@@ -1,0 +1,105 @@
+require File.dirname(__FILE__) + '/test_helper'
+
+class Thing < ActiveRecord::Base
+end
+
+def thing
+  Thing.new(:name => "Thing One",:price_in_cents=> 125)
+end
+
+class RailsMoneyTest < Test::Unit::TestCase
+  
+  def test_should_return_price_as_money_object
+    price = thing.price
+    assert_kind_of Money, price
+  end
+  
+  def test_should_set_price_from_money_object
+    thing1 = thing 
+    thing1.price = Money.new(1095)
+    assert_equal 1095, thing1.price_in_cents
+  end
+
+  def test_should_set_price_from_fixnum
+    thing1 = thing
+    thing1.price = 1095
+    assert_equal 1095, thing1.price_in_cents
+  end
+
+  def test_should_set_price_from_float
+    thing1 = thing
+    thing1.price = 10.95
+    assert_equal 1095, thing1.price_in_cents
+  end
+
+  def test_should_raise_exception_setting_invalid_price
+    assert_raise(MoneyError) { thing.price = '10.95' }
+  end
+end
+
+class MoneyTest < Test::Unit::TestCase
+   
+  def test_should_create_money_object
+    assert cash_money = Money.new(1290)
+    assert_equal 1290, cash_money.cents
+    assert_equal 12.9, cash_money.dollars
+    assert_equal "$12.90", cash_money.to_s
+    assert_equal false, cash_money.free?
+    assert_equal 0, Money.new(nil).cents
+  end
+
+  def test_should_create_money_object_from_float_with_proper_rounding
+    money =  Money.new(12.196)
+    assert_equal 1220, money.cents
+    assert_instance_of Fixnum, money.cents 
+  end
+  
+  def test_should_raise_exception_if_invalid_type_passed_to_initialize
+    assert_raise(MoneyError) { Money.new("1295") }
+  end
+
+  def test_should_return_free_on_to_s_if_cents_is_zero
+    cash_money = Money.new(0)
+    assert_equal 'free', cash_money.to_s
+    assert_equal true, cash_money.free?
+    assert_equal true, cash_money.zero?
+  end
+
+  def test_should_be_comparable
+    assert Money.include?(Comparable)
+    assert Money.new(0) == Money.new(0)
+  end
+
+  def test_should_add_money
+    assert_equal Money.new(2095), Money.new(1000) + Money.new(1095)
+    assert_equal Money.new(2000), Money.new(1000) + 1000
+    assert_equal Money.new(2006), Money.new(1000) + 10.056
+  end
+
+  def test_should_subtract_money
+    assert_equal Money.new(500), Money.new(1000) - Money.new(500)
+    assert_equal Money.new(500),  Money.new(1000) - 500
+    assert_equal Money.new(460),  Money.new(1000) - 5.40
+  end
+
+  def test_should_multiply_money
+    assert_equal Money.new(5000), Money.new(1000) * 5
+    assert_equal Money.new(999), Money.new(333) * 3
+    assert_equal Money.new(1199), Money.new(333) * 3.6 # 1198.9
+  end
+
+  def test_should_divide_money_and_retur_array_of_monies
+    money_array = [Money.new(3.34), Money.new(3.33), Money.new(3.33)]
+    assert_equal money_array, Money.new(1000) / 3
+    assert_equal [Money.new(2.00), Money.new(2.00)], Money.new(4.00) / 2
+    assert_raises(MoneyError) { Money.new(4.00) / 2.2 }
+  end
+
+  def test_should_implement_to_money
+    assert_equal Money.new(10.00), Money.new(1000).to_money
+    assert_equal Money.new(1.00), 100.to_money
+    assert_equal Money.new(100.00), 100.00.to_money
+    assert_equal Money.new(100.96), 100.956.to_money
+  end
+
+end
