@@ -19,7 +19,7 @@ All other operations (+, -, *, and Comparable stuff) will work without any surpr
 
 == Installation
 
-./script/plugin install http://svn.nullcreations.net/plugins/rails_money
+./script/plugin install svn://svn.nullcreations.net/plugins/rails_money
 
 
 == Usage
