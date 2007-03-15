@@ -2,10 +2,6 @@
 # This stores the value of the price in cents, and can be initialized with
 # a Float (dollars.cents) or Fixnum (cents). 
 # 
-# If you need something more indepth, that deals with currency, exchange rates,
-# I highly recommend replacing this with the Money class Tobi wrote, 
-# which you can get in Gems (gem install money). 
-#
 # The following article by Martin Fowler was used as a reference:
 #   http://www.martinfowler.com/ap2/quantity.html
 
