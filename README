@@ -1,5 +1,7 @@
 = Rails Money
 
+Note! This is NOT compatible with the 'money' gem!
+
 A handler for storing money in ActiveRecord objects as integers (as cents), but dealing
 with them as Money Objects.
 
@@ -33,6 +35,9 @@ FIELDNAME. ActiveRecord will return Money objects instead of Fixnums.
   product.price = 100.00
   product.price >> #<Money @cents=10000>
 
+
+Creating a Money can be done from a Fixnum (dollars) or a Float (dollars.cents). To create a money
+object from just cents, do Money.create_from_cents(100) 
 
 == Feedback
 

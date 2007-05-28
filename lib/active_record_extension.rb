@@ -6,10 +6,10 @@ module RailsMoney
 
     if @attributes.include?(method_name)
       if setter
-        money = args.first.kind_of?(MONEY_CLASS) ? args.first : MONEY_CLASS.new(args.first)
+        money = args.first.kind_of?(Money) ? args.first : Money.new(args.first)
         write_attribute(method_name,money.cents) 
       else
-        MONEY_CLASS.new(read_attribute(method_name))      
+        Money.create_from_cents(read_attribute(method_name))      
       end
     else 
       super
