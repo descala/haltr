@@ -16,8 +16,8 @@ class Money
 
   # Create a new Money object with value. Value can be a Float (Dollars.cents) or Fixnum (Dollars).
   def initialize(value)
-    unless [Float,Fixnum,NilClass].include? value.class
-      raise MoneyError, "Cannot create money from #{value.class}. Float or Fixnum required." 
+    unless value.kind_of?(Integer) or value.kind_of?(Float) or value.nil?
+      raise MoneyError, "Cannot create money from #{value.class}. Float or Integer required." 
     end 
     value = value.kind_of?(NilClass) ? 0 : (value*100.0).round
     @cents = value
