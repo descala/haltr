@@ -19,7 +19,7 @@ class RailsMoneyTest < Test::Unit::TestCase
     thing1 = thing 
     thing1.price = Money.new(1095)
     assert_equal 109500, thing1.price_in_cents
-    assert_equal "$1095.00", thing1.price.to_s
+    assert_equal "$1,095.00", thing1.price.to_s
   end
 
   def test_should_set_price_from_fixnum
@@ -53,7 +53,7 @@ class MoneyTest < Test::Unit::TestCase
     assert cash_money = Money.new(1290)
     assert_equal 129000, cash_money.cents
     assert_equal 1290, cash_money.dollars
-    assert_equal "$1290.00", cash_money.to_s
+    assert_equal "$1,290.00", cash_money.to_s
     assert_equal false, cash_money.free?
     assert_equal 0, Money.new(nil).cents
   end

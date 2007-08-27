@@ -21,15 +21,12 @@ class Money
   
   # Create a new Money object with value. Value can be a Float (Dollars.cents) or Fixnum (Dollars).
   def initialize(value)
-    value = Money.get_value(value)
-    value = value.kind_of?(NilClass) ? 0 : (value*100.0).round
-    @cents = value
+    @cents = (Money.get_value(value)*100.0).round
   end
 
   # Create a new Money object with a value representing cents.
   def self.create_from_cents(value)
-    value = Money.get_value(value)
-    return value.nil? ? Money.new(0) : Money.new(value/100.0)
+    return Money.new(Money.get_value(value)/100.0)
   end
     
   # Equality. 
@@ -91,7 +88,10 @@ class Money
   # Return the value in a string (in dollars)
   def to_s
     return "free" if free?
-    "$#{sprintf("%.2f",dollars)}"
+    seperated = dollars.to_s.split(".")
+    seperated[0] = seperated[0].to_s.reverse.scan(/..?.?/).join(",").reverse
+    seperated[1] = sprintf("%02u",seperated[1])
+    "$#{seperated.join(".")}"
   end
 
   # Conversation to self
@@ -103,7 +103,8 @@ class Money
   # Get a value in preperation for creating a new Money object. 
   def self.get_value(value)
     value = value.gsub(/[^0-9.]/,'').to_f if value.kind_of?(String) 
-    unless value.kind_of?(Integer) or value.kind_of?(Float) or value.nil?
+    value = 0 if value.nil?
+    unless value.kind_of?(Integer) or value.kind_of?(Float)
       raise MoneyError, "Cannot create money from cents with #{value.class}. Fixnum required." 
     end
     value
