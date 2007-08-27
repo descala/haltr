@@ -1,11 +1,16 @@
 # Money class. 
 # This stores the value of the price in cents, and can be initialized with
-# a Float (dollars.cents) or Fixnum (dollars). To create a money object from
+# a Float (dollars.cents) or Integer (dollars). To create a money object from
 # cents, use create_from_cents (Money.create_from_cents(500) and Money.new(5) are
-# the same)
+# the same).
+# 
+# If a String is passed, it will do it's best to figure turn it into a float. 
+# This means "$10.00" and "$10 dollars" would both be treated as 10.00
 #
 # The following article by Martin Fowler was used as a reference:
 #   http://www.martinfowler.com/ap2/quantity.html
+#
+
 
 raise "Another Money Object is already defined!" if Object.const_defined?(:Money)
 
@@ -13,24 +18,20 @@ class MoneyError < StandardError; end;
 class Money
   include Comparable
   attr_reader :cents
-
+  
   # Create a new Money object with value. Value can be a Float (Dollars.cents) or Fixnum (Dollars).
   def initialize(value)
-    unless value.kind_of?(Integer) or value.kind_of?(Float) or value.nil?
-      raise MoneyError, "Cannot create money from #{value.class}. Float or Integer required." 
-    end 
+    value = Money.get_value(value)
     value = value.kind_of?(NilClass) ? 0 : (value*100.0).round
     @cents = value
   end
 
   # Create a new Money object with a value representing cents.
   def self.create_from_cents(value)
-    unless [Fixnum,NilClass].include? value.class
-      raise MoneyError, "Cannot create money from cents with #{value.class}. Fixnum required." 
-    end
+    value = Money.get_value(value)
     return value.nil? ? Money.new(0) : Money.new(value/100.0)
   end
-  
+    
   # Equality. 
   def eql?(other)
    (cents <=> other.cents)
@@ -96,6 +97,16 @@ class Money
   # Conversation to self
   def to_money
     self
+  end
+
+  private 
+  # Get a value in preperation for creating a new Money object. 
+  def self.get_value(value)
+    value = value.gsub(/[^0-9.]/,'').to_f if value.kind_of?(String) 
+    unless value.kind_of?(Integer) or value.kind_of?(Float) or value.nil?
+      raise MoneyError, "Cannot create money from cents with #{value.class}. Fixnum required." 
+    end
+    value
   end
 
 end

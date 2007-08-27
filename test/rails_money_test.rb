@@ -33,9 +33,17 @@ class RailsMoneyTest < Test::Unit::TestCase
     thing1.price = 10.95
     assert_equal 1095, thing1.price_in_cents
   end
+  
+  def test_should_set_price_from_string
+    thing1 = thing
+    thing1.price = "$10.95"
+    assert_equal 1095, thing1.price_in_cents
+    thing1.price = "10"
+    assert_equal 1000, thing1.price_in_cents
+  end
 
   def test_should_raise_exception_setting_invalid_price
-    assert_raise(MoneyError) { thing.price = '10.95' }
+    assert_raise(MoneyError) { thing.price = [] }
   end
 end
 
@@ -57,7 +65,7 @@ class MoneyTest < Test::Unit::TestCase
   end
   
   def test_should_raise_exception_if_invalid_type_passed_to_initialize
-    assert_raise(MoneyError) { Money.new("1295") }
+    assert_raise(MoneyError) { Money.new([]) }
   end
 
   def test_should_return_free_on_to_s_if_cents_is_zero
