@@ -88,9 +88,8 @@ class Money
   # Return the value in a string (in dollars)
   def to_s
     return "free" if free?
-    seperated = dollars.to_s.split(".")
+    seperated = "#{sprintf("%.2f",dollars)}".to_s.split(".")
     seperated[0] = seperated[0].to_s.reverse.scan(/..?.?/).join(",").reverse
-    seperated[1] = sprintf("%02u",seperated[1])
     "$#{seperated.join(".")}"
   end
 

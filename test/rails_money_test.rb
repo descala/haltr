@@ -42,6 +42,10 @@ class RailsMoneyTest < Test::Unit::TestCase
     assert_equal 1000, thing1.price_in_cents
   end
 
+  def test_should_format_correctly
+    assert_equal "$12.40", Money.new(12.40).to_s
+  end
+
   def test_should_raise_exception_setting_invalid_price
     assert_raise(MoneyError) { thing.price = [] }
   end
