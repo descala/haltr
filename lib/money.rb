@@ -31,7 +31,7 @@ class Money
     
   # Equality. 
   def eql?(other)
-   (cents <=> other.cents)
+    cents <=> other.to_money.cents
   end
 
   # Equality for Comparable.
