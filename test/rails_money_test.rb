@@ -72,11 +72,13 @@ class MoneyTest < Test::Unit::TestCase
     assert_raise(MoneyError) { Money.new([]) }
   end
 
-  def test_should_return_free_on_to_s_if_cents_is_zero
+  def test_should_return_correcnt_value_on_to_s_if_cents_is_zero
     cash_money = Money.new(0)
-    assert_equal 'free', cash_money.to_s
+    assert_equal '$0.00', cash_money.to_s
+    assert_equal 'free', cash_money.to_s('free')
     assert_equal true, cash_money.free?
     assert_equal true, cash_money.zero?
+    
   end
 
   def test_should_be_comparable
