@@ -1,7 +1,7 @@
 module RailsMoney
   def method_missing(method_id,*args)
     method_name = method_id.to_s
-    setter = method_name.chomp!("=") 
+    setter = method_name.chomp!("=")
     method_name = "#{method_name}_in_cents"
 
     if @attributes.include?(method_name)
@@ -14,6 +14,12 @@ module RailsMoney
     else 
       super
     end
+  end
+
+  def respond_to?(method)
+    method_name = method.to_s.chomp("=")
+
+    @attributes.include?("#{method_name}_in_cents") || super
   end
 end
 
