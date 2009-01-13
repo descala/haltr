@@ -1,5 +1,5 @@
 module RailsMoney
-  def method_missing(method_id,*args)
+  def method_missing( method_id, *args )
     method_name = method_id.to_s
     setter = method_name.chomp!("=")
     method_name = "#{method_name}_in_cents"
@@ -15,10 +15,9 @@ module RailsMoney
       super
     end
   end
-
-  def respond_to?(method)
+ 
+  def respond_to?( method, include_private = false )
     method_name = method.to_s.chomp("=")
-
     @attributes.include?("#{method_name}_in_cents") || super
   end
 end
