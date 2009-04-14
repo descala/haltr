@@ -1,0 +1,257 @@
+/*
+-----------------------------------------------
+Blinksale Screen Master
+Author:   Firewheel Design
+Version:  002 27 January 2006
+----------------------------------------------- */
+body {
+	margin: 0;
+  	padding: 0;
+  	font: 12px/1.5em "Helvetice Neue", Helvetica, Verdana, Sans-serif;
+   	color: #000;
+ 	}
+ul {
+	margin: 0;
+	padding: 0;
+	list-style: none;
+	}
+ul li {
+	margin: 0;
+	padding: 0;
+	list-style: none;
+	}
+ol {
+	margin: 0;
+	padding: 0 0 0 20px;
+	}
+ol li {
+	margin: 0;
+	padding: 0;
+	}
+h2 {
+	margin: 0 0 .75em;
+	font-size: 18px;
+	}
+h3 {
+	margin: 0 0 .75em;
+	font-size: 14px;
+	}
+h4 {
+	margin: 0;
+	}
+p {
+	margin: 0 0 .75em;
+	}
+input, select, textarea {
+	margin: 0;
+	}
+acronym {
+	font-style: normal;
+	border-bottom: 1px dotted #333;
+	cursor: help;
+	}
+
+/* Hide the UI Styles
+----------------------------------------------- */
+#navigation1,
+.flash,
+.drop-form,
+.history,
+#col2,
+#footer1 {
+	display: none;
+	}
+
+/* Link Styles
+----------------------------------------------- */
+a:link {
+	color: #000;
+	text-decoration: none;
+	}
+a:visited {
+	color: #000;
+	text-decoration: none;
+	}
+a:hover {
+	color: #000;
+	text-decoration: underline;
+	}
+a:link img,
+a:visited img,
+a:hover img {
+	border: 0;
+	background: none;
+	}
+
+/* Invoice View Styles
+----------------------------------------------- */
+#col1 {
+	margin: .25in .25in .5in;
+	padding: 0;
+	}
+.invoice-show .vcard {
+	margin: 0 0 20px;
+	line-height: 1.5em;
+	font-size: 12px;
+	}
+.invoice-show .vcard h3 {
+	margin: 0;
+	}
+.invoice-show .firm {
+	}
+.client h3 {
+	margin: -4px 0 .25em;
+	font-size: 18px;
+/*	letter-spacing: -.025em; */
+	}
+.invoice {
+	margin: 0 0 20px;
+	font-size: 11px;
+	}
+.invoice h4 {
+	margin: 0 12px 4px;
+	font-size: 14px;
+	}
+.invoice-info {
+	float:right;
+	margin: 0 0 10px;
+	text-align:right;
+	}
+.invoice-info th {
+	margin: 0;
+	padding: 1px 0;
+	width: 114px;
+	text-align: left;
+	font-weight: normal;
+	}
+.invoice-info th.date {
+	font-weight: bold;
+	}
+.invoice-info td {
+	margin: 0;
+	padding: 1px 0;
+	}
+.invoice-info input {
+	margin: 0;
+	padding: 0;
+	}
+.line-items {
+	clear: both;
+	margin: 0 0 10px;
+	padding: 0;
+	width: 100%;
+	font-size: 11px;
+	}
+.line-items tr {
+	margin: 0;
+	padding: 0;
+	text-align: left;
+	}
+.line-items th {
+	margin: 0;
+	padding: 0 4px;
+	line-height: 24px;
+	border-bottom: 2px solid #000;
+	}
+.line-items th.first { padding-left:12px; }
+.line-items th.last { padding-right:12px; }
+.line-items td {
+	margin: 0;
+	padding: 4px 4px 3px;
+	vertical-align: top;
+	line-height: 20px;
+	border-bottom: 1px solid #999;
+	}
+.line-items td.first { padding-left:12px; }
+.line-items td.last { padding-right:12px; }
+.line-items .item-delete { width: 14px; }
+.line-items .item-delete img { padding-top: 2px; }
+.line-items .item-date { width: 75px; }
+.line-items .item-date input { width: 65px; height: 18px; }
+.line-items .item-kind { width: 85px; }
+.line-items .item-kind select { width: 75px; margin: 0; padding: 0; }
+.line-items .item-quantity { width: 45px; }
+.line-items .item-quantity input { width: 35px; height: 18px; }
+.line-items .item-description textarea { width: 180px; height: 18px; }
+.line-items .item-tax { text-align: right; width: 20px; }
+.line-items .item-tax input { margin-top: 2px; }
+.line-items .item-price { text-align: right; width: 75px; }
+.line-items .item-price input { text-align: right; width: 65px; height: 18px; }
+.line-items .line-total {
+	text-align: right;
+	width: 90px;
+	}
+.line-items img {
+	display: none;
+	}
+.show .item-date { width: 70px; }
+.show .item-quantity { width: 60px; }
+.payments .item-date { width: 116px; }
+.newline {
+	margin: -6px 12px 10px;
+	padding: 0;
+	font-size: 11px;
+	text-align: right;
+	}
+.invoice-calculations {
+	float: right;
+	margin: 0 0 .5in;
+	text-align: right;
+	}
+.invoice-calculations th {
+	text-align: left;
+	line-height: 20px;
+	}
+.invoice-calculations td {
+	text-align: right;
+	line-height: 20px;
+	padding-left: .75in;
+	padding-right: 12px;
+	}
+.invoice-calculations .sales-tax th,
+.invoice-calculations .freight th,
+.invoice-calculations .paid th,
+.invoice-calculations .late-fee th {
+	font-weight: normal;
+	}
+.invoice-calculations .invoice-total th,
+.invoice-calculations .invoice-total td {
+	font-size: 13px;
+	}
+.invoice-calculations .invoice-total td {
+	font-weight: bold;
+	}
+.invoice-notes {
+	clear: both;
+	margin: 0 0 10px;
+	padding: 7px 0;
+	background: #fff;
+	border-top: 1px solid #000;	
+	}
+.invoice-notes h3 {
+	margin: 0 0 .25em;
+	font-size: 11px;
+	}
+.invoice-notes p {
+	margin: 0 0 .25em;
+	font-size: 11px;
+	}
+.vendor {
+	margin: 0 0 .25in;
+	padding: 0 0 10px;
+	text-align: right;
+	border-bottom: 4px solid #000;
+	overflow: hidden;
+	}
+.vendor .logo {
+	float: left;
+	}
+.firm {
+	margin: 0 0 .25in;
+	padding: 0 0 10px;
+	text-align: right;
+	border-bottom: 4px solid #000;
+	}
+.firm .logo {
+	float: left;
+	}

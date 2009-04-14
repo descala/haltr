@@ -1,0 +1,25 @@
+<div class="active-scaffold-header">
+  <h2>Actions</h2>
+</div>
+<ul>
+  <li>
+    <%= link_to "Generate invoices", :action => 'create_more' %> from templates (<%= @num_new_invoices%>)
+  </li>
+  <li>
+    <%= link_to "Send invoices", :action => 'automator' %>: download PDFs, e-mail automator script and mark as send (<%= @num_not_sent %>)
+  </li>
+  <li>
+    Charge bank accounts with Nº19 format
+    <% if @charge_bank_on_due_date.size > 0 -%>
+    <ul>
+      <% @charge_bank_on_due_date.each do |invoice| -%>
+      <li>
+        <%= invoice.due_date %> (<%= invoice.invoice_count %>) - <%= link_to "download", :action => 'n19', :id => invoice %> - <%= link_to "mark done", {:action => 'n19_done', :id => invoice}, :confirm => "Mark invoices with due date #{invoice.due_date} as done?", :method => :post %>
+      </li>
+      <% end -%>
+    </ul>
+    <% else -%>
+    (0)
+    <% end -%>
+  </li>
+</ul>

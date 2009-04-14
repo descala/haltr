@@ -1,0 +1,6 @@
+[submodule "vendor/plugins/active_scaffold"]
+	path = vendor/plugins/active_scaffold
+	url = git://github.com/activescaffold/active_scaffold.git
+[submodule "vendor/plugins/rails_money"]
+	path = vendor/plugins/rails_money
+	url = git://github.com/jerrett/rails_money.git
