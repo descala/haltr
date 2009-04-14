@@ -1,0 +1,7 @@
+log/*.log
+tmp/**/*
+doc/api
+doc/app
+config/database.yml
+**/.DS_Store
+.DS_Store
