@@ -1,0 +1,14 @@
+#  id             :integer(4)      not null, primary key
+#  invoice_id     :integer(4)
+#  quantity       :integer(4)
+#  description    :string(512)
+#  price_in_cents :integer(4)
+#  created_at     :datetime
+#  updated_at     :datetime
+
+test_import_l1:
+  invoice: test_import
+  quantity: 1
+  description: bla bla bla
+  price_in_cents: 92568
+

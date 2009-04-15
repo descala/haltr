@@ -1,0 +1,46 @@
+# == Schema Information
+# Schema version: 20090121143448
+#
+# Table name: invoices
+#
+#  id                  :integer(4)      not null, primary key
+#  client_id           :integer(4)
+#  date                :date
+#  number              :string(255)
+#  extra_info          :text
+#  terms               :string(255)
+#  created_at          :datetime
+#  updated_at          :datetime
+#  discount_text       :string(255)
+#  discount_percent    :integer(4)
+#  draft               :boolean(1)
+#  type                :string(255)
+#  frequency           :integer(4)
+#  invoice_template_id :integer(4)
+#  status              :integer(4)      default(1)
+#  due_date            :date
+#  use_bank_account    :boolean(1)      default(TRUE)
+#
+
+invoice1:
+  type: InvoiceDocument
+  number: 08/001
+  date: 2008-11-24
+  client: invinet
+  terms: 1m1
+
+template1:
+  type: InvoiceTemplate
+  date: 2008-11-24
+  client: invinet
+  extra_info: "periode: Desembre 2008"
+  frequency: 1
+
+test_import:
+  type: InvoiceDocument
+  status: 5
+  number: 08/194
+  date: "2008-11-24"
+  client: invinet
+  due_date: "2008-12-24"
+  terms: "30"
