@@ -88,15 +88,15 @@ class Money
   # Return the value in a string (in dollars)
   # if a zero_string is provided like "FREE" or "FREE!" or "$ --.--"
   # it will be returned instead of "$0.00"
-  def to_s(zero_string=nil)
+  def to_s(zero_string="")
     return zero_string if zero_string && free?
     seperated = "#{sprintf("%.2f",dollars)}".to_s.split(".")
     if dollars >= 0
-      seperated[0] = seperated[0].to_s.reverse.scan(/..?.?/).join(",").reverse
-      "$#{seperated.join(".")}"
+      seperated[0] = seperated[0].to_s.reverse.scan(/..?.?/).join(".").reverse
+      "#{seperated.join(",")}"
     else
-      seperated[0] = seperated[0].to_s.delete("-").reverse.scan(/..?.?/).join(",").reverse
-      "-$#{seperated.join(".")}"
+      seperated[0] = seperated[0].to_s.delete("-").reverse.scan(/..?.?/).join(".").reverse
+      "-#{seperated.join(",")}"
     end
   end
 
@@ -109,6 +109,11 @@ class Money
   private 
   # Get a value in preperation for creating a new Money object. 
   def self.get_value(value)
+
+    # TODO: i18n support
+    # Europe: "," are "." and "," are "."
+    value = value.gsub(/,|\./){|x| x==',' ? '.' : ','} if value.kind_of?(String)
+
     value = value.gsub(/[^0-9.]/,'').to_f if value.kind_of?(String) 
     value = 0 if value.nil?
     unless value.kind_of?(Integer) or value.kind_of?(Float)
