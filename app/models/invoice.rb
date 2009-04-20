@@ -148,7 +148,7 @@ class Invoice < ActiveRecord::Base
   
   # Sets due date
   def before_save
-    self.due_date = terms_object.due_date unless self.due_date
+    self.due_date = terms_object.due_date
   end
 
   private

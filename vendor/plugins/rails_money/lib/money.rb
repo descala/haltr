@@ -113,8 +113,11 @@ class Money
     # TODO: i18n support
     # Europe: "," are "." and "," are "."
     value = value.gsub(/,|\./){|x| x==',' ? '.' : ','} if value.kind_of?(String)
-
-    value = value.gsub(/[^0-9.]/,'').to_f if value.kind_of?(String) 
+    
+    if value.kind_of?(String)
+      sign = value.first == '-' ? -1 : 1
+      value = value.gsub(/[^0-9.]/,'').to_f * sign
+    end
     value = 0 if value.nil?
     unless value.kind_of?(Integer) or value.kind_of?(Float)
       raise MoneyError, "Cannot create money from cents with #{value.class}. Fixnum required." 
