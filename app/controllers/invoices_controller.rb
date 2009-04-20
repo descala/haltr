@@ -18,7 +18,7 @@ class InvoicesController < ApplicationController
   
   def showit
     find_invoice
-    render :layout => 'invoice'
+    render :template => "invoices/showit", :layout => 'invoice'
   end
   
   def pdf
@@ -27,7 +27,8 @@ class InvoicesController < ApplicationController
     xhtml_file=Tempfile.new("invoice_#{@invoice.id}.xhtml","tmp")
     xhtml_file.write(render_to_string(:action => "showit", :layout => "invoice"))
     xhtml_file.close
-    cmd="java -classpath java/core-renderer.jar:java/itext-paulo-155.jar:java/minium.jar org.xhtmlrenderer.simple.PDFRenderer #{xhtml_file.path} #{pdf_file.path}"
+    jarpath = "vendor/xhtmlrenderer"
+    cmd="java -classpath #{jarpath}/core-renderer.jar:#{jarpath}/iText-2.0.8.jar:#{jarpath}/minium.jar org.xhtmlrenderer.simple.PDFRenderer #{xhtml_file.path} #{pdf_file.path}"
     if system(cmd)
       send_file(pdf_file.path, :filename => @invoice.pdf_name, :type => "application/pdf", :disposition => 'inline')
     else
@@ -122,6 +123,18 @@ class InvoicesController < ApplicationController
     @num_new_invoices = InvoiceTemplate.all(:conditions => ["date <= ?", Time.now + 7.day]).size
     @num_not_sent = InvoiceDocument.find_not_sent.size
     @charge_bank_on_due_date = InvoiceDocument.find_due_dates
+  end
+  
+  def report
+    d = Date.today - 3.months
+    @date = Date.new(d.year,d.month,1)
+    @invoices = InvoiceDocument.all(:conditions => ["date >= ?", @date], :order => :number)
+    @total_amount = Money.new 0
+    @total_tax = Money.new 0
+    @invoices.each do |i|
+      @total_amount +=  i.subtotal
+      @total_tax    +=  i.tax
+    end
   end
   
   private
