@@ -27,7 +27,7 @@ class InvoiceDocument < Invoice
   validates_uniqueness_of :number
 
   def self.find_due_dates
-    find_by_sql "select due_date, invoices.id, count(*) as invoice_count from invoices, clients where type='InvoiceDocument' and client_id = clients.id and status = #{Invoice::STATUS_SENT} and bank_account group by due_date"
+    find_by_sql "select due_date, invoices.id, count(*) as invoice_count from invoices, clients where type='InvoiceDocument' and client_id = clients.id and status = #{Invoice::STATUS_SENT} and bank_account and use_bank_account group by due_date"
   end
     
   def label

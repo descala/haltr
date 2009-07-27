@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*-
+
 <h1>Invoices report</h1>
 
 <p>With date >= <%= @date %>.</p>
@@ -12,10 +14,11 @@
 <th>Name</th>
 <th>Amount</th>
 <th>Tax</th>
+<th>Charge bank on date</ht>
 </tr>  
 <% @invoices.each do |i| -%>
 <tr>
-<td><%= i.number %></td><td> <%= i.date %></td><td><%= i.client.taxcode %></td><td><%= i.client.name %></td><td style="text-align: right;"><%= i.subtotal %> €</td><td style="text-align: right;"><%= i.tax %> €</td>
+<td><%= i.number %></td><td> <%= i.date %></td><td><%= i.client.taxcode %></td><td><%= i.client.name %></td><td style="text-align: right;"><%= i.subtotal %> €</td><td style="text-align: right;"><%= i.tax %> €</td><td style="text-align:center;"><%= i.due_date if i.use_bank_account && i.client.bank_account %></td>
 </tr>
 <% end -%>
 <tr>

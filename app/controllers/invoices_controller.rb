@@ -2,7 +2,7 @@
 class InvoicesController < ApplicationController
 
   
-  COLS = ['draft','client','date','number','terms','invoice_lines','discount_text', 'discount_percent','extra_info']
+  COLS = ['draft','client','date','number','terms','use_bank_account','invoice_lines','discount_text', 'discount_percent','extra_info']
   
   active_scaffold :invoice_document do |config|
     config.action_links.add "showit", {:type=>:record, :page=>true, :label=>"Show"}
@@ -126,7 +126,8 @@ class InvoicesController < ApplicationController
   end
   
   def report
-    d = Date.today - 3.months
+    m = params[:id] || 3
+    d = Date.today - m.to_i.months
     @date = Date.new(d.year,d.month,1)
     @invoices = InvoiceDocument.all(:conditions => ["date >= ?", @date], :order => :number)
     @total_amount = Money.new 0
