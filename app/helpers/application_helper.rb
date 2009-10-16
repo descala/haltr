@@ -45,6 +45,14 @@ module ApplicationHelper
     end
   end
   
+  def quantity(q)
+    if q.floor == q
+      q.to_i
+    else
+      number_with_delimiter q, :delimiter => ".", :separator => ","
+    end
+  end
+  
   private
   
   def especial(path)

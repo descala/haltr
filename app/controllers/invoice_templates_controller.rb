@@ -1,6 +1,6 @@
 class InvoiceTemplatesController < InvoicesController
 
-  T_COLS = ['client','date','frequency','terms','invoice_lines','discount_text', 'discount_percent','extra_info']
+  T_COLS = ['client','date','frequency','terms','use_bank_account','invoice_lines','discount_text', 'discount_percent','extra_info']
 
   active_scaffold :invoice_template do |config|
     config.label='Recurring invoices'

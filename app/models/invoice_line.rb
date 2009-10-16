@@ -1,11 +1,11 @@
 # == Schema Information
-# Schema version: 20090121143448
+# Schema version: 20091016144057
 #
 # Table name: invoice_lines
 #
 #  id             :integer(4)      not null, primary key
 #  invoice_id     :integer(4)
-#  quantity       :integer(4)
+#  quantity       :decimal(10, 2)
 #  description    :string(512)
 #  price_in_cents :integer(4)
 #  created_at     :datetime
@@ -15,7 +15,7 @@
 class InvoiceLine < ActiveRecord::Base
   belongs_to :invoice
   
-  validates_numericality_of :quantity
+#  validates_numericality_of :quantity
   
   def total
     # quantity is a Money object

@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 # == Schema Information
-# Schema version: 20090121143448
+# Schema version: 20091016144057
 #
 # Table name: invoices
 #
@@ -23,6 +23,7 @@
 #  use_bank_account    :boolean(1)      default(TRUE)
 #
 
+# -*- coding: utf-8 -*-
 # -*- coding: utf-8 -*-
 class Invoice < ActiveRecord::Base
 
@@ -95,24 +96,24 @@ class Invoice < ActiveRecord::Base
   end
   
   def self.last_number
-    i = InvoiceDocument.last :order => "number"
+    i = InvoiceDocument.last :order => "number", :conditions => ["draft=?",false]
     i.number if i
   end
   
   def self.next_number
-    i = InvoiceDocument.last :order => "number" 
-    if i.number.nil?
+    number = self.last_number
+    if number.nil?
       a = []
       num = 0
     else
-      a = i.number.split('/')
-      num = i.number.to_i
+      a = number.split('/')
+      num = number.to_i
     end
     if a.size > 1
       a[1] =  sprintf('%03d', a[1].to_i + 1)
       return a.join("/")
     else
-      return num.to_i + 1
+      return num + 1
     end
   end
   
@@ -150,7 +151,18 @@ class Invoice < ActiveRecord::Base
   def before_save
     self.due_date = terms_object.due_date
   end
-
+  
+  def payment_method
+    if use_bank_account and client.bank_account
+      ba = client.bank_account
+      "Rebut domiciliat a #{ba[0..3]} #{ba[4..7]} ** ******#{ba[16..19]}"
+    else
+      ba = Setting.company_bank_account.to_s
+      "Pagament per transferència al compte #{ba[0..3]} #{ba[4..7]} #{ba[8..9]} #{ba[10..19]}"
+    end
+    
+  end
+  
   private
 
   def terms_object

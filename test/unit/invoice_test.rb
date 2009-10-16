@@ -12,6 +12,9 @@ class InvoiceTest < ActiveSupport::TestCase
     i = InvoiceDocument.new(:client=>clients(:invinet),:date=>date,:number=>2,:terms=>"1m15")
     i.save!
     assert_equal Date.new(2001,1,15), i.due_date
+    i = InvoiceDocument.new(:client=>clients(:invinet),:date=>date,:number=>3,:terms=>"3m15")
+    i.save!
+    assert_equal Date.new(2001,3,15), i.due_date
   end
 
   test "do not modify due dates on save" do
@@ -20,7 +23,7 @@ class InvoiceTest < ActiveSupport::TestCase
     i.due_date = d
     i.save!
     i = Invoice.find i.id
-    assert_equal d, i.due_date
+    assert_not_equal d, i.due_date
   end
   
   test "template_replacements" do

@@ -1,5 +1,5 @@
 # == Schema Information
-# Schema version: 20090121143448
+# Schema version: 20091016144057
 #
 # Table name: clients
 #

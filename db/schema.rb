@@ -9,7 +9,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20090414170016) do
+ActiveRecord::Schema.define(:version => 20091016144057) do
 
   create_table "clients", :force => true do |t|
     t.string   "taxcode",      :limit => 9
@@ -27,7 +27,7 @@ ActiveRecord::Schema.define(:version => 20090414170016) do
 
   create_table "invoice_lines", :force => true do |t|
     t.integer  "invoice_id"
-    t.integer  "quantity"
+    t.float    "quantity"
     t.string   "description",    :limit => 512
     t.integer  "price_in_cents"
     t.datetime "created_at"

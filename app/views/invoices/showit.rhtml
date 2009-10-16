@@ -35,6 +35,7 @@
 	    <div class="invoice-info">
 	      <span class="date"><strong><%= @invoice.date %></strong></span><br/>
 	      <span class="invoice-terms">Venciment <%= @invoice.due %></span><br/>
+	      <span class="invoice-terms"><%= @invoice.payment_method %></span><br/>
 	      <span class="invoice-terms"><%= simple_format(@invoice.extra_info) %></span><br/>
 	      
 	    </div>
@@ -71,7 +72,7 @@
 		  
 		  <% @lines.each do |line| -%>
 		  <tr>
-		    <td class="item-quantity first"><%= line.quantity %></td>
+		    <td class="item-quantity first"><%= quantity(line.quantity) %></td>
 		    <td class="item-description"><%= line.description %></td>
 		    <td class="item-price"><%= euros(line.price) %></td>
 		    <td class="line-total last"><%= euros(line.total) %></td>

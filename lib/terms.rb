@@ -19,10 +19,17 @@ class Terms
       end
     else
       # It's an string
-      if code[/1m[0-9]+/]
-        day = code[2..3].to_i
-        @description = sprintf(DAYNM,day)
-        @due_date = Date.new(date.next_month.year,date.next_month.month,day)
+      if code=~/([0-9]+)+m([0-9]+)/
+        months_to_add = $1.to_i
+        day = $2.to_i
+        date_with_months = date + months_to_add.months
+        if months_to_add == 1
+          @description = sprintf(DAYNM,day)
+        else
+          months = I18n.backend.translate("#{I18n.locale}.date.month_names", "")
+          @description = "#{day} de #{months[date_with_months.month]}"
+        end
+        @due_date = Date.new(date_with_months.year,date_with_months.month,day)
       end
     end
   end

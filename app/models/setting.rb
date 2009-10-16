@@ -1,3 +1,15 @@
+# == Schema Information
+# Schema version: 20091016144057
+#
+# Table name: settings
+#
+#  id         :integer(4)      not null, primary key
+#  name       :string(50)      default(""), not null
+#  value      :text
+#  created_at :datetime
+#  updated_at :datetime
+#
+
 # Adapted from redmine's setting system
 
 class Setting < ActiveRecord::Base
