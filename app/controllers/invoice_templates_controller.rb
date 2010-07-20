@@ -1,4 +1,6 @@
-class InvoiceTemplatesController < InvoicesController
+class InvoiceTemplatesController < ApplicationController 
+
+  include InvoiceCommon
 
   T_COLS = ['client','date','frequency','terms','use_bank_account','invoice_lines','discount_text', 'discount_percent','extra_info']
 

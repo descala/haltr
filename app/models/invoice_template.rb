@@ -29,6 +29,7 @@ class InvoiceTemplate < Invoice
   def next_invoice
     i = InvoiceDocument.new self.attributes
     i.number = InvoiceDocument.next_number
+    i.tax_percent = Invoice::TAX
     i.invoice_template = self
     # Do not generate invoices on weekend
     if [6,0].include? i.date.wday

@@ -9,7 +9,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20091016144057) do
+ActiveRecord::Schema.define(:version => 20100701100409) do
 
   create_table "clients", :force => true do |t|
     t.string   "taxcode",      :limit => 9
@@ -51,6 +51,7 @@ ActiveRecord::Schema.define(:version => 20091016144057) do
     t.integer  "status",              :default => 1
     t.date     "due_date"
     t.boolean  "use_bank_account",    :default => true
+    t.integer  "tax_percent",         :default => 16
   end
 
   create_table "people", :force => true do |t|

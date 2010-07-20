@@ -15,10 +15,7 @@
 class InvoiceLine < ActiveRecord::Base
   belongs_to :invoice
   
-#  validates_numericality_of :quantity
-  
   def total
-    # quantity is a Money object
     price * quantity
   end
   

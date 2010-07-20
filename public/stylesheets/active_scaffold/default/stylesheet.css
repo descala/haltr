@@ -153,7 +153,7 @@ display: block;
 background-color: #555;
 }
 
-.active-scaffold th a {
+.active-scaffold th a, .active-scaffold th a:visited {
 color: #fff;
 padding: 2px 15px 2px 5px;
 }
@@ -190,29 +190,33 @@ background: #333 url(../../../images/active_scaffold/default/indicator-small.gif
 /* Table :: Record Rows
    ============================= */
 
+.active-scaffold tr.record {
+  background-color: #E6F2FF;
+}
 .active-scaffold tr.record td {
 padding: 5px 4px;
 color: #333;
 font-family: Verdana, sans-serif;
 font-size: 11px;
-background-color: #E6F2FF;
 border-bottom: solid 1px #C5DBF7;
 border-left: solid 1px #C5DBF7;
 }
 
-.active-scaffold tr.even-record td {
+.active-scaffold tr.even-record {
 background-color: #fff;
-border-left: solid 1px #ddd;
+}
+.active-scaffold tr.even-record td {
+border-left-color: #ddd;
 }
 
 .active-scaffold tr.record td.sorted {
 background-color: #B9DCFF;
-border-bottom: solid 1px #AFD0F5;
+border-bottom-color: #AFD0F5;
 }
 
 .active-scaffold tr.even-record td.sorted {
 background-color: #E6F2FF;
-border-bottom: solid 1px #AFD0F5;
+border-bottom-color: #AFD0F5;
 }
 
 .active-scaffold tbody.records td.empty {
@@ -290,6 +294,10 @@ background-color: #1F7F00;
 background: transparent;
 }
 
+.active-scaffold .active-scaffold .active-scaffold-header {
+margin-right: 15px;
+}
+
 .active-scaffold .active-scaffold .active-scaffold-header h2 {
 font-size: 12px;
 font-weight: bold;
@@ -300,12 +308,18 @@ font-weight: bold;
 color: #444;
 }
 
+.active-scaffold .active-scaffold .active-scaffold-header div.actions {
+top: 0px;
+right: 0px;
+}
+
 .active-scaffold .active-scaffold .active-scaffold-header div.actions a {
 font: bold 11px verdana, sans-serif;
 padding: 0 2px 1px 17px;
 }
 
-.blue-theme .active-scaffold .active-scaffold-header div.actions a {
+.blue-theme .active-scaffold .active-scaffold-header div.actions a,
+.blue-theme .active-scaffold .active-scaffold-header div.actions a:visited {
 color: #06c;
 }
 
@@ -368,7 +382,8 @@ margin: 0 -2px;
 font: bold 12px arial, sans-serif;
 }
 
-.blue-theme .active-scaffold-footer a {
+.blue-theme .active-scaffold-footer a,
+.blue-theme .active-scaffold-footer a:visited {
 color: #fff;
 }
 
@@ -491,7 +506,7 @@ background-color: transparent;
    ============================== */
 
 .active-scaffold .loading-indicator {
-vertical-align: bottom;
+vertical-align: text-bottom;
 width: 16px;
 margin: 0;
 }
@@ -505,6 +520,9 @@ margin-bottom: 3px;
 
 .active-scaffold .show-view dl {
 margin-left: 5px;
+}
+.active-scaffold .show-view dl dl {
+margin-left: 0px;
 }
 
 .active-scaffold .show-view dt {
@@ -633,7 +651,8 @@ border: solid 1px #1F7F00;
 padding: 2px;
 }
 
-.active-scaffold .fieldWithErrors input.text-input,
+.active-scaffold .fieldWithErrors input,
+.active-scaffold .fieldWithErrors textarea,
 .active-scaffold .fieldWithErrors select {
 border: solid 1px #f00;
 }
@@ -732,7 +751,7 @@ padding: 0 5px 0 1px;
 background: none;
 }
 
-.active-scaffold .sub-form label {
+.active-scaffold .horizontal-sub-form td label {
 display: none;
 }
 
@@ -754,9 +773,10 @@ vertical-align: top;
 color: #999;
 }
 
-.active-scaffold .sub-form table td.actions {
+.active-scaffold .sub-form .actions {
 vertical-align: middle;
 background-color: transparent;
+clear: left;
 }
 
 .active-scaffold .sub-form .association-record a.destroy {

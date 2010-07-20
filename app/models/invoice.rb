@@ -24,7 +24,6 @@
 #
 
 # -*- coding: utf-8 -*-
-# -*- coding: utf-8 -*-
 class Invoice < ActiveRecord::Base
 
   
@@ -32,6 +31,9 @@ class Invoice < ActiveRecord::Base
   STATUS_NOT_SENT = 1
   STATUS_SENT     = 5
   STATUS_CLOSED   = 9
+
+  # Default tax %
+  TAX = 18
 
   STATUS_LIST = { 'Not sent'=>STATUS_NOT_SENT,'Sent'=>STATUS_SENT,'Closed'=>STATUS_CLOSED}
 
@@ -50,10 +52,6 @@ class Invoice < ActiveRecord::Base
   
   def subtotal
     subtotal_without_discount - discount
-  end
-  
-  def tax_percent
-    16
   end
   
   def tax
