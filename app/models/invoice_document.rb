@@ -24,6 +24,7 @@
 
 class InvoiceDocument < Invoice
   belongs_to :invoice_template
+  validates_presence_of :number
   validates_uniqueness_of :number
 
   def self.find_due_dates
