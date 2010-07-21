@@ -8,8 +8,10 @@ module InvoicesHelper
     else
       link_to("New", :action => :mark_sent, :id => invoice)
     end
-    
+  end
 
+  def clients_for_select
+    Client.find(:all, :order => 'name', :conditions => ["project_id = ?", @project]).collect {|c| [ c.name, c.id ] }
   end
 
 end

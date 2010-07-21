@@ -1,0 +1,16 @@
+<%= error_messages_for 'invoice' %>
+
+<div class="box">
+<p><%= f.select :client_id, clients_for_select, :required => true %></p>
+<p><%= f.text_field :date, :size => 10, :required => true %><%= calendar_for('invoice_date') %></p>
+<p><%= f.text_field :number, :size => 60, :required => true %></p>
+<p><%= f.text_field :extra_info %></p>
+<p><%= f.text_field :terms %></p>
+<p><%= f.text_field :discount_text %></p>
+<p><%= f.text_field :discount_percent %></p>
+<p><%= f.text_field :frequency %></p>
+<p><%= f.text_field :due_date, :size => 10 %><%= calendar_for('invoice_due_date') %></p>
+<p><%= f.check_box :draft %></p>
+<p><%= f.check_box :use_bank_account %></p>
+</div>
+

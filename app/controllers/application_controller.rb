@@ -3,13 +3,22 @@
 
 require 'utils'
 
-class ApplicationController < ActionController::Base
-  helper :all # include all helpers, all the time
-  protect_from_forgery # See ActionController::RequestForgeryProtection for details
+begin
 
-  # Scrub sensitive parameters from your log
-  filter_parameter_logging :password
+  require 'redmine'
+  RAILS_DEFAULT_LOGGER.info 'Running inside Redmine, it has its own ApplicationController'
 
-  layout 'default'
-  
+rescue MissingSourceFile
+
+  RAILS_DEFAULT_LOGGER.info 'Running standalone'
+
+  class ApplicationController < ActionController::Base
+    unloadable
+    helper :all # include all helpers, all the time
+    protect_from_forgery # See ActionController::RequestForgeryProtection for details
+    # Scrub sensitive parameters from your log
+    filter_parameter_logging :password
+    layout 'default'
+  end
+
 end

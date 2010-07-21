@@ -13,19 +13,22 @@
 #
 
 class InvoiceLine < ActiveRecord::Base
+
+  unloadable
+
   belongs_to :invoice
-  
+
   def total
     price * quantity
   end
-  
+
   def to_label
     description
   end
-  
+
   def template_replacements(date=nil)
     Utils.replace_dates! description, (date || Date.today) +  (invoice.frequency || 0).months
   end
 
-  
+
 end

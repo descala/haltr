@@ -23,9 +23,12 @@
 #
 
 class InvoiceTemplate < Invoice
+
+  unloadable
+
   has_many :invoice_documents
   validates_presence_of :frequency
-  
+
   def next_invoice
     i = InvoiceDocument.new self.attributes
     i.number = InvoiceDocument.next_number
@@ -49,7 +52,7 @@ class InvoiceTemplate < Invoice
     end
     return i
   end
-  
+
   def label
     "Template"
   end
@@ -61,5 +64,5 @@ class InvoiceTemplate < Invoice
   def template_replacements(date=nil)
     Utils.replace_dates! extra_info, (date || Date.today) +  (frequency || 0).months
   end
-  
+
 end

@@ -1,0 +1,10 @@
+<h1><%= l(:label_client) %></h1>
+
+<% labelled_tabular_form_for :client, @client, :url => { :action => 'update', :id => @client } do |f| %>
+<%= render :partial => 'form', :locals => { :f => f } %>
+<%= submit_tag l(:button_save) %>
+<% end %>
+
+<% content_for :sidebar do %>
+    <%= render :partial => 'common/sidebar' %>
+<% end %>

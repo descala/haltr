@@ -1,5 +1,30 @@
-# Sample localization file for English. Add more files in this directory for other locales.
-# See http://github.com/svenfuchs/rails-i18n/tree/master/rails%2Flocale for starting points.
-
 en:
-  hello: "Hello world"
+
+  # Clients
+  field_taxcode: CIF
+  label_client: Client
+  label_client_plural: Clients
+  label_client_new: New client
+  field_address1: Adress
+  field_address2: Adress
+  field_city: City
+  field_province: Province
+  field_postalcode: Postcode
+  field_country: Country
+  field_bank_account: Banck account
+
+  # Invoices
+  label_invoice_plural: Invoices
+  label_invoice: Invoice
+  label_invoice_new: New invoice
+  button_new_invoice: New invoice
+  field_number: Number
+  field_date: Invoice date
+  field_client: Client
+  field_extra_info: Notes
+  field_terms: Terms
+  field_discount_text: Discount text
+  field_discount_percent: Discount %
+  field_frequency: Frequency
+  field_draft: Draft
+  field_use_bank_account: Use banck account

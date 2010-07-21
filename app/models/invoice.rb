@@ -26,6 +26,7 @@
 # -*- coding: utf-8 -*-
 class Invoice < ActiveRecord::Base
 
+  unloadable
   
   # Invoice statuses
   STATUS_NOT_SENT = 1

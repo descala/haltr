@@ -1,6 +1,6 @@
-class Settings < ActiveRecord::Migration
+class HaltrSettings < ActiveRecord::Migration
   def self.up
-    create_table :settings, :force => true do |t|
+    create_table :haltr_settings, :force => true do |t|
       t.column "name", :string, :limit => 50, :default => "", :null => false
       t.column "value", :text
       t.timestamps
@@ -8,6 +8,6 @@ class Settings < ActiveRecord::Migration
   end
 
   def self.down
-    drop_table :settings
+    drop_table :haltr_settings
   end
 end

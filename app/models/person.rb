@@ -17,13 +17,16 @@
 #
 
 class Person < ActiveRecord::Base
+
+  unloadable
+
   belongs_to :client
- 
+
   validates_presence_of :client, :first_name, :last_name, :email
   validates_uniqueness_of :email, :scope => :client_id
 
   def to_label
     "#{first_name} #{last_name}"
   end
-  
+
 end

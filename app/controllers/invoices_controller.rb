@@ -1,19 +1,93 @@
 class InvoicesController < ApplicationController
 
   include InvoiceCommon
-  
+
   COLS = ['draft','client','date','number','terms','tax_percent','use_bank_account','invoice_lines','discount_text', 'discount_percent','extra_info']
-  
-  active_scaffold :invoice_document do |config|
-    config.action_links.add "showit", {:type=>:record, :page=>true, :label=>"Show"}
-    config.action_links.add "pdf", {:type=>:record, :page=>true, :label=>"PDF"}
-    config.action_links.add "template", {:type=>:record, :page=>false, :label=>"Template"}
-    config.show.link = nil
-    config.list.columns = ['status','number','client','subtotal_eur','date','due_date','invoice_lines']
-    config.create.columns = COLS
-    config.update.columns = COLS
-    config.show.columns = []
-    config.columns[:client].form_ui = :select
+
+  unloadable
+
+  menu_item :haltr
+
+  helper :sort
+  include SortHelper
+
+  before_filter :find_project, :only => [:index,:new,:create]
+  before_filter :find_invoice, :except => [:index,:new,:create]
+
+  def index
+    sort_init 'number', 'desc'
+    sort_update %w(date number clients.name)
+
+    c = ARCondition.new
+
+    unless params[:name].blank?
+      name = "%#{params[:name].strip.downcase}%"
+      c << ["LOWER(name) LIKE ? OR LOWER(address1) LIKE ? OR LOWER(address2) LIKE ?", name, name, name]
+    end
+
+    @invoice_count = InvoiceDocument.count(:conditions => c.conditions)
+    @invoice_pages = Paginator.new self, @invoice_count,
+		per_page_option,
+		params['page']
+    @invoices =  InvoiceDocument.find :all,:order => sort_clause,
+       :conditions => c.conditions,
+       :include => [:client],
+       :limit  =>  @invoice_pages.items_per_page,
+       :offset =>  @invoice_pages.current.offset
+
+    render :action => "index", :layout => false if request.xhr?
   end
 
-end 
+  def new
+    @invoice = InvoiceDocument.new
+  end
+
+  def edit
+    @invoice = InvoiceDocument.find(params[:id])
+  end
+
+  def create
+    @invoice = InvoiceDocument.new(params[:invoice])
+    if @invoice.save
+      flash[:notice] = 'Invoice was successfully created.'
+      redirect_to :action => 'index', :id => @project
+    else
+      render :action => "new"
+    end
+  end
+
+  def update
+    if @invoice.update_attributes(params[:invoice])
+      flash[:notice] = 'Invoice was successfully updated.'
+      redirect_to :action => 'index', :id => @project
+    else
+      render :action => "edit"
+    end
+  end
+
+  def destroy
+    @invoice.destroy
+    redirect_to :action => 'index', :id => @project
+  end
+
+  private
+
+  def find_invoice
+    @invoice = InvoiceDocument.find params[:id]
+    @lines = @invoice.invoice_lines
+    @client = @invoice.client
+    @project = @client.project
+  rescue ActiveRecord::RecordNotFound
+    render_404
+  end
+
+  def find_project
+    begin
+      @project = Project.find(params[:id])
+      logger.info "Project #{@project.name}"
+    rescue ActiveRecord::RecordNotFound
+      render_404
+    end
+  end
+
+end

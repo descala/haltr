@@ -1,0 +1,45 @@
+<div class="contextual">
+<%= link_to l(:label_client_new), {:action => 'new', :id => @project}, :class => 'icon icon-add' %>
+</div>
+
+<h2><%=l(:label_client_plural)%></h2>
+
+<% form_tag({}, :method => :get) do %>
+<fieldset><legend><%= l(:label_filter_plural) %></legend>
+<label><%= l(:label_client) %>:</label>
+<%= text_field_tag 'name', params[:name], :size => 30 %>
+<%= submit_tag l(:button_apply), :class => "small", :name => nil %>
+</fieldset>
+<% end %>
+&nbsp;
+
+
+<table class="list">
+  <thead>
+      <%= sort_header_tag('taxcode', :caption => l(:field_taxcode)) %>
+      <%= sort_header_tag('name', :caption => l(:field_name)) %>
+      <th style="width:15%"></th>
+      <th style="width:15%"></th>
+      <th style="width:15%"></th>
+  </thead>
+  <tbody>
+<% for client in @clients -%>
+  <tr class="user <%= cycle("odd", "even") %>" />
+    <td><%=h client.taxcode %></td>
+    <td><%=h client.name %></td>
+    <td align="center"><%= link_to l(:button_new_invoice), {:controller=>'invoice',:action=>'new',:client=>client}, :class => 'icon icon-edit' %></td>
+    <td align="center"><%= link_to l(:button_edit), {:action=>'edit',:id=>client}, :class => 'icon icon-edit' %></td>
+    <td align="center"><%= link_to l(:button_delete), {:action=>'destroy',:id=>client} , :confirm => l(:text_are_you_sure), :method => :post, :class => 'icon icon-del' %></td>
+  </tr>
+<% end -%>
+  </tbody>
+</table>
+
+<p class="pagination"><%= pagination_links_full @client_pages, @client_count %></p>
+
+
+<% html_title(l(:label_client_plural)) -%>
+
+<% content_for :sidebar do %>
+    <%= render :partial => 'common/sidebar' %>
+<% end %>
