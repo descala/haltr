@@ -13,20 +13,20 @@
 	    <!-- Vendor Info -->
 	    <div class="vcard vendor">
 	      <div class="logo">
-                 <%= image_tag "logo.png", :alt => "#{Setting.company_name} Logo"  %>
+                 <%= image_tag "logo.png", :alt => "#{Setting.plugin_haltr[:company_name]} Logo"  %>
 	      </div>
 	      <div class="vendor-info">
-		<h3 class="org fn"><%= Setting.company_name %></h3>
+		<h3 class="org fn"><%= Setting.plugin_haltr[:company_name] %></h3>
 		<address class="adr">
-		<div class="street-address"><%= Setting.company_address %></div>
-		<span class="postal-code"><%= Setting.company_postal_code %></span> <span class="locality"><%= Setting.company_locality %></span>
-		<div class="region"><%= Setting.company_region %></div>
+		<div class="street-address"><%= Setting.plugin_haltr[:company_address] %></div>
+		<span class="postal-code"><%= Setting.plugin_haltr[:company_postal_code] %></span> <span class="locality"><%= Setting.plugin_haltr[:company_locality] %></span>
+		<div class="region"><%= Setting.plugin_haltr[:company_region] %></div>
 		<div class="country-name"></div>
 		</address>
-		<div><strong>CIF:</strong><span class="tax-id"> <%= Setting.company_tax_id %></span></div>
+		<div><strong>CIF:</strong><span class="tax-id"> <%= Setting.plugin_haltr[:company_tax_id] %></span></div>
 		<div style="height:10px;"></div>
-		<div><a href="<%= Setting.company_website %>" class="url" target="_blank"><%= Setting.company_website %></a></div>
-		<div><a href="<%= Setting.company_email %>" class="url" target="_blank"><%= Setting.company_email %></a></div>
+		<div><a href="<%= Setting.plugin_haltr[:company_website] %>" class="url" target="_blank"><%= Setting.plugin_haltr[:company_website] %></a></div>
+		<div><a href="<%= Setting.plugin_haltr[:company_email] %>" class="url" target="_blank"><%= Setting.plugin_haltr[:company_email] %></a></div>
 	      </div>
 	    </div>
 

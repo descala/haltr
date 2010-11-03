@@ -2,9 +2,9 @@
 <html xml:lang="en" xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta http-equiv="content-type" content="text/html; charset=UTF-8"/>
-    <title>Factura | <%= Setting.company_name %></title>
-    <%= stylesheet_link_tag "main", :media => "screen" %> 
-    <%= stylesheet_link_tag "print", :media => "print" %> 
+    <title>Factura | <%= Setting.plugin_haltr[:company_name] %></title>
+    <%= stylesheet_link_tag "main", :media => "screen", :plugin => "haltr" %>
+    <%= stylesheet_link_tag "print", :media => "print", :plugin => "haltr" %> 
   </head>
   <body class="client_view">
     <%= yield %>

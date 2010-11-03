@@ -1,5 +1,6 @@
 begin
   require 'redmine'
+  require 'haltr'
 
   RAILS_DEFAULT_LOGGER.info 'Starting haltr plugin'
 
