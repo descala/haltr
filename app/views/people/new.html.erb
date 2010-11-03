@@ -1,0 +1,11 @@
+<h1><%= l(:label_person_new) %></h1>
+
+
+<% labelled_tabular_form_for :person, @person, :url => { :action => 'create', :id => @client } do |f| %>
+<%= render :partial => 'form', :locals => { :f => f } %>
+<%= submit_tag l(:button_create) %>
+<% end %>
+
+<% content_for :sidebar do %>
+    <%= render :partial => 'common/sidebar' %>
+<% end %>

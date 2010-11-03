@@ -12,11 +12,13 @@ ca:
   field_postalcode: Còdi postal
   field_country: País
   field_bank_account: Compte bancari
+  button_people: Persones
 
   # Invoices
   label_invoice_plural: Factures
   label_invoice: Factura
   label_invoice_new: Nova factura
+  button_new_invoice: Nova factura
   field_number: Número
   field_date: Data factura
   field_client: Client
@@ -27,3 +29,14 @@ ca:
   field_frequency: Freqüència
   field_draft: Esborrany
   field_use_bank_account: Carregar al compte
+
+  # People
+  label_person_new: Nova persona
+  label_person_plural: Persones
+  field_first_name: Nom
+  field_last_name: Cognoms
+  field_email: Email
+  field_phone_office: Telèfon oficina
+  field_phone_mobile: Telèfon mòbil
+  field_invoice_recipient: Destí factures
+  field_report_recipient: Destí informes

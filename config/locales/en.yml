@@ -12,6 +12,7 @@ en:
   field_postalcode: Postcode
   field_country: Country
   field_bank_account: Banck account
+  button_people: People
 
   # Invoices
   label_invoice_plural: Invoices
@@ -28,3 +29,14 @@ en:
   field_frequency: Frequency
   field_draft: Draft
   field_use_bank_account: Use banck account
+
+  # People
+  label_person_new: New person
+  label_person_plural: People
+  field_first_name: Name
+  field_last_name: Surname
+  field_email: Email
+  field_phone_office: Office phone
+  field_phone_mobile: Mobile phone
+  field_invoice_recipient: Invoice recipient
+  field_report_recipient: Report recipient

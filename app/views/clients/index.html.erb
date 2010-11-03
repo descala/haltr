@@ -18,9 +18,10 @@
   <thead>
       <%= sort_header_tag('taxcode', :caption => l(:field_taxcode)) %>
       <%= sort_header_tag('name', :caption => l(:field_name)) %>
-      <th style="width:15%"></th>
-      <th style="width:15%"></th>
-      <th style="width:15%"></th>
+      <th style="width:10%"></th>
+      <th style="width:10%"></th>
+      <th style="width:10%"></th>
+      <th style="width:10%"></th>
   </thead>
   <tbody>
 <% for client in @clients -%>
@@ -30,6 +31,7 @@
     <td align="center"><%= link_to l(:button_new_invoice), {:controller=>'invoice',:action=>'new',:client=>client}, :class => 'icon icon-edit' %></td>
     <td align="center"><%= link_to l(:button_edit), {:action=>'edit',:id=>client}, :class => 'icon icon-edit' %></td>
     <td align="center"><%= link_to l(:button_delete), {:action=>'destroy',:id=>client} , :confirm => l(:text_are_you_sure), :method => :post, :class => 'icon icon-del' %></td>
+    <td align="center"><%= link_to l(:button_people), {:controller=>'people', :id=>client}, :class => 'icon' %></td>
   </tr>
 <% end -%>
   </tbody>

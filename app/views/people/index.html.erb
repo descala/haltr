@@ -1,0 +1,45 @@
+<div class="contextual">
+<%= link_to l(:label_person_new), {:action => 'new', :id => @client}, :class => 'icon icon-add' %>
+</div>
+
+<h2><%=@client%> - <%=l(:label_person_plural)%></h2>
+
+<% form_tag({}, :method => :get) do %>
+<fieldset><legend><%= l(:label_filter_plural) %></legend>
+<label><%= l(:label_client) %>:</label>
+<%= text_field_tag 'name', params[:name], :size => 30 %>
+<%= submit_tag l(:button_apply), :class => "small", :name => nil %>
+</fieldset>
+<% end %>
+&nbsp;
+
+
+<table class="list">
+  <thead>
+      <%= sort_header_tag('first_name', :caption => l(:field_first_name)) %>
+      <%= sort_header_tag('last_name', :caption => l(:field_last_name)) %>
+      <%= sort_header_tag('email', :caption => l(:field_email)) %>
+      <th style="width:10%"></th>
+      <th style="width:10%"></th>
+  </thead>
+  <tbody>
+<% for person in @people -%>
+  <tr class="user <%= cycle("odd", "even") %>" />
+    <td><%=h person.first_name %></td>
+    <td><%=h person.last_name %></td>
+    <td><%=h person.email %></td>
+    <td align="center"><%= link_to l(:button_edit), {:action=>'edit',:id=>person}, :class => 'icon icon-edit' %></td>
+    <td align="center"><%= link_to l(:button_delete), {:action=>'destroy',:id=>person} , :confirm => l(:text_are_you_sure), :method => :post, :class => 'icon icon-del' %></td>
+  </tr>
+<% end -%>
+  </tbody>
+</table>
+
+<p class="pagination"><%= pagination_links_full @person_pages, @person_count %></p>
+
+
+<% html_title(l(:label_client_plural)) -%>
+
+<% content_for :sidebar do %>
+    <%= render :partial => 'common/sidebar' %>
+<% end %>

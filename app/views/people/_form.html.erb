@@ -1,0 +1,12 @@
+<%= error_messages_for 'person' %>
+
+<div class="box">
+<p><%= f.text_field :first_name, :required => true %></p>
+<p><%= f.text_field :last_name, :required => true %></p>
+<p><%= f.text_field :email, :required => true %></p>
+<p><%= f.text_field :phone_office %></p>
+<p><%= f.text_field :phone_mobile %></p>
+<p><%= f.check_box :invoice_recipient %></p>
+<p><%= f.check_box :report_recipient %></p>
+</div>
+

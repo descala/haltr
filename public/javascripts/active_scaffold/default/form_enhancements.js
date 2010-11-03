@@ -10,12 +10,7 @@ TextFieldWithExample.prototype = {
 		this.defaultText = defaultText;
 		this.createHiddenInput();
 
-		if (options.focus) this.input.focus();
 		this.checkAndShowExample();
-		if (options.focus) {
-			this.input.selectionStart = 0;
-			this.input.selectionEnd = 0;
-		}
 
 		Event.observe(this.input, "blur", this.onBlur.bindAsEventListener(this));
 		Event.observe(this.input, "focus", this.onFocus.bindAsEventListener(this));
@@ -44,7 +39,9 @@ TextFieldWithExample.prototype = {
 		this.checkAndShowExample();
 	},
 	onFocus: function(event) {
-		this.removeExample();
+		if (this.exampleShown()) {
+		    this.removeExample();
+	  	}
 	},
 	onClick: function(event) {
 		this.removeExample();
@@ -60,7 +57,7 @@ TextFieldWithExample.prototype = {
 			Element.addClassName(this.input, this.options.exampleClassName);
 		}
 	},
-	removeExample: function() {
+  removeExample: function() {
 		if (this.exampleShown()) {
 			this.input.value = '';
 			this.input.name = this.name;
