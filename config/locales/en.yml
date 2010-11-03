@@ -23,7 +23,7 @@ en:
   field_date: Invoice date
   field_client: Client
   field_extra_info: Notes
-  field_terms: Terms
+  field_terms: Term
   field_discount_text: Discount text
   field_discount_percent: Discount %
   field_frequency: Frequency
