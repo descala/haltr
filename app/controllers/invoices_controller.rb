@@ -40,6 +40,7 @@ class InvoicesController < ApplicationController
 
   def new
     @invoice = InvoiceDocument.new
+    @invoice.client_id = params[:client]
   end
 
   def edit

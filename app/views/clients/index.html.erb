@@ -28,7 +28,7 @@
   <tr class="user <%= cycle("odd", "even") %>" />
     <td><%=h client.taxcode %></td>
     <td><%=h client.name %></td>
-    <td align="center"><%= link_to l(:button_new_invoice), {:controller=>'invoice',:action=>'new',:client=>client}, :class => 'icon icon-edit' %></td>
+    <td align="center"><%= link_to l(:button_new_invoice), {:controller=>'invoices',:action=>'new',:id=>@project,:client=>client}, :class => 'icon icon-edit' %></td>
     <td align="center"><%= link_to l(:button_edit), {:action=>'edit',:id=>client}, :class => 'icon icon-edit' %></td>
     <td align="center"><%= link_to l(:button_delete), {:action=>'destroy',:id=>client} , :confirm => l(:text_are_you_sure), :method => :post, :class => 'icon icon-del' %></td>
     <td align="center"><%= link_to l(:button_people), {:controller=>'people', :id=>client}, :class => 'icon' %></td>
