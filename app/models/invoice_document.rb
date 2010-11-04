@@ -46,13 +46,12 @@ class InvoiceDocument < Invoice
     "#{number}"
   end
 
-  def self.find_not_sent
-    find :all, :conditions => ["status = ? and draft != ?", Invoice::STATUS_NOT_SENT, 1 ]
+  def self.find_not_sent(project)
+    project.clients.collect {|c| c.invoice_documents}.flatten.collect {|i| i if i.status == Invoice::STATUS_NOT_SENT and i.draft != 1}.flatten
   end
 
-  def self.count_not_sent
-    count :all, :conditions => ["status = ? and draft != ?", Invoice::STATUS_NOT_SENT, 1 ]
+  def self.count_not_sent(project)
+    find_not_sent(project).size
   end
-
 
 end

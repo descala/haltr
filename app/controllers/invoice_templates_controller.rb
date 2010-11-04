@@ -2,20 +2,90 @@ class InvoiceTemplatesController < ApplicationController
 
   include InvoiceCommon
 
-  T_COLS = ['client','date','frequency','terms','use_bank_account','invoice_lines','discount_text', 'discount_percent','extra_info']
+  unloadable
+  menu_item :haltr
 
-  active_scaffold :invoice_template do |config|
-    config.label='Recurring invoices'
-    config.action_links.add "showit", {:type=>:record, :page=>true, :label=>"Show"}
-    config.show.link = nil
-    config.list.columns = ['client','subtotal_eur','date','frequency','invoice_lines','invoice_documents']
-    config.create.columns = T_COLS
-    config.update.columns = T_COLS
-    config.show.columns = [] 
-    config.columns[:invoice_documents].clear_link
-    config.columns[:date].label = 'Next charge date'
-    config.columns[:frequency].label = 'Frequency (Months)'
-    config.columns[:client].form_ui = :select
+  helper :sort
+  include SortHelper
+
+  before_filter :find_project, :only => [:index,:new,:create]
+  before_filter :find_invoice, :except => [:index,:new,:create]
+
+  def index
+    sort_init 'number', 'desc'
+    sort_update %w(date number clients.name)
+
+    c = ARCondition.new
+
+    unless params[:name].blank?
+      name = "%#{params[:name].strip.downcase}%"
+      c << ["LOWER(name) LIKE ? OR LOWER(address1) LIKE ? OR LOWER(address2) LIKE ?", name, name, name]
+    end
+
+    @invoice_count = InvoiceTemplate.count(:conditions => c.conditions)
+    @invoice_pages = Paginator.new self, @invoice_count,
+		per_page_option,
+		params['page']
+    @invoices =  InvoiceTemplate.find :all,:order => sort_clause,
+       :conditions => c.conditions,
+       :include => [:client],
+       :limit  =>  @invoice_pages.items_per_page,
+       :offset =>  @invoice_pages.current.offset
+
+    render :action => "index", :layout => false if request.xhr?
   end
-  
+
+  def new
+    @invoice = InvoiceTemplate.new
+    @invoice.client_id = params[:client]
+  end
+
+  def edit
+    @invoice = InvoiceTemplate.find(params[:id])
+  end
+
+  def create
+    @invoice = InvoiceTemplate.new(params[:invoice])
+    if @invoice.save
+      flash[:notice] = 'Invoice was successfully created.'
+      redirect_to :action => 'index', :id => @project
+    else
+      render :action => "new"
+    end
+  end
+
+  def update
+    if @invoice.update_attributes(params[:invoice])
+      flash[:notice] = 'Invoice was successfully updated.'
+      redirect_to :action => 'index', :id => @project
+    else
+      render :action => "edit"
+    end
+  end
+
+  def destroy
+    @invoice.destroy
+    redirect_to :action => 'index', :id => @project
+  end
+
+  private
+
+  def find_invoice
+    @invoice = InvoiceTemplate.find params[:id]
+    @lines = @invoice.invoice_lines
+    @client = @invoice.client
+    @project = @client.project
+  rescue ActiveRecord::RecordNotFound
+    render_404
+  end
+
+  def find_project
+    begin
+      @project = Project.find(params[:id])
+      logger.info "Project #{@project.name}"
+    rescue ActiveRecord::RecordNotFound
+      render_404
+    end
+  end
+
 end

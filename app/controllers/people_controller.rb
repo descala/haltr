@@ -1,7 +1,6 @@
 class PeopleController < ApplicationController
 
   unloadable
-
   menu_item :haltr
 
   helper :sort

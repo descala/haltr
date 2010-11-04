@@ -1,0 +1,12 @@
+<div class="invoice_line">
+
+<p>
+<%= f.text_field :quantity, :size => 4, :no_label => true %>
+<%= f.text_field :description, :no_label => true %>
+<%= f.text_field :price_in_cents, :size => 4, :no_label => true %>
+
+<% unless f.object.new_record? %>
+  <%= f.check_box(:_destroy, :no_label=>true) %><span style="font-weight:bold;"> Remove </span>
+<% end %>
+</p>
+</div>

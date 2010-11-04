@@ -59,4 +59,12 @@ class Client < ActiveRecord::Base
 
   alias :to_s :to_label
 
+  def invoice_templates
+    self.invoices.find(:all,:conditions=>["type=?","InvoiceTemplate"])
+  end
+
+  def invoice_documents
+    self.invoices.find(:all,:conditions=>["type=?","InvoiceDocument"])
+  end
+
 end

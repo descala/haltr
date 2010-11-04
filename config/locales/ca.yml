@@ -30,6 +30,14 @@ ca:
   field_draft: Esborrany
   field_use_bank_account: Carregar al compte
 
+  # Invoice templates
+  label_invoice_template_new: Nova plantilla
+  next_charge: Següent pagament
+
+  # Invoice lines
+  field_price_in_cents: Preu
+  field_quantity: Quantitat
+
   # People
   label_person_new: Nova persona
   label_person_plural: Persones
@@ -40,3 +48,6 @@ ca:
   field_phone_mobile: Telèfon mòbil
   field_invoice_recipient: Destí factures
   field_report_recipient: Destí informes
+
+  # Tasks
+  label_task_plural: Tasks

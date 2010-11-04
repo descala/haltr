@@ -42,6 +42,10 @@ class Invoice < ActiveRecord::Base
   has_many :invoice_lines, :dependent => :destroy
   belongs_to :client
   validates_presence_of :client, :date
+
+  accepts_nested_attributes_for :invoice_lines,
+    :allow_destroy => true,
+    :reject_if => proc {|attributes| attributes['quantity'].blank? or attributes['description'].blank? or attributes['price_in_cents'].blank? }
     
   def subtotal_without_discount
     total = Money.new(0)

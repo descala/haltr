@@ -11,7 +11,14 @@ begin
     version '0.1'
     settings :default => {
       'company_name' => 'Ingent Grup Systems, SL',
-      'company_tax_id' => 'B63354724'
+      'company_tax_id' => 'B63354724',
+      'company_address' => '',
+      'company_locality' => '',
+      'company_postal_code' => '',
+      'company_region' => '',
+      'company_website' => '',
+      'company_email' => '',
+      'company_bank_account' => ''
     },
     :partial => 'haltradmin/settings'
 

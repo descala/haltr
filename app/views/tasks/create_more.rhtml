@@ -1,0 +1,16 @@
+<h1>Generate invoices from templates</h1>
+
+<p>With date <= <%= @date.to_date %>.</p>
+<% if @invoices.size > 0 -%>
+<ul>
+<% @invoices.each do |i| -%>
+<li><%= "#{i.number} #{i.date}. #{i.client.name} #{i.total}" %></li>
+<% end -%>
+</ul>
+<% else -%>
+<p>Nothing has to be generated</p>
+<% end -%>
+
+<% content_for :sidebar do %>
+  <%= render :partial => 'common/sidebar' %>
+<% end %>

@@ -1,0 +1,35 @@
+<h1>Invoices report</h1>
+
+<p>With date >= <%= @date %>.</p>
+<% if @invoices.size > 0 -%>
+
+<table>
+  
+<tr>
+<th>Number</th>
+<th>Date</th>
+<th>Tax code</th>
+<th>Name</th>
+<th>Amount</th>
+<th>Tax</th>
+<th>Charge bank on date</ht>
+</tr>  
+<% @invoices.each do |i| -%>
+<tr>
+<td><%= i.number %></td><td> <%= i.date %></td><td><%= i.client.taxcode %></td><td><%= i.client.name %></td><td style="text-align: right;"><%= i.subtotal %> €</td><td style="text-align: right;"><%= i.tax %> €</td><td style="text-align:center;"><%= i.due_date if i.use_bank_account && i.client.bank_account %></td>
+</tr>
+<% end -%>
+<tr>
+<td colspan="4"/>
+<th><%= @total_amount %> €</th>
+<th><%= @total_tax %> €</th>
+</tr>
+</table>
+
+<% else -%>
+<p>Nothing has to be reported</p>
+<% end -%>
+
+<% content_for :sidebar do %>
+  <%= render :partial => 'common/sidebar' %>
+<% end %>

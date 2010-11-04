@@ -30,6 +30,10 @@ en:
   field_draft: Draft
   field_use_bank_account: Use banck account
 
+  # Invoice templates
+  label_invoice_template_new: New template
+  next_charge: Next charge
+
   # People
   label_person_new: New person
   label_person_plural: People
@@ -40,3 +44,6 @@ en:
   field_phone_mobile: Mobile phone
   field_invoice_recipient: Invoice recipient
   field_report_recipient: Report recipient
+
+  # Tasks
+  label_task_plural: Tasks

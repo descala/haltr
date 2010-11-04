@@ -2,10 +2,7 @@ class InvoicesController < ApplicationController
 
   include InvoiceCommon
 
-  COLS = ['draft','client','date','number','terms','tax_percent','use_bank_account','invoice_lines','discount_text', 'discount_percent','extra_info']
-
   unloadable
-
   menu_item :haltr
 
   helper :sort

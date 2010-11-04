@@ -1,5 +1,7 @@
 class InvoiceLinesController < ApplicationController
   
+  unloadable
+
   COLS = ['quantity','description','price']
   
   active_scaffold do |config|
