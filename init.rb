@@ -4,6 +4,8 @@ begin
 
   RAILS_DEFAULT_LOGGER.info 'Starting haltr plugin'
 
+  Date::DATE_FORMATS[:ddmmyy] = "%d%m%y"
+
   Redmine::Plugin.register :haltr do
     name 'haltr'
     author 'Ingent'
