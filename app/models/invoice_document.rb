@@ -30,8 +30,8 @@ class InvoiceDocument < Invoice
   validates_presence_of :number
   validates_uniqueness_of :number
 
-  def self.find_due_dates
-    find_by_sql "select due_date, invoices.id, count(*) as invoice_count from invoices, clients where type='InvoiceDocument' and client_id = clients.id and status = #{Invoice::STATUS_SENT} and bank_account and use_bank_account group by due_date"
+  def self.find_due_dates(project)
+    find_by_sql "SELECT due_date, invoices.id, count(*) AS invoice_count FROM invoices, clients WHERE type='InvoiceDocument' AND client_id = clients.id AND clients.project_id = #{project.id} AND status = #{Invoice::STATUS_SENT} AND bank_account AND use_bank_account GROUP BY due_date"
   end
 
   def label
