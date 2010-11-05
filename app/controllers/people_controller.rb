@@ -6,7 +6,8 @@ class PeopleController < ApplicationController
   helper :sort
   include SortHelper
 
-  before_filter :find_client, :except => [:edit,:destroy,:update]
+  before_filter :find_client, :except => [:show,:edit,:destroy,:update]
+  before_filter :find_person, :only   => [:show,:edit,:destroy,:update]
   before_filter :authorize
 
   def index
@@ -32,12 +33,14 @@ class PeopleController < ApplicationController
     render :action => "index", :layout => false if request.xhr?
   end
 
+  def show
+  end
+
   def new
     @person = Person.new
   end
 
   def edit
-    @person = Person.find(params[:id])
   end
 
   def create
@@ -51,7 +54,6 @@ class PeopleController < ApplicationController
   end
 
   def update
-    @person = Person.find(params[:id])
     if @person.update_attributes(params[:person])
       flash[:notice] = 'Person was successfully updated.'
       redirect_to :action => 'index', :id => @person.client
@@ -61,7 +63,6 @@ class PeopleController < ApplicationController
   end
 
   def destroy
-    @person = Person.find(params[:id])
     @person.destroy
     redirect_to :action => 'index', :id => @person.client
   end
@@ -70,6 +71,14 @@ class PeopleController < ApplicationController
 
   def find_client
     @client = Client.find params[:id]
+    @project = @client.project
+  rescue ActiveRecord::RecordNotFound
+    render_404
+  end
+
+  def find_person
+    @person = Person.find(params[:id])
+    @client = @person.client
     @project = @client.project
   rescue ActiveRecord::RecordNotFound
     render_404

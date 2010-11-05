@@ -41,6 +41,7 @@ ca:
   field_quantity: Quantitat
 
   # People
+  label_person: Persona
   label_person_new: Nova persona
   label_person_plural: Persones
   field_first_name: Nom
