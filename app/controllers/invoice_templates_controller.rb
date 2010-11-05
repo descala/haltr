@@ -16,14 +16,14 @@ class InvoiceTemplatesController < ApplicationController
     sort_init 'number', 'desc'
     sort_update %w(date number clients.name)
 
-    c = ARCondition.new
+    c = ARCondition.new(["clients.project_id = ?",@project.id])
 
     unless params[:name].blank?
       name = "%#{params[:name].strip.downcase}%"
       c << ["LOWER(name) LIKE ? OR LOWER(address1) LIKE ? OR LOWER(address2) LIKE ?", name, name, name]
     end
 
-    @invoice_count = InvoiceTemplate.count(:conditions => c.conditions)
+    @invoice_count = InvoiceTemplate.count(:conditions => c.conditions, :include => [:client])
     @invoice_pages = Paginator.new self, @invoice_count,
 		per_page_option,
 		params['page']

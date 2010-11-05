@@ -16,7 +16,7 @@ class InvoicesController < ApplicationController
     sort_init 'number', 'desc'
     sort_update %w(status date number clients.name)
 
-    c = ARCondition.new
+    c = ARCondition.new(["clients.project_id = ?",@project.id])
 
     unless params[:name].blank?
       name = "%#{params[:name].strip.downcase}%"
@@ -27,7 +27,7 @@ class InvoicesController < ApplicationController
       c << ["client_id = ?", @client.id]
     end
 
-    @invoice_count = InvoiceDocument.count(:conditions => c.conditions)
+    @invoice_count = InvoiceDocument.count(:conditions => c.conditions, :include => [:client])
     @invoice_pages = Paginator.new self, @invoice_count,
 		per_page_option,
 		params['page']

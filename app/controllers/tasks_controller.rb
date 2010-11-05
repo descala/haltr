@@ -7,9 +7,13 @@ class TasksController < ApplicationController
   before_filter :find_invoice, :only => [:n19, :n19_done]
 
   def index
-    @num_new_invoices = @project.invoice_templates.collect {|i| i if i.date <= Date.parse((Time.now + 15.day).to_s) }.compact.size
+    @num_new_invoices = InvoiceTemplate.count(:include=>[:client],:conditions => ["clients.project_id = ? AND date <= ?", @project, Time.now + 15.day])
     @num_not_sent = InvoiceDocument.find_not_sent(@project).size
     @charge_bank_on_due_date = InvoiceDocument.find_due_dates
+
+#    @num_new_invoices = @project.invoice_templates.collect {|i| i if i.date <= Date.parse((Time.now + 15.day).to_s) }.compact.size
+#    @num_not_sent = InvoiceDocument.find_not_sent(@project).size
+#    @charge_bank_on_due_date = InvoiceDocument.find_due_dates
   end
 
   def create_more
