@@ -29,7 +29,7 @@
     <td align="center"><%= change_status_link(invoice) %></td>
     <td align="center"><%=h invoice.date %></td>
     <td align="center"><%= link_to h(invoice.number), {:action=>'showit',:id=>invoice}, :class => 'icon icon-show' %></td>
-    <td><%=h invoice.client %></td>
+    <td><%=link_to h(invoice.client), {:controller => 'clients', :action => 'edit', :id => invoice.client} %></td>
     <td align="center"><%= link_to l(:button_edit), {:action=>'edit',:id=>invoice}, :class => 'icon icon-edit' %></td>
     <td align="center"><%= link_to l(:button_delete), {:action=>'destroy',:id=>invoice} , :confirm => l(:text_are_you_sure), :method => :post, :class => 'icon icon-del' %></td>
   </tr>

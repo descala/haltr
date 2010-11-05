@@ -8,8 +8,9 @@ class InvoicesController < ApplicationController
   helper :sort
   include SortHelper
 
+  before_filter :find_invoice, :except => [:index,:new,:create,:for_client]
   before_filter :find_project, :only => [:index,:new,:create]
-  before_filter :find_invoice, :except => [:index,:new,:create]
+  before_filter :find_client, :only => [:for_client]
 
   def index
     sort_init 'number', 'desc'
@@ -22,17 +23,27 @@ class InvoicesController < ApplicationController
       c << ["LOWER(name) LIKE ? OR LOWER(address1) LIKE ? OR LOWER(address2) LIKE ?", name, name, name]
     end
 
+    if @client
+      c << ["client_id = ?", @client.id]
+    end
+
     @invoice_count = InvoiceDocument.count(:conditions => c.conditions)
     @invoice_pages = Paginator.new self, @invoice_count,
 		per_page_option,
 		params['page']
-    @invoices =  InvoiceDocument.find :all,:order => sort_clause,
+    @invoices =  InvoiceDocument.find :all,
+       :order => sort_clause,
        :conditions => c.conditions,
        :include => [:client],
        :limit  =>  @invoice_pages.items_per_page,
        :offset =>  @invoice_pages.current.offset
 
     render :action => "index", :layout => false if request.xhr?
+  end
+
+  def for_client
+    index
+    render :action => 'index'
   end
 
   def new
@@ -82,6 +93,16 @@ class InvoicesController < ApplicationController
   def find_project
     begin
       @project = Project.find(params[:id])
+      logger.info "Project #{@project.name}"
+    rescue ActiveRecord::RecordNotFound
+      render_404
+    end
+  end
+
+  def find_client
+    begin
+      @client = Client.find(params[:id])
+      @project = @client.project
       logger.info "Project #{@project.name}"
     rescue ActiveRecord::RecordNotFound
       render_404
