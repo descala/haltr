@@ -27,11 +27,11 @@ begin
 
     project_module :haltr do
       permission :general_use,
-        { :clients  => [:index, :new, :edit, :create, :update, :destroy] },
-        { :people   => [:index, :new, :edit, :create, :update, :destroy] },
-        { :invoices => [:index, :for_client, :new, :edit, :create, :update, :destroy, :showit, :pdf, :template, :mark_sent, :mark_closed, :mark_not_sent] },
-        { :invoice_templates => [:index, :new, :edit, :create, :update, :destroy, :showit] },
-        { :tasks    => [:index, :create_more, :automator, :n19, :n19_done, :report] },
+        { :clients  => [:index, :new, :edit, :create, :update, :destroy],
+          :people   => [:index, :new, :edit, :create, :update, :destroy],
+          :invoices => [:index, :for_client, :new, :edit, :create, :update, :destroy, :showit, :pdf, :template, :mark_sent, :mark_closed, :mark_not_sent],
+          :invoice_templates => [:index, :new, :edit, :create, :update, :destroy, :showit],
+          :tasks    => [:index, :create_more, :automator, :n19, :n19_done, :report] },
         :require => :member
     end
 
