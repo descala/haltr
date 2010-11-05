@@ -32,6 +32,8 @@ ca:
 
   # Invoice templates
   label_invoice_template_new: Nova plantilla
+  label_invoice_template: Plantilla
+  label_invoice_template_plural: Plantilles
   next_charge: Següent pagament
 
   # Invoice lines

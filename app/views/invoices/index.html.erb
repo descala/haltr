@@ -1,8 +1,12 @@
 <div class="contextual">
-<%= link_to l(:label_invoice_new), {:action => 'new', :id => @project}, :class => 'icon icon-add' %>
+  <% if controller.controller_name == "invoice_templates" -%>
+    <%= link_to l(:label_invoice_template_new), {:action => 'new', :id => @project}, :class => 'icon icon-add' %>
+  <% else -%>
+    <%= link_to l(:label_invoice_new), {:action => 'new', :id => @project}, :class => 'icon icon-add' %>
+  <% end -%>
 </div>
 
-<h2><%=l(:label_invoice_plural)%></h2>
+<h2><%= controller.controller_name == "invoice_templates" ? l(:label_invoice_template_plural) : l(:label_invoice_plural)%></h2>
 
 <% form_tag({}, :method => :get) do %>
 <fieldset><legend><%= l(:label_filter_plural) %></legend>
@@ -16,9 +20,13 @@
 
 <table class="list">
   <thead>
-      <%= sort_header_tag('status', :caption => l(:field_status)) %>
+      <%= sort_header_tag('status', :caption => l(:field_status)) unless controller.controller_name == "invoice_templates" %>
       <%= sort_header_tag('date', :caption => l(:field_date)) %>
-      <%= sort_header_tag('number', :caption => l(:field_number)) %>
+      <% if controller.controller_name == "invoice_templates" -%>
+        <th><%=l(:field_frequency)%></th>
+      <% else -%>
+        <%= sort_header_tag('number', :caption => l(:field_number)) %>
+      <% end -%>
       <%= sort_header_tag('clients.name', :caption => l(:field_client)) %>
       <th style="width:15%"></th>
       <th style="width:15%"></th>
@@ -26,9 +34,15 @@
   <tbody>
 <% for invoice in @invoices -%>
   <tr class="user <%= cycle("odd", "even") %>" />
-    <td align="center"><%= change_status_link(invoice) %></td>
+    <% unless controller.controller_name == "invoice_templates" -%>
+      <td align="center"><%= change_status_link(invoice) %></td>
+    <% end -%>
     <td align="center"><%=h invoice.date %></td>
-    <td align="center"><%= link_to h(invoice.number), {:action=>'showit',:id=>invoice}, :class => 'icon icon-show' %></td>
+    <% if controller.controller_name == "invoice_templates" -%>
+      <td align="center"><%=h invoice.frequency%></td>
+    <% else -%>
+      <td align="center"><%= link_to h(invoice.number), {:action=>'showit',:id=>invoice}, :class => 'icon icon-show' %></td>
+    <% end -%>
     <td><%=link_to h(invoice.client), {:controller => 'clients', :action => 'edit', :id => invoice.client} %></td>
     <td align="center"><%= link_to l(:button_edit), {:action=>'edit',:id=>invoice}, :class => 'icon icon-edit' %></td>
     <td align="center"><%= link_to l(:button_delete), {:action=>'destroy',:id=>invoice} , :confirm => l(:text_are_you_sure), :method => :post, :class => 'icon icon-del' %></td>

@@ -5,6 +5,7 @@ class InvoiceTemplatesController < ApplicationController
   unloadable
   menu_item :haltr
 
+  helper :invoices
   helper :sort
   include SortHelper
 
@@ -32,16 +33,19 @@ class InvoiceTemplatesController < ApplicationController
        :limit  =>  @invoice_pages.items_per_page,
        :offset =>  @invoice_pages.current.offset
 
-    render :action => "index", :layout => false if request.xhr?
+    render(:template => "invoices/index", :layout => false) and return if request.xhr?
+    render :template => "invoices/index"
   end
 
   def new
     @invoice = InvoiceTemplate.new
     @invoice.client_id = params[:client]
+    render :template => "invoices/new"
   end
 
   def edit
     @invoice = InvoiceTemplate.find(params[:id])
+    render :template => "invoices/edit"
   end
 
   def create

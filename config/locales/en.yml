@@ -32,6 +32,8 @@ en:
 
   # Invoice templates
   label_invoice_template_new: New template
+  label_invoice_template: Template
+  label_invoice_template_plural: Templates
   next_charge: Next charge
 
   # People
