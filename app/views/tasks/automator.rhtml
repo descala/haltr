@@ -1,6 +1,10 @@
-<pre>
+<div class="wiki">
+<pre style="margin: 0pt; border: 0pt none; padding: 0pt;">
 
-SESSION=<%= session.session_id %>
+<% a=ActionController::Base.session %>
+SESSION="<%= request.env['HTTP_COOKIE'] %>"
+MONTH=<%= sprintf("%02d",Time.now.day > 15 ? Time.now.month : Time.now.month - 1) %>
+YEAR=<%=Time.now.year%>
 
 ################
 # Download pdf #
@@ -9,7 +13,7 @@ cat << EOF > factures_download.sh
 #!/bin/bash
 P="../factures-emeses"
 <% @invoices.each do |invoice| -%>
-curl -o \${P}/<%= invoice.pdf_name %> <%= url_for :controller => 'invoices', :action => 'pdf', :id => invoice.id, :only_path => false %>
+curl -o \${P}/<%= invoice.pdf_name %> --cookie $SESSION <%= url_for :controller => 'invoices', :action => 'pdf', :id => invoice.id, :only_path => false %>
 <% end -%>
 EOF
 chmod +x factures_download.sh
@@ -35,13 +39,13 @@ chmod +x factures_enviar.sh
 cat << EOF > factures_marcar_enviades.sh
 #!/bin/bash
 <% @invoices.each do |invoice| -%>
-curl <%= url_for :controller => 'invoices', :action => 'mark_sent', :id => invoice.id, :only_path => false %> > /dev/null # <%= invoice.pdf_name  %> 
+curl --cookie $SESSION <%= url_for :controller => 'invoices', :action => 'mark_sent', :id => invoice.id, :only_path => false %> > /dev/null # <%= invoice.pdf_name  %> 
 <% end -%>
 EOF
 chmod +x factures_marcar_enviades.sh
 
 </pre>
-
+</div>
 
 <% content_for :sidebar do %>
   <%= render :partial => 'common/sidebar' %>
