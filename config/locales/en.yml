@@ -37,6 +37,7 @@ en:
   next_charge: Next charge
 
   # People
+  label_person: Person
   label_person_new: New person
   label_person_plural: People
   field_first_name: Name
