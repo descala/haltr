@@ -5,6 +5,7 @@ class TasksController < ApplicationController
 
   before_filter :find_project, :except => [:n19, :n19_done]
   before_filter :find_invoice, :only => [:n19, :n19_done]
+  before_filter :authorize
 
   def index
     @num_new_invoices = InvoiceTemplate.count(:include=>[:client],:conditions => ["clients.project_id = ? AND date <= ?", @project, Time.now + 15.day])

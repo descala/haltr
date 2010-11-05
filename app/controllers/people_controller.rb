@@ -7,6 +7,7 @@ class PeopleController < ApplicationController
   include SortHelper
 
   before_filter :find_client, :except => [:edit,:destroy,:update]
+  before_filter :authorize
 
   def index
     sort_init 'last_name', 'asc'
