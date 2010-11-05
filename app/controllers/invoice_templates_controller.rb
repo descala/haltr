@@ -11,6 +11,7 @@ class InvoiceTemplatesController < ApplicationController
 
   before_filter :find_project, :only => [:index,:new,:create]
   before_filter :find_invoice, :except => [:index,:new,:create]
+  before_filter :authorize
 
   def index
     sort_init 'number', 'desc'
