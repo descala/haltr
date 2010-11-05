@@ -62,7 +62,7 @@ class TasksController < ApplicationController
   end
   
   def report
-    m = params[:id] || 3
+    m = params[:months_ago] || 3
     d = Date.today - m.to_i.months
     @date = Date.new(d.year,d.month,1)
     @invoices = InvoiceDocument.all(:include => [:client], :conditions => ["clients.project_id = ? and date >= ?", @project.id, @date], :order => :number)

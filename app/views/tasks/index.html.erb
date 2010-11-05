@@ -23,7 +23,9 @@
     <% end -%>
   </li>
   <li>
-  <%= link_to "Invoices report", :action => 'report', :id => @project %>
+  Invoices report <%= link_to "last 3 months", :action => 'report', :id => @project, :months_ago => 3 %>
+  <%= link_to "6 months", :action => 'report', :id => @project, :months_ago => 6 %>
+  <%= link_to "12 months", :action => 'report', :id => @project, :months_ago => 12 %>
   </li>
 </ul>
 
