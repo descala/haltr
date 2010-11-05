@@ -35,5 +35,9 @@
   <label>company_bank_account</label>
   <%= text_field_tag 'settings[company_bank_account]', @settings['company_bank_account'] %>
 </p>
+<p>
+  <label>Company logo url</label>
+  <%= text_field_tag 'settings[company_logo_url]', @settings['company_logo_url'] %>
+</p>
 
 <%= link_to 'Back', :controller=>'admin', :action =>'plugins' %>

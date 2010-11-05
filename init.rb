@@ -18,7 +18,8 @@ begin
       'company_region' => '',
       'company_website' => '',
       'company_email' => '',
-      'company_bank_account' => ''
+      'company_bank_account' => '',
+      'company_logo_url' => ''
     },
     :partial => 'haltradmin/settings'
 

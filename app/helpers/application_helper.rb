@@ -56,7 +56,7 @@ module ApplicationHelper
   private
   
   def especial(path)
-    if request.parameters["controller"] == "invoices" and request.parameters["action"] == "pdf"
+    if request.parameters["controller"] == "invoices" and request.parameters["action"] == "pdf" and !(path =~ /^https?:\/\//)
       "../public#{path}"
     else
       path

@@ -1,5 +1,6 @@
 module InvoiceCommon
 
+  unloadable
   def showit
     find_invoice
     render :template => "invoices/showit", :layout => 'invoice'
@@ -11,12 +12,13 @@ module InvoiceCommon
     xhtml_file=Tempfile.new("invoice_#{@invoice.id}.xhtml","tmp")
     xhtml_file.write(render_to_string(:action => "showit", :layout => "invoice"))
     xhtml_file.close
-    jarpath = "vendor/xhtmlrenderer"
-    cmd="java -classpath #{jarpath}/core-renderer.jar:#{jarpath}/iText-2.0.8.jar:#{jarpath}/minium.jar org.xhtmlrenderer.simple.PDFRenderer #{xhtml_file.path} #{pdf_file.path}"
-    if system(cmd)
+    jarpath = "#{File.dirname(__FILE__)}/../vendor/xhtmlrenderer"
+    cmd="java -classpath #{jarpath}/core-renderer.jar:#{jarpath}/iText-2.0.8.jar:#{jarpath}/minium.jar org.xhtmlrenderer.simple.PDFRenderer #{RAILS_ROOT}/#{xhtml_file.path} #{RAILS_ROOT}/#{pdf_file.path}"
+    out = `#{cmd} 2>&1`
+    if $?.success?
       send_file(pdf_file.path, :filename => @invoice.pdf_name, :type => "application/pdf", :disposition => 'inline')
     else
-      render :text => "Error in PDF creation"
+      render :text => "Error in PDF creation <br /><pre>#{cmd}</pre><pre>#{out}</pre>"
     end
   end
   
