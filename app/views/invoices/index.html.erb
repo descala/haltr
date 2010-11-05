@@ -16,6 +16,7 @@
 
 <table class="list">
   <thead>
+      <%= sort_header_tag('status', :caption => l(:field_status)) %>
       <%= sort_header_tag('date', :caption => l(:field_date)) %>
       <%= sort_header_tag('number', :caption => l(:field_number)) %>
       <%= sort_header_tag('clients.name', :caption => l(:field_client)) %>
@@ -25,6 +26,7 @@
   <tbody>
 <% for invoice in @invoices -%>
   <tr class="user <%= cycle("odd", "even") %>" />
+    <td align="center"><%= change_status_link(invoice) %></td>
     <td align="center"><%=h invoice.date %></td>
     <td align="center"><%= link_to h(invoice.number), {:action=>'showit',:id=>invoice}, :class => 'icon icon-show' %></td>
     <td><%=h invoice.client %></td>

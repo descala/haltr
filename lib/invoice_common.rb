@@ -40,19 +40,19 @@ module InvoiceCommon
   def mark_sent
     find_invoice
     @invoice.mark_sent
-    index
+    redirect_to :action => 'index', :id => @project
   end
 
   def mark_closed
     find_invoice
     @invoice.mark_closed
-    index
+    redirect_to :action => 'index', :id => @project
   end
   
   def mark_not_sent
     find_invoice
     @invoice.mark_not_sent
-    index
+    redirect_to :action => 'index', :id => @project
   end
   
   def find_invoice

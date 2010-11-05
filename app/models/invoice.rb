@@ -36,7 +36,7 @@ class Invoice < ActiveRecord::Base
   # Default tax %
   TAX = 18
 
-  STATUS_LIST = { 'Not sent'=>STATUS_NOT_SENT,'Sent'=>STATUS_SENT,'Closed'=>STATUS_CLOSED}
+  STATUS_LIST = { STATUS_NOT_SENT=>'Not sent', STATUS_SENT=>'Sent', STATUS_CLOSED=>'Closed' }
 
   
   has_many :invoice_lines, :dependent => :destroy
@@ -142,8 +142,7 @@ class Invoice < ActiveRecord::Base
 
   
   def status_txt
-    return "Not sent" if !sent?
-    return "Sent" if sent?
+    STATUS_LIST[self.status]
   end
   
   def terms_description

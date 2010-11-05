@@ -39,7 +39,7 @@ module ApplicationHelper
   
   def euros(import)
     if import && import.cents != 0
-      "#{import} €"
+      "#{import}€"
     else
       "-"
     end

@@ -1,12 +1,12 @@
 module InvoicesHelper
 
-  def status_column(invoice)
+  def change_status_link(invoice)
     if invoice.closed?
-      link_to("Closed", {:action => :mark_not_sent, :id => invoice}, :style => 'color: blue;')
+      link_to("Closed", {:action => :mark_not_sent, :id => invoice})
     elsif invoice.sent?
-      link_to("Sent", {:action => :mark_closed, :id => invoice}, :style => 'color: green;')
+      link_to("Sent", {:action => :mark_closed, :id => invoice}, :style => 'color: #CC6600;')
     else
-      link_to("New", :action => :mark_sent, :id => invoice)
+      link_to("New", {:action => :mark_sent, :id => invoice}, :style => 'color: green;')
     end
   end
 
