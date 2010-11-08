@@ -1,7 +1,3 @@
-<% content_for :header_tags do %>
-  <%= stylesheet_link_tag 'minimal', :plugin => 'haltr' %>
-<% end %>
-
 <!-- Wrapper -->
 <div id="invoice_wrapper">
 
@@ -118,9 +114,12 @@
 </div>
 
 <% unless controller.action_name == "pdf" -%>
-<% content_for :sidebar do %>
-    <%= render :partial => 'common/sidebar' %>
-    <%= render :partial => 'invoices/invoice_menu' %>
-<% end %>
+  <% content_for :sidebar do %>
+      <%= render :partial => 'common/sidebar' %>
+      <%= render :partial => 'invoices/invoice_menu' %>
+  <% end %>
+  <% content_for :header_tags do %>
+    <%= stylesheet_link_tag 'minimal', :plugin => 'haltr' %>
+  <% end %>
 <% end %>
 
