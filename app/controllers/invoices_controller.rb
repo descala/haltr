@@ -81,19 +81,19 @@ class InvoicesController < ApplicationController
   def mark_sent
     find_invoice
     @invoice.mark_sent
-    redirect_to :action => 'index', :id => @project
+    redirect_to :back
   end
 
   def mark_closed
     find_invoice
     @invoice.mark_closed
-    redirect_to :action => 'index', :id => @project
+    redirect_to :back
   end
 
   def mark_not_sent
     find_invoice
     @invoice.mark_not_sent
-    redirect_to :action => 'index', :id => @project
+    redirect_to :back
   end
 
   # create a template from an invoice

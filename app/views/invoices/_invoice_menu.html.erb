@@ -1,6 +1,9 @@
 <div class="haltrinvoice">
   <h3>Invoice <%=@invoice.number%></h3>
   <ul class="toolbox secondary">
+    <li><%= link_to l(:button_edit), {:action=>'edit',:id=>@invoice} %></li>
+    <li><%= link_to l(:button_delete), {:action=>'destroy',:id=>@invoice} , :confirm => l(:text_are_you_sure), :method => :post %></li>
+    <li><%= change_status_link2(@invoice) %></li>
     <li><a href="#" onclick="window.print();; return false;"><strong>Imprimir</strong> factura</a></li>
     <li><%= link_to "Desar factura <strong>PDF</strong>", :action=>'pdf', :id=>@invoice %></li>
   </ul>
@@ -17,23 +20,35 @@
     </ul>
   </div>
 
+  <% if @invoices_not_sent.any? -%>
   <div class="client-invoices">
     <h3>Factures obertes</h3>
-    <ul class="secondary">
-
-    </ul>
+    <p style="padding:7px 20px;">
+      <% @invoices_not_sent.each do |invoice| -%>
+        <%=link_to invoice.number, :action => 'showit', :id => invoice %><%= ", " unless invoice == @invoices_not_sent.last %>
+      <% end -%>
+    </p>
   </div>
+  <% end -%>
+  <% if @invoices_sent.any? -%>
   <div class="client-invoices">
     <h3>Factures pendents</h3>
-    <ul class="secondary">
-
-    </ul>
+    <p style="padding:7px 20px;">
+      <% @invoices_sent.each do |invoice| -%>
+        <%=link_to invoice.number, :action => 'showit', :id => invoice %><%= ", " unless invoice == @invoices_sent.last %>
+      <% end -%>
+    </p>
   </div>
+  <% end -%>
+  <% if @invoices_closed.any? -%>
   <div class="client-invoices">
     <h3>Factures tancades</h3>
-    <ul class="secondary">
-
-    </ul>
+    <p style="padding:7px 20px;">
+      <% @invoices_closed.each do |invoice| -%>
+        <%=link_to invoice.number, :action => 'showit', :id => invoice %><%= ", " unless invoice == @invoices_closed.last %>
+      <% end -%>
+    </p>
   </div>
+  <% end -%>
 
 </div>

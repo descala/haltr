@@ -165,6 +165,10 @@ class Invoice < ActiveRecord::Base
     end
     
   end
+
+  def <=>(oth)
+    self.number <=> oth.number
+  end
   
   private
 

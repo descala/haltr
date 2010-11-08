@@ -29,6 +29,7 @@ en:
   field_frequency: Frequency
   field_draft: Draft
   field_use_bank_account: Use banck account
+  label_invoice_status: Status
 
   # Invoice templates
   label_invoice_template_new: New template
