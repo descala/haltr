@@ -1,17 +1,22 @@
 <div class="haltrinvoice">
-  <h3><%= @invoice.is_a?(InvoiceDocument) ? "#{l(:label_invoice)} #{@invoice.number}" : l(:label_invoice_template) %></h3>
+  <h3>
+    <%= @invoice.is_a?(InvoiceDocument) ? "#{l(:label_invoice)} #{@invoice.number}" : l(:label_invoice_template) %>
+  </h3>
   <ul class="toolbox secondary">
     <li><%= link_to l(:button_edit), {:action=>'edit',:id=>@invoice} %></li>
     <li><%= link_to l(:button_delete), {:action=>'destroy',:id=>@invoice} , :confirm => l(:text_are_you_sure), :method => :post %></li>
     <% if @invoice.is_a? InvoiceDocument -%>
       <li><%= change_status_link2(@invoice) %></li>
-    <% end -%>
-    <li><a href="#" onclick="window.print();; return false;"><strong>Imprimir</strong> factura</a></li>
-    <li><%= link_to "Desar factura <strong>PDF</strong>", :action=>'pdf', :id=>@invoice %></li>
-    <% if @invoice.invoice_template_id and @invoice.invoice_template -%>
-      <li><%= link_to "#{l(:generated_from_template)} #{@invoice.invoice_template.id}", {:controller=>'invoice_templates',:action => 'showit', :id => @invoice.invoice_template_id } %></li>
+      <li><%= link_to "Desar factura <strong>PDF</strong>", :action=>'pdf', :id=>@invoice %></li>
+      <% if @invoice.status < Invoice::STATUS_CLOSED -%>
+        <li><%= link_to l(:receive_payment), :controller => 'payments', :action => 'new', :id => @project, :invoice_id => @invoice %></li>
+      <% end -%>
     <% end -%>
   </ul>
+
+    <% if @invoice.invoice_template_id and @invoice.invoice_template -%>
+      <%= link_to "(#{l(:generated_from_template)} #{@invoice.invoice_template.id})", {:controller=>'invoice_templates',:action => 'showit', :id => @invoice.invoice_template_id } %>
+    <% end -%>
 
   <% if @invoice.is_a?(InvoiceDocument) -%>
 

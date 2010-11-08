@@ -32,6 +32,7 @@ ca:
   field_use_bank_account: Carregar al compte
   label_invoice_status: Estat
   generated_from_template: Generada de la plantilla
+  receive_payment: Rebre pagament
 
   # Invoice templates
   label_invoice_template_new: Nova plantilla

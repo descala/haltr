@@ -27,7 +27,7 @@
   <tbody>
 <% for payment in @payments -%>
   <tr class="user <%= cycle("odd", "even") %>" />
-    <td><%=h payment.invoice.number unless payment.invoice.nil? %></td>
+    <td><%=link_to(h(payment.invoice.number), :controller=>'invoices', :action=>'showit', :id=>payment.invoice) unless payment.invoice.nil? %></td>
     <td><%=h payment.amount %></td>
     <td><%=h payment.date %></td>
     <td><%=h payment.payment_method %></td>

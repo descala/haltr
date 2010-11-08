@@ -32,6 +32,7 @@ en:
   field_use_bank_account: Use banck account
   label_invoice_status: Status
   generated_from_template: Generated from template
+  receive_payment: Rebre pagament
 
   # Invoice templates
   label_invoice_template_new: New template

@@ -27,6 +27,8 @@ class InvoiceDocument < Invoice
   unloadable
 
   belongs_to :invoice_template
+  has_many :payments, :foreign_key => 'invoice_id' #, :dependent => :restrict #TODO: ok to set as destroy?
+#  has_many :payments, :dependent => :destroy
   validates_presence_of :number
   validates_uniqueness_of :number
 
@@ -52,6 +54,18 @@ class InvoiceDocument < Invoice
 
   def self.count_not_sent(project)
     count :all, :include => [:client], :conditions => ["clients.project_id = ? and status = ? and draft != ?", project.id, Invoice::STATUS_NOT_SENT, 1 ]
+  end
+
+  def total_paid
+    paid=0
+    self.payments.each do |payment|
+      paid += payment.amount.dollars
+    end
+    Money.new(paid)
+  end
+
+  def unpaid
+    total - total_paid
   end
 
 end
