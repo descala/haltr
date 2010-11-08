@@ -1,13 +1,19 @@
 <div class="haltrinvoice">
-  <h3>Invoice <%=@invoice.number%></h3>
+  <h3><%= @invoice.is_a?(InvoiceDocument) ? "#{l(:label_invoice)} #{@invoice.number}" : l(:label_invoice_template) %></h3>
   <ul class="toolbox secondary">
     <li><%= link_to l(:button_edit), {:action=>'edit',:id=>@invoice} %></li>
     <li><%= link_to l(:button_delete), {:action=>'destroy',:id=>@invoice} , :confirm => l(:text_are_you_sure), :method => :post %></li>
-    <li><%= change_status_link2(@invoice) %></li>
+    <% if @invoice.is_a? InvoiceDocument -%>
+      <li><%= change_status_link2(@invoice) %></li>
+    <% end -%>
     <li><a href="#" onclick="window.print();; return false;"><strong>Imprimir</strong> factura</a></li>
     <li><%= link_to "Desar factura <strong>PDF</strong>", :action=>'pdf', :id=>@invoice %></li>
+    <% if @invoice.invoice_template_id and @invoice.invoice_template -%>
+      <li><%= link_to "#{l(:generated_from_template)} #{@invoice.invoice_template.id}", {:controller=>'invoice_templates',:action => 'showit', :id => @invoice.invoice_template_id } %></li>
+    <% end -%>
   </ul>
 
+  <% if @invoice.is_a?(InvoiceDocument) -%>
 
   <div class="client-invoices">
     <h3>Recipients</h3>
@@ -51,4 +57,17 @@
   </div>
   <% end -%>
 
+  <% else -%>
+  <% if @invoices_generated.any? -%>
+    <div class="client-invoices">
+      <h3>Factures generades</h3>
+      <p style="padding:7px 20px;">
+      <% @invoices_generated.each do |invoice| -%>
+        <%=link_to invoice.number, :controller => 'invoices', :action => 'showit', :id => invoice %><%= ", " unless invoice == @invoices_generated.last %>
+      <% end -%>
+      </p>
+    </div>
+  <% end -%>
+
+  <% end -%>
 </div>

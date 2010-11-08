@@ -30,6 +30,7 @@ en:
   field_draft: Draft
   field_use_bank_account: Use banck account
   label_invoice_status: Status
+  generated_from_template: Generated from template
 
   # Invoice templates
   label_invoice_template_new: New template

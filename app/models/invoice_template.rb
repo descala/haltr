@@ -26,7 +26,7 @@ class InvoiceTemplate < Invoice
 
   unloadable
 
-  has_many :invoice_documents
+  has_many :invoice_documents, :dependent => :nullify
   validates_presence_of :frequency
 
   def next_invoice

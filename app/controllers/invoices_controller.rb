@@ -1,7 +1,5 @@
 class InvoicesController < ApplicationController
 
-  include InvoiceCommon
-
   unloadable
   menu_item :haltr
 
@@ -127,6 +125,12 @@ class InvoicesController < ApplicationController
     else
       render :text => "Error in PDF creation <br /><pre>#{cmd}</pre><pre>#{out}</pre>"
     end
+  end
+
+  def showit
+    @invoices_not_sent = InvoiceDocument.find(:all,:conditions => ["client_id = ? and status = ?",@client.id,Invoice::STATUS_NOT_SENT]).sort
+    @invoices_sent = InvoiceDocument.find(:all,:conditions => ["client_id = ? and status = ?",@client.id,Invoice::STATUS_SENT]).sort
+    @invoices_closed = InvoiceDocument.find(:all,:conditions => ["client_id = ? and status = ?",@client.id,Invoice::STATUS_CLOSED]).sort
   end
 
   private
