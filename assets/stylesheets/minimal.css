@@ -101,20 +101,11 @@ Version:  002 27 January 2006
 	padding: 0;
 	background: url(../images/bgd-workspace2.png) top left no-repeat;
 	}
-#col1 {
-	float: left;
-	margin: 0;
-	padding: 20px 0 0 20px;
-	width: 620px;
-	}
 #col2 {
 	float: right;
 	margin: 0;
 	padding: 0;
 	width: 260px;
-	}
-#col1 h2 {
-	margin-top: -4px;
 	}
 #col2 h2 {
 	margin: 0 0 10px;
