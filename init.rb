@@ -35,7 +35,7 @@ begin
         :require => :member
     end
 
-    menu :project_menu, :haltr, { :controller => 'clients', :action => 'index' }, :caption => 'Haltr'
+    menu :project_menu, :haltr, { :controller => 'invoices', :action => 'index' }, :caption => 'Haltr'
 
   end
 
