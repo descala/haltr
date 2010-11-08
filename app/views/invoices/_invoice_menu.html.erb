@@ -1,0 +1,39 @@
+<div class="haltrinvoice">
+  <h3>Invoice <%=@invoice.number%></h3>
+  <ul class="toolbox secondary">
+    <li><a href="#" onclick="window.print();; return false;"><strong>Imprimir</strong> factura</a></li>
+    <li><%= link_to "Desar factura <strong>PDF</strong>", :action=>'pdf', :id=>@invoice %></li>
+  </ul>
+
+
+  <div class="client-invoices">
+    <h3>Recipients</h3>
+    <ul class="secondary">
+      <% @invoice.recipients.each do |person| -%>
+        <li>
+        <%= link_to "#{person.first_name} #{person.last_name} &lt;#{person.email}&gt;", :controller =>'people' ,:action=>'show', :id=>person %>
+        </li>
+      <% end -%>
+    </ul>
+  </div>
+
+  <div class="client-invoices">
+    <h3>Factures obertes</h3>
+    <ul class="secondary">
+
+    </ul>
+  </div>
+  <div class="client-invoices">
+    <h3>Factures pendents</h3>
+    <ul class="secondary">
+
+    </ul>
+  </div>
+  <div class="client-invoices">
+    <h3>Factures tancades</h3>
+    <ul class="secondary">
+
+    </ul>
+  </div>
+
+</div>

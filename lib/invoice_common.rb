@@ -3,7 +3,7 @@ module InvoiceCommon
   unloadable
   def showit
     find_invoice
-    render :template => "invoices/showit", :layout => 'invoice'
+    render :template => "invoices/showit"
   end
   
   private
