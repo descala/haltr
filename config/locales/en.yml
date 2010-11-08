@@ -17,10 +17,11 @@ en:
   # Invoices
   label_invoice_plural: Invoices
   label_invoice: Invoice
+  field_invoice: Invoice
   label_invoice_new: New invoice
   button_new_invoice: New invoice
   field_number: Number
-  field_date: Invoice date
+  field_date: Date
   field_client: Client
   field_extra_info: Notes
   field_terms: Term
@@ -50,3 +51,11 @@ en:
 
   # Tasks
   label_task_plural: Tasks
+
+  # Payments
+  label_payment: Payment
+  label_payment_plural: Payments
+  label_payment_new: New payment
+  field_amount: Amount
+  field_payment_method: Payment method
+  field_reference: Reference

@@ -1,0 +1,49 @@
+<div class="contextual">
+<%= link_to l(:label_payment_new), {:action => 'new', :id => @project}, :class => 'icon icon-add' %>
+</div>
+
+<h2><%=l(:label_payment_plural)%></h2>
+
+<% form_tag({}, :method => :get) do %>
+<fieldset><legend><%= l(:label_filter_plural) %></legend>
+<label><%= l(:label_client) %>:</label>
+<%= text_field_tag 'name', params[:name], :size => 30 %>
+<%= submit_tag l(:button_apply), :class => "small", :name => nil %>
+</fieldset>
+<% end %>
+&nbsp;
+
+
+<table class="list">
+  <thead>
+      <%= sort_header_tag('invoices.number', :caption => l(:field_invoice)) %>
+      <%= sort_header_tag('amount_in_cents', :caption => l(:field_amount)) %>
+      <%= sort_header_tag('payments.date', :caption => l(:field_date)) %>
+      <%= content_tag('th', l(:field_payment_method)) %>
+      <%= content_tag('th', l(:field_reference)) %>
+      <th style="width:10%"></th>
+      <th style="width:10%"></th>
+  </thead>
+  <tbody>
+<% for payment in @payments -%>
+  <tr class="user <%= cycle("odd", "even") %>" />
+    <td><%=h payment.invoice.number unless payment.invoice.nil? %></td>
+    <td><%=h payment.amount %></td>
+    <td><%=h payment.date %></td>
+    <td><%=h payment.payment_method %></td>
+    <td><%=h payment.reference %></td>
+    <td align="center"><%= link_to l(:button_edit), {:action=>'edit',:id=>payment}, :class => 'icon icon-edit' %></td>
+    <td align="center"><%= link_to l(:button_delete), {:action=>'destroy',:id=>payment} , :confirm => l(:text_are_you_sure), :method => :post, :class => 'icon icon-del' %></td>
+  </tr>
+<% end -%>
+  </tbody>
+</table>
+
+<p class="pagination"><%= pagination_links_full @payment_pages, @payment_count %></p>
+
+
+<% html_title(l(:label_payment_plural)) -%>
+
+<% content_for :sidebar do %>
+    <%= render :partial => 'common/sidebar' %>
+<% end %>
