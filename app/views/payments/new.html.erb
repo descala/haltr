@@ -1,0 +1,11 @@
+<h1><%= l(:label_payment_new) %></h1>
+
+
+<% labelled_tabular_form_for :payment, @payment, :url => { :action => 'create', :id => @project } do |f| %>
+<%= render :partial => 'form', :locals => { :f => f } %>
+<%= submit_tag l(:button_create) %>
+<% end %>
+
+<% content_for :sidebar do %>
+    <%= render :partial => 'common/sidebar' %>
+<% end %>

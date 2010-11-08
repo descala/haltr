@@ -1,5 +1,6 @@
 <h3>Haltr</h3>
   <%= link_to l(:label_client_plural), :controller => 'clients', :action => 'index', :id => @project %><br />
-  <%= link_to 'Invoices', :controller => 'invoices', :action => 'index', :id => @project %><br/>
-  <%= link_to 'Recurring', :controller => 'invoice_templates', :action => 'index', :id => @project %><br/>
-  <%= link_to 'Actions', :controller => 'tasks', :action => 'index', :id => @project %>
+  <%= link_to l(:label_invoice_plural), :controller => 'invoices', :action => 'index', :id => @project %><br/>
+  <%= link_to l(:label_invoice_template_plural), :controller => 'invoice_templates', :action => 'index', :id => @project %><br/>
+  <%= link_to l(:label_payment_plural), :controller => 'payments', :action => 'index', :id => @project %><br />
+  <%= link_to l(:label_task_plural), :controller => 'tasks', :action => 'index', :id => @project %>

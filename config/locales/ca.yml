@@ -17,10 +17,11 @@ ca:
   # Invoices
   label_invoice_plural: Factures
   label_invoice: Factura
+  field_invoice: Factura
   label_invoice_new: Nova factura
   button_new_invoice: Nova factura
   field_number: Número
-  field_date: Data factura
+  field_date: Data
   field_client: Client
   field_extra_info: Notes
   field_terms: Termini
@@ -57,3 +58,10 @@ ca:
 
   # Tasks
   label_task_plural: Tasks
+
+  # Payments
+  label_payment: Pagament
+  label_payment_plural: Pagaments
+  field_amount: Import
+  field_payment_method: Mètode de pagament
+  field_reference: Referència
