@@ -30,6 +30,8 @@ ca:
   field_frequency: Freqüència
   field_draft: Esborrany
   field_use_bank_account: Carregar al compte
+  label_invoice_status: Estat
+  generated_from_template: Generada de la plantilla
 
   # Invoice templates
   label_invoice_template_new: Nova plantilla
@@ -40,6 +42,7 @@ ca:
   # Invoice lines
   field_price_in_cents: Preu
   field_quantity: Quantitat
+  field_invoice_lines: Línies de comanda
 
   # People
   label_person: Persona

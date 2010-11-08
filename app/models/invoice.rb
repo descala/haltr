@@ -45,7 +45,8 @@ class Invoice < ActiveRecord::Base
 
   accepts_nested_attributes_for :invoice_lines,
     :allow_destroy => true,
-    :reject_if => proc {|attributes| attributes['quantity'].blank? or attributes['description'].blank? or attributes['price_in_cents'].blank? }
+    :reject_if => proc { |attributes| attributes.all? { |_, value| value.blank? } }
+   validates_associated :invoice_lines
     
   def subtotal_without_discount
     total = Money.new(0)
@@ -163,6 +164,10 @@ class Invoice < ActiveRecord::Base
       "Pagament per transferència al compte #{ba[0..3]} #{ba[4..7]} #{ba[8..9]} #{ba[10..19]}"
     end
     
+  end
+
+  def <=>(oth)
+    self.number <=> oth.number
   end
   
   private

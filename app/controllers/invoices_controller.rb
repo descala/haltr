@@ -1,7 +1,5 @@
 class InvoicesController < ApplicationController
 
-  include InvoiceCommon
-
   unloadable
   menu_item :haltr
 
@@ -38,8 +36,6 @@ class InvoicesController < ApplicationController
        :include => [:client],
        :limit  =>  @invoice_pages.items_per_page,
        :offset =>  @invoice_pages.current.offset
-
-    render :action => "index", :layout => false if request.xhr?
   end
 
   def for_client
@@ -83,19 +79,19 @@ class InvoicesController < ApplicationController
   def mark_sent
     find_invoice
     @invoice.mark_sent
-    redirect_to :action => 'index', :id => @project
+    redirect_to :back
   end
 
   def mark_closed
     find_invoice
     @invoice.mark_closed
-    redirect_to :action => 'index', :id => @project
+    redirect_to :back
   end
 
   def mark_not_sent
     find_invoice
     @invoice.mark_not_sent
-    redirect_to :action => 'index', :id => @project
+    redirect_to :back
   end
 
   # create a template from an invoice
@@ -121,7 +117,7 @@ class InvoicesController < ApplicationController
     xhtml_file=Tempfile.new("invoice_#{@invoice.id}.xhtml","tmp")
     xhtml_file.write(render_to_string(:action => "showit", :layout => "invoice"))
     xhtml_file.close
-    jarpath = "#{File.dirname(__FILE__)}/../vendor/xhtmlrenderer"
+    jarpath = "#{File.dirname(__FILE__)}/../../vendor/xhtmlrenderer"
     cmd="java -classpath #{jarpath}/core-renderer.jar:#{jarpath}/iText-2.0.8.jar:#{jarpath}/minium.jar org.xhtmlrenderer.simple.PDFRenderer #{RAILS_ROOT}/#{xhtml_file.path} #{RAILS_ROOT}/#{pdf_file.path}"
     out = `#{cmd} 2>&1`
     if $?.success?
@@ -129,6 +125,12 @@ class InvoicesController < ApplicationController
     else
       render :text => "Error in PDF creation <br /><pre>#{cmd}</pre><pre>#{out}</pre>"
     end
+  end
+
+  def showit
+    @invoices_not_sent = InvoiceDocument.find(:all,:conditions => ["client_id = ? and status = ?",@client.id,Invoice::STATUS_NOT_SENT]).sort
+    @invoices_sent = InvoiceDocument.find(:all,:conditions => ["client_id = ? and status = ?",@client.id,Invoice::STATUS_SENT]).sort
+    @invoices_closed = InvoiceDocument.find(:all,:conditions => ["client_id = ? and status = ?",@client.id,Invoice::STATUS_CLOSED]).sort
   end
 
   private

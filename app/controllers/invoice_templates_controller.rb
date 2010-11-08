@@ -1,7 +1,5 @@
 class InvoiceTemplatesController < ApplicationController 
 
-  include InvoiceCommon
-
   unloadable
   menu_item :haltr
 
@@ -71,6 +69,11 @@ class InvoiceTemplatesController < ApplicationController
   def destroy
     @invoice.destroy
     redirect_to :action => 'index', :id => @project
+  end
+
+  def showit
+    @invoices_generated = @invoice.invoice_documents.sort
+    render :template => "invoices/showit"
   end
 
   private

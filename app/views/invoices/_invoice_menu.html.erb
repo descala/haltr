@@ -1,0 +1,73 @@
+<div class="haltrinvoice">
+  <h3><%= @invoice.is_a?(InvoiceDocument) ? "#{l(:label_invoice)} #{@invoice.number}" : l(:label_invoice_template) %></h3>
+  <ul class="toolbox secondary">
+    <li><%= link_to l(:button_edit), {:action=>'edit',:id=>@invoice} %></li>
+    <li><%= link_to l(:button_delete), {:action=>'destroy',:id=>@invoice} , :confirm => l(:text_are_you_sure), :method => :post %></li>
+    <% if @invoice.is_a? InvoiceDocument -%>
+      <li><%= change_status_link2(@invoice) %></li>
+    <% end -%>
+    <li><a href="#" onclick="window.print();; return false;"><strong>Imprimir</strong> factura</a></li>
+    <li><%= link_to "Desar factura <strong>PDF</strong>", :action=>'pdf', :id=>@invoice %></li>
+    <% if @invoice.invoice_template_id and @invoice.invoice_template -%>
+      <li><%= link_to "#{l(:generated_from_template)} #{@invoice.invoice_template.id}", {:controller=>'invoice_templates',:action => 'showit', :id => @invoice.invoice_template_id } %></li>
+    <% end -%>
+  </ul>
+
+  <% if @invoice.is_a?(InvoiceDocument) -%>
+
+  <div class="client-invoices">
+    <h3>Recipients</h3>
+    <ul class="secondary">
+      <% @invoice.recipients.each do |person| -%>
+        <li>
+        <%= link_to "#{person.first_name} #{person.last_name} &lt;#{person.email}&gt;", :controller =>'people' ,:action=>'show', :id=>person %>
+        </li>
+      <% end -%>
+    </ul>
+  </div>
+
+  <% if @invoices_not_sent.any? -%>
+  <div class="client-invoices">
+    <h3>Factures obertes</h3>
+    <p style="padding:7px 20px;">
+      <% @invoices_not_sent.each do |invoice| -%>
+        <%=link_to invoice.number, :action => 'showit', :id => invoice %><%= ", " unless invoice == @invoices_not_sent.last %>
+      <% end -%>
+    </p>
+  </div>
+  <% end -%>
+  <% if @invoices_sent.any? -%>
+  <div class="client-invoices">
+    <h3>Factures pendents</h3>
+    <p style="padding:7px 20px;">
+      <% @invoices_sent.each do |invoice| -%>
+        <%=link_to invoice.number, :action => 'showit', :id => invoice %><%= ", " unless invoice == @invoices_sent.last %>
+      <% end -%>
+    </p>
+  </div>
+  <% end -%>
+  <% if @invoices_closed.any? -%>
+  <div class="client-invoices">
+    <h3>Factures tancades</h3>
+    <p style="padding:7px 20px;">
+      <% @invoices_closed.each do |invoice| -%>
+        <%=link_to invoice.number, :action => 'showit', :id => invoice %><%= ", " unless invoice == @invoices_closed.last %>
+      <% end -%>
+    </p>
+  </div>
+  <% end -%>
+
+  <% else -%>
+  <% if @invoices_generated.any? -%>
+    <div class="client-invoices">
+      <h3>Factures generades</h3>
+      <p style="padding:7px 20px;">
+      <% @invoices_generated.each do |invoice| -%>
+        <%=link_to invoice.number, :controller => 'invoices', :action => 'showit', :id => invoice %><%= ", " unless invoice == @invoices_generated.last %>
+      <% end -%>
+      </p>
+    </div>
+  <% end -%>
+
+  <% end -%>
+</div>

@@ -30,12 +30,19 @@ en:
   field_frequency: Frequency
   field_draft: Draft
   field_use_bank_account: Use banck account
+  label_invoice_status: Status
+  generated_from_template: Generated from template
 
   # Invoice templates
   label_invoice_template_new: New template
   label_invoice_template: Template
   label_invoice_template_plural: Templates
   next_charge: Next charge
+
+  # Invoice lines
+  field_price_in_cents: Price
+  field_quantity: Quantity
+  field_invoice_lines: Invoice lines
 
   # People
   label_person: Person
