@@ -36,6 +36,11 @@ en:
   label_invoice_template_plural: Templates
   next_charge: Next charge
 
+  # Invoice lines
+  field_price_in_cents: Price
+  field_quantity: Quantity
+  field_invoice_lines: Invoice lines
+
   # People
   label_person: Person
   label_person_new: New person

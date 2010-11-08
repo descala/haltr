@@ -39,6 +39,7 @@ ca:
   # Invoice lines
   field_price_in_cents: Preu
   field_quantity: Quantitat
+  field_invoice_lines: Línies de comanda
 
   # People
   label_person: Persona
