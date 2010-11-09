@@ -11,7 +11,6 @@
     <%= sort_header_tag('date', :caption => l(:field_date)) %>
     <th><%=l(:field_frequency)%></th>
     <%= sort_header_tag('clients.name', :caption => l(:field_client)) %>
-    <th></th>
     <th><%= l(:label_total) %></th>
   </thead>
   <tbody>
@@ -20,7 +19,6 @@
     <td align="center"><%=h invoice.date %></td>
     <td align="center"><%=h invoice.frequency%></td>
     <td><%=link_to h(invoice.client), {:controller => 'clients', :action => 'edit', :id => invoice.client} %></td>
-    <td align="center"><%= link_to l(:button_show), {:action=>'showit',:id=>invoice}, :class => 'icon icon-show' %></td>
     <td align="right"><%= invoice.total %></td>
   </tr>
 <% end -%>
