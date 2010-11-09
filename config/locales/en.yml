@@ -36,6 +36,8 @@ en:
   receive_payment: Rebre pagament
   label_paid: Paid
   field_tax_percent: IVA
+  label_from: From
+  label_to: To
 
   # Invoice templates
   label_invoice_template_new: New template

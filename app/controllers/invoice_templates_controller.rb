@@ -33,8 +33,7 @@ class InvoiceTemplatesController < ApplicationController
        :limit  =>  @invoice_pages.items_per_page,
        :offset =>  @invoice_pages.current.offset
 
-    render(:template => "invoices/index", :layout => false) and return if request.xhr?
-    render :template => "invoices/index"
+    render(:template => "index", :layout => false) if request.xhr?
   end
 
   def new
@@ -107,6 +106,7 @@ class InvoiceTemplatesController < ApplicationController
   def find_project
     begin
       @project = Project.find(params[:id])
+      Project.send(:include, ProjectHaltrPatch) #TODO: perque nomes funciona el primer cop sense aixo?
       logger.info "Project #{@project.name}"
     rescue ActiveRecord::RecordNotFound
       render_404

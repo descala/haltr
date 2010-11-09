@@ -6,9 +6,8 @@ class InvoicesController < ApplicationController
   helper :sort
   include SortHelper
 
-  before_filter :find_invoice, :except => [:index,:new,:create,:for_client,:destroy_payment]
+  before_filter :find_invoice, :except => [:index,:new,:create,:destroy_payment]
   before_filter :find_project, :only => [:index,:new,:create]
-  before_filter :find_client, :only => [:for_client]
   before_filter :find_payment, :only => [:destroy_payment]
   before_filter :authorize
 
@@ -18,13 +17,31 @@ class InvoicesController < ApplicationController
 
     c = ARCondition.new(["clients.project_id = ?",@project.id])
 
-    unless params[:name].blank?
-      name = "%#{params[:name].strip.downcase}%"
-      c << ["LOWER(name) LIKE ? OR LOWER(address1) LIKE ? OR LOWER(address2) LIKE ?", name, name, name]
+    # status filter
+    unless params["status_all"] == "1"
+      statuslist=[]
+      Invoice::STATUS_LIST.each do |id,txt|
+        if params["status_#{id}"] == "1"
+          statuslist << id
+        end
+      end
+      if statuslist.any?
+        c << ["status in (#{statuslist.join(",")})"]
+      end
     end
 
-    if @client
-      c << ["client_id = ?", @client.id]
+    # client filter
+    # TODO: change view collection_select (doesnt display previously selected client)
+    unless params[:client_id].blank?
+      c << ["client_id = ?", params[:client_id]]
+    end
+
+    # date filter
+    unless params[:date_from].blank?
+      c << ["date >= ?",params[:date_from]]
+    end
+    unless params["date_to"].blank?
+      c << ["date <= ?",params[:date_to]]
     end
 
     @invoice_count = InvoiceDocument.count(:conditions => c.conditions, :include => [:client])
@@ -37,11 +54,6 @@ class InvoicesController < ApplicationController
        :include => [:client],
        :limit  =>  @invoice_pages.items_per_page,
        :offset =>  @invoice_pages.current.offset
-  end
-
-  def for_client
-    index
-    render :action => 'index'
   end
 
   def new
@@ -153,16 +165,7 @@ class InvoicesController < ApplicationController
   def find_project
     begin
       @project = Project.find(params[:id])
-      logger.info "Project #{@project.name}"
-    rescue ActiveRecord::RecordNotFound
-      render_404
-    end
-  end
-
-  def find_client
-    begin
-      @client = Client.find(params[:id])
-      @project = @client.project
+      Project.send(:include, ProjectHaltrPatch) #TODO: perque nomes funciona el primer cop sense aixo?
       logger.info "Project #{@project.name}"
     rescue ActiveRecord::RecordNotFound
       render_404
