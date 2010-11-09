@@ -27,6 +27,12 @@
   <%= link_to "6 months", :action => 'report', :id => @project, :months_ago => 6 %>
   <%= link_to "12 months", :action => 'report', :id => @project, :months_ago => 12 %>
   </li>
+  <li>
+  <% form_tag(url_for(:action => 'import_aeb43', :id => @project ), :multipart => true ) do |f| %>
+    Import AEB43 <%= file_field_tag 'file', :size => 30, :id => nil  -%>
+    <%= submit_tag l(:button_submit) %>
+  <% end %>
+  </li>
 </ul>
 
 

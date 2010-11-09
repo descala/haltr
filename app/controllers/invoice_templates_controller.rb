@@ -81,6 +81,9 @@ class InvoiceTemplatesController < ApplicationController
     @invoice.created_at=nil
     @invoice.updated_at=nil
     @invoice.number=nil
+    @invoice_document.invoice_lines.each do |line|
+      @invoice.invoice_lines << InvoiceLine.new(line.attributes)
+    end
     render :template => "invoices/new"
   end
 

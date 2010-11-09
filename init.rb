@@ -31,7 +31,7 @@ begin
           :people   => [:index, :new, :show, :edit, :create, :update, :destroy],
           :invoices => [:index, :new, :edit, :create, :update, :destroy, :showit, :pdf, :template, :mark_sent, :mark_closed, :mark_not_sent, :destroy_payment],
           :invoice_templates => [:index, :new, :edit, :create, :update, :destroy, :showit, :new_from_invoice],
-          :tasks    => [:index, :create_more, :automator, :n19, :n19_done, :report],
+          :tasks    => [:index, :create_more, :automator, :n19, :n19_done, :report, :import_aeb43],
           :payments => [:index, :new, :edit, :create, :update, :destroy ] },
         :require => :member
     end
