@@ -31,7 +31,8 @@ en:
   field_draft: Draft
   field_use_bank_account: Use banck account
   label_invoice_status: Status
-  generated_from_template: Generated from template
+  show_template: Show template
+  generate_template_from_invoice: Generate new template
   receive_payment: Rebre pagament
   label_paid: Paid
   field_tax_percent: IVA

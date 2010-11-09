@@ -12,14 +12,18 @@
         <li><%= link_to l(:receive_payment), :controller => 'payments', :action => 'new', :id => @project, :invoice_id => @invoice %></li>
       <% end -%>
     <% end -%>
-  </ul>
-
-    <% if @invoice.invoice_template_id and @invoice.invoice_template -%>
-      <%= link_to "(#{l(:generated_from_template)} #{@invoice.invoice_template.id})", {:controller=>'invoice_templates',:action => 'showit', :id => @invoice.invoice_template_id } %>
-    <% end -%>
 
   <% if @invoice.is_a?(InvoiceDocument) -%>
+    <% if @invoice.invoice_template_id and @invoice.invoice_template -%>
+      <li><%= link_to "#{l(:show_template)} #{@invoice.invoice_template.id}", {:controller=>'invoice_templates',:action => 'showit', :id => @invoice.invoice_template_id } %></li>
+    <% else -%>
+      <li><%= link_to l(:generate_template_from_invoice), {:controller=>'invoice_templates',:action=>'new_from_invoice',:id=>@invoice} %></li>
+    <% end -%>
+  <% end -%>
 
+  </ul>
+
+  <% if @invoice.is_a?(InvoiceDocument) -%>
   <div class="client-invoices">
     <h3>Recipients</h3>
     <ul class="secondary">

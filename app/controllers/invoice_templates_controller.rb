@@ -7,8 +7,9 @@ class InvoiceTemplatesController < ApplicationController
   helper :sort
   include SortHelper
 
+  before_filter :find_invoice_template, :except => [:index,:new,:create,:new_from_invoice]
   before_filter :find_project, :only => [:index,:new,:create]
-  before_filter :find_invoice, :except => [:index,:new,:create]
+  before_filter :find_invoice, :only => [:new_from_invoice]
   before_filter :authorize
 
   def index
@@ -76,12 +77,28 @@ class InvoiceTemplatesController < ApplicationController
     render :template => "invoices/showit"
   end
 
+  def new_from_invoice
+    @invoice = InvoiceTemplate.new(@invoice_document.attributes)
+    @invoice.created_at=nil
+    @invoice.updated_at=nil
+    @invoice.number=nil
+    render :template => "invoices/new"
+  end
+
   private
 
-  def find_invoice
+  def find_invoice_template
     @invoice = InvoiceTemplate.find params[:id]
     @lines = @invoice.invoice_lines
     @client = @invoice.client
+    @project = @client.project
+  rescue ActiveRecord::RecordNotFound
+    render_404
+  end
+
+  def find_invoice
+    @invoice_document = InvoiceDocument.find params[:id]
+    @client = @invoice_document.client
     @project = @client.project
   rescue ActiveRecord::RecordNotFound
     render_404

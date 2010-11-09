@@ -31,7 +31,8 @@ ca:
   field_draft: Esborrany
   field_use_bank_account: Carregar al compte
   label_invoice_status: Estat
-  generated_from_template: Generada de la plantilla
+  show_template: Veure la plantilla
+  generate_template_from_invoice: Generar nova plantilla
   receive_payment: Rebre pagament
   label_paid: Pagat
   field_tax_percent: IVA
