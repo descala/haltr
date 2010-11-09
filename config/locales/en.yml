@@ -33,6 +33,7 @@ en:
   label_invoice_status: Status
   generated_from_template: Generated from template
   receive_payment: Rebre pagament
+  label_paid: Pagat
 
   # Invoice templates
   label_invoice_template_new: New template
