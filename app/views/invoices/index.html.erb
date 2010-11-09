@@ -4,6 +4,7 @@
 
 <div class="contextual">
   <%= link_to l(:label_invoice_new), {:action => 'new', :id => @project}, :class => 'icon icon-add' %>
+  <%= check_box nil, nil, :onclick => "Element.toggle('filter');"%> Hide filter
 </div>
 
 <h2><%= controller.controller_name == "invoice_templates" ? l(:label_invoice_template_plural) : l(:label_invoice_plural)%></h2>
