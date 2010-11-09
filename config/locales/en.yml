@@ -68,3 +68,15 @@ en:
   field_amount: Amount
   field_payment_method: Payment method
   field_reference: Reference
+
+  # Settings
+  company_name: Company name
+  company_tax_id: Company tax Id
+  company_address: Company address
+  company_locality: Company locality
+  company_postal_code: Company postal code
+  company_region: Company region
+  company_website: Company website
+  company_email: Company email
+  company_bank_account: Company bank account
+  company_logo_url: Company Logo URL

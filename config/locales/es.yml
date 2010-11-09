@@ -1,0 +1,82 @@
+es:
+
+  # Clients
+  field_taxcode: CIF
+  label_client: Cliente
+  label_client_plural: Clientes
+  label_client_new: Nuevo cliente
+  field_address1: Dirección
+  field_address2: Dirección
+  field_city: Ciudad
+  field_province: Provincia
+  field_postalcode: Codigo postal
+  field_country: País
+  field_bank_account: Cuenta bancaria
+  button_people: Personas
+
+  # Invoices
+  label_invoice_plural: Facturas
+  label_invoice: Factura
+  field_invoice: Factura
+  label_invoice_new: Nueva factura
+  button_new_invoice: Nueva factura
+  field_number: Número
+  field_date: Fecha
+  field_client: Cliente
+  field_extra_info: Notas
+  field_terms: Terminio
+  field_discount_text: Texto del descuento
+  field_discount_percent: % de descuento
+  field_frequency: Frecuencia
+  field_draft: Borrador
+  field_use_bank_account: Cargar en cuenta
+  label_invoice_status: Estado
+  generated_from_template: Generada de la plantilla
+  receive_payment: Recibir pago
+  label_paid: Pagado
+
+  # Invoice templates
+  label_invoice_template_new: Nueva plantilla
+  label_invoice_template: Plantilla
+  label_invoice_template_plural: Plantillas
+  next_charge: Siguiente pago
+
+  # Invoice lines
+  field_price_in_cents: Precio
+  field_quantity: Cantidad
+  field_invoice_lines: Lineas de factura
+
+  # People
+  label_person: Persona
+  label_person_new: Nueva persona
+  label_person_plural: Personas
+  field_first_name: Nombre
+  field_last_name: Apellidos
+  field_email: Email
+  field_phone_office: Teléfono oficina
+  field_phone_mobile: Telefono móbil
+  field_invoice_recipient: Receptor de factures
+  field_report_recipient: Receptor de informes
+
+  # Tasks
+  label_task_plural: Tareas
+
+  # Payments
+  label_payment: Pagos
+  label_payment_plural: Pagos
+  label_payment_new: Nuevo pago
+  field_amount: Importe
+  field_payment_method: Metodo de pago
+  field_reference: Referencia
+
+  # Settings
+  company_name: "Nombre de la empresa"
+  company_tax_id: "CIF de la empresa"
+  company_address: "Dirección de la empresa"
+  company_locality: "Localidad de la empresa"
+  company_postal_code: "Código postal de la empresa"
+  company_region: "Provincia de la empresa"
+  company_website: "Sitio web de la empersa"
+  company_email: "e-mail de la empresa"
+  company_bank_account: "Cuenta bancaria de la empresa"
+  company_logo_url: "URL de el logo de la empresa"
