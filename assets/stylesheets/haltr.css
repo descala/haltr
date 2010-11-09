@@ -24,3 +24,6 @@
 	margin-right: 8px;
 	}
 
+#invoices tr {
+  cursor: pointer;
+}
