@@ -99,15 +99,9 @@
                   <th>IVA <%= number_to_percentage(@invoice.tax_percent, :precision=>0) %> :</th>
                   <td><%= euros(@invoice.tax) %></td>
                 </tr>
-                <% if @invoice.payments.any? -%>
-                <tr class="sales-tax">
-                  <th><%= l(:label_paid) %>:</th>
-                  <td><%= @invoice.total_paid %></td>
-                </tr>
-                <% end -%>
                 <tr class="invoice-total">
                   <th>Total:</th>
-                  <td><%= euros(@invoice.unpaid) %></td>
+                  <td><%= euros(@invoice.total) %></td>
                 </tr>
               <% end -%>
           </tbody></table>
@@ -115,15 +109,17 @@
           <% if @invoice.is_a?(InvoiceDocument) and @invoice.payments.any? -%>
 
           <!-- Payment Details -->
-          <table class="line-items" border="0" cellpadding="0" cellspacing="0">
+          <table class="line-items payments" border="0" cellpadding="0" cellspacing="0">
             <tbody>
               <tr>
-                <th class="item-date first">Data</th>
+                <th class="item-delete first"></th>
+                <th class="item-date">Data</th>
                 <th class="item-description">Descripció</th>
                 <th class="line-total last">Quantitat</th>
               </tr>
               <% @invoice.payments.each do |payment| -%>
                 <tr>
+                <td class="item-delete first"><%= link_to "", {:action=>'destroy_payment',:id=>payment} , :confirm => l(:text_are_you_sure), :method => :post, :class => 'icon icon-del' %></td>
                   <td class="item-date first"><%= payment.date %></td>
                   <td class="item-description"><%= payment.description %></td>
                   <td class="line-total last"><%= euros(payment.amount) %></td>

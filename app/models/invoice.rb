@@ -169,6 +169,10 @@ class Invoice < ActiveRecord::Base
   def <=>(oth)
     self.number <=> oth.number
   end
+
+  def project
+    self.client.project
+  end
   
   private
 

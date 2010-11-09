@@ -6,9 +6,10 @@ class InvoicesController < ApplicationController
   helper :sort
   include SortHelper
 
-  before_filter :find_invoice, :except => [:index,:new,:create,:for_client]
+  before_filter :find_invoice, :except => [:index,:new,:create,:for_client,:destroy_payment]
   before_filter :find_project, :only => [:index,:new,:create]
   before_filter :find_client, :only => [:for_client]
+  before_filter :find_payment, :only => [:destroy_payment]
   before_filter :authorize
 
   def index
@@ -74,6 +75,11 @@ class InvoicesController < ApplicationController
   def destroy
     @invoice.destroy
     redirect_to :action => 'index', :id => @project
+  end
+
+  def destroy_payment
+    @payment.destroy
+    redirect_to :action => 'showit', :id => @invoice
   end
 
   def mark_sent
@@ -161,6 +167,12 @@ class InvoicesController < ApplicationController
     rescue ActiveRecord::RecordNotFound
       render_404
     end
+  end
+
+  def find_payment
+    @payment = Payment.find(params[:id])
+    @invoice = @payment.invoice
+    @project = @invoice.project
   end
 
 end

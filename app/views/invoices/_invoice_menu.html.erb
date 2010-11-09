@@ -1,6 +1,6 @@
 <div class="haltrinvoice">
   <h3>
-    <%= @invoice.is_a?(InvoiceDocument) ? "#{l(:label_invoice)} #{@invoice.number}" : l(:label_invoice_template) %>
+    <%= @invoice.is_a?(InvoiceDocument) ? "#{l(:label_invoice)} #{@invoice.number} (#{@invoice.status_txt})" : l(:label_invoice_template) %>
   </h3>
   <ul class="toolbox secondary">
     <li><%= link_to l(:button_edit), {:action=>'edit',:id=>@invoice} %></li>

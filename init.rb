@@ -29,7 +29,7 @@ begin
       permission :general_use,
         { :clients  => [:index, :new, :edit, :create, :update, :destroy],
           :people   => [:index, :new, :show, :edit, :create, :update, :destroy],
-          :invoices => [:index, :for_client, :new, :edit, :create, :update, :destroy, :showit, :pdf, :template, :mark_sent, :mark_closed, :mark_not_sent],
+          :invoices => [:index, :for_client, :new, :edit, :create, :update, :destroy, :showit, :pdf, :template, :mark_sent, :mark_closed, :mark_not_sent, :destroy_payment],
           :invoice_templates => [:index, :new, :edit, :create, :update, :destroy, :showit],
           :tasks    => [:index, :create_more, :automator, :n19, :n19_done, :report],
           :payments => [:index, :new, :edit, :create, :update, :destroy ] },

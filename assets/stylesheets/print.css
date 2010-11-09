@@ -58,7 +58,8 @@ acronym {
 .drop-form,
 .history,
 #col2,
-#footer1 {
+#footer1,
+.payments {
 	display: none;
 	}
 
