@@ -33,7 +33,7 @@ ca:
   label_invoice_status: Estat
   generated_from_template: Generada de la plantilla
   receive_payment: Rebre pagament
-  label_paid: Paid
+  label_paid: Pagat
 
   # Invoice templates
   label_invoice_template_new: Nova plantilla
