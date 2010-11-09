@@ -2,7 +2,7 @@
 
 <div class="box">
   <p><%= f.select :client_id, clients_for_select, :required => true %></p>
-  <p><%= f.text_field :date, :size => 10, :required => true, :label => 'test' %><%= calendar_for('invoice_date') %></p>
+  <p><%= f.text_field :date, :size => 10, :required => true %><%= calendar_for('invoice_date') %></p>
   <% if controller.controller_name == "invoice_templates" -%>
     <p><%= f.text_field :frequency, :required => true %></p>
   <% else -%>

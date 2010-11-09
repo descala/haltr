@@ -1,43 +1,43 @@
 <p>
-  <label>Company Name</label>
-  <%= text_field_tag 'settings[company_name]', @settings['company_name'] %>
+<label><%= l(:company_name) %></label>
+<%= text_field_tag 'settings[company_name]', @settings['company_name'] %>
 </p>
 <p>
-  <label>Company Tax ID</label>
-  <%= text_field_tag 'settings[company_tax_id]', @settings['company_tax_id'] %>
+<label><%= l(:company_tax_id) %></label>
+<%= text_field_tag 'settings[company_tax_id]', @settings['company_tax_id'] %>
 </p>
 <p>
-  <label>company_address</label>
-  <%= text_field_tag 'settings[company_address]', @settings['company_address'] %>
+<label><%= l(:company_address) %></label>
+<%= text_field_tag 'settings[company_address]', @settings['company_address'] %>
 </p>
 
 <p>
-  <label>company_locality</label>
-  <%= text_field_tag 'settings[company_locality]', @settings['company_locality'] %>
+<label><%= l(:company_locality) %></label>
+<%= text_field_tag 'settings[company_locality]', @settings['company_locality'] %>
 </p>
 <p>
-  <label>company_postal_code</label>
-  <%= text_field_tag 'settings[company_postal_code]', @settings['company_postal_code'] %>
+<label><%= l(:company_postal_code) %></label>
+<%= text_field_tag 'settings[company_postal_code]', @settings['company_postal_code'] %>
 </p>
 <p>
-  <label>company_region</label>
-  <%= text_field_tag 'settings[company_region]', @settings['company_region'] %>
+<label><%= l(:company_region) %></label>
+<%= text_field_tag 'settings[company_region]', @settings['company_region'] %>
 </p>
 <p>
-  <label>company_website</label>
-  <%= text_field_tag 'settings[company_website]', @settings['company_website'] %>
+<label><%= l(:company_website) %></label>
+<%= text_field_tag 'settings[company_website]', @settings['company_website'] %>
 </p>
 <p>
-  <label>company_email</label>
-  <%= text_field_tag 'settings[company_email]', @settings['company_email'] %>
+<label><%= l(:company_email) %></label>
+<%= text_field_tag 'settings[company_email]', @settings['company_email'] %>
 </p>
 <p>
-  <label>company_bank_account</label>
-  <%= text_field_tag 'settings[company_bank_account]', @settings['company_bank_account'] %>
+<label><%= l(:company_bank_account) %></label>
+<%= text_field_tag 'settings[company_bank_account]', @settings['company_bank_account'] %>
 </p>
 <p>
-  <label>Company logo url</label>
-  <%= text_field_tag 'settings[company_logo_url]', @settings['company_logo_url'] %>
+<label><%= l(:company_logo_url) %></label>
+<%= text_field_tag 'settings[company_logo_url]', @settings['company_logo_url'] %>
 </p>
 
-<%= link_to 'Back', :controller=>'admin', :action =>'plugins' %>
+<%= link_to l(:button_back), :controller=>'admin', :action =>'plugins' %>

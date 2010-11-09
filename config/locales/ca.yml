@@ -44,7 +44,7 @@ ca:
   # Invoice lines
   field_price_in_cents: Preu
   field_quantity: Quantitat
-  field_invoice_lines: Línies de comanda
+  field_invoice_lines: Línies de factura
 
   # People
   label_person: Persona
@@ -64,6 +64,19 @@ ca:
   # Payments
   label_payment: Pagament
   label_payment_plural: Pagaments
+  label_payment_new: Nou pagament
   field_amount: Import
   field_payment_method: Mètode de pagament
   field_reference: Referència
+
+  # Settings
+  company_name: "Nom de l'empresa"
+  company_tax_id: "CIF de l'empresa"
+  company_address: "Adreça de l'empresa"
+  company_locality: "Localitat de l'empresa"
+  company_postal_code: "Codi postal de l'empresa"
+  company_region: "Província de l'empresa"
+  company_website: "Lloc web de l'empersa"
+  company_email: "e-mail de l'empresa"
+  company_bank_account: "Compte bancari de l'empresa"
+  company_logo_url: "URL on hi ha el logo de l'empresa"
