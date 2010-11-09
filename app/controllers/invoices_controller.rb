@@ -54,6 +54,7 @@ class InvoicesController < ApplicationController
        :include => [:client],
        :limit  =>  @invoice_pages.items_per_page,
        :offset =>  @invoice_pages.current.offset
+    render :action => "index", :layout => false if request.xhr?
   end
 
   def new
