@@ -1,0 +1,13 @@
+<h1>AEB43 import</h1>
+
+<pre>
+<% @moviments.each do |m| %>
+<%= m %>
+<% end %>
+</pre>
+
+<%= @errors %>
+
+<% content_for :sidebar do %>
+  <%= render :partial => 'common/sidebar' %>
+<% end %>

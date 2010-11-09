@@ -46,7 +46,7 @@ class TasksController < ApplicationController
       render :layout => false
     else
       flash[:warning] = "No data for an Nº19"
-      redirect_to :action => 'menu'
+      redirect_to :action => 'menu', :id => @project
     end
   end
   
@@ -73,7 +73,30 @@ class TasksController < ApplicationController
       @total_tax    +=  i.tax
     end
   end
-  
+ 
+  def import_aeb43
+    file = params[:file]
+    if file && file.size > 0
+      importer = Import::Aeb43.new file.path
+      @errors = []
+      @moviments = importer.moviments
+      @moviments.each do |m|
+        if m.positiu
+          begin
+          p =Payment.new :date => m.date_o, :amount => m.amount, :reference => "#{m.ref1}#{m.ref2}#{m.txt1}#{m.txt2}", :project => @project
+          p.save!
+          rescue ActiveRecord::RecordInvalid => e
+            @errors << p.amount_in_cents
+          end
+        end
+      end
+    else
+      flash[:warning] = "No file found"
+      redirect_to :action => 'index', :id => @project
+    end
+  end
+
+
   private
 
   def find_project
