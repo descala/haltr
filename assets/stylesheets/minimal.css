@@ -91,7 +91,7 @@ Version:  002 27 January 2006
 	margin: 0;
 	padding: 50px;
     border: 1px solid;
-	background: #fff url(../images/bgd-workspace1.gif) repeat-y;
+	background: #fff;
     margin-left:auto;
     margin-right:auto;
 	}
@@ -99,7 +99,6 @@ Version:  002 27 January 2006
 	overflow: hidden;
 	margin: 0;
 	padding: 0;
-	background: url(../images/bgd-workspace2.png) top left no-repeat;
 	}
 #col2 {
 	float: right;
@@ -388,8 +387,8 @@ Version:  002 27 January 2006
 	line-height: 24px;
 	background: #dfb;
 	}
-.line-items th.first { padding-left:12px;background: #dfb url(../images/bgd-invoiceTable_th_first.gif) top left repeat-y; }
-.line-items th.last { padding-right:12px;background: #dfb url(../images/bgd-invoiceTable_th_last.gif) top right repeat-y; }
+.line-items th.first { padding-left:12px;background: #dfb; }
+.line-items th.last { padding-right:12px;background: #dfb; }
 .line-items td {
 	margin: 0;
 	padding: 5px 4px 3px;
@@ -423,7 +422,7 @@ Version:  002 27 January 2006
 	border:1px solid #ccc;
 	}
 .show .item-date { width: 70px; }
-.payments .item-date { width: 116px; }
+lpayments .item-date { width: 116px; }
 .newline {
 	margin: -6px 12px 10px;
 	padding: 0;
@@ -564,8 +563,8 @@ Version:  002 27 January 2006
 	line-height: 24px;
 	background: #dfb;
 	}
-.client-list th.first { padding-left:12px;background: #dfb url(../images/bgd-invoiceTable_th_first.gif) top left repeat-y; }
-.client-list th.last { padding-right:12px;background: #dfb url(../images/bgd-invoiceTable_th_last.gif) top right repeat-y; }
+.client-list th.first { padding-left:12px;background: #dfb; }
+.client-list th.last { padding-right:12px;background: #dfb; }
 .client-list td {
 	margin: 0;
 	padding: 4px 4px 3px;

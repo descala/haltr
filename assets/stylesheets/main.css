@@ -97,14 +97,13 @@ a:hover img {
 #workspace1 {
 	margin: 0;
 	padding: 0;
-	background: #fff url(../images/bgd-workspace1.gif) repeat-y;
+	background: #fff;
 	}
 #workspace2 {
 	overflow: hidden;
 	width: 920px;
 	margin: 0;
 	padding: 0;
-	background: url(../images/bgd-workspace2.png) top left no-repeat;
 	}
 #col1 {
 	float: left;
@@ -516,8 +515,8 @@ h2 input {
 	background: #dfb;
 	}
 
-.invoiceTable th.first { background: #dfb url(../images/bgd-invoiceTable_th_first.gif) top left repeat-y; }
-.invoiceTable th.last { background: #dfb url(../images/bgd-invoiceTable_th_last.gif) top right repeat-y; }
+.invoiceTable th.first { background: #dfb; }
+.invoiceTable th.last { background: #dfb; }
 .pastdue th { background: #fd9; }
 .pastdue th.first { background: #fd9 url(../images/bgd-invoiceTable_past_th_first.gif) top left repeat-y; }
 .pastdue th.last { background: #fd9 url(../images/bgd-invoiceTable_past_th_last.gif) top right repeat-y; }
@@ -721,8 +720,8 @@ td.due { color: #1a8; font-style: italic; }
 	line-height: 24px;
 	background: #dfb;
 	}
-.line-items th.first { padding-left:12px;background: #dfb url(../images/bgd-invoiceTable_th_first.gif) top left repeat-y; }
-.line-items th.last { padding-right:12px;background: #dfb url(../images/bgd-invoiceTable_th_last.gif) top right repeat-y; }
+.line-items th.first { padding-left:12px;background: #dfb; }
+.line-items th.last { padding-right:12px;background: #dfb; }
 .line-items td {
 	margin: 0;
 	padding: 5px 4px 3px;
@@ -897,8 +896,8 @@ td.due { color: #1a8; font-style: italic; }
 	line-height: 24px;
 	background: #dfb;
 	}
-.client-list th.first { padding-left:12px;background: #dfb url(../images/bgd-invoiceTable_th_first.gif) top left repeat-y; }
-.client-list th.last { padding-right:12px;background: #dfb url(../images/bgd-invoiceTable_th_last.gif) top right repeat-y; }
+.client-list th.first { padding-left:12px;background: #dfb; }
+.client-list th.last { padding-right:12px;background: #dfb; }
 .client-list td {
 	margin: 0;
 	padding: 4px 4px 3px;
