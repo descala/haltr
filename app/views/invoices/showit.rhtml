@@ -94,16 +94,14 @@
                 <th>Subtotal:</th>
                 <td><%= euros(@invoice.subtotal) %></td>
               </tr>
-              <% unless @invoice.is_a? InvoiceTemplate -%> 
-                <tr class="sales-tax">
-                  <th>IVA <%= number_to_percentage(@invoice.tax_percent, :precision=>0) %> :</th>
-                  <td><%= euros(@invoice.tax) %></td>
-                </tr>
-                <tr class="invoice-total">
-                  <th>Total:</th>
-                  <td><%= euros(@invoice.total) %></td>
-                </tr>
-              <% end -%>
+              <tr class="sales-tax">
+                <th>IVA <%= number_to_percentage(@invoice.tax_percent, :precision=>0) %> :</th>
+                <td><%= euros(@invoice.tax) %></td>
+              </tr>
+              <tr class="invoice-total">
+                <th>Total:</th>
+                <td><%= euros(@invoice.total) %></td>
+              </tr>
           </tbody></table>
 
           <% if @invoice.is_a?(InvoiceDocument) and @invoice.payments.any? -%>
