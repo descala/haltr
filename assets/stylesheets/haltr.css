@@ -27,3 +27,7 @@
 #invoices tr {
   cursor: pointer;
 }
+
+.pastdue {
+  color: red;
+}

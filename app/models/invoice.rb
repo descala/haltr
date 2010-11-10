@@ -47,6 +47,8 @@ class Invoice < ActiveRecord::Base
     :reject_if => proc { |attributes| attributes.all? { |_, value| value.blank? } }
   validates_associated :invoice_lines
 
+  before_save :set_due_date
+
   def subtotal_without_discount
     total = Money.new(0)
     invoice_lines.each do |line|
@@ -149,11 +151,6 @@ class Invoice < ActiveRecord::Base
     terms_object.description
   end
 
-  # Sets due date
-  def before_save
-    self.due_date = terms_object.due_date
-  end
-
   def payment_method
     if use_bank_account and client.bank_account
       ba = client.bank_account
@@ -172,7 +169,15 @@ class Invoice < ActiveRecord::Base
     self.client.project
   end
 
+  def past_due?
+    self.status < STATUS_CLOSED && due_date && due_date < Date.today
+  end
+
   private
+
+  def set_due_date
+    self.due_date = terms_object.due_date
+  end
 
   def terms_object
     Terms.new(self.terms, self.date)

@@ -695,3 +695,6 @@ body.client_view .form-details  {
 	width: 220px;
 	}
 
+.pastdue {
+  color: red;
+}

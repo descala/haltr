@@ -13,7 +13,7 @@ class InvoicesController < ApplicationController
 
   def index
     sort_init 'number', 'desc'
-    sort_update %w(status date number clients.name)
+    sort_update %w(status number date due_date clients.name import_in_cents)
 
     c = ARCondition.new(["clients.project_id = ?",@project.id])
 

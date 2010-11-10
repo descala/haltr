@@ -31,7 +31,7 @@
         <h2 class="invoice-ID"><%= @invoice.label %> <%= @invoice.number %></h2>
         <div class="invoice-info">
           <span class="date"><strong><%= @invoice.date %></strong></span><br/>
-          <span class="invoice-terms">Venciment <%= @invoice.due %></span><br/>
+          <span class="invoice-terms<%=" pastdue" if @invoice.past_due?%>">Venciment <%= @invoice.due %></span><br/>
           <span class="invoice-terms"><%= @invoice.payment_method %></span><br/>
           <span class="invoice-terms"><%= simple_format(@invoice.extra_info) %></span><br/>
 
