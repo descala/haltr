@@ -23,11 +23,10 @@
 #  use_bank_account    :boolean(1)      default(TRUE)
 #
 
-# -*- coding: utf-8 -*-
 class Invoice < ActiveRecord::Base
 
   unloadable
-  
+
   # Invoice statuses
   STATUS_NOT_SENT = 1
   STATUS_SENT     = 5
@@ -38,7 +37,7 @@ class Invoice < ActiveRecord::Base
 
   STATUS_LIST = { STATUS_NOT_SENT=>'Not sent', STATUS_SENT=>'Sent', STATUS_CLOSED=>'Closed' }
 
-  
+
   has_many :invoice_lines, :dependent => :destroy
   belongs_to :client
   validates_presence_of :client, :date
@@ -47,38 +46,37 @@ class Invoice < ActiveRecord::Base
     :allow_destroy => true,
     :reject_if => proc { |attributes| attributes.all? { |_, value| value.blank? } }
    validates_associated :invoice_lines
-    
+
   def subtotal_without_discount
     total = Money.new(0)
     invoice_lines.each do |line|
-      total = total + line.total 
+      total = total + line.total
     end
     total
   end
-  
+
   def subtotal
     subtotal_without_discount - discount
   end
-  
+
   def tax
     subtotal * (tax_percent / 100.0)
   end
-  
+
   def discount
-   
     if discount_percent
       subtotal_without_discount * (discount_percent / 100.0)
     else
       Money.new(0)
     end
   end
-  
+
   def total
     subtotal + tax
   end
-  
+
   def subtotal_eur
-    "#{subtotal} €"    
+    "#{subtotal} €"
   end
 
   def due
@@ -88,7 +86,7 @@ class Invoice < ActiveRecord::Base
       "#{terms_description}"
     end
   end
-  
+
   def pdf_name
     # i18n catalan ca-AD
     # remove_non_ascii "factura-#{number.gsub('/','')}-#{client.name.upcase.gsub(/\/|\.|\'/,'').strip.gsub(' ','_')}.pdf"
@@ -98,12 +96,12 @@ class Invoice < ActiveRecord::Base
   def recipients
     Person.find(:all,:order=>'last_name ASC',:conditions => ["client_id = ? AND invoice_recipient = ?", client, true])
   end
-  
+
   def self.last_number
     i = InvoiceDocument.last :order => "number", :conditions => ["draft=?",false]
     i.number if i
   end
-  
+
   def self.next_number
     number = self.last_number
     if number.nil?
@@ -120,7 +118,7 @@ class Invoice < ActiveRecord::Base
       return num + 1
     end
   end
-  
+
   def sent?
     self.status > STATUS_NOT_SENT
   end
@@ -141,20 +139,20 @@ class Invoice < ActiveRecord::Base
     self.status == STATUS_CLOSED
   end
 
-  
+
   def status_txt
     STATUS_LIST[self.status]
   end
-  
+
   def terms_description
     terms_object.description
   end
-  
+
   # Sets due date
   def before_save
     self.due_date = terms_object.due_date
   end
-  
+
   def payment_method
     if use_bank_account and client.bank_account
       ba = client.bank_account
@@ -163,7 +161,6 @@ class Invoice < ActiveRecord::Base
       ba = Setting.plugin_haltr[:company_bank_account].to_s
       "Pagament per transferència al compte #{ba[0..3]} #{ba[4..7]} #{ba[8..9]} #{ba[10..19]}"
     end
-    
   end
 
   def <=>(oth)
@@ -173,12 +170,11 @@ class Invoice < ActiveRecord::Base
   def project
     self.client.project
   end
-  
+
   private
 
   def terms_object
     Terms.new(self.terms, self.date)
   end
 
-    
 end
