@@ -27,10 +27,12 @@ class InvoiceDocument < Invoice
   unloadable
 
   belongs_to :invoice_template
-  has_many :payments, :foreign_key => 'invoice_id' #, :dependent => :restrict #TODO: ok to set as destroy?
-#  has_many :payments, :dependent => :destroy
+  has_many :payments, :dependent => :nullify
   validates_presence_of :number
   validates_uniqueness_of :number
+
+  before_save :update_status, :unless => Proc.new {|invoicedoc| invoicedoc.status_changed? }
+  before_save :update_import
 
   def self.find_due_dates(project)
     find_by_sql "SELECT due_date, invoices.id, count(*) AS invoice_count FROM invoices, clients WHERE type='InvoiceDocument' AND client_id = clients.id AND clients.project_id = #{project.id} AND status = #{Invoice::STATUS_SENT} AND bank_account AND use_bank_account GROUP BY due_date"
@@ -66,6 +68,17 @@ class InvoiceDocument < Invoice
 
   def unpaid
     total - total_paid
+  end
+
+  protected
+
+  def update_status
+    self.status=STATUS_SENT if status == STATUS_CLOSED && unpaid > 0
+    self.status=STATUS_CLOSED if unpaid == 0
+  end
+
+  def update_import
+    self.import_in_cents=self.subtotal.cents
   end
 
 end

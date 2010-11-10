@@ -6,6 +6,9 @@ class Payment < ActiveRecord::Base
   belongs_to :project
   validates_numericality_of :amount_in_cents, :greater_than => 0
 
+  after_save :save_invoice, :if => Proc.new {|payment| payment.invoice.is_a? InvoiceDocument }
+  after_destroy :save_invoice, :if => Proc.new {|payment| payment.invoice.is_a? InvoiceDocument }
+
   def initialize(attributes=nil)
     super
     self.date ||= Date.today
@@ -17,20 +20,8 @@ class Payment < ActiveRecord::Base
     desc += self.reference
   end
 
-  def after_save
-    return unless invoice
-    unless invoice.unpaid > 0 and invoice.status < Invoice::STATUS_CLOSED
-      invoice.status = Invoice::STATUS_CLOSED
-      invoice.save
-    end
-  end
-
-  def after_destroy
-    return unless invoice
-    if invoice.unpaid > 0 and invoice.status == Invoice::STATUS_CLOSED
-      invoice.status = Invoice::STATUS_SENT
-      invoice.save
-    end
+  def save_invoice
+    invoice.save
   end
 
 end

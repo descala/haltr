@@ -38,18 +38,19 @@ class Invoice < ActiveRecord::Base
   STATUS_LIST = { STATUS_NOT_SENT=>'Not sent', STATUS_SENT=>'Sent', STATUS_CLOSED=>'Closed' }
 
 
-  has_many :invoice_lines, :dependent => :destroy
+  has_many :invoice_lines, :dependent => :destroy, :after_add => :save, :after_remove => :save
   belongs_to :client
   validates_presence_of :client, :date
 
   accepts_nested_attributes_for :invoice_lines,
     :allow_destroy => true,
     :reject_if => proc { |attributes| attributes.all? { |_, value| value.blank? } }
-   validates_associated :invoice_lines
+  validates_associated :invoice_lines
 
   def subtotal_without_discount
     total = Money.new(0)
     invoice_lines.each do |line|
+      next if line.destroyed?
       total = total + line.total
     end
     total
