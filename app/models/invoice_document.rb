@@ -27,7 +27,7 @@ class InvoiceDocument < Invoice
   unloadable
 
   belongs_to :invoice_template
-  has_many :payments, :dependent => :nullify
+  has_many :payments, :foreign_key => :invoice_id, :dependent => :nullify
   validates_presence_of :number
   validates_uniqueness_of :number
 
