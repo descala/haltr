@@ -79,7 +79,7 @@ class InvoiceDocument < Invoice
 
   def update_status
     self.status=STATUS_SENT if status == STATUS_CLOSED && unpaid > 0
-    self.status=STATUS_CLOSED if unpaid == 0
+    self.status=STATUS_CLOSED if unpaid <= 0
   end
 
   def update_import
