@@ -32,7 +32,7 @@
         </tr>
         <tr>
           <th><%= l(:label_client) %>:</th>
-          <td><%= collection_select(nil, :client_id, @project.clients, :id, :name, {:include_blank => true, :selected => params[:client_id]}) %></td>
+          <td><%= collection_select(nil, :client_id, Client.find(:all, :order => 'name', :conditions => ["project_id = ?", @project]), :id, :name, {:include_blank => true, :selected => params[:client_id]}) %></td>
         </tr>
         <tr>
           <th></th>
