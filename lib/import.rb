@@ -14,10 +14,13 @@ module Import
 
     def moviments
       moviments=[]
+      account = nil
       @text.each_line do |line|
         case line[0..1]
+        when '11'
+          account = line[2..22].strip
         when '22'
-          moviments << Moviment.new(line)
+          moviments << Moviment.new(line, account)
         when '23' 
           moviments.last.process_23 line
         end
@@ -35,10 +38,13 @@ module Import
   
   
   class Moviment
+
     attr_accessor :date_o, :date_v, :positiu, :amount, :ref1, :ref2
     attr_accessor :txt1, :txt2
-    
-    def initialize(line)
+    attr_accessor :account
+
+    def initialize(line,account=nil)
+      @account = account
       process_22 line
     end
 
@@ -46,7 +52,7 @@ module Import
       @line = line
       @date_o = aammdd_date 10
       @date_v = aammdd_date 16
-      @amount = money 28, 14
+      @amount = money 28, 13
       @ref1 = string 52, 11
       @ref2 = string 64, 16
       @positiu = signe 27
@@ -60,7 +66,9 @@ module Import
     
     def to_s
       s = positiu ?  '+' : '-'
-      "#{@date_o} #{date_v} #{s}#{amount} #{ref1} #{ref2} ** #{txt1} #{txt2}"
+      n = "#{s}#{amount}"
+      t = "#{ref1} #{ref2} #{txt1} #{txt2}"
+      "#{@date_o} #{date_v} #{n.rjust(14)} #{t.strip}" 
     end
     
     private

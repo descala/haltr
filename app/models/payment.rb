@@ -9,6 +9,8 @@ class Payment < ActiveRecord::Base
   after_save :save_invoice, :if => Proc.new {|payment| payment.invoice.is_a? InvoiceDocument }
   after_destroy :save_invoice, :if => Proc.new {|payment| payment.invoice.is_a? InvoiceDocument }
 
+  before_save :guess_invoice, :unless => :invoice
+
   def initialize(attributes=nil)
     super
     self.date ||= Date.today
@@ -22,6 +24,11 @@ class Payment < ActiveRecord::Base
 
   def save_invoice
     invoice.save
+  end
+
+  def guess_invoice
+    candidates = InvoiceDocument.candidates_for_payment self
+    self.invoice = candidates.first if candidates
   end
 
 end

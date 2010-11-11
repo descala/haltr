@@ -83,10 +83,10 @@ class TasksController < ApplicationController
       @moviments.each do |m|
         if m.positiu
           begin
-          p =Payment.new :date => m.date_o, :amount => m.amount, :reference => "#{m.ref1}#{m.ref2}#{m.txt1}#{m.txt2}", :project => @project
+          p =Payment.new :date => m.date_o, :amount => m.amount, :payment_method => "Account #{m.account}", :reference => "#{m.ref1} #{m.ref2} #{m.txt1} #{m.txt2}".strip, :project => @project
           p.save!
           rescue ActiveRecord::RecordInvalid => e
-            @errors << p.amount_in_cents
+            @errors << p
           end
         end
       end

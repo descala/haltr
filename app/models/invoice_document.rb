@@ -70,6 +70,11 @@ class InvoiceDocument < Invoice
     total - total_paid
   end
 
+  def self.candidates_for_payment(payment)
+    # order => older invoices to get paid first
+    find :all, :conditions => ["round(import_in_cents*(1+tax_percent/100)) = ? and date <= ? and status < ?", payment.amount_in_cents, payment.date, STATUS_CLOSED], :order => "due_date ASC"
+  end
+
   protected
 
   def update_status
