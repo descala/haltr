@@ -39,16 +39,15 @@ class InvoiceTemplate < Invoice
       i.date = i.date.next_week
     end
     template_replacements(i.date)
-    if i.save!
-      self.date = self.date.to_time.months_since(self.frequency)
-      self.save!
-    end
     # copy template lines
     self.invoice_lines.each do |tl|
       l = InvoiceLine.new tl.attributes
-      l.invoice = i
       l.template_replacements(i.date)
-      l.save!
+      i.invoice_lines << l
+    end
+    if i.save!
+      self.date = self.date.to_time.months_since(self.frequency)
+      self.save!
     end
     return i
   end
