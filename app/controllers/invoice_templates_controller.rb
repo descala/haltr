@@ -33,7 +33,7 @@ class InvoiceTemplatesController < ApplicationController
        :limit  =>  @invoice_pages.items_per_page,
        :offset =>  @invoice_pages.current.offset
 
-    render(:template => "index", :layout => false) if request.xhr?
+    render :action => "index", :layout => false if request.xhr?
   end
 
   def new
