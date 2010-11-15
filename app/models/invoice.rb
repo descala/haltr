@@ -156,7 +156,7 @@ class Invoice < ActiveRecord::Base
       ba = client.bank_account
       "Rebut domiciliat a #{ba[0..3]} #{ba[4..7]} ** ******#{ba[16..19]}"
     else
-      ba = Setting.plugin_haltr[:company_bank_account].to_s
+      ba = client.project.custom_value_for(ProjectCustomField.find_by_name("company_bank_account")).value rescue ""
       "Pagament per transferència al compte #{ba[0..3]} #{ba[4..7]} #{ba[8..9]} #{ba[10..19]}"
     end
   end
