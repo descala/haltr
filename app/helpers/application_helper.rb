@@ -2,10 +2,6 @@
 # Methods added to this helper will be available to all templates in the application.
 module ApplicationHelper
 
-  def custom_value(project,custom_field_name,alt="")
-    project.custom_value_for(ProjectCustomField.find_by_name(custom_field_name.to_s)).value rescue alt
-  end
-
   def path_to_stylesheet(source)
     path = super(source)
     especial path

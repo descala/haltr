@@ -11,6 +11,19 @@ begin
     author 'Ingent'
     description 'Hackers dont do books'
     version '0.1'
+    settings :default => {
+      'company_name' => 'Ingent Grup Systems, SL',
+      'company_tax_id' => 'B63354724',
+      'company_address' => '',
+      'company_locality' => '',
+      'company_postal_code' => '',
+      'company_region' => '',
+      'company_website' => '',
+      'company_email' => '',
+      'company_bank_account' => '',
+      'company_logo_url' => ''
+    },
+    :partial => 'haltradmin/settings'
 
     project_module :haltr do
       permission :general_use,
@@ -29,20 +42,4 @@ begin
 
 rescue MissingSourceFile
   RAILS_DEFAULT_LOGGER.info 'Warning: not running inside Redmine'
-end
-
-haltr_settings = ['company_name',
-'company_tax_id',
-'company_address',
-'company_locality',
-'company_postal_code',
-'company_region',
-'company_website',
-'company_email',
-'company_bank_account',
-'company_logo_url']
-
-haltr_settings.each do |hs|
-  next if ProjectCustomField.find_by_name hs
-  ProjectCustomField.new(:name=>hs,:field_format=>"string").save
 end

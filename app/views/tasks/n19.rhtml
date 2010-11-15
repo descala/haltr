@@ -1,11 +1,11 @@
 <% r1 = r2 = 0 -%>
-5180<%= custom_value @project, :company_tax_id %>000<%= @fecha_confeccion %>      <%= custom_value @project, :company_name.ljust(60)%><%= custom_value @project, :company_bank_account.to_s[0..7] %><%= ' '*66%>
-5380<%= custom_value @project, :company_tax_id %>000<%= @fecha_confeccion %><%= @due_date.to_formatted_s :ddmmyy %><%= custom_value @project, :company_name.ljust(40)%><%= custom_value @project, :company_bank_account.to_s %>        01<%= ' '*64%>
+5180<%= Setting.plugin_haltr[:company_tax_id] %>000<%= @fecha_confeccion %>      <%= Setting.plugin_haltr[:company_name].ljust(60)%><%= Setting.plugin_haltr[:company_bank_account].to_s[0..7] %><%= ' '*66%>
+5380<%= Setting.plugin_haltr[:company_tax_id] %>000<%= @fecha_confeccion %><%= @due_date.to_formatted_s :ddmmyy %><%= Setting.plugin_haltr[:company_name].ljust(40)%><%= Setting.plugin_haltr[:company_bank_account].to_s %>        01<%= ' '*64%>
 <% @clients.each do |client|; invoices = client.bank_invoices(@due_date); r1 += 1; r2 += 1 -%>
-5680<%= custom_value @project, :company_tax_id %>000<%= client.taxcode.ljust(12) %><%= client.name.to_ascii.upcase.ljust(40) %><%= client.bank_account.rjust(20) %><%= sprintf("%010d",client.bank_invoices_total(@due_date).cents) %><%= ' '*16 %><%= "FACTURA #{invoices.first.number}".ljust(30) %><%= invoices.first.total.to_s.rjust(10) %><%= ' '*8 %>
+5680<%= Setting.plugin_haltr[:company_tax_id] %>000<%= client.taxcode.ljust(12) %><%= client.name.to_ascii.upcase.ljust(40) %><%= client.bank_account.rjust(20) %><%= sprintf("%010d",client.bank_invoices_total(@due_date).cents) %><%= ' '*16 %><%= "FACTURA #{invoices.first.number}".ljust(30) %><%= invoices.first.total.to_s.rjust(10) %><%= ' '*8 %>
 <% invoices.shift; i=0; invoices.each do |invoice| i=i+1; r2 += 1; -%>
-568<%=i%><%= custom_value @project, :company_tax_id %>000<%= client.taxcode.ljust(12) %><%= "FACTURA #{invoice.number}".ljust(30) %><%= invoice.total.to_s.rjust(10) %><%= ' '*94 %>
+568<%=i%><%= Setting.plugin_haltr[:company_tax_id] %>000<%= client.taxcode.ljust(12) %><%= "FACTURA #{invoice.number}".ljust(30) %><%= invoice.total.to_s.rjust(10) %><%= ' '*94 %>
 <% end -%>
 <% end -%>
-5880<%= custom_value @project, :company_tax_id %>000                                                                        <%= sprintf("%010d",@total.cents) %>      <%= sprintf("%010d",r1) %><%= sprintf("%010d",r2 + 2) %><%= ' '*38%>
-5980<%= custom_value @project, :company_tax_id %>000                                                    0001                <%= sprintf("%010d",@total.cents) %>      <%= sprintf("%010d",r1) %><%= sprintf("%010d",r2 + 4) %><%= ' '*38%>
+5880<%= Setting.plugin_haltr[:company_tax_id] %>000                                                                        <%= sprintf("%010d",@total.cents) %>      <%= sprintf("%010d",r1) %><%= sprintf("%010d",r2 + 2) %><%= ' '*38%>
+5980<%= Setting.plugin_haltr[:company_tax_id] %>000                                                    0001                <%= sprintf("%010d",@total.cents) %>      <%= sprintf("%010d",r1) %><%= sprintf("%010d",r2 + 4) %><%= ' '*38%>
