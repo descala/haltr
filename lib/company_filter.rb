@@ -7,6 +7,7 @@ module CompanyFilter
     if @project.company.nil?
       c = Company.new(:project=>@project)
       c.save(false)
+      @project.reload
     end
     unless @project.company.valid?
       flash[:error] = "Configure company settings before using haltr"
