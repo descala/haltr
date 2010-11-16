@@ -74,13 +74,12 @@ ca:
   field_reference: Referència
 
   # Settings
-  company_name: "Nom de l'empresa"
-  company_tax_id: "CIF de l'empresa"
-  company_address: "Adreça de l'empresa"
-  company_locality: "Localitat de l'empresa"
-  company_postal_code: "Codi postal de l'empresa"
-  company_region: "Província de l'empresa"
-  company_website: "Lloc web de l'empersa"
-  company_email: "e-mail de l'empresa"
-  company_bank_account: "Compte bancari de l'empresa"
-  company_logo_url: "URL on hi ha el logo de l'empresa"
+  field_taxid: "CIF"
+  field_address: "Adreça"
+  field_locality: "Localitat"
+  field_postal_code: "Codi postal"
+  field_region: "Província"
+  field_website: "Lloc web"
+  field_email: "e-mail"
+  field_bank_account: "Compte bancari"
+  field_logo_url: "URL on hi ha el logo"

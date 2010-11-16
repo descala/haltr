@@ -10,20 +10,20 @@
         <!-- Vendor Info -->
         <div class="vcard vendor">
           <div class="logo">
-            <%= image_tag Setting.plugin_haltr[:company_logo_url], :alt => "#{Setting.plugin_haltr[:company_name]} Logo"  %>
+            <%= image_tag @project.company.logo_url, :alt => "#{@project.company.name} Logo"  %>
           </div>
           <div class="vendor-info">
-            <h3 class="org fn"><%= Setting.plugin_haltr[:company_name] %></h3>
+            <h3 class="org fn"><%= @project.company.name %></h3>
             <address class="adr">
-              <div class="street-address"><%= Setting.plugin_haltr[:company_address] %></div>
-              <span class="postal-code"><%= Setting.plugin_haltr[:company_postal_code] %></span> <span class="locality"><%= Setting.plugin_haltr[:company_locality] %></span>
-              <div class="region"><%= Setting.plugin_haltr[:company_region] %></div>
+              <div class="street-address"><%= @project.company.address %></div>
+              <span class="postal-code"><%= @project.company.postal_code %></span> <span class="locality"><%= @project.company.locality %></span>
+              <div class="region"><%= @project.company.region %></div>
               <div class="country-name"></div>
             </address>
-            <div><strong>CIF:</strong><span class="tax-id"> <%= Setting.plugin_haltr[:company_tax_id] %></span></div>
+            <div><strong>CIF:</strong><span class="tax-id"> <%= @project.company.taxid %></span></div>
             <div style="height:10px;"></div>
-            <div><a href="<%= Setting.plugin_haltr[:company_website] %>" class="url" target="_blank"><%= Setting.plugin_haltr[:company_website] %></a></div>
-            <div><a href="<%= Setting.plugin_haltr[:company_email] %>" class="url" target="_blank"><%= Setting.plugin_haltr[:company_email] %></a></div>
+            <div><a href="<%= @project.company.website %>" class="url" target="_blank"><%= @project.company.website %></a></div>
+            <div><a href="<%= @project.company.email %>" class="url" target="_blank"><%= @project.company.email %></a></div>
           </div>
         </div>
 

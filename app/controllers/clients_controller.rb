@@ -11,6 +11,9 @@ class ClientsController < ApplicationController
   before_filter :find_client, :except => [:index,:new,:create]
   before_filter :authorize
 
+  include CompanyFilter
+  before_filter :check_for_company
+
   def index
     sort_init 'taxcode', 'asc'
     sort_update %w(taxcode name)
@@ -67,15 +70,6 @@ class ClientsController < ApplicationController
   end
 
   private
-
-  def find_project
-    begin
-      @project = Project.find(params[:id])
-      logger.info "Project #{@project.name}"
-    rescue ActiveRecord::RecordNotFound
-      render_404
-    end
-  end
 
   def find_client
     @client = Client.find params[:id]

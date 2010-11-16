@@ -11,6 +11,9 @@ class InvoicesController < ApplicationController
   before_filter :find_payment, :only => [:destroy_payment]
   before_filter :authorize
 
+  include CompanyFilter
+  before_filter :check_for_company
+
   def index
     sort_init 'number', 'desc'
     sort_update %w(status number date due_date clients.name import_in_cents)
@@ -161,16 +164,6 @@ class InvoicesController < ApplicationController
     @project = @client.project
   rescue ActiveRecord::RecordNotFound
     render_404
-  end
-
-  def find_project
-    begin
-      @project = Project.find(params[:id])
-      Project.send(:include, ProjectHaltrPatch) #TODO: perque nomes funciona el primer cop sense aixo?
-      logger.info "Project #{@project.name}"
-    rescue ActiveRecord::RecordNotFound
-      render_404
-    end
   end
 
   def find_payment

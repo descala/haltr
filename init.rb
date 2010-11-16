@@ -11,19 +11,6 @@ begin
     author 'Ingent'
     description 'Hackers dont do books'
     version '0.1'
-    settings :default => {
-      'company_name' => 'Ingent Grup Systems, SL',
-      'company_tax_id' => 'B63354724',
-      'company_address' => '',
-      'company_locality' => '',
-      'company_postal_code' => '',
-      'company_region' => '',
-      'company_website' => '',
-      'company_email' => '',
-      'company_bank_account' => '',
-      'company_logo_url' => ''
-    },
-    :partial => 'haltradmin/settings'
 
     project_module :haltr do
       permission :general_use,
@@ -32,7 +19,8 @@ begin
           :invoices => [:index, :new, :edit, :create, :update, :destroy, :showit, :pdf, :template, :mark_sent, :mark_closed, :mark_not_sent, :destroy_payment],
           :invoice_templates => [:index, :new, :edit, :create, :update, :destroy, :showit, :new_from_invoice],
           :tasks    => [:index, :create_more, :automator, :n19, :n19_done, :report, :import_aeb43],
-          :payments => [:index, :new, :edit, :create, :update, :destroy ] },
+          :payments => [:index, :new, :edit, :create, :update, :destroy ],
+          :companies => [:index,:edit,:update]},
         :require => :member
     end
 

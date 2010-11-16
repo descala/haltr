@@ -74,13 +74,12 @@ en:
   field_reference: Reference
 
   # Settings
-  company_name: Company name
-  company_tax_id: Company tax Id
-  company_address: Company address
-  company_locality: Company locality
-  company_postal_code: Company postal code
-  company_region: Company region
-  company_website: Company website
-  company_email: Company email
-  company_bank_account: Company bank account
-  company_logo_url: Company Logo URL
+  field_taxid: Tax Id
+  field_address: Address
+  field_locality: Locality
+  field_postal_code: Postal code
+  field_region: Region
+  field_website: Website
+  field_email: Email
+  field_bank_account: Bank account
+  field_logo_url: Logo URL

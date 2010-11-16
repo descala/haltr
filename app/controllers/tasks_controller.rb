@@ -7,6 +7,9 @@ class TasksController < ApplicationController
   before_filter :find_invoice, :only => [:n19, :n19_done]
   before_filter :authorize
 
+  include CompanyFilter
+  before_filter :check_for_company
+
   def index
     @num_new_invoices = InvoiceTemplate.count(:include=>[:client],:conditions => ["clients.project_id = ? AND date <= ?", @project, Time.now + 15.day])
     @num_not_sent = InvoiceDocument.find_not_sent(@project).size
@@ -98,11 +101,6 @@ class TasksController < ApplicationController
 
 
   private
-
-  def find_project
-    Project.send(:include, ProjectHaltrPatch) #TODO: perque nomes funciona el primer cop sense aixo?
-    @project = Project.find(params[:id])
-  end
 
   def find_invoice
     @invoice = InvoiceDocument.find params[:id]

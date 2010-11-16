@@ -10,6 +10,9 @@ class PaymentsController < ApplicationController
   before_filter :find_payment, :only   => [:destroy,:edit,:update]
   before_filter :authorize
 
+  include CompanyFilter
+  before_filter :check_for_company
+
   def index
     sort_init 'date', 'asc'
     sort_update %w(payments.date amount_in_cents invoices.number)
@@ -77,14 +80,6 @@ class PaymentsController < ApplicationController
   end
 
   private
-
-  def find_project
-    begin
-      @project = Project.find(params[:id])
-    rescue ActiveRecord::RecordNotFound
-      render_404
-    end
-  end
 
   def find_payment
     @payment = Payment.find(params[:id])

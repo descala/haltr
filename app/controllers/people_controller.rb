@@ -10,6 +10,9 @@ class PeopleController < ApplicationController
   before_filter :find_person, :only   => [:show,:edit,:destroy,:update]
   before_filter :authorize
 
+  include CompanyFilter
+  before_filter :check_for_company
+
   def index
     sort_init 'last_name', 'asc'
     sort_update %w(first_name last_name email)

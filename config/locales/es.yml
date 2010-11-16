@@ -70,13 +70,12 @@ es:
   field_reference: Referencia
 
   # Settings
-  company_name: "Nombre de la empresa"
-  company_tax_id: "CIF de la empresa"
-  company_address: "Dirección de la empresa"
-  company_locality: "Localidad de la empresa"
-  company_postal_code: "Código postal de la empresa"
-  company_region: "Provincia de la empresa"
-  company_website: "Sitio web de la empersa"
-  company_email: "e-mail de la empresa"
-  company_bank_account: "Cuenta bancaria de la empresa"
-  company_logo_url: "URL de el logo de la empresa"
+  field_taxid: "CIF"
+  field_address: "Dirección"
+  field_locality: "Localidad"
+  field_postal_code: "Código postal"
+  field_region: "Provincia"
+  field_website: "Sitio web"
+  field_email: "e-mail"
+  field_bank_account: "Cuenta bancaria"
+  field_logo_url: "URL de el logo"

@@ -1,0 +1,10 @@
+<h1><%= l(:label_settings) %></h1>
+
+<% labelled_tabular_form_for :company, @company, :url => { :action => 'update', :id => @company } do |f| %>
+<%= render :partial => 'form', :locals => { :f => f } %>
+<%= submit_tag l(:button_save) %>
+<% end %>
+
+<% content_for :sidebar do %>
+    <%= render :partial => 'common/sidebar' %>
+<% end %>
