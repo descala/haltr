@@ -9,7 +9,12 @@ class CompaniesController < ApplicationController
   before_filter :authorize
 
   def index
-    @company = @project.company.nil? ? Company.new(:project=>@project) : @project.company
+    if @project.company.nil?
+      @company = Company.new(:project=>@project)
+      @company.save(false)
+    else
+      @company = @project.company
+    end
     render :action => 'edit'
   end
 

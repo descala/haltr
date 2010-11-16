@@ -11,7 +11,7 @@ module CompanyFilter
     end
     unless @project.company.valid?
       flash[:error] = "Configure company settings before using haltr"
-      redirect_to :controller => :companies, :action => :edit, :id => @project
+      redirect_to :controller => :companies, :action => :index, :id => @project
     end
   end
 
