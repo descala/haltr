@@ -3,15 +3,13 @@ class CompaniesController < ApplicationController
   unloadable
   menu_item :haltr
 
+  before_filter :project_patch
   before_filter :find_project, :except => [:update]
   before_filter :find_company, :only => [:update]
   before_filter :authorize
 
-  include CompanyFilter
-  before_filter :check_for_company
-
   def index
-    @company = @project.company
+    @company = @project.company.nil? ? Company.new(:project=>@project) : @project.company
     render :action => 'edit'
   end
 
@@ -29,6 +27,10 @@ class CompaniesController < ApplicationController
   def find_company
     @company = Company.find params[:id]
     @project = @company.project
+  end
+
+  def project_patch
+    Project.send(:include, ProjectHaltrPatch) #TODO: perque nomes funciona el primer cop sense aixo?
   end
 
 end
