@@ -4,14 +4,13 @@
 
 <div class="contextual">
   <%= link_to l(:label_invoice_new), {:action => 'new', :id => @project}, :class => 'icon icon-add' %>
-  <%= check_box nil, nil, :onclick => "Element.toggle('filter');"%> Hide filter
 </div>
 
 <h2><%= controller.controller_name == "invoice_templates" ? l(:label_invoice_template_plural) : l(:label_invoice_plural)%></h2>
 
-<div id="filter" class="invoiceFilter">
   <% form_tag({}, :method => :get) do %>
-    <fieldset><legend><%= l(:label_filter_plural) %></legend>
+    <fieldset id="filters" class="collapsible"><legend onclick="toggleFieldset(this);"><%= l(:label_filter_plural) %></legend>
+    <div id="query_form_content" class="hide-when-print">
       <table>
         <tr>
           <th><%= l(:label_invoice_status) %>:</th>
@@ -39,9 +38,9 @@
           <td><%= submit_tag l(:button_apply), :class => "small", :name => nil %></td>
         </tr>
       </table>
+    </div>
     </fieldset>
   <% end %>
-</div>
 
 
 <table class="list" id="invoices">
