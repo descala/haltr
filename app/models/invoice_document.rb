@@ -29,7 +29,7 @@ class InvoiceDocument < Invoice
   belongs_to :invoice_template
   has_many :payments, :foreign_key => :invoice_id, :dependent => :nullify
   validates_presence_of :number
-  validates_uniqueness_of :number
+  validate :number_must_be_unique_in_project
 
   before_save :update_status, :unless => Proc.new {|invoicedoc| invoicedoc.status_changed? }
   before_save :update_import
@@ -84,6 +84,13 @@ class InvoiceDocument < Invoice
 
   def update_import
     self.import_in_cents=self.subtotal.cents
+  end
+
+  def number_must_be_unique_in_project
+    return false if self.client.nil?
+    if self.client.project.clients.collect {|c| c.invoice_documents }.flatten.compact.collect {|i| i.number}.include? self.number
+      errors.add(:base, ("#{l(:field_number)} #{l(:taken)}"))
+    end
   end
 
 end

@@ -27,7 +27,7 @@ class Client < ActiveRecord::Base
   has_many :people
 
   # TODO: only in Redmine
-  belongs_to :project
+  belongs_to :project, :include => true
 
   validates_presence_of :name, :taxcode
   validates_uniqueness_of :name, :scope => :project_id

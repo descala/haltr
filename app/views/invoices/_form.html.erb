@@ -6,7 +6,7 @@
   <% if controller.controller_name == "invoice_templates" -%>
     <p><%= f.text_field :frequency, :required => true %></p>
   <% else -%>
-    <p><%= f.text_field :number, :size => 10, :required => true %><%=" Last used: #{InvoiceDocument.last_number}" if InvoiceDocument.all.any?%></p>
+    <p><%= f.text_field :number, :size => 10, :required => true %><%=" Last used: #{InvoiceDocument.last_number(@project)}" if InvoiceDocument.all.any?%></p>
   <% end -%>
   <p><%= f.text_field :extra_info %></p>
   <p><%= f.text_field :terms %></p>

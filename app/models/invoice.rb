@@ -100,13 +100,13 @@ class Invoice < ActiveRecord::Base
     Person.find(:all,:order=>'last_name ASC',:conditions => ["client_id = ? AND invoice_recipient = ?", client, true])
   end
 
-  def self.last_number
-    i = InvoiceDocument.last :order => "number", :conditions => ["draft=?",false]
+  def self.last_number(project)
+    i = InvoiceDocument.last(:order => "number", :include => [:client], :conditions => ["clients.project_id=? AND draft=?",project.id,false])
     i.number if i
   end
 
-  def self.next_number
-    number = self.last_number
+  def self.next_number(project)
+    number = self.last_number(project)
     if number.nil?
       a = []
       num = 0

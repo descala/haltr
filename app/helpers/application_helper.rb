@@ -24,7 +24,7 @@ module ApplicationHelper
   def number_form_column(record, input_name)
     output = input :record, :number, :class=>'text-input'
     output += content_tag :span do
-      "Last used: #{InvoiceDocument.last_number}"
+      "Last used: #{InvoiceDocument.last_number(@project)}"
     end
   end
 

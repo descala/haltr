@@ -31,7 +31,7 @@ class InvoiceTemplate < Invoice
 
   def next_invoice
     i = InvoiceDocument.new self.attributes
-    i.number = InvoiceDocument.next_number
+    i.number = InvoiceDocument.next_number(self.client.project)
     i.tax_percent = Invoice::TAX
     i.invoice_template = self
     # Do not generate invoices on weekend
