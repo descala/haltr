@@ -15,6 +15,7 @@ en:
   button_people: People
   field_invoice_format: Preferred invoice format
   field_currency: Currency
+  field_ponumber: Purchase Order
 
   # Invoices
   label_invoice_plural: Invoices

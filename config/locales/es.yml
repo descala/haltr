@@ -15,6 +15,7 @@ es:
   button_people: Personas
   field_invoice_format: Formato de factura preferido
   field_currency: Moneda
+  field_ponumber: Número de pedido
 
   # Invoices
   label_invoice_plural: Facturas

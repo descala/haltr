@@ -8,12 +8,13 @@
   <% else -%>
     <p><%= f.text_field :number, :size => 10, :required => true %><%=" Last used: #{InvoiceDocument.last_number(@project)}" if InvoiceDocument.all.any?%></p>
   <% end -%>
-  <p><%= f.text_field :extra_info %></p>
+  <p><%= f.text_field :ponumber %></p>
   <p><%= f.text_field :terms %></p>
   <p><%= f.text_field :due_date, :size => 10, :readonly => true %></p>
   <p><%= f.text_field :tax_percent %></p>
   <p><%= f.text_field :discount_text %></p>
   <p><%= f.text_field :discount_percent %></p>
+  <p><%= f.text_area :extra_info, :rows=>3 %></p>
   <p><%= f.check_box :draft %></p>
   <p><%= f.check_box :use_bank_account %></p>
   <div id="invoice_lines">

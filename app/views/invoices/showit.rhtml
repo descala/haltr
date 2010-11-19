@@ -33,7 +33,9 @@
           <span class="date"><strong><%= @invoice.date %></strong></span><br/>
           <span class="invoice-terms<%=" pastdue" if @invoice.past_due?%>">Venciment <%= @invoice.due %></span><br/>
           <span class="invoice-terms"><%= @invoice.payment_method %></span><br/>
-          <span class="invoice-terms"><%= simple_format(@invoice.extra_info) %></span><br/>
+          <% unless @invoice.ponumber.blank? -%>
+            <span class="invoice-terms"><%= "#{t(:field_ponumber)} #{@invoice.ponumber}" %></span><br/>
+          <% end -%>
 
         </div>
 
@@ -137,6 +139,11 @@
 
         <% end -%>
 
+        </div>
+
+        <div class="notes">
+          <h3>Invoice Notes</h3>
+          <span class="invoice-terms"><%= simple_format(@invoice.extra_info) %></span><br/>
         </div>
 
         <!-- END Standard Invoice Markup -->
