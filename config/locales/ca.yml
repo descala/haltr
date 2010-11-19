@@ -13,6 +13,8 @@ ca:
   field_country: País
   field_bank_account: Compte bancari
   button_people: Persones
+  field_invoice_format: Format de factura preferit
+  field_currency: Moneda
 
   # Invoices
   label_invoice_plural: Factures

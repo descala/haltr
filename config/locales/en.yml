@@ -13,6 +13,8 @@ en:
   field_country: Country
   field_bank_account: Banck account
   button_people: People
+  field_invoice_format: Preferred invoice format
+  field_currency: Currency
 
   # Invoices
   label_invoice_plural: Invoices

@@ -3,6 +3,7 @@
 <div class="box">
 <p><%= f.text_field :taxcode, :size => 20, :required => true %></p>
 <p><%= f.text_field :name, :size => 60, :required => true %></p>
+<p><%= f.text_field :email %></p>
 <p><%= f.text_field :address1 %></p>
 <p><%= f.text_field :address2 %></p>
 <p><%= f.text_field :city %></p>
@@ -10,5 +11,9 @@
 <p><%= f.text_field :postalcode %></p>
 <p><%= f.text_field :country %></p>
 <p><%= f.text_field :bank_account %></p>
+<p><%= f.text_field :currency %></p>
+<p><%= f.select :language, [[I18n.t(:general_lang_name, :locale=>:ca),"ca"],[I18n.t(:general_lang_name, :locale=>:es),"es"],[I18n.t(:general_lang_name, :locale=>:en),"en"]] %></p>
+<% if @folder_options.any? -%>
+  <p><%= f.select :invoice_format, @folder_options %></p>
+<% end -%>
 </div>
-

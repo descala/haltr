@@ -10,6 +10,7 @@ class ClientsController < ApplicationController
   before_filter :find_project, :only => [:index,:new,:create]
   before_filter :find_client, :except => [:index,:new,:create]
   before_filter :authorize
+  before_filter :set_folder_options, :only => [:new,:create,:edit,:update]
 
   include CompanyFilter
   before_filter :check_for_company
@@ -78,5 +79,11 @@ class ClientsController < ApplicationController
     render_404
   end
 
+  def set_folder_options
+    @folder_options = []
+    @folder_options << [Setting.plugin_haltr['folder1_name'],"folder1"] unless Setting.plugin_haltr['folder1_name'].blank?
+    @folder_options << [Setting.plugin_haltr['folder2_name'],"folder2"] unless Setting.plugin_haltr['folder2_name'].blank?
+    @folder_options.insert(0,"") if @folder_options.any?
+  end
 
 end
