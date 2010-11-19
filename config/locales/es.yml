@@ -20,6 +20,7 @@ es:
   # Invoices
   label_invoice_plural: Facturas
   label_invoice: Factura
+  label_draft: Borrador de factura
   field_invoice: Factura
   label_invoice_new: Nueva factura
   button_new_invoice: Nueva factura
@@ -37,6 +38,10 @@ es:
   generated_from_template: Generada de la plantilla
   receive_payment: Recibir pago
   label_paid: Pagado
+  save_invoice: Guardar factura
+  recipients: Destinatarios
+  open_invoices: Facturas abiertas
+  label_subtotal: Subtotal
 
   # Invoice templates
   label_invoice_template_new: Nueva plantilla
@@ -63,6 +68,10 @@ es:
 
   # Tasks
   label_task_plural: Tareas
+  with_date: Con fecha
+  charge_bank_on_date: Cobrar a dia
+  nothing_to_report: Nada a mostrar
+  nothing_to_generate: Nada a generar
 
   # Payments
   label_payment: Pagos
@@ -82,3 +91,4 @@ es:
   field_email: "e-mail"
   field_bank_account: "Cuenta bancaria"
   field_logo_url: "URL de el logo"
+  folders_to_leave_invoices_on: "Carpetas donde dejar las facturas"

@@ -7,7 +7,7 @@
     <li><%= link_to l(:button_delete), {:action=>'destroy',:id=>@invoice} , :confirm => l(:text_are_you_sure), :method => :post %></li>
     <% if @invoice.is_a? InvoiceDocument -%>
       <li><%= change_status_link2(@invoice) %></li>
-      <li><%= link_to "Desar factura <strong>PDF</strong>", :action=>'pdf', :id=>@invoice %></li>
+      <li><%= link_to "#{l(:save_invoice)} <strong>PDF</strong>", :action=>'pdf', :id=>@invoice %></li>
       <% if @invoice.status < Invoice::STATUS_CLOSED -%>
         <li><%= link_to l(:receive_payment), :controller => 'payments', :action => 'new', :id => @project, :invoice_id => @invoice %></li>
       <% end -%>
@@ -25,7 +25,7 @@
 
   <% if @invoice.is_a?(InvoiceDocument) -%>
   <div class="client-invoices">
-    <h3>Recipients</h3>
+    <h3><%=l(:recipients)%></h3>
     <ul class="secondary">
       <% @invoice.recipients.each do |person| -%>
         <li>
@@ -37,7 +37,7 @@
 
   <% if @invoices_not_sent.any? -%>
   <div class="client-invoices">
-    <h3>Factures obertes</h3>
+    <h3><%=l(:open_invoices)%></h3>
     <p style="padding:7px 20px;">
       <% @invoices_not_sent.each do |invoice| -%>
         <%=link_to invoice.number, :action => 'showit', :id => invoice %><%= ", " unless invoice == @invoices_not_sent.last %>

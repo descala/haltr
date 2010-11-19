@@ -2,7 +2,7 @@
 <html xml:lang="en" xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta http-equiv="content-type" content="text/html; charset=UTF-8"/>
-    <title>Factura | <%= @project.company.name %></title>
+    <title><%= l(:label_invoice) %> | <%= @project.company.name %></title>
     <%= stylesheet_link_tag "print", :media => "print", :plugin => "haltr" %> 
   </head>
   <body class="client_view">

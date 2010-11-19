@@ -20,6 +20,7 @@ ca:
   # Invoices
   label_invoice_plural: Factures
   label_invoice: Factura
+  label_draft: Esborrany de factura
   field_invoice: Factura
   label_invoice_new: Nova factura
   button_new_invoice: Nova factura
@@ -41,6 +42,10 @@ ca:
   field_tax_percent: IVA
   label_from: Des de
   label_to: Fins a
+  save_invoice: Desar factura
+  recipients: Destinataris
+  open_invoices: Factures obertes
+  label_subtotal: Subtotal
 
   # Invoice templates
   label_invoice_template_new: Nova plantilla
@@ -67,6 +72,10 @@ ca:
 
   # Tasks
   label_task_plural: Tasks
+  with_date: Amb data
+  charge_bank_on_date: Cobrar a dia
+  nothing_to_report: Res a mostrar
+  nothing_to_generate: Res a generar
 
   # Payments
   label_payment: Pagament
@@ -86,3 +95,4 @@ ca:
   field_email: "e-mail"
   field_bank_account: "Compte bancari"
   field_logo_url: "URL on hi ha el logo"
+  folders_to_leave_invoices_on: "Carpetes on deixar les factures"

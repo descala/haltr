@@ -40,9 +40,9 @@ class InvoiceDocument < Invoice
 
   def label
     if self.draft
-      "Esborrany de factura"
+      l :label_draft
     else
-      "Factura"
+      l :label_invoice
     end
   end
 

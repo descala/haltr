@@ -20,6 +20,7 @@ en:
   # Invoices
   label_invoice_plural: Invoices
   label_invoice: Invoice
+  label_draft: Invoice draft
   field_invoice: Invoice
   label_invoice_new: New invoice
   button_new_invoice: New invoice
@@ -41,6 +42,10 @@ en:
   field_tax_percent: IVA
   label_from: From
   label_to: To
+  save_invoice: Save invoice
+  recipients: Recipients
+  open_invoices: Open invoices
+  label_subtotal: Subtotal
 
   # Invoice templates
   label_invoice_template_new: New template
@@ -67,6 +72,10 @@ en:
 
   # Tasks
   label_task_plural: Tasks
+  with_date: With date
+  charge_bank_on_date: Charge bank on date
+  nothing_to_report: Nothing has to be reported
+  nothing_to_generate: Nothing has to be generated
 
   # Payments
   label_payment: Payment
@@ -86,3 +95,4 @@ en:
   field_email: Email
   field_bank_account: Bank account
   field_logo_url: Logo URL
+  folders_to_leave_invoices_on: "Folders to leave invoices on"
