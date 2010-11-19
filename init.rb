@@ -21,14 +21,17 @@ begin
     :partial => '/common/settings'
 
     project_module :haltr do
-      permission :general_use,
+      permission :free_use,
         { :clients  => [:index, :new, :edit, :create, :update, :destroy],
           :people   => [:index, :new, :show, :edit, :create, :update, :destroy],
           :invoices => [:index, :new, :edit, :create, :update, :destroy, :showit, :pdf, :template, :mark_sent, :mark_closed, :mark_not_sent, :destroy_payment],
           :invoice_templates => [:index, :new, :edit, :create, :update, :destroy, :showit, :new_from_invoice],
-          :tasks    => [:index, :create_more, :automator, :n19, :n19_done, :report, :import_aeb43],
+          :tasks    => [:index, :create_more, :n19, :n19_done, :report, :import_aeb43],
           :payments => [:index, :new, :edit, :create, :update, :destroy ],
           :companies => [:index,:edit,:update]},
+        :require => :member
+      permission :premium_use,
+        {:tasks => [:automator]},
         :require => :member
     end
 
