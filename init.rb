@@ -35,7 +35,8 @@ begin
         :require => :member
     end
 
-    menu :project_menu, :haltr, { :controller => 'invoices', :action => 'index' }, :caption => 'Haltr'
+    I18n.load_path += Dir[Rails.root.join('vendor', 'plugins','haltr','config','locales','*.{rb,yml}').to_s]
+    menu :project_menu, :haltr, { :controller => 'invoices', :action => 'index' }, :caption => I18n.t(:label_invoice_plural)
 
   end
 
