@@ -145,10 +145,12 @@
 
         </div>
 
-        <div class="notes">
-          <h3><%=l(:field_extra_info)%></h3>
-          <span class="invoice-terms"><%= simple_format(@invoice.extra_info) %></span><br/>
-        </div>
+        <% if @invoice.extra_info -%>
+          <div class="notes">
+            <h3><%=l(:field_extra_info)%></h3>
+            <span class="invoice-terms"><%= simple_format(@invoice.extra_info) %></span><br/>
+          </div>
+        <% end -%>
 
         <!-- END Standard Invoice Markup -->
         </div>
