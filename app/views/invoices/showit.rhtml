@@ -87,7 +87,7 @@
                   <td class="item-quantity first"></td>
                   <td class="item-description"><%= @invoice.discount_text %></td>
                   <td class="item-price"><%= number_to_percentage(@invoice.discount_percent, :precision=>0) %></td>
-                  <td class="line-total last"><%= euros(@invoice.discount) %></td>
+                  <td class="line-total last">- <%= euros(@invoice.discount) %></td>
                 </tr>
               <% end -%>
 
