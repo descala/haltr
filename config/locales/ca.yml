@@ -46,6 +46,8 @@ ca:
   recipients: Destinataris
   open_invoices: Factures obertes
   label_subtotal: Subtotal
+  field_withholding_tax_name: Nom de la retenció
+  field_withholding_tax_percent: % de retenció
 
   # Invoice templates
   label_invoice_template_new: Nova plantilla

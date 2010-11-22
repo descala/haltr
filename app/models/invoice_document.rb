@@ -72,7 +72,13 @@ class InvoiceDocument < Invoice
 
   def self.candidates_for_payment(payment)
     # order => older invoices to get paid first
+    #TODO: add withholding_tax
     find :all, :conditions => ["round(import_in_cents*(1+tax_percent/100)) = ? and date <= ? and status < ?", payment.amount_in_cents, payment.date, STATUS_CLOSED], :order => "due_date ASC"
+  end
+
+  def batchidentifier
+    require "digest/md5"
+    Digest::MD5.hexdigest("#{client.project_id}#{date}#{number}")
   end
 
   protected

@@ -66,6 +66,18 @@ class Invoice < ActiveRecord::Base
     subtotal * (tax_percent / 100.0)
   end
 
+  def withholding_tax
+    subtotal * (self.client.project.company.withholding_tax_percent / 100.0)
+  end
+
+  def withholding_tax_percent
+    self.client.project.company.withholding_tax_percent
+  end
+
+  def withholding_tax_name
+    self.client.project.company.withholding_tax_name
+  end
+
   def discount
     if discount_percent
       subtotal_without_discount * (discount_percent / 100.0)
@@ -75,7 +87,7 @@ class Invoice < ActiveRecord::Base
   end
 
   def total
-    subtotal + tax
+    subtotal + tax - withholding_tax
   end
 
   def subtotal_eur
@@ -171,6 +183,10 @@ class Invoice < ActiveRecord::Base
 
   def past_due?
     self.status < STATUS_CLOSED && due_date && due_date < Date.today
+  end
+
+  def currency
+    client.currency.blank? ? "EUR" : client.currency
   end
 
   private

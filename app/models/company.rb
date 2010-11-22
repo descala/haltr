@@ -7,6 +7,11 @@ class Company < ActiveRecord::Base
   validates_length_of :taxid, :maximum => 9
   validates_length_of :bank_account, :maximum => 24
 
+  def initialize(attributes=nil)
+    super
+    self.withholding_tax_name ||= "IRPF"
+  end
+
   def <=>(oth)
     self.name <=> oth.name
   end
