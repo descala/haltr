@@ -90,15 +90,13 @@ a:hover img {
 	margin: .25in .25in .5in;
 	padding: 0;
 	}
-.invoice-show .vcard {
-	margin: 0 0 20px;
+.vcard {
+	margin: 0 0 30px;
 	line-height: 1.5em;
 	font-size: 12px;
 	}
-.invoice-show .vcard h3 {
+.vcard h3 {
 	margin: 0;
-	}
-.invoice-show .firm {
 	}
 .client h3 {
 	margin: -4px 0 .25em;
