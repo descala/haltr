@@ -145,7 +145,7 @@
 
         </div>
 
-        <% if @invoice.extra_info -%>
+        <% unless @invoice.extra_info.nil? or @invoice.extra_info.empty? -%>
           <div class="notes">
             <h3><%=l(:field_extra_info)%></h3>
             <span class="invoice-terms"><%= simple_format(@invoice.extra_info) %></span><br/>
