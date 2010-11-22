@@ -10,7 +10,7 @@ en:
   field_city: City
   field_province: Province
   field_postalcode: Postcode
-  field_country: Country
+  field_countrycode: Country code
   field_bank_account: Banck account
   button_people: People
   field_invoice_format: Preferred invoice format
@@ -90,9 +90,6 @@ en:
   # Settings
   field_taxid: Tax Id
   field_address: Address
-  field_locality: Locality
-  field_postal_code: Postal code
-  field_region: Region
   field_website: Website
   field_email: Email
   field_bank_account: Bank account

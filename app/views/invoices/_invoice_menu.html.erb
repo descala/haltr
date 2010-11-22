@@ -8,6 +8,7 @@
     <% if @invoice.is_a? InvoiceDocument -%>
       <li><%= change_status_link2(@invoice) %></li>
       <li><%= link_to "#{l(:save_invoice)} <strong>PDF</strong>", :action=>'pdf', :id=>@invoice %></li>
+      <li><%= link_to "#{l(:save_invoice)} <strong>efactura</strong>", :action=>'efactura', :id=>@invoice %></li>
       <% if @invoice.status < Invoice::STATUS_CLOSED -%>
         <li><%= link_to l(:receive_payment), :controller => 'payments', :action => 'new', :id => @project, :invoice_id => @invoice %></li>
       <% end -%>

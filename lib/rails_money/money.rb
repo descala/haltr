@@ -112,7 +112,7 @@ class Money
 
     # TODO: i18n support
     # Europe: "," are "." and "," are "."
-    value = value.gsub(/,|\./){|x| x==',' ? '.' : ','} if value.kind_of?(String)
+#    value = value.gsub(/,|\./){|x| x==',' ? '.' : ','} if value.kind_of?(String)
     
     if value.kind_of?(String)
       sign = value.first == '-' ? -1 : 1

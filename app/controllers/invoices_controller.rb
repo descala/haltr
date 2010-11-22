@@ -99,26 +99,22 @@ class InvoicesController < ApplicationController
   end
 
   def mark_sent
-    find_invoice
     @invoice.mark_sent
     redirect_to :back
   end
 
   def mark_closed
-    find_invoice
     @invoice.mark_closed
     redirect_to :back
   end
 
   def mark_not_sent
-    find_invoice
     @invoice.mark_not_sent
     redirect_to :back
   end
 
   # create a template from an invoice
   def template
-    find_invoice
     it = InvoiceTemplate.new @invoice.attributes
     it.frequency = 1
     it.number = nil
@@ -134,7 +130,6 @@ class InvoicesController < ApplicationController
   end
 
   def pdf
-    find_invoice
     pdf_file=Tempfile.new("invoice_#{@invoice.id}.pdf","tmp")
     xhtml_file=Tempfile.new("invoice_#{@invoice.id}.xhtml","tmp")
     xhtml_file.write(render_to_string(:action => "showit", :layout => "invoice"))
@@ -147,6 +142,11 @@ class InvoicesController < ApplicationController
     else
       render :text => "Error in PDF creation <br /><pre>#{cmd}</pre><pre>#{out}</pre>"
     end
+  end
+
+  def efactura
+    @company = @invoice.company
+    render :template => 'invoices/facturae.xml.erb', :layout => false
   end
 
   def showit

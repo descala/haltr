@@ -10,7 +10,7 @@ ca:
   field_city: Ciutat
   field_province: Província
   field_postalcode: Còdi postal
-  field_country: País
+  field_countrycode: Codi de país
   field_bank_account: Compte bancari
   button_people: Persones
   field_invoice_format: Format de factura preferit
@@ -90,9 +90,6 @@ ca:
   # Settings
   field_taxid: "CIF"
   field_address: "Adreça"
-  field_locality: "Localitat"
-  field_postal_code: "Codi postal"
-  field_region: "Província"
   field_website: "Lloc web"
   field_email: "e-mail"
   field_bank_account: "Compte bancari"

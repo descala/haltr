@@ -68,4 +68,8 @@ class Client < ActiveRecord::Base
     self.invoices.find(:all,:conditions=>["type=?","InvoiceDocument"])
   end
 
+  def address
+    "#{address1}\n#{address2}"
+  end
+
 end

@@ -16,4 +16,14 @@ class Company < ActiveRecord::Base
     self.name <=> oth.name
   end
 
+  def first_name
+    name.split(" ").first
+  end
+
+  def last_name
+    ln = name.split(" ")
+    ln.shift
+    ln.join(" ")
+  end
+
 end

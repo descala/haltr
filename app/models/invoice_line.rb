@@ -32,4 +32,8 @@ class InvoiceLine < ActiveRecord::Base
     Utils.replace_dates! description, (date || Date.today) +  (invoice.frequency || 0).months
   end
 
+  def tax
+    total * (invoice.tax_percent / 100.0)
+  end
+
 end

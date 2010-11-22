@@ -10,7 +10,7 @@ es:
   field_city: Ciudad
   field_province: Provincia
   field_postalcode: Codigo postal
-  field_country: País
+  field_countrycode: Código de país
   field_bank_account: Cuenta bancaria
   button_people: Personas
   field_invoice_format: Formato de factura preferido
@@ -86,9 +86,6 @@ es:
   # Settings
   field_taxid: "CIF"
   field_address: "Dirección"
-  field_locality: "Localidad"
-  field_postal_code: "Código postal"
-  field_region: "Provincia"
   field_website: "Sitio web"
   field_email: "e-mail"
   field_bank_account: "Cuenta bancaria"

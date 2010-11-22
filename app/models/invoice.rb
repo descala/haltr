@@ -66,16 +66,24 @@ class Invoice < ActiveRecord::Base
     subtotal * (tax_percent / 100.0)
   end
 
+  def persontypecode
+    if withholding_tax_percent > 0
+      "F" # Fisica
+    else
+      "J" # Juridica
+    end
+  end
+
   def withholding_tax
-    subtotal * (self.client.project.company.withholding_tax_percent / 100.0)
+    subtotal * (company.withholding_tax_percent / 100.0)
   end
 
   def withholding_tax_percent
-    self.client.project.company.withholding_tax_percent
+    company.withholding_tax_percent
   end
 
   def withholding_tax_name
-    self.client.project.company.withholding_tax_name
+    company.withholding_tax_name
   end
 
   def discount
@@ -168,7 +176,7 @@ class Invoice < ActiveRecord::Base
       ba = client.bank_account
       "Rebut domiciliat a #{ba[0..3]} #{ba[4..7]} ** ******#{ba[16..19]}"
     else
-      ba = self.client.project.company.bank_account rescue ""
+      ba = company.bank_account rescue ""
       "Pagament per transferència al compte #{ba[0..3]} #{ba[4..7]} #{ba[8..9]} #{ba[10..19]}"
     end
   end
@@ -187,6 +195,10 @@ class Invoice < ActiveRecord::Base
 
   def currency
     client.currency.blank? ? "EUR" : client.currency
+  end
+
+  def company
+    self.client.project.company
   end
 
   private

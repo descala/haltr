@@ -16,8 +16,8 @@
             <h3 class="org fn"><%= @project.company.name %></h3>
             <address class="adr">
               <div class="street-address"><%= @project.company.address %></div>
-              <span class="postal-code"><%= @project.company.postal_code %></span> <span class="locality"><%= @project.company.locality %></span>
-              <div class="region"><%= @project.company.region %></div>
+              <span class="postal-code"><%= @project.company.postalcode %></span> <span class="locality"><%= @project.company.city %></span>
+              <div class="region"><%= @project.company.province %></div>
               <div class="country-name"></div>
             </address>
             <div><strong>CIF:</strong><span class="tax-id"> <%= @project.company.taxid %></span></div>
@@ -51,8 +51,11 @@
               <div class="street-address"><%= @client.address1 %></div>
               <div class="street-address"><%= @client.address2 %></div>
               <span class="postal-code"><%= @client.postalcode %></span>
-            <span class="locality"><%= @client.city.strip if @client.city %></span><% if @client.province -%>, <span class="region"><%= @client.province %></span><% end -%>
-              <div class="country-name"><%= @client.country if @client.country.downcase!="españa" %></div>
+              <% if !@client.city.blank? or !@client.province.blank? -%>
+              <span class="locality"><%= @client.city.strip unless @client.city.blank? %></span>
+              <% unless @client.province.blank? -%>, <span class="region"><%= @client.province %></span><% end -%>
+              <% end -%>
+              <div class="country-name"><%= @client.countrycode if @client.countrycode.downcase!="esp" %></div>
             </address>
             <% if !@invoice.draft -%>
               <div><strong><%= @client.taxcode_type %>:</strong><span class="tax-id"> <%= @client.taxcode.upcase %></span></div>
