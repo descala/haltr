@@ -14,7 +14,7 @@ class PaymentsController < ApplicationController
   before_filter :check_for_company
 
   def index
-    sort_init 'date', 'asc'
+    sort_init 'payments.date', 'desc'
     sort_update %w(payments.date amount_in_cents invoices.number)
 
     c = ARCondition.new(["project_id = ?", @project])
