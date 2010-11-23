@@ -102,18 +102,24 @@ class InvoicesController < ApplicationController
     find_invoice
     @invoice.mark_sent
     redirect_to :back
+  rescue ActionController::RedirectBackError => e
+    render :text => "OK"
   end
 
   def mark_closed
     find_invoice
     @invoice.mark_closed
     redirect_to :back
+  rescue ActionController::RedirectBackError => e
+    render :text => "OK"
   end
 
   def mark_not_sent
     find_invoice
     @invoice.mark_not_sent
     redirect_to :back
+  rescue ActionController::RedirectBackError => e
+    render :text => "OK"
   end
 
   # create a template from an invoice
