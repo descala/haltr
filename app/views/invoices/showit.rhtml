@@ -106,7 +106,7 @@
               </tr>
               <% if @invoice.withholding_tax_percent > 0 -%>
               <tr class="sales-tax">
-                <th><%=@invoice.withholding_tax_name%> :</th>
+                <th><%=@invoice.withholding_tax_name%> <%= number_to_percentage(@invoice.withholding_tax_percent, :precision=>0) %> :</th>
                 <td><%=euros(@invoice.withholding_tax)%></td>
               </tr>
               <% end -%>
