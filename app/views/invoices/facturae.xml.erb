@@ -27,13 +27,13 @@
          <BatchIdentifier><%= @invoice.batchidentifier %></BatchIdentifier>  <!-- generar un id en base a la data factura i número de factura -->
          <InvoicesCount>1</InvoicesCount>    <!-- fixe 1 factura per document -->
          <TotalInvoicesAmount>
-            <TotalAmount>63.72</TotalAmount>
+            <TotalAmount><%=precision @invoice.total.dollars %></TotalAmount>
          </TotalInvoicesAmount>
          <TotalOutstandingAmount>
-            <TotalAmount>63.72</TotalAmount>
+            <TotalAmount><%=precision @invoice.total.dollars %></TotalAmount>
          </TotalOutstandingAmount>
          <TotalExecutableAmount>
-            <TotalAmount>63.72</TotalAmount>
+            <TotalAmount><%=precision @invoice.total.dollars %></TotalAmount>
          </TotalExecutableAmount>
          <InvoiceCurrencyCode><%= @invoice.currency %></InvoiceCurrencyCode>  <!-- moneda de la factura -->
       </Batch>
@@ -47,7 +47,7 @@
          </TaxIdentification>
 <% if @invoice.persontypecode == "J" -%>
          <!-- Si és una Empresa (no té IRPF a la fitxa de empresa  -->
-         <LegalEntity>                             
+         <LegalEntity>
             <CorporateName><%=@company.name%></CorporateName>
             <%= render :partial => "address.xml", :locals => {:entity => @company} %>
             <ContactDetails>
@@ -103,12 +103,12 @@
          <TaxesOutputs>
             <Tax>                                           <!-- convenim una sola línia d'impostos -->
                <TaxTypeCode>01</TaxTypeCode>                <!-- 01 = IVA -->
-               <TaxRate><%=@invoice.tax_percent%></TaxRate>                     
+               <TaxRate><%=precision @invoice.tax_percent%></TaxRate>
                <TaxableBase>
-                  <TotalAmount><%=@invoice.subtotal%></TotalAmount>
+                  <TotalAmount><%=precision(@invoice.subtotal.dollars)%></TotalAmount>
                </TaxableBase>
                <TaxAmount>
-                 <TotalAmount><%=@invoice.tax%></TotalAmount>
+                 <TotalAmount><%=precision @invoice.tax.dollars %></TotalAmount>
                </TaxAmount>
             </Tax>
          </TaxesOutputs>
@@ -116,26 +116,36 @@
 <% if @invoice.persontypecode == "F" -%>
          <TaxesWithheld>
             <Tax>
-               <TaxTypeCode>04</TaxTypeCode>  04 = IRPF
-               <TaxRate><%=@company.withholding_tax_percent%></TaxRate>
+               <TaxTypeCode>04</TaxTypeCode>
+               <TaxRate><%=precision @company.withholding_tax_percent%></TaxRate>
                <TaxableBase>
-                  <TotalAmount><%=@invoice.subtotal%></TotalAmount>
+                  <TotalAmount><%=precision @invoice.subtotal.dollars%></TotalAmount>
                </TaxableBase>
                <TaxAmount>
-                 <TotalAmount><%=@invoice.withholding_tax%></TotalAmount>
+                 <TotalAmount><%=precision @invoice.withholding_tax.dollars%></TotalAmount>
                </TaxAmount>
             </Tax>
          </TaxesWithheld>
 <% end -%>
-         
+
          <InvoiceTotals>
-            <TotalGrossAmount><%=@invoice.subtotal%></TotalGrossAmount>
-            <TotalGrossAmountBeforeTaxes><%=@invoice.subtotal%></TotalGrossAmountBeforeTaxes>
-            <TotalTaxOutputs><%=@invoice.tax%></TotalTaxOutputs>
-            <TotalTaxesWithheld><%=@invoice.withholding_tax%></TotalTaxesWithheld>  <!-- encara que no n'hi hagi, s'ha de posar a 0.00 -->
-            <InvoiceTotal><%=@invoice.total%></InvoiceTotal>
-            <TotalOutstandingAmount><%=@invoice.total%></TotalOutstandingAmount>
-            <TotalExecutableAmount><%=@invoice.total%></TotalExecutableAmount>
+            <TotalGrossAmount><%=precision @invoice.subtotal_without_discount.dollars%></TotalGrossAmount>
+<% if @invoice.discount_percent > 0 -%>
+            <GeneralDiscounts>
+               <Discount>
+                 <DiscountReason><%=@invoice.discount_text%></DiscountReason>
+                 <DiscountRate><%=precision(@invoice.discount_percent, 4) %></DiscountRate>
+                 <DiscountAmount><%=precision(@invoice.discount.dollars,6)%></DiscountAmount>
+               </Discount>
+            </GeneralDiscounts>
+            <TotalGeneralDiscounts><%=precision(@invoice.discount.dollars,2)%></TotalGeneralDiscounts>
+<% end -%>
+            <TotalGrossAmountBeforeTaxes><%=precision(@invoice.subtotal.dollars)%></TotalGrossAmountBeforeTaxes>
+            <TotalTaxOutputs><%=precision @invoice.tax.dollars%></TotalTaxOutputs>
+            <TotalTaxesWithheld><%=precision @invoice.withholding_tax.dollars%></TotalTaxesWithheld>  <!-- encara que no n'hi hagi, s'ha de posar a 0.00 -->
+            <InvoiceTotal><%=precision @invoice.total.dollars%></InvoiceTotal>
+            <TotalOutstandingAmount><%=precision @invoice.total.dollars%></TotalOutstandingAmount>
+            <TotalExecutableAmount><%=precision @invoice.total.dollars%></TotalExecutableAmount>
          </InvoiceTotals>
          <Items>
 <% @invoice.invoice_lines.each do |invoice_line| -%>
@@ -143,18 +153,18 @@
               <ReceiverTransactionReference><%=@invoice.number%></ReceiverTransactionReference>  <!-- número de comanda. Com que no hi ha nº comanda a nivell de capçalera, cal repetir-lo a totes les línies si hi es -->
                <ItemDescription><%=invoice_line.description%></ItemDescription>
                <Quantity><%=invoice_line.quantity%></Quantity>
-               <UnitPriceWithoutTax><%=precision(invoice_line.price.dollars)%></UnitPriceWithoutTax>     <!-- ojo amb la precisió decimal, han de ser 6 dígits!! -->
-               <TotalCost><%=precision(invoice_line.price.dollars*invoice_line.quantity)%></TotalCost>
-               <GrossAmount><%=precision(invoice_line.price.dollars*invoice_line.quantity)%></GrossAmount>
+               <UnitPriceWithoutTax><%=precision(invoice_line.price.dollars,6)%></UnitPriceWithoutTax>     <!-- ojo amb la precisió decimal, han de ser 6 dígits!! -->
+               <TotalCost><%=precision(invoice_line.price.dollars*invoice_line.quantity,6)%></TotalCost>
+               <GrossAmount><%=precision(invoice_line.price.dollars*invoice_line.quantity,6)%></GrossAmount>
                <TaxesOutputs>                                           <!-- s'han de repetir els impostos a nivell de línia. calcular-ho? -->
                   <Tax>
                      <TaxTypeCode>01</TaxTypeCode>
-                     <TaxRate><%=@invoice.tax_percent%></TaxRate>
+                     <TaxRate><%=precision @invoice.tax_percent%></TaxRate>
                      <TaxableBase>
                        <TotalAmount><%=precision(invoice_line.price.dollars*invoice_line.quantity)%></TotalAmount>
                      </TaxableBase>
                      <TaxAmount>
-                        <TotalAmount><%=invoice_line.tax%></TotalAmount>
+                        <TotalAmount><%=precision invoice_line.tax.dollars%></TotalAmount>
                      </TaxAmount>
                   </Tax>
                </TaxesOutputs>
@@ -164,18 +174,21 @@
          <PaymentDetails>
             <Installment>
               <InstallmentDueDate><%=@invoice.due_date%></InstallmentDueDate>
-               <InstallmentAmount>63.72</InstallmentAmount>
-               <PaymentMeans>02</PaymentMeans>  <!-- 02 - Rebut domiciliat,  04 -transferencia -->
-               <!-- AccountToBeCredited>
-                  <AccountNumber>Transferencia</AccountNumber>
-                  </AccountToBeCredited -->
+               <InstallmentAmount><%=precision @invoice.total.dollars%></InstallmentAmount>
+               <PaymentMeans><%=@invoice.use_bank_account ? "02" : "04" %></PaymentMeans>  <!-- 02 - Rebut domiciliat,  04 -transferencia -->
+<% if @invoice.use_bank_account -%>
                <AccountToBeDebited>
-                  <AccountNumber>2081 0082 ** ******5188</AccountNumber>
+                 <AccountNumber><%=@client.bank_account%></AccountNumber>
                </AccountToBeDebited>
+<% else -%>
+               <AccountToBeCredited>
+                 <AccountNumber><%=@company.bank_account%></AccountNumber>
+               </AccountToBeCredited>
+<% end -%>
             </Installment>
          </PaymentDetails>
          <AdditionalData>
-            <InvoiceAdditionalInformation>Notes</InvoiceAdditionalInformation>
+           <InvoiceAdditionalInformation><%=@invoice.extra_info%></InvoiceAdditionalInformation>
          </AdditionalData>
       </Invoice>
    </Invoices>

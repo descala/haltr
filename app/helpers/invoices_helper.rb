@@ -33,8 +33,8 @@ module InvoicesHelper
     end
   end
 
-  def precision(num)
-    number_with_precision(num,:precision=>6,:significant => true)
+  def precision(num,precision=2)
+    number_with_precision(num,:precision=>precision,:significant => true)
   end
 
 end

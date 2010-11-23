@@ -16,7 +16,7 @@ class InvoiceLine < ActiveRecord::Base
 
   unloadable
 
-  belongs_to :invoice
+  belongs_to :invoice, :autosave => true
   validates_presence_of :description
   validates_numericality_of :quantity, :price_in_cents
 

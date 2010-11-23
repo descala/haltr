@@ -8,7 +8,7 @@ class Terms
   attr_reader :description, :due_date
   
   def initialize(code, date=Date.today)
-    if code.to_i.to_s == code.to_s or code.nil?
+    if code.to_i.to_s == code.to_s or code.nil? or code.blank?
       # It's a number
       if code.to_i == 0
         @description = NOW

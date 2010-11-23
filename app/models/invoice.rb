@@ -49,6 +49,11 @@ class Invoice < ActiveRecord::Base
 
   before_save :set_due_date
 
+  def initialize(attributes=nil)
+    super
+    self.discount_percent ||= 0
+  end
+
   def subtotal_without_discount
     total = Money.new(0)
     invoice_lines.each do |line|
@@ -103,11 +108,7 @@ class Invoice < ActiveRecord::Base
   end
 
   def due
-    if terms.nil? or terms==0
-      "#{terms_description}: #{due_date}"
-    else
-      "#{terms_description}"
-    end
+    "#{due_date} (#{terms_description})"
   end
 
   def pdf_name

@@ -30,6 +30,7 @@ class InvoiceDocument < Invoice
   has_many :payments, :foreign_key => :invoice_id, :dependent => :nullify
   validates_presence_of :number
   validate :number_must_be_unique_in_project
+  validate :invoice_must_have_lines
 
   before_save :update_status, :unless => Proc.new {|invoicedoc| invoicedoc.status_changed? }
   before_save :update_import
@@ -97,6 +98,12 @@ class InvoiceDocument < Invoice
     return if !self.new_record? && !self.number_changed?
     if self.client.project.clients.collect {|c| c.invoice_documents }.flatten.compact.collect {|i| i.number unless i.id == self.id}.include? self.number
       errors.add(:base, ("#{l(:field_number)} #{l(:taken)}"))
+    end
+  end
+
+  def invoice_must_have_lines
+    if invoice_lines.empty? or invoice_lines.all? {|i| i.marked_for_destruction?}
+      errors.add(:base, "#{l(:label_invoice)} #{l(:must_have_lines)}")
     end
   end
 
