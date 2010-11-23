@@ -16,7 +16,7 @@ class ClientsController < ApplicationController
   before_filter :check_for_company
 
   def index
-    sort_init 'taxcode', 'asc'
+    sort_init 'name', 'asc'
     sort_update %w(taxcode name)
 
     c = ARCondition.new(["project_id = ?", @project])

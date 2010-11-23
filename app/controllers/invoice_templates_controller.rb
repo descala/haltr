@@ -16,7 +16,7 @@ class InvoiceTemplatesController < ApplicationController
   before_filter :check_for_company
 
   def index
-    sort_init 'number', 'desc'
+    sort_init 'date', 'asc'
     sort_update %w(date number clients.name)
 
     c = ARCondition.new(["clients.project_id = ?",@project.id])
