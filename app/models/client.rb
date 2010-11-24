@@ -32,8 +32,14 @@ class Client < ActiveRecord::Base
   validates_presence_of :name, :taxcode
   validates_uniqueness_of :name, :scope => :project_id
   validates_uniqueness_of :taxcode, :scope => :project_id
+  validates_presence_of :currency
 #  validates_length_of :name, :maximum => 30
 #  validates_format_of :identifier, :with => /^[a-z0-9\-]*$/
+
+  def initialize(attributes=nil)
+    super
+    self.currency ||= "EUR"
+  end
 
   def taxcode_type
     if taxcode.first.upcase>="A"
