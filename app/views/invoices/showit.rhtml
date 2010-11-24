@@ -85,7 +85,7 @@
                 </tr>
               <% end -%>
 
-              <% if @invoice.discount_percent -%>
+              <% if @invoice.discount_percent and @invoice.discount_percent > 0 -%>
                 <tr>
                   <td class="item-quantity first"></td>
                   <td class="item-description"><%= @invoice.discount_text %></td>
