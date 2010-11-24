@@ -117,7 +117,7 @@
          <TaxesWithheld>
             <Tax>
                <TaxTypeCode>04</TaxTypeCode>
-               <TaxRate><%=precision @company.withholding_tax_percent%></TaxRate>
+               <TaxRate><%=precision @invoice.withholding_tax_percent%></TaxRate>
                <TaxableBase>
                   <TotalAmount><%=precision @invoice.subtotal.dollars%></TotalAmount>
                </TaxableBase>
