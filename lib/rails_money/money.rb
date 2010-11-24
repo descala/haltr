@@ -89,15 +89,7 @@ class Money
   # if a zero_string is provided like "FREE" or "FREE!" or "$ --.--"
   # it will be returned instead of "$0.00"
   def to_s(zero_string="")
-    return zero_string if zero_string && free?
-    seperated = "#{sprintf("%.2f",dollars)}".to_s.split(".")
-    if dollars >= 0
-      seperated[0] = seperated[0].to_s.reverse.scan(/..?.?/).join(".").reverse
-      "#{seperated.join(",")}"
-    else
-      seperated[0] = seperated[0].to_s.delete("-").reverse.scan(/..?.?/).join(".").reverse
-      "-#{seperated.join(",")}"
-    end
+    sprintf("%.2f",dollars.to_s)
   end
 
 

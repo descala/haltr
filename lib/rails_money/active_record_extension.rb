@@ -6,9 +6,20 @@ module RailsMoney
 
     if @attributes.include?(method_name)
       if setter
+        if args.first.kind_of?(String)
+          args.first.gsub!(/,/,'.') # suport ","
+          unless args.first =~ /^-?[0-9]+\.?[0-9]+$/ or args.first =~ /^-?[0-9]+$/
+            write_attribute(method_name,args.first)
+            return
+          end
+        end
         money = args.first.kind_of?(Money) ? args.first : Money.new(args.first)
         write_attribute(method_name,money.cents) 
       else
+        v=read_attribute_before_type_cast(method_name)
+        unless v.to_s =~ /^-?[0-9]+\.?[0-9]+$/ or v.to_s =~ /^-?[0-9]+$/
+          return v
+        end
         Money.create_from_cents(read_attribute(method_name))      
       end
     else 
