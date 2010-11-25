@@ -47,7 +47,7 @@ class Invoice < ActiveRecord::Base
     :reject_if => proc { |attributes| attributes.all? { |_, value| value.blank? } }
   validates_associated :invoice_lines
 
-  before_save :set_due_date
+  before_validation :set_due_date
 
   def initialize(attributes=nil)
     super

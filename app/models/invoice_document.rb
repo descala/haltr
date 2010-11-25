@@ -28,7 +28,7 @@ class InvoiceDocument < Invoice
 
   belongs_to :invoice_template
   has_many :payments, :foreign_key => :invoice_id, :dependent => :nullify
-  validates_presence_of :number
+  validates_presence_of :number, :due_date
   validate :number_must_be_unique_in_project
   validate :invoice_must_have_lines
 
