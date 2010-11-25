@@ -11,6 +11,12 @@ class Payment < ActiveRecord::Base
 
   before_save :guess_invoice, :unless => :invoice
 
+  composed_of :amount,
+    :class_name => "Money",
+    :mapping => [%w(amount_in_cents cents)],
+    :constructor => Proc.new { |cents| Money.new(cents || 0) },
+    :converter => lambda {|m| m.to_money }
+
   def initialize(attributes=nil)
     super
     self.date ||= Date.today
