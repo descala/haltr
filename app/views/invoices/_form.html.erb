@@ -1,4 +1,5 @@
 <%= error_messages_for 'invoice' %>
+<%= javascript_include_tag 'terms', :plugin => 'haltr' %>
 
 <div class="box">
   <p><%= f.select :client_id, clients_for_select, :required => true %></p>
@@ -9,8 +10,8 @@
     <p><%= f.text_field :number, :size => 10, :required => true %><%=" Last used: #{InvoiceDocument.last_number(@project)}" if InvoiceDocument.all.any?%></p>
   <% end -%>
   <p><%= f.text_field :ponumber %></p>
-  <p><%= f.text_field :terms %></p>
-  <p><%= f.text_field :due_date, :size => 10, :readonly => true %></p>
+  <p><%= f.select(:terms, Terms.for_select, {}, {:onchange=>"terms()"}) %></p>
+  <p><%= f.text_field :due_date, :size => 10, :disabled => !@invoice.custom_due? %><span id="due_date_cal" style="visibility: <%=@invoice.custom_due? ? "visible" : "hidden" %>;"><%= calendar_for('invoice_due_date') %></span></p>
   <p><%= f.text_field :tax_percent %></p>
   <p><%= f.text_field :discount_text %></p>
   <p><%= f.text_field :discount_percent %></p>

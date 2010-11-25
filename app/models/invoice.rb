@@ -83,7 +83,7 @@ class Invoice < ActiveRecord::Base
   end
 
   def due
-    "#{due_date} (#{terms_description})"
+    "#{due_date}#{terms == "custom" ? "" : " (#{terms_description})"}"
   end
 
   def pdf_name
@@ -177,10 +177,14 @@ class Invoice < ActiveRecord::Base
     self.client.project.company
   end
 
+  def custom_due?
+    terms == "custom"
+  end
+
   private
 
   def set_due_date
-    self.due_date = terms_object.due_date
+    self.due_date = terms_object.due_date unless terms == "custom"
   end
 
   def terms_object

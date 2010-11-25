@@ -1,5 +1,8 @@
-# -*- coding: utf-8 -*-
 class Terms
+
+  unloadable
+
+  KEYS = %w(0 30 60 90 120 1m1 1m15 1m20)
 
   NOW = "al comptat"
   DAYS = "%d dies"
@@ -32,6 +35,10 @@ class Terms
         @due_date = Date.new(date_with_months.year,date_with_months.month,day)
       end
     end
+  end
+
+  def self.for_select
+    KEYS.collect {|k| [I18n.t(k), k] } + [[I18n.t("custom"), "custom"]]
   end
     
 end
