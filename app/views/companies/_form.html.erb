@@ -10,7 +10,7 @@
 <p><%= f.text_field :postalcode %></p>
 <p><%= f.text_field :province %></p>
 <p><%= f.text_field :countrycode %></p>
-<p><%= f.text_field :website %></p>
+<p><%= f.text_field :website, :maxlength => 20, :size => 30 %></p>
 <p><%= f.text_field :email %></p>
 <p><%= f.text_field :bank_account %></p>
 <p><%= f.text_field :logo_url %></p>

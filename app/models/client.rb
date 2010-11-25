@@ -32,6 +32,8 @@ class Client < ActiveRecord::Base
   validates_presence_of :name, :taxcode, :currency, :language
   validates_uniqueness_of :name, :scope => :project_id
   validates_uniqueness_of :taxcode, :scope => :project_id
+  validates_numericality_of :bank_account
+  validates_length_of :bank_account, :maximum => 20
 #  validates_length_of :name, :maximum => 30
 #  validates_format_of :identifier, :with => /^[a-z0-9\-]*$/
 
