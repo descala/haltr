@@ -1,24 +1,3 @@
-# -*- coding: utf-8 -*-
-# == Schema Information
-# Schema version: 20091016144057
-#
-# Table name: clients
-#
-#  id           :integer(4)      not null, primary key
-#  taxcode      :string(9)
-#  name         :string(255)
-#  address1     :string(255)
-#  address2     :string(255)
-#  city         :string(255)
-#  province     :string(255)
-#  postalcode   :string(255)
-#  country      :string(255)     default("España")
-#  created_at   :datetime
-#  updated_at   :datetime
-#  bank_account :string(24)
-#
-
-# -*- coding: utf-8 -*-
 class Client < ActiveRecord::Base
 
   unloadable

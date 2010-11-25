@@ -1,28 +1,3 @@
-# -*- coding: utf-8 -*-
-# == Schema Information
-# Schema version: 20091016144057
-#
-# Table name: invoices
-#
-#  id                  :integer(4)      not null, primary key
-#  client_id           :integer(4)
-#  date                :date
-#  number              :string(255)
-#  extra_info          :text
-#  terms               :string(255)
-#  created_at          :datetime
-#  updated_at          :datetime
-#  discount_text       :string(255)
-#  discount_percent    :integer(4)
-#  draft               :boolean(1)
-#  type                :string(255)
-#  frequency           :integer(4)
-#  invoice_template_id :integer(4)
-#  status              :integer(4)      default(1)
-#  due_date            :date
-#  use_bank_account    :boolean(1)      default(TRUE)
-#
-
 class Invoice < ActiveRecord::Base
 
   unloadable
