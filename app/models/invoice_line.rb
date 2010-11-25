@@ -12,9 +12,6 @@ class InvoiceLine < ActiveRecord::Base
     :constructor => Proc.new { |cents, currency| Money.new(cents || 0) },
     :converter => lambda {|m| m.to_money }
 
-  def currency=(v)
-  end
-
   def currency
     self.invoice.currency
   end

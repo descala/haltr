@@ -15,10 +15,15 @@ class Client < ActiveRecord::Base
   validates_length_of :bank_account, :maximum => 20
 #  validates_length_of :name, :maximum => 30
 #  validates_format_of :identifier, :with => /^[a-z0-9\-]*$/
+  validates_inclusion_of :currency, :in  => Money::Currency::TABLE.collect {|k,v| v[:iso_code] }
 
   def initialize(attributes=nil)
     super
     self.currency ||= "EUR"
+  end
+
+  def currency=(v)
+    write_attribute(:currency,v.upcase)
   end
 
   def taxcode_type
