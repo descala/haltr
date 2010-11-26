@@ -60,7 +60,7 @@
         <td align="center"><%=h invoice.date %></td>
         <td align="center"<%='class="pastdue"' if invoice.past_due?%>><%=h invoice.due_date %></td>
         <td><%=h invoice.client %></td>
-        <td align="right"><%= invoice.import %></td>
+        <td align="right"><%= money invoice.import %></td>
       </tr>
     <% end -%>
   </tbody>
