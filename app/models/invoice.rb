@@ -207,7 +207,7 @@ class Invoice < ActiveRecord::Base
   end
 
   def update_import
-    self.import_in_cents = subtotal
+    self.import_in_cents = subtotal.cents
   end
 
 end
