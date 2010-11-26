@@ -9,7 +9,6 @@ class InvoiceDocument < Invoice
   validate :invoice_must_have_lines
 
   before_save :update_status, :unless => Proc.new {|invoicedoc| invoicedoc.status_changed? }
-  before_save :update_import
 
   def self.find_due_dates(project)
     find_by_sql "SELECT due_date, invoices.id, count(*) AS invoice_count FROM invoices, clients WHERE type='InvoiceDocument' AND client_id = clients.id AND clients.project_id = #{project.id} AND status = #{Invoice::STATUS_SENT} AND bank_account AND use_bank_account GROUP BY due_date"
@@ -40,7 +39,7 @@ class InvoiceDocument < Invoice
     self.payments.each do |payment|
       paid += payment.amount.cents
     end
-    Money.new(paid)
+    Money.new(paid,currency)
   end
 
   def unpaid
@@ -61,12 +60,8 @@ class InvoiceDocument < Invoice
   protected
 
   def update_status
-    self.status=STATUS_SENT if status == STATUS_CLOSED && unpaid > 0
-    self.status=STATUS_CLOSED if unpaid <= 0
-  end
-
-  def update_import
-    self.import_in_cents=self.subtotal.cents
+    self.status=STATUS_SENT if status == STATUS_CLOSED && unpaid.cents > 0
+    self.status=STATUS_CLOSED if unpaid.cents <= 0
   end
 
   def number_must_be_unique_in_project

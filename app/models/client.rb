@@ -19,7 +19,7 @@ class Client < ActiveRecord::Base
 
   def initialize(attributes=nil)
     super
-    self.currency ||= "EUR"
+    self.currency ||= Money.default_currency.iso_code
   end
 
   def currency=(v)

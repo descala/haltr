@@ -61,8 +61,7 @@ class InvoicesController < ApplicationController
   end
 
   def new
-    @invoice = InvoiceDocument.new
-    @invoice.client_id = params[:client]
+    @invoice = InvoiceDocument.new(:client_id=>params[:client])
   end
 
   def edit

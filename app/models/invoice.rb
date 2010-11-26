@@ -13,9 +13,10 @@ class Invoice < ActiveRecord::Base
   STATUS_LIST = { STATUS_NOT_SENT=>'Not sent', STATUS_SENT=>'Sent', STATUS_CLOSED=>'Closed' }
 
 
-  has_many :invoice_lines, :dependent => :destroy, :after_add => :save, :after_remove => :save
+  has_many :invoice_lines, :dependent => :destroy
   belongs_to :client
-  validates_presence_of :client, :date
+  validates_presence_of :client, :date, :currency
+  validates_inclusion_of :currency, :in  => Money::Currency::TABLE.collect {|k,v| v[:iso_code] }
 
   accepts_nested_attributes_for :invoice_lines,
     :allow_destroy => true,
@@ -23,6 +24,7 @@ class Invoice < ActiveRecord::Base
   validates_associated :invoice_lines
 
   before_validation :set_due_date
+  before_save :update_import
 
   composed_of :import,
     :class_name => "Money",
@@ -32,13 +34,25 @@ class Invoice < ActiveRecord::Base
   def initialize(attributes=nil)
     super
     self.discount_percent ||= 0
+    self.currency ||= self.client.currency rescue nil
+    self.currency ||= self.client.company.currency rescue nil
+    self.currency ||= Money.default_currency.iso_code
+  end
+
+  def currency=(v)
+    write_attribute(:currency,v.upcase)
+    invoice_lines.each do |il|
+      # replace price since it's frozen.
+      # il.currency='xxx' does not update its money currency (!)
+      il.price=Money.new(il.price_in_cents,v.upcase)
+    end
   end
 
   def subtotal_without_discount
-    total = Money.new(0)
+    total = Money.new(0,currency)
     invoice_lines.each do |line|
       next if line.destroyed?
-      total = total + line.total
+      total += line.total
     end
     total
   end
@@ -75,7 +89,7 @@ class Invoice < ActiveRecord::Base
     if discount_percent
       subtotal_without_discount * (discount_percent / 100.0)
     else
-      Money.new(0)
+      Money.new(0,currency)
     end
   end
 
@@ -174,10 +188,6 @@ class Invoice < ActiveRecord::Base
     self.status < STATUS_CLOSED && due_date && due_date < Date.today
   end
 
-  def currency
-    client.currency.blank? ? "EUR" : client.currency
-  end
-
   def company
     self.client.project.company
   end
@@ -194,6 +204,10 @@ class Invoice < ActiveRecord::Base
 
   def terms_object
     Terms.new(self.terms, self.date)
+  end
+
+  def update_import
+    self.import_in_cents = subtotal
   end
 
 end

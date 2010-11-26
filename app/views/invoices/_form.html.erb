@@ -9,6 +9,7 @@
   <% else -%>
     <p><%= f.text_field :number, :size => 10, :required => true %><%=" Last used: #{InvoiceDocument.last_number(@project)}" if InvoiceDocument.all.any?%></p>
   <% end -%>
+  <p><%= f.text_field :currency, :required => true%></p>
   <p><%= f.text_field :ponumber %></p>
   <p><%= f.select(:terms, Terms.for_select, {}, {:onchange=>"terms()"}) %></p>
   <p><%= f.text_field :due_date, :size => 10, :disabled => !@invoice.custom_due? %><span id="due_date_cal" style="visibility: <%=@invoice.custom_due? ? "visible" : "hidden" %>;"><%= calendar_for('invoice_due_date') %></span></p>

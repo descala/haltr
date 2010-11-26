@@ -80,8 +80,8 @@
                 <tr>
                   <td class="item-quantity first"><%= quantity(line.quantity) %></td>
                   <td class="item-description"><%= line.description %></td>
-                  <td class="item-price"><%= euros(line.price) %></td>
-                  <td class="line-total last"><%= euros(line.total) %></td>
+                  <td class="item-price"><%= money(line.price) %></td>
+                  <td class="line-total last"><%= money(line.total) %></td>
                 </tr>
               <% end -%>
 
@@ -90,7 +90,7 @@
                   <td class="item-quantity first"></td>
                   <td class="item-description"><%= @invoice.discount_text %></td>
                   <td class="item-price"><%= number_to_percentage(@invoice.discount_percent, :precision=>0) %></td>
-                  <td class="line-total last">- <%= euros(@invoice.discount) %></td>
+                  <td class="line-total last">- <%= money(@invoice.discount) %></td>
                 </tr>
               <% end -%>
 
@@ -101,21 +101,21 @@
           <table class="invoice-calculations" border="0" cellpadding="0" cellspacing="0">
             <tbody><tr class="invoice-subtotal">
                 <th><%=l(:label_subtotal)%>:</th>
-                <td><%= euros(@invoice.subtotal) %></td>
+                <td><%= money(@invoice.subtotal) %></td>
               </tr>
               <tr class="sales-tax">
                 <th>IVA <%= number_to_percentage(@invoice.tax_percent, :precision=>0) %> :</th>
-                <td><%= euros(@invoice.tax) %></td>
+                <td><%= money(@invoice.tax) %></td>
               </tr>
               <% if @invoice.withholding_tax_percent > 0 -%>
               <tr class="sales-tax">
                 <th><%=@invoice.withholding_tax_name%> <%= number_to_percentage(@invoice.withholding_tax_percent, :precision=>0) %> :</th>
-                <td><%=euros(@invoice.withholding_tax)%></td>
+                <td><%=money(@invoice.withholding_tax)%></td>
               </tr>
               <% end -%>
               <tr class="invoice-total">
                 <th><%=l(:label_total)%>:</th>
-                <td><%= euros(@invoice.total) %></td>
+                <td><%= money(@invoice.total) %>(<%=money @invoice.import%>)</td>
               </tr>
           </tbody></table>
 
@@ -135,7 +135,7 @@
                 <td class="item-delete first"><%= link_to "", {:action=>'destroy_payment',:id=>payment} , :confirm => l(:text_are_you_sure), :method => :post, :class => 'icon icon-del' %></td>
                   <td class="item-date first"><%= payment.date %></td>
                   <td class="item-description"><%= payment.description %></td>
-                  <td class="line-total last"><%= euros(payment.amount) %></td>
+                  <td class="line-total last"><%= money(payment.amount) %></td>
                 </tr>
               <% end -%>
             </tbody>
@@ -146,7 +146,7 @@
             <tbody>
               <tr class="invoice-total">
                 <th>Total pagat:</th>
-                <td><%= euros(@invoice.total_paid) %></td>
+                <td><%= money(@invoice.total_paid) %></td>
               </tr>
           </tbody></table>
 

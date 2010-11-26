@@ -37,9 +37,9 @@ module ApplicationHelper
     s
   end
   
-  def euros(import)
+  def money(import)
     if import && import.cents != 0
-      "#{import}€"
+      "#{import} #{import.currency.symbol}"
     else
       "-"
     end
