@@ -38,7 +38,7 @@ class InvoiceDocument < Invoice
   def total_paid
     paid=0
     self.payments.each do |payment|
-      paid += payment.amount.dollars
+      paid += payment.amount.cents
     end
     Money.new(paid)
   end
