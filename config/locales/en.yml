@@ -87,6 +87,7 @@ en:
   field_amount: Amount
   field_payment_method: Payment method
   field_reference: Reference
+  field_total_paid: Total paid
 
   # Settings
   field_taxid: Tax Id

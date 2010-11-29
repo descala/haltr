@@ -83,6 +83,7 @@ es:
   field_amount: Importe
   field_payment_method: Metodo de pago
   field_reference: Referencia
+  field_total_paid: Total pagado
 
   # Settings
   field_taxid: "CIF"

@@ -98,6 +98,7 @@ ca:
   field_amount: Import
   field_payment_method: Mètode de pagament
   field_reference: Referència
+  field_total_paid: Total pagat
 
   # Settings
   field_taxid: "CIF"

@@ -126,9 +126,9 @@
             <tbody>
               <tr>
                 <th class="item-delete first"></th>
-                <th class="item-date">Data</th>
-                <th class="item-description">Descripció</th>
-                <th class="line-total last">Quantitat</th>
+                <th class="item-date"><%= l :field_due_date %></th>
+                <th class="item-description"><%=l :field_description%></th>
+                <th class="line-total last"><%=l :field_quantity %></th>
               </tr>
               <% @invoice.payments.each do |payment| -%>
                 <tr>
@@ -145,7 +145,7 @@
           <table class="invoice-calculations" border="0" cellpadding="0" cellspacing="0">
             <tbody>
               <tr class="invoice-total">
-                <th>Total pagat:</th>
+                <th><%= l :field_total_paid %>:</th>
                 <td><%= money(@invoice.total_paid) %></td>
               </tr>
           </tbody></table>
