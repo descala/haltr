@@ -19,7 +19,7 @@
     <td align="center"><%=h invoice.date %></td>
     <td align="center"><%=h invoice.frequency%></td>
     <td><%=link_to h(invoice.client), {:controller => 'clients', :action => 'edit', :id => invoice.client} %></td>
-    <td align="right"><%= invoice.total %></td>
+    <td align="right"><%= money(invoice.total) %></td>
   </tr>
 <% end -%>
   </tbody>

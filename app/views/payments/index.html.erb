@@ -28,7 +28,7 @@
 <% for payment in @payments -%>
   <tr class="user <%= cycle("odd", "even") %>" />
     <td align="center"><%=link_to(h(payment.invoice.number), :controller=>'invoices', :action=>'showit', :id=>payment.invoice) unless payment.invoice.nil? %></td>
-    <td align="right"><%=h payment.amount %> &euro; </td>
+    <td align="right"><%= money(payment.amount) %></td>
     <td align="center"><%=h payment.date %></td>
     <td><%=h(truncate(payment.payment_method,:length=>20)) %></td>
     <td><%=h(truncate(payment.reference,:length=>30)) %></td>

@@ -17,7 +17,13 @@
 
 <% @invoices.each do |i| -%>
 <tr>
-<td><%= i.number %></td><td> <%= i.date %></td><td><%= i.client.taxcode %></td><td><%= i.client.name %></td><td style="text-align: right;"><%= i.subtotal %> €</td><td style="text-align: right;"><%= i.tax %> €</td><td style="text-align:center;"><%= i.due_date if i.use_bank_account && i.client.bank_account %></td>
+  <td><%= i.number %></td>
+  <td><%= i.date %></td>
+  <td><%= i.client.taxcode %></td>
+  <td><%= i.client.name %></td>
+  <td style="text-align: right;"><%= money(i.subtotal) %></td>
+  <td style="text-align: right;"><%= money(i.tax) %></td>
+  <td style="text-align:center;"><%= i.due_date if i.use_bank_account && i.client.bank_account %></td>
 </tr>
 <% end -%>
 <tr>
