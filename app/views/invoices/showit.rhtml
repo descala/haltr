@@ -1,3 +1,4 @@
+<% I18n.locale = @invoice.locale %>
 <!-- Wrapper -->
 <div id="invoice_wrapper">
 
@@ -167,7 +168,7 @@
   </div></div>
 
 </div>
-
+<% lang = find_language(User.current.language); lang ||= Setting.default_language; set_language_if_valid(lang) -%>
 <% unless controller.action_name == "pdf" -%>
   <% content_for :sidebar do %>
       <%= render :partial => 'common/sidebar' %>
@@ -177,4 +178,3 @@
     <%= stylesheet_link_tag 'minimal', :plugin => 'haltr' %>
   <% end %>
 <% end %>
-

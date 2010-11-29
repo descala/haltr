@@ -106,8 +106,6 @@ class Invoice < ActiveRecord::Base
   end
 
   def pdf_name
-    # i18n catalan ca-AD
-    # remove_non_ascii "factura-#{number.gsub('/','')}-#{client.name.upcase.gsub(/\/|\.|\'/,'').strip.gsub(' ','_')}.pdf"
     "factura-#{number.gsub('/','')}.pdf"
   end
 

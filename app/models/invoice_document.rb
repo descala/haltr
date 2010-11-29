@@ -57,6 +57,14 @@ class InvoiceDocument < Invoice
     Digest::MD5.hexdigest("#{client.project_id}#{date}#{number}")
   end
 
+  def locale
+    begin
+      client.language
+    rescue
+      I18n.default_locale
+    end
+  end   
+
   protected
 
   def update_status

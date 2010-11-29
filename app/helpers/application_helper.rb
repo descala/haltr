@@ -39,7 +39,7 @@ module ApplicationHelper
   
   def money(import)
     if import && import.cents != 0
-      "#{import} #{import.currency.symbol}"
+      number_to_currency(import, :unit => import.currency.symbol)
     else
       "-"
     end
