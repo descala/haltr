@@ -3,7 +3,7 @@ class InvoiceLine < ActiveRecord::Base
   unloadable
 
   belongs_to :invoice
-  validates_presence_of :description, :invoice_id
+  validates_presence_of :description
   validates_numericality_of :quantity, :price_in_cents
 
   composed_of :price,
