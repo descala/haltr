@@ -1,3 +1,4 @@
+<% I18n.locale = @invoice.locale %>
 <!-- Wrapper -->
 <div id="invoice_wrapper">
 
@@ -115,7 +116,7 @@
               <% end -%>
               <tr class="invoice-total">
                 <th><%=l(:label_total)%>:</th>
-                <td><%= money(@invoice.total) %>(<%=money @invoice.import%>)</td>
+                <td><%= money(@invoice.total) %></td>
               </tr>
           </tbody></table>
 
@@ -142,7 +143,7 @@
           </table>
 
           <!-- Payment Total Details -->
-          <table class="invoice-calculations" border="0" cellpadding="0" cellspacing="0">
+          <table class="invoice-calculations payments" border="0" cellpadding="0" cellspacing="0">
             <tbody>
               <tr class="invoice-total">
                 <th><%= l :field_total_paid %>:</th>
@@ -167,7 +168,7 @@
   </div></div>
 
 </div>
-
+<% lang = find_language(User.current.language); lang ||= Setting.default_language; set_language_if_valid(lang) -%>
 <% unless controller.action_name == "pdf" -%>
   <% content_for :sidebar do %>
       <%= render :partial => 'common/sidebar' %>
@@ -177,4 +178,3 @@
     <%= stylesheet_link_tag 'minimal', :plugin => 'haltr' %>
   <% end %>
 <% end %>
-

@@ -79,7 +79,7 @@ module Import
       Date.strptime(line[pos..pos+6], '%y%m%d')
     end
     def money(pos,len)
-      Money.create_from_cents(line[pos..pos+len].to_i)
+      Money.new(line[pos..pos+len].to_i)
     end
     def string(pos,len)
       line[pos..pos+len].strip

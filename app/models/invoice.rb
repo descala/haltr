@@ -106,8 +106,6 @@ class Invoice < ActiveRecord::Base
   end
 
   def pdf_name
-    # i18n catalan ca-AD
-    # remove_non_ascii "factura-#{number.gsub('/','')}-#{client.name.upcase.gsub(/\/|\.|\'/,'').strip.gsub(' ','_')}.pdf"
     "factura-#{number.gsub('/','')}.pdf"
   end
 
@@ -167,7 +165,7 @@ class Invoice < ActiveRecord::Base
   end
 
   def payment_method
-    if use_bank_account and client.bank_account
+    if use_bank_account and client.bank_account and !client.bank_account.blank?
       ba = client.bank_account
       "Rebut domiciliat a #{ba[0..3]} #{ba[4..7]} ** ******#{ba[16..19]}"
     else

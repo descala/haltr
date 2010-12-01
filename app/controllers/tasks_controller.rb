@@ -46,6 +46,7 @@ class TasksController < ApplicationController
     if @clients.size > 0
       response.headers['Content-type'] = "text; charset=utf-8"
       response.headers['Content-disposition'] = "attachment; filename=n19-#{@fecha_cargo[4..5]}-#{@fecha_cargo[2..3]}-#{@fecha_cargo[0..1]}.txt"
+      I18n.locale = :es
       render :layout => false
     else
       flash[:warning] = "No data for an Nº19"
