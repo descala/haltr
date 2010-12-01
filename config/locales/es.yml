@@ -93,6 +93,7 @@ es:
   field_bank_account: "Cuenta bancaria"
   field_logo_url: "URL de el logo"
   folders_to_leave_invoices_on: "Carpetas donde dejar las facturas"
+  field_company: "Empresa"
 
   # Terms
   "0": Al contado

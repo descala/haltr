@@ -97,6 +97,7 @@ en:
   field_bank_account: Bank account
   field_logo_url: Logo URL
   folders_to_leave_invoices_on: "Folders to leave invoices on"
+  field_company: "Company"
 
   # Terms
   "0": Immediately
