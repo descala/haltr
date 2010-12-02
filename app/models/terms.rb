@@ -2,7 +2,7 @@ class Terms
 
   unloadable
 
-  KEYS = %w(0 30 60 90 120 1m1 1m15 1m20)
+  KEYS = %w(0 30 60 90 120 1m1 2m1 1m15 1m20)
 
   NOW = "al comptat"
   DAYS = "%d dies"

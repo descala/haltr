@@ -106,6 +106,7 @@ en:
   "90": 90 days
   "120": 120 days
   "1m1": 1st day next month
+  "2m1": "1st day in two months"
   "1m15": 15th dat next month
   "1m20": 20th dat next month
   "custom": Custom
