@@ -194,6 +194,14 @@ class Invoice < ActiveRecord::Base
     terms == "custom"
   end
 
+  def locale
+    begin
+      client.language
+    rescue
+      I18n.default_locale
+    end
+  end 
+
   private
 
   def set_due_date
