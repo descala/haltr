@@ -10,7 +10,7 @@ class CompaniesController < ApplicationController
 
   def index
     if @project.company.nil?
-      @company = Company.new(:project=>@project, :name=>@project.name.capitalize)
+      @company = Company.new(:project=>@project, :name=>@project.name)
       @company.save(false)
     else
       @company = @project.company
