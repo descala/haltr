@@ -5,7 +5,7 @@ module CompanyFilter
   def check_for_company
     Project.send(:include, ProjectHaltrPatch) #TODO: perque nomes funciona el primer cop sense aixo?
     if @project.company.nil?
-      c = Company.new(:project=>@project,:name=>@project.name.capitalize)
+      c = Company.new(:project=>@project,:name=>@project.name)
       c.save(false)
       @project.reload
     end
