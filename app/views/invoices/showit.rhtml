@@ -11,7 +11,7 @@
         <!-- Vendor Info -->
         <div class="vcard vendor">
           <div class="logo">
-            <%= image_tag @project.company.logo_url, :alt => "#{@project.company.name} Logo"  %>
+            <%= image_tag "/attachments/#{@project.company.attachments.first.id}/#{@project.company.attachments.first.filename}", :alt => "#{@project.company.name} Logo" -%>
           </div>
           <div class="vendor-info">
             <h3 class="org fn"><%= @project.company.name %></h3>

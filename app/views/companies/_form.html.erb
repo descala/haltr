@@ -13,7 +13,10 @@
 <p><%= f.text_field :website %></p>
 <p><%= f.text_field :email %></p>
 <p><%= f.text_field :bank_account, :maxlength => 20, :size => 30 %></p>
-<p><%= f.text_field :logo_url %></p>
 <p><%= f.text_field :currency %></p>
+<p><%=label_tag('attachments[1][file]', l(:logo))%><%= file_field_tag 'attachments[1][file]', :size => 30, :id => nil -%></p>
+<% if @company.attachments.size > 0 -%>
+  <p><%= image_tag "/attachments/#{@company.attachments.first.id}/#{@company.attachments.first.filename}" -%></p>
+<% end -%>
 </div>
 

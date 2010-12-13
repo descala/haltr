@@ -106,9 +106,9 @@ ca:
   field_website: "Lloc web"
   field_email: "e-mail"
   field_bank_account: "Compte bancari"
-  field_logo_url: "URL on hi ha el logo"
   folders_to_leave_invoices_on: "Carpetes on deixar les factures"
   field_company: "Empresa"
+  logo: "Logo"
 
   # Terms
   "0": Al comptat

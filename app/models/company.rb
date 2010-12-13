@@ -8,11 +8,15 @@ class Company < ActiveRecord::Base
   validates_numericality_of :bank_account, :allow_nil => true, :unless => Proc.new {|company| company.bank_account.blank?}
   validates_length_of :bank_account, :maximum => 20
   validates_inclusion_of :currency, :in  => Money::Currency::TABLE.collect {|k,v| v[:iso_code] }
+  validates_uniqueness_of :taxid
+  acts_as_attachable :view_permission => :free_use,
+                     :delete_permission => :free_use
 
   def initialize(attributes=nil)
     super
     self.withholding_tax_name ||= "IRPF"
     self.currency ||= Money.default_currency.iso_code
+    self.attachments ||= []
   end
 
   def <=>(oth)
