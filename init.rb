@@ -23,7 +23,7 @@ Redmine::Plugin.register :haltr do
     permission :free_use,
       { :clients  => [:index, :new, :edit, :create, :update, :destroy],
         :people   => [:index, :new, :show, :edit, :create, :update, :destroy],
-        :invoices => [:index, :new, :edit, :create, :update, :destroy, :showit, :pdf, :template, :mark_sent, :mark_closed, :mark_not_sent, :destroy_payment, :efactura],
+        :invoices => [:index, :new, :edit, :create, :update, :destroy, :showit, :pdf, :template, :mark_sent, :mark_closed, :mark_not_sent, :destroy_payment, :efactura, :send_invoice],
         :invoice_templates => [:index, :new, :edit, :create, :update, :destroy, :showit, :new_from_invoice],
         :tasks    => [:index, :create_more, :n19, :n19_done, :report, :import_aeb43],
         :payments => [:index, :new, :edit, :create, :update, :destroy ],

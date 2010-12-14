@@ -160,6 +160,28 @@ class InvoicesController < ApplicationController
     @invoices_closed = InvoiceDocument.find(:all,:conditions => ["client_id = ? and status = ?",@client.id,Invoice::STATUS_CLOSED]).sort
   end
 
+  def send_invoice
+    path=Setting.plugin_haltr["folder#{params[:folder]}"]
+    unless path.blank?
+      @company = @invoice.company
+      xml_file=Tempfile.new("invoice_#{@invoice.id}.xml","tmp")
+      xml_file.write(render_to_string(:template => "invoices/facturae.xml.erb", :layout => false))
+      xml_file.close
+      destination="#{path}/" + "#{@project.identifier}_#{@invoice.number}.xml".gsub(/\//,'')
+      i=2
+      while File.exists? destination
+        destination="#{path}/" + "#{@project.identifier}_#{@invoice.number}_#{i}.xml".gsub(/\//,'')
+        i+=1
+      end
+      FileUtils.mv(xml_file.path,destination)
+      flash[:info] = 'Invoice sent to the send queue'
+      redirect_to :action => 'showit', :id => @invoice
+    else
+      flash[:error] = 'Unknown send type'
+      redirect_to :action => 'showit', :id => @invoice
+    end
+  end
+
   private
 
   def find_invoice

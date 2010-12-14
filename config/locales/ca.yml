@@ -60,6 +60,7 @@ ca:
   field_withholding_tax_name: Nom de la retenció
   field_withholding_tax_percent: % de retenció
   must_have_lines: ha de tenir linies
+  send_invoice: Enviar factura
 
   # Invoice templates
   label_invoice_template_new: Nova plantilla

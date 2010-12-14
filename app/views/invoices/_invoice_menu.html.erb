@@ -9,6 +9,12 @@
       <li><%= change_status_link2(@invoice) %></li>
       <li><%= link_to "#{l(:save_invoice)} <strong>PDF</strong>", :action=>'pdf', :id=>@invoice %></li>
       <li><%= link_to "#{l(:save_invoice)} <strong>efactura</strong>", :action=>'efactura', :id=>@invoice %></li>
+      <% unless Setting.plugin_haltr["folder1_name"].blank? or Setting.plugin_haltr["folder1"].blank? -%>
+        <li><%= link_to "#{l(:send_invoice)} <strong>#{Setting.plugin_haltr["folder1_name"]}</strong>", :action=>'send_invoice', :id=>@invoice, :folder=>1 %></li>
+      <% end -%>
+      <% unless Setting.plugin_haltr["folder2_name"].blank? or Setting.plugin_haltr["folder2"].blank? -%>
+        <li><%= link_to "#{l(:send_invoice)} <strong>#{Setting.plugin_haltr["folder2_name"]}</strong>", :action=>'send_invoice', :id=>@invoice, :folder=>2 %></li>
+      <% end -%>
       <% if @invoice.status < Invoice::STATUS_CLOSED -%>
         <li><%= link_to l(:receive_payment), :controller => 'payments', :action => 'new', :id => @project, :invoice_id => @invoice %></li>
       <% end -%>

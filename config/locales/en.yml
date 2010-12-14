@@ -49,6 +49,7 @@ en:
   field_withholding_tax_name: Withholding tax name
   field_withholding_tax_percent: Withholding tax %
   must_have_lines: must have lines
+  send_invoice: Send invoice
 
   # Invoice templates
   label_invoice_template_new: New template
