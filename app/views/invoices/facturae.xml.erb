@@ -78,7 +78,7 @@
             <CorporateName><%=@client.name%></CorporateName>
             <%= render :partial => "address.xml", :locals => {:entity => @client}%>
             <ContactDetails>
-              <ElectronicMail><%= @company.email %></ElectronicMail>
+              <ElectronicMail><%= @client.email %></ElectronicMail>
             </ContactDetails>
          </LegalEntity>
       </BuyerParty>
@@ -171,8 +171,8 @@
             <Installment>
               <InstallmentDueDate><%=@invoice.due_date%></InstallmentDueDate>
                <InstallmentAmount><%=precision @invoice.total.dollars%></InstallmentAmount>
-               <PaymentMeans><%=@invoice.use_bank_account ? "02" : "04" %></PaymentMeans>  <!-- 02 - Rebut domiciliat,  04 -transferencia -->
-<% if @invoice.use_bank_account -%>
+               <PaymentMeans><%=@invoice.can_use_bank_account? ? "02" : "04" %></PaymentMeans>  <!-- 02 - Rebut domiciliat,  04 -transferencia -->
+<% if @invoice.can_use_bank_account? -%>
                <AccountToBeDebited>
                  <AccountNumber><%=@client.bank_account%></AccountNumber>
                </AccountToBeDebited>

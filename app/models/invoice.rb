@@ -174,6 +174,10 @@ class Invoice < ActiveRecord::Base
     end
   end
 
+  def can_use_bank_account?
+    use_bank_account and !client.bank_account.blank?
+  end
+
   def <=>(oth)
     self.number <=> oth.number
   end
