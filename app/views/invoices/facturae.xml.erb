@@ -77,13 +77,9 @@
          <LegalEntity>
             <CorporateName><%=@client.name%></CorporateName>
             <%= render :partial => "address.xml", :locals => {:entity => @client}%>
-<% @client.people.each do |person| -%>
-             <ContactDetails>
-               <Telephone><%= person.phone %></Telephone>
-               <ElectronicMail><%= person.email %></ElectronicMail>
-               <ContactPersons><%= person.name %></ContactPersons>
-             </ContactDetails>
-<% end -%>
+            <ContactDetails>
+              <ElectronicMail><%= @company.email %></ElectronicMail>
+            </ContactDetails>
          </LegalEntity>
       </BuyerParty>
    </Parties>
