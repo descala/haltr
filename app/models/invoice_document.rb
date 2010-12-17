@@ -46,6 +46,10 @@ class InvoiceDocument < Invoice
     total - total_paid
   end
 
+  def paid?
+    unpaid.cents <= 0
+  end
+
   def self.candidates_for_payment(payment)
     # order => older invoices to get paid first
     #TODO: add withholding_tax
@@ -60,8 +64,8 @@ class InvoiceDocument < Invoice
   protected
 
   def update_status
-    self.status=STATUS_SENT if status == STATUS_CLOSED && unpaid.cents > 0
-    self.status=STATUS_CLOSED if unpaid.cents <= 0
+    self.status=STATUS_SENT if status == STATUS_CLOSED && !paid?
+    self.status=STATUS_CLOSED if paid?
   end
 
   def number_must_be_unique_in_project
