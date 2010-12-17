@@ -11,7 +11,7 @@ class InvoiceDocument < Invoice
   before_save :update_status, :unless => Proc.new {|invoicedoc| invoicedoc.status_changed? }
 
   def self.find_due_dates(project)
-    find_by_sql "SELECT due_date, invoices.id, count(*) AS invoice_count FROM invoices, clients WHERE type='InvoiceDocument' AND client_id = clients.id AND clients.project_id = #{project.id} AND status = #{Invoice::STATUS_SENT} AND bank_account AND use_bank_account GROUP BY due_date"
+    find_by_sql "SELECT due_date, invoices.id, count(*) AS invoice_count FROM invoices, clients WHERE type='InvoiceDocument' AND client_id = clients.id AND clients.project_id = #{project.id} AND status = #{Invoice::STATUS_SENT} AND bank_account AND payment_method=#{Invoice::PAYMENT_DEBIT} GROUP BY due_date"
   end
 
   def label

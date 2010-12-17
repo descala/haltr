@@ -7,6 +7,13 @@ class Invoice < ActiveRecord::Base
   STATUS_SENT     = 5
   STATUS_CLOSED   = 9
 
+  # 1 - cash (al comptat)
+  # 2 - debit (rebut domiciliat)
+  # 4 - transfer (transferència)
+  PAYMENT_CASH = 1
+  PAYMENT_DEBIT = 2
+  PAYMENT_TRANSFER = 4
+
   # Default tax %
   TAX = 18
 
@@ -22,6 +29,7 @@ class Invoice < ActiveRecord::Base
     :allow_destroy => true,
     :reject_if => proc { |attributes| attributes.all? { |_, value| value.blank? } }
   validates_associated :invoice_lines
+  validate :payment_method_requirements
 
   before_validation :set_due_date
   before_save :update_import
@@ -37,6 +45,7 @@ class Invoice < ActiveRecord::Base
     self.currency ||= self.client.currency rescue nil
     self.currency ||= self.client.company.currency rescue nil
     self.currency ||= Money.default_currency.iso_code
+    self.payment_method ||= 1
   end
 
   def currency=(v)
@@ -164,18 +173,31 @@ class Invoice < ActiveRecord::Base
     terms_object.description
   end
 
-  def payment_method
-    if use_bank_account and client.bank_account and !client.bank_account.blank?
-      ba = client.bank_account
+  #TODO: translate
+  def payment_method_string
+    if debit? and !client.bank_account.blank?
+      ba = client.bank_account rescue ""
+      ba ||= ""
       "Rebut domiciliat a #{ba[0..3]} #{ba[4..7]} ** ******#{ba[16..19]}"
-    else
+    elsif transfer?
       ba = company.bank_account rescue ""
+      ba ||= ""
       "Pagament per transferència al compte #{ba[0..3]} #{ba[4..7]} #{ba[8..9]} #{ba[10..19]}"
+    else
+      "Pagament al comptat"
     end
   end
 
-  def can_use_bank_account?
-    use_bank_account and !client.bank_account.blank?
+  def self.payment_methods
+    [[l("cash"), 1],[l("debit"), 2],[l("transfer"), 4]]
+  end
+
+  def debit?
+    payment_method == PAYMENT_DEBIT
+  end
+
+  def transfer?
+    payment_method == PAYMENT_TRANSFER
   end
 
   def <=>(oth)
@@ -218,6 +240,14 @@ class Invoice < ActiveRecord::Base
 
   def update_import
     self.import_in_cents = subtotal.cents
+  end
+
+  def payment_method_requirements
+    if debit?
+      errors.add(:base, ("#{l(:field_payment_method)} (#{l(:debit)}) #{l(:requires_client_bank_account)}")) if client.bank_account.blank?
+    elsif transfer?
+      errors.add(:base, ("#{l(:field_payment_method)} (#{l(:transfer)}) #{l(:requires_company_bank_account)}")) if company.bank_account.blank?
+    end
   end
 
 end

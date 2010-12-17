@@ -36,7 +36,7 @@ class Client < ActiveRecord::Base
   end
 
   def bank_invoices(due_date)
-    InvoiceDocument.find :all, :conditions => ["client_id = ? and status = ? and draft != ? and use_bank_account and due_date = ?", self, Invoice::STATUS_SENT, 1, due_date ]
+    InvoiceDocument.find :all, :conditions => ["client_id = ? and status = ? and draft != ? and payment_method=#{Invoice::PAYMENT_DEBIT} and due_date = ?", self, Invoice::STATUS_SENT, 1, due_date ]
   end
 
   def bank_invoices_total(due_date)

@@ -33,7 +33,6 @@ es:
   field_discount_percent: % de descuento
   field_frequency: Frecuencia
   field_draft: Borrador
-  field_use_bank_account: Cargar en cuenta
   label_invoice_status: Estado
   generated_from_template: Generada de la plantilla
   receive_payment: Recibir pago
@@ -46,6 +45,11 @@ es:
   field_withholding_tax_percent: % de retención
   must_have_lines: tiene que tener lineas
   send_invoice: Enviar factura
+  cash: Al contado
+  debit: Cargar en cuenta
+  transfer: Transferencia bancaria
+  requires_client_bank_account: requiere cuenta bancaria del cliente
+  requires_company_bank_account: requiere cuenta bancaria propia
 
   # Invoice templates
   label_invoice_template_new: Nueva plantilla

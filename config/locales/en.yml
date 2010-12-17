@@ -33,7 +33,6 @@ en:
   field_discount_percent: Discount %
   field_frequency: Frequency
   field_draft: Draft
-  field_use_bank_account: Use banck account
   label_invoice_status: Status
   show_template: Show template
   generate_template_from_invoice: Generate new template
@@ -50,6 +49,11 @@ en:
   field_withholding_tax_percent: Withholding tax %
   must_have_lines: must have lines
   send_invoice: Send invoice
+  cash: Cash
+  debit: Debit payment
+  transfer: Bank transfer
+  requires_client_bank_account: requires client bank account
+  requires_company_bank_account: requires self bank account
 
   # Invoice templates
   label_invoice_template_new: New template

@@ -18,7 +18,7 @@
   <p><%= f.text_field :discount_percent %></p>
   <p><%= f.text_area :extra_info, :rows=>3 %></p>
   <p><%= f.check_box :draft %></p>
-  <p><%= f.check_box :use_bank_account %></p>
+  <p><%= f.select(:payment_method,Invoice.payment_methods, :required => true) %></p>
   <div id="invoice_lines">
     <p style="font-weight:bold;">
     <%= l(:field_quantity) %>

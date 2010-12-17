@@ -44,7 +44,6 @@ ca:
   field_discount_percent: % de descompte
   field_frequency: Freqüència
   field_draft: Esborrany
-  field_use_bank_account: Carregar al compte
   label_invoice_status: Estat
   show_template: Veure la plantilla
   generate_template_from_invoice: Generar nova plantilla
@@ -61,6 +60,11 @@ ca:
   field_withholding_tax_percent: % de retenció
   must_have_lines: ha de tenir linies
   send_invoice: Enviar factura
+  cash: Al comptat
+  debit: Carregar al compte
+  transfer: Transferència bancària
+  requires_client_bank_account: requereix compte bancari del client
+  requires_company_bank_account: requereix compte bancari propi
 
   # Invoice templates
   label_invoice_template_new: Nova plantilla

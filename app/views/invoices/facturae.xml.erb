@@ -171,12 +171,12 @@
             <Installment>
               <InstallmentDueDate><%=@invoice.due_date%></InstallmentDueDate>
                <InstallmentAmount><%=precision @invoice.total.dollars%></InstallmentAmount>
-               <PaymentMeans><%=@invoice.can_use_bank_account? ? "02" : "04" %></PaymentMeans>  <!-- 02 - Rebut domiciliat,  04 -transferencia -->
-<% if @invoice.can_use_bank_account? -%>
+               <PaymentMeans><%=@invoice.payment_method %></PaymentMeans>
+<% if @invoice.debit? -%>
                <AccountToBeDebited>
                  <AccountNumber><%=@client.bank_account%></AccountNumber>
                </AccountToBeDebited>
-<% else -%>
+<% elsif @invoice.transfer? -%>
                <AccountToBeCredited>
                  <AccountNumber><%=@company.bank_account%></AccountNumber>
                </AccountToBeCredited>
