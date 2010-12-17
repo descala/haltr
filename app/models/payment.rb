@@ -24,8 +24,8 @@ class Payment < ActiveRecord::Base
 
   def description
     desc = ""
-    desc += "#{self.payment_method} - " unless self.payment_method.nil? or self.payment_method.blank?
-    desc += self.reference
+    desc += self.payment_method unless self.payment_method.blank?
+    desc += "#{' - ' if desc.size > 0}#{self.reference}" unless self.reference.blank?
   end
 
   def save_invoice
