@@ -65,6 +65,9 @@ ca:
   transfer: Transferència bancària
   requires_client_bank_account: requereix compte bancari del client
   requires_company_bank_account: requereix compte bancari propi
+  cash_str: "Pagament al comptat"
+  debit_str: "Rebut domiciliat a"
+  transfer_str: "Pagament per transferència al compte"
 
   # Invoice templates
   label_invoice_template_new: Nova plantilla

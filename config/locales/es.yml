@@ -50,6 +50,9 @@ es:
   transfer: Transferencia bancaria
   requires_client_bank_account: requiere cuenta bancaria del cliente
   requires_company_bank_account: requiere cuenta bancaria propia
+  cash_str: "Pago al contado"
+  debit_str: "Recibo domiciliado a"
+  transfer_str: "Pago por transferencia a la cuenta"
 
   # Invoice templates
   label_invoice_template_new: Nueva plantilla

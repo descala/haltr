@@ -54,6 +54,9 @@ en:
   transfer: Bank transfer
   requires_client_bank_account: requires client bank account
   requires_company_bank_account: requires self bank account
+  cash_str: "Cash payment"
+  debit_str: "Debit payment to"
+  transfer_str: "Bank transfer to"
 
   # Invoice templates
   label_invoice_template_new: New template

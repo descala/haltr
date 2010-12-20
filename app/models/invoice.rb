@@ -173,18 +173,17 @@ class Invoice < ActiveRecord::Base
     terms_object.description
   end
 
-  #TODO: translate
   def payment_method_string
     if debit? and !client.bank_account.blank?
       ba = client.bank_account rescue ""
       ba ||= ""
-      "Rebut domiciliat a #{ba[0..3]} #{ba[4..7]} ** ******#{ba[16..19]}"
+      "#{l(:debit_str)} #{ba[0..3]} #{ba[4..7]} ** ******#{ba[16..19]}"
     elsif transfer?
       ba = company.bank_account rescue ""
       ba ||= ""
-      "Pagament per transferència al compte #{ba[0..3]} #{ba[4..7]} #{ba[8..9]} #{ba[10..19]}"
+      "#{l(:transfer_str)} #{ba[0..3]} #{ba[4..7]} #{ba[8..9]} #{ba[10..19]}"
     else
-      "Pagament al comptat"
+      l(:cash_str)
     end
   end
 
