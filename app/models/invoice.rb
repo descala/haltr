@@ -199,6 +199,14 @@ class Invoice < ActiveRecord::Base
     payment_method == PAYMENT_TRANSFER
   end
 
+  def payment_method_code
+    if payment_method < 10
+      "0#{payment_method}"
+    else
+      payment_method.to_s
+    end
+  end
+
   def <=>(oth)
     self.number <=> oth.number
   end
