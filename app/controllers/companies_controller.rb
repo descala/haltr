@@ -33,7 +33,7 @@ class CompaniesController < ApplicationController
   end
 
   def logo
-    c = Company.find_by_taxid params[:id]
+    c = Company.find_by_taxcode params[:id]
     render :text=>"" and return unless c
     a = c.attachments.first
     render :text=>"" and return unless a
