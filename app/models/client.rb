@@ -16,6 +16,7 @@ class Client < ActiveRecord::Base
 #  validates_length_of :name, :maximum => 30
 #  validates_format_of :identifier, :with => /^[a-z0-9\-]*$/
   validates_inclusion_of :currency, :in  => Money::Currency::TABLE.collect {|k,v| v[:iso_code] }
+  validates_length_of :taxcode, :maximum => 20
 
   def initialize(attributes=nil)
     super
@@ -24,15 +25,6 @@ class Client < ActiveRecord::Base
 
   def currency=(v)
     write_attribute(:currency,v.upcase)
-  end
-
-  def taxcode_type
-    if taxcode.first.upcase>="A"
-      return "CIF"
-    else
-      #comença per un número
-      return "NIF"
-    end
   end
 
   def bank_invoices(due_date)

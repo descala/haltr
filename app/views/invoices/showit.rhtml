@@ -27,7 +27,7 @@
               <div class="region"><%= @project.company.province %></div>
               <div class="country-name"></div>
             </address>
-            <div><strong>CIF:</strong><span class="tax-id"> <%= @project.company.taxid %></span></div>
+            <div><strong><%= l(:field_taxcode) %></strong><span class="tax-id"> <%= @project.company.taxcode %></span></div>
             <div style="height:10px;"></div>
             <div><a href="<%= @project.company.website %>" class="url" target="_blank"><%= @project.company.website %></a></div>
             <div><a href="<%= @project.company.email %>" class="url" target="_blank"><%= @project.company.email %></a></div>
@@ -65,7 +65,7 @@
               <div class="country-name"><%= @client.countrycode if @client.countrycode.downcase!="esp" %></div>
             </address>
             <% if !@invoice.draft -%>
-              <div><strong><%= @client.taxcode_type %>:</strong><span class="tax-id"> <%= @client.taxcode.upcase %></span></div>
+              <div><strong><%= l(:field_taxcode) %>:</strong><span class="tax-id"> <%= @client.taxcode.upcase %></span></div>
             <% end -%>
           </div>
         </div>

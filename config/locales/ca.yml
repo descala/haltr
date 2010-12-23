@@ -12,7 +12,6 @@ ca:
         delimiter: "."
         precision: 2
   # Clients
-  field_taxcode: CIF
   label_client: Client
   label_client_plural: Clients
   label_client_new: Nou client
@@ -109,7 +108,7 @@ ca:
   field_total_paid: Total pagat
 
   # Settings
-  field_taxid: "CIF"
+  field_taxcode: "CIF"
   field_address: "Adreça"
   field_website: "Lloc web"
   field_email: "e-mail"

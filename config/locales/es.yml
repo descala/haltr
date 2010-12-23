@@ -1,7 +1,6 @@
 es:
 
   # Clients
-  field_taxcode: CIF
   label_client: Cliente
   label_client_plural: Clientes
   label_client_new: Nuevo cliente
@@ -98,7 +97,7 @@ es:
   field_total_paid: Total pagado
 
   # Settings
-  field_taxid: "CIF"
+  field_taxcode: "CIF"
   field_address: "Dirección"
   field_website: "Sitio web"
   field_email: "e-mail"
