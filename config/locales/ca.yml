@@ -92,7 +92,7 @@ ca:
   field_report_recipient: Destí informes
 
   # Tasks
-  label_task_plural: Tasks
+  label_task_plural: Tasques
   with_date: Amb data
   charge_bank_on_date: Cobrar a dia
   nothing_to_report: Res a mostrar
