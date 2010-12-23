@@ -4,12 +4,12 @@ class Company < ActiveRecord::Base
 
   belongs_to :project
   validates_presence_of :name, :project_id, :email
-  validates_length_of :taxid, :maximum => 9
+  validates_length_of :taxcode, :maximum => 20
   validates_length_of :postalcode, :is => 5
   validates_numericality_of :bank_account, :allow_nil => true, :unless => Proc.new {|company| company.bank_account.blank?}
   validates_length_of :bank_account, :maximum => 20
   validates_inclusion_of :currency, :in  => Money::Currency::TABLE.collect {|k,v| v[:iso_code] }
-  validates_uniqueness_of :taxid
+  validates_uniqueness_of :taxcode
   acts_as_attachable :view_permission => :free_use,
                      :delete_permission => :free_use
 
