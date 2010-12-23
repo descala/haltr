@@ -43,7 +43,7 @@
          <TaxIdentification>
             <PersonTypeCode><%= @invoice.persontypecode %></PersonTypeCode>     <!-- Si Empresa => J= Persona jurídica F = persona física (en cas que tingui IRPF a la fitxa de persona)-->
             <ResidenceTypeCode>R</ResidenceTypeCode>  <!-- fixe R=Residencia a España.  -->
-            <TaxIdentificationNumber>B63354724</TaxIdentificationNumber>
+            <TaxIdentificationNumber><%=@company.taxcode%></TaxIdentificationNumber>
          </TaxIdentification>
 <% if @invoice.persontypecode == "J" -%>
          <!-- Si és una Empresa (no té IRPF a la fitxa de empresa  -->

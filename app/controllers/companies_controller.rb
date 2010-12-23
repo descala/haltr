@@ -7,6 +7,7 @@ class CompaniesController < ApplicationController
   before_filter :find_project, :except => [:update, :logo]
   before_filter :find_company, :only => [:update]
   before_filter :authorize, :except => [:logo]
+  skip_before_filter :check_if_login_required, :only => [:logo]
 
   def index
     if @project.company.nil?
