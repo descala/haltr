@@ -34,7 +34,12 @@ class CompaniesController < ApplicationController
 
   def logo
     c = Company.find_by_taxid params[:id]
-    render :text => c.attachments.first.diskfile
+    render :text=>"" and return unless c
+    a = c.attachments.first
+    render :text=>"" and return unless a
+    send_file a.diskfile, :filename => filename_for_content_disposition(a.filename),
+                                    :type => detect_content_type(a),
+                                    :disposition => (a.image? ? 'inline' : 'attachment')
   end
 
   private
@@ -46,6 +51,14 @@ class CompaniesController < ApplicationController
 
   def project_patch
     Project.send(:include, ProjectHaltrPatch) #TODO: perque nomes funciona el primer cop sense aixo?
+  end
+
+  def detect_content_type(attachment)
+    content_type = attachment.content_type
+    if content_type.blank?
+      content_type = Redmine::MimeType.of(attachment.filename)
+    end
+    content_type.to_s
   end
 
 end
