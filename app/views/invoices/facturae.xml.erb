@@ -147,7 +147,7 @@
          <Items>
 <% @invoice.invoice_lines.each do |invoice_line| -%>
             <InvoiceLine>
-              <ReceiverTransactionReference><%=@invoice.number%></ReceiverTransactionReference>  <!-- número de comanda. Com que no hi ha nº comanda a nivell de capçalera, cal repetir-lo a totes les línies si hi es -->
+              <ReceiverTransactionReference><%=@invoice.ponumber%></ReceiverTransactionReference>  <!-- número de comanda. Com que no hi ha nº comanda a nivell de capçalera, cal repetir-lo a totes les línies si hi es -->
                <ItemDescription><%=invoice_line.description%></ItemDescription>
                <Quantity><%=invoice_line.quantity%></Quantity>
                <UnitPriceWithoutTax><%=precision(invoice_line.price.dollars,6)%></UnitPriceWithoutTax>     <!-- ojo amb la precisió decimal, han de ser 6 dígits!! -->
