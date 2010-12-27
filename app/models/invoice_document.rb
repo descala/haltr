@@ -8,10 +8,39 @@ class InvoiceDocument < Invoice
   validate :number_must_be_unique_in_project
   validate :invoice_must_have_lines
 
-  before_save :update_status, :unless => Proc.new {|invoicedoc| invoicedoc.status_changed? }
+  before_save :update_status, :unless => Proc.new {|invoicedoc| invoicedoc.state_changed? }
+
+  # new sending sent error closed
+  state_machine :state, :initial => :new do
+    event :manual_send do
+      transition [:new,:sending,:error] => :sent
+    end
+    event :queue do
+      transition :new => :sending
+    end
+    event :requeue do
+      transition [:sent,:error] => :sending
+    end
+    event :success_sending do
+      transition :sending => :sent
+    end
+    event :mark_unsent do
+      transition [:sent,:closed] => :new
+    end
+    event :error_sending do
+      transition :sending => :error
+    end
+    event :close do
+      transition [:sent] => :closed
+    end
+  end
+
+  def sent?
+    state?(:sent) or state?(:closed)
+  end
 
   def self.find_due_dates(project)
-    find_by_sql "SELECT due_date, invoices.id, count(*) AS invoice_count FROM invoices, clients WHERE type='InvoiceDocument' AND client_id = clients.id AND clients.project_id = #{project.id} AND status = #{Invoice::STATUS_SENT} AND bank_account AND payment_method=#{Invoice::PAYMENT_DEBIT} GROUP BY due_date"
+    find_by_sql "SELECT due_date, invoices.id, count(*) AS invoice_count FROM invoices, clients WHERE type='InvoiceDocument' AND client_id = clients.id AND clients.project_id = #{project.id} AND state = 'sent' AND bank_account AND payment_method=#{Invoice::PAYMENT_DEBIT} GROUP BY due_date"
   end
 
   def label
@@ -27,11 +56,7 @@ class InvoiceDocument < Invoice
   end
 
   def self.find_not_sent(project)
-    find :all, :include => [:client], :conditions => ["clients.project_id = ? and status = ? and draft != ?", project.id, Invoice::STATUS_NOT_SENT, 1 ]
-  end
-
-  def self.count_not_sent(project)
-    count :all, :include => [:client], :conditions => ["clients.project_id = ? and status = ? and draft != ?", project.id, Invoice::STATUS_NOT_SENT, 1 ]
+    find :all, :include => [:client], :conditions => ["clients.project_id = ? and state = 'new' and draft != ?", project.id, 1 ]
   end
 
   def total_paid
@@ -53,7 +78,7 @@ class InvoiceDocument < Invoice
   def self.candidates_for_payment(payment)
     # order => older invoices to get paid first
     #TODO: add withholding_tax
-    find :all, :conditions => ["round(import_in_cents*(1+tax_percent/100)) = ? and date <= ? and status < ?", payment.amount_in_cents, payment.date, STATUS_CLOSED], :order => "due_date ASC"
+    find :all, :conditions => ["round(import_in_cents*(1+tax_percent/100)) = ? and date <= ? and state != 'closed'", payment.amount_in_cents, payment.date], :order => "due_date ASC"
   end
 
   def batchidentifier
@@ -64,8 +89,8 @@ class InvoiceDocument < Invoice
   protected
 
   def update_status
-    self.status=STATUS_SENT if status == STATUS_CLOSED && !paid?
-    self.status=STATUS_CLOSED if paid?
+    self.state='sent' if state?(:closed) && !paid?
+    self.state='closed' if paid?
   end
 
   def number_must_be_unique_in_project

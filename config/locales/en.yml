@@ -32,7 +32,8 @@ en:
   field_discount_percent: Discount %
   field_frequency: Frequency
   field_draft: Draft
-  label_invoice_status: Status
+  label_invoice_state: Status
+  field_state: Status
   show_template: Show template
   generate_template_from_invoice: Generate new template
   generated_from_template: Generated from template
@@ -44,6 +45,8 @@ en:
   save_invoice: Save invoice
   recipients: Recipients
   open_invoices: Open invoices
+  pending_invoices: Pending invoices
+  closed_invoices: Closed invoices
   label_subtotal: Subtotal
   field_withholding_tax_name: Withholding tax name
   field_withholding_tax_percent: Withholding tax %
@@ -57,6 +60,16 @@ en:
   cash_str: "Cash payment"
   debit_str: "Debit payment to"
   transfer_str: "Bank transfer to"
+  state_new_plural: "New"
+  state_sending_plural: "Sending"
+  state_sent_plural: "Sent"
+  state_error_plural: "With errors"
+  state_closed_plural: "Closed"
+  state_new: "New"
+  state_sending: "Sending"
+  state_sent: "Sent"
+  state_error: "With errors"
+  state_closed: "Closed"
 
   # Invoice templates
   label_invoice_template_new: New template

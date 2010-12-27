@@ -2,11 +2,6 @@ class Invoice < ActiveRecord::Base
 
   unloadable
 
-  # Invoice statuses
-  STATUS_NOT_SENT = 1
-  STATUS_SENT     = 5
-  STATUS_CLOSED   = 9
-
   # 1 - cash (al comptat)
   # 2 - debit (rebut domiciliat)
   # 4 - transfer (transferència)
@@ -16,9 +11,6 @@ class Invoice < ActiveRecord::Base
 
   # Default tax %
   TAX = 18
-
-  STATUS_LIST = { STATUS_NOT_SENT=>'Not sent', STATUS_SENT=>'Sent', STATUS_CLOSED=>'Closed' }
-
 
   has_many :invoice_lines, :dependent => :destroy
   belongs_to :client
@@ -144,31 +136,6 @@ class Invoice < ActiveRecord::Base
     end
   end
 
-  def sent?
-    self.status > STATUS_NOT_SENT
-  end
-
-  def mark_closed
-    update_attribute :status, STATUS_CLOSED
-  end
-
-  def mark_sent
-    update_attribute :status, STATUS_SENT
-  end
-
-  def mark_not_sent
-    update_attribute :status, STATUS_NOT_SENT
-  end
-
-  def closed?
-    self.status == STATUS_CLOSED
-  end
-
-
-  def status_txt
-    STATUS_LIST[self.status]
-  end
-
   def terms_description
     terms_object.description
   end
@@ -216,7 +183,7 @@ class Invoice < ActiveRecord::Base
   end
 
   def past_due?
-    self.status < STATUS_CLOSED && due_date && due_date < Date.today
+    state?(:closed) && due_date && due_date < Date.today
   end
 
   def company

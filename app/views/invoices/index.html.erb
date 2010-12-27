@@ -13,11 +13,11 @@
     <div id="query_form_content" class="hide-when-print">
       <table>
         <tr>
-          <th><%= l(:label_invoice_status) %>:</th>
+          <th><%= l(:label_invoice_state) %>:</th>
           <td>
-            <%= check_box_tag("status_all", "1", params["status_all"]) %> <span style="font-weight:bold;">All</span>
-            <% Invoice::STATUS_LIST.each do |id,txt| -%>
-              <%= check_box_tag("status_#{id}", "1", params["status_#{id}"]) %> <%=txt%>
+            <%= check_box_tag("state_all", "1", params["state_all"]) %> <span style="font-weight:bold;">All</span>
+            <% %w(new sending sent error closed).each do |state| -%>
+              <%= check_box_tag(state, "1", params[state]) %> <%=l("state_#{state}_plural")%>
             <% end -%>
           </td>
         </tr>
@@ -45,7 +45,7 @@
 
 <table class="list" id="invoices">
   <thead>
-    <%= sort_header_tag('status', :caption => l(:field_status)) %>
+    <%= sort_header_tag('state', :caption => l(:field_state)) %>
     <%= sort_header_tag('number', :caption => l(:field_number)) %>
     <%= sort_header_tag('date', :caption => l(:field_date)) %>
     <%= sort_header_tag('due_date', :caption => l(:field_due_date)) %>
@@ -55,7 +55,7 @@
   <tbody>
     <% for invoice in @invoices -%>
       <tr class="user <%= cycle("odd", "even") %>" onclick="javascript: document.location = '<%=url_for(:action=>'showit', :id=>invoice)%>'">
-        <td align="center"><%= change_status_link(invoice) %></td>
+        <td align="center"><%= change_state_link(invoice) %></td>
         <td align="center"><%=h invoice.number %></td>
         <td align="center"><%=h invoice.date %></td>
         <td align="center"<%='class="pastdue"' if invoice.past_due?%>><%=h invoice.due_date %></td>

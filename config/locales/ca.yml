@@ -43,7 +43,8 @@ ca:
   field_discount_percent: % de descompte
   field_frequency: Freqüència
   field_draft: Esborrany
-  label_invoice_status: Estat
+  label_invoice_state: Estat
+  field_state: Estat
   show_template: Veure la plantilla
   generate_template_from_invoice: Generar nova plantilla
   generated_from_template: Generada de la plantilla
@@ -55,6 +56,8 @@ ca:
   save_invoice: Desar factura
   recipients: Destinataris
   open_invoices: Factures obertes
+  pending_invoices: Factures pendents
+  closed_invoices: Factures tancades
   label_subtotal: Subtotal
   field_withholding_tax_name: Nom de la retenció
   field_withholding_tax_percent: % de retenció
@@ -68,6 +71,16 @@ ca:
   cash_str: "Pagament al comptat"
   debit_str: "Rebut domiciliat a"
   transfer_str: "Pagament per transferència al compte"
+  state_new_plural: "Noves"
+  state_sending_plural: "Enviant-se"
+  state_sent_plural: "Enviades"
+  state_error_plural: "Amb errors"
+  state_closed_plural: "Tancades"
+  state_new: "Nova"
+  state_sending: "Enviant-se"
+  state_sent: "Enviada"
+  state_error: "Amb errors"
+  state_closed: "Tancada"
 
   # Invoice templates
   label_invoice_template_new: Nova plantilla

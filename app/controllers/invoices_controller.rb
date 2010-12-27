@@ -16,20 +16,19 @@ class InvoicesController < ApplicationController
 
   def index
     sort_init 'number', 'desc'
-    sort_update %w(status number date due_date clients.name import_in_cents)
+    sort_update %w(state number date due_date clients.name import_in_cents)
 
     c = ARCondition.new(["clients.project_id = ?",@project.id])
 
-    # status filter
-    unless params["status_all"] == "1"
-      statuslist=[]
-      Invoice::STATUS_LIST.each do |id,txt|
-        if params["status_#{id}"] == "1"
-          statuslist << id
+    unless params["state_all"] == "1"
+      statelist=[]
+      %w(new sending sent error closed).each do |state|
+        if params[state] == "1"
+          statelist << "'#{state}'"
         end
       end
-      if statuslist.any?
-        c << ["status in (#{statuslist.join(",")})"]
+      if statelist.any?
+        c << ["state in (#{statelist.join(",")})"]
       end
     end
 
@@ -98,21 +97,21 @@ class InvoicesController < ApplicationController
   end
 
   def mark_sent
-    @invoice.mark_sent
+    @invoice.manual_send
     redirect_to :back
   rescue ActionController::RedirectBackError => e
     render :text => "OK"
   end
 
   def mark_closed
-    @invoice.mark_closed
+    @invoice.close
     redirect_to :back
   rescue ActionController::RedirectBackError => e
     render :text => "OK"
   end
 
   def mark_not_sent
-    @invoice.mark_not_sent
+    @invoice.mark_unsent
     redirect_to :back
   rescue ActionController::RedirectBackError => e
     render :text => "OK"
@@ -155,9 +154,9 @@ class InvoicesController < ApplicationController
   end
 
   def showit
-    @invoices_not_sent = InvoiceDocument.find(:all,:conditions => ["client_id = ? and status = ?",@client.id,Invoice::STATUS_NOT_SENT]).sort
-    @invoices_sent = InvoiceDocument.find(:all,:conditions => ["client_id = ? and status = ?",@client.id,Invoice::STATUS_SENT]).sort
-    @invoices_closed = InvoiceDocument.find(:all,:conditions => ["client_id = ? and status = ?",@client.id,Invoice::STATUS_CLOSED]).sort
+    @invoices_not_sent = InvoiceDocument.find(:all,:conditions => ["client_id = ? and state = 'new'",@client.id]).sort
+    @invoices_sent = InvoiceDocument.find(:all,:conditions => ["client_id = ? and state = 'sent'",@client.id]).sort
+    @invoices_closed = InvoiceDocument.find(:all,:conditions => ["client_id = ? and state = 'closed'",@client.id]).sort
   end
 
   def send_invoice

@@ -14,7 +14,7 @@ template1:
 
 test_import:
   type: InvoiceDocument
-  status: 5
+  state: sent
   number: 08/194
   date: "2008-11-24"
   client: invinet

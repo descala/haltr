@@ -58,7 +58,7 @@ class TasksController < ApplicationController
     example_invoice = InvoiceDocument.find params[:id]
     invoices = InvoiceDocument.find :all, :include => [:client], :conditions => ["clients.project_id = ? and due_date = ?", @project.id, example_invoice.due_date]
     invoices.each do |invoice|
-      invoice.status = Invoice::STATUS_CLOSED
+      invoice.state='closed'
       invoice.save
     end
     flash[:notice] = "Nº19 for due date #{example_invoice.due_date} maked as done"

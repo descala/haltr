@@ -32,7 +32,8 @@ es:
   field_discount_percent: % de descuento
   field_frequency: Frecuencia
   field_draft: Borrador
-  label_invoice_status: Estado
+  label_invoice_state: Estado
+  field_state: Estado
   show_template: Ver plantilla
   generate_template_from_invoice: Generar nueva plantilla
   generated_from_template: Generada de la plantilla
@@ -44,6 +45,8 @@ es:
   save_invoice: Guardar factura
   recipients: Destinatarios
   open_invoices: Facturas abiertas
+  pending_invoices: Facturas pendientes
+  closed_invoices: Facturas cerradas
   label_subtotal: Subtotal
   field_withholding_tax_name: Nombre de la retención
   field_withholding_tax_percent: % de retención
@@ -57,6 +60,16 @@ es:
   cash_str: "Pago al contado"
   debit_str: "Recibo domiciliado a"
   transfer_str: "Pago por transferencia a la cuenta"
+  state_new_plural: "Nuevas"
+  state_sending_plural: "Enviándose"
+  state_sent_plural: "Enviadas"
+  state_error_plural: "Con errores"
+  state_closed_plural: "Cerradas"
+  state_new: "Nueva"
+  state_sending: "Enviandose"
+  state_sent: "Enviada"
+  state_error: "Con errores"
+  state_closed: "Cerrada"
 
   # Invoice templates
   label_invoice_template_new: Nueva plantilla
