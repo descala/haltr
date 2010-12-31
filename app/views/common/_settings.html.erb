@@ -1,4 +1,6 @@
 <h3><%= l(:folders_to_leave_invoices_on) %></h3>
+<p><label><%=l(:trace_url)%></label><%= text_field_tag 'settings[trace_url]', @settings['trace_url'] %></p>
+
 <p><label>Folder 1 Name</label><%= text_field_tag 'settings[folder1_name]', @settings['folder1_name'] %></p>
 <p><label>Folder 1 Path</label><%= text_field_tag 'settings[folder1]', @settings['folder1'] %></p>
 

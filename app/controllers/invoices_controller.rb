@@ -172,7 +172,13 @@ class InvoicesController < ApplicationController
         destination="#{path}/" + "#{@project.identifier}_#{@invoice.number}_#{i}.xml".gsub(/\//,'')
         i+=1
       end
+      @invoice.md5=`md5sum '#{xml_file.path}'`.split.first
+      B2bMessage.connect(Setting.plugin_haltr["trace_url"])
+      channel=Setting.plugin_haltr["folder#{params[:folder]}"].split("/").last
+      b2bm = B2bMessage.new(:md5=>@invoice.md5,:name=>File.basename(destination),:b2b_channel_id=>channel)
+      b2bm.save
       FileUtils.mv(xml_file.path,destination)
+      @invoice.queue
       flash[:info] = 'Invoice sent to the send queue'
       redirect_to :action => 'showit', :id => @invoice
     else
