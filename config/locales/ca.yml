@@ -81,6 +81,7 @@ ca:
   state_sent: "Enviada"
   state_error: "Amb errors"
   state_closed: "Tancada"
+  sending_log: "Log d'enviament"
 
   # Invoice templates
   label_invoice_template_new: Nova plantilla

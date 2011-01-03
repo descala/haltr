@@ -173,24 +173,29 @@ class InvoicesController < ApplicationController
         i+=1
       end
       @invoice.md5=`md5sum '#{xml_file.path}'`.split.first
-      begin
-        # Insert invoice into b2brouter messages database
-        B2bMessage.connect(Setting.plugin_haltr["trace_url"])
-        channel=Setting.plugin_haltr["folder#{params[:folder]}"].split("/").last
-        b2bm = B2bMessage.new(:md5=>@invoice.md5,:name=>File.basename(destination),:b2b_channel_id=>channel)
-        b2bm.save
-      rescue Exception => e
-        #TODO
-        logger.error(e.message)
-      end
+      @invoice.channel=path.split("/").last
+      #TODO: fer b2brouter_url diferent per a cada canal, doncs pot ser que hi hagi varis b2brouters
+      @invoice.b2brouter_url=Setting.plugin_haltr["trace_url"]
+      @invoice.create_b2b_message(File.basename(destination))
       FileUtils.mv(xml_file.path,destination)
-      @invoice.queue
+      #TODO state restrictions
+      @invoice.queue || @invoice.requeue
       flash[:info] = 'Invoice sent to the send queue'
       redirect_to :action => 'showit', :id => @invoice
     else
       flash[:error] = 'Unknown send type'
       redirect_to :action => 'showit', :id => @invoice
     end
+  end
+
+  def log
+    B2bMessage.connect(@invoice.b2brouter_url)
+    B2bLog.connect(@invoice.b2brouter_url)
+    @message = @invoice.b2b_message
+    @current_page = params[:page] || 1
+    @messages_page = params[:messages_page]
+    @sent=params[:sent]
+    @logs = B2bLog.paginate(:all, :params => { :b2b_message_id=>@message.id, :page=>@current_page })
   end
 
   private

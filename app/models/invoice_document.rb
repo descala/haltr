@@ -86,6 +86,24 @@ class InvoiceDocument < Invoice
     Digest::MD5.hexdigest("#{client.project_id}#{date}#{number}")
   end
 
+  # Insert invoice into b2brouter messages database, if not exists
+  def create_b2b_message(filename)
+    B2bMessage.connect(b2brouter_url)
+    unless b2b_message
+      B2bMessage.new(:md5=>md5,:name=>filename,:b2b_channel_id=>channel).save
+    end
+  rescue Exception => e
+    #TODO
+    logger.error(e.message)
+  end
+
+  def b2b_message
+    B2bMessage.connect(b2brouter_url)
+    #TODO: aixo es fa aixi?
+    hash_attrs=B2bMessage.get(:b2b_message, :b2b_channel=>channel, :md5=>md5).first
+    B2bMessage.new(hash_attrs) unless hash_attrs.nil?
+  end
+
   protected
 
   def update_status

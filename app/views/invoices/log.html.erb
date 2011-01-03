@@ -1,0 +1,21 @@
+<h3>Logs for message <%=@message.name%> ( MD5: <%=@message.md5%> )</h3>
+
+<table width="100%">
+  <tr>
+    <th>Timestamp</th>
+    <th>Transaction ID</th>
+    <th>Message</th>
+  </tr>
+<% @logs.each do |log| -%>
+
+  <tr class="<%= cycle('odd', 'even') %>">
+    <td><%= log.created_at.getlocal rescue "?" %></td>
+    <td><%= log.tid %></td>
+    <td><%= log.message %></td>
+  </tr>
+
+<% end -%>
+</table>
+
+<p><%=will_paginate @logs %></p>
+

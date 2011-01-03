@@ -70,6 +70,7 @@ es:
   state_sent: "Enviada"
   state_error: "Con errores"
   state_closed: "Cerrada"
+  sending_log: "Log de envio"
 
   # Invoice templates
   label_invoice_template_new: Nueva plantilla
