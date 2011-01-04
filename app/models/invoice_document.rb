@@ -89,7 +89,12 @@ class InvoiceDocument < Invoice
   # Insert invoice into b2brouter messages database, if not exists
   def create_b2b_message(filename)
     B2bMessage.connect(b2brouter_url)
-    unless b2b_message
+    b2bm = b2b_message
+    if b2bm
+      # we are re-sending a previous message, reset its state
+      b2bm.sent=nil
+      b2bm.save
+    else
       B2bMessage.new(:md5=>md5,:name=>filename,:b2b_channel_id=>channel).save
     end
   rescue Exception => e
