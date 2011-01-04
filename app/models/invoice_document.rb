@@ -99,9 +99,7 @@ class InvoiceDocument < Invoice
 
   def b2b_message
     B2bMessage.connect(b2brouter_url)
-    #TODO: aixo es fa aixi?
-    hash_attrs=B2bMessage.get(:b2b_message, :b2b_channel=>channel, :md5=>md5).first
-    B2bMessage.new(hash_attrs) unless hash_attrs.nil?
+    B2bMessage.find(:by_channel_and_md5, :params => { :b2b_channel=>"ch9", :md5=>"badac8a82a14481bcad80a9a1ecfc4eb" })
   end
 
   protected
