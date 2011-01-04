@@ -15,7 +15,7 @@
       <% unless Setting.plugin_haltr["folder2_name"].blank? or Setting.plugin_haltr["folder2"].blank? -%>
         <li><%= link_to "#{l(:send_invoice)} <strong>#{Setting.plugin_haltr["folder2_name"]}</strong>", :action=>'send_invoice', :id=>@invoice, :folder=>2 %></li>
       <% end -%>
-      <% if @invoice.b2b_message -%>
+      <% if %w(error sending).include?(@invoice.state) and @invoice.b2b_message -%>
         <li><%= link_to l(:sending_log), :controller => 'invoices', :action => 'log', :id => @invoice %></li>
       <% end -%>
       <% if @invoice.state?(:sent) -%>

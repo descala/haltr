@@ -14,6 +14,8 @@ class InvoicesController < ApplicationController
   include CompanyFilter
   before_filter :check_for_company
 
+  before_filter :update_sending_invoices_state, :only => [:index,:showit]
+
   def index
     sort_init 'number', 'desc'
     sort_update %w(state number date due_date clients.name import_in_cents)
@@ -213,6 +215,23 @@ class InvoicesController < ApplicationController
     @payment = Payment.find(params[:id])
     @invoice = @payment.invoice
     @project = @invoice.project
+  end
+
+  def update_sending_invoices_state
+    if @invoice
+      ii = [ @invoice ]
+    else
+      ii = InvoiceDocument.find :all, :conditions => ["clients.project_id = ? AND state='sending'",@project.id], :include => [:client]
+    end
+    ii.each do |i|
+      b2bm = i.b2b_message
+      next if b2bm.nil?
+      if b2bm.sent == true
+        i.success_sending
+      elsif b2bm.sent == false
+        i.error_sending
+      end
+    end
   end
 
 end
