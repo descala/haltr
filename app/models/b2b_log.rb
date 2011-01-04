@@ -1,4 +1,4 @@
-require "activeresource"
+require "active_resource"
 
 class B2bLog < ActiveResource::Base
 

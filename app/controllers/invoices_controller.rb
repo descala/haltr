@@ -178,7 +178,7 @@ class InvoicesController < ApplicationController
       @invoice.channel=path.split("/").last
       #TODO: fer b2brouter_url diferent per a cada canal, doncs pot ser que hi hagi varis b2brouters
       @invoice.b2brouter_url=Setting.plugin_haltr["trace_url"]
-      @invoice.create_b2b_message(File.basename(destination))
+      @invoice.filename=File.basename(destination)
       FileUtils.mv(xml_file.path,destination)
       #TODO state restrictions
       @invoice.queue || @invoice.requeue

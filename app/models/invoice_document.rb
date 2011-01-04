@@ -12,6 +12,8 @@ class InvoiceDocument < Invoice
 
   # new sending sent error closed
   state_machine :state, :initial => :new do
+    before_transition :on => :queue, :do => :create_b2b_message
+    before_transition :on => :requeue, :do => :update_b2b_message
     event :manual_send do
       transition [:new,:sending,:error] => :sent
     end
@@ -87,24 +89,37 @@ class InvoiceDocument < Invoice
   end
 
   # Insert invoice into b2brouter messages database, if not exists
-  def create_b2b_message(filename)
-    B2bMessage.connect(b2brouter_url)
+  def create_b2b_message
     b2bm = b2b_message
     if b2bm
-      # we are re-sending a previous message, reset its state
-      b2bm.sent=nil
-      b2bm.save
+      update_b2b_message
     else
-      B2bMessage.new(:md5=>md5,:name=>filename,:b2b_channel_id=>channel).save
+      @b2bmessage=B2bMessage.new(:md5=>md5,:name=>filename,:b2b_channel_id=>channel)
+      @b2bmessage.save
+      @b2bmessage
     end
   rescue Exception => e
     #TODO
     logger.error(e.message)
   end
 
+  def update_b2b_message
+    b2bm = b2b_message
+    b2bm = create_b2b_message unless b2bm
+    b2bm.sent = nil
+    b2bm.save
+  end
+
   def b2b_message
+    logger.info("Aprofitant @b2bmessage") if @b2bmessage
+    return @b2bmessage if @b2bmessage
     B2bMessage.connect(b2brouter_url)
-    B2bMessage.find(:by_channel_and_md5, :params => { :b2b_channel=>"ch9", :md5=>"badac8a82a14481bcad80a9a1ecfc4eb" })
+    b=B2bMessage.find(:by_channel_and_md5, :params => { :b2b_channel=>channel, :md5=>md5 })
+    @b2bmessage = b if b.exists?
+    @b2bmessage
+  rescue Exception => e
+    #TODO
+    logger.error(e.message)
   end
 
   protected
