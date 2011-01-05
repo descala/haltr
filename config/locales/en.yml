@@ -120,6 +120,7 @@ en:
   folders_to_leave_invoices_on: "Folders to leave invoices on"
   field_company: "Company"
   logo: "Logo"
+  trace_url: "B2brouter trace URL"
 
   # Terms
   "0": Immediately
