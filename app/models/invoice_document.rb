@@ -101,11 +101,13 @@ class InvoiceDocument < Invoice
   rescue Exception => e
     #TODO
     logger.error(e.message)
+    nil
   end
 
   def update_b2b_message
     b2bm = b2b_message
     b2bm = create_b2b_message unless b2bm
+    return unless b2bm
     b2bm.sent = nil
     b2bm.save
   end
@@ -120,6 +122,11 @@ class InvoiceDocument < Invoice
   rescue Exception => e
     #TODO
     logger.error(e.message)
+    nil
+  end
+
+  def b2brouter_url
+    read_attribute(:b2brouter_url).blank? ? Setting.plugin_haltr['trace_url'] : read_attribute(:b2brouter_url)
   end
 
   protected
