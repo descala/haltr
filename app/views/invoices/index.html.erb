@@ -55,7 +55,7 @@
   <tbody>
     <% for invoice in @invoices -%>
       <tr class="user <%= cycle("odd", "even") %>" onclick="javascript: document.location = '<%=url_for(:action=>'showit', :id=>invoice)%>'">
-        <td align="center"><%= change_state_link(invoice) %></td>
+        <td align="center"><%=h invoice.state.capitalize %></td>
         <td align="center"><%=h invoice.number %></td>
         <td align="center"><%=h invoice.date %></td>
         <td align="center"<%='class="pastdue"' if invoice.past_due?%>><%=h invoice.due_date %></td>

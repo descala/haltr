@@ -2,18 +2,6 @@ module InvoicesHelper
 
   def change_state_link(invoice)
     if invoice.state?(:closed)
-      link_to("Closed", {:action => :mark_not_sent, :id => invoice})
-    elsif invoice.sent? and invoice.paid?
-      link_to("Sent", {:action => :mark_closed, :id => invoice}, :style => 'color: #CC6600;')
-    elsif invoice.sent?
-      link_to("Sent", {:action => :mark_not_sent, :id => invoice})
-    else
-      link_to("New", {:action => :mark_sent, :id => invoice}, :style => 'color: green;')
-    end
-  end
-
-  def change_state_link2(invoice)
-    if invoice.state?(:closed)
       link_to("Mark as not sent", {:action => :mark_not_sent, :id => invoice})
     elsif invoice.sent? and invoice.paid?
       link_to("Mark as closed", {:action => :mark_closed, :id => invoice})
