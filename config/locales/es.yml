@@ -65,11 +65,13 @@ es:
   state_sent_plural: "Enviadas"
   state_error_plural: "Con errores"
   state_closed_plural: "Cerradas"
+  state_discarded_plural: "Descartadas"
   state_new: "Nueva"
   state_sending: "Enviandose"
   state_sent: "Enviada"
   state_error: "Con errores"
   state_closed: "Cerrada"
+  state_discarded: "Descartada"
   sending_log: "Log de envio"
 
   # Invoice templates

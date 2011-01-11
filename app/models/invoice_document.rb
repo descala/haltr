@@ -10,30 +10,33 @@ class InvoiceDocument < Invoice
 
   before_save :update_status, :unless => Proc.new {|invoicedoc| invoicedoc.state_changed? }
 
-  # new sending sent error closed
+  # new sending sent error discarded closed
   state_machine :state, :initial => :new do
     before_transition :on => :queue, :do => :create_b2b_message
     before_transition :on => :requeue, :do => :update_b2b_message
     event :manual_send do
-      transition [:new,:sending,:error] => :sent
+      transition [:new,:sending,:error,:discarded] => :sent
     end
     event :queue do
       transition :new => :sending
     end
     event :requeue do
-      transition [:sent,:error] => :sending
+      transition [:sent,:error,:discarded] => :sending
     end
     event :success_sending do
-      transition :sending => :sent
+      transition [:sending,:error] => :sent
     end
     event :mark_unsent do
-      transition [:sent,:closed] => :new
+      transition [:sent,:closed,:error,:discarded] => :new
     end
     event :error_sending do
       transition :sending => :error
     end
     event :close do
       transition [:sent] => :closed
+    end
+    event :discard do
+      transition [:error,:sending] => :discarded
     end
   end
 
