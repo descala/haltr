@@ -21,7 +21,7 @@ class InvoiceDocument < Invoice
       transition :new => :sending
     end
     event :requeue do
-      transition [:sent,:error,:discarded] => :sending
+      transition [:sending,:sent,:error,:discarded] => :sending
     end
     event :success_sending do
       transition [:sending,:error] => :sent
@@ -109,9 +109,10 @@ class InvoiceDocument < Invoice
 
   def update_b2b_message
     b2bm = b2b_message
-    b2bm = create_b2b_message unless b2bm
+    b2bm = create_b2b_message unless b2bm and b2bm.exists?
     return unless b2bm
     b2bm.sent = nil
+    b2bm.retries = 0
     b2bm.save
   end
 

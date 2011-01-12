@@ -163,31 +163,32 @@ class InvoicesController < ApplicationController
 
   def send_invoice
     path=Setting.plugin_haltr["folder#{params[:folder]}"]
-    unless path.blank?
-      @company = @invoice.company
-      xml_file=Tempfile.new("invoice_#{@invoice.id}.xml","tmp")
-      xml_file.write(render_to_string(:template => "invoices/facturae.xml.erb", :layout => false))
-      xml_file.close
-      destination="#{path}/" + "#{@project.identifier}_#{@invoice.number}.xml".gsub(/\//,'')
-      i=2
-      while File.exists? destination
-        destination="#{path}/" + "#{@project.identifier}_#{@invoice.number}_#{i}.xml".gsub(/\//,'')
-        i+=1
-      end
-      @invoice.md5=`md5sum '#{xml_file.path}'`.split.first
-      @invoice.channel=path.split("/").last
-      #TODO: fer b2brouter_url diferent per a cada canal, doncs pot ser que hi hagi varis b2brouters
-      @invoice.b2brouter_url=Setting.plugin_haltr["trace_url"]
-      @invoice.filename=File.basename(destination)
-      FileUtils.mv(xml_file.path,destination)
-      #TODO state restrictions
-      @invoice.queue || @invoice.requeue
-      flash[:info] = 'Invoice sent to the send queue'
-      redirect_to :action => 'showit', :id => @invoice
-    else
+    if path.blank?
       flash[:error] = 'Unknown send type'
       redirect_to :action => 'showit', :id => @invoice
+      return
     end
+    @company = @invoice.company
+    xml_file=Tempfile.new("invoice_#{@invoice.id}.xml","tmp")
+    xml_file.write(render_to_string(:template => "invoices/facturae.xml.erb", :layout => false))
+    xml_file.close
+    destination="#{path}/" + "#{@project.identifier}_#{@invoice.number}.xml".gsub(/\//,'')
+    i=2
+    while File.exists? destination
+      destination="#{path}/" + "#{@project.identifier}_#{@invoice.number}_#{i}.xml".gsub(/\//,'')
+      i+=1
+    end
+    @invoice.md5=`md5sum '#{xml_file.path}'`.split.first
+    @invoice.channel=path.split("/").last
+    #TODO: fer b2brouter_url diferent per a cada canal, doncs pot ser que hi hagi varis b2brouters
+    @invoice.b2brouter_url=Setting.plugin_haltr["trace_url"]
+    @invoice.filename=File.basename(destination)
+    @invoice.save
+    FileUtils.mv(xml_file.path,destination)
+    #TODO state restrictions
+    @invoice.queue || @invoice.requeue
+    flash[:info] = 'Invoice sent to the send queue'
+    redirect_to :action => 'showit', :id => @invoice
   end
 
   def log
