@@ -86,6 +86,10 @@ class InvoiceDocument < Invoice
     Digest::MD5.hexdigest("#{client.project_id}#{date}#{number}")
   end
 
+  def past_due?
+    !state?(:closed) && due_date && due_date < Date.today
+  end
+
   protected
 
   def update_status
