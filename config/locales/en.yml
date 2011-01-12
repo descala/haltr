@@ -75,6 +75,7 @@ en:
   state_closed: "Closed"
   state_discarded: "Discarded"
   sending_log: "Sending log"
+  max_retries: "Max retries"
 
   # Invoice templates
   label_invoice_template_new: New template

@@ -9,6 +9,7 @@ class B2bMessage < ActiveResource::Base
   end
 
   def discarded?
+    return false if self.retries.nil?
     self.retries >= 5
   end
 

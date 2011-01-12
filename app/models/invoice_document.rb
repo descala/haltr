@@ -113,6 +113,8 @@ class InvoiceDocument < Invoice
     return unless b2bm
     b2bm.sent = nil
     b2bm.retries = 0
+    b2bm.max_retries = Setting.plugin_haltr['max_retries']
+    b2bm.max_retries ||= 5
     b2bm.save
   end
 
