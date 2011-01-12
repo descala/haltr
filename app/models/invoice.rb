@@ -183,7 +183,7 @@ class Invoice < ActiveRecord::Base
   end
 
   def past_due?
-    state?(:closed) && due_date && due_date < Date.today
+    !state?(:closed) && due_date && due_date < Date.today
   end
 
   def company
