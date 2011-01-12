@@ -40,4 +40,8 @@ class InvoiceTemplate < Invoice
     Utils.replace_dates! extra_info, (date || Date.today) +  (frequency || 0).months
   end
 
+  def past_due?
+    false
+  end
+
 end

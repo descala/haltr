@@ -182,10 +182,6 @@ class Invoice < ActiveRecord::Base
     self.client.project
   end
 
-  def past_due?
-    state?(:closed) && due_date && due_date < Date.today
-  end
-
   def company
     self.client.project.company
   end
