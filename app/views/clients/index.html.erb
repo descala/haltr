@@ -1,12 +1,12 @@
 <div class="contextual">
-<%= link_to l(:label_client_new), {:action => 'new', :id => @project}, :class => 'icon icon-add' %>
+<%= link_to l(:label_company_new), {:action => 'new', :id => @project}, :class => 'icon icon-add' %>
 </div>
 
-<h2><%=l(:label_client_plural)%></h2>
+<h2><%=l(:label_community)%></h2>
 
 <% form_tag({}, :method => :get) do %>
 <fieldset><legend><%= l(:label_filter_plural) %></legend>
-<label><%= l(:label_client) %>:</label>
+<label><%= l(:label_company) %>:</label>
 <%= text_field_tag 'name', params[:name], :size => 30 %>
 <%= submit_tag l(:button_apply), :class => "small", :name => nil %>
 </fieldset>
@@ -42,7 +42,7 @@
 <p class="pagination"><%= pagination_links_full @client_pages, @client_count %></p>
 
 
-<% html_title(l(:label_client_plural)) -%>
+<% html_title(l(:label_community)) -%>
 
 <% content_for :sidebar do %>
     <%= render :partial => 'common/sidebar' %>

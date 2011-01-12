@@ -1,9 +1,12 @@
 es:
 
-  # Clients
-  label_client: Cliente
-  label_client_plural: Clientes
-  label_client_new: Nuevo cliente
+  halt_configure_before_use: Por favor, primero configura los datos de la empresa
+
+
+  # community
+  label_company: Empresa
+  label_community: Comunidad
+  label_company_new: Nueva empresa
   field_address1: Dirección
   field_address2: Dirección
   field_city: Ciudad

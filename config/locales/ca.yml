@@ -11,10 +11,13 @@ ca:
         separator: ","
         delimiter: "."
         precision: 2
-  # Clients
-  label_client: Client
-  label_client_plural: Clients
-  label_client_new: Nou client
+
+  halt_configure_before_use: "Si us plau, primer de tot configura les dades de l'empresa"
+
+  # community
+  label_company: Empresa
+  label_community: Comunitat
+  label_company_new: Nova empresa
   field_address1: Adreça
   field_address2: Adreça
   field_city: Ciutat
