@@ -10,7 +10,7 @@ module CompanyFilter
       @project.reload
     end
     unless @project.company.valid?
-      flash[:error] = "Configure company settings before using haltr"
+      flash[:error] = l(:halt_configure_before_use)
       redirect_to :controller => :companies, :action => :index, :id => @project
     end
   end

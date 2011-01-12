@@ -1,9 +1,11 @@
 en:
 
-  # Clients
-  label_client: Client
-  label_client_plural: Clients
-  label_client_new: New client
+  halt_configure_before_use: Please first configure company settings
+
+  # community
+  label_company: Company
+  label_community: Community
+  label_company_new: New company
   field_address1: Adress
   field_address2: Adress
   field_city: City

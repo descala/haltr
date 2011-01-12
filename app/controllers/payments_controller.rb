@@ -21,7 +21,7 @@ class PaymentsController < ApplicationController
 
     unless params[:name].blank?
       name = "%#{params[:name].strip.downcase}%"
-      c << ["LOWER(method) LIKE ? OR LOWER(reference) LIKE ?", name, name]
+      c << ["LOWER(payments.payment_method) LIKE ? OR LOWER(reference) LIKE ?", name, name]
     end
 
     @payment_count = Payment.count(:conditions => c.conditions, :include => :invoice)
