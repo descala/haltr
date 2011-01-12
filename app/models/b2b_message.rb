@@ -8,5 +8,9 @@ class B2bMessage < ActiveResource::Base
     self.created_at <=> oth.created_at
   end
 
+  def discarded?
+    self.retries >= 5
+  end
+
 end
 

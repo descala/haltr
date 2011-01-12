@@ -79,11 +79,13 @@ ca:
   state_sent_plural: "Enviades"
   state_error_plural: "Amb errors"
   state_closed_plural: "Tancades"
+  state_discarded_plural: "Descartades"
   state_new: "Nova"
   state_sending: "Enviant-se"
   state_sent: "Enviada"
   state_error: "Amb errors"
   state_closed: "Tancada"
+  state_discarded: "Descartada"
   sending_log: "Log d'enviament"
 
   # Invoice templates

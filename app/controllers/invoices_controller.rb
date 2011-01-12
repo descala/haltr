@@ -14,7 +14,7 @@ class InvoicesController < ApplicationController
   include CompanyFilter
   before_filter :check_for_company
 
-  before_filter :update_sending_invoices_state, :only => [:index,:showit]
+  before_filter :update_invoices_state, :only => [:index,:showit]
 
   def index
     sort_init 'number', 'desc'
@@ -217,11 +217,11 @@ class InvoicesController < ApplicationController
     @project = @invoice.project
   end
 
-  def update_sending_invoices_state
+  def update_invoices_state
     if @invoice
       ii = [ @invoice ]
     else
-      ii = InvoiceDocument.find :all, :conditions => ["clients.project_id = ? AND state='sending'",@project.id], :include => [:client]
+      ii = InvoiceDocument.find :all, :conditions => ["clients.project_id = ? AND state in ('sending','error')",@project.id], :include => [:client]
     end
     ii.each do |i|
       b2bm = i.b2b_message
@@ -229,7 +229,11 @@ class InvoicesController < ApplicationController
       if b2bm.sent == true
         i.success_sending
       elsif b2bm.sent == false
-        i.error_sending
+        if b2bm.discarded?
+          i.discard
+        else
+          i.error_sending unless i.state?(:error)
+        end
       end
     end
   end
