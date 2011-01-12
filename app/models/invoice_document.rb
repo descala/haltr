@@ -45,7 +45,7 @@ class InvoiceDocument < Invoice
   end
 
   def self.find_due_dates(project)
-    find_by_sql "SELECT due_date, invoices.id, count(*) AS invoice_count FROM invoices, clients WHERE type='InvoiceDocument' AND client_id = clients.id AND clients.project_id = #{project.id} AND state = 'sent' AND bank_account AND payment_method=#{Invoice::PAYMENT_DEBIT} GROUP BY due_date"
+    find_by_sql "SELECT due_date, invoices.id, count(*) AS invoice_count FROM invoices, clients WHERE type='InvoiceDocument' AND client_id = clients.id AND clients.project_id = #{project.id} AND state = 'sent' AND bank_account AND payment_method=#{Invoice::PAYMENT_DEBIT} GROUP BY due_date ORDER BY due_date DESC"
   end
 
   def label
@@ -130,6 +130,10 @@ class InvoiceDocument < Invoice
 
   def b2brouter_url
     read_attribute(:b2brouter_url).blank? ? Setting.plugin_haltr['trace_url'] : read_attribute(:b2brouter_url)
+  end
+
+  def past_due?
+    !state?(:closed) && due_date && due_date < Date.today
   end
 
   protected

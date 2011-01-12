@@ -56,7 +56,7 @@ class InvoiceTemplatesController < ApplicationController
       flash[:notice] = 'Invoice was successfully created.'
       redirect_to :action => 'index', :id => @project
     else
-      render :action => "new"
+      render :template => "invoices/new"
     end
   end
 
@@ -65,7 +65,7 @@ class InvoiceTemplatesController < ApplicationController
       flash[:notice] = 'Invoice was successfully updated.'
       redirect_to :action => 'index', :id => @project
     else
-      render :action => "edit"
+      render :template => "invoices/edit"
     end
   end
 
