@@ -151,3 +151,6 @@ ca:
   "1m15": Dia 15 mes següent
   "1m20": Dia 20 mes següent
   "custom": Personalitzat
+
+  # Errors
+  cant_connect_trace: "No es pot connectar a la plataforma b2brouter"

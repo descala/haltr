@@ -101,10 +101,6 @@ class InvoiceDocument < Invoice
       @b2bmessage.save
       @b2bmessage
     end
-  rescue Exception => e
-    #TODO
-    logger.error(e.message)
-    nil
   end
 
   def update_b2b_message
@@ -125,10 +121,6 @@ class InvoiceDocument < Invoice
     b=B2bMessage.find(:by_channel_and_md5, :params => { :b2b_channel=>channel, :md5=>md5 })
     @b2bmessage = b if b.exists?
     @b2bmessage
-  rescue Exception => e
-    #TODO
-    logger.error(e.message)
-    nil
   end
 
   def b2brouter_url

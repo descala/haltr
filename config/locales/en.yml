@@ -139,3 +139,6 @@ en:
   "1m15": 15th dat next month
   "1m20": 20th dat next month
   "custom": Custom
+
+  # Errors
+  cant_connect_trace: "Can't connect to b2brouter platform"

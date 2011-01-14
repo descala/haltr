@@ -188,6 +188,9 @@ class InvoicesController < ApplicationController
     #TODO state restrictions
     @invoice.queue || @invoice.requeue
     flash[:info] = 'Invoice sent to the send queue'
+  rescue Errno::ECONNREFUSED, Errno::EHOSTUNREACH => e
+    flash[:error]="#{l(:cant_connect_trace)} (#{e.message})"
+  ensure
     redirect_to :action => 'showit', :id => @invoice
   end
 
@@ -199,6 +202,9 @@ class InvoicesController < ApplicationController
     @messages_page = params[:messages_page]
     @sent=params[:sent]
     @logs = B2bLog.paginate(:all, :params => { :b2b_message_id=>@message.id, :page=>@current_page })
+  rescue Errno::ECONNREFUSED, Errno::EHOSTUNREACH => e
+    flash[:error]="#{l(:cant_connect_trace)} (#{e.message})"
+    redirect_to :action => 'showit', :id => @invoice
   end
 
   def get_legal
@@ -217,6 +223,9 @@ class InvoicesController < ApplicationController
         render_404
       end
     }
+  rescue Errno::ECONNREFUSED, Errno::EHOSTUNREACH => e
+    flash[:error]="#{l(:cant_connect_trace)} (#{e.message})"
+    redirect_to :action => 'showit', :id => @invoice
   end
 
   private
@@ -226,6 +235,10 @@ class InvoicesController < ApplicationController
     @lines = @invoice.invoice_lines
     @client = @invoice.client
     @project = @client.project
+    begin
+      @b2b_message = @invoice.b2b_message
+    rescue Errno::ECONNREFUSED, Errno::EHOSTUNREACH
+    end
   rescue ActiveRecord::RecordNotFound
     render_404
   end
@@ -255,6 +268,8 @@ class InvoicesController < ApplicationController
         end
       end
     end
+  rescue Errno::ECONNREFUSED, Errno::EHOSTUNREACH => e
+    flash.now[:error]="#{l(:cant_connect_trace)} (#{e.message})"
   end
 
 end
