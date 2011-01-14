@@ -142,3 +142,5 @@ en:
 
   # Errors
   cant_connect_trace: "Can't connect to b2brouter platform"
+  halt_configure_before_use: "First configure your company settings, please"
+  warning_can_not_generate_invoice: "Can not generate invoice form template {{value}}"

@@ -143,3 +143,5 @@ es:
 
   # Errors
   cant_connect_trace: "No se puede conectar con la plataforma b2brouter"
+  halt_configure_before_use: "Por favor, configure primero los datos de la empresa"
+  warning_can_not_generate_invoice: "No se ha podido generar la factura de la plantilla {{value}}"

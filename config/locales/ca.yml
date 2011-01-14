@@ -12,7 +12,6 @@ ca:
         delimiter: "."
         precision: 2
 
-  halt_configure_before_use: "Si us plau, primer de tot configura les dades de l'empresa"
 
   # community
   label_company: Empresa
@@ -154,3 +153,5 @@ ca:
 
   # Errors
   cant_connect_trace: "No es pot connectar a la plataforma b2brouter"
+  halt_configure_before_use: "Si us plau, primer de tot configura les dades de l'empresa"
+  warning_can_not_generate_invoice: "No s'ha pogut generar la factura de la plantilla {{value}}"
