@@ -133,3 +133,5 @@ en:
   "1m15": 15th dat next month
   "1m20": 20th dat next month
   "custom": Custom
+
+  warning_can_not_generate_invoice: "Can not generate invoice form template {{value}}"
