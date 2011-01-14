@@ -17,6 +17,9 @@
       <% end -%>
       <% if %w(error sending sent discarded).include?(@invoice.state) and @invoice.b2b_message -%>
         <li><%= link_to l(:sending_log), :controller => 'invoices', :action => 'log', :id => @invoice %></li>
+        <% if @invoice.state?(:sent) -%>
+          <li><%= link_to l(:download_legal), :controller => 'invoices', :action => 'get_legal', :id => @invoice %></li>
+        <% end -%>
       <% end -%>
       <% if @invoice.state?(:sent) -%>
         <li><%= link_to l(:receive_payment), :controller => 'payments', :action => 'new', :id => @project, :invoice_id => @invoice %></li>

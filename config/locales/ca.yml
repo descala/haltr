@@ -88,6 +88,7 @@ ca:
   state_discarded: "Descartada"
   sending_log: "Log d'enviament"
   max_retries: "Màxim de reintents"
+  download_legal: "Descarregar factura legal"
 
   # Invoice templates
   label_invoice_template_new: Nova plantilla

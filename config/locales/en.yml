@@ -76,6 +76,7 @@ en:
   state_discarded: "Discarded"
   sending_log: "Sending log"
   max_retries: "Max retries"
+  download_legal: "Download legal invoice"
 
   # Invoice templates
   label_invoice_template_new: New template

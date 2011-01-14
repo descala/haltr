@@ -201,6 +201,24 @@ class InvoicesController < ApplicationController
     @logs = B2bLog.paginate(:all, :params => { :b2b_message_id=>@message.id, :page=>@current_page })
   end
 
+  def get_legal
+    url = @invoice.b2brouter_url
+    url ||= Setting.plugin_haltr["trace_url"]
+    url = URI.parse(url.gsub(/\/$/,'')) # remove trailing slash
+    http = Net::HTTP.new(url.host,url.port)
+    http.start() { |http|
+      req = Net::HTTP::Get.new("#{url.path.blank? ? "/" : "#{url.path}/"}b2b_messages/get_legal_invoice?md5=#{@invoice.md5}")
+      response = http.request(req)
+      if response.is_a? Net::HTTPNotFound
+        render_404
+      else
+        # retrieve filename from response headers
+        filename = response["Content-Disposition"].match('filename=\\".*\\"').to_s.gsub(/filename=/,'').gsub(/\"/,'').gsub(/^legal_/,'')
+        send_data response.body, :filename => filename
+      end
+    }
+  end
+
   private
 
   def find_invoice

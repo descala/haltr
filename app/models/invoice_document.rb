@@ -21,7 +21,7 @@ class InvoiceDocument < Invoice
       transition :new => :sending
     end
     event :requeue do
-      transition [:sending,:sent,:error,:discarded] => :sending
+      transition [:closed,:sending,:sent,:error,:discarded] => :sending
     end
     event :success_sending do
       transition [:sending,:error] => :sent
