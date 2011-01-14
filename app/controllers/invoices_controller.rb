@@ -209,12 +209,12 @@ class InvoicesController < ApplicationController
     http.start() { |http|
       req = Net::HTTP::Get.new("#{url.path.blank? ? "/" : "#{url.path}/"}b2b_messages/get_legal_invoice?md5=#{@invoice.md5}")
       response = http.request(req)
-      if response.is_a? Net::HTTPNotFound
-        render_404
-      else
+      if response.is_a? Net::HTTPOK
         # retrieve filename from response headers
         filename = response["Content-Disposition"].match('filename=\\".*\\"').to_s.gsub(/filename=/,'').gsub(/\"/,'').gsub(/^legal_/,'')
         send_data response.body, :filename => filename
+      else
+        render_404
       end
     }
   end
