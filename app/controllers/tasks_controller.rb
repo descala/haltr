@@ -21,7 +21,12 @@ class TasksController < ApplicationController
     templates = InvoiceTemplate.find :all, :include => [:client], :conditions => ["clients.project_id = ? and date <= ?", @project.id, @date]
     @invoices = []
     templates.each do |t|
-      @invoices << t.next_invoice
+      i = t.next_invoice
+      if i.valid?
+        @invoices << i
+      else
+        flash.now[:warning] = l(:warning_can_not_generate_invoice,t.to_s)
+      end
     end
   end
 

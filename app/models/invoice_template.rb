@@ -10,6 +10,7 @@ class InvoiceTemplate < Invoice
     i.number = InvoiceDocument.next_number(self.client.project)
     i.tax_percent = Invoice::TAX
     i.invoice_template = self
+    i.state = 'new'
     # Do not generate invoices on weekend
     if [6,0].include? i.date.wday
       i.date = i.date.next_week
@@ -21,19 +22,15 @@ class InvoiceTemplate < Invoice
       l.template_replacements(i.date)
       i.invoice_lines << l
     end
-    if i.save!
+    if i.save
       self.date = self.date.to_time.months_since(self.frequency)
       self.save!
     end
     return i
   end
 
-  def label
-    "Template"
-  end
-
-  def to_label
-    "Next:#{date}"
+  def to_s
+    self.id.to_s
   end
 
   def template_replacements(date=nil)
