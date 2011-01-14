@@ -29,6 +29,10 @@ class InvoiceTemplate < Invoice
     return i
   end
 
+  def label
+    l(:label_invoice_template)
+  end
+
   def to_s
     self.id.to_s
   end
