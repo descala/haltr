@@ -269,7 +269,7 @@ class InvoicesController < ApplicationController
       end
     end
   rescue Errno::ECONNREFUSED, Errno::EHOSTUNREACH => e
-    flash.now[:error]="#{l(:cant_connect_trace)} (#{e.message})"
+    # don't show error if trace is not required (log, download)
   end
 
 end
