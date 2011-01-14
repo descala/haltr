@@ -53,7 +53,7 @@ class InvoiceTemplatesController < ApplicationController
   def create
     @invoice = InvoiceTemplate.new(params[:invoice])
     if @invoice.save
-      flash[:notice] = 'Invoice was successfully created.'
+      flash[:notice] = l(:notice_successful_create)
       redirect_to :action => 'index', :id => @project
     else
       render :template => "invoices/new"
@@ -62,7 +62,7 @@ class InvoiceTemplatesController < ApplicationController
 
   def update
     if @invoice.update_attributes(params[:invoice])
-      flash[:notice] = 'Invoice was successfully updated.'
+      flash[:notice] = l(:notice_successful_update)
       redirect_to :action => 'index', :id => @project
     else
       render :template => "invoices/edit"
