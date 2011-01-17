@@ -1,4 +1,4 @@
-<h1>Generate invoices from templates</h1>
+<h1><%= l(:button_generate_invoices) %></h1>
 
 <p><%= l(:with_date) %> &lt;= <%= @date.to_date %>.</p>
 <% if @invoices.size > 0 -%>
@@ -8,7 +8,7 @@
 <% end -%>
 </ul>
 <% else -%>
-  <p><%=l(:nothing_to_generate)%></p>
+  <p class="nodata"><%=l(:nothing_to_generate)%></p>
 <% end -%>
 
 <% content_for :sidebar do %>
