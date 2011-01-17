@@ -1,8 +1,5 @@
 es:
 
-  halt_configure_before_use: Por favor, primero configura los datos de la empresa
-
-
   # community
   label_company: Empresa
   label_community: Comunidad
@@ -108,12 +105,20 @@ es:
   charge_bank_on_date: Cobrar a dia
   nothing_to_report: Nada a mostrar
   nothing_to_generate: Nada a generar
+  button_generate_invoices: Generar nuevas facturas a partir de las plantillas 
+  button_send_invoices: Enviar facturas
+  label_automator_info: "descargar PDFs, script de Automator para enviar emails y marcar como enviadas"
+  label_charge_n19: Generar recibos mediante ficheros N19
+  button_mark_done: Marcar como cobrado
+  label_invoice_report: Informe de facturación
+  label_import_aeb43: Importar movimientos en formato AEB43
 
   # Payments
   label_payment: Pagos
   label_payment_plural: Pagos
   label_payment_new: Nuevo pago
   field_amount: Importe
+  field_amount_in_cents: Importe
   field_payment_method: Metodo de pago
   field_reference: Referencia
   field_total_paid: Total pagado
@@ -143,5 +148,10 @@ es:
 
   # Errors
   cant_connect_trace: "No se puede conectar con la plataforma b2brouter"
-  halt_configure_before_use: "Por favor, configure primero los datos de la empresa"
+  halt_configure_before_use: "Por favor, primero configura los datos de la empresa"
   warning_can_not_generate_invoice: "No se ha podido generar la factura de la plantilla {{value}}"
+  notice_invoice_sent: "La factura se ha enviado"
+  error_invoice_not_sent: "La factura no se ha podido enviar"
+  notice_empty_n19: "No hay datos para generar un N19"
+  notice_n19_done:  "Se ha cerrado el N19 de fecha {{value}}"
+  notice_file_not_found: "No s'ha encontrado el fichero"

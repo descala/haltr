@@ -49,7 +49,7 @@ class PeopleController < ApplicationController
   def create
     @person = Person.new(params[:person].merge({:client=>@client}))
     if @person.save
-      flash[:notice] = 'Person was successfully created.'
+      flash[:notice] = l(:notice_successful_create)
       redirect_to :action => 'index', :id => @client
     else
       render :action => "new"
@@ -58,7 +58,7 @@ class PeopleController < ApplicationController
 
   def update
     if @person.update_attributes(params[:person])
-      flash[:notice] = 'Person was successfully updated.'
+      flash[:notice] = l(:notice_successful_update)
       redirect_to :action => 'index', :id => @person.client
     else
       render :action => "edit"

@@ -54,7 +54,7 @@ class PaymentsController < ApplicationController
   def create
     @payment = Payment.new(params[:payment].merge({:project=>@project}))
     if @payment.save
-      flash[:notice] = 'Payment was successfully created.'
+      flash[:notice] = l(:notice_successful_create)
       if @payment.invoice
         redirect_to :controller => 'invoices', :action => 'showit', :id => @payment.invoice
       else
@@ -67,7 +67,7 @@ class PaymentsController < ApplicationController
 
   def update
     if @payment.update_attributes(params[:payment])
-      flash[:notice] = 'Payment was successfully updated.'
+      flash[:notice] = l(:notice_successful_update)
       redirect_to :action => 'index', :id => @project
     else
       render :action => "edit"

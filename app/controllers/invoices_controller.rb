@@ -163,11 +163,7 @@ class InvoicesController < ApplicationController
 
   def send_invoice
     path=Setting.plugin_haltr["folder#{params[:folder]}"]
-    if path.blank?
-      flash[:error] = 'Unknown send type'
-      redirect_to :action => 'showit', :id => @invoice
-      return
-    end
+    raise if path.blank?
     @company = @invoice.company
     xml_file=Tempfile.new("invoice_#{@invoice.id}.xml","tmp")
     xml_file.write(render_to_string(:template => "invoices/facturae.xml.erb", :layout => false))
@@ -187,9 +183,12 @@ class InvoicesController < ApplicationController
     FileUtils.mv(xml_file.path,destination)
     #TODO state restrictions
     @invoice.queue || @invoice.requeue
-    flash[:info] = 'Invoice sent to the send queue'
+    flash[:notice] = l(:notice_invoice_sent)
   rescue Errno::ECONNREFUSED, Errno::EHOSTUNREACH => e
-    flash[:error]="#{l(:cant_connect_trace)} (#{e.message})"
+    flash[:error] = l(:error_invoice_not_sent)
+    flash[:warning]=l(:cant_connect_trace, e.message)
+  rescue Exception => e
+    flash[:error] = l(:error_invoice_not_sent)
   ensure
     redirect_to :action => 'showit', :id => @invoice
   end
@@ -203,7 +202,7 @@ class InvoicesController < ApplicationController
     @sent=params[:sent]
     @logs = B2bLog.paginate(:all, :params => { :b2b_message_id=>@message.id, :page=>@current_page })
   rescue Errno::ECONNREFUSED, Errno::EHOSTUNREACH => e
-    flash[:error]="#{l(:cant_connect_trace)} (#{e.message})"
+    flash[:warning]=l(:cant_connect_trace, e.message)
     redirect_to :action => 'showit', :id => @invoice
   end
 
@@ -224,7 +223,7 @@ class InvoicesController < ApplicationController
       end
     }
   rescue Errno::ECONNREFUSED, Errno::EHOSTUNREACH => e
-    flash[:error]="#{l(:cant_connect_trace)} (#{e.message})"
+    flash[:warning]=l(:cant_connect_trace, e.message)
     redirect_to :action => 'showit', :id => @invoice
   end
 
