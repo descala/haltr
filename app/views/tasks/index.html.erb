@@ -5,9 +5,11 @@
   <li>
   <%= link_to l(:button_generate_invoices), :action => 'create_more', :id => @project %> (<%= @num_new_invoices%>)
   </li>
+  <% if authorize_for('tasks','automator')  -%>
   <li>
   <%= link_to l(:button_send_invoices), :action => 'automator', :id => @project %>: <%= l(:label_automator_info) %> (<%= @num_not_sent %>)
   </li>
+  <% end -%>
   <li>
     <%= l(:label_charge_n19) %>
     <% if @charge_bank_on_due_date.size > 0 -%>
