@@ -118,7 +118,7 @@ class InvoiceDocument < Invoice
     logger.info("Aprofitant @b2bmessage") if @b2bmessage
     return @b2bmessage if @b2bmessage
     B2bMessage.connect(b2brouter_url)
-    b=B2bMessage.find(:by_channel_and_md5, :params => { :b2b_channel=>channel, :md5=>md5 })
+    b=B2bMessage.find(:by_channel_and_md5, :params => { :b2b_channel=>channel, :md5=>md5 }) rescue B2bMessage.new
     @b2bmessage = b if b.exists?
     @b2bmessage
   end
