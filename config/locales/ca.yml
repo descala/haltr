@@ -40,7 +40,7 @@ ca:
   field_date: Data
   field_client: Client
   field_extra_info: Notes
-  field_terms: Termini
+  field_terms: Venciment
   field_discount_text: Text del descompte
   field_discount_percent: % de descompte
   field_frequency: Freqüència
@@ -65,7 +65,7 @@ ca:
   field_withholding_tax_percent: % de retenció
   must_have_lines: ha de tenir linies
   send_invoice: Enviar factura
-  cash: Al comptat
+  cash: En efectiu
   debit: Carregar al compte
   transfer: Transferència bancària
   requires_client_bank_account: requereix compte bancari del client
