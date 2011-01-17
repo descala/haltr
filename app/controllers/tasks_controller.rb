@@ -54,7 +54,7 @@ class TasksController < ApplicationController
       I18n.locale = :es
       render :layout => false
     else
-      flash[:warning] = "No data for an Nº19"
+      flash[:warning] = l(:notice_empty_n19)
       redirect_to :action => 'menu', :id => @project
     end
   end
@@ -66,7 +66,7 @@ class TasksController < ApplicationController
       invoice.state='closed'
       invoice.save
     end
-    flash[:notice] = "Nº19 for due date #{example_invoice.due_date} maked as done"
+    flash[:notice] = l(:notice_n19_done, example_invoice.due_date.to_s)
     redirect_to :action => 'index', :id => @project
   end
   
@@ -100,7 +100,7 @@ class TasksController < ApplicationController
         end
       end
     else
-      flash[:warning] = "No file found"
+      flash[:warning] = l(:notice_file_not_found)
       redirect_to :action => 'index', :id => @project
     end
   end

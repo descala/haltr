@@ -113,12 +113,20 @@ ca:
   charge_bank_on_date: Cobrar a dia
   nothing_to_report: Res a mostrar
   nothing_to_generate: Res a generar
+  button_generate_invoices: Generar noves factures de les plantilles 
+  button_send_invoices: Enviar factures
+  label_automator_info: "descarregar els PDFs, script de l'Automator per enviar emails i marcar-les com a enviades"
+  label_charge_n19: Girar rebuts mitjançant fitxers N19 
+  button_mark_done: Marcar com a cobrat
+  label_invoice_report: Informe de facturació
+  label_import_aeb43: Importar moviments en format AEB43
 
   # Payments
   label_payment: Pagament
   label_payment_plural: Pagaments
   label_payment_new: Nou pagament
   field_amount: Import
+  field_amount_in_cents: Import
   field_payment_method: Mètode de pagament
   field_reference: Referència
   field_total_paid: Total pagat
@@ -149,3 +157,6 @@ ca:
   warning_can_not_generate_invoice: "No s'ha pogut generar la factura de la plantilla {{value}}"
   notice_invoice_sent: "La factura s'ha enviat"
   error_invoice_not_sent: "La factura no s'ha pogut enviar"
+  notice_empty_n19: "No hi ha dades per generar un N19"
+  notice_n19_done: "S'ha tancat el N19 de data {{value}}"
+  notice_file_not_found: "No s'ha trobat el fitxer"

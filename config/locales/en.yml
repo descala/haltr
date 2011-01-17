@@ -100,12 +100,20 @@ en:
   charge_bank_on_date: Charge bank on date
   nothing_to_report: Nothing has to be reported
   nothing_to_generate: Nothing has to be generated
+  button_generate_invoices: Generate invoices from templates
+  button_send_invoices: Send invoices
+  label_automator_info: download PDFs, e-mail automator script and mark as send
+  label_charge_n19: Charge bank accounts with N19 format 
+  button_mark_done: Mark as done
+  label_invoice_report: Invoices report
+  label_import_aeb43: Import AEB43
 
   # Payments
   label_payment: Payment
   label_payment_plural: Payments
   label_payment_new: New payment
   field_amount: Amount
+  field_amount_in_cents: Amount
   field_payment_method: Payment method
   field_reference: Reference
   field_total_paid: Total paid
@@ -136,3 +144,6 @@ en:
   warning_can_not_generate_invoice: "Can not generate invoice form template {{value}}"
   notice_invoice_sent: "Invoice sent"
   error_invoice_not_sent: "Could not send invoice"
+  notice_empty_n19: "No data to create N19"
+  notice_n19_done:  "Nº19 for due date {{value}} maked as done"
+  notice_file_not_found: "File not found"
