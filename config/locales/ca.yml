@@ -147,4 +147,5 @@ ca:
 
   halt_configure_before_use: "Si us plau, primer de tot configura les dades de l'empresa"
   warning_can_not_generate_invoice: "No s'ha pogut generar la factura de la plantilla {{value}}"
-
+  notice_invoice_sent: "La factura s'ha enviat"
+  error_invoice_not_sent: "La factura no s'ha pogut enviar"

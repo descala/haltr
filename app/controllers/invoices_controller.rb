@@ -161,24 +161,23 @@ class InvoicesController < ApplicationController
 
   def send_invoice
     path=Setting.plugin_haltr["folder#{params[:folder]}"]
-    unless path.blank?
-      @company = @invoice.company
-      xml_file=Tempfile.new("invoice_#{@invoice.id}.xml","tmp")
-      xml_file.write(render_to_string(:template => "invoices/facturae.xml.erb", :layout => false))
-      xml_file.close
-      destination="#{path}/" + "#{@project.identifier}_#{@invoice.number}.xml".gsub(/\//,'')
-      i=2
-      while File.exists? destination
-        destination="#{path}/" + "#{@project.identifier}_#{@invoice.number}_#{i}.xml".gsub(/\//,'')
-        i+=1
-      end
-      FileUtils.mv(xml_file.path,destination)
-      flash[:info] = 'Invoice sent to the send queue'
-      redirect_to :action => 'showit', :id => @invoice
-    else
-      flash[:error] = 'Unknown send type'
-      redirect_to :action => 'showit', :id => @invoice
+    raise if path.blank?
+    @company = @invoice.company
+    xml_file=Tempfile.new("invoice_#{@invoice.id}.xml","tmp")
+    xml_file.write(render_to_string(:template => "invoices/facturae.xml.erb", :layout => false))
+    xml_file.close
+    destination="#{path}/" + "#{@project.identifier}_#{@invoice.number}.xml".gsub(/\//,'')
+    i=2
+    while File.exists? destination
+      destination="#{path}/" + "#{@project.identifier}_#{@invoice.number}_#{i}.xml".gsub(/\//,'')
+      i+=1
     end
+    FileUtils.mv(xml_file.path,destination)
+    flash[:notice] = l(:notice_invoice_sent) 
+    redirect_to :action => 'showit', :id => @invoice
+  rescue
+    flash[:error] = l(:error_invoice_not_sent)
+    redirect_to :action => 'showit', :id => @invoice
   end
 
   private

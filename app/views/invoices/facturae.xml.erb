@@ -189,4 +189,5 @@
          </AdditionalData>
       </Invoice>
    </Invoices>
-</facturae:Facturae>
+ </facturae:Facturae>
+<% lang = find_language(User.current.language); lang ||= Setting.default_language; set_language_if_valid(lang) -%>

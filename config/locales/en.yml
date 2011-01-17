@@ -1,7 +1,5 @@
 en:
 
-  halt_configure_before_use: Please first configure company settings
-
   # community
   label_company: Company
   label_community: Community
@@ -134,4 +132,7 @@ en:
   "1m20": 20th dat next month
   "custom": Custom
 
+  halt_configure_before_use: Please first configure company settings
   warning_can_not_generate_invoice: "Can not generate invoice form template {{value}}"
+  notice_invoice_sent: "Invoice sent"
+  error_invoice_not_sent: "Could not send invoice"
