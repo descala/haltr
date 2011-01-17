@@ -4,10 +4,10 @@
    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
    xsi:schemaLocation="http://www.facturae.es/Facturae/2009/v3.2/Facturae http://www.facturae.es/NR/rdonlyres/2DF1A921-9E57-4A24-85D8-14FE74E0FB31/0/Facturaev3_2.xsd">
    <FileHeader>
-      <SchemaVersion>3.2</SchemaVersion>        <!-- fixe -->
-      <Modality>I</Modality>                    <!-- fixe I = Individual -->
-      <InvoiceIssuerType>TE</InvoiceIssuerType> <!-- fixe TE = Emesa i signada per la tercera part (invinet) -->
-      <ThirdParty>                              <!-- fixe Invinet signa en nom de l'empresa... -->
+      <SchemaVersion>3.2</SchemaVersion>
+      <Modality>I</Modality>
+      <InvoiceIssuerType>TE</InvoiceIssuerType>
+      <ThirdParty>
          <TaxIdentification>
             <PersonTypeCode>J</PersonTypeCode>
             <ResidenceTypeCode>R</ResidenceTypeCode>
@@ -25,8 +25,8 @@
          </LegalEntity>
       </ThirdParty>
       <Batch>
-         <BatchIdentifier><%= @invoice.batchidentifier %></BatchIdentifier>  <!-- generar un id en base a la data factura i número de factura -->
-         <InvoicesCount>1</InvoicesCount>    <!-- fixe 1 factura per document -->
+         <BatchIdentifier><%= @invoice.batchidentifier %></BatchIdentifier>
+         <InvoicesCount>1</InvoicesCount>
          <TotalInvoicesAmount>
             <TotalAmount><%=precision @invoice.total.dollars %></TotalAmount>
          </TotalInvoicesAmount>
@@ -36,18 +36,18 @@
          <TotalExecutableAmount>
             <TotalAmount><%=precision @invoice.total.dollars %></TotalAmount>
          </TotalExecutableAmount>
-         <InvoiceCurrencyCode><%= @invoice.currency %></InvoiceCurrencyCode>  <!-- moneda de la factura -->
+         <InvoiceCurrencyCode><%= @invoice.currency %></InvoiceCurrencyCode>
       </Batch>
    </FileHeader>
    <Parties>
       <SellerParty>
          <TaxIdentification>
-            <PersonTypeCode><%= @invoice.persontypecode %></PersonTypeCode>     <!-- Si Empresa => J= Persona jurídica F = persona física (en cas que tingui IRPF a la fitxa de persona)-->
-            <ResidenceTypeCode>R</ResidenceTypeCode>  <!-- fixe R=Residencia a España.  -->
+            <PersonTypeCode><%= @invoice.persontypecode %></PersonTypeCode>
+            <ResidenceTypeCode>R</ResidenceTypeCode>
             <TaxIdentificationNumber><%=@company.taxcode%></TaxIdentificationNumber>
          </TaxIdentification>
 <% if @invoice.persontypecode == "J" -%>
-         <!-- Si és una Empresa (no té IRPF a la fitxa de empresa  -->
+
          <LegalEntity>
             <CorporateName><%=@company.name%></CorporateName>
             <%= render :partial => "address.xml", :locals => {:entity => @company} %>
@@ -57,7 +57,7 @@
             </ContactDetails>
          </LegalEntity>
 <% else -%>
-         <!-- Si es té IRPF, es una persona física, cal omplir Individual enlloc de LegalEntity -->
+
          <Individual>
             <Name><%=@company.first_name%></Name>
             <FirstSurname><%=@company.last_name%></FirstSurname>
@@ -88,18 +88,18 @@
       <Invoice>
          <InvoiceHeader>
             <InvoiceNumber><%=@invoice.number%></InvoiceNumber>
-            <InvoiceDocumentType>FC</InvoiceDocumentType> <!-- fixe FC=Factura Comercial -->
-            <InvoiceClass>OO</InvoiceClass>  <!-- fixe OO=Original -->
+            <InvoiceDocumentType>FC</InvoiceDocumentType>
+            <InvoiceClass>OO</InvoiceClass>
          </InvoiceHeader>
          <InvoiceIssueData>
             <IssueDate><%=@invoice.date%></IssueDate>
-            <InvoiceCurrencyCode><%=@client.currency%></InvoiceCurrencyCode>     <!-- de la fitxa de client -->
-            <TaxCurrencyCode><%=@client.currency%></TaxCurrencyCode>             <!-- la mateixa que la anterior -->
-            <LanguageName><%=@client.language%></LanguageName>                    <!-- de la fitxa de client -->
+            <InvoiceCurrencyCode><%=@client.currency%></InvoiceCurrencyCode>
+            <TaxCurrencyCode><%=@client.currency%></TaxCurrencyCode>
+            <LanguageName><%=@client.language%></LanguageName>
          </InvoiceIssueData>
          <TaxesOutputs>
-            <Tax>                                           <!-- convenim una sola línia d'impostos -->
-               <TaxTypeCode>01</TaxTypeCode>                <!-- 01 = IVA -->
+            <Tax>
+               <TaxTypeCode>01</TaxTypeCode>
                <TaxRate><%=precision @invoice.tax_percent%></TaxRate>
                <TaxableBase>
                   <TotalAmount><%=precision(@invoice.subtotal.dollars)%></TotalAmount>
@@ -109,7 +109,7 @@
                </TaxAmount>
             </Tax>
          </TaxesOutputs>
-         <!-- En cas que sigui persona física, ha de poder informar de IRPF -->
+
 <% if @invoice.persontypecode == "F" -%>
          <TaxesWithheld>
             <Tax>
@@ -139,7 +139,7 @@
 <% end -%>
             <TotalGrossAmountBeforeTaxes><%=precision(@invoice.subtotal.dollars)%></TotalGrossAmountBeforeTaxes>
             <TotalTaxOutputs><%=precision @invoice.tax.dollars%></TotalTaxOutputs>
-            <TotalTaxesWithheld><%=precision @invoice.withholding_tax.dollars%></TotalTaxesWithheld>  <!-- encara que no n'hi hagi, s'ha de posar a 0.00 -->
+            <TotalTaxesWithheld><%=precision @invoice.withholding_tax.dollars%></TotalTaxesWithheld>
             <InvoiceTotal><%=precision @invoice.total.dollars%></InvoiceTotal>
             <TotalOutstandingAmount><%=precision @invoice.total.dollars%></TotalOutstandingAmount>
             <TotalExecutableAmount><%=precision @invoice.total.dollars%></TotalExecutableAmount>
@@ -147,13 +147,13 @@
          <Items>
 <% @invoice.invoice_lines.each do |invoice_line| -%>
             <InvoiceLine>
-              <ReceiverTransactionReference><%=@invoice.ponumber%></ReceiverTransactionReference>  <!-- número de comanda. Com que no hi ha nº comanda a nivell de capçalera, cal repetir-lo a totes les línies si hi es -->
+              <ReceiverTransactionReference><%=@invoice.ponumber%></ReceiverTransactionReference>
                <ItemDescription><%=invoice_line.description%></ItemDescription>
                <Quantity><%=invoice_line.quantity%></Quantity>
-               <UnitPriceWithoutTax><%=precision(invoice_line.price.dollars,6)%></UnitPriceWithoutTax>     <!-- ojo amb la precisió decimal, han de ser 6 dígits!! -->
+               <UnitPriceWithoutTax><%=precision(invoice_line.price.dollars,6)%></UnitPriceWithoutTax>
                <TotalCost><%=precision(invoice_line.price.dollars*invoice_line.quantity,6)%></TotalCost>
                <GrossAmount><%=precision(invoice_line.price.dollars*invoice_line.quantity,6)%></GrossAmount>
-               <TaxesOutputs>                                           <!-- s'han de repetir els impostos a nivell de línia. calcular-ho? -->
+               <TaxesOutputs>
                   <Tax>
                      <TaxTypeCode>01</TaxTypeCode>
                      <TaxRate><%=precision @invoice.tax_percent%></TaxRate>
