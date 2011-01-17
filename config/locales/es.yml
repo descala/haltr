@@ -27,7 +27,7 @@ es:
   field_date: Fecha
   field_client: Cliente
   field_extra_info: Notas
-  field_terms: Terminio
+  field_terms: Vencimiento 
   field_discount_text: Texto del descuento
   field_discount_percent: % de descuento
   field_frequency: Frecuencia
@@ -52,7 +52,7 @@ es:
   field_withholding_tax_percent: % de retención
   must_have_lines: tiene que tener líneas
   send_invoice: Enviar factura
-  cash: Al contado
+  cash: En efectivo
   debit: Cargar en cuenta
   transfer: Transferencia bancaria
   requires_client_bank_account: requiere cuenta bancaria del cliente
@@ -80,7 +80,7 @@ es:
   # Invoice lines
   field_price_in_cents: Precio
   field_quantity: Cantidad
-  field_invoice_lines: Lineas de factura
+  field_invoice_lines: Líneas de factura
 
   # People
   label_person: Persona
@@ -90,8 +90,8 @@ es:
   field_last_name: Apellidos
   field_email: Email
   field_phone_office: Teléfono oficina
-  field_phone_mobile: Telefono móbil
-  field_invoice_recipient: Receptor de factures
+  field_phone_mobile: Teléfono movil
+  field_invoice_recipient: Receptor de facturas
   field_report_recipient: Receptor de informes
 
   # Tasks
@@ -122,7 +122,6 @@ es:
   field_taxcode: "CIF"
   field_address: "Dirección"
   field_website: "Sitio web"
-  field_email: "e-mail"
   field_bank_account: "Cuenta bancaria"
   folders_to_leave_invoices_on: "Carpetas donde dejar las facturas"
   field_company: "Empresa"
