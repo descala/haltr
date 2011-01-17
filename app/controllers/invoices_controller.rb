@@ -72,7 +72,7 @@ class InvoicesController < ApplicationController
   def create
     @invoice = InvoiceDocument.new(params[:invoice])
     if @invoice.save
-      flash[:notice] = 'Invoice was successfully created.'
+      flash[:notice] = l(:notice_successful_create)
       redirect_to :action => 'showit', :id => @invoice
     else
       render :action => "new"
@@ -81,7 +81,7 @@ class InvoicesController < ApplicationController
 
   def update
     if @invoice.update_attributes(params[:invoice])
-      flash[:notice] = 'Invoice was successfully updated.'
+      flash[:notice] = l(:notice_successful_update)
       redirect_to :action => 'showit', :id => @invoice
     else
       render :action => "edit"

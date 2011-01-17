@@ -26,7 +26,7 @@ class CompaniesController < ApplicationController
         Attachment.attach_files(@company, params[:attachments])
         render_attachment_warning_if_needed(@company)
       end
-      flash[:notice] = 'Settings successfully updated'
+      flash[:notice] = l(:notice_successful_update) 
       redirect_to :action => 'index', :id => @project
     else
       render :action => 'edit'

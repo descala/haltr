@@ -49,7 +49,7 @@ class ClientsController < ApplicationController
   def create
     @client = Client.new(params[:client].merge({:project=>@project}))
     if @client.save
-      flash[:notice] = 'Client was successfully created.'
+      flash[:notice] = l(:notice_successful_create)
       redirect_to :action => 'index', :id => @project
     else
       render :action => "new"
@@ -58,7 +58,7 @@ class ClientsController < ApplicationController
 
   def update
     if @client.update_attributes(params[:client])
-      flash[:notice] = 'Client was successfully updated.'
+      flash[:notice] = l(:notice_successful_update)
       redirect_to :action => 'index', :id => @project
     else
       render :action => "edit"
