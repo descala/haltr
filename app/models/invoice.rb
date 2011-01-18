@@ -2,6 +2,8 @@ class Invoice < ActiveRecord::Base
 
   unloadable
 
+  has_many :events
+
   # 1 - cash (al comptat)
   # 2 - debit (rebut domiciliat)
   # 4 - transfer (transferència)

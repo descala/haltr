@@ -172,6 +172,9 @@
         </div>
 
   </div></div>
+      <% @invoice.events.each do |e| -%>
+        <%= e.name -%> by <%= e.user.name %><br />
+      <% end -%>
 
 </div>
 <% lang = find_language(User.current.language); lang ||= Setting.default_language; set_language_if_valid(lang) -%>

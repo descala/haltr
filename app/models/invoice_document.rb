@@ -12,6 +12,9 @@ class InvoiceDocument < Invoice
 
   # new sending sent error discarded closed
   state_machine :state, :initial => :new do
+    before_transition do |invoice,transition|
+      Event.create(:name=>transition.event.to_s,:invoice=>invoice,:user=>User.current)
+    end
     event :manual_send do
       transition [:new,:sending,:error,:discarded] => :sent
     end
@@ -35,6 +38,12 @@ class InvoiceDocument < Invoice
     end
     event :discard do
       transition [:error,:sending] => :discarded
+    end
+    event :paid do
+      transition [:sent] => :closed
+    end
+    event :unpaid do
+      transition [:closed] => :sent
     end
   end
 
@@ -63,11 +72,11 @@ class InvoiceDocument < Invoice
   end
 
   def total_paid
-    paid=0
+    paid_amount=0
     self.payments.each do |payment|
-      paid += payment.amount.cents
+      paid_amount += payment.amount.cents
     end
-    Money.new(paid,currency)
+    Money.new(paid_amount,currency)
   end
 
   def unpaid
@@ -91,8 +100,12 @@ class InvoiceDocument < Invoice
   protected
 
   def update_status
-    self.state='sent' if state?(:closed) && !paid?
-    self.state='closed' if paid?
+    if paid?
+      paid
+    else
+      unpaid
+    end
+    return true # always continue saving
   end
 
   def number_must_be_unique_in_project
