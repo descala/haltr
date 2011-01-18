@@ -14,8 +14,6 @@ class InvoicesController < ApplicationController
   include CompanyFilter
   before_filter :check_for_company
 
-  before_filter :update_invoices_state, :only => [:index,:showit]
-
   def index
     sort_init 'number', 'desc'
     sort_update %w(state number date due_date clients.name import_in_cents)
@@ -174,45 +172,24 @@ class InvoicesController < ApplicationController
       destination="#{path}/" + "#{@project.identifier}_#{@invoice.number}_#{i}.xml".gsub(/\//,'')
       i+=1
     end
-    @invoice.md5=`md5sum '#{xml_file.path}'`.split.first
-    @invoice.channel=path.split("/").last
-    #TODO: fer b2brouter_url diferent per a cada canal, doncs pot ser que hi hagi varis b2brouters
-    @invoice.b2brouter_url=Setting.plugin_haltr["trace_url"]
-    @invoice.filename=File.basename(destination)
-    @invoice.save
     FileUtils.mv(xml_file.path,destination)
     #TODO state restrictions
     @invoice.queue || @invoice.requeue
     flash[:notice] = l(:notice_invoice_sent)
-  rescue Errno::ECONNREFUSED, Errno::EHOSTUNREACH => e
-    flash[:error] = l(:error_invoice_not_sent)
-    flash[:warning]=l(:cant_connect_trace, e.message)
   rescue Exception => e
-    flash[:error] = l(:error_invoice_not_sent)
+    flash[:error] = "#{l(:error_invoice_not_sent)}: #{e.message}"
   ensure
     redirect_to :action => 'showit', :id => @invoice
   end
 
-  def log
-    B2bMessage.connect(@invoice.b2brouter_url)
-    B2bLog.connect(@invoice.b2brouter_url)
-    @message = @invoice.b2b_message
-    @current_page = params[:page] || 1
-    @messages_page = params[:messages_page]
-    @sent=params[:sent]
-    @logs = B2bLog.paginate(:all, :params => { :b2b_message_id=>@message.id, :page=>@current_page })
-  rescue Errno::ECONNREFUSED, Errno::EHOSTUNREACH => e
-    flash[:warning]=l(:cant_connect_trace, e.message)
-    redirect_to :action => 'showit', :id => @invoice
-  end
-
   def get_legal
-    url = @invoice.b2brouter_url
-    url ||= Setting.plugin_haltr["trace_url"]
+    #TODO: several B2bRouters
+    url = Setting.plugin_haltr["trace_url"]
     url = URI.parse(url.gsub(/\/$/,'')) # remove trailing slash
     http = Net::HTTP.new(url.host,url.port)
     http.start() { |http|
-      req = Net::HTTP::Get.new("#{url.path.blank? ? "/" : "#{url.path}/"}b2b_messages/get_legal_invoice?md5=#{@invoice.md5}")
+      #TODO: add params[:filename] to allow several filenames on one md5 (file.xml, file.pdf)
+      req = Net::HTTP::Get.new("#{url.path.blank? ? "/" : "#{url.path}/"}b2b_messages/get_legal_invoice?md5=#{params[:md5]}")
       response = http.request(req)
       if response.is_a? Net::HTTPOK
         # retrieve filename from response headers
@@ -234,10 +211,6 @@ class InvoicesController < ApplicationController
     @lines = @invoice.invoice_lines
     @client = @invoice.client
     @project = @client.project
-    begin
-      @b2b_message = @invoice.b2b_message
-    rescue Errno::ECONNREFUSED, Errno::EHOSTUNREACH
-    end
   rescue ActiveRecord::RecordNotFound
     render_404
   end
@@ -246,29 +219,6 @@ class InvoicesController < ApplicationController
     @payment = Payment.find(params[:id])
     @invoice = @payment.invoice
     @project = @invoice.project
-  end
-
-  def update_invoices_state
-    if @invoice
-      ii = [ @invoice ]
-    else
-      ii = InvoiceDocument.find :all, :conditions => ["clients.project_id = ? AND state in ('sending','error')",@project.id], :include => [:client]
-    end
-    ii.each do |i|
-      b2bm = i.b2b_message
-      next if b2bm.nil?
-      if b2bm.sent == true
-        i.success_sending
-      elsif b2bm.sent == false
-        if b2bm.discarded?
-          i.discard
-        else
-          i.error_sending unless i.state?(:error)
-        end
-      end
-    end
-  rescue Errno::ECONNREFUSED, Errno::EHOSTUNREACH => e
-    # don't show error if trace is not required (log, download)
   end
 
 end

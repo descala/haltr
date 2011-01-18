@@ -12,8 +12,6 @@ class InvoiceDocument < Invoice
 
   # new sending sent error discarded closed
   state_machine :state, :initial => :new do
-    before_transition :on => :queue, :do => :create_b2b_message
-    before_transition :on => :requeue, :do => :update_b2b_message
     event :manual_send do
       transition [:new,:sending,:error,:discarded] => :sent
     end
@@ -84,47 +82,6 @@ class InvoiceDocument < Invoice
     # order => older invoices to get paid first
     #TODO: add withholding_tax
     find :all, :conditions => ["round(import_in_cents*(1+tax_percent/100)) = ? and date <= ? and state != 'closed'", payment.amount_in_cents, payment.date], :order => "due_date ASC"
-  end
-
-  def batchidentifier
-    require "digest/md5"
-    Digest::MD5.hexdigest("#{client.project_id}#{date}#{number}")
-  end
-
-  # Insert invoice into b2brouter messages database, if not exists
-  def create_b2b_message
-    b2bm = b2b_message
-    if b2bm
-      update_b2b_message
-    else
-      @b2bmessage=B2bMessage.new(:md5=>md5,:name=>filename,:b2b_channel_id=>channel)
-      @b2bmessage.save
-      @b2bmessage
-    end
-  end
-
-  def update_b2b_message
-    b2bm = b2b_message
-    b2bm = create_b2b_message unless b2bm and b2bm.exists?
-    return unless b2bm
-    b2bm.sent = nil
-    b2bm.retries = 0
-    b2bm.max_retries = Setting.plugin_haltr['max_retries']
-    b2bm.max_retries ||= 5
-    b2bm.save
-  end
-
-  def b2b_message
-    logger.info("Aprofitant @b2bmessage") if @b2bmessage
-    return @b2bmessage if @b2bmessage
-    B2bMessage.connect(b2brouter_url)
-    b=B2bMessage.find(:by_channel_and_md5, :params => { :b2b_channel=>channel, :md5=>md5 }) rescue B2bMessage.new
-    @b2bmessage = b if b.exists?
-    @b2bmessage
-  end
-
-  def b2brouter_url
-    read_attribute(:b2brouter_url).blank? ? Setting.plugin_haltr['trace_url'] : read_attribute(:b2brouter_url)
   end
 
   def past_due?

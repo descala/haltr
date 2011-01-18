@@ -86,7 +86,6 @@ ca:
   state_closed: "Tancada"
   state_discarded: "Descartada"
   sending_log: "Log d'enviament"
-  max_retries: "Màxim de reintents"
   download_legal: "Descarregar factura legal"
 
   # Invoice templates

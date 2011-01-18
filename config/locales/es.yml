@@ -73,7 +73,6 @@ es:
   state_closed: "Cerrada"
   state_discarded: "Descartada"
   sending_log: "Log de envio"
-  max_retries: "Máximo de reintentos"
   download_legal: "Descargar factura legal"
 
   # Invoice templates
