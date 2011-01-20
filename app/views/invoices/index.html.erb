@@ -54,7 +54,7 @@
   </thead>
   <tbody>
     <% for invoice in @invoices -%>
-      <tr class="user <%= cycle("odd", "even") %>" onclick="javascript: document.location = '<%=url_for(:action=>'showit', :id=>invoice)%>'">
+      <tr class="user <%= cycle("odd", "even") %>" onclick="javascript: document.location = '<%=url_for(:action=>'show', :id=>invoice)%>'">
         <td align="center"><%=h invoice.state.capitalize %></td>
         <td align="center"><%=h invoice.number %></td>
         <td align="center"><%=h invoice.date %></td>

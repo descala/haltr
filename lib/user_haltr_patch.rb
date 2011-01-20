@@ -9,5 +9,5 @@ module UserHaltrPatch
     end
   end
 end
- 
+
 User.send(:include, UserHaltrPatch)

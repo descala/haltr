@@ -71,7 +71,7 @@ class InvoicesController < ApplicationController
     @invoice = InvoiceDocument.new(params[:invoice])
     if @invoice.save
       flash[:notice] = l(:notice_successful_create)
-      redirect_to :action => 'showit', :id => @invoice
+      redirect_to :action => 'show', :id => @invoice
     else
       render :action => "new"
     end
@@ -80,7 +80,7 @@ class InvoicesController < ApplicationController
   def update
     if @invoice.update_attributes(params[:invoice])
       flash[:notice] = l(:notice_successful_update)
-      redirect_to :action => 'showit', :id => @invoice
+      redirect_to :action => 'show', :id => @invoice
     else
       render :action => "edit"
     end
@@ -93,7 +93,7 @@ class InvoicesController < ApplicationController
 
   def destroy_payment
     @payment.destroy
-    redirect_to :action => 'showit', :id => @invoice
+    redirect_to :action => 'show', :id => @invoice
   end
 
   def mark_sent
@@ -136,7 +136,7 @@ class InvoicesController < ApplicationController
   def pdf
     pdf_file=Tempfile.new("invoice_#{@invoice.id}.pdf","tmp")
     xhtml_file=Tempfile.new("invoice_#{@invoice.id}.xhtml","tmp")
-    xhtml_file.write(render_to_string(:action => "showit", :layout => "invoice"))
+    xhtml_file.write(render_to_string(:action => "show", :layout => "invoice"))
     xhtml_file.close
     jarpath = "#{File.dirname(__FILE__)}/../../vendor/xhtmlrenderer"
     cmd="java -classpath #{jarpath}/core-renderer.jar:#{jarpath}/iText-2.0.8.jar:#{jarpath}/minium.jar org.xhtmlrenderer.simple.PDFRenderer #{RAILS_ROOT}/#{xhtml_file.path} #{RAILS_ROOT}/#{pdf_file.path}"
@@ -153,7 +153,7 @@ class InvoicesController < ApplicationController
     render :template => 'invoices/facturae.xml.erb', :layout => false
   end
 
-  def showit
+  def show
     @invoices_not_sent = InvoiceDocument.find(:all,:conditions => ["client_id = ? and state = 'new'",@client.id]).sort
     @invoices_sent = InvoiceDocument.find(:all,:conditions => ["client_id = ? and state = 'sent'",@client.id]).sort
     @invoices_closed = InvoiceDocument.find(:all,:conditions => ["client_id = ? and state = 'closed'",@client.id]).sort
@@ -179,7 +179,7 @@ class InvoicesController < ApplicationController
   rescue Exception => e
     flash[:error] = "#{l(:error_invoice_not_sent)}: #{e.message}"
   ensure
-    redirect_to :action => 'showit', :id => @invoice
+    redirect_to :action => 'show', :id => @invoice
   end
 
   def get_legal
@@ -201,12 +201,13 @@ class InvoicesController < ApplicationController
     }
   rescue Errno::ECONNREFUSED, Errno::EHOSTUNREACH => e
     flash[:warning]=l(:cant_connect_trace, e.message)
-    redirect_to :action => 'showit', :id => @invoice
+    redirect_to :action => 'show', :id => @invoice
   end
 
   private
 
   def find_invoice
+#    require "ruby-debug" ; debugger
     @invoice = InvoiceDocument.find params[:id]
     @lines = @invoice.invoice_lines
     @client = @invoice.client

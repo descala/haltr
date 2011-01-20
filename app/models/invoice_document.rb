@@ -13,7 +13,9 @@ class InvoiceDocument < Invoice
   # new sending sent error discarded closed
   state_machine :state, :initial => :new do
     before_transition do |invoice,transition|
-      Event.create(:name=>transition.event.to_s,:invoice=>invoice,:user=>User.current)
+      unless Event::AUTOMATIC.include?(transition.event.to_s)
+        Event.create(:name=>transition.event.to_s,:invoice=>invoice,:user=>User.current)
+      end
     end
     event :manual_send do
       transition [:new,:sending,:error,:discarded] => :sent
