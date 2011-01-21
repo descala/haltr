@@ -36,6 +36,7 @@ ca:
   field_invoice: Factura
   label_invoice_new: Nova factura
   button_new_invoice: Nova factura
+  button_add_invoice_line: Afegeix una nova línia a la factura
   field_number: Número
   field_date: Data
   field_client: Client

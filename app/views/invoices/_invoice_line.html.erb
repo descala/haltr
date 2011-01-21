@@ -6,7 +6,7 @@
 <%= f.text_field :price, :size => 10, :no_label => true %>
 
 <% unless f.object.new_record? %>
-  <%= f.check_box(:_destroy, :no_label=>true) %><span style="font-weight:bold;"> Remove </span>
+  <%= f.check_box(:_destroy, :no_label=>true) %><span style="font-weight:bold;"><%= l(:button_delete)%></span>
 <% end %>
 </p>
 </div>

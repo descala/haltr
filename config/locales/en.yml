@@ -23,6 +23,7 @@ en:
   field_invoice: Invoice
   label_invoice_new: New invoice
   button_new_invoice: New invoice
+  button_add_invoice_line: Add a new invoice line
   field_number: Number
   field_date: Date
   field_client: Client
