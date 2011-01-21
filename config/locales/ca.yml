@@ -36,6 +36,7 @@ ca:
   field_invoice: Factura
   label_invoice_new: Nova factura
   button_new_invoice: Nova factura
+  button_add_invoice_line: Afegeix una nova línia a la factura
   field_number: Número
   field_date: Data
   field_client: Client
@@ -70,7 +71,7 @@ ca:
   transfer: Transferència bancària
   requires_client_bank_account: requereix compte bancari del client
   requires_company_bank_account: requereix compte bancari propi
-  cash_str: "Pagament al comptat"
+  cash_str: "Pagament en efectiu"
   debit_str: "Rebut domiciliat a"
   transfer_str: "Pagament per transferència al compte"
   state_new_plural: "Noves"
