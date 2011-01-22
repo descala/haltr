@@ -37,4 +37,10 @@ class Payment < ActiveRecord::Base
     self.invoice = candidates.first if candidates
   end
 
+  def self.new_to_close(invoice)
+    if invoice.is_a?(InvoiceDocument)
+      Payment.new(:invoice => invoice, :project => invoice.project, :amount => invoice.unpaid)
+    end
+  end
+
 end

@@ -63,8 +63,8 @@ class TasksController < ApplicationController
     example_invoice = InvoiceDocument.find params[:id]
     invoices = InvoiceDocument.find :all, :include => [:client], :conditions => ["clients.project_id = ? and due_date = ?", @project.id, example_invoice.due_date]
     invoices.each do |invoice|
-      invoice.state='closed'
-      invoice.save
+      Payment.new_to_close(invoice).save
+      invoice.close
     end
     flash[:notice] = l(:notice_n19_done, example_invoice.due_date.to_s)
     redirect_to :action => 'index', :id => @project
