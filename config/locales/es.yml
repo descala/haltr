@@ -76,6 +76,20 @@ es:
   sending_log: "Log de envio"
   download_legal: "Descargar factura legal"
 
+  # Events
+  events: "Log de eventos"
+  by: "por"
+  manual_send: "Marcada manualmente como enviada"
+  queue: "Enviada al b2brouter"
+  requeue: "Re-enviada al b2brouter"
+  success_sending: "Enviada correctamente al destinatario"
+  mark_unsent: "Marcada manualmente como no enviada"
+  error_sending: "Error al enviar"
+  close: "Cerrada"
+  discard: "No enviada. Se ha llegado al máximo de reintentos"
+  paid: "Marcada como pagada"
+  unpaid: "Marcada como no pagada"
+
   # Invoice templates
   label_invoice_template_new: Nueva plantilla
   label_invoice_template: Plantilla

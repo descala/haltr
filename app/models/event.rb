@@ -16,9 +16,9 @@ class Event < ActiveRecord::Base
 
   def to_s
     if automatic?
-      "#{created_at} -- #{name} by b2brouter"
+      "#{format_time created_at} -- #{l(name)} #{l(:by)} b2brouter"
     else
-      "#{created_at} -- #{name} by #{user.name}"
+      "#{format_time created_at} -- #{l(name)} #{l(:by)} #{user.name}"
     end
   end
 

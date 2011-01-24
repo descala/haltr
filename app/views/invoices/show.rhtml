@@ -172,9 +172,16 @@
         </div>
 
   </div></div>
+  <% if @invoice.events.any? -%>
+    <div id="events">
+      <h3><%=l(:events)%></h3>
+      <ul>
       <% @invoice.events.each do |e| -%>
-        <%= e %><br />
+        <li><%= e %></li>
       <% end -%>
+      </ul>
+    </div>
+  <% end -%>
 
 </div>
 <% lang = find_language(User.current.language); lang ||= Setting.default_language; set_language_if_valid(lang) -%>

@@ -76,6 +76,20 @@ en:
   sending_log: "Sending log"
   download_legal: "Download legal invoice"
 
+  # Events
+  events: "Event log"
+  by: "by"
+  manual_send: "Manually marked as sent"
+  queue: "Sent to b2brouter"
+  requeue: "Re-sent to b2brouter"
+  success_sending: "Correctly sent to recipient"
+  mark_unsent: "Manually marked as not sent"
+  error_sending: "Error sending"
+  close: "Closed"
+  discard: "Not sent. Max retries reached"
+  paid: "Marked as paid"
+  unpaid: "Marked as unpaid"
+
   # Invoice templates
   label_invoice_template_new: New template
   label_invoice_template: Template
