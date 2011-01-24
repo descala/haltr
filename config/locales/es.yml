@@ -131,7 +131,7 @@ es:
   folders_to_leave_invoices_on: "Carpetas donde dejar las facturas"
   field_company: "Empresa"
   logo: "Logo"
-  trace_url: "URL del b2brouter trace"
+  trace_url: "URL del b2brouter"
 
   # Terms
   "0": Al contado
