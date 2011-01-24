@@ -29,4 +29,12 @@ module InvoicesHelper
     number_with_precision(num,:precision=>precision,:significant => true)
   end
 
+  def download_link_for(e)
+    if e.name == "success_sending" and !e.md5.blank?
+      "( #{link_to l(:download_legal), :controller=>'invoices', :action=>'get_legal', :id=>e.invoice, :md5=>e.md5} )"
+    else
+      ""
+    end
+  end
+
 end

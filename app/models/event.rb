@@ -15,11 +15,13 @@ class Event < ActiveRecord::Base
   end
 
   def to_s
+    str = "#{format_time created_at} -- "
     if automatic?
-      "#{format_time created_at} -- #{l(name)} #{l(:by)} b2brouter"
+      str += "#{l(name)} #{l(:by)} b2brouter"
     else
-      "#{format_time created_at} -- #{l(name)} #{l(:by)} #{user.name}"
+      str += "#{l(name)} #{l(:by)} #{user.name}"
     end
+    str
   end
 
   def <=>(oth)

@@ -207,7 +207,6 @@ class InvoicesController < ApplicationController
   private
 
   def find_invoice
-#    require "ruby-debug" ; debugger
     @invoice = InvoiceDocument.find params[:id]
     @lines = @invoice.invoice_lines
     @client = @invoice.client

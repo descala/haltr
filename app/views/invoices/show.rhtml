@@ -177,7 +177,7 @@
       <h3><%=l(:events)%></h3>
       <ul>
       <% @invoice.events.each do |e| -%>
-        <li><%= e %></li>
+        <li><%= e %><%= download_link_for(e) %></li>
       <% end -%>
       </ul>
     </div>
