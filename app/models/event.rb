@@ -33,7 +33,7 @@ class Event < ActiveRecord::Base
   private
 
   def update_invoice
-    invoice.send(name) if automatic?
+    self.invoice.send(name) if automatic?
   end
 
 end
