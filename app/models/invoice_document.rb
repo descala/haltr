@@ -9,7 +9,7 @@ class InvoiceDocument < Invoice
   validate :invoice_must_have_lines
 
   before_save :update_status, :unless => Proc.new {|invoicedoc| invoicedoc.state_changed? }
-#  after_save :register_event
+  after_create :create_event
 
   # new sending sent error discarded closed
   state_machine :state, :initial => :new do
@@ -111,8 +111,8 @@ class InvoiceDocument < Invoice
     return true # always continue saving
   end
 
-  def register_event
-    Event.create(:name=>'edited',:invoice=>self,:user=>User.current)
+  def create_event
+    Event.create(:name=>'new',:invoice=>self,:user=>User.current)
   end
 
   def number_must_be_unique_in_project
