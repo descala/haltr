@@ -9,7 +9,7 @@ class InvoiceDocument < Invoice
   validate :invoice_must_have_lines
 
   before_save :update_status, :unless => Proc.new {|invoicedoc| invoicedoc.state_changed? }
-  after_save :register_event
+#  after_save :register_event
 
   # new sending sent error discarded closed
   state_machine :state, :initial => :new do
