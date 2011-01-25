@@ -70,7 +70,6 @@ class InvoicesController < ApplicationController
   def create
     @invoice = InvoiceDocument.new(params[:invoice])
     if @invoice.save
-      Event.create(:name=>'edited',:invoice=>@invoice,:user=>User.current)
       flash[:notice] = l(:notice_successful_create)
       redirect_to :action => 'show', :id => @invoice
     else
@@ -80,6 +79,7 @@ class InvoicesController < ApplicationController
 
   def update
     if @invoice.update_attributes(params[:invoice])
+      Event.create(:name=>'edited',:invoice=>@invoice,:user=>User.current)
       flash[:notice] = l(:notice_successful_update)
       redirect_to :action => 'show', :id => @invoice
     else
