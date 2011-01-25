@@ -70,7 +70,7 @@ class InvoicesController < ApplicationController
   def create
     @invoice = InvoiceDocument.new(params[:invoice])
     if @invoice.save
-      Event.create(:name=>'edited',:invoice=>self,:user=>User.current)
+      Event.create(:name=>'edited',:invoice=>@invoice,:user=>User.current)
       flash[:notice] = l(:notice_successful_create)
       redirect_to :action => 'show', :id => @invoice
     else
