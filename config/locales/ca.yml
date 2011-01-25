@@ -102,6 +102,7 @@ ca:
   discard: "No enviada. S'ha arribat al màxim de reintents"
   paid: "Marcada com a pagada"
   unpaid: "Marcada com a no pagada"
+  edited: "Editada"
 
   # Invoice templates
   label_invoice_template_new: Nova plantilla

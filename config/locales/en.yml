@@ -89,6 +89,7 @@ en:
   discard: "Not sent. Max retries reached"
   paid: "Marked as paid"
   unpaid: "Marked as unpaid"
+  edited: "Edited"
 
   # Invoice templates
   label_invoice_template_new: New template

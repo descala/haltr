@@ -2,7 +2,7 @@ class Invoice < ActiveRecord::Base
 
   unloadable
 
-  has_many :events
+  has_many :events, :dependent => :destroy
 
   # 1 - cash (al comptat)
   # 2 - debit (rebut domiciliat)
