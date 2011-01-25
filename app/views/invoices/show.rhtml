@@ -6,7 +6,6 @@
   <div id="workspace1" class="haltrinvoice"><div id="workspace2">
 
         <div id="col1">
-        <!-- BEGIN Standard Invoice Markup -->
 
         <!-- Vendor Info -->
         <div class="vcard vendor">
@@ -168,13 +167,11 @@
           </div>
         <% end -%>
 
-        <!-- END Standard Invoice Markup -->
-        </div>
-
-  </div></div>
+  <% lang = find_language(User.current.language); lang ||= Setting.default_language; set_language_if_valid(lang) -%>
   <% if @invoice.events.any? -%>
     <div id="events">
-      <h3><%=l(:events)%></h3>
+      <h4><%=l(:events)%></h4>
+      <p></p>
       <ul>
       <% @invoice.events.each do |e| -%>
         <li><%= e %><%= download_link_for(e) %></li>
@@ -183,8 +180,11 @@
     </div>
   <% end -%>
 
+      </div>
+    </div>
+  </div>
+
 </div>
-<% lang = find_language(User.current.language); lang ||= Setting.default_language; set_language_if_valid(lang) -%>
 <% unless controller.action_name == "pdf" -%>
   <% content_for :sidebar do %>
       <%= render :partial => 'common/sidebar' %>

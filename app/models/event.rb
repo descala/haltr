@@ -16,8 +16,9 @@ class Event < ActiveRecord::Base
 
   def to_s
     str = "#{format_time created_at} -- "
-    if automatic?
-      str += "#{l(name)} #{l(:by)} b2brouter"
+    if !user
+      # TODO: log the origin of the REST event. i.e. "Sent by host4"
+      str += "#{l(name)}"
     else
       str += "#{l(name)} #{l(:by)} #{user.name}"
     end
