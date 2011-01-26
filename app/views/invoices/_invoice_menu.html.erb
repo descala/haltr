@@ -7,14 +7,8 @@
     <li><%= link_to l(:button_delete), {:action=>'destroy',:id=>@invoice}, :confirm => l(:text_are_you_sure), :method => :delete %></li>
     <% if @invoice.is_a? InvoiceDocument -%>
       <li><%= change_state_link(@invoice) %></li>
-      <li><%= link_to "#{l(:save_invoice)} <strong>PDF</strong>", :action=>'pdf', :id=>@invoice %></li>
-      <li><%= link_to "#{l(:save_invoice)} <strong>FacturaE</strong>", :action=>'efactura', :id=>@invoice %></li>
-      <% unless Setting.plugin_haltr["folder1_name"].blank? or Setting.plugin_haltr["folder1"].blank? -%>
-        <li><%= link_to "#{l(:send_invoice)} <strong>#{Setting.plugin_haltr["folder1_name"]}</strong>", :action=>'send_invoice', :id=>@invoice, :folder=>1 %></li>
-      <% end -%>
-      <% unless Setting.plugin_haltr["folder2_name"].blank? or Setting.plugin_haltr["folder2"].blank? -%>
-        <li><%= link_to "#{l(:send_invoice)} <strong>#{Setting.plugin_haltr["folder2_name"]}</strong>", :action=>'send_invoice', :id=>@invoice, :folder=>2 %></li>
-      <% end -%>
+      <li><%= link_to "#{l(:save_invoice)} PDF", :action=>'pdf', :id=>@invoice %></li>
+      <li><%= link_to l(:send_invoice), :action=>'send_invoice', :id=>@invoice %></li>
       <% if @invoice.state?(:sent) -%>
         <li><%= link_to l(:receive_payment), :controller => 'payments', :action => 'new', :id => @project, :invoice_id => @invoice %></li>
       <% end -%>

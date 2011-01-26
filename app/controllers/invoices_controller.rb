@@ -161,7 +161,8 @@ class InvoicesController < ApplicationController
   end
 
   def send_invoice
-    path=Setting.plugin_haltr["folder#{params[:folder]}"]
+    folder=@invoice.client.invoice_format
+    path=Setting.plugin_haltr[folder]
     raise if path.blank?
     @company = @invoice.company
     xml_file=Tempfile.new("invoice_#{@invoice.id}.xml","tmp")
