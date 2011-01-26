@@ -8,7 +8,7 @@
     <% if @invoice.is_a? InvoiceDocument -%>
       <li><%= change_state_link(@invoice) %></li>
       <li><%= link_to "#{l(:save_invoice)} <strong>PDF</strong>", :action=>'pdf', :id=>@invoice %></li>
-      <li><%= link_to "#{l(:save_invoice)} <strong>efactura</strong>", :action=>'efactura', :id=>@invoice %></li>
+      <li><%= link_to "#{l(:save_invoice)} <strong>FacturaE</strong>", :action=>'efactura', :id=>@invoice %></li>
       <% unless Setting.plugin_haltr["folder1_name"].blank? or Setting.plugin_haltr["folder1"].blank? -%>
         <li><%= link_to "#{l(:send_invoice)} <strong>#{Setting.plugin_haltr["folder1_name"]}</strong>", :action=>'send_invoice', :id=>@invoice, :folder=>1 %></li>
       <% end -%>
