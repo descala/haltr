@@ -83,7 +83,6 @@ class ClientsController < ApplicationController
     @folder_options = []
     @folder_options << [Setting.plugin_haltr['folder1_name'],"folder1"] unless Setting.plugin_haltr['folder1_name'].blank?
     @folder_options << [Setting.plugin_haltr['folder2_name'],"folder2"] unless Setting.plugin_haltr['folder2_name'].blank?
-    @folder_options.insert(0,"") if @folder_options.any?
   end
 
 end
