@@ -149,9 +149,18 @@ class InvoicesController < ApplicationController
     end
   end
 
-  def efactura
+  # methods to debugg xml
+  def efactura30
     @company = @invoice.company
-    render :template => 'invoices/facturae.xml.erb', :layout => false
+    render :template => 'invoices/facturae30.xml.erb', :layout => false
+  end
+  def efactura31
+    @company = @invoice.company
+    render :template => 'invoices/facturae31.xml.erb', :layout => false
+  end
+  def efactura32
+    @company = @invoice.company
+    render :template => 'invoices/facturae32.xml.erb', :layout => false
   end
 
   def show
@@ -166,7 +175,7 @@ class InvoicesController < ApplicationController
     raise if path.blank?
     @company = @invoice.company
     xml_file=Tempfile.new("invoice_#{@invoice.id}.xml","tmp")
-    xml_file.write(render_to_string(:template => "invoices/facturae.xml.erb", :layout => false))
+    xml_file.write(render_to_string(:template => "invoices/facturae32.xml.erb", :layout => false))
     xml_file.close
     destination="#{path}/" + "#{@project.identifier}_#{@invoice.number}.xml".gsub(/\//,'')
     i=2
