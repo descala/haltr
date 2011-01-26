@@ -38,7 +38,7 @@ en:
   show_template: Show template
   generate_template_from_invoice: Generate new template
   generated_from_template: Generated from template
-  receive_payment: Rebre pagament
+  receive_payment: Receive payment
   label_paid: Paid
   field_tax_percent: IVA
   label_from: From

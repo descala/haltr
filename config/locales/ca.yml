@@ -21,7 +21,7 @@ ca:
   field_address2: Adreça
   field_city: Ciutat
   field_province: Província
-  field_postalcode: Còdi postal
+  field_postalcode: Codi postal
   field_countrycode: Codi de país
   field_bank_account: Compte bancari
   button_people: Persones
