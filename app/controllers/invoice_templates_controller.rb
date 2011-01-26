@@ -74,9 +74,9 @@ class InvoiceTemplatesController < ApplicationController
     redirect_to :action => 'index', :id => @project
   end
 
-  def showit
+  def show
     @invoices_generated = @invoice.invoice_documents.sort
-    render :template => "invoices/showit"
+    render :template => "invoices/show"
   end
 
   def new_from_invoice

@@ -79,11 +79,31 @@ ca:
   state_sent_plural: "Enviades"
   state_error_plural: "Amb errors"
   state_closed_plural: "Tancades"
+  state_discarded_plural: "Descartades"
   state_new: "Nova"
   state_sending: "Enviant-se"
   state_sent: "Enviada"
   state_error: "Amb errors"
   state_closed: "Tancada"
+  state_discarded: "Descartada"
+  sending_log: "Log d'enviament"
+  download_legal: "Descarregar factura legal"
+
+  # Events
+  events: "Log d'esdeveniments"
+  by: "per"
+  manual_send: "Marcada manualment com a enviada"
+  queue: "Enviada al b2brouter"
+  requeue: "Re-enviada al b2brouter"
+  success_sending: "Enviada correctament al destinatari"
+  mark_unsent: "Marcada manualment com a no enviada"
+  error_sending: "Error a l'enviar"
+  close: "Tancada"
+  discard: "No enviada. S'ha arribat al màxim de reintents"
+  paid: "Marcada com a pagada"
+  unpaid: "Marcada com a no pagada"
+  edited: "Editada"
+  new: "Creada"
 
   # Invoice templates
   label_invoice_template_new: Nova plantilla
@@ -141,6 +161,7 @@ ca:
   folders_to_leave_invoices_on: "Carpetes on deixar les factures"
   field_company: "Empresa"
   logo: "Logo"
+  trace_url: "URL del b2brouter"
 
   # Terms
   "0": Al comptat
@@ -154,6 +175,8 @@ ca:
   "1m20": Dia 20 mes següent
   "custom": Personalitzat
 
+  # Errors
+  cant_connect_trace: "No es pot connectar a la plataforma b2brouter"
   halt_configure_before_use: "Si us plau, primer de tot configura les dades de l'empresa"
   warning_can_not_generate_invoice: "No s'ha pogut generar la factura de la plantilla {{value}}"
   notice_invoice_sent: "La factura s'ha enviat"

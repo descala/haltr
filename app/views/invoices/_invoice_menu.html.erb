@@ -4,17 +4,11 @@
   </h3>
   <ul class="toolbox secondary">
     <li><%= link_to l(:button_edit), {:action=>'edit',:id=>@invoice} %></li>
-    <li><%= link_to l(:button_delete), {:action=>'destroy',:id=>@invoice} , :confirm => l(:text_are_you_sure), :method => :post %></li>
+    <li><%= link_to l(:button_delete), {:action=>'destroy',:id=>@invoice}, :confirm => l(:text_are_you_sure), :method => :delete %></li>
     <% if @invoice.is_a? InvoiceDocument -%>
-      <li><%= change_state_link2(@invoice) %></li>
-      <li><%= link_to "#{l(:save_invoice)} <strong>PDF</strong>", :action=>'pdf', :id=>@invoice %></li>
-      <li><%= link_to "#{l(:save_invoice)} <strong>efactura</strong>", :action=>'efactura', :id=>@invoice %></li>
-      <% unless Setting.plugin_haltr["folder1_name"].blank? or Setting.plugin_haltr["folder1"].blank? -%>
-        <li><%= link_to "#{l(:send_invoice)} <strong>#{Setting.plugin_haltr["folder1_name"]}</strong>", :action=>'send_invoice', :id=>@invoice, :folder=>1 %></li>
-      <% end -%>
-      <% unless Setting.plugin_haltr["folder2_name"].blank? or Setting.plugin_haltr["folder2"].blank? -%>
-        <li><%= link_to "#{l(:send_invoice)} <strong>#{Setting.plugin_haltr["folder2_name"]}</strong>", :action=>'send_invoice', :id=>@invoice, :folder=>2 %></li>
-      <% end -%>
+      <li><%= change_state_link(@invoice) %></li>
+      <li><%= link_to "#{l(:save_invoice)} PDF", :action=>'pdf', :id=>@invoice %></li>
+      <li><%= link_to l(:send_invoice), :action=>'send_invoice', :id=>@invoice %></li>
       <% if @invoice.state?(:sent) -%>
         <li><%= link_to l(:receive_payment), :controller => 'payments', :action => 'new', :id => @project, :invoice_id => @invoice %></li>
       <% end -%>
@@ -22,7 +16,7 @@
 
   <% if @invoice.is_a?(InvoiceDocument) -%>
     <% if @invoice.invoice_template_id and @invoice.invoice_template -%>
-      <li><%= link_to "#{l(:show_template)} #{@invoice.invoice_template.id}", {:controller=>'invoice_templates',:action => 'showit', :id => @invoice.invoice_template_id } %></li>
+      <li><%= link_to "#{l(:show_template)} #{@invoice.invoice_template.id}", {:controller=>'invoice_templates',:action => 'show', :id => @invoice.invoice_template_id } %></li>
     <% else -%>
       <li><%= link_to l(:generate_template_from_invoice), {:controller=>'invoice_templates',:action=>'new_from_invoice',:id=>@invoice} %></li>
     <% end -%>
@@ -47,7 +41,7 @@
     <h3><%=l(:open_invoices)%></h3>
     <p style="padding:7px 20px;">
       <% @invoices_not_sent.each do |invoice| -%>
-        <%=link_to invoice.number, :action => 'showit', :id => invoice %><%= ", " unless invoice == @invoices_not_sent.last %>
+        <%=link_to invoice.number, :action => 'show', :id => invoice %><%= ", " unless invoice == @invoices_not_sent.last %>
       <% end -%>
     </p>
   </div>
@@ -57,7 +51,7 @@
     <h3><%=l(:pending_invoices)%></h3>
     <p style="padding:7px 20px;">
       <% @invoices_sent.each do |invoice| -%>
-        <%=link_to invoice.number, :action => 'showit', :id => invoice %><%= ", " unless invoice == @invoices_sent.last %>
+        <%=link_to invoice.number, :action => 'show', :id => invoice %><%= ", " unless invoice == @invoices_sent.last %>
       <% end -%>
     </p>
   </div>
@@ -67,7 +61,7 @@
     <h3><%=l(:closed_invoices)%></h3>
     <p style="padding:7px 20px;">
       <% @invoices_closed.each do |invoice| -%>
-        <%=link_to invoice.number, :action => 'showit', :id => invoice %><%= ", " unless invoice == @invoices_closed.last %>
+        <%=link_to invoice.number, :action => 'show', :id => invoice %><%= ", " unless invoice == @invoices_closed.last %>
       <% end -%>
     </p>
   </div>
@@ -79,7 +73,7 @@
       <h3>Factures generades</h3>
       <p style="padding:7px 20px;">
       <% @invoices_generated.each do |invoice| -%>
-        <%=link_to invoice.number, :controller => 'invoices', :action => 'showit', :id => invoice %><%= ", " unless invoice == @invoices_generated.last %>
+        <%=link_to invoice.number, :controller => 'invoices', :action => 'show', :id => invoice %><%= ", " unless invoice == @invoices_generated.last %>
       <% end -%>
       </p>
     </div>

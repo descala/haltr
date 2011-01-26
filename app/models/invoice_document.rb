@@ -9,29 +9,44 @@ class InvoiceDocument < Invoice
   validate :invoice_must_have_lines
 
   before_save :update_status, :unless => Proc.new {|invoicedoc| invoicedoc.state_changed? }
+  after_create :create_event
 
-  # new sending sent error closed
+  # new sending sent error discarded closed
   state_machine :state, :initial => :new do
+    before_transition do |invoice,transition|
+      unless Event::AUTOMATIC.include?(transition.event.to_s)
+        Event.create(:name=>transition.event.to_s,:invoice=>invoice,:user=>User.current)
+      end
+    end
     event :manual_send do
-      transition [:new,:sending,:error] => :sent
+      transition [:new,:sending,:error,:discarded] => :sent
     end
     event :queue do
       transition :new => :sending
     end
     event :requeue do
-      transition [:sent,:error] => :sending
+      transition [:closed,:sending,:sent,:error,:discarded] => :sending
     end
     event :success_sending do
-      transition :sending => :sent
+      transition [:sending,:error] => :sent
     end
     event :mark_unsent do
-      transition [:sent,:closed] => :new
+      transition [:sent,:closed,:error,:discarded] => :new
     end
     event :error_sending do
       transition :sending => :error
     end
     event :close do
       transition [:sent] => :closed
+    end
+    event :discard do
+      transition [:error,:sending] => :discarded
+    end
+    event :paid do
+      transition [:sent] => :closed
+    end
+    event :unpaid do
+      transition [:closed] => :sent
     end
   end
 
@@ -60,11 +75,11 @@ class InvoiceDocument < Invoice
   end
 
   def total_paid
-    paid=0
+    paid_amount=0
     self.payments.each do |payment|
-      paid += payment.amount.cents
+      paid_amount += payment.amount.cents
     end
-    Money.new(paid,currency)
+    Money.new(paid_amount,currency)
   end
 
   def unpaid
@@ -81,11 +96,6 @@ class InvoiceDocument < Invoice
     find :all, :conditions => ["round(import_in_cents*(1+tax_percent/100)) = ? and date <= ? and state != 'closed'", payment.amount_in_cents, payment.date], :order => "due_date ASC"
   end
 
-  def batchidentifier
-    require "digest/md5"
-    Digest::MD5.hexdigest("#{client.project_id}#{date}#{number}")
-  end
-
   def past_due?
     !state?(:closed) && due_date && due_date < Date.today
   end
@@ -93,8 +103,16 @@ class InvoiceDocument < Invoice
   protected
 
   def update_status
-    self.state='sent' if state?(:closed) && !paid?
-    self.state='closed' if paid?
+    if paid?
+      paid
+    else
+      unpaid
+    end
+    return true # always continue saving
+  end
+
+  def create_event
+    Event.create(:name=>'new',:invoice=>self,:user=>User.current)
   end
 
   def number_must_be_unique_in_project

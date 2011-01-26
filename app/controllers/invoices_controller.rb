@@ -22,7 +22,7 @@ class InvoicesController < ApplicationController
 
     unless params["state_all"] == "1"
       statelist=[]
-      %w(new sending sent error closed).each do |state|
+      %w(new sending sent error closed discarded).each do |state|
         if params[state] == "1"
           statelist << "'#{state}'"
         end
@@ -71,7 +71,7 @@ class InvoicesController < ApplicationController
     @invoice = InvoiceDocument.new(params[:invoice])
     if @invoice.save
       flash[:notice] = l(:notice_successful_create)
-      redirect_to :action => 'showit', :id => @invoice
+      redirect_to :action => 'show', :id => @invoice
     else
       render :action => "new"
     end
@@ -79,8 +79,9 @@ class InvoicesController < ApplicationController
 
   def update
     if @invoice.update_attributes(params[:invoice])
+      Event.create(:name=>'edited',:invoice=>@invoice,:user=>User.current)
       flash[:notice] = l(:notice_successful_update)
-      redirect_to :action => 'showit', :id => @invoice
+      redirect_to :action => 'show', :id => @invoice
     else
       render :action => "edit"
     end
@@ -93,7 +94,7 @@ class InvoicesController < ApplicationController
 
   def destroy_payment
     @payment.destroy
-    redirect_to :action => 'showit', :id => @invoice
+    redirect_to :action => 'show', :id => @invoice
   end
 
   def mark_sent
@@ -136,7 +137,7 @@ class InvoicesController < ApplicationController
   def pdf
     pdf_file=Tempfile.new("invoice_#{@invoice.id}.pdf","tmp")
     xhtml_file=Tempfile.new("invoice_#{@invoice.id}.xhtml","tmp")
-    xhtml_file.write(render_to_string(:action => "showit", :layout => "invoice"))
+    xhtml_file.write(render_to_string(:action => "show", :layout => "invoice"))
     xhtml_file.close
     jarpath = "#{File.dirname(__FILE__)}/../../vendor/xhtmlrenderer"
     cmd="java -classpath #{jarpath}/core-renderer.jar:#{jarpath}/iText-2.0.8.jar:#{jarpath}/minium.jar org.xhtmlrenderer.simple.PDFRenderer #{RAILS_ROOT}/#{xhtml_file.path} #{RAILS_ROOT}/#{pdf_file.path}"
@@ -148,23 +149,33 @@ class InvoicesController < ApplicationController
     end
   end
 
-  def efactura
+  # methods to debugg xml
+  def efactura30
     @company = @invoice.company
-    render :template => 'invoices/facturae.xml.erb', :layout => false
+    render :template => 'invoices/facturae30.xml.erb', :layout => false
+  end
+  def efactura31
+    @company = @invoice.company
+    render :template => 'invoices/facturae31.xml.erb', :layout => false
+  end
+  def efactura32
+    @company = @invoice.company
+    render :template => 'invoices/facturae32.xml.erb', :layout => false
   end
 
-  def showit
+  def show
     @invoices_not_sent = InvoiceDocument.find(:all,:conditions => ["client_id = ? and state = 'new'",@client.id]).sort
     @invoices_sent = InvoiceDocument.find(:all,:conditions => ["client_id = ? and state = 'sent'",@client.id]).sort
     @invoices_closed = InvoiceDocument.find(:all,:conditions => ["client_id = ? and state = 'closed'",@client.id]).sort
   end
 
   def send_invoice
-    path=Setting.plugin_haltr["folder#{params[:folder]}"]
+    folder=@invoice.client.invoice_format
+    path=Setting.plugin_haltr[folder]
     raise if path.blank?
     @company = @invoice.company
     xml_file=Tempfile.new("invoice_#{@invoice.id}.xml","tmp")
-    xml_file.write(render_to_string(:template => "invoices/facturae.xml.erb", :layout => false))
+    xml_file.write(render_to_string(:template => "invoices/facturae32.xml.erb", :layout => false))
     xml_file.close
     destination="#{path}/" + "#{@project.identifier}_#{@invoice.number}.xml".gsub(/\//,'')
     i=2
@@ -173,11 +184,35 @@ class InvoicesController < ApplicationController
       i+=1
     end
     FileUtils.mv(xml_file.path,destination)
-    flash[:notice] = l(:notice_invoice_sent) 
-    redirect_to :action => 'showit', :id => @invoice
-  rescue
-    flash[:error] = l(:error_invoice_not_sent)
-    redirect_to :action => 'showit', :id => @invoice
+    #TODO state restrictions
+    @invoice.queue || @invoice.requeue
+    flash[:notice] = l(:notice_invoice_sent)
+  rescue Exception => e
+    flash[:error] = "#{l(:error_invoice_not_sent)}: #{e.message}"
+  ensure
+    redirect_to :action => 'show', :id => @invoice
+  end
+
+  def get_legal
+    #TODO: several B2bRouters
+    url = Setting.plugin_haltr["trace_url"]
+    url = URI.parse(url.gsub(/\/$/,'')) # remove trailing slash
+    http = Net::HTTP.new(url.host,url.port)
+    http.start() { |http|
+      #TODO: add params[:filename] to allow several filenames on one md5 (file.xml, file.pdf)
+      req = Net::HTTP::Get.new("#{url.path.blank? ? "/" : "#{url.path}/"}b2b_messages/get_legal_invoice?md5=#{params[:md5]}")
+      response = http.request(req)
+      if response.is_a? Net::HTTPOK
+        # retrieve filename from response headers
+        filename = response["Content-Disposition"].match('filename=\\".*\\"').to_s.gsub(/filename=/,'').gsub(/\"/,'').gsub(/^legal_/,'')
+        send_data response.body, :filename => filename
+      else
+        render_404
+      end
+    }
+  rescue Errno::ECONNREFUSED, Errno::EHOSTUNREACH => e
+    flash[:warning]=l(:cant_connect_trace, e.message)
+    redirect_to :action => 'show', :id => @invoice
   end
 
   private

@@ -66,11 +66,31 @@ en:
   state_sent_plural: "Sent"
   state_error_plural: "With errors"
   state_closed_plural: "Closed"
+  state_discarded_plural: "Discarded"
   state_new: "New"
   state_sending: "Sending"
   state_sent: "Sent"
   state_error: "With errors"
   state_closed: "Closed"
+  state_discarded: "Discarded"
+  sending_log: "Sending log"
+  download_legal: "Download legal invoice"
+
+  # Events
+  events: "Event log"
+  by: "by"
+  manual_send: "Manually marked as sent"
+  queue: "Sent to b2brouter"
+  requeue: "Re-sent to b2brouter"
+  success_sending: "Correctly sent to recipient"
+  mark_unsent: "Manually marked as not sent"
+  error_sending: "Error sending"
+  close: "Closed"
+  discard: "Not sent. Max retries reached"
+  paid: "Marked as paid"
+  unpaid: "Marked as unpaid"
+  edited: "Edited"
+  new: "Created"
 
   # Invoice templates
   label_invoice_template_new: New template
@@ -128,6 +148,7 @@ en:
   folders_to_leave_invoices_on: "Folders to leave invoices on"
   field_company: "Company"
   logo: "Logo"
+  trace_url: "B2brouter URL"
 
   # Terms
   "0": Immediately
@@ -141,6 +162,8 @@ en:
   "1m20": 20th dat next month
   "custom": Custom
 
+  # Errors
+  cant_connect_trace: "Can't connect to b2brouter platform. {{value}}"
   halt_configure_before_use: Please first configure company settings
   warning_can_not_generate_invoice: "Can not generate invoice form template {{value}}"
   notice_invoice_sent: "Invoice sent"

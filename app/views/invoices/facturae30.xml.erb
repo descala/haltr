@@ -25,7 +25,7 @@
          </LegalEntity>
       </ThirdParty>
       <Batch>
-         <BatchIdentifier><%= @invoice.batchidentifier %></BatchIdentifier>
+         <BatchIdentifier><%= @invoice.id %></BatchIdentifier>
          <InvoicesCount>1</InvoicesCount>
          <TotalInvoicesAmount>
             <TotalAmount><%=precision @invoice.total.dollars %></TotalAmount>

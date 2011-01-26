@@ -66,11 +66,31 @@ es:
   state_sent_plural: "Enviadas"
   state_error_plural: "Con errores"
   state_closed_plural: "Cerradas"
+  state_discarded_plural: "Descartadas"
   state_new: "Nueva"
   state_sending: "Enviandose"
   state_sent: "Enviada"
   state_error: "Con errores"
   state_closed: "Cerrada"
+  state_discarded: "Descartada"
+  sending_log: "Log de envio"
+  download_legal: "Descargar factura legal"
+
+  # Events
+  events: "Log de eventos"
+  by: "por"
+  manual_send: "Marcada manualmente como enviada"
+  queue: "Enviada al b2brouter"
+  requeue: "Re-enviada al b2brouter"
+  success_sending: "Enviada correctamente al destinatario"
+  mark_unsent: "Marcada manualmente como no enviada"
+  error_sending: "Error al enviar"
+  close: "Cerrada"
+  discard: "No enviada. Se ha llegado al máximo de reintentos"
+  paid: "Marcada como pagada"
+  unpaid: "Marcada como no pagada"
+  edited: "Editada"
+  new: "Creada"
 
   # Invoice templates
   label_invoice_template_new: Nueva plantilla
@@ -127,6 +147,7 @@ es:
   folders_to_leave_invoices_on: "Carpetas donde dejar las facturas"
   field_company: "Empresa"
   logo: "Logo"
+  trace_url: "URL del b2brouter"
 
   # Terms
   "0": Al contado
@@ -140,6 +161,8 @@ es:
   "1m20": Dia 20 mes siguiente
   "custom": Personalizado
 
+  # Errors
+  cant_connect_trace: "No se puede conectar con la plataforma b2brouter"
   halt_configure_before_use: "Por favor, primero configura los datos de la empresa"
   warning_can_not_generate_invoice: "No se ha podido generar la factura de la plantilla {{value}}"
   notice_invoice_sent: "La factura se ha enviado"

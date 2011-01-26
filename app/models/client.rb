@@ -8,7 +8,7 @@ class Client < ActiveRecord::Base
   # TODO: only in Redmine
   belongs_to :project, :include => true
 
-  validates_presence_of :name, :taxcode, :currency, :language
+  validates_presence_of :name, :taxcode, :currency, :language, :invoice_format
   validates_uniqueness_of :name, :scope => :project_id
   validates_uniqueness_of :taxcode, :scope => :project_id
   validates_numericality_of :bank_account, :if => Proc.new { |c| c.bank_account != '' }
@@ -21,6 +21,7 @@ class Client < ActiveRecord::Base
   def initialize(attributes=nil)
     super
     self.currency ||= Money.default_currency.iso_code
+    self.invoice_format ||= "folder1"
   end
 
   def currency=(v)

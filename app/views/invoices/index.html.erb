@@ -8,7 +8,7 @@
 
 <h2><%= controller.controller_name == "invoice_templates" ? l(:label_invoice_template_plural) : l(:label_invoice_plural)%></h2>
 
-  <% form_tag({}, :method => :get) do %>
+  <% form_tag({:id=>@project}, :method => :get) do %>
     <fieldset id="filters" class="collapsible"><legend onclick="toggleFieldset(this);"><%= l(:label_filter_plural) %></legend>
     <div id="query_form_content" class="hide-when-print">
       <table>
@@ -16,7 +16,7 @@
           <th><%= l(:label_invoice_state) %>:</th>
           <td>
             <%= check_box_tag("state_all", "1", params["state_all"]) %> <span style="font-weight:bold;">All</span>
-            <% %w(new sending sent error closed).each do |state| -%>
+            <% %w(new sending sent error closed discarded).each do |state| -%>
               <%= check_box_tag(state, "1", params[state]) %> <%=l("state_#{state}_plural")%>
             <% end -%>
           </td>
@@ -54,8 +54,8 @@
   </thead>
   <tbody>
     <% for invoice in @invoices -%>
-      <tr class="user <%= cycle("odd", "even") %>" onclick="javascript: document.location = '<%=url_for(:action=>'showit', :id=>invoice)%>'">
-        <td align="center"><%= change_state_link(invoice) %></td>
+      <tr class="user <%= cycle("odd", "even") %>" onclick="javascript: document.location = '<%=url_for(:action=>'show', :id=>invoice)%>'">
+        <td align="center"><%=h l("state_#{invoice.state}").capitalize %></td>
         <td align="center"><%=h invoice.number %></td>
         <td align="center"><%=h invoice.date %></td>
         <td align="center"<%='class="pastdue"' if invoice.past_due?%>><%=h invoice.due_date %></td>

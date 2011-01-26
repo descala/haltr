@@ -1,0 +1,193 @@
+<% I18n.locale = :en -%>
+<?xml version="1.0" encoding="UTF-8"?>
+<facturae:Facturae xmlns:facturae="http://www.facturae.es/Facturae/2009/v3.2/Facturae"
+   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+   xsi:schemaLocation="http://www.facturae.es/Facturae/2009/v3.2/Facturae http://www.facturae.es/NR/rdonlyres/2DF1A921-9E57-4A24-85D8-14FE74E0FB31/0/Facturaev3_2.xsd">
+   <FileHeader>
+      <SchemaVersion>3.2</SchemaVersion>
+      <Modality>I</Modality>
+      <InvoiceIssuerType>TE</InvoiceIssuerType>
+      <ThirdParty>
+         <TaxIdentification>
+            <PersonTypeCode>J</PersonTypeCode>
+            <ResidenceTypeCode>R</ResidenceTypeCode>
+            <TaxIdentificationNumber>B63276174</TaxIdentificationNumber>
+         </TaxIdentification>
+         <LegalEntity>
+            <CorporateName>Invinet Sistemes 2003, S.L</CorporateName>
+            <AddressInSpain>
+               <Address>Ribes 31</Address>
+               <PostCode>08013</PostCode>
+               <Town>Barcelona</Town>
+               <Province>Barcelona</Province>
+               <CountryCode>ESP</CountryCode>
+            </AddressInSpain>
+         </LegalEntity>
+      </ThirdParty>
+      <Batch>
+         <BatchIdentifier><%= @invoice.id %></BatchIdentifier>
+         <InvoicesCount>1</InvoicesCount>
+         <TotalInvoicesAmount>
+            <TotalAmount><%=precision @invoice.total.dollars %></TotalAmount>
+         </TotalInvoicesAmount>
+         <TotalOutstandingAmount>
+            <TotalAmount><%=precision @invoice.total.dollars %></TotalAmount>
+         </TotalOutstandingAmount>
+         <TotalExecutableAmount>
+            <TotalAmount><%=precision @invoice.total.dollars %></TotalAmount>
+         </TotalExecutableAmount>
+         <InvoiceCurrencyCode><%= @invoice.currency %></InvoiceCurrencyCode>
+      </Batch>
+   </FileHeader>
+   <Parties>
+      <SellerParty>
+         <TaxIdentification>
+            <PersonTypeCode><%= @invoice.persontypecode %></PersonTypeCode>
+            <ResidenceTypeCode>R</ResidenceTypeCode>
+            <TaxIdentificationNumber><%=@company.taxcode%></TaxIdentificationNumber>
+         </TaxIdentification>
+<% if @invoice.persontypecode == "J" -%>
+
+         <LegalEntity>
+            <CorporateName><%=@company.name%></CorporateName>
+            <%= render :partial => "address.xml", :locals => {:entity => @company} %>
+            <ContactDetails>
+               <WebAddress><%=@company.website%></WebAddress>
+               <ElectronicMail><%=@company.email%></ElectronicMail>
+            </ContactDetails>
+         </LegalEntity>
+<% else -%>
+
+         <Individual>
+            <Name><%=@company.first_name%></Name>
+            <FirstSurname><%=@company.last_name%></FirstSurname>
+            <%= render :partial => "address.xml", :locals => {:entity => @company} %>
+            <ContactDetails>
+               <WebAddress><%=@company.website%></WebAddress>
+               <ElectronicMail><%=@company.email%></ElectronicMail>
+            </ContactDetails>
+         </Individual>
+<% end -%>
+      </SellerParty>
+      <BuyerParty>
+         <TaxIdentification>
+            <PersonTypeCode>J</PersonTypeCode>
+            <ResidenceTypeCode>R</ResidenceTypeCode>
+            <TaxIdentificationNumber><%=@client.taxcode%></TaxIdentificationNumber>
+         </TaxIdentification>
+         <LegalEntity>
+            <CorporateName><%=@client.name%></CorporateName>
+            <%= render :partial => "address.xml", :locals => {:entity => @client}%>
+            <ContactDetails>
+              <ElectronicMail><%= @client.email %></ElectronicMail>
+            </ContactDetails>
+         </LegalEntity>
+      </BuyerParty>
+   </Parties>
+   <Invoices>
+      <Invoice>
+         <InvoiceHeader>
+            <InvoiceNumber><%=@invoice.number%></InvoiceNumber>
+            <InvoiceDocumentType>FC</InvoiceDocumentType>
+            <InvoiceClass>OO</InvoiceClass>
+         </InvoiceHeader>
+         <InvoiceIssueData>
+            <IssueDate><%=@invoice.date%></IssueDate>
+            <InvoiceCurrencyCode><%=@client.currency%></InvoiceCurrencyCode>
+            <TaxCurrencyCode><%=@client.currency%></TaxCurrencyCode>
+            <LanguageName><%=@client.language%></LanguageName>
+         </InvoiceIssueData>
+         <TaxesOutputs>
+            <Tax>
+               <TaxTypeCode>01</TaxTypeCode>
+               <TaxRate><%=precision @invoice.tax_percent%></TaxRate>
+               <TaxableBase>
+                  <TotalAmount><%=precision(@invoice.subtotal.dollars)%></TotalAmount>
+               </TaxableBase>
+               <TaxAmount>
+                 <TotalAmount><%=precision @invoice.tax.dollars %></TotalAmount>
+               </TaxAmount>
+            </Tax>
+         </TaxesOutputs>
+
+<% if @invoice.persontypecode == "F" -%>
+         <TaxesWithheld>
+            <Tax>
+               <TaxTypeCode>04</TaxTypeCode>
+               <TaxRate><%=precision @invoice.withholding_tax_percent%></TaxRate>
+               <TaxableBase>
+                  <TotalAmount><%=precision @invoice.subtotal.dollars%></TotalAmount>
+               </TaxableBase>
+               <TaxAmount>
+                 <TotalAmount><%=precision @invoice.withholding_tax.dollars%></TotalAmount>
+               </TaxAmount>
+            </Tax>
+         </TaxesWithheld>
+<% end -%>
+
+         <InvoiceTotals>
+            <TotalGrossAmount><%=precision @invoice.subtotal_without_discount.dollars%></TotalGrossAmount>
+<% if @invoice.discount_percent > 0 -%>
+            <GeneralDiscounts>
+               <Discount>
+                 <DiscountReason><%=@invoice.discount_text%></DiscountReason>
+                 <DiscountRate><%=precision(@invoice.discount_percent, 4) %></DiscountRate>
+                 <DiscountAmount><%=precision(@invoice.discount.dollars,6)%></DiscountAmount>
+               </Discount>
+            </GeneralDiscounts>
+            <TotalGeneralDiscounts><%=precision(@invoice.discount.dollars,2)%></TotalGeneralDiscounts>
+<% end -%>
+            <TotalGrossAmountBeforeTaxes><%=precision(@invoice.subtotal.dollars)%></TotalGrossAmountBeforeTaxes>
+            <TotalTaxOutputs><%=precision @invoice.tax.dollars%></TotalTaxOutputs>
+            <TotalTaxesWithheld><%=precision @invoice.withholding_tax.dollars%></TotalTaxesWithheld>
+            <InvoiceTotal><%=precision @invoice.total.dollars%></InvoiceTotal>
+            <TotalOutstandingAmount><%=precision @invoice.total.dollars%></TotalOutstandingAmount>
+            <TotalExecutableAmount><%=precision @invoice.total.dollars%></TotalExecutableAmount>
+         </InvoiceTotals>
+         <Items>
+<% @invoice.invoice_lines.each do |invoice_line| -%>
+            <InvoiceLine>
+              <ReceiverTransactionReference><%=@invoice.ponumber%></ReceiverTransactionReference>
+               <ItemDescription><%=invoice_line.description%></ItemDescription>
+               <Quantity><%=invoice_line.quantity%></Quantity>
+               <UnitPriceWithoutTax><%=precision(invoice_line.price.dollars,6)%></UnitPriceWithoutTax>
+               <TotalCost><%=precision(invoice_line.price.dollars*invoice_line.quantity,6)%></TotalCost>
+               <GrossAmount><%=precision(invoice_line.price.dollars*invoice_line.quantity,6)%></GrossAmount>
+               <TaxesOutputs>
+                  <Tax>
+                     <TaxTypeCode>01</TaxTypeCode>
+                     <TaxRate><%=precision @invoice.tax_percent%></TaxRate>
+                     <TaxableBase>
+                       <TotalAmount><%=precision(invoice_line.price.dollars*invoice_line.quantity)%></TotalAmount>
+                     </TaxableBase>
+                     <TaxAmount>
+                        <TotalAmount><%=precision invoice_line.tax.dollars%></TotalAmount>
+                     </TaxAmount>
+                  </Tax>
+               </TaxesOutputs>
+            </InvoiceLine>
+<% end -%>
+         </Items>
+         <PaymentDetails>
+            <Installment>
+              <InstallmentDueDate><%=@invoice.due_date%></InstallmentDueDate>
+               <InstallmentAmount><%=precision @invoice.total.dollars%></InstallmentAmount>
+               <PaymentMeans><%=@invoice.payment_method_code %></PaymentMeans>
+<% if @invoice.debit? -%>
+               <AccountToBeDebited>
+                 <AccountNumber><%=@client.bank_account%></AccountNumber>
+               </AccountToBeDebited>
+<% elsif @invoice.transfer? -%>
+               <AccountToBeCredited>
+                 <AccountNumber><%=@company.bank_account%></AccountNumber>
+               </AccountToBeCredited>
+<% end -%>
+            </Installment>
+         </PaymentDetails>
+         <AdditionalData>
+           <InvoiceAdditionalInformation><%=@invoice.extra_info%></InvoiceAdditionalInformation>
+         </AdditionalData>
+      </Invoice>
+   </Invoices>
+ </facturae:Facturae>
+<% lang = find_language(User.current.language); lang ||= Setting.default_language; set_language_if_valid(lang) -%>

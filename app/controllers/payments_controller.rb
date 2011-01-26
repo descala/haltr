@@ -56,7 +56,7 @@ class PaymentsController < ApplicationController
     if @payment.save
       flash[:notice] = l(:notice_successful_create)
       if @payment.invoice
-        redirect_to :controller => 'invoices', :action => 'showit', :id => @payment.invoice
+        redirect_to :controller => 'invoices', :action => 'show', :id => @payment.invoice
       else
         redirect_to :action => 'index', :id => @project
       end
