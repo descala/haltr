@@ -1,10 +1,8 @@
 <% I18n.locale = :en -%>
 <?xml version="1.0" encoding="UTF-8"?>
-<facturae:Facturae xmlns:facturae="http://www.facturae.es/Facturae/2009/v3.0/Facturae"
-   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-   xsi:schemaLocation="http://www.facturae.es/Facturae/2009/v3.2/Facturae http://www.facturae.es/NR/rdonlyres/2DF1A921-9E57-4A24-85D8-14FE74E0FB31/0/Facturaev3_2.xsd">
+<facturae:Facturae xmlns:ds="http://www.w3.org/2000/09/xmldsig#" xmlns:facturae="http://www.facturae.es/Facturae/2007/v3.0/Facturae">
    <FileHeader>
-      <SchemaVersion>3.2</SchemaVersion>
+      <SchemaVersion>3.0</SchemaVersion>
       <Modality>I</Modality>
       <InvoiceIssuerType>TE</InvoiceIssuerType>
       <ThirdParty>
@@ -132,7 +130,7 @@
                <Discount>
                  <DiscountReason><%=@invoice.discount_text%></DiscountReason>
                  <DiscountRate><%=precision(@invoice.discount_percent, 4) %></DiscountRate>
-                 <DiscountAmount><%=precision(@invoice.discount.dollars,6)%></DiscountAmount>
+                 <DiscountAmount><%=precision(@invoice.discount.dollars,2)%></DiscountAmount>
                </Discount>
             </GeneralDiscounts>
             <TotalGeneralDiscounts><%=precision(@invoice.discount.dollars,2)%></TotalGeneralDiscounts>
@@ -151,8 +149,8 @@
                <ItemDescription><%=invoice_line.description%></ItemDescription>
                <Quantity><%=invoice_line.quantity%></Quantity>
                <UnitPriceWithoutTax><%=precision(invoice_line.price.dollars,6)%></UnitPriceWithoutTax>
-               <TotalCost><%=precision(invoice_line.price.dollars*invoice_line.quantity,6)%></TotalCost>
-               <GrossAmount><%=precision(invoice_line.price.dollars*invoice_line.quantity,6)%></GrossAmount>
+               <TotalCost><%=precision(invoice_line.price.dollars*invoice_line.quantity,2)%></TotalCost>
+               <GrossAmount><%=precision(invoice_line.price.dollars*invoice_line.quantity,2)%></GrossAmount>
                <TaxesOutputs>
                   <Tax>
                      <TaxTypeCode>01</TaxTypeCode>
