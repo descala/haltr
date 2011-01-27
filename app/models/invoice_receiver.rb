@@ -26,6 +26,7 @@ class InvoiceReceiver < ActionMailer::Base
         return
       end
       Event.create(:name=>'bounced',:invoice=>invoice)
+      @@logger.info "Created event for invoice #{name} with id #{id}"
     end
   end
 
