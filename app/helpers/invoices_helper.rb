@@ -37,4 +37,10 @@ module InvoicesHelper
     end
   end
 
+  def frequencies_for_select
+    [1,3,6,12].collect do |f|
+      [I18n.t("mf#{f}"), f]
+    end
+  end
+
 end

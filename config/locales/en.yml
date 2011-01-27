@@ -162,6 +162,12 @@ en:
   "1m20": 20th dat next month
   "custom": Custom
 
+  # Frequency
+  mf12: Yearly
+  mf6: Half-yearly
+  mf3: Quarterly
+  mf1: Monthly
+
   # Errors
   cant_connect_trace: "Can't connect to b2brouter platform. {{value}}"
   halt_configure_before_use: Please first configure company settings

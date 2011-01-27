@@ -161,6 +161,12 @@ es:
   "1m20": Dia 20 mes siguiente
   "custom": Personalizado
 
+  # Frequency
+  mf12: Anual
+  mf6: Semestral
+  mf3: Trimestral
+  mf1: Mensual
+
   # Errors
   cant_connect_trace: "No se puede conectar con la plataforma b2brouter"
   halt_configure_before_use: "Por favor, primero configura los datos de la empresa"
