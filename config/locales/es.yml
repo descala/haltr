@@ -91,6 +91,7 @@ es:
   unpaid: "Marcada como no pagada"
   edited: "Editada"
   new: "Creada"
+  bounced: "Devuelta"
 
   # Invoice templates
   label_invoice_template_new: Nueva plantilla
