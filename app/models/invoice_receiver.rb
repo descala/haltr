@@ -12,7 +12,7 @@ class InvoiceReceiver < ActionMailer::Base
   class BouncedInvoice
     @@logger = RAILS_DEFAULT_LOGGER
     def self.process_file(invoice)
-      md5  = Digest::MD5.hexdigest(invoice.read)
+      md5  = Digest::MD5.hexdigest(invoice.read.chomp)
       name = invoice.original_filename
       id   = name.gsub(/#{File.extname(name)}$/,'').split("_").last.to_i
       @@logger.info "invoice #{name} has id #{id} has md5sum #{md5}"
