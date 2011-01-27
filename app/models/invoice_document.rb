@@ -105,7 +105,7 @@ class InvoiceDocument < Invoice
 
   def md5
     #TODO: check #2451 to store md5 on invoice.
-    self.events.collect {|e| e unless e.md5.blank? }.compact.sort.last.md5 rescue nil
+    self.events.collect {|e| e unless e.final_md5.blank? }.compact.sort.last.final_md5 rescue nil
   end
 
   protected
