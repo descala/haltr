@@ -108,6 +108,10 @@ class InvoiceDocument < Invoice
     self.events.collect {|e| e unless e.final_md5.blank? }.compact.sort.last.final_md5 rescue nil
   end
 
+  def can_be_exported?
+    ExportChannels.channel(client.invoice_format) != nil
+  end
+
   protected
 
   def update_status

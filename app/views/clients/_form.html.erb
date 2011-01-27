@@ -13,7 +13,5 @@
 <p><%= f.text_field :bank_account, :size => 30 %></p>
 <p><%= f.text_field :currency, :required => true %></p>
 <p><%= f.select :language, [[I18n.t(:general_lang_name, :locale=>:ca),"ca"],[I18n.t(:general_lang_name, :locale=>:es),"es"],[I18n.t(:general_lang_name, :locale=>:en),"en"]] %></p>
-<% if @folder_options.any? -%>
-  <p><%= f.select :invoice_format, @folder_options %></p>
-<% end -%>
+<p><%= f.select :invoice_format, ExportChannels.for_select %></p>
 </div>

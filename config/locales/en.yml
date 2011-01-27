@@ -12,7 +12,7 @@ en:
   field_countrycode: Country code
   field_bank_account: Banck account
   button_people: People
-  field_invoice_format: Preferred invoice format
+  field_invoice_format: Preferred invoice delivery method
   field_currency: Currency
   field_ponumber: Purchase Order
 
@@ -53,6 +53,7 @@ en:
   field_withholding_tax_percent: Withholding tax %
   must_have_lines: must have lines
   send_invoice: Send invoice
+  label_send: Send
   cash: Cash
   debit: Debit payment
   transfer: Bank transfer
@@ -146,7 +147,7 @@ en:
   field_website: Website
   field_email: Email
   field_bank_account: Bank account
-  folders_to_leave_invoices_on: "Folders to leave invoices on"
+  export_channels_path: "Path of export folders"
   field_company: "Company"
   logo: "Logo"
   trace_url: "B2brouter URL"
@@ -168,6 +169,13 @@ en:
   mf6: Half-yearly
   mf3: Quarterly
   mf1: Monthly
+
+  # ExportChannels
+  paper:       "None (manual PDF download)"
+  facturae_30: "Facturae 3.0 to email"
+  facturae_31: "Facturae 3.1 to email"
+  facturae_32: "Facturae 3.2 to email"
+  signed_pdf:  "Signed PDF to email"
 
   # Errors
   cant_connect_trace: "Can't connect to b2brouter platform. {{value}}"

@@ -21,7 +21,14 @@ class Client < ActiveRecord::Base
   def initialize(attributes=nil)
     super
     self.currency ||= Money.default_currency.iso_code
-    self.invoice_format ||= "folder1"
+    self.invoice_format ||= ExportChannels.default
+  end
+
+  # Masks db value with default if db value is deprecated
+  def invoice_format
+    format = read_attribute(:invoice_format)
+    format = ExportChannels.default unless ExportChannels.available? format
+    return format
   end
 
   def currency=(v)

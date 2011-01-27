@@ -12,7 +12,7 @@ es:
   field_countrycode: Código de país
   field_bank_account: Cuenta bancaria
   button_people: Personas
-  field_invoice_format: Formato de factura preferido
+  field_invoice_format: Método de envio de facturas preferido
   field_currency: Moneda
   field_ponumber: Número de pedido
 
@@ -53,6 +53,7 @@ es:
   field_withholding_tax_percent: % de retención
   must_have_lines: tiene que tener líneas
   send_invoice: Enviar factura
+  label_send: Enviar
   cash: En efectivo
   debit: Cargar en cuenta
   transfer: Transferencia bancaria
@@ -145,7 +146,7 @@ es:
   field_address: "Dirección"
   field_website: "Sitio web"
   field_bank_account: "Cuenta bancaria"
-  folders_to_leave_invoices_on: "Carpetas donde dejar las facturas"
+  export_channels_path: "Path de les carpetas de exportación"
   field_company: "Empresa"
   logo: "Logo"
   trace_url: "URL del b2brouter"
@@ -167,6 +168,13 @@ es:
   mf6: Semestral
   mf3: Trimestral
   mf1: Mensual
+
+  # ExportChannels
+  paper:       "Ninguno (descarga de un PDF)"
+  facturae_30: "Facturae 3.0 por email"
+  facturae_31: "Facturae 3.1 por email"
+  facturae_32: "Facturae 3.2 por email"
+  signed_pdf:  "PDF firmado, enviado por email"
 
   # Errors
   cant_connect_trace: "No se puede conectar con la plataforma b2brouter"
