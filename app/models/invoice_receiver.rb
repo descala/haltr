@@ -16,7 +16,7 @@ class InvoiceReceiver < ActionMailer::Base
       name = invoice.original_filename
       id   = name.gsub(/#{File.extname(name)}$/,'').split("_").last.to_i
       @@logger.info "invoice #{name} has id #{id} has md5sum #{md5}"
-      invoice = InvoiceDocument.find_by_number(id)# if InvoiceDocument.exists?(id)
+      invoice = InvoiceDocument.find(id) if InvoiceDocument.exists?(id)
       if invoice.nil?
         @@logger.info "Bounced invoice #{name} with id #{id} does not exist on haltr"
         return
