@@ -26,6 +26,7 @@ module InvoicesHelper
   end
 
   def precision(num,precision=2)
+    num=0 if num.nil?
     number_with_precision(num,:precision=>precision,:significant => true)
   end
 
