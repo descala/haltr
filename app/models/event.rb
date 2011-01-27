@@ -1,7 +1,7 @@
 class Event < ActiveRecord::Base
   unloadable
 
-  AUTOMATIC = %w(success_sending error_sending discard)
+  AUTOMATIC = %w(success_sending error_sending discard bounced)
 
   validates_presence_of :name
   validates_presence_of :invoice_id

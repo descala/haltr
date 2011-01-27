@@ -48,6 +48,9 @@ class InvoiceDocument < Invoice
     event :unpaid do
       transition [:closed] => :sent
     end
+    event :bounced do
+      transition [:sent] => :discarded
+    end
   end
 
   def sent?
@@ -98,6 +101,11 @@ class InvoiceDocument < Invoice
 
   def past_due?
     !state?(:closed) && due_date && due_date < Date.today
+  end
+
+  def md5
+    #TODO: check #2451 to store md5 on invoice.
+    self.events.collect {|e| e unless e.final_md5.blank? }.compact.sort.last.final_md5 rescue nil
   end
 
   protected

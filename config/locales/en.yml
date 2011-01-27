@@ -91,6 +91,7 @@ en:
   unpaid: "Marked as unpaid"
   edited: "Edited"
   new: "Created"
+  bounced: "Bounced"
 
   # Invoice templates
   label_invoice_template_new: New template
