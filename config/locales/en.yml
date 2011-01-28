@@ -87,7 +87,7 @@ en:
   mark_unsent: "Manually marked as not sent"
   error_sending: "Error sending"
   close: "Closed"
-  discard: "Not sent. Max retries reached"
+  discard_sending: "Not sent. Max retries reached"
   paid: "Marked as paid"
   unpaid: "Marked as unpaid"
   edited: "Edited"

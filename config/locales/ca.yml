@@ -100,7 +100,7 @@ ca:
   mark_unsent: "Marcada manualment com a no enviada"
   error_sending: "Error a l'enviar"
   close: "Tancada"
-  discard: "No enviada. S'ha arribat al màxim de reintents"
+  discard_sending: "No enviada. S'ha arribat al màxim de reintents"
   paid: "Marcada com a pagada"
   unpaid: "Marcada com a no pagada"
   edited: "Editada"

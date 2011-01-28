@@ -87,7 +87,7 @@ es:
   mark_unsent: "Marcada manualmente como no enviada"
   error_sending: "Error al enviar"
   close: "Cerrada"
-  discard: "No enviada. Se ha llegado al máximo de reintentos"
+  discard_sending: "No enviada. Se ha llegado al máximo de reintentos"
   paid: "Marcada como pagada"
   unpaid: "Marcada como no pagada"
   edited: "Editada"
