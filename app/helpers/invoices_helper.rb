@@ -26,6 +26,7 @@ module InvoicesHelper
   end
 
   def precision(num,precision=2)
+    num=0 if num.nil?
     number_with_precision(num,:precision=>precision,:significant => true)
   end
 
@@ -34,6 +35,12 @@ module InvoicesHelper
       "( #{link_to l(:download_legal), :controller=>'invoices', :action=>'get_legal', :id=>e.invoice, :md5=>e.md5} )"
     else
       ""
+    end
+  end
+
+  def frequencies_for_select
+    [1,3,6,12].collect do |f|
+      [I18n.t("mf#{f}"), f]
     end
   end
 

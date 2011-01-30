@@ -30,7 +30,11 @@ class InvoiceLine < ActiveRecord::Base
   end
 
   def tax
-    total * (invoice.tax_percent / 100.0)
+     if invoice.tax_percent
+      total * (invoice.tax_percent / 100.0)
+    else
+      Money.new(0,currency)
+    end
   end
 
   private

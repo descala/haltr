@@ -1,7 +1,7 @@
 class Event < ActiveRecord::Base
   unloadable
 
-  AUTOMATIC = %w(success_sending error_sending discard)
+  ACTIONS = %w(sending receiving validating_format validating_signature)
 
   validates_presence_of :name
   validates_presence_of :invoice_id
@@ -30,7 +30,17 @@ class Event < ActiveRecord::Base
   end
 
   def automatic?
-    AUTOMATIC.include? name
+    Event.automatic.include? name
+  end
+
+  def self.automatic
+    events = %w(bounced)
+    ACTIONS.each do |a|
+      events << "success_#{a}"
+      events << "error_#{a}"
+      events << "discard_#{a}"
+    end
+    events
   end
 
   private

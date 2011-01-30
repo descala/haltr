@@ -1,9 +1,2 @@
 <p><label><%=l(:trace_url)%></label><%= text_field_tag 'settings[trace_url]', @settings['trace_url'] %></p>
-
-<h3><%= l(:folders_to_leave_invoices_on) %></h3>
-<p><label>Folder 1 Name</label><%= text_field_tag 'settings[folder1_name]', @settings['folder1_name'] %></p>
-<p><label>Folder 1 Path</label><%= text_field_tag 'settings[folder1]', @settings['folder1'] %></p>
-
-<p><label>Folder 2 Name</label><%= text_field_tag 'settings[folder2_name]', @settings['folder2_name'] %></p>
-<p><label>Folder 2 Path</label><%= text_field_tag 'settings[folder2]', @settings['folder2'] %></p>
-
+<p><label><%=l(:export_channels_path)%></label><%= text_field_tag 'settings[export_channels_path]', @settings['export_channels_path'] || '/tmp' %></p>

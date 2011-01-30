@@ -5,7 +5,7 @@
   <p><%= f.select :client_id, clients_for_select, :required => true %></p>
   <p><%= f.text_field :date, :size => 10, :required => true %><%= calendar_for('invoice_date') %></p>
   <% if controller.controller_name == "invoice_templates" -%>
-    <p><%= f.text_field :frequency, :required => true %></p>
+    <p><%= f.select :frequency, frequencies_for_select, :required => true %></p>
   <% else -%>
     <p><%= f.text_field :number, :size => 10, :required => true %><%=" Last used: #{InvoiceDocument.last_number(@project)}" if InvoiceDocument.all.any?%></p>
   <% end -%>

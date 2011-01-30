@@ -8,7 +8,9 @@
     <% if @invoice.is_a? InvoiceDocument -%>
       <li><%= change_state_link(@invoice) %></li>
       <li><%= link_to "#{l(:save_invoice)} PDF", :action=>'pdf', :id=>@invoice %></li>
-      <li><%= link_to l(:send_invoice), :action=>'send_invoice', :id=>@invoice %></li>
+      <% if @invoice.can_be_exported? %>
+        <li><%= link_to "#{l(:label_send)} (#{l(@invoice.client.invoice_format)})" , :action=>'send_invoice', :id=>@invoice %></li>
+      <% end -%>
       <% if @invoice.state?(:sent) -%>
         <li><%= link_to l(:receive_payment), :controller => 'payments', :action => 'new', :id => @project, :invoice_id => @invoice %></li>
       <% end -%>

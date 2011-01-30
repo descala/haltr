@@ -170,17 +170,17 @@ class InvoicesController < ApplicationController
   end
 
   def send_invoice
-    folder=@invoice.client.invoice_format
-    path=Setting.plugin_haltr[folder]
-    raise if path.blank?
+    export_id = @invoice.client.invoice_format
+    path = ExportChannels.path export_id
+    format = ExportChannels.format export_id 
     @company = @invoice.company
     xml_file=Tempfile.new("invoice_#{@invoice.id}.xml","tmp")
-    xml_file.write(render_to_string(:template => "invoices/facturae32.xml.erb", :layout => false))
+    xml_file.write(render_to_string(:template => "invoices/#{format}.xml.erb", :layout => false))
     xml_file.close
-    destination="#{path}/" + "#{@project.identifier}_#{@invoice.number}.xml".gsub(/\//,'')
+    destination="#{path}/" + "#{@company.taxcode}_#{@invoice.id}.xml".gsub(/\//,'')
     i=2
     while File.exists? destination
-      destination="#{path}/" + "#{@project.identifier}_#{@invoice.number}_#{i}.xml".gsub(/\//,'')
+      destination="#{path}/" + "#{@company.taxcode}_#{i}_#{@invoice.id}.xml".gsub(/\//,'')
       i+=1
     end
     FileUtils.mv(xml_file.path,destination)

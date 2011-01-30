@@ -65,7 +65,11 @@ class Invoice < ActiveRecord::Base
   end
 
   def tax
-    subtotal * (tax_percent / 100.0)
+    if tax_percent
+      subtotal * (tax_percent / 100.0)
+    else
+      Money.new(0,currency)
+    end
   end
 
   def persontypecode
