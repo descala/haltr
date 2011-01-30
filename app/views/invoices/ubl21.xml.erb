@@ -6,14 +6,17 @@
 	<cbc:ProfileID>urn:www.cenbii.eu:profile:bii04:ver1.0</cbc:ProfileID>
 	<cbc:ID><%=@invoice.number%></cbc:ID>
 	<cbc:IssueDate><%=@invoice.date%></cbc:IssueDate>
+<% if @invoice.extra_info? -%>	
 	<cbc:Note><%=@invoice.extra_info%></cbc:Note>
+<% end -%>
 	<cbc:DocumentCurrencyCode listID="ISO 4217 Alpha" listAgencyID="6"><%=@client.currency%></cbc:DocumentCurrencyCode>
+<% if @invoice.ponumber? -%>
 	<cac:OrderReference>
 		<cbc:ID><%=@invoice.ponumber%></cbc:ID>
 	</cac:OrderReference>
+<% end -%>
 	<cac:AccountingSupplierParty>
 		<cac:Party>
-			<cbc:WebsiteURI><%=@company.website%></cbc:WebsiteURI>
 			<cac:PartyName>
 				<cbc:Name><%=@company.name%></cbc:Name>
 			</cac:PartyName>
@@ -63,11 +66,13 @@
 		</cac:PayeeFinancialAccount>
 <% end -%>
 	</cac:PaymentMeans>
+<% if @invoice.discount_percent > 0 -%>
 	<cac:AllowanceCharge>
 		<cbc:ChargeIndicator>false</cbc:ChargeIndicator>
 		<cbc:AllowanceChargeReason><%=@invoice.discount_text%></cbc:AllowanceChargeReason>
 		<cbc:Amount currencyID="EUR"><%=precision(@invoice.discount.dollars,2)%></cbc:Amount>
 	</cac:AllowanceCharge>
+<% end -%>
 	<cac:TaxTotal>
 		<cbc:TaxAmount currencyID="EUR"><%=precision @invoice.tax.dollars %></cbc:TaxAmount>
 		<cac:TaxSubtotal>
@@ -93,7 +98,7 @@
 	</cac:LegalMonetaryTotal>
 <% @invoice.invoice_lines.each do |invoice_line| -%>	
 	<cac:InvoiceLine>
-		<cbc:ID>1</cbc:ID>
+		<cbc:ID><%=invoice_line.id%></cbc:ID>
 		<cbc:InvoicedQuantity><%=invoice_line.quantity%></cbc:InvoicedQuantity>
 		<cbc:LineExtensionAmount currencyID="EUR"><%=precision(invoice_line.price.dollars*invoice_line.quantity,2)%></cbc:LineExtensionAmount>
 		<cac:Item>
