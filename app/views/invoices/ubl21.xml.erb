@@ -1,0 +1,108 @@
+<% I18n.locale = :en -%>
+<?xml version="1.0" encoding="UTF-8"?>
+<Invoice xmlns="urn:oasis:names:specification:ubl:schema:xsd:Invoice-2" xmlns:cac="urn:oasis:names:specification:ubl:schema:xsd:CommonAggregateComponents-2" xmlns:cbc="urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2" xmlns:ccts="urn:un:unece:uncefact:documentation:2" xmlns:ext="urn:oasis:names:specification:ubl:schema:xsd:CommonExtensionComponents-2" xmlns:qdt="urn:oasis:names:specification:ubl:schema:xsd:QualifiedDatatypes-2" xmlns:udt="urn:un:unece:uncefact:data:specification:UnqualifiedDataTypesSchemaModule:2">
+	<cbc:UBLVersionID>2.0</cbc:UBLVersionID>
+	<cbc:CustomizationID>urn:www.cenbii.eu:transaction:biicoretrdm010:ver1.0</cbc:CustomizationID>
+	<cbc:ProfileID>urn:www.cenbii.eu:profile:bii04:ver1.0</cbc:ProfileID>
+	<cbc:ID><%=@invoice.number%></cbc:ID>
+	<cbc:IssueDate><%=@invoice.date%></cbc:IssueDate>
+	<cbc:Note><%=@invoice.extra_info%></cbc:Note>
+	<cbc:DocumentCurrencyCode listID="ISO 4217 Alpha" listAgencyID="6"><%=@client.currency%></cbc:DocumentCurrencyCode>
+	<cac:OrderReference>
+		<cbc:ID><%=@invoice.ponumber%></cbc:ID>
+	</cac:OrderReference>
+	<cac:AccountingSupplierParty>
+		<cac:Party>
+			<cbc:WebsiteURI><%=@company.website%></cbc:WebsiteURI>
+			<cac:PartyName>
+				<cbc:Name><%=@company.name%></cbc:Name>
+			</cac:PartyName>
+			<cac:PostalAddress>
+				<%= render :partial => "address.ubl.xml", :locals => {:entity => @company} %>
+			</cac:PostalAddress>
+			<cac:PartyTaxScheme>
+				<cbc:CompanyID><%=@company.taxcode%></cbc:CompanyID>
+				<cac:TaxScheme>
+					<cbc:ID>VAT</cbc:ID>
+				</cac:TaxScheme>
+			</cac:PartyTaxScheme>
+			<cac:Contact>
+				<cbc:ElectronicMail><%=@company.email%></cbc:ElectronicMail>
+			</cac:Contact>
+		</cac:Party>
+	</cac:AccountingSupplierParty>
+	<cac:AccountingCustomerParty>
+		<cac:Party>
+			<cac:PartyName>
+				<cbc:Name><%=@client.name%></cbc:Name>
+			</cac:PartyName>
+			<cac:PostalAddress>
+				<%= render :partial => "address.ubl.xml", :locals => {:entity => @client} %>
+			</cac:PostalAddress>
+			<cac:PartyTaxScheme>
+				<cbc:CompanyID><%=@client.taxcode%></cbc:CompanyID>
+				<cac:TaxScheme>
+					<cbc:ID>VAT</cbc:ID>
+				</cac:TaxScheme>
+			</cac:PartyTaxScheme>
+			<cac:Contact>
+				<cbc:ElectronicMail><%=@company.email%></cbc:ElectronicMail>
+			</cac:Contact>
+		</cac:Party>
+	</cac:AccountingCustomerParty>
+	<cac:PaymentMeans>
+		<cbc:PaymentMeansCode><%=@invoice.payment_method_code %></cbc:PaymentMeansCode>
+		<cbc:PaymentDueDate><%=@invoice.due_date%></cbc:PaymentDueDate>
+<% if @invoice.debit? -%>
+		<cac:PayerFinancialAccount>
+                 <cbc:ID><%=@client.bank_account%></cbc:ID>
+		</cac:PayerFinancialAccount>
+<% elsif @invoice.transfer? -%>
+		<cac:PayeeFinancialAccount>
+                 <cbc:ID><%=@company.bank_account%></cbc:ID>
+		</cac:PayeeFinancialAccount>
+<% end -%>
+	</cac:PaymentMeans>
+	<cac:AllowanceCharge>
+		<cbc:ChargeIndicator>false</cbc:ChargeIndicator>
+		<cbc:AllowanceChargeReason><%=@invoice.discount_text%></cbc:AllowanceChargeReason>
+		<cbc:Amount currencyID="EUR"><%=precision(@invoice.discount.dollars,2)%></cbc:Amount>
+	</cac:AllowanceCharge>
+	<cac:TaxTotal>
+		<cbc:TaxAmount currencyID="EUR"><%=precision @invoice.tax.dollars %></cbc:TaxAmount>
+		<cac:TaxSubtotal>
+			<cbc:TaxableAmount currencyID="EUR"><%=precision(@invoice.subtotal.dollars)%></cbc:TaxableAmount>
+			<cbc:TaxAmount currencyID="<%=@client.currency%>"><%=precision @invoice.tax.dollars %></cbc:TaxAmount>
+			<cac:TaxCategory>
+				<cbc:ID schemeID="UN/ECE 5305" schemeAgencyID="6">S</cbc:ID>
+				<cbc:Percent><%=precision @invoice.tax_percent%></cbc:Percent>
+				<cac:TaxScheme>
+					<cbc:ID schemeID="UN/ECE 5153" schemeAgencyID="6">VAT</cbc:ID>
+				</cac:TaxScheme>
+			</cac:TaxCategory>
+		</cac:TaxSubtotal>
+	</cac:TaxTotal>
+	<cac:LegalMonetaryTotal>
+		<cbc:LineExtensionAmount currencyID="EUR"><%=precision @invoice.subtotal_without_discount.dollars%></cbc:LineExtensionAmount>
+		<cbc:TaxExclusiveAmount currencyID="EUR"><%=precision(@invoice.subtotal.dollars)%></cbc:TaxExclusiveAmount>
+		<cbc:TaxInclusiveAmount currencyID="EUR"><%=precision @invoice.total.dollars%></cbc:TaxInclusiveAmount>
+<% if @invoice.discount_percent > 0 -%>
+		<cbc:AllowanceTotalAmount currencyID="EUR"><%=precision(@invoice.discount.dollars,2)%></cbc:AllowanceTotalAmount>
+<% end -%>
+		<cbc:PayableAmount currencyID="EUR"><%=precision @invoice.total.dollars%></cbc:PayableAmount>
+	</cac:LegalMonetaryTotal>
+<% @invoice.invoice_lines.each do |invoice_line| -%>	
+	<cac:InvoiceLine>
+		<cbc:ID>1</cbc:ID>
+		<cbc:InvoicedQuantity><%=invoice_line.quantity%></cbc:InvoicedQuantity>
+		<cbc:LineExtensionAmount currencyID="EUR"><%=precision(invoice_line.price.dollars*invoice_line.quantity,2)%></cbc:LineExtensionAmount>
+		<cac:Item>
+			<cbc:Name><%=invoice_line.description%></cbc:Name>
+		</cac:Item>
+		<cac:Price>
+			<cbc:PriceAmount currencyID="EUR"><%=precision(invoice_line.price.dollars,2)%></cbc:PriceAmount>
+		</cac:Price>
+	</cac:InvoiceLine>
+<% end -%>	
+</Invoice>
+<% lang = find_language(User.current.language); lang ||= Setting.default_language; set_language_if_valid(lang) -%>
