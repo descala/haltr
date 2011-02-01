@@ -12,8 +12,8 @@ class TasksController < ApplicationController
 
   def index
     @num_new_invoices = InvoiceTemplate.count(:include=>[:client],:conditions => ["clients.project_id = ? AND date <= ?", @project, Time.now + 15.day])
-    @num_not_sent = InvoiceDocument.find_not_sent(@project).size
-    @charge_bank_on_due_date = InvoiceDocument.find_due_dates(@project)
+    @num_not_sent = IssuedInvoice.find_not_sent(@project).size
+    @charge_bank_on_due_date = IssuedInvoice.find_due_dates(@project)
   end
 
   def create_more
@@ -31,12 +31,12 @@ class TasksController < ApplicationController
   end
 
   def automator
-    @invoices = InvoiceDocument.find_not_sent(@project)
+    @invoices = IssuedInvoice.find_not_sent(@project)
   end
   
   # generate spanish AEB Nº19
   def n19
-    example_invoice = InvoiceDocument.find params[:id]
+    example_invoice = IssuedInvoice.find params[:id]
     @due_date = example_invoice.due_date
     @fecha_cargo = @due_date.to_formatted_s :ddmmyy
     @clients = Client.find :all, :conditions => ["bank_account != '' and project_id = ?", @project.id], :order => 'taxcode'
@@ -60,8 +60,8 @@ class TasksController < ApplicationController
   end
   
   def n19_done
-    example_invoice = InvoiceDocument.find params[:id]
-    invoices = InvoiceDocument.find :all, :include => [:client], :conditions => ["clients.project_id = ? and due_date = ?", @project.id, example_invoice.due_date]
+    example_invoice = IssuedInvoice.find params[:id]
+    invoices = IssuedInvoice.find :all, :include => [:client], :conditions => ["clients.project_id = ? and due_date = ?", @project.id, example_invoice.due_date]
     invoices.each do |invoice|
       Payment.new_to_close(invoice).save
       invoice.close
@@ -74,7 +74,7 @@ class TasksController < ApplicationController
     m = params[:months_ago] || 3
     d = Date.today - m.to_i.months
     @date = Date.new(d.year,d.month,1)
-    @invoices = InvoiceDocument.all(:include => [:client], :conditions => ["clients.project_id = ? and date >= ?", @project.id, @date], :order => :number)
+    @invoices = IssuedInvoice.all(:include => [:client], :conditions => ["clients.project_id = ? and date >= ?", @project.id, @date], :order => :number)
     @total_amount = Money.new 0
     @total_tax = Money.new 0
     @invoices.each do |i|
@@ -109,7 +109,7 @@ class TasksController < ApplicationController
   private
 
   def find_invoice
-    @invoice = InvoiceDocument.find params[:id]
+    @invoice = IssuedInvoice.find params[:id]
     @project = @invoice.client.project
   end
 

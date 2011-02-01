@@ -3,7 +3,6 @@ class IssuedInvoice < InvoiceDocument
   unloadable
 
   belongs_to :invoice_template
-  has_many :payments, :foreign_key => :invoice_id, :dependent => :nullify
   validates_presence_of :number, :due_date
   validate :number_must_be_unique_in_project
   validate :invoice_must_have_lines
@@ -60,7 +59,7 @@ class IssuedInvoice < InvoiceDocument
   end
 
   def self.find_due_dates(project)
-    find_by_sql "SELECT due_date, invoices.id, count(*) AS invoice_count FROM invoices, clients WHERE type='InvoiceDocument' AND client_id = clients.id AND clients.project_id = #{project.id} AND state = 'sent' AND bank_account AND payment_method=#{Invoice::PAYMENT_DEBIT} GROUP BY due_date ORDER BY due_date DESC"
+    find_by_sql "SELECT due_date, invoices.id, count(*) AS invoice_count FROM invoices, clients WHERE type='IssuedInvoice' AND client_id = clients.id AND clients.project_id = #{project.id} AND state = 'sent' AND bank_account AND payment_method=#{Invoice::PAYMENT_DEBIT} GROUP BY due_date ORDER BY due_date DESC"
   end
 
   def label
@@ -119,6 +118,28 @@ class IssuedInvoice < InvoiceDocument
     false
   end
 
+  def self.last_number(project)
+    i = IssuedInvoice.last(:order => "number", :include => [:client], :conditions => ["clients.project_id=? AND draft=?",project.id,false])
+    i.number if i
+  end
+
+  def self.next_number(project)
+    number = self.last_number(project)
+    if number.nil?
+      a = []
+      num = 0
+    else
+      a = number.split('/')
+      num = number.to_i
+    end
+    if a.size > 1
+      a[1] =  sprintf('%03d', a[1].to_i + 1)
+      return a.join("/")
+    else
+      return num + 1
+    end
+  end
+
   protected
 
   def update_status
@@ -137,7 +158,7 @@ class IssuedInvoice < InvoiceDocument
   def number_must_be_unique_in_project
     return if self.client.nil?
     return if !self.new_record? && !self.number_changed?
-    if self.client.project.clients.collect {|c| c.invoice_documents }.flatten.compact.collect {|i| i.number unless i.id == self.id}.include? self.number
+    if self.client.project.clients.collect {|c| c.issued_invoices }.flatten.compact.collect {|i| i.number unless i.id == self.id}.include? self.number
       errors.add(:base, ("#{l(:field_number)} #{l(:taken,:scope=>'activerecord.errors.messages')}"))
     end
   end
