@@ -8,11 +8,11 @@ class Client < ActiveRecord::Base
   # TODO: only in Redmine
   belongs_to :project, :include => true
 
-  validates_presence_of :name, :taxcode, :currency, :language, :invoice_format
-  validates_uniqueness_of :name, :scope => :project_id
+  validates_presence_of :project_id, :name, :taxcode, :currency, :language, :invoice_format
+#  validates_uniqueness_of :name, :scope => :project_id
   validates_uniqueness_of :taxcode, :scope => :project_id
-  validates_numericality_of :bank_account, :if => Proc.new { |c| c.bank_account != '' }
-  validates_length_of :bank_account, :within => 16..40, :if => Proc.new { |c| c.bank_account != '' }
+  validates_numericality_of :bank_account, :unless => Proc.new { |c| c.bank_account.blank? }
+  validates_length_of :bank_account, :within => 16..40, :unless => Proc.new { |c| c.bank_account.blank? }
 #  validates_length_of :name, :maximum => 30
 #  validates_format_of :identifier, :with => /^[a-z0-9\-]*$/
   validates_inclusion_of :currency, :in  => Money::Currency::TABLE.collect {|k,v| v[:iso_code] }
@@ -22,6 +22,7 @@ class Client < ActiveRecord::Base
     super
     self.currency ||= Money.default_currency.iso_code
     self.invoice_format ||= ExportChannels.default
+    self.language ||= "es"
   end
 
   # Masks db value with default if db value is deprecated

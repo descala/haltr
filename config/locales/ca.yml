@@ -30,6 +30,8 @@ ca:
   field_ponumber: Número de comanda
 
   # Invoices
+  IssuedInvoice: Factura emesa
+  ReceivedInvoice: Factura rebuda
   label_invoice_plural: Factures
   label_invoice: Factura
   label_draft: Esborrany de factura
@@ -87,8 +89,18 @@ ca:
   state_error: "Amb errors"
   state_closed: "Tancada"
   state_discarded: "Descartada"
+  state_validating_format: "Validant format"
+  state_validating_signature: "Validant signatura"
+  state_non_electronic_invoice: "Factura no electrònica"
+  state_electronic_invoice: "Factura electrònica"
+  state_accepted: "Acceptada"
+  state_refused: "Refusada"
+  state_paid: "Pagada"
   sending_log: "Log d'enviament"
   download_legal: "Descarregar factura legal"
+  label_all_invoices: "Totes les factures"
+  label_issued: "Factures emeses"
+  label_received: "Factures rebudes"
 
   # Events
   events: "Log d'esdeveniments"
@@ -106,6 +118,9 @@ ca:
   edited: "Editada"
   new: "Creada"
   bounced: "Retornada"
+  validating_format: "Factura rebuda"
+  success_validating_format: "Validació de format correcta"
+  success_validating_signature: "Validació de signatura correcta"
 
   # Invoice templates
   label_invoice_template_new: Nova plantilla

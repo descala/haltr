@@ -16,9 +16,14 @@ class InvoicesController < ApplicationController
 
   def index
     sort_init 'number', 'desc'
-    sort_update %w(state number date due_date clients.name import_in_cents)
+    sort_update %w(type state number date due_date clients.name import_in_cents)
 
     c = ARCondition.new(["clients.project_id = ?",@project.id])
+
+    unless params[:type] == "all"
+      c << ["type='IssuedInvoice'"] if params[:type] == "issued"
+      c << ["type='ReceivedInvoice'"] if params[:type] == "received"
+    end
 
     unless params["state_all"] == "1"
       statelist=[]
@@ -60,15 +65,15 @@ class InvoicesController < ApplicationController
   end
 
   def new
-    @invoice = InvoiceDocument.new(:client_id=>params[:client])
+    @invoice = IssuedInvoice.new(:client_id=>params[:client])
   end
 
   def edit
-    @invoice = InvoiceDocument.find(params[:id])
+    @invoice = IssuedInvoice.find(params[:id])
   end
 
   def create
-    @invoice = InvoiceDocument.new(params[:invoice])
+    @invoice = IssuedInvoice.new(params[:invoice])
     if @invoice.save
       flash[:notice] = l(:notice_successful_create)
       redirect_to :action => 'show', :id => @invoice

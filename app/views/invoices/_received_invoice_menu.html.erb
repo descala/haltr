@@ -1,0 +1,8 @@
+<div class="haltrinvoice">
+  <h3>
+    <%= "#{l(:label_invoice)} #{@invoice.number} (#{l("state_#{@invoice.state}")})" %>
+  </h3>
+  <ul class="toolbox secondary">
+    <li><%= link_to l(:button_delete), {:action=>'destroy',:id=>@invoice}, :confirm => l(:text_are_you_sure), :method => :delete %></li>
+  </ul>
+</div>

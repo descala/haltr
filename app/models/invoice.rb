@@ -25,9 +25,6 @@ class Invoice < ActiveRecord::Base
   validates_associated :invoice_lines
   validate :payment_method_requirements
 
-  before_validation :set_due_date
-  before_save :update_import
-
   composed_of :import,
     :class_name => "Money",
     :mapping => [%w(import_in_cents cents), %w(currency currency_as_string)],

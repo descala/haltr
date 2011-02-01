@@ -13,6 +13,14 @@
     <div id="query_form_content" class="hide-when-print">
       <table>
         <tr>
+          <th></th>
+          <td>
+            <%= radio_button_tag("type", "all", (params[:type]=="all"||params[:type].blank?)) %> <%=l :label_all_invoices %>
+            <%= radio_button_tag("type", "issued", params[:type]=="issued") %> <%=l :label_issued %>
+            <%= radio_button_tag("type", "received", params[:type]=="received") %> <%=l :label_received %>
+          </td>
+        </tr>
+        <tr>
           <th><%= l(:label_invoice_state) %>:</th>
           <td>
             <%= check_box_tag("state_all", "1", params["state_all"]) %> <span style="font-weight:bold;">All</span>
@@ -45,6 +53,7 @@
 
 <table class="list" id="invoices">
   <thead>
+    <%= sort_header_tag('type', :caption => l(:field_type)) %>
     <%= sort_header_tag('state', :caption => l(:field_state)) %>
     <%= sort_header_tag('number', :caption => l(:field_number)) %>
     <%= sort_header_tag('date', :caption => l(:field_date)) %>
@@ -55,6 +64,7 @@
   <tbody>
     <% for invoice in @invoices -%>
       <tr class="user <%= cycle("odd", "even") %>" onclick="javascript: document.location = '<%=url_for(:action=>'show', :id=>invoice)%>'">
+        <td align="center"><%=h l(invoice.type) %></td>
         <td align="center"><%=h l("state_#{invoice.state}").capitalize %></td>
         <td align="center"><%=h invoice.number %></td>
         <td align="center"><%=h invoice.date %></td>

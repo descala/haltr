@@ -1,0 +1,22 @@
+<div class="haltrinvoice">
+  <h3>
+    <%= l(:label_invoice_template) %>
+  </h3>
+
+  <ul class="toolbox secondary">
+    <li><%= link_to l(:button_edit), {:action=>'edit',:id=>@invoice} %></li>
+    <li><%= link_to l(:button_delete), {:action=>'destroy',:id=>@invoice}, :confirm => l(:text_are_you_sure), :method => :delete %></li>
+  </ul>
+
+  <% if @invoices_generated.any? -%>
+    <div class="client-invoices">
+      <h3>Factures generades</h3>
+      <p style="padding:7px 20px;">
+      <% @invoices_generated.each do |invoice| -%>
+        <%=link_to invoice.number, :controller => 'invoices', :action => 'show', :id => invoice %><%= ", " unless invoice == @invoices_generated.last %>
+      <% end -%>
+      </p>
+    </div>
+  <% end -%>
+
+</div>

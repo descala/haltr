@@ -17,6 +17,8 @@ es:
   field_ponumber: Número de pedido
 
   # Invoices
+  IssuedInvoice: Factura emitida
+  ReceivedInvoice: Factura recibida
   label_invoice_plural: Facturas
   label_invoice: Factura
   label_draft: Borrador de factura
@@ -74,8 +76,19 @@ es:
   state_error: "Con errores"
   state_closed: "Cerrada"
   state_discarded: "Descartada"
+  state_validating_format: "Validando formato"
+  state_validating_signature: "Validando firma"
+  state_non_electronic_invoice: "Factura no electrónica"
+  state_electronic_invoice: "Factura electrónica"
+  state_accepted: "Aceptada"
+  state_refused: "Rechazada"
+  state_paid: "Pagada"
+  sending_log: "Log d'enviament"
   sending_log: "Log de envio"
   download_legal: "Descargar factura legal"
+  label_all_invoices: "Todas las facturas"
+  label_issued: "Facturas emitidas"
+  label_received: "Facturas"
 
   # Events
   events: "Log de eventos"

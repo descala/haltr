@@ -188,7 +188,7 @@
 <% unless controller.action_name == "pdf" -%>
   <% content_for :sidebar do %>
       <%= render :partial => 'common/sidebar' %>
-      <%= render :partial => 'invoices/invoice_menu' %>
+      <%= render :partial => "invoices/#{@invoice.class.to_s.underscore}_menu" %>
   <% end %>
   <% content_for :header_tags do %>
     <%= stylesheet_link_tag 'minimal', :plugin => 'haltr' %>

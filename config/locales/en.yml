@@ -17,6 +17,8 @@ en:
   field_ponumber: Purchase Order
 
   # Invoices
+  IssuedInvoice: Issued invoice
+  ReceivedInvoice: Received invoice
   label_invoice_plural: Invoices
   label_invoice: Invoice
   label_draft: Invoice draft
@@ -74,8 +76,19 @@ en:
   state_error: "With errors"
   state_closed: "Closed"
   state_discarded: "Discarded"
+  state_validating_format: "Validating format"
+  state_validating_signature: "Validating signature"
+  state_non_electronic_invoice: "Non electronic invoice"
+  state_electronic_invoice: "Electronic invoice"
+  state_accepted: "Accepted"
+  state_refused: "Refused"
+  state_paid: "Paid"
+  sending_log: "Log d'enviament"
   sending_log: "Sending log"
   download_legal: "Download legal invoice"
+  label_all_invoices: "All invoices"
+  label_issued: "Issued invoices"
+  label_received: "Received invoices"
 
   # Events
   events: "Event log"
