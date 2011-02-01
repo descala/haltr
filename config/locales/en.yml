@@ -172,6 +172,7 @@ en:
 
   # ExportChannels
   paper:       "None (manual PDF download)"
+  ublinvoice_20: "UBL Invoice 2.0 to email"
   facturae_30: "Facturae 3.0 to email"
   facturae_31: "Facturae 3.1 to email"
   facturae_32: "Facturae 3.2 to email"

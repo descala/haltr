@@ -171,6 +171,7 @@ es:
 
   # ExportChannels
   paper:       "Ninguno (descarga de un PDF)"
+  ublinvoice_20: "Factura UBL 2.0 por email"
   facturae_30: "Facturae 3.0 por email"
   facturae_31: "Facturae 3.1 por email"
   facturae_32: "Facturae 3.2 por email"
