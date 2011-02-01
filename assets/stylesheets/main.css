@@ -923,7 +923,6 @@ td.due { color: #1a8; font-style: italic; }
 	margin-right: 8px;
 	}
 .vendor {
-	overflow: hidden;
 	margin: 0 0 20px;
 	padding: 0 0 10px;
 	text-align: right;
