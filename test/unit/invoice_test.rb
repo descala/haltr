@@ -6,13 +6,13 @@ class InvoiceTest < ActiveSupport::TestCase
 
   test "due dates" do
     date = Date.new(2000,12,1)
-    i = InvoiceDocument.new(:client=>clients(:invinet),:date=>date,:number=>1)
+    i = IssuedInvoice.new(:client=>clients(:invinet),:date=>date,:number=>1)
     i.save!
     assert_equal date, i.due_date
-    i = InvoiceDocument.new(:client=>clients(:invinet),:date=>date,:number=>2,:terms=>"1m15")
+    i = IssuedInvoice.new(:client=>clients(:invinet),:date=>date,:number=>2,:terms=>"1m15")
     i.save!
     assert_equal Date.new(2001,1,15), i.due_date
-    i = InvoiceDocument.new(:client=>clients(:invinet),:date=>date,:number=>3,:terms=>"3m15")
+    i = IssuedInvoice.new(:client=>clients(:invinet),:date=>date,:number=>3,:terms=>"3m15")
     i.save!
     assert_equal Date.new(2001,3,15), i.due_date
   end

@@ -33,7 +33,7 @@ class Payment < ActiveRecord::Base
   end
 
   def guess_invoice
-    candidates = InvoiceDocument.candidates_for_payment self
+    candidates = IssuedInvoice.candidates_for_payment self
     self.invoice = candidates.first if candidates
   end
 

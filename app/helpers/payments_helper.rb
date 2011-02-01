@@ -6,7 +6,7 @@ module PaymentsHelper
     else
       conditions = ["clients.project_id = ? and state != 'closed'", @project]
     end
-    InvoiceDocument.find(:all, :order => 'number DESC', :include => 'client', :conditions => conditions).collect {|c| [ "#{c.number} #{c.total.to_s.rjust(10).gsub(' ','_')}€ #{c.client}", c.id ] }
+    IssuedInvoice.find(:all, :order => 'number DESC', :include => 'client', :conditions => conditions).collect {|c| [ "#{c.number} #{c.total.to_s.rjust(10).gsub(' ','_')}€ #{c.client}", c.id ] }
   end
 
 end

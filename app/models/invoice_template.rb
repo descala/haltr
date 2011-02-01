@@ -2,15 +2,15 @@ class InvoiceTemplate < Invoice
 
   unloadable
 
-  has_many :invoice_documents, :dependent => :nullify
+  has_many :issued_invoices, :dependent => :nullify
   validates_presence_of :frequency
 
   before_validation :set_due_date
   before_save :update_import
 
   def next_invoice
-    i = InvoiceDocument.new self.attributes
-    i.number = InvoiceDocument.next_number(self.client.project)
+    i = IssuedInvoice.new self.attributes
+    i.number = IssuedInvoice.next_number(self.client.project)
     i.tax_percent = Invoice::TAX
     i.invoice_template = self
     i.state = 'new'

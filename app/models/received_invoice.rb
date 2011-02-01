@@ -37,9 +37,6 @@ class ReceivedInvoice < InvoiceDocument
     event :pay do
       transition :accepted => :paid
     end
-    event :close do
-      transition [:sent,:paid] => :closed
-    end
   end
 
   def total
@@ -57,18 +54,6 @@ class ReceivedInvoice < InvoiceDocument
 
   def label
     l(self.class)
-  end
-
-  def payments
-    []
-  end
-
-  def sent?
-    false
-  end
-
-  def can_be_exported?
-    false
   end
 
   protected

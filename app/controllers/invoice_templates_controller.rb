@@ -75,16 +75,16 @@ class InvoiceTemplatesController < ApplicationController
   end
 
   def show
-    @invoices_generated = @invoice.invoice_documents.sort
+    @invoices_generated = @invoice.issued_invoices.sort
     render :template => "invoices/show"
   end
 
   def new_from_invoice
-    @invoice = InvoiceTemplate.new(@invoice_document.attributes)
+    @invoice = InvoiceTemplate.new(@issued_invoice.attributes)
     @invoice.created_at=nil
     @invoice.updated_at=nil
     @invoice.number=nil
-    @invoice_document.invoice_lines.each do |line|
+    @issued_invoice.invoice_lines.each do |line|
       @invoice.invoice_lines << InvoiceLine.new(line.attributes)
     end
     render :template => "invoices/new"
@@ -102,8 +102,8 @@ class InvoiceTemplatesController < ApplicationController
   end
 
   def find_invoice
-    @invoice_document = InvoiceDocument.find params[:id]
-    @client = @invoice_document.client
+    @issued_invoice = IssuedInvoice.find params[:id]
+    @client = @issued_invoice.client
     @project = @client.project
   rescue ActiveRecord::RecordNotFound
     render_404

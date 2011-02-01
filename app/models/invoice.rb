@@ -117,28 +117,6 @@ class Invoice < ActiveRecord::Base
     Person.find(:all,:order=>'last_name ASC',:conditions => ["client_id = ? AND invoice_recipient = ?", client, true])
   end
 
-  def self.last_number(project)
-    i = InvoiceDocument.last(:order => "number", :include => [:client], :conditions => ["clients.project_id=? AND draft=?",project.id,false])
-    i.number if i
-  end
-
-  def self.next_number(project)
-    number = self.last_number(project)
-    if number.nil?
-      a = []
-      num = 0
-    else
-      a = number.split('/')
-      num = number.to_i
-    end
-    if a.size > 1
-      a[1] =  sprintf('%03d', a[1].to_i + 1)
-      return a.join("/")
-    else
-      return num + 1
-    end
-  end
-
   def terms_description
     terms_object.description
   end
