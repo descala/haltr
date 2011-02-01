@@ -14,16 +14,16 @@ class InvoiceReceiver < ActionMailer::Base
       name = invoice.original_filename
       id   = name.gsub(/#{File.extname(name)}$/,'').split("_").last.to_i
       InvoiceReceiver.log "invoice #{name} has id #{id} has md5sum #{md5}"
-      invoice = InvoiceDocument.find(id) if InvoiceDocument.exists?(id)
-      if invoice.nil?
+      haltr_invoice = IssuedInvoice.find(id) if IssuedInvoice.exists?(id)
+      if haltr_invoice.nil?
         InvoiceReceiver.log "Bounced invoice #{name} with id #{id} does not exist on haltr"
         return
       end
-      if invoice.md5 != md5
-        InvoiceReceiver.log "Bounced invoice #{name} with id #{id} does not match MD5 stored on haltr (received: #{md5} stored: #{invoice.md5})"
+      if haltr_invoice.md5 != md5
+        InvoiceReceiver.log "Bounced invoice #{name} with id #{id} does not match MD5 stored on haltr (received: #{md5} stored: #{haltr_invoice.md5})"
         return
       end
-      Event.create(:name=>'bounced',:invoice=>invoice)
+      Event.create(:name=>'bounced',:invoice=>haltr_invoice)
       InvoiceReceiver.log "Created event for invoice #{name} with id #{id}"
     end
   end
@@ -132,7 +132,7 @@ class InvoiceReceiver < ActionMailer::Base
     # bounced invoice
     if is_bounce?(email)
       if invoices.size == 1 # we send only 1 invoice on each mail
-        InvoiceReceiver.log "Bounced invoice mail received (#{invoice.original_filename})"
+        InvoiceReceiver.log "Bounced invoice mail received (#{invoices.first.original_filename})"
         BouncedInvoice.process_file(invoices.first)
       else
         InvoiceReceiver.log "Discarding bounce mail with > 1 (#{invoices.size}) invoices attached (#{invoices.collect {|i| i.original_filename}.join(',')})"
