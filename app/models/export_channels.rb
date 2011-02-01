@@ -6,7 +6,8 @@ class ExportChannels
   def self.available
     {
       'paper' =>       { :format=>nil,          :channel=>nil} ,
-      'facturae_30' => { :format=>'facturae30', :channel=>'free_xml'},
+      'ublinvoice_20' => { :format=>'ubl21', :channel=>'free_ubl'},
+      'facturae_32' => { :format=>'facturae32', :channel=>'free_xml'},
       'facturae_31' => { :format=>'facturae31', :channel=>'free_xml'},
       'facturae_32' => { :format=>'facturae32', :channel=>'free_xml'},
       'signed_pdf' =>  { :format=>'facturae32', :channel=>'free_pdf'}

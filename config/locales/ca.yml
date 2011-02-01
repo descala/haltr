@@ -200,6 +200,7 @@ ca:
 
   # ExportChannels
   paper:       "Cap (descàrrega d'un PDF)"
+  ublinvoice_20: "Factura UBL 2.0 per email"
   facturae_30: "Facturae 3.0 per email"
   facturae_31: "Facturae 3.1 per email"
   facturae_32: "Facturae 3.2 per email"
