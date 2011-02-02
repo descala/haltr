@@ -83,9 +83,9 @@ class InvoiceReceiver < ActionMailer::Base
         i=2
         extension = File.extname(invoice.original_filename)
         base = invoice.original_filename.gsub(/#{extension}$/,'')
-        destination = "#{channel}/#{base}#{extension}"
+        destination = "#{channel}/#{base}_#{ri.id}#{extension}"
         while File.exist? destination do
-          destination = "#{channel}/#{base}_#{i}#{extension}"
+          destination = "#{channel}/#{base}_#{i}_#{ri.id}#{extension}"
           i+=1
         end
         invoice.rewind
