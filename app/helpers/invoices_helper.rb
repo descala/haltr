@@ -32,7 +32,7 @@ module InvoicesHelper
 
   def download_link_for(e)
     if (e.name == "success_sending"||e.name == "success_validating_signature") and !e.md5.blank?
-      "( #{link_to l(:download_legal), :controller=>'invoices', :action=>'get_legal', :id=>e.invoice, :md5=>e.md5} )"
+      "( #{link_to l(:download_legal), :controller=>'invoices', :action=>'legal', :id=>e.invoice} )"
     else
       ""
     end

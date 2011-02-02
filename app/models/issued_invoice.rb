@@ -104,11 +104,6 @@ class IssuedInvoice < InvoiceDocument
     !state?(:closed) && due_date && due_date < Date.today
   end
 
-  def md5
-    #TODO: check #2451 to store md5 on invoice.
-    self.events.collect {|e| e unless e.final_md5.blank? }.compact.sort.last.final_md5 rescue nil
-  end
-
   def can_be_exported?
     ExportChannels.channel(client.invoice_format) != nil
   end

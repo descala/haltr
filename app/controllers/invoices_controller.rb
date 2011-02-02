@@ -200,23 +200,21 @@ class InvoicesController < ApplicationController
     redirect_to :action => 'show', :id => @invoice
   end
 
-  def get_legal
+  def legal
     #TODO: several B2bRouters
-    url = Setting.plugin_haltr["trace_url"]
-    url = URI.parse(url.gsub(/\/$/,'')) # remove trailing slash
-    http = Net::HTTP.new(url.host,url.port)
-    http.start() { |http|
-      #TODO: add params[:filename] to allow several filenames on one md5 (file.xml, file.pdf)
-      req = Net::HTTP::Get.new("#{url.path.blank? ? "/" : "#{url.path}/"}b2b_messages/get_legal_invoice?md5=#{params[:md5]}")
-      response = http.request(req)
-      if response.is_a? Net::HTTPOK
-        # retrieve filename from response headers
-        filename = response["Content-Disposition"].match('filename=\\".*\\"').to_s.gsub(/filename=/,'').gsub(/\"/,'').gsub(/^legal_/,'')
-        send_data response.body, :filename => filename
-      else
-        render_404
+    #TODO: add params[:filename] to allow several filenames on one md5 (file.xml, file.pdf)
+    if @invoice.fetch_legal_by_http
+      respond_to do |format|
+        format.html do
+          send_data @invoice.legal_invoice, :filename => @invoice.legal_filename
+        end 
+        format.xml do
+          render :xml => @invoice.legal_invoice
+        end
       end
-    }
+    else
+      render_404
+    end
   rescue Errno::ECONNREFUSED, Errno::EHOSTUNREACH => e
     flash[:warning]=l(:cant_connect_trace, e.message)
     redirect_to :action => 'show', :id => @invoice
