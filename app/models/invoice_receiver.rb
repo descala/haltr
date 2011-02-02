@@ -30,21 +30,18 @@ class InvoiceReceiver < ActionMailer::Base
 
   class IncomingInvoice
     require "rexml/document"
+    @@channels = {
+      "facturae3.0" => "free_receive_facturae30",
+      "facturae3.1" => "free_receive_facturae31",
+      "facturae3.2" => "free_receive_facturae32",
+      "ubl2.0"      => "free_receive_ubl20"
+    }
     def self.process_file(invoice)
-      #TODO:
-      # comprovar format de la factura, crear bounce si no es suportat
-      # id = crear InvoiceIn amb (num fra, nif i nom emisor, nif i nom receptor, data fra, import total), agafant els camps de l'XPATH que toqui segons format
-      # enviar a un canal (segons format) b2brouter amb nom CIF_id.xml
-      # canal:
-      #   -validar format
-      #   -crear Event a haltr (firma ok/error)
-      #   -validar firma
-      #   -crear Event a haltr (format ok/error)
-      #   -fer backup per poder descarregar
       doc = REXML::Document.new(invoice.read.chomp)
       facturae_version = REXML::XPath.first(doc,"//FileHeader/SchemaVersion")
       ubl_version = REXML::XPath.first(doc,"//Invoice/*:UBLVersionID")
       xpaths = {}
+      channel=""
       if facturae_version
         InvoiceReceiver.log "Incoming invoice is FacturaE #{facturae_version.text}"
         xpaths[:invoice_number] = [ "//Invoices/Invoice/InvoiceHeader/InvoiceNumber",
@@ -55,13 +52,13 @@ class InvoiceReceiver < ActionMailer::Base
                                     "//Parties/SellerParty/Individual/FirstSurname",
                                     "//Parties/SellerParty/Individual/SecondSurname" ]
         xpaths[:buyer_taxcode]  = "//Parties/BuyerParty/TaxIdentification/TaxIdentificationNumber"
-#        xpaths[:buyer_name]     = "//Parties/BuyerParty/LegalEntity/CorporateName"
-        xpaths[:buyer_name2]    = [ "//Parties/BuyerParty/Individual/Name",
-                                    "//Parties/BuyerParty/Individual/FirstSurname",
-                                    "//Parties/BuyerParty/Individual/SecondSurname" ]
         xpaths[:invoice_date]   = "//Invoices/Invoice/InvoiceIssueData/IssueDate"
         xpaths[:invoice_import] = "//Invoices/Invoice/InvoiceTotals/InvoiceTotal"
         xpaths[:currency]       = "//FileHeader/Batch/InvoiceCurrencyCode"
+        ch_name = @@channels["facturae#{facturae_version.text}"]
+        if ch_name
+          channel="/var/spool/b2brouter/input/#{ch_name}"
+        end
       elsif ubl_version
         InvoiceReceiver.log "Incoming invoice is UBL #{facturae_version.text}"
         xpaths[:invoice_number] = ""
@@ -69,17 +66,34 @@ class InvoiceReceiver < ActionMailer::Base
         xpaths[:seller_name]    = ""
         xpaths[:seller_name2]   = nil
         xpaths[:buyer_taxcode]  = ""
-#        xpaths[:buyer_name]     = ""
-        xpaths[:buyer_name2]    = nil
         xpaths[:invoice_date]   = ""
         xpaths[:invoice_import] = ""
         xpaths[:currency] = ""
+        ch_name = @@channels["ubl#{ubl_version.text}"]
+        if ch_name
+          channel="/var/spool/b2brouter/input/#{ch_name}"
+        end
       else
         InvoiceReceiver.log "Incoming invoice with unknown format"
         #TODO: bounce message
       end
       ri = invoice_from_xml(doc,xpaths)
       ri.save!
+      if File.directory? channel
+        i=2
+        extension = File.extname(invoice.original_filename)
+        base = invoice.original_filename.gsub(/#{extension}$/,'')
+        destination = "#{channel}/#{base}#{extension}"
+        while File.exist? destination do
+          destination = "#{channel}/#{base}_#{i}#{extension}"
+          i+=1
+        end
+        invoice.rewind
+        open(destination,'w') {|f| f.puts invoice.read.chomp }
+        InvoiceReceiver.log "Sent invoice to validation channel: #{destination}"
+      else
+        InvoiceReceiver.log "Invoice format without validation channel #{channel}"
+      end
     rescue Exception => e
       InvoiceReceiver.log e.message
     end
@@ -89,7 +103,6 @@ class InvoiceReceiver < ActionMailer::Base
       seller_taxcode = get_xpath(doc,xpaths[:seller_taxcode])
       seller_name    = get_xpath(doc,xpaths[:seller_name]) || get_xpath(doc,xpaths[:seller_name2])
       buyer_taxcode  = get_xpath(doc,xpaths[:buyer_taxcode])
-#      buyer_name     = get_xpath(doc,xpaths[:buyer_name]) || get_xpath(doc,xpaths[:buyer_name2])
       invoice_date   = get_xpath(doc,xpaths[:invoice_date])
       invoice_import = get_xpath(doc,xpaths[:invoice_import])
       currency       = get_xpath(doc,xpaths[:currency])
