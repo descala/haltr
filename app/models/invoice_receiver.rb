@@ -59,7 +59,6 @@ class InvoiceReceiver < ActionMailer::Base
         xpaths[:seller_address]          = "//Parties/SellerParty/*/*/Address"
         xpaths[:seller_province]         = "//Parties/SellerParty/*/*/Province"
         xpaths[:seller_countrycode]      = "//Parties/SellerParty/*/*/CountryCode"
-        xpaths[:seller_persontypecode]   = "//Parties/SellerParty/TaxIdentification/PersonTypeCode"
         xpaths[:seller_website]          = "//Parties/SellerParty/*/ContactDetails/WebAddress"
         xpaths[:seller_email]            = "//Parties/SellerParty/*/ContactDetails/ElectronicMail"
         xpaths[:seller_cp_city]          = [ "//Parties/SellerParty/*/*/PostCode",
@@ -86,7 +85,6 @@ class InvoiceReceiver < ActionMailer::Base
         xpaths[:seller_address]          = ""
         xpaths[:seller_province]         = ""
         xpaths[:seller_countrycode]      = ""
-        xpaths[:seller_persontypecode]   = ""
         xpaths[:seller_website]          = ""
         xpaths[:seller_email]            = ""
         xpaths[:seller_cp_city]          = ""
@@ -135,19 +133,17 @@ class InvoiceReceiver < ActionMailer::Base
         seller_address        = get_xpath(doc,xpaths[:seller_address])
         seller_province       = get_xpath(doc,xpaths[:seller_province])
         seller_countrycode    = get_xpath(doc,xpaths[:seller_countrycode])
-        seller_persontypecode = get_xpath(doc,xpaths[:seller_persontypecode])
         seller_website        = get_xpath(doc,xpaths[:seller_website])
         seller_email          = get_xpath(doc,xpaths[:seller_email])
         seller_cp_city        = get_xpath(doc,xpaths[:seller_cp_city]) || get_xpath(doc,xpaths[:seller_cp_city2])
-        seller_postalcode = seller_cp_city.split[" "].first
-        seller_city       = seller_cp_city.gsub(/^#{seller_cp} /,'')
+        seller_postalcode = seller_cp_city.split(" ").first
+        seller_city       = seller_cp_city.gsub(/^#{seller_postalcode} /,'')
 
         client = Client.new(:taxcode        => seller_taxcode,
                             :name           => seller_name,
-                            :address        => seller_address,
+                            :address1       => seller_address,
                             :province       => seller_province,
                             :countrycode    => seller_countrycode,
-                            :persontypecode => seller_persontypecode,
                             :website        => seller_website,
                             :email          => seller_email,
                             :postalcode     => seller_postalcode,
