@@ -51,6 +51,7 @@ class InvoiceReceiver < ActionMailer::Base
         xpaths[:invoice_tax_percent]     = "//Invoices/Invoice/InvoiceTotals/TotalTaxOutputs"
         xpaths[:invoice_subtotal]        = "//Invoices/Invoice/InvoiceTotals/TotalGrossAmountBeforeTaxes"
         xpaths[:invoice_withholding_tax] = "//Invoices/Invoice/InvoiceTotals/TotalTaxesWithheld"
+        xpaths[:invoice_due_date]        = "//Invoices/Invoice/PaymentDetails/Installment/InstallmentDueDate"
         xpaths[:seller_taxcode]          = "//Parties/SellerParty/TaxIdentification/TaxIdentificationNumber"
         xpaths[:seller_name]             = "//Parties/SellerParty/LegalEntity/CorporateName"
         xpaths[:seller_name2]            = [ "//Parties/SellerParty/Individual/Name",
@@ -79,6 +80,7 @@ class InvoiceReceiver < ActionMailer::Base
         xpaths[:invoice_tax_percent]     = ""
         xpaths[:invoice_subtotal]        = ""
         xpaths[:invoice_withholding_tax] = ""
+        xpaths[:invoice_due_date]        = ""
         xpaths[:seller_taxcode]          = ""
         xpaths[:seller_name]             = ""
         xpaths[:seller_name2]            = nil
@@ -158,6 +160,7 @@ class InvoiceReceiver < ActionMailer::Base
       invoice_tax_percent = get_xpath(doc,xpaths[:invoice_tax_percent])
       invoice_subtotal    = get_xpath(doc,xpaths[:invoice_subtotal])
       invoice_withholding_tax = get_xpath(doc,xpaths[:invoice_withholding_tax])
+      invoice_due_date    = get_xpath(doc,xpaths[:invoice_due_date])
 
       r = ReceivedInvoice.new(:number      => invoice_number,
                           :client          => client,
@@ -166,7 +169,8 @@ class InvoiceReceiver < ActionMailer::Base
                           :currency        => currency,
                           :tax_percent     => invoice_tax_percent,
                           :subtotal        => invoice_subtotal.to_money,
-                          :withholding_tax => invoice_withholding_tax.to_money)
+                          :withholding_tax => invoice_withholding_tax.to_money,
+                          :due_date        => invoice_due_date)
       return r
     end
 
