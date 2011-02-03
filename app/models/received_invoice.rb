@@ -4,9 +4,14 @@ class ReceivedInvoice < InvoiceDocument
 
   after_create :create_event
 
-  composed_of :received_invoice_total,
+  composed_of :subtotal,
     :class_name => "Money",
-    :mapping => [%w(received_invoice_total_in_cents cents), %w(currency currency_as_string)],
+    :mapping => [%w(subtotal_in_cents cents), %w(currency currency_as_string)],
+    :constructor => Proc.new { |cents, currency| Money.new(cents || 0, currency || Money.default_currency) }
+
+  composed_of :withholding_tax,
+    :class_name => "Money",
+    :mapping => [%w(withholding_tax_in_cents cents), %w(currency currency_as_string)],
     :constructor => Proc.new { |cents, currency| Money.new(cents || 0, currency || Money.default_currency) }
 
   # new sending sent error discarded closed

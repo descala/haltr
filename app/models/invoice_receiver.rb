@@ -44,31 +44,55 @@ class InvoiceReceiver < ActionMailer::Base
       channel=""
       if facturae_version
         InvoiceReceiver.log "Incoming invoice is FacturaE #{facturae_version.text}"
-        xpaths[:invoice_number] = [ "//Invoices/Invoice/InvoiceHeader/InvoiceNumber",
-                                    "//Invoices/Invoice/InvoiceHeader/InvoiceSeriesCode" ]
-        xpaths[:seller_taxcode] = "//Parties/SellerParty/TaxIdentification/TaxIdentificationNumber"
-        xpaths[:seller_name]    = "//Parties/SellerParty/LegalEntity/CorporateName"
-        xpaths[:seller_name2]   = [ "//Parties/SellerParty/Individual/Name",
-                                    "//Parties/SellerParty/Individual/FirstSurname",
-                                    "//Parties/SellerParty/Individual/SecondSurname" ]
-        xpaths[:buyer_taxcode]  = "//Parties/BuyerParty/TaxIdentification/TaxIdentificationNumber"
-        xpaths[:invoice_date]   = "//Invoices/Invoice/InvoiceIssueData/IssueDate"
-        xpaths[:invoice_import] = "//Invoices/Invoice/InvoiceTotals/InvoiceTotal"
-        xpaths[:currency]       = "//FileHeader/Batch/InvoiceCurrencyCode"
+        xpaths[:invoice_number]          = [ "//Invoices/Invoice/InvoiceHeader/InvoiceNumber",
+                                             "//Invoices/Invoice/InvoiceHeader/InvoiceSeriesCode" ]
+        xpaths[:invoice_date]            = "//Invoices/Invoice/InvoiceIssueData/IssueDate"
+        xpaths[:invoice_import]          = "//Invoices/Invoice/InvoiceTotals/InvoiceTotal"
+        xpaths[:invoice_tax_percent]     = "//Invoices/Invoice/InvoiceTotals/TotalTaxOutputs"
+        xpaths[:invoice_subtotal]        = "//Invoices/Invoice/InvoiceTotals/TotalGrossAmountBeforeTaxes"
+        xpaths[:invoice_withholding_tax] = "//Invoices/Invoice/InvoiceTotals/TotalTaxesWithheld"
+        xpaths[:seller_taxcode]          = "//Parties/SellerParty/TaxIdentification/TaxIdentificationNumber"
+        xpaths[:seller_name]             = "//Parties/SellerParty/LegalEntity/CorporateName"
+        xpaths[:seller_name2]            = [ "//Parties/SellerParty/Individual/Name",
+                                             "//Parties/SellerParty/Individual/FirstSurname",
+                                             "//Parties/SellerParty/Individual/SecondSurname" ]
+        xpaths[:seller_address]          = "//Parties/SellerParty/*/*/Address"
+        xpaths[:seller_province]         = "//Parties/SellerParty/*/*/Province"
+        xpaths[:seller_countrycode]      = "//Parties/SellerParty/*/*/CountryCode"
+        xpaths[:seller_persontypecode]   = "//Parties/SellerParty/TaxIdentification/PersonTypeCode"
+        xpaths[:seller_website]          = "//Parties/SellerParty/*/ContactDetails/WebAddress"
+        xpaths[:seller_email]            = "//Parties/SellerParty/*/ContactDetails/ElectronicMail"
+        xpaths[:seller_cp_city]          = [ "//Parties/SellerParty/*/*/PostCode",
+                                             "//Parties/SellerParty/*/*/Town" ]
+        xpaths[:seller_cp_city2]         = "//Parties/SellerParty/*/*/PostCodeAndTown"
+        xpaths[:buyer_taxcode]           = "//Parties/BuyerParty/TaxIdentification/TaxIdentificationNumber"
+        xpaths[:currency]                = "//FileHeader/Batch/InvoiceCurrencyCode"
+
         ch_name = @@channels["facturae#{facturae_version.text}"]
         if ch_name
           channel="/var/spool/b2brouter/input/#{ch_name}"
         end
       elsif ubl_version
         InvoiceReceiver.log "Incoming invoice is UBL #{facturae_version.text}"
-        xpaths[:invoice_number] = ""
-        xpaths[:seller_taxcode] = ""
-        xpaths[:seller_name]    = ""
-        xpaths[:seller_name2]   = nil
-        xpaths[:buyer_taxcode]  = ""
-        xpaths[:invoice_date]   = ""
-        xpaths[:invoice_import] = ""
-        xpaths[:currency] = ""
+        xpaths[:invoice_number]          = ""
+        xpaths[:invoice_date]            = ""
+        xpaths[:invoice_import]          = ""
+        xpaths[:invoice_tax_percent]     = ""
+        xpaths[:invoice_subtotal]        = ""
+        xpaths[:invoice_withholding_tax] = ""
+        xpaths[:seller_taxcode]          = ""
+        xpaths[:seller_name]             = ""
+        xpaths[:seller_name2]            = nil
+        xpaths[:seller_address]          = ""
+        xpaths[:seller_province]         = ""
+        xpaths[:seller_countrycode]      = ""
+        xpaths[:seller_persontypecode]   = ""
+        xpaths[:seller_website]          = ""
+        xpaths[:seller_email]            = ""
+        xpaths[:seller_cp_city]          = ""
+        xpaths[:seller_cp_city2]         = nil
+        xpaths[:buyer_taxcode]           = ""
+        xpaths[:currency]                = ""
         ch_name = @@channels["ubl#{ubl_version.text}"]
         if ch_name
           channel="/var/spool/b2brouter/input/#{ch_name}"
@@ -99,25 +123,54 @@ class InvoiceReceiver < ActionMailer::Base
     end
 
     def self.invoice_from_xml(doc,xpaths)
-      invoice_number = get_xpath(doc,xpaths[:invoice_number])
-      seller_taxcode = get_xpath(doc,xpaths[:seller_taxcode])
-      seller_name    = get_xpath(doc,xpaths[:seller_name]) || get_xpath(doc,xpaths[:seller_name2])
       buyer_taxcode  = get_xpath(doc,xpaths[:buyer_taxcode])
-      invoice_date   = get_xpath(doc,xpaths[:invoice_date])
-      invoice_import = get_xpath(doc,xpaths[:invoice_import])
-      currency       = get_xpath(doc,xpaths[:currency])
       company = Company.find_by_taxcode(buyer_taxcode)
       raise "Company with taxcode '#{buyer_taxcode}' not found" unless company #TODO: bounce message
-      client = company.project.clients.find_by_taxcode(seller_taxcode)
+
+      seller_taxcode = get_xpath(doc,xpaths[:seller_taxcode])
+      client         = company.project.clients.find_by_taxcode(seller_taxcode)
+      currency       = get_xpath(doc,xpaths[:currency])
       unless client
-        client = Client.new(:taxcode=>seller_taxcode,:name=>seller_name,:currency=>currency,:project=>company.project)
+        seller_name           = get_xpath(doc,xpaths[:seller_name]) || get_xpath(doc,xpaths[:seller_name2])
+        seller_address        = get_xpath(doc,xpaths[:seller_address])
+        seller_province       = get_xpath(doc,xpaths[:seller_province])
+        seller_countrycode    = get_xpath(doc,xpaths[:seller_countrycode])
+        seller_persontypecode = get_xpath(doc,xpaths[:seller_persontypecode])
+        seller_website        = get_xpath(doc,xpaths[:seller_website])
+        seller_email          = get_xpath(doc,xpaths[:seller_email])
+        seller_cp_city        = get_xpath(doc,xpaths[:seller_cp_city]) || get_xpath(doc,xpaths[:seller_cp_city2])
+        seller_postalcode = seller_cp_city.split[" "].first
+        seller_city       = seller_cp_city.gsub(/^#{seller_cp} /,'')
+
+        client = Client.new(:taxcode        => seller_taxcode,
+                            :name           => seller_name,
+                            :address        => seller_address,
+                            :province       => seller_province,
+                            :countrycode    => seller_countrycode,
+                            :persontypecode => seller_persontypecode,
+                            :website        => seller_website,
+                            :email          => seller_email,
+                            :postalcode     => seller_postalcode,
+                            :city           => seller_city,
+                            :currency       => currency,
+                            :project        => company.project)
         client.save!
       end
-      r = ReceivedInvoice.new(:number=>invoice_number,
-                          :client=>client,
-                          :date=>invoice_date,
-                          :import=>invoice_import.to_money,
-                          :currency=>currency)
+      invoice_number      = get_xpath(doc,xpaths[:invoice_number])
+      invoice_date        = get_xpath(doc,xpaths[:invoice_date])
+      invoice_import      = get_xpath(doc,xpaths[:invoice_import])
+      invoice_tax_percent = get_xpath(doc,xpaths[:invoice_tax_percent])
+      invoice_subtotal    = get_xpath(doc,xpaths[:invoice_subtotal])
+      invoice_withholding_tax = get_xpath(doc,xpaths[:invoice_withholding_tax])
+
+      r = ReceivedInvoice.new(:number      => invoice_number,
+                          :client          => client,
+                          :date            => invoice_date,
+                          :import          => invoice_import.to_money,
+                          :currency        => currency,
+                          :tax_percent     => invoice_tax_percent,
+                          :subtotal        => invoice_subtotal.to_money,
+                          :withholding_tax => invoice_withholding_tax.to_money)
       return r
     end
 
@@ -127,7 +180,11 @@ class InvoiceReceiver < ActionMailer::Base
       val=""
       if xpath.is_a?(Array)
         xpath.each do |xp|
-          val += REXML::XPath.first(doc,xp).text rescue ""
+          txt = REXML::XPath.first(doc,xp).text rescue ""
+          unless txt.blank?
+            val += txt
+            val += " " unless xp == xpath.last
+          end
         end
       elsif xpath.nil?
         nil
