@@ -120,7 +120,9 @@ ca:
   bounced: "Retornada"
   validating_format: "Factura rebuda"
   success_validating_format: "Validació de format correcta"
+  error_validating_format: "Error en la validació de format"
   success_validating_signature: "Validació de signatura correcta"
+  error_validating_signature: "Error en la validació de signatura"
 
   # Invoice templates
   label_invoice_template_new: Nova plantilla
