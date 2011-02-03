@@ -204,4 +204,4 @@ en:
   error_invoice_not_sent: "Could not send invoice"
   notice_empty_n19: "No data to create N19"
   notice_n19_done:  "Nº19 for due date {{value}} maked as done"
-  notice_file_not_found: "File not found"
+  notice_uploaded_file_not_found: "File not found"
