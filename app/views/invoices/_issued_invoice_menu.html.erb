@@ -25,6 +25,9 @@
   <div class="client-invoices">
     <h3><%=l(:recipients)%></h3>
     <ul class="secondary">
+      <li>
+      <%= link_to "#{@invoice.client.name} &lt;#{@invoice.client.email}&gt;", :controller =>'clients' ,:action=>'edit', :id=>@invoice.client %>
+      </li>
       <% @invoice.recipients.each do |person| -%>
         <li>
         <%= link_to "#{person.first_name} #{person.last_name} &lt;#{person.email}&gt;", :controller =>'people' ,:action=>'show', :id=>person %>
