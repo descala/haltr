@@ -2,6 +2,7 @@ class ReceivedInvoice < InvoiceDocument
 
   unloadable
 
+  attr_accessor :md5
   after_create :create_event
 
   composed_of :subtotal,
@@ -70,7 +71,7 @@ class ReceivedInvoice < InvoiceDocument
   protected
 
   def create_event
-    Event.create(:name=>'validating_format',:invoice=>self)
+    Event.create(:name=>'validating_format',:invoice=>self,:md5=>md5)
   end
 
 end

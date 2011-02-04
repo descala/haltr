@@ -102,6 +102,8 @@ class InvoiceReceiver < ActionMailer::Base
         #TODO: bounce message
       end
       ri = invoice_from_xml(doc,xpaths)
+      invoice.rewind
+      ri.md5 = Digest::MD5.hexdigest(invoice.read.chomp)
       ri.save!
       if File.directory? channel
         i=2
