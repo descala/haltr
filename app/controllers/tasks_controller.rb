@@ -100,7 +100,7 @@ class TasksController < ApplicationController
         end
       end
     else
-      flash[:warning] = l(:notice_file_not_found)
+      flash[:warning] = l(:notice_uploaded_uploaded_file_not_found)
       redirect_to :action => 'index', :id => @project
     end
   end

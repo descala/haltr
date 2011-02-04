@@ -10,9 +10,13 @@ class InvoiceDocument < Invoice
 
   attr_accessor :legal_filename, :legal_invoice
 
-  def md5
+  def final_md5
     #TODO: check #2451 to store md5 on invoice.
     self.events.collect {|e| e unless e.final_md5.blank? }.compact.sort.last.final_md5 rescue nil
+  end
+
+  def initial_md5
+    self.events.collect {|e| e unless e.md5.blank? }.compact.sort.last.md5 rescue nil
   end
 
   def fetch_legal_by_http 
@@ -20,7 +24,7 @@ class InvoiceDocument < Invoice
     url = URI.parse(url.gsub(/\/$/,'')) # remove trailing slash
     http = Net::HTTP.new(url.host,url.port)
     http.start() do |http|
-      full_url = "#{url.path.blank? ? "/" : "#{url.path}/"}b2b_messages/get_legal_invoice?md5=#{self.md5}"
+      full_url = "#{url.path.blank? ? "/" : "#{url.path}/"}b2b_messages/get_legal_invoice?md5=#{self.initial_md5}"
       logger.debug "Fetching legal GET #{full_url}" if logger && logger.debug?
       req = Net::HTTP::Get.new(full_url)
       response = http.request(req)

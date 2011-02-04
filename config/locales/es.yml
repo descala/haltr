@@ -203,4 +203,4 @@ es:
   error_invoice_not_sent: "La factura no se ha podido enviar"
   notice_empty_n19: "No hay datos para generar un N19"
   notice_n19_done:  "Se ha cerrado el N19 de fecha {{value}}"
-  notice_file_not_found: "No s'ha encontrado el fichero"
+  notice_uploaded_file_not_found: "No s'ha encontrado el fichero"
