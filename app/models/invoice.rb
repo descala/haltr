@@ -80,7 +80,11 @@ class Invoice < ActiveRecord::Base
   end
 
   def withholding_tax
-    subtotal * (withholding_tax_percent / 100.0)
+    if self.apply_withholding_tax
+      subtotal * (withholding_tax_percent / 100.0)
+    else
+      0.to_money
+    end
   end
 
   def withholding_tax_percent

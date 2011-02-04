@@ -53,6 +53,7 @@ en:
   label_subtotal: Subtotal
   field_withholding_tax_name: Withholding tax name
   field_withholding_tax_percent: Withholding tax %
+  field_apply_withholding_tax: Apply withholding tax
   must_have_lines: must have lines
   send_invoice: Send invoice
   label_send: Send

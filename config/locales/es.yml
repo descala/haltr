@@ -53,6 +53,7 @@ es:
   label_subtotal: Subtotal
   field_withholding_tax_name: Nombre de la retención
   field_withholding_tax_percent: % de retención
+  field_apply_withholding_tax: Aplicar retención
   must_have_lines: tiene que tener líneas
   send_invoice: Enviar factura
   label_send: Enviar
