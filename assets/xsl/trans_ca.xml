@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Traducció xslts Facturae -->
+<diccionari>
+    <element etiqueta="Description">Descripció</element>
+    <element etiqueta="Amount">Import</element>
+    <element etiqueta="Total">Total</element>
+    <element etiqueta="Invoice">Factura</element>
+    <element etiqueta="Installment">Venciment</element>
+    <element etiqueta="Notes">Notes</element>
+    <element etiqueta="VAT">IVA</element>
+    <element etiqueta="VAT Nbr">CIF</element>
+</diccionari>

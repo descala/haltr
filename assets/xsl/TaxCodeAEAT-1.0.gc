@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<gc:CodeList xmlns:gc="http://genericode.org/2006/ns/CodeList/0.4/">
+    <Identification>
+        <ShortName>TaxCodeAEAT</ShortName>
+        <LongName xml:lang="en">Tax Schemes defined by Spanish Tax Office</LongName>
+        <LongName Identifier="listID">Tax AEAT</LongName>
+        <Version>1</Version>
+        <CanonicalUri>urn:invinet:codelist:gc:TaxCodeAEAT</CanonicalUri>
+        <CanonicalVersionUri>urn:invinet:codelist:gc:TaxCodeAEAT-1.0</CanonicalVersionUri>
+        <LocationUri>http://www.invinet.org/cl/gc/TaxCodeAEAT-1.0.gc</LocationUri>
+        <Agency>
+            <LongName xml:lang="en">Agencia Estatal de Administracion Tributaria</LongName>
+        </Agency>
+    </Identification>
+    <ColumnSet>
+        <Column Id="code" Use="required">
+            <ShortName>Code</ShortName>
+            <Data Type="normalizedString"/>
+        </Column>
+        <Column Id="en" Use="optional">
+            <ShortName>Name</ShortName>
+            <Data Type="string"/>
+        </Column>
+        <Column Id="es" Use="optional">
+            <ShortName>Nombre</ShortName>
+            <Data Type="string"/>
+        </Column>
+        <Column Id="ca" Use="optional">
+            <ShortName>Nom</ShortName>
+            <Data Type="string"/>
+        </Column>
+        <Key Id="codeKey">
+            <ShortName>CodeKey</ShortName>
+            <ColumnRef Ref="code"/>
+        </Key>
+    </ColumnSet>
+    <SimpleCodeList>
+         <Row>
+            <Value ColumnRef="code">
+                <SimpleValue>01</SimpleValue>
+            </Value>
+            <Value ColumnRef="en">
+                <SimpleValue>VAT</SimpleValue>
+            </Value>
+            <Value ColumnRef="es">
+                <SimpleValue>IVA</SimpleValue>
+            </Value>
+             <Value ColumnRef="ca">
+                <SimpleValue>IVA</SimpleValue>
+            </Value>
+        </Row>
+    </SimpleCodeList>
+</gc:CodeList>
