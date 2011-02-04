@@ -90,6 +90,13 @@ en:
   label_all_invoices: "All invoices"
   label_issued: "Issued invoices"
   label_received: "Received invoices"
+  mark_not_sent: "Mark as not sent"
+  mark_closed: "Mark as closed"
+  mark_sent: "Mark as sent"
+  mark_accepted: "Accept invoice"
+  mark_refused: "Refuse invoice"
+  accept: "Accepted"
+  refuse: "Refused"
 
   # Events
   events: "Event log"

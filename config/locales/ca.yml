@@ -102,6 +102,13 @@ ca:
   label_all_invoices: "Totes les factures"
   label_issued: "Factures emeses"
   label_received: "Factures rebudes"
+  mark_not_sent: "Marcar com a no enviada"
+  mark_closed: "Marcar com a tancada"
+  mark_sent: "Marcar com a enviada"
+  mark_accepted: "Accepta la factura"
+  mark_refused: "Refusa la factura"
+  accept: "Acceptada"
+  refuse: "Refusada"
 
   # Events
   events: "Log d'esdeveniments"

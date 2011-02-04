@@ -90,6 +90,13 @@ es:
   label_all_invoices: "Todas las facturas"
   label_issued: "Facturas emitidas"
   label_received: "Facturas"
+  mark_not_sent: "Marcar como no enviada"
+  mark_closed: "Marcar como cerrada"
+  mark_sent: "Marcar como enviada"
+  mark_accepted: "Aceptar la factura"
+  mark_refused: "Rechazar la factura"
+  accept: "Aceptada"
+  refuse: "Rechazada"
 
   # Events
   events: "Log de eventos"

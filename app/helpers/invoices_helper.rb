@@ -2,13 +2,19 @@ module InvoicesHelper
 
   def change_state_link(invoice)
     if invoice.state?(:closed)
-      link_to("Mark as not sent", {:action => :mark_not_sent, :id => invoice})
+      link_to(I18n.t(:mark_not_sent), {:action => :mark_not_sent, :id => invoice})
     elsif invoice.sent? and invoice.paid?
-      link_to("Mark as closed", {:action => :mark_closed, :id => invoice})
+      link_to(I18n.t(:mark_closed), {:action => :mark_closed, :id => invoice})
     elsif invoice.sent?
-      link_to("Mark as not sent", {:action => :mark_not_sent, :id => invoice})
+      link_to(I18n.t(:mark_not_sent), {:action => :mark_not_sent, :id => invoice})
     else
-      link_to("Mark as sent", {:action => :mark_sent, :id => invoice})
+      link_to(I18n.t(:mark_sent), {:action => :mark_sent, :id => invoice})
+    end
+  end
+
+  def accept_link(invoice)
+    if invoice.state?(:electronic_invoice) or invoice.state?(:non_electronic_invoice)
+      link_to(I18n.t(:mark_accepted), {:action => :mark_accepted, :id => invoice})
     end
   end
 

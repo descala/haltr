@@ -123,6 +123,20 @@ class InvoicesController < ApplicationController
     render :text => "OK"
   end
 
+  def mark_accepted
+    @invoice.accept
+    redirect_to :back
+  rescue ActionController::RedirectBackError => e
+    render :text => "OK"
+  end
+
+  def mark_refused
+    @invoice.refuse
+    redirect_to :back
+  rescue ActionController::RedirectBackError => e
+    render :text => "OK"
+  end
+
   # create a template from an invoice
   def template
     it = InvoiceTemplate.new @invoice.attributes
