@@ -27,10 +27,16 @@ class ReceivedInvoice < InvoiceDocument
     event :error_validating_format do
       transition :validating_format => :non_electronic_invoice
     end
+    event :discard_validating_format do
+      transition :validating_format => :non_electronic_invoice
+    end
     event :success_validating_signature do
       transition :validating_signature => :electronic_invoice
     end
     event :error_validating_signature do
+      transition :validating_signature => :non_electronic_invoice
+    end
+    event :discard_validating_signature do
       transition :validating_signature => :non_electronic_invoice
     end
     event :refuse do
