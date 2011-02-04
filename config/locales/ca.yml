@@ -66,6 +66,7 @@ ca:
   label_subtotal: Subtotal
   field_withholding_tax_name: Nom de la retenció
   field_withholding_tax_percent: % de retenció
+  field_apply_withholding_tax: Aplicar retenció
   must_have_lines: ha de tenir linies
   send_invoice: Enviar factura
   label_send: Enviar
@@ -121,8 +122,10 @@ ca:
   validating_format: "Factura rebuda"
   success_validating_format: "Validació de format correcta"
   error_validating_format: "Error en la validació de format"
+  discard_validating_format: "Error en la validació de format"
   success_validating_signature: "Validació de signatura correcta"
   error_validating_signature: "Error en la validació de signatura"
+  discard_validating_signature: "Error en la validació de signatura"
 
   # Invoice templates
   label_invoice_template_new: Nova plantilla
@@ -188,6 +191,8 @@ ca:
   "60": 60 dies
   "90": 90 dies
   "120": 120 dies
+  "0m-1": Últim dia del mes
+  "1m-1": Últim dia del mes següent
   "1m1": 1er dia mes següent
   "2m1": "1er dia mes següent no l'altre"
   "1m15": Dia 15 mes següent

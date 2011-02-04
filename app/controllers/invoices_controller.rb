@@ -226,13 +226,21 @@ class InvoicesController < ApplicationController
     redirect_to :action => 'show', :id => @invoice
   end
 
+  def project
+    if self.client.nil?
+      self.user.project
+    else
+      self.client.project
+    end
+  end
+
   private
 
   def find_invoice
     @invoice = InvoiceDocument.find params[:id]
     @lines = @invoice.invoice_lines
     @client = @invoice.client
-    @project = @client.project
+    @project = @invoice.project
   rescue ActiveRecord::RecordNotFound
     render_404
   end

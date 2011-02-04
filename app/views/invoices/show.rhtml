@@ -113,7 +113,7 @@
                 <th>IVA <%= number_to_percentage(@invoice.tax_percent, :precision=>0) %> :</th>
                 <td><%= money(@invoice.tax) %></td>
               </tr>
-              <% if @invoice.withholding_tax_percent > 0 -%>
+              <% if @invoice.withholding_tax_percent > 0 and @invoice.apply_withholding_tax -%>
               <tr class="sales-tax">
                 <th><%=@invoice.withholding_tax_name%> <%= number_to_percentage(@invoice.withholding_tax_percent, :precision=>0) %> :</th>
                 <td><%=money(@invoice.withholding_tax)%></td>
@@ -174,7 +174,7 @@
       <p></p>
       <ul>
       <% @invoice.events.each do |e| -%>
-        <li><%= e %><%= download_link_for(e) %></li>
+        <li><%= e %> <%= download_link_for(e) %></li>
       <% end -%>
       </ul>
     </div>

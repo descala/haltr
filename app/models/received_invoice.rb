@@ -2,6 +2,7 @@ class ReceivedInvoice < InvoiceDocument
 
   unloadable
 
+  attr_accessor :md5
   after_create :create_event
 
   composed_of :subtotal,
@@ -27,10 +28,16 @@ class ReceivedInvoice < InvoiceDocument
     event :error_validating_format do
       transition :validating_format => :non_electronic_invoice
     end
+    event :discard_validating_format do
+      transition :validating_format => :non_electronic_invoice
+    end
     event :success_validating_signature do
       transition :validating_signature => :electronic_invoice
     end
     event :error_validating_signature do
+      transition :validating_signature => :non_electronic_invoice
+    end
+    event :discard_validating_signature do
       transition :validating_signature => :non_electronic_invoice
     end
     event :refuse do
@@ -64,7 +71,7 @@ class ReceivedInvoice < InvoiceDocument
   protected
 
   def create_event
-    Event.create(:name=>'validating_format',:invoice=>self)
+    Event.create(:name=>'validating_format',:invoice=>self,:md5=>md5)
   end
 
 end

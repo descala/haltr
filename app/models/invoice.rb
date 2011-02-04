@@ -3,6 +3,7 @@ class Invoice < ActiveRecord::Base
   unloadable
 
   has_many :events, :dependent => :destroy
+  belongs_to :user
 
   # 1 - cash (al comptat)
   # 2 - debit (rebut domiciliat)
@@ -16,7 +17,7 @@ class Invoice < ActiveRecord::Base
 
   has_many :invoice_lines, :dependent => :destroy
   belongs_to :client
-  validates_presence_of :client, :date, :currency
+  validates_presence_of :client, :date, :currency, :user_id
   validates_inclusion_of :currency, :in  => Money::Currency::TABLE.collect {|k,v| v[:iso_code] }
 
   accepts_nested_attributes_for :invoice_lines,
@@ -37,6 +38,7 @@ class Invoice < ActiveRecord::Base
     self.currency ||= self.client.company.currency rescue nil
     self.currency ||= Money.default_currency.iso_code
     self.payment_method ||= 1
+    self.user = User.current
   end
 
   def currency=(v)
@@ -78,7 +80,11 @@ class Invoice < ActiveRecord::Base
   end
 
   def withholding_tax
-    subtotal * (withholding_tax_percent / 100.0)
+    if self.apply_withholding_tax
+      subtotal * (withholding_tax_percent / 100.0)
+    else
+      0.to_money
+    end
   end
 
   def withholding_tax_percent
