@@ -2,7 +2,7 @@ class Terms
 
   unloadable
 
-  KEYS = %w(0 30 60 90 120 1m1 2m1 1m15 1m20)
+  KEYS = %w(0 30 60 90 120 0m-1 1m-1 1m1 2m1 1m15 1m20)
 
   attr_reader :description, :due_date
   
@@ -16,7 +16,7 @@ class Terms
       end
     else
       # It's an string
-      if code=~/([0-9]+)+m([0-9]+)/
+      if code =~ /([0-9]+)+m(-?[0-9]+)/
         months_to_add = $1.to_i
         day = $2.to_i
         date_with_months = date + months_to_add.months

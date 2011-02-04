@@ -175,6 +175,8 @@ es:
   "60": 60 días
   "90": 90 días
   "120": 120 días
+  "0m-1": Último dia del mes
+  "1m-1": Último dia del mes siguiente
   "1m1": 1er día mes siguiente
   "2m1": "1er día en dos meses" 
   "1m15": Día 15 mes siguiente
