@@ -110,8 +110,9 @@ es:
   validating_format: "Factura recibida"
   success_validating_format: "Validación de formato correcta"
   error_validating_format: "Error en la validación de formato"
+  discard_validating_format: "Error en la validación de formato"
   success_validating_signature: "Validación de firma correcta"
-  error_validating_signature: "Error en la validación de firma"
+  discard_validating_signature: "Error en la validación de firma"
 
   # Invoice templates
   label_invoice_template_new: Nueva plantilla

@@ -110,8 +110,10 @@ en:
   validating_format: "Received invoice"
   success_validating_format: "Format validation success"
   error_validating_format: "Error on format validation"
+  discard_validating_format: "Error on format validation"
   success_validating_signature: "Signature validation success"
   error_validating_signature: "Error on signature validation"
+  discard_validating_signature: "Error on signature validation"
 
   # Invoice templates
   label_invoice_template_new: New template
