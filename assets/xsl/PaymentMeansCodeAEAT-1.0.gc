@@ -1,0 +1,305 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<gc:CodeList xmlns:gc="http://genericode.org/2006/ns/CodeList/0.4/">
+    <Identification>
+        <ShortName>PaymentMeansCodeAEAT</ShortName>
+        <LongName xml:lang="en">Payment Means defined by Spanish Tax Office</LongName>
+        <LongName Identifier="listID">Payment Means AEAT</LongName>
+        <Version>1</Version>
+        <CanonicalUri>urn:invinet:codelist:gc:PaymentMeansCodeAEAT</CanonicalUri>
+        <CanonicalVersionUri>urn:invinet:codelist:gc:PaymentMeansCodeAEAT-1.0</CanonicalVersionUri>
+        <LocationUri>http://www.invinet.org/cl/gc/PaymentMeansCodeAEAT-1.0.gc</LocationUri>
+        <Agency>
+            <LongName xml:lang="en">Agencia Estatal de Administracion Tributaria</LongName>
+        </Agency>
+    </Identification>
+    <ColumnSet>
+        <Column Id="code" Use="required">
+            <ShortName>Code</ShortName>
+            <Data Type="normalizedString"/>
+        </Column>
+        <Column Id="en" Use="optional">
+            <ShortName>Name</ShortName>
+            <Data Type="string"/>
+        </Column>
+        <Column Id="es" Use="optional">
+            <ShortName>Nombre</ShortName>
+            <Data Type="string"/>
+        </Column>
+        <Column Id="ca" Use="optional">
+            <ShortName>Nom</ShortName>
+            <Data Type="string"/>
+        </Column>
+        <Key Id="codeKey">
+            <ShortName>CodeKey</ShortName>
+            <ColumnRef Ref="code"/>
+        </Key>
+    </ColumnSet>
+    <SimpleCodeList>
+         <Row>
+            <Value ColumnRef="code">
+                <SimpleValue>01</SimpleValue>
+            </Value>
+            <Value ColumnRef="en">
+                <SimpleValue>In cash</SimpleValue>
+            </Value>
+            <Value ColumnRef="es">
+                <SimpleValue>Al contado</SimpleValue>
+            </Value>
+             <Value ColumnRef="ca">
+                 <SimpleValue>Al comptat</SimpleValue>
+             </Value>
+        </Row>
+        <Row>
+            <Value ColumnRef="code">
+                <SimpleValue>02</SimpleValue>
+            </Value>
+            <Value ColumnRef="en">
+                <SimpleValue>Direct debit</SimpleValue>
+            </Value>
+            <Value ColumnRef="es">
+                <SimpleValue>Recibo Domiciliado</SimpleValue>
+            </Value>
+            <Value ColumnRef="ca">
+                <SimpleValue>Rebut Domiciliat</SimpleValue>
+            </Value>
+        </Row>
+                <Row>
+            <Value ColumnRef="code">
+                <SimpleValue>03</SimpleValue>
+            </Value>
+            <Value ColumnRef="en">
+                <SimpleValue>Receipt</SimpleValue>
+            </Value>
+            <Value ColumnRef="es">
+                <SimpleValue>Recibo</SimpleValue>
+            </Value>
+                    <Value ColumnRef="ca">
+                        <SimpleValue>Rebut</SimpleValue>
+                    </Value>
+        </Row>
+                <Row>
+            <Value ColumnRef="code">
+                <SimpleValue>04</SimpleValue>
+            </Value>
+            <Value ColumnRef="en">
+                <SimpleValue>Credit transfer</SimpleValue>
+            </Value>
+            <Value ColumnRef="es">
+                <SimpleValue>Transferencia</SimpleValue>
+            </Value>
+                    <Value ColumnRef="ca">
+                        <SimpleValue>Transferència</SimpleValue>
+                    </Value>
+        </Row>
+                <Row>
+            <Value ColumnRef="code">
+                <SimpleValue>05</SimpleValue>
+            </Value>
+            <Value ColumnRef="en">
+                <SimpleValue>Accepted bill of exchange</SimpleValue>
+            </Value>
+            <Value ColumnRef="es">
+                <SimpleValue>Letra Aceptada</SimpleValue>
+            </Value>
+                    <Value ColumnRef="ca">
+                        <SimpleValue>Lletra acceptada</SimpleValue>
+                    </Value>
+        </Row>
+                <Row>
+            <Value ColumnRef="code">
+                <SimpleValue>06</SimpleValue>
+            </Value>
+            <Value ColumnRef="en">
+                <SimpleValue>Documentary credit</SimpleValue>
+            </Value>
+            <Value ColumnRef="es">
+                <SimpleValue>Crédito Documentario</SimpleValue>
+            </Value>
+                    <Value ColumnRef="es">
+                        <SimpleValue>Crèdit Documentari</SimpleValue>
+                    </Value>
+        </Row>
+                <Row>
+            <Value ColumnRef="code">
+                <SimpleValue>07</SimpleValue>
+            </Value>
+            <Value ColumnRef="en">
+                <SimpleValue>Contract award</SimpleValue>
+            </Value>
+            <Value ColumnRef="es">
+                <SimpleValue>Contrato Adjudicación</SimpleValue>
+            </Value>
+                    <Value ColumnRef="ca">
+                        <SimpleValue>Adjudicació Contracte</SimpleValue>
+                    </Value>
+        </Row>
+                <Row>
+            <Value ColumnRef="code">
+                <SimpleValue>08</SimpleValue>
+            </Value>
+            <Value ColumnRef="en">
+                <SimpleValue>Bill of exchange</SimpleValue>
+            </Value>
+            <Value ColumnRef="es">
+                <SimpleValue>Letra de cambio</SimpleValue>
+            </Value>
+                    <Value ColumnRef="ca">
+                        <SimpleValue>Lletra de canvi</SimpleValue>
+                    </Value>
+        </Row>
+                <Row>
+            <Value ColumnRef="code">
+                <SimpleValue>09</SimpleValue>
+            </Value>
+            <Value ColumnRef="en">
+                <SimpleValue>Transferable promissory note</SimpleValue>
+            </Value>
+            <Value ColumnRef="es">
+                <SimpleValue>Pagaré a la  Orden</SimpleValue>
+            </Value>
+                    <Value ColumnRef="ca">
+                        <SimpleValue>Pagaré a l'ordre</SimpleValue>
+                    </Value>
+        </Row>
+                <Row>
+            <Value ColumnRef="code">
+                <SimpleValue>10</SimpleValue>
+            </Value>
+            <Value ColumnRef="en">
+                <SimpleValue>Non transferable promissory note</SimpleValue>
+            </Value>
+            <Value ColumnRef="es">
+                <SimpleValue>Pagaré No a la Orden</SimpleValue>
+            </Value>
+                    <Value ColumnRef="ca">
+                        <SimpleValue>Pagaré no a la ordre</SimpleValue>
+                    </Value>
+        </Row>
+                <Row>
+            <Value ColumnRef="code">
+                <SimpleValue>11</SimpleValue>
+            </Value>
+            <Value ColumnRef="en">
+                <SimpleValue>Cheque</SimpleValue>
+            </Value>
+            <Value ColumnRef="es">
+                <SimpleValue>Cheque</SimpleValue>
+            </Value>
+                    <Value ColumnRef="ca">
+                        <SimpleValue>Xec</SimpleValue>
+                    </Value>
+        </Row>
+                <Row>
+            <Value ColumnRef="code">
+                <SimpleValue>12</SimpleValue>
+            </Value>
+            <Value ColumnRef="en">
+                <SimpleValue>Open account reimbursement</SimpleValue>
+            </Value>
+            <Value ColumnRef="es">
+                <SimpleValue>Reposición</SimpleValue>
+            </Value>
+                    <Value ColumnRef="ca">
+                        <SimpleValue>Reposició</SimpleValue>
+                    </Value>
+        </Row>
+                <Row>
+            <Value ColumnRef="code">
+                <SimpleValue>13</SimpleValue>
+            </Value>
+            <Value ColumnRef="en">
+                <SimpleValue>Special payment</SimpleValue>
+            </Value>
+            <Value ColumnRef="es">
+                <SimpleValue>Especiales</SimpleValue>
+            </Value>
+                    <Value ColumnRef="ca">
+                        <SimpleValue>Especials</SimpleValue>
+                    </Value>
+        </Row>
+                <Row>
+            <Value ColumnRef="code">
+                <SimpleValue>14</SimpleValue>
+            </Value>
+            <Value ColumnRef="en">
+                <SimpleValue>Set-off by reciprocal credits</SimpleValue>
+            </Value>
+            <Value ColumnRef="es">
+                <SimpleValue>Compensación</SimpleValue>
+            </Value>
+                    <Value ColumnRef="ca">
+                        <SimpleValue>Compensació</SimpleValue>
+                    </Value>
+        </Row>
+                <Row>
+            <Value ColumnRef="code">
+                <SimpleValue>15</SimpleValue>
+            </Value>
+            <Value ColumnRef="en">
+                <SimpleValue>Payment by postgiro</SimpleValue>
+            </Value>
+            <Value ColumnRef="es">
+                <SimpleValue>Giro postal</SimpleValue>
+            </Value>
+                    <Value ColumnRef="ca">
+                        <SimpleValue>Giro postal</SimpleValue>
+                    </Value>
+        </Row>
+                <Row>
+            <Value ColumnRef="code">
+                <SimpleValue>16</SimpleValue>
+            </Value>
+            <Value ColumnRef="en">
+                <SimpleValue>Certified cheque</SimpleValue>
+            </Value>
+            <Value ColumnRef="es">
+                <SimpleValue>Cheque conformado</SimpleValue>
+            </Value>
+                    <Value ColumnRef="ca">
+                        <SimpleValue>Xec conformat</SimpleValue>
+                    </Value>
+        </Row>
+                <Row>
+            <Value ColumnRef="code">
+                <SimpleValue>17</SimpleValue>
+            </Value>
+            <Value ColumnRef="en">
+                <SimpleValue>Banker’s draft</SimpleValue>
+            </Value>
+            <Value ColumnRef="es">
+                <SimpleValue>Cheque bancario</SimpleValue>
+            </Value>
+                    <Value ColumnRef="ca">
+                        <SimpleValue>Xec bancari</SimpleValue>
+                    </Value>
+        </Row>
+                <Row>
+            <Value ColumnRef="code">
+                <SimpleValue>18</SimpleValue>
+            </Value>
+            <Value ColumnRef="en">
+                <SimpleValue>Cash on delivery</SimpleValue>
+            </Value>
+            <Value ColumnRef="es">
+                <SimpleValue>Pago contra reembolso</SimpleValue>
+            </Value>
+                    <Value ColumnRef="es">
+                        <SimpleValue>Contra reemborsament</SimpleValue>
+                    </Value>
+        </Row>
+                <Row>
+            <Value ColumnRef="code">
+                <SimpleValue>19</SimpleValue>
+            </Value>
+            <Value ColumnRef="en">
+                <SimpleValue>Payment by card</SimpleValue>
+            </Value>
+            <Value ColumnRef="es">
+                <SimpleValue>Pago mediante tarjeta</SimpleValue>
+            </Value>
+                    <Value ColumnRef="es">
+                        <SimpleValue>Pagament amb targeta</SimpleValue>
+                    </Value>
+        </Row>
+    </SimpleCodeList>
+</gc:CodeList>

@@ -187,6 +187,12 @@ class InvoicesController < ApplicationController
       @invoices_not_sent = InvoiceDocument.find(:all,:conditions => ["client_id = ? and state = 'new'",@client.id]).sort
       @invoices_sent = InvoiceDocument.find(:all,:conditions => ["client_id = ? and state = 'sent'",@client.id]).sort
       @invoices_closed = InvoiceDocument.find(:all,:conditions => ["client_id = ? and state = 'closed'",@client.id]).sort
+    elsif @invoice.is_a? ReceivedInvoice
+      # TODO also show the database record version?
+      # Redel XML with XSLT in browser
+      @xsl = 'facturae32'
+      render :template => 'invoices/show_with_xsl'
+      #render :template => 'invoices/show_with_xsl_iframe'
     end
   end
 

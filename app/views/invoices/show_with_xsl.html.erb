@@ -1,0 +1,68 @@
+<div id="invoice_wrapper">
+  
+  <div id="InvoiceOutput">
+    ............
+  </div>
+
+  <% if @invoice.events.any? -%>
+    <div id="events">
+      <h4><%=l(:events)%></h4>
+      <p></p>
+      <ul>
+        <% @invoice.events.each do |e| -%>
+          <li><%= e %><%= download_link_for(e) %></li>
+        <% end -%>
+      </ul>
+    </div>
+  <% end -%>
+
+</div>
+
+<% content_for :sidebar do %>
+  <%= render :partial => 'common/sidebar' %>
+  <%= render :partial => "invoices/#{@invoice.class.to_s.underscore}_menu" %>
+<% end %>
+
+<% content_for :header_tags do %>
+  <%= stylesheet_link_tag 'minimal', :plugin => 'haltr' %>
+  <%= javascript_include_tag 'sarissa', :plugin => 'haltr' %>
+  <script type="text/javascript">
+ 
+/**
+    Load file (located in relative path on the server) via AJAX (in synchronous mode)
+*/
+function loadFile(sUrl){
+
+    var response;
+
+    new Ajax.Request(sUrl,
+        {
+         method:'get',
+         asynchronous:false,
+         onSuccess: function(transport){
+             response = transport.responseText || "no response text";
+         },
+            onFailure: function(){ alert('Something went wrong loading the xslt resource...') }
+        });
+   
+    return response;
+}
+ 
+    function XsltTransform() {
+    sourceXml= loadFile("<%= url_for (:action => 'legal', :id => @invoice, :format => :xml, :kk => 123) %>");
+    xml = (new DOMParser()).parseFromString(sourceXml, "text/xml");
+    sourceXslt = loadFile("/plugin_assets/haltr/xsl/<%= @xsl %>.xsl");
+    xslt = (new DOMParser()).parseFromString(sourceXslt, "text/xml");
+    var processor = new XSLTProcessor();
+    processor.importStylesheet(xslt);
+    var XmlDom = processor.transformToDocument(xml)
+    var serializer = new XMLSerializer(); 
+    var output = serializer.serializeToString(XmlDom.documentElement);
+    var outputDiv = document.getElementById("InvoiceOutput");
+    outputDiv.innerHTML = output;
+  }
+  var oldonload = window.onload;
+  window.onload = (typeof window.onload != 'function') ?
+    XsltTransform : function() { oldonload(); XsltTransform(); };
+</script>
+<% end %>
