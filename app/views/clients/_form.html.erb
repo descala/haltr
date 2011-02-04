@@ -12,6 +12,6 @@
 <p><%= f.text_field :countrycode %></p>
 <p><%= f.text_field :bank_account, :size => 30 %></p>
 <p><%= f.text_field :currency, :required => true %></p>
-<p><%= f.select :language, [[I18n.t(:general_lang_name, :locale=>:ca),"ca"],[I18n.t(:general_lang_name, :locale=>:es),"es"],[I18n.t(:general_lang_name, :locale=>:en),"en"]] %></p>
+<p><%= f.select :language, %w(ca es en).collect {|l| [I18n.t(:general_lang_name,:locale=>l),l]} %></p>
 <p><%= f.select :invoice_format, ExportChannels.for_select %></p>
 </div>

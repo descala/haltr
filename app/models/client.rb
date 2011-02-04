@@ -22,7 +22,8 @@ class Client < ActiveRecord::Base
     super
     self.currency ||= Money.default_currency.iso_code
     self.invoice_format ||= ExportChannels.default
-    self.language ||= "es"
+    self.language ||= User.current.language
+    self.language = "es" if self.language.blank?
   end
 
   # Masks db value with default if db value is deprecated
