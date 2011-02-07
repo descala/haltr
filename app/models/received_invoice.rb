@@ -22,6 +22,9 @@ class ReceivedInvoice < InvoiceDocument
         Event.create(:name=>transition.event.to_s,:invoice=>invoice,:user=>User.current)
       end
     end
+    before_transition any => :accepted, :do => :notify_accepted
+    before_transition any => :refused,  :do => :notify_refused
+
     event :success_validating_format do
       transition :validating_format => :validating_signature
     end
@@ -72,6 +75,14 @@ class ReceivedInvoice < InvoiceDocument
 
   def create_event
     Event.create(:name=>'validating_format',:invoice=>self,:md5=>md5)
+  end
+
+  def notify_accepted
+    MailNotifier.deliver_received_invoice_accepted(self)
+  end
+
+  def notify_refused
+    MailNotifier.deliver_received_invoice_refused(self)
   end
 
 end

@@ -97,6 +97,8 @@ en:
   mark_refused: "Refuse invoice"
   accept: "Accepted"
   refuse: "Refused"
+  received_invoice_accepted: "%{company} accepted invoice number %{num}"
+  received_invoice_refused: "%{company} refused invoice number %{num}"
 
   # Events
   events: "Event log"
@@ -179,6 +181,7 @@ en:
   field_company: "Company"
   logo: "Logo"
   trace_url: "B2brouter URL"
+  b2b_subtitle: "Your online invoicing service"
 
   # Terms
   "0": Immediately

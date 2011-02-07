@@ -109,6 +109,8 @@ ca:
   mark_refused: "Refusa la factura"
   accept: "Acceptada"
   refuse: "Refusada"
+  received_invoice_accepted: "%{company} ha acceptat la seva factura número %{num}"
+  received_invoice_refused: "%{company} ha refusat la seva factura número %{num}"
 
   # Events
   events: "Log d'esdeveniments"
@@ -191,6 +193,7 @@ ca:
   field_company: "Empresa"
   logo: "Logo"
   trace_url: "URL del b2brouter"
+  b2b_subtitle: "El teu portal de factura electrònica"
 
   # Terms
   "0": Al comptat
