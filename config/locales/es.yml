@@ -106,6 +106,7 @@ es:
   accept_and_mail: "Aceptar con mail"
   accept_without_mail: "Aceptar sin mail"
   cancel: "Cancelar"
+  client_without_email: "El cliente associado no tiene email definido"
 
   # Events
   events: "Log de eventos"

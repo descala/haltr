@@ -118,6 +118,7 @@ ca:
   accept_and_mail: "Acceptar amb mail"
   accept_without_mail: "Acceptar sense mail"
   cancel: "Cancelar"
+  client_without_email: "El client associat no té email definit"
 
   # Events
   events: "Log d'esdeveniments"
