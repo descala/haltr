@@ -123,11 +123,21 @@ class InvoicesController < ApplicationController
     render :text => "OK"
   end
 
+  def mark_accepted_with_mail
+    MailNotifier.deliver_received_invoice_accepted(@invoice,params[:reason])
+    mark_accepted
+  end
+
   def mark_accepted
     @invoice.accept
     redirect_to :back
   rescue ActionController::RedirectBackError => e
     render :text => "OK"
+  end
+
+  def mark_refused_with_mail
+    MailNotifier.deliver_received_invoice_refused(@invoice,params[:reason])
+    mark_refused
   end
 
   def mark_refused

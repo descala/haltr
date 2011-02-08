@@ -111,6 +111,13 @@ ca:
   refuse: "Refusada"
   received_invoice_accepted: "%{company} ha acceptat la seva factura número %{num}"
   received_invoice_refused: "%{company} ha refusat la seva factura número %{num}"
+  refuse_notification_to: "Notificar el refús a %{mail}"
+  accept_notification_to: "Notificar l'acceptació a %{mail}"
+  refuse_and_mail: "Refusar amb mail"
+  refuse_without_mail: "Refusar sense mail"
+  accept_and_mail: "Acceptar amb mail"
+  accept_without_mail: "Acceptar sense mail"
+  cancel: "Cancelar"
 
   # Events
   events: "Log d'esdeveniments"

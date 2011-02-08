@@ -1,0 +1,26 @@
+<fieldset style="padding:5px 30px;">
+  <legend><%= l :accept_notification_to, :mail => @invoice.client.email%></legend>
+<% form_tag(:controller=>'invoices',:action=>'mark_accepted_with_mail') do -%>
+
+ <%=hidden_field_tag "id", @invoice.id %>
+
+<pre>
+
+<%= I18n.t(:received_invoice_accepted, :num => @invoice.number, :company => @invoice.client.project.company.name) %>
+
+<%= text_area_tag 'reason', "", :rows => 4, :cols => 40 %>
+
+----------------------------------------
+
+<%= render :partial => "mail_notifier/invoice", :locals => { :invoice => @invoice } %>
+
+</pre>
+
+<%= submit_tag I18n.t(:accept_and_mail) %>
+<% end -%>
+
+<% form_tag(:controller=>'invoices',:action=>'mark_accepted') do -%>
+  <%= submit_tag I18n.t(:accept_without_mail) %>
+  <%= button_to_function I18n.t(:cancel), "document.getElementById('invoice-accept').hide();" %>
+<% end -%>
+</fieldset>

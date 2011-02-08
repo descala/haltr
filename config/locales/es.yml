@@ -99,6 +99,13 @@ es:
   refuse: "Rechazada"
   received_invoice_accepted: "%{company} ha aceptado su factura número %{num}"
   received_invoice_refused: "%{company} ha rechazado su factura número %{num}"
+  refuse_notification_to: "Notificar el rechazo a %{mail}"
+  accept_notification_to: "Notificar la aceptación a %{mail}"
+  refuse_and_mail: "Rechazar con mail"
+  refuse_without_mail: "Rechazar sin mail"
+  accept_and_mail: "Aceptar con mail"
+  accept_without_mail: "Aceptar sin mail"
+  cancel: "Cancelar"
 
   # Events
   events: "Log de eventos"
