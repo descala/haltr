@@ -18,6 +18,11 @@ class MailNotifier < ActionMailer::Base
     body :invoice => invoice, :reason => reason
     content_type "text/plain"
     body render(:file => "received_invoice_refused.rhtml", :body => body, :layout => 'mail_notifier.erb')
+    if invoice.fetch_legal_by_http
+      attachment :content_type => "application/xml",
+          :filename => invoice.legal_filename,
+          :body => invoice.legal_invoice
+    end
   end
 
 end

@@ -41,6 +41,9 @@ class InvoiceDocument < Invoice
         return false
       end
     end
+  rescue Exception => e
+    logger.error "Error retrieving invoice #{id} legal by http: #{e.message}"
+    return false
   end
 
 end
