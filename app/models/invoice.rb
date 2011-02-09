@@ -83,7 +83,7 @@ class Invoice < ActiveRecord::Base
     if self.apply_withholding_tax
       subtotal * (withholding_tax_percent / 100.0)
     else
-      0.to_money
+      0.to_money(currency)
     end
   end
 
