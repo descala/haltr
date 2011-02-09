@@ -23,7 +23,7 @@ class Terms
         @due_date = Date.new(date_with_months.year,date_with_months.month,day)
       end
     end
-    @description = I18n.t(code)
+    @description = I18n.t(code) if code and !code.blank?
   end
 
   def self.for_select
