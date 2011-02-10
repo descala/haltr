@@ -175,7 +175,8 @@ class InvoiceReceiver < ActionMailer::Base
                           :tax_percent     => invoice_tax_percent,
                           :subtotal        => invoice_subtotal.to_money,
                           :withholding_tax => invoice_withholding_tax.to_money,
-                          :due_date        => invoice_due_date)
+                          :due_date        => invoice_due_date,
+                          :project         => company.project)
       return r
     end
 

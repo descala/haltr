@@ -65,7 +65,7 @@ class InvoicesController < ApplicationController
   end
 
   def new
-    @invoice = IssuedInvoice.new(:client_id=>params[:client])
+    @invoice = IssuedInvoice.new(:client_id=>params[:client],:project=>@project)
   end
 
   def edit
@@ -74,6 +74,7 @@ class InvoicesController < ApplicationController
 
   def create
     @invoice = IssuedInvoice.new(params[:invoice])
+    @invoice.project = @project
     if @invoice.save
       flash[:notice] = l(:notice_successful_create)
       redirect_to :action => 'show', :id => @invoice
@@ -248,14 +249,6 @@ class InvoicesController < ApplicationController
   rescue Errno::ECONNREFUSED, Errno::EHOSTUNREACH => e
     flash[:warning]=l(:cant_connect_trace, e.message)
     redirect_to :action => 'show', :id => @invoice
-  end
-
-  def project
-    if self.client.nil?
-      self.user.project
-    else
-      self.client.project
-    end
   end
 
   private

@@ -110,7 +110,7 @@ class TasksController < ApplicationController
 
   def find_invoice
     @invoice = IssuedInvoice.find params[:id]
-    @project = @invoice.client.project
+    @project = @invoice.project
   end
 
 end

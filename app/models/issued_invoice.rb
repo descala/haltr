@@ -164,7 +164,7 @@ class IssuedInvoice < InvoiceDocument
   def number_must_be_unique_in_project
     return if self.client.nil?
     return if !self.new_record? && !self.number_changed?
-    if self.client.project.clients.collect {|c| c.issued_invoices }.flatten.compact.collect {|i| i.number unless i.id == self.id}.include? self.number
+    if self.project.clients.collect {|c| c.issued_invoices }.flatten.compact.collect {|i| i.number unless i.id == self.id}.include? self.number
       errors.add(:base, ("#{l(:field_number)} #{l(:taken,:scope=>'activerecord.errors.messages')}"))
     end
   end

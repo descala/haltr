@@ -10,7 +10,7 @@ class InvoiceTemplate < Invoice
 
   def next_invoice
     i = IssuedInvoice.new self.attributes
-    i.number = IssuedInvoice.next_number(self.client.project)
+    i.number = IssuedInvoice.next_number(self.project)
     i.tax_percent = Invoice::TAX
     i.invoice_template = self
     i.state = 'new'

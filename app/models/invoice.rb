@@ -2,9 +2,6 @@ class Invoice < ActiveRecord::Base
 
   unloadable
 
-  has_many :events, :dependent => :destroy
-  belongs_to :user
-
   # 1 - cash (al comptat)
   # 2 - debit (rebut domiciliat)
   # 4 - transfer (transferència)
@@ -16,8 +13,10 @@ class Invoice < ActiveRecord::Base
   TAX = 18
 
   has_many :invoice_lines, :dependent => :destroy
+  has_many :events, :dependent => :destroy
+  belongs_to :project
   belongs_to :client
-  validates_presence_of :client, :date, :currency, :user_id
+  validates_presence_of :client, :date, :currency, :project_id
   validates_inclusion_of :currency, :in  => Money::Currency::TABLE.collect {|k,v| v[:iso_code] }
 
   accepts_nested_attributes_for :invoice_lines,
@@ -35,10 +34,9 @@ class Invoice < ActiveRecord::Base
     super
     self.discount_percent ||= 0
     self.currency ||= self.client.currency rescue nil
-    self.currency ||= self.client.company.currency rescue nil
+    self.currency ||= self.company.currency rescue nil
     self.currency ||= Money.default_currency.iso_code
     self.payment_method ||= 1
-    self.user = User.current
   end
 
   def currency=(v)
@@ -165,12 +163,8 @@ class Invoice < ActiveRecord::Base
     self.number <=> oth.number
   end
 
-  def project
-    self.client.project
-  end
-
   def company
-    self.client.project.company
+    self.project.company
   end
 
   def custom_due?

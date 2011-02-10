@@ -1,4 +1,4 @@
-<%= I18n.t(:received_invoice_refused, :num => @invoice.number, :company => @invoice.client.project.company.name) %>
+<%= I18n.t(:received_invoice_refused, :num => @invoice.number, :company => @invoice.company.name) %>
 
 <% unless @reason.blank? -%>
   <%= @reason %>

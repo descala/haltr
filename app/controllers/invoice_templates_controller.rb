@@ -40,8 +40,7 @@ class InvoiceTemplatesController < ApplicationController
   end
 
   def new
-    @invoice = InvoiceTemplate.new
-    @invoice.client_id = params[:client]
+    @invoice = InvoiceTemplate.new(:client_id=>params[:client],:project=>@project)
     render :template => "invoices/new"
   end
 
@@ -52,6 +51,7 @@ class InvoiceTemplatesController < ApplicationController
 
   def create
     @invoice = InvoiceTemplate.new(params[:invoice])
+    @invoice.project=@project
     if @invoice.save
       flash[:notice] = l(:notice_successful_create)
       redirect_to :action => 'index', :id => @project
@@ -96,7 +96,7 @@ class InvoiceTemplatesController < ApplicationController
     @invoice = InvoiceTemplate.find params[:id]
     @lines = @invoice.invoice_lines
     @client = @invoice.client
-    @project = @client.project
+    @project = @invoice.project
   rescue ActiveRecord::RecordNotFound
     render_404
   end
@@ -104,7 +104,7 @@ class InvoiceTemplatesController < ApplicationController
   def find_invoice
     @issued_invoice = IssuedInvoice.find params[:id]
     @client = @issued_invoice.client
-    @project = @client.project
+    @project = @issued_invoice.project
   rescue ActiveRecord::RecordNotFound
     render_404
   end
