@@ -13,7 +13,7 @@ module InvoicesHelper
   end
 
   def accept_link(invoice)
-    if invoice.state?(:electronic_invoice) or invoice.state?(:non_electronic_invoice)
+    if invoice.state?(:received)
       link_to(I18n.t(:mark_accepted), {:action => :mark_accepted, :id => invoice})
     end
   end

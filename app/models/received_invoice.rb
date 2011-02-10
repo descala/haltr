@@ -27,25 +27,25 @@ class ReceivedInvoice < InvoiceDocument
       transition :validating_format => :validating_signature
     end
     event :error_validating_format do
-      transition :validating_format => :non_electronic_invoice
+      transition :validating_format => :received
     end
     event :discard_validating_format do
-      transition :validating_format => :non_electronic_invoice
+      transition :validating_format => :received
     end
     event :success_validating_signature do
-      transition :validating_signature => :electronic_invoice
+      transition :validating_signature => :received
     end
     event :error_validating_signature do
-      transition :validating_signature => :non_electronic_invoice
+      transition :validating_signature => :received
     end
     event :discard_validating_signature do
-      transition :validating_signature => :non_electronic_invoice
+      transition :validating_signature => :received
     end
     event :refuse do
-      transition [:accepted,:non_electronic_invoice,:electronic_invoice] => :refused
+      transition [:accepted,:received] => :refused
     end
     event :accept do
-      transition [:electronic_invoice,:non_electronic_invoice] => :accepted
+      transition [:received] => :accepted
     end
     event :pay do
       transition :accepted => :paid
