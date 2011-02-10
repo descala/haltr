@@ -18,7 +18,7 @@ class InvoicesController < ApplicationController
     sort_init 'number', 'desc'
     sort_update %w(type state number date due_date clients.name import_in_cents)
 
-    c = ARCondition.new(["clients.project_id = ?",@project.id])
+    c = ARCondition.new(["invoices.project_id = ?",@project.id])
 
     unless params[:type] == "all"
       c << ["type='IssuedInvoice'"] if params[:type] == "issued"
