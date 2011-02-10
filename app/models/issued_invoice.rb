@@ -54,10 +54,10 @@ class IssuedInvoice < InvoiceDocument
     event :bounced do
       transition :sent => :discarded
     end
-    event :they_accept do
+    event :accept_notification do
       transition :sent => :accepted
     end
-    event :they_refuse do
+    event :refuse_notification do
       transition :sent => :refused
     end
     event :paid_notification do
