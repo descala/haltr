@@ -8,7 +8,7 @@ class InvoiceDocument < Invoice
 
   has_many :payments, :foreign_key => :invoice_id, :dependent => :nullify
 
-  attr_accessor :legal_filename, :legal_invoice
+  attr_accessor :legal_filename, :legal_content_type, :legal_invoice
 
   def final_md5
     #TODO: check #2451 to store md5 on invoice.
@@ -35,6 +35,7 @@ class InvoiceDocument < Invoice
         else
           self.legal_filename = "invoice.xml"
         end
+        self.legal_content_type = response["Content-Type"]
         self.legal_invoice = response.body
         return true
       else
