@@ -108,11 +108,6 @@ class IssuedInvoice < InvoiceDocument
     ExportChannels.channel(client.invoice_format) != nil
   end
 
-  def past_due?
-    #TODO
-    false
-  end
-
   def self.last_number(project)
     i = IssuedInvoice.last(:order => "number", :include => [:client], :conditions => ["clients.project_id=? AND draft=?",project.id,false])
     i.number if i
