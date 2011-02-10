@@ -256,7 +256,7 @@ class InvoicesController < ApplicationController
   def find_invoice
     @invoice = InvoiceDocument.find params[:id]
     @lines = @invoice.invoice_lines
-    @client = @invoice.client || Client.new(:project=>@invoice.project)
+    @client = @invoice.client || Client.new(:name=>"unknown",:contrycode=>"ESP",:project=>@invoice.project)
     @project = @invoice.project
   rescue ActiveRecord::RecordNotFound
     render_404
