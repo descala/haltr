@@ -1,3 +1,5 @@
+# to draw states graph execute:
+#   rake state_machine:draw FILE=invoice.rb CLASS=IssuedInvoice ORIENTATION=landscape
 class IssuedInvoice < InvoiceDocument
 
   unloadable
@@ -26,7 +28,7 @@ class IssuedInvoice < InvoiceDocument
       transition :new => :sending
     end
     event :requeue do
-      transition [:closed,:sending,:sent,:error,:discarded] => :sending
+      transition all - :new => :sending
     end
     event :success_sending do
       transition [:sending,:error] => :sent
@@ -44,13 +46,22 @@ class IssuedInvoice < InvoiceDocument
       transition [:error,:sending] => :discarded
     end
     event :paid do
-      transition [:sent] => :closed
+      transition [:sent,:accepted,:allegedly_paid] => :closed
     end
     event :unpaid do
-      transition [:closed] => :sent
+      transition :closed => :sent
     end
     event :bounced do
-      transition [:sent] => :discarded
+      transition :sent => :discarded
+    end
+    event :they_accept do
+      transition :sent => :accepted
+    end
+    event :they_refuse do
+      transition :sent => :refused
+    end
+    event :paid_notification do
+      transition :accepted => :allegedly_paid
     end
   end
 

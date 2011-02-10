@@ -1,8 +1,6 @@
 class Event < ActiveRecord::Base
   unloadable
 
-  ACTIONS = %w(sending receiving validating_format validating_signature)
-
   validates_presence_of :name
   validates_presence_of :invoice_id
   belongs_to :user
@@ -34,8 +32,9 @@ class Event < ActiveRecord::Base
   end
 
   def self.automatic
-    events = %w(bounced)
-    ACTIONS.each do |a|
+    events = %w(bounced delivered registered they_refuse they_accept paid_notification)
+    actions = %w(sending receiving validating_format validating_signature)
+    actions.each do |a|
       events << "success_#{a}"
       events << "error_#{a}"
       events << "discard_#{a}"

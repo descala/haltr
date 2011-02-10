@@ -1,7 +1,5 @@
-# to execute
-#   rake state_machine:draw FILE=received_invoice.rb CLASS=ReceivedInvoice
-# we need
-#   class ReceivedInvoice < ActiveRecord::Base
+# to draw states graph execute:
+#   rake state_machine:draw FILE=invoice.rb CLASS=ReceivedInvoice
 class ReceivedInvoice < InvoiceDocument
 
   unloadable
