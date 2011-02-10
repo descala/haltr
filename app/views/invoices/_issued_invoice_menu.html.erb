@@ -8,7 +8,7 @@
     <li><%= change_state_link(@invoice) %></li>
     <li><%= link_to "#{l(:save_invoice)} PDF", :action=>'pdf', :id=>@invoice %></li>
     <% if @invoice.can_be_exported? %>
-      <li><%= link_to "#{l(:label_send)} (#{l(@invoice.client.invoice_format)})" , :action=>'send_invoice', :id=>@invoice %></li>
+      <li><%= link_to "#{l(:label_send)} (#{l(@client.invoice_format)})" , :action=>'send_invoice', :id=>@invoice %></li>
     <% end -%>
     <% if @invoice.state?(:sent) -%>
       <li><%= link_to l(:receive_payment), :controller => 'payments', :action => 'new', :id => @project, :invoice_id => @invoice %></li>
@@ -26,7 +26,7 @@
     <h3><%=l(:recipients)%></h3>
     <ul class="secondary">
       <li>
-      <%= link_to "#{@invoice.client.name} &lt;#{@invoice.client.email}&gt;", :controller =>'clients' ,:action=>'edit', :id=>@invoice.client %>
+      <%= link_to "#{@client.name} &lt;#{@client.email}&gt;", :controller =>'clients' ,:action=>'edit', :id=>@client %>
       </li>
       <% @invoice.recipients.each do |person| -%>
         <li>

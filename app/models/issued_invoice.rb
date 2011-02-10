@@ -116,7 +116,7 @@ class IssuedInvoice < InvoiceDocument
   end
 
   def can_be_exported?
-    ExportChannels.channel(client.invoice_format) != nil
+    self.valid? and ExportChannels.channel(client.invoice_format) != nil
   end
 
   def self.last_number(project)

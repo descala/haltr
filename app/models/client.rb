@@ -69,4 +69,12 @@ class Client < ActiveRecord::Base
     "#{address1}\n#{address2}"
   end
 
+  def before_destroy
+    if self.invoices.any?
+      #TODO: this error not shown
+      errors.add_to_base("Client has #{invoices.size} invoices associated")
+      false
+    end
+  end
+
 end
