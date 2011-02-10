@@ -43,6 +43,7 @@ class InvoiceReceiver < ActionMailer::Base
       xpaths = {}
       channel=""
       if facturae_version
+        invoice_format="facturae#{facturae_version.text}"
         InvoiceReceiver.log "Incoming invoice is FacturaE #{facturae_version.text}"
         xpaths[:invoice_number]          = [ "//Invoices/Invoice/InvoiceHeader/InvoiceNumber",
                                              "//Invoices/Invoice/InvoiceHeader/InvoiceSeriesCode" ]
@@ -68,11 +69,12 @@ class InvoiceReceiver < ActionMailer::Base
         xpaths[:buyer_taxcode]           = "//Parties/BuyerParty/TaxIdentification/TaxIdentificationNumber"
         xpaths[:currency]                = "//FileHeader/Batch/InvoiceCurrencyCode"
 
-        ch_name = @@channels["facturae#{facturae_version.text}"]
+        ch_name = @@channels[invoice_format]
         if ch_name
           channel="/var/spool/b2brouter/input/#{ch_name}"
         end
       elsif ubl_version
+        invoice_format="ubl#{ubl_version.text}"
         InvoiceReceiver.log "Incoming invoice is UBL #{facturae_version.text}"
         xpaths[:invoice_number]          = ""
         xpaths[:invoice_date]            = ""
@@ -93,7 +95,7 @@ class InvoiceReceiver < ActionMailer::Base
         xpaths[:seller_cp_city2]         = nil
         xpaths[:buyer_taxcode]           = ""
         xpaths[:currency]                = ""
-        ch_name = @@channels["ubl#{ubl_version.text}"]
+        ch_name = @@channels[invoice_format]
         if ch_name
           channel="/var/spool/b2brouter/input/#{ch_name}"
         end
@@ -102,6 +104,7 @@ class InvoiceReceiver < ActionMailer::Base
         #TODO: bounce message
       end
       ri = invoice_from_xml(doc,xpaths)
+      ri.invoice_format = invoice_format
       invoice.rewind
       ri.md5 = Digest::MD5.hexdigest(invoice.read.chomp)
       ri.save!
