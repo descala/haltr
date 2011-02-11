@@ -86,6 +86,7 @@ en:
   sending_log: "Log d'enviament"
   sending_log: "Sending log"
   download_legal: "Download legal invoice"
+  download_notification: "Download notification"
   label_all_invoices: "All invoices"
   label_issued: "Issued invoices"
   label_received: "Received invoices"
@@ -130,6 +131,12 @@ en:
   success_validating_signature: "Signature validation success"
   error_validating_signature: "Error on signature validation"
   discard_validating_signature: "Error on signature validation"
+  sent_notification: "Notificación AOC: Recibida"
+  delivered_notification: "Notificación AOC: Enviada"
+  registered_notification: "Notificación AOC: Registrada"
+  accept_notification: "Notificación AOC: Aceptada"
+  refuse_notification: "Notificación AOC: Rechazada"
+  paid_notification: "Notificación AOC: Pagada"
 
   # Invoice templates
   label_invoice_template_new: New template

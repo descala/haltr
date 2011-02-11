@@ -63,6 +63,15 @@ class IssuedInvoice < InvoiceDocument
     event :paid_notification do
       transition :accepted => :allegedly_paid
     end
+    event :sent_notification do
+      transition :sent => :sent
+    end
+    event :delivered_notification do
+      transition :sent => :sent
+    end
+    event :registered_notification do
+      transition :sent => :sent
+    end
   end
 
   def sent?

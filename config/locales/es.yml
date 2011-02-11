@@ -86,6 +86,7 @@ es:
   sending_log: "Log d'enviament"
   sending_log: "Log de envio"
   download_legal: "Descargar factura legal"
+  download_notification: "Descargar notificación"
   label_all_invoices: "Todas las facturas"
   label_issued: "Facturas emitidas"
   label_received: "Facturas"
@@ -129,6 +130,12 @@ es:
   discard_validating_format: "Error en la validación de formato"
   success_validating_signature: "Validación de firma correcta"
   discard_validating_signature: "Error en la validación de firma"
+  sent_notification: "AOC notification: Received"
+  delivered_notification: "AOC notification: Sent"
+  registered_notification: "AOC notification: Registered"
+  accept_notification: "AOC notification: Accepted"
+  refuse_notification: "AOC notification: Refused"
+  paid_notification: "AOC notification: Paid"
 
   # Invoice templates
   label_invoice_template_new: Nueva plantilla

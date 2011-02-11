@@ -13,12 +13,13 @@ class Event < ActiveRecord::Base
   end
 
   def to_s
-    str = "#{format_time created_at} -- "
-    if !user
-      # TODO: log the origin of the REST event. i.e. "Sent by host4"
-      str += "#{l(name)}"
-    else
-      str += "#{l(name)} #{l(:by)} #{user.name}"
+    # TODO: log the origin of the REST event. i.e. "Sent by host4"
+    str = "#{format_time created_at} -- #{l(name)}"
+    if user
+      str += " #{l(:by)} #{user.name}"
+    end
+    if info
+      str += " (#{info})"
     end
     str
   end
@@ -32,7 +33,8 @@ class Event < ActiveRecord::Base
   end
 
   def self.automatic
-    events = %w(bounced delivered registered refuse_notification accept_notification paid_notification)
+    events  = %w(bounced sent_notification delivered_notification registered_notification)
+    events += %w(refuse_notification accept_notification paid_notification)
     actions = %w(sending receiving validating_format validating_signature)
     actions.each do |a|
       events << "success_#{a}"

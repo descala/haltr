@@ -98,6 +98,7 @@ ca:
   state_paid: "Pagada"
   sending_log: "Log d'enviament"
   download_legal: "Descarregar factura legal"
+  download_notification: "Descarregar notificació"
   label_all_invoices: "Totes les factures"
   label_issued: "Factures emeses"
   label_received: "Factures rebudes"
@@ -142,6 +143,12 @@ ca:
   success_validating_signature: "Validació de signatura correcta"
   error_validating_signature: "Error en la validació de signatura"
   discard_validating_signature: "Error en la validació de signatura"
+  sent_notification: "Notificació AOC: Rebuda"
+  delivered_notification: "Notificació AOC: Enviada"
+  registered_notification: "Notificació AOC: Registrada"
+  accept_notification: "Notificació AOC: Acceptada"
+  refuse_notification: "Notificació AOC: Refusada"
+  paid_notification: "Notificació AOC: Pagada"
 
   # Invoice templates
   label_invoice_template_new: Nova plantilla
