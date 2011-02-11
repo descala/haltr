@@ -236,6 +236,7 @@ ca:
   facturae_31: "Facturae 3.1 per email"
   facturae_32: "Facturae 3.2 per email"
   signed_pdf:  "PDF signat, enviat per email"
+  aoc: "Hub e-FACT de la AOC"
 
   # Errors
   cant_connect_trace: "No es pot connectar a la plataforma b2brouter"
