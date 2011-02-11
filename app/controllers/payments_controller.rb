@@ -17,7 +17,7 @@ class PaymentsController < ApplicationController
     sort_init 'payments.date', 'desc'
     sort_update %w(payments.date amount_in_cents invoices.number)
 
-    c = ARCondition.new(["project_id = ?", @project])
+    c = ARCondition.new(["payments.project_id = ?", @project])
 
     unless params[:name].blank?
       name = "%#{params[:name].strip.downcase}%"
