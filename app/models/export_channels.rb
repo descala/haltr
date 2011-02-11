@@ -11,7 +11,7 @@ class ExportChannels
       'facturae_31'   => { :format=>'facturae31', :channel=>'free_xml'},
       'facturae_32'   => { :format=>'facturae32', :channel=>'free_xml'},
       'signed_pdf'    => { :format=>'facturae32', :channel=>'free_pdf'},
-      'aoc'           => { :format=>'facturae32', :channel=>'free_aoc'}
+      'aoc'           => { :format=>'facturae32', :channel=>'free_aoc', :private=>true}
     }
   end
 
@@ -32,7 +32,12 @@ class ExportChannels
   end
 
   def self.for_select
-    available.collect {|k,v| [ I18n.t(k), k ] }
+    available.collect {|k,v|
+      unless User.current.admin?
+        next if v[:private]
+      end
+      [ I18n.t(k), k ]
+    }.compact
   end
 
   def self.path(id)
