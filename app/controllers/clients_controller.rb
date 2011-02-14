@@ -81,8 +81,12 @@ class ClientsController < ApplicationController
     @client = Client.find(params[:client]) unless params[:client].blank?
     @client ||= Client.new(:project=>@project)
     @client.company = @company
-    @client.save
-    redirect_to :action => 'edit', :id => @client
+    if @client.save
+      redirect_to :action => 'edit', :id => @client
+    else
+      @client.company = nil
+      render :action => 'edit'
+    end
   end
 
   def unlink
