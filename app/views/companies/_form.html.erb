@@ -11,6 +11,7 @@
   <p><%= f.text_field :city %></p>
   <p><%= f.text_field :address %></p>
   <p><%= f.text_field :website %></p>
+  <p><%= f.select :invoice_format, ExportChannels.for_select %></p>
   <p><%= f.check_box :public %></p>
   <br />
   <hr />
