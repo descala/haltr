@@ -7,8 +7,8 @@ class ClientsController < ApplicationController
   helper :sort
   include SortHelper
 
-  before_filter :find_project, :only => [:index,:new,:create]
-  before_filter :find_client, :except => [:index,:new,:create]
+  before_filter :find_project,  :only => [:index,:new,:create,:check_cif,:link_to_profile]
+  before_filter :find_client, :except => [:index,:new,:create,:check_cif,:link_to_profile]
   before_filter :authorize
 
   include CompanyFilter
@@ -22,7 +22,7 @@ class ClientsController < ApplicationController
 
     unless params[:name].blank?
       name = "%#{params[:name].strip.downcase}%"
-      c << ["LOWER(name) LIKE ? OR LOWER(address1) LIKE ? OR LOWER(address2) LIKE ?", name, name, name]
+      c << ["LOWER(name) LIKE ? OR LOWER(address) LIKE ? OR LOWER(address2) LIKE ?", name, name, name]
     end
 
     @client_count = Client.count(:conditions => c.conditions)
@@ -43,6 +43,7 @@ class ClientsController < ApplicationController
 
   def edit
     @client = Client.find(params[:id])
+    @company = Company.find(:all, :conditions => ["taxcode = ? and public = true", @client.taxcode]).first
   end
 
   def create
@@ -67,6 +68,28 @@ class ClientsController < ApplicationController
   def destroy
     @client.destroy
     redirect_to :action => 'index', :id => @project
+  end
+
+  def check_cif
+    @company = Company.find(:all, :conditions => ["taxcode = ? and public = true", params[:value]]).first
+    @client = Client.find(params[:client]) unless params[:client].blank?
+    render :partial => "cif_info"
+  end
+
+  def link_to_profile
+    @company = Company.find(params[:company])
+    @client = Client.find(params[:client]) unless params[:client].blank?
+    @client ||= Client.new(:project=>@project)
+    @client.company = @company
+    @client.save
+    render :action => 'edit'
+  end
+
+  def unlink
+    @company = @client.company
+    @client.company=nil
+    @client.save
+    render :action => 'edit'
   end
 
   private

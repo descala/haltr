@@ -23,7 +23,7 @@ class InvoiceTemplatesController < ApplicationController
 
     unless params[:name].blank?
       name = "%#{params[:name].strip.downcase}%"
-      c << ["LOWER(name) LIKE ? OR LOWER(address1) LIKE ? OR LOWER(address2) LIKE ?", name, name, name]
+      c << ["LOWER(name) LIKE ? OR LOWER(address) LIKE ? OR LOWER(address2) LIKE ?", name, name, name]
     end
 
     @invoice_count = InvoiceTemplate.count(:conditions => c.conditions, :include => [:client])

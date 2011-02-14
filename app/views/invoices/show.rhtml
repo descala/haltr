@@ -54,7 +54,7 @@
           <div class="client-info">
             <h3 class="org fn"><%= @client.name.to_ascii.upcase %></h3>
             <address class="adr">
-              <div class="street-address"><%= @client.address1 %></div>
+              <div class="street-address"><%= @client.address %></div>
               <div class="street-address"><%= @client.address2 %></div>
               <span class="postal-code"><%= @client.postalcode %></span>
               <% if !@client.city.blank? or !@client.province.blank? -%>

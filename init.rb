@@ -21,7 +21,7 @@ Redmine::Plugin.register :haltr do
 
   project_module :haltr do
     permission :free_use,
-      { :clients  => [:index, :new, :edit, :create, :update, :destroy],
+      { :clients  => [:index, :new, :edit, :create, :update, :destroy, :check_cif, :link_to_profile, :unlink],
         :people   => [:index, :new, :show, :edit, :create, :update, :destroy],
         :invoices => [:index, :new, :edit, :create, :update, :destroy, :show, :pdf, :template, :mark_sent,
                       :mark_closed, :mark_not_sent, :mark_accepted, :mark_accepted_with_mail, :mark_refused,

@@ -4,7 +4,7 @@ es:
   label_company: Empresa
   label_community: Comunidad
   label_company_new: Nueva empresa
-  field_address1: Dirección
+  field_address: Dirección
   field_address2: Dirección
   field_city: Ciudad
   field_province: Provincia
@@ -15,6 +15,11 @@ es:
   field_invoice_format: Método de envio de facturas preferido
   field_currency: Moneda
   field_ponumber: Número de pedido
+  cif_belongs_to_company: "Este CIF corresponde a la empresa <span style='font-weight: bold;'>%{company}</span>."
+  link_to_profile_suggest: "Puedes %{href} a este cliente"
+  link_to_profile: "vincular su perfil público"
+  linked_to_profile: "Vinculado a la empresa <span style='font-weight: bold;'>%{company}</span>"
+  unlink: Desvincular
 
   # Invoices
   IssuedInvoice: Factura emitida
@@ -194,6 +199,8 @@ es:
   logo: "Logo"
   trace_url: "URL del b2brouter"
   b2b_subtitle: "Tu portal de factura electrónica"
+  field_public: "Perfil público"
+  private_fields_info: "Los siguientes campos son privados i no se mostrarán aunque escoja hacer público su perfil"
 
   # Terms
   "0": Al contado

@@ -1,20 +1,25 @@
 <%= error_messages_for 'company' %>
 
 <div class="box">
-<p><%= f.text_field :name %></p>
-<p><%= f.text_field :taxcode %></p>
-<p><%= f.text_field :withholding_tax_name %></p>
-<p><%= f.text_field :withholding_tax_percent %></p>
-<p><%= f.text_field :address %></p>
-<p><%= f.text_field :city %></p>
-<p><%= f.text_field :postalcode %></p>
-<p><%= f.text_field :province %></p>
-<p><%= f.text_field :countrycode %></p>
-<p><%= f.text_field :website %></p>
-<p><%= f.text_field :email %></p>
-<p><%= f.text_field :bank_account, :maxlength => 20, :size => 30 %></p>
-<p><%= f.text_field :currency %></p>
-<p><%=label_tag('attachments[1][file]', l(:logo))%><%= file_field_tag 'attachments[1][file]', :size => 30, :id => nil -%></p>
+  <p><%= f.text_field :taxcode, :required => true %></p>
+  <p><%= f.text_field :name, :required => true %></p>
+  <p><%= f.text_field :email, :required => true %></p>
+  <p><%= f.text_field :currency, :required => true %></p>
+  <p><%= f.text_field :postalcode, :required => true %></p>
+  <p><%= f.text_field :countrycode %></p>
+  <p><%= f.text_field :province %></p>
+  <p><%= f.text_field :city %></p>
+  <p><%= f.text_field :address %></p>
+  <p><%= f.text_field :website %></p>
+  <p><%= f.check_box :public %></p>
+  <br />
+  <hr />
+  <br />
+  <p style="padding-left: 20px;"><%= I18n.t :private_fields_info %>:</p>
+  <p><%= f.text_field :withholding_tax_name %></p>
+  <p><%= f.text_field :withholding_tax_percent %></p>
+  <p><%= f.text_field :bank_account, :maxlength => 20, :size => 30 %></p>
+  <p><%=label_tag('attachments[1][file]', l(:logo))%><%= file_field_tag 'attachments[1][file]', :size => 30, :id => nil -%></p>
 <% if @company.attachments.size > 0 -%>
   <p><%= image_tag "/attachments/#{@company.attachments.first.id}/#{@company.attachments.first.filename}" -%></p>
 <% end -%>

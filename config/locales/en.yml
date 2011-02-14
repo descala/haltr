@@ -4,7 +4,7 @@ en:
   label_company: Company
   label_community: Community
   label_company_new: New company
-  field_address1: Adress
+  field_address: Adress
   field_address2: Adress
   field_city: City
   field_province: Province
@@ -15,6 +15,11 @@ en:
   field_invoice_format: Preferred invoice delivery method
   field_currency: Currency
   field_ponumber: Purchase Order
+  cif_belongs_to_company: "This CIF belongs to company <span style='font-weight: bold;'>%{company}</span>."
+  link_to_profile_suggest: "You can %{href} to that client"
+  link_to_profile: "link its public profile"
+  linked_to_profile: "Linked to company <span style='font-weight: bold;'>%{company}</span>"
+  unlink: Unlink
 
   # Invoices
   IssuedInvoice: Issued invoice
@@ -196,6 +201,8 @@ en:
   logo: "Logo"
   trace_url: "B2brouter URL"
   b2b_subtitle: "Your online invoicing service"
+  field_public: "Public profile"
+  private_fields_info: "Next fields are private, regardless you choose public profile"
 
   # Terms
   "0": Immediately

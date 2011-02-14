@@ -1,0 +1,18 @@
+<%
+  @client ||= client rescue nil
+  @company ||= company rescue nil
+-%>
+
+<% if @client.company and (@client.company == @company || @company.nil?) -%>
+
+  <div class="profilelink">
+    <%= l(:linked_to_profile, :company => @client.company.name) %> (<%=link_to(l(:unlink),{:action=>'unlink',:id=>@client})%>)
+  </div>
+
+<% elsif @company -%>
+
+  <div class="profilelink">
+    <%= l(:cif_belongs_to_company,{:company=>@company.name}) %> <%= l(:link_to_profile_suggest, :href=>link_to(l(:link_to_profile),{:action=>'link_to_profile',:id=>@project,:company=>@company,:client=>@client})) %>
+  </div>
+
+<% end -%>

@@ -17,7 +17,7 @@ ca:
   label_company: Empresa
   label_community: Comunitat
   label_company_new: Nova empresa
-  field_address1: Adreça
+  field_address: Adreça
   field_address2: Adreça
   field_city: Ciutat
   field_province: Província
@@ -28,6 +28,11 @@ ca:
   field_invoice_format: "Mètode d'enviament de factures"
   field_currency: Moneda
   field_ponumber: Número de comanda
+  cif_belongs_to_company: "Aquest CIF correspon a l'empresa <span style='font-weight: bold;'>%{company}</span>."
+  link_to_profile_suggest: "Pots %{href} a aquest client"
+  link_to_profile: "vincular el seu perfil públic"
+  linked_to_profile: "Vinculat a l'empresa <span style='font-weight: bold;'>%{company}</span>"
+  unlink: Desvincular
 
   # Invoices
   IssuedInvoice: Factura emesa
@@ -208,6 +213,9 @@ ca:
   logo: "Logo"
   trace_url: "URL del b2brouter"
   b2b_subtitle: "El teu portal de factura electrònica"
+  field_public: "Perfil públic"
+  private_fields_info: "Els següents camps són privats i no es mostraran encara que escolliu fer públic el vostre perfil"
+
 
   # Terms
   "0": Al comptat

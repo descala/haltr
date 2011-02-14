@@ -3,6 +3,7 @@ class Company < ActiveRecord::Base
   unloadable
 
   belongs_to :project
+  has_many :clients, :dependent => :nullify
   validates_presence_of :name, :project_id, :email
   validates_length_of :taxcode, :maximum => 20
   validates_length_of :postalcode, :is => 5
@@ -12,6 +13,7 @@ class Company < ActiveRecord::Base
   validates_uniqueness_of :taxcode
   acts_as_attachable :view_permission => :free_use,
                      :delete_permission => :free_use
+  after_save :update_linked_clients
 
   def initialize(attributes=nil)
     super
@@ -36,6 +38,15 @@ class Company < ActiveRecord::Base
 
   def currency=(v)
     write_attribute(:currency,v.upcase)
+  end
+
+  private
+
+  def update_linked_clients
+    self.clients.each do |client|
+      client.company=nil unless self.public
+      client.save
+    end
   end
 
 end

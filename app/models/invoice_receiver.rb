@@ -148,7 +148,7 @@ class InvoiceReceiver < ActionMailer::Base
 
         client = Client.new(:taxcode        => seller_taxcode,
                             :name           => seller_name,
-                            :address1       => seller_address,
+                            :address        => seller_address,
                             :province       => seller_province,
                             :countrycode    => seller_countrycode,
                             :website        => seller_website,

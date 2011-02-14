@@ -6,7 +6,7 @@
 #  id           :integer(4)      not null, primary key
 #  taxcode      :string(9)
 #  name         :string(255)
-#  address1     :string(255)
+#  address      :string(255)
 #  address2     :string(255)
 #  city         :string(255)
 #  province     :string(255)
@@ -19,7 +19,7 @@
 
 invinet:
   city: Barcelona
-  address1: Ribes, 00
+  address: Ribes, 00
   name: Invinet Sistemes 2003 SL
   taxcode: B00000000
   country: "Espa\xC3\xB1a"

@@ -7,6 +7,7 @@ class Client < ActiveRecord::Base
 
   # TODO: only in Redmine
   belongs_to :project, :include => true
+  belongs_to :company
 
   validates_presence_of :project_id, :name, :taxcode, :currency, :language, :invoice_format, :email
 #  validates_uniqueness_of :name, :scope => :project_id
@@ -17,6 +18,8 @@ class Client < ActiveRecord::Base
 #  validates_format_of :identifier, :with => /^[a-z0-9\-]*$/
   validates_inclusion_of :currency, :in  => Money::Currency::TABLE.collect {|k,v| v[:iso_code] }
   validates_length_of :taxcode, :maximum => 20
+
+  before_validation :copy_linked_profile
 
   def initialize(attributes=nil)
     super
@@ -66,7 +69,7 @@ class Client < ActiveRecord::Base
   end
 
   def address
-    "#{address1}\n#{address2}"
+    "#{address}\n#{address2}"
   end
 
   def before_destroy
@@ -74,6 +77,17 @@ class Client < ActiveRecord::Base
       #TODO: this error not shown
       errors.add_to_base("Client has #{invoices.size} invoices associated")
       false
+    end
+  end
+
+  private
+
+  def copy_linked_profile
+    if self.company
+      %w(taxcode name email currency postalcode countrycode province city address website invoice_format).each do |attr|
+        self.send("#{attr}=",company.send(attr))
+      end
+      self.language = company.project.users.collect {|u| u unless u.admin?}.compact.first.language rescue I18n.default_locale
     end
   end
 
