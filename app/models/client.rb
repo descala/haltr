@@ -68,10 +68,6 @@ class Client < ActiveRecord::Base
     self.invoices.find(:all,:conditions=>["type=?","IssuedInvoice"])
   end
 
-  def address
-    "#{address}\n#{address2}"
-  end
-
   def before_destroy
     if self.invoices.any?
       #TODO: this error not shown
