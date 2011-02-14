@@ -82,14 +82,14 @@ class ClientsController < ApplicationController
     @client ||= Client.new(:project=>@project)
     @client.company = @company
     @client.save
-    render :action => 'edit'
+    redirect_to :action => 'edit', :id => @client
   end
 
   def unlink
     @company = @client.company
     @client.company=nil
     @client.save
-    render :action => 'edit'
+    redirect_to :action => 'edit', :id => @client
   end
 
   private
