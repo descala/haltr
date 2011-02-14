@@ -48,6 +48,12 @@ module ApplicationHelper
       number_with_delimiter q, :delimiter => ".", :separator => ","
     end
   end
+
+  def notify_pending_requests(project)
+    if project.company.companies_with_link_requests.any?
+      "<span style='color: #dd6600;'>(#{l(:pending_requests,:i=>project.company.companies_with_link_requests.size)})</span>"
+    end
+  end
   
   private
   

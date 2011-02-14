@@ -1,5 +1,9 @@
 div.profilelink {
   height: 30px;
-  border-color: #9fcf9f;
   color: #005f00;
+}
+
+div.profilelinkred {
+  height: 30px;
+  color: #dd6600;
 }

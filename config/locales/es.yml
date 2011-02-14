@@ -12,14 +12,25 @@ es:
   field_countrycode: Código de país
   field_bank_account: Cuenta bancaria
   button_people: Personas
-  field_invoice_format: Método de envio de facturas preferido
+  field_invoice_format: Formato y transporte de facturas preferido
   field_currency: Moneda
   field_ponumber: Número de pedido
   cif_belongs_to_company: "Este CIF corresponde a la empresa <span style='font-weight: bold;'>%{company}</span>."
   link_to_profile_suggest: "Puedes %{href} a este cliente"
   link_to_profile: "vincular su perfil público"
+  link_to_profile_ask: "pedir autorización para vincular su perfil público"
+  pending_authorization: "Pendiente de autorización de la empresa <span style='font-weight: bold;'>%{company}</span>"
+  denied_authorization: "La empresa <span style='font-weight: bold;'>%{company}</span> ha denegado el permiso para vincular con su perfil"
   linked_to_profile: "Vinculado a la empresa <span style='font-weight: bold;'>%{company}</span>"
+  link_requests: "Peticiones para vincular con su perfil"
+  pending_requests: "%{i} peticiones pendientes"
+  allow_link: "Autorizar"
+  deny_link: "Denegar"
   unlink: Desvincular
+  field_company_public: "Perfil"
+  public: "Público"
+  semipublic: "Requerir autorización"
+  private: "Privado"
 
   # Invoices
   IssuedInvoice: Factura emitida

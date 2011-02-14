@@ -76,14 +76,28 @@ class Client < ActiveRecord::Base
     end
   end
 
+  def allowed?
+    self.company and ( self.company.public? || self.company.semipublic? and self.allowed )
+  end
+
+  def denied?
+    self.company and ( self.company.private? || self.company.semipublic? and self.allowed == false )
+  end
+
+  def linked?
+    self.company and !self.denied?
+  end
+
   private
 
   def copy_linked_profile
-    if self.company
+    if self.company and self.allowed?
       %w(taxcode name email currency postalcode countrycode province city address website invoice_format).each do |attr|
         self.send("#{attr}=",company.send(attr))
       end
       self.language = company.project.users.collect {|u| u unless u.admin?}.compact.first.language rescue I18n.default_locale
+    elsif !self.company
+      self.allowed = nil
     end
   end
 

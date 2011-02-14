@@ -7,8 +7,8 @@ class ClientsController < ApplicationController
   helper :sort
   include SortHelper
 
-  before_filter :find_project,  :only => [:index,:new,:create,:check_cif,:link_to_profile]
-  before_filter :find_client, :except => [:index,:new,:create,:check_cif,:link_to_profile]
+  before_filter :find_project,  :only => [:index,:new,:create,:check_cif,:link_to_profile,:allow_link,:deny_link]
+  before_filter :find_client, :except => [:index,:new,:create,:check_cif,:link_to_profile,:allow_link,:deny_link]
   before_filter :authorize
 
   include CompanyFilter
@@ -43,7 +43,7 @@ class ClientsController < ApplicationController
 
   def edit
     @client = Client.find(params[:id])
-    @company = Company.find(:all, :conditions => ["taxcode = ? and public = true", @client.taxcode]).first
+    @company = Company.find(:all, :conditions => ["taxcode = ? and (public='public' or public='semipublic')", @client.taxcode]).first
   end
 
   def create
@@ -71,7 +71,7 @@ class ClientsController < ApplicationController
   end
 
   def check_cif
-    @company = Company.find(:all, :conditions => ["taxcode = ? and public = true", params[:value]]).first
+    @company = Company.find(:all, :conditions => ["taxcode = ? and (public='public' or public='semipublic')", params[:value]]).first
     @client = Client.find(params[:client]) unless params[:client].blank?
     render :partial => "cif_info"
   end
@@ -94,6 +94,22 @@ class ClientsController < ApplicationController
     @client.company=nil
     @client.save
     redirect_to :action => 'edit', :id => @client
+  end
+
+  def allow_link
+    req = Company.find params[:req]
+    client = req.clients.find_by_taxcode(@project.company.taxcode)
+    client.allowed = true
+    client.save
+    redirect_to :action => 'index', :id => @project
+  end
+
+  def deny_link
+    req = Company.find params[:req]
+    client = req.clients.find_by_taxcode(@project.company.taxcode)
+    client.allowed = false
+    client.save
+    redirect_to :action => 'index', :id => @project
   end
 
   private

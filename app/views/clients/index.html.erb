@@ -41,6 +41,20 @@
 
 <p class="pagination"><%= pagination_links_full @client_pages, @client_count %></p>
 
+<br />
+
+<% if @project.company.companies_with_link_requests.any? -%>
+  <h3><%=l(:link_requests)%></h3>
+  <ul>
+    <% @project.company.companies_with_link_requests.each do |req| -%>
+      <li>
+      <%=req.taxcode%> <span style="font-weight: bold;"><%=req.name%></span> - 
+      <%=link_to l(:allow_link), {:action=>'allow_link',:id=>@project,:req=>req}%> / 
+      <%=link_to l(:deny_link), {:action=>'deny_link',:id=>@project,:req=>req} %>
+      </li>
+    <% end -%>
+  </ul>
+<% end -%>
 
 <% html_title(l(:label_community)) -%>
 

@@ -25,14 +25,25 @@ ca:
   field_countrycode: Codi de país
   field_bank_account: Compte bancari
   button_people: Persones
-  field_invoice_format: "Mètode d'enviament de factures"
+  field_invoice_format: "Format i transport de factures preferit"
   field_currency: Moneda
   field_ponumber: Número de comanda
   cif_belongs_to_company: "Aquest CIF correspon a l'empresa <span style='font-weight: bold;'>%{company}</span>."
   link_to_profile_suggest: "Pots %{href} a aquest client"
   link_to_profile: "vincular el seu perfil públic"
+  link_to_profile_ask: "demanar autorització per vincular el seu perfil públic"
+  pending_authorization: "Pendent d'autorització de l'empresa <span style='font-weight: bold;'>%{company}</span>"
+  denied_authorization: "L'empresa <span style='font-weight: bold;'>%{company}</span> ha denegat la autorització per vincular amb el seu perfil"
   linked_to_profile: "Vinculat a l'empresa <span style='font-weight: bold;'>%{company}</span>"
+  link_requests: "Peticions per vincular amb el seu perfil"
+  pending_requests: "%{i} peticions pendents"
+  allow_link: "Autoritzar"
+  deny_link: "Denegar"
   unlink: Desvincular
+  field_company_public: "Perfil"
+  public: "Públic"
+  semipublic: "Requerir autorització"
+  private: "Privat"
 
   # Invoices
   IssuedInvoice: Factura emesa

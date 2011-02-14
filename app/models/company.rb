@@ -40,11 +40,33 @@ class Company < ActiveRecord::Base
     write_attribute(:currency,v.upcase)
   end
 
+  def public?
+    self.public == "public"
+  end
+
+  def semipublic?
+    self.public == "semipublic"
+  end
+
+  def private?
+    self.public == "private"
+  end
+
+  def companies_with_link_requests
+    self.clients.collect { |c|
+      next unless c.project and c.project.company
+      c.project.company if c.allowed.nil?
+    }.compact
+  end
+
   private
 
   def update_linked_clients
     self.clients.each do |client|
-      client.company=nil unless self.public
+      if self.private?
+        client.company=nil
+        client.allowed=nil
+      end
       client.save
     end
   end

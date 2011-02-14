@@ -12,7 +12,12 @@
   <p><%= f.text_field :address %></p>
   <p><%= f.text_field :website %></p>
   <p><%= f.select :invoice_format, ExportChannels.for_select %></p>
-  <p><%= f.check_box :public %></p>
+  <p>
+  <%= f.label_for_field "company_public" %>
+  <%= f.radio_button :public, :public %>      <%=l(:public)%>&nbsp;&nbsp;&nbsp;
+  <%= f.radio_button :public, :semipublic %>  <%=l(:semipublic)%>&nbsp;&nbsp;&nbsp;
+  <%= f.radio_button :public, :private %>     <%=l(:private)%>
+  </p>
   <br />
   <hr />
   <br />

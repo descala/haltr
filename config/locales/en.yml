@@ -12,14 +12,25 @@ en:
   field_countrycode: Country code
   field_bank_account: Banck account
   button_people: People
-  field_invoice_format: Preferred invoice delivery method
+  field_invoice_format: Preferred invoice transport and format
   field_currency: Currency
   field_ponumber: Purchase Order
   cif_belongs_to_company: "This CIF belongs to company <span style='font-weight: bold;'>%{company}</span>."
   link_to_profile_suggest: "You can %{href} to that client"
   link_to_profile: "link its public profile"
+  link_to_profile_ask: "request authorization to link its public profile"
+  pending_authorization: "Pending authorization from company <span style='font-weight: bold;'>%{company}</span>"
+  denied_authorization: "Company <span style='font-weight: bold;'>%{company}</span> denied authorization to link its profile"
   linked_to_profile: "Linked to company <span style='font-weight: bold;'>%{company}</span>"
+  link_requests: "Requests to link your profile"
+  pending_requests: "%{i} pending requests"
+  allow_link: "Authorize"
+  deny_link: "Deny"
   unlink: Unlink
+  field_company_public: "Profile"
+  public: "Public"
+  semipublic: "Require authorization"
+  private: "Private"
 
   # Invoices
   IssuedInvoice: Issued invoice
