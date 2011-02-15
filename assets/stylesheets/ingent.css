@@ -7,3 +7,11 @@ div.profilelinkred {
   height: 30px;
   color: #dd6600;
 }
+
+span.invoiceLineHeader {
+  display: block;
+  float: left;
+  margin-left: 2px;
+  margin-right: 2px;
+  overflow: hidden;
+}
