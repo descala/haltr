@@ -213,7 +213,7 @@ en:
   trace_url: "B2brouter URL"
   b2b_subtitle: "Your online invoicing service"
   field_public: "Public profile"
-  private_fields_info: "Next fields are private, regardless you choose public profile"
+  private_fields_info: "These fields are private, regardless you choose public profile"
 
   # Terms
   "0": Immediately
