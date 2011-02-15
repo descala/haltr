@@ -11,7 +11,11 @@
   <p><%= f.text_field :city %></p>
   <p><%= f.text_field :address %></p>
   <p><%= f.text_field :website %></p>
-  <p><%= f.select :invoice_format, ExportChannels.for_select %></p>
+  <% if ExportChannels.for_select.collect {|v| v.last }.include? @company.invoice_format -%>
+    <p><%= f.select :invoice_format, ExportChannels.for_select %></p>
+  <% else -%>
+    <p><%= f.text_field :invoice_format, :readonly=>true %></p>
+  <% end -%>
   <p>
   <%= f.label_for_field "company_public" %>
   <%= f.radio_button :public, :public %>      <%=l(:public)%>&nbsp;&nbsp;&nbsp;
