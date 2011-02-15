@@ -211,7 +211,7 @@ es:
   trace_url: "URL del b2brouter"
   b2b_subtitle: "Tu portal de factura electrónica"
   field_public: "Perfil público"
-  private_fields_info: "Los siguientes campos son privados i no se mostrarán aunque escoja hacer público su perfil"
+  private_fields_info: "Los siguientes campos son privados y no se mostrarán aunque escoja hacer público su perfil"
 
   # Terms
   "0": Al contado
