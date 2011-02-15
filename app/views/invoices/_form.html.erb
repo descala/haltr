@@ -1,5 +1,6 @@
 <%= error_messages_for 'invoice' %>
 <%= javascript_include_tag 'terms', :plugin => 'haltr' %>
+<%= javascript_include_tag 'invoice', :plugin => 'haltr' %>
 
 <div class="box">
   <p><%= f.select :client_id, clients_for_select, :required => true %></p>
