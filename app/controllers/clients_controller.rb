@@ -99,7 +99,7 @@ class ClientsController < ApplicationController
 
   def allow_link
     req = Company.find params[:req]
-    client = req.clients.find_by_taxcode(@project.company.taxcode)
+    client = req.project.clients.find_by_taxcode(@project.company.taxcode)
     client.allowed = true
     client.save
     redirect_to :action => 'index', :id => @project
@@ -107,7 +107,7 @@ class ClientsController < ApplicationController
 
   def deny_link
     req = Company.find params[:req]
-    client = req.clients.find_by_taxcode(@project.company.taxcode)
+    client = req.project.clients.find_by_taxcode(@project.company.taxcode)
     client.allowed = false
     client.save
     redirect_to :action => 'index', :id => @project
