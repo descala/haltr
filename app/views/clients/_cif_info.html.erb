@@ -3,7 +3,7 @@
   @company ||= company rescue nil
 -%>
 
-<% if @client.company and (@client.company == @company || @company.nil?) -%>
+<% if @client and @client.company and (@client.company == @company || @company.nil?) -%>
 
   <% if @client.allowed? -%>
     <div class="profilelink">
@@ -17,7 +17,7 @@
   <% end -%>
     </div>
 
-<% elsif @company -%>
+<% elsif @company and @client -%>
 
   <div class="profilelink">
     <%= l(:cif_belongs_to_company,{:company=>@company.name}) %>
