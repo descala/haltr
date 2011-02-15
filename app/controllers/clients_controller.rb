@@ -92,6 +92,7 @@ class ClientsController < ApplicationController
   def unlink
     @company = @client.company
     @client.company=nil
+    @client.allowed=nil
     @client.save
     redirect_to :action => 'edit', :id => @client
   end

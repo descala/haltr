@@ -9,15 +9,17 @@ class Client < ActiveRecord::Base
   belongs_to :project, :include => true
   belongs_to :company
 
-  validates_presence_of :project_id, :name, :taxcode, :currency, :language, :invoice_format, :email
-#  validates_uniqueness_of :name, :scope => :project_id
+  validates_presence_of   :taxcode
+  validates_length_of     :taxcode, :maximum => 20
   validates_uniqueness_of :taxcode, :scope => :project_id
+
+  validates_presence_of     :project_id, :name, :currency, :language, :invoice_format, :email, :if => Proc.new {|c| c.company_id.blank? }
+  validates_inclusion_of    :currency, :in  => Money::Currency::TABLE.collect {|k,v| v[:iso_code] }, :if => Proc.new {|c| c.company_id.blank? }
   validates_numericality_of :bank_account, :unless => Proc.new { |c| c.bank_account.blank? }
-  validates_length_of :bank_account, :within => 16..40, :unless => Proc.new { |c| c.bank_account.blank? }
+  validates_length_of       :bank_account, :within => 16..40, :unless => Proc.new { |c| c.bank_account.blank? }
+#  validates_uniqueness_of :name, :scope => :project_id
 #  validates_length_of :name, :maximum => 30
 #  validates_format_of :identifier, :with => /^[a-z0-9\-]*$/
-  validates_inclusion_of :currency, :in  => Money::Currency::TABLE.collect {|k,v| v[:iso_code] }
-  validates_length_of :taxcode, :maximum => 20
 
   before_validation :copy_linked_profile
 
