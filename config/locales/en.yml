@@ -161,7 +161,7 @@ en:
   next_charge: Next charge
 
   # Invoice lines
-  field_price_in_cents: Price
+  field_price: Price
   field_quantity: Quantity
   field_invoice_lines: Invoice lines
 

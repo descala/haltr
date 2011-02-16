@@ -42,9 +42,7 @@ class Invoice < ActiveRecord::Base
   def currency=(v)
     write_attribute(:currency,v.upcase)
     invoice_lines.each do |il|
-      # replace price since it's frozen.
-      # il.currency='xxx' does not update its money currency (!)
-      il.price=Money.new(il.price_in_cents,v.upcase)
+      il.currency=v.upcase
     end
   end
 

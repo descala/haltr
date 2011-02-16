@@ -149,15 +149,15 @@ xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http:/
               <ReceiverTransactionReference><%=@invoice.ponumber%></ReceiverTransactionReference>
                <ItemDescription><%=invoice_line.description%></ItemDescription>
                <Quantity><%=invoice_line.quantity%></Quantity>
-               <UnitPriceWithoutTax><%=precision(invoice_line.price.dollars,6)%></UnitPriceWithoutTax>
-               <TotalCost><%=precision(invoice_line.price.dollars*invoice_line.quantity,2)%></TotalCost>
-               <GrossAmount><%=precision(invoice_line.price.dollars*invoice_line.quantity,2)%></GrossAmount>
+               <UnitPriceWithoutTax><%=precision(invoice_line.price,6)%></UnitPriceWithoutTax>
+               <TotalCost><%=precision(invoice_line.price*invoice_line.quantity,2)%></TotalCost>
+               <GrossAmount><%=precision(invoice_line.price*invoice_line.quantity,2)%></GrossAmount>
                <TaxesOutputs>
                   <Tax>
                      <TaxTypeCode>01</TaxTypeCode>
                      <TaxRate><%=precision @invoice.tax_percent%></TaxRate>
                      <TaxableBase>
-                       <TotalAmount><%=precision(invoice_line.price.dollars*invoice_line.quantity)%></TotalAmount>
+                       <TotalAmount><%=precision(invoice_line.price*invoice_line.quantity)%></TotalAmount>
                      </TaxableBase>
                      <TaxAmount>
                         <TotalAmount><%=precision invoice_line.tax.dollars%></TotalAmount>

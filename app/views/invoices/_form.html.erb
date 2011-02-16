@@ -27,7 +27,7 @@
     <p style="font-weight:bold;">
     <span class="invoiceLineHeader" style="width: 80px;"><%= l(:field_quantity) %></span>
     <span class="invoiceLineHeader" style="width: 290px;"><%= l(:field_description) %></span>
-    <span class="invoiceLineHeader" style="width: 80px;"><%= l(:field_price_in_cents) %></span>
+    <span class="invoiceLineHeader" style="width: 80px;"><%= l(:field_price) %></span>
     </p>
     <% f.fields_for :invoice_lines do |line_form| %>
       <%= render :partial => 'invoices/invoice_line', :locals => { :f => line_form } %>

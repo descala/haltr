@@ -86,7 +86,7 @@
                 <tr>
                   <td class="item-quantity first"><%= quantity(line.quantity) %></td>
                   <td class="item-description"><%= line.description %></td>
-                  <td class="item-price"><%= money(line.price) %></td>
+                  <td class="item-price"><%= line_price(line) %></td>
                   <td class="line-total last"><%= money(line.total) %></td>
                 </tr>
               <% end -%>
