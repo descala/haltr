@@ -2,16 +2,16 @@ invoice1_l1:
   invoice: invoice1
   quantity: 1
   description: bla bla bla
-  price_in_cents: 925.68
+  price: 925.68
 
 test_import_l1:
   invoice: test_import
   quantity: 1
   description: bla bla bla
-  price_in_cents: 925.68
+  price: 925.68
 
 template1_l1:
   invoice: template1
   quantity: 1
   description: bla bla bla
-  price_in_cents: 925.68
+  price: 925.68

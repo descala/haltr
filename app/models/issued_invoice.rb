@@ -139,6 +139,7 @@ class IssuedInvoice < InvoiceDocument
   end
 
   def self.increment_right(number)
+    return "1" if number.nil?
     nums = number.scan(/\d+/).size
     return "#{number}1" if nums == 0
     i = 1

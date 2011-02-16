@@ -1,1 +1,2 @@
+rake db:migrate_plugins RAILS_ENV=test
 rake test:plugins PLUGIN=haltr
