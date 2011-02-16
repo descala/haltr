@@ -1,27 +1,27 @@
-# == Schema Information
-# Schema version: 20091016144057
-#
-# Table name: clients
-#
-#  id           :integer(4)      not null, primary key
-#  taxcode      :string(9)
-#  name         :string(255)
-#  address      :string(255)
-#  address2     :string(255)
-#  city         :string(255)
-#  province     :string(255)
-#  postalcode   :string(255)
-#  country      :string(255)     default("España")
-#  created_at   :datetime
-#  updated_at   :datetime
-#  bank_account :string(24)
-#
+#    t.string   "taxcode",        :limit => 20
+#    t.string   "name"
+#    t.string   "address"
+#    t.string   "address2"
+#    t.string   "city"
+#    t.string   "province"
+#    t.string   "postalcode"
+#    t.string   "countrycode",    :default => "ESP"
+#    t.datetime "created_at"
+#    t.datetime "updated_at"
+#    t.string   "bank_account",   :limit => 24
+#    t.integer  "project_id"
+#    t.string   "email"
+#    t.string   "language"
+#    t.string   "currency"
+#    t.string   "invoice_format"
+#    t.string   "website"
+#    t.integer  "company_id"
+#    t.boolean  "allowed"
 
-invinet:
+client1:
   city: Barcelona
   address: Ribes, 00
   name: Invinet Sistemes 2003 SL
   taxcode: B00000000
-  country: "Espa\xC3\xB1a"
   postalcode: 08013
-  project: ingent
+  project: haltr

@@ -2,21 +2,27 @@ invoice1:
   type: InvoiceDocument
   number: 08/001
   date: 2008-11-24
-  client: invinet
+  client: client1 
   terms: 1m1
+  project_id: 2 
+  client: client1
 
 template1:
   type: InvoiceTemplate
   date: 2008-11-24
-  client: invinet
+  client: client1
   extra_info: "periode: Desembre 2008"
   frequency: 1
+  project_id: 2 
+  client: client1
 
 test_import:
   type: InvoiceDocument
   state: sent
   number: 08/194
   date: "2008-11-24"
-  client: invinet
+  client: client1
   due_date: "2008-12-24"
   terms: "30"
+  project_id: 2
+  client: client1
