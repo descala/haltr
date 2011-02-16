@@ -26,6 +26,7 @@ class TasksController < ApplicationController
         @invoices << i
       else
         flash.now[:warning] = l(:warning_can_not_generate_invoice,t.to_s)
+        flash.now[:error] = i.errors.full_messages.join ", "
       end
     end
   end

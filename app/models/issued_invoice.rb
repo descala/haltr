@@ -135,19 +135,19 @@ class IssuedInvoice < InvoiceDocument
 
   def self.next_number(project)
     number = self.last_number(project)
-    if number.nil?
-      a = []
-      num = 0
-    else
-      a = number.split('/')
-      num = number.to_i
-    end
-    if a.size > 1
-      a[1] =  sprintf('%03d', a[1].to_i + 1)
-      return a.join("/")
-    else
-      return num + 1
-    end
+    self.increment_right(number)
+  end
+
+  def self.increment_right(number)
+    nums = number.scan(/\d+/).size
+    return "#{number}1" if nums == 0
+    i = 1
+    number.gsub(/(\d+)/) { |m|
+      m = m.to_i
+      m += 1 if i == nums
+      i += 1
+      m
+    }
   end
 
   protected
