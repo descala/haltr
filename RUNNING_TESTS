@@ -1,2 +1,5 @@
 rake db:migrate_plugins RAILS_ENV=test
 rake test:plugins PLUGIN=haltr
+
+# use this to recreate test database:
+rake db:drop db:create db:migrate db:migrate_plugins redmine:load_default_data RAILS_ENV=test
