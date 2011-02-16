@@ -1,0 +1,1 @@
+rake test:plugins PLUGIN=haltr

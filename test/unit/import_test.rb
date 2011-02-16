@@ -1,11 +1,10 @@
-require 'test_helper'
+require File.dirname(__FILE__) + '/../test_helper'
 
 class ImportTest < ActiveSupport::TestCase
   
-  fixtures  :invoices, :invoice_lines
-  
   def setup
-    importer = Import::Aeb43.new "test/files/aeb43.txt"
+    filename = File.dirname(__FILE__) + '/../fixtures/txt/aeb43.txt'
+    importer = Import::Aeb43.new filename
     @moviments = importer.moviments
   end
   
@@ -24,10 +23,6 @@ class ImportTest < ActiveSupport::TestCase
     assert_equal Money.new(11791), m.amount
     assert_equal "B63456630", m.ref1        # tax id
     assert_equal "4660", m.ref2        # invoice number    
-  end
-  
-  def test_match
-    invoices = InvoiceDocument.all
   end
   
 end
