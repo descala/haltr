@@ -43,6 +43,7 @@ module ApplicationHelper
 
   def line_price(line)
     precision = line.price.to_s.split(".").last.size
+    precision = 2 if precision == 1
     currency = Money.new(0,line.currency).currency.symbol
     number_to_currency(line.price, :unit => currency, :precision => precision)
   end
