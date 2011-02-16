@@ -1,7 +1,15 @@
-ENV["RAILS_ENV"] = "test"
-require File.expand_path(File.dirname(__FILE__) + "/../config/environment")
-require 'test_help'
+begin
+  # Load the normal Rails helper. This ensures the environment is loaded
+  require File.expand_path(File.dirname(__FILE__) + '/../../../../test/test_helper')
+  # Ensure that we are using the temporary fixture path
+  Engines::Testing.set_fixture_path
+rescue LoadError
+  # we are alone
+  puts "I'm a plugin. I need Redmine to run my tests."
+end
 
+
+#class Test::Unit::TestCase
 class ActiveSupport::TestCase
   # Transactional fixtures accelerate your tests by wrapping each test method
   # in a transaction that's rolled back on completion.  This ensures that the

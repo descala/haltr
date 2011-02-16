@@ -9,13 +9,11 @@ Redmine::Plugin.register :haltr do
   name 'haltr'
   author 'Ingent'
   description 'Hackers dont do books'
-  version '0.1'
+  version '1.0'
 
   settings :default => {
-    'folder1' => '',
-    'folder1_name' => '',
-    'folder2' => '',
-    'folder2_name' => ''
+    'trace_url' => 'http://localhost:3000',
+    'export_channels_path' => '/tmp'
   },
   :partial => '/common/settings'
 
