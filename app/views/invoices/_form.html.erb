@@ -24,9 +24,9 @@
   <p><%= f.check_box :draft %></p>
   <%
     disabled = []
-    unless @invoice.new_record?
-      disabled << Invoice::PAYMENT_DEBIT if @invoice.client and @invoice.client.bank_account.blank?
-    end
+#    unless @invoice.new_record?
+#      disabled << Invoice::PAYMENT_DEBIT if @invoice.client and @invoice.client.bank_account.blank?
+#    end
     disabled << Invoice::PAYMENT_TRANSFER if @invoice.project.company.bank_account.blank?
   -%>
   <p><%= f.select(:payment_method, Invoice.payment_methods, :disabled=>disabled, :required => true) %></p>
