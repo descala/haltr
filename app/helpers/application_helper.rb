@@ -40,7 +40,14 @@ module ApplicationHelper
   def money(import)
     number_to_currency(import, :unit => import.currency.symbol)
   end
-  
+
+  def line_price(line)
+    precision = line.price.to_s.split(".").last.size
+    precision = 2 if precision == 1
+    currency = Money.new(0,line.currency).currency.symbol
+    number_to_currency(line.price, :unit => currency, :precision => precision)
+  end
+
   def quantity(q)
     if q.floor == q
       q.to_i

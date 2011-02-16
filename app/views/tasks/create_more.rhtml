@@ -4,7 +4,7 @@
 <% if @invoices.size > 0 -%>
 <ul>
 <% @invoices.each do |i| -%>
-<li><%= "#{i.number} #{i.date}. #{i.client.name} #{i.total}" %></li>
+  <li><%= link_to "#{i.number} #{i.date}. #{i.client.name} #{i.total}", :controller=>"invoices", :action=>"show", :id=>i  %></li>
 <% end -%>
 </ul>
 <% else -%>

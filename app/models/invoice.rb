@@ -18,12 +18,12 @@ class Invoice < ActiveRecord::Base
   belongs_to :client
   validates_presence_of :client, :date, :currency, :project_id
   validates_inclusion_of :currency, :in  => Money::Currency::TABLE.collect {|k,v| v[:iso_code] }
+  validate :payment_method_requirements
 
   accepts_nested_attributes_for :invoice_lines,
     :allow_destroy => true,
     :reject_if => proc { |attributes| attributes.all? { |_, value| value.blank? } }
   validates_associated :invoice_lines
-  validate :payment_method_requirements
 
   composed_of :import,
     :class_name => "Money",
@@ -42,9 +42,7 @@ class Invoice < ActiveRecord::Base
   def currency=(v)
     write_attribute(:currency,v.upcase)
     invoice_lines.each do |il|
-      # replace price since it's frozen.
-      # il.currency='xxx' does not update its money currency (!)
-      il.price=Money.new(il.price_in_cents,v.upcase)
+      il.currency=v.upcase
     end
   end
 

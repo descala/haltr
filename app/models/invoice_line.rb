@@ -4,13 +4,7 @@ class InvoiceLine < ActiveRecord::Base
 
   belongs_to :invoice
   validates_presence_of :description
-  validates_numericality_of :quantity, :price_in_cents
-
-  composed_of :price,
-    :class_name => "Money",
-    :mapping => [%w(price_in_cents cents), %w(currency currency_as_string)],
-    :constructor => Proc.new { |cents, currency| Money.new(cents || 0, currency || Money.default_currency) },
-    :converter => lambda {|m| m.to_money }
+  validates_numericality_of :quantity, :price
 
   def initialize(attributes=nil)
     super
@@ -18,7 +12,7 @@ class InvoiceLine < ActiveRecord::Base
   end
 
   def total
-    price * quantity
+    Money.new((price * quantity * 100).to_i, currency)
   end
 
   def to_label
@@ -47,3 +41,4 @@ class InvoiceLine < ActiveRecord::Base
   end
 
 end
+

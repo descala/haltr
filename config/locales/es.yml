@@ -160,7 +160,7 @@ es:
   next_charge: Siguiente pago
 
   # Invoice lines
-  field_price_in_cents: Precio
+  field_price: Precio
   field_quantity: Cantidad
   field_invoice_lines: Líneas de factura
 

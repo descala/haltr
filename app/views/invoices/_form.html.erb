@@ -22,12 +22,19 @@
   <p><%= f.text_field :discount_percent %></p>
   <p><%= f.text_area :extra_info, :rows=>3 %></p>
   <p><%= f.check_box :draft %></p>
-  <p><%= f.select(:payment_method,Invoice.payment_methods, :required => true) %></p>
+  <%
+    disabled = []
+#    unless @invoice.new_record?
+#      disabled << Invoice::PAYMENT_DEBIT if @invoice.client and @invoice.client.bank_account.blank?
+#    end
+    disabled << Invoice::PAYMENT_TRANSFER if @invoice.project.company.bank_account.blank?
+  -%>
+  <p><%= f.select(:payment_method, Invoice.payment_methods, :disabled=>disabled, :required => true) %></p>
   <div id="invoice_lines">
     <p style="font-weight:bold;">
     <span class="invoiceLineHeader" style="width: 80px;"><%= l(:field_quantity) %></span>
     <span class="invoiceLineHeader" style="width: 290px;"><%= l(:field_description) %></span>
-    <span class="invoiceLineHeader" style="width: 80px;"><%= l(:field_price_in_cents) %></span>
+    <span class="invoiceLineHeader" style="width: 80px;"><%= l(:field_price) %></span>
     </p>
     <% f.fields_for :invoice_lines do |line_form| %>
       <%= render :partial => 'invoices/invoice_line', :locals => { :f => line_form } %>

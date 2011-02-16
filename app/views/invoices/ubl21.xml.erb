@@ -100,12 +100,12 @@
 	<cac:InvoiceLine>
 		<cbc:ID><%=invoice_line.id%></cbc:ID>
 		<cbc:InvoicedQuantity><%=invoice_line.quantity%></cbc:InvoicedQuantity>
-		<cbc:LineExtensionAmount currencyID="EUR"><%=precision(invoice_line.price.dollars*invoice_line.quantity,2)%></cbc:LineExtensionAmount>
+		<cbc:LineExtensionAmount currencyID="EUR"><%=precision(invoice_line.price*invoice_line.quantity,2)%></cbc:LineExtensionAmount>
 		<cac:Item>
 			<cbc:Name><%=invoice_line.description%></cbc:Name>
 		</cac:Item>
 		<cac:Price>
-			<cbc:PriceAmount currencyID="EUR"><%=precision(invoice_line.price.dollars,2)%></cbc:PriceAmount>
+			<cbc:PriceAmount currencyID="EUR"><%=precision(invoice_line.price,2)%></cbc:PriceAmount>
 		</cac:Price>
 	</cac:InvoiceLine>
 <% end -%>	
