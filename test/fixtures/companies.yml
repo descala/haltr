@@ -1,0 +1,8 @@
+company1:
+  project_id: 2
+  name: Company1
+  taxcode: 77310000G
+  postalcode: 08720
+  bank_account: 1234567890
+  currency: EUR
+  
