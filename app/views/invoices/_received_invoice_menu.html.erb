@@ -1,12 +1,10 @@
-<div class="haltrinvoice">
-  <h3>
-    <%= "#{l(:label_invoice)} #{@invoice.number} (#{l("state_#{@invoice.state}")})" %>
-  </h3>
-  <ul class="toolbox secondary">
-    <li><%= link_to l(:button_delete), {:action=>'destroy',:id=>@invoice}, :confirm => l(:text_are_you_sure), :method => :delete %></li>
-    <% if @invoice.state?(:received) -%>
+<h3>
+  <%= "#{l(:label_invoice)} #{@invoice.number} (#{l("state_#{@invoice.state}")})" %>
+</h3>
+<ul class="toolbox secondary">
+  <li><%= link_to l(:button_delete), {:action=>'destroy',:id=>@invoice}, :confirm => l(:text_are_you_sure), :method => :delete %></li>
+  <% if @invoice.state?(:received) -%>
     <li><%= link_to_function(I18n.t(:mark_accepted), "show_accepted_form();") %></li>
     <li><%= link_to_function(I18n.t(:mark_refused),  "show_refused_form();") %></li>
-    <% end -%>
-  </ul>
-</div>
+  <% end -%>
+</ul>

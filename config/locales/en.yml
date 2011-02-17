@@ -123,6 +123,9 @@ en:
   accept_without_mail: "Accept without mail"
   cancel: "Cancel"
   client_without_email: "Associated client has no email defined"
+  report_issue_with_invoice: "Report a trouble with this invoice"
+  invoice_issue_subject: "I have an issue with invoice with internal id %{id}"
+  invoice_issue_body: "-- write here issue description --"
 
   # Events
   events: "Event log"
@@ -214,6 +217,7 @@ en:
   b2b_subtitle: "Your online invoicing service"
   field_public: "Public profile"
   private_fields_info: "These fields are private, regardless you choose public profile"
+  issues_controller_name: "Issues controller name"
 
   # Terms
   "0": Immediately

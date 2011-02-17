@@ -1,0 +1,18 @@
+<div class="haltrinvoice">
+
+  <%= render :partial => "invoices/#{@invoice.class.to_s.underscore}_menu" %>
+
+  <hr />
+
+  <% unless Setting.plugin_haltr['issues_controller_name'].blank? -%>
+  <ul class="secondary">
+    <li><%= link_to l(:report_issue_with_invoice),
+              :controller => Setting.plugin_haltr['issues_controller_name'],
+              :action => 'new',
+              :project_id => @project,
+              'issue[subject]' => l(:invoice_issue_subject, :id=>@invoice.id),
+              'issue[description]' => l(:invoice_issue_body) %></li>
+  </ul>
+  <% end -%>
+
+</div>

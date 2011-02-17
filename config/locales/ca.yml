@@ -135,6 +135,9 @@ ca:
   accept_without_mail: "Acceptar sense mail"
   cancel: "Cancelar"
   client_without_email: "El client associat no té email definit"
+  report_issue_with_invoice: "Informar d'un problema amb aquesta factura"
+  invoice_issue_subject: "Tinc un problema amb la factura amb id intern %{id}"
+  invoice_issue_body: "-- escriu aquí la descripció del problema --"
 
   # Events
   events: "Log d'esdeveniments"
@@ -226,6 +229,7 @@ ca:
   b2b_subtitle: "El teu portal de factura electrònica"
   field_public: "Perfil públic"
   private_fields_info: "Els següents camps són privats i no es mostraran encara que escolliu fer públic el vostre perfil"
+  issues_controller_name: "Nom del controlador d'assumptes"
 
 
   # Terms
