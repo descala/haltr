@@ -80,8 +80,9 @@ class ClientsController < ApplicationController
   def link_to_profile
     @company = Company.find(params[:company])
     @client = Client.find(params[:client]) unless params[:client].blank?
-    @client ||= Client.new(:project=>@project,:taxcode=>@company.taxcode)
+    @client ||= Client.new(:project=>@project)
     @client.company = @company
+    @client.taxcode = @company.taxcode
     if @client.save
       redirect_to :action => 'edit', :id => @client
     else
