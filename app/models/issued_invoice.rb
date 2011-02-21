@@ -141,14 +141,17 @@ class IssuedInvoice < InvoiceDocument
   def self.increment_right(number)
     return "1" if number.nil?
     nums = number.scan(/\d+/).size
+    digits = number.scan(/\d+/).last.to_s.size
     return "#{number}1" if nums == 0
-    i = 1
-    number.gsub(/(\d+)/) { |m|
-      m = m.to_i
-      m += 1 if i == nums
+    i = 0
+    number.gsub(/(\d+)/) do |m|
       i += 1
-      m
-    }
+      if i == nums
+        m = sprintf("%0#{digits}d", m.to_i+1)
+      else
+        m
+      end
+    end
   end
 
   protected
