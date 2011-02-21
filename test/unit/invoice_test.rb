@@ -2,7 +2,7 @@ require File.dirname(__FILE__) + '/../test_helper'
 
 class InvoiceTest < ActiveSupport::TestCase
   
-  fixtures :clients, :invoices
+  fixtures :clients, :invoices, :invoice_lines, :projects
 
   test "due dates" do
     date = Date.new(2000,12,1)
@@ -28,24 +28,14 @@ class InvoiceTest < ActiveSupport::TestCase
     i = Invoice.find i.id
     assert_equal d, i.due_date
   end
-  
-  test "template_replacements" do
-    I18n.locale = :ca
-    it = invoices(:template1)
-    it.template_replacements(Date.new(2008,1,15))
-    assert_equal "periode: Febrer 2008", it.extra_info
-    it.frequency = 12
-    it.template_replacements(Date.new(2008,1,15))    
-    assert_equal "periode: Gener 2009", it.extra_info
+ 
+  test "invoice number increment right" do
+    assert_equal "not_an_i1", IssuedInvoice.increment_right("not_an_i")
+    assert_equal "1", IssuedInvoice.increment_right(nil)
+    assert_equal "2011/2", IssuedInvoice.increment_right("2011/1")
+    assert_equal "2011-2", IssuedInvoice.increment_right("2011-1")
+    assert_equal "11/002", IssuedInvoice.increment_right("11/001")
+    assert_equal "0032", IssuedInvoice.increment_right("0031")
   end
 
-  test "next invoice" do
-    I18n.locale = :ca
-    it = invoices(:template1)
-    ni = it.next_invoice
-    assert_equal "periode: Desembre 2008", ni.extra_info
-    ni = it.next_invoice
-    assert_equal "periode: Gener 2009", ni.extra_info
-  end
-  
 end
