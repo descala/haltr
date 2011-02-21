@@ -3,6 +3,7 @@ class ClientsController < ApplicationController
   unloadable
 
   menu_item :haltr
+  helper :haltr
 
   helper :sort
   include SortHelper

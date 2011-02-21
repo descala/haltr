@@ -2,6 +2,7 @@ class CompaniesController < ApplicationController
 
   unloadable
   menu_item :haltr
+  helper :haltr
 
   before_filter :project_patch
   before_filter :find_project, :except => [:update, :logo]
