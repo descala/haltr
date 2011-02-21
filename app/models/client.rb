@@ -90,6 +90,14 @@ class Client < ActiveRecord::Base
     self.company and !self.denied?
   end
 
+  def language
+    if self.linked?
+      company.project.users.collect {|u| u unless u.admin?}.compact.first.language rescue read_attribute(:language)
+    else
+      read_attribute(:language)
+    end
+  end
+
   private
 
   def copy_linked_profile
