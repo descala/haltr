@@ -1,6 +1,5 @@
-# -*- coding: utf-8 -*-
 # Methods added to this helper will be available to all templates in the application.
-module ApplicationHelper
+module HaltrHelper
 
   def path_to_stylesheet(source)
     path = super(source)
@@ -36,7 +35,7 @@ module ApplicationHelper
     end
     s
   end
-  
+
   def money(import)
     number_to_currency(import, :unit => import.currency.symbol)
   end
@@ -61,9 +60,9 @@ module ApplicationHelper
       "<span style='color: #dd6600;'>(#{l(:pending_requests,:i=>project.company.companies_with_link_requests.size)})</span>"
     end
   end
-  
+
   private
-  
+
   def especial(path)
     if request.parameters["controller"] == "invoices" and request.parameters["action"] == "pdf" and !(path =~ /^https?:\/\//)
       "../public#{path}"
@@ -71,5 +70,5 @@ module ApplicationHelper
       path
     end
   end
-  
+
 end
