@@ -1,7 +1,7 @@
 class TasksController < ApplicationController
 
   unloadable
-  menu_item :haltr
+  menu_item :haltr_invoices
   helper :haltr
 
   before_filter :find_project, :except => [:n19, :n19_done]

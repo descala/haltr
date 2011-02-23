@@ -1,7 +1,3 @@
-<div class="contextual">
-<%= link_to l(:label_person_new), {:action => 'new', :id => @client}, :class => 'icon icon-add' %>
-</div>
-
 <h2><%=@client%> - <%=l(:label_person_plural)%></h2>
 
 <% form_tag({}, :method => :get) do %>
@@ -41,5 +37,5 @@
 <% html_title(l(:label_community)) -%>
 
 <% content_for :sidebar do %>
-    <%= render :partial => 'common/sidebar' %>
+    <%= render :partial => 'sidebar' %>
 <% end %>

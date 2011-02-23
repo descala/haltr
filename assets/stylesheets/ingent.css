@@ -15,3 +15,30 @@ span.invoiceLineHeader {
   margin-right: 2px;
   overflow: hidden;
 }
+
+.invoice_menu {
+       margin: 0 0 20px;
+       padding: 0;
+       line-height: 18px;
+       }
+.invoice_menu li {
+       margin: 0;
+       padding: 0;
+       border-bottom: 1px solid #c8f6b6;
+list-style: none; 
+       }
+.invoice_menu li a:link,
+.invoice_menu li a:visited {
+       display: block;
+       margin: 0;
+       padding: 7px 20px;
+       }
+.invoice_menu li a:hover {
+       text-decoration: none;
+       background: #efc;
+       }
+.invoice_menu li#invoice_new a:link,
+.invoice_menu li#invoice_new a:visited {
+       padding: 7px 20px 7px 40px;
+       background: url(/images/add.png) no-repeat 20px 8px;
+       }

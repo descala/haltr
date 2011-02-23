@@ -1,0 +1,7 @@
+<h3><%= l(:label_payment_plural) %></h3>
+<ul class="invoice_menu">
+  <li id="invoice_new">
+  <%= link_to l(:label_payment_new), {:action => 'new', :id => @project} %>
+  </li>
+  <li><%= link_to l(:label_payment_plural), :action => 'index', :id => @project %></li>
+</ul>

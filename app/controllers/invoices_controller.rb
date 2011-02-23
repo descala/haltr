@@ -1,7 +1,7 @@
 class InvoicesController < ApplicationController
 
   unloadable
-  menu_item :haltr
+  menu_item :haltr_invoices
   helper :haltr
 
   helper :sort
@@ -204,7 +204,6 @@ class InvoicesController < ApplicationController
       # Redel XML with XSLT in browser
       @xsl = 'facturae32'
       render :template => 'invoices/show_with_xsl'
-      #render :template => 'invoices/show_with_xsl_iframe'
     end
   end
 

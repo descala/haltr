@@ -1,7 +1,7 @@
 class PaymentsController < ApplicationController
 
   unloadable
-  menu_item :haltr
+  menu_item :haltr_payments
 
   helper :haltr
   helper :sort

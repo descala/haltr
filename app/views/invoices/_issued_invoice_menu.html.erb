@@ -1,7 +1,5 @@
-<h3>
-  <%= "#{l(:label_invoice)} #{@invoice.number} (#{l("state_#{@invoice.state}")})" %>
-</h3>
-<ul class="toolbox secondary">
+<h3><%= "#{l(:label_invoice)} #{@invoice.number} (#{l("state_#{@invoice.state}")})" %></h3>
+<ul class="invoice_menu">
   <li><%= link_to l(:button_edit), {:action=>'edit',:id=>@invoice} %></li>
   <li><%= link_to l(:button_delete), {:action=>'destroy',:id=>@invoice}, :confirm => l(:text_are_you_sure), :method => :delete %></li>
   <li><%= change_state_link(@invoice) %></li>
@@ -21,7 +19,7 @@
 
 </ul>
 
-<div class="client-invoices">
+<div class="client-invoices invoice_menu">
   <h3><%=l(:recipients)%></h3>
   <ul class="secondary">
     <li>

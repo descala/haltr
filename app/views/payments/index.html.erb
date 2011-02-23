@@ -1,7 +1,3 @@
-<div class="contextual">
-<%= link_to l(:label_payment_new), {:action => 'new', :id => @project}, :class => 'icon icon-add' %>
-</div>
-
 <h2><%=l(:label_payment_plural)%></h2>
 
 <% form_tag({}, :method => :get) do %>
@@ -45,5 +41,5 @@
 <% html_title(l(:label_payment_plural)) -%>
 
 <% content_for :sidebar do %>
-    <%= render :partial => 'common/sidebar' %>
+    <%= render :partial => 'sidebar' %>
 <% end %>

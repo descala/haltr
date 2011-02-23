@@ -2,8 +2,6 @@
   <%= stylesheet_link_tag 'haltr', :plugin => 'haltr' %>
 <% end %>
 
-<div class="contextual"><%= link_to l(:label_invoice_template_new), {:action => 'new', :id => @project}, :class => 'icon icon-add' %></div>
-
 <h2><%= l(:label_invoice_template_plural) %></h2>
 
 <table class="list" id="invoices">
@@ -30,5 +28,5 @@
 <% html_title(l(:label_invoice_plural)) -%>
 
 <% content_for :sidebar do %>
-      <%= render :partial => 'common/sidebar' %>
+      <%= render :partial => 'sidebar' %>
 <% end %>

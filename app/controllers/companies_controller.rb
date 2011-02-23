@@ -1,7 +1,7 @@
 class CompaniesController < ApplicationController
 
   unloadable
-  menu_item :haltr
+  menu_item :haltr_community
   helper :haltr
 
   before_filter :project_patch
