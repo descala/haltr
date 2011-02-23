@@ -36,6 +36,7 @@ class InvoiceTest < ActiveSupport::TestCase
     assert_equal "2011-2", IssuedInvoice.increment_right("2011-1")
     assert_equal "11/002", IssuedInvoice.increment_right("11/001")
     assert_equal "0032", IssuedInvoice.increment_right("0031")
+    assert_equal "999", IssuedInvoice.increment_right("1000")
   end
 
 end
