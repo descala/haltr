@@ -6,6 +6,16 @@ class InvoiceLine < ActiveRecord::Base
   validates_presence_of :description
   validates_numericality_of :quantity, :price
 
+  # remove colons "1,23" => "1.23"
+  def price=(v)
+    write_attribute :price, (v.is_a?(String) ? v.gsub(',','.') : v)
+  end
+
+  # remove colons "1,23" => "1.23"
+  def quanity=(v)
+    write_attribute :quantity, (v.is_a?(String) ? v.gsub(',','.') : v)
+  end
+
   def initialize(attributes=nil)
     super
     update_currency
