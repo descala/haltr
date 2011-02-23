@@ -25,7 +25,7 @@ cat << EOF > factures_enviar.sh
 P="../factures-emeses"
 AS="/usr/bin/osascript factures_enviar.scpt"
 <% @invoices.each do |invoice| -%>
-\${AS} \${P}/<%= invoice.pdf_name  %> <%= invoice.recipients.collect{|p|p.email}.join(' ') %>
+\${AS} \${P}/<%= invoice.pdf_name  %> <%= invoice.client.email %> <%= invoice.recipients.collect{|p|p.email}.join(' ') %>
 <% end -%>
 EOF
 chmod +x factures_enviar.sh
