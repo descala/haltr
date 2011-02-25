@@ -2,7 +2,9 @@ class TasksController < ApplicationController
 
   unloadable
   menu_item :haltr_invoices
+  menu_item :haltr_payments, :only => [:index,:n19,:n19_done,:import_aeb43]
   helper :haltr
+  helper :invoices
 
   before_filter :find_project, :except => [:n19, :n19_done]
   before_filter :find_invoice, :only => [:n19, :n19_done]
@@ -12,8 +14,6 @@ class TasksController < ApplicationController
   before_filter :check_for_company
 
   def index
-    @num_new_invoices = InvoiceTemplate.count(:include=>[:client],:conditions => ["clients.project_id = ? AND date <= ?", @project, Time.now + 15.day])
-    @num_not_sent = IssuedInvoice.find_not_sent(@project).size
     @charge_bank_on_due_date = IssuedInvoice.find_due_dates(@project)
   end
 

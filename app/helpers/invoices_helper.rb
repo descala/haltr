@@ -52,4 +52,12 @@ module InvoicesHelper
     end
   end
 
+  def num_new_invoices
+    InvoiceTemplate.count(:include=>[:client],:conditions => ["clients.project_id = ? AND date <= ?", @project, Time.now + 15.day])
+  end
+
+  def num_not_sent
+    IssuedInvoice.find_not_sent(@project).size
+  end
+
 end

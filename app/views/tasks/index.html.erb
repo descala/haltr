@@ -3,14 +3,6 @@
 
 <ul>
   <li>
-  <%= link_to l(:button_generate_invoices), :action => 'create_more', :id => @project %> (<%= @num_new_invoices%>)
-  </li>
-  <% if authorize_for('tasks','automator')  -%>
-  <li>
-  <%= link_to l(:button_send_invoices), :action => 'automator', :id => @project %>: <%= l(:label_automator_info) %> (<%= @num_not_sent %>)
-  </li>
-  <% end -%>
-  <li>
     <%= l(:label_charge_n19) %>
     <% if @charge_bank_on_due_date.size > 0 -%>
     <ul>
@@ -23,11 +15,6 @@
     <% else -%>
     (0)
     <% end -%>
-  </li>
-  <li>
-  <%= l(:label_invoice_report) %>: <%= link_to l('datetime.distance_in_words.x_months',3), :action => 'report', :id => @project, :months_ago => 3 %>,
-  <%= link_to l('datetime.distance_in_words.x_months',6), :action => 'report', :id => @project, :months_ago => 6 %>,
-  <%= link_to l('datetime.distance_in_words.x_months',12), :action => 'report', :id => @project, :months_ago => 12 %>
   </li>
   <li>
   <% form_tag(url_for(:action => 'import_aeb43', :id => @project ), :multipart => true ) do |f| %>
@@ -43,5 +30,5 @@
 <% html_title(l(:label_task_plural)) -%>
 
 <% content_for :sidebar do %>
-      <%= render :partial => 'sidebar' %>
+      <%= render :partial => 'payments/sidebar' %>
 <% end %>

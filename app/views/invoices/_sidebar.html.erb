@@ -5,5 +5,16 @@
   </li>
   <li><%= link_to l(:label_invoice_plural), :controller => 'invoices', :action => 'index', :id => @project %></li>
   <li><%= link_to l(:label_invoice_template_plural), :controller => 'invoice_templates', :action => 'index', :id => @project %></li>
-  <li><%= link_to l(:label_task_plural), :controller => 'tasks', :action => 'index', :id => @project %></li>
+  <li>
+  <%= link_to "#{l(:button_generate_invoices)} (#{num_new_invoices})", :controller => 'tasks', :action => 'create_more', :id => @project %> 
+  </li>
+  <% if authorize_for('tasks','automator') && num_not_sent > 0 -%>
+  <li>
+  <%= link_to "#{l(:button_send_invoices)} (#{num_not_sent})",{ :controller => 'tasks', :action => 'automator', :id => @project}, :title => l(:label_automator_info) %>
+  </li>
+  <% end -%>
+  <li>
+  <%= link_to "#{l(:label_invoice_report)} #{l('datetime.distance_in_words.x_months',3)}", :controller => 'tasks',:action => 'report', :id => @project, :months_ago => 3 %>
+  </li>
+
 </ul>

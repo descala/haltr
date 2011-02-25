@@ -5,6 +5,7 @@ class PaymentsController < ApplicationController
 
   helper :haltr
   helper :sort
+
   include SortHelper
 
   before_filter :find_project, :except => [:destroy,:edit,:update]
