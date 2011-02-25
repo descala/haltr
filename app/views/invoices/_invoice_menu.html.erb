@@ -1,4 +1,4 @@
-  <%= render :partial => "#{@invoice.class.to_s.underscore}_menu" %>
+  <%= render :partial => "invoices/#{@invoice.class.to_s.underscore}_menu" %>
 
   <% unless Setting.plugin_haltr['issues_controller_name'].blank? -%>
   <ul class="invoice_menu">

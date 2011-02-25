@@ -5,9 +5,11 @@
   </li>
   <li><%= link_to l(:label_invoice_plural), :controller => 'invoices', :action => 'index', :id => @project %></li>
   <li><%= link_to l(:label_invoice_template_plural), :controller => 'invoice_templates', :action => 'index', :id => @project %></li>
+  <% if num_new_invoices > 0 %>
   <li>
   <%= link_to "#{l(:button_generate_invoices)} (#{num_new_invoices})", :controller => 'tasks', :action => 'create_more', :id => @project %> 
   </li>
+  <% end -%>
   <% if authorize_for('tasks','automator') && num_not_sent > 0 -%>
   <li>
   <%= link_to "#{l(:button_send_invoices)} (#{num_not_sent})",{ :controller => 'tasks', :action => 'automator', :id => @project}, :title => l(:label_automator_info) %>
