@@ -29,7 +29,7 @@ class TasksControllerTest < ActionController::TestCase
     assert_equal 'text', @response.content_type
     lines = @response.body.chomp.split("\n")
     # spaces are relevant
-    assert_equal '568077310000G000B00000000   THIS CLIENT HAS A VERY LONG NAME THAT MA114910865126953221150000109230                FRA 08/001                      1.092,30        ', lines[2]
+    assert_equal '568077310000G000B00000000   SOME NON ASCII CHARS  LONG NAME THAT MAY114910865126953221150000109230                FRA 08/001                      1.092,30        ', lines[2]
   end
 
 end
