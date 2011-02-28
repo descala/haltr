@@ -38,8 +38,7 @@ class TasksController < ApplicationController
   
   # generate spanish AEB Nº19
   def n19
-    example_invoice = IssuedInvoice.find params[:id]
-    @due_date = example_invoice.due_date
+    @due_date = @invoice.due_date
     @fecha_cargo = @due_date.to_formatted_s :ddmmyy
     @clients = Client.find :all, :conditions => ["bank_account != '' and project_id = ?", @project.id], :order => 'taxcode'
     @fecha_confeccion = Date.today.to_formatted_s :ddmmyy
@@ -62,13 +61,12 @@ class TasksController < ApplicationController
   end
   
   def n19_done
-    example_invoice = IssuedInvoice.find params[:id]
-    invoices = IssuedInvoice.find :all, :include => [:client], :conditions => ["clients.project_id = ? and due_date = ?", @project.id, example_invoice.due_date]
+    invoices = IssuedInvoice.find :all, :include => [:client], :conditions => ["clients.project_id = ? and due_date = ?", @project.id, @invoice.due_date]
     invoices.each do |invoice|
       Payment.new_to_close(invoice).save
       invoice.close
     end
-    flash[:notice] = l(:notice_n19_done, example_invoice.due_date.to_s)
+    flash[:notice] = l(:notice_n19_done, @invoice.due_date.to_s)
     redirect_to :action => 'index', :id => @project
   end
   

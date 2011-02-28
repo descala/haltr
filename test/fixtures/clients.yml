@@ -21,7 +21,8 @@
 client1:
   city: Barcelona
   address: Ribes, 00
-  name: Invinet Sistemes 2003 SL
+  name: This client has a very long name that may be truncated Inc.
   taxcode: B00000000
   postalcode: 08013
-  project: haltr
+  project_id: 2
+  bank_account: 11491086512695322115

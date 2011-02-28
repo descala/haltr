@@ -1,11 +1,14 @@
 invoice1:
-  type: InvoiceDocument
+  type: IssuedInvoice
   number: 08/001
   date: 2008-11-24
+  due_date: 2008-12-01
   client: client1 
   terms: 1m1
   project_id: 2 
   client: client1
+  payment_method: 2
+  state: sent
 
 template1:
   type: InvoiceTemplate
@@ -17,7 +20,7 @@ template1:
   client: client1
 
 test_import:
-  type: InvoiceDocument
+  type: IssuedInvoice
   state: sent
   number: 08/194
   date: "2008-11-24"

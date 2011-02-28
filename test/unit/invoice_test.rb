@@ -26,7 +26,7 @@ class InvoiceTest < ActiveSupport::TestCase
     i.due_date = d
     i.save!
     i = Invoice.find i.id
-    assert_equal d, i.due_date
+    assert_equal Date.new(2008,12,1), i.due_date
   end
  
   test "invoice number increment right" do
@@ -36,7 +36,7 @@ class InvoiceTest < ActiveSupport::TestCase
     assert_equal "2011-2", IssuedInvoice.increment_right("2011-1")
     assert_equal "11/002", IssuedInvoice.increment_right("11/001")
     assert_equal "0032", IssuedInvoice.increment_right("0031")
-    assert_equal "999", IssuedInvoice.increment_right("1000")
+    assert_equal "1000", IssuedInvoice.increment_right("999")
   end
 
 end

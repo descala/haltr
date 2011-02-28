@@ -5,7 +5,7 @@ require 'invoices_controller'
 class InvoicesController; def rescue_action(e) raise e end; end
 
 class InvoicesControllerTest < ActionController::TestCase
-  fixtures :projects, :enabled_modules, :users, :roles, :members, :invoices
+  fixtures :projects, :enabled_modules, :users, :roles, :members, :invoices, :companies
 
   def setup
     Setting.plugin_haltr = { 'trace_url' => 'loclhost:3000',
@@ -25,6 +25,8 @@ class InvoicesControllerTest < ActionController::TestCase
  end
 
   def test_must_redirect_if_not_configured
+    # deconfigure onlinestore
+    companies(:company1).destroy
     @request.session[:user_id] = 2
     get :index, :id => 'onlinestore'
     assert_redirected_to :controller => 'companies', :action => 'index', :id => 'onlinestore'
