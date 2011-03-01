@@ -56,6 +56,7 @@ ca:
   button_new_invoice: Nova factura
   button_add_invoice_line: Afegeix una nova línia a la factura
   field_number: Número
+  label_last_invoice_number: "Últim fet servir"
   field_date: Data
   field_client: Client
   field_extra_info: Notes

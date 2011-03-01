@@ -20,13 +20,6 @@ module HaltrHelper
     end
   end
 
-  def number_form_column(record, input_name)
-    output = input :record, :number, :class=>'text-input'
-    output += content_tag :span do
-      "Last used: #{IssuedInvoice.last_number(@project)}"
-    end
-  end
-
   # Renders flash messages
   def render_flash_messages
     s = ''

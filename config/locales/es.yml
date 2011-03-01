@@ -43,6 +43,7 @@ es:
   button_new_invoice: Nueva factura
   button_add_invoice_line: Añade una nueva linea a la factura
   field_number: Número
+  label_last_invoice_number: "Último usado"
   field_date: Fecha
   field_client: Cliente
   field_extra_info: Notas
