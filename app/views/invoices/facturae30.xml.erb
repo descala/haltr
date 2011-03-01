@@ -23,46 +23,46 @@
          </LegalEntity>
       </ThirdParty>
       <Batch>
-         <BatchIdentifier><%= @invoice.id %></BatchIdentifier>
+         <BatchIdentifier><%=h  @invoice.id %></BatchIdentifier>
          <InvoicesCount>1</InvoicesCount>
          <TotalInvoicesAmount>
-            <TotalAmount><%=precision @invoice.total.dollars %></TotalAmount>
+            <TotalAmount><%=h precision @invoice.total.dollars %></TotalAmount>
          </TotalInvoicesAmount>
          <TotalOutstandingAmount>
-            <TotalAmount><%=precision @invoice.total.dollars %></TotalAmount>
+            <TotalAmount><%=h precision @invoice.total.dollars %></TotalAmount>
          </TotalOutstandingAmount>
          <TotalExecutableAmount>
-            <TotalAmount><%=precision @invoice.total.dollars %></TotalAmount>
+            <TotalAmount><%=h precision @invoice.total.dollars %></TotalAmount>
          </TotalExecutableAmount>
-         <InvoiceCurrencyCode><%= @invoice.currency %></InvoiceCurrencyCode>
+         <InvoiceCurrencyCode><%=h  @invoice.currency %></InvoiceCurrencyCode>
       </Batch>
    </FileHeader>
    <Parties>
       <SellerParty>
          <TaxIdentification>
-            <PersonTypeCode><%= @invoice.persontypecode %></PersonTypeCode>
+            <PersonTypeCode><%=h  @invoice.persontypecode %></PersonTypeCode>
             <ResidenceTypeCode>R</ResidenceTypeCode>
-            <TaxIdentificationNumber><%=@company.taxcode%></TaxIdentificationNumber>
+            <TaxIdentificationNumber><%=h @company.taxcode%></TaxIdentificationNumber>
          </TaxIdentification>
 <% if @invoice.persontypecode == "J" -%>
 
          <LegalEntity>
-            <CorporateName><%=@company.name%></CorporateName>
-            <%= render :partial => "address.xml", :locals => {:entity => @company} %>
+            <CorporateName><%=h @company.name%></CorporateName>
+            <%=h  render :partial => "address.xml", :locals => {:entity => @company} %>
             <ContactDetails>
-               <WebAddress><%=@company.website%></WebAddress>
-               <ElectronicMail><%=@company.email%></ElectronicMail>
+               <WebAddress><%=h @company.website%></WebAddress>
+               <ElectronicMail><%=h @company.email%></ElectronicMail>
             </ContactDetails>
          </LegalEntity>
 <% else -%>
 
          <Individual>
-            <Name><%=@company.first_name%></Name>
-            <FirstSurname><%=@company.last_name%></FirstSurname>
-            <%= render :partial => "address.xml", :locals => {:entity => @company} %>
+            <Name><%=h @company.first_name%></Name>
+            <FirstSurname><%=h @company.last_name%></FirstSurname>
+            <%=h  render :partial => "address.xml", :locals => {:entity => @company} %>
             <ContactDetails>
-               <WebAddress><%=@company.website%></WebAddress>
-               <ElectronicMail><%=@company.email%></ElectronicMail>
+               <WebAddress><%=h @company.website%></WebAddress>
+               <ElectronicMail><%=h @company.email%></ElectronicMail>
             </ContactDetails>
          </Individual>
 <% end -%>
@@ -71,13 +71,13 @@
          <TaxIdentification>
             <PersonTypeCode>J</PersonTypeCode>
             <ResidenceTypeCode>R</ResidenceTypeCode>
-            <TaxIdentificationNumber><%=@client.taxcode%></TaxIdentificationNumber>
+            <TaxIdentificationNumber><%=h @client.taxcode%></TaxIdentificationNumber>
          </TaxIdentification>
          <LegalEntity>
-            <CorporateName><%=@client.name%></CorporateName>
-            <%= render :partial => "address.xml", :locals => {:entity => @client}%>
+            <CorporateName><%=h @client.name%></CorporateName>
+            <%=h  render :partial => "address.xml", :locals => {:entity => @client}%>
             <ContactDetails>
-              <ElectronicMail><%= @client.email %></ElectronicMail>
+              <ElectronicMail><%=h  @client.email %></ElectronicMail>
             </ContactDetails>
          </LegalEntity>
       </BuyerParty>
@@ -85,25 +85,25 @@
    <Invoices>
       <Invoice>
          <InvoiceHeader>
-            <InvoiceNumber><%=@invoice.number%></InvoiceNumber>
+            <InvoiceNumber><%=h @invoice.number%></InvoiceNumber>
             <InvoiceDocumentType>FC</InvoiceDocumentType>
             <InvoiceClass>OO</InvoiceClass>
          </InvoiceHeader>
          <InvoiceIssueData>
-            <IssueDate><%=@invoice.date%></IssueDate>
-            <InvoiceCurrencyCode><%=@client.currency%></InvoiceCurrencyCode>
-            <TaxCurrencyCode><%=@client.currency%></TaxCurrencyCode>
-            <LanguageName><%=@client.language%></LanguageName>
+            <IssueDate><%=h @invoice.date%></IssueDate>
+            <InvoiceCurrencyCode><%=h @client.currency%></InvoiceCurrencyCode>
+            <TaxCurrencyCode><%=h @client.currency%></TaxCurrencyCode>
+            <LanguageName><%=h @client.language%></LanguageName>
          </InvoiceIssueData>
          <TaxesOutputs>
             <Tax>
                <TaxTypeCode>01</TaxTypeCode>
-               <TaxRate><%=precision @invoice.tax_percent%></TaxRate>
+               <TaxRate><%=h precision @invoice.tax_percent%></TaxRate>
                <TaxableBase>
-                  <TotalAmount><%=precision(@invoice.subtotal.dollars)%></TotalAmount>
+                  <TotalAmount><%=h precision(@invoice.subtotal.dollars)%></TotalAmount>
                </TaxableBase>
                <TaxAmount>
-                 <TotalAmount><%=precision @invoice.tax.dollars %></TotalAmount>
+                 <TotalAmount><%=h precision @invoice.tax.dollars %></TotalAmount>
                </TaxAmount>
             </Tax>
          </TaxesOutputs>
@@ -112,54 +112,54 @@
          <TaxesWithheld>
             <Tax>
                <TaxTypeCode>04</TaxTypeCode>
-               <TaxRate><%=precision @invoice.withholding_tax_percent%></TaxRate>
+               <TaxRate><%=h precision @invoice.withholding_tax_percent%></TaxRate>
                <TaxableBase>
-                  <TotalAmount><%=precision @invoice.subtotal.dollars%></TotalAmount>
+                  <TotalAmount><%=h precision @invoice.subtotal.dollars%></TotalAmount>
                </TaxableBase>
                <TaxAmount>
-                 <TotalAmount><%=precision @invoice.withholding_tax.dollars%></TotalAmount>
+                 <TotalAmount><%=h precision @invoice.withholding_tax.dollars%></TotalAmount>
                </TaxAmount>
             </Tax>
          </TaxesWithheld>
 <% end -%>
 
          <InvoiceTotals>
-            <TotalGrossAmount><%=precision @invoice.subtotal_without_discount.dollars%></TotalGrossAmount>
+            <TotalGrossAmount><%=h precision @invoice.subtotal_without_discount.dollars%></TotalGrossAmount>
 <% if @invoice.discount_percent > 0 -%>
             <GeneralDiscounts>
                <Discount>
-                 <DiscountReason><%=@invoice.discount_text%></DiscountReason>
-                 <DiscountRate><%=precision(@invoice.discount_percent, 4) %></DiscountRate>
-                 <DiscountAmount><%=precision(@invoice.discount.dollars,2)%></DiscountAmount>
+                 <DiscountReason><%=h @invoice.discount_text%></DiscountReason>
+                 <DiscountRate><%=h precision(@invoice.discount_percent, 4) %></DiscountRate>
+                 <DiscountAmount><%=h precision(@invoice.discount.dollars,2)%></DiscountAmount>
                </Discount>
             </GeneralDiscounts>
-            <TotalGeneralDiscounts><%=precision(@invoice.discount.dollars,2)%></TotalGeneralDiscounts>
+            <TotalGeneralDiscounts><%=h precision(@invoice.discount.dollars,2)%></TotalGeneralDiscounts>
 <% end -%>
-            <TotalGrossAmountBeforeTaxes><%=precision(@invoice.subtotal.dollars)%></TotalGrossAmountBeforeTaxes>
-            <TotalTaxOutputs><%=precision @invoice.tax.dollars%></TotalTaxOutputs>
-            <TotalTaxesWithheld><%=precision @invoice.withholding_tax.dollars%></TotalTaxesWithheld>
-            <InvoiceTotal><%=precision @invoice.total.dollars%></InvoiceTotal>
-            <TotalOutstandingAmount><%=precision @invoice.total.dollars%></TotalOutstandingAmount>
-            <TotalExecutableAmount><%=precision @invoice.total.dollars%></TotalExecutableAmount>
+            <TotalGrossAmountBeforeTaxes><%=h precision(@invoice.subtotal.dollars)%></TotalGrossAmountBeforeTaxes>
+            <TotalTaxOutputs><%=h precision @invoice.tax.dollars%></TotalTaxOutputs>
+            <TotalTaxesWithheld><%=h precision @invoice.withholding_tax.dollars%></TotalTaxesWithheld>
+            <InvoiceTotal><%=h precision @invoice.total.dollars%></InvoiceTotal>
+            <TotalOutstandingAmount><%=h precision @invoice.total.dollars%></TotalOutstandingAmount>
+            <TotalExecutableAmount><%=h precision @invoice.total.dollars%></TotalExecutableAmount>
          </InvoiceTotals>
          <Items>
 <% @invoice.invoice_lines.each do |invoice_line| -%>
             <InvoiceLine>
-              <ReceiverTransactionReference><%=@invoice.ponumber%></ReceiverTransactionReference>
-               <ItemDescription><%=invoice_line.description%></ItemDescription>
-               <Quantity><%=invoice_line.quantity%></Quantity>
-               <UnitPriceWithoutTax><%=precision(invoice_line.price,6)%></UnitPriceWithoutTax>
-               <TotalCost><%=precision(invoice_line.price*invoice_line.quantity,2)%></TotalCost>
-               <GrossAmount><%=precision(invoice_line.price*invoice_line.quantity,2)%></GrossAmount>
+              <ReceiverTransactionReference><%=h @invoice.ponumber%></ReceiverTransactionReference>
+               <ItemDescription><%=h invoice_line.description%></ItemDescription>
+               <Quantity><%=h invoice_line.quantity%></Quantity>
+               <UnitPriceWithoutTax><%=h precision(invoice_line.price,6)%></UnitPriceWithoutTax>
+               <TotalCost><%=h precision(invoice_line.price*invoice_line.quantity,2)%></TotalCost>
+               <GrossAmount><%=h precision(invoice_line.price*invoice_line.quantity,2)%></GrossAmount>
                <TaxesOutputs>
                   <Tax>
                      <TaxTypeCode>01</TaxTypeCode>
-                     <TaxRate><%=precision @invoice.tax_percent%></TaxRate>
+                     <TaxRate><%=h precision @invoice.tax_percent%></TaxRate>
                      <TaxableBase>
-                       <TotalAmount><%=precision(invoice_line.price*invoice_line.quantity)%></TotalAmount>
+                       <TotalAmount><%=h precision(invoice_line.price*invoice_line.quantity)%></TotalAmount>
                      </TaxableBase>
                      <TaxAmount>
-                        <TotalAmount><%=precision invoice_line.tax.dollars%></TotalAmount>
+                        <TotalAmount><%=h precision invoice_line.tax.dollars%></TotalAmount>
                      </TaxAmount>
                   </Tax>
                </TaxesOutputs>
@@ -168,22 +168,22 @@
          </Items>
          <PaymentDetails>
             <Installment>
-              <InstallmentDueDate><%=@invoice.due_date%></InstallmentDueDate>
-               <InstallmentAmount><%=precision @invoice.total.dollars%></InstallmentAmount>
-               <PaymentMeans><%=@invoice.payment_method_code %></PaymentMeans>
+              <InstallmentDueDate><%=h @invoice.due_date%></InstallmentDueDate>
+               <InstallmentAmount><%=h precision @invoice.total.dollars%></InstallmentAmount>
+               <PaymentMeans><%=h @invoice.payment_method_code %></PaymentMeans>
 <% if @invoice.debit? -%>
                <AccountToBeDebited>
-                 <AccountNumber><%=@client.bank_account%></AccountNumber>
+                 <AccountNumber><%=h @client.bank_account%></AccountNumber>
                </AccountToBeDebited>
 <% elsif @invoice.transfer? -%>
                <AccountToBeCredited>
-                 <AccountNumber><%=@company.bank_account%></AccountNumber>
+                 <AccountNumber><%=h @company.bank_account%></AccountNumber>
                </AccountToBeCredited>
 <% end -%>
             </Installment>
          </PaymentDetails>
          <AdditionalData>
-           <InvoiceAdditionalInformation><%=@invoice.extra_info%></InvoiceAdditionalInformation>
+           <InvoiceAdditionalInformation><%=h @invoice.extra_info%></InvoiceAdditionalInformation>
          </AdditionalData>
       </Invoice>
    </Invoices>
