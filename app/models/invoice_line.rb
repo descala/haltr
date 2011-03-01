@@ -5,6 +5,7 @@ class InvoiceLine < ActiveRecord::Base
   belongs_to :invoice
   validates_presence_of :description
   validates_numericality_of :quantity, :price
+  attr_accessor :new_and_first
 
   # remove colons "1,23" => "1.23"
   def price=(v)
