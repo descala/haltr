@@ -188,7 +188,7 @@ es:
   charge_bank_on_date: Cobrar a dia
   nothing_to_report: Nada a mostrar
   nothing_to_generate: Nada a generar
-  button_generate_invoices: Generar nuevas facturas
+  button_generate_invoices: Nuevas facturas desde plantilla
   button_send_invoices: Enviar facturas
   label_automator_info: "descargar PDFs, script de Automator para enviar emails y marcar como enviadas"
   label_charge_n19: Generar recibos mediante ficheros N19
