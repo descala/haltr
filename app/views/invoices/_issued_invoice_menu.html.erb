@@ -21,9 +21,9 @@
 
 <h3><%=l(:recipients)%></h3>
 <ul class="invoice_menu">
-  <li>
-  <%= link_to "#{@client.name} &lt;#{@client.email}&gt;", {:controller =>'clients' ,:action=>'edit', :id=>@client}, :class => 'icon-haltr-edit' %>
-  </li>
+  <% if @client.email -%>
+  <li><%= link_to "#{@client.name} &lt;#{@client.email}&gt;", {:controller =>'clients' ,:action=>'edit', :id=>@client}, :class => 'icon-haltr-edit' %></li>
+  <% end -%>
   <% @invoice.recipients.each do |person| -%>
     <li>
     <%= link_to "#{person.first_name} #{person.last_name} &lt;#{person.email}&gt;", {:controller =>'people' ,:action=>'show', :id=>person}, :class => 'icon-haltr-person' %>
