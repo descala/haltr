@@ -4,6 +4,7 @@ class InvoiceTemplatesController < ApplicationController
   menu_item :haltr_invoices
 
   helper :invoices
+  layout 'haltr'
   helper :haltr
   helper :sort
   include SortHelper

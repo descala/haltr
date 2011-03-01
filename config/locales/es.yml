@@ -3,7 +3,7 @@ es:
   # community
   label_company: Empresa
   label_my_company: Mi empresa
-  label_community: Empresas
+  label_companies: Empresas
   label_company_new: Nueva empresa
   field_address: Dirección
   field_address2: Dirección
@@ -162,6 +162,7 @@ es:
   label_invoice_template_new: Nueva plantilla
   label_invoice_template: Plantilla
   label_invoice_template_plural: Plantillas
+  label_generated_invoices: Facturas generadas
   next_charge: Siguiente pago
 
   # Invoice lines

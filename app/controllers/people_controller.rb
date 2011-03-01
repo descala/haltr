@@ -2,7 +2,7 @@ class PeopleController < ApplicationController
 
   unloadable
   menu_item :haltr_community
-
+  layout 'haltr'
   helper :haltr
   helper :sort
   include SortHelper

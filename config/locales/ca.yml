@@ -16,7 +16,7 @@ ca:
   # community
   label_company: Empresa
   label_my_company: La meva empresa
-  label_community: Empreses
+  label_companies: Empreses
   label_company_new: Nova empresa
   field_address: Adreça
   field_address2: Adreça
@@ -175,6 +175,7 @@ ca:
   label_invoice_template_new: Nova plantilla
   label_invoice_template: Plantilla
   label_invoice_template_plural: Plantilles
+  label_generated_invoices: Factures generades
   next_charge: Següent pagament
 
   # Invoice lines

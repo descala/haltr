@@ -36,7 +36,7 @@ Redmine::Plugin.register :haltr do
       :require => :member
   end
 
-  menu :project_menu, :haltr_community, { :controller => 'clients', :action => 'index' }, :caption => :label_community
+  menu :project_menu, :haltr_community, { :controller => 'clients', :action => 'index' }, :caption => :label_companies
   menu :project_menu, :haltr_invoices, { :controller => 'invoices', :action => 'index' }, :caption => :label_invoice_plural
   menu :project_menu, :haltr_payments, { :controller => 'payments', :action => 'index' }, :caption => :label_payment_plural
 

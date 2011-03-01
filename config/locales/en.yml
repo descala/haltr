@@ -3,7 +3,7 @@ en:
   # community
   label_company: Company
   label_my_company: My company
-  label_community: Companies
+  label_companies: Companies
   label_company_new: New company
   field_address: Adress
   field_address2: Adress
@@ -163,6 +163,7 @@ en:
   label_invoice_template_new: New template
   label_invoice_template: Template
   label_invoice_template_plural: Templates
+  label_generated_invoices: Generated invoices
   next_charge: Next charge
 
   # Invoice lines
