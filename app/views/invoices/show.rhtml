@@ -19,32 +19,32 @@
             <% end -%>
           </div>
           <div class="vendor-info">
-            <h3 class="org fn"><%=h  @project.company.name %></h3>
+            <h3 class="org fn"><%=h @project.company.name %></h3>
             <address class="adr">
-              <div class="street-address"><%=h  @project.company.address %></div>
-              <span class="postal-code"><%=h  @project.company.postalcode %></span> <span class="locality"><%=h  @project.company.city %></span>
-              <div class="region"><%=h  @project.company.province %></div>
+              <div class="street-address"><%=h @project.company.address %></div>
+              <span class="postal-code"><%=h @project.company.postalcode %></span> <span class="locality"><%=h @project.company.city %></span>
+              <div class="region"><%=h @project.company.province %></div>
               <div class="country-name"></div>
             </address>
-            <div><strong><%=h  l(:field_taxcode) %></strong><span class="tax-id"> <%=h  @project.company.taxcode %></span></div>
+            <div><strong><%=h l(:field_taxcode) %></strong><span class="tax-id"> <%=h @project.company.taxcode %></span></div>
             <div style="height:10px;"></div>
-            <div><a href="<%=h  @project.company.website %>" class="url" target="_blank"><%=h  @project.company.website %></a></div>
-            <div><a href="<%=h  @project.company.email %>" class="url" target="_blank"><%=h  @project.company.email %></a></div>
+            <div><a href="<%=h @project.company.website %>" class="url" target="_blank"><%=h @project.company.website %></a></div>
+            <div><a href="<%=h @project.company.email %>" class="url" target="_blank"><%=h @project.company.email %></a></div>
           </div>
         </div>
 
         <!-- Invoice Number and Info -->
-        <h2 class="invoice-ID"><%=h  @invoice.label %> <%=h  @invoice.number %></h2>
+        <h2 class="invoice-ID"><%=h @invoice.label %> <%=h @invoice.number %></h2>
         <div class="invoice-info">
-          <span class="date"><strong><%=h  @invoice.date %></strong></span><br/>
+          <span class="date"><strong><%=h @invoice.date %></strong></span><br/>
           <% unless @invoice.due.blank? -%>
-            <span class="invoice-terms<%=h " pastdue" if @invoice.past_due?%>"><%=h l(:field_due_date)%> <%=h  @invoice.due %></span><br/>
+            <span class="invoice-terms<%=h " pastdue" if @invoice.past_due?%>"><%=h l(:field_due_date)%> <%=h @invoice.due %></span><br/>
           <% end -%>
           <% unless @invoice.payment_method_string.blank? -%>
-            <span class="invoice-terms"><%=h  @invoice.payment_method_string %></span><br/>
+            <span class="invoice-terms"><%=h @invoice.payment_method_string %></span><br/>
           <% end -%>
           <% unless @invoice.ponumber.blank? -%>
-            <span class="invoice-terms"><%=h  "#{t(:field_ponumber)} #{@invoice.ponumber}" %></span><br/>
+            <span class="invoice-terms"><%=h "#{t(:field_ponumber)} #{@invoice.ponumber}" %></span><br/>
           <% end -%>
 
         </div>
@@ -52,19 +52,19 @@
         <!-- Client Info -->
         <div class="vcard client">
           <div class="client-info">
-            <h3 class="org fn"><%=h  @client.name.to_ascii.upcase %></h3>
+            <h3 class="org fn"><%=h @client.name.to_ascii.upcase %></h3>
             <address class="adr">
-              <div class="street-address"><%=h  @client.address %></div>
-              <div class="street-address"><%=h  @client.address2 %></div>
-              <span class="postal-code"><%=h  @client.postalcode %></span>
+              <div class="street-address"><%=h @client.address %></div>
+              <div class="street-address"><%=h @client.address2 %></div>
+              <span class="postal-code"><%=h @client.postalcode %></span>
               <% if !@client.city.blank? or !@client.province.blank? -%>
-              <span class="locality"><%=h  @client.city.strip unless @client.city.blank? %></span>
-              <% unless @client.province.blank? -%>, <span class="region"><%=h  @client.province %></span><% end -%>
+              <span class="locality"><%=h @client.city.strip unless @client.city.blank? %></span>
+              <% unless @client.province.blank? -%>, <span class="region"><%=h @client.province %></span><% end -%>
               <% end -%>
-              <div class="country-name"><%=h  @client.countrycode if @client.countrycode.downcase!="esp" %></div>
+              <div class="country-name"><%=h @client.countrycode if @client.countrycode.downcase!="esp" %></div>
             </address>
             <% if !@invoice.draft -%>
-              <div><strong><%=h  l(:field_taxcode) %>:</strong><span class="tax-id"> <%=h  @client.taxcode.upcase %></span></div>
+              <div><strong><%=h l(:field_taxcode) %>:</strong><span class="tax-id"> <%=h @client.taxcode.upcase %></span></div>
             <% end -%>
           </div>
         </div>
@@ -78,25 +78,25 @@
               <tr>
                 <th class="item-quantity first"><abbr title="Quantitat">Q</abbr></th>
                 <th class="item-description"><%=h l(:field_description)%></th>
-                <th class="item-price"><%=h  l(:field_amount) %></th>
+                <th class="item-price"><%=h l(:field_amount) %></th>
                 <th class="line-total last"><%=h l(:label_total)%></th>
               </tr>
 
               <% @lines.each do |line| -%>
                 <tr>
-                  <td class="item-quantity first"><%=h  quantity(line.quantity) %></td>
-                  <td class="item-description"><%=h  line.description %></td>
-                  <td class="item-price"><%=h  line_price(line) %></td>
-                  <td class="line-total last"><%=h  money(line.total) %></td>
+                  <td class="item-quantity first"><%=h quantity(line.quantity) %></td>
+                  <td class="item-description"><%=h line.description %></td>
+                  <td class="item-price"><%=h line_price(line) %></td>
+                  <td class="line-total last"><%=h money(line.total) %></td>
                 </tr>
               <% end -%>
 
               <% if @invoice.discount_percent and @invoice.discount_percent > 0 -%>
                 <tr>
                   <td class="item-quantity first"></td>
-                  <td class="item-description"><%=h  @invoice.discount_text %></td>
-                  <td class="item-price"><%=h  number_to_percentage(@invoice.discount_percent, :precision=>0) %></td>
-                  <td class="line-total last">- <%=h  money(@invoice.discount) %></td>
+                  <td class="item-description"><%=h @invoice.discount_text %></td>
+                  <td class="item-price"><%=h number_to_percentage(@invoice.discount_percent, :precision=>0) %></td>
+                  <td class="line-total last">- <%=h money(@invoice.discount) %></td>
                 </tr>
               <% end -%>
 
@@ -107,21 +107,21 @@
           <table class="invoice-calculations" border="0" cellpadding="0" cellspacing="0">
             <tbody><tr class="invoice-subtotal">
                 <th><%=h l(:label_subtotal)%>:</th>
-                <td><%=h  money(@invoice.subtotal) %></td>
+                <td><%=h money(@invoice.subtotal) %></td>
               </tr>
               <tr class="sales-tax">
-                <th>IVA <%=h  number_to_percentage(@invoice.tax_percent, :precision=>0) %> :</th>
-                <td><%=h  money(@invoice.tax) %></td>
+                <th>IVA <%=h number_to_percentage(@invoice.tax_percent, :precision=>0) %> :</th>
+                <td><%=h money(@invoice.tax) %></td>
               </tr>
               <% if @invoice.withholding_tax_percent > 0 and @invoice.apply_withholding_tax -%>
               <tr class="sales-tax">
-                <th><%=h @invoice.withholding_tax_name%> <%=h  number_to_percentage(@invoice.withholding_tax_percent, :precision=>0) %> :</th>
+                <th><%=h @invoice.withholding_tax_name%> <%=h number_to_percentage(@invoice.withholding_tax_percent, :precision=>0) %> :</th>
                 <td><%=h money(@invoice.withholding_tax)%></td>
               </tr>
               <% end -%>
               <tr class="invoice-total">
                 <th><%=h l(:label_total)%>:</th>
-                <td><%=h  money(@invoice.total) %></td>
+                <td><%=h money(@invoice.total) %></td>
               </tr>
           </tbody></table>
 
@@ -132,16 +132,16 @@
             <tbody>
               <tr>
                 <th class="item-delete first"></th>
-                <th class="item-date"><%=h  l :field_due_date %></th>
+                <th class="item-date"><%=h l :field_due_date %></th>
                 <th class="item-description"><%=h l :field_description%></th>
                 <th class="line-total last"><%=h l :field_quantity %></th>
               </tr>
               <% @invoice.payments.each do |payment| -%>
                 <tr>
-                <td class="item-delete first"><%=h  link_to "", {:action=>'destroy_payment',:id=>payment} , :confirm => l(:text_are_you_sure), :method => :post, :class => 'icon icon-del' %></td>
-                  <td class="item-date first"><%=h  payment.date %></td>
-                  <td class="item-description"><%=h  payment.description %></td>
-                  <td class="line-total last"><%=h  money(payment.amount) %></td>
+                <td class="item-delete first"><%= link_to "", {:action=>'destroy_payment',:id=>payment} , :confirm => l(:text_are_you_sure), :method => :post, :class => 'icon icon-del' %></td>
+                  <td class="item-date first"><%=h payment.date %></td>
+                  <td class="item-description"><%=h payment.description %></td>
+                  <td class="line-total last"><%=h money(payment.amount) %></td>
                 </tr>
               <% end -%>
             </tbody>
@@ -151,8 +151,8 @@
           <table class="invoice-calculations payments" border="0" cellpadding="0" cellspacing="0">
             <tbody>
               <tr class="invoice-total">
-                <th><%=h  l :field_total_paid %>:</th>
-                <td><%=h  money(@invoice.total_paid) %></td>
+                <th><%=h l :field_total_paid %>:</th>
+                <td><%=h money(@invoice.total_paid) %></td>
               </tr>
           </tbody></table>
 
@@ -174,7 +174,7 @@
       <p></p>
       <ul>
       <% @invoice.events.each do |e| -%>
-        <li><%=h  e %> <%=h  download_link_for(e) %></li>
+        <li><%=h e %> <%= download_link_for(e) %></li>
       <% end -%>
       </ul>
     </div>
