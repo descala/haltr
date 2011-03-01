@@ -1,5 +1,5 @@
 <h3><%= l(:label_community) %></h3>
 <ul class="invoice_menu">
-  <li id="invoice_new"><%= link_to l(:label_company_new), {:action => 'new', :id => @project} %></li>
-  <li id="company_settings"><%=link_to l(:label_my_company), :controller=>'companies', :action=>'index', :id=>@project %></li>
+  <li><%= link_to l(:label_company_new), {:action => 'new', :id => @project}, :class=>'icon-haltr-company' %></li>
+  <li><%=link_to l(:label_my_company), {:controller=>'companies', :action=>'index', :id=>@project}, :class=>'icon-haltr-my-company' %></li>
 </ul>

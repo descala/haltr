@@ -4,6 +4,7 @@ class TasksController < ApplicationController
   menu_item :haltr_invoices
   menu_item :haltr_payments, :only => [:index,:n19,:n19_done,:import_aeb43]
   helper :haltr
+  layout 'haltr'
   helper :invoices
 
   before_filter :find_project, :except => [:n19, :n19_done]

@@ -200,7 +200,7 @@ ca:
   charge_bank_on_date: Cobrar a dia
   nothing_to_report: Res a mostrar
   nothing_to_generate: Res a generar
-  button_generate_invoices: Generar noves factures de les plantilles 
+  button_generate_invoices: Generar noves factures
   button_send_invoices: Enviar factures
   label_automator_info: "descarregar els PDFs, script de l'Automator per enviar emails i marcar-les com a enviades"
   label_charge_n19: Girar rebuts mitjançant fitxers N19 
