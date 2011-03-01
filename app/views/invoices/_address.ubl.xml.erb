@@ -1,7 +1,7 @@
-				<cbc:StreetName><%=entity.address%></cbc:StreetName>
-				<cbc:CityName><%=entity.city%></cbc:CityName>
-				<cbc:PostalZone><%=entity.postalcode%></cbc:PostalZone>
-				<cbc:CountrySubentity><%=entity.province%></cbc:CountrySubentity>
+				<cbc:StreetName><%=h entity.address%></cbc:StreetName>
+				<cbc:CityName><%=h entity.city%></cbc:CityName>
+				<cbc:PostalZone><%=h entity.postalcode%></cbc:PostalZone>
+				<cbc:CountrySubentity><%=h entity.province%></cbc:CountrySubentity>
 				<cac:Country>
-					<cbc:IdentificationCode listID="ISO3166-1" listAgencyID="6"><%=entity.countrycode%></cbc:IdentificationCode>
+					<cbc:IdentificationCode listID="ISO3166-1" listAgencyID="6"><%=h entity.countrycode%></cbc:IdentificationCode>
 				</cac:Country>
