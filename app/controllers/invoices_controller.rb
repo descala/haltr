@@ -66,7 +66,7 @@ class InvoicesController < ApplicationController
   end
 
   def new
-    @invoice = IssuedInvoice.new(:client_id=>params[:client],:project=>@project)
+    @invoice = IssuedInvoice.new(:client_id=>params[:client],:project=>@project,:date=>Date.today,:number=>IssuedInvoice.next_number(@project))
   end
 
   def edit
