@@ -188,7 +188,7 @@ en:
   charge_bank_on_date: Charge bank on date
   nothing_to_report: Nothing has to be reported
   nothing_to_generate: Nothing has to be generated
-  button_generate_invoices: Generate invoices from templates
+  button_generate_invoices: Generate new invoices
   button_send_invoices: Send invoices
   label_automator_info: download PDFs, e-mail automator script and mark as send
   label_charge_n19: Charge bank accounts with N19 format 

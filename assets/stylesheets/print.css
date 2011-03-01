@@ -1,9 +1,3 @@
-/*
------------------------------------------------
-Blinksale Screen Master
-Author:   Firewheel Design
-Version:  002 27 January 2006
------------------------------------------------ */
 body {
 	margin: 0;
   	padding: 0;
@@ -51,8 +45,6 @@ acronym {
 	cursor: help;
 	}
 
-/* Hide the UI Styles
------------------------------------------------ */
 #navigation1,
 .flash,
 .drop-form,
@@ -63,8 +55,6 @@ acronym {
 	display: none;
 	}
 
-/* Link Styles
------------------------------------------------ */
 a:link {
 	color: #000;
 	text-decoration: none;
@@ -84,8 +74,6 @@ a:hover img {
 	background: none;
 	}
 
-/* Invoice View Styles
------------------------------------------------ */
 #col1 {
 	margin: .25in .25in .5in;
 	padding: 0;

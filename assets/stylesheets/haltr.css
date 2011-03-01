@@ -32,3 +32,98 @@
   color: red;
 }
 
+div.profilelink {
+  height: 30px;
+  color: #005f00;
+}
+
+div.profilelinkred {
+  height: 30px;
+  color: #dd6600;
+}
+
+span.invoiceLineHeader {
+  display: block;
+  float: left;
+  margin-left: 2px;
+  margin-right: 2px;
+  overflow: hidden;
+}
+
+/* Sidebar */
+
+.invoice_menu {
+	list-style-type: none;
+	font-size: 13px;
+	letter-spacing: 0px;
+	word-spacing: 0px;
+}
+.invoice_menu li {
+	border-bottom-width: 1px;
+	border-bottom-style: dashed;
+	border-bottom-color: #CCCCCC;
+}
+.invoice_menu a {
+	display: block;
+	height: 20px;
+	border-bottom-width: 1px;
+	border-bottom-style: solid;
+	border-bottom-color: #CCCCCC;
+	background-repeat: no-repeat;
+	padding-top: 5px;
+	padding-right: 3px;
+	padding-bottom: 5px;
+	padding-left: 32px;
+	background-position: 3px 3px;
+}
+.invoice_menu a:hover {
+	background-color: #fff;
+}
+.icon-haltr-invoice , .icon-haltr-invoices-from-templates {
+    background-image: url(../images/invoice.gif);
+}
+.icon-haltr-invoices {
+	background-image: url(../images/invoices.gif);
+}
+.icon-haltr-templates {
+	background-image: url(../images/templates.gif);
+}
+.icon-haltr-report {
+	background-image: url(../images/report.gif);
+}
+.icon-haltr-edit {
+	background-image: url(../images/edit.gif);
+}
+.icon-haltr-delete {
+	background-image: url(../images/delete.gif);
+}
+.icon-haltr-mark-sent {
+	background-image: url(../images/mark_sent.gif);
+}
+.icon-haltr-save {
+	background-image: url(../images/save.gif);
+}
+.icon-haltr-send {
+	background-image: url(../images/send.gif);
+}
+.icon-haltr-template {
+	background-image: url(../images/template.gif);
+}
+.icon-haltr-my-company {
+	background-image: url(../images/my_company.gif);
+}
+.icon-haltr-company {
+	background-image: url(../images/company.gif);
+}
+.icon-haltr-companies {
+	background-image: url(../images/companies.gif);
+}
+.icon-haltr-person {
+	background-image: url(../images/person.gif);
+}
+.icon-haltr-payment {
+	background-image: url(../images/payment.gif);
+}
+.icon-haltr-tasks {
+	background-image: url(../images/tasks.gif);
+}

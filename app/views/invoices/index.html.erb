@@ -1,7 +1,3 @@
-<% content_for :header_tags do %>
-  <%= stylesheet_link_tag 'haltr', :plugin => 'haltr' %>
-<% end %>
-
 <h2><%= controller.controller_name == "invoice_templates" ? l(:label_invoice_template_plural) : l(:label_invoice_plural)%></h2>
 
   <% form_tag({:id=>@project}, :method => :get) do %>

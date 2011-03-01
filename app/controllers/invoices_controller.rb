@@ -3,6 +3,7 @@ class InvoicesController < ApplicationController
   unloadable
   menu_item :haltr_invoices
   helper :haltr
+  layout 'haltr'
 
   helper :sort
   include SortHelper
