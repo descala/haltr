@@ -1,7 +1,0 @@
-<span style="float: right; margin: 10px 10px 0 0;"><%=link_to l(:label_settings), :controller=>'companies', :action=>'index', :id=>@project %></span>
-<h3><%= l(:label_invoice_plural) %></h3>
-<%= link_to l(:label_community), :controller => 'clients', :action => 'index', :id => @project %> <%= notify_pending_requests(@project) %><br />
-<%= link_to l(:label_invoice_plural), :controller => 'invoices', :action => 'index', :id => @project %><br/>
-<%= link_to l(:label_invoice_template_plural), :controller => 'invoice_templates', :action => 'index', :id => @project %><br/>
-<%= link_to l(:label_payment_plural), :controller => 'payments', :action => 'index', :id => @project %><br />
-<%= link_to l(:label_task_plural), :controller => 'tasks', :action => 'index', :id => @project %>

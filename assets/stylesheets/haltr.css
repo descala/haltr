@@ -24,7 +24,7 @@
 	margin-right: 8px;
 	}
 
-#invoices tr {
+#invoices tr, #clients tr {
   cursor: pointer;
 }
 

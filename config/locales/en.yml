@@ -2,7 +2,8 @@ en:
 
   # community
   label_company: Company
-  label_community: Community
+  label_my_company: My company
+  label_community: Companies
   label_company_new: New company
   field_address: Adress
   field_address2: Adress

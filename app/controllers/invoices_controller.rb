@@ -42,6 +42,7 @@ class InvoicesController < ApplicationController
     # TODO: change view collection_select (doesnt display previously selected client)
     unless params[:client_id].blank?
       c << ["client_id = ?", params[:client_id]]
+      @client_id = params[:client_id].to_i rescue nil
     end
 
     # date filter

@@ -2,7 +2,8 @@ es:
 
   # community
   label_company: Empresa
-  label_community: Comunidad
+  label_my_company: Mi empresa
+  label_community: Empresas
   label_company_new: Nueva empresa
   field_address: Dirección
   field_address2: Dirección

@@ -1,10 +1,13 @@
-<h3><%= l(:label_invoice_plural) %></h3>
+<h3><%= l("label_#{params[:controller].singularize}_plural") %></h3>
 <ul class="invoice_menu">
   <li id="invoice_new">
-  <%= link_to l(:label_invoice_new), {:action => 'new', :id => @project} %>
+  <%= link_to l("label_#{params[:controller].singularize}_new"), {:action => 'new', :id => @project} %>
   </li>
-  <li><%= link_to l(:label_invoice_plural), :controller => 'invoices', :action => 'index', :id => @project %></li>
-  <li><%= link_to l(:label_invoice_template_plural), :controller => 'invoice_templates', :action => 'index', :id => @project %></li>
+  <% if params[:controller] == "invoices" -%>
+    <li><%= link_to l(:label_invoice_template_plural), :controller => 'invoice_templates', :action => 'index', :id => @project %></li>
+  <% else -%>
+    <li><%= link_to l(:label_invoice_plural), :controller => 'invoices', :action => 'index', :id => @project %></li>
+  <% end -%>
   <% if num_new_invoices > 0 %>
   <li>
   <%= link_to "#{l(:button_generate_invoices)} (#{num_new_invoices})", :controller => 'tasks', :action => 'create_more', :id => @project %> 
