@@ -19,7 +19,9 @@ module InvoicesHelper
   end
 
   def clients_for_select
-    Client.find(:all, :order => 'name', :conditions => ["project_id = ?", @project]).collect {|c| [ c.name, c.id ] }
+    clients = Client.find(:all, :order => 'name', :conditions => ["project_id = ?", @project])
+    # check if client.valid?: if you request to link profile, and then unlink it, client is invalid
+    clients.collect {|c| [c.name, c.id] if c.valid? }.compact
   end
 
   def add_invoice_line_link(invoice_form)

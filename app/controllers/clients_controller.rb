@@ -95,7 +95,7 @@ class ClientsController < ApplicationController
     @company = @client.company
     @client.company=nil
     @client.allowed=nil
-    @client.save
+    @client.save(false)
     redirect_to :action => 'edit', :id => @client
   end
 
