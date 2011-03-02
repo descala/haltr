@@ -1,28 +1,28 @@
 .invoiceFilter {
-	margin: 0 0 20px;
-	}
+  margin: 0 0 20px;
+  }
 .invoiceFilter th {
-	margin: 0;
-	padding: 4px 10px 4px 0;
-	width: 90px;
-	text-align: right;
-	vertical-align: top;
-	font-size: 13px;
-	line-height: 22px;
-	}
+  margin: 0;
+  padding: 4px 10px 4px 0;
+  width: 90px;
+  text-align: right;
+  vertical-align: top;
+  font-size: 13px;
+  line-height: 22px;
+}
 .invoiceFilter td {
-	margin: 0;
-	padding: 4px 0;
-	vertical-align: top;
-	line-height: 22px;
-	}
+  margin: 0;
+  padding: 4px 0;
+  vertical-align: top;
+  line-height: 22px;
+}
 .invoiceFilter ul {
-	margin: 0;
-	}
+  margin: 0;
+}
 .invoiceFilter li {
-	display: inline;
-	margin-right: 8px;
-	}
+  display: inline;
+  margin-right: 8px;
+}
 
 #invoices tr, #clients tr {
   cursor: pointer;
@@ -53,79 +53,43 @@ span.invoiceLineHeader {
 /* Sidebar */
 
 .invoice_menu {
-	list-style-type: none;
-	font-size: 13px;
-	letter-spacing: 0px;
-	word-spacing: 0px;
-    padding-left: 0;
+  list-style-type: none;
+  font-size: 13px;
+  letter-spacing: 0px;
+  word-spacing: 0px;
+  padding-left: 0;
 }
 .invoice_menu li {
-	border-bottom-width: 1px;
-	border-bottom-style: dashed;
-	border-bottom-color: #CCCCCC;
-    overflow: hidden;
+  border-bottom-width: 1px;
+  border-bottom-style: dashed;
+  border-bottom-color: #CCCCCC;
+  overflow: hidden;
 }
 .invoice_menu a {
-	display: block;
-	height: 20px;
-	border-bottom-width: 1px;
-	border-bottom-style: solid;
-	border-bottom-color: #CCCCCC;
-	background-repeat: no-repeat;
-	padding-top: 5px;
-	padding-right: 3px;
-	padding-bottom: 5px;
-	padding-left: 32px;
-	background-position: 3px 3px;
+  display: block;
+  border-bottom-width: 1px;
+  border-bottom-style: solid;
+  border-bottom-color: #CCCCCC;
+  background-repeat: no-repeat;
+  padding: 7px 3px 7px 32px;
+  background-position: 3px 3px;
 }
 .invoice_menu a:hover {
-	background-color: #fff;
+  background-color: #fff;
 }
-.icon-haltr-invoice , .icon-haltr-invoices-from-templates {
-    background-image: url(../images/invoice.gif);
-}
-.icon-haltr-invoices {
-	background-image: url(../images/invoices.gif);
-}
-.icon-haltr-templates {
-	background-image: url(../images/templates.gif);
-}
-.icon-haltr-report {
-	background-image: url(../images/report.gif);
-}
-.icon-haltr-edit {
-	background-image: url(../images/edit.gif);
-}
-.icon-haltr-delete {
-	background-image: url(../images/delete.gif);
-}
-.icon-haltr-mark-sent {
-	background-image: url(../images/mark_sent.gif);
-}
-.icon-haltr-save {
-	background-image: url(../images/save.gif);
-}
-.icon-haltr-send {
-	background-image: url(../images/send.gif);
-}
-.icon-haltr-template {
-	background-image: url(../images/template.gif);
-}
-.icon-haltr-my-company {
-	background-image: url(../images/my_company.gif);
-}
-.icon-haltr-company {
-	background-image: url(../images/company.gif);
-}
-.icon-haltr-companies {
-	background-image: url(../images/companies.gif);
-}
-.icon-haltr-person {
-	background-image: url(../images/person.gif);
-}
-.icon-haltr-payment {
-	background-image: url(../images/payment.gif);
-}
-.icon-haltr-tasks {
-	background-image: url(../images/tasks.gif);
-}
+.icon-haltr-invoice , .icon-haltr-invoices-from-templates {  background-image: url(../images/invoice.gif); }
+.icon-haltr-invoices   {  background-image: url(../images/invoices.gif); }
+.icon-haltr-templates  {  background-image: url(../images/templates.gif); }
+.icon-haltr-report     {  background-image: url(../images/report.gif); }
+.icon-haltr-edit       {  background-image: url(../images/edit.gif); }
+.icon-haltr-delete     {  background-image: url(../images/delete.gif); }
+.icon-haltr-mark-sent  {  background-image: url(../images/mark_sent.gif); }
+.icon-haltr-save       {  background-image: url(../images/save.gif); }
+.icon-haltr-send       {  background-image: url(../images/send.gif); }
+.icon-haltr-template   {  background-image: url(../images/template.gif); }
+.icon-haltr-my-company {  background-image: url(../images/my_company.gif); }
+.icon-haltr-company    {  background-image: url(../images/company.gif); }
+.icon-haltr-companies  {  background-image: url(../images/companies.gif); }
+.icon-haltr-person     {  background-image: url(../images/person.gif); }
+.icon-haltr-payment    {  background-image: url(../images/payment.gif); }
+.icon-haltr-tasks      {  background-image: url(../images/tasks.gif); }
