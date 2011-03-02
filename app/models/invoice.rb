@@ -199,4 +199,10 @@ class Invoice < ActiveRecord::Base
     end
   end
 
+  def invoice_must_have_lines
+    if invoice_lines.empty? or invoice_lines.all? {|i| i.marked_for_destruction?}
+      errors.add(:base, "#{l(:label_invoice)} #{l(:must_have_lines)}")
+    end
+  end
+
 end

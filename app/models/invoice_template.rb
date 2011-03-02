@@ -4,6 +4,7 @@ class InvoiceTemplate < Invoice
 
   has_many :issued_invoices, :dependent => :nullify
   validates_presence_of :frequency
+  validate :invoice_must_have_lines
 
   before_validation :set_due_date
   before_save :update_import

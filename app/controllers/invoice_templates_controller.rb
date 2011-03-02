@@ -42,7 +42,8 @@ class InvoiceTemplatesController < ApplicationController
   end
 
   def new
-    @invoice = InvoiceTemplate.new(:client_id=>params[:client],:project=>@project)
+    @invoice = InvoiceTemplate.new(:client_id=>params[:client],:project=>@project,:date=>Date.today)
+    @client = params[:client] ? Client.find(params[:client]) : Client.new
     render :template => "invoices/new"
   end
 
@@ -53,6 +54,7 @@ class InvoiceTemplatesController < ApplicationController
 
   def create
     @invoice = InvoiceTemplate.new(params[:invoice])
+    @client = @invoice.client
     @invoice.project=@project
     if @invoice.save
       flash[:notice] = l(:notice_successful_create)
