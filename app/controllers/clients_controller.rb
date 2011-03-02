@@ -4,7 +4,7 @@ class ClientsController < ApplicationController
 
   menu_item :haltr_community
   layout 'haltr'
-  helper :haltr
+  helper :haltr, :invoices
 
   helper :sort
   include SortHelper
@@ -50,11 +50,26 @@ class ClientsController < ApplicationController
 
   def create
     @client = Client.new(params[:client].merge({:project=>@project}))
-    if @client.save
-      flash[:notice] = l(:notice_successful_create)
-      redirect_to :action => 'index', :id => @project
-    else
-      render :action => "new"
+    respond_to do |format|
+      if @client.save
+        format.html {
+          flash[:notice] = l(:notice_successful_create)
+          redirect_to :controller=>'clients', :action=>'index', :id=>@project
+        }
+        format.js {
+          render(:update) { |page|
+            page.replace_html "client_select", :partial => 'invoices/clients', :locals=>{:selected=>@client.id}
+            page.hide "new_client_wrapper"
+          }
+        }
+      else
+        format.html { render :action => 'new' }
+        format.js {
+          render(:update) { |page|
+            page.alert(l(:notice_failed_to_save_members, :errors => @client.errors.full_messages.join(', ')))
+          }
+        }
+      end
     end
   end
 

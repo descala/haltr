@@ -21,7 +21,7 @@
   </thead>
   <tbody>
 <% for client in @clients -%>
-  <tr class="user <%= cycle("odd", "even") %>" onclick="javascript: document.location = '<%=url_for(:action=>'edit', :id=>client)%>'"/>
+  <tr class="user <%= cycle("odd", "even") %>" onclick="javascript: document.location = '<%=url_for(:action=>'edit', :id=>client)%>'">
     <td><%=h client.taxcode %></td>
     <td><%=h client.name %></td>
     <td align="center"><%= link_to l(:label_invoice_plural), {:controller=>'invoices',:action=>'index',:id=>@project, :client_id => client} %></td>

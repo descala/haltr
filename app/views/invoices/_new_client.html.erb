@@ -1,0 +1,20 @@
+<div id="new_client_wrapper" style="display:none;">
+  <div class="new_client_box">
+    <div id="new_client">
+      <h2><%= l(:label_company_new) %></h2>
+
+      <% remote_form_for(:client, Client.new,
+                         :url     => {:controller=>'clients', :action=>'create', :id=>@project},
+                         :html    => {:class => 'tabular'},
+                         :builder => TabularFormBuilder,
+                         :lang    => current_language
+                        ) do |form| -%>
+
+        <%= render :partial=>'clients/form', :locals=>{ :f=>form } %>
+        <%= submit_tag l(:button_create) %>
+        <%= button_to_function(l(:cancel), "$('new_client_wrapper').hide();") %>
+      <% end -%>
+    </div>
+  </div>
+  <div class="overlay"></div>
+</div>

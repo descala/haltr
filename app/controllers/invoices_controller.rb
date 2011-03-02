@@ -69,6 +69,7 @@ class InvoicesController < ApplicationController
 
   def new
     @invoice = IssuedInvoice.new(:client_id=>params[:client],:project=>@project,:date=>Date.today,:number=>IssuedInvoice.next_number(@project))
+    @client = params[:client] ? Client.find(params[:client]) : Client.new
   end
 
   def edit
@@ -77,6 +78,7 @@ class InvoicesController < ApplicationController
 
   def create
     @invoice = IssuedInvoice.new(params[:invoice])
+    @client = @invoice.client
     @invoice.project = @project
     if @invoice.save
       flash[:notice] = l(:notice_successful_create)

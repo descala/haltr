@@ -273,3 +273,6 @@ ca:
   notice_empty_n19: "No hi ha dades per generar un N19"
   notice_n19_done: "S'ha tancat el N19 de data {{value}}"
   notice_uploaded_file_not_found: "No s'ha trobat el fitxer"
+
+  hide_full_form: "Mostrar menys camps"
+  show_full_form: "Mostrar mes camps"

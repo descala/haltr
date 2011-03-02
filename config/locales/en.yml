@@ -260,3 +260,6 @@ en:
   notice_empty_n19: "No data to create N19"
   notice_n19_done:  "Nº19 for due date {{value}} maked as done"
   notice_uploaded_file_not_found: "File not found"
+
+  hide_full_form: "Show less fields"
+  show_full_form: "Show more fields"
