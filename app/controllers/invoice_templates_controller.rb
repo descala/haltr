@@ -9,8 +9,8 @@ class InvoiceTemplatesController < ApplicationController
   helper :sort
   include SortHelper
 
-  before_filter :find_invoice_template, :except => [:index,:new,:create,:new_from_invoice]
-  before_filter :find_project, :only => [:index,:new,:create]
+  before_filter :find_invoice_template, :except => [:index,:new,:create,:new_from_invoice,:invoices,:create_invoices]
+  before_filter :find_project, :only => [:index,:new,:create,:invoices,:create_invoices]
   before_filter :find_invoice, :only => [:new_from_invoice]
   before_filter :authorize
 
@@ -92,6 +92,49 @@ class InvoiceTemplatesController < ApplicationController
       @invoice.invoice_lines << InvoiceLine.new(line.attributes)
     end
     render :template => "invoices/new"
+  end
+
+  def invoices
+    @number = IssuedInvoice.next_number(@project)
+    days = params[:date] || 15
+    @date = Time.now + days.day
+    templates = InvoiceTemplate.find :all, :include => [:client], :conditions => ["clients.project_id = ? and date <= ?", @project.id, @date]
+    @drafts = DraftInvoice.all
+    templates.each do |t|
+      begin
+        @drafts << t.invoices_until(@date)
+      rescue ActiveRecord::RecordInvalid => e
+        flash.now[:warning] = l(:warning_can_not_generate_invoice,t.to_s)
+        flash.now[:error] = e.message
+      end
+    end
+    @drafts.flatten!
+  end
+
+  def create_invoices
+    @number = IssuedInvoice.next_number(@project)
+    drafts_to_process=[]
+    @invoices = []
+    if params[:draft_ids]
+      params[:draft_ids].each do |draft_id|
+        drafts_to_process << DraftInvoice.find(draft_id)
+      end
+    end
+    drafts_to_process.each do |draft|
+      issued = IssuedInvoice.new(draft.attributes)
+      issued.number = params["draft_#{draft.id}"]
+      issued.invoice_lines = draft.invoice_lines
+      if issued.valid?
+        draft.destroy
+        issued.id=draft.id
+        issued.save
+        @invoices << issued
+      else
+        flash.now[:error] = issued.errors.full_messages.join ","
+      end
+    end
+    @drafts = DraftInvoice.all
+    render :action => 'invoices'
   end
 
   private

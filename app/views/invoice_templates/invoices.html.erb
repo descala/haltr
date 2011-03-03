@@ -1,0 +1,79 @@
+<% if @invoices and @invoices.any? -%>
+  <h2><%= l(:label_generated_invoices)%></h2>
+
+  <table class="list" id="invoices">
+    <thead>
+      <tr>
+        <th><%= l(:field_type) %></th>
+        <th><%= l(:field_state) %></th>
+        <th><%= l(:field_number) %></th>
+        <th><%= l(:field_date) %></th>
+        <th><%= l(:field_due_date) %></th>
+        <th><%= l(:field_company) %></th>
+        <th><%= l(:label_total) %></th>
+      </tr>
+    </thead>
+    <tbody>
+      <% for invoice in @invoices do -%>
+        <tr class="user <%= cycle("odd", "even") %>" onclick="javascript: document.location = '<%=url_for(:controller=>'invoices',:action=>'show', :id=>invoice)%>'">
+          <td align="center"><%=h l(invoice.type) %></td>
+          <td align="center"><%=h l("state_#{invoice.state}").capitalize %></td>
+          <td align="center"><%=h invoice.number %></td>
+          <td align="center"><%=h invoice.date %></td>
+          <td align="center"<%='class="pastdue"' if invoice.past_due?%>><%=h invoice.due_date %></td>
+          <td><%=h invoice.client %></td>
+          <td align="right"><%= money invoice.import %></td>
+        </tr>
+      <% end -%>
+    </tbody>
+  </table>
+
+
+<% end -%>
+
+<% if @drafts.any? -%>
+
+  <h2><%= l(:invoices_to_generate)%></h2>
+  <% form_tag(url_for(:action => 'create_invoices', :id=>@project)) do -%>
+  <table class="list">
+    <thead>
+      <tr>
+        <th><%= l(:generate) %></th>
+        <th><%= l(:field_number) %></th>
+        <th><%= l(:field_date) %></th>
+        <th><%= l(:field_due_date) %></th>
+        <th><%= l(:field_company) %></th>
+        <th><%= l(:label_total) %></th>
+      </tr>
+    </thead>
+    <tbody>
+      <% for draft in @drafts do -%>
+        <tr class="user <%= cycle("odd", "even") %>">
+          <td align="center"><%= check_box_tag "draft_ids[]", draft.id, true %></td>
+          <td align="center"><%= text_field_tag "draft_#{draft.id}", @number, :size => 5 %></td>
+          <td align="center"><%=h draft.date %></td>
+          <td align="center"<%='class="pastdue"' if draft.past_due?%>><%=h draft.due_date %></td>
+          <td><%=h draft.client %></td>
+          <td align="right"><%= money draft.import %></td>
+        </tr>
+        <% @number = IssuedInvoice.increment_right(@number) -%>
+      <% end -%>
+    </tbody>
+  </table>
+
+  <%= submit_tag(l(:generate_selected)) %>
+  <% end -%>
+
+<% end -%>
+
+<% unless (@invoices and @invoices.any?) or @drafts.any? -%>
+  <br />
+  <p class="nodata"><%= l(:label_no_issues_to_generate) %></p>
+<% end -%>
+
+<% html_title(l(:label_invoice_plural)) -%>
+
+<% content_for :sidebar do %>
+      <%= render :partial => 'invoices/sidebar' %>
+<% end %>
+

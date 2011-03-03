@@ -164,6 +164,10 @@ es:
   label_invoice_template_plural: Plantillas
   label_generated_invoices: Facturas generadas
   next_charge: Siguiente pago
+  invoices_to_generate: Facturas a generar
+  generate: Generar
+  generate_selected: Generar seleccionadas
+  label_no_issues_to_generate: No hay facturas a generar
 
   # Invoice lines
   field_price: Precio

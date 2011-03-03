@@ -165,6 +165,10 @@ en:
   label_invoice_template_plural: Templates
   label_generated_invoices: Generated invoices
   next_charge: Next charge
+  invoices_to_generate: Invoices to generate
+  generate: Generate
+  generate_selected: Generate selected
+  label_no_issues_to_generate: No invoices to generate
 
   # Invoice lines
   field_price: Price

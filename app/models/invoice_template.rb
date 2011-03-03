@@ -9,9 +9,17 @@ class InvoiceTemplate < Invoice
   before_validation :set_due_date
   before_save :update_import
 
+  def invoices_until(date_limit)
+    drafts = []
+    while self.date.to_time.months_since(self.frequency) <= date_limit
+      drafts << next_invoice
+    end
+    drafts
+  end
+
   def next_invoice
-    i = IssuedInvoice.new self.attributes
-    i.number = IssuedInvoice.next_number(self.project)
+    i = DraftInvoice.new self.attributes
+#    i.number = DraftInvoice.next_number(self.project)
     i.tax_percent = Invoice::TAX
     i.invoice_template = self
     i.state = 'new'
@@ -26,10 +34,9 @@ class InvoiceTemplate < Invoice
       l.template_replacements(i.date)
       i.invoice_lines << l
     end
-    if i.save
-      self.date = self.date.to_time.months_since(self.frequency)
-      self.save!
-    end
+    i.save!
+    self.date = self.date.to_time.months_since(self.frequency).to_date
+    self.save!
     return i
   end
 

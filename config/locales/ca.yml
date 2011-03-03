@@ -177,6 +177,10 @@ ca:
   label_invoice_template_plural: Plantilles
   label_generated_invoices: Factures generades
   next_charge: Següent pagament
+  invoices_to_generate: Factures a generar
+  generate: Generar
+  generate_selected: Generar seleccionades
+  label_no_issues_to_generate: No hi ha factures a generar
 
   # Invoice lines
   field_price: Preu

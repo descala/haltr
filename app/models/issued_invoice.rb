@@ -5,7 +5,8 @@ class IssuedInvoice < InvoiceDocument
   unloadable
 
   belongs_to :invoice_template
-  validates_presence_of :number, :due_date
+  validates_presence_of :number, :unless => Proc.new {|invoice| invoice.type == "DraftInvoice"}
+  validates_presence_of :due_date
   validate :number_must_be_unique_in_project
   validate :invoice_must_have_lines
 
@@ -171,7 +172,7 @@ class IssuedInvoice < InvoiceDocument
 
   def number_must_be_unique_in_project
     return if self.client.nil?
-    return if !self.new_record? && !self.number_changed?
+#    return if !self.new_record? && !self.number_changed?
     if self.project.clients.collect {|c| c.issued_invoices }.flatten.compact.collect {|i| i.number unless i.id == self.id}.include? self.number
       errors.add(:base, ("#{l(:field_number)} #{l(:taken,:scope=>'activerecord.errors.messages')}"))
     end
