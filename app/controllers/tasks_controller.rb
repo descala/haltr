@@ -18,21 +18,6 @@ class TasksController < ApplicationController
     @charge_bank_on_due_date = IssuedInvoice.find_due_dates(@project)
   end
 
-  def create_more
-    @date = Time.now + 15.day
-    templates = InvoiceTemplate.find :all, :include => [:client], :conditions => ["clients.project_id = ? and date <= ?", @project.id, @date]
-    @invoices = []
-    templates.each do |t|
-      i = t.next_invoice
-      if i.valid?
-        @invoices << i
-      else
-        flash.now[:warning] = l(:warning_can_not_generate_invoice,t.to_s)
-        flash.now[:error] = i.errors.full_messages.join ", "
-      end
-    end
-  end
-
   def automator
     @invoices = IssuedInvoice.find_not_sent(@project)
   end
