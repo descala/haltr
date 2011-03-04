@@ -1,40 +1,46 @@
 <h2><%= l(:label_invoice_report) %></h2>
 
 <p><%=l(:with_date) %> &gt;= <%= @date %>.</p>
-<% if @invoices.size > 0 -%>
 
-<table>
-  
-<tr>
-  <th><%=l(:field_number)%></th>
-  <th><%=l(:field_date)%></th>
-  <th><%=l(:field_taxcode)%></th>
-  <th><%=l(:field_firstname)%></th>
-  <th><%=l(:field_amount)%></th>
-  <th><%=l(:field_tax_percent)%></th>
-  <th><%=l(:charge_bank_on_date)%></th>
-</tr>
+<% if @invoices.keys.any? -%>
 
-<% @invoices.each do |i| -%>
-<tr>
-  <td><%= i.number %></td>
-  <td><%= i.date %></td>
-  <td><%= i.client.taxcode %></td>
-  <td><%= i.client.name %></td>
-  <td style="text-align: right;"><%= money(i.subtotal) %></td>
-  <td style="text-align: right;"><%= money(i.tax) %></td>
-  <td style="text-align:center;"><%= i.due_date if i.debit? && i.client.bank_account %></td>
-</tr>
-<% end -%>
-<tr>
-<td colspan="4"/>
-<th><%= @total_amount %> €</th>
-<th><%= @total_tax %> €</th>
-</tr>
-</table>
+  <% @invoices.keys.each do |currency| -%>
+
+  <table class="list" width="100%">
+
+    <tr>
+      <th><%=l(:field_number)%></th>
+      <th><%=l(:field_date)%></th>
+      <th><%=l(:field_taxcode)%></th>
+      <th><%=l(:field_firstname)%></th>
+      <th><%=l(:field_amount)%></th>
+      <th><%=l(:field_tax_percent)%></th>
+      <th><%=l(:charge_bank_on_date)%></th>
+    </tr>
+
+    <% @invoices[currency].each do |i| -%>
+      <tr class="<%= cycle("odd", "even") %>">
+        <td><%= i.number %></td>
+        <td><%= i.date %></td>
+        <td><%= i.client.taxcode %></td>
+        <td><%= i.client.name %></td>
+        <td style="text-align: right;"><%= money(i.subtotal) %></td>
+        <td style="text-align: right;"><%= money(i.tax) %></td>
+        <td style="text-align:center;"><%= i.due_date if i.debit? && i.client.bank_account %></td>
+      </tr>
+    <% end -%>
+
+    <tr>
+      <td colspan="4"/>
+        <th><%= @total[currency] %> <%=@total[currency].currency.symbol%></th>
+        <th><%= @tax[currency] %> <%=@total[currency].currency.symbol%></th>
+      </td>
+    </tr>
+  </table>
+  <% end -%>
 
 <% else -%>
-  <p><%= l(:nothing_to_report) %></p>
+  <p class="nodata"><%= l(:nothing_to_report) %></p>
 <% end -%>
 
 <% content_for :sidebar do %>

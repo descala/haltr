@@ -60,12 +60,19 @@ class TasksController < ApplicationController
     m = params[:months_ago] || 3
     d = Date.today - m.to_i.months
     @date = Date.new(d.year,d.month,1)
-    @invoices = IssuedInvoice.all(:include => [:client], :conditions => ["clients.project_id = ? and date >= ?", @project.id, @date], :order => :number)
-    @total_amount = Money.new 0
-    @total_tax = Money.new 0
-    @invoices.each do |i|
-      @total_amount +=  i.subtotal
-      @total_tax    +=  i.tax
+    @invoices = {}
+    @total    = {}
+    @tax      = {}
+    IssuedInvoice.all(:include => [:client],
+                      :conditions => ["clients.project_id = ? and date >= ?", @project.id, @date],
+                      :order => :number
+    ).each do |i|
+      @invoices[i.currency] ||= []
+      @total[i.currency]    ||= Money.new(0,i.currency)
+      @tax[i.currency]      ||= Money.new(0,i.currency)
+      @invoices[i.currency] << i
+      @total[i.currency] += i.subtotal
+      @tax[i.currency]   += i.tax
     end
   end
  
