@@ -257,6 +257,7 @@ ca:
   mf12: Anual
   mf6: Semestral
   mf3: Trimestral
+  mf2: Bimensual
   mf1: Mensual
 
   # ExportChannels

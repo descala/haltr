@@ -244,6 +244,7 @@ en:
   mf12: Yearly
   mf6: Half-yearly
   mf3: Quarterly
+  mf2: Bimonthly
   mf1: Monthly
 
   # ExportChannels
