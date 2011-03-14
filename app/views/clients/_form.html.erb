@@ -22,9 +22,13 @@
   <% end -%>
   <p><%= f.text_field :name, :required => true, :readonly => @client.linked? %></p>
   <p><%= f.text_field :email, :readonly => @client.linked? %></p>
+  <% unless params[:controller] == "clients" -%>
   <p id="show_full_form"><%= link_to_function("--- #{l(:show_full_form)} ---", "$('client_hiden_fields').show(); $('show_full_form').hide()") %></p>
-  <div id="client_hiden_fields" style="display:none;">
+  <% end -%>
+  <div id="client_hiden_fields" style="<%= params[:controller] == "clients" ? "" : "display:none;" %>">
+    <% unless params[:controller] == "clients" -%>
     <p><%= link_to_function("--- #{l(:hide_full_form)} ---", "$('client_hiden_fields').hide(); $('show_full_form').show()") %></p>
+    <% end -%>
     <p><%= f.text_field :address, :readonly => @client.linked? %></p>
     <p><%= f.text_field :address2, :readonly => @client.linked? %></p>
     <p><%= f.text_field :city, :readonly => @client.linked? %></p>
