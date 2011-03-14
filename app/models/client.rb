@@ -13,7 +13,7 @@ class Client < ActiveRecord::Base
   validates_length_of     :taxcode, :maximum => 20
   validates_uniqueness_of :taxcode, :scope => :project_id
 
-  validates_presence_of     :project_id, :name, :currency, :language, :invoice_format, :email, :if => Proc.new {|c| c.company_id.blank? }
+  validates_presence_of     :project_id, :name, :currency, :language, :invoice_format, :if => Proc.new {|c| c.company_id.blank? }
   validates_inclusion_of    :currency, :in  => Money::Currency::TABLE.collect {|k,v| v[:iso_code] }, :if => Proc.new {|c| c.company_id.blank? }
   validates_numericality_of :bank_account, :unless => Proc.new { |c| c.bank_account.blank? }
   validates_length_of       :bank_account, :within => 16..40, :unless => Proc.new { |c| c.bank_account.blank? }

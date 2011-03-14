@@ -126,6 +126,7 @@ class IssuedInvoice < InvoiceDocument
   end
 
   def can_be_exported?
+    # TODO Test if endpoint is correcty configured
     self.valid? and ExportChannels.channel(client.invoice_format) != nil
   end
 
