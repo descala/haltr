@@ -96,9 +96,9 @@ class InvoiceTemplatesController < ApplicationController
 
   def invoices
     @number = IssuedInvoice.next_number(@project)
-    days = params[:date] || 15
-    @date = Time.now + days.day
-    templates = InvoiceTemplate.find :all, :include => [:client], :conditions => ["clients.project_id = ? and date <= ?", @project.id, @date]
+    days = params[:date].to_i || 10
+    @date = Date.today + days.day
+    templates = InvoiceTemplate.find :all, :include => [:client], :conditions => ["clients.project_id = ? and date <= ?", @project.id, @date], :order => "date ASC"
     @drafts = DraftInvoice.all
     templates.each do |t|
       begin
@@ -109,6 +109,7 @@ class InvoiceTemplatesController < ApplicationController
       end
     end
     @drafts.flatten!
+
   end
 
   def create_invoices

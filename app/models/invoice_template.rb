@@ -11,7 +11,9 @@ class InvoiceTemplate < Invoice
 
   def invoices_until(date_limit)
     drafts = []
-    while self.date.to_time.months_since(self.frequency) <= date_limit
+    while self.date <= date_limit
+      # TODO: invoice numbers do not grow with invoice dates
+      # if we generate many invoices for the same template
       drafts << next_invoice
     end
     drafts
@@ -19,7 +21,6 @@ class InvoiceTemplate < Invoice
 
   def next_invoice
     i = DraftInvoice.new self.attributes
-#    i.number = DraftInvoice.next_number(self.project)
     i.tax_percent = Invoice::TAX
     i.invoice_template = self
     i.state = 'new'
