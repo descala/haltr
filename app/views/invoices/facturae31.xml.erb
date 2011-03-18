@@ -49,7 +49,7 @@ xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http:/
 
          <LegalEntity>
             <CorporateName><%=h @company.name%></CorporateName>
-            <%=h  render :partial => "address.xml", :locals => {:entity => @company} %>
+            <%= render :partial => "address.xml", :locals => {:entity => @company} %>
             <ContactDetails>
                <WebAddress><%=h @company.website%></WebAddress>
                <ElectronicMail><%=h @company.email%></ElectronicMail>
@@ -60,7 +60,7 @@ xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http:/
          <Individual>
             <Name><%=h @company.first_name%></Name>
             <FirstSurname><%=h @company.last_name%></FirstSurname>
-            <%=h  render :partial => "address.xml", :locals => {:entity => @company} %>
+            <%= render :partial => "address.xml", :locals => {:entity => @company} %>
             <ContactDetails>
                <WebAddress><%=h @company.website%></WebAddress>
                <ElectronicMail><%=h @company.email%></ElectronicMail>
@@ -76,7 +76,7 @@ xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http:/
          </TaxIdentification>
          <LegalEntity>
             <CorporateName><%=h @client.name%></CorporateName>
-            <%=h  render :partial => "address.xml", :locals => {:entity => @client}%>
+            <%= render :partial => "address.xml", :locals => {:entity => @client}%>
             <ContactDetails>
               <ElectronicMail><%=h  @client.email %></ElectronicMail>
             </ContactDetails>

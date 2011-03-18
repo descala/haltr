@@ -96,9 +96,9 @@ class InvoiceTemplatesController < ApplicationController
 
   def invoices
     @number = IssuedInvoice.next_number(@project)
-    days = params[:date] || 15
-    @date = Time.now + days.day
-    templates = InvoiceTemplate.find :all, :include => [:client], :conditions => ["clients.project_id = ? and date <= ?", @project.id, @date]
+    days = params[:date] || 10
+    @date = Date.today + days.to_i.day
+    templates = InvoiceTemplate.find :all, :include => [:client], :conditions => ["clients.project_id = ? and date <= ?", @project.id, @date], :order => "date ASC"
     @drafts = DraftInvoice.all
     templates.each do |t|
       begin
@@ -109,6 +109,7 @@ class InvoiceTemplatesController < ApplicationController
       end
     end
     @drafts.flatten!
+
   end
 
   def create_invoices
@@ -123,7 +124,10 @@ class InvoiceTemplatesController < ApplicationController
     drafts_to_process.each do |draft|
       issued = IssuedInvoice.new(draft.attributes)
       issued.number = params["draft_#{draft.id}"]
-      issued.invoice_lines = draft.invoice_lines
+      draft.invoice_lines.each do |draft_line|
+        l = InvoiceLine.new draft_line.attributes
+        issued.invoice_lines << l
+      end
       if issued.valid?
         draft.destroy
         issued.id=draft.id

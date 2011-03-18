@@ -10,7 +10,7 @@
   <% end -%>
   <% if num_new_invoices > 0 %>
   <li>
-  <%= link_to l(:button_generate_invoices), {:controller => 'invoice_templates', :action => 'invoices', :id => @project}, :class=>'icon-haltr-invoices-from-templates' %> 
+  <%= link_to "#{l(:button_generate_invoices)} (#{num_new_invoices})", {:controller => 'invoice_templates', :action => 'invoices', :id => @project}, :class=>'icon-haltr-invoices-from-templates' %> 
   </li>
   <% end -%>
   <% if authorize_for('tasks','automator') && num_not_sent > 0 -%>
