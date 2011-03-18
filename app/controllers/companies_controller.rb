@@ -8,6 +8,7 @@ class CompaniesController < ApplicationController
   before_filter :project_patch
   before_filter :find_project, :except => [:update, :logo]
   before_filter :find_company, :only => [:update]
+  before_filter :set_iso_countries_language
   before_filter :authorize, :except => [:logo]
   skip_before_filter :check_if_login_required, :only => [:logo]
 
@@ -62,6 +63,10 @@ class CompaniesController < ApplicationController
       content_type = Redmine::MimeType.of(attachment.filename)
     end
     content_type.to_s
+  end
+
+  def set_iso_countries_language
+    ISO::Countries.set_language I18n.locale.to_s
   end
 
 end

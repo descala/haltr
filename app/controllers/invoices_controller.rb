@@ -11,6 +11,7 @@ class InvoicesController < ApplicationController
   before_filter :find_invoice, :except => [:index,:new,:create,:destroy_payment]
   before_filter :find_project, :only => [:index,:new,:create]
   before_filter :find_payment, :only => [:destroy_payment]
+  before_filter :set_iso_countries_language
   before_filter :authorize
 
   include CompanyFilter
@@ -270,6 +271,10 @@ class InvoicesController < ApplicationController
     @payment = Payment.find(params[:id])
     @invoice = @payment.invoice
     @project = @invoice.project
+  end
+
+  def set_iso_countries_language
+    ISO::Countries.set_language I18n.locale.to_s
   end
 
 end
