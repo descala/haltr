@@ -150,7 +150,7 @@ class InvoiceReceiver < ActionMailer::Base
                             :name           => seller_name,
                             :address        => seller_address,
                             :province       => seller_province,
-                            :countrycode    => seller_countrycode,
+                            :country        => seller_countrycode,
                             :website        => seller_website,
                             :email          => seller_email,
                             :postalcode     => seller_postalcode,

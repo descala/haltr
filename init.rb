@@ -2,8 +2,14 @@ require 'redmine'
 require 'haltr'
 
 RAILS_DEFAULT_LOGGER.info 'Starting haltr plugin'
-
 Date::DATE_FORMATS[:ddmmyy] = "%d%m%y"
+
+Dir[File.join(directory,'vendor','plugins','*')].each do |dir|
+  path = File.join(dir, 'lib')
+  $LOAD_PATH << path
+  ActiveSupport::Dependencies.load_paths << path
+  ActiveSupport::Dependencies.load_once_paths.delete(path)
+end
 
 Redmine::Plugin.register :haltr do
   name 'haltr'
@@ -42,3 +48,8 @@ Redmine::Plugin.register :haltr do
   menu :project_menu, :haltr_payments, { :controller => 'payments', :action => 'index' }, :caption => :label_payment_plural
 
 end
+
+# https://github.com/koke/iso_countries/
+require_dependency 'iso_countries'
+# https://github.com/SunDawg/country_codes
+config.gem 'sundawg_country_codes', :lib => 'country_iso_translater'

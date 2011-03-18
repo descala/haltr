@@ -10,7 +10,7 @@ en:
   field_city: City
   field_province: Province
   field_postalcode: Postcode
-  field_countrycode: Country code
+  field_country: Country
   field_bank_account: Banck account
   button_people: People
   field_invoice_format: Preferred invoice transport and format

@@ -5,7 +5,7 @@
 #    t.string   "city"
 #    t.string   "province"
 #    t.string   "postalcode"
-#    t.string   "countrycode",    :default => "ESP"
+#    t.string   "country",    :default => "ES"
 #    t.datetime "created_at"
 #    t.datetime "updated_at"
 #    t.string   "bank_account",   :limit => 24
