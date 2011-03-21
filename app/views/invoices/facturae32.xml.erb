@@ -50,7 +50,7 @@
 
          <LegalEntity>
             <CorporateName><%=h @company.name%></CorporateName>
-            <%= render :partial => "address.xml", :locals => {:entity => @company} %>
+            <%= render :partial => "address.facturae.xml", :locals => {:entity => @company} %>
             <ContactDetails>
                <WebAddress><%=h @company.website%></WebAddress>
                <ElectronicMail><%=h @company.email%></ElectronicMail>
@@ -61,7 +61,7 @@
          <Individual>
             <Name><%=h @company.first_name%></Name>
             <FirstSurname><%=h @company.last_name%></FirstSurname>
-            <%= render :partial => "address.xml", :locals => {:entity => @company} %>
+            <%= render :partial => "address.facturae.xml", :locals => {:entity => @company} %>
             <ContactDetails>
                <WebAddress><%=h @company.website%></WebAddress>
                <ElectronicMail><%=h @company.email%></ElectronicMail>
@@ -77,7 +77,7 @@
          </TaxIdentification>
          <LegalEntity>
             <CorporateName><%=h @client.name%></CorporateName>
-            <%= render :partial => "address.xml", :locals => {:entity => @client}%>
+            <%= render :partial => "address.facturae.xml", :locals => {:entity => @client}%>
             <ContactDetails>
               <ElectronicMail><%=h  @client.email %></ElectronicMail>
             </ContactDetails>

@@ -15,6 +15,7 @@ class Company < ActiveRecord::Base
                      :delete_permission => :free_use
   after_save :update_linked_clients
   iso_country :country
+  include CountryUtils
 
   def initialize(attributes=nil)
     super

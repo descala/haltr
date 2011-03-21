@@ -198,6 +198,10 @@ class InvoicesController < ApplicationController
     @company = @invoice.company
     render :template => 'invoices/facturae32.xml.erb', :layout => false
   end
+  def ubl21
+    @company = @invoice.company
+    render :template => 'invoices/ubl21.xml.erb', :layout => false
+  end
 
   def show
     if @invoice.is_a? IssuedInvoice

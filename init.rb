@@ -30,7 +30,7 @@ Redmine::Plugin.register :haltr do
         :people   => [:index, :new, :show, :edit, :create, :update, :destroy],
         :invoices => [:index, :new, :edit, :create, :update, :destroy, :show, :pdf, :template, :mark_sent,
                       :mark_closed, :mark_not_sent, :mark_accepted, :mark_accepted_with_mail, :mark_refused,
-                      :mark_refused_with_mail, :destroy_payment, :efactura30, :efactura31, :efactura32,
+                      :mark_refused_with_mail, :destroy_payment, :efactura30, :efactura31, :efactura32, :ubl21,
                       :send_invoice, :log, :legal],
         :invoice_templates => [:index, :new, :edit, :create, :update, :destroy, :show, :new_from_invoice,
                                :invoices, :create_invoices],

@@ -1,16 +1,16 @@
-<% if entity.country.downcase == "es" -%>
+<% if entity.country == "es" -%>
             <AddressInSpain>
                <Address><%=h entity.address%></Address>
                <PostCode><%=h entity.postalcode%></PostCode>
                <Town><%=h entity.city%></Town>
                <Province><%=h entity.province%></Province>
-               <CountryCode><%=h entity.country%></CountryCode>
+               <CountryCode><%=h entity.country_alpha3%></CountryCode>
             </AddressInSpain>
 <% else -%>
             <OverseasAddress>
                <Address><%=h entity.address%></Address>
                <PostCodeAndTown><%=h entity.postalcode%> <%=h entity.city%></PostCodeAndTown>
                <Province><%=h entity.province%></Province>
-               <CountryCode><%=h entity.country%></CountryCode>
+               <CountryCode><%=h entity.country_alpha3%></CountryCode>
             </OverseasAddress>
 <% end -%>

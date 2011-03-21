@@ -23,6 +23,7 @@ class Client < ActiveRecord::Base
 
   before_validation :copy_linked_profile
   iso_country :country
+  include CountryUtils
 
   def initialize(attributes=nil)
     super
