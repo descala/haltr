@@ -4,7 +4,7 @@
   <p><%= f.text_field :taxcode, :required => true %></p>
   <p><%= f.text_field :name, :required => true %></p>
   <p><%= f.text_field :email, :required => true %></p>
-  <p><%= f.text_field :currency, :required => true %></p>
+  <p><%= f.select :currency, currency_options_for_select, :required => true %></p>
   <p><%= f.text_field :postalcode, :required => true %></p>
   <p><%= f.label_for_field :country, :required => true %><%= f.iso_country_select :country, [:es] %></p>
   <p><%= f.text_field :province %></p>
