@@ -34,7 +34,7 @@
     <p><%= f.text_field :city, :readonly => @client.linked? %></p>
     <p><%= f.text_field :province, :readonly => @client.linked? %></p>
     <p><%= f.text_field :postalcode, :readonly => @client.linked? %></p>
-    <p><%= f.iso_country_select :country, [:es], :readonly => @client.linked? %></p>
+    <p><%= f.label_for_field :country, :required => true %><%= f.iso_country_select :country, [:es], :readonly => @client.linked? %></p>
     <p><%= f.text_field :bank_account, :size => 30 %></p>
     <p><%= f.text_field :currency, :required => true, :readonly => @client.linked? %></p>
     <% if @client.linked? -%>
