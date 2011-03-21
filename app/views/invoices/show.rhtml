@@ -61,7 +61,7 @@
               <span class="locality"><%=h @client.city.strip unless @client.city.blank? %></span>
               <% unless @client.province.blank? -%>, <span class="region"><%=h @client.province %></span><% end -%>
               <% end -%>
-              <div class="country-name"><%=h @client.country if @client.country.downcase="es" %></div>
+              <div class="country-name"><%=h @client.country if @client.country.downcase == "es" %></div>
             </address>
             <% if !@invoice.draft -%>
               <div><strong><%=h l(:field_taxcode) %>:</strong><span class="tax-id"> <%=h @client.taxcode.upcase %></span></div>
