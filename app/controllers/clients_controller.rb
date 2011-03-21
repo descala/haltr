@@ -11,6 +11,7 @@ class ClientsController < ApplicationController
 
   before_filter :find_project,  :only => [:index,:new,:create,:check_cif,:link_to_profile,:allow_link,:deny_link]
   before_filter :find_client, :except => [:index,:new,:create,:check_cif,:link_to_profile,:allow_link,:deny_link]
+  before_filter :set_iso_countries_language
   before_filter :authorize
 
   include CompanyFilter
@@ -138,6 +139,10 @@ class ClientsController < ApplicationController
     @project = @client.project
   rescue ActiveRecord::RecordNotFound
     render_404
+  end
+
+  def set_iso_countries_language
+    ISO::Countries.set_language I18n.locale.to_s
   end
 
 end

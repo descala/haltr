@@ -22,6 +22,8 @@ class Client < ActiveRecord::Base
 #  validates_format_of :identifier, :with => /^[a-z0-9\-]*$/
 
   before_validation :copy_linked_profile
+  iso_country :country
+  include CountryUtils
 
   def initialize(attributes=nil)
     super
@@ -102,7 +104,7 @@ class Client < ActiveRecord::Base
 
   def copy_linked_profile
     if self.company and self.allowed?
-      %w(taxcode name email currency postalcode countrycode province city address website invoice_format).each do |attr|
+      %w(taxcode name email currency postalcode country province city address website invoice_format).each do |attr|
         self.send("#{attr}=",company.send(attr))
       end
       self.language = company.project.users.collect {|u| u unless u.admin?}.compact.first.language rescue I18n.default_locale

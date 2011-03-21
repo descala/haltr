@@ -11,6 +11,7 @@ class InvoicesController < ApplicationController
   before_filter :find_invoice, :except => [:index,:new,:create,:destroy_payment]
   before_filter :find_project, :only => [:index,:new,:create]
   before_filter :find_payment, :only => [:destroy_payment]
+  before_filter :set_iso_countries_language
   before_filter :authorize
 
   include CompanyFilter
@@ -197,6 +198,10 @@ class InvoicesController < ApplicationController
     @company = @invoice.company
     render :template => 'invoices/facturae32.xml.erb', :layout => false
   end
+  def ubl21
+    @company = @invoice.company
+    render :template => 'invoices/ubl21.xml.erb', :layout => false
+  end
 
   def show
     if @invoice.is_a? IssuedInvoice
@@ -260,7 +265,7 @@ class InvoicesController < ApplicationController
   def find_invoice
     @invoice = InvoiceDocument.find params[:id]
     @lines = @invoice.invoice_lines
-    @client = @invoice.client || Client.new(:name=>"unknown",:countrycode=>"ESP",:taxcode=>"EUR",:project=>@invoice.project)
+    @client = @invoice.client || Client.new(:name=>"unknown",:country=>"ES",:taxcode=>"EUR",:project=>@invoice.project)
     @project = @invoice.project
   rescue ActiveRecord::RecordNotFound
     render_404
@@ -270,6 +275,10 @@ class InvoicesController < ApplicationController
     @payment = Payment.find(params[:id])
     @invoice = @payment.invoice
     @project = @invoice.project
+  end
+
+  def set_iso_countries_language
+    ISO::Countries.set_language I18n.locale.to_s
   end
 
 end

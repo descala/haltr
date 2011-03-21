@@ -10,7 +10,7 @@ es:
   field_city: Ciudad
   field_province: Provincia
   field_postalcode: Codigo postal
-  field_countrycode: Código de país
+  field_country: Código
   field_bank_account: Cuenta bancaria
   button_people: Personas
   field_invoice_format: Formato y transporte de facturas preferido

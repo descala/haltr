@@ -14,6 +14,8 @@ class Company < ActiveRecord::Base
   acts_as_attachable :view_permission => :free_use,
                      :delete_permission => :free_use
   after_save :update_linked_clients
+  iso_country :country
+  include CountryUtils
 
   def initialize(attributes=nil)
     super
