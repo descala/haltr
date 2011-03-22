@@ -8,8 +8,8 @@ class InvoicesController < ApplicationController
   helper :sort
   include SortHelper
 
-  before_filter :find_invoice, :except => [:index,:new,:create,:destroy_payment]
-  before_filter :find_project, :only => [:index,:new,:create]
+  before_filter :find_invoice, :except => [:index,:new,:create,:destroy_payment,:update_currency_select]
+  before_filter :find_project, :only => [:index,:new,:create,:update_currency_select]
   before_filter :find_payment, :only => [:destroy_payment]
   before_filter :set_iso_countries_language
   before_filter :authorize
@@ -69,8 +69,9 @@ class InvoicesController < ApplicationController
   end
 
   def new
-    @invoice = IssuedInvoice.new(:client_id=>params[:client],:project=>@project,:date=>Date.today,:number=>IssuedInvoice.next_number(@project))
-    @client = params[:client] ? Client.find(params[:client]) : Client.new
+    @client = params[:client] ? Client.find(params[:client]) : Client.find(:all, :order => 'name', :conditions => ["project_id = ?", @project]).first
+    @invoice = IssuedInvoice.new(:client_id=>@client.id,:project=>@project,:date=>Date.today,:number=>IssuedInvoice.next_number(@project))
+    @invoice.currency = @client.currency
   end
 
   def edit
@@ -258,6 +259,12 @@ class InvoicesController < ApplicationController
   rescue Errno::ECONNREFUSED, Errno::EHOSTUNREACH => e
     flash[:warning]=l(:cant_connect_trace, e.message)
     redirect_to :action => 'show', :id => @invoice
+  end
+
+  def update_currency_select
+    client = Client.find(params[:value]) unless params[:value].blank?
+    selected = client.nil? ? params[:curr_sel] : client.currency.downcase
+    render :partial => "currency", :locals => {:selected=>selected}
   end
 
   private

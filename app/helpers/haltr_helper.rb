@@ -58,17 +58,17 @@ module HaltrHelper
     opts = []
     Money::Currency::TABLE.each do |id,attributes|
       if attributes[:priority] && attributes[:priority] < 10
-        opts << ["#{id.to_s.upcase} - #{attributes[:name]}",id]
+        opts << ["#{id.to_s.upcase} - #{attributes[:name]}",id.to_s]
       end
     end
     opts.compact.sort {|x,y|
-      if x[1] == :eur
+      if x[1] == "eur"
         -1
-      elsif y[1] == :eur
+      elsif y[1] == "eur"
         1
-      elsif x[1] == :usd
+      elsif x[1] == "usd"
         -1
-      elsif y[1] == :usd
+      elsif y[1] == "usd"
         1
       else
         x[0] <=> y[0]

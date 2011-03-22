@@ -60,6 +60,7 @@ class ClientsController < ApplicationController
         format.js {
           render(:update) { |page|
             page.replace_html "client_select", :partial => 'invoices/clients', :locals=>{:selected=>@client.id}
+            page.replace_html "currency_select", :partial => 'invoices/currency', :locals=>{:selected=>@client.currency.downcase}
             page.hide "new_client_wrapper"
           }
         }
