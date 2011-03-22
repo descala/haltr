@@ -55,7 +55,7 @@ module InvoicesHelper
   end
 
   def num_new_invoices
-    pre_drafts = InvoiceTemplate.count(:include=>[:client],:conditions => ["clients.project_id = ? AND date <= ?", @project, Time.now + 15.day])
+    pre_drafts = InvoiceTemplate.count(:include=>[:client],:conditions => ["clients.project_id = ? AND date <= ?", @project, Date.today + 10.day])
     drafts = DraftInvoice.count(:include=>[:client],:conditions => ["clients.project_id = ?", @project])
     pre_drafts + drafts
   end
