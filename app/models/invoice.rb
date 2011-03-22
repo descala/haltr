@@ -9,6 +9,12 @@ class Invoice < ActiveRecord::Base
   PAYMENT_DEBIT = 2
   PAYMENT_TRANSFER = 4
 
+  PAYMENT_CODES = {
+    PAYMENT_CASH     => {:facturae => '10', :ubl => '01'},
+    PAYMENT_DEBIT    => {:facturae => '49', :ubl => '02'},
+    PAYMENT_TRANSFER => {:facturae => '31', :ubl => '04'},
+  }
+
   # Default tax %
   TAX = 18
 
@@ -149,12 +155,8 @@ class Invoice < ActiveRecord::Base
     payment_method == PAYMENT_TRANSFER
   end
 
-  def payment_method_code
-    if payment_method < 10
-      "0#{payment_method}"
-    else
-      payment_method.to_s
-    end
+  def payment_method_code(format)
+    PAYMENT_CODES[payment_method][format]
   end
 
   def <=>(oth)

@@ -170,7 +170,7 @@
             <Installment>
               <InstallmentDueDate><%=h @invoice.due_date%></InstallmentDueDate>
                <InstallmentAmount><%=h precision @invoice.total.dollars%></InstallmentAmount>
-               <PaymentMeans><%=h @invoice.payment_method_code %></PaymentMeans>
+               <PaymentMeans><%=h @invoice.payment_method_code(:facturae) %></PaymentMeans>
 <% if @invoice.debit? -%>
                <AccountToBeDebited>
                  <AccountNumber><%=h @client.bank_account%></AccountNumber>
