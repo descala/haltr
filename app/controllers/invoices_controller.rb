@@ -70,8 +70,8 @@ class InvoicesController < ApplicationController
 
   def new
     @client = params[:client] ? Client.find(params[:client]) : Client.find(:all, :order => 'name', :conditions => ["project_id = ?", @project]).first
-    @invoice = IssuedInvoice.new(:client_id=>@client.id,:project=>@project,:date=>Date.today,:number=>IssuedInvoice.next_number(@project))
-    @invoice.currency = @client.currency
+    @invoice = IssuedInvoice.new(:client=>@client,:project=>@project,:date=>Date.today,:number=>IssuedInvoice.next_number(@project))
+    @invoice.currency = @client.nil? ? "EUR" : @client.currency
   end
 
   def edit
