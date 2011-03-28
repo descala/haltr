@@ -3,7 +3,8 @@
     <div id="new_client">
       <h2><%= l(:label_company_new) %></h2>
 
-      <% remote_form_for(:client, Client.new,
+      <% @client ||= Client.new
+         remote_form_for(:client, @client,
                          :url     => {:controller=>'clients', :action=>'create', :id=>@project},
                          :html    => {:class => 'tabular'},
                          :builder => TabularFormBuilder,
