@@ -1,0 +1,262 @@
+Return-Path: <MAILER-DAEMON>
+Date: Wed, 26 Jan 2011 15:19:15 +0100 (CET)
+From: MAILER-DAEMON@ingent.net (Mail Delivery System)
+Subject: Undelivered Mail Returned to Sender
+To: noreply@b2brouter.net
+Auto-Submitted: auto-replied
+MIME-Version: 1.0
+Content-Type: multipart/report; report-type=delivery-status;
+	boundary="EB96913401A.1296051555/foobar.foobar.net"
+Message-Id: <20110126141915.EC6B113401B@foobar.foobar.net>
+
+This is a MIME-encapsulated message.
+
+--EB96913401A.1296051555/foobar.foobar.net
+Content-Description: Notification
+Content-Type: text/plain; charset=us-ascii
+
+This is the mail system at host foobar.foobar.net.
+
+I'm sorry to have to inform you that your message could not
+be delivered to one or more recipients. It's attached below.
+
+For further assistance, please send mail to <postmaster>
+
+If you do so, please include this problem report. You can
+delete your own text from the attached returned message.
+
+                   The mail system
+
+<aaaaaaaaaaaaa@debian.org>: host master.debian.org[70.103.162.29] said: 550
+    Unrouteable address (in reply to RCPT TO command)
+
+--EB96913401A.1296051555/foobar.foobar.net
+Content-Description: Delivery report
+Content-Type: message/delivery-status
+
+Reporting-MTA: dns; foobar.foobar.net
+X-mailer-Queue-ID: EB96913401A
+X-mailer-Sender: rfc822; noreply@b2brouter.net
+Arrival-Date: Wed, 26 Jan 2011 15:19:13 +0100 (CET)
+
+Final-Recipient: rfc822; aaaaaaaaaaaaa@debian.org
+Original-Recipient: rfc822;aaaaaaaaaaaaa@debian.org
+Action: failed
+Status: 5.0.0
+Remote-MTA: dns; master.debian.org
+Diagnostic-Code: smtp; 550 Unrouteable address
+
+--EB96913401A.1296051555/foobar.foobar.net
+Content-Description: Undelivered Message
+Content-Type: message/rfc822
+
+Date: Wed, 26 Jan 2011 15:19:13 +0100
+From: "B2B Router.net" <noreply@b2brouter.net>
+To: aaaaaaaaaaaaa@debian.org
+Subject: invoice
+Message-ID: <20110126141912.GA14628@cloud.b2brouter.net>
+MIME-Version: 1.0
+Content-Type: multipart/mixed; boundary="ew6BAiZeqk4r7MaW"
+Content-Disposition: inline
+User-Agent: Mutt/1.5.18 (2008-05-17)
+
+
+--ew6BAiZeqk4r7MaW
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+
+Factura en formato Facturae enviada desde https://www.b2brouter.net/
+--ew6BAiZeqk4r7MaW
+Content-Type: application/xml
+Content-Disposition: attachment; filename="ingent_1234.xml"
+Content-Transfer-Encoding: quoted-printable
+
+<?xml version=3D"1.0" encoding=3D"UTF-8"?><facturae:Facturae xmlns:facturae=
+=3D"http://www.facturae.es/Facturae/2009/v3.2/Facturae" xmlns:xsi=3D"http:/=
+/www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation=3D"http://www.factu=
+rae.es/Facturae/2009/v3.2/Facturae http://www.facturae.es/NR/rdonlyres/2DF1=
+A921-9E57-4A24-85D8-14FE74E0FB31/0/Facturaev3_2.xsd">=0A   <FileHeader>=0A =
+     <SchemaVersion>3.2</SchemaVersion>=0A      <Modality>I</Modality>=0A  =
+    <InvoiceIssuerType>TE</InvoiceIssuerType>=0A      <ThirdParty>=0A      =
+   <TaxIdentification>=0A            <PersonTypeCode>J</PersonTypeCode>=0A =
+           <ResidenceTypeCode>R</ResidenceTypeCode>=0A            <TaxIdent=
+ificationNumber>B63276174</TaxIdentificationNumber>=0A         </TaxIdentif=
+ication>=0A         <LegalEntity>=0A            <CorporateName>Invinet Sist=
+emes 2003, S.L</CorporateName>=0A            <AddressInSpain>=0A           =
+    <Address>Ribes 31</Address>=0A               <PostCode>08013</PostCode>=
+=0A               <Town>Barcelona</Town>=0A               <Province>Barcelo=
+na</Province>=0A               <CountryCode>ESP</CountryCode>=0A           =
+ </AddressInSpain>=0A         </LegalEntity>=0A      </ThirdParty>=0A      =
+<Batch>=0A         <BatchIdentifier>23</BatchIdentifier>=0A         <Invoic=
+esCount>1</InvoicesCount>=0A         <TotalInvoicesAmount>=0A            <T=
+otalAmount>497.64</TotalAmount>=0A         </TotalInvoicesAmount>=0A       =
+  <TotalOutstandingAmount>=0A            <TotalAmount>497.64</TotalAmount>=
+=0A         </TotalOutstandingAmount>=0A         <TotalExecutableAmount>=0A=
+            <TotalAmount>497.64</TotalAmount>=0A         </TotalExecutableA=
+mount>=0A         <InvoiceCurrencyCode>EUR</InvoiceCurrencyCode>=0A      </=
+Batch>=0A   </FileHeader>=0A   <Parties>=0A      <SellerParty>=0A         <=
+TaxIdentification>=0A            <PersonTypeCode>J</PersonTypeCode>=0A     =
+       <ResidenceTypeCode>R</ResidenceTypeCode>=0A            <TaxIdentific=
+ationNumber>423456</TaxIdentificationNumber>=0A         </TaxIdentification=
+>=0A=0A         <LegalEntity>=0A            <CorporateName>Ingent</Corporat=
+eName>=0A                        <AddressInSpain>=0A               <Address=
+>Meli=C3=B3 113</Address>=0A               <PostCode>08720</PostCode>=0A   =
+            <Town>Vilafranca</Town>=0A               <Province>Barcelona</P=
+rovince>=0A               <CountryCode>ESP</CountryCode>=0A            </Ad=
+dressInSpain>=0A=0A            <ContactDetails>=0A               <WebAddres=
+s/>=0A               <ElectronicMail>lluis@foobar.net</ElectronicMail>=0A  =
+          </ContactDetails>=0A         </LegalEntity>=0A      </SellerParty=
+>=0A      <BuyerParty>=0A         <TaxIdentification>=0A            <Person=
+TypeCode>J</PersonTypeCode>=0A            <ResidenceTypeCode>R</ResidenceTy=
+peCode>=0A            <TaxIdentificationNumber>1234567</TaxIdentificationNu=
+mber>=0A         </TaxIdentification>=0A         <LegalEntity>=0A          =
+  <CorporateName>Llu=C3=ADs Gili</CorporateName>=0A                        =
+<AddressInSpain>=0A               <Address>st pere 9=0A</Address>=0A       =
+        <PostCode>08720</PostCode>=0A               <Town>Vilafranca</Town>=
+=0A               <Province>Barcelona</Province>=0A               <CountryC=
+ode>ESP</CountryCode>=0A            </AddressInSpain>=0A=0A            <Con=
+tactDetails>=0A              <ElectronicMail>aaaaaaaaaaaaa@debian.org</Elec=
+tronicMail>=0A            </ContactDetails>=0A         </LegalEntity>=0A   =
+   </BuyerParty>=0A   </Parties>=0A   <Invoices>=0A      <Invoice>=0A      =
+   <InvoiceHeader>=0A            <InvoiceNumber>1234</InvoiceNumber>=0A    =
+        <InvoiceDocumentType>FC</InvoiceDocumentType>=0A            <Invoic=
+eClass>OO</InvoiceClass>=0A         </InvoiceHeader>=0A         <InvoiceIss=
+ueData>=0A            <IssueDate>2010-11-10</IssueDate>=0A            <Invo=
+iceCurrencyCode>EUR</InvoiceCurrencyCode>=0A            <TaxCurrencyCode>EU=
+R</TaxCurrencyCode>=0A            <LanguageName>es</LanguageName>=0A       =
+  </InvoiceIssueData>=0A         <TaxesOutputs>=0A            <Tax>=0A     =
+          <TaxTypeCode>01</TaxTypeCode>=0A               <TaxRate>16.00</Ta=
+xRate>=0A               <TaxableBase>=0A                  <TotalAmount>429.=
+00</TotalAmount>=0A               </TaxableBase>=0A               <TaxAmoun=
+t>=0A                 <TotalAmount>68.64</TotalAmount>=0A               </T=
+axAmount>=0A            </Tax>=0A         </TaxesOutputs>=0A=0A=0A         =
+<InvoiceTotals>=0A            <TotalGrossAmount>429.00</TotalGrossAmount>=
+=0A            <TotalGrossAmountBeforeTaxes>429.00</TotalGrossAmountBeforeT=
+axes>=0A            <TotalTaxOutputs>68.64</TotalTaxOutputs>=0A            =
+<TotalTaxesWithheld>0.00</TotalTaxesWithheld>=0A            <InvoiceTotal>4=
+97.64</InvoiceTotal>=0A            <TotalOutstandingAmount>497.64</TotalOut=
+standingAmount>=0A            <TotalExecutableAmount>497.64</TotalExecutabl=
+eAmount>=0A         </InvoiceTotals>=0A         <Items>=0A            <Invo=
+iceLine>=0A              <ReceiverTransactionReference/>=0A               <=
+ItemDescription>dsf</ItemDescription>=0A               <Quantity>1.0</Quant=
+ity>=0A               <UnitPriceWithoutTax>1.000000</UnitPriceWithoutTax>=
+=0A               <TotalCost>1.000000</TotalCost>=0A               <GrossAm=
+ount>1.000000</GrossAmount>=0A               <TaxesOutputs>=0A             =
+     <Tax>=0A                     <TaxTypeCode>01</TaxTypeCode>=0A         =
+            <TaxRate>16.00</TaxRate>=0A                     <TaxableBase>=
+=0A                       <TotalAmount>1.00</TotalAmount>=0A               =
+      </TaxableBase>=0A                     <TaxAmount>=0A                 =
+       <TotalAmount>0.16</TotalAmount>=0A                     </TaxAmount>=
+=0A                  </Tax>=0A               </TaxesOutputs>=0A            =
+</InvoiceLine>=0A            <InvoiceLine>=0A              <ReceiverTransac=
+tionReference/>=0A               <ItemDescription>zxdfzxdf</ItemDescription=
+>=0A               <Quantity>2.0</Quantity>=0A               <UnitPriceWith=
+outTax>213.000000</UnitPriceWithoutTax>=0A               <TotalCost>426.000=
+000</TotalCost>=0A               <GrossAmount>426.000000</GrossAmount>=0A  =
+             <TaxesOutputs>=0A                  <Tax>=0A                   =
+  <TaxTypeCode>01</TaxTypeCode>=0A                     <TaxRate>16.00</TaxR=
+ate>=0A                     <TaxableBase>=0A                       <TotalAm=
+ount>426.00</TotalAmount>=0A                     </TaxableBase>=0A         =
+            <TaxAmount>=0A                        <TotalAmount>68.16</Total=
+Amount>=0A                     </TaxAmount>=0A                  </Tax>=0A  =
+             </TaxesOutputs>=0A            </InvoiceLine>=0A            <In=
+voiceLine>=0A              <ReceiverTransactionReference/>=0A              =
+ <ItemDescription>1</ItemDescription>=0A               <Quantity>1.0</Quant=
+ity>=0A               <UnitPriceWithoutTax>2.000000</UnitPriceWithoutTax>=
+=0A               <TotalCost>2.000000</TotalCost>=0A               <GrossAm=
+ount>2.000000</GrossAmount>=0A               <TaxesOutputs>=0A             =
+     <Tax>=0A                     <TaxTypeCode>01</TaxTypeCode>=0A         =
+            <TaxRate>16.00</TaxRate>=0A                     <TaxableBase>=
+=0A                       <TotalAmount>2.00</TotalAmount>=0A               =
+      </TaxableBase>=0A                     <TaxAmount>=0A                 =
+       <TotalAmount>0.32</TotalAmount>=0A                     </TaxAmount>=
+=0A                  </Tax>=0A               </TaxesOutputs>=0A            =
+</InvoiceLine>=0A         </Items>=0A         <PaymentDetails>=0A          =
+  <Installment>=0A              <InstallmentDueDate>2010-11-10</Installment=
+DueDate>=0A               <InstallmentAmount>497.64</InstallmentAmount>=0A =
+              <PaymentMeans>01</PaymentMeans>=0A            </Installment>=
+=0A         </PaymentDetails>=0A         <AdditionalData>=0A           <Inv=
+oiceAdditionalInformation/>=0A         </AdditionalData>=0A      </Invoice>=
+=0A   </Invoices>=0A <ds:Signature xmlns:ds=3D"http://www.w3.org/2000/09/xm=
+ldsig#" Id=3D"Signature_1"><ds:SignedInfo Id=3D"Signature_1_SignedInfo_1"><=
+ds:CanonicalizationMethod Algorithm=3D"http://www.w3.org/TR/2001/REC-xml-c1=
+4n-20010315"/><ds:SignatureMethod Algorithm=3D"http://www.w3.org/2000/09/xm=
+ldsig#rsa-sha1"/><ds:Reference Id=3D"Signature_1_Reference_1" URI=3D""><ds:=
+Transforms><ds:Transform Algorithm=3D"http://www.w3.org/2000/09/xmldsig#env=
+eloped-signature"/></ds:Transforms><ds:DigestMethod Algorithm=3D"http://www=
+=2Ew3.org/2000/09/xmldsig#sha1"/><ds:DigestValue>48fcr34NsdSeptQchQBstuI7RK=
+A=3D</ds:DigestValue></ds:Reference><ds:Reference Id=3D"Signature_1_Referen=
+ce_2" Type=3D"http://uri.etsi.org/01903#SignedProperties" URI=3D"#Signature=
+_1_SignedProperties_1"><ds:DigestMethod Algorithm=3D"http://www.w3.org/2000=
+/09/xmldsig#sha1"/><ds:DigestValue>5ttMxZbnUNL5MtXLeEanwtZWLiM=3D</ds:Diges=
+tValue></ds:Reference><ds:Reference Id=3D"Signature_1_Reference_3" URI=3D"#=
+Signature_1_KeyInfo_1"><ds:DigestMethod Algorithm=3D"http://www.w3.org/2000=
+/09/xmldsig#sha1"/><ds:DigestValue>wEiXtakDksPN7/WSjnipq/Z+KeI=3D</ds:Diges=
+tValue></ds:Reference></ds:SignedInfo><ds:SignatureValue Id=3D"Signature_1_=
+SignatureValue_1">IHnOxvEELJBLpDrjG+44Iw6MBuIDJzmcvhN/YtXgDrrA8tzKlSW2gq2Vw=
+x7lB6f3=0AVWB4IvAyhUqbDl534PbLJC9rZvG2n0D7EREqZXP/NBQo7Jrv69GDleZPt7cl3UZ+=
+=0AKBx6PSxqvmheDlLSr21x99gMJ/KKwMohUcSbj0dem7db5XmwAknbk0HJDNJU42X8=0AB3wr3=
+5K3NX99qRcba23A0aq2W37lGDDXyqqt5GUnd66yLLt4ob0LvJx0MMSyenWe=0ATfAntBlxD5AAU=
+HXc/vUKVmtpxJzJA6yYEoADDZZt8OiamJqIKKtFoMQHrQIZFfqr=0AFP72BcujgnSBvUZZVxH1j=
+A=3D=3D</ds:SignatureValue><ds:KeyInfo Id=3D"Signature_1_KeyInfo_1"><ds:X50=
+9Data><ds:X509Certificate>MIIFrjCCBRegAwIBAgIEPL9wXDANBgkqhkiG9w0BAQUFADA2M=
+QswCQYDVQQGEwJF=0AUzENMAsGA1UEChMERk5NVDEYMBYGA1UECxMPRk5NVCBDbGFzZSAyIENBM=
+B4XDTEw=0AMDYxNTEzNDQyN1oXDTEzMDYxNTEzNDQyN1owfTELMAkGA1UEBhMCRVMxDTALBgNV=
+=0ABAoTBEZOTVQxGDAWBgNVBAsTD0ZOTVQgQ2xhc2UgMiBDQTESMBAGA1UECxMJNTAw=0AMDUwM=
+zYzMTEwLwYDVQQDEyhOT01CUkUgQkFVU0EgUEVSSVMgT1JJT0wgLSBOSUYg=0ANDYyMjgxNjBUM=
+IIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAljkquhTD=0ABbJKMVnPb6cq8uv0dbOFZ=
+yx9KV+nqZmQweNrqjVl3FqxNx/hmgEyTQK9dLGJSH+m=0AfbegiHasTJq0RrHdoNtE/52z97FLz=
+lGXINIiqwO8jSfD+hy3AGjCpqHA7gkOugj8=0AFd2WBv0/R2M9eZ0Tc68Q2IunHDEnmTkDSQV/1=
+cl9Q3KLDa5tH6mF+K/1ZC1yEavO=0AWouFAAkyPOpsZblhVULbAB8dasPSVrMW1yS0ssk/U2diH=
+jT5uZgfew5Upz4gMoBn=0Ai3G9k/RErI7A8ADcp9vA8Sp2PEbMlCCf5KGDkU+9cHvLUppdXeph0=
+HozDXgUAm3I=0ALWxNHKOPpDMknwIDAQABo4IC/DCCAvgwfAYDVR0RBHUwc4ERT1JJT0xASU5WS=
+U5F=0AVC5PUkekXjBcMRgwFgYJKwYBBAGsZgEEEwk0NjIyODE2MFQxFDASBgkrBgEEAaxm=0AAQ=
+MTBVBFUklTMRQwEgYJKwYBBAGsZgECEwVCQVVTQTEUMBIGCSsGAQQBrGYBARMF=0AT1JJT0wwCQ=
+YDVR0TBAIwADArBgNVHRAEJDAigA8yMDEwMDYxNTEzNDQyN1qBDzIw=0AMTMwNjE1MTM0NDI3Wj=
+ALBgNVHQ8EBAMCBaAwEQYJYIZIAYb4QgEBBAQDAgWgMB0G=0AA1UdDgQWBBRilB1A3Tkckrnh1K=
+U7jqcLSXztVTAfBgNVHSMEGDAWgBRAmnZEl3QH=0AxKwUyx6NTzpFfDDXYTCCATEGA1UdIASCAS=
+gwggEkMIIBIAYJKwYBBAGsZgMFMIIB=0AETA0BggrBgEFBQcCARYoaHR0cDovL3d3dy5jZXJ0Lm=
+ZubXQuZXMvY29udmVuaW8v=0AZHBjLnBkZjCB2AYIKwYBBQUHAgIwgcsagchDZXJ0aWZpY2Fkby=
+BSZWNvbm9jaWRv=0AIGV4cGVkaWRvIHNlZ/puIGxlZ2lzbGFjafNuIHZpZ2VudGUuVXNvIGxpbW=
+l0YWRv=0AIGEgbGEgQ29tdW5pZGFkIEVsZWN0cvNuaWNhIHBvciB2YWxvciBt4XhpbW8gZGUg=
+=0AMTAwIGUgc2Fsdm8gZXhjZXBjaW9uZXMgZW4gRFBDLkNvbnRhY3RvIEZOTVQ6Qy9K=0Ab3JnZ=
+SBKdWFuIDEwNi0yODAwOS1NYWRyaWQtRXNwYfFhLjAdBgkrBgEEAaxmASEE=0AEBYOUEVSU09OQ=
+SBGSVNJQ0EwLwYIKwYBBQUHAQMEIzAhMAgGBgQAjkYBATAVBgYE=0AAI5GAQIwCxMDRVVSAgFkA=
+gEAMFsGA1UdHwRUMFIwUKBOoEykSjBIMQswCQYDVQQG=0AEwJFUzENMAsGA1UEChMERk5NVDEYM=
+BYGA1UECxMPRk5NVCBDbGFzZSAyIENBMRAw=0ADgYDVQQDEwdDUkw3MzQ4MA0GCSqGSIb3DQEBB=
+QUAA4GBAGg9/lDjY4ujA310fuYD=0AZoEqLfRe2zgLODfbBerQLLYS9tR4IJXju44rOTqNur4GI=
+tlla8d6iwip9mjmLYGH=0AXfxT6uv8egdotTUj/+LAHUmeyRN0FpR+o6YUwzS2sVq75Q1//M83w=
+lik8VkW0blJ=0AG+aO2ZmSk6+xyamng7lHaTo8</ds:X509Certificate></ds:X509Data><d=
+s:KeyValue><ds:RSAKeyValue><ds:Modulus>ljkquhTDBbJKMVnPb6cq8uv0dbOFZyx9KV+n=
+qZmQweNrqjVl3FqxNx/hmgEyTQK9=0AdLGJSH+mfbegiHasTJq0RrHdoNtE/52z97FLzlGXINIi=
+qwO8jSfD+hy3AGjCpqHA=0A7gkOugj8Fd2WBv0/R2M9eZ0Tc68Q2IunHDEnmTkDSQV/1cl9Q3KL=
+Da5tH6mF+K/1=0AZC1yEavOWouFAAkyPOpsZblhVULbAB8dasPSVrMW1yS0ssk/U2diHjT5uZgf=
+ew5U=0Apz4gMoBni3G9k/RErI7A8ADcp9vA8Sp2PEbMlCCf5KGDkU+9cHvLUppdXeph0Hoz=0AD=
+XgUAm3ILWxNHKOPpDMknw=3D=3D</ds:Modulus><ds:Exponent>AQAB</ds:Exponent></ds=
+:RSAKeyValue></ds:KeyValue></ds:KeyInfo><ds:Object Id=3D"Signature_1_Object=
+_1"><xades:QualifyingProperties xmlns:xades=3D"http://uri.etsi.org/01903/v1=
+=2E3.2#" Id=3D"Signature_1_QualifyingProperties_1" Target=3D"#Signature_1">=
+<xades:SignedProperties Id=3D"Signature_1_SignedProperties_1"><xades:Signed=
+SignatureProperties Id=3D"Signature_1_SignedSignatureProperties_1"><xades:S=
+igningTime>2011-01-26T15:19:11+01:00</xades:SigningTime><xades:SigningCerti=
+ficate><xades:Cert><xades:CertDigest><ds:DigestMethod Algorithm=3D"http://w=
+ww.w3.org/2000/09/xmldsig#sha1"/><ds:DigestValue>rCzSv12OYQRPO3rfVvEtjG6wVT=
+Q=3D</ds:DigestValue></xades:CertDigest><xades:IssuerSerial><ds:X509IssuerN=
+ame>OU=3DFNMT Clase 2 CA,O=3DFNMT,C=3DES</ds:X509IssuerName><ds:X509SerialN=
+umber>1019179100</ds:X509SerialNumber></xades:IssuerSerial></xades:Cert></x=
+ades:SigningCertificate><xades:SignaturePolicyIdentifier><xades:SignaturePo=
+licyId><xades:SigPolicyId><xades:Identifier Qualifier=3D"OIDAsURI">http://w=
+ww.facturae.es/politica_de_firma_formato_facturae/politica_de_firma_formato=
+_facturae_v3_1.pdf</xades:Identifier><xades:Description>Pol=C3=ADtica de fi=
+rma electr=C3=B3nica para facturaci=C3=B3n electr=C3=B3nica con formato Fac=
+turae</xades:Description></xades:SigPolicyId><xades:SigPolicyHash><ds:Diges=
+tMethod Algorithm=3D"http://www.w3.org/2000/09/xmldsig#sha1"/><ds:DigestVal=
+ue>Ohixl6upD6av8N7pEvDABhEL6hM=3D</ds:DigestValue></xades:SigPolicyHash></x=
+ades:SignaturePolicyId></xades:SignaturePolicyIdentifier><xades:SignerRole>=
+<xades:ClaimedRoles><xades:ClaimedRole>Emisor</xades:ClaimedRole></xades:Cl=
+aimedRoles></xades:SignerRole></xades:SignedSignatureProperties></xades:Sig=
+nedProperties></xades:QualifyingProperties></ds:Object></ds:Signature></fac=
+turae:Facturae>
+--ew6BAiZeqk4r7MaW--
+
+--EB96913401A.1296051555/foobar.foobar.net--
