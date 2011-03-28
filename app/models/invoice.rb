@@ -118,7 +118,7 @@ class Invoice < ActiveRecord::Base
   end
 
   def pdf_name
-    "factura-#{number.gsub('/','')}.pdf"
+    "factura-#{number.gsub('/','')}.pdf" rescue "factura-___.pdf"
   end
 
   def recipients

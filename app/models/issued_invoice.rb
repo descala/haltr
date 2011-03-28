@@ -96,7 +96,10 @@ class IssuedInvoice < InvoiceDocument
   end
 
   def self.find_not_sent(project)
-    find :all, :include => [:client], :conditions => ["clients.project_id = ? and state = 'new' and draft != ?", project.id, 1 ]
+    invoices = find :all, :include => [:client], :conditions => ["clients.project_id = ? and state = 'new' and draft != ?", project.id, 1 ], :order => "number ASC"
+    invoices.collect do |invoice|
+      invoice unless invoice.is_a? DraftInvoice or invoice.number.nil?
+    end.compact
   end
 
   def total_paid
