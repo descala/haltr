@@ -5,7 +5,7 @@ require 'tasks_controller'
 class TasksController; def rescue_action(e) raise e end; end
 
 class TasksControllerTest < ActionController::TestCase
-  fixtures :projects, :enabled_modules, :users, :roles, :members, :invoices
+  fixtures :projects, :enabled_modules, :users, :roles, :members, :invoices, :companies
 
   def setup
     # user 2 (jsmith) is member of project 2 (onlinesotre)
