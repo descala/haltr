@@ -245,8 +245,7 @@ class InvoicesController < ApplicationController
 
   def legal
     #TODO: several B2bRouters
-    #TODO: add params[:filename] to allow several filenames on one md5 (file.xml, file.pdf)
-    if @invoice.fetch_legal_by_http
+    if @invoice.fetch_legal_by_http(params[:md5])
       respond_to do |format|
         format.html do
           send_data @invoice.legal_invoice, :filename => @invoice.legal_filename

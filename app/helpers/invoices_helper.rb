@@ -40,9 +40,9 @@ module InvoicesHelper
 
   def download_link_for(e)
     if (e.name == "success_sending"||e.name == "validating_format") and !e.md5.blank?
-      "( #{link_to l(:download_legal), :controller=>'invoices', :action=>'legal', :id=>e.invoice} )"
+      "( #{link_to l(:download_legal), :controller=>'invoices', :action=>'legal', :id=>e.invoice, :md5=>e.md5} )"
     elsif e.name =~ /_notification$/ and !e.md5.blank?
-      "( #{link_to l(:download_notification), :controller=>'invoices', :action=>'legal', :id=>e.invoice} )"
+      "( #{link_to l(:download_notification), :controller=>'invoices', :action=>'legal', :id=>e.invoice, :md5=>e.md5} )"
     else
       ""
     end

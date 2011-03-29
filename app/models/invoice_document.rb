@@ -16,15 +16,16 @@ class InvoiceDocument < Invoice
   end
 
   def initial_md5
-    self.events.collect {|e| e unless e.md5.blank? }.compact.sort.last.md5 rescue nil
+    self.events.collect {|e| e unless e.md5.blank? }.compact.sort.first.md5 rescue nil
   end
 
-  def fetch_legal_by_http 
+  def fetch_legal_by_http(md5=nil)
+    md5 ||= self.initial_md5
     url = Setting.plugin_haltr["trace_url"]
     url = URI.parse(url.gsub(/\/$/,'')) # remove trailing slash
     http = Net::HTTP.new(url.host,url.port)
     http.start() do |http|
-      full_url = "#{url.path.blank? ? "/" : "#{url.path}/"}b2b_messages/get_legal_invoice?md5=#{self.initial_md5}"
+      full_url = "#{url.path.blank? ? "/" : "#{url.path}/"}b2b_messages/get_legal_invoice?md5=#{md5}"
       logger.debug "Fetching legal GET #{full_url}" if logger && logger.debug?
       req = Net::HTTP::Get.new(full_url)
       response = http.request(req)
