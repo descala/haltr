@@ -11,7 +11,7 @@ class ExportChannels
       'facturae_31'   => { :format=>'facturae31', :channel=>'free_xml'},
       'facturae_32'   => { :format=>'facturae32', :channel=>'free_xml'},
       'signed_pdf'    => { :format=>'facturae32', :channel=>'free_pdf'},
-      'aoc'           => { :format=>'facturae32', :channel=>'free_aoc', :private=>true}
+      'aoc'           => { :format=>'facturae30', :channel=>'free_aoc', :private=>true}
     }
   end
 
