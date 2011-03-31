@@ -274,12 +274,16 @@ class InvoicesController < ApplicationController
     company = Company.find_by_taxcode params[:taxcode]
     if company
       project = company.project
-      number = params[:id]
+      number = params[:num]
       invoice = IssuedInvoice.find(:all,:conditions=>["number = ? AND project_id = ?",number,project.id]).first if project
     end
-    respond_to do |format|
-      format.html { render :text => invoice.nil? ? "" : invoice.id }
-      format.xml { render :xml => invoice }
+    if invoice.nil?
+      render_404
+    else
+      respond_to do |format|
+        format.html { render :text => invoice.nil? ? render_404 : invoice.id }
+        format.xml { render :xml => invoice.nil? ? render_404 : invoice }
+      end
     end
   end
 
