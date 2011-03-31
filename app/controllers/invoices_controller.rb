@@ -8,14 +8,16 @@ class InvoicesController < ApplicationController
   helper :sort
   include SortHelper
 
-  before_filter :find_invoice, :except => [:index,:new,:create,:destroy_payment,:update_currency_select]
+  before_filter :find_invoice, :except => [:index,:new,:create,:destroy_payment,:update_currency_select,:by_taxcode_and_num]
   before_filter :find_project, :only => [:index,:new,:create,:update_currency_select]
   before_filter :find_payment, :only => [:destroy_payment]
   before_filter :set_iso_countries_language
-  before_filter :authorize
+  before_filter :authorize, :except => [:by_taxcode_and_num]
+  skip_before_filter :check_if_login_required, :only => [:by_taxcode_and_num]
+  before_filter :check_remote_ip, :only => [:by_taxcode_and_num]
 
   include CompanyFilter
-  before_filter :check_for_company
+  before_filter :check_for_company, :except => [:by_taxcode_and_num]
 
   def index
     sort_init 'number', 'desc'
@@ -268,6 +270,19 @@ class InvoicesController < ApplicationController
     render :partial => "currency", :locals => {:selected=>selected}
   end
 
+  def by_taxcode_and_num
+    company = Company.find_by_taxcode params[:taxcode]
+    if company
+      project = company.project
+      number = params[:id]
+      invoice = IssuedInvoice.find(:all,:conditions=>["number = ? AND project_id = ?",number,project.id]).first if project
+    end
+    respond_to do |format|
+      format.html { render :text => invoice.nil? ? "" : invoice.id }
+      format.xml { render :xml => invoice }
+    end
+  end
+
   private
 
   def find_invoice
@@ -287,6 +302,10 @@ class InvoicesController < ApplicationController
 
   def set_iso_countries_language
     ISO::Countries.set_language I18n.locale.to_s
+  end
+
+  def check_remote_ip
+    #TODO: see events_controller
   end
 
 end
