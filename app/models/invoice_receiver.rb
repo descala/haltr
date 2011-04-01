@@ -10,7 +10,7 @@ class InvoiceReceiver < ActionMailer::Base
 
   class BouncedInvoice
     def self.process_file(invoice)
-      md5  = Digest::MD5.hexdigest(invoice.read.chomp)
+      md5  = Digest::MD5.hexdigest(invoice.read)
       name = invoice.original_filename
       id   = name.gsub(/#{File.extname(name)}$/,'').split("_").last.to_i
       InvoiceReceiver.log "invoice #{name} has id #{id} has md5sum #{md5}"
@@ -106,7 +106,7 @@ class InvoiceReceiver < ActionMailer::Base
       ri = invoice_from_xml(doc,xpaths)
       ri.invoice_format = invoice_format
       invoice.rewind
-      ri.md5 = Digest::MD5.hexdigest(invoice.read.chomp)
+      ri.md5 = Digest::MD5.hexdigest(invoice.read)
       ri.save!
       if File.directory? channel
         i=2
