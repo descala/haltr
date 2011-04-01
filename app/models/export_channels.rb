@@ -11,7 +11,9 @@ class ExportChannels
       'facturae_31'   => { :format=>'facturae31', :channel=>'free_xml'},
       'facturae_32'   => { :format=>'facturae32', :channel=>'free_xml'},
       'signed_pdf'    => { :format=>'facturae32', :channel=>'free_pdf'},
-      'aoc'           => { :format=>'facturae30', :channel=>'free_aoc', :private=>true}
+      'aoc'           => { :format=>'facturae30', :channel=>'free_aoc', :private=>true},
+      'aoc31'         => { :format=>'facturae31', :channel=>'free_aoc', :private=>true},
+      'aoc32'         => { :format=>'facturae32', :channel=>'free_aoc', :private=>true}
     }
   end
 
@@ -37,7 +39,7 @@ class ExportChannels
         next if v[:private]
       end
       [ I18n.t(k), k ]
-    }.compact
+    }.compact.sort {|a,b| a[1] <=> b[1] }
   end
 
   def self.path(id)
