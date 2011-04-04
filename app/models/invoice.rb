@@ -10,9 +10,9 @@ class Invoice < ActiveRecord::Base
   PAYMENT_TRANSFER = 4
 
   PAYMENT_CODES = {
-    PAYMENT_CASH     => {:facturae => '10', :ubl => '01'},
-    PAYMENT_DEBIT    => {:facturae => '49', :ubl => '02'},
-    PAYMENT_TRANSFER => {:facturae => '31', :ubl => '04'},
+    PAYMENT_CASH     => {:facturae => '01', :ubl => '10'},
+    PAYMENT_DEBIT    => {:facturae => '02', :ubl => '49'},
+    PAYMENT_TRANSFER => {:facturae => '04', :ubl => '31'},
   }
 
   # Default tax %
