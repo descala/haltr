@@ -146,23 +146,24 @@
 <% @invoice.invoice_lines.each do |invoice_line| -%>
             <InvoiceLine>
               <ReceiverTransactionReference><%=h @invoice.ponumber%></ReceiverTransactionReference>
-               <ItemDescription><%=h invoice_line.description%></ItemDescription>
-               <Quantity><%=h invoice_line.quantity%></Quantity>
-               <UnitPriceWithoutTax><%=h precision(invoice_line.price,6)%></UnitPriceWithoutTax>
-               <TotalCost><%=h precision(invoice_line.price*invoice_line.quantity,2)%></TotalCost>
-               <GrossAmount><%=h precision(invoice_line.price*invoice_line.quantity,2)%></GrossAmount>
-               <TaxesOutputs>
-                  <Tax>
-                     <TaxTypeCode>01</TaxTypeCode>
-                     <TaxRate><%=h precision @invoice.tax_percent%></TaxRate>
-                     <TaxableBase>
-                       <TotalAmount><%=h precision(invoice_line.price*invoice_line.quantity)%></TotalAmount>
-                     </TaxableBase>
-                     <TaxAmount>
-                        <TotalAmount><%=h precision invoice_line.tax.dollars%></TotalAmount>
-                     </TaxAmount>
-                  </Tax>
-               </TaxesOutputs>
+              <ItemDescription><%=h invoice_line.description%></ItemDescription>
+              <Quantity><%=h invoice_line.quantity%></Quantity>
+              <UnitOfMeasure><%=h invoice_line.unit_code(:facturae)%></UnitOfMeasure>
+              <UnitPriceWithoutTax><%=h precision(invoice_line.price,6)%></UnitPriceWithoutTax>
+              <TotalCost><%=h precision(invoice_line.price*invoice_line.quantity,2)%></TotalCost>
+              <GrossAmount><%=h precision(invoice_line.price*invoice_line.quantity,2)%></GrossAmount>
+              <TaxesOutputs>
+                 <Tax>
+                    <TaxTypeCode>01</TaxTypeCode>
+                    <TaxRate><%=h precision @invoice.tax_percent%></TaxRate>
+                    <TaxableBase>
+                      <TotalAmount><%=h precision(invoice_line.price*invoice_line.quantity)%></TotalAmount>
+                    </TaxableBase>
+                    <TaxAmount>
+                       <TotalAmount><%=h precision invoice_line.tax.dollars%></TotalAmount>
+                    </TaxAmount>
+                 </Tax>
+              </TaxesOutputs>
             </InvoiceLine>
 <% end -%>
          </Items>

@@ -186,6 +186,15 @@ ca:
   field_price: Preu
   field_quantity: Quantitat
   field_invoice_lines: Línies de factura
+  field_unit: Unitat
+  units: Unitats
+  hours: Hores
+  kilograms: Quilograms
+  litters: Litres
+  s_units: ""
+  s_hours: h
+  s_kilograms: kg
+  s_litters: l
 
   # People
   label_person: Persona

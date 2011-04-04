@@ -99,7 +99,7 @@
 <% @invoice.invoice_lines.each do |invoice_line| -%>	
       <cac:InvoiceLine>
         <cbc:ID><%=h invoice_line.id%></cbc:ID>
-        <cbc:InvoicedQuantity><%=h invoice_line.quantity%></cbc:InvoicedQuantity>
+        <cbc:InvoicedQuantity unitCode="<%=h invoice_line.unit_code(:ubl) %>"><%=h invoice_line.quantity%></cbc:InvoicedQuantity>
         <cbc:LineExtensionAmount currencyID="EUR"><%=h precision(invoice_line.price*invoice_line.quantity,2)%></cbc:LineExtensionAmount>
         <cac:Item>
           <cbc:Name><%=h invoice_line.description%></cbc:Name>

@@ -2,8 +2,20 @@ class InvoiceLine < ActiveRecord::Base
 
   unloadable
 
+  UNITS     = 1
+  HOURS     = 2
+  KILOGRAMS = 3
+  LITTERS   = 4
+
+  UNIT_CODES = {
+    UNITS     => {:name => 'units',     :facturae => '01', :ubl => 'C62'},
+    HOURS     => {:name => 'hours',     :facturae => '02', :ubl => 'HUR'},
+    KILOGRAMS => {:name => 'kilograms', :facturae => '03', :ubl => 'KGM'},
+    LITTERS   => {:name => 'litters',   :facturae => '04', :ubl => 'LTR'},
+  }
+
   belongs_to :invoice
-  validates_presence_of :description
+  validates_presence_of :description, :unit
   validates_numericality_of :quantity, :price
   attr_accessor :new_and_first
 
@@ -40,6 +52,20 @@ class InvoiceLine < ActiveRecord::Base
     else
       Money.new(0,currency)
     end
+  end
+
+  def self.units
+    UNIT_CODES.collect { |k,v|
+      [l(v[:name]), k]
+    }
+  end
+
+  def unit_code(format)
+    UNIT_CODES[unit][format]
+  end
+
+  def unit_short
+    l("s_#{UNIT_CODES[unit][:name]}")
   end
 
   private

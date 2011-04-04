@@ -173,6 +173,15 @@ es:
   field_price: Precio
   field_quantity: Cantidad
   field_invoice_lines: Líneas de factura
+  field_unit: Unidad
+  units: Unidades
+  hours: Horas
+  kilograms: Kilogramos
+  litters: Litros
+  s_units: ""
+  s_hours: h
+  s_kilograms: kg
+  s_litters: l
 
   # People
   label_person: Persona
