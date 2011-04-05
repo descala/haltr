@@ -99,7 +99,7 @@ class InvoiceTemplatesController < ApplicationController
     days = params[:date] || 10
     @date = Date.today + days.to_i.day
     templates = InvoiceTemplate.find :all, :include => [:client], :conditions => ["clients.project_id = ? and date <= ?", @project.id, @date], :order => "date ASC"
-    @drafts = DraftInvoice.all
+    @drafts = DraftInvoice.find :all, :include => [:client], :conditions => ["clients.project_id = ?", @project.id], :order => "date ASC"
     templates.each do |t|
       begin
         @drafts << t.invoices_until(@date)
