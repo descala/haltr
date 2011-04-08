@@ -29,3 +29,14 @@ test_import:
   terms: "30"
   project_id: 2
   client: client1
+
+draft:
+  type: DraftInvoice
+  date: 2010-11-20
+  due_date: 2010-12-01
+  client: client1
+  terms: 1m1
+  project_id: 2
+  client: client1
+  payment_method: 2
+  state: sent

@@ -18,3 +18,10 @@ template1_l1:
   description: bla bla bla
   price: 925.68
   currency: EUR
+
+draft_l1:
+  invoice: draft
+  quantity: 1
+  description: bla bla bla
+  price: 925.68
+  currency: EUR

@@ -160,7 +160,15 @@ class Invoice < ActiveRecord::Base
   end
 
   def <=>(oth)
-    self.number <=> oth.number
+    if self.number.nil? and oth.number.nil?
+      0
+    elsif self.number.nil?
+      -1
+    elsif oth.number.nil?
+      1
+    else
+      self.number <=> oth.number
+    end
   end
 
   def company
