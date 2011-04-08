@@ -39,4 +39,9 @@ class InvoiceTest < ActiveSupport::TestCase
     assert_equal "1000", IssuedInvoice.increment_right("999")
   end
 
+  test "sort draft invoices" do
+    assert_equal -1 , invoices(:draft) <=> invoices(:invoice1)
+    assert_equal 1 , invoices(:invoice1) <=> invoices(:draft)
+    assert_equal 0 , invoices(:draft) <=> invoices(:draft)
+  end
 end
