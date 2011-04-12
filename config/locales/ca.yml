@@ -211,7 +211,7 @@ ca:
   # Tasks
   label_task_plural: Tasques
   with_date: Amb data
-  charge_bank_on_date: Cobrar a dia
+  charge_bank_on_date: Data rebut
   nothing_to_report: Res a mostrar
   nothing_to_generate: Res a generar
   button_generate_invoices: Noves factures des de plantilla
