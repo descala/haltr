@@ -6,6 +6,7 @@
     :with => "'value=' + this.value",
     :update => 'cif_info'
   }
+  short ||= false
 -%>
 
 <div id="cif_info">
@@ -15,18 +16,18 @@
 <div class="box">
   <% if @client.linked? -%>
     <p><%= f.text_field :taxcode, :size => 20, :required => true, :readonly => @client.linked? %></p>
-  <% elsif params[:controller] == 'clients' -%>
+  <% elsif !short -%>
     <p><%= f.text_field :taxcode, :size => 20, :required => true, :onblur => remote_function(ajax_opts) %></p>
   <% else -%>
     <p><%= f.text_field :taxcode, :size => 20, :required => true %></p>
   <% end -%>
   <p><%= f.text_field :name, :required => true, :readonly => @client.linked? %></p>
   <p><%= f.text_field :email, :readonly => @client.linked? %></p>
-  <% unless params[:controller] == "clients" -%>
+  <% if short -%>
   <p id="show_full_form"><%= link_to_function("--- #{l(:show_full_form)} ---", "$('client_hiden_fields').show(); $('show_full_form').hide()") %></p>
   <% end -%>
-  <div id="client_hiden_fields" style="<%= params[:controller] == "clients" ? "" : "display:none;" %>">
-    <% unless params[:controller] == "clients" -%>
+  <div id="client_hiden_fields" style="<%= short ? "display:none;" : "" %>">
+    <% if short -%>
     <p><%= link_to_function("--- #{l(:hide_full_form)} ---", "$('client_hiden_fields').hide(); $('show_full_form').show()") %></p>
     <% end -%>
     <p><%= f.text_field :address, :readonly => @client.linked? %></p>
