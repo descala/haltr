@@ -4,5 +4,6 @@ ActionController::Routing::Routes.draw do |map|
   map.resources :events
   map.connect '/invoices/logo/:id/:filename', :controller => 'invoices', :action => 'logo', :id => /\d+/, :filename => /.*/
   map.connect '/invoices/legal/:id.:format', :controller => 'invoices', :action => 'legal'
+  map.connect '/invoice/download/:id/:invoice_id', :controller => 'invoices', :action => 'download', :id => /.*/, :invoice_id => /\d+/
   map.connect '/invoice/:id/:invoice_id', :controller => 'invoices', :action => 'view', :id => /.*/, :invoice_id => /\d+/
 end

@@ -1,6 +1,11 @@
 <% I18n.locale = @invoice.locale %>
 <!-- Wrapper -->
 <div style="width:100%; text-align:center;">
+  <% if @invoice.events.any? -%>
+  <div style="text-align:right;">
+    <p style="margin:10px;"><%= link_to "Download", :controller=>"invoices", :action=>"download", :id=>@client.hashid, :invoice_id=>@invoice.id %></p>
+  </div>
+  <% end -%>
 <div id="invoice_wrapper" style="width:671px; margin:auto; text-align:left;">
 
   <!-- Workspace -->

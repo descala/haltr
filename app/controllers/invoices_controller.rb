@@ -8,17 +8,18 @@ class InvoicesController < ApplicationController
   helper :sort
   include SortHelper
 
-  before_filter :find_invoice, :except => [:index,:new,:create,:destroy_payment,:update_currency_select,:by_taxcode_and_num,:view,:logo]
+  before_filter :find_invoice, :except => [:index,:new,:create,:destroy_payment,:update_currency_select,:by_taxcode_and_num,:view,:logo,:download]
   before_filter :find_project, :only => [:index,:new,:create,:update_currency_select]
   before_filter :find_payment, :only => [:destroy_payment]
+  before_filter :find_hashid, :only => [:view,:download]
   before_filter :find_attachment, :only => [:logo]
   before_filter :set_iso_countries_language
-  before_filter :authorize, :except => [:by_taxcode_and_num,:view,:logo]
-  skip_before_filter :check_if_login_required, :only => [:by_taxcode_and_num,:view,:logo]
+  before_filter :authorize, :except => [:by_taxcode_and_num,:view,:logo,:download]
+  skip_before_filter :check_if_login_required, :only => [:by_taxcode_and_num,:view,:logo,:download]
   before_filter :check_remote_ip, :only => [:by_taxcode_and_num]
 
   include CompanyFilter
-  before_filter :check_for_company, :except => [:by_taxcode_and_num,:view]
+  before_filter :check_for_company, :except => [:by_taxcode_and_num,:view,:download]
 
   def index
     sort_init 'number', 'desc'
@@ -289,16 +290,6 @@ class InvoicesController < ApplicationController
   end
 
   def view
-    Project.send(:include, ProjectHaltrPatch) #TODO: perque nomes funciona el primer cop sense aixo?
-    client = Client.find_by_hashid params[:id]
-    @company = client.project.company
-    invoices = IssuedInvoice.find(:all, :conditions => ["client_id=? AND id=?",client.id,params[:invoice_id]])
-    if invoices.size != 1
-      render_404
-      return
-    else
-      @invoice = invoices.first
-    end
     @lines = @invoice.invoice_lines
     @client = @invoice.client || Client.new(:name=>"unknown",:country=>"ES",:taxcode=>"EUR",:project=>@invoice.project)
     render :layout=>"public"
@@ -316,7 +307,39 @@ class InvoicesController < ApplicationController
     end
   end
 
+  def download
+    #TODO: several B2bRouters
+    if @invoice.fetch_legal_by_http(params[:md5])
+      respond_to do |format|
+        format.html do
+          send_data @invoice.legal_invoice, :filename => @invoice.legal_filename
+        end
+        format.xml do
+          render :xml => @invoice.legal_invoice
+        end
+      end
+    else
+      render_404
+    end
+  rescue Errno::ECONNREFUSED, Errno::EHOSTUNREACH => e
+    flash[:warning]=l(:cant_connect_trace, e.message)
+    redirect_to :action => 'show', :id => @invoice
+  end
+
   private
+
+  def find_hashid
+    Project.send(:include, ProjectHaltrPatch) #TODO: perque nomes funciona el primer cop sense aixo?
+    @client = Client.find_by_hashid params[:id]
+    @company = @client.project.company
+    invoices = IssuedInvoice.find(:all, :conditions => ["client_id=? AND id=?",@client.id,params[:invoice_id]])
+    if invoices.size != 1
+      render_404
+      return
+    else
+      @invoice = invoices.first
+    end
+  end
 
   def find_attachment
     @attachment = Attachment.find(params[:id])
