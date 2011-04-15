@@ -9,9 +9,10 @@ class Client < ActiveRecord::Base
   belongs_to :project, :include => true
   belongs_to :company
 
-  validates_presence_of   :taxcode
+  validates_presence_of   :taxcode, :hashid
   validates_length_of     :taxcode, :maximum => 20
   validates_uniqueness_of :taxcode, :scope => :project_id
+  validates_uniqueness_of :hashid
 
   validates_presence_of     :project_id, :name, :currency, :language, :invoice_format, :if => Proc.new {|c| c.company_id.blank? }
   validates_inclusion_of    :currency, :in  => Money::Currency::TABLE.collect {|k,v| v[:iso_code] }, :if => Proc.new {|c| c.company_id.blank? }
@@ -21,6 +22,7 @@ class Client < ActiveRecord::Base
 #  validates_length_of :name, :maximum => 30
 #  validates_format_of :identifier, :with => /^[a-z0-9\-]*$/
 
+  before_validation :set_hashid_value
   before_validation :copy_linked_profile
   iso_country :country
   include CountryUtils
@@ -110,6 +112,13 @@ class Client < ActiveRecord::Base
       self.language = company.project.users.collect {|u| u unless u.admin?}.compact.first.language rescue I18n.default_locale
     elsif !self.company
       self.allowed = nil
+    end
+  end
+
+  def set_hashid_value
+    unless hashid
+      require "md5"
+      self.hashid=MD5.hexdigest(Time.now.to_f.to_s)[0...10]
     end
   end
 

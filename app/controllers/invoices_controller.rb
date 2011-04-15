@@ -8,16 +8,17 @@ class InvoicesController < ApplicationController
   helper :sort
   include SortHelper
 
-  before_filter :find_invoice, :except => [:index,:new,:create,:destroy_payment,:update_currency_select,:by_taxcode_and_num]
+  before_filter :find_invoice, :except => [:index,:new,:create,:destroy_payment,:update_currency_select,:by_taxcode_and_num,:view,:logo]
   before_filter :find_project, :only => [:index,:new,:create,:update_currency_select]
   before_filter :find_payment, :only => [:destroy_payment]
+  before_filter :find_attachment, :only => [:logo]
   before_filter :set_iso_countries_language
-  before_filter :authorize, :except => [:by_taxcode_and_num]
-  skip_before_filter :check_if_login_required, :only => [:by_taxcode_and_num]
+  before_filter :authorize, :except => [:by_taxcode_and_num,:view,:logo]
+  skip_before_filter :check_if_login_required, :only => [:by_taxcode_and_num,:view,:logo]
   before_filter :check_remote_ip, :only => [:by_taxcode_and_num]
 
   include CompanyFilter
-  before_filter :check_for_company, :except => [:by_taxcode_and_num]
+  before_filter :check_for_company, :except => [:by_taxcode_and_num,:view]
 
   def index
     sort_init 'number', 'desc'
@@ -224,15 +225,15 @@ class InvoicesController < ApplicationController
   def send_invoice
     export_id = @invoice.client.invoice_format
     path = ExportChannels.path export_id
-    format = ExportChannels.format export_id 
+    format = ExportChannels.format export_id
     @company = @invoice.company
     xml_file=Tempfile.new("invoice_#{@invoice.id}.xml","tmp")
     xml_file.write(render_to_string(:template => "invoices/#{format}.xml.erb", :layout => false))
     xml_file.close
-    destination="#{path}/" + "#{@company.taxcode}_#{@invoice.id}.xml".gsub(/\//,'')
+    destination="#{path}/" + "#{@invoice.client.hashid}_#{@invoice.id}.xml".gsub(/\//,'')
     i=2
     while File.exists? destination
-      destination="#{path}/" + "#{@company.taxcode}_#{i}_#{@invoice.id}.xml".gsub(/\//,'')
+      destination="#{path}/" + "#{@invoice.client.hashid}_#{i}_#{@invoice.id}.xml".gsub(/\//,'')
       i+=1
     end
     FileUtils.mv(xml_file.path,destination)
@@ -251,7 +252,7 @@ class InvoicesController < ApplicationController
       respond_to do |format|
         format.html do
           send_data @invoice.legal_invoice, :filename => @invoice.legal_filename
-        end 
+        end
         format.xml do
           render :xml => @invoice.legal_invoice
         end
@@ -287,7 +288,44 @@ class InvoicesController < ApplicationController
     end
   end
 
+  def view
+    Project.send(:include, ProjectHaltrPatch) #TODO: perque nomes funciona el primer cop sense aixo?
+    client = Client.find_by_hashid params[:id]
+    @company = client.project.company
+    invoices = IssuedInvoice.find(:all, :conditions => ["client_id=? AND id=?",client.id,params[:invoice_id]])
+    if invoices.size != 1
+      render_404
+      return
+    else
+      @invoice = invoices.first
+    end
+    @lines = @invoice.invoice_lines
+    @client = @invoice.client || Client.new(:name=>"unknown",:country=>"ES",:taxcode=>"EUR",:project=>@invoice.project)
+    render :layout=>"public"
+  rescue
+    render_404
+  end
+
+  def logo
+    if @attachment.image?
+      send_file @attachment.diskfile, :filename => filename_for_content_disposition(@attachment.filename),
+        :type => @attachment.content_type,
+        :disposition => 'inline'
+    else
+      render_404
+    end
+  end
+
   private
+
+  def find_attachment
+    @attachment = Attachment.find(params[:id])
+    # Show 404 if the filename in the url is wrong
+    raise ActiveRecord::RecordNotFound if params[:filename] && params[:filename] != @attachment.filename
+    @project = @attachment.project
+  rescue ActiveRecord::RecordNotFound
+    render_404
+  end
 
   def find_invoice
     @invoice = InvoiceDocument.find params[:id]
