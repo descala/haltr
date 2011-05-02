@@ -137,7 +137,7 @@ class InvoiceTemplatesController < ApplicationController
         flash.now[:error] = issued.errors.full_messages.join ","
       end
     end
-    @drafts = DraftInvoice.all
+    @drafts = DraftInvoice.find :all, :include => [:client], :conditions => ["clients.project_id = ?", @project.id], :order => "date ASC"
     render :action => 'invoices'
   end
 
