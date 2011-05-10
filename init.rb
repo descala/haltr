@@ -38,6 +38,9 @@ Redmine::Plugin.register :haltr do
         :payments => [:index, :new, :edit, :create, :update, :destroy ],
         :companies => [:index,:edit,:update]},
       :require => :member
+    permission :use_restricted_channels,
+      {},
+      :require => :member
     permission :premium_use,
       {:tasks => [:automator]},
       :require => :member
