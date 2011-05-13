@@ -81,7 +81,7 @@ class InvoicesController < ApplicationController
   end
 
   def edit
-    @invoice = IssuedInvoice.find(params[:id])
+    @invoice = InvoiceDocument.find(params[:id])
   end
 
   def create
@@ -216,10 +216,14 @@ class InvoicesController < ApplicationController
       @invoices_sent = InvoiceDocument.find(:all,:conditions => ["client_id = ? and state = 'sent'",@client.id]).sort
       @invoices_closed = InvoiceDocument.find(:all,:conditions => ["client_id = ? and state = 'closed'",@client.id]).sort
     elsif @invoice.is_a? ReceivedInvoice
-      # TODO also show the database record version?
-      # Redel XML with XSLT in browser
-      @xsl = 'facturae32'
-      render :template => 'invoices/show_with_xsl'
+      if @invoice.invoice_format == "pdf"
+        render :template => 'invoices/show'
+      else
+        # TODO also show the database record version?
+        # Redel XML with XSLT in browser
+        @xsl = 'facturae32'
+        render :template => 'invoices/show_with_xsl'
+      end
     end
   end
 

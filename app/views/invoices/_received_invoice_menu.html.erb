@@ -2,6 +2,9 @@
   <%= "#{l(:label_invoice)} #{@invoice.number} (#{l("state_#{@invoice.state}")})" %>
 </h3>
 <ul class="invoice_menu">
+  <% if @invoice.invoice_format == "pdf" -%>
+    <li><%= link_to l(:button_edit), {:action=>'edit',:id=>@invoice}, :class=>'icon-haltr-edit' %></li>
+  <% end -%>
   <li><%= link_to l(:button_delete), {:action=>'destroy',:id=>@invoice}, :confirm=>l(:text_are_you_sure), :method=>:delete, :class=>'icon-haltr-delete' %></li>
   <% if @invoice.state?(:received) -%>
     <li><%= link_to_function(I18n.t(:mark_accepted), "show_accepted_form();") %></li>

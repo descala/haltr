@@ -1,0 +1,2 @@
+<label for="invoice_currency"><%= l(:field_currency) %></label>
+<%= select :invoice, :currency, currency_options_for_select, {:selected=>selected,:include_blank=>true}, :required => true%>

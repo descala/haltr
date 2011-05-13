@@ -22,9 +22,9 @@ class Invoice < ActiveRecord::Base
   has_many :events, :dependent => :destroy
   belongs_to :project
   belongs_to :client
-  validates_presence_of :client, :date, :currency, :project_id
-  validates_inclusion_of :currency, :in  => Money::Currency::TABLE.collect {|k,v| v[:iso_code] }
-  validate :payment_method_requirements
+  validates_presence_of :client, :date, :currency, :project_id, :unless => Proc.new {|i| i.type == "ReceivedInvoice" }
+  validates_inclusion_of :currency, :in  => Money::Currency::TABLE.collect {|k,v| v[:iso_code] }, :unless => Proc.new {|i| i.type == "ReceivedInvoice" }
+  validate :payment_method_requirements, :unless => Proc.new {|i| i.type == "ReceivedInvoice" }
 
   accepts_nested_attributes_for :invoice_lines,
     :allow_destroy => true,

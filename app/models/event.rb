@@ -15,6 +15,9 @@ class Event < ActiveRecord::Base
   def to_s
     # TODO: log the origin of the REST event. i.e. "Sent by host4"
     str = "#{format_time created_at} -- #{l(name)}"
+    if name == "validating_format" and invoice.transport == "email"
+      str += " #{l(:by_mail_from, :email=>invoice.from)} "
+    end
     if user
       str += " #{l(:by)} #{user.name}"
     end

@@ -170,6 +170,7 @@ ca:
   accept_notification: "Notificació AOC: Acceptada"
   refuse_notification: "Notificació AOC: Refusada"
   paid_notification: "Notificació AOC: Pagada"
+  by_mail_from: "per correu des de %{email}"
 
   # Invoice templates
   label_invoice_template_new: Nova plantilla
