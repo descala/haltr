@@ -161,6 +161,19 @@ module Estructura
       return valid_total_amount?
     end
 
+    def my_own_tax_id?(tax_id)
+      if @my_own_tax_id.is_a? Regexp
+        return !(tax_id =~ @my_own_tax_id).nil?
+      elsif @my_own_tax_id.is_a? String
+        nums = @my_own_tax_id.scan(/\d+/).first
+        char = @my_own_tax_id.scan(/[a-z]/i).first
+        regexp = Regexp.new("#{char}[\s\-]{0,3}#{nums}")
+        regexp2 = Regexp.new("#{nums}[\s\-]{0,3}#{char}")
+        return (!(tax_id =~ regexp).nil? or !(tax_id =~ regexp2).nil?)
+      end
+      return false
+    end
+
     private
 
     def pick_date(tag_name)
@@ -211,14 +224,6 @@ module Estructura
       result = highest_token.nil? ? "" : Utils.string_to_number(highest_token.str.scan(/[+-]?[\.\,\d]+\s*%/).to_s.gsub(/[% ]/,''))
       return result if result.size > 0
       highest_token.nil? ? "" : highest_token.to_i_str
-    end
-
-    def my_own_tax_id?(tax_id)
-      if @my_own_tax_id.is_a? Regexp
-        tax_id =~ @my_own_tax_id
-      elsif @my_own_tax_id.is_a? String
-        tax_id =~ Regexp.new(@my_own_tax_id.gsub(/[ -]/,'').gsub(/([a-z])/i,'\1-').split('-').join('[\s\-]{0,3}'))
-      end
     end
 
   end
