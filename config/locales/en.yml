@@ -158,7 +158,7 @@ en:
   accept_notification: "Notificación AOC: Aceptada"
   refuse_notification: "Notificación AOC: Rechazada"
   paid_notification: "Notificación AOC: Pagada"
-  by_mail_from: "por correo desde %{email}"
+  by_mail_from: "by email from %{email}"
 
   # Invoice templates
   label_invoice_template_new: New template
