@@ -43,7 +43,7 @@
       <p><%= f.text_field :invoice_format, :value => l(@client.invoice_format), :readonly=>true %></p>
     <% else -%>
       <p><%= f.select :language, %w(ca es en).collect {|l| [I18n.t(:general_lang_name,:locale=>l),l]}, :readonly => @client.linked? %></p>
-      <p><%= f.select :invoice_format, ExportChannels.for_select %></p>
+      <p><%= f.select :invoice_format, ExportChannels.for_select(@project) %></p>
     <% end -%>
   </div>
 </div>

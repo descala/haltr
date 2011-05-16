@@ -33,9 +33,9 @@ class ExportChannels
     available[id][:channel] if available? id
   end
 
-  def self.for_select
+  def self.for_select(current_project)
     available.collect {|k,v|
-      unless User.current.admin? or User.current.allowed_to?(:use_restricted_channels, User.current.project)
+      unless User.current.admin? or User.current.allowed_to?(:use_restricted_channels, current_project)
         next if v[:private]
       end
       [ I18n.t(k), k ]

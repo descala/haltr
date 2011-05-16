@@ -11,10 +11,10 @@
   <p><%= f.text_field :city %></p>
   <p><%= f.text_field :address %></p>
   <p><%= f.text_field :website %></p>
-  <% if @company.invoice_format.nil? or ExportChannels.for_select.collect {|v| v.last }.include? @company.invoice_format -%>
-    <p><%= f.select :invoice_format, ExportChannels.for_select %></p>
+  <% if @company.invoice_format.nil? or ExportChannels.for_select(@project).collect {|v| v.last }.include? @company.invoice_format -%>
+    <p><%= f.select :invoice_format, ExportChannels.for_select(@project) %></p>
   <% else -%>
-    <p><%= f.select :invoice_format, ExportChannels.for_select %> <%= I18n.t(@company.invoice_format)%></p>
+    <p><%= f.select :invoice_format, ExportChannels.for_select(@project) %> <%= I18n.t(@company.invoice_format)%></p>
   <% end -%>
   <p>
   <%= f.label_for_field "company_public" %>
