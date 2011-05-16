@@ -107,7 +107,7 @@ es:
   download_notification: "Descargar notificación"
   label_all_invoices: "Todas las facturas"
   label_issued: "Facturas emitidas"
-  label_received: "Facturas"
+  label_received: "Facturas recibidas"
   mark_not_sent: "Marcar como no enviada"
   mark_closed: "Marcar como cerrada"
   mark_sent: "Marcar como enviada"
