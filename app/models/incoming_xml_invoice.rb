@@ -82,7 +82,7 @@ class IncomingXmlInvoice
     ri.transport=transport
     ri.from=from
     invoice.rewind
-    ri.md5 = Digest::MD5.hexdigest(invoice.read)
+    ri.md5 = Digest::MD5.hexdigest(invoice.read.chomp)
     ri.save!
     if File.directory? channel
       i=2
