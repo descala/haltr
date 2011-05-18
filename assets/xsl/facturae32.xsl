@@ -40,7 +40,7 @@
             
             <!-- Workspace -->
             
-            <div id="workspace1" class="haltrinvoice">
+            <div id="workspace1" class="haltrinvoice received">
                 <div id="workspace2">
                 
                 <div id="col1">
