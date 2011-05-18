@@ -40,7 +40,7 @@
   <script type="text/javascript">
     window.onload = function (){
       var myPDF = new PDFObject({
-                    url: <%= url_for({:controller=>'invoices', :action=>'legal', :id=>@invoice, :md5=>@invoice.events.first.md5}) %>,
+                    url: "<%= url_for({:controller=>'invoices', :action=>'legal', :id=>@invoice, :md5=>@invoice.events.first.md5}) %>",
                     //pdfOpenParams: { zoom: '75' }
                     pdfOpenParams: { viewrect: '0,0,670,900' }
                   }).embed("pdfobject");
