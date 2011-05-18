@@ -2,7 +2,7 @@
   ajax_opts = {
     :method => :get,
     :url => url_for({:action=>'update_currency_select',:id=>@project.id}),
-    :with => "'value=' + this.value + '&curr_sel=' + $('invoice_currency').value",
+    :with => "'value=' + this.value + '&curr_sel=' + $('invoice_currency').value + '&required=' + #{@invoice.invoice_format!="pdf"}",
     :update => 'currency_select'
   }
 -%>

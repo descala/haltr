@@ -217,7 +217,7 @@ class InvoicesController < ApplicationController
       @invoices_closed = InvoiceDocument.find(:all,:conditions => ["client_id = ? and state = 'closed'",@client.id]).sort
     elsif @invoice.is_a? ReceivedInvoice
       if @invoice.invoice_format == "pdf"
-        render :template => 'invoices/show'
+        render :template => 'invoices/show_pdf'
       else
         # TODO also show the database record version?
         # Redel XML with XSLT in browser
@@ -273,7 +273,11 @@ class InvoicesController < ApplicationController
   def update_currency_select
     client = Client.find(params[:value]) unless params[:value].blank?
     selected = client.nil? ? params[:curr_sel] : client.currency.downcase
-    render :partial => "currency", :locals => {:selected=>selected}
+    if params[:required] == "false"
+      render :partial => "received_invoices/currency", :locals => {:selected=>selected}
+    else
+      render :partial => "currency", :locals => {:selected=>selected}
+    end
   end
 
   def by_taxcode_and_num

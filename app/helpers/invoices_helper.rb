@@ -68,4 +68,11 @@ module InvoicesHelper
     IssuedInvoice.find_not_sent(@project).size
   end
 
+  def transport_text(invoice)
+    if invoice.transport == "email"
+      l(:by_mail_from, :email => invoice.from)
+    #eslif invoice.transport == "upload" ...
+    end
+  end
+
 end

@@ -140,6 +140,9 @@ ca:
   report_issue_with_invoice: "Informar d'un problema amb aquesta factura"
   invoice_issue_subject: "Tinc un problema amb la factura amb id intern %{id}"
   invoice_issue_body: "-- escriu aquí la descripció del problema --"
+  quick_pdf_view: "Vista ràpida del PDF"
+  pdf_invoice_expl: "Aquesta és una aproximació a la factura rebuda, siusplau, comproveu que les dades siguin correctes amb l'original"
+
 
   # Events
   events: "Log d'esdeveniments"
@@ -171,6 +174,7 @@ ca:
   refuse_notification: "Notificació AOC: Refusada"
   paid_notification: "Notificació AOC: Pagada"
   by_mail_from: "per correu des de %{email}"
+  in_format: "en format %{format}"
 
   # Invoice templates
   label_invoice_template_new: Nova plantilla

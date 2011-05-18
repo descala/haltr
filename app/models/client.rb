@@ -102,6 +102,12 @@ class Client < ActiveRecord::Base
     end
   end
 
+  def full_address
+    addr = address
+    addr += "\n#{address2}" if address2
+    addr
+  end
+
   private
 
   def copy_linked_profile

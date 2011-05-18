@@ -38,6 +38,7 @@ class IncomingPdfInvoice
     cmd = "pdftotext -f 1 -l 1 -layout #{pdf_file.path} #{text_file.path}"
     out = `#{cmd} 2>&1`
     raise "Error with pdftotext <br /><pre>#{cmd}</pre><pre>#{out}</pre>" unless $?.success?
+    html = `pdftohtml #{pdf_file.path} -i -stdout -noframes`.gsub(/^.*<body[^>]*>/mi,'').gsub(/<\/body[^>]*>.*$/mi,'')
     ds = Estructura::Invoice.new(text_file.read,:tax_id=>@company.taxcode)
     ds.apply_rules
     ds.fix_amounts
@@ -51,7 +52,8 @@ class IncomingPdfInvoice
 #                            :subtotal        => ds.invoice_subtotal.to_money,
 #                            :withholding_tax => ds.withholding_tax.to_money,
                             :due_date        => ds.due_date,
-                            :project         => @company.project)
+                            :project         => @company.project,
+                            :html            => html)
     return r
   end
 

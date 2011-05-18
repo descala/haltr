@@ -3,6 +3,9 @@
 </h3>
 <ul class="invoice_menu">
   <% if @invoice.invoice_format == "pdf" -%>
+    <% if @invoice.events.first -%>
+      <li><%= link_to "#{l(:button_download)} PDF", {:controller=>'invoices', :action=>'legal', :id=>@invoice, :md5=>@invoice.events.first.md5}, :class=>'icon-haltr-save' %></li>
+    <% end -%>
     <li><%= link_to l(:button_edit), {:action=>'edit',:id=>@invoice}, :class=>'icon-haltr-edit' %></li>
   <% end -%>
   <li><%= link_to l(:button_delete), {:action=>'destroy',:id=>@invoice}, :confirm=>l(:text_are_you_sure), :method=>:delete, :class=>'icon-haltr-delete' %></li>

@@ -1,3 +1,5 @@
+<h4><%= "#{l :ReceivedInvoice} #{transport_text(@invoice)} #{l :in_format, :format => @invoice.invoice_format}" %></h4>
+
 <div id="invoice-refuse" style="display: none;">
   <%= render :partial => "invoice_refuse_form" %>
 </div>
