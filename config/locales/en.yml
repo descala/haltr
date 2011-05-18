@@ -130,6 +130,7 @@ en:
   invoice_issue_body: "-- write here issue description --"
   quick_pdf_view: "Quick PDF view"
   pdf_invoice_expl: "This is an aproximation to received invoice, please, check fields are correct with original one"
+  no_pdf_support: "It appears you don't have Adobe Reader or PDF support in this web browser. <a href='%{pdf}'>Click here to download the PDF</a>"
 
   # Events
   events: "Event log"

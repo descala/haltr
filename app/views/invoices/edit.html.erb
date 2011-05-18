@@ -9,15 +9,6 @@
 <%= submit_tag l(:button_save) %>
 <% end %>
 
-<!-- PDFtohtml -->
-<% if @invoice.invoice_format == "pdf" and !@invoice.html.blank? -%>
-  <h4><%=h l(:quick_pdf_view)%></h4>
-  <div id="pdftohtml">
-    <%=@invoice.html%>
-  </div>
-<% end -%>
-
-
 <div id="new_client_wrapper" style="display:none;">
   <%= render :partial => 'invoices/new_client' %>
 </div>

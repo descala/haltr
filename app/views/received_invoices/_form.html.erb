@@ -33,14 +33,14 @@
   <div id="invoice_lines">
     <p style="font-weight:bold;">
     <span class="invoiceLineHeader" style="width: 80px;"><%= l(:field_quantity) %></span>
-    <span class="invoiceLineHeader" style="width: 102px;">&nbsp;</span>
-    <span class="invoiceLineHeader" style="width: 290px;"><%= l(:field_description) %></span>
+    <span class="invoiceLineHeader" style="width: 80px;">&nbsp;</span>
+    <span class="invoiceLineHeader" style="width: 215px;"><%= l(:field_description) %></span>
     <span class="invoiceLineHeader" style="width: 80px;"><%= l(:field_price) %></span>
     </p>
     <% f.fields_for :invoice_lines do |line_form| %>
       <%= render :partial => 'received_invoices/invoice_line', :locals => { :f => line_form } %>
     <% end %>
   </div>
-  <p><%= add_invoice_line_link(f) %></p>
+  <p><%= add_invoice_line_link(f,true) %></p>
 </div>
 

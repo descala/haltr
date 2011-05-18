@@ -1,178 +1,9 @@
 <h4><%= "#{l :ReceivedInvoice} #{l :by_mail_from, :email => @invoice.from} #{l :in_format, :format => @invoice.invoice_format}" %></h4>
-<p>
-<%= l :pdf_invoice_expl %>
-</p>
 
-<% I18n.locale = @invoice.locale %>
-
-<!-- Wrapper -->
-<div id="invoice_wrapper">
-
-  <!-- Workspace -->
-  <div id="workspace1" class="haltrinvoice received"><div id="workspace2">
-
-        <div id="col1">
-
-        <% if @invoice.client -%>
-        <!-- Vendor Info -->
-        <div class="vcard vendor">
-          <div class="logo">
-            <!-- TODO: issuer's logo -->
-          </div>
-          <div class="vendor-info">
-            <h3 class="org fn"><%=h @invoice.client.name %></h3>
-            <address class="adr">
-              <div class="street-address"><%=h @invoice.client.full_address %></div>
-              <span class="postal-code"><%=h @invoice.client.postalcode %></span> <span class="locality"><%=h @invoice.client.city %></span>
-              <div class="region"><%=h @invoice.client.province %></div>
-              <div class="country-name"></div>
-            </address>
-            <div><strong><%=h l(:field_taxcode) %></strong><span class="tax-id"> <%=h @invoice.client.taxcode %></span></div>
-            <div style="height:10px;"></div>
-            <div><a href="<%=h @invoice.client.website %>" class="url" target="_blank"><%=h @invoice.client.website %></a></div>
-            <div><a href="<%=h @invoice.client.email %>" class="url" target="_blank"><%=h @invoice.client.email %></a></div>
-          </div>
-        </div>
-        <% end -%>
-
-        <!-- Invoice Number and Info -->
-        <h2 class="invoice-ID"><%=h @invoice.label %> <%=h @invoice.number %></h2>
-        <div class="invoice-info">
-          <span class="date"><strong><%=h @invoice.date %></strong></span><br/>
-          <% unless @invoice.due.blank? -%>
-            <span class="invoice-terms<%=h " pastdue" if @invoice.past_due?%>"><%=h l(:field_due_date)%> <%=h @invoice.due %></span><br/>
-          <% end -%>
-          <% unless @invoice.payment_method_string.blank? -%>
-            <span class="invoice-terms"><%=h @invoice.payment_method_string %></span><br/>
-          <% end -%>
-          <% unless @invoice.ponumber.blank? -%>
-            <span class="invoice-terms"><%=h "#{t(:field_ponumber)} #{@invoice.ponumber}" %></span><br/>
-          <% end -%>
-
-        </div>
-
-        <!-- Client Info -->
-        <div class="vcard client">
-          <div class="client-info">
-            <h3 class="org fn"><%=h @client.name %></h3>
-            <address class="adr">
-              <div class="street-address"><%=h @client.address %></div>
-              <div class="street-address"><%=h @client.address2 %></div>
-              <span class="postal-code"><%=h @client.postalcode %></span>
-              <% if !@client.city.blank? or !@client.province.blank? -%>
-              <span class="locality"><%=h @client.city.strip unless @client.city.blank? %></span>
-              <% unless @client.province.blank? -%>, <span class="region"><%=h @client.province %></span><% end -%>
-              <% end -%>
-              <div class="country-name"><%=h @client.country if @client.country.downcase != "es" %></div>
-            </address>
-            <% if !@invoice.draft -%>
-              <div><strong><%=h l(:field_taxcode) %>:</strong><span class="tax-id"> <%=h @client.taxcode.upcase %></span></div>
-            <% end -%>
-          </div>
-        </div>
-
-        <!-- Invoice Data -->
-        <div class="invoice">
-
-          <!-- Line Details -->
-          <table class="line-items" border="0" cellpadding="0" cellspacing="0">
-            <tbody>
-              <tr>
-                <th class="item-quantity first"><abbr title="Quantitat">Q</abbr></th>
-                <th class="item-description"><%=h l(:field_description)%></th>
-                <th class="item-price"><%=h l(:field_amount) %></th>
-                <th class="line-total last"><%=h l(:label_total)%></th>
-              </tr>
-
-              <% @lines.each do |line| -%>
-                <tr>
-                  <td class="item-quantity first"><%=h quantity(line.quantity) %> <%=h line.unit_short%></td>
-                  <td class="item-description"><%=h line.description %></td>
-                  <td class="item-price"><%=h line_price(line) %></td>
-                  <td class="line-total last"><%=h money(line.total) %></td>
-                </tr>
-              <% end -%>
-
-              <% if @invoice.discount_percent and @invoice.discount_percent > 0 -%>
-                <tr>
-                  <td class="item-quantity first"></td>
-                  <td class="item-description"><%=h @invoice.discount_text %></td>
-                  <td class="item-price"><%=h number_to_percentage(@invoice.discount_percent, :precision=>0) %></td>
-                  <td class="line-total last">- <%=h money(@invoice.discount) %></td>
-                </tr>
-              <% end -%>
-
-
-          </tbody></table>
-
-          <!-- Totals Details -->
-          <table class="invoice-calculations" border="0" cellpadding="0" cellspacing="0">
-            <tbody><tr class="invoice-subtotal">
-                <th><%=h l(:label_subtotal)%>:</th>
-                <td><%=h money(@invoice.subtotal) %></td>
-              </tr>
-              <tr class="sales-tax">
-                <th>IVA <%=h number_to_percentage(@invoice.tax_percent, :precision=>0) %> :</th>
-                <td><%=h money(@invoice.tax) %></td>
-              </tr>
-              <% if @invoice.withholding_tax_percent > 0 and @invoice.apply_withholding_tax -%>
-              <tr class="sales-tax">
-                <th><%=h @invoice.withholding_tax_name%> <%=h number_to_percentage(@invoice.withholding_tax_percent, :precision=>0) %> :</th>
-                <td><%=h money(@invoice.withholding_tax)%></td>
-              </tr>
-              <% end -%>
-              <tr class="invoice-total">
-                <th><%=h l(:label_total)%>:</th>
-                <td><%=h money(@invoice.total) %></td>
-              </tr>
-          </tbody></table>
-
-          <% if @invoice.is_a?(IssuedInvoice) and @invoice.payments.any? -%>
-
-          <!-- Payment Details -->
-          <table class="line-items payments" border="0" cellpadding="0" cellspacing="0">
-            <tbody>
-              <tr>
-                <th class="item-delete first"></th>
-                <th class="item-date"><%=h l :field_due_date %></th>
-                <th class="item-description"><%=h l :field_description%></th>
-                <th class="line-total last"><%=h l :field_quantity %></th>
-              </tr>
-              <% @invoice.payments.each do |payment| -%>
-                <tr>
-                <td class="item-delete first"><%= link_to "", {:action=>'destroy_payment',:id=>payment} , :confirm => l(:text_are_you_sure), :method => :post, :class => 'icon icon-del' %></td>
-                  <td class="item-date first"><%=h payment.date %></td>
-                  <td class="item-description"><%=h payment.description %></td>
-                  <td class="line-total last"><%=h money(payment.amount) %></td>
-                </tr>
-              <% end -%>
-            </tbody>
-          </table>
-
-          <!-- Payment Total Details -->
-          <table class="invoice-calculations payments" border="0" cellpadding="0" cellspacing="0">
-            <tbody>
-              <tr class="invoice-total">
-                <th><%=h l :field_total_paid %>:</th>
-                <td><%=h money(@invoice.total_paid) %></td>
-              </tr>
-          </tbody></table>
-
-        <% end -%>
-
-        </div>
-
-        <% unless @invoice.extra_info.nil? or @invoice.extra_info.empty? -%>
-          <div class="notes">
-            <h3><%=h l(:field_extra_info)%></h3>
-            <span class="invoice-terms"><%= simple_format(h @invoice.extra_info) %></span><br/>
-          </div>
-        <% end -%>
-
-      </div>
-    </div>
-  </div>
-
+<div id="pdfobject" style="height:500px; text-align:center;">
+  <p style="padding-top:150px;">
+  <%= l :no_pdf_support, :pdf => url_for({:controller=>'invoices', :action=>'legal', :id=>@invoice, :md5=>@invoice.events.first.md5}) %>
+  </p>
 </div>
 
 <!-- Events -->
@@ -189,20 +20,30 @@
   </div>
 <% end -%>
 
-<!-- PDFtohtml -->
-<% if @invoice.invoice_format == "pdf" and !@invoice.html.blank? -%>
-  <h4><%=h l(:quick_pdf_view)%></h4>
-  <div id="pdftohtml">
-    <%=@invoice.html%>
-  </div>
-<% end -%>
-
-
+<% labelled_tabular_form_for :invoice, @invoice, {:url => { :action => 'update', :id => @invoice }, :html => {:method => :put}}  do |f| %>
+  <% if @invoice.is_a? ReceivedInvoice -%>
+    <%= render :partial => 'received_invoices/form', :locals => { :f => f } %>
+  <% else -%>
+    <%= render :partial => 'invoices/form', :locals => { :f => f } %>
+  <% end -%>
+<%= submit_tag l(:button_save) %>
+<% end %>
 
 <% content_for :sidebar do %>
     <%= render :partial => 'invoices/sidebar' %>
     <%= render :partial => "invoices/invoice_menu" %>
 <% end %>
+
 <% content_for :header_tags do %>
   <%= stylesheet_link_tag 'minimal', :plugin => 'haltr' %>
+  <%= javascript_include_tag 'pdfobject', :plugin => 'haltr' %>
+  <script type="text/javascript">
+    window.onload = function (){
+      var myPDF = new PDFObject({
+                    url: <%= url_for({:controller=>'invoices', :action=>'legal', :id=>@invoice, :md5=>@invoice.events.first.md5}) %>,
+                    //pdfOpenParams: { zoom: '75' }
+                    pdfOpenParams: { viewrect: '0,0,670,900' }
+                  }).embed("pdfobject");
+    };
+  </script>
 <% end %>
