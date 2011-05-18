@@ -134,7 +134,7 @@ class IncomingXmlInvoice
                           :city           => seller_city,
                           :currency       => currency,
                           :project        => @company.project)
-      client.save!
+      client.save(false)
     end
     invoice_number      = get_xpath(doc,xpaths[:invoice_number])
     invoice_date        = get_xpath(doc,xpaths[:invoice_date])
