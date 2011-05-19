@@ -1,9 +1,11 @@
 <h4><%= "#{l :ReceivedInvoice} #{l :by_mail_from, :email => @invoice.from} #{l :in_format, :format => @invoice.invoice_format}" %></h4>
 
 <div id="pdfobject" style="height:500px; text-align:center;">
+  <object data='<%=url_for({:controller=>'invoices', :action=>'legal', :id=>@invoice, :md5=>@invoice.events.first.md5})%>#viewrect=670,900,0,0' type='application/pdf' width='100%' height='500px'>
   <p style="padding-top:150px;">
   <%= l :no_pdf_support, :pdf => url_for({:controller=>'invoices', :action=>'legal', :id=>@invoice, :md5=>@invoice.events.first.md5}) %>
   </p>
+</object>
 </div>
 
 <!-- Events -->
@@ -36,14 +38,4 @@
 
 <% content_for :header_tags do %>
   <%= stylesheet_link_tag 'minimal', :plugin => 'haltr' %>
-  <%= javascript_include_tag 'pdfobject', :plugin => 'haltr' %>
-  <script type="text/javascript">
-    window.onload = function (){
-      var myPDF = new PDFObject({
-                    url: "<%= url_for({:controller=>'invoices', :action=>'legal', :id=>@invoice, :md5=>@invoice.events.first.md5}) %>",
-                    //pdfOpenParams: { zoom: '75' }
-                    pdfOpenParams: { viewrect: '0,0,670,900' }
-                  }).embed("pdfobject");
-    };
-  </script>
 <% end %>
