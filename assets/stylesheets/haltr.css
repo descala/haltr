@@ -96,6 +96,10 @@ span.invoiceLineHeader {
 .icon-haltr-payment       {  background-image: url(../images/payment.gif); }
 .icon-haltr-tasks         {  background-image: url(../images/tasks.gif); }
 
+.disabled {
+  text-decoration: line-through !important;
+}
+
 .overlay {
   position:absolute; top:0; left:0;
   /* width:100%; height:100% */

@@ -6,11 +6,11 @@ class ExportChannels
   def self.available
     {
       'paper'         => { :format=>nil,          :channel=>nil} ,
-      'ublinvoice_20' => { :format=>'ubl21', :channel=>'free_ubl'},
-      'facturae_30'   => { :format=>'facturae30', :channel=>'free_xml'},
-      'facturae_31'   => { :format=>'facturae31', :channel=>'free_xml'},
-      'facturae_32'   => { :format=>'facturae32', :channel=>'free_xml'},
-      'signed_pdf'    => { :format=>'facturae32', :channel=>'free_pdf'},
+      'ublinvoice_20' => { :format=>'ubl21',      :channel=>'free_ubl', :validate => :client_has_email },
+      'facturae_30'   => { :format=>'facturae30', :channel=>'free_xml', :validate => :client_has_email },
+      'facturae_31'   => { :format=>'facturae31', :channel=>'free_xml', :validate => :client_has_email },
+      'facturae_32'   => { :format=>'facturae32', :channel=>'free_xml', :validate => :client_has_email },
+      'signed_pdf'    => { :format=>'facturae32', :channel=>'free_pdf', :validate => :client_has_email },
       'aoc'           => { :format=>'facturae30', :channel=>'free_aoc', :private=>true},
       'aoc31'         => { :format=>'facturae31', :channel=>'free_aoc', :private=>true},
       'aoc32'         => { :format=>'facturae32', :channel=>'free_aoc', :private=>true}
@@ -31,6 +31,11 @@ class ExportChannels
 
   def self.channel(id)
     available[id][:channel] if available? id
+  end
+
+  def self.validations(id)
+    return [] if available[id][:validate].nil?
+    available[id][:validate].is_a?(Array) ? available[id][:validate] : [available[id][:validate]]
   end
 
   def self.for_select(current_project)

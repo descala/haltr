@@ -15,6 +15,8 @@ class IssuedInvoice < InvoiceDocument
   before_save :update_status, :unless => Proc.new {|invoicedoc| invoicedoc.state_changed? }
   after_create :create_event
 
+  attr_accessor :export_errors
+
   # new sending sent error discarded closed
   state_machine :state, :initial => :new do
     before_transition do |invoice,transition|
@@ -130,7 +132,11 @@ class IssuedInvoice < InvoiceDocument
 
   def can_be_exported?
     # TODO Test if endpoint is correcty configured
-    self.valid? and ExportChannels.channel(client.invoice_format) != nil
+    can_be = self.valid? and ExportChannels.channel(client.invoice_format) != nil
+    ExportChannels.validations(client.invoice_format).each do |v|
+      can_be &&= self.send(v)
+    end
+    can_be
   end
 
   def self.last_number(project)
@@ -179,6 +185,20 @@ class IssuedInvoice < InvoiceDocument
 #    return if !self.new_record? && !self.number_changed?
     if self.project.clients.collect {|c| c.issued_invoices }.flatten.compact.collect {|i| i.number unless i.id == self.id}.include? self.number
       errors.add(:base, ("#{l(:field_number)} #{l(:taken,:scope=>'activerecord.errors.messages')}"))
+    end
+  end
+
+  def add_export_error(err)
+    @export_errors ||= []
+    @export_errors << err
+  end
+
+  def client_has_email
+    if self.client and !self.client.email.blank?
+      true
+    else
+      add_export_error(:client_has_no_email)
+      false
     end
   end
 
