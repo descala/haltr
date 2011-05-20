@@ -18,7 +18,7 @@ class InvoiceReceiver < ActionMailer::Base
         InvoiceReceiver.log "Bounced invoice mail received (#{invoices.first.original_filename})"
         IncomingBouncedInvoice.process_file(invoices.first)
       else
-        InvoiceReceiver.log "Discarding bounce mail with > 1 (#{invoices.size}) invoices attached (#{invoices.collect {|i| i.original_filename}.join(',')})"
+        InvoiceReceiver.log "Discarding bounce mail with != 1 (#{invoices.size}) invoices attached (#{invoices.collect {|i| i.original_filename}.join(',')})"
       end
 
     # incoming invoices (PDF/XML)

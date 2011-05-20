@@ -1,7 +1,7 @@
 class IncomingBouncedInvoice
 
   def self.process_file(invoice)
-    md5  = Digest::MD5.hexdigest(invoice.read)
+    md5  = Digest::MD5.hexdigest(invoice.read.chomp)
     name = invoice.original_filename
     id   = name.gsub(/#{File.extname(name)}$/,'').split("_").last.to_i
       InvoiceReceiver.log "invoice #{name} has id #{id} has md5sum #{md5}"
