@@ -160,7 +160,7 @@ ca:
   unpaid: "Marcada com a no pagada"
   edited: "Editada"
   new: "Creada"
-  bounced: "Retornada"
+  bounced: "Retornada: No s'ha pogut lliurar a l'adreça de correu indicada"
   validating_format: "Factura rebuda"
   success_validating_format: "Validació de format correcta"
   error_validating_format: "Error en la validació de format"
