@@ -78,12 +78,12 @@
 	margin: 0;
 	padding: 50px;
     border: 1px solid;
-	background: #F0FFF0;
+	background: #F5FFF5;
     margin-left:auto;
     margin-right:auto;
 	}
 .received {
-    background: #FDF5E6 !important;
+    background: #FFF7F6 !important;
 }
 #workspace2 {
 	overflow: hidden;
