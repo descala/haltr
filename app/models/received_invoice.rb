@@ -86,6 +86,12 @@ class ReceivedInvoice < InvoiceDocument
     return false
   end
 
+  # remove colons "1,23" => "1.23"
+  def import=(v)
+    i = Money.new(((v.is_a?(String) ? v.gsub(',','.') : v).to_f * 100).round, currency)
+    write_attribute :import_in_cents, i.cents
+  end
+
   protected
 
   def create_event

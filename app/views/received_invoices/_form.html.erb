@@ -42,5 +42,8 @@
     <% end %>
   </div>
   <p><%= add_invoice_line_link(f,true) %></p>
+  <div id="invoice_total">
+    <p><%= f.text_field :import, :value => f.object.import.to_s.gsub(/\.0+$/,'') %></p>
+  </div>
 </div>
 

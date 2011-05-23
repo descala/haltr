@@ -132,6 +132,7 @@ es:
   pdf_invoice_expl: "Esta és una aproximación a la factura recibida, por favor, compruebe que los datos sean correctos con la original"
   no_pdf_support: "Parece que no tienes Adobe Reader o soporte para PDF en este navegador. <a href='%{pdf}'>Clica aquí para descargar el PDF</a>"
   client_has_no_email: "El cliente asociado a la factura no tiene correo electrónico definido"
+  field_import: "Importe"
 
   # Events
   events: "Log de eventos"
