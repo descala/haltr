@@ -24,19 +24,25 @@ class InvoiceReceiver < ActionMailer::Base
     # incoming invoices (PDF/XML)
     else
       InvoiceReceiver.log "Incoming invoice mail with #{invoices.size} attached invoices"
-      company = Company.find_by_taxcode(email['to'].to_s.scan(/[\w.]+@[\w.]+/).first.split("@").first)
-      from = email['from'].to_s.scan(/[\w.]+@[\w.]+/).first
-      if company
-        invoices.each do |invoice|
-          if invoice.content_type == "application/xml"
-            IncomingXmlInvoice.process_file(invoice,company,"email",from)
-          elsif invoice.content_type == "application/pdf"
-            IncomingPdfInvoice.process_file(invoice,company,"email",from)
-          else
-            InvoiceReceiver.log "Discarding #{invoice.original_filename} on incoming mail (#{invoice.content_type})"
+      company_found=false
+      email['to'].to_s.scan(/[\w.]+@[\w.]+/).each do |to|
+        company = Company.find_by_taxcode(to.split("@").first)
+        if company
+          from = email['from'].to_s.scan(/[\w.]+@[\w.]+/).first
+          company_found=true
+          invoices.each do |invoice|
+            if invoice.content_type == "application/xml"
+              IncomingXmlInvoice.process_file(invoice,company,"email",from)
+            elsif invoice.content_type == "application/pdf"
+              IncomingPdfInvoice.process_file(invoice,company,"email",from)
+            else
+              InvoiceReceiver.log "Discarding #{invoice.original_filename} on incoming mail (#{invoice.content_type})"
+            end
           end
+          break #TODO: allow incoming invoice to several companies?
         end
-      else
+      end
+      unless company_found
         InvoiceReceiver.log "Discarding email for #{email['to'].to_s} (Can't find company with taxcode #{email['to'].to_s.split("@").first})"
       end
     end
@@ -66,7 +72,7 @@ class InvoiceReceiver < ActionMailer::Base
   end
 
   def is_bounce?(email)
-    email.to.include? "noreply@b2brouter.net"
+    email.to and email.to.include? "noreply@b2brouter.net"
   end
 
 end
