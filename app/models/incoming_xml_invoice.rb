@@ -94,7 +94,7 @@ class IncomingXmlInvoice
         i+=1
       end
       invoice.rewind
-      open(destination,'w') {|f| f.puts invoice.read.chomp }
+      open(destination,'w') {|f| f.puts invoice.read }
       InvoiceReceiver.log "Sent invoice to validation channel: #{destination}"
     else
       InvoiceReceiver.log "Invoice format without validation channel #{channel}"
