@@ -378,8 +378,14 @@ class InvoicesController < ApplicationController
     ISO::Countries.set_language I18n.locale.to_s
   end
 
+  #TODO: duplicated code
   def check_remote_ip
-    #TODO: see events_controller
+    allowed_ips = Setting.plugin_haltr['b2brouter_ip'].gsub(/ /,'').split(",") << "127.0.0.1"
+    unless allowed_ips.include?(request.remote_ip)
+      render :text => "Not allowed from your IP #{request.remote_ip}\n", :status => 403
+      logger.error "Not allowed from IP #{request.remote_ip} (allowed IPs: #{allowed_ips.join(', ')})\n"
+      return false
+    end
   end
 
 end

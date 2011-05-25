@@ -20,12 +20,14 @@ class EventsController < ApplicationController
 
   private
 
+  #TODO: duplicated code
   def check_remote_ip
-#    unless request.remote_ip == '127.0.0.1' #TODO: or Setting.plugin_haltr['b2brouter_ip'].gsub(/ /,'').split(",").include?(request.remote_ip)
-#      render :text => "Not allowed from your IP #{request.remote_ip}\n", :status => 403
-#      logger.error "Not allowed from IP #{request.remote_ip}\n" #TODO: (must be from #{Setting.plugin_haltr['b2brouter_ip']}).\n"
-#      return false
-#    end
+    allowed_ips = Setting.plugin_haltr['b2brouter_ip'].gsub(/ /,'').split(",") << "127.0.0.1"
+    unless allowed_ips.include?(request.remote_ip)
+      render :text => "Not allowed from your IP #{request.remote_ip}\n", :status => 403
+      logger.error "Not allowed from IP #{request.remote_ip} (allowed IPs: #{allowed_ips.join(', ')})\n"
+      return false
+    end
   end
 
 end
