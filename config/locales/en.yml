@@ -237,6 +237,7 @@ en:
   field_company: "Company"
   logo: "Logo"
   trace_url: "B2brouter URL"
+  b2brouter_ip: "B2brouter IP"
   b2b_subtitle: "Your online invoicing service"
   field_public: "Public profile"
   private_fields_info: "These fields are private, regardless you choose public profile"
