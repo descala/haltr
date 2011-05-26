@@ -1,6 +1,7 @@
 class IncomingXmlInvoice
 
   require "rexml/document"
+  require "tempfile"
 
   @@channels = {
     "facturae3.0" => "free_receive_facturae30",
@@ -82,7 +83,10 @@ class IncomingXmlInvoice
     ri.transport=transport
     ri.from=from
     invoice.rewind
-    ri.md5 = Digest::MD5.hexdigest(invoice.read)
+    tmpfile = Tempfile.new("invoice.xml")
+    tmpfile.write(invoice.read.chomp)
+    tmpfile.close
+    ri.md5 = `md5sum #{tmpfile.path} | cut -d" " -f1`.chomp
     ri.save!
     if File.directory? channel
       i=2
@@ -93,9 +97,8 @@ class IncomingXmlInvoice
         destination = "#{channel}/#{base}_#{i}_#{ri.id}#{extension}"
         i+=1
       end
-      invoice.rewind
-      open(destination,'w') {|f| f.puts invoice.read }
-      InvoiceReceiver.log "Sent invoice to validation channel: #{destination}"
+      FileUtils.mv(tmpfile.path, destination)
+      InvoiceReceiver.log "Invoice sent to validation channel: #{destination} (MD5: #{ri.md5})"
     else
       InvoiceReceiver.log "Invoice format without validation channel #{channel}"
     end

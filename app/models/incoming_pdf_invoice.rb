@@ -1,12 +1,17 @@
 class IncomingPdfInvoice
 
+  require "tempfile"
+
   def self.process_file(invoice,company,transport,from="")
     @company = company
-    ri = invoice_from_pdf(invoice)
+    tmpfile = Tempfile.new "pdf"
+    tmpfile.write(invoice.read.chomp)
+    tmpfile.close
+    ri = invoice_from_pdf(tmpfile.path)
+    ri.md5 = `md5sum #{tmpfile.path} | cut -d" " -f1`.chomp
     ri.transport=transport
     ri.from=from
     ri.invoice_format = "pdf"
-    ri.md5 = Digest::MD5.hexdigest(invoice.read)
     ri.save!
     channel="/var/spool/b2brouter/input/free_receive_pdf"
     if File.directory? channel
@@ -18,9 +23,8 @@ class IncomingPdfInvoice
         destination = "#{channel}/#{base}_#{i}_#{ri.id}#{extension}"
         i+=1
       end
-      invoice.rewind
-      open(destination,'w') {|f| f.puts invoice.read.chomp }
-      InvoiceReceiver.log "Sent invoice to validation channel: #{destination}"
+      FileUtils.mv(tmpfile.path, destination)
+      InvoiceReceiver.log "Sent invoice to validation channel: #{destination} (MD5: #{ri.md5})"
     else
       InvoiceReceiver.log "Invoice format without validation channel #{channel}"
     end
@@ -28,17 +32,14 @@ class IncomingPdfInvoice
     InvoiceReceiver.log e.message
   end
 
-  def self.invoice_from_pdf(pdf)
-    require "tempfile"
-    pdf_file = Tempfile.new "pdf"
-    pdf_file.write(pdf.read)
-    pdf_file.close
-    pdf.rewind
+  def self.invoice_from_pdf(pdf_file_path)
     text_file = Tempfile.new "txt"
-    cmd = "pdftotext -f 1 -l 1 -layout #{pdf_file.path} #{text_file.path}"
+    cmd = "pdftotext -f 1 -l 1 -layout #{pdf_file_path} #{text_file.path}"
     out = `#{cmd} 2>&1`
     raise "Error with pdftotext <br /><pre>#{cmd}</pre><pre>#{out}</pre>" unless $?.success?
-    ds = Estructura::Invoice.new(text_file.read,:tax_id=>@company.taxcode)
+    ds = Estructura::Invoice.new(text_file.read.chomp,:tax_id=>@company.taxcode)
+    text_file.close
+    text_file.unlink
     ds.apply_rules
     ds.fix_amounts
     client = Client.find(:all, :conditions => ["project_id = ? AND taxcode = ?",@company.project_id,ds.tax_identification_number]).first

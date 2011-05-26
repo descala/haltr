@@ -4,7 +4,7 @@ class IncomingBouncedInvoice
     md5  = Digest::MD5.hexdigest(invoice.read.chomp)
     name = invoice.original_filename
     id   = name.gsub(/#{File.extname(name)}$/,'').split("_").last.to_i
-      InvoiceReceiver.log "invoice #{name} has id #{id} has md5sum #{md5}"
+    InvoiceReceiver.log "invoice #{name} has id #{id} has md5sum #{md5}"
     haltr_invoice = IssuedInvoice.find(id) if IssuedInvoice.exists?(id)
     if haltr_invoice.nil?
       InvoiceReceiver.log "Bounced invoice #{name} with id #{id} does not exist on haltr"
