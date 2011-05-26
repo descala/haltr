@@ -233,7 +233,7 @@
     <tr class="sales-tax">
         <th><xsl:value-of
             select="document('TaxCodeAEAT-1.0.gc')//SimpleCodeList[1]/Row/Value[@ColumnRef='code']/SimpleValue[.=$valuetype]/../../Value[@ColumnRef=$lang]/SimpleValue"/>
-            <xsl:value-of select="concat(format-number(TaxRate,'#'),' %')"/>:</th>
+            <xsl:value-of select="concat(' ',format-number(TaxRate,'#'),'%')"/>:</th>
         
         <td><xsl:value-of select="TaxAmount/TotalAmount"/></td>
     </tr>
