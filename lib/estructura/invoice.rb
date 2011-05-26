@@ -158,6 +158,17 @@ module Estructura
         end
         wrong_tax_rates << tax_rate unless valid_total_amount?
       end
+      unless valid_total_amount? or @retried
+        @tokens = extract_tokens(true)
+        apply_rules
+        @retried = true
+        @amounts = nil
+        @tax_rate = nil
+        @withholding_tax = nil
+        @invoice_number = nil
+        @tax_identification_number = nil
+        fix_amounts
+      end
       return valid_total_amount?
     end
 

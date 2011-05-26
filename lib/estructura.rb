@@ -175,11 +175,12 @@ module Estructura
 
     private
 
-    def extract_tokens
+    def extract_tokens(one_space=false)
       tokens = []
       y = 0
       @document.each_line do |line|
-        Utils.strings_two_spaces(line).each do |str|
+        strings = one_space ? Utils.strings_one_space(line) : Utils.strings_two_spaces(line)
+        strings.each do |str|
           x_not_unicode = line.rindex(str)
           x = line[0..x_not_unicode].jsize - 1
           tokens << Token.new(str,x,y)
@@ -197,6 +198,12 @@ module Estructura
         n = n.join if n.is_a? Array
         n.to_f.zero? ? nil : n
         end.compact
+    end
+    def self.strings_one_space(text)
+      text.split(/(\s{1,}|$)/).collect do |s|
+        ss = s.strip
+        ss.empty? ? nil : ss
+      end.compact
     end
     def self.strings_two_spaces(text)
       text.split(/(\s{2,}|$)/).collect do |s|
