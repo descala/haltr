@@ -52,7 +52,7 @@
         <!-- Client Info -->
         <div class="vcard client">
           <div class="client-info">
-            <h3 class="org fn"><%=h @client.name %></h3>
+            <h3 class="org fn"><%= link_to h(@client.name), {:controller=>'clients',:action=>'edit',:id=>@client} %></h3>
             <address class="adr">
               <div class="street-address"><%=h @client.address %></div>
               <div class="street-address"><%=h @client.address2 %></div>
