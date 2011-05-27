@@ -124,7 +124,13 @@
 <xsl:template match="SellerParty">
     <!-- Vendor Info -->
     <div class="vcard vendor">
-        
+        <div class="logo">
+            <xsl:element name="img">
+                <xsl:attribute name="alt"><xsl:value-of select="LegalEntity/CorporateName"/></xsl:attribute>
+                <xsl:attribute name="src">http://www.b2brouter.net/companies/logo/<xsl:value-of select="TaxIdentification/TaxIdentificationNumber"/></xsl:attribute>
+            </xsl:element>
+        </div>
+
         <div class="vendor-info">
             <h3 class="org fn">
                 <xsl:choose>
