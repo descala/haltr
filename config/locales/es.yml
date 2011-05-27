@@ -97,7 +97,7 @@ es:
   state_discarded: "Descartada"
   state_validating_format: "Validando formato"
   state_validating_signature: "Validando firma"
-  state_received: "Factura rebuda"
+  state_received: "Factura recibida"
   state_accepted: "Aceptada"
   state_refused: "Rechazada"
   state_paid: "Pagada"
