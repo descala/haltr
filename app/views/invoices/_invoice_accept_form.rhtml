@@ -1,6 +1,8 @@
 <fieldset style="padding:5px 30px;">
   <% if !@invoice.client or @invoice.client.email.blank? -%>
+    <p>
     <%= I18n.t :client_without_email %>
+    </p>
   <% else -%>
   <legend><%= l :accept_notification_to, :mail => @invoice.client.email %></legend>
 <% form_tag(:controller=>'invoices',:action=>'mark_accepted_with_mail') do -%>
