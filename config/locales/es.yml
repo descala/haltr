@@ -86,13 +86,13 @@ es:
   state_new_plural: "Nuevas"
   state_sending_plural: "Enviándose"
   state_sent_plural: "Enviadas"
-  state_error_plural: "Con errores"
+  state_error_plural: "No legal"
   state_closed_plural: "Cerradas"
   state_discarded_plural: "Descartadas"
   state_new: "Nueva"
   state_sending: "Enviandose"
   state_sent: "Enviada"
-  state_error: "Con errores"
+  state_error: "No legal"
   state_closed: "Cerrada"
   state_discarded: "Descartada"
   state_validating_format: "Validando formato"
@@ -133,6 +133,7 @@ es:
   no_pdf_support: "Parece que no tienes Adobe Reader o soporte para PDF en este navegador. <a href='%{pdf}'>Clica aquí para descargar el PDF</a>"
   client_has_no_email: "El cliente asociado a la factura no tiene correo electrónico definido"
   field_import: "Importe"
+  pdf_not_legal: "PDF no legal"
 
   # Events
   events: "Log de eventos"

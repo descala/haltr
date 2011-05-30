@@ -99,13 +99,13 @@ ca:
   state_new_plural: "Noves"
   state_sending_plural: "Enviant-se"
   state_sent_plural: "Enviades"
-  state_error_plural: "Amb errors"
+  state_error_plural: "No legal"
   state_closed_plural: "Tancades"
   state_discarded_plural: "Descartades"
   state_new: "Nova"
   state_sending: "Enviant-se"
   state_sent: "Enviada"
-  state_error: "Amb errors"
+  state_error: "No legal"
   state_closed: "Tancada"
   state_discarded: "Descartada"
   state_validating_format: "Validant format"
@@ -145,6 +145,7 @@ ca:
   no_pdf_support: "Sembla que no tens Adobe Reader o suport per a PDF en aquest navegador. <a href='%{pdf}'>Clica aquí per descarregar el PDF</a>"
   client_has_no_email: "El client associat a la factura no té correu electrònic definit"
   field_import: "Import"
+  pdf_not_legal: "PDF no legal"
 
   # Events
   events: "Log d'esdeveniments"

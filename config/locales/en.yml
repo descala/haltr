@@ -86,13 +86,13 @@ en:
   state_new_plural: "New"
   state_sending_plural: "Sending"
   state_sent_plural: "Sent"
-  state_error_plural: "With errors"
+  state_error_plural: "Not legal"
   state_closed_plural: "Closed"
   state_discarded_plural: "Discarded"
   state_new: "New"
   state_sending: "Sending"
   state_sent: "Sent"
-  state_error: "With errors"
+  state_error: "Not legal"
   state_closed: "Closed"
   state_discarded: "Discarded"
   state_validating_format: "Validating format"
@@ -133,6 +133,7 @@ en:
   no_pdf_support: "It appears you don't have Adobe Reader or PDF support in this web browser. <a href='%{pdf}'>Click here to download the PDF</a>"
   client_has_no_email: "Invoice's client has no email defined"
   field_import: "Import"
+  pdf_not_legal: "PDF not legal"
 
   # Events
   events: "Event log"
