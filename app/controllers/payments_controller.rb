@@ -44,7 +44,7 @@ class PaymentsController < ApplicationController
   def new
     if params[:invoice_id]
       invoice = Invoice.find params[:invoice_id]
-      @payment = Payment.new(:invoice_id => invoice.id, :amount => invoice.unpaid)
+      @payment = Payment.new(:invoice_id => invoice.id, :amount => invoice.unpaid_amount)
     else
       @payment = Payment.new
     end

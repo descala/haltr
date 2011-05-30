@@ -7,6 +7,7 @@ class InvoiceDocument < Invoice
   unloadable
 
   has_many :payments, :foreign_key => :invoice_id, :dependent => :nullify
+  before_save :update_status, :unless => Proc.new {|invoicedoc| invoicedoc.state_changed? }
 
   attr_accessor :legal_filename, :legal_content_type, :legal_invoice
 
@@ -46,6 +47,33 @@ class InvoiceDocument < Invoice
   rescue Exception => e
     logger.error "Error retrieving invoice #{id} legal by http: #{e.message}"
     return false
+  end
+
+  def unpaid_amount
+    total - total_paid
+  end
+
+  def is_paid?
+    unpaid_amount.cents <= 0
+  end
+
+  def total_paid
+    paid_amount=0
+    self.payments.each do |payment|
+      paid_amount += payment.amount.cents
+    end
+    Money.new(paid_amount,currency)
+  end
+
+  protected
+
+  def update_status
+    if is_paid?
+      paid
+    else
+      unpaid
+    end
+    return true # always continue saving
   end
 
 end

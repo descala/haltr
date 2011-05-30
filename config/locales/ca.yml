@@ -72,6 +72,7 @@ ca:
   generate_template_from_invoice: Generar nova plantilla
   generated_from_template: Generada de la plantilla
   receive_payment: Rebre pagament
+  make_payment: Efectuar pagament
   label_paid: Pagat
   field_tax_percent: IVA
   label_from: Des de

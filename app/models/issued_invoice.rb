@@ -12,7 +12,6 @@ class IssuedInvoice < InvoiceDocument
 
   before_validation :set_due_date
   before_save :update_import
-  before_save :update_status, :unless => Proc.new {|invoicedoc| invoicedoc.state_changed? }
   after_create :create_event
 
   attr_accessor :export_errors
@@ -104,22 +103,6 @@ class IssuedInvoice < InvoiceDocument
     end.compact
   end
 
-  def total_paid
-    paid_amount=0
-    self.payments.each do |payment|
-      paid_amount += payment.amount.cents
-    end
-    Money.new(paid_amount,currency)
-  end
-
-  def unpaid
-    total - total_paid
-  end
-
-  def paid?
-    unpaid.cents <= 0
-  end
-
   def self.candidates_for_payment(payment)
     # order => older invoices to get paid first
     #TODO: add withholding_tax
@@ -166,15 +149,6 @@ class IssuedInvoice < InvoiceDocument
   end
 
   protected
-
-  def update_status
-    if paid?
-      paid
-    else
-      unpaid
-    end
-    return true # always continue saving
-  end
 
   def create_event
     Event.create(:name=>'new',:invoice=>self,:user=>User.current)

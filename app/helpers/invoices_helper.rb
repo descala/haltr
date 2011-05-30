@@ -3,7 +3,7 @@ module InvoicesHelper
   def change_state_link(invoice)
     if invoice.state?(:closed)
       link_to(I18n.t(:mark_not_sent), {:action => :mark_not_sent, :id => invoice},:class=>'icon-haltr-mark-not-sent')
-    elsif invoice.sent? and invoice.paid?
+    elsif invoice.sent? and invoice.is_paid?
       link_to(I18n.t(:mark_closed), {:action => :mark_closed, :id => invoice},:class=>'icon-haltr-mark-closed')
     elsif invoice.sent?
       link_to(I18n.t(:mark_not_sent), {:action => :mark_not_sent, :id => invoice},:class=>'icon-haltr-mark-not-sent')

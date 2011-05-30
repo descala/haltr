@@ -39,7 +39,7 @@ class Payment < ActiveRecord::Base
 
   def self.new_to_close(invoice)
     if invoice.is_a?(InvoiceDocument)
-      Payment.new(:invoice => invoice, :project => invoice.project, :amount => invoice.unpaid)
+      Payment.new(:invoice => invoice, :project => invoice.project, :amount => invoice.unpaid_amount)
     end
   end
 

@@ -48,8 +48,11 @@ class ReceivedInvoice < InvoiceDocument
     event :accept do
       transition [:received,:error,:accepted] => :accepted
     end
-    event :pay do
+    event :paid do
       transition :accepted => :paid
+    end
+    event :unpaid do
+      transition :paid => :accepted
     end
   end
 
