@@ -35,7 +35,7 @@ class InvoiceLine < ActiveRecord::Base
   end
 
   def total
-    Money.new((price * quantity * 100).round, currency)
+    Money.new((price * quantity * 100).round.to_i, currency)
   end
 
   def to_label
