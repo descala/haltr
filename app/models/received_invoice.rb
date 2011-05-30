@@ -28,25 +28,25 @@ class ReceivedInvoice < InvoiceDocument
       transition :validating_format => :validating_signature
     end
     event :error_validating_format do
-      transition :validating_format => :received
+      transition :validating_format => :error
     end
     event :discard_validating_format do
-      transition :validating_format => :received
+      transition :validating_format => :error
     end
     event :success_validating_signature do
       transition [:validating_format, :validating_signature] => :received
     end
     event :error_validating_signature do
-      transition :validating_signature => :received
+      transition [:validating_format, :validating_signature] => :error
     end
     event :discard_validating_signature do
-      transition :validating_signature => :received
+      transition [:validating_format, :validating_signature] => :error
     end
     event :refuse do
-      transition [:accepted,:received] => :refused
+      transition [:accepted,:received,:error] => :refused
     end
     event :accept do
-      transition [:received] => :accepted
+      transition [:received,:error,:accepted] => :accepted
     end
     event :pay do
       transition :accepted => :paid

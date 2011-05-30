@@ -177,6 +177,8 @@ ca:
   paid_notification: "Notificació AOC: Pagada"
   by_mail_from: "per correu des de %{email}"
   in_format: "en format %{format}"
+  back: "Tornar"
+  view_mail: "Veure email"
 
   # Invoice templates
   label_invoice_template_new: Nova plantilla

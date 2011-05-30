@@ -143,7 +143,7 @@ class InvoicesController < ApplicationController
   end
 
   def mark_accepted
-    @invoice.accept
+    Event.create(:name=>'accept',:invoice=>@invoice,:user=>User.current,:info=>params[:reason])
     redirect_to :back
   rescue ActionController::RedirectBackError => e
     render :text => "OK"
@@ -155,7 +155,7 @@ class InvoicesController < ApplicationController
   end
 
   def mark_refused
-    @invoice.refuse
+    Event.create(:name=>'refuse',:invoice=>@invoice,:user=>User.current,:info=>params[:reason])
     redirect_to :back
   rescue ActionController::RedirectBackError => e
     render :text => "OK"

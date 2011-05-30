@@ -22,7 +22,9 @@ class Event < ActiveRecord::Base
       str += " #{l(:by)} #{user.name}"
     end
     if info
-      str += " (#{info})"
+      unless name == "accept" or name == "refuse" # accept and refuse stores mail on info
+        str += " (#{info})"
+      end
     end
     str
   end
@@ -37,7 +39,7 @@ class Event < ActiveRecord::Base
 
   def self.automatic
     events  = %w(bounced sent_notification delivered_notification registered_notification)
-    events += %w(refuse_notification accept_notification paid_notification)
+    events += %w(refuse_notification accept_notification paid_notification accept refuse)
     actions = %w(sending receiving validating_format validating_signature)
     actions.each do |a|
       events << "success_#{a}"

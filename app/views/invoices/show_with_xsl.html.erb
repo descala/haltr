@@ -12,17 +12,7 @@
     ............
   </div>
 
-  <% if @invoice.events.any? -%>
-    <div id="events">
-      <h4><%=l(:events)%></h4>
-      <p></p>
-      <ul>
-        <% @invoice.events.each do |e| -%>
-          <li><%= e %><%= download_link_for(e) %></li>
-        <% end -%>
-      </ul>
-    </div>
-  <% end -%>
+  <%= render :partial => "events" -%>
 
 </div>
 

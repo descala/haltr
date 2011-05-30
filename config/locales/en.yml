@@ -165,6 +165,8 @@ en:
   paid_notification: "Notificación AOC: Pagada"
   by_mail_from: "by email from %{email}"
   in_format: "in %{format} format"
+  back: "Back"
+  view_mail: "View email"
 
   # Invoice templates
   label_invoice_template_new: New template
