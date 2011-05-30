@@ -24,7 +24,7 @@
 <% for payment in @payments -%>
   <tr class="user <%= cycle("odd", "even") %>" />
     <td align="center"><%=link_to(h(payment.invoice.number), :controller=>'invoices', :action=>'show', :id=>payment.invoice) unless payment.invoice.nil? %></td>
-    <td align="right"><%= money(payment.amount) %></td>
+    <td align="right" style="color: <%=payment.invoice.is_a?(IssuedInvoice) ? "green" : "red" %>"><%= money(payment.amount) %></td>
     <td align="center"><%=h payment.date %></td>
     <td><%=h(truncate(payment.payment_method,:length=>20)) %></td>
     <td><%=h(truncate(payment.reference,:length=>30)) %></td>
