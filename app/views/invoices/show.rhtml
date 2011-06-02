@@ -169,7 +169,7 @@
 
   <% lang = find_language(User.current.language); lang ||= Setting.default_language; set_language_if_valid(lang) -%>
 
-  <%= render :partial=>'events'%>
+  <%= render :partial=>'invoices/events'%>
 
       </div>
     </div>
