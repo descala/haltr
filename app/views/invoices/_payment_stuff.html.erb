@@ -1,13 +1,16 @@
 <%
   if @invoice and @invoice.new_record? and @client
+    # new invoice, default client
     currency = @client.currency.downcase
     payment_method = @client.payment_method
     terms = @client.terms
-  elsif @invoice and !@client
+  elsif @invoice
+    # existing invoice, current client
     currency = @invoice.currency.downcase
     payment_method = @invoice.payment_method
     terms = @invoice.terms
   elsif @client
+    # ajax call on changing invoice's client
     currency = @client.currency.downcase
     payment_method = @client.payment_method
     terms = @client.terms

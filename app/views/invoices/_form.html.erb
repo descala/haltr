@@ -12,7 +12,7 @@
   <% end -%>
   <p><%= f.text_field :ponumber %></p>
   <div id="payment_stuff">
-  <%= render :partial => 'invoices/payment_stuff', :locals=>{:client=>@invoice.client} %>
+  <%= render :partial => 'invoices/payment_stuff' %>
   </div>
   <p><%= f.text_field :tax_percent %></p>
 <% if @invoice.withholding_tax_percent > 0 -%>
