@@ -203,7 +203,8 @@ class Invoice < ActiveRecord::Base
 
   def payment_method_requirements
     if debit?
-      errors.add(:base, ("#{l(:field_payment_method)} (#{l(:debit)}) #{l(:requires_client_bank_account)}")) if client.bank_account.blank?
+      c = Client.find client_id
+      errors.add(:base, ("#{l(:field_payment_method)} (#{l(:debit)}) #{l(:requires_client_bank_account)}")) if c.bank_account.blank?
     elsif transfer?
       errors.add(:base, ("#{l(:field_payment_method)} (#{l(:transfer)}) #{l(:requires_company_bank_account)}")) if company.bank_account.blank?
     end
