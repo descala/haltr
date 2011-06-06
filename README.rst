@@ -7,6 +7,7 @@ Haltr - Hackers don't do books
 
 
 about facturae
+
 * http://www.facturae.es/es-ES/Documentacion/EsquemaFormato/Paginas/Index.aspx
 * http://www11.mityc.es/FacturaE/ValidarCompleto
 
