@@ -81,7 +81,7 @@ class IssuedInvoice < InvoiceDocument
   end
 
   def self.find_due_dates(project)
-    find_by_sql "SELECT due_date, invoices.id, count(*) AS invoice_count FROM invoices, clients WHERE type='IssuedInvoice' AND client_id = clients.id AND clients.project_id = #{project.id} AND state = 'sent' AND bank_account AND invoices.payment_method=#{Invoice::PAYMENT_DEBIT} GROUP BY due_date ORDER BY due_date DESC"
+    find_by_sql "SELECT due_date, invoices.id, count(*) AS invoice_count FROM invoices, clients WHERE type='IssuedInvoice' AND client_id = clients.id AND clients.project_id = #{project.id} AND state = 'sent' AND bank_account != '' AND invoices.payment_method=#{Invoice::PAYMENT_DEBIT} GROUP BY due_date, invoices.id ORDER BY due_date DESC"
   end
 
   def label
