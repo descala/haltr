@@ -43,7 +43,9 @@ class InvoiceTemplatesController < ApplicationController
 
   def new
     @invoice = InvoiceTemplate.new(:client_id=>params[:client],:project=>@project,:date=>Date.today)
-    @client = params[:client] ? Client.find(params[:client]) : Client.new
+    @client = Client.find(params[:client]) if params[:client]
+    @client ||= Client.find(:all, :order => 'name', :conditions => ["project_id = ?", @project]).first
+    @client ||= Client.new
     render :template => "invoices/new"
   end
 

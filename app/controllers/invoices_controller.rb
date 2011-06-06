@@ -272,12 +272,12 @@ class InvoicesController < ApplicationController
   end
 
   def update_currency_select
-    client = Client.find(params[:value]) unless params[:value].blank?
-    selected = client.nil? ? params[:curr_sel] : client.currency.downcase
+    @client = Client.find(params[:value]) unless params[:value].blank?
+    selected = @client.nil? ? params[:curr_sel] : @client.currency.downcase
     if params[:required] == "false"
       render :partial => "received_invoices/currency", :locals => {:selected=>selected}
     else
-      render :partial => "currency", :locals => {:selected=>selected}
+      render :partial => "payment_stuff", :locals => {:client=>@client}
     end
   end
 

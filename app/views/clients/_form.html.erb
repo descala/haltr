@@ -44,6 +44,15 @@
     <% else -%>
       <p><%= f.select :language, %w(ca es en).collect {|l| [I18n.t(:general_lang_name,:locale=>l),l]}, :readonly => @client.linked? %></p>
       <p><%= f.select :invoice_format, ExportChannels.for_select(@project) %></p>
+      <%
+        disabled = []
+        #    unless @invoice.new_record?
+        #      disabled << Invoice::PAYMENT_DEBIT if @invoice.client and @invoice.client.bank_account.blank?
+        #    end
+        disabled << Invoice::PAYMENT_TRANSFER if @project.company.bank_account.blank?
+      -%>
+      <p><%= f.select(:payment_method, Invoice.payment_methods, :disabled=>disabled) %></p>
+      <p><%= f.select(:terms, Terms.for_select, {}) %></p>
     <% end -%>
   </div>
 </div>

@@ -10,10 +10,10 @@
   <% else -%>
     <p><%= f.text_field :number, :size => 10, :required => true %> <%= "#{l(:label_last_invoice_number)}: #{IssuedInvoice.last_number(@project)}" if IssuedInvoice.all.any?%></p>
   <% end -%>
-  <p id="currency_select"><%= render :partial=>'invoices/currency', :locals => {:selected=>@invoice.currency.downcase} %></p>
   <p><%= f.text_field :ponumber %></p>
-  <p><%= f.select(:terms, Terms.for_select, {}, {:onchange=>"terms()"}) %></p>
-  <p><%= f.text_field :due_date, :size => 10, :disabled => !@invoice.custom_due? %><span id="due_date_cal" style="visibility: <%=@invoice.custom_due? ? "visible" : "hidden" %>;"><%= calendar_for('invoice_due_date') %></span></p>
+  <div id="payment_stuff">
+  <%= render :partial => 'invoices/payment_stuff', :locals=>{:client=>@invoice.client} %>
+  </div>
   <p><%= f.text_field :tax_percent %></p>
 <% if @invoice.withholding_tax_percent > 0 -%>
   <p><%= f.check_box :apply_withholding_tax %> (<%=@invoice.withholding_tax_percent%>% <%=@project.company.withholding_tax_name%>)</p>
@@ -22,14 +22,6 @@
   <p><%= f.text_field :discount_percent %></p>
   <p><%= f.text_area :extra_info, :rows=>3 %></p>
   <p><%= f.check_box :draft %></p>
-  <%
-    disabled = []
-#    unless @invoice.new_record?
-#      disabled << Invoice::PAYMENT_DEBIT if @invoice.client and @invoice.client.bank_account.blank?
-#    end
-    disabled << Invoice::PAYMENT_TRANSFER if @invoice.project.company.bank_account.blank?
-  -%>
-  <p><%= f.select(:payment_method, Invoice.payment_methods, :disabled=>disabled, :required => true) %></p>
   <div id="invoice_lines">
     <p style="font-weight:bold;">
     <span class="invoiceLineHeader" style="width: 80px;"><%= l(:field_quantity) %></span>

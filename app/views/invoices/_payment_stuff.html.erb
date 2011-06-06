@@ -1,0 +1,43 @@
+<%
+  if @invoice and @invoice.new_record? and @client
+    currency = @client.currency.downcase
+    payment_method = @client.payment_method
+    terms = @client.terms
+  elsif @invoice and !@client
+    currency = @invoice.currency.downcase
+    payment_method = @invoice.payment_method
+    terms = @invoice.terms
+  elsif @client
+    currency = @client.currency.downcase
+    payment_method = @client.payment_method
+    terms = @client.terms
+  end
+  currency ||= "eur"
+  payment_method ||= 1
+  terms ||= 0
+-%>
+<p>
+<label for="invoice_currency"><%= l(:field_currency) %><span class="required"> *</span></label>
+<%= select :invoice, :currency, currency_options_for_select, {:selected=>currency}, :required => true%>
+</p>
+<%
+  disabled = []
+  #    unless @invoice.new_record?
+  #      disabled << Invoice::PAYMENT_DEBIT if @invoice.client and @invoice.client.bank_account.blank?
+  #    end
+  disabled << Invoice::PAYMENT_TRANSFER if @project.company.bank_account.blank?
+-%>
+<p>
+<label for="invoice_payment_method"><%= l(:field_payment_method) %></label>
+<%= select(:invoice, :payment_method, Invoice.payment_methods, {:selected=>payment_method }, :required => true) %>
+</p>
+<p>
+<label for="invoice_terms"><%= l(:field_terms) %></label>
+<%= select(:invoice, :terms, Terms.for_select, {:selected=>terms}, {:onchange=>"terms()"}) %>
+</p>
+<p>
+<label for="invoice_due_date"><%= l(:field_due_date) %></label>
+<%= text_field :invoice, :due_date, :size => 10 %><span id="due_date_cal"><%= calendar_for('invoice_due_date') %></span>
+</p>
+
+<script type="text/javascript">terms();</script>
