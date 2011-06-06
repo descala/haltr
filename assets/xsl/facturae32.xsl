@@ -88,7 +88,7 @@
                         <!-- Totals Details -->
                         <table class="invoice-calculations" border="0" cellpadding="0" cellspacing="0">
                             <tbody><tr class="invoice-subtotal">
-                                <th>Subtotal:</th>
+                                <th>Sous-total:</th>
                                 <td><xsl:value-of select="concat(//TotalGrossAmountBeforeTaxes,' ',//InvoiceCurrencyCode)"/></td>
                             </tr>
                                 <xsl:apply-templates select="//Invoice/TaxesOutputs/Tax"/>
