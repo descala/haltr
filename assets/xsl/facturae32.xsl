@@ -88,14 +88,16 @@
                         <!-- Totals Details -->
                         <table class="invoice-calculations" border="0" cellpadding="0" cellspacing="0">
                             <tbody><tr class="invoice-subtotal">
-                                <th>Sous-total:</th>
+                                <th><xsl:value-of
+                        select="document(concat('trans_',$lang,'.xml'))/diccionari/element[@etiqueta='Subtotal']"/>:</th>
                                 <td><xsl:value-of select="concat(//TotalGrossAmountBeforeTaxes,' ',//InvoiceCurrencyCode)"/></td>
                             </tr>
                                 <xsl:apply-templates select="//Invoice/TaxesOutputs/Tax"/>
                                 <xsl:apply-templates select="//Invoice/TaxesWithheld/Tax"/>
                                 
                                 <tr class="invoice-total">
-                                    <th>Total:</th>
+                                    <th><xsl:value-of
+                        select="document(concat('trans_',$lang,'.xml'))/diccionari/element[@etiqueta='Total']"/>:</th>
                                     <td><xsl:value-of select="concat(//TotalExecutableAmount,' ',//InvoiceCurrencyCode)"/></td>
                                 </tr>
                             </tbody></table>

@@ -61,7 +61,7 @@ en:
   receive_payment: Receive payment
   make_payment: Make payment
   label_paid: Paid
-  field_tax_percent: IVA
+  field_tax_percent: VAT
   label_from: From
   label_to: To
   save_invoice: Save invoice

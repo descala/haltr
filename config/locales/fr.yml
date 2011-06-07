@@ -61,7 +61,7 @@ fr:
   receive_payment: Recevoir paiement
   make_payment: Faire paiement
   label_paid: Payé
-  field_tax_percent: % TVA
+  field_tax_percent: TVA
   label_from: De
   label_to: À
   save_invoice: Sauver facture
