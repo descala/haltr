@@ -81,7 +81,7 @@ class IssuedInvoice < InvoiceDocument
   end
 
   def self.find_due_dates(project)
-    find_by_sql "SELECT due_date, invoices.id, count(*) AS invoice_count FROM invoices, clients WHERE type='IssuedInvoice' AND client_id = clients.id AND clients.project_id = #{project.id} AND state = 'sent' AND bank_account AND invoices.payment_method=#{Invoice::PAYMENT_DEBIT} GROUP BY due_date ORDER BY due_date DESC"
+    find_by_sql "SELECT due_date, invoices.id, count(*) AS invoice_count FROM invoices, clients WHERE type='IssuedInvoice' AND client_id = clients.id AND clients.project_id = #{project.id} AND state = 'sent' AND bank_account != '' AND invoices.payment_method=#{Invoice::PAYMENT_DEBIT} GROUP BY due_date, invoices.id ORDER BY due_date DESC"
   end
 
   def label
@@ -97,7 +97,7 @@ class IssuedInvoice < InvoiceDocument
   end
 
   def self.find_not_sent(project)
-    invoices = find :all, :include => [:client], :conditions => ["clients.project_id = ? and state = 'new' and draft != ?", project.id, 1 ], :order => "number ASC"
+    invoices = find :all, :include => [:client], :conditions => ["clients.project_id = ? and state = 'new' and draft = ?", project.id, false ], :order => "number ASC"
     invoices.collect do |invoice|
       invoice unless invoice.is_a? DraftInvoice or invoice.number.nil?
     end.compact
@@ -123,7 +123,7 @@ class IssuedInvoice < InvoiceDocument
   end
 
   def self.last_number(project)
-    i = IssuedInvoice.last(:order => "number", :include => [:client], :conditions => ["clients.project_id=? AND draft=?",project.id,false])
+    i = IssuedInvoice.last(:order => "number", :include => [:client], :conditions => ["clients.project_id = ? AND draft = ?", project.id, false])
     i.number if i
   end
 

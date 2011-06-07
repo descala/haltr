@@ -1,0 +1,293 @@
+fr:
+
+  # community
+  label_company: Compagnie
+  label_my_company: Ma compagnie
+  label_companies: Compagnies
+  label_company_new: Nouvelle compagnie
+  field_address: Addresse
+  field_address2: Addresse
+  field_city: Ville
+  field_province: Province
+  field_postalcode: Code postal
+  field_country: Pays
+  field_bank_account: Compte bancaire
+  button_people: Personnes
+  field_invoice_format: Mode de transimission et format préféré
+  field_currency: Monnaie
+  field_ponumber: Ordre d'achat
+  cif_belongs_to_company: "Ce CIF appartient à la compagnie <span style='font-weight: bold;'>%{company}</span>."
+  link_to_profile_suggest: Vous pouvez %{href} à ce client
+  link_to_profile: lier à son profil publique
+  link_to_profile_ask: requiert authorisation pour lier à son profil publique
+  pending_authorization: "Authorisation en attente de la compagnie <span style='font-weight: bold;'>%{company}</span>"
+  denied_authorization: "Company <span style='font-weight: bold;'>%{company}</span> denied authorization to link its profile"
+  linked_to_profile: "Lié à la compagnie <span style='font-weight: bold;'>%{company}</span>"
+  link_requests: Requiert un lien à votre profil
+  pending_requests: %{i} requêtes en attente
+  allow_link: Autoriser
+  deny_link: Refuser
+  unlink: Délier
+  field_company_public: Profile
+  public: Publique
+  semipublic: Requiert authentification
+  private: Privé
+
+  # Invoices
+  IssuedInvoice: Facture émise
+  ReceivedInvoice: Facture reçue
+  label_invoice_plural: Factures
+  label_invoice: Facture
+  label_draft: Brouillon facture
+  field_invoice: Facture
+  label_invoice_new: Nouvelle facture
+  button_new_invoice: Nouvelle facture
+  button_add_invoice_line: Ajouter une nouvelle ligne
+  field_number: Numéro
+  label_last_invoice_number: Dernier utilisé
+  field_date: Date
+  field_client: Client
+  field_extra_info: Notes
+  field_terms: Termes
+  field_discount_text: Texte de réduction
+  field_discount_percent: % réduction
+  field_frequency: Fréquence
+  field_draft: Brouillon
+  label_invoice_state: Statut
+  field_state: Statut
+  show_template: Montrer modèle
+  generate_template_from_invoice: Générer nouveau modèle
+  generated_from_template: Généré depuis modèle
+  receive_payment: Recevoir paiement
+  make_payment: Faire paiement
+  label_paid: Payé
+  field_tax_percent: % TVA
+  label_from: De
+  label_to: À
+  save_invoice: Sauver facture
+  recipients: Destinataires
+  open_invoices: Ouvrir facture
+  pending_invoices: Factures en attente
+  closed_invoices: Factures closes
+  label_subtotal: Sous-total
+  field_withholding_tax_name: Nom de la taxe retenue à la source
+  field_withholding_tax_percent: % taxe retenue à la source
+  field_apply_withholding_tax: Appliquer taxe retenue à la source
+  must_have_lines: doit avoir des lignes
+  send_invoice: Envoyer facture
+  label_send: Envoyer
+  cash: Liquide
+  debit: Débiter paiement
+  transfer: Transfert bancaire
+  requires_client_bank_account: requiert compte bancaire client
+  requires_company_bank_account: requiert propre compte bancaire
+  cash_str: "Paiement liquide"
+  debit_str: "Débite paiement à"
+  transfer_str: "Transfert bancaire à"
+  state_new_plural: "Nouvelles"
+  state_sending_plural: "Emises"
+  state_sent_plural: "Envoyées"
+  state_error_plural: "En erreur"
+  state_closed_plural: "Closes"
+  state_discarded_plural: "Annulées"
+  state_new: "Nouveau"
+  state_sending: "Emission"
+  state_sent: "Envoyé"
+  state_error: "Illégal"
+  state_closed: "Clos"
+  state_discarded: "Annulé"
+  state_validating_format: "Validation format"
+  state_validating_signature: "Validation signature"
+  state_received: "Factura rebuda"
+  state_accepted: "Accepté"
+  state_refused: "Refusé"
+  state_paid: "Payé"
+  sending_log: "Log d'émission"
+  sending_log: "Envoyant log"
+  download_legal: "Télécharger facture légale"
+  download_notification: "Télécharger notification"
+  label_all_invoices: "Toutes les factures"
+  label_issued: "Factures émises"
+  label_received: "Factures reçues"
+  mark_not_sent: "Marquer comme non envoyé"
+  mark_closed: "Marquer comme clos"
+  mark_sent: "Marquer comme envoyé"
+  mark_accepted: "Accepter facture"
+  mark_refused: "Refuser facture"
+  accept: "Accepté"
+  refuse: "Refusé"
+  received_invoice_accepted: "%{company} a accepté la facture n° %{num}"
+  received_invoice_refused: "%{company} a refusé la facture n° %{num}"
+  refuse_notification_to: "Notifier refus à %{mail}"
+  accept_notification_to: "Notifier acceptation à %{mail}"
+  refuse_and_mail: "Refuser avec mail"
+  refuse_without_mail: "Refuser sans mail"
+  accept_and_mail: "Accepter avec mail"
+  accept_without_mail: "Accepter sans mail"
+  cancel: "Annuler"
+  client_without_email: "Client associé n'a pas d'email défini"
+  report_issue_with_invoice: "Rapporter un problème avec cette facture"
+  invoice_issue_subject: "J'ai un problème avec la facture d'id interne %{id}"
+  invoice_issue_body: "-- écrire ici description du problème --"
+  quick_pdf_view: "Vue PDF rapide"
+  pdf_invoice_expl: "Ceci est une approximation de facture reçue, s'il vous plait, vérifiez que les champs sont corrects avec les originaux"
+  no_pdf_support: "Il semble que vous n'ayez pas Adobe Reader ou le support PDF dans ce navigateur web. <a href='%{pdf}'>Cliquez ici pour télécharger le PDF</a>"
+  client_has_no_email: "Le client de cette facture n'a pas d'email défini"
+  field_import: "Importer"
+  pdf_not_legal: "PDF illégal"
+
+  # Events
+  events: "Log des évènements"
+  by: "par"
+  manual_send: "Manuellement marqué comme envoyé"
+  queue: "Envoyé par b2brouter"
+  requeue: "Re-envoyé par b2brouter"
+  success_sending: "Envoyé correctement au destinataire"
+  mark_unsent: "Manuellement marqué comment non envoyé"
+  error_sending: "Erreur à l'envoi"
+  close: "Clos"
+  discard_sending: "Pas envoyé. Limite maximum de tentatives atteint"
+  paid: "Marqué comme payé"
+  unpaid: "Marqué comme non payé"
+  edited: "Edité"
+  new: "Créé"
+  bounced: "Rebondi: Incapable d'envoyer à l'email indiqué"
+  validating_format: "Facture reçue"
+  success_validating_format: "Format validé avec success"
+  error_validating_format: "Erreur à la validation du format"
+  discard_validating_format: "Abandonne validation du format"
+  success_validating_signature: "Signature validée avec success"
+  error_validating_signature: "Erreur à la validation de la signature"
+  discard_validating_signature: "Abandonne la validation de la signature"
+  sent_notification: "Notification AOC: Envoyé"
+  delivered_notification: "Notification AOC: Reçu"
+  registered_notification: "Notification AOC: Enregistré"
+  accept_notification: "Notification AOC: Acceptation"
+  refuse_notification: "Notification AOC: Refus"
+  paid_notification: "Notification AOC: Paiement"
+  by_mail_from: "par email de %{email}"
+  in_format: "en format %{format}"
+  back: "Retour"
+  view_mail: Voir email
+
+  # Invoice templates
+  label_invoice_template_new: Nouveau modèle
+  label_invoice_template: Modèle
+  label_invoice_template_plural: Modèles
+  label_generated_invoices: Factures générées
+  next_charge: Charge suivante
+  invoices_to_generate: Factures à être générées
+  generate: Génère
+  generate_selected: Génère sélectionnée
+  label_no_issues_to_generate: Pas de facture à générer
+
+  # Invoice lines
+  field_price: Prix
+  field_quantity: Quantité
+  field_invoice_lines: Lignes de facture
+  field_unit: Unité
+  units: Unités
+  hours: Heures
+  kilograms: Kilogrammes
+  litters: Litres
+  s_units: ""
+  s_hours: h
+  s_kilograms: kg
+  s_litters: l
+
+  # People
+  label_person: Personne
+  label_person_new: Nouvelle personne
+  label_person_plural: Personnes
+  field_first_name: Nom
+  field_last_name: Prénom
+  field_email: Email
+  field_phone_office: Tél bureau
+  field_phone_mobile: Mobile
+  field_invoice_recipient: Facturer destinataire
+  field_report_recipient: Rapport destinataire
+
+  # Tasks
+  label_task_plural: Tâches
+  with_date: Avec date
+  charge_bank_on_date: Imputer la banque à la date
+  nothing_to_report: Rien n'a été rapporté
+  nothing_to_generate: Rien n'a à être généré
+  button_generate_invoices: Nouvelles factures depuis le modèle
+  button_send_invoices: Envoyer factures
+  label_automator_info: télécherger les PDFs, emailer script d'automation et marquer comme envoyé
+  label_charge_n19: Imputer les comptes bancaires avec format N19
+  button_mark_done: Marquer comme fait
+  label_invoice_report: Rapport des factures
+  label_import_aeb43: Importer AEB43
+
+  # Payments
+  label_payment: Paiement
+  label_payment_plural: Paiements
+  label_payment_new: Nouveau paiement
+  field_amount: Total
+  field_amount_in_cents: Total
+  field_payment_method: Méthode de paiement
+  field_reference: Référence
+  field_total_paid: Total payé
+
+  # Settings
+  field_taxcode: N° TVA
+  field_address: Addresse
+  field_website: Site web
+  field_email: Email
+  field_bank_account: Compte bancaire
+  export_channels_path: "Chemin des répertoires d'export"
+  field_company: "Compagnie"
+  logo: "Logo"
+  trace_url: "B2brouter URL"
+  b2brouter_ip: "B2brouter IP"
+  b2b_subtitle: "Votre service de facturation en-ligne"
+  field_public: "Profil publique"
+  private_fields_info: "Ces champs sont privés, même si vous choisissez un profil publique"
+  issues_controller_name: "Issues controller name"
+
+  # Terms
+  "0": Immédiatement
+  "30": 30 jours
+  "60": 60 jours
+  "90": 90 jours
+  "120": 120 jours
+  "0m-1": Dernier jour du mois en cours
+  "1m-1": Dernier jour du mois suivant
+  "1m1": 1er jour du mois suivant
+  "2m1": 1er jour dans deux mois
+  "1m15": 15ème jour prochain mois
+  "1m20": 20ème jour prochain mois
+  "custom": Personnalisé
+
+  # Frequency
+  mf12: Annuel
+  mf6: Semi-annuel
+  mf3: Trimestriel
+  mf2: Bimensuel
+  mf1: Mensuel
+
+  # ExportChannels
+  paper:       "Aucun (Téléchargement manuel PDF)"
+  ublinvoice_20: "UBL Facture 2.0 par email"
+  facturae_30: "Facturae 3.0 par email"
+  facturae_31: "Facturae 3.1 par email"
+  facturae_32: "Facturae 3.2 par email"
+  signed_pdf:  "PDF signé par email"
+  aoc: "Facturae 3.0 vers e-FACT hub depuis AOC"
+  aoc31: "Facturae 3.1 vers e-FACT hub depuis AOC"
+  aoc32: "Facturae 3.2 vers e-FACT hub depuis AOC"
+
+  # Errors
+  cant_connect_trace: "Ne peut se connecter à la plate-forme b2brouter. {{value}}"
+  halt_configure_before_use: Veuillez d'abord configurer votre compagnie
+  warning_can_not_generate_invoice: "Ne peut générer la facture depuis le modèle {{value}}"
+  notice_invoice_sent: "Facture envoyée"
+  error_invoice_not_sent: "N'a pas pu envoyer la facture"
+  notice_empty_n19: "Aucune donnée pour créer N19"
+  notice_n19_done:  "Nº19 pour date d'échéance {{value}} marquée comme faite"
+  notice_uploaded_file_not_found: "Fichier non trouvé"
+
+  hide_full_form: "Montrer moins de champs"
+  show_full_form: "Montrer plus de champs"

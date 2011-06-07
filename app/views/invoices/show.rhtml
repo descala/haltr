@@ -110,12 +110,12 @@
                 <td><%=h money(@invoice.subtotal) %></td>
               </tr>
               <tr class="sales-tax">
-                <th>IVA <%=h number_to_percentage(@invoice.tax_percent, :precision=>0) %> :</th>
+                <th>TVA <%=h number_to_percentage(@invoice.tax_percent, :precision=>1) %> :</th>
                 <td><%=h money(@invoice.tax) %></td>
               </tr>
               <% if @invoice.withholding_tax_percent > 0 and @invoice.apply_withholding_tax -%>
               <tr class="sales-tax">
-                <th><%=h @invoice.withholding_tax_name%> <%=h number_to_percentage(@invoice.withholding_tax_percent, :precision=>0) %> :</th>
+                <th><%=h @invoice.withholding_tax_name%> <%=h number_to_percentage(@invoice.withholding_tax_percent, :precision=>2) %> :</th>
                 <td><%=h money(@invoice.withholding_tax)%></td>
               </tr>
               <% end -%>
