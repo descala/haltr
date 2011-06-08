@@ -26,7 +26,7 @@
         <head>
             <meta http-equiv="content-type" content="text/html; charset=UTF-8"/>
             <title><xsl:value-of
-                select="document(concat('trans_',$lang,'.xml'))/diccionari/element[@etiqueta='Invoice']"/></title>
+                select="document(concat('/plugin_assets/haltr/xsl/trans_',$lang,'.xml'))/diccionari/element[@etiqueta='Invoice']"/></title>
             <!-- link href="/stylesheets/application.css?1288878280" media="all" rel="stylesheet" type="text/css" / -->            
             <link href="http://www.b2brouter.net/plugin_assets/haltr/stylesheets/print.css" media="print" rel="stylesheet" type="text/css" />            
             <!-- link href="/plugin_assets/haltr/stylesheets/minimal.css?1289397738" media="screen" rel="stylesheet" type="text/css" / -->
@@ -50,7 +50,7 @@
                     
                     <!-- Invoice Number and Info -->
                     <h2 class="invoice-ID"><xsl:value-of
-                        select="document(concat('trans_',$lang,'.xml'))/diccionari/element[@etiqueta='Invoice']"/><xsl:value-of select="concat(' ',//InvoiceNumber)"/></h2>
+                        select="document(concat('/plugin_assets/haltr/xsl/trans_',$lang,'.xml'))/diccionari/element[@etiqueta='Invoice']"/><xsl:value-of select="concat(' ',//InvoiceNumber)"/></h2>
                     <div class="invoice-info">
                         <span class="date"><strong><xsl:value-of select="//IssueDate"/></strong></span><br/>
                         <xsl:apply-templates select="//Installment"/>
@@ -70,13 +70,13 @@
                                     <th class="item-description">
                                         <span>
                                             <xsl:value-of
-                                                select="document(concat('trans_',$lang,'.xml'))/diccionari/element[@etiqueta='Description']"/>
+                                                select="document(concat('/plugin_assets/haltr/xsl/trans_',$lang,'.xml'))/diccionari/element[@etiqueta='Description']"/>
                                         </span>
                                     </th>
                                     <th class="item-price"><xsl:value-of
-                                        select="document(concat('trans_',$lang,'.xml'))/diccionari/element[@etiqueta='Amount']"/></th>
+                                        select="document(concat('/plugin_assets/haltr/xsl/trans_',$lang,'.xml'))/diccionari/element[@etiqueta='Amount']"/></th>
                                     <th class="line-total last">                        <xsl:value-of
-                                        select="document(concat('trans_',$lang,'.xml'))/diccionari/element[@etiqueta='Total']"/></th>
+                                        select="document(concat('/plugin_assets/haltr/xsl/trans_',$lang,'.xml'))/diccionari/element[@etiqueta='Total']"/></th>
                                 </tr>
                                 
                                 <xsl:apply-templates select="//InvoiceLine"/>
@@ -88,14 +88,16 @@
                         <!-- Totals Details -->
                         <table class="invoice-calculations" border="0" cellpadding="0" cellspacing="0">
                             <tbody><tr class="invoice-subtotal">
-                                <th>Sous-total:</th>
+                                <th><xsl:value-of
+                        select="document(concat('/plugin_assets/haltr/xsl/trans_',$lang,'.xml'))/diccionari/element[@etiqueta='Subtotal']"/>:</th>
                                 <td><xsl:value-of select="concat(//TotalGrossAmountBeforeTaxes,' ',//InvoiceCurrencyCode)"/></td>
                             </tr>
                                 <xsl:apply-templates select="//Invoice/TaxesOutputs/Tax"/>
                                 <xsl:apply-templates select="//Invoice/TaxesWithheld/Tax"/>
                                 
                                 <tr class="invoice-total">
-                                    <th>Total:</th>
+                                    <th><xsl:value-of
+                        select="document(concat('/plugin_assets/haltr/xsl/trans_',$lang,'.xml'))/diccionari/element[@etiqueta='Total']"/>:</th>
                                     <td><xsl:value-of select="concat(//TotalExecutableAmount,' ',//InvoiceCurrencyCode)"/></td>
                                 </tr>
                             </tbody></table>
@@ -105,7 +107,7 @@
                     
                     <div class="notes">
                         <h3>                      <xsl:value-of
-                            select="document(concat('trans_',$lang,'.xml'))/diccionari/element[@etiqueta='Notes']"/></h3>
+                            select="document(concat('/plugin_assets/haltr/xsl/trans_',$lang,'.xml'))/diccionari/element[@etiqueta='Notes']"/></h3>
                         <span class="invoice-terms"><p><xsl:value-of select="//InvoiceAdditionalInformation"/></p></span><br/>
                     </div>
                     
@@ -147,7 +149,7 @@
                <div class="country-name"><xsl:value-of select="(LegalEntity|Individual)/*/CountryCode"/></div>
             </address>
             <div><strong> <xsl:value-of
-                select="document(concat('trans_',$lang,'.xml'))/diccionari/element[@etiqueta='VAT Nbr']"/>:</strong><span class="tax-id"><xsl:value-of select="TaxIdentification/TaxIdentificationNumber"/></span></div>
+                select="document(concat('/plugin_assets/haltr/xsl/trans_',$lang,'.xml'))/diccionari/element[@etiqueta='VAT Nbr']"/>:</strong><span class="tax-id"><xsl:value-of select="TaxIdentification/TaxIdentificationNumber"/></span></div>
             <div style="height:10px;"></div>
             
             <xsl:apply-templates select="(LegalEntity|Individual)/*/WebAddress"/>
@@ -177,7 +179,7 @@
             <span class="locality"><xsl:value-of select="(LegalEntity|Individual)/*/Town"/></span>&nbsp;<span class="region"><xsl:value-of select="(LegalEntity|Individual)/*/Province"/></span>              <div class="country-name"><xsl:value-of select="(LegalEntity|Individual)/*/CountryCode"/></div>
             </address>
             <div><strong><xsl:value-of
-                select="document(concat('trans_',$lang,'.xml'))/diccionari/element[@etiqueta='VAT Nbr']"/>:</strong><span class="tax-id"> <xsl:value-of select="TaxIdentification/TaxIdentificationNumber"/></span></div>
+                select="document(concat('/plugin_assets/haltr/xsl/trans_',$lang,'.xml'))/diccionari/element[@etiqueta='VAT Nbr']"/>:</strong><span class="tax-id"> <xsl:value-of select="TaxIdentification/TaxIdentificationNumber"/></span></div>
             <div style="height:10px;"></div>
             
             <xsl:apply-templates select="(LegalEntity|Individual)/*/WebAddress"/>
@@ -213,7 +215,7 @@
 <xsl:template match="Installment">
     
     <span class="invoice-terms"><xsl:value-of
-        select="document(concat('trans_',$lang,'.xml'))/diccionari/element[@etiqueta='Installment']"/> <xsl:value-of select="concat(' ',InstallmentDueDate)"/></span><br/>
+        select="document(concat('/plugin_assets/haltr/xsl/trans_',$lang,'.xml'))/diccionari/element[@etiqueta='Installment']"/> <xsl:value-of select="concat(' ',InstallmentDueDate)"/></span><br/>
     <span class="invoice-terms">
         <xsl:variable name="valuetype" select="PaymentMeans"/>
         <xsl:value-of

@@ -1,5 +1,18 @@
 fr:
 
+  number:
+    # Used in number_to_tax_percent()
+    tax:
+      format:
+        # Where is the percentage? %n is the number, %p is the "%" sign, %t is the tax name
+        format: "%t %p%n"
+        separator: ","
+        delimiter: "."
+        precision: 1
+        significant: true
+        tax_name: TVA
+
+
   # community
   label_company: Compagnie
   label_my_company: Ma compagnie
@@ -61,7 +74,7 @@ fr:
   receive_payment: Recevoir paiement
   make_payment: Faire paiement
   label_paid: Payé
-  field_tax_percent: % TVA
+  field_tax_percent: TVA
   label_from: De
   label_to: À
   save_invoice: Sauver facture
