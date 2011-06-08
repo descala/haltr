@@ -2,6 +2,8 @@
 <!-- Wrapper -->
 <div id="invoice_wrapper">
 
+  <% lang = find_language(User.current.language); lang ||= Setting.default_language; set_language_if_valid(lang) -%>
+
   <!-- Workspace -->
   <div id="workspace1" class="haltrinvoice"><div id="workspace2">
 
@@ -36,9 +38,9 @@
         <!-- Invoice Number and Info -->
         <h2 class="invoice-ID"><%=h @invoice.label %> <%=h @invoice.number %></h2>
         <div class="invoice-info">
-          <span class="date"><strong><%=h @invoice.date %></strong></span><br/>
+          <span class="date"><strong><%=h format_date @invoice.date %></strong></span><br/>
           <% unless @invoice.due.blank? -%>
-            <span class="invoice-terms<%=h " pastdue" if @invoice.past_due?%>"><%=h l(:field_due_date)%> <%=h @invoice.due %></span><br/>
+            <span class="invoice-terms<%=h " pastdue" if @invoice.past_due?%>"><%=h l(:field_due_date)%> <%=h format_date @invoice.due %></span><br/>
           <% end -%>
           <% unless @invoice.payment_method_string.blank? -%>
             <span class="invoice-terms"><%=h @invoice.payment_method_string %></span><br/>
@@ -61,7 +63,7 @@
               <span class="locality"><%=h @client.city.strip unless @client.city.blank? %></span>
               <% unless @client.province.blank? -%>, <span class="region"><%=h @client.province %></span><% end -%>
               <% end -%>
-              <div class="country-name"><%=h @client.country if @client.country.downcase != "es" %></div>
+              <div class="country-name"><%=h @client.country if @client.country.downcase != @project.company.country.downcase %></div>
             </address>
             <% if !@invoice.draft -%>
               <div><strong><%=h l(:field_taxcode) %>:</strong><span class="tax-id"> <%=h @client.taxcode.upcase %></span></div>
@@ -139,7 +141,7 @@
               <% @invoice.payments.each do |payment| -%>
                 <tr>
                 <td class="item-delete first"><%= link_to "", {:action=>'destroy_payment',:id=>payment} , :confirm => l(:text_are_you_sure), :method => :post, :class => 'icon icon-del' %></td>
-                  <td class="item-date first"><%=h payment.date %></td>
+                  <td class="item-date first"><%=h format_date payment.date %></td>
                   <td class="item-description"><%=h payment.description %></td>
                   <td class="line-total last"><%=h money(payment.amount) %></td>
                 </tr>
@@ -166,8 +168,6 @@
             <span class="invoice-terms"><%= simple_format(h @invoice.extra_info) %></span><br/>
           </div>
         <% end -%>
-
-  <% lang = find_language(User.current.language); lang ||= Setting.default_language; set_language_if_valid(lang) -%>
 
   <%= render :partial=>'invoices/events'%>
 
