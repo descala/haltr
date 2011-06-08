@@ -5,13 +5,12 @@ fr:
     tax:
       format:
         # Where is the percentage? %n is the number, %p is the "%" sign, %t is the tax name
-        format: "%t %p%n"
+        format: "%t %n%p"
         separator: ","
         delimiter: "."
         precision: 1
-        significant: true
+        significant: false
         tax_name: TVA
-
 
   # community
   label_company: Compagnie
