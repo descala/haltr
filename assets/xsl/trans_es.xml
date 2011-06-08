@@ -3,6 +3,7 @@
 <diccionari>
     <element etiqueta="Description">Descripción</element>
     <element etiqueta="Amount">Importe</element>
+    <element etiqueta="Subtotal">Subtotal</element>
     <element etiqueta="Total">Total</element>
     <element etiqueta="Invoice">Factura</element>
     <element etiqueta="Installment">Vencimiento</element>
