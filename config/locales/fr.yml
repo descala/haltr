@@ -203,10 +203,12 @@ fr:
   hours: Heures
   kilograms: Kilogrammes
   litters: Litres
+  days: Jours
   s_units: ""
   s_hours: h
   s_kilograms: kg
   s_litters: l
+  s_days: j
 
   # People
   label_person: Personne
@@ -238,7 +240,7 @@ fr:
   label_payment: Paiement
   label_payment_plural: Paiements
   label_payment_new: Nouveau paiement
-  field_amount: Total
+  field_amount: Prix
   field_amount_in_cents: Total
   field_payment_method: Méthode de paiement
   field_reference: Référence

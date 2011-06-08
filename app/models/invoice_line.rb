@@ -6,12 +6,14 @@ class InvoiceLine < ActiveRecord::Base
   HOURS     = 2
   KILOGRAMS = 3
   LITTERS   = 4
+  DAYS      = 5
 
   UNIT_CODES = {
     UNITS     => {:name => 'units',     :facturae => '01', :ubl => 'C62'},
     HOURS     => {:name => 'hours',     :facturae => '02', :ubl => 'HUR'},
     KILOGRAMS => {:name => 'kilograms', :facturae => '03', :ubl => 'KGM'},
     LITTERS   => {:name => 'litters',   :facturae => '04', :ubl => 'LTR'},
+    DAYS      => {:name => 'days',      :facturae => '05', :ubl => 'DAY'},
   }
 
   belongs_to :invoice
