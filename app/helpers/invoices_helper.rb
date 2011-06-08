@@ -1,5 +1,8 @@
 module InvoicesHelper
 
+  DEFAULT_TAX_PERCENT_VALUES = { :format => "%t %n%p", :negative_format => "%t -%n%p", :separator => ".", :delimiter => ",",
+                                 :precision => 2, :significant => false, :strip_insignificant_zeros => false, :tax_name => "VAT" }
+
   def change_state_link(invoice)
     if invoice.state?(:closed)
       link_to(I18n.t(:mark_not_sent), {:action => :mark_not_sent, :id => invoice},:class=>'icon-haltr-mark-not-sent')
@@ -78,6 +81,34 @@ module InvoicesHelper
     if invoice.transport == "email"
       l(:by_mail_from, :email => invoice.from)
     #eslif invoice.transport == "upload" ...
+    end
+  end
+
+  def number_to_tax_percent(number, options = {})
+    return nil if number.nil?
+
+    options.symbolize_keys!
+
+    defaults = I18n.translate(:'number.format', :locale => options[:locale], :default => {})
+    tax      = I18n.translate(:'number.tax.format', :locale => options[:locale], :default => {})
+
+    defaults  = DEFAULT_TAX_PERCENT_VALUES.merge(defaults).merge!(tax)
+    defaults[:negative_format] = "-" + options[:format] if options[:format]
+    options   = defaults.merge!(options)
+
+    tax_name  = options.delete(:tax_name)
+    format    = options.delete(:format)
+
+    if number.to_f < 0
+      format = options.delete(:negative_format)
+      number = number.respond_to?("abs") ? number.abs : number.sub(/^-/, '')
+    end
+
+    begin
+      value = number_with_precision(number, options.merge(:raise => true))
+      format.gsub(/%n/, value).gsub(/%p/, '%').gsub(/%t/,tax_name)
+    rescue
+      number
     end
   end
 
