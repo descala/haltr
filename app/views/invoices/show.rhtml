@@ -110,7 +110,7 @@
                 <td><%=h money(@invoice.subtotal) %></td>
               </tr>
               <tr class="sales-tax">
-                <th><%=l(:field_tax_percent)%> <%=h number_to_percentage(@invoice.tax_percent, :precision=>1) %> :</th>
+                <th><%=h number_to_tax_percent(@invoice.tax_percent) %>:</th>
                 <td><%=h money(@invoice.tax) %></td>
               </tr>
               <% if @invoice.withholding_tax_percent > 0 and @invoice.apply_withholding_tax -%>
