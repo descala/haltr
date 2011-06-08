@@ -16,7 +16,7 @@
               <% if controller.action_name == "pdf" %>
                 <%= tag 'img', :src => "#{Attachment.storage_path}/#{@project.company.attachments.first.disk_filename}" -%>
               <% else -%>
-                <%= image_tag "/attachments/#{@project.company.attachments.first.id}/#{@project.company.attachments.first.filename}", :alt => "#{@project.company.name} Logo" -%>
+                <%= tag 'img', :src => "/attachments/#{@project.company.attachments.first.id}/#{@project.company.attachments.first.filename}", :alt => "#{@project.company.name} Logo" -%>
               <% end -%>
             <% end -%>
           </div>
