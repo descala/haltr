@@ -31,8 +31,8 @@ es:
   field_address2: Dirección
   field_city: Ciudad
   field_province: Provincia
-  field_postalcode: Codigo postal
-  field_country: Código
+  field_postalcode: Código postal
+  field_country: País
   field_bank_account: Cuenta bancaria
   button_people: Personas
   field_invoice_format: Formato y transporte de facturas preferido
