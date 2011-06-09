@@ -219,7 +219,7 @@
     <span class="invoice-terms">
         <xsl:variable name="valuetype" select="PaymentMeans"/>
         <xsl:value-of
-        select="document('PaymentMeansCodeAEAT-1.0.gc')//SimpleCodeList[1]/Row/Value[@ColumnRef='code']/SimpleValue[.=$valuetype]/../../Value[@ColumnRef=$lang]/SimpleValue"/>
+        select="document('/plugin_assets/haltr/xsl/PaymentMeansCodeAEAT-1.0.gc')//SimpleCodeList[1]/Row/Value[@ColumnRef='code']/SimpleValue[.=$valuetype]/../../Value[@ColumnRef=$lang]/SimpleValue"/>
         <xsl:value-of select="concat(' ',(AccountToBeDebited|AccountToBeCredited)/AccountNumber)"/></span><br/>
 </xsl:template>
     
