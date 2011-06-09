@@ -1,7 +1,13 @@
 <h2><%= l(:label_payment_new) %></h2>
 
-
 <% labelled_tabular_form_for :payment, @payment, :url => { :action => 'create', :id => @project } do |f| %>
-<%= render :partial => 'form', :locals => { :f => f } %>
-<%= submit_tag l(:button_create) %>
+  <%= render :partial => 'form', :locals => { :f => f } %>
+  <% if @invoice -%>
+    <div id="mail_notification">
+      <%= render :partial => 'paid_notification' %>
+    </div>
+    <%= submit_tag I18n.t(:save_without_mail) %>
+  <% else -%>
+    <%= submit_tag l(:button_create) %>
+  <% end -%>
 <% end %>

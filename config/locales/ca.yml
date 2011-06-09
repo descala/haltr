@@ -252,12 +252,17 @@ ca:
   field_payment_method: Mètode de pagament
   field_reference: Referència
   field_total_paid: Total pagat
+  received_invoice_paid: "%{company} ha pagat la seva factura número %{num}"
+  issued_invoice_paid: "%{company} ha rebut el pagament de la factura número %{num}"
+  paid_notification_to: "Notificar pagament a %{mail}"
+  received_paid_notification_to: "Notificar recepció de pagament a %{mail}"
+  save_and_mail: "Desar i enviar mail"
+  save_without_mail: "Desar sense enviar mail"
 
   # Settings
   field_taxcode: "CIF"
   field_address: "Adreça"
   field_website: "Lloc web"
-  field_email: "e-mail"
   field_bank_account: "Compte bancari"
   export_channels_path: "Path de les carptes d'exportació"
   field_company: "Empresa"

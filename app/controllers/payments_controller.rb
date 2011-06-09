@@ -42,9 +42,10 @@ class PaymentsController < ApplicationController
 
 
   def new
+    @payment_type = params[:payment_type]
     if params[:invoice_id]
-      invoice = Invoice.find params[:invoice_id]
-      @payment = Payment.new(:invoice_id => invoice.id, :amount => invoice.unpaid_amount)
+      @invoice = Invoice.find params[:invoice_id]
+      @payment = Payment.new(:invoice_id => @invoice.id, :amount => @invoice.unpaid_amount)
     else
       @payment = Payment.new
     end
@@ -58,6 +59,15 @@ class PaymentsController < ApplicationController
     if @payment.save
       flash[:notice] = l(:notice_successful_create)
       if @payment.invoice
+        if params[:save_and_mail]
+          MailNotifier.deliver_invoice_paid(@payment.invoice,params[:reason])
+        end
+        if @payment.invoice.is_paid?
+          # paid state change automatically creates an Event,
+          # delete it and create new one with email info (params[:reason])
+          @payment.invoice.events.last.destroy
+          Event.create(:name=>'paid',:invoice=>@payment.invoice,:user=>User.current,:info=>params[:reason])
+        end
         redirect_to :controller => 'invoices', :action => 'show', :id => @payment.invoice
       else
         redirect_to :action => 'index', :id => @project
