@@ -113,10 +113,6 @@ class Invoice < ActiveRecord::Base
     "#{subtotal} €"
   end
 
-  def due
-    "#{due_date}#{terms == "custom" ? "" : " (#{terms_description})"}"
-  end
-
   def pdf_name
     "factura-#{number.gsub('/','')}.pdf" rescue "factura-___.pdf"
   end
