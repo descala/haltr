@@ -1,6 +1,8 @@
 <!-- Wrapper -->
 <div id="invoice_wrapper">
 
+  <% lang = find_language(User.current.language); lang ||= Setting.default_language; set_language_if_valid(lang) -%>
+
   <!-- Workspace -->
   <div id="workspace1" class="haltrinvoice"><div id="workspace2">
 
