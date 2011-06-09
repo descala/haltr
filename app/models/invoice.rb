@@ -90,7 +90,11 @@ class Invoice < ActiveRecord::Base
   end
 
   def withholding_tax_percent
-    company.withholding_tax_percent.nil? ? 0 : company.withholding_tax_percent
+    if apply_withholding_tax
+      company.withholding_tax_percent.nil? ? 0 : company.withholding_tax_percent
+    else
+      0
+    end
   end
 
   def withholding_tax_name
