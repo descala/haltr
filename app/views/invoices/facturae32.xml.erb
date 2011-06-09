@@ -147,7 +147,7 @@
          <Items>
 <% @invoice.invoice_lines.each do |invoice_line| -%>
             <InvoiceLine>
-              <ReceiverTransactionReference><%=h @invoice.ponumber%></ReceiverTransactionReference>
+              <ReceiverTransactionReference><%=h(@invoice.ponumber)[0..19]%></ReceiverTransactionReference>
               <ItemDescription><%=h invoice_line.description%></ItemDescription>
               <Quantity><%=h invoice_line.quantity%></Quantity>
               <UnitOfMeasure><%=h invoice_line.unit_code(:facturae)%></UnitOfMeasure>
