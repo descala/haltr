@@ -1,12 +1,14 @@
 module PaymentsHelper
 
-  def invoices_for_select
+  def invoices_for_select(type=nil)
+    cond = ARCondition.new
     if @payment.invoice
-      conditions = ["(clients.project_id = ? and state != 'closed') OR invoices.id=?", @project, @payment.invoice]
+      cond << ["(clients.project_id = ? and state != 'closed') OR invoices.id=?", @project, @payment.invoice]
     else
-      conditions = ["clients.project_id = ? and state != 'closed'", @project]
+      cond << ["clients.project_id = ? and state != 'closed'", @project]
     end
-    InvoiceDocument.find(:all, :order => 'number DESC', :include => 'client', :conditions => conditions).collect {|c| [ "#{c.number} #{c.total.to_s.rjust(10).gsub(' ','_')}€ #{c.client}", c.id ] }
+    cond << ["type = ?", type] if type
+    InvoiceDocument.find(:all, :order => 'number DESC', :include => 'client', :conditions => cond.conditions).collect {|c| [ "#{c.number} #{c.total.to_s.rjust(10).gsub(' ','_')}€ #{c.client}", c.id ] }
   end
 
 

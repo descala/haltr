@@ -14,6 +14,6 @@
     <li><%= link_to_function(I18n.t(:mark_refused),  "show_refused_form();") %></li>
   <% end -%>
   <% if @invoice.state?(:accepted) -%>
-    <li><%= link_to l(:make_payment), {:controller=>'payments', :action=>'new', :id=>@project, :invoice_id=>@invoice}, :class=>'icon-haltr-payment' %></li>
+    <li><%= link_to l(:make_payment), {:controller=>'payments', :action=>'new', :id=>@project, :invoice_id=>@invoice, :payment_type=>@invoice.type}, :class=>'icon-haltr-payment' %></li>
   <% end -%>
 </ul>

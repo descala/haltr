@@ -54,7 +54,7 @@ module InvoicesHelper
       end
     elsif e.name =~ /_notification$/ and !e.md5.blank?
       "( #{link_to l(:download_notification), :controller=>'invoices', :action=>'legal', :id=>e.invoice, :md5=>e.md5} )"
-    elsif ( e.name == "accept" || e.name == "refuse" ) && !e.info.blank?
+    elsif ( e.name == "accept" || e.name == "refuse" || e.name == "paid" ) && !e.info.blank?
       "( #{link_to_function(l(:view_mail), "$('event_#{e.id}').show();")} )"
     else
       ""
