@@ -363,10 +363,12 @@ class InvoicesController < ApplicationController
   end
 
   def find_invoice
+    Project.send(:include, ProjectHaltrPatch) #TODO: perque nomes funciona el primer cop sense aixo?
     @invoice = InvoiceDocument.find params[:id]
     @lines = @invoice.invoice_lines
     @client = @invoice.client || Client.new(:name=>"unknown",:country=>"ES",:taxcode=>"EUR",:project=>@invoice.project)
     @project = @invoice.project
+    @company = @project.company
   rescue ActiveRecord::RecordNotFound
     render_404
   end
