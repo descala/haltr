@@ -181,6 +181,7 @@ en:
   in_format: "in %{format} format"
   back: "Back"
   view_mail: "View email"
+  public_link: "Public link"
 
   # Invoice templates
   label_invoice_template_new: New template

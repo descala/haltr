@@ -181,6 +181,7 @@ fr:
   in_format: "en format %{format}"
   back: "Retour"
   view_mail: Voir email
+  public_link: "Lien public"
 
   # Invoice templates
   label_invoice_template_new: Nouveau modèle

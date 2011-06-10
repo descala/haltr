@@ -190,6 +190,7 @@ es:
   in_format: "en formato %{format}"
   back: "Volver"
   view_mail: "Ver email"
+  public_link: "Enlace público"
 
   # Invoice templates
   label_invoice_template_new: Nueva plantilla

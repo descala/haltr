@@ -191,6 +191,7 @@ ca:
   in_format: "en format %{format}"
   back: "Tornar"
   view_mail: "Veure email"
+  public_link: "Enllaç públic"
 
   # Invoice templates
   label_invoice_template_new: Nova plantilla
