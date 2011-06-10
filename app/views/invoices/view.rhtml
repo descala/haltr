@@ -39,8 +39,8 @@
         <h2 class="invoice-ID"><%=h @invoice.label %> <%=h @invoice.number %></h2>
         <div class="invoice-info">
           <span class="date"><strong><%=h @invoice.date %></strong></span><br/>
-          <% unless @invoice.due.blank? -%>
-            <span class="invoice-terms<%=h " pastdue" if @invoice.past_due?%>"><%=h l(:field_due_date)%> <%=h @invoice.due %></span><br/>
+          <% unless @invoice.due_date.blank? -%>
+            <span class="invoice-terms<%=h " pastdue" if @invoice.past_due?%>"><%=h l(:field_due_date)%> <%=h @invoice.due_date %></span><br/>
           <% end -%>
           <% unless @invoice.payment_method_string.blank? -%>
             <span class="invoice-terms"><%=h @invoice.payment_method_string %></span><br/>
