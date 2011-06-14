@@ -19,8 +19,8 @@
     </address>
     <div><strong><%=h l(:field_taxcode) %></strong><span class="tax-id"> <%=h @company.taxcode %></span></div>
     <div style="height:10px;"></div>
-    <div><a href="<%=h @company.website %>" class="url" target="_blank"><%=h @company.website %></a></div>
-    <div><a href="<%=h @company.email %>" class="url" target="_blank"><%=h @company.email %></a></div>
+    <div><%= auto_link(@company.website) %></div>
+    <div><%= auto_link(@company.email) %></div>
   </div>
 </div>
 
@@ -43,7 +43,13 @@
 <!-- Client Info -->
 <div class="vcard client">
   <div class="client-info">
-    <h3 class="org fn"><%= link_to h(@client.name), {:controller=>'clients',:action=>'edit',:id=>@client} %></h3>
+    <h3 class="org fn"><%= 
+    if authorize_for ('clients', 'edit')
+      link_to h(@client.name), {:controller=>'clients',:action=>'edit',:id=>@client}
+    else
+      h(@client.name)
+    end
+    %></h3>
     <address class="adr">
       <div class="street-address"><%=h @client.address %></div>
       <div class="street-address"><%=h @client.address2 %></div>
