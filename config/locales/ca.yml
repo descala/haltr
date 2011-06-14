@@ -104,6 +104,8 @@ ca:
   transfer: Transferència bancària
   requires_client_bank_account: requereix compte bancari del client
   requires_company_bank_account: requereix compte bancari propi
+  requires_client_iban_bic: requereix IBAN i BIC del client
+  requires_company_iban_bic: requereix IBAN i BIC propis
   cash_str: "Pagament en efectiu"
   debit_str: "Rebut domiciliat a"
   transfer_str: "Pagament per transferència al compte"
@@ -262,9 +264,7 @@ ca:
 
   # Settings
   field_taxcode: "CIF"
-  field_address: "Adreça"
   field_website: "Lloc web"
-  field_bank_account: "Compte bancari"
   export_channels_path: "Path de les carptes d'exportació"
   field_company: "Empresa"
   logo: "Logo"
@@ -274,6 +274,8 @@ ca:
   field_public: "Perfil públic"
   private_fields_info: "Els següents camps són privats i no es mostraran encara que escolliu fer públic el vostre perfil"
   issues_controller_name: "Nom del controlador d'assumptes"
+  field_iban: IBAN
+  field_bic: BIC
 
 
   # Terms

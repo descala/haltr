@@ -163,6 +163,7 @@ class IssuedInvoice < InvoiceDocument
     end
   end
 
+  # errors to be raised on sending invoice
   def add_export_error(err)
     @export_errors ||= []
     @export_errors << err
