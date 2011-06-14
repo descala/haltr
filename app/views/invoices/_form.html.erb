@@ -15,7 +15,7 @@
   <%= render :partial => 'invoices/payment_stuff' %>
   </div>
   <p><%= f.text_field :tax_percent %></p>
-<% if @invoice.company.withholding_tax_percent > 0 -%>
+<% if @invoice.company.withholding_tax_percent and @invoice.company.withholding_tax_percent > 0 -%>
   <p><%= f.check_box :apply_withholding_tax %> (<%=@invoice.company.withholding_tax_percent%>% <%=@project.company.withholding_tax_name%>)</p>
 <% end -%>
   <p><%= f.text_field :discount_text %></p>
