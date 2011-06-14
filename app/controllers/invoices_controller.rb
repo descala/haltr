@@ -285,6 +285,9 @@ class InvoicesController < ApplicationController
 
   def view
     @lines = @invoice.invoice_lines
+    @invoices_not_sent = []
+    @invoices_sent = IssuedInvoice.find(:all,:conditions => ["client_id = ? and state = 'sent'",@client.id]).sort
+    @invoices_closed = IssuedInvoice.find(:all,:conditions => ["client_id = ? and state = 'closed'",@client.id]).sort
     render :layout=>"public"
   rescue ActionView::MissingTemplate
     nil

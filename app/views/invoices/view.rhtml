@@ -18,6 +18,11 @@
     </div>
   </div>
 </div>
+
+<% content_for :sidebar do %>
+  <%= render :partial => 'invoices/issued_invoice_list_other' %>
+<% end %>
+
 <% content_for :header_tags do %>
   <%= stylesheet_link_tag 'minimal', :plugin => 'haltr' %>
 <% end %>

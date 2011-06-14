@@ -114,4 +114,16 @@ module InvoicesHelper
     end
   end
 
+  def link_to_invoice(invoice, current=nil)
+    if invoice == current
+      invoice.number
+    else
+      if User.current.logged?
+        link_to(invoice.number, {:action=>'show', :id=>invoice})
+      else
+        link_to(invoice.number, {:action=>'view', :id=>invoice.client.hashid, :invoice_id=>invoice.id})
+      end
+    end
+  end
+
 end

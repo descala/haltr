@@ -33,28 +33,4 @@
   <% end -%>
 </ul>
 
-<% if @invoices_not_sent.any? -%>
-<h3><%=l(:open_invoices)%></h3>
-<p style="padding:7px 20px;">
-<% @invoices_not_sent.each do |invoice| -%>
-  <%=link_to invoice.number, :action=>'show', :id=>invoice %><%= ", " unless invoice == @invoices_not_sent.last %>
-<% end -%>
-</p>
-<% end -%>
-<% if @invoices_sent.any? -%>
-<h3><%=l(:pending_invoices)%></h3>
-<p style="padding:7px 20px;">
-<% @invoices_sent.each do |invoice| -%>
-  <%=link_to invoice.number, :action=>'show', :id=>invoice %><%= ", " unless invoice == @invoices_sent.last %>
-<% end -%>
-</p>
-<% end -%>
-<% if @invoices_closed.any? -%>
-<h3><%=l(:closed_invoices)%></h3>
-<p style="padding:7px 20px;">
-<% @invoices_closed.each do |invoice| -%>
-  <%=link_to invoice.number, :action=>'show', :id=>invoice %><%= ", " unless invoice == @invoices_closed.last %>
-<% end -%>
-</p>
-<% end -%>
-
+<%= render :partial => 'invoices/issued_invoice_list_other' %>
