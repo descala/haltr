@@ -56,7 +56,7 @@ module InvoicesHelper
       "( #{link_to l(:download_notification), :controller=>'invoices', :action=>'legal', :id=>e.invoice, :md5=>e.md5} )"
     elsif ( e.name == "accept" || e.name == "refuse" || e.name == "paid" ) && !e.info.blank?
       "( #{link_to_function(l(:view_mail), "$('event_#{e.id}').show();")} )"
-    elsif e.name == "new" and e.invoice and e.invoice.client
+    elsif e.name == "new" and e.invoice and e.invoice.client and e.invoice.visible_by_client?
       " (#{link_to(l(:public_link), :controller=>'invoices', :action=>'view', :id=>e.invoice.client.hashid, :invoice_id=>e.invoice.id)})"
     else
       ""

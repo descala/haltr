@@ -149,6 +149,10 @@ class IssuedInvoice < InvoiceDocument
     end
   end
 
+  def visible_by_client?
+    %w(sent refused accepted allegedly_paid closed).include? state
+  end
+
   protected
 
   def create_event
