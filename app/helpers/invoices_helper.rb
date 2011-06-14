@@ -28,7 +28,7 @@ module InvoicesHelper
   end
 
   def add_invoice_line_link(invoice_form,received=false)
-    link_to_function l(:button_add_invoice_line) do |page|
+    link_to_function l(:button_add_invoice_line), :class=>"icon icon-add" do |page|
       invoice_form.fields_for(:invoice_lines, InvoiceLine.new, :child_index => 'NEW_RECORD') do |line_form|
         if received
           html = render(:partial => 'received_invoices/invoice_line', :locals => { :f => line_form })
