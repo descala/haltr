@@ -172,10 +172,20 @@
               <InstallmentDueDate><%=h @invoice.due_date%></InstallmentDueDate>
                <InstallmentAmount><%=h precision @invoice.total.dollars%></InstallmentAmount>
                <PaymentMeans><%=h @invoice.payment_method_code(:facturae) %></PaymentMeans>
-<% if @invoice.debit? -%>
+<% if @invoice.debit? and @invoice.international? -%>
+               <AccountToBeDebited>
+                 <IBAN><%=h @client.iban%></IBAN>
+                 <BankCode><%=h @client.bic%></BankCode>
+               </AccountToBeDebited>
+<% elsif @invoice.debit? -%>
                <AccountToBeDebited>
                  <AccountNumber><%=h @client.bank_account%></AccountNumber>
                </AccountToBeDebited>
+<% elsif @invoice.transfer? and @invoice.international? -%>
+               <AccountToBeCredited>
+                 <IBAN><%=h @company.iban%></IBAN>
+                 <BankCode><%=h @company.bic%></BankCode>
+               </AccountToBeCredited>
 <% elsif @invoice.transfer? -%>
                <AccountToBeCredited>
                  <AccountNumber><%=h @company.bank_account%></AccountNumber>

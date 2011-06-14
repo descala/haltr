@@ -130,16 +130,28 @@ class Invoice < ActiveRecord::Base
   end
 
   def payment_method_string
-    if debit? and !client.bank_account.blank?
-      ba = client.bank_account rescue ""
-      ba ||= ""
-      "#{l(:debit_str)} #{ba[0..3]} #{ba[4..7]} ** ******#{ba[16..19]}"
-    elsif transfer?
-      ba = company.bank_account rescue ""
-      ba ||= ""
-      "#{l(:transfer_str)} #{ba[0..3]} #{ba[4..7]} #{ba[8..9]} #{ba[10..19]}"
+    if international?
+      if debit?
+        iban = client.iban || ""
+        bic  = client.bic || ""
+        "#{l(:debit_str)} (#{bic}) #{iban[0..3]} #{iban[4..7]} #{iban[8..11]} **** **** #{iban[20..23]}"
+      elsif transfer?
+        iban = company.iban || ""
+        bic  = company.bic || ""
+        "#{l(:transfer_str)} (#{bic}) #{iban[0..3]} #{iban[4..7]} #{iban[8..11]} #{iban[12..15]} #{iban[16..19]} #{iban[20..23]}"
+      else
+        l(:cash_str)
+      end
     else
-      l(:cash_str)
+      if debit?
+        ba = client.bank_account || ""
+        "#{l(:debit_str)} #{ba[0..3]} #{ba[4..7]} ** ******#{ba[16..19]}"
+      elsif transfer?
+        ba = company.bank_account ||= ""
+        "#{l(:transfer_str)} #{ba[0..3]} #{ba[4..7]} #{ba[8..9]} #{ba[10..19]}"
+      else
+        l(:cash_str)
+      end
     end
   end
 
@@ -187,6 +199,12 @@ class Invoice < ActiveRecord::Base
     end
   end 
 
+  def international?
+    # use Client.find to reload client info, sometimnes changed with ajax
+    c = Client.find client_id
+    company.country != c.country
+  end
+
   private
 
   def set_due_date
@@ -202,11 +220,16 @@ class Invoice < ActiveRecord::Base
   end
 
   def payment_method_requirements
-    if debit?
+    if debit? and !international?
       c = Client.find client_id
       errors.add(:base, ("#{l(:field_payment_method)} (#{l(:debit)}) #{l(:requires_client_bank_account)}")) if c.bank_account.blank?
-    elsif transfer?
+    elsif debit? and international?
+      c = Client.find client_id
+      errors.add(:base, ("#{l(:field_payment_method)} (#{l(:debit)}) #{l(:requires_client_iban_bic)}")) if c.iban.blank? or c.bic.blank?
+    elsif transfer? and !international?
       errors.add(:base, ("#{l(:field_payment_method)} (#{l(:transfer)}) #{l(:requires_company_bank_account)}")) if company.bank_account.blank?
+    elsif transfer? and international?
+      errors.add(:base, ("#{l(:field_payment_method)} (#{l(:transfer)}) #{l(:requires_company_iban_bic)}")) if company.iban.blank? or company.bic.blank?
     end
   end
 

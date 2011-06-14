@@ -93,6 +93,8 @@ en:
   transfer: Bank transfer
   requires_client_bank_account: requires client bank account
   requires_company_bank_account: requires self bank account
+  requires_client_iban_bic: requires client IBAN and BIC
+  requires_company_iban_bic: requires self IBAN and BIC
   cash_str: "Cash payment"
   debit_str: "Debit payment to"
   transfer_str: "Bank transfer to"
@@ -252,10 +254,7 @@ en:
 
   # Settings
   field_taxcode: VAT Id Number
-  field_address: Address
   field_website: Website
-  field_email: Email
-  field_bank_account: Bank account
   export_channels_path: "Path of export folders"
   field_company: "Company"
   logo: "Logo"
@@ -265,6 +264,8 @@ en:
   field_public: "Public profile"
   private_fields_info: "These fields are private, regardless you choose public profile"
   issues_controller_name: "Issues controller name"
+  field_iban: IBAN
+  field_bic: BIC
 
   # Terms
   "0": Immediately

@@ -103,6 +103,8 @@ es:
   transfer: Transferencia bancaria
   requires_client_bank_account: requiere cuenta bancaria del cliente
   requires_company_bank_account: requiere cuenta bancaria propia
+  requires_client_iban_bic: requiere IBAN y BIC del cliente
+  requires_company_iban_bic: requiere IBAN y BIC propios
   cash_str: "Pago al contado"
   debit_str: "Recibo domiciliado a"
   transfer_str: "Pago por transferencia a la cuenta"
@@ -261,9 +263,7 @@ es:
 
   # Settings
   field_taxcode: "CIF"
-  field_address: "Dirección"
   field_website: "Sitio web"
-  field_bank_account: "Cuenta bancaria"
   export_channels_path: "Path de les carpetas de exportación"
   field_company: "Empresa"
   logo: "Logo"
@@ -273,6 +273,8 @@ es:
   field_public: "Perfil público"
   private_fields_info: "Los siguientes campos son privados y no se mostrarán aunque escoja hacer público su perfil"
   issues_controller_name: "Nombre del controlador de peticiones"
+  field_iban: IBAN
+  field_bic: BIC
 
   # Terms
   "0": Al contado

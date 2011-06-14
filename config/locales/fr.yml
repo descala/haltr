@@ -93,6 +93,8 @@ fr:
   transfer: Transfert bancaire
   requires_client_bank_account: requiert compte bancaire client
   requires_company_bank_account: requiert propre compte bancaire
+#  requires_client_iban_bic: requires client IBAN and BIC
+#  requires_company_iban_bic: requires self IBAN and BIC
   cash_str: "Paiement liquide"
   debit_str: "Débite paiement à"
   transfer_str: "Transfert bancaire à"
@@ -254,10 +256,7 @@ fr:
 
   # Settings
   field_taxcode: N° TVA
-  field_address: Addresse
   field_website: Site web
-  field_email: Email
-  field_bank_account: Compte bancaire
   export_channels_path: "Chemin des répertoires d'export"
   field_company: "Compagnie"
   logo: "Logo"
@@ -267,6 +266,8 @@ fr:
   field_public: "Profil publique"
   private_fields_info: "Ces champs sont privés, même si vous choisissez un profil publique"
   issues_controller_name: "Issues controller name"
+  field_iban: IBAN
+  field_bic: BIC
 
   # Terms
   "0": Immédiatement

@@ -56,10 +56,30 @@
     <cac:PaymentMeans>
       <cbc:PaymentMeansCode><%=h @invoice.payment_method_code(:ubl) %></cbc:PaymentMeansCode>
       <cbc:PaymentDueDate><%=h @invoice.due_date%></cbc:PaymentDueDate>
-<% if @invoice.debit? -%>
+<% if @invoice.debit? and @invoice.international? -%>
+          <cbc:PaymentChannelCode>IBAN</cbc:PaymentChannelCode>
+          <cac:PayerFinancialAccount>
+            <cbc:ID><%=h @client.iban%></cbc:ID>
+            <cac:FinancialInstitutionBranch>
+              <cac:FinancialInstitution>
+                <cbc:ID><%=h @client.bic%></cbc:ID>
+              </cac:FinancialInstitution>
+            </cac:FinancialInstitutionBranch>
+          </cac:PayerFinancialAccount>
+<% elsif @invoice.debit? -%>
           <cac:PayerFinancialAccount>
             <cbc:ID><%=h @client.bank_account%></cbc:ID>
           </cac:PayerFinancialAccount>
+<% elsif @invoice.transfer? and @invoice.international? -%>
+          <cbc:PaymentChannelCode>IBAN</cbc:PaymentChannelCode>
+          <cac:PayeeFinancialAccount>
+            <cbc:ID><%=h @company.iban%></cbc:ID>
+            <cac:FinancialInstitutionBranch>
+              <cac:FinancialInstitution>
+                <cbc:ID><%=h @client.bic%></cbc:ID>
+              </cac:FinancialInstitution>
+            </cac:FinancialInstitutionBranch>
+          </cac:PayeeFinancialAccount>
 <% elsif @invoice.transfer? -%>
           <cac:PayeeFinancialAccount>
             <cbc:ID><%=h @company.bank_account%></cbc:ID>

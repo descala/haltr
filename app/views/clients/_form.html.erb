@@ -37,6 +37,8 @@
     <p><%= f.text_field :postalcode, :readonly => @client.linked? %></p>
     <p><%= f.label_for_field :country, :required => true %><%= f.iso_country_select :country, [:es], :readonly => @client.linked? %></p>
     <p><%= f.text_field :bank_account, :size => 30 %></p>
+    <p><%= f.text_field :iban, :size => 30 %></p>
+    <p><%= f.text_field :bic, :size => 30 %></p>
     <p><%= f.select :currency, currency_options_for_select, :required => true, :readonly => @client.linked? %></p>
     <% if @client.linked? -%>
       <p><%= f.text_field :language, :value => l(:general_lang_name,:locale => @client.language), :readonly=>true %></p>
