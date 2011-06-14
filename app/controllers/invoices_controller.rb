@@ -253,22 +253,7 @@ class InvoicesController < ApplicationController
   end
 
   def legal
-    #TODO: several B2bRouters
-    if @invoice.fetch_legal_by_http(params[:md5])
-      respond_to do |format|
-        format.html do
-          send_data @invoice.legal_invoice, :filename => @invoice.legal_filename
-        end
-        format.xml do
-          render :xml => @invoice.legal_invoice
-        end
-      end
-    else
-      render_404
-    end
-  rescue Errno::ECONNREFUSED, Errno::EHOSTUNREACH => e
-    flash[:warning]=l(:cant_connect_trace, e.message)
-    redirect_to :action => 'show', :id => @invoice
+    download
   end
 
   def update_currency_select
@@ -301,6 +286,8 @@ class InvoicesController < ApplicationController
   def view
     @lines = @invoice.invoice_lines
     render :layout=>"public"
+  rescue ActionView::MissingTemplate
+    nil
   rescue
     render_404
   end
