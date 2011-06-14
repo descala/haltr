@@ -1,7 +1,6 @@
-<% I18n.locale = @invoice.locale %>
 <!-- Wrapper -->
 <div style="width:100%; text-align:center;">
-  <% if @invoice.events.any? -%>
+  <% if @invoice.final_md5 -%>
     <div style="text-align:right;">
       <p style="margin:10px;"><%= link_to "Download", :controller=>"invoices", :action=>"download", :id=>@client.hashid, :invoice_id=>@invoice.id %></p>
     </div>
@@ -11,7 +10,9 @@
     <div id="workspace1" class="haltrinvoice"><div id="workspace2">
       <div id="col1">
 
-          <%= render :partial=>'invoices/invoice' %>
+        <% I18n.locale = @invoice.locale %>
+        <%= render :partial=>'invoices/invoice' %>
+        <% lang = find_language(User.current.language); lang ||= Setting.default_language; set_language_if_valid(lang) -%>
 
       </div>
     </div>
