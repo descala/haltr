@@ -334,7 +334,9 @@ class InvoicesController < ApplicationController
       return
     end
     @company = @client.project.company
-    invoices = IssuedInvoice.find(:all, :conditions => ["client_id=? AND id=?",@client.id,params[:invoice_id]])
+    invoices = IssuedInvoice.find(:all,
+                                  :conditions => ["client_id=? AND id=?",@client.id,params[:invoice_id]]
+                                 ).delete_if { |i| !i.visible_by_client? }
     if invoices.size != 1
       render_404
       return

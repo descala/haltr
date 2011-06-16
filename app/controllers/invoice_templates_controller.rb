@@ -150,6 +150,7 @@ class InvoiceTemplatesController < ApplicationController
     @lines = @invoice.invoice_lines
     @client = @invoice.client
     @project = @invoice.project
+    @company = @project.company
   rescue ActiveRecord::RecordNotFound
     render_404
   end

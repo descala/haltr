@@ -28,7 +28,7 @@ module InvoicesHelper
   end
 
   def add_invoice_line_link(invoice_form,received=false)
-    link_to_function l(:button_add_invoice_line) do |page|
+    link_to_function l(:button_add_invoice_line), :class=>"icon icon-add" do |page|
       invoice_form.fields_for(:invoice_lines, InvoiceLine.new, :child_index => 'NEW_RECORD') do |line_form|
         if received
           html = render(:partial => 'received_invoices/invoice_line', :locals => { :f => line_form })
@@ -56,7 +56,7 @@ module InvoicesHelper
       "( #{link_to l(:download_notification), :controller=>'invoices', :action=>'legal', :id=>e.invoice, :md5=>e.md5} )"
     elsif ( e.name == "accept" || e.name == "refuse" || e.name == "paid" ) && !e.info.blank?
       "( #{link_to_function(l(:view_mail), "$('event_#{e.id}').show();")} )"
-    elsif e.name == "new" and e.invoice and e.invoice.client
+    elsif e.name == "new" and e.invoice and e.invoice.client and e.invoice.visible_by_client?
       " (#{link_to(l(:public_link), :controller=>'invoices', :action=>'view', :id=>e.invoice.client.hashid, :invoice_id=>e.invoice.id)})"
     else
       ""
