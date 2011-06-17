@@ -54,6 +54,7 @@ es:
   public: "Público"
   semipublic: "Requerir autorización"
   private: "Privado"
+  confirm_delete_client_with_invoices: "Atención! El cliente tiene %{count} facturas asociadas.\nBorrar el cliente y todas sus facturas?"
 
   # Invoices
   IssuedInvoice: Factura emitida

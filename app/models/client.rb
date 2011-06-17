@@ -2,8 +2,8 @@ class Client < ActiveRecord::Base
 
   unloadable
 
-  has_many :invoices ##, :dependent => :nullify ## NO ESBORRAR CLIENTS
-  has_many :people
+  has_many :invoices, :dependent => :destroy
+  has_many :people, :dependent => :destroy
 
   # TODO: only in Redmine
   belongs_to :project, :include => true
@@ -72,14 +72,6 @@ class Client < ActiveRecord::Base
 
   def issued_invoices
     self.invoices.find(:all,:conditions=>["type=?","IssuedInvoice"])
-  end
-
-  def before_destroy
-    if self.invoices.any?
-      #TODO: this error not shown
-      errors.add_to_base("Client has #{invoices.size} invoices associated")
-      false
-    end
   end
 
   def allowed?
