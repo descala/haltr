@@ -50,9 +50,9 @@ class ClientsController < ApplicationController
   end
 
   def create
-    @client = Client.new(params[:client].merge({:project=>@project}))
+    new_client = Client.new(params[:client].merge({:project=>@project}))
     respond_to do |format|
-      if @client.save
+      if new_client.save
         format.html {
           flash[:notice] = l(:notice_successful_create)
           redirect_to :controller=>'clients', :action=>'index', :id=>@project
@@ -60,8 +60,9 @@ class ClientsController < ApplicationController
         format.js {
           render(:update) { |page|
             page.replace_html "new_client_wrapper", :partial => 'invoices/new_client'
-            page.replace_html "client_select", :partial => 'invoices/clients', :locals=>{:selected=>@client.id}
-            page.replace_html "currency_select", :partial => 'invoices/currency', :locals=>{:selected=>@client.currency.downcase}
+            page.replace_html "client_select", :partial => 'invoices/clients', :locals=>{:selected=>new_client.id}
+            page.replace_html "payment_stuff", :partial => 'invoices/payment_stuff',
+              :locals=>{:currency=>new_client.currency.downcase,:payment_method=>new_client.payment_method,:terms=>new_client.terms}
             page.hide "new_client_wrapper"
           }
         }

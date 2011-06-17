@@ -9,7 +9,7 @@
     currency = @invoice.currency.downcase
     payment_method = @invoice.payment_method
     terms = @invoice.terms
-  elsif @client
+  elsif @client and !@client.new_record?
     # ajax call on changing invoice's client
     currency = @client.currency.downcase
     payment_method = @client.payment_method
