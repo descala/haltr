@@ -21,12 +21,13 @@
   </thead>
   <tbody>
 <% for client in @clients -%>
-  <tr class="user <%= cycle("odd", "even") %>" onclick="javascript: document.location = '<%=url_for(:action=>'edit', :id=>client)%>'">
-    <td><%=h client.taxcode %></td>
-    <td><%=h client.name %></td>
-    <td align="center"><%= link_to l(:label_invoice_plural), {:controller=>'invoices',:action=>'index',:id=>@project, :client_id => client} %></td>
-    <td align="center"><%= link_to l(:button_people), {:controller=>'people', :id=>client}, :class => 'icon' %></td>
-    <td align="center"><%= link_to l(:button_new_invoice), {:controller=>'invoices',:action=>'new',:id=>@project,:client=>client}, :class => 'icon icon-edit' %></td>
+  <% onclick_edit = "onclick=\"javascript: document.location = '#{url_for(:action=>'edit', :id=>client)}'\"" -%>
+  <tr class="user <%= cycle("odd", "even") %>">
+    <td <%=onclick_edit%>><%=h client.taxcode %></td>
+    <td <%=onclick_edit%>><%=h client.name %></td>
+    <td align="center" <%=onclick_edit%>><%= link_to l(:label_invoice_plural), {:controller=>'invoices',:action=>'index',:id=>@project, :client_id => client} %></td>
+    <td align="center" <%=onclick_edit%>><%= link_to l(:button_people), {:controller=>'people', :id=>client}, :class => 'icon' %></td>
+    <td align="center" <%=onclick_edit%>><%= link_to l(:button_new_invoice), {:controller=>'invoices',:action=>'new',:id=>@project,:client=>client}, :class => 'icon icon-edit' %></td>
     <td align="center"><%= link_to l(:button_delete), {:action=>'destroy',:id=>client} , :confirm => l(:text_are_you_sure), :method => :delete, :class => 'icon icon-del' %></td>
   </tr>
 <% end -%>
