@@ -210,6 +210,8 @@ en:
   s_hours: h
   s_kilograms: kg
   s_litters: l
+  days: Days
+  s_days: d
 
   # People
   label_person: Person

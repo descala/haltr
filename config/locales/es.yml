@@ -219,6 +219,8 @@ es:
   s_hours: h
   s_kilograms: kg
   s_litters: l
+  days: Dias
+  s_days: d
 
   # People
   label_person: Persona
