@@ -67,6 +67,7 @@ class ClientsController < ApplicationController
           }
         }
       else
+        @client=new_client
         format.html { render :action => 'new' }
         format.js {
           render(:update) { |page|
