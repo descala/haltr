@@ -49,6 +49,7 @@ en:
   # Invoices
   IssuedInvoice: Issued invoice
   ReceivedInvoice: Received invoice
+  DraftInvoice: Draft
   label_invoice_plural: Invoices
   label_invoice: Invoice
   label_draft: Invoice draft

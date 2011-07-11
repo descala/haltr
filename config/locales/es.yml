@@ -59,6 +59,7 @@ es:
   # Invoices
   IssuedInvoice: Factura emitida
   ReceivedInvoice: Factura recibida
+  DraftInvoice: Borrador
   label_invoice_plural: Facturas
   label_invoice: Factura
   label_draft: Borrador de factura

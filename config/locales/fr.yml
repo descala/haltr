@@ -48,6 +48,7 @@ fr:
   # Invoices
   IssuedInvoice: Facture émise
   ReceivedInvoice: Facture reçue
+  DraftInvoice: Projet
   label_invoice_plural: Factures
   label_invoice: Facture
   label_draft: Brouillon facture

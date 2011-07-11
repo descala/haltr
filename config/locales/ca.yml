@@ -60,6 +60,7 @@ ca:
   # Invoices
   IssuedInvoice: Factura emesa
   ReceivedInvoice: Factura rebuda
+  DraftInvoice: Esborrany
   label_invoice_plural: Factures
   label_invoice: Factura
   label_draft: Esborrany de factura
