@@ -267,6 +267,7 @@ fr:
   field_public: "Profil publique"
   private_fields_info: "Ces champs sont privés, même si vous choisissez un profil publique"
   issues_controller_name: "Issues controller name"
+  diba_cif: "DIBA CIF"
   field_iban: IBAN
   field_bic: BIC
 
@@ -314,3 +315,8 @@ fr:
 
   hide_full_form: "Montrer moins de champs"
   show_full_form: "Montrer plus de champs"
+
+  # DIBA
+  field_codi_centre_gestor: "Management center code"
+  field_num_contracte: "Contract num"
+  field_num_expedient: "Record num"

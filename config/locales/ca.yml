@@ -278,6 +278,7 @@ ca:
   field_public: "Perfil públic"
   private_fields_info: "Els següents camps són privats i no es mostraran encara que escolliu fer públic el vostre perfil"
   issues_controller_name: "Nom del controlador d'assumptes"
+  diba_cif: "CIF de DIBA"
   field_iban: IBAN
   field_bic: BIC
 
@@ -326,3 +327,8 @@ ca:
 
   hide_full_form: "Mostrar menys camps"
   show_full_form: "Mostrar mes camps"
+
+  # DIBA
+  field_codi_centre_gestor: "Codi de centre gestor"
+  field_num_contracte: "Número de contracte"
+  field_num_expedient: "Número d'expedient"

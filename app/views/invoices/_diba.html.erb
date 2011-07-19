@@ -1,0 +1,18 @@
+<%
+  centre_gestor = @invoice.codi_centre_gestor unless @invoice.nil?
+-%>
+<p>
+<label for="invoice_codi_centre_gestor"><%= l(:field_codi_centre_gestor) %></label>
+<%= select(:invoice, :codi_centre_gestor, IssuedInvoice.centres_gestors_for_select, {:selected=>centre_gestor}, :required => true) %>
+</p>
+
+<p>
+<label for="invoice_num_contracte"><%= l(:field_num_contracte) %></label>
+<%= text_field :invoice, :num_contracte %>
+</p>
+
+<p>
+<label for="invoice_num_expedient"><%= l(:field_num_expedient) %></label>
+<%= text_field :invoice, :num_expedient %>
+</p>
+
