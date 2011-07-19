@@ -3,7 +3,7 @@
 -%>
 <p>
 <label for="invoice_codi_centre_gestor"><%= l(:field_codi_centre_gestor) %></label>
-<%= select(:invoice, :codi_centre_gestor, IssuedInvoice.centres_gestors_for_select, {:selected=>centre_gestor}, :required => true) %>
+<%= select(:invoice, :codi_centre_gestor, grouped_options_for_select(Diba::CODIS_CENTRE_GESTORS, centre_gestor), :required => true) %>
 </p>
 
 <p>

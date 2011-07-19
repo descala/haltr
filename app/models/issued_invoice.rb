@@ -153,10 +153,6 @@ class IssuedInvoice < InvoiceDocument
     %w(sent refused accepted allegedly_paid closed).include? state
   end
 
-  def self.centres_gestors_for_select
-    {"centre 1" => "1", "centre 2" => "2"}
-  end
-
   protected
 
   def create_event

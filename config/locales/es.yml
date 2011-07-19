@@ -327,6 +327,6 @@ es:
   show_full_form: "Mostrar mas campos"
 
   # DIBA
-  field_codi_centre_gestor: "Codigo de centro gestor"
+  field_codi_centre_gestor: "Código de centro gestor"
   field_num_contracte: "Número de contrato"
   field_num_expedient: "Número de expediente"
