@@ -258,7 +258,7 @@ class InvoicesController < ApplicationController
 
   def update_currency_select
     @client = Client.find(params[:value]) unless params[:value].blank?
-    selected = @client.nil? ? params[:curr_sel] : @client.currency.downcase
+    selected = @client.nil? ? params[:curr_sel] : @client.currency
     if params[:required] == "false"
       render :partial => "received_invoices/currency", :locals => {:selected=>selected}
     else
@@ -358,7 +358,7 @@ class InvoicesController < ApplicationController
     Project.send(:include, ProjectHaltrPatch) #TODO: perque nomes funciona el primer cop sense aixo?
     @invoice = InvoiceDocument.find params[:id]
     @lines = @invoice.invoice_lines
-    @client = @invoice.client || Client.new(:name=>"unknown",:country=>"ES",:taxcode=>"EUR",:project=>@invoice.project)
+    @client = @invoice.client || Client.new(:name=>"unknown",:project=>@invoice.project)
     @project = @invoice.project
     @company = @project.company
   rescue ActiveRecord::RecordNotFound

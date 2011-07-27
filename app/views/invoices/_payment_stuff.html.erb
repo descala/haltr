@@ -1,21 +1,21 @@
 <%
   if @invoice and @invoice.new_record? and @client
     # new invoice, default client
-    currency = @client.currency.downcase
+    currency = @client.currency
     payment_method = @client.payment_method
     terms = @client.terms
   elsif @invoice
     # existing invoice, current client
-    currency = @invoice.currency.downcase
+    currency = @invoice.currency
     payment_method = @invoice.payment_method
     terms = @invoice.terms
   elsif @client and !@client.new_record?
     # ajax call on changing invoice's client
-    currency = @client.currency.downcase
+    currency = @client.currency
     payment_method = @client.payment_method
     terms = @client.terms
   end
-  currency ||= "eur"
+  currency ||= Setting.plugin_haltr['default_currency']
   payment_method ||= 1
   terms ||= 0
 -%>

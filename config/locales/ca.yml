@@ -280,6 +280,8 @@ ca:
   issues_controller_name: "Nom del controlador d'assumptes"
   field_iban: IBAN
   field_bic: BIC
+  default_country: "País per defecte"
+  default_currency: "Moneda per defecte"
 
 
   # Terms

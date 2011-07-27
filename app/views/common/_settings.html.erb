@@ -2,3 +2,5 @@
 <p><label><%=l(:trace_url)%></label><%= text_field_tag 'settings[trace_url]', @settings['trace_url'] %></p>
 <p><label><%=l(:export_channels_path)%></label><%= text_field_tag 'settings[export_channels_path]', @settings['export_channels_path'] || '/tmp' %></p>
 <p><label><%=l(:issues_controller_name)%></label><%= text_field_tag 'settings[issues_controller_name]', @settings['issues_controller_name'] || 'issues' %></p>
+<p><label><%=l(:default_country) %></label><%= select_tag('settings[default_country]', options_for_select(ISO::Countries::COUNTRIES.collect {|k,v| [v,k.to_s]}.sort,@settings['default_country'])) %></p>
+<p><label><%=l(:default_currency) %></label><%= select_tag('settings[default_currency]', options_for_select(HaltrHelper.currency_options_for_select, @settings['default_currency'])) %></p>

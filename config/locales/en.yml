@@ -270,6 +270,8 @@ en:
   issues_controller_name: "Issues controller name"
   field_iban: IBAN
   field_bic: BIC
+  default_country: "Default country"
+  default_currency: "Default currency"
 
   # Terms
   "0": Immediately

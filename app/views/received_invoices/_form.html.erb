@@ -10,7 +10,7 @@
   <% else -%>
     <p><%= f.text_field :number, :size => 10 %> <%= "#{l(:label_last_invoice_number)}: #{IssuedInvoice.last_number(@project)}" if IssuedInvoice.all.any?%></p>
   <% end -%>
-  <p id="currency_select"><%= render :partial=>'received_invoices/currency', :locals => {:selected=>@invoice.currency.downcase} %></p>
+  <p id="currency_select"><%= render :partial=>'received_invoices/currency', :locals => {:selected=>@invoice.currency} %></p>
   <p><%= f.text_field :ponumber %></p>
   <p><%= f.select(:terms, Terms.for_select, {}, {:onchange=>"terms()"}) %></p>
   <p><%= f.text_field :due_date, :size => 10, :disabled => !@invoice.custom_due? %><span id="due_date_cal" style="visibility: <%=@invoice.custom_due? ? "visible" : "hidden" %>;"><%= calendar_for('invoice_due_date') %></span></p>

@@ -279,6 +279,8 @@ es:
   issues_controller_name: "Nombre del controlador de peticiones"
   field_iban: IBAN
   field_bic: BIC
+  default_country: "País por defecto"
+  default_currency: "Moneda por defecto"
 
   # Terms
   "0": Al contado
