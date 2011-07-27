@@ -56,3 +56,4 @@ end
 require_dependency 'iso_countries'
 # https://github.com/SunDawg/country_codes
 config.gem 'sundawg_country_codes', :lib => 'country_iso_translater'
+

@@ -29,7 +29,8 @@ class Client < ActiveRecord::Base
 
   def initialize(attributes=nil)
     super
-    self.currency ||= Money.default_currency.iso_code
+    self.currency ||= Setting.plugin_haltr['default_currency']
+    self.country  ||= Setting.plugin_haltr['default_country']
     self.invoice_format ||= ExportChannels.default
     self.language ||= User.current.language
     self.language = "es" if self.language.blank?

@@ -20,7 +20,8 @@ class Company < ActiveRecord::Base
   def initialize(attributes=nil)
     super
     self.withholding_tax_name ||= "IRPF"
-    self.currency ||= Money.default_currency.iso_code
+    self.currency ||= Setting.plugin_haltr['default_currency']
+    self.country  ||= Setting.plugin_haltr['default_country']
     self.attachments ||= []
   end
 

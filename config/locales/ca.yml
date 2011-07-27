@@ -281,6 +281,8 @@ ca:
   diba_cif: "CIF de DIBA"
   field_iban: IBAN
   field_bic: BIC
+  default_country: "País per defecte"
+  default_currency: "Moneda per defecte"
 
 
   # Terms

@@ -270,6 +270,8 @@ fr:
   diba_cif: "DIBA CIF"
   field_iban: IBAN
   field_bic: BIC
+  default_country: "Pays par défaut"
+  default_currency: "Devise par défaut"
 
   # Terms
   "0": Immédiatement

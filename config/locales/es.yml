@@ -280,6 +280,8 @@ es:
   diba_cif: "CIF de DIBA"
   field_iban: IBAN
   field_bic: BIC
+  default_country: "País por defecto"
+  default_currency: "Moneda por defecto"
 
   # Terms
   "0": Al contado

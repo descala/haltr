@@ -76,7 +76,7 @@ class InvoiceLine < ActiveRecord::Base
     self.currency = self.invoice.currency rescue nil
     self.currency ||= self.invoice.client.currency rescue nil
     self.currency ||= self.invoice.company.currency rescue nil
-    self.currency ||= Money.default_currency.iso_code
+    self.currency ||= Setting.plugin_haltr['default_currency']
   end
 
 end

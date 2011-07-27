@@ -17,8 +17,8 @@ en:
   label_my_company: My company
   label_companies: Companies
   label_company_new: New company
-  field_address: Adress
-  field_address2: Adress
+  field_address: Address
+  field_address2: Address
   field_city: City
   field_province: Province
   field_postalcode: Postcode
@@ -271,6 +271,8 @@ en:
   diba_cif: "DIBA CIF"
   field_iban: IBAN
   field_bic: BIC
+  default_country: "Default country"
+  default_currency: "Default currency"
 
   # Terms
   "0": Immediately

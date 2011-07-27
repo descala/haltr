@@ -34,14 +34,14 @@ class Invoice < ActiveRecord::Base
   composed_of :import,
     :class_name => "Money",
     :mapping => [%w(import_in_cents cents), %w(currency currency_as_string)],
-    :constructor => Proc.new { |cents, currency| Money.new(cents || 0, currency || Money.default_currency) }
+    :constructor => Proc.new { |cents, currency| Money.new(cents || 0, currency || Money::Currency.new(Setting.plugin_haltr['default_currency'])) }
 
   def initialize(attributes=nil)
     super
     self.discount_percent ||= 0
     self.currency ||= self.client.currency rescue nil
     self.currency ||= self.company.currency rescue nil
-    self.currency ||= Money.default_currency.iso_code
+    self.currency ||= Setting.plugin_haltr['default_currency']
     self.payment_method ||= 1
   end
 
