@@ -19,7 +19,10 @@ Redmine::Plugin.register :haltr do
 
   settings :default => {
     'trace_url' => 'http://localhost:3000',
-    'export_channels_path' => '/tmp'
+    'export_channels_path' => '/tmp',
+    'issues_controller_name' => 'issues',
+    'default_country' => 'es',
+    'default_currency' => 'EUR'
   },
   :partial => '/common/settings'
 
