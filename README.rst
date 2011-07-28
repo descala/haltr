@@ -15,14 +15,25 @@ about facturae
 INSTALL
 -------
 
-* Install Haltr plugin following `Redmine's plugin installation instructions`_
-
-* Install required gems
+* Download Haltr plugin using git
 
 ::
-  
+  cd <Redmine root dir>/vendor/plugins
+  git clone git://github.com/descala/haltr.git
+
+* Install necessary gems
+
+::
+  cd haltr
+  bundle install
   cd <Redmine root dir>
   rake gems:install
+
+* Apply the database changes
+
+::
+  cd <Redmine root dir>
+  rake db:migrate_plugins RAILS_ENV='production'
 
 * Clone iso_countries on Haltr's vendor/plugins folder
 
