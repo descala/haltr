@@ -40,6 +40,7 @@ class Company < ActiveRecord::Base
   end
 
   def currency=(v)
+    return unless v
     write_attribute(:currency,v.upcase)
   end
 

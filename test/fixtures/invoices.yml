@@ -7,8 +7,9 @@ invoice1:
   terms: 1m1
   project_id: 2 
   client: client1
-  payment_method: 2
+  payment_method: 1
   state: sent
+  currency: EUR
 
 template1:
   type: InvoiceTemplate
@@ -18,6 +19,7 @@ template1:
   frequency: 1
   project_id: 2 
   client: client1
+  currency: EUR
 
 test_import:
   type: IssuedInvoice
@@ -29,6 +31,7 @@ test_import:
   terms: "30"
   project_id: 2
   client: client1
+  currency: EUR
 
 draft:
   type: DraftInvoice
@@ -40,3 +43,4 @@ draft:
   client: client1
   payment_method: 2
   state: sent
+  currency: EUR
