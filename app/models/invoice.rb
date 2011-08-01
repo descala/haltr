@@ -46,6 +46,7 @@ class Invoice < ActiveRecord::Base
   end
 
   def currency=(v)
+    return unless v
     write_attribute(:currency,v.upcase)
     invoice_lines.each do |il|
       il.currency=v.upcase

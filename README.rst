@@ -18,12 +18,14 @@ INSTALL
 * Download Haltr plugin using git
 
 ::
+
   cd <Redmine root dir>/vendor/plugins
   git clone git://github.com/descala/haltr.git
 
 * Install necessary gems
 
 ::
+
   cd haltr
   bundle install
   cd <Redmine root dir>
@@ -32,6 +34,7 @@ INSTALL
 * Apply the database changes
 
 ::
+
   cd <Redmine root dir>
   rake db:migrate_plugins RAILS_ENV='production'
 

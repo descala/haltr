@@ -79,7 +79,7 @@ module Import
       Date.strptime(line[pos..pos+6], '%y%m%d')
     end
     def money(pos,len)
-      Money.new(line[pos..pos+len].to_i)
+      Money.new(line[pos..pos+len].to_i, Money::Currency.new(Setting.plugin_haltr['default_currency']))
     end
     def string(pos,len)
       line[pos..pos+len].strip

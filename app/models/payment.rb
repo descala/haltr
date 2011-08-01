@@ -14,7 +14,7 @@ class Payment < ActiveRecord::Base
   composed_of :amount,
     :class_name => "Money",
     :mapping => [%w(amount_in_cents cents)],
-    :constructor => Proc.new { |cents| Money.new(cents || 0) },
+    :constructor => Proc.new { |cents| Money.new(cents || 0, Money::Currency.new(Setting.plugin_haltr['default_currency'])) },
     :converter => lambda {|m| m.to_money }
 
   def initialize(attributes=nil)
