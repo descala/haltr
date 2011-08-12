@@ -52,7 +52,7 @@ class Client < ActiveRecord::Base
   end
 
   def bank_invoices_total(due_date)
-    a = Money.new 0
+    a = Money.new 0, Money::Currency.new(Setting.plugin_haltr['default_currency'])
     bank_invoices(due_date).each { |i| a = i.total + a }
     a
   end

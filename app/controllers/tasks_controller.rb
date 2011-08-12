@@ -28,7 +28,7 @@ class TasksController < ApplicationController
     @fecha_cargo = @due_date.to_formatted_s :ddmmyy
     @clients = Client.find :all, :conditions => ["bank_account != '' and project_id = ?", @project.id], :order => 'taxcode'
     @fecha_confeccion = Date.today.to_formatted_s :ddmmyy
-    @total = Money.new 0
+    @total = Money.new 0, Money::Currency.new(Setting.plugin_haltr['default_currency'])
     @clients.each do |client|
       money = client.bank_invoices_total(@due_date)
       @clients = @clients - [client] if money.zero?
