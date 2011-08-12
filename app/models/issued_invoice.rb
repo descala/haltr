@@ -107,7 +107,7 @@ class IssuedInvoice < InvoiceDocument
   def self.candidates_for_payment(payment)
     # order => older invoices to get paid first
     #TODO: add withholding_tax
-    find :all, :conditions => ["project_id = ? round(import_in_cents*(1+tax_percent/100)) = ? and date <= ? and state != 'closed'", payment.project_id, payment.amount_in_cents, payment.date], :order => "due_date ASC"
+    find :all, :conditions => ["project_id = ? and round(import_in_cents*(1+tax_percent/100)) = ? and date <= ? and state != 'closed'", payment.project_id, payment.amount_in_cents, payment.date], :order => "due_date ASC"
   end
 
   def past_due?
