@@ -7,7 +7,7 @@ class InvoiceTemplate < Invoice
   validate :invoice_must_have_lines
 
   before_validation :set_due_date
-  before_save :update_import
+  before_save :update_imports
 
   def invoices_until(date_limit)
     drafts = []
@@ -21,7 +21,7 @@ class InvoiceTemplate < Invoice
 
   def next_invoice
     i = DraftInvoice.new self.attributes
-    i.tax_percent = Invoice::TAX
+    i.taxes = self.taxes
     i.invoice_template = self
     i.state = 'new'
     # Do not generate invoices on weekend

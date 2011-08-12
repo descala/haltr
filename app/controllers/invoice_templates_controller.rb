@@ -87,6 +87,7 @@ class InvoiceTemplatesController < ApplicationController
 
   def new_from_invoice
     @invoice = InvoiceTemplate.new(@issued_invoice.attributes)
+    @invoice.taxes = @issued_invoice.taxes
     @invoice.created_at=nil
     @invoice.updated_at=nil
     @invoice.number=nil
@@ -125,6 +126,7 @@ class InvoiceTemplatesController < ApplicationController
     end
     drafts_to_process.each do |draft|
       issued = IssuedInvoice.new(draft.attributes)
+      issued.taxes = draft.taxes
       issued.number = params["draft_#{draft.id}"]
       draft.invoice_lines.each do |draft_line|
         l = InvoiceLine.new draft_line.attributes

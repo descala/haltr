@@ -4,6 +4,7 @@ class Company < ActiveRecord::Base
 
   belongs_to :project
   has_many :clients, :dependent => :nullify
+  has_many :taxes, :dependent => :destroy, :class_name => "Tax", :order => "percent"
   validates_presence_of :name, :project_id, :email
   validates_length_of :taxcode, :maximum => 20
   validates_uniqueness_of :taxcode
@@ -17,9 +18,14 @@ class Company < ActiveRecord::Base
   iso_country :country
   include CountryUtils
 
+  accepts_nested_attributes_for :taxes,
+    :allow_destroy => true,
+    :reject_if => proc { |attributes| attributes.all? { |_, value| value.blank? } }
+  validates_associated :taxes
+
   def initialize(attributes=nil)
     super
-    self.withholding_tax_name ||= "IRPF"
+    #TODO: Add default country taxes
     self.currency ||= Setting.plugin_haltr['default_currency']
     self.country  ||= Setting.plugin_haltr['default_country']
     self.attachments ||= []

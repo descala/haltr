@@ -15,13 +15,11 @@ class Invoice < ActiveRecord::Base
     PAYMENT_TRANSFER => {:facturae => '04', :ubl => '31'},
   }
 
-  # Default tax %
-  TAX = 18
-
   has_many :invoice_lines, :dependent => :destroy
   has_many :events, :dependent => :destroy
   belongs_to :project
   belongs_to :client
+  has_and_belongs_to_many :taxes, :class_name => "Tax", :order => "percent"
   validates_presence_of :client, :date, :currency, :project_id, :unless => Proc.new {|i| i.type == "ReceivedInvoice" }
   validates_inclusion_of :currency, :in  => Money::Currency::TABLE.collect {|k,v| v[:iso_code] }, :unless => Proc.new {|i| i.type == "ReceivedInvoice" }
   validate :payment_method_requirements, :unless => Proc.new {|i| i.type == "ReceivedInvoice" }
@@ -34,6 +32,11 @@ class Invoice < ActiveRecord::Base
   composed_of :import,
     :class_name => "Money",
     :mapping => [%w(import_in_cents cents), %w(currency currency_as_string)],
+    :constructor => Proc.new { |cents, currency| Money.new(cents || 0, currency || Money::Currency.new(Setting.plugin_haltr['default_currency'])) }
+
+  composed_of :total,
+    :class_name => "Money",
+    :mapping => [%w(total_in_cents cents), %w(currency currency_as_string)],
     :constructor => Proc.new { |cents, currency| Money.new(cents || 0, currency || Money::Currency.new(Setting.plugin_haltr['default_currency'])) }
 
   def initialize(attributes=nil)
@@ -54,52 +57,24 @@ class Invoice < ActiveRecord::Base
   end
 
   def subtotal_without_discount
-    total = Money.new(0,currency)
+    amount = Money.new(0,currency)
     invoice_lines.each do |line|
       next if line.destroyed?
-      total += line.total
+      amount += line.total
     end
-    total
+    amount
   end
 
   def subtotal
     subtotal_without_discount - discount
   end
 
-  def tax
-    if tax_percent
-      subtotal * (tax_percent / 100.0)
-    else
-      Money.new(0,currency)
-    end
-  end
-
   def persontypecode
-    if withholding_tax_percent > 0
+    if has_negative_tax?
       "F" # Fisica
     else
       "J" # Juridica
     end
-  end
-
-  def withholding_tax
-    if self.apply_withholding_tax
-      subtotal * (withholding_tax_percent / 100.0)
-    else
-      0.to_money(currency)
-    end
-  end
-
-  def withholding_tax_percent
-    if apply_withholding_tax
-      company.withholding_tax_percent.nil? ? 0 : company.withholding_tax_percent
-    else
-      0
-    end
-  end
-
-  def withholding_tax_name
-    company.withholding_tax_name
   end
 
   def discount
@@ -110,12 +85,8 @@ class Invoice < ActiveRecord::Base
     end
   end
 
-  def total
-    subtotal + tax - withholding_tax
-  end
-
-  def subtotal_eur
-    "#{subtotal} €"
+  def has_negative_tax?
+    taxes.collect {|t| t if t.percent < 0 }.compact.any?
   end
 
   def pdf_name
@@ -216,8 +187,13 @@ class Invoice < ActiveRecord::Base
     Terms.new(self.terms, self.date)
   end
 
-  def update_import
+  def update_imports
     self.import_in_cents = subtotal.cents
+    amount = subtotal
+    taxes.each do |tax|
+      amount *= (tax.percent / 100.0 + 1)
+    end
+    self.total_in_cents = amount.cents
   end
 
   def payment_method_requirements

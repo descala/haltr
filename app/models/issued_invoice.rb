@@ -11,7 +11,7 @@ class IssuedInvoice < InvoiceDocument
   validate :invoice_must_have_lines
 
   before_validation :set_due_date
-  before_save :update_import
+  before_save :update_imports
   after_create :create_event
 
   attr_accessor :export_errors
@@ -106,8 +106,7 @@ class IssuedInvoice < InvoiceDocument
 
   def self.candidates_for_payment(payment)
     # order => older invoices to get paid first
-    #TODO: add withholding_tax
-    find :all, :conditions => ["round(import_in_cents*(1+tax_percent/100)) = ? and date <= ? and state != 'closed'", payment.amount_in_cents, payment.date], :order => "due_date ASC"
+    find :all, :conditions => ["total_in_cents = ? and date <= ? and state != 'closed'", payment.amount_in_cents, payment.date], :order => "due_date ASC"
   end
 
   def past_due?

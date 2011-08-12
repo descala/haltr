@@ -49,11 +49,12 @@ class InvoiceLine < ActiveRecord::Base
   end
 
   def tax
-     if invoice.tax_percent
-      total * (invoice.tax_percent / 100.0)
-    else
-      Money.new(0,currency)
+    line_tax = 0
+    invoice.taxes.each do |tax|
+      next unless tax.percent > 0
+      line_tax += total * (tax.percent / 100.0)
     end
+    line_tax
   end
 
   def self.units

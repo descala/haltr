@@ -74,7 +74,6 @@ fr:
   receive_payment: Recevoir paiement
   make_payment: Faire paiement
   label_paid: Payé
-  field_tax_percent: TVA
   label_from: De
   label_to: À
   save_invoice: Sauver facture
@@ -83,9 +82,6 @@ fr:
   pending_invoices: Factures en attente
   closed_invoices: Factures closes
   label_subtotal: Sous-total
-  field_withholding_tax_name: Nom de la taxe retenue à la source
-  field_withholding_tax_percent: % taxe retenue à la source
-  field_apply_withholding_tax: Appliquer taxe retenue à la source
   must_have_lines: doit avoir des lignes
   send_invoice: Envoyer facture
   label_send: Envoyer

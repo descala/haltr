@@ -86,7 +86,6 @@ ca:
   receive_payment: Rebre pagament
   make_payment: Efectuar pagament
   label_paid: Pagat
-  field_tax_percent: IVA
   label_from: Des de
   label_to: Fins a
   save_invoice: Desar factura
@@ -95,9 +94,6 @@ ca:
   pending_invoices: Factures pendents
   closed_invoices: Factures tancades
   label_subtotal: Subtotal
-  field_withholding_tax_name: Nom de la retenció
-  field_withholding_tax_percent: % de retenció
-  field_apply_withholding_tax: Aplicar retenció
   must_have_lines: ha de tenir linies
   send_invoice: Enviar factura
   label_send: Enviar
