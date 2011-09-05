@@ -76,11 +76,11 @@ class Client < ActiveRecord::Base
   end
 
   def allowed?
-    self.company and ( self.company.public? || self.company.semipublic? and self.allowed )
+    self.company and ( self.company.public? || ( self.company.semipublic? and self.allowed ) )
   end
 
   def denied?
-    self.company and ( self.company.private? || self.company.semipublic? and self.allowed == false )
+    self.company and ( self.company.private? || ( self.company.semipublic? and self.allowed == false ) )
   end
 
   def linked?
