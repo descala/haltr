@@ -134,7 +134,20 @@
                  <DiscountAmount><%=h precision(@invoice.discount.dollars,2)%></DiscountAmount>
                </Discount>
             </GeneralDiscounts>
+<% end -%>
+<% if @invoice.suplidos > 0 -%>
+	    <GeneralSurcharges>
+		<Charge>
+		    <ChargeReason>><%=h @invoice.suplidos_text%></ChargeReason>
+		    <ChargeAmount><%=h precision(@invoice.suplidos.dollars,2)%></ChargeAmount>
+		</Charge>
+	    </GeneralSurcharges>
+<% end -%>
+<% if @invoice.discount_percent > 0 -%>
             <TotalGeneralDiscounts><%=h precision(@invoice.discount.dollars,2)%></TotalGeneralDiscounts>
+<% end -%>
+<% if @invoice.suplidos > 0 -%>
+            <TotalGeneralSurcharges><%=h precision(@invoice.suplidos.dollars,2)%></TotalGeneralSurcharges>
 <% end -%>
             <TotalGrossAmountBeforeTaxes><%=h precision(@invoice.subtotal.dollars)%></TotalGrossAmountBeforeTaxes>
             <TotalTaxOutputs><%=h precision @invoice.tax.dollars%></TotalTaxOutputs>
