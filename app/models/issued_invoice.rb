@@ -106,7 +106,7 @@ class IssuedInvoice < InvoiceDocument
 
   def self.candidates_for_payment(payment)
     # order => older invoices to get paid first
-    find :all, :conditions => ["total_in_cents = ? and date <= ? and state != 'closed'", payment.amount_in_cents, payment.date], :order => "due_date ASC"
+    find :all, :conditions => ["project_id = ? and total_in_cents = ? and date <= ? and state != 'closed'", payment.project_id, payment.amount_in_cents, payment.date], :order => "due_date ASC"
   end
 
   def past_due?
