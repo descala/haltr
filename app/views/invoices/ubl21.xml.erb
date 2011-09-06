@@ -99,6 +99,19 @@
         </cac:TaxCategory>
       </cac:AllowanceCharge>
 <% end -%>
+<% if @invoice.suplidos > 0 -%>
+      <cac:AllowanceCharge>
+        <cbc:ChargeIndicator>true</cbc:ChargeIndicator>
+        <cbc:AllowanceChargeReason><<%=h @invoice.suplidos_text%></cbc:AllowanceChargeReason>
+        <cbc:Amount currencyID="EUR"><%=h precision(@invoice.suplidos.dollars,2)%></cbc:Amount>
+        <cac:TaxCategory>
+          <cbc:ID schemeID="UN/ECE 5305" schemeAgencyID="6">Z</cbc:ID>
+          <cac:TaxScheme>
+            <cbc:ID schemeID="UN/ECE 5153" schemeAgencyID="6">VAT</cbc:ID>
+          </cac:TaxScheme>
+        </cac:TaxCategory>
+      </cac:AllowanceCharge>
+<% end -%>
     <cac:TaxTotal>
       <cbc:TaxAmount currencyID="EUR"><%=h precision @invoice.tax.dollars %></cbc:TaxAmount>
       <cac:TaxSubtotal>
@@ -119,6 +132,9 @@
       <cbc:TaxInclusiveAmount currencyID="EUR"><%=h precision @invoice.total.dollars%></cbc:TaxInclusiveAmount>
 <% if @invoice.discount_percent > 0 -%>
           <cbc:AllowanceTotalAmount currencyID="EUR"><%=h precision(@invoice.discount.dollars,2)%></cbc:AllowanceTotalAmount>
+<% end -%>
+<% if @invoice.suplidos > 0 -%>
+          <cbc:ChargeTotalAmount currencyID="EUR"><%=h precision(@invoice.discount.dollars,2)%></cbc:ChargeTotalAmount>
 <% end -%>
         <cbc:PayableAmount currencyID="EUR"><%=h precision @invoice.total.dollars%></cbc:PayableAmount>
       </cac:LegalMonetaryTotal>
