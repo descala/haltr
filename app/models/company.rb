@@ -65,7 +65,7 @@ class Company < ActiveRecord::Base
   def companies_with_link_requests
     self.clients.collect { |c|
       next unless c.project and c.project.company
-      c.project.company if c.allowed.nil?
+      c.project.company if c.allowed?.nil?
     }.compact
   end
 
