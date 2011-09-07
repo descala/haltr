@@ -80,7 +80,7 @@
                                 </tr>
                                 
                                 <xsl:apply-templates select="//InvoiceLine"/>
-                                
+                                <xsl:apply-templates select="//Discount"/>
                                 
                             </tbody></table>
                         
@@ -97,10 +97,19 @@
                                 
                                 <tr class="invoice-total">
                                     <th><xsl:value-of
-                        select="document(concat('/plugin_assets/haltr/xsl/trans_',$lang,'.xml'))/diccionari/element[@etiqueta='Total']"/>:</th>
-                                    <td><xsl:value-of select="concat(//TotalExecutableAmount,' ',//InvoiceCurrencyCode)"/></td>
+                        select="document(concat('/plugin_assets/haltr/xsl/trans_',$lang,'.xml'))/diccionari/element[@etiqueta='TotalFactura']"/>:</th>
+                                    <td><xsl:value-of select="concat(//InvoiceTotal,' ',//InvoiceCurrencyCode)"/></td>
                                 </tr>
-                            </tbody></table>
+                                <xsl:apply-templates select="//Charge"/>
+                                <xsl:if test="//TotalGeneralSurcharges">
+                                    <tr class="invoice-total">
+                                        <th><xsl:value-of
+                                            select="document(concat('/plugin_assets/haltr/xsl/trans_',$lang,'.xml'))/diccionari/element[@etiqueta='TotalAPagar']"/>:</th>
+                                        <td><xsl:value-of select="concat(//TotalExecutableAmount,' ',//InvoiceCurrencyCode)"/></td>
+                                    </tr>                                    
+                                </xsl:if>
+                            </tbody>
+                        </table>
                         
                         
                     </div>
@@ -232,9 +241,19 @@
                 <td class="item-price"><xsl:value-of select='format-number(UnitPriceWithoutTax, "#.00", "Importe")'/></td>
                 <td class="line-total last"><xsl:value-of select='format-number(TotalCost, "#.00", "Importe")'/></td>
             </tr>
-            
-            
 </xsl:template>
+
+<xsl:template match="Discount">
+        
+        <tr>
+            
+            <td class="item-quantity first"></td>
+            <td class="item-description"><xsl:value-of select="DiscountReason"/></td>
+            <td class="item-price"><xsl:value-of select='concat(format-number(DiscountRate,"#"),"%")'/></td>
+            <td class="line-total last"><xsl:value-of select='format-number(DiscountAmount, "#.00", "Importe")'/></td>
+        </tr>
+</xsl:template>
+    
 
 <xsl:template match="Tax">
     <xsl:variable name="valuetype"><xsl:value-of select="TaxTypeCode"/></xsl:variable>
@@ -246,5 +265,12 @@
         <td><xsl:value-of select="TaxAmount/TotalAmount"/></td>
     </tr>
 </xsl:template>
-
+    
+<xsl:template match="Charge">
+        <tr class="sales-tax">
+            <th><xsl:value-of select="ChargeReason"/><xsl:if test="ChargeRate"><xsl:value-of select="concat(' ',format-number(ChargeRate,'#'),'%')"/></xsl:if>:</th>            
+            <td><xsl:value-of select="ChargeAmount"/></td>
+        </tr>
+</xsl:template>
+    
 </xsl:stylesheet>

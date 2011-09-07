@@ -4,7 +4,8 @@
     <element etiqueta="Description">Descripció</element>
     <element etiqueta="Amount">Import</element>
     <element etiqueta="Subtotal">Subtotal</element>
-    <element etiqueta="Total">Total</element>
+    <element etiqueta="TotalFactura">Total Factura</element>
+    <element etiqueta="TotalAPagar">Total a Pagar</element>
     <element etiqueta="Invoice">Factura</element>
     <element etiqueta="Installment">Venciment</element>
     <element etiqueta="Notes">Notes</element>
