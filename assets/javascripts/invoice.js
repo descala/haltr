@@ -4,12 +4,10 @@
  * really delete line.
  */
 function rm_line(id) {
-  var div = document.getElementById("invoice_line_"+id);
-  var p = div.firstElementChild;
-  div.removeChild(p);
+  $("invoice_line_"+id).firstDescendant().remove();
   // set hidden_field to 1 to really delete line
-  var hf = document.getElementById("destroy_line_"+id);
+  var hf = $("destroy_line_"+id);
   if (hf != null) {
-    hf.setAttribute("value", "1");
+    hf.value = 1;
   }
 }
