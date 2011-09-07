@@ -2,8 +2,8 @@
   centre_gestor = @invoice.codi_centre_gestor unless @invoice.nil?
 -%>
 <p>
-<label for="invoice_codi_centre_gestor"><%= l(:field_codi_centre_gestor) %></label>
-<%= select(:invoice, :codi_centre_gestor, grouped_options_for_select(Diba::CODIS_CENTRE_GESTORS, centre_gestor), :required => true) %>
+<label for="invoice_codi_centre_gestor"><%= l(:field_codi_centre_gestor) %><span class="required"> *</span></label>
+<%= select(:invoice, :codi_centre_gestor, grouped_options_for_select(Diba::CODIS_CENTRE_GESTORS, centre_gestor), :include_blank => true) %>
 </p>
 
 <p>

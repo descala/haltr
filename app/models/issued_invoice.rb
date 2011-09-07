@@ -9,6 +9,7 @@ class IssuedInvoice < InvoiceDocument
   validates_presence_of :due_date
   validate :number_must_be_unique_in_project
   validate :invoice_must_have_lines
+  validate :comprovacions_diba
 
   before_validation :set_due_date
   before_save :update_import
@@ -179,6 +180,12 @@ class IssuedInvoice < InvoiceDocument
     else
       add_export_error(:client_has_no_email)
       false
+    end
+  end
+
+  def comprovacions_diba
+    if self.client.taxcode == Setting.plugin_haltr['diba_cif']
+      errors.add(:codi_centre_gestor,:blank) if self.codi_centre_gestor.blank?
     end
   end
 
