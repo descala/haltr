@@ -195,7 +195,7 @@ class Invoice < ActiveRecord::Base
     self.import_in_cents = subtotal.cents
     amount = subtotal
     taxes.each do |tax|
-      amount *= (tax.percent / 100.0 + 1)
+      amount = amount + subtotal * (tax.percent / 100.0 )
     end
     self.total_in_cents = amount.cents
   end
