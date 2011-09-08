@@ -184,7 +184,7 @@ class IssuedInvoice < InvoiceDocument
   end
 
   def comprovacions_diba
-    if self.client.taxcode == Setting.plugin_haltr['diba_cif']
+    if self.client and self.client.taxcode == Setting.plugin_haltr['diba_cif']
       errors.add(:codi_centre_gestor,:blank) if self.codi_centre_gestor.blank?
     end
   end
