@@ -150,11 +150,11 @@ class IncomingXmlInvoice
     r = ReceivedInvoice.new(:number          => invoice_number,
                             :client          => client,
                             :date            => invoice_date,
-                            :import          => invoice_import.to_money,
+                            :import          => invoice_import.to_money(currency),
                             :currency        => currency,
                             :tax_percent     => invoice_tax_percent,
-                            :subtotal        => invoice_subtotal.to_money,
-                            :withholding_tax => invoice_withholding_tax.to_money,
+                            :subtotal        => invoice_subtotal.to_money(currency),
+                            :withholding_tax => invoice_withholding_tax.to_money(currency),
                             :due_date        => invoice_due_date,
                             :project         => @company.project)
     return r
