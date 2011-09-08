@@ -13,7 +13,8 @@ class ExportChannels
       'signed_pdf'    => { :format=>'facturae32', :channel=>'free_pdf', :validate => :client_has_email },
       'aoc'           => { :format=>'facturae30', :channel=>'free_aoc', :private=>true},
       'aoc31'         => { :format=>'facturae31', :channel=>'free_aoc', :private=>true},
-      'aoc32'         => { :format=>'facturae32', :channel=>'free_aoc', :private=>true}
+      'aoc32'         => { :format=>'facturae32', :channel=>'free_aoc', :private=>true},
+      'aoc32_test'    => { :format=>'facturae32', :channel=>'free_aoc_test', :private=>true}
     }
   end
 

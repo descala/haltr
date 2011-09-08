@@ -230,6 +230,7 @@ class InvoicesController < ApplicationController
   def send_invoice
     raise @invoice.export_errors.collect {|e| l(e)}.join(", ") unless @invoice.can_be_exported?
     export_id = @invoice.client.invoice_format
+    export_id = params[:export_id] if params[:export_id] # aoc test https://www.ingent.net/issues/2903
     path = ExportChannels.path export_id
     format = ExportChannels.format export_id
     @company = @invoice.company
