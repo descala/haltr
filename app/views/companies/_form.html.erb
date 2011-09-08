@@ -32,10 +32,9 @@
   <p><%= f.text_field :bic, :size => 30 %></p>
 
   <div id="taxes">
-    <p style="padding-left: 20px;"><%= I18n.t :taxes %>:</p>
+    <p style="padding-left: 20px;"><%= I18n.t :label_tax_plural %>:</p>
     <p style="font-weight:bold;">
     <span class="invoiceLineHeader" style="width: 80px;"><%= l(:field_name) %></span>
-    <span class="invoiceLineHeader" style="width: 290px;"><%= l(:field_percent) %></span>
     </p>
     <% @company.taxes << Tax.new if @company.taxes.empty? -%>
     <% f.fields_for :taxes do |tax_form| %>

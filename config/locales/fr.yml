@@ -76,6 +76,7 @@ fr:
   label_paid: Payé
   label_tax: Tax
   label_tax_plural: Taxes
+  button_add_tax: Add new tax
   label_from: De
   label_to: À
   save_invoice: Sauver facture

@@ -87,6 +87,7 @@ es:
   label_paid: Pagado
   label_tax: Impuesto
   label_tax_plural: Impuestos
+  button_add_tax: Añadir nuevo impuesto
   label_from: Desde
   label_to: Hasta
   save_invoice: Guardar factura

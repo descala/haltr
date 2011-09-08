@@ -88,6 +88,7 @@ ca:
   label_paid: Pagat
   label_tax: Impost
   label_tax_plural: Impostos
+  button_add_tax: Afegir un nou impost
   label_from: Des de
   label_to: Fins a
   save_invoice: Desar factura
