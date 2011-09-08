@@ -85,6 +85,8 @@ es:
   receive_payment: Recibir pago
   make_payment: Efectuar pago
   label_paid: Pagado
+  label_tax: Impuesto
+  label_tax_plural: Impuestos
   label_from: Desde
   label_to: Hasta
   save_invoice: Guardar factura

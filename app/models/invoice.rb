@@ -69,6 +69,10 @@ class Invoice < ActiveRecord::Base
     subtotal_without_discount - discount
   end
 
+  def taxes_total
+    total - import
+  end
+
   def persontypecode
     if has_negative_tax?
       "F" # Fisica

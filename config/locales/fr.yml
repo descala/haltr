@@ -74,6 +74,8 @@ fr:
   receive_payment: Recevoir paiement
   make_payment: Faire paiement
   label_paid: Payé
+  label_tax: Tax
+  label_tax_plural: Taxes
   label_from: De
   label_to: À
   save_invoice: Sauver facture

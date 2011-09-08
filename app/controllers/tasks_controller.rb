@@ -72,7 +72,7 @@ class TasksController < ApplicationController
       @tax[i.currency]      ||= Money.new(0,i.currency)
       @invoices[i.currency] << i
       @total[i.currency] += i.subtotal
-      @tax[i.currency]   += i.tax
+      @tax[i.currency]   += i.taxes_total
     end
   end
  

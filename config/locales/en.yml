@@ -75,6 +75,8 @@ en:
   receive_payment: Receive payment
   make_payment: Make payment
   label_paid: Paid
+  label_tax: Tax
+  label_tax_plural: Taxes
   label_from: From
   label_to: To
   save_invoice: Save invoice
