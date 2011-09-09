@@ -68,6 +68,7 @@ class InvoiceDocument < Invoice
   protected
 
   def update_status
+    update_imports
     if is_paid?
       paid
     else
