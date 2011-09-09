@@ -26,7 +26,7 @@
         <td><%= i.client.taxcode %></td>
         <td><%= i.client.name %></td>
         <td style="text-align: right;"><%= money(i.subtotal) %></td>
-        <td style="text-align: right;"><%= money(i.taxes_total) %></td>
+        <td style="text-align: right;"><%= money(i.tax_amount) %></td>
         <td style="text-align:center;"><%= i.due_date if i.debit? && i.client.bank_account %></td>
         <td style="text-align:center;"><%= i.payments.collect{|p|p.date}.join('<br/>') %></td>
       </tr>
@@ -34,8 +34,8 @@
 
     <tr>
       <td colspan="4"/>
-        <th><%= @total[currency] %> <%=@total[currency].currency.symbol%></th>
-        <th><%= @tax[currency] %> <%=@total[currency].currency.symbol%></th>
+        <th style="text-align: right;"><%= money(@total[currency]) %></th>
+        <th style="text-align: right;"><%= money(@tax[currency]) %></th>
       </td>
     </tr>
   </table>

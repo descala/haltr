@@ -192,14 +192,6 @@ class Invoice < ActiveRecord::Base
     taxes.collect {|tax| tax.name }.uniq
   end
 
-  def import_for_tax(tax_type)
-    t = Money.new(0,currency)
-    invoice_lines.each do |il|
-      t += il.tax_amount(tax_type)
-    end
-    t
-  end
-
   private
 
   def set_due_date
@@ -212,7 +204,7 @@ class Invoice < ActiveRecord::Base
 
   def update_imports
     self.import_in_cents = subtotal.cents
-    self.total_in_cents = subtotal.cents + tax.cents
+    self.total_in_cents = subtotal.cents + tax_amount.cents
   end
 
   def payment_method_requirements
