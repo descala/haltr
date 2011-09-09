@@ -5,6 +5,7 @@ class Tax < ActiveRecord::Base
   belongs_to :company
   validates_presence_of :name, :percent
   validates_numericality_of :percent
+  validates_format_of :name, :with => /^[a-zA-Z]+$/
   # only one name-percent combination per invoice_line:
   validates_uniqueness_of :percent, :scope => [:invoice_line_id,:name], :unless => Proc.new { |tax| tax.invoice_line_id.nil? }
   # only one name-percent combination per company:

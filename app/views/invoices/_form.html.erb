@@ -14,13 +14,6 @@
   <div id="payment_stuff">
   <%= render :partial => 'invoices/payment_stuff' %>
   </div>
-  <p>
-  <% @invoice.company.taxes.each do |tax| -%>
-    <% # we use taxis_ids since "taxes".singularize returns "taxis" (bug?) -%>
-    <%= check_box_tag "invoice[taxis_ids][]", tax.id, @invoice.taxes.include?(tax) %>
-    <%= h number_to_tax_percent(tax.percent, :tax_name=>tax.name) %><br />
-  <% end -%>
-  </p>
   <p><%= f.text_field :discount_text %></p>
   <p><%= f.text_field :discount_percent %></p>
   <p><%= f.text_area :extra_info, :rows=>3 %></p>
@@ -31,6 +24,9 @@
     <span class="invoiceLineHeader" style="width: 102px;">&nbsp;</span>
     <span class="invoiceLineHeader" style="width: 290px;"><%= l(:field_description) %></span>
     <span class="invoiceLineHeader" style="width: 80px;"><%= l(:field_price) %></span>
+    <% @invoice.company.taxes_hash.each_key do |name| -%>
+      <span class="invoiceLineHeader" style="width: 80px;"><%= name %></span>
+    <% end -%>
     </p>
     <% @invoice.invoice_lines << InvoiceLine.new(:new_and_first=>true) if @invoice.invoice_lines.empty? -%>
     <% f.fields_for :invoice_lines do |line_form| %>
