@@ -19,7 +19,6 @@ class Invoice < ActiveRecord::Base
   has_many :events, :dependent => :destroy
   belongs_to :project
   belongs_to :client
-  has_and_belongs_to_many :taxes, :class_name => "Tax", :order => "percent"
   validates_presence_of :client, :date, :currency, :project_id, :unless => Proc.new {|i| i.type == "ReceivedInvoice" }
   validates_inclusion_of :currency, :in  => Money::Currency::TABLE.collect {|k,v| v[:iso_code] }, :unless => Proc.new {|i| i.type == "ReceivedInvoice" }
   validate :payment_method_requirements, :unless => Proc.new {|i| i.type == "ReceivedInvoice" }
@@ -60,17 +59,13 @@ class Invoice < ActiveRecord::Base
     amount = Money.new(0,currency)
     invoice_lines.each do |line|
       next if line.destroyed?
-      amount += line.total
+      amount += line.taxable_base
     end
     amount
   end
 
   def subtotal
     subtotal_without_discount - discount
-  end
-
-  def taxes_total
-    total - import
   end
 
   def persontypecode
@@ -181,6 +176,30 @@ class Invoice < ActiveRecord::Base
     company.country != c.country
   end
 
+  def tax_amount(tax_type=nil)
+    t = Money.new(0,currency)
+    invoice_lines.each do |il|
+      t += il.tax_amount(tax_type)
+    end
+    t
+  end
+
+  def taxes
+    invoice_lines.collect {|il| il.taxes }.flatten
+  end
+
+  def tax_names
+    taxes.collect {|tax| tax.name }.uniq
+  end
+
+  def import_for_tax(tax_type)
+    t = Money.new(0,currency)
+    invoice_lines.each do |il|
+      t += il.tax_amount(tax_type)
+    end
+    t
+  end
+
   private
 
   def set_due_date
@@ -193,11 +212,7 @@ class Invoice < ActiveRecord::Base
 
   def update_imports
     self.import_in_cents = subtotal.cents
-    amount = subtotal
-    taxes.each do |tax|
-      amount = amount + subtotal * (tax.percent / 100.0 )
-    end
-    self.total_in_cents = amount.cents
+    self.total_in_cents = subtotal.cents + tax.cents
   end
 
   def payment_method_requirements

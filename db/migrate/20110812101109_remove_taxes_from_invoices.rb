@@ -9,22 +9,19 @@ class RemoveTaxesFromInvoices < ActiveRecord::Migration
     raise "Migration aborted by user" unless confirmation == "y"
     say_with_time "Migrating invoices, this may take a while..." do
       tax_names = {"es" => "IVA", "fr" => "TVA" }
-      Invoice.find(:all, :conditions => "tax_percent > 0").each do |invoice|
-        if invoice.company.taxes.find_by_percent(invoice.tax_percent)
-          invoice.taxes << invoice.company.taxes.find_by_percent(invoice.tax_percent)
-        else
-          invoice.taxes << Tax.new(:name => (tax_names[invoice.company.country] || "VAT"), :percent => invoice.tax_percent, :company => invoice.company)
+      Invoice.all.each do |invoice|
+        if invoice.tax_percent and invoice.tax_percent > 0
+          invoice.invoice_lines.each do |il|
+            il.taxes << Tax.new(:name => (tax_names[invoice.company.country] || "VAT"), :percent => invoice.tax_percent)
+          end
         end
-        invoice.save(false)
-      end
-      Invoice.find(:all, :conditions => [ "apply_withholding_tax = ?", true]).each do |invoice|
-        tax_percent = invoice.company.withholding_tax_percent * -1
-        if invoice.company.taxes.find_by_percent(tax_percent)
-          invoice.taxes << invoice.company.taxes.find_by_percent(tax_percent)
-        else
-          invoice.taxes << Tax.new(:name => "IRPF", :percent => tax_percent, :company => invoice.company)
+        if invoice.apply_withholding_tax and invoice.company.withholding_tax_percent
+          tax_percent = invoice.company.withholding_tax_percent * -1
+          invoice.invoice_lines.each do |il|
+            il.taxes << Tax.new(:name => "IRPF", :percent => tax_percent)
+          end
         end
-        invoice.save(false)
+        invoice.save(false) # to trigger update_imports method and update invoice imports
       end
     end
     remove_column :invoices, :withholding_tax_in_cents

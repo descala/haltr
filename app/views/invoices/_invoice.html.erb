@@ -84,7 +84,7 @@
           <td class="item-quantity first"><%=h quantity(line.quantity) %> <%=h line.unit_short%></td>
           <td class="item-description"><%=h line.description %></td>
           <td class="item-price"><%=h line_price(line) %></td>
-          <td class="line-total last"><%=h money(line.total) %></td>
+          <td class="line-total last"><%=h money(line.taxable_base) %></td>
         </tr>
       <% end -%>
 
@@ -109,7 +109,7 @@
       <% @invoice.taxes.each do |tax| -%>
       <tr class="sales-tax">
         <th><%= h number_to_tax_percent(tax.percent, :tax_name=>tax.name) %>:</th>
-        <td><%= h money(@invoice.subtotal * ( tax.percent / 100.0 )) %></td>
+        <td><%= h money(@invoice.tax_amount(tax)) %></td>
       </tr>
       <% end -%>
       <tr class="invoice-total">

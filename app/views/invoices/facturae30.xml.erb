@@ -103,7 +103,7 @@
                   <TotalAmount><%=h precision(@invoice.subtotal.dollars)%></TotalAmount>
                </TaxableBase>
                <TaxAmount>
-                 <TotalAmount><%=h precision @invoice.tax.dollars %></TotalAmount>
+                 <TotalAmount><%=h precision @invoice.tax_amount.dollars %></TotalAmount>
                </TaxAmount>
             </Tax>
          </TaxesOutputs>
@@ -136,7 +136,7 @@
             <TotalGeneralDiscounts><%=h precision(@invoice.discount.dollars,2)%></TotalGeneralDiscounts>
 <% end -%>
             <TotalGrossAmountBeforeTaxes><%=h precision(@invoice.subtotal.dollars)%></TotalGrossAmountBeforeTaxes>
-            <TotalTaxOutputs><%=h precision @invoice.tax.dollars%></TotalTaxOutputs>
+            <TotalTaxOutputs><%=h precision @invoice.tax_amount.dollars%></TotalTaxOutputs>
             <TotalTaxesWithheld><%=h precision @invoice.withholding_tax.dollars%></TotalTaxesWithheld>
             <InvoiceTotal><%=h precision @invoice.total.dollars%></InvoiceTotal>
             <TotalOutstandingAmount><%=h precision @invoice.total.dollars%></TotalOutstandingAmount>
@@ -160,7 +160,7 @@
                       <TotalAmount><%=h precision(invoice_line.price*invoice_line.quantity)%></TotalAmount>
                     </TaxableBase>
                     <TaxAmount>
-                       <TotalAmount><%=h precision invoice_line.tax.dollars%></TotalAmount>
+                       <TotalAmount><%=h precision invoice_line.tax_amount.dollars%></TotalAmount>
                     </TaxAmount>
                  </Tax>
               </TaxesOutputs>

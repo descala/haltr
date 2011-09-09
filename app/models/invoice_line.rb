@@ -17,6 +17,7 @@ class InvoiceLine < ActiveRecord::Base
   }
 
   belongs_to :invoice
+  has_many :taxes, :class_name => "Tax", :order => "percent", :dependent => :destroy
   validates_presence_of :description, :unit
   validates_numericality_of :quantity, :price
   attr_accessor :new_and_first
@@ -36,7 +37,7 @@ class InvoiceLine < ActiveRecord::Base
     update_currency
   end
 
-  def total
+  def taxable_base
     Money.new((price * quantity * 100).round.to_i, currency)
   end
 
@@ -48,11 +49,10 @@ class InvoiceLine < ActiveRecord::Base
     Utils.replace_dates! description, (date || Date.today) +  (invoice.frequency || 0).months
   end
 
-  def tax
-    line_tax = 0
-    invoice.taxes.each do |tax|
-      next unless tax.percent > 0
-      line_tax += total * (tax.percent / 100.0)
+  def tax_amount(tax_type=nil)
+    line_tax = Money.new(0,currency)
+    taxes.each do |tax|
+      line_tax += taxable_base * (tax.percent / 100.0) if tax_type.nil? or tax == tax_type
     end
     line_tax
   end

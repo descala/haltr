@@ -97,9 +97,6 @@ class InvoicesController < ApplicationController
   end
 
   def update
-    # note that we use taxis_ids instead tax_ids since "taxes".singularize
-    # is wrong and returns taxis. On model we workaround with class_name => "Tax"
-    params[:invoice][:taxis_ids] ||= []
     if @invoice.update_attributes(params[:invoice])
       Event.create(:name=>'edited',:invoice=>@invoice,:user=>User.current)
       flash[:notice] = l(:notice_successful_update)
