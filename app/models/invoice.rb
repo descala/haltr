@@ -17,6 +17,7 @@ class Invoice < ActiveRecord::Base
 
   has_many :invoice_lines, :dependent => :destroy
   has_many :events, :dependent => :destroy
+  has_many :taxes, :through => :invoice_lines
   belongs_to :project
   belongs_to :client
   validates_presence_of :client, :date, :currency, :project_id, :unless => Proc.new {|i| i.type == "ReceivedInvoice" }
@@ -184,8 +185,8 @@ class Invoice < ActiveRecord::Base
     t
   end
 
-  def taxes
-    invoice_lines.collect {|il| il.taxes }.flatten
+  def taxes_uniq
+    taxes.find :all, :group=> 'name,percent'
   end
 
   def tax_names

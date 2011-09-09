@@ -106,7 +106,7 @@
         <th><%=h l(:label_subtotal)%>:</th>
         <td><%=h money(@invoice.subtotal) %></td>
       </tr>
-      <% @invoice.taxes.each do |tax| -%>
+      <% @invoice.taxes_uniq.each do |tax| -%>
       <tr class="sales-tax">
         <th><%= h number_to_tax_percent(tax.percent, :tax_name=>tax.name) %>:</th>
         <td><%= h money(@invoice.tax_amount(tax)) %></td>
