@@ -71,6 +71,18 @@ class InvoiceLine < ActiveRecord::Base
     l("s_#{UNIT_CODES[unit][:name]}")
   end
 
+  def attributes=(args)
+    self.taxes=[]
+    args.keys.each do |k|
+      if k =~ /^tax_[a-zA-Z]+$/
+        percent=args.delete(k)
+        next if percent.blank?
+        self.taxes << Tax.new(:name=>k.gsub(/^tax_/,''),:percent=>percent)
+      end
+    end
+    super
+  end
+
   private
 
   def update_currency
@@ -78,6 +90,17 @@ class InvoiceLine < ActiveRecord::Base
     self.currency ||= self.invoice.client.currency rescue nil
     self.currency ||= self.invoice.company.currency rescue nil
     self.currency ||= Setting.plugin_haltr['default_currency']
+  end
+
+  def method_missing(m, *args)
+#    if m.to_s =~ /^tax_[a-zA-Z]=$+/ and args.size == 1
+#      self.taxes << Tax.new(:name=>m.to_s.gsub(/tax_/,'').gsub(/=$/,''),:percent=>args[0])
+    if m.to_s =~ /^tax_[a-zA-Z]+/ and args.size == 0
+      curr_tax = taxes.find_by_name(m.to_s.gsub(/tax_/,''))
+      return curr_tax.nil? ? 0 : curr_tax.percent
+    else
+      super
+    end
   end
 
 end
