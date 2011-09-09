@@ -212,7 +212,7 @@ class Invoice < ActiveRecord::Base
 
   def update_imports
     self.import_in_cents = subtotal.cents
-    self.total_in_cents = subtotal.cents + tax.cents
+    self.total_in_cents = subtotal.cents + tax_amount.cents
   end
 
   def payment_method_requirements
