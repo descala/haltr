@@ -133,3 +133,6 @@ span.invoiceLineHeader {
   margin: 30px;
 }
 
+select.tax {
+  width: 77px;
+}
