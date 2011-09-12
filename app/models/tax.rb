@@ -3,6 +3,7 @@ class Tax < ActiveRecord::Base
   unloadable
 
   belongs_to :company
+  belongs_to :invoice_line
   validates_presence_of :name, :percent
   validates_numericality_of :percent
   validates_format_of :name, :with => /^[a-zA-Z]+$/

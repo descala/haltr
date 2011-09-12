@@ -85,6 +85,7 @@ fr:
   pending_invoices: Factures en attente
   closed_invoices: Factures closes
   label_subtotal: Sous-total
+  over_taxable_base: sur
   must_have_lines: doit avoir des lignes
   send_invoice: Envoyer facture
   label_send: Envoyer

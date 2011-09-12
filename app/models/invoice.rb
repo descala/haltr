@@ -182,7 +182,27 @@ class Invoice < ActiveRecord::Base
     invoice_lines.each do |il|
       t += il.tax_amount(tax_type)
     end
-    t
+    if discount_percent
+      t * ( 1 - discount_percent / 100.0)
+    else
+      t
+    end
+  end
+
+  def taxable_base(tax_type=nil)
+    t = Money.new(0,currency)
+    invoice_lines.each do |il|
+      t += il.taxable_base if il.has_tax?(tax_type)
+    end
+    if discount_percent
+      t * ( 1 - discount_percent / 100.0)
+    else
+      t
+    end
+  end
+
+  def tax_applies_to_all_lines?(tax)
+    taxable_base(tax) == subtotal
   end
 
   def taxes_uniq

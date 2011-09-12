@@ -108,7 +108,7 @@
       </tr>
       <% @invoice.taxes_uniq.each do |tax| -%>
       <tr class="sales-tax">
-        <th><%= h number_to_tax_percent(tax.percent, :tax_name=>tax.name) %>:</th>
+        <th><%= h number_to_tax_percent(tax.percent, :tax_name=>tax.name) %> <%= " #{l(:over_taxable_base)} #{money(@invoice.taxable_base(tax))}" unless @invoice.tax_applies_to_all_lines?(tax) %>:</th>
         <td><%= h money(@invoice.tax_amount(tax)) %></td>
       </tr>
       <% end -%>

@@ -86,6 +86,7 @@ en:
   pending_invoices: Pending invoices
   closed_invoices: Closed invoices
   label_subtotal: Subtotal
+  over_taxable_base: over 
   must_have_lines: must have lines
   send_invoice: Send invoice
   label_send: Send

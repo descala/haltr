@@ -97,6 +97,7 @@ ca:
   pending_invoices: Factures pendents
   closed_invoices: Factures tancades
   label_subtotal: Subtotal
+  over_taxable_base: sobre
   must_have_lines: ha de tenir linies
   send_invoice: Enviar factura
   label_send: Enviar

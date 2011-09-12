@@ -57,6 +57,14 @@ class InvoiceLine < ActiveRecord::Base
     line_tax
   end
 
+  def has_tax?(tax_type)
+    return true if tax_type.nil?
+    taxes.each do |tax|
+      return true if tax.name == tax_type.name and tax.percent == tax_type.percent
+    end
+    false
+  end
+
   def self.units
     UNIT_CODES.collect { |k,v|
       [l(v[:name]), k]
