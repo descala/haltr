@@ -18,7 +18,6 @@ class Invoice < ActiveRecord::Base
   has_many :invoice_lines, :dependent => :destroy
   has_many :events, :dependent => :destroy
   has_many :taxes, :through => :invoice_lines
-  has_one  :company, :through => :project
   belongs_to :project
   belongs_to :client
   validates_presence_of :client, :date, :currency, :project_id, :unless => Proc.new {|i| i.type == "ReceivedInvoice" }
@@ -154,6 +153,10 @@ class Invoice < ActiveRecord::Base
     else
       self.number <=> oth.number
     end
+  end
+
+  def company
+    self.project.company
   end
 
   def custom_due?
