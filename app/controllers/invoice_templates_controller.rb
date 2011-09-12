@@ -148,11 +148,12 @@ class InvoiceTemplatesController < ApplicationController
   private
 
   def find_invoice_template
+    Project.send(:include, ProjectHaltrPatch) #TODO: perque nomes funciona el primer cop sense aixo?
     @invoice = InvoiceTemplate.find params[:id]
     @lines = @invoice.invoice_lines
     @client = @invoice.client
     @project = @invoice.project
-    @company = @project.company
+    @company = @invoice.company
   rescue ActiveRecord::RecordNotFound
     render_404
   end
