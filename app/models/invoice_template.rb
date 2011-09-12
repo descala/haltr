@@ -21,7 +21,6 @@ class InvoiceTemplate < Invoice
 
   def next_invoice
     i = DraftInvoice.new self.attributes
-    i.taxes = self.taxes
     i.invoice_template = self
     i.state = 'new'
     # Do not generate invoices on weekend
@@ -34,6 +33,9 @@ class InvoiceTemplate < Invoice
       l = InvoiceLine.new tl.attributes
       l.template_replacements(i.date)
       i.invoice_lines << l
+      tl.taxes.each do |tax|
+        l.taxes << Tax.new(:name=>tax.name,:percent=>tax.percent)
+      end
     end
     i.save!
     self.date = self.date.to_time.months_since(self.frequency).to_date

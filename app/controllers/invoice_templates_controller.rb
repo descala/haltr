@@ -126,10 +126,12 @@ class InvoiceTemplatesController < ApplicationController
     end
     drafts_to_process.each do |draft|
       issued = IssuedInvoice.new(draft.attributes)
-      issued.taxes = draft.taxes
       issued.number = params["draft_#{draft.id}"]
       draft.invoice_lines.each do |draft_line|
         l = InvoiceLine.new draft_line.attributes
+        draft_line.taxes.each do |tax|
+          l.taxes << Tax.new(tax.attributes)
+        end
         issued.invoice_lines << l
       end
       if issued.valid?
