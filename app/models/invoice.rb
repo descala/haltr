@@ -190,6 +190,15 @@ class Invoice < ActiveRecord::Base
     taxes.collect {|tax| tax.name }.uniq
   end
 
+  def taxes_hash
+    th = company.taxes_hash
+    taxes_uniq.each do |t|
+      th[t.name] = [] unless th[t.name]
+      th[t.name] << t.percent unless th[t.name].include? t.percent
+    end
+    th
+  end
+
   private
 
   def set_due_date

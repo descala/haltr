@@ -18,13 +18,14 @@
   <p><%= f.text_field :discount_percent %></p>
   <p><%= f.text_area :extra_info, :rows=>3 %></p>
   <p><%= f.check_box :draft %></p>
+  <hr />
   <div id="invoice_lines">
-    <p style="font-weight:bold;">
+    <p style="font-weight:bold; padding:10px;">
     <span class="invoiceLineHeader" style="width: 80px;"><%= l(:field_quantity) %></span>
     <span class="invoiceLineHeader" style="width: 102px;">&nbsp;</span>
     <span class="invoiceLineHeader" style="width: 290px;"><%= l(:field_description) %></span>
     <span class="invoiceLineHeader" style="width: 80px;"><%= l(:field_price) %></span>
-    <% @invoice.company.taxes_hash.each_key do |name| -%>
+    <% @invoice.taxes_hash.each_key do |name| -%>
       <span class="invoiceLineHeader" style="width: 80px;"><%= name %></span>
     <% end -%>
     </p>
@@ -33,6 +34,7 @@
       <%= render :partial => 'invoices/invoice_line', :locals => { :f => line_form } %>
     <% end %>
   </div>
-  <p><%= add_invoice_line_link(f) %></p>
+  <p style="font-weight:bold; padding:10px;"><%= add_invoice_line_link(f) %></p>
+  <hr />
 </div>
 
