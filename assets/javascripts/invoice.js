@@ -4,7 +4,7 @@
  * really delete line.
  */
 function rm_line(id) {
-  $("invoice_line_"+id).firstDescendant().remove();
+  $("invoice_line_"+id).remove();
   // set hidden_field to 1 to really delete line
   var hf = $("destroy_line_"+id);
   if (hf != null) {
