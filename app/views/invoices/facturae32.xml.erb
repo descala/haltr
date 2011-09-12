@@ -98,30 +98,36 @@
             <LanguageName><%=h @client.language%></LanguageName>
          </InvoiceIssueData>
          <TaxesOutputs>
-            <Tax>
-               <TaxTypeCode>01</TaxTypeCode>
-               <TaxRate><%=h precision @invoice.tax_percent%></TaxRate>
-               <TaxableBase>
-                  <TotalAmount><%=h precision(@invoice.subtotal.dollars)%></TotalAmount>
-               </TaxableBase>
-               <TaxAmount>
-                 <TotalAmount><%=h precision @invoice.tax_amount.dollars %></TotalAmount>
-               </TaxAmount>
-            </Tax>
+<% @invoice.taxes_uniq.each do |tax| -%>
+<% next if tax.percent < 0 -%>
+           <Tax>
+             <TaxTypeCode>01</TaxTypeCode>
+             <TaxRate><%=h precision tax.percent%></TaxRate>
+             <TaxableBase>
+               <TotalAmount><%=h precision(@invoice.subtotal(tax).dollars)%></TotalAmount>
+             </TaxableBase>
+             <TaxAmount>
+               <TotalAmount><%=h precision @invoice.tax_amount(tax).dollars %></TotalAmount>
+             </TaxAmount>
+           </Tax>
+<% end -%>
          </TaxesOutputs>
 
 <% if @invoice.persontypecode == "F" -%>
          <TaxesWithheld>
+<% @invoice.taxes_uniq.each do |tax| -%>
+<% next if tax.percent >= 0 -%>
             <Tax>
                <TaxTypeCode>04</TaxTypeCode>
-               <TaxRate><%=h precision @invoice.withholding_tax_percent%></TaxRate>
+               <TaxRate><%=h precision tax.percent * -1 %></TaxRate>
                <TaxableBase>
-                  <TotalAmount><%=h precision @invoice.subtotal.dollars%></TotalAmount>
+                  <TotalAmount><%=h precision @invoice.subtotal(tax).dollars%></TotalAmount>
                </TaxableBase>
                <TaxAmount>
-                 <TotalAmount><%=h precision @invoice.withholding_tax.dollars%></TotalAmount>
+                 <TotalAmount><%=h precision @invoice.tax_amount(tax).dollars * -1 %></TotalAmount>
                </TaxAmount>
             </Tax>
+<% end -%>
          </TaxesWithheld>
 <% end -%>
 
@@ -138,8 +144,8 @@
             <TotalGeneralDiscounts><%=h precision(@invoice.discount.dollars,2)%></TotalGeneralDiscounts>
 <% end -%>
             <TotalGrossAmountBeforeTaxes><%=h precision(@invoice.subtotal.dollars)%></TotalGrossAmountBeforeTaxes>
-            <TotalTaxOutputs><%=h precision @invoice.tax_amount.dollars%></TotalTaxOutputs>
-            <TotalTaxesWithheld><%=h precision @invoice.withholding_tax.dollars%></TotalTaxesWithheld>
+            <TotalTaxOutputs><%=h precision @invoice.total_tax_outputs.dollars%></TotalTaxOutputs>
+            <TotalTaxesWithheld><%=h precision @invoice.total_taxes_withheld.dollars%></TotalTaxesWithheld>
             <InvoiceTotal><%=h precision @invoice.total.dollars%></InvoiceTotal>
             <TotalOutstandingAmount><%=h precision @invoice.total.dollars%></TotalOutstandingAmount>
             <TotalExecutableAmount><%=h precision @invoice.total.dollars%></TotalExecutableAmount>
@@ -155,16 +161,19 @@
               <TotalCost><%=h precision(invoice_line.price*invoice_line.quantity,6)%></TotalCost>
               <GrossAmount><%=h precision(invoice_line.price*invoice_line.quantity,6)%></GrossAmount>
               <TaxesOutputs>
+<% invoice_line.taxes.each do |tax| -%>
+<% next if tax.percent < 0 -%>
                  <Tax>
                     <TaxTypeCode>01</TaxTypeCode>
-                    <TaxRate><%=h precision @invoice.tax_percent%></TaxRate>
+                    <TaxRate><%=h precision tax.percent%></TaxRate>
                     <TaxableBase>
-                      <TotalAmount><%=h precision(invoice_line.price*invoice_line.quantity)%></TotalAmount>
+                      <TotalAmount><%=h precision(invoice_line.taxable_base)%></TotalAmount>
                     </TaxableBase>
                     <TaxAmount>
-                       <TotalAmount><%=h precision invoice_line.tax_amount.dollars%></TotalAmount>
+                       <TotalAmount><%=h precision invoice_line.tax_amount(tax).dollars%></TotalAmount>
                     </TaxAmount>
                  </Tax>
+<% end -%>
               </TaxesOutputs>
             </InvoiceLine>
 <% end -%>
