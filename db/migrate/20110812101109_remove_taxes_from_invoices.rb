@@ -1,12 +1,14 @@
 class RemoveTaxesFromInvoices < ActiveRecord::Migration
 
   def self.up
-    say "-----------------------------------------------------------------------------------------------------"
-    say "Please BACKUP YOUR DATABASE before continue! Irreversible changes to the invoices table will be made."
-    say "-----------------------------------------------------------------------------------------------------"
-    say "continue?(y/N)"
-    confirmation = $stdin.gets.strip
-    raise "Migration aborted by user" unless confirmation == "y"
+    if Invoice.count > 0
+      say "-----------------------------------------------------------------------------------------------------"
+      say "Please BACKUP YOUR DATABASE before continue! Irreversible changes to the invoices table will be made."
+      say "-----------------------------------------------------------------------------------------------------"
+      say "continue?(y/N)"
+      confirmation = $stdin.gets.strip
+      raise "Migration aborted by user" unless confirmation == "y"
+    end
     say_with_time "Migrating invoices, this may take a while..." do
       tax_names = {"es" => "IVA", "fr" => "TVA" }
       Invoice.all.each do |invoice|

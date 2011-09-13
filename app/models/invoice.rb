@@ -60,7 +60,7 @@ class Invoice < ActiveRecord::Base
     amount = Money.new(0,currency)
     invoice_lines.each do |line|
       next if line.destroyed?
-      amount += line.taxable_base if tax_type.nil? or line.has_tax?(tax_type)
+      amount += line.total if tax_type.nil? or line.has_tax?(tax_type)
     end
     amount
   end
@@ -83,6 +83,10 @@ class Invoice < ActiveRecord::Base
     else
       Money.new(0,currency)
     end
+  end
+
+  def discount_without_expenses
+    discount - ( expenses_total - total_general_surcharges )
   end
 
   def pdf_name
@@ -173,16 +177,13 @@ class Invoice < ActiveRecord::Base
     company.country != c.country
   end
 
+  # cost de les taxes (Money)
   def tax_amount(tax_type=nil)
     t = Money.new(0,currency)
     invoice_lines.each do |il|
       t += il.tax_amount(tax_type)
     end
-    if discount_percent
-      t * ( 1 - discount_percent / 100.0)
-    else
-      t
-    end
+    t
   end
 
   def taxable_base(tax_type=nil)
@@ -190,11 +191,7 @@ class Invoice < ActiveRecord::Base
     invoice_lines.each do |il|
       t += il.taxable_base if tax_type.nil? or il.has_tax?(tax_type)
     end
-    if discount_percent
-      t * ( 1 - discount_percent / 100.0)
-    else
-      t
-    end
+    t
   end
 
   def tax_applies_to_all_lines?(tax)
@@ -241,6 +238,28 @@ class Invoice < ActiveRecord::Base
     end
     # here we have negative amount, pass it to positive (what facturae template expects)
     t * -1
+  end
+
+  def expenses
+    invoice_lines.collect { |line|
+      line if line.expenses?
+    }.compact
+  end
+
+  def expenses_total
+    t = Money.new(0,currency)
+    expenses.each do |line|
+      t += line.total
+    end
+    t
+  end
+
+  def total_general_surcharges
+    t = Money.new(0,currency)
+    expenses.each do |line|
+      t += line.taxable_base
+    end
+    t
   end
 
   private

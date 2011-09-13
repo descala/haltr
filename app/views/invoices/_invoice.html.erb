@@ -84,7 +84,7 @@
           <td class="item-quantity first"><%=h quantity(line.quantity) %> <%=h line.unit_short%></td>
           <td class="item-description"><%=h line.description %></td>
           <td class="item-price"><%=h line_price(line) %></td>
-          <td class="line-total last"><%=h money(line.taxable_base) %></td>
+          <td class="line-total last"><%=h money(line.total) %></td>
         </tr>
       <% end -%>
 

@@ -132,16 +132,31 @@
 <% end -%>
 
          <InvoiceTotals>
-            <TotalGrossAmount><%=h precision @invoice.subtotal_without_discount.dollars%></TotalGrossAmount>
+            <TotalGrossAmount><%=h precision @invoice.subtotal_without_discount.dollars - @invoice.expenses_total.dollars%></TotalGrossAmount>
 <% if @invoice.discount_percent and @invoice.discount_percent > 0 -%>
             <GeneralDiscounts>
                <Discount>
                  <DiscountReason><%=h @invoice.discount_text%></DiscountReason>
                  <DiscountRate><%=h precision(@invoice.discount_percent, 4) %></DiscountRate>
-                 <DiscountAmount><%=h precision(@invoice.discount.dollars,6)%></DiscountAmount>
+                 <DiscountAmount><%=h precision(@invoice.discount_without_expenses.dollars,6)%></DiscountAmount>
                </Discount>
             </GeneralDiscounts>
-            <TotalGeneralDiscounts><%=h precision(@invoice.discount.dollars,2)%></TotalGeneralDiscounts>
+<% end -%>
+<% if @invoice.expenses.any? -%>
+           <GeneralSurcharges>
+<% @invoice.expenses.each do |expense| -%>
+               <Charge>
+                   <ChargeReason><%=h expense.description%></ChargeReason>
+                   <ChargeAmount><%=h precision(expense.taxable_base.dollars,6)%></ChargeAmount>
+               </Charge>
+<% end -%>
+           </GeneralSurcharges>
+<% end -%>
+<% if @invoice.discount_percent and @invoice.discount_percent > 0 -%>
+            <TotalGeneralDiscounts><%=h precision(@invoice.discount_without_expenses.dollars,2)%></TotalGeneralDiscounts>
+<% end -%>
+<% if @invoice.expenses.any? -%>
+           <TotalGeneralSurcharges><%=h precision(@invoice.total_general_surcharges.dollars,2)%></TotalGeneralSurcharges>
 <% end -%>
             <TotalGrossAmountBeforeTaxes><%=h precision(@invoice.subtotal.dollars)%></TotalGrossAmountBeforeTaxes>
             <TotalTaxOutputs><%=h precision @invoice.total_tax_outputs.dollars%></TotalTaxOutputs>

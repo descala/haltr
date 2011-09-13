@@ -37,8 +37,16 @@ class InvoiceLine < ActiveRecord::Base
     update_currency
   end
 
-  def taxable_base
+  def total
     Money.new((price * quantity * 100).round.to_i, currency)
+  end
+
+  def taxable_base
+    if invoice.discount_percent
+      total * ( 1 - invoice.discount_percent / 100.0)
+    else
+      total
+    end
   end
 
   def to_label
@@ -101,6 +109,7 @@ class InvoiceLine < ActiveRecord::Base
 
   # expenses are invoice lines of reimbursable expenses, payments advanced for the client
   # not subject to taxes. We consider expenses each line that has no taxes.
+  # (In spanish "suplidos")
   def expenses?
     are_expenses = true
     taxes.each do |tax|
