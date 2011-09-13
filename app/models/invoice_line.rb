@@ -91,6 +91,24 @@ class InvoiceLine < ActiveRecord::Base
     super
   end
 
+  def taxes_withheld
+    taxes.find(:all, :conditions => "percent < 0")
+  end
+
+  def taxes_outputs
+    taxes.find(:all, :conditions => "percent > 0")
+  end
+
+  # expenses are invoice lines of reimbursable expenses, payments advanced for the client
+  # not subject to taxes. We consider expenses each line that has no taxes.
+  def expenses?
+    are_expenses = true
+    taxes.each do |tax|
+      are_expenses &= (tax.percent.nil? || tax.percent == 0)
+    end
+    are_expenses
+  end
+
   private
 
   def update_currency

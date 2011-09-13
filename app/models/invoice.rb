@@ -60,8 +60,7 @@ class Invoice < ActiveRecord::Base
     amount = Money.new(0,currency)
     invoice_lines.each do |line|
       next if line.destroyed?
-      next unless tax_type.nil? or line.taxes.include?(tax_type)
-      amount += line.taxable_base
+      amount += line.taxable_base if tax_type.nil? or line.has_tax?(tax_type)
     end
     amount
   end
@@ -71,7 +70,7 @@ class Invoice < ActiveRecord::Base
   end
 
   def persontypecode
-    if has_negative_tax?
+    if taxes_withheld.any?
       "F" # Fisica
     else
       "J" # Juridica
@@ -84,10 +83,6 @@ class Invoice < ActiveRecord::Base
     else
       Money.new(0,currency)
     end
-  end
-
-  def has_negative_tax?
-    taxes.find(:all, :conditions => "percent < 0").any?
   end
 
   def pdf_name
@@ -193,7 +188,7 @@ class Invoice < ActiveRecord::Base
   def taxable_base(tax_type=nil)
     t = Money.new(0,currency)
     invoice_lines.each do |il|
-      t += il.taxable_base if il.has_tax?(tax_type)
+      t += il.taxable_base if tax_type.nil? or il.has_tax?(tax_type)
     end
     if discount_percent
       t * ( 1 - discount_percent / 100.0)
@@ -223,17 +218,25 @@ class Invoice < ActiveRecord::Base
     th
   end
 
+  def taxes_outputs
+    taxes.find(:all, :group => 'name,percent', :conditions => "percent > 0")
+  end
+
   def total_tax_outputs
     t = Money.new(0,currency)
-    taxes.find(:all, :conditions => "percent > 0").each do |tax|
+    taxes_outputs.each do |tax|
       t += tax_amount(tax)
     end
     t
   end
 
+  def taxes_withheld
+    taxes.find(:all, :group => 'name,percent', :conditions => "percent < 0")
+  end
+
   def total_taxes_withheld
     t = Money.new(0,currency)
-    taxes.find(:all, :conditions => "percent < 0").each do |tax|
+    taxes_withheld.each do |tax|
       t += tax_amount(tax)
     end
     # here we have negative amount, pass it to positive (what facturae template expects)
