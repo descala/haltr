@@ -181,6 +181,7 @@ class Invoice < ActiveRecord::Base
   def tax_amount(tax_type=nil)
     t = Money.new(0,currency)
     invoice_lines.each do |il|
+      il.invoice=self if il.new_record? #TODO: new invoice_line can't use invoice.discount without this
       t += il.tax_amount(tax_type)
     end
     t
