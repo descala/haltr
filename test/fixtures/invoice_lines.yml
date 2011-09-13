@@ -4,6 +4,7 @@ invoice1_l1:
   description: bla bla bla
   price: 925.68
   currency: EUR
+  id: 100
 
 test_import_l1:
   invoice: test_import
@@ -11,6 +12,7 @@ test_import_l1:
   description: bla bla bla
   price: 925.68
   currency: EUR
+  id: 101
 
 template1_l1:
   invoice: template1
@@ -18,6 +20,7 @@ template1_l1:
   description: bla bla bla
   price: 925.68
   currency: EUR
+  id: 102
 
 draft_l1:
   invoice: draft
@@ -25,3 +28,60 @@ draft_l1:
   description: bla bla bla
   price: 925.68
   currency: EUR
+  id: 103
+ 
+invoice_lines_002: 
+  price: 100.0
+  created_at: 2011-09-13 14:01:11 +02:00
+  quantity: 1.0
+  updated_at: 2011-09-13 14:01:11 +02:00
+  invoice_id: 1
+  id: 2
+  unit: 1
+  currency: EUR
+  description: bar
+
+
+invoice_lines_003: 
+  price: 50.0
+  created_at: 2011-09-13 14:01:11 +02:00
+  quantity: 1.0
+  updated_at: 2011-09-13 14:01:11 +02:00
+  invoice_id: 1
+  id: 3
+  unit: 1
+  currency: EUR
+  description: expense
+
+invoice_lines_004: 
+  price: 100.0
+  created_at: 2011-09-13 14:02:55 +02:00
+  quantity: 1.0
+  updated_at: 2011-09-13 14:02:55 +02:00
+  invoice_id: 2
+  id: 4
+  unit: 1
+  currency: EUR
+  description: foo
+
+invoice_lines_005: 
+  price: 100.0
+  created_at: 2011-09-13 14:03:50 +02:00
+  quantity: 1.0
+  updated_at: 2011-09-13 14:03:50 +02:00
+  invoice_id: 3
+  id: 5
+  unit: 1
+  currency: EUR
+  description: foo
+
+invoice_lines_001: 
+  price: 100.0
+  created_at: 2011-09-13 14:01:11 +02:00
+  quantity: 1.0
+  updated_at: 2011-09-13 14:01:11 +02:00
+  invoice_id: 1
+  id: 1
+  unit: 1
+  currency: EUR
+  description: foo

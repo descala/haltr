@@ -2,7 +2,7 @@ require File.dirname(__FILE__) + '/../test_helper'
 
 class InvoiceTest < ActiveSupport::TestCase
   
-  fixtures :clients, :invoices, :invoice_lines, :projects
+  fixtures :clients, :invoices, :invoice_lines, :projects, :taxes
 
   test "due dates" do
     date = Date.new(2000,12,1)
@@ -44,4 +44,32 @@ class InvoiceTest < ActiveSupport::TestCase
     assert_equal 1 , invoices(:invoice1) <=> invoices(:draft)
     assert_equal 0 , invoices(:draft) <=> invoices(:draft)
   end
+
+  test "invoice contable validation" do
+    assert_equal 100, invoices(:invoices_003).subtotal_without_discount.dollars
+    assert_equal 100, invoices(:invoices_003).taxable_base.dollars
+    assert_equal 100, invoices(:invoices_003).subtotal.dollars
+    assert_equal 0, invoices(:invoices_003).discount.dollars
+    assert_equal 18, invoices(:invoices_003).tax_amount.dollars
+    assert_equal 118, invoices(:invoices_003).total.dollars
+
+    assert_equal 100, invoices(:invoices_002).subtotal_without_discount.dollars
+    assert_equal 85, invoices(:invoices_002).taxable_base.dollars
+    assert_equal 85, invoices(:invoices_002).subtotal.dollars
+    assert_equal 15, invoices(:invoices_002).discount.dollars
+    assert_equal 15.30, invoices(:invoices_002).tax_amount.dollars
+    assert_equal 100.30, invoices(:invoices_002).total.dollars
+
+    assert_equal 250, invoices(:invoices_001).subtotal_without_discount.dollars
+    assert_equal 225, invoices(:invoices_001).taxable_base.dollars
+    assert_equal 225, invoices(:invoices_001).subtotal.dollars
+    assert_equal 25, invoices(:invoices_001).discount.dollars
+    assert_equal 2.7, invoices(:invoices_001).tax_amount.dollars
+    assert_equal 227.7, invoices(:invoices_001).total.dollars
+    assert_equal -13.5, invoices(:invoices_001).tax_amount(taxes(:taxes_006)).dollars
+    assert_equal 16.2, invoices(:invoices_001).tax_amount(taxes(:taxes_005)).dollars
+    assert_equal 7.2, invoices(:invoices_001).tax_amount(taxes(:taxes_007)).dollars
+    assert_equal -7.2, invoices(:invoices_001).tax_amount(taxes(:taxes_008)).dollars
+  end
+
 end

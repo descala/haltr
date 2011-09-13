@@ -2,7 +2,7 @@ require File.dirname(__FILE__) + '/../test_helper'
 
 class InvoiceTemplateTest < ActiveSupport::TestCase
   
-  fixtures :clients, :invoices, :invoice_lines, :projects
+  fixtures :clients, :invoices, :invoice_lines, :projects, :taxes
 
    test "template_replacements" do
     I18n.locale = :ca
