@@ -31,6 +31,10 @@ class RemoveTaxesFromInvoices < ActiveRecord::Migration
     remove_column :invoices, :tax_percent
     remove_column :companies, :withholding_tax_name
     remove_column :companies, :withholding_tax_percent
+
+    # HACK Use this to update the taxes of old templates
+    # InvoiceTemplate.all.each{|it|it.taxes.each{|t| t.percent=18;t.save}};
+    # InvoiceTemplate.all.each{|it|it.save}
   end
 
   def self.down
