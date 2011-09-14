@@ -181,7 +181,6 @@ class Invoice < ActiveRecord::Base
   def tax_amount(tax_type=nil)
     t = Money.new(0,currency)
     invoice_lines.each do |il|
-      il.invoice=self if il.new_record? #TODO: new invoice_line can't use invoice.discount without this
       t += il.tax_amount(tax_type)
     end
     t
@@ -274,6 +273,11 @@ class Invoice < ActiveRecord::Base
   end
 
   def update_imports
+    #TODO: new invoice_line can't use invoice.discount without this
+    # and while updating, lines have old invoice instance
+    self.invoice_lines.each do |il|
+      il.invoice = self
+    end
     self.import_in_cents = subtotal.cents
     self.total_in_cents = subtotal.cents + tax_amount.cents
   end
