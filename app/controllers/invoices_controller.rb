@@ -326,7 +326,7 @@ class InvoicesController < ApplicationController
 
   def amend_for_invoice
     amend = @invoice.create_amend
-    redirect_to :action => 'show', :id => amend
+    redirect_to :action => 'edit', :id => amend
   end
 
   private
