@@ -1,8 +1,12 @@
 require File.dirname(__FILE__) + '/../test_helper'
 
 class InvoiceTest < ActiveSupport::TestCase
-  
+
   fixtures :clients, :invoices, :invoice_lines, :projects, :taxes
+
+  def setup
+    Setting.plugin_haltr = { "trace_url"=>"http://localhost:3001", "b2brouter_ip"=>"", "export_channels_path"=>"/tmp", "default_country"=>"es", "default_currency"=>"EUR", "issues_controller_name"=>"issues" }
+  end
 
   test "due dates" do
     date = Date.new(2000,12,1)

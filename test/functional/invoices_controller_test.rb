@@ -8,8 +8,8 @@ class InvoicesControllerTest < ActionController::TestCase
   fixtures :projects, :enabled_modules, :users, :roles, :members, :invoices, :companies
 
   def setup
-    Setting.plugin_haltr = { 'trace_url' => 'loclhost:3000',
-                             'export_channels_path' => '/tmp' }
+
+    Setting.plugin_haltr = { "trace_url"=>"http://localhost:3001", "b2brouter_ip"=>"", "export_channels_path"=>"/tmp", "default_country"=>"es", "default_currency"=>"EUR", "issues_controller_name"=>"issues" }
 
     # user 2 (jsmith) is member of project 2 (onlinesotre)
     # with role 2 (developer)
