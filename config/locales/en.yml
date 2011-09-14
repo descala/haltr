@@ -151,6 +151,9 @@ en:
   client_has_no_email: "Invoice's client has no email defined"
   field_import: "Import"
   pdf_not_legal: "PDF not legal"
+  amended_invoice: "Rectification of %{link}"
+  amended_by_invoice: "Rectificated by %{link}"
+  create_amend_invoice: "Create rectification invoice"
 
   # Events
   events: "Event log"

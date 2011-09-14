@@ -1,3 +1,13 @@
+<div id="amends">
+<% if @invoice.amend_of -%>
+  <h3><%=l(:amended_invoice, :link => link_to("#{l(:label_invoice)} #{l(:field_number)} #{@invoice.amend_of.number}",
+                                              :controller => 'invoices', :action => 'show', :id => @invoice.amend_of)) %></h3>
+<% end -%>
+<% if @invoice.amend -%>
+  <h3><%=l(:amended_by_invoice, :link => link_to("#{l(:label_invoice)} #{l(:field_number)} #{@invoice.amend.number}",
+                                                 :controller => 'invoices', :action=>'show', :id=>@invoice.amend)) %></h3>
+<% end -%>
+</div>
 <!-- Vendor Info -->
 <div class="vcard vendor">
   <div class="logo">

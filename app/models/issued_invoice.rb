@@ -5,6 +5,8 @@ class IssuedInvoice < InvoiceDocument
   unloadable
 
   belongs_to :invoice_template
+  belongs_to :amend, :class_name => "Invoice", :foreign_key => 'amend_id'
+  has_one :amend_of, :class_name => "Invoice", :foreign_key => 'amend_id'
   validates_presence_of :number, :unless => Proc.new {|invoice| invoice.type == "DraftInvoice"}
   validates_presence_of :due_date
   validates_uniqueness_of :number, :scope => [:project_id,:type], :if => Proc.new {|i| i.type == "IssuedInvoice" }
@@ -151,6 +153,18 @@ class IssuedInvoice < InvoiceDocument
 
   def visible_by_client?
     %w(sent refused accepted allegedly_paid closed).include? state
+  end
+
+  def create_amend
+    ai = IssuedInvoice.new(self.attributes)
+    ai.number = "#{number}*"
+    ai.save(false)
+    self.invoice_lines.each do |line|
+      ai.invoice_lines << InvoiceLine.new(line.attributes)
+    end
+    self.amend_id = ai.id
+    self.save(false)
+    ai
   end
 
   protected

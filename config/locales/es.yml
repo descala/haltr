@@ -161,6 +161,9 @@ es:
   client_has_no_email: "El cliente asociado a la factura no tiene correo electrónico definido"
   field_import: "Importe"
   pdf_not_legal: "PDF no legal"
+  amended_invoice: "Rectificación de la %{link}"
+  amended_by_invoice: "Rectificada por la %{link}"
+  create_amend_invoice: "Crear factura rectificativa"
 
   # Events
   events: "Log de eventos"

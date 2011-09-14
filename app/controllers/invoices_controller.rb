@@ -324,6 +324,11 @@ class InvoicesController < ApplicationController
     redirect_to :action => 'show', :id => @invoice
   end
 
+  def amend_for_invoice
+    amend = @invoice.create_amend
+    redirect_to :action => 'show', :id => amend
+  end
+
   private
 
   def find_hashid

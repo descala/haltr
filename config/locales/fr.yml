@@ -150,6 +150,9 @@ fr:
   client_has_no_email: "Le client de cette facture n'a pas d'email défini"
   field_import: "Importer"
   pdf_not_legal: "PDF illégal"
+  amended_invoice: "Ajustements au %{link}"
+  amended_by_invoice: "Corrigé pour %{link}"
+  create_amend_invoice: "Créer projet d'amendement"
 
   # Events
   events: "Log des évènements"
