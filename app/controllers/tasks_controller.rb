@@ -63,7 +63,7 @@ class TasksController < ApplicationController
     @total    = {}
     @tax      = {}
     IssuedInvoice.all(:include => [:client],
-                      :conditions => ["clients.project_id = ? and date >= ?", @project.id, @date],
+                      :conditions => ["clients.project_id = ? and date >= ? and amend_id is null", @project.id, @date],
                       :order => :number
     ).each do |i|
       @invoices[i.currency] ||= []

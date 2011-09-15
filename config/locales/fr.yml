@@ -153,6 +153,8 @@ fr:
   amended_invoice: "Ajustements au %{link}"
   amended_by_invoice: "Corrigé pour %{link}"
   create_amend_invoice: "Créer projet d'amendement"
+  label_amendment_invoice: "Facture d'amendment"
+  label_amended_invoice: "Facture corrigé"
 
   # Events
   events: "Log des évènements"

@@ -76,6 +76,9 @@ class IssuedInvoice < InvoiceDocument
     event :registered_notification do
       transition :sent => :sent
     end
+    event :amend_and_close do
+      transition all=> :closed
+    end
   end
 
   def sent?
@@ -88,8 +91,8 @@ class IssuedInvoice < InvoiceDocument
   end
 
   def label
-    if self.draft
-      l :label_draft
+    if self.amend_of
+      l :label_amendment_invoice
     else
       l :label_invoice
     end
@@ -100,7 +103,7 @@ class IssuedInvoice < InvoiceDocument
   end
 
   def self.find_not_sent(project)
-    invoices = find :all, :include => [:client], :conditions => ["clients.project_id = ? and state = 'new' and draft = ?", project.id, false ], :order => "number ASC"
+    invoices = find :all, :include => [:client], :conditions => ["clients.project_id = ? and state = 'new'", project.id ], :order => "number ASC"
     invoices.collect do |invoice|
       invoice unless invoice.is_a? DraftInvoice or invoice.number.nil?
     end.compact
@@ -126,7 +129,7 @@ class IssuedInvoice < InvoiceDocument
   end
 
   def self.last_number(project)
-    i = IssuedInvoice.last(:order => "number", :include => [:client], :conditions => ["clients.project_id = ? AND draft = ?", project.id, false])
+    i = IssuedInvoice.last(:order => "number", :include => [:client], :conditions => ["clients.project_id = ?", project.id])
     i.number if i
   end
 
@@ -156,17 +159,26 @@ class IssuedInvoice < InvoiceDocument
   end
 
   def create_amend
-    ai = IssuedInvoice.new(self.attributes)
-    ai.number = "#{number}*"
+    new_attributes = self.attributes
+    new_attributes['state']='new'
+    ai = IssuedInvoice.new(new_attributes)
+    ai.number = "#{number}-R"
     ai.save(false)
     self.invoice_lines.each do |line|
       ai.invoice_lines << InvoiceLine.new(line.attributes)
     end
     self.amend_id = ai.id
     self.save(false)
+    self.amend_and_close # change state
     ai
   end
 
+  def amended?
+    !self.amend_id.nil? 
+  end
+
+  #TODO when an amend invoice is destroyed the amended one still has its id in amend_id
+ 
   protected
 
   def create_event

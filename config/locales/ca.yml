@@ -164,6 +164,8 @@ ca:
   amended_invoice: "Rectificació de la %{link}"
   amended_by_invoice: "Rectificada per la %{link}"
   create_amend_invoice: "Crear factura rectificativa"
+  label_amendment_invoice: "Factura Rectificativa"
+  label_amended_invoice: "Factura rectificada"
 
   # Events
   events: "Log d'esdeveniments"

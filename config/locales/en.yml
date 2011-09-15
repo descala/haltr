@@ -154,6 +154,8 @@ en:
   amended_invoice: "Rectification of %{link}"
   amended_by_invoice: "Rectificated by %{link}"
   create_amend_invoice: "Create rectification invoice"
+  label_amendment_invoice: "Amendment Invoice"
+  label_amended_invoice: "Amended invoice"
 
   # Events
   events: "Event log"

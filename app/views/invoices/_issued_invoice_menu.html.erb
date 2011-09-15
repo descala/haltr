@@ -19,7 +19,7 @@
     <li><%= link_to l(:generate_template_from_invoice), {:controller=>'invoice_templates',:action=>'new_from_invoice',:id=>@invoice}, :class => 'icon-haltr-template' %></li>
   <% end -%>
 
-  <% unless @invoice.amend -%>
+  <% unless @invoice.amended? -%>
     <li><%= link_to l(:create_amend_invoice), {:controller => 'invoices', :action => 'amend_for_invoice', :id => @invoice}, :class => 'icon-haltr-template' %></li>
   <% end -%>
 
