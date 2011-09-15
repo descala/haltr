@@ -161,6 +161,7 @@ ca:
   client_has_no_email: "El client associat a la factura no té correu electrònic definit"
   field_import: "Import"
   pdf_not_legal: "PDF no legal"
+  line_specific_tax: "Impost per línia"
 
   # Events
   events: "Log d'esdeveniments"

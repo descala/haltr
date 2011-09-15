@@ -22,12 +22,18 @@
   <% @company.taxes_hash.keys.sort.each do |name| -%>
     <p>
     <%= label_tag "#{name}_global", name%>
+    <span class="invoiceLineHeader" style="width: 100px;">
     <%= select_tag("#{name}_global",
                    options_for_select(@company.taxes_hash[name].collect {|p| ["#{p} %",p] }.insert(0,''), :selected => @invoice.global_percent_for(name)),
-                   :disabled=>@invoice.tax_per_line?(name), :onclick => "tax_changed('#{name}',$('#{name}_global').value);")
+                   :disabled=>@invoice.tax_per_line?(name), :onclick => "tax_changed('#{name}',$('#{name}_global').value);", :style => "width: 90px;")
     %>
+    </span>
+    <span class="invoiceLineHeader" style="width: 13px; margin-top: 4px;">
     <%= check_box_tag("#{name}_multiple", 1, @invoice.tax_per_line?(name), :onclick => "global_tax_check_changed('#{name}');") %>
+    </span>
+    <span class="invoiceLineHeader" style="width: 200px; margin-top: 6px;">
     <%= l(:line_specific_tax) %>
+    </span>
     </p>
   <% end -%>
   <hr />

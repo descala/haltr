@@ -150,6 +150,7 @@ fr:
   client_has_no_email: "Le client de cette facture n'a pas d'email défini"
   field_import: "Importer"
   pdf_not_legal: "PDF illégal"
+  line_specific_tax: "Line tax"
 
   # Events
   events: "Log des évènements"

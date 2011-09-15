@@ -151,6 +151,7 @@ en:
   client_has_no_email: "Invoice's client has no email defined"
   field_import: "Import"
   pdf_not_legal: "PDF not legal"
+  line_specific_tax: "Line tax"
 
   # Events
   events: "Event log"
