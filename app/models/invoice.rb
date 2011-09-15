@@ -263,6 +263,7 @@ class Invoice < ActiveRecord::Base
   end
 
   def tax_per_line?(tax_name)
+    return false if invoice_lines.first.nil?
     first_tax = invoice_lines.first.taxes.find_by_name(tax_name)
     invoice_lines.each do |line|
       return true if line.taxes.find_by_name(tax_name) != first_tax
