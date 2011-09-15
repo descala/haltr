@@ -36,10 +36,9 @@ class TasksController < ApplicationController
     end
 
     if @clients.size > 0
-      response.headers['Content-type'] = "text; charset=utf-8"
-      response.headers['Content-disposition'] = "attachment; filename=n19-#{@fecha_cargo[4..5]}-#{@fecha_cargo[2..3]}-#{@fecha_cargo[0..1]}.txt"
       I18n.locale = :es
-      render :layout => false
+      output = render_to_string :layout => false
+      send_data output, :filename => filename_for_content_disposition("n19-#{@fecha_cargo[4..5]}-#{@fecha_cargo[2..3]}-#{@fecha_cargo[0..1]}.txt"), :type => 'text/plain'
     else
       flash[:warning] = l(:notice_empty_n19)
       redirect_to :action => 'menu', :id => @project
