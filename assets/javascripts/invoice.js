@@ -12,3 +12,30 @@ function rm_line(id) {
   }
 }
 
+/* Iterate over all selects of a tax and update its values */
+function tax_changed(tax_name, tax_percent) {
+  $$('select.tax_'+tax_name).each(function(tax_select) {
+    tax_select.value=tax_percent;
+  });
+}
+
+/* Update form when a tax becomes global or line-specific.
+ * Enables/disables global tax selector and shows/hides per line ones.
+ * Iterate over all selects of a tax and update its values
+ */
+function global_tax_check_changed(name) {
+  $(name+'_global').disabled=$(name+'_multiple').checked;
+  if ($(name+'_multiple').checked) {
+    $(name+'_title').removeClassName('hidden');
+    $$('select.tax_'+name).each(function(tax_select) {
+      tax_select.removeClassName('hidden');
+    });
+  } else {
+    tax_changed(name,$(name+'_global').value);
+    $(name+'_title').addClassName('hidden');
+    $$('select.tax_'+name).each(function(tax_select) {
+      tax_select.addClassName('hidden');
+    });
+  }
+}
+

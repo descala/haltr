@@ -262,6 +262,22 @@ class Invoice < ActiveRecord::Base
     t
   end
 
+  def tax_per_line?(tax_name)
+    first_tax = invoice_lines.first.taxes.find_by_name(tax_name)
+    invoice_lines.each do |line|
+      return true if line.taxes.find_by_name(tax_name) != first_tax
+    end
+    false
+  end
+
+  def global_percent_for(tax_name)
+    return "" if tax_per_line? tax_name
+    return "" if invoice_lines.first.nil?
+    first_tax = invoice_lines.first.taxes.find_by_name(tax_name)
+    return "" if first_tax.nil?
+    return first_tax.percent
+  end
+
   private
 
   def set_due_date
