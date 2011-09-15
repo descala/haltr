@@ -36,9 +36,10 @@ module InvoicesHelper
           html = render(:partial => 'invoices/invoice_line', :locals => { :f => line_form })
         end
         page << "$('invoice_lines').insert({ bottom: '#{escape_javascript(html)}'.replace(/NEW_RECORD/g, new Date().getTime()) });"
-        #TODO: global_tax_check_changed does more things than necessary here
         @company.taxes_hash.each_key do |tax_name|
+          #TODO: global_tax_check_changed does more things than necessary here
           page << "global_tax_check_changed('#{tax_name}');"
+          page << "copy_last_line_tax('#{tax_name}');"
         end
       end
     end

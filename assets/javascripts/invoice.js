@@ -39,3 +39,9 @@ function global_tax_check_changed(name) {
   }
 }
 
+/* Copy last line tax percent */
+function copy_last_line_tax(tax_name) {
+  tax_selects = $$('select.tax_'+tax_name)
+  last_value = tax_selects[tax_selects.size() - 2].value;
+  tax_selects.last().value = last_value
+}

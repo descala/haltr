@@ -19,15 +19,3 @@
 <%= f.object.new_record? ? "" : f.hidden_field(:_destroy, {:value=>0, :id=>"destroy_line_#{lineid}"}) %>
 
 
-<% # pre-select last selected tax
-  if f.object.new_record? and !f.object.new_and_first
--%>
-  <script type="text/javascript">
-    <% @invoice.taxes_hash.each do |name,percents| -%>
-      var tax_sel = $('invoice_invoice_lines_attributes_<%=lineid%>_tax_<%=name%>');
-      if (tax_sel.up('.invoice_line').previous('.invoice_line')) {
-        tax_sel.value=tax_sel.up('.invoice_line').previous('.invoice_line').down('.tax_<%=name%>').value;
-      }
-    <% end -%>
-  </script>
-<% end -%>
