@@ -166,6 +166,7 @@ fr:
   mark_unsent: "Manuellement marqué comment non envoyé"
   error_sending: "Erreur à l'envoi"
   close: "Clos"
+  amend_and_close: "Corrigé + clos"
   discard_sending: "Pas envoyé. Limite maximum de tentatives atteint"
   paid: "Marqué comme payé"
   unpaid: "Marqué comme non payé"

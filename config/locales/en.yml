@@ -167,6 +167,7 @@ en:
   mark_unsent: "Manually marked as not sent"
   error_sending: "Error sending"
   close: "Closed"
+  amend_and_close: "Amended and closed"
   discard_sending: "Not sent. Max retries reached"
   paid: "Marked as paid"
   unpaid: "Marked as unpaid"
