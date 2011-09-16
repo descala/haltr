@@ -18,12 +18,15 @@
   <p><%= f.text_field :discount_percent %></p>
   <p><%= f.text_area :extra_info, :rows=>3 %></p>
   <p><%= label_tag l(:label_tax_plural) %></p>
-  <% @project.company.taxes_hash.keys.sort.each do |name| -%>
+  <% if @invoice.taxes_hash.empty? -%>
+    <p><%= link_to l(:add_taxes_on_company), :controller => 'companies', :id => @project -%></p>
+  <% end -%>
+  <% @invoice.taxes_hash.keys.sort.each do |name| -%>
     <p>
     <%= label_tag "#{name}_global", name%>
     <span class="invoiceLineHeader" style="width: 100px;">
     <%= select_tag("#{name}_global",
-                   options_for_select(@project.company.taxes_hash[name].collect {|p| ["#{p} %",p] }.insert(0,''), :selected => @invoice.global_percent_for(name)),
+                   options_for_select(@invoice.taxes_hash[name].collect {|p| ["#{p} %",p] }.insert(0,''), :selected => @invoice.global_percent_for(name)),
                    :disabled=>@invoice.tax_per_line?(name), :onclick => "tax_changed('#{name}',$('#{name}_global').value);", :style => "width: 90px;")
     %>
     </span>

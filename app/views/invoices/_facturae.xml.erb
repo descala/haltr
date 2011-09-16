@@ -208,9 +208,6 @@
                     <TaxableBase>
                       <TotalAmount><%=h precision(invoice_line.taxable_base)%></TotalAmount>
                     </TaxableBase>
-                    <TaxAmount>
-                       <TotalAmount><%=h precision invoice_line.tax_amount(tax).dollars%></TotalAmount>
-                    </TaxAmount>
                  </Tax>
 <% end -%>
               </TaxesOutputs>

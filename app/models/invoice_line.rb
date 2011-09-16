@@ -57,14 +57,6 @@ class InvoiceLine < ActiveRecord::Base
     Utils.replace_dates! description, (date || Date.today) +  (invoice.frequency || 0).months
   end
 
-  def tax_amount(tax_type=nil)
-    line_tax = Money.new(0,currency)
-    taxes.each do |tax|
-      line_tax += taxable_base * (tax.percent / 100.0) if tax_type.nil? or tax == tax_type
-    end
-    line_tax
-  end
-
   def has_tax?(tax_type)
     return true if tax_type.nil?
     taxes.each do |tax|

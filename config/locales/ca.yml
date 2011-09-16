@@ -169,6 +169,7 @@ ca:
   line_specific_tax: "Impost per línia"
   default: "Per defecte"
   only_one_default_allowed_for: "%{tax_name}: Només es permet un impost per defecte"
+  add_taxes_on_company: "Pots gestionar els impostos a \"La meva empresa\""
 
   # Events
   events: "Log d'esdeveniments"

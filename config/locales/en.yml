@@ -159,6 +159,7 @@ en:
   line_specific_tax: "Line tax"
   default: "Default"
   only_one_default_allowed_for: "%{tax_name}: Only one default tax allowed"
+  add_taxes_on_company: "Manage taxes at \"My company\""
 
   # Events
   events: "Event log"
