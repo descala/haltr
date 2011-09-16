@@ -20,6 +20,8 @@ class Invoice < ActiveRecord::Base
   has_many :taxes, :through => :invoice_lines
   belongs_to :project
   belongs_to :client
+  belongs_to :amend, :class_name => "Invoice", :foreign_key => 'amend_id'
+  has_one :amend_of, :class_name => "Invoice", :foreign_key => 'amend_id'
   validates_presence_of :client, :date, :currency, :project_id, :unless => Proc.new {|i| i.type == "ReceivedInvoice" }
   validates_inclusion_of :currency, :in  => Money::Currency::TABLE.collect {|k,v| v[:iso_code] }, :unless => Proc.new {|i| i.type == "ReceivedInvoice" }
   validate :payment_method_requirements, :unless => Proc.new {|i| i.type == "ReceivedInvoice" }
