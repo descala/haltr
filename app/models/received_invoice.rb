@@ -7,11 +7,6 @@ class ReceivedInvoice < InvoiceDocument
   attr_accessor :md5
   after_create :create_event
 
-  composed_of :subtotal,
-    :class_name => "Money",
-    :mapping => [%w(subtotal_in_cents cents), %w(currency currency_as_string)],
-    :constructor => Proc.new { |cents, currency| Money.new(cents || 0, currency || Money::Currency.new(Setting.plugin_haltr['default_currency'])) }
-
   state_machine :state, :initial => :validating_format do
     before_transition do |invoice,transition|
       unless Event.automatic.include?(transition.event.to_s)

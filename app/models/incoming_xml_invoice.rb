@@ -23,10 +23,8 @@ class IncomingXmlInvoice
       xpaths[:invoice_number]          = [ "//Invoices/Invoice/InvoiceHeader/InvoiceNumber",
         "//Invoices/Invoice/InvoiceHeader/InvoiceSeriesCode" ]
       xpaths[:invoice_date]            = "//Invoices/Invoice/InvoiceIssueData/IssueDate"
-      xpaths[:invoice_import]          = "//Invoices/Invoice/InvoiceTotals/InvoiceTotal"
-      xpaths[:invoice_tax_percent]     = "//Invoices/Invoice/InvoiceTotals/TotalTaxOutputs"
-      xpaths[:invoice_subtotal]        = "//Invoices/Invoice/InvoiceTotals/TotalGrossAmountBeforeTaxes"
-      xpaths[:invoice_withholding_tax] = "//Invoices/Invoice/InvoiceTotals/TotalTaxesWithheld"
+      xpaths[:invoice_total]           = "//Invoices/Invoice/InvoiceTotals/InvoiceTotal"
+      xpaths[:invoice_import]          = "//Invoices/Invoice/InvoiceTotals/TotalGrossAmountBeforeTaxes"
       xpaths[:invoice_due_date]        = "//Invoices/Invoice/PaymentDetails/Installment/InstallmentDueDate"
       xpaths[:seller_taxcode]          = "//Parties/SellerParty/TaxIdentification/TaxIdentificationNumber"
       xpaths[:seller_name]             = "//Parties/SellerParty/LegalEntity/CorporateName"
@@ -53,10 +51,8 @@ class IncomingXmlInvoice
       InvoiceReceiver.log "Incoming invoice is UBL #{facturae_version.text}"
       xpaths[:invoice_number]          = ""
       xpaths[:invoice_date]            = ""
+      xpaths[:invoice_total]           = ""
       xpaths[:invoice_import]          = ""
-      xpaths[:invoice_tax_percent]     = ""
-      xpaths[:invoice_subtotal]        = ""
-      xpaths[:invoice_withholding_tax] = ""
       xpaths[:invoice_due_date]        = ""
       xpaths[:seller_taxcode]          = ""
       xpaths[:seller_name]             = ""
@@ -141,20 +137,16 @@ class IncomingXmlInvoice
     end
     invoice_number      = get_xpath(doc,xpaths[:invoice_number])
     invoice_date        = get_xpath(doc,xpaths[:invoice_date])
+    invoice_total       = get_xpath(doc,xpaths[:invoice_total])
     invoice_import      = get_xpath(doc,xpaths[:invoice_import])
-    invoice_tax_percent = get_xpath(doc,xpaths[:invoice_tax_percent])
-    invoice_subtotal    = get_xpath(doc,xpaths[:invoice_subtotal])
-    invoice_withholding_tax = get_xpath(doc,xpaths[:invoice_withholding_tax])
     invoice_due_date    = get_xpath(doc,xpaths[:invoice_due_date])
 
     r = ReceivedInvoice.new(:number          => invoice_number,
                             :client          => client,
                             :date            => invoice_date,
-                            :import          => invoice_import.to_money(currency),
+                            :total           => invoice_total.to_money(currency),
                             :currency        => currency,
-                            :tax_percent     => invoice_tax_percent,
-                            :subtotal        => invoice_subtotal.to_money(currency),
-                            :withholding_tax => invoice_withholding_tax.to_money(currency),
+                            :import          => invoice_import.to_money(currency),
                             :due_date        => invoice_due_date,
                             :project         => @company.project)
     return r

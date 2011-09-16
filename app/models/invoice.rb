@@ -180,8 +180,12 @@ class Invoice < ActiveRecord::Base
   # cost de les taxes (Money)
   def tax_amount(tax_type=nil)
     t = Money.new(0,currency)
-    invoice_lines.each do |il|
-      t += il.tax_amount(tax_type)
+    if tax_type.nil?
+      taxes_uniq.each do |tax|
+        t += taxable_base(tax) * (tax.percent / 100.0)
+      end
+    else
+      t += taxable_base(tax_type) * (tax_type.percent / 100.0)
     end
     t
   end
