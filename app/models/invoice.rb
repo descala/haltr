@@ -206,6 +206,10 @@ class Invoice < ActiveRecord::Base
     company.country != c.country
   end
 
+  def amended?
+    false # Only IssuedInvoices can be an amend
+  end
+
   private
 
   def set_due_date
