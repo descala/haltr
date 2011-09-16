@@ -79,7 +79,6 @@
       <% if @client.taxcode == Setting.plugin_haltr['diba_cif'] and !@invoice.codi_centre_gestor.blank? -%>
         <div><%=h l(:field_codi_centre_gestor) %>:<span class="tax-id"> <%=h @invoice.codi_centre_gestor %></span></div>
       <% end -%>
-    <% end -%>
   </div>
 </div>
 
