@@ -162,6 +162,8 @@ ca:
   field_import: "Import"
   pdf_not_legal: "PDF no legal"
   line_specific_tax: "Impost per línia"
+  default: "Per defecte"
+  only_one_default_allowed_for: "%{tax_name}: Només es permet un impost per defecte"
 
   # Events
   events: "Log d'esdeveniments"

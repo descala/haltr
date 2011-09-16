@@ -78,6 +78,11 @@ class InvoicesController < ApplicationController
     @client ||= Client.new
     @invoice = IssuedInvoice.new(:client=>@client,:project=>@project,:date=>Date.today,:number=>IssuedInvoice.next_number(@project))
     @invoice.currency = @client.currency
+    il = InvoiceLine.new(:new_and_first=>true)
+    @project.company.taxes.each do |tax|
+      il.taxes << Tax.new(:name=>tax.name, :percent=>tax.percent) if tax.default
+    end
+    @invoice.invoice_lines << il
   end
 
   def edit
@@ -86,6 +91,13 @@ class InvoicesController < ApplicationController
 
   def create
     @invoice = IssuedInvoice.new(params[:invoice])
+    if @invoice.invoice_lines.empty?
+      il = InvoiceLine.new(:new_and_first=>true)
+      @project.company.taxes.each do |tax|
+        il.taxes << Tax.new(:name=>tax.name, :percent=>tax.percent) if tax.default
+      end
+      @invoice.invoice_lines << il
+    end
     @client = @invoice.client
     @invoice.project = @project
     if @invoice.save
@@ -233,7 +245,7 @@ class InvoicesController < ApplicationController
     export_id = @invoice.client.invoice_format
     path = ExportChannels.path export_id
     format = ExportChannels.format export_id
-    @company = @invoice.company
+    @company = @project.company
     xml_file=Tempfile.new("invoice_#{@invoice.id}.xml","tmp")
     xml_file.write(render_to_string(:template => "invoices/#{format}.xml.erb", :layout => false))
     xml_file.close

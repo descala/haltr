@@ -151,6 +151,8 @@ fr:
   field_import: "Importer"
   pdf_not_legal: "PDF illégal"
   line_specific_tax: "Line tax"
+  default: "Défault"
+  only_one_default_allowed_for: "%{tax_name}: Une seule taxe par défaut autorisé"
 
   # Events
   events: "Log des évènements"

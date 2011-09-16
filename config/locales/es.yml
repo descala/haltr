@@ -162,6 +162,8 @@ es:
   field_import: "Importe"
   pdf_not_legal: "PDF no legal"
   line_specific_tax: "Impuesto por línea"
+  default: "Por defecto"
+  only_one_default_allowed_for: "%{tax_name}: Solo se acepta un impuesto por defecto"
 
   # Events
   events: "Log de eventos"
