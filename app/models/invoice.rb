@@ -59,7 +59,7 @@ class Invoice < ActiveRecord::Base
   def subtotal_without_discount(tax_type=nil)
     amount = Money.new(0,currency)
     invoice_lines.each do |line|
-      next if line.destroyed?
+      next if line.destroyed? or line.marked_for_destruction?
       amount += line.total if tax_type.nil? or line.has_tax?(tax_type)
     end
     amount
