@@ -264,9 +264,9 @@ class Invoice < ActiveRecord::Base
 
   def tax_per_line?(tax_name)
     return false if invoice_lines.first.nil?
-    first_tax = invoice_lines.first.taxes.find_by_name(tax_name)
+    first_tax = invoice_lines.first.taxes.collect {|t| t if t.name == tax_name}.compact.first
     invoice_lines.each do |line|
-      return true if line.taxes.find_by_name(tax_name) != first_tax
+      return true if line.taxes.collect {|t| t if t.name == tax_name}.compact.first != first_tax
     end
     false
   end
@@ -274,7 +274,7 @@ class Invoice < ActiveRecord::Base
   def global_percent_for(tax_name)
     return "" if tax_per_line? tax_name
     return "" if invoice_lines.first.nil?
-    first_tax = invoice_lines.first.taxes.find_by_name(tax_name)
+    first_tax = invoice_lines.first.taxes.collect {|t| t if t.name == tax_name}.compact.first
     return "" if first_tax.nil?
     return first_tax.percent
   end

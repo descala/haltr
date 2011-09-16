@@ -131,7 +131,7 @@ class InvoiceLine < ActiveRecord::Base
 #    if m.to_s =~ /^tax_[a-zA-Z]=$+/ and args.size == 1
 #      self.taxes << Tax.new(:name=>m.to_s.gsub(/tax_/,'').gsub(/=$/,''),:percent=>args[0])
     if m.to_s =~ /^tax_[a-zA-Z]+/ and args.size == 0
-      curr_tax = taxes.find_by_name(m.to_s.gsub(/tax_/,''))
+      curr_tax = taxes.collect {|t| t if t.name == m.to_s.gsub(/tax_/,'')}.compact.first
       return curr_tax.nil? ? nil : curr_tax.percent
     else
       super
