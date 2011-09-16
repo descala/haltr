@@ -15,11 +15,9 @@ class Invoice < ActiveRecord::Base
     PAYMENT_TRANSFER => {:facturae => '04', :ubl => '31'},
   }
 
-  # Default tax %
-  TAX = 18
-
   has_many :invoice_lines, :dependent => :destroy
   has_many :events, :dependent => :destroy
+  has_many :taxes, :through => :invoice_lines
   belongs_to :project
   belongs_to :client
   validates_presence_of :client, :date, :currency, :project_id, :unless => Proc.new {|i| i.type == "ReceivedInvoice" }
@@ -34,6 +32,11 @@ class Invoice < ActiveRecord::Base
   composed_of :import,
     :class_name => "Money",
     :mapping => [%w(import_in_cents cents), %w(currency currency_as_string)],
+    :constructor => Proc.new { |cents, currency| Money.new(cents || 0, currency || Money::Currency.new(Setting.plugin_haltr['default_currency'])) }
+
+  composed_of :total,
+    :class_name => "Money",
+    :mapping => [%w(total_in_cents cents), %w(currency currency_as_string)],
     :constructor => Proc.new { |cents, currency| Money.new(cents || 0, currency || Money::Currency.new(Setting.plugin_haltr['default_currency'])) }
 
   def initialize(attributes=nil)
@@ -53,69 +56,37 @@ class Invoice < ActiveRecord::Base
     end
   end
 
-  def subtotal_without_discount
-    total = Money.new(0,currency)
+  def subtotal_without_discount(tax_type=nil)
+    amount = Money.new(0,currency)
     invoice_lines.each do |line|
       next if line.destroyed?
-      total += line.total
+      amount += line.total if tax_type.nil? or line.has_tax?(tax_type)
     end
-    total
+    amount
   end
 
-  def subtotal
-    subtotal_without_discount - discount
-  end
-
-  def tax
-    if tax_percent
-      subtotal * (tax_percent / 100.0)
-    else
-      Money.new(0,currency)
-    end
+  def subtotal(tax_type=nil)
+    subtotal_without_discount(tax_type) - discount(tax_type)
   end
 
   def persontypecode
-    if withholding_tax_percent > 0
+    if taxes_withheld.any?
       "F" # Fisica
     else
       "J" # Juridica
     end
   end
 
-  def withholding_tax
-    if self.apply_withholding_tax
-      subtotal * (withholding_tax_percent / 100.0)
-    else
-      0.to_money(currency)
-    end
-  end
-
-  def withholding_tax_percent
-    if apply_withholding_tax
-      company.withholding_tax_percent.nil? ? 0 : company.withholding_tax_percent
-    else
-      0
-    end
-  end
-
-  def withholding_tax_name
-    company.withholding_tax_name
-  end
-
-  def discount
+  def discount(tax_type=nil)
     if discount_percent
-      subtotal_without_discount * (discount_percent / 100.0)
+      subtotal_without_discount(tax_type) * (discount_percent / 100.0)
     else
       Money.new(0,currency)
     end
   end
 
-  def total
-    subtotal + tax - withholding_tax
-  end
-
-  def subtotal_eur
-    "#{subtotal} €"
+  def discount_without_expenses
+    discount - ( expenses_total - total_general_surcharges )
   end
 
   def pdf_name
@@ -210,6 +181,108 @@ class Invoice < ActiveRecord::Base
     false # Only IssuedInvoices can be an amend
   end
 
+  # cost de les taxes (Money)
+  def tax_amount(tax_type=nil)
+    t = Money.new(0,currency)
+    invoice_lines.each do |il|
+      t += il.tax_amount(tax_type)
+    end
+    t
+  end
+
+  def taxable_base(tax_type=nil)
+    t = Money.new(0,currency)
+    invoice_lines.each do |il|
+      t += il.taxable_base if tax_type.nil? or il.has_tax?(tax_type)
+    end
+    t
+  end
+
+  def tax_applies_to_all_lines?(tax)
+    taxable_base(tax) == subtotal
+  end
+
+  def taxes_uniq
+    taxes.find :all, :group=> 'name,percent'
+  end
+
+  def tax_names
+    taxes.collect {|tax| tax.name }.uniq
+  end
+
+  def taxes_hash
+    th = company.taxes_hash
+    taxes_uniq.each do |t|
+      th[t.name] = [] unless th[t.name]
+      th[t.name] << t.percent unless th[t.name].include? t.percent
+    end
+    th
+  end
+
+  def taxes_outputs
+    taxes.find(:all, :group => 'name,percent', :conditions => "percent > 0")
+  end
+
+  def total_tax_outputs
+    t = Money.new(0,currency)
+    taxes_outputs.each do |tax|
+      t += tax_amount(tax)
+    end
+    t
+  end
+
+  def taxes_withheld
+    taxes.find(:all, :group => 'name,percent', :conditions => "percent < 0")
+  end
+
+  def total_taxes_withheld
+    t = Money.new(0,currency)
+    taxes_withheld.each do |tax|
+      t += tax_amount(tax)
+    end
+    # here we have negative amount, pass it to positive (what facturae template expects)
+    t * -1
+  end
+
+  def expenses
+    invoice_lines.collect { |line|
+      line if line.expenses?
+    }.compact
+  end
+
+  def expenses_total
+    t = Money.new(0,currency)
+    expenses.each do |line|
+      t += line.total
+    end
+    t
+  end
+
+  def total_general_surcharges
+    t = Money.new(0,currency)
+    expenses.each do |line|
+      t += line.taxable_base
+    end
+    t
+  end
+
+  def tax_per_line?(tax_name)
+    return false if invoice_lines.first.nil?
+    first_tax = invoice_lines.first.taxes.collect {|t| t if t.name == tax_name}.compact.first
+    invoice_lines.each do |line|
+      return true if line.taxes.collect {|t| t if t.name == tax_name}.compact.first != first_tax
+    end
+    false
+  end
+
+  def global_percent_for(tax_name)
+    return "" if tax_per_line? tax_name
+    return "" if invoice_lines.first.nil?
+    first_tax = invoice_lines.first.taxes.collect {|t| t if t.name == tax_name}.compact.first
+    return "" if first_tax.nil?
+    return first_tax.percent
+  end
+
   private
 
   def set_due_date
@@ -220,8 +293,14 @@ class Invoice < ActiveRecord::Base
     Terms.new(self.terms, self.date)
   end
 
-  def update_import
+  def update_imports
+    #TODO: new invoice_line can't use invoice.discount without this
+    # and while updating, lines have old invoice instance
+    self.invoice_lines.each do |il|
+      il.invoice = self
+    end
     self.import_in_cents = subtotal.cents
+    self.total_in_cents = subtotal.cents + tax_amount.cents
   end
 
   def payment_method_requirements

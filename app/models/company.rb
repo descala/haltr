@@ -4,6 +4,7 @@ class Company < ActiveRecord::Base
 
   belongs_to :project
   has_many :clients, :dependent => :nullify
+  has_many :taxes, :class_name => "Tax", :dependent => :destroy, :order => "name,percent DESC"
   validates_presence_of :name, :project_id, :email
   validates_length_of :taxcode, :maximum => 20
   validates_uniqueness_of :taxcode
@@ -11,15 +12,21 @@ class Company < ActiveRecord::Base
   validates_numericality_of :bank_account, :allow_nil => true, :unless => Proc.new {|company| company.bank_account.blank?}
   validates_length_of :bank_account, :maximum => 20
   validates_inclusion_of :currency, :in  => Money::Currency::TABLE.collect {|k,v| v[:iso_code] }
+  validate :only_one_default_tax_per_name
   acts_as_attachable :view_permission => :free_use,
                      :delete_permission => :free_use
   after_save :update_linked_clients
   iso_country :country
   include CountryUtils
 
+  accepts_nested_attributes_for :taxes,
+    :allow_destroy => true,
+    :reject_if => proc { |attributes| attributes.all? { |_, value| value.blank? } }
+  validates_associated :taxes
+
   def initialize(attributes=nil)
     super
-    self.withholding_tax_name ||= "IRPF"
+    #TODO: Add default country taxes
     self.currency ||= Setting.plugin_haltr['default_currency']
     self.country  ||= Setting.plugin_haltr['default_country']
     self.attachments ||= []
@@ -67,6 +74,23 @@ class Company < ActiveRecord::Base
     # taxcode is used to retrieve logo on xhtml when transforming to PDF,
     # some chars will make logo retrieval fail (i.e. spaces)
     write_attribute(:taxcode,tc.to_s.gsub(/\W/,''))
+  end
+
+  def taxes_hash
+    th = {}
+    taxes.each do |t|
+      th[t.name] = [] unless th[t.name]
+      th[t.name] << t.percent
+    end
+    th
+  end
+
+  def only_one_default_tax_per_name
+    deftaxes = {}
+    taxes.each do |tax|
+      errors.add(:base, l(:only_one_default_allowed_for, :tax_name=>tax.name)) if deftaxes[tax.name] and tax.default
+      deftaxes[tax.name] = tax.default
+    end
   end
 
   private

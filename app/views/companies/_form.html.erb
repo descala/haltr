@@ -1,4 +1,5 @@
 <%= error_messages_for 'company' %>
+<%= javascript_include_tag 'company', :plugin => 'haltr' %>
 
 <div class="box">
   <p><%= f.text_field :taxcode, :required => true %></p>
@@ -26,11 +27,22 @@
   <hr />
   <br />
   <p style="padding-left: 20px;"><%= I18n.t :private_fields_info %>:</p>
-  <p><%= f.text_field :withholding_tax_name %></p>
-  <p><%= f.text_field :withholding_tax_percent %></p>
   <p><%= f.text_field :bank_account, :maxlength => 20, :size => 30 %></p>
   <p><%= f.text_field :iban, :size => 30 %></p>
   <p><%= f.text_field :bic, :size => 30 %></p>
+
+  <div id="taxes">
+    <p style="padding-left: 20px;"><%= I18n.t :label_tax_plural %>:</p>
+    <p style="font-weight:bold;">
+    <span class="invoiceLineHeader" style="width: 80px;"><%= l(:field_name) %></span>
+    </p>
+    <% @company.taxes << Tax.new if @company.taxes.empty? -%>
+    <% f.fields_for :taxes do |tax_form| %>
+      <%= render :partial => 'companies/tax', :locals => { :f => tax_form } %>
+    <% end %>
+  </div>
+  <p><%= add_tax_link(f) %></p>
+
   <p><%=label_tag('attachments[1][file]', l(:logo))%><%= file_field_tag 'attachments[1][file]', :size => 30, :id => nil -%></p>
 <% if @company.attachments.size > 0 -%>
   <p><%= image_tag "/attachments/#{@company.attachments.first.id}/#{@company.attachments.first.filename}" -%></p>

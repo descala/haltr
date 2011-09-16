@@ -14,8 +14,6 @@
   <p><%= f.text_field :ponumber %></p>
   <p><%= f.select(:terms, Terms.for_select, {}, {:onchange=>"terms()"}) %></p>
   <p><%= f.text_field :due_date, :size => 10, :disabled => !@invoice.custom_due? %><span id="due_date_cal" style="visibility: <%=@invoice.custom_due? ? "visible" : "hidden" %>;"><%= calendar_for('invoice_due_date') %></span></p>
-  <p><%= f.text_field :tax_percent %></p>
-  <p><%= f.check_box :apply_withholding_tax %> (<%=@invoice.withholding_tax_percent%>% <%=@project.company.withholding_tax_name%>)</p>
   <p><%= f.text_field :discount_text %></p>
   <p><%= f.text_field :discount_percent %></p>
   <p><%= f.text_area :extra_info, :rows=>3 %></p>

@@ -100,10 +100,10 @@
       </cac:AllowanceCharge>
 <% end -%>
     <cac:TaxTotal>
-      <cbc:TaxAmount currencyID="EUR"><%=h precision @invoice.tax.dollars %></cbc:TaxAmount>
+      <cbc:TaxAmount currencyID="EUR"><%=h precision @invoice.tax_amount.dollars %></cbc:TaxAmount>
       <cac:TaxSubtotal>
         <cbc:TaxableAmount currencyID="EUR"><%=h precision(@invoice.subtotal.dollars)%></cbc:TaxableAmount>
-        <cbc:TaxAmount currencyID="<%=h @client.currency%>"><%=h precision @invoice.tax.dollars %></cbc:TaxAmount>
+        <cbc:TaxAmount currencyID="<%=h @client.currency%>"><%=h precision @invoice.tax_amount.dollars %></cbc:TaxAmount>
         <cac:TaxCategory>
           <cbc:ID schemeID="UN/ECE 5305" schemeAgencyID="6">S</cbc:ID>
           <cbc:Percent><%=h precision @invoice.tax_percent%></cbc:Percent>

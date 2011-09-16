@@ -113,15 +113,11 @@
         <th><%=h l(:label_subtotal)%>:</th>
         <td><%=h money(@invoice.subtotal) %></td>
       </tr>
+      <% @invoice.taxes_uniq.each do |tax| -%>
       <tr class="sales-tax">
-        <th><%=h number_to_tax_percent(@invoice.tax_percent) %>:</th>
-        <td><%=h money(@invoice.tax) %></td>
+        <th><%= h number_to_tax_percent(tax.percent, :tax_name=>tax.name) %> <%= " #{l(:over_taxable_base)} #{money(@invoice.taxable_base(tax))}" unless @invoice.tax_applies_to_all_lines?(tax) %>:</th>
+        <td><%= h money(@invoice.tax_amount(tax)) %></td>
       </tr>
-      <% if @invoice.withholding_tax_percent > 0 and @invoice.apply_withholding_tax -%>
-        <tr class="sales-tax">
-          <th><%=h number_to_tax_percent(@invoice.withholding_tax_percent, :tax_name=>@invoice.withholding_tax_name) %>:</th>
-          <td><%=h money(@invoice.withholding_tax)%></td>
-        </tr>
       <% end -%>
       <tr class="invoice-total">
         <th><%=h l(:label_total)%>:</th>
