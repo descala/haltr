@@ -15,6 +15,7 @@ class IssuedInvoice < InvoiceDocument
   before_validation :set_due_date
   before_save :update_import
   after_create :create_event
+  after_destroy :release_amended
 
   attr_accessor :export_errors
 
@@ -174,11 +175,10 @@ class IssuedInvoice < InvoiceDocument
   end
 
   def amended?
-    !self.amend_id.nil? 
+    #!amend.nil?
+    !self.amend_id.nil?
   end
 
-  #TODO when an amend invoice is destroyed the amended one still has its id in amend_id
- 
   protected
 
   def create_event
@@ -197,6 +197,13 @@ class IssuedInvoice < InvoiceDocument
     else
       add_export_error(:client_has_no_email)
       false
+    end
+  end
+
+  def release_amended
+    if self.amend_of
+      self.amend_of.amend_id = nil
+      self.amend_of.save
     end
   end
 
