@@ -5,8 +5,6 @@ class IssuedInvoice < InvoiceDocument
   unloadable
 
   belongs_to :invoice_template
-  belongs_to :amend, :class_name => "Invoice", :foreign_key => 'amend_id'
-  has_one :amend_of, :class_name => "Invoice", :foreign_key => 'amend_id'
   validates_presence_of :number, :unless => Proc.new {|invoice| invoice.type == "DraftInvoice"}
   validates_presence_of :due_date
   validates_uniqueness_of :number, :scope => [:project_id,:type], :if => Proc.new {|i| i.type == "IssuedInvoice" }
