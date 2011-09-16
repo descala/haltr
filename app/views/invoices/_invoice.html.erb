@@ -1,3 +1,9 @@
+<div id="amends">
+<% if @invoice.amend -%>
+  <h3><%=l(:amended_by_invoice, :link => link_to("#{l(:label_amendment_invoice)} #{@invoice.amend.number}",
+                                                 :controller => 'invoices', :action=>'show', :id=>@invoice.amend)) %></h3>
+<% end -%>
+</div>
 <!-- Vendor Info -->
 <div class="vcard vendor">
   <div class="logo">
@@ -28,6 +34,9 @@
 <h2 class="invoice-ID"><%=h @invoice.label %> <%=h @invoice.number %></h2>
 <div class="invoice-info">
   <span class="date"><strong><%=h format_date @invoice.date %></strong></span><br/>
+  <% if @invoice.amend_of -%>
+    <span class="invoice-terms"><%=h l(:label_amended_invoice)%>: <%= link_to @invoice.amend_of.number,{:controller => 'invoices', :action => 'show', :id => @invoice.amend_of} %></span><br/>
+  <% end -%>
   <% unless @invoice.due_date.blank? -%>
     <span class="invoice-terms<%=h " pastdue" if @invoice.past_due?%>"><%=h l(:field_due_date)%> <%=h format_date @invoice.due_date %> <%= "(#{@invoice.terms_description})" unless @invoice.custom_due? %></span><br/>
   <% end -%>
@@ -66,7 +75,6 @@
       <% end -%>
       <div class="country-name"><%=h @client.country if @client.country and @client.country.downcase != @company.country.downcase %></div>
     </address>
-    <% if !@invoice.draft -%>
       <div><strong><%=h l(:field_taxcode) %>:</strong><span class="tax-id"> <%=h @client.taxcode.upcase %></span></div>
       <% if @client.taxcode == Setting.plugin_haltr['diba_cif'] and !@invoice.codi_centre_gestor.blank? -%>
         <div><%=h l(:field_codi_centre_gestor) %>:<span class="tax-id"> <%=h @invoice.codi_centre_gestor %></span></div>

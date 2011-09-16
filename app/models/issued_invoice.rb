@@ -5,6 +5,8 @@ class IssuedInvoice < InvoiceDocument
   unloadable
 
   belongs_to :invoice_template
+  belongs_to :amend, :class_name => "Invoice", :foreign_key => 'amend_id'
+  has_one :amend_of, :class_name => "Invoice", :foreign_key => 'amend_id'
   validates_presence_of :number, :unless => Proc.new {|invoice| invoice.type == "DraftInvoice"}
   validates_presence_of :due_date
   validates_uniqueness_of :number, :scope => [:project_id,:type], :if => Proc.new {|i| i.type == "IssuedInvoice" }
@@ -75,6 +77,9 @@ class IssuedInvoice < InvoiceDocument
     event :registered_notification do
       transition :sent => :sent
     end
+    event :amend_and_close do
+      transition all=> :closed
+    end
   end
 
   def sent?
@@ -87,8 +92,8 @@ class IssuedInvoice < InvoiceDocument
   end
 
   def label
-    if self.draft
-      l :label_draft
+    if self.amend_of
+      l :label_amendment_invoice
     else
       l :label_invoice
     end
@@ -99,7 +104,7 @@ class IssuedInvoice < InvoiceDocument
   end
 
   def self.find_not_sent(project)
-    invoices = find :all, :include => [:client], :conditions => ["clients.project_id = ? and state = 'new' and draft = ?", project.id, false ], :order => "number ASC"
+    invoices = find :all, :include => [:client], :conditions => ["clients.project_id = ? and state = 'new'", project.id ], :order => "number ASC"
     invoices.collect do |invoice|
       invoice unless invoice.is_a? DraftInvoice or invoice.number.nil?
     end.compact
@@ -125,7 +130,7 @@ class IssuedInvoice < InvoiceDocument
   end
 
   def self.last_number(project)
-    i = IssuedInvoice.last(:order => "number", :include => [:client], :conditions => ["clients.project_id = ? AND draft = ?", project.id, false])
+    i = IssuedInvoice.last(:order => "number", :include => [:client], :conditions => ["clients.project_id = ?", project.id])
     i.number if i
   end
 
@@ -154,6 +159,27 @@ class IssuedInvoice < InvoiceDocument
     %w(sent refused accepted allegedly_paid closed).include? state
   end
 
+  def create_amend
+    new_attributes = self.attributes
+    new_attributes['state']='new'
+    ai = IssuedInvoice.new(new_attributes)
+    ai.number = "#{number}-R"
+    ai.save(false)
+    self.invoice_lines.each do |line|
+      ai.invoice_lines << InvoiceLine.new(line.attributes)
+    end
+    self.amend_id = ai.id
+    self.save(false)
+    self.amend_and_close # change state
+    ai
+  end
+
+  def amended?
+    !self.amend_id.nil? 
+  end
+
+  #TODO when an amend invoice is destroyed the amended one still has its id in amend_id
+ 
   protected
 
   def create_event

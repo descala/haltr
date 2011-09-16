@@ -88,7 +88,21 @@
          <InvoiceHeader>
             <InvoiceNumber><%=h @invoice.number%></InvoiceNumber>
             <InvoiceDocumentType>FC</InvoiceDocumentType>
-            <InvoiceClass>OO</InvoiceClass>
+            <InvoiceClass><%= @invoice.amend_of ? "OR" : "OO" %></InvoiceClass>
+<% if @invoice.amend_of -%>
+            <Corrective>
+              <InvoiceNumber><%=@invoice.amend_of.number%></InvoiceNumber>
+              <ReasonCode>15</ReasonCode>
+              <ReasonDescription>Literales legales</ReasonDescription>
+              <TaxPeriod>
+                <StartDate><%=@invoice.amend_of.date%></StartDate>
+                <EndDate><%=@invoice.amend_of.date%></EndDate>
+              </TaxPeriod>
+              <CorrectionMethod>01</CorrectionMethod>
+              <CorrectionMethodDescription>Rectificación íntegra</CorrectionMethodDescription>
+              <AdditionalReasonDescription><%=@invoice.extra_info%></AdditionalReasonDescription>
+            </Corrective>
+<% end -%>
          </InvoiceHeader>
          <InvoiceIssueData>
             <IssueDate><%=h @invoice.date%></IssueDate>

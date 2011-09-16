@@ -133,3 +133,6 @@ span.invoiceLineHeader {
   margin: 30px;
 }
 
+.amended {
+  text-decoration: line-through;
+} 

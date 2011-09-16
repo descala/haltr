@@ -161,6 +161,11 @@ ca:
   client_has_no_email: "El client associat a la factura no té correu electrònic definit"
   field_import: "Import"
   pdf_not_legal: "PDF no legal"
+  amended_invoice: "Rectificació de la %{link}"
+  amended_by_invoice: "Rectificada per la %{link}"
+  create_amend_invoice: "Crear factura rectificativa"
+  label_amendment_invoice: "Factura Rectificativa"
+  label_amended_invoice: "Factura rectificada"
 
   # Events
   events: "Log d'esdeveniments"
@@ -172,6 +177,7 @@ ca:
   mark_unsent: "Marcada manualment com a no enviada"
   error_sending: "Error a l'enviar"
   close: "Tancada"
+  amend_and_close: "Tancada perquè s'ha creat una factura que rectifica a aquesta"
   discard_sending: "No enviada. S'ha arribat al màxim de reintents"
   paid: "Marcada com a pagada"
   unpaid: "Marcada com a no pagada"

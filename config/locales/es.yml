@@ -161,6 +161,11 @@ es:
   client_has_no_email: "El cliente asociado a la factura no tiene correo electrónico definido"
   field_import: "Importe"
   pdf_not_legal: "PDF no legal"
+  amended_invoice: "Rectificación de la %{link}"
+  amended_by_invoice: "Rectificada por la %{link}"
+  create_amend_invoice: "Crear factura rectificativa"
+  label_amendment_invoice: "Factura Rectificativa"
+  label_amended_invoice: "Factura rectificada"
 
   # Events
   events: "Log de eventos"
@@ -172,6 +177,7 @@ es:
   mark_unsent: "Marcada manualmente como no enviada"
   error_sending: "Error al enviar"
   close: "Cerrada"
+  amend_and_close: "Se ha creado una factura rectificativa"
   discard_sending: "No enviada. Se ha llegado al máximo de reintentos"
   paid: "Marcada como pagada"
   unpaid: "Marcada como no pagada"

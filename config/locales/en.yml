@@ -151,6 +151,11 @@ en:
   client_has_no_email: "Invoice's client has no email defined"
   field_import: "Import"
   pdf_not_legal: "PDF not legal"
+  amended_invoice: "Rectification of %{link}"
+  amended_by_invoice: "Rectificated by %{link}"
+  create_amend_invoice: "Create rectification invoice"
+  label_amendment_invoice: "Amendment Invoice"
+  label_amended_invoice: "Amended invoice"
 
   # Events
   events: "Event log"
@@ -162,6 +167,7 @@ en:
   mark_unsent: "Manually marked as not sent"
   error_sending: "Error sending"
   close: "Closed"
+  amend_and_close: "Amended and closed"
   discard_sending: "Not sent. Max retries reached"
   paid: "Marked as paid"
   unpaid: "Marked as unpaid"

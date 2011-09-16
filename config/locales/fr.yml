@@ -150,6 +150,11 @@ fr:
   client_has_no_email: "Le client de cette facture n'a pas d'email défini"
   field_import: "Importer"
   pdf_not_legal: "PDF illégal"
+  amended_invoice: "Ajustements au %{link}"
+  amended_by_invoice: "Corrigé pour %{link}"
+  create_amend_invoice: "Créer projet d'amendement"
+  label_amendment_invoice: "Facture d'amendment"
+  label_amended_invoice: "Facture corrigé"
 
   # Events
   events: "Log des évènements"
@@ -161,6 +166,7 @@ fr:
   mark_unsent: "Manuellement marqué comment non envoyé"
   error_sending: "Erreur à l'envoi"
   close: "Clos"
+  amend_and_close: "Corrigé + clos"
   discard_sending: "Pas envoyé. Limite maximum de tentatives atteint"
   paid: "Marqué comme payé"
   unpaid: "Marqué comme non payé"
