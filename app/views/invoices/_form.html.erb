@@ -22,18 +22,18 @@
     <p><%= link_to l(:add_taxes_on_company), :controller => 'companies', :id => @project -%></p>
   <% end -%>
   <% @invoice.taxes_hash.keys.sort.each do |name| -%>
-    <p>
+    <p id="invoice_taxes_global">
     <%= label_tag "#{name}_global", name%>
-    <span class="invoiceLineHeader" style="width: 100px;">
+    <span>
     <%= select_tag("#{name}_global",
                    options_for_select(@invoice.taxes_hash[name].collect {|p| ["#{p} %",p] }.insert(0,''), :selected => @invoice.global_percent_for(name)),
                    :disabled=>@invoice.tax_per_line?(name), :onclick => "tax_changed('#{name}',$('#{name}_global').value);", :style => "width: 90px;")
     %>
     </span>
-    <span class="invoiceLineHeader" style="width: 13px; margin-top: 4px;">
+    <span>
     <%= check_box_tag("#{name}_multiple", 1, @invoice.tax_per_line?(name), :onclick => "global_tax_check_changed('#{name}');") %>
     </span>
-    <span class="invoiceLineHeader" style="width: 200px; margin-top: 6px;">
+    <span>
     <%= l(:line_specific_tax) %>
     </span>
     </p>
@@ -41,10 +41,10 @@
   <hr />
   <div id="invoice_lines">
     <p style="font-weight:bold; padding:10px;">
-    <span class="invoiceLineHeader" style="width: 80px;"><%= l(:field_quantity) %></span>
-    <span class="invoiceLineHeader" style="width: 102px;">&nbsp;</span>
-    <span class="invoiceLineHeader" style="width: 290px;"><%= l(:field_description) %></span>
-    <span class="invoiceLineHeader" style="width: 80px;"><%= l(:field_price) %></span>
+    <span class="invoiceLineHeader"><%= l(:field_quantity) %></span>
+    <span class="invoiceLineHeader">&nbsp;</span>
+    <span class="invoiceLineHeader"><%= l(:field_description) %></span>
+    <span class="invoiceLineHeader"><%= l(:field_price) %></span>
     <% @invoice.taxes_hash.keys.sort.each do |name| -%>
       <span id="<%=name%>_title" class="invoiceLineHeader <%= 'hidden' unless @invoice.tax_per_line?(name)%>" style="width: 80px;"><%= name %></span>
     <% end -%>

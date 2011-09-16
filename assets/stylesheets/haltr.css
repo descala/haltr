@@ -145,3 +145,7 @@ select.tax {
   display: none !important;
   /* useful to debug background-color: yellow !important; */
 }
+
+#invoice_taxes_global span, #invoice_lines span {
+  margin: 5px;
+}
