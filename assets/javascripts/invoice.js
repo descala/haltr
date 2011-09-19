@@ -41,8 +41,12 @@ function global_tax_check_changed(name) {
 
 /* Copy last line tax percent */
 function copy_last_line_tax(tax_name) {
-  tax_selects = $$('select.tax_'+tax_name)
-  last_value = tax_selects[tax_selects.size() - 2].value;
-  tax_selects.last().value = last_value
+  tax_selects = $$('select.tax_'+tax_name);
+  if (tax_selects.size > 1) {
+    last_value = tax_selects[tax_selects.size() - 2].value;
+  } else {
+    last_value = $(tax_name+'_global').value;
+  }
+  tax_selects.last().value = last_value;
 }
 
