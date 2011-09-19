@@ -17,7 +17,7 @@ class Invoice < ActiveRecord::Base
 
   has_many :invoice_lines, :dependent => :destroy
   has_many :events, :dependent => :destroy
-  has_many :taxes, :through => :invoice_lines
+  #has_many :taxes, :through => :invoice_lines
   belongs_to :project
   belongs_to :client
   belongs_to :amend, :class_name => "Invoice", :foreign_key => 'amend_id'
@@ -208,8 +208,17 @@ class Invoice < ActiveRecord::Base
     taxable_base(tax) == subtotal
   end
 
+  def taxes
+    invoice_lines.collect {|l| l.taxes }.flatten.compact
+  end
+
   def taxes_uniq
-    taxes.find :all, :group=> 'name,percent'
+    #taxes.find :all, :group=> 'name,percent'
+    tt=[]
+    taxes.collect {|tax|
+      tt << tax unless tt.include? tax
+    }
+    tt
   end
 
   def tax_names
