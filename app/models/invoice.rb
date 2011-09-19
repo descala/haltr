@@ -8,11 +8,13 @@ class Invoice < ActiveRecord::Base
   PAYMENT_CASH = 1
   PAYMENT_DEBIT = 2
   PAYMENT_TRANSFER = 4
+  PAYMENT_SPECIAL = 13
 
   PAYMENT_CODES = {
     PAYMENT_CASH     => {:facturae => '01', :ubl => '10'},
     PAYMENT_DEBIT    => {:facturae => '02', :ubl => '49'},
     PAYMENT_TRANSFER => {:facturae => '04', :ubl => '31'},
+    PAYMENT_SPECIAL  => {:facturae => '13', :ubl => '??'},
   }
 
   has_many :invoice_lines, :dependent => :destroy
@@ -113,6 +115,8 @@ class Invoice < ActiveRecord::Base
         iban = company.iban || ""
         bic  = company.bic || ""
         "#{l(:transfer_str)} (#{bic}) #{iban[0..3]} #{iban[4..7]} #{iban[8..11]} #{iban[12..15]} #{iban[16..19]} #{iban[20..23]}"
+      elsif special?
+        payment_method_text
       else
         l(:cash_str)
       end
@@ -123,6 +127,8 @@ class Invoice < ActiveRecord::Base
       elsif transfer?
         ba = company.bank_account ||= ""
         "#{l(:transfer_str)} #{ba[0..3]} #{ba[4..7]} #{ba[8..9]} #{ba[10..19]}"
+      elsif special?
+        payment_method_text
       else
         l(:cash_str)
       end
@@ -130,7 +136,7 @@ class Invoice < ActiveRecord::Base
   end
 
   def self.payment_methods
-    [[l("cash"), 1],[l("debit"), 2],[l("transfer"), 4]]
+    [[l("cash"), 1],[l("debit"), 2],[l("transfer"), 4],[l("other"),13]]
   end
 
   def debit?
@@ -139,6 +145,10 @@ class Invoice < ActiveRecord::Base
 
   def transfer?
     payment_method == PAYMENT_TRANSFER
+  end
+
+  def special?
+    payment_method == PAYMENT_SPECIAL
   end
 
   def payment_method_code(format)
@@ -215,7 +225,7 @@ class Invoice < ActiveRecord::Base
   def taxes_uniq
     #taxes.find :all, :group=> 'name,percent'
     tt=[]
-    taxes.collect {|tax|
+    taxes.each {|tax|
       tt << tax unless tt.include? tax
     }
     tt
@@ -235,7 +245,10 @@ class Invoice < ActiveRecord::Base
   end
 
   def taxes_outputs
-    taxes.find(:all, :group => 'name,percent', :conditions => "percent > 0")
+    #taxes.find(:all, :group => 'name,percent', :conditions => "percent > 0")
+    taxes_uniq.collect { |tax|
+      tax if tax.percent > 0
+    }.compact
   end
 
   def total_tax_outputs
@@ -247,7 +260,10 @@ class Invoice < ActiveRecord::Base
   end
 
   def taxes_withheld
-    taxes.find(:all, :group => 'name,percent', :conditions => "percent < 0")
+    #taxes.find(:all, :group => 'name,percent', :conditions => "percent < 0")
+    taxes_uniq.collect {|tax|
+      tax if tax.percent < 0
+    }.compact
   end
 
   def total_taxes_withheld

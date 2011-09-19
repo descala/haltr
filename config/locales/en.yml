@@ -93,6 +93,7 @@ en:
   cash: Cash
   debit: Debit payment
   transfer: Bank transfer
+  other: Other
   requires_client_bank_account: requires client bank account
   requires_company_bank_account: requires self bank account
   requires_client_iban_bic: requires client IBAN and BIC

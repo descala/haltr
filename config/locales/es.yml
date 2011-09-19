@@ -103,6 +103,7 @@ es:
   cash: En efectivo
   debit: Cargar en cuenta
   transfer: Transferencia bancaria
+  other: Otros
   requires_client_bank_account: requiere cuenta bancaria del cliente
   requires_company_bank_account: requiere cuenta bancaria propia
   requires_client_iban_bic: requiere IBAN y BIC del cliente

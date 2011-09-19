@@ -92,6 +92,7 @@ fr:
   cash: Liquide
   debit: Débiter paiement
   transfer: Transfert bancaire
+  other: Autres
   requires_client_bank_account: requiert compte bancaire client
   requires_company_bank_account: requiert propre compte bancaire
 #  requires_client_iban_bic: requires client IBAN and BIC
