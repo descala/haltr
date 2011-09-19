@@ -104,6 +104,7 @@ ca:
   cash: En efectiu
   debit: Carregar al compte
   transfer: Transferència bancària
+  other: Altres
   requires_client_bank_account: requereix compte bancari del client
   requires_company_bank_account: requereix compte bancari propi
   requires_client_iban_bic: requereix IBAN i BIC del client

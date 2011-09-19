@@ -3,20 +3,24 @@
     # new invoice, default client
     currency = @client.currency
     payment_method = @client.payment_method
+    payment_method_text = @client.payment_method_text
     terms = @client.terms
   elsif @invoice
     # existing invoice, current client
     currency = @invoice.currency
     payment_method = @invoice.payment_method
+    payment_method_text = @invoice.payment_method_text
     terms = @invoice.terms
   elsif @client and !@client.new_record?
     # ajax call on changing invoice's client
     currency = @client.currency
     payment_method = @client.payment_method
+    payment_method_text = @client.payment_method_text
     terms = @client.terms
   end
   currency ||= Setting.plugin_haltr['default_currency']
   payment_method ||= 1
+  payment_method_text ||= ""
   terms ||= 0
 -%>
 <p>
@@ -32,7 +36,12 @@
 -%>
 <p>
 <label for="invoice_payment_method"><%= l(:field_payment_method) %></label>
-<%= select(:invoice, :payment_method, Invoice.payment_methods, {:selected=>payment_method }, :required => true) %>
+<%= select(:invoice, :payment_method, Invoice.payment_methods, {:selected=>payment_method }, :required => true, :onchange => "payment_method_changed('invoice');") %><br />
+<% if payment_method == 13 -%>
+  <%= text_area(:invoice, :payment_method_text, :cols => 40, :rows => 2, :value => payment_method_text) %>
+<% else -%>
+  <%= text_area(:invoice, :payment_method_text, :cols => 40, :rows => 2, :value => payment_method_text, :class => "hidden") %>
+<% end -%>
 </p>
 <p>
 <label for="invoice_terms"><%= l(:field_terms) %></label>

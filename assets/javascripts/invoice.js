@@ -45,3 +45,4 @@ function copy_last_line_tax(tax_name) {
   last_value = tax_selects[tax_selects.size() - 2].value;
   tax_selects.last().value = last_value
 }
+
