@@ -225,7 +225,7 @@ class Invoice < ActiveRecord::Base
   def taxes_uniq
     #taxes.find :all, :group=> 'name,percent'
     tt=[]
-    taxes.collect {|tax|
+    taxes.each {|tax|
       tt << tax unless tt.include? tax
     }
     tt
@@ -245,7 +245,10 @@ class Invoice < ActiveRecord::Base
   end
 
   def taxes_outputs
-    taxes.find(:all, :group => 'name,percent', :conditions => "percent > 0")
+    #taxes.find(:all, :group => 'name,percent', :conditions => "percent > 0")
+    taxes_uniq.collect { |tax|
+      tax if tax.percent > 0
+    }.compact
   end
 
   def total_tax_outputs
@@ -257,7 +260,10 @@ class Invoice < ActiveRecord::Base
   end
 
   def taxes_withheld
-    taxes.find(:all, :group => 'name,percent', :conditions => "percent < 0")
+    #taxes.find(:all, :group => 'name,percent', :conditions => "percent < 0")
+    taxes_uniq.collect {|tax|
+      tax if tax.percent < 0
+    }.compact
   end
 
   def total_taxes_withheld
