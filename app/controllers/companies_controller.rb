@@ -25,6 +25,7 @@ class CompaniesController < ApplicationController
   def update
     if @company.update_attributes(params[:company])
       if params[:attachments]
+        #TODO: validate content-type ?
         @company.attachments.each {|a| a.destroy }
         Attachment.attach_files(@company, params[:attachments])
         render_attachment_warning_if_needed(@company)

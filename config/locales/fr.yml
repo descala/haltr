@@ -74,7 +74,9 @@ fr:
   receive_payment: Recevoir paiement
   make_payment: Faire paiement
   label_paid: Payé
-  field_tax_percent: TVA
+  label_tax: Tax
+  label_tax_plural: Taxes
+  button_add_tax: Add new tax
   label_from: De
   label_to: À
   save_invoice: Sauver facture
@@ -83,9 +85,7 @@ fr:
   pending_invoices: Factures en attente
   closed_invoices: Factures closes
   label_subtotal: Sous-total
-  field_withholding_tax_name: Nom de la taxe retenue à la source
-  field_withholding_tax_percent: % taxe retenue à la source
-  field_apply_withholding_tax: Appliquer taxe retenue à la source
+  over_taxable_base: sur
   must_have_lines: doit avoir des lignes
   send_invoice: Envoyer facture
   label_send: Envoyer
@@ -155,6 +155,10 @@ fr:
   create_amend_invoice: "Créer projet d'amendement"
   label_amendment_invoice: "Facture d'amendment"
   label_amended_invoice: "Facture corrigé"
+  line_specific_tax: "Line tax"
+  default: "Défault"
+  only_one_default_allowed_for: "%{tax_name}: Une seule taxe par défaut autorisé"
+  add_taxes_on_company: "Vous pouvez gérer vos impôts \"Ma compagnie\""
 
   # Events
   events: "Log des évènements"

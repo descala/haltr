@@ -12,7 +12,7 @@ class IssuedInvoice < InvoiceDocument
   validate :comprovacions_diba
 
   before_validation :set_due_date
-  before_save :update_import
+  before_save :update_imports
   after_create :create_event
   after_destroy :release_amended
 
@@ -111,8 +111,7 @@ class IssuedInvoice < InvoiceDocument
 
   def self.candidates_for_payment(payment)
     # order => older invoices to get paid first
-    #TODO: add withholding_tax
-    find :all, :conditions => ["project_id = ? and round(import_in_cents*(1+tax_percent/100)) = ? and date <= ? and state != 'closed'", payment.project_id, payment.amount_in_cents, payment.date], :order => "due_date ASC"
+    find :all, :conditions => ["project_id = ? and total_in_cents = ? and date <= ? and state != 'closed'", payment.project_id, payment.amount_in_cents, payment.date], :order => "due_date ASC"
   end
 
   def past_due?

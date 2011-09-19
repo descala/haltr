@@ -14,25 +14,45 @@
   <div id="payment_stuff">
   <%= render :partial => 'invoices/payment_stuff' %>
   </div>
-  <p><%= f.text_field :tax_percent %></p>
-<% if @invoice.company.withholding_tax_percent and @invoice.company.withholding_tax_percent > 0 -%>
-  <p><%= f.check_box :apply_withholding_tax %> (<%=@invoice.company.withholding_tax_percent%>% <%=@project.company.withholding_tax_name%>)</p>
-<% end -%>
   <p><%= f.text_field :discount_text %></p>
   <p><%= f.text_field :discount_percent %></p>
   <p><%= f.text_area :extra_info, :rows=>3 %></p>
-  <div id="invoice_lines">
-    <p style="font-weight:bold;">
-    <span class="invoiceLineHeader" style="width: 80px;"><%= l(:field_quantity) %></span>
-    <span class="invoiceLineHeader" style="width: 102px;">&nbsp;</span>
-    <span class="invoiceLineHeader" style="width: 290px;"><%= l(:field_description) %></span>
-    <span class="invoiceLineHeader" style="width: 80px;"><%= l(:field_price) %></span>
+  <p><%= label_tag l(:label_tax_plural) %></p>
+  <% if @invoice.taxes_hash.empty? -%>
+    <p><%= link_to l(:add_taxes_on_company), :controller => 'companies', :id => @project -%></p>
+  <% end -%>
+  <% @invoice.taxes_hash.keys.sort.each do |name| -%>
+    <p id="invoice_taxes_global">
+    <%= label_tag "#{name}_global", name%>
+    <span>
+    <%= select_tag("#{name}_global",
+                   options_for_select(@invoice.taxes_hash[name].collect {|p| ["#{p} %",p] }.insert(0,''), :selected => @invoice.global_percent_for(name)),
+                   :disabled=>@invoice.tax_per_line?(name), :onclick => "tax_changed('#{name}',$('#{name}_global').value);", :style => "width: 90px;")
+    %>
+    </span>
+    <span>
+    <%= check_box_tag("#{name}_multiple", 1, @invoice.tax_per_line?(name), :onclick => "global_tax_check_changed('#{name}');") %>
+    </span>
+    <span>
+    <%= l(:line_specific_tax) %>
+    </span>
     </p>
-    <% @invoice.invoice_lines << InvoiceLine.new(:new_and_first=>true) if @invoice.invoice_lines.empty? -%>
+  <% end -%>
+  <hr />
+  <div id="invoice_lines">
+    <p style="font-weight:bold; padding:10px;">
+    <span class="invoiceLineHeader"><%= l(:field_quantity) %></span>
+    <span class="invoiceLineHeader">&nbsp;</span>
+    <span class="invoiceLineHeader"><%= l(:field_description) %></span>
+    <span class="invoiceLineHeader"><%= l(:field_price) %></span>
+    <% @invoice.taxes_hash.keys.sort.each do |name| -%>
+      <span id="<%=name%>_title" class="invoiceLineHeader <%= 'hidden' unless @invoice.tax_per_line?(name)%>" style="width: 80px;"><%= name %></span>
+    <% end -%>
+    </p>
     <% f.fields_for :invoice_lines do |line_form| %>
       <%= render :partial => 'invoices/invoice_line', :locals => { :f => line_form } %>
     <% end %>
   </div>
-  <p><%= add_invoice_line_link(f) %></p>
+  <p style="font-weight:bold; padding:10px;"><%= add_invoice_line_link(f) %></p>
+  <hr />
 </div>
-

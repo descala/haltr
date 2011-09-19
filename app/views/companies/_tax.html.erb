@@ -1,0 +1,12 @@
+<% taxid = f.object_name.split("[").last.gsub(/\]/,'') -%>
+<div id="tax_<%= taxid %>" class="tax">
+
+<p>
+<span style="float:left; width: 90px;"><%= f.text_field :name, :style => "width: 78px;", :no_label => true %></span>
+<span style="float:left; width: 80px;"><%= f.text_field :percent, :style => "width: 48px; text-align: right;", :no_label => true %> %</span>
+<span style="float:left; margin-top:5px;"><%= f.check_box :default, :no_label => true %> <%= l(:default) %></span>
+
+<span style="float:left; margin-top:7px; margin-left: 10px;"><%= link_to_function(image_tag("false.png"),"rm_tax(#{taxid});") %></span>
+</p>
+</div>
+<%= f.object.new_record? ? "" : f.hidden_field(:_destroy, {:value=>0, :id=>"destroy_tax_#{taxid}"}) %>

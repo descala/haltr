@@ -136,3 +136,16 @@ span.invoiceLineHeader {
 .amended {
   text-decoration: line-through;
 } 
+
+select.tax {
+  width: 77px;
+}
+
+.hidden {
+  display: none !important;
+  /* useful to debug background-color: yellow !important; */
+}
+
+#invoice_taxes_global span, #invoice_lines span {
+  margin: 5px;
+}

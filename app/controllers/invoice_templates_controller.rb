@@ -87,6 +87,7 @@ class InvoiceTemplatesController < ApplicationController
 
   def new_from_invoice
     @invoice = InvoiceTemplate.new(@issued_invoice.attributes)
+    @invoice.taxes = @issued_invoice.taxes
     @invoice.created_at=nil
     @invoice.updated_at=nil
     @invoice.number=nil
@@ -128,6 +129,9 @@ class InvoiceTemplatesController < ApplicationController
       issued.number = params["draft_#{draft.id}"]
       draft.invoice_lines.each do |draft_line|
         l = InvoiceLine.new draft_line.attributes
+        draft_line.taxes.each do |tax|
+          l.taxes << Tax.new(:name=>tax.name,:percent=>tax.percent)
+        end
         issued.invoice_lines << l
       end
       if issued.valid?
@@ -146,11 +150,12 @@ class InvoiceTemplatesController < ApplicationController
   private
 
   def find_invoice_template
+    Project.send(:include, ProjectHaltrPatch) #TODO: perque nomes funciona el primer cop sense aixo?
     @invoice = InvoiceTemplate.find params[:id]
     @lines = @invoice.invoice_lines
     @client = @invoice.client
     @project = @invoice.project
-    @company = @project.company
+    @company = @invoice.company
   rescue ActiveRecord::RecordNotFound
     render_404
   end

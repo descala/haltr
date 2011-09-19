@@ -44,3 +44,84 @@ draft:
   payment_method: 2
   state: sent
   currency: EUR
+ 
+invoices_001: 
+  discount_percent: 10
+  number: "1"
+  ponumber: ""
+  created_at: 2011-09-13 14:01:11 +02:00
+  invoice_format: 
+  import_in_cents: 22500
+  discount_text: discount
+  from: 
+  project_id: 1
+  draft: false
+  updated_at: 2011-09-13 14:01:11 +02:00
+  payment_method: 1
+  invoice_template_id: 
+  date: 2011-09-13
+  id: 1
+  type: IssuedInvoice
+  client_id: 1
+  total_in_cents: 22770
+  due_date: 2011-09-13
+  extra_info: ""
+  currency: EUR
+  frequency: 
+  transport: 
+  terms: "0"
+  state: new
+
+invoices_002: 
+  discount_percent: 15
+  number: "2"
+  ponumber: ""
+  created_at: 2011-09-13 14:02:55 +02:00
+  invoice_format: 
+  import_in_cents: 8500
+  discount_text: discount
+  from: 
+  project_id: 1
+  draft: false
+  updated_at: 2011-09-13 14:02:55 +02:00
+  payment_method: 1
+  invoice_template_id: 
+  date: 2011-09-13
+  id: 2
+  type: IssuedInvoice
+  client_id: 1
+  total_in_cents: 10030
+  due_date: 2011-09-13
+  extra_info: ""
+  currency: EUR
+  frequency: 
+  transport: 
+  terms: "0"
+  state: new
+
+invoices_003: 
+  discount_percent: 0
+  number: "3"
+  ponumber: ""
+  created_at: 2011-09-13 14:03:50 +02:00
+  invoice_format: 
+  import_in_cents: 10000
+  discount_text: ""
+  from: 
+  project_id: 1
+  draft: false
+  updated_at: 2011-09-13 14:04:38 +02:00
+  payment_method: 1
+  invoice_template_id: 
+  date: 2011-09-13
+  id: 3
+  type: IssuedInvoice
+  client_id: 1
+  total_in_cents: 11800
+  due_date: 2011-09-13
+  extra_info: ""
+  currency: EUR
+  frequency: 
+  transport: 
+  terms: "0"
+  state: new

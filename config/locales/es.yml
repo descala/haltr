@@ -85,7 +85,9 @@ es:
   receive_payment: Recibir pago
   make_payment: Efectuar pago
   label_paid: Pagado
-  field_tax_percent: IVA
+  label_tax: Impuesto
+  label_tax_plural: Impuestos
+  button_add_tax: Añadir nuevo impuesto
   label_from: Desde
   label_to: Hasta
   save_invoice: Guardar factura
@@ -94,9 +96,7 @@ es:
   pending_invoices: Facturas pendientes
   closed_invoices: Facturas cerradas
   label_subtotal: Subtotal
-  field_withholding_tax_name: Nombre de la retención
-  field_withholding_tax_percent: % de retención
-  field_apply_withholding_tax: Aplicar retención
+  over_taxable_base: sobre
   must_have_lines: tiene que tener líneas
   send_invoice: Enviar factura
   label_send: Enviar
@@ -166,6 +166,10 @@ es:
   create_amend_invoice: "Crear factura rectificativa"
   label_amendment_invoice: "Factura Rectificativa"
   label_amended_invoice: "Factura rectificada"
+  line_specific_tax: "Impuesto por línea"
+  default: "Por defecto"
+  only_one_default_allowed_for: "%{tax_name}: Solo se acepta un impuesto por defecto"
+  add_taxes_on_company: "Puedes gestionar los impuestos en \"Mi empresa\""
 
   # Events
   events: "Log de eventos"

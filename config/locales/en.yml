@@ -75,7 +75,9 @@ en:
   receive_payment: Receive payment
   make_payment: Make payment
   label_paid: Paid
-  field_tax_percent: VAT
+  label_tax: Tax
+  label_tax_plural: Taxes
+  button_add_tax: Add new tax
   label_from: From
   label_to: To
   save_invoice: Save invoice
@@ -84,9 +86,7 @@ en:
   pending_invoices: Pending invoices
   closed_invoices: Closed invoices
   label_subtotal: Subtotal
-  field_withholding_tax_name: Withholding tax name
-  field_withholding_tax_percent: Withholding tax %
-  field_apply_withholding_tax: Apply withholding tax
+  over_taxable_base: over 
   must_have_lines: must have lines
   send_invoice: Send invoice
   label_send: Send
@@ -156,6 +156,10 @@ en:
   create_amend_invoice: "Create rectification invoice"
   label_amendment_invoice: "Amendment Invoice"
   label_amended_invoice: "Amended invoice"
+  line_specific_tax: "Line tax"
+  default: "Default"
+  only_one_default_allowed_for: "%{tax_name}: Only one default tax allowed"
+  add_taxes_on_company: "Manage taxes at \"My company\""
 
   # Events
   events: "Event log"
