@@ -55,7 +55,6 @@ invoices_001:
   discount_text: discount
   from: 
   project_id: 1
-  draft: false
   updated_at: 2011-09-13 14:01:11 +02:00
   payment_method: 1
   invoice_template_id: 
@@ -82,7 +81,6 @@ invoices_002:
   discount_text: discount
   from: 
   project_id: 1
-  draft: false
   updated_at: 2011-09-13 14:02:55 +02:00
   payment_method: 1
   invoice_template_id: 
@@ -109,7 +107,6 @@ invoices_003:
   discount_text: ""
   from: 
   project_id: 1
-  draft: false
   updated_at: 2011-09-13 14:04:38 +02:00
   payment_method: 1
   invoice_template_id: 
