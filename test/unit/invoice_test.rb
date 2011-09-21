@@ -92,4 +92,18 @@ class InvoiceTest < ActiveSupport::TestCase
     assert_equal "USD", i.currency
   end
 
+  test "tax_categories" do
+    i=invoices(:invoices_001)
+    categories = i.tax_categories
+    assert_equal 3, categories.size
+    assert_equal 1, categories["AA"].size
+    assert_equal 8, categories["AA"].first.percent
+    assert_equal 1, categories["S"].size
+    assert_equal 18, categories["S"].first.percent
+    assert_equal 2, categories["E"].size
+    e_percents = categories["E"].collect {|t| t.percent }
+    assert e_percents.include? 8
+    assert e_percents.include? 18
+  end
+
 end

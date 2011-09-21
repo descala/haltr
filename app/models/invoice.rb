@@ -245,9 +245,9 @@ class Invoice < ActiveRecord::Base
   end
 
   def taxes_outputs
-    #taxes.find(:all, :group => 'name,percent', :conditions => "percent > 0")
+    #taxes.find(:all, :group => 'name,percent', :conditions => "percent >= 0")
     taxes_uniq.collect { |tax|
-      tax if tax.percent > 0
+      tax if tax.percent >= 0
     }.compact
   end
 
@@ -312,6 +312,28 @@ class Invoice < ActiveRecord::Base
     first_tax = invoice_lines.first.taxes.collect {|t| t if t.name == tax_name}.compact.first
     return "" if first_tax.nil?
     return first_tax.percent
+  end
+
+  def tax_categories
+    cts = {}
+    taxes_outputs.sort.each_with_index do |t,i|
+      if t.percent == 0
+        cts["Z"] = [] unless cts["Z"]
+        cts["Z"] << t
+      elsif i == taxes_outputs.size - 1
+        cts["S"] = [] unless cts["S"]
+        cts["S"] << t
+      else
+        cts["AA"] = [] unless cts["AA"]
+        cts["AA"] << t
+      end
+      invoice_lines.each do |l|
+        next if l.taxes.include?(t) or (cts["E"] and cts["E"].include?(t))
+        cts["E"] = [] unless cts["E"]
+        cts["E"] << t
+      end
+    end
+    cts
   end
 
   private
