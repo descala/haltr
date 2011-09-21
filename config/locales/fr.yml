@@ -328,3 +328,4 @@ fr:
 
   hide_full_form: "Montrer moins de champs"
   show_full_form: "Montrer plus de champs"
+  field_created_at: "Created at"

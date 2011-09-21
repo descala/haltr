@@ -149,3 +149,8 @@ select.tax {
 #invoice_taxes_global span, #invoice_lines span {
   margin: 5px;
 }
+
+.tabs li {
+  margin-left: 0px !important;
+  padding-left: 0px !important;
+}

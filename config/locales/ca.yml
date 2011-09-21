@@ -340,3 +340,4 @@ ca:
 
   hide_full_form: "Mostrar menys camps"
   show_full_form: "Mostrar mes camps"
+  field_created_at: "Creada el"

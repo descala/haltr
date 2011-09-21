@@ -338,3 +338,4 @@ es:
 
   hide_full_form: "Mostrar menos campos"
   show_full_form: "Mostrar mas campos"
+  field_created_at: "Creada el"
