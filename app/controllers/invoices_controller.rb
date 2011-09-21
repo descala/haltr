@@ -207,14 +207,17 @@ class InvoicesController < ApplicationController
 
   # methods to debugg xml
   def efactura30
+    @format = "facturae30"
     @company = @invoice.company
     render :template => 'invoices/facturae30.xml.erb', :layout => false
   end
   def efactura31
+    @format = "facturae31"
     @company = @invoice.company
     render :template => 'invoices/facturae31.xml.erb', :layout => false
   end
   def efactura32
+    @format = "facturae32"
     @company = @invoice.company
     render :template => 'invoices/facturae32.xml.erb', :layout => false
   end
@@ -244,10 +247,10 @@ class InvoicesController < ApplicationController
     raise @invoice.export_errors.collect {|e| l(e)}.join(", ") unless @invoice.can_be_exported?
     export_id = @invoice.client.invoice_format
     path = ExportChannels.path export_id
-    format = ExportChannels.format export_id
+    @format = ExportChannels.format export_id
     @company = @project.company
     xml_file=Tempfile.new("invoice_#{@invoice.id}.xml","tmp")
-    xml_file.write(render_to_string(:template => "invoices/#{format}.xml.erb", :layout => false))
+    xml_file.write(render_to_string(:template => "invoices/#{@format}.xml.erb", :layout => false))
     xml_file.close
     destination="#{path}/" + "#{@invoice.client.hashid}_#{@invoice.id}.xml".gsub(/\//,'')
     i=2

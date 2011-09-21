@@ -146,7 +146,7 @@
                <Discount>
                  <DiscountReason><%=h @invoice.discount_text%></DiscountReason>
                  <DiscountRate><%=h precision(@invoice.discount_percent, 4) %></DiscountRate>
-                 <DiscountAmount><%=h precision(@invoice.discount_without_expenses.dollars,(params[:action] == "efactura32" ? 6 : 2))%></DiscountAmount>
+                 <DiscountAmount><%=h precision(@invoice.discount_without_expenses.dollars,(@format == "facturae32" ? 6 : 2))%></DiscountAmount>
                </Discount>
             </GeneralDiscounts>
 <% end -%>
@@ -155,7 +155,7 @@
 <% @invoice.expenses.each do |expense| -%>
                <Charge>
                    <ChargeReason><%=h expense.description%></ChargeReason>
-                   <ChargeAmount><%=h precision(expense.taxable_base.dollars,(params[:action] == "efactura32" ? 6 : 2))%></ChargeAmount>
+                   <ChargeAmount><%=h precision(expense.taxable_base.dollars,(@format == "facturae32" ? 6 : 2))%></ChargeAmount>
                </Charge>
 <% end -%>
            </GeneralSurcharges>
@@ -184,8 +184,8 @@
               <Quantity><%=h invoice_line.quantity%></Quantity>
               <UnitOfMeasure><%=h invoice_line.unit_code(:facturae)%></UnitOfMeasure>
               <UnitPriceWithoutTax><%=h precision(invoice_line.price,6)%></UnitPriceWithoutTax>
-              <TotalCost><%=h precision(invoice_line.price*invoice_line.quantity,(params[:action] == "efactura32" ? 6 : 2))%></TotalCost>
-              <GrossAmount><%=h precision(invoice_line.price*invoice_line.quantity,(params[:action] == "efactura32" ? 6 : 2))%></GrossAmount>
+              <TotalCost><%=h precision(invoice_line.price*invoice_line.quantity,(@format == "facturae32" ? 6 : 2))%></TotalCost>
+              <GrossAmount><%=h precision(invoice_line.price*invoice_line.quantity,(@format == "facturae32" ? 6 : 2))%></GrossAmount>
 <% if invoice_line.taxes_withheld.any? -%>
               <TaxesWithheld>
 <% invoice_line.taxes_withheld.each do |tax| -%>

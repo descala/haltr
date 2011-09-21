@@ -16,4 +16,12 @@ class Tax < ActiveRecord::Base
     self.name == oth.name and self.percent == oth.percent
   end
 
+  def <=>(oth)
+    if (self.name <=> oth.name) == 0
+      self.percent <=> oth.percent
+    else
+      self.name <=> oth.name
+    end
+  end
+
 end
