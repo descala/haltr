@@ -23,9 +23,11 @@ class CompaniesController < ApplicationController
   end
 
   def update
-    #TODO: if we don't call update_attributes 2 times, taxes are not updated
+    #TODO: need to access company taxes before update_attributes, if not
+    # updated taxes are not saved.
     # maybe related to https://rails.lighthouseapp.com/projects/8994/tickets/4642
-    if @company.update_attributes(params[:company]) and @company.update_attributes(params[:company])
+    @company.taxes.each {|t| }
+    if @company.update_attributes(params[:company])
       if params[:attachments]
         #TODO: validate content-type ?
         @company.attachments.each {|a| a.destroy }
