@@ -19,7 +19,7 @@
     
     
     <xsl:variable name="lang"><xsl:value-of select="//LanguageName"/></xsl:variable>
-    <<xsl:variable name="path">/plugin_assets/haltr/xsl</xsl:variable>
+    <xsl:variable name="path">/plugin_assets/haltr/xsl</xsl:variable>
     <!-- <xsl:variable name="path">./</xsl:variable> -->
     
 <xsl:template match="facturae:Facturae">
