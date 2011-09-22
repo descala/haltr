@@ -22,15 +22,10 @@ class InvoicesController < ApplicationController
   before_filter :check_for_company, :except => [:by_taxcode_and_num,:view,:download]
 
   def index
-    sort_init 'number', 'desc'
-    sort_update %w(type state number date due_date clients.name import_in_cents)
+    sort_init 'created_at', 'desc'
+    sort_update %w(created_at state number date due_date clients.name import_in_cents)
 
     c = ARCondition.new(["invoices.project_id = ?",@project.id])
-
-    unless params[:type] == "all"
-      c << ["type='IssuedInvoice'"] if params[:type] == "issued"
-      c << ["type='ReceivedInvoice'"] if params[:type] == "received"
-    end
 
     unless params["state_all"] == "1"
       statelist=[]
@@ -59,16 +54,28 @@ class InvoicesController < ApplicationController
       c << ["date <= ?",params[:date_to]]
     end
 
-    @invoice_count = InvoiceDocument.count(:conditions => c.conditions, :include => [:client])
-    @invoice_pages = Paginator.new self, @invoice_count,
+    @i_invoice_count = IssuedInvoice.count(:conditions => c.conditions, :include => [:client])
+    @i_invoice_pages = Paginator.new self, @i_invoice_count,
 		per_page_option,
-		params['page']
-    @invoices =  InvoiceDocument.find :all,
+		params['i_page']
+    @i_invoices =  IssuedInvoice.find :all,
        :order => sort_clause,
        :conditions => c.conditions,
        :include => [:client],
-       :limit  =>  @invoice_pages.items_per_page,
-       :offset =>  @invoice_pages.current.offset
+       :limit  =>  @i_invoice_pages.items_per_page,
+       :offset =>  @i_invoice_pages.current.offset
+
+    @r_invoice_count = ReceivedInvoice.count(:conditions => c.conditions, :include => [:client])
+    @r_invoice_pages = Paginator.new self, @r_invoice_count,
+		per_page_option,
+		params['r_page']
+    @r_invoices =  ReceivedInvoice.find :all,
+       :order => sort_clause,
+       :conditions => c.conditions,
+       :include => [:client],
+       :limit  =>  @r_invoice_pages.items_per_page,
+       :offset =>  @r_invoice_pages.current.offset
+
     render :action => "index", :layout => false if request.xhr?
   end
 

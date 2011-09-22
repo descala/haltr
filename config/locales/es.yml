@@ -344,3 +344,4 @@ es:
   field_codi_centre_gestor: "Código de centro gestor"
   field_num_contracte: "Número de contrato"
   field_num_expedient: "Número de expediente"
+  field_created_at: "Creada el"

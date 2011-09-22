@@ -334,3 +334,4 @@ fr:
   field_codi_centre_gestor: "Management center code"
   field_num_contracte: "Contract num"
   field_num_expedient: "Record num"
+  field_created_at: "Created at"

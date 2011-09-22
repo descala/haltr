@@ -23,7 +23,9 @@ class CompaniesController < ApplicationController
   end
 
   def update
-    if @company.update_attributes(params[:company])
+    #TODO: if we don't call update_attributes 2 times, taxes are not updated
+    # maybe related to https://rails.lighthouseapp.com/projects/8994/tickets/4642
+    if @company.update_attributes(params[:company]) and @company.update_attributes(params[:company])
       if params[:attachments]
         #TODO: validate content-type ?
         @company.attachments.each {|a| a.destroy }
