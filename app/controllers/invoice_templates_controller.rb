@@ -87,12 +87,15 @@ class InvoiceTemplatesController < ApplicationController
 
   def new_from_invoice
     @invoice = InvoiceTemplate.new(@issued_invoice.attributes)
-    @invoice.taxes = @issued_invoice.taxes
     @invoice.created_at=nil
     @invoice.updated_at=nil
     @invoice.number=nil
     @issued_invoice.invoice_lines.each do |line|
-      @invoice.invoice_lines << InvoiceLine.new(line.attributes)
+      tl = InvoiceLine.new(line.attributes)
+      line.taxes.each do |tax|
+        tl.taxes << Tax.new(tax.attributes)
+      end
+      @invoice.invoice_lines << tl
     end
     render :template => "invoices/new"
   end
