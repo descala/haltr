@@ -13,6 +13,7 @@ class Tax < ActiveRecord::Base
   validates_uniqueness_of :percent, :scope => [:company_id,:name], :unless => Proc.new { |tax| tax.company_id.nil? }
 
   def ==(oth)
+    return false if oth.nil?
     self.name == oth.name and self.percent == oth.percent
   end
 

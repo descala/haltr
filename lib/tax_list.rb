@@ -9,20 +9,43 @@ module TaxList
   end
 
   def self.check(list,tax_name)
-    [tax_name, tax_name.gsub(/[\. -]/,'')].each do |t|
-      return list[t] if list[t]
+    t = tax_name.downcase.gsub(/[\. -]/,'')
+    if list.values.flatten.include?(t)
+      list.each do |k,v|
+        return k if v.include? t
+      end
     end
     nil
   end
 
   FACTURAE = {
-    "IVA" => 1,
-    "VAT" => 1
+    "01" => %w( iva vat ),
+    "04" => %w( irpf ),
+    "05" => %w( other altres otros )
   }
 
   UBL = {
-    "IVA" => 2,
-    "VAT" => 2
+    "VAT" => %w( vat iva ),
+    "OTH" => %w( irpf other altres otros )
+  }
+
+  def self.default_taxes_for(country)
+    return nil unless COUNTRY_TAXES[country]
+    taxes = []
+    COUNTRY_TAXES[country].each do |name,percents|
+      percents.each do |percent|
+        default = COUNTRY_TAXES["#{country}_default"] &&
+          COUNTRY_TAXES["#{country}_default"][name] &&
+          COUNTRY_TAXES["#{country}_default"][name] == percent
+        taxes << Tax.new(:name => name, :percent => percent, :default => default)
+      end
+    end
+    taxes
+  end
+
+  COUNTRY_TAXES = {
+    "es" => { "IVA" => [4,8,18], "IRPF" => [-15,-19] },
+    "es_default" => { "IVA" => 18 }
   }
 
 end

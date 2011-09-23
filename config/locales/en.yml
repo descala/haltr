@@ -336,3 +336,4 @@ en:
   field_num_contracte: "Contract num"
   field_num_expedient: "Record num"
   field_created_at: "Created at"
+  info_default_taxes: "Your country taxes will be created by default"

@@ -1,0 +1,12 @@
+How to test this:
+
+- cd to this folder
+- in the xsl change path variable to "./"
+
+  <xsl:variable name="path">./</xsl:variable>
+
+- use saxon to trasform
+
+  java net.sf.saxon.Transform -x:org.apache.xml.resolver.tools.ResolvingXMLReader -y:org.apache.xml.resolver.tools.ResolvingXMLReader -r:org.apache.xml.resolver.tools.CatalogResolver -s:/test_input.xml -o:test_output.xhtml -xsl:facturae32.xsl
+
+

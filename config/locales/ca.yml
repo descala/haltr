@@ -347,3 +347,4 @@ ca:
   field_num_contracte: "Número de contracte"
   field_num_expedient: "Número d'expedient"
   field_created_at: "Creada el"
+  info_default_taxes: "Per defecte es crearan els impostos del teu país"

@@ -28,6 +28,10 @@ class CompaniesController < ApplicationController
     # maybe related to https://rails.lighthouseapp.com/projects/8994/tickets/4642
     @company.taxes.each {|t| }
     if @company.update_attributes(params[:company])
+      unless @company.taxes.collect {|t| t unless t.marked_for_destruction? }.compact.any?
+        @company.taxes = []
+        @company.taxes = TaxList.default_taxes_for(@company.country)
+      end
       if params[:attachments]
         #TODO: validate content-type ?
         @company.attachments.each {|a| a.destroy }
