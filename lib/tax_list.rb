@@ -1,11 +1,13 @@
 module TaxList
 
   def self.facturae(tax_name)
-    TaxList.check(FACTURAE,tax_name)
+    val = TaxList.check(FACTURAE,tax_name)
+    val.nil? ? "05" : val
   end
 
   def self.ubl(tax_name)
-    TaxList.check(UBL,tax_name)
+    val = TaxList.check(UBL,tax_name)
+    val.nil? ? "OTH" : val
   end
 
   def self.check(list,tax_name)
@@ -19,14 +21,12 @@ module TaxList
   end
 
   FACTURAE = {
-    "01" => %w( iva vat ),
-    "04" => %w( irpf ),
-    "05" => %w( other altres otros )
+    "01" => %w( iva vat tva ),
+    "04" => %w( irpf )
   }
 
   UBL = {
-    "VAT" => %w( vat iva ),
-    "OTH" => %w( irpf other altres otros )
+    "VAT" => %w( vat iva tva )
   }
 
   def self.default_taxes_for(country)
@@ -45,7 +45,9 @@ module TaxList
 
   COUNTRY_TAXES = {
     "es" => { "IVA" => [4,8,18], "IRPF" => [-15,-19] },
-    "es_default" => { "IVA" => 18 }
+    "es_default" => { "IVA" => 18 },
+    "fr" => { "TVA" => [2.1,5.5,19.6] },
+    "fr_default" => { "TVA" => 19.6 }
   }
 
 end
