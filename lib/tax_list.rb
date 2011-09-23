@@ -12,7 +12,7 @@ module TaxList
     t = tax_name.downcase.gsub(/[\. -]/,'')
     if list.values.flatten.include?(t)
       list.each do |k,v|
-        return k if v.include? v
+        return k if v.include? t
       end
     end
     nil
