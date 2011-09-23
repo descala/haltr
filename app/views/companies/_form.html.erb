@@ -33,10 +33,10 @@
 
   <div id="taxes">
     <p style="padding-left: 20px;"><%= I18n.t :label_tax_plural %>:</p>
+    (<%= l(:info_default_taxes) %>)
     <p style="font-weight:bold;">
     <span class="invoiceLineHeader" style="width: 80px;"><%= l(:field_name) %></span>
     </p>
-    <% @company.taxes << Tax.new if @company.taxes.empty? -%>
     <% f.fields_for :taxes do |tax_form| %>
       <%= render :partial => 'companies/tax', :locals => { :f => tax_form } %>
     <% end %>

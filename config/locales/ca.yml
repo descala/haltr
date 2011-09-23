@@ -341,3 +341,4 @@ ca:
   hide_full_form: "Mostrar menys camps"
   show_full_form: "Mostrar mes camps"
   field_created_at: "Creada el"
+  info_default_taxes: "Per defecte es crearan els impostos del teu país"

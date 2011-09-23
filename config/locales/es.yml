@@ -339,3 +339,4 @@ es:
   hide_full_form: "Mostrar menos campos"
   show_full_form: "Mostrar mas campos"
   field_created_at: "Creada el"
+  info_default_taxes: "Por defecto se crearan los impuestos de tu país"

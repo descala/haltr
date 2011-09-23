@@ -15,6 +15,20 @@ module TaxList
     nil
   end
 
+  def self.default_taxes_for(country)
+    return nil unless COUNTRY_TAXES[country]
+    taxes = []
+    COUNTRY_TAXES[country].each do |name,percents|
+      percents.each do |percent|
+        default = COUNTRY_TAXES["#{country}_default"] &&
+          COUNTRY_TAXES["#{country}_default"][name] &&
+          COUNTRY_TAXES["#{country}_default"][name] == percent
+        taxes << Tax.new(:name => name, :percent => percent, :default => default)
+      end
+    end
+    taxes
+  end
+
   FACTURAE = {
     "IVA" => 1,
     "VAT" => 1
@@ -23,6 +37,11 @@ module TaxList
   UBL = {
     "IVA" => 2,
     "VAT" => 2
+  }
+
+  COUNTRY_TAXES = {
+    "es" => { "IVA" => [4,8,18], "IRPF" => [-15,-19] },
+    "es_default" => { "IVA" => 18 }
   }
 
 end

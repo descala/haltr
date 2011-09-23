@@ -329,3 +329,4 @@ fr:
   hide_full_form: "Montrer moins de champs"
   show_full_form: "Montrer plus de champs"
   field_created_at: "Created at"
+  info_default_taxes: "Par défaut, il va créer des taxes dans votre pays"

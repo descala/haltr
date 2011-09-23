@@ -330,3 +330,4 @@ en:
   hide_full_form: "Show less fields"
   show_full_form: "Show more fields"
   field_created_at: "Created at"
+  info_default_taxes: "Your country taxes will be created by default"
