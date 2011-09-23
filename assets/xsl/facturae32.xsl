@@ -20,7 +20,7 @@
     
     <xsl:variable name="lang"><xsl:value-of select="//LanguageName"/></xsl:variable>
     <xsl:variable name="path">/plugin_assets/haltr/xsl</xsl:variable>
-    <!-- <xsl:variable name="path">./</xsl:variable> -->
+    <!-- <xsl:variable name="path">.</xsl:variable> -->
     
 <xsl:template match="facturae:Facturae">
     
@@ -29,10 +29,8 @@
             <meta http-equiv="content-type" content="text/html; charset=UTF-8"/>
             <title><xsl:value-of
                 select="document(concat($path,'/trans_',$lang,'.xml'))/diccionari/element[@etiqueta='Invoice']"/></title>
-            <!-- link href="/stylesheets/application.css?1288878280" media="all" rel="stylesheet" type="text/css" / -->            
             <link href="http://www.b2brouter.net/plugin_assets/haltr/stylesheets/print.css" media="print" rel="stylesheet" type="text/css" />            
-            <!-- link href="/plugin_assets/haltr/stylesheets/minimal.css?1289397738" media="screen" rel="stylesheet" type="text/css" / -->
-
+            <link href="http://www.b2brouter.net/plugin_assets/haltr/stylesheets/minimal.css" media="screen" rel="stylesheet" type="text/css" />
         </head>
         <body>
             <div id="invoice_wrapper">
@@ -264,14 +262,14 @@
             select="document(concat($path,'/TaxCodeAEAT-1.0.gc'))//SimpleCodeList[1]/Row/Value[@ColumnRef='code']/SimpleValue[.=$valuetype]/../../Value[@ColumnRef=$lang]/SimpleValue"/>
             <xsl:value-of select="concat(' ',format-number(TaxRate,'#'),'%')"/>:</th>
         
-        <td><xsl:value-of select="TaxAmount/TotalAmount"/></td>
+        <td><xsl:value-of select="concat(TaxAmount/TotalAmount,' ',//InvoiceCurrencyCode)"/></td>
     </tr>
 </xsl:template>
 
 <xsl:template match="Charge">
         <tr class="sales-tax">
             <th><xsl:value-of select="ChargeReason"/><xsl:if test="ChargeRate"><xsl:value-of select="concat(' ',format-number(ChargeRate,'#'),'%')"/></xsl:if>:</th>
-            <td><xsl:value-of select="ChargeAmount"/></td>
+            <td><xsl:value-of select="concat(format-number(ChargeAmount, '#.00', 'Importe'),' ',//InvoiceCurrencyCode)"/></td>
         </tr>
 </xsl:template>
 

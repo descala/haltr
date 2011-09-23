@@ -50,4 +50,20 @@
             </Value>
         </Row>
     </SimpleCodeList>
+    <SimpleCodeList>
+        <Row>
+            <Value ColumnRef="code">
+                <SimpleValue>04</SimpleValue>
+            </Value>
+            <Value ColumnRef="en">
+                <SimpleValue>IRPF</SimpleValue>
+            </Value>
+            <Value ColumnRef="es">
+                <SimpleValue>IRPF</SimpleValue>
+            </Value>
+            <Value ColumnRef="ca">
+                <SimpleValue>IRPF</SimpleValue>
+            </Value>
+        </Row>
+    </SimpleCodeList>
 </gc:CodeList>
