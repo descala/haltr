@@ -3,7 +3,7 @@ How to test this:
 - cd to this folder
 - in the xsl change path variable to "./"
 
-  <xsl:variable name="path">./</xsl:variable>
+  <xsl:variable name="path">.</xsl:variable>
 
 - use saxon to trasform
 
