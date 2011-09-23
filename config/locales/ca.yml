@@ -160,6 +160,7 @@ ca:
   pdf_invoice_expl: "Aquesta és una aproximació a la factura rebuda, siusplau, comproveu que les dades siguin correctes amb l'original"
   no_pdf_support: "Sembla que no tens Adobe Reader o suport per a PDF en aquest navegador. <a href='%{pdf}'>Clica aquí per descarregar el PDF</a>"
   client_has_no_email: "El client associat a la factura no té correu electrònic definit"
+  invoice_has_no_taxes: "La factura no té impostos"
   field_import: "Import"
   pdf_not_legal: "PDF no legal"
   amended_invoice: "Rectificació de la %{link}"
