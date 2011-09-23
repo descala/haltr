@@ -106,12 +106,6 @@
         <cbc:ChargeIndicator>false</cbc:ChargeIndicator>
         <cbc:AllowanceChargeReason><%=h @invoice.discount_text%></cbc:AllowanceChargeReason>
         <cbc:Amount currencyID="<%=h @client.currency%>"><%=h precision(@invoice.discount.dollars,2)%></cbc:Amount>
-        <cac:TaxCategory>
-          <cbc:ID schemeID="UN/ECE 5305" schemeAgencyID="6">S</cbc:ID>
-          <cac:TaxScheme>
-            <cbc:ID schemeID="UN/ECE 5153" schemeAgencyID="6">VAT</cbc:ID>
-          </cac:TaxScheme>
-        </cac:TaxCategory>
       </cac:AllowanceCharge>
 <% end -%>
 <% if @invoice.expenses.size > 0 -%>
