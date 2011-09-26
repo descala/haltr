@@ -11,6 +11,10 @@ module ProjectHaltrPatch
       unloadable # Send unloadable so it will not be unloaded in development
       has_one :company
       has_many :clients
+      has_many :invoices
+      has_many :invoice_templates
+      has_many :issued_invoices
+      has_many :received_invoices
     end
  
   end
@@ -19,12 +23,6 @@ module ProjectHaltrPatch
   end
   
   module InstanceMethods
-    def invoice_templates
-      self.clients.collect {|c| c.invoice_templates}.flatten.compact
-    end
-    def invoices
-      self.clients.collect {|c| c.invoice_documents}.flatten.compact
-    end
   end
 
 end

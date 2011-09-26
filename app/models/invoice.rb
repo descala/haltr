@@ -20,13 +20,16 @@ class Invoice < ActiveRecord::Base
   has_many :invoice_lines, :dependent => :destroy
   has_many :events, :dependent => :destroy
   #has_many :taxes, :through => :invoice_lines
-  belongs_to :project
+  belongs_to :project, :counter_cache => true
   belongs_to :client
   belongs_to :amend, :class_name => "Invoice", :foreign_key => 'amend_id'
   has_one :amend_of, :class_name => "Invoice", :foreign_key => 'amend_id'
   validates_presence_of :client, :date, :currency, :project_id, :unless => Proc.new {|i| i.type == "ReceivedInvoice" }
   validates_inclusion_of :currency, :in  => Money::Currency::TABLE.collect {|k,v| v[:iso_code] }, :unless => Proc.new {|i| i.type == "ReceivedInvoice" }
   validate :payment_method_requirements, :unless => Proc.new {|i| i.type == "ReceivedInvoice" }
+
+  after_create :increment_counter
+  before_destroy :decrement_counter
 
   accepts_nested_attributes_for :invoice_lines,
     :allow_destroy => true,
@@ -359,6 +362,16 @@ class Invoice < ActiveRecord::Base
       t += tax_amount(tax)
     end
     t
+  end
+
+  protected
+
+  def increment_counter
+    Project.increment_counter "#{type.to_s.pluralize.underscore}_count", project_id
+  end
+
+  def decrement_counter
+    Project.decrement_counter "#{type.to_s.pluralize.underscore}_count", project_id
   end
 
   private

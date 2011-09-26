@@ -341,3 +341,5 @@ es:
   show_full_form: "Mostrar mas campos"
   field_created_at: "Creada el"
   info_default_taxes: "Por defecto se crearan los impuestos de tu país"
+  label_invoices_min: "Mínimo de facturas"
+  label_stastics: "Estadísticas"
