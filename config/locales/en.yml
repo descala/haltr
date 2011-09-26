@@ -338,3 +338,5 @@ en:
   field_num_expedient: "Record num"
   field_created_at: "Created at"
   info_default_taxes: "Your country taxes will be created by default"
+  label_invoices_min: "Minimum number of invoices"
+  label_stastics: "Stastics"

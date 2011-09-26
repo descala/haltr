@@ -24,4 +24,12 @@ class DraftInvoice < IssuedInvoice
     return
   end
 
+  def increment_counter
+    Project.increment_counter "issued_invoices_count", project_id
+  end
+
+  def decrement_counter
+    Project.decrement_counter "issued_invoices_count", project_id
+  end
+
 end
