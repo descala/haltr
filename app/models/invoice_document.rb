@@ -6,7 +6,7 @@ class InvoiceDocument < Invoice
 
   unloadable
 
-  has_many :payments, :foreign_key => :invoice_id, :dependent => :nullify
+  has_many :payments, :foreign_key => :invoice_id, :dependent => :destroy
   before_save :update_status, :unless => Proc.new {|invoicedoc| invoicedoc.state_changed? }
 
   attr_accessor :legal_filename, :legal_content_type, :legal_invoice
