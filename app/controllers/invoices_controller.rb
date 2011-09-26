@@ -204,17 +204,11 @@ class InvoicesController < ApplicationController
   end
 
   def pdf
-    pdf_file=Tempfile.new("invoice_#{@invoice.id}.pdf","tmp")
-    xhtml_file=Tempfile.new("invoice_#{@invoice.id}.xhtml","tmp")
-    xhtml_file.write(render_to_string(:action => "show", :layout => "invoice"))
-    xhtml_file.close
-    jarpath = "#{File.dirname(__FILE__)}/../../vendor/xhtmlrenderer"
-    cmd="java -classpath #{jarpath}/core-renderer.jar:#{jarpath}/iText-2.0.8.jar:#{jarpath}/minium.jar org.xhtmlrenderer.simple.PDFRenderer #{RAILS_ROOT}/#{xhtml_file.path} #{RAILS_ROOT}/#{pdf_file.path}"
-    out = `#{cmd} 2>&1`
-    if $?.success?
+    pdf_file = create_pdf_file
+    if pdf_file
       send_file(pdf_file.path, :filename => @invoice.pdf_name, :type => "application/pdf", :disposition => 'inline')
     else
-      render :text => "Error in PDF creation <br /><pre>#{cmd}</pre><pre>#{out}</pre>"
+      render :text => "Error in PDF creation"
     end
   end
 
@@ -262,21 +256,25 @@ class InvoicesController < ApplicationController
     path = ExportChannels.path export_id
     @format = ExportChannels.format export_id
     @company = @project.company
-    xml_file=Tempfile.new("invoice_#{@invoice.id}.xml","tmp")
-    xml_file.write(render_to_string(:template => "invoices/#{@format}.xml.erb", :layout => false))
-    xml_file.close
-    destination="#{path}/" + "#{@invoice.client.hashid}_#{@invoice.id}.xml".gsub(/\//,'')
+    if @format == 'pdf'
+      invoice_file = create_pdf_file
+    else
+      invoice_file=Tempfile.new("invoice_#{@invoice.id}.#{@format}","tmp")
+      invoice_file.write(render_to_string(:template => "invoices/#{@format}.xml.erb", :layout => false))
+    end
+#    invoice_file.close
     i=2
+    destination="#{path}/" + "#{@invoice.client.hashid}_#{@invoice.id}.#{@format}".gsub(/\//,'')
     while File.exists? destination
-      destination="#{path}/" + "#{@invoice.client.hashid}_#{i}_#{@invoice.id}.xml".gsub(/\//,'')
+      destination="#{path}/" + "#{@invoice.client.hashid}_#{i}_#{@invoice.id}.#{@format}".gsub(/\//,'')
       i+=1
     end
-    FileUtils.mv(xml_file.path,destination)
+    FileUtils.mv(invoice_file.path,destination)
     #TODO state restrictions
     @invoice.queue || @invoice.requeue
     flash[:notice] = l(:notice_invoice_sent)
   rescue Exception => e
-    flash[:error] = "#{l(:error_invoice_not_sent)}: #{e.message}"
+    flash[:error] = "#{l(:error_invoice_not_sent)}: #{e.message} #{e.backtrace}"
   ensure
     redirect_to :action => 'show', :id => @invoice
   end
@@ -428,6 +426,18 @@ class InvoicesController < ApplicationController
       logger.error "Not allowed from IP #{request.remote_ip} (allowed IPs: #{allowed_ips.join(', ')})\n"
       return false
     end
+  end
+
+  def create_pdf_file
+    @is_pdf = true
+    pdf_file=Tempfile.new("invoice_#{@invoice.id}.pdf","tmp")
+    xhtml_file=Tempfile.new("invoice_#{@invoice.id}.xhtml","tmp")
+    xhtml_file.write(render_to_string(:action => "show", :layout => "invoice"))
+    xhtml_file.close
+    jarpath = "#{File.dirname(__FILE__)}/../../vendor/xhtmlrenderer"
+    cmd="java -classpath #{jarpath}/core-renderer.jar:#{jarpath}/iText-2.0.8.jar:#{jarpath}/minium.jar org.xhtmlrenderer.simple.PDFRenderer #{RAILS_ROOT}/#{xhtml_file.path} #{RAILS_ROOT}/#{pdf_file.path}"
+    discarded_output = `#{cmd} 2>&1`
+    $?.success? ? pdf_file : nil
   end
 
 end
