@@ -30,14 +30,15 @@ module TaxList
   }
 
   def self.default_taxes_for(country)
-    return nil unless COUNTRY_TAXES[country]
     taxes = []
-    COUNTRY_TAXES[country].each do |name,percents|
-      percents.each do |percent|
-        default = COUNTRY_TAXES["#{country}_default"] &&
-          COUNTRY_TAXES["#{country}_default"][name] &&
-          COUNTRY_TAXES["#{country}_default"][name] == percent
-        taxes << Tax.new(:name => name, :percent => percent, :default => default)
+    if COUNTRY_TAXES[country]
+      COUNTRY_TAXES[country].each do |name,percents|
+        percents.each do |percent|
+          default = COUNTRY_TAXES["#{country}_default"] &&
+            COUNTRY_TAXES["#{country}_default"][name] &&
+            COUNTRY_TAXES["#{country}_default"][name] == percent
+          taxes << Tax.new(:name => name, :percent => percent, :default => default)
+        end
       end
     end
     taxes

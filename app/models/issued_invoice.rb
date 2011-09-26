@@ -204,6 +204,16 @@ class IssuedInvoice < InvoiceDocument
     end
   end
 
+  # facturae 3.x needs taxes to be valid
+  def invoice_has_taxes
+    if self.taxes.any?
+      true
+    else
+      add_export_error(:invoice_has_no_taxes)
+      false
+    end
+  end
+
   def release_amended
     if self.amend_of
       self.amend_of.amend_id = nil
