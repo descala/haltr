@@ -8,23 +8,24 @@ class InvoicesController < ApplicationController
   helper :sort
   include SortHelper
 
-  before_filter :find_invoice, :except => [:index,:new,:create,:destroy_payment,:update_currency_select,:by_taxcode_and_num,:view,:logo,:download]
+  before_filter :find_invoice, :except => [:index,:new,:create,:destroy_payment,:update_currency_select,:by_taxcode_and_num,:view,:logo,:download,:mail]
   before_filter :find_project, :only => [:index,:new,:create,:update_currency_select]
   before_filter :find_payment, :only => [:destroy_payment]
   before_filter :find_hashid, :only => [:view,:download]
   before_filter :find_attachment, :only => [:logo]
   before_filter :set_iso_countries_language
-  before_filter :authorize, :except => [:by_taxcode_and_num,:view,:logo,:download]
-  skip_before_filter :check_if_login_required, :only => [:by_taxcode_and_num,:view,:logo,:download]
+  before_filter :authorize, :except => [:by_taxcode_and_num,:view,:logo,:download,:mail]
+  skip_before_filter :check_if_login_required, :only => [:by_taxcode_and_num,:view,:logo,:download,:mail]
   # on development skip auth so we can use curl to debug
   if RAILS_ENV == "development"
     skip_before_filter :check_if_login_required, :only => [:efactura30,:efactura31,:efactura32,:ubl21]
     skip_before_filter :authorize, :only => [:efactura30,:efactura31,:efactura32,:ubl21]
+  else
+    before_filter :check_remote_ip, :only => [:by_taxcode_and_num,:mail]
   end
-  before_filter :check_remote_ip, :only => [:by_taxcode_and_num]
 
   include CompanyFilter
-  before_filter :check_for_company, :except => [:by_taxcode_and_num,:view,:download]
+  before_filter :check_for_company, :except => [:by_taxcode_and_num,:view,:download,:mail]
 
   def index
     sort_init 'created_at', 'desc'
@@ -355,6 +356,17 @@ class InvoicesController < ApplicationController
   def amend_for_invoice
     amend = @invoice.create_amend
     redirect_to :action => 'edit', :id => amend
+  end
+
+  def mail
+    invoice = InvoiceDocument.find(params[:id])
+    if invoice.nil? or invoice.client.nil?
+      render_404
+    else
+      respond_to do |format|
+        format.html { render :text => invoice.client.email }
+      end
+    end
   end
 
   private
