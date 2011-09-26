@@ -12,7 +12,7 @@
   </div>
 </div>
 
-<% unless controller.action_name == "pdf" -%>
+<% unless @is_pdf -%>
   <% content_for :sidebar do %>
     <%= render :partial => 'invoices/sidebar' %>
     <%= render :partial => "invoices/invoice_menu" %>
