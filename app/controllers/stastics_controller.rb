@@ -16,7 +16,7 @@ class StasticsController < ApplicationController
     c = ARCondition.new()
 
     unless params[:invoices_min].blank?
-      c << ["invoices_count > ?", params[:invoices_min]]
+      c << ["invoices_count >= ?", params[:invoices_min]]
     end
 
     @projects_count = Project.count(:conditions=>c.conditions)
