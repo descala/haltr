@@ -8,7 +8,7 @@
 <div class="vcard vendor">
   <div class="logo">
     <% if @company.attachments.any? -%>
-      <% if controller.action_name == "pdf" %>
+      <% if @is_pdf %>
         <%= tag 'img', :src => "#{Attachment.storage_path}/#{@company.attachments.first.disk_filename}" -%>
       <% else -%>
         <%= tag 'img', :src => "/invoices/logo/#{@company.attachments.first.id}/#{@company.attachments.first.filename}", :alt => "#{@company.name} Logo" -%>

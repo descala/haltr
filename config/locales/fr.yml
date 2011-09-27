@@ -339,3 +339,4 @@ fr:
   info_default_taxes: "Par défaut, il va créer des taxes dans votre pays"
   label_invoices_min: "nombre minimum de factures"
   label_stastics: "Stastics"
+  label_received_with_num: "Factures reçues (%{num} nouveaux)"

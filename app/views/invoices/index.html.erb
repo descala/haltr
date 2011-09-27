@@ -34,11 +34,17 @@
     </fieldset>
   <% end %>
 
-
+  <% if @unread > 0 -%>
   <%= render_tabs [
     {:name=>'issued',:partial=>'invoices/issued_invoices',:label=>:label_issued},
-    {:name=>'received',:partial=>'invoices/received_invoices',:label=>:label_received}
+    {:name=>'received_with_new',:partial=>'invoices/received_invoices',:label => [:label_received_with_num, {:num=>@unread}] }
   ] %>
+  <% else -%>
+  <%= render_tabs [
+    {:name=>'issued',:partial=>'invoices/issued_invoices',:label=>:label_issued},
+    {:name=>'received',:partial=>'invoices/received_invoices',:label => :label_received }
+  ] %>
+  <% end -%>
 
 <% html_title(l(:label_invoice_plural)) -%>
 

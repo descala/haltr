@@ -83,7 +83,7 @@ module HaltrHelper
   private
 
   def especial(path)
-    if request.parameters["controller"] == "invoices" and request.parameters["action"] == "pdf" and !(path =~ /^https?:\/\//)
+    if @is_pdf and !(path =~ /^https?:\/\//)
       "../public#{path}"
     else
       path

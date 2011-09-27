@@ -154,3 +154,7 @@ select.tax {
   margin-left: 0px !important;
   padding-left: 0px !important;
 }
+
+#tab-received_with_new, .unread {
+  color: #ff9900 !important;
+}

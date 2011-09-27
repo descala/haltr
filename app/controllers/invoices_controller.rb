@@ -8,23 +8,24 @@ class InvoicesController < ApplicationController
   helper :sort
   include SortHelper
 
-  before_filter :find_invoice, :except => [:index,:new,:create,:destroy_payment,:update_currency_select,:by_taxcode_and_num,:view,:logo,:download]
+  before_filter :find_invoice, :except => [:index,:new,:create,:destroy_payment,:update_currency_select,:by_taxcode_and_num,:view,:logo,:download,:mail]
   before_filter :find_project, :only => [:index,:new,:create,:update_currency_select]
   before_filter :find_payment, :only => [:destroy_payment]
   before_filter :find_hashid, :only => [:view,:download]
   before_filter :find_attachment, :only => [:logo]
   before_filter :set_iso_countries_language
-  before_filter :authorize, :except => [:by_taxcode_and_num,:view,:logo,:download]
-  skip_before_filter :check_if_login_required, :only => [:by_taxcode_and_num,:view,:logo,:download]
+  before_filter :authorize, :except => [:by_taxcode_and_num,:view,:logo,:download,:mail]
+  skip_before_filter :check_if_login_required, :only => [:by_taxcode_and_num,:view,:logo,:download,:mail]
   # on development skip auth so we can use curl to debug
   if RAILS_ENV == "development"
     skip_before_filter :check_if_login_required, :only => [:efactura30,:efactura31,:efactura32,:ubl21]
     skip_before_filter :authorize, :only => [:efactura30,:efactura31,:efactura32,:ubl21]
+  else
+    before_filter :check_remote_ip, :only => [:by_taxcode_and_num,:mail]
   end
-  before_filter :check_remote_ip, :only => [:by_taxcode_and_num]
 
   include CompanyFilter
-  before_filter :check_for_company, :except => [:by_taxcode_and_num,:view,:download]
+  before_filter :check_for_company, :except => [:by_taxcode_and_num,:view,:download,:mail]
 
   def index
     sort_init 'created_at', 'desc'
@@ -80,6 +81,7 @@ class InvoicesController < ApplicationController
        :include => [:client],
        :limit  =>  @r_invoice_pages.items_per_page,
        :offset =>  @r_invoice_pages.current.offset
+    @unread = ReceivedInvoice.count(:all, :conditions => (c << ["has_been_read = ?", false]).conditions)
 
     render :action => "index", :layout => false if request.xhr?
   end
@@ -203,17 +205,11 @@ class InvoicesController < ApplicationController
   end
 
   def pdf
-    pdf_file=Tempfile.new("invoice_#{@invoice.id}.pdf","tmp")
-    xhtml_file=Tempfile.new("invoice_#{@invoice.id}.xhtml","tmp")
-    xhtml_file.write(render_to_string(:action => "show", :layout => "invoice"))
-    xhtml_file.close
-    jarpath = "#{File.dirname(__FILE__)}/../../vendor/xhtmlrenderer"
-    cmd="java -classpath #{jarpath}/core-renderer.jar:#{jarpath}/iText-2.0.8.jar:#{jarpath}/minium.jar org.xhtmlrenderer.simple.PDFRenderer #{RAILS_ROOT}/#{xhtml_file.path} #{RAILS_ROOT}/#{pdf_file.path}"
-    out = `#{cmd} 2>&1`
-    if $?.success?
+    pdf_file = create_pdf_file
+    if pdf_file
       send_file(pdf_file.path, :filename => @invoice.pdf_name, :type => "application/pdf", :disposition => 'inline')
     else
-      render :text => "Error in PDF creation <br /><pre>#{cmd}</pre><pre>#{out}</pre>"
+      render :text => "Error in PDF creation"
     end
   end
 
@@ -244,6 +240,7 @@ class InvoicesController < ApplicationController
       @invoices_sent = InvoiceDocument.find(:all,:conditions => ["client_id = ? and state = 'sent'",@client.id]).sort
       @invoices_closed = InvoiceDocument.find(:all,:conditions => ["client_id = ? and state = 'closed'",@client.id]).sort
     elsif @invoice.is_a? ReceivedInvoice
+      @invoice.update_attribute(:has_been_read, true)
       if @invoice.invoice_format == "pdf"
         render :template => 'invoices/show_pdf'
       else
@@ -261,21 +258,25 @@ class InvoicesController < ApplicationController
     path = ExportChannels.path export_id
     @format = ExportChannels.format export_id
     @company = @project.company
-    xml_file=Tempfile.new("invoice_#{@invoice.id}.xml","tmp")
-    xml_file.write(render_to_string(:template => "invoices/#{@format}.xml.erb", :layout => false))
-    xml_file.close
-    destination="#{path}/" + "#{@invoice.client.hashid}_#{@invoice.id}.xml".gsub(/\//,'')
+    if @format == 'pdf'
+      invoice_file = create_pdf_file
+    else
+      invoice_file=Tempfile.new("invoice_#{@invoice.id}.#{@format}","tmp")
+      invoice_file.write(render_to_string(:template => "invoices/#{@format}.xml.erb", :layout => false))
+    end
+#    invoice_file.close
     i=2
+    destination="#{path}/" + "#{@invoice.client.hashid}_#{@invoice.id}.#{@format}".gsub(/\//,'')
     while File.exists? destination
-      destination="#{path}/" + "#{@invoice.client.hashid}_#{i}_#{@invoice.id}.xml".gsub(/\//,'')
+      destination="#{path}/" + "#{@invoice.client.hashid}_#{i}_#{@invoice.id}.#{@format}".gsub(/\//,'')
       i+=1
     end
-    FileUtils.mv(xml_file.path,destination)
+    FileUtils.mv(invoice_file.path,destination)
     #TODO state restrictions
     @invoice.queue || @invoice.requeue
     flash[:notice] = l(:notice_invoice_sent)
   rescue Exception => e
-    flash[:error] = "#{l(:error_invoice_not_sent)}: #{e.message}"
+    flash[:error] = "#{l(:error_invoice_not_sent)}: #{e.message} #{e.backtrace}"
   ensure
     redirect_to :action => 'show', :id => @invoice
   end
@@ -357,6 +358,17 @@ class InvoicesController < ApplicationController
     redirect_to :action => 'edit', :id => amend
   end
 
+  def mail
+    invoice = InvoiceDocument.find(params[:id])
+    if invoice.nil? or invoice.client.nil?
+      render_404
+    else
+      respond_to do |format|
+        format.html { render :text => invoice.client.email }
+      end
+    end
+  end
+
   private
 
   def find_hashid
@@ -416,6 +428,18 @@ class InvoicesController < ApplicationController
       logger.error "Not allowed from IP #{request.remote_ip} (allowed IPs: #{allowed_ips.join(', ')})\n"
       return false
     end
+  end
+
+  def create_pdf_file
+    @is_pdf = true
+    pdf_file=Tempfile.new("invoice_#{@invoice.id}.pdf","tmp")
+    xhtml_file=Tempfile.new("invoice_#{@invoice.id}.xhtml","tmp")
+    xhtml_file.write(render_to_string(:action => "show", :layout => "invoice"))
+    xhtml_file.close
+    jarpath = "#{File.dirname(__FILE__)}/../../vendor/xhtmlrenderer"
+    cmd="java -classpath #{jarpath}/core-renderer.jar:#{jarpath}/iText-2.0.8.jar:#{jarpath}/minium.jar org.xhtmlrenderer.simple.PDFRenderer #{RAILS_ROOT}/#{xhtml_file.path} #{RAILS_ROOT}/#{pdf_file.path}"
+    discarded_output = `#{cmd} 2>&1`
+    $?.success? ? pdf_file : nil
   end
 
 end

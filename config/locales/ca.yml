@@ -351,4 +351,5 @@ ca:
   info_default_taxes: "Per defecte es crearan els impostos del teu país"
   label_invoices_min: "Mínim de factures"
   label_stastics: "Estadístiques"
+  label_received_with_num: "Factures rebudes ({{num}} noves)"
 
