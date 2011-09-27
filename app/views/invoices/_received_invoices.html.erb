@@ -10,7 +10,7 @@
   </thead>
   <tbody>
     <% for invoice in @r_invoices -%>
-      <tr class="user <%= cycle("odd", "even") %><%= ' amended' if invoice.amended? %>" onclick="javascript: document.location = '<%=url_for(:action=>'show', :id=>invoice)%>'">
+      <tr class="user <%= cycle("odd", "even") %><%= ' amended' if invoice.amended? %><%= ' unread' unless invoice.has_been_read%>" onclick="javascript: document.location = '<%=url_for(:action=>'show', :id=>invoice)%>'">
         <td align="center"><%=h invoice.created_at.to_date %></td>
         <td align="center"><%=h l("state_#{invoice.state}").capitalize %></td>
         <td align="center"><%=h invoice.number %></td>
