@@ -81,6 +81,7 @@ class InvoicesController < ApplicationController
        :include => [:client],
        :limit  =>  @r_invoice_pages.items_per_page,
        :offset =>  @r_invoice_pages.current.offset
+    @unread = ReceivedInvoice.count(:all, :conditions => (c << ["has_been_read = ?", false]).conditions)
 
     render :action => "index", :layout => false if request.xhr?
   end
@@ -239,6 +240,7 @@ class InvoicesController < ApplicationController
       @invoices_sent = InvoiceDocument.find(:all,:conditions => ["client_id = ? and state = 'sent'",@client.id]).sort
       @invoices_closed = InvoiceDocument.find(:all,:conditions => ["client_id = ? and state = 'closed'",@client.id]).sort
     elsif @invoice.is_a? ReceivedInvoice
+      @invoice.update_attribute(:has_been_read, true)
       if @invoice.invoice_format == "pdf"
         render :template => 'invoices/show_pdf'
       else
