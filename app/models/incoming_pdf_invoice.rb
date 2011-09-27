@@ -48,7 +48,7 @@ class IncomingPdfInvoice
                             :date            => ds.issue_date,
                             :import          => ds.total_amount.to_money,
 #                            :currency        => ds.currency,
-                            :tax_percent     => ds.tax_rate,
+#                            :tax_percent     => ds.tax_rate,
 #                            :subtotal        => ds.invoice_subtotal.to_money,
 #                            :withholding_tax => ds.withholding_tax.to_money,
                             :due_date        => ds.due_date,
