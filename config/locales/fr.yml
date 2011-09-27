@@ -150,6 +150,7 @@ fr:
   no_pdf_support: "Il semble que vous n'ayez pas Adobe Reader ou le support PDF dans ce navigateur web. <a href='%{pdf}'>Cliquez ici pour télécharger le PDF</a>"
   client_has_no_email: "Le client de cette facture n'a pas d'email défini"
   invoice_has_no_taxes: "la facture n'a pas d'impôts"
+  invoice_no_taxes_and_discount: "(TODO) Can not have lines without tax and a global discount"
   field_import: "Importer"
   pdf_not_legal: "PDF illégal"
   amended_invoice: "Ajustements au %{link}"
