@@ -46,6 +46,11 @@ class ReceivedInvoice < InvoiceDocument
     end
   end
 
+  def initialize(attributes)
+    super
+    self.has_been_read=false
+  end
+
   def total
     import
   end
