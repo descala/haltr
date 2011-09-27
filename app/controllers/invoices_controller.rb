@@ -8,8 +8,8 @@ class InvoicesController < ApplicationController
   helper :sort
   include SortHelper
 
-  before_filter :find_invoice, :except => [:index,:new,:create,:destroy_payment,:update_currency_select,:by_taxcode_and_num,:view,:logo,:download,:mail]
-  before_filter :find_project, :only => [:index,:new,:create,:update_currency_select]
+  before_filter :find_invoice, :except => [:index,:new,:create,:destroy_payment,:update_currency_select,:by_taxcode_and_num,:view,:logo,:download,:mail,:download_new_invoices]
+  before_filter :find_project, :only => [:index,:new,:create,:update_currency_select,:download_new_invoices]
   before_filter :find_payment, :only => [:destroy_payment]
   before_filter :find_hashid, :only => [:view,:download]
   before_filter :find_attachment, :only => [:logo]
@@ -259,7 +259,7 @@ class InvoicesController < ApplicationController
     @format = ExportChannels.format export_id
     @company = @project.company
     if @format == 'pdf'
-      invoice_file = create_pdf_file
+      invoice_file = create_pdf_file @invoice
     else
       invoice_file=Tempfile.new("invoice_#{@invoice.id}.#{@format}","tmp")
       invoice_file.write(render_to_string(:template => "invoices/#{@format}.xml.erb", :layout => false))
@@ -279,6 +279,30 @@ class InvoicesController < ApplicationController
     flash[:error] = "#{l(:error_invoice_not_sent)}: #{e.message} #{e.backtrace}"
   ensure
     redirect_to :action => 'show', :id => @invoice
+  end
+
+  def download_new_invoices
+    # TODO document gem install zip
+    require 'zip/zip'
+    require 'zip/zipfilesystem'
+    @company = @project.company
+    invoices = IssuedInvoice.find_not_sent @project
+    zip_file = Tempfile.new "#{@project.identifier}_invoices.zip", 'tmp'
+    logger.info "Creating zip file '#{zip_file.path}' for invoice ids #{invoices.collect{|i|i.id}.join(',')}."
+    Zip::ZipOutputStream.open(zip_file.path) do |zos|
+      invoices.each do |invoice|
+        @invoice = invoice
+        @lines = @invoice.invoice_lines
+        @client = @invoice.client
+        pdf_file = create_pdf_file
+        zos.put_next_entry(@invoice.pdf_name)
+        zos.print IO.read(pdf_file.path)
+        pdf_file.close
+        logger.info "Added #{@invoice.pdf_name} from #{pdf_file.path}"
+      end
+    end
+    send_file zip_file.path, :type => "application/zip", :filename => "#{@project.identifier}-invoices.zip"
+    zip_file.close
   end
 
   def legal
