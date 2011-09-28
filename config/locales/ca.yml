@@ -347,4 +347,6 @@ ca:
   label_invoices_min: "Mínim de factures"
   label_stastics: "Estadístiques"
   label_received_with_num: "Factures rebudes ({{num}} noves)"
+  help_invoice_format: "Format i transport preferit de recepció de factures"
+  logo_not_image: "El logo no s'ha desat perquè no era una imatge"
 
