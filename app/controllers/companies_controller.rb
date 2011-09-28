@@ -37,7 +37,7 @@ class CompaniesController < ApplicationController
         @company.attachments.each {|a| a.destroy }
         attachments = Attachment.attach_files(@company, params[:attachments])
         attachments[:files].each do |attachment|
-          if attachment.image?
+          if attachment.content_type =~ /^image/
             begin
               require 'RMagick'
               image = Magick::Image.read("#{attachment.storage_path}/#{attachment.disk_filename}").first
