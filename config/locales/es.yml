@@ -21,6 +21,9 @@ es:
         precision: 2
         significant: false
         tax_name: "IVA"
+  date:
+    formats:
+      default: "%d-%m-%Y"
 
   # community
   label_company: Empresa
@@ -351,3 +354,5 @@ es:
   label_invoices_min: "Mínimo de facturas"
   label_stastics: "Estadísticas"
   label_received_with_num: "Facturas recibidas (%{num} nuevas)"
+  help_invoice_format: "Formato y transporte preferido de recepción de facturas"
+  logo_not_image: "El logo no se ha guardado porque no era una imagen"

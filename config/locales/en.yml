@@ -342,3 +342,5 @@ en:
   label_invoices_min: "Minimum number of invoices"
   label_stastics: "Stastics"
   label_received_with_num: "Received invoices ({{num}} new)"
+  help_invoice_format: "Preferred invoice transport and format"
+  logo_not_image: "Logo not saved, it wasn't an image"

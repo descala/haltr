@@ -35,7 +35,21 @@ class CompaniesController < ApplicationController
       if params[:attachments]
         #TODO: validate content-type ?
         @company.attachments.each {|a| a.destroy }
-        Attachment.attach_files(@company, params[:attachments])
+        attachments = Attachment.attach_files(@company, params[:attachments])
+        attachments[:files].each do |attachment|
+          if attachment.image?
+            begin
+              require 'RMagick'
+              image = Magick::Image.read("#{attachment.storage_path}/#{attachment.disk_filename}").first
+              image.change_geometry!('350x130>') {|cols,rows,img| img.resize!(cols, rows)}
+              image.write("#{attachment.storage_path}/#{attachment.disk_filename}")
+            rescue LoadError => e
+            end
+          else
+            flash[:warning] = l(:logo_not_image)
+            attachment.destroy
+          end
+        end
         render_attachment_warning_if_needed(@company)
       end
       flash[:notice] = l(:notice_successful_update) 
