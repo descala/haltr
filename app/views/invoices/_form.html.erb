@@ -27,7 +27,7 @@
     <span>
     <%= select_tag("#{name}_global",
                    options_for_select(@invoice.taxes_hash[name].collect {|p| ["#{p} %",p] }.insert(0,''), :selected => @invoice.global_percent_for(name)),
-                   :disabled=>@invoice.tax_per_line?(name), :onclick => "tax_changed('#{name}',$('#{name}_global').value);", :style => "width: 90px;")
+                   :disabled=>@invoice.tax_per_line?(name), :onchange => "tax_changed('#{name}',$('#{name}_global').value);", :style => "width: 90px;")
     %>
     </span>
     <span>
