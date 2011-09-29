@@ -258,17 +258,18 @@ class InvoicesController < ApplicationController
     path = ExportChannels.path export_id
     @format = ExportChannels.format export_id
     @company = @project.company
+    file_ext = @format == "pdf" ? "pdf" : "xml"
     if @format == 'pdf'
       invoice_file = create_pdf_file
     else
-      invoice_file=Tempfile.new("invoice_#{@invoice.id}.#{@format}","tmp")
+      invoice_file=Tempfile.new("invoice_#{@invoice.id}.#{file_ext}","tmp")
       invoice_file.write(render_to_string(:template => "invoices/#{@format}.xml.erb", :layout => false))
     end
-#    invoice_file.close
+    invoice_file.close
     i=2
-    destination="#{path}/" + "#{@invoice.client.hashid}_#{@invoice.id}.#{@format}".gsub(/\//,'')
+    destination="#{path}/" + "#{@invoice.client.hashid}_#{@invoice.id}.#{file_ext}".gsub(/\//,'')
     while File.exists? destination
-      destination="#{path}/" + "#{@invoice.client.hashid}_#{i}_#{@invoice.id}.#{@format}".gsub(/\//,'')
+      destination="#{path}/" + "#{@invoice.client.hashid}_#{i}_#{@invoice.id}.#{file_ext}".gsub(/\//,'')
       i+=1
     end
     FileUtils.mv(invoice_file.path,destination)
