@@ -264,7 +264,7 @@ class InvoicesController < ApplicationController
       invoice_file=Tempfile.new("invoice_#{@invoice.id}.#{@format}","tmp")
       invoice_file.write(render_to_string(:template => "invoices/#{@format}.xml.erb", :layout => false))
     end
-#    invoice_file.close
+    invoice_file.close
     i=2
     destination="#{path}/" + "#{@invoice.client.hashid}_#{@invoice.id}.#{@format}".gsub(/\//,'')
     while File.exists? destination
