@@ -87,8 +87,6 @@ class InvoiceTemplatesController < ApplicationController
 
   def new_from_invoice
     @invoice = InvoiceTemplate.new(@issued_invoice.attributes)
-    @invoice.created_at=nil
-    @invoice.updated_at=nil
     @invoice.number=nil
     @issued_invoice.invoice_lines.each do |line|
       tl = InvoiceLine.new(line.attributes)
