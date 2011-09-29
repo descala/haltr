@@ -356,3 +356,5 @@ es:
   label_received_with_num: "Facturas recibidas (%{num} nuevas)"
   help_invoice_format: "Formato y transporte preferido de recepción de facturas"
   logo_not_image: "El logo no se ha guardado porque no era una imagen"
+  contact_us_for_cif: "Si este es realmente su CIF, %{link}"
+  contact_us: "contacte con nosotros"

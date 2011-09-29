@@ -343,3 +343,5 @@ fr:
   label_received_with_num: "Factures reçues (%{num} nouveaux)"
   help_invoice_format: "Format de transport préféré et la réception des factures"
   logo_not_image: "Le logo n'a pas été sauvé parce qu'il y avait une image"
+  contact_us_for_cif: "Si c'est effectivement votre TVA, %{link}"
+  contact_us: "s'il vous plaît nous contacter"

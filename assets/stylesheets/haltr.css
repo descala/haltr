@@ -162,3 +162,13 @@ select.tax {
 span.help {
   margin-left: 10px;
 }
+
+span.lineErrorExplanation {
+  border: 2px solid;
+  padding: 4px 4px 4px 4px;
+  margin-left: 10px;
+}
+
+span.lineErrorExplanation a {
+  font-weight: bold;
+}

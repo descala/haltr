@@ -2,7 +2,7 @@
 <%= javascript_include_tag 'company', :plugin => 'haltr' %>
 
 <div class="box">
-  <p><%= f.text_field :taxcode, :required => true %></p>
+  <p><%= f.text_field :taxcode, :required => true %><%= contact_us_for_cif if !@company.taxcode.blank? and @company.errors["taxcode"] %></p>
   <p><%= f.text_field :name, :required => true %></p>
   <p><%= f.text_field :email, :required => true %></p>
   <p><%= f.select :currency, currency_options_for_select, :required => true %></p>

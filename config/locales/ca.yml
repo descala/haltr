@@ -355,4 +355,5 @@ ca:
   label_received_with_num: "Factures rebudes ({{num}} noves)"
   help_invoice_format: "Format i transport preferit de recepció de factures"
   logo_not_image: "El logo no s'ha desat perquè no era una imatge"
-
+  contact_us_for_cif: "Si aquest es realment el seu CIF, %{link}"
+  contact_us: "contacti amb nosaltres"
