@@ -47,5 +47,6 @@
 <% if @company.attachments.size > 0 -%>
   <p><%= image_tag "/attachments/#{@company.attachments.first.id}/#{@company.attachments.first.filename}" -%></p>
 <% end -%>
+  <p><br /><span class="ownCertificate"><%= l(:add_own_certificate,:link=>link_to(l(:contact_us),:controller=>'support',:action=>'new',:project_id=>@project)) %></span></p>
 </div>
 

@@ -345,3 +345,4 @@ fr:
   logo_not_image: "Le logo n'a pas été sauvé parce qu'il y avait une image"
   contact_us_for_cif: "Si c'est effectivement votre TVA, %{link}"
   contact_us: "s'il vous plaît nous contacter"
+  add_own_certificate: "Pour signer les factures avec leur propre certificat, %{link}"

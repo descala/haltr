@@ -346,3 +346,4 @@ en:
   logo_not_image: "Logo not saved, it wasn't an image"
   contact_us_for_cif: "If this is really your taxcode, %{link}"
   contact_us: "contact us"
+  add_own_certificate: "%{link} to sign invoices with your own certificate"

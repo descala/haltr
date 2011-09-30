@@ -358,3 +358,4 @@ es:
   logo_not_image: "El logo no se ha guardado porque no era una imagen"
   contact_us_for_cif: "Si este es realmente su CIF, %{link}"
   contact_us: "contacte con nosotros"
+  add_own_certificate: "Para firmar las facturas con su propio certificado, %{link}"

@@ -172,3 +172,13 @@ span.lineErrorExplanation {
 span.lineErrorExplanation a {
   font-weight: bold;
 }
+
+span.ownCertificate {
+  border: 2px solid;
+  padding: 4px 4px 4px 4px;
+  margin-left: 10px;
+}
+
+span.ownCertificate a {
+  font-weight: bold;
+}

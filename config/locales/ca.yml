@@ -357,3 +357,4 @@ ca:
   logo_not_image: "El logo no s'ha desat perquè no era una imatge"
   contact_us_for_cif: "Si aquest es realment el seu CIF, %{link}"
   contact_us: "contacti amb nosaltres"
+  add_own_certificate: "Per signar les factures amb el seu propi certificat, %{link}"
