@@ -25,31 +25,12 @@
 
 <% content_for :header_tags do %>
   <%= stylesheet_link_tag 'minimal', :plugin => 'haltr' %>
+  <%= javascript_include_tag 'haltr', :plugin => 'haltr' %>
   <%= javascript_include_tag 'sarissa', :plugin => 'haltr' %>
   <%= javascript_include_tag 'received_invoice', :plugin => 'haltr' %>
   <script type="text/javascript">
  
-/**
-    Load file (located in relative path on the server) via AJAX (in synchronous mode)
-*/
-function loadFile(sUrl){
-
-    var response;
-
-    new Ajax.Request(sUrl,
-        {
-         method:'get',
-         asynchronous:false,
-         onSuccess: function(transport){
-             response = transport.responseText || "no response text";
-         },
-            onFailure: function(){ alert('Something went wrong loading the xslt resource...') }
-        });
-   
-    return response;
-}
- 
-    function XsltTransform() {
+  function XsltTransform() {
     sourceXml= loadFile("<%= url_for (:action => 'legal', :id => @invoice, :format => :xml, :kk => 123) %>");
     xml = (new DOMParser()).parseFromString(sourceXml, "text/xml");
     sourceXslt = loadFile("/plugin_assets/haltr/xsl/<%= @xsl %>.xsl");
@@ -62,8 +43,6 @@ function loadFile(sUrl){
     var outputDiv = document.getElementById("InvoiceOutput");
     outputDiv.innerHTML = output;
   }
-  var oldonload = window.onload;
-  window.onload = (typeof window.onload != 'function') ?
-    XsltTransform : function() { oldonload(); XsltTransform(); };
-</script>
+  addLoadEvent(XsltTransform);
+  </script>
 <% end %>

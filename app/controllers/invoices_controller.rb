@@ -331,7 +331,9 @@ class InvoicesController < ApplicationController
         :type => @attachment.content_type,
         :disposition => 'inline'
     else
-      render_404
+      send_file "/plugin_assets/haltr/images/transparent.gif",
+        :type => 'image/gif',
+        :disposition => 'inline'
     end
   end
 
