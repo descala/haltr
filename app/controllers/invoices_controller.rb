@@ -8,8 +8,8 @@ class InvoicesController < ApplicationController
   helper :sort
   include SortHelper
 
-  before_filter :find_invoice, :except => [:index,:new,:create,:destroy_payment,:update_currency_select,:by_taxcode_and_num,:view,:logo,:download,:mail]
-  before_filter :find_project, :only => [:index,:new,:create,:update_currency_select]
+  before_filter :find_invoice, :except => [:index,:new,:create,:destroy_payment,:update_currency_select,:by_taxcode_and_num,:view,:logo,:download,:mail,:send_new_invoices]
+  before_filter :find_project, :only => [:index,:new,:create,:update_currency_select,:send_new_invoices]
   before_filter :find_payment, :only => [:destroy_payment]
   before_filter :find_hashid, :only => [:view,:download]
   before_filter :find_attachment, :only => [:logo]
@@ -253,33 +253,38 @@ class InvoicesController < ApplicationController
   end
 
   def send_invoice
-    raise @invoice.export_errors.collect {|e| l(e)}.join(", ") unless @invoice.can_be_exported?
-    export_id = @invoice.client.invoice_format
-    path = ExportChannels.path export_id
-    @format = ExportChannels.format export_id
-    @company = @project.company
-    file_ext = @format == "pdf" ? "pdf" : "xml"
-    if @format == 'pdf'
-      invoice_file = create_pdf_file
-    else
-      invoice_file=Tempfile.new("invoice_#{@invoice.id}.#{file_ext}","tmp")
-      invoice_file.write(render_to_string(:template => "invoices/#{@format}.xml.erb", :layout => false))
-    end
-    invoice_file.close
-    i=2
-    destination="#{path}/" + "#{@invoice.client.hashid}_#{@invoice.id}.#{file_ext}".gsub(/\//,'')
-    while File.exists? destination
-      destination="#{path}/" + "#{@invoice.client.hashid}_#{i}_#{@invoice.id}.#{file_ext}".gsub(/\//,'')
-      i+=1
-    end
-    FileUtils.mv(invoice_file.path,destination)
-    #TODO state restrictions
-    @invoice.queue || @invoice.requeue
+    create_and_queue_file
     flash[:notice] = l(:notice_invoice_sent)
   rescue Exception => e
     flash[:error] = "#{l(:error_invoice_not_sent)}: #{e.message} #{e.backtrace}"
   ensure
     redirect_to :action => 'show', :id => @invoice
+  end
+
+  def send_new_invoices
+    unsent = IssuedInvoice.find_not_sent(@project)
+    if unsent.size > 10
+      flash[:error] = l(:too_much_invoices,:num=>unsent.size)
+      redirect_to :action => 'index', :id => @project
+      return
+    end
+    errors=[]
+    unsent.each do |i|
+      @invoice = i
+      @lines = @invoice.invoice_lines
+      @client = @invoice.client || Client.new(:name=>"unknown",:project=>@invoice.project)
+      @company = @project.company
+      begin
+        create_and_queue_file
+      rescue Exception => e
+        errors << "#{l(:error_invoice_not_sent)}: #{e.message}"
+      end
+    end
+    if errors.any?
+      flash[:error] = "#{l(:invoices_not_sent,:num=>errors.size)} <br /> #{errors.join('<br />')}"
+    end
+    flash[:info] = l(:invoices_sent,:num=>unsent.size - errors.size)
+    redirect_to :action => 'index', :id => @project
   end
 
   def legal
@@ -443,6 +448,31 @@ class InvoicesController < ApplicationController
     cmd="java -classpath #{jarpath}/core-renderer.jar:#{jarpath}/iText-2.0.8.jar:#{jarpath}/minium.jar org.xhtmlrenderer.simple.PDFRenderer #{RAILS_ROOT}/#{xhtml_file.path} #{RAILS_ROOT}/#{pdf_file.path}"
     discarded_output = `#{cmd} 2>&1`
     $?.success? ? pdf_file : nil
+  end
+
+  def create_and_queue_file
+    raise @invoice.export_errors.collect {|e| l(e)}.join(", ") unless @invoice.can_be_exported?
+    export_id = @invoice.client.invoice_format
+    path = ExportChannels.path export_id
+    @format = ExportChannels.format export_id
+    @company = @project.company
+    file_ext = @format == "pdf" ? "pdf" : "xml"
+    if @format == 'pdf'
+      invoice_file = create_pdf_file
+    else
+      invoice_file=Tempfile.new("invoice_#{@invoice.id}.#{file_ext}","tmp")
+      invoice_file.write(render_to_string(:template => "invoices/#{@format}.xml.erb", :layout => false))
+    end
+    invoice_file.close
+    i=2
+    destination="#{path}/" + "#{@invoice.client.hashid}_#{@invoice.id}.#{file_ext}".gsub(/\//,'')
+    while File.exists? destination
+      destination="#{path}/" + "#{@invoice.client.hashid}_#{i}_#{@invoice.id}.#{file_ext}".gsub(/\//,'')
+      i+=1
+    end
+    FileUtils.mv(invoice_file.path,destination)
+    #TODO state restrictions
+    @invoice.queue || @invoice.requeue
   end
 
 end

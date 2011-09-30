@@ -337,3 +337,6 @@ fr:
   label_received_with_num: "Factures reçues (%{num} nouveaux)"
   help_invoice_format: "Format de transport préféré et la réception des factures"
   logo_not_image: "Le logo n'a pas été sauvé parce qu'il y avait une image"
+  too_much_invoices: "Trop de factures à générer (%{num} factures, maximum 10)"
+  invoices_not_sent: "%{num} pas réussi à envoyer les factures:"
+  invoices_sent: "Envoyé factures %{num}"
