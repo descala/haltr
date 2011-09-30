@@ -95,6 +95,5 @@ tooltip.hide = function () {
 	this.tip.style.display = "none";
 }
 
-window.onload = function () {
-	tooltip.init ();
-}
+
+addLoadEvent(function() { tooltip.init (); });

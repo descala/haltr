@@ -29,8 +29,8 @@
             <meta http-equiv="content-type" content="text/html; charset=UTF-8"/>
             <title><xsl:value-of
                 select="document(concat($path,'/trans_',$lang,'.xml'))/diccionari/element[@etiqueta='Invoice']"/></title>
-            <link href="http://www.b2brouter.net/plugin_assets/haltr/stylesheets/print.css" media="print" rel="stylesheet" type="text/css" />            
-            <link href="http://www.b2brouter.net/plugin_assets/haltr/stylesheets/minimal.css" media="screen" rel="stylesheet" type="text/css" />
+            <link href="/plugin_assets/haltr/stylesheets/print.css" media="print" rel="stylesheet" type="text/css" />            
+            <link href="/plugin_assets/haltr/stylesheets/minimal.css" media="screen" rel="stylesheet" type="text/css" />
         </head>
         <body>
             <div id="invoice_wrapper">
@@ -138,7 +138,7 @@
         <div class="logo">
             <xsl:element name="img">
                 <xsl:attribute name="alt"><xsl:value-of select="LegalEntity/CorporateName"/></xsl:attribute>
-                <xsl:attribute name="src">http://www.b2brouter.net/companies/logo/<xsl:value-of select="TaxIdentification/TaxIdentificationNumber"/></xsl:attribute>
+                <xsl:attribute name="src">/companies/logo/<xsl:value-of select="TaxIdentification/TaxIdentificationNumber"/></xsl:attribute>
             </xsl:element>
         </div>
 

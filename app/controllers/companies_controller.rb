@@ -61,12 +61,14 @@ class CompaniesController < ApplicationController
 
   def logo
     c = Company.find_by_taxcode params[:id]
-    render :text=>"" and return unless c
     a = c.attachments.first
-    render :text=>"" and return unless a
     send_file a.diskfile, :filename => filename_for_content_disposition(a.filename),
-                                    :type => detect_content_type(a),
-                                    :disposition => (a.image? ? 'inline' : 'attachment')
+      :type => detect_content_type(a),
+      :disposition => (a.image? ? 'inline' : 'attachment')
+  rescue
+    send_file "/plugin_assets/haltr/images/transparent.gif",
+      :type => 'image/gif',
+      :disposition => 'inline'
   end
 
   private
