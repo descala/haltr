@@ -287,6 +287,11 @@ class InvoicesController < ApplicationController
     require 'zip/zipfilesystem'
     @company = @project.company
     invoices = IssuedInvoice.find_not_sent @project
+    if invoices.size > 10
+      flash[:error] = l(:too_much_invoices,:num=>invoices.size)
+      redirect_to :action=>'index', :id=>@project
+      return
+    end
     zip_file = Tempfile.new "#{@project.identifier}_invoices.zip", 'tmp'
     logger.info "Creating zip file '#{zip_file.path}' for invoice ids #{invoices.collect{|i|i.id}.join(',')}."
     Zip::ZipOutputStream.open(zip_file.path) do |zos|

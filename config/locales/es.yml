@@ -353,3 +353,4 @@ es:
   help_invoice_format: "Formato y transporte preferido de recepción de facturas"
   logo_not_image: "El logo no se ha guardado porque no era una imagen"
   zip_gem_required: "Se necesita instalar la gem 'zip' para usar esta funcionalidad"
+  too_much_invoices: "Masses factures a descarregar (%{num} factures, màxim 10)"
