@@ -80,6 +80,12 @@ module HaltrHelper
     HaltrHelper.currency_options_for_select
   end
 
+  def help(topic)
+    content_tag("span",:class=>'help') do
+      image_tag('help.png', :title => l(topic))
+    end
+  end
+
   private
 
   def especial(path)

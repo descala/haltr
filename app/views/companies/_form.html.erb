@@ -13,9 +13,9 @@
   <p><%= f.text_field :address %></p>
   <p><%= f.text_field :website %></p>
   <% if @company.invoice_format.nil? or ExportChannels.for_select(@project).collect {|v| v.last }.include? @company.invoice_format -%>
-    <p><%= f.select :invoice_format, ExportChannels.for_select(@project) %></p>
+    <p><%= f.select :invoice_format, ExportChannels.for_select(@project) %><%= help :help_invoice_format %></p>
   <% else -%>
-    <p><%= f.select :invoice_format, ExportChannels.for_select(@project) %> <%= I18n.t(@company.invoice_format)%></p>
+    <p><%= f.select :invoice_format, ExportChannels.for_select(@project) %> <%= I18n.t(@company.invoice_format)%><%= help :help_invoice_format %></p>
   <% end -%>
   <p>
   <%= f.label_for_field "company_public" %>
@@ -43,7 +43,7 @@
   </div>
   <p><%= add_tax_link(f) %></p>
 
-  <p><%=label_tag('attachments[1][file]', l(:logo))%><%= file_field_tag 'attachments[1][file]', :size => 30, :id => nil -%></p>
+  <p><%=label_tag('attachments[1][file]', l(:logo))%><%= file_field_tag 'attachments[1][file]', :size => 30, :id => nil, :accept => 'image/png,image/gif,image/jpeg' -%></p>
 <% if @company.attachments.size > 0 -%>
   <p><%= image_tag "/attachments/#{@company.attachments.first.id}/#{@company.attachments.first.filename}" -%></p>
 <% end -%>

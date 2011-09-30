@@ -176,7 +176,7 @@ class IssuedInvoice < InvoiceDocument
 
   def validate_invoice_semantics
     # Can not have lines without tax and a global discount
-    if discount.nonzero? and expenses.any?
+    if discount_percent and discount_percent > 0 and expenses.any?
       errors.add(:base, "#{l(:invoice_no_taxes_and_discount)}")
     end
   end

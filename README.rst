@@ -47,6 +47,7 @@ INSTALL
   git clone https://github.com/koke/iso_countries.git
 
 * poppler-utils package and chronic gem are required to receive PDF invoices by mail.
+* imagemagick library is required to resize automatically uploaded images (for company logos).
 
 
 .. _Redmine's plugin installation instructions: http://www.redmine.org/projects/redmine/wiki/Plugins

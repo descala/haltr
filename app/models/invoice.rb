@@ -17,6 +17,8 @@ class Invoice < ActiveRecord::Base
     PAYMENT_SPECIAL  => {:facturae => '13', :ubl => '??'},
   }
 
+  attr_protected :created_at, :updated_at
+
   has_many :invoice_lines, :dependent => :destroy
   has_many :events, :dependent => :destroy
   #has_many :taxes, :through => :invoice_lines

@@ -16,6 +16,8 @@ class InvoiceLine < ActiveRecord::Base
     DAYS      => {:name => 'days',      :facturae => '05', :ubl => 'DAY'},
   }
 
+  attr_protected :created_at, :updated_at
+
   belongs_to :invoice
   has_many :taxes, :class_name => "Tax", :order => "percent", :dependent => :destroy
   validates_presence_of :description, :unit

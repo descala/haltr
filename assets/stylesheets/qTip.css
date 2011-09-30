@@ -1,0 +1,26 @@
+div#qTip {
+  padding: 3px;
+  border: 1px solid #333333;
+  display: none;
+  background: #CCCCCC;
+  font: bold 11px Verdana, Arial, sans-serif;
+  text-align: left;
+  position: absolute;
+  z-index: 1000;
+}
+
+/*
+div#qTip {
+  padding: 3px;
+  border: 1px solid #666;
+  border-right-width: 2px;
+  border-bottom-width: 2px;
+  display: none;
+  background: #999;
+  color: #FFF;
+  font: bold 9px Verdana, Arial, sans-serif;
+  text-align: left;
+  position: absolute;
+  z-index: 1000;
+}
+*/
