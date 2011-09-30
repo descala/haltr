@@ -340,3 +340,4 @@ en:
   label_received_with_num: "Received invoices ({{num}} new)"
   help_invoice_format: "Preferred invoice transport and format"
   logo_not_image: "Logo not saved, it wasn't an image"
+  zip_gem_required: "'zip' gem required to use this functionality"

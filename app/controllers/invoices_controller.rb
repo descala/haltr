@@ -283,7 +283,6 @@ class InvoicesController < ApplicationController
   end
 
   def download_new_invoices
-    # TODO document gem install zip
     require 'zip/zip'
     require 'zip/zipfilesystem'
     @company = @project.company
@@ -304,6 +303,9 @@ class InvoicesController < ApplicationController
     end
     send_file zip_file.path, :type => "application/zip", :filename => "#{@project.identifier}-invoices.zip"
     zip_file.close
+  rescue LoadError
+    flash[:error] = l(:zip_gem_required)
+    redirect_to :action => 'index', :id => @project
   end
 
   def legal
