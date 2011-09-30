@@ -331,7 +331,7 @@ class InvoicesController < ApplicationController
         :type => @attachment.content_type,
         :disposition => 'inline'
     else
-      send_file "/plugin_assets/haltr/images/transparent.gif",
+      send_file "#{RAILS_ROOT}/public/plugin_assets/haltr/images/transparent.gif",
         :type => 'image/gif',
         :disposition => 'inline'
     end

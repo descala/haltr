@@ -66,7 +66,7 @@ class CompaniesController < ApplicationController
       :type => detect_content_type(a),
       :disposition => (a.image? ? 'inline' : 'attachment')
   rescue
-    send_file "/plugin_assets/haltr/images/transparent.gif",
+    send_file "#{RAILS_ROOT}/public/plugin_assets/haltr/images/transparent.gif",
       :type => 'image/gif',
       :disposition => 'inline'
   end
