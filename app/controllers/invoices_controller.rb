@@ -263,14 +263,14 @@ class InvoicesController < ApplicationController
 
   def send_new_invoices
     unsent = IssuedInvoice.find_not_sent(@project)
-    if unsent.size > 10
-      flash[:error] = l(:too_much_invoices,:num=>unsent.size)
-      redirect_to :action => 'index', :id => @project
-      return
-    end
     errors=[]
-    unsent.each do |i|
-      @invoice = i
+    unsent.each_with_index do |inv,i|
+      if i >= 9
+        flash[:error] = l(:invoice_limit_reached)
+        redirect_to :action => 'index', :id => @project
+        return
+      end
+      @invoice = inv
       @lines = @invoice.invoice_lines
       @client = @invoice.client || Client.new(:name=>"unknown",:project=>@invoice.project)
       @company = @project.company

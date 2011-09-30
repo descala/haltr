@@ -338,6 +338,6 @@ en:
   label_received_with_num: "Received invoices ({{num}} new)"
   help_invoice_format: "Preferred invoice transport and format"
   logo_not_image: "Logo not saved, it wasn't an image"
-  too_much_invoices: "Too much invoices to generate (%{num} invoices, maximum 10)"
   invoices_not_sent: "%{num} invoices failed to send:"
   invoices_sent: "%{num} invoices sent"
+  invoice_limit_reached: "Simultaneous delivery limit reached (10 bills).<br />You can send again to process 10 more."
