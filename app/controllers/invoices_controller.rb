@@ -33,6 +33,9 @@ class InvoicesController < ApplicationController
 
     c = ARCondition.new(["invoices.project_id = ?",@project.id])
 
+    # remove Draft Invoices from list
+    c << ["type != ?","DraftInvoice"]
+
     unless params["state_all"] == "1"
       statelist=[]
       %w(new sending sent error closed discarded).each do |state|
