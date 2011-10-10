@@ -263,7 +263,7 @@ class InvoicesController < ApplicationController
     @company = @project.company
     file_ext = @format == "pdf" ? "pdf" : "xml"
     if @format == 'pdf'
-      invoice_file = create_pdf_file @invoice
+      invoice_file = create_pdf_file
     else
       invoice_file=Tempfile.new("invoice_#{@invoice.id}.#{file_ext}","tmp")
       invoice_file.write(render_to_string(:template => "invoices/#{@format}.xml.erb", :layout => false))
@@ -275,12 +275,15 @@ class InvoicesController < ApplicationController
       destination="#{path}/" + "#{@invoice.client.hashid}_#{i}_#{@invoice.id}.#{file_ext}".gsub(/\//,'')
       i+=1
     end
+    logger.info "Sending #{@format} to '#{destination}' for invoice id #{@invoice.id}."
     FileUtils.mv(invoice_file.path,destination)
     #TODO state restrictions
     @invoice.queue || @invoice.requeue
-    flash[:notice] = l(:notice_invoice_sent)
+    flash[:notice] = "#{l(:notice_invoice_sent)}"
   rescue Exception => e
-    flash[:error] = "#{l(:error_invoice_not_sent)}: #{e.message} #{e.backtrace}"
+    # e.backtrace does not fit in session leading to
+    #   ActionController::Session::CookieStore::CookieOverflow
+    flash[:error] = "#{l(:error_invoice_not_sent)}: #{e.message}"
   ensure
     redirect_to :action => 'show', :id => @invoice
   end
