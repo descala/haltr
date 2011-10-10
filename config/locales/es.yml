@@ -176,6 +176,8 @@ es:
   default: "Por defecto"
   only_one_default_allowed_for: "%{tax_name}: Solo se acepta un impuesto por defecto"
   add_taxes_on_company: "Puedes gestionar los impuestos en \"Mi empresa\""
+  button_download_new_invoices: "Descargar zip de facturas nuevas"
+  label_download_new_invoices_info: "Genera un zip con todas las facturas nuevas en formato PDF"
 
   # Events
   events: "Log de eventos"
@@ -350,3 +352,5 @@ es:
   label_received_with_num: "Facturas recibidas (%{num} nuevas)"
   help_invoice_format: "Formato y transporte preferido de recepción de facturas"
   logo_not_image: "El logo no se ha guardado porque no era una imagen"
+  zip_gem_required: "Se necesita instalar la gem 'zip' para usar esta funcionalidad"
+  too_much_invoices: "Masses factures a descarregar (%{num} factures, màxim 10)"
