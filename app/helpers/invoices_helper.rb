@@ -81,7 +81,7 @@ module InvoicesHelper
   end
 
   def num_not_sent
-    IssuedInvoice.find_not_sent(@project).size
+    @project.issued_invoices.count(:conditions => "state='new' and number is not null")
   end
 
   def transport_text(invoice)
