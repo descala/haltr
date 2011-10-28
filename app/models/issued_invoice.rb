@@ -116,6 +116,10 @@ class IssuedInvoice < InvoiceDocument
     !state?(:closed) && due_date && due_date < Date.today
   end
 
+  def self.past_due_total(project)
+    IssuedInvoice.sum :total_in_cents, :conditions => ["state <> 'closed' and due_date < ? and project_id = ?", Date.today, project.id]
+  end
+
   def can_be_exported?
     # TODO Test if endpoint is correcty configured
     can_be = self.valid? and ExportChannels.channel(client.invoice_format) != nil
@@ -126,7 +130,7 @@ class IssuedInvoice < InvoiceDocument
   end
 
   def self.last_number(project)
-    i = IssuedInvoice.last(:order => "number", :include => [:client], :conditions => ["clients.project_id = ?", project.id])
+    i = IssuedInvoice.last(:order => "number", :conditions => ["project_id = ?", project.id])
     i.number if i
   end
 
