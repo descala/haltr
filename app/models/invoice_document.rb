@@ -68,7 +68,7 @@ class InvoiceDocument < Invoice
   protected
 
   def update_status
-    update_imports
+    update_imports unless self.is_a? ReceivedInvoice
     if is_paid?
       paid
     else
