@@ -46,7 +46,7 @@ class TasksController < ApplicationController
   end
   
   def n19_done
-    invoices = IssuedInvoice.find :all, :include => [:client], :conditions => ["clients.project_id = ? and due_date = ?", @project.id, @invoice.due_date]
+    invoices = IssuedInvoice.find :all, :include => [:client], :conditions => ["clients.project_id = ? and due_date = ? and invoices.payment_method = #{Invoice::PAYMENT_DEBIT}", @project.id, @invoice.due_date]
     invoices.each do |invoice|
       Payment.new_to_close(invoice).save
       invoice.close
