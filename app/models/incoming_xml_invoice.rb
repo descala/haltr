@@ -49,23 +49,25 @@ class IncomingXmlInvoice
     elsif ubl_version
       invoice_format="ubl#{ubl_version.text}"
       InvoiceReceiver.log "Incoming invoice is UBL #{facturae_version.text}"
-      xpaths[:invoice_number]          = ""
-      xpaths[:invoice_date]            = ""
-      xpaths[:invoice_total]           = ""
-      xpaths[:invoice_import]          = ""
-      xpaths[:invoice_due_date]        = ""
-      xpaths[:seller_taxcode]          = ""
-      xpaths[:seller_name]             = ""
+      xpaths[:invoice_number]          = "/Invoice/cbc:ID"
+      xpaths[:invoice_date]            = "/Invoice/cbc:IssueDate"
+      xpaths[:invoice_total]           = "/Invoice/cac:LegalMonetaryTotal/cbc:TaxInclusiveAmount"
+      xpaths[:invoice_import]          = "/Invoice/cac:LegalMonetaryTotal/cbc:TaxExclusiveAmount"
+      xpaths[:invoice_due_date]        = "/Invoice/cac:PaymentMeans/cbc:PaymentDueDate"
+      xpaths[:seller_taxcode]          = "/Invoice/cac:AccountingSupplierParty/cac:Party/cac:PartyTaxScheme/cbc:CompanyID"
+      xpaths[:seller_name]             = "/Invoice/cac:AccountingSupplierParty/cac:Party/cac:PartyName/cbc:Name"
       xpaths[:seller_name2]            = nil
-      xpaths[:seller_address]          = ""
-      xpaths[:seller_province]         = ""
-      xpaths[:seller_countrycode]      = ""
-      xpaths[:seller_website]          = ""
-      xpaths[:seller_email]            = ""
-      xpaths[:seller_cp_city]          = ""
+      xpaths[:seller_address]          = [ "/Invoice/cac:AccountingSupplierParty/cac:Party/cac:PostalAddress/cbc:StreetName",
+	  "/Invoice/cac:AccountingSupplierParty/cac:Party/cac:PostalAddress/cbc:BuildingNumber" ] 
+      xpaths[:seller_province]         = "/Invoice/cac:AccountingSupplierParty/cac:Party/cac:PostalAddress/cbc:CountrySubentity"
+      xpaths[:seller_countrycode]      = "/Invoice/cac:AccountingSupplierParty/cac:Party/cac:PostalAddress/cac:Country/cbc:IdentificationCode"
+      xpaths[:seller_website]          = "/Invoice/cac:AccountingSupplierParty/cac:Party/cbc:WebsiteURI"
+      xpaths[:seller_email]            = "/Invoice/cac:AccountingSupplierParty/cac:Party/cac:Contact/cbc:ElectronicMail"
+      xpaths[:seller_cp_city]          = [ "/Invoice/cac:AccountingSupplierParty/cac:Party/cac:PostalAddress/cbc:PostalZone",
+	  "/Invoice/cac:AccountingSupplierParty/cac:Party/cac:PostalAddress/cbc:CityName" ]
       xpaths[:seller_cp_city2]         = nil
-      xpaths[:buyer_taxcode]           = ""
-      xpaths[:currency]                = ""
+      xpaths[:buyer_taxcode]           = "/Invoice/cac:AccountingCustomerParty/cac:Party/cac:PartyTaxScheme/cbc:CompanyID"
+      xpaths[:currency]                = "/Invoice/cbc:DocumentCurrencyCode"
       ch_name = @@channels[invoice_format]
       if ch_name
         channel="/var/spool/b2brouter/input/#{ch_name}"
