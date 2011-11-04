@@ -48,7 +48,7 @@ class IncomingXmlInvoice
       end
     elsif ubl_version
       invoice_format="ubl#{ubl_version.text}"
-      InvoiceReceiver.log "Incoming invoice is UBL #{facturae_version.text}"
+      InvoiceReceiver.log "Incoming invoice is UBL #{ubl_version.text}"
       xpaths[:invoice_number]          = "/Invoice/cbc:ID"
       xpaths[:invoice_date]            = "/Invoice/cbc:IssueDate"
       xpaths[:invoice_total]           = "/Invoice/cac:LegalMonetaryTotal/cbc:TaxInclusiveAmount"
