@@ -293,6 +293,7 @@ ca:
   field_public: "Perfil públic"
   private_fields_info: "Els següents camps són privats i no es mostraran encara que escolliu fer públic el vostre perfil"
   issues_controller_name: "Nom del controlador d'assumptes"
+  diba_cif: "CIF de DIBA"
   field_iban: IBAN
   field_bic: BIC
   default_country: "País per defecte"
@@ -312,6 +313,7 @@ ca:
   "2m1": "1er dia mes següent no l'altre"
   "1m15": Dia 15 mes següent
   "1m20": Dia 20 mes següent
+  "1m10": Dia 10 mes següent
   "custom": Personalitzat
 
   # Frequency
@@ -344,6 +346,11 @@ ca:
 
   hide_full_form: "Mostrar menys camps"
   show_full_form: "Mostrar mes camps"
+
+  # DIBA
+  field_codi_centre_gestor: "Codi de centre gestor"
+  field_num_contracte: "Número de contracte"
+  field_num_expedient: "Número d'expedient"
   field_created_at: "Creada el"
   info_default_taxes: "Per defecte es crearan els impostos del teu país"
   label_invoices_min: "Mínim de factures"
@@ -351,5 +358,8 @@ ca:
   label_received_with_num: "Factures rebudes ({{num}} noves)"
   help_invoice_format: "Format i transport preferit de recepció de factures"
   logo_not_image: "El logo no s'ha desat perquè no era una imatge"
+  contact_us_for_cif: "Si aquest es realment el seu CIF, %{link}"
+  contact_us: "contacti amb nosaltres"
+  add_own_certificate: "Per signar les factures amb el seu propi certificat, %{link}"
   zip_gem_required: "Cal instal·lar la gem 'zip' per fer servir aquesta funcionalitat"
   too_much_invoices: "Masses factures a descarregar (%{num} factures, màxim 10)"

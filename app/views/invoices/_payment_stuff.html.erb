@@ -1,3 +1,9 @@
+<%=
+  # diba
+  if @client and @client.taxcode == Setting.plugin_haltr['diba_cif']
+    render :partial => 'invoices/diba'
+  end
+%>
 <%
   if @invoice and @invoice.new_record? and @client
     # new invoice, default client

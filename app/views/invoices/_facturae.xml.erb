@@ -73,6 +73,7 @@
             <%= render :partial => "address.facturae.xml", :locals => {:entity => @client}%>
             <ContactDetails>
               <ElectronicMail><%=h  @client.email %></ElectronicMail>
+<%="              <ContactPersons>#{@invoice.codi_centre_gestor}</ContactPersons>" if @client.taxcode == Setting.plugin_haltr['diba_cif']%>
             </ContactDetails>
          </LegalEntity>
       </BuyerParty>
@@ -176,7 +177,9 @@
 <% @invoice.invoice_lines.each do |invoice_line| -%>
   <% next if invoice_line.expenses? -%>
             <InvoiceLine>
+<%="              <ReceiverContractReference>#{@invoice.num_contracte}</ReceiverContractReference>" if @client.taxcode == Setting.plugin_haltr['diba_cif']%>
               <ReceiverTransactionReference><%=h(@invoice.ponumber)[0..19]%></ReceiverTransactionReference>
+<%="              <FileReference>#{@invoice.num_expedient}</FileReference>" if @client.taxcode == Setting.plugin_haltr['diba_cif']%>
               <ItemDescription><%=h invoice_line.description%></ItemDescription>
               <Quantity><%=h invoice_line.quantity%></Quantity>
               <UnitOfMeasure><%=h invoice_line.unit_code(:facturae)%></UnitOfMeasure>

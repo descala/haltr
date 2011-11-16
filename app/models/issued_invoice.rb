@@ -9,6 +9,7 @@ class IssuedInvoice < InvoiceDocument
   validates_presence_of :due_date
   validates_uniqueness_of :number, :scope => [:project_id,:type], :if => Proc.new {|i| i.type == "IssuedInvoice" }
   validate :invoice_must_have_lines
+  validate :comprovacions_diba
   validate :validate_invoice_semantics
 
   before_validation :set_due_date
@@ -203,6 +204,12 @@ class IssuedInvoice < InvoiceDocument
     else
       add_export_error(:client_has_no_email)
       false
+    end
+  end
+
+  def comprovacions_diba
+    if self.client and self.client.taxcode == Setting.plugin_haltr['diba_cif']
+      errors.add(:codi_centre_gestor,:blank) if self.codi_centre_gestor.blank?
     end
   end
 

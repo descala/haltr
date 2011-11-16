@@ -283,6 +283,7 @@ en:
   field_public: "Public profile"
   private_fields_info: "These fields are private, regardless you choose public profile"
   issues_controller_name: "Issues controller name"
+  diba_cif: "DIBA CIF"
   field_iban: IBAN
   field_bic: BIC
   default_country: "Default country"
@@ -301,6 +302,7 @@ en:
   "2m1": "1st day in two months"
   "1m15": 15th day next month
   "1m20": 20th day next month
+  "1m10": 10th day next month
   "custom": Custom
 
   # Frequency
@@ -333,6 +335,11 @@ en:
 
   hide_full_form: "Show less fields"
   show_full_form: "Show more fields"
+
+  # DIBA
+  field_codi_centre_gestor: "Management center code"
+  field_num_contracte: "Contract num"
+  field_num_expedient: "Record num"
   field_created_at: "Created at"
   info_default_taxes: "Your country taxes will be created by default"
   label_invoices_min: "Minimum number of invoices"
@@ -340,5 +347,8 @@ en:
   label_received_with_num: "Received invoices ({{num}} new)"
   help_invoice_format: "Preferred invoice transport and format"
   logo_not_image: "Logo not saved, it wasn't an image"
+  contact_us_for_cif: "If this is really your taxcode, %{link}"
+  contact_us: "contact us"
+  add_own_certificate: "%{link} to sign invoices with your own certificate"
   zip_gem_required: "'zip' gem required to use this functionality"
   too_much_invoices: "Masses factures a descarregar (%{num} factures, màxim 10)"
