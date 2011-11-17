@@ -103,10 +103,7 @@ class IssuedInvoice < InvoiceDocument
   end
 
   def self.find_not_sent(project)
-    invoices = find :all, :include => [:client], :conditions => ["clients.project_id = ? and state = 'new'", project.id ], :order => "number ASC"
-    invoices.collect do |invoice|
-      invoice unless invoice.is_a? DraftInvoice or invoice.number.nil?
-    end.compact
+    project.issued_invoices.all :conditions => "state='new' and number is not null", :order => "number ASC"
   end
 
   def self.candidates_for_payment(payment)
@@ -116,6 +113,10 @@ class IssuedInvoice < InvoiceDocument
 
   def past_due?
     !state?(:closed) && due_date && due_date < Date.today
+  end
+
+  def self.past_due_total(project)
+    IssuedInvoice.sum :total_in_cents, :conditions => ["state <> 'closed' and due_date < ? and project_id = ?", Date.today, project.id]
   end
 
   def can_be_exported?
@@ -128,7 +129,7 @@ class IssuedInvoice < InvoiceDocument
   end
 
   def self.last_number(project)
-    i = IssuedInvoice.last(:order => "number", :include => [:client], :conditions => ["clients.project_id = ?", project.id])
+    i = IssuedInvoice.last(:order => "number", :conditions => ["project_id = ?", project.id])
     i.number if i
   end
 

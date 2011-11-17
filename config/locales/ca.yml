@@ -173,6 +173,8 @@ ca:
   default: "Per defecte"
   only_one_default_allowed_for: "%{tax_name}: Només es permet un impost per defecte"
   add_taxes_on_company: "Pots gestionar els impostos a \"La meva empresa\""
+  button_download_new_invoices: "Descarregar zip amb les noves"
+  label_download_new_invoices_info: "Genera un zip que conté totes les factures noves en format PDF"
 
   # Events
   events: "Log d'esdeveniments"
@@ -282,7 +284,7 @@ ca:
   # Settings
   field_taxcode: "CIF"
   field_website: "Lloc web"
-  export_channels_path: "Path de les carptes d'exportació"
+  export_channels_path: "Path de les carpetes d'exportació"
   field_company: "Empresa"
   logo: "Logo"
   trace_url: "URL del b2brouter"
@@ -352,3 +354,5 @@ ca:
   invoices_not_sent: "%{num} factures no s'han pogut enviar:"
   invoices_sent: "%{num} factures enviades"
   invoice_limit_reached: "S'ha arribat al límit d'enviament simultani (10 factures).<br />Pots tornar a enviar per processar-ne 10 més."
+  zip_gem_required: "Cal instal·lar la gem 'zip' per fer servir aquesta funcionalitat"
+  too_much_invoices: "Masses factures a descarregar (%{num} factures, màxim 10)"

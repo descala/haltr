@@ -176,6 +176,8 @@ es:
   default: "Por defecto"
   only_one_default_allowed_for: "%{tax_name}: Solo se acepta un impuesto por defecto"
   add_taxes_on_company: "Puedes gestionar los impuestos en \"Mi empresa\""
+  button_download_new_invoices: "Descargar zip de facturas nuevas"
+  label_download_new_invoices_info: "Genera un zip con todas las facturas nuevas en formato PDF"
 
   # Events
   events: "Log de eventos"
@@ -353,3 +355,5 @@ es:
   invoices_not_sent: "%{num} facturas no se han podido enviar:"
   invoices_sent: "%{num} facturas enviadas"
   invoice_limit_reached: "Se ha alcanzado el límite de envio simultáneo (10 facturas).<br />Puedes volver a enviar para procesar 10 facturas más."
+  zip_gem_required: "Se necesita instalar la gem 'zip' para usar esta funcionalidad"
+  too_much_invoices: "Masses factures a descarregar (%{num} factures, màxim 10)"

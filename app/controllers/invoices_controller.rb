@@ -8,8 +8,8 @@ class InvoicesController < ApplicationController
   helper :sort
   include SortHelper
 
-  before_filter :find_invoice, :except => [:index,:new,:create,:destroy_payment,:update_currency_select,:by_taxcode_and_num,:view,:logo,:download,:mail,:send_new_invoices]
-  before_filter :find_project, :only => [:index,:new,:create,:update_currency_select,:send_new_invoices]
+  before_filter :find_invoice, :except => [:index,:new,:create,:destroy_payment,:update_currency_select,:by_taxcode_and_num,:view,:logo,:download,:mail,:send_new_invoices, :download_new_invoices]
+  before_filter :find_project, :only => [:index,:new,:create,:update_currency_select,:send_new_invoices, :download_new_invoices]
   before_filter :find_payment, :only => [:destroy_payment]
   before_filter :find_hashid, :only => [:view,:download]
   before_filter :find_attachment, :only => [:logo]
@@ -18,7 +18,7 @@ class InvoicesController < ApplicationController
   skip_before_filter :check_if_login_required, :only => [:by_taxcode_and_num,:view,:logo,:download,:mail]
   # on development skip auth so we can use curl to debug
   if RAILS_ENV == "development"
-    skip_before_filter :check_if_login_required, :only => [:efactura30,:efactura31,:efactura32,:ubl21]
+    skip_before_filter :check_if_login_required, :only => [:by_taxcode_and_num,:view,:logo,:download,:mail,:efactura30,:efactura31,:efactura32,:ubl21]
     skip_before_filter :authorize, :only => [:efactura30,:efactura31,:efactura32,:ubl21]
   else
     before_filter :check_remote_ip, :only => [:by_taxcode_and_num,:mail]
@@ -29,9 +29,12 @@ class InvoicesController < ApplicationController
 
   def index
     sort_init 'created_at', 'desc'
-    sort_update %w(created_at state number date due_date clients.name import_in_cents)
+    sort_update %w(invoices.created_at state number date due_date clients.name import_in_cents)
 
     c = ARCondition.new(["invoices.project_id = ?",@project.id])
+
+    # remove Draft Invoices from list
+    c << ["type != ?","DraftInvoice"]
 
     unless params["state_all"] == "1"
       statelist=[]
@@ -253,10 +256,34 @@ class InvoicesController < ApplicationController
   end
 
   def send_invoice
-    create_and_queue_file
-    flash[:notice] = l(:notice_invoice_sent)
+    raise @invoice.export_errors.collect {|e| l(e)}.join(", ") unless @invoice.can_be_exported?
+    export_id = @invoice.client.invoice_format
+    path = ExportChannels.path export_id
+    @format = ExportChannels.format export_id
+    @company = @project.company
+    file_ext = @format == "pdf" ? "pdf" : "xml"
+    if @format == 'pdf'
+      invoice_file = create_pdf_file
+    else
+      invoice_file=Tempfile.new("invoice_#{@invoice.id}.#{file_ext}","tmp")
+      invoice_file.write(render_to_string(:template => "invoices/#{@format}.xml.erb", :layout => false))
+    end
+    invoice_file.close
+    i=2
+    destination="#{path}/" + "#{@invoice.client.hashid}_#{@invoice.id}.#{file_ext}".gsub(/\//,'')
+    while File.exists? destination
+      destination="#{path}/" + "#{@invoice.client.hashid}_#{i}_#{@invoice.id}.#{file_ext}".gsub(/\//,'')
+      i+=1
+    end
+    logger.info "Sending #{@format} to '#{destination}' for invoice id #{@invoice.id}."
+    FileUtils.mv(invoice_file.path,destination)
+    #TODO state restrictions
+    @invoice.queue || @invoice.requeue
+    flash[:notice] = "#{l(:notice_invoice_sent)}"
   rescue Exception => e
-    flash[:error] = "#{l(:error_invoice_not_sent)}: #{e.message} #{e.backtrace}"
+    # e.backtrace does not fit in session leading to
+    #   ActionController::Session::CookieStore::CookieOverflow
+    flash[:error] = "#{l(:error_invoice_not_sent)}: #{e.message}"
   ensure
     redirect_to :action => 'show', :id => @invoice
   end
@@ -284,6 +311,38 @@ class InvoicesController < ApplicationController
       flash[:error] = "#{l(:invoices_not_sent,:num=>errors.size)} <br /> #{errors.join('<br />')}"
     end
     flash[:info] = l(:invoices_sent,:num=>unsent.size - errors.size)
+    redirect_to :action => 'index', :id => @project
+  end
+
+  
+  def download_new_invoices
+    require 'zip/zip'
+    require 'zip/zipfilesystem'
+    @company = @project.company
+    invoices = IssuedInvoice.find_not_sent @project
+    if invoices.size > 10
+      flash[:error] = l(:too_much_invoices,:num=>invoices.size)
+      redirect_to :action=>'index', :id=>@project
+      return
+    end
+    zip_file = Tempfile.new "#{@project.identifier}_invoices.zip", 'tmp'
+    logger.info "Creating zip file '#{zip_file.path}' for invoice ids #{invoices.collect{|i|i.id}.join(',')}."
+    Zip::ZipOutputStream.open(zip_file.path) do |zos|
+      invoices.each do |invoice|
+        @invoice = invoice
+        @lines = @invoice.invoice_lines
+        @client = @invoice.client
+        pdf_file = create_pdf_file
+        zos.put_next_entry(@invoice.pdf_name)
+        zos.print IO.read(pdf_file.path)
+        pdf_file.close
+        logger.info "Added #{@invoice.pdf_name} from #{pdf_file.path}"
+      end
+    end
+    send_file zip_file.path, :type => "application/zip", :filename => "#{@project.identifier}-invoices.zip"
+    zip_file.close
+  rescue LoadError
+    flash[:error] = l(:zip_gem_required)
     redirect_to :action => 'index', :id => @project
   end
 

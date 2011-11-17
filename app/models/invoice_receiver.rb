@@ -31,9 +31,9 @@ class InvoiceReceiver < ActionMailer::Base
           from = email['from'].to_s.scan(/[\w.]+@[\w.]+/).first
           company_found=true
           invoices.each do |invoice|
-            if invoice.content_type == "application/xml"
+            if invoice.content_type =~ /xml/
               IncomingXmlInvoice.process_file(invoice,company,"email",from)
-            elsif invoice.content_type == "application/pdf"
+            elsif invoice.content_type =~ /pdf/
               IncomingPdfInvoice.process_file(invoice,company,"email",from)
             else
               InvoiceReceiver.log "Discarding #{invoice.original_filename} on incoming mail (#{invoice.content_type})"
@@ -58,14 +58,14 @@ class InvoiceReceiver < ActionMailer::Base
   def attached_invoices(email)
     invoices = []
     email.attachments.each do |attachment|
-      invoices << attachment if attachment.content_type == "application/xml" || attachment.content_type == "application/pdf"
+      invoices << attachment if attachment.content_type =~ /xml/ || attachment.content_type =~ /pdf/
     end
     email.parts.each do |part|
       attached_mail = nil
       attached_mail = TMail::Mail.parse(part.body) if email.attachment?(part) rescue nil
       next if attached_mail.nil? || attached_mail.attachments.nil?
       attached_mail.attachments.each do |attachment|
-        invoices << attachment if attachment.content_type == "application/xml" || attachment.content_type == "application/pdf"
+        invoices << attachment if attachment.content_type =~ /xml/ || attachment.content_type =~ /pdf/
       end
     end
     invoices
