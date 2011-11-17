@@ -313,6 +313,7 @@ ca:
   "2m1": "1er dia mes següent no l'altre"
   "1m15": Dia 15 mes següent
   "1m20": Dia 20 mes següent
+  "1m10": Dia 10 mes següent
   "custom": Personalitzat
 
   # Frequency
