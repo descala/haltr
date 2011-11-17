@@ -127,7 +127,7 @@
 <% end -%>
 <% @invoice.taxes_by_category.each do |tax_name,categories| -%>
 
-<% S'HA DE REPETIR UN TAXTOTAL PER CADA tax_name DE LA FACTURA. LA LLISTA S'HAURIA DE PODER CONVERTIR A CODIS I PER TANT AL DEFINIR ELS tax_name S'HAURIA DE PODER CLASSIFICAR AMB UNA LLISTA (IVA, INCOME TAX ,OTHER)%>
+    <%  /* TODO: S'HA DE REPETIR UN TAXTOTAL PER CADA tax_name DE LA FACTURA. LA LLISTA S'HAURIA DE PODER CONVERTIR A CODIS I PER TANT AL DEFINIR ELS tax_name S'HAURIA DE PODER CLASSIFICAR AMB UNA LLISTA (IVA, INCOME TAX ,OTHER) */ -%>
 
     <cac:TaxTotal>
       <cbc:TaxAmount currencyID="<%=h @client.currency%>"><%=h precision @invoice.tax_amount_for(tax_name).dollars %></cbc:TaxAmount>
@@ -140,9 +140,9 @@
         <cac:TaxCategory>
           <cbc:ID schemeID="UN/ECE 5305" schemeAgencyID="6"><%=category%></cbc:ID>
           <cbc:Percent><%=h precision (category == "E" ? 0 : tax.percent)%></cbc:Percent>
-		  <% SI ES E HAURIA DE PODER INCORPORAR EL MOTIU DE L'EXEMPCIî -%>
+		  <% /* TODO: SI ES E HAURIA DE PODER INCORPORAR EL MOTIU DE L'EXEMPCIÃ“ */ -%>
 		  <cbc:TaxExemptionReason><% MOTIU D'EXEMPCIO-%></cbc:TaxExemptionReason>
-		  <% FINAL-%>
+		  <% /* TODO: FINAL */ -%>
           <cac:TaxScheme>
             <cbc:ID schemeID="UN/ECE 5153" schemeAgencyID="6"><%=TaxList.ubl(tax.name)%></cbc:ID>
           </cac:TaxScheme>
@@ -156,7 +156,7 @@
     <cac:LegalMonetaryTotal>
       <cbc:LineExtensionAmount currencyID="<%=h @client.currency%>"><%=h precision @invoice.subtotal_without_discount.dollars%></cbc:LineExtensionAmount>
       <cbc:TaxExclusiveAmount currencyID="<%=h @client.currency%>"><%=h precision(@invoice.subtotal.dollars)%></cbc:TaxExclusiveAmount>
-	  <% ELS IMPOSTOS NEGATIUS, RETENCIONS, NO S'HAN DE RESTAR DE TaxInclusiveAmount, sino DE PayableAmount -%>
+	  <% /* TODO: ELS IMPOSTOS NEGATIUS, RETENCIONS, NO S'HAN DE RESTAR DE TaxInclusiveAmount, sino DE PayableAmount */ -%>
       <cbc:TaxInclusiveAmount currencyID="<%=h @client.currency%>"><%=h precision @invoice.total.dollars%></cbc:TaxInclusiveAmount>
 <% if @invoice.discount_percent > 0 -%>
           <cbc:AllowanceTotalAmount currencyID="<%=h @client.currency%>"><%=h precision(@invoice.discount.dollars,2)%></cbc:AllowanceTotalAmount>
@@ -173,7 +173,7 @@
         <cbc:LineExtensionAmount currencyID="<%=h @client.currency%>"><%=h precision(invoice_line.price*invoice_line.quantity,2)%></cbc:LineExtensionAmount>
         <cac:Item>
           <cbc:Name><%=h invoice_line.description%></cbc:Name>
-		  <% QUAN TENIM IMPOSTOS A NIVELL DE LêNIA -%>
+		  <% /* TODO: QUAN TENIM IMPOSTOS A NIVELL DE LINIA */ -%>
 		  <cac:ClassifiedTaxCategory>
 			<cbc:ID schemeID="UN/ECE 5305" schemeAgencyID="6"><% POSAR LA CATEGORIA D'IMPOST DE LA LINIA -%><cbc:ID>
 			<cac:TaxScheme>
