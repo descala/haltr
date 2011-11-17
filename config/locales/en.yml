@@ -302,6 +302,7 @@ en:
   "2m1": "1st day in two months"
   "1m15": 15th day next month
   "1m20": 20th day next month
+  "1m10": 10th day next month
   "custom": Custom
 
   # Frequency
