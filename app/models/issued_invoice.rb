@@ -103,6 +103,10 @@ class IssuedInvoice < InvoiceDocument
     "#{number}"
   end
 
+  def self.find_can_be_sent(project)
+    project.issued_invoices.all :conditions => ["state='new' and number is not null and date <= ?", Date.today], :order => "number ASC"
+  end
+
   def self.find_not_sent(project)
     project.issued_invoices.all :conditions => "state='new' and number is not null", :order => "number ASC"
   end

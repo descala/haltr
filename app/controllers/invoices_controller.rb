@@ -269,11 +269,10 @@ class InvoicesController < ApplicationController
   def send_new_invoices
     num = 0
     @errors=[]
-    IssuedInvoice.find_not_sent(@project).each do |inv|
-      if num > 10
+    IssuedInvoice.find_can_be_sent(@project).each do |inv|
+      if num >= 10
         flash[:error] = l(:invoice_limit_reached)
-        redirect_to :action => 'index', :id => @project
-        return
+        break
       end
       @invoice = inv
       @lines = @invoice.invoice_lines
