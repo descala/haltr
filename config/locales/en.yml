@@ -326,7 +326,7 @@ en:
   halt_configure_before_use: Please first configure company settings
   warning_can_not_generate_invoice: "Can not generate invoice form template {{value}}"
   notice_invoice_sent: "Invoice sent"
-  error_invoice_not_sent: "Could not send invoice"
+  error_invoice_not_sent: "Could not send invoice %{num}"
   notice_empty_n19: "No data to create N19"
   notice_n19_done:  "Nº19 for due date {{value}} maked as done"
   notice_uploaded_file_not_found: "File not found"
