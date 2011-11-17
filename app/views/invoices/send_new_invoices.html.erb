@@ -1,0 +1,12 @@
+<h2><%= l(:button_send_invoices)%></h2>
+<p><%= l(:invoices_sent,:num=>@num_sent)%></p>
+<% if @errors.any? -%>
+  <p><%= l(:invoices_not_sent,:num=>@errors.size) %></p>
+  <ul>
+    <%= @errors.map{|e| content_tag("li", e)} %>
+  </ul>
+<% end -%>
+<% html_title(l(:button_send_invoices)) -%>
+<% content_for :sidebar do %>
+  <%= render :partial => 'sidebar' %>
+<% end %>

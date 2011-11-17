@@ -349,5 +349,8 @@ en:
   contact_us_for_cif: "If this is really your taxcode, %{link}"
   contact_us: "contact us"
   add_own_certificate: "%{link} to sign invoices with your own certificate"
+  invoices_not_sent: "%{num} invoices failed to send:"
+  invoices_sent: "%{num} invoices sent"
+  invoice_limit_reached: "Simultaneous delivery limit reached (10 bills).<br />You can send again to process 10 more."
   zip_gem_required: "'zip' gem required to use this functionality"
   too_much_invoices: "Masses factures a descarregar (%{num} factures, màxim 10)"

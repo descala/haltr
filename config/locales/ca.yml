@@ -338,7 +338,7 @@ ca:
   halt_configure_before_use: "Si us plau, primer de tot configura les dades de l'empresa"
   warning_can_not_generate_invoice: "No s'ha pogut generar la factura de la plantilla {{value}}"
   notice_invoice_sent: "La factura s'ha enviat"
-  error_invoice_not_sent: "La factura no s'ha pogut enviar"
+  error_invoice_not_sent: "La factura %{num} no s'ha pogut enviar"
   notice_empty_n19: "No hi ha dades per generar un N19"
   notice_n19_done: "S'ha tancat el N19 de data {{value}}"
   notice_uploaded_file_not_found: "No s'ha trobat el fitxer"
@@ -346,7 +346,7 @@ ca:
   hide_full_form: "Mostrar menys camps"
   show_full_form: "Mostrar mes camps"
 
-  # DIBA
+# DIBA
   field_codi_centre_gestor: "Codi de centre gestor"
   field_num_contracte: "Número de contracte"
   field_num_expedient: "Número d'expedient"
@@ -360,5 +360,8 @@ ca:
   contact_us_for_cif: "Si aquest es realment el seu CIF, %{link}"
   contact_us: "contacti amb nosaltres"
   add_own_certificate: "Per signar les factures amb el seu propi certificat, %{link}"
+  invoices_not_sent: "%{num} factures no s'han pogut enviar:"
+  invoices_sent: "%{num} factures enviades"
+  invoice_limit_reached: "S'ha arribat al límit d'enviament simultani (10 factures).<br />Pots tornar a enviar per processar-ne 10 més."
   zip_gem_required: "Cal instal·lar la gem 'zip' per fer servir aquesta funcionalitat"
   too_much_invoices: "Masses factures a descarregar (%{num} factures, màxim 10)"

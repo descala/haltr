@@ -361,5 +361,8 @@ es:
   contact_us_for_cif: "Si este es realmente su CIF, %{link}"
   contact_us: "contacte con nosotros"
   add_own_certificate: "Para firmar las facturas con su propio certificado, %{link}"
+  invoices_not_sent: "%{num} facturas no se han podido enviar:"
+  invoices_sent: "%{num} facturas enviadas"
+  invoice_limit_reached: "Se ha alcanzado el límite de envio simultáneo (10 facturas).<br />Puedes volver a enviar para procesar 10 facturas más."
   zip_gem_required: "Se necesita instalar la gem 'zip' para usar esta funcionalidad"
   too_much_invoices: "Masses factures a descarregar (%{num} factures, màxim 10)"

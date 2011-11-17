@@ -17,7 +17,12 @@
   <% end -%>
   <% if authorize_for('tasks','automator') && num_not_sent > 0 -%>
   <li>
-  <%= link_to "#{l(:button_send_invoices)} (#{num_not_sent})",{ :controller => 'tasks', :action => 'automator', :id => @project}, :title => l(:label_automator_info), :class=>'icon-haltr-send'%>
+  <%= link_to "#{l(:button_send_invoices)} (#{num_not_sent}) - script",{ :controller => 'tasks', :action => 'automator', :id => @project}, :title => l(:label_automator_info), :class=>'icon-haltr-send'%>
+  </li>
+  <% end -%>
+  <% if num_not_sent > 0 -%>
+  <li>
+  <%= link_to "#{l(:button_send_invoices)} (#{num_not_sent})",{ :controller => 'invoices', :action => 'send_new_invoices', :id => @project}, :class=>'icon-haltr-send'%>
   </li>
   <% end -%>
   <% if num_not_sent > 0 -%>
