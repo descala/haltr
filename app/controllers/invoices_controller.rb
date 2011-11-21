@@ -28,7 +28,7 @@ class InvoicesController < ApplicationController
   before_filter :check_for_company, :except => [:by_taxcode_and_num,:view,:download,:mail]
 
   def index
-    sort_init 'created_at', 'desc'
+    sort_init 'invoices.created_at', 'desc'
     sort_update %w(invoices.created_at state number date due_date clients.name import_in_cents)
 
     c = ARCondition.new(["invoices.project_id = ?",@project.id])
