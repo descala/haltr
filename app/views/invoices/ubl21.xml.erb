@@ -125,15 +125,14 @@
           <cbc:Amount currencyID="<%=h @client.currency%>"><%=h precision(@invoice.expenses_total.dollars,2)%></cbc:Amount>
         </cac:AllowanceCharge>
 <% end -%>
-<% @invoice.taxes_by_category.each do |tax_name,categories| -%>
+<% @invoice.taxes_by_category.each do |name,categories| -%>
 
       <!--  TODO: S'HA DE REPETIR UN TAXTOTAL PER CADA tax_name DE LA FACTURA. LA LLISTA S'HAURIA DE PODER CONVERTIR A CODIS I PER TANT AL DEFINIR ELS tax_name S'HAURIA DE PODER CLASSIFICAR AMB UNA LLISTA (IVA, INCOME TAX ,OTHER)  -->
 
       <cac:TaxTotal>
-        <cbc:TaxAmount currencyID="<%=h @client.currency%>"><%=h precision @invoice.tax_amount_for(tax_name).dollars %></cbc:TaxAmount>
-        <% categories.each do |category,taxes| -%>
-          <% taxes.each do |tax| -%>
+        <cbc:TaxAmount currencyID="<%=h @client.currency%>"><%=h precision @invoice.tax_amount_for(name).dollars %></cbc:TaxAmount>
 
+        <% categories.each do |category,tax|; tax = tax[0] -%>
             <cac:TaxSubtotal>
               <cbc:TaxableAmount currencyID="<%=h @client.currency%>"><%=h precision((category == "E" ? @invoice.exempt_taxable_base(tax) : @invoice.taxable_base(tax)).dollars)%></cbc:TaxableAmount>
               <cbc:TaxAmount currencyID="<%=h @client.currency%>"><%=h precision (category == "E" ? 0 : @invoice.tax_amount(tax).dollars) %></cbc:TaxAmount>
@@ -148,7 +147,6 @@
                 </cac:TaxScheme>
               </cac:TaxCategory>
             </cac:TaxSubtotal>
-          <% end -%>
         <% end -%>
       </cac:TaxTotal>
 <% end -%>
