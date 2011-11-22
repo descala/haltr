@@ -320,7 +320,8 @@ class Invoice < ActiveRecord::Base
     return first_tax.percent
   end
 
-  # { "VAT" => { "S" => [tax1,tax2], "E" => [tax1] } }
+  # { "VAT" => { "S" => tax_example, "E" => tax_example } }
+  # tax_example should be passed to exempt_taxable_base, tax_amount, etc..
   def taxes_by_category
     cts = {}
     taxes_outputs.each do |tax|
@@ -329,20 +330,17 @@ class Invoice < ActiveRecord::Base
     taxes_outputs.sort.each_with_index do |t,i|
       unless cts[t.name].values.flatten.include?(t)
         if t.percent == 0
-          cts[t.name]["Z"] = [] unless cts[t.name]["Z"]
-          cts[t.name]["Z"] << t
+          cts[t.name]["Z"] = t
         elsif i == taxes_outputs.size - 1
-          cts[t.name]["S"] = [] unless cts[t.name]["S"]
-          cts[t.name]["S"] << t
+          cts[t.name]["S"] = t
         else
-          cts[t.name]["AA"] = [] unless cts[t.name]["AA"]
-          cts[t.name]["AA"] << t
+          cts[t.name]["AA"] = t
         end
       end
       invoice_lines.each do |l|
         # on type E, only add one tax per tax name, to add only one E definition on ubl
-        next if l.taxes.include?(t) or cts[t.name]["E"]
-        cts[t.name]["E"] = [t]
+        next if l.taxes.collect {|lt| lt.name }.include?(t.name) or cts[t.name]["E"]
+        cts[t.name]["E"] = t
       end
     end
     cts

@@ -125,30 +125,47 @@
           <cbc:Amount currencyID="<%=h @client.currency%>"><%=h precision(@invoice.expenses_total.dollars,2)%></cbc:Amount>
         </cac:AllowanceCharge>
 <% end -%>
-<% @invoice.taxes_by_category.each do |name,categories| -%>
+
+<% @invoice.taxes_by_category.each do |tax_name,categories| -%>
 
       <!--  TODO: S'HA DE REPETIR UN TAXTOTAL PER CADA tax_name DE LA FACTURA. LA LLISTA S'HAURIA DE PODER CONVERTIR A CODIS I PER TANT AL DEFINIR ELS tax_name S'HAURIA DE PODER CLASSIFICAR AMB UNA LLISTA (IVA, INCOME TAX ,OTHER)  -->
 
-      <cac:TaxTotal>
-        <cbc:TaxAmount currencyID="<%=h @client.currency%>"><%=h precision @invoice.tax_amount_for(name).dollars %></cbc:TaxAmount>
+    <cac:TaxTotal>
+      <cbc:TaxAmount currencyID="<%=h @client.currency%>"><%=h precision @invoice.tax_amount_for(tax_name).dollars %></cbc:TaxAmount>
+  <% categories.each do |category,tax_example| -%>
 
-        <% categories.each do |category,tax|; tax = tax[0] -%>
-            <cac:TaxSubtotal>
-              <cbc:TaxableAmount currencyID="<%=h @client.currency%>"><%=h precision((category == "E" ? @invoice.exempt_taxable_base(tax) : @invoice.taxable_base(tax)).dollars)%></cbc:TaxableAmount>
-              <cbc:TaxAmount currencyID="<%=h @client.currency%>"><%=h precision (category == "E" ? 0 : @invoice.tax_amount(tax).dollars) %></cbc:TaxAmount>
-              <cac:TaxCategory>
-                <cbc:ID schemeID="UN/ECE 5305" schemeAgencyID="6"><%=category%></cbc:ID>
-                <cbc:Percent><%=h precision (category == "E" ? 0 : tax.percent)%></cbc:Percent>
-                <!-- TODO: SI ES E HAURIA DE PODER INCORPORAR EL MOTIU DE L'EXEMPCIÓ -->
-                <cbc:TaxExemptionReason>MOTIU D'EXEMPCIO</cbc:TaxExemptionReason>
-                <!-- TODO: FINAL -->
-                <cac:TaxScheme>
-                  <cbc:ID schemeID="UN/ECE 5153" schemeAgencyID="6"><%=TaxList.ubl(tax.name)%></cbc:ID>
-                </cac:TaxScheme>
-              </cac:TaxCategory>
-            </cac:TaxSubtotal>
-        <% end -%>
-      </cac:TaxTotal>
+      <cac:TaxSubtotal>
+        <cbc:TaxableAmount currencyID="<%=h @client.currency%>"><%=h precision((category == "E" ? @invoice.exempt_taxable_base(tax_example) : @invoice.taxable_base(tax_example)).dollars)%></cbc:TaxableAmount>
+        <cbc:TaxAmount currencyID="<%=h @client.currency%>"><%=h precision (category == "E" ? 0 : @invoice.tax_amount(tax_example).dollars) %></cbc:TaxAmount>
+        <cac:TaxCategory>
+          <cbc:ID schemeID="UN/ECE 5305" schemeAgencyID="6"><%=category%></cbc:ID>
+          <cbc:Percent><%=h precision (category == "E" ? 0 : tax_example.percent)%></cbc:Percent>
+          <cac:TaxScheme>
+            <cbc:ID schemeID="UN/ECE 5153" schemeAgencyID="6"><%=TaxList.ubl(tax_example.name)%></cbc:ID>
+          </cac:TaxScheme>
+        </cac:TaxCategory>
+      </cac:TaxSubtotal>
+
+  <% end -%>
+    </cac:TaxTotal>
+
+<% end -%>
+
+<% @invoice.taxes_withheld.each do |tax| -%>
+    <cac:TaxTotal>
+      <cbc:TaxAmount currencyID="<%=h @client.currency%>"><%=h precision @invoice.tax_amount(tax).dollars %></cbc:TaxAmount>
+      <cac:TaxSubtotal>
+        <cbc:TaxableAmount currencyID="<%=h @client.currency%>"><%=h precision(@invoice.taxable_base(tax).dollars)%></cbc:TaxableAmount>
+        <cbc:TaxAmount currencyID="<%=h @client.currency%>"><%=h precision @invoice.tax_amount(tax).dollars %></cbc:TaxAmount>
+        <cac:TaxCategory>
+          <cbc:ID schemeID="UN/ECE 5305" schemeAgencyID="6">S</cbc:ID>
+          <cbc:Percent><%=h precision tax.percent * -1 %></cbc:Percent>
+          <cac:TaxScheme>
+            <cbc:ID><%=TaxList.ubl(tax.name)%></cbc:ID>
+          </cac:TaxScheme>
+        </cac:TaxCategory>
+      </cac:TaxSubtotal>
+    </cac:TaxTotal>
 <% end -%>
 
     <cac:LegalMonetaryTotal>
@@ -174,15 +191,15 @@
             <!-- TODO: QUAN TENIM IMPOSTOS A NIVELL DE LINIA -->
             <cac:ClassifiedTaxCategory>
               <cbc:ID schemeID="UN/ECE 5305" schemeAgencyID="6">POSAR LA CATEGORIA D'IMPOST DE LA LINIA</cbc:ID>
-                  <cac:TaxScheme>
-                    <cbc:ID schemeID="UN/ECE 5153" schemeAgencyID="6"><%= TaxList.ubl("") %></cbc:ID>
-                  </cac:TaxScheme>
-                </cac:ClassifiedTaxCategory>
-              </cac:Item>
-              <cac:Price>
-                <cbc:PriceAmount currencyID="<%=h @client.currency%>"><%=h precision(invoice_line.price,2)%></cbc:PriceAmount>
-              </cac:Price>
-            </cac:<%= @invoice.amend_of ? "CreditNoteLine" : "InvoiceLine" %>>
+              <cac:TaxScheme>
+                <cbc:ID schemeID="UN/ECE 5153" schemeAgencyID="6"><%= TaxList.ubl("") %></cbc:ID>
+              </cac:TaxScheme>
+            </cac:ClassifiedTaxCategory>
+          </cac:Item>
+          <cac:Price>
+            <cbc:PriceAmount currencyID="<%=h @client.currency%>"><%=h precision(invoice_line.price,2)%></cbc:PriceAmount>
+          </cac:Price>
+        </cac:<%= @invoice.amend_of ? "CreditNoteLine" : "InvoiceLine" %>>
 <% end -%>	
 </<%= @invoice.amend_of ? "CreditNote" : "Invoice" %>>
 <% lang = find_language(User.current.language); lang ||= Setting.default_language; set_language_if_valid(lang) -%>
