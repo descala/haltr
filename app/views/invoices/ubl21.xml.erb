@@ -125,11 +125,7 @@
           <cbc:Amount currencyID="<%=h @client.currency%>"><%=h precision(@invoice.expenses_total.dollars,2)%></cbc:Amount>
         </cac:AllowanceCharge>
 <% end -%>
-
 <% @invoice.taxes_by_category.each do |tax_name,categories| -%>
-
-      <!--  TODO: S'HA DE REPETIR UN TAXTOTAL PER CADA tax_name DE LA FACTURA. LA LLISTA S'HAURIA DE PODER CONVERTIR A CODIS I PER TANT AL DEFINIR ELS tax_name S'HAURIA DE PODER CLASSIFICAR AMB UNA LLISTA (IVA, INCOME TAX ,OTHER)  -->
-
     <cac:TaxTotal>
       <cbc:TaxAmount currencyID="<%=h @client.currency%>"><%=h precision @invoice.tax_amount_for(tax_name).dollars %></cbc:TaxAmount>
   <% categories.each do |category,tax_example| -%>
@@ -188,13 +184,17 @@
           <cbc:LineExtensionAmount currencyID="<%=h @client.currency%>"><%=h precision(invoice_line.price*invoice_line.quantity,2)%></cbc:LineExtensionAmount>
           <cac:Item>
             <cbc:Name><%=h invoice_line.description%></cbc:Name>
-            <!-- TODO: QUAN TENIM IMPOSTOS A NIVELL DE LINIA -->
+            <% invoice_line.taxes.each do |tax_line| -%>
+            <% if @invoice.tax_per_line?(tax_line.name) -%>
             <cac:ClassifiedTaxCategory>
-              <cbc:ID schemeID="UN/ECE 5305" schemeAgencyID="6">POSAR LA CATEGORIA D'IMPOST DE LA LINIA</cbc:ID>
+              <!-- Ha de ser la Categoria i no el percentatge -->
+              <cbc:ID schemeID="UN/ECE 5305" schemeAgencyID="6"><%=h tax_line.percent%></cbc:ID>
               <cac:TaxScheme>
-                <cbc:ID schemeID="UN/ECE 5153" schemeAgencyID="6"><%= TaxList.ubl("") %></cbc:ID>
+                <cbc:ID schemeID="UN/ECE 5153" schemeAgencyID="6"><%= TaxList.ubl(tax_line.name) %></cbc:ID>
               </cac:TaxScheme>
             </cac:ClassifiedTaxCategory>
+          <% end -%>
+          <% end -%>
           </cac:Item>
           <cac:Price>
             <cbc:PriceAmount currencyID="<%=h @client.currency%>"><%=h precision(invoice_line.price,2)%></cbc:PriceAmount>
