@@ -185,6 +185,7 @@
           <cac:Item>
             <cbc:Name><%=h invoice_line.description%></cbc:Name>
             <% invoice_line.taxes.each do |tax_line| -%>
+            <% if @invoice.tax_per_line?(tax_line.name) -%>
             <cac:ClassifiedTaxCategory>
               <!-- Ha de ser la Categoria i no el percentatge -->
               <cbc:ID schemeID="UN/ECE 5305" schemeAgencyID="6"><%=h tax_line.percent%></cbc:ID>
@@ -192,6 +193,7 @@
                 <cbc:ID schemeID="UN/ECE 5153" schemeAgencyID="6"><%= TaxList.ubl(tax_line.name) %></cbc:ID>
               </cac:TaxScheme>
             </cac:ClassifiedTaxCategory>
+          <% end -%>
           <% end -%>
           </cac:Item>
           <cac:Price>
