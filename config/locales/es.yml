@@ -77,7 +77,7 @@ es:
   field_extra_info: Notas
   field_terms: Vencimiento 
   field_discount_text: Texto del descuento
-  field_discount_percent: % de descuento
+  field_discount_percent: "% de descuento"
   field_frequency: Frecuencia
   field_draft: Borrador
   label_invoice_state: Estado

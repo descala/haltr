@@ -75,7 +75,7 @@ ca:
   field_extra_info: Notes
   field_terms: Venciment
   field_discount_text: Text del descompte
-  field_discount_percent: % de descompte
+  field_discount_percent: "% de descompte"
   field_frequency: Freqüència
   field_draft: Esborrany
   label_invoice_state: Estat

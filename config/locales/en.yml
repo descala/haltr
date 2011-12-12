@@ -64,7 +64,7 @@ en:
   field_extra_info: Notes
   field_terms: Term
   field_discount_text: Discount text
-  field_discount_percent: Discount %
+  field_discount_percent: "Discount %"
   field_frequency: Frequency
   field_draft: Draft
   label_invoice_state: Status

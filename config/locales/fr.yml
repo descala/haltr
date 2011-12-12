@@ -36,7 +36,7 @@ fr:
   denied_authorization: "Company <span style='font-weight: bold;'>%{company}</span> denied authorization to link its profile"
   linked_to_profile: "Lié à la compagnie <span style='font-weight: bold;'>%{company}</span>"
   link_requests: Requiert un lien à votre profil
-  pending_requests: %{i} requêtes en attente
+  pending_requests: "%{i} requêtes en attente"
   allow_link: Autoriser
   deny_link: Refuser
   unlink: Délier
@@ -63,7 +63,7 @@ fr:
   field_extra_info: Notes
   field_terms: Termes
   field_discount_text: Texte de réduction
-  field_discount_percent: % réduction
+  field_discount_percent: "% réduction"
   field_frequency: Fréquence
   field_draft: Brouillon
   label_invoice_state: Statut
