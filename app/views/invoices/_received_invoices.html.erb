@@ -23,6 +23,10 @@
   </tbody>
 </table>
 
-<% params[:tab] = 'received' -%>
+<% if @unread and @unread > 0 -%>
+  <% params[:tab] = 'received_with_new' -%>
+<% else -%>
+  <% params[:tab] = 'received' -%>
+<% end -%>
 <p class="pagination"><%= pagination_links_full @r_invoice_pages, @r_invoice_count, :page_param => :r_page %></p>
 
