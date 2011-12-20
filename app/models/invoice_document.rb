@@ -68,11 +68,15 @@ class InvoiceDocument < Invoice
   protected
 
   def update_status
-    update_imports unless self.is_a? ReceivedInvoice
-    if is_paid?
-      paid
-    else
-      unpaid
+    #TODO: received invoices need this?
+    # it was showing an error about invalid_transition
+    unless self.is_a? ReceivedInvoice
+      update_imports
+      if is_paid?
+        paid
+      else
+        unpaid
+      end
     end
     return true # always continue saving
   end
