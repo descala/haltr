@@ -71,7 +71,7 @@ class InvoiceDocument < Invoice
     update_imports unless self.is_a? ReceivedInvoice
     if is_paid?
       paid
-    elsif (state?(:closed) or state?(:paid))
+    elsif ((is_a?(IssuedInvoice) and state?(:closed)) or (is_a?(ReceivedInvoice) and state?(:paid)))
       unpaid
     end
     return true # always continue saving
