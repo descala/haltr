@@ -7,7 +7,6 @@ class InvoiceDocument < Invoice
   unloadable
 
   has_many :payments, :foreign_key => :invoice_id, :dependent => :destroy
-  before_save :update_status, :unless => Proc.new {|invoicedoc| invoicedoc.state_changed? }
 
   attr_accessor :legal_filename, :legal_content_type, :legal_invoice
 
@@ -63,18 +62,6 @@ class InvoiceDocument < Invoice
       paid_amount += payment.amount.cents
     end
     Money.new(paid_amount,currency)
-  end
-
-  protected
-
-  def update_status
-    update_imports unless self.is_a? ReceivedInvoice
-    if is_paid?
-      paid
-    elsif ((is_a?(IssuedInvoice) and state?(:closed)) or (is_a?(ReceivedInvoice) and state?(:paid)))
-      unpaid
-    end
-    return true # always continue saving
   end
 
 end

@@ -6,6 +6,7 @@ class ReceivedInvoice < InvoiceDocument
 
   attr_accessor :md5
   after_create :create_event
+  before_save :update_status, :unless => Proc.new {|invoicedoc| invoicedoc.state_changed? }
 
   state_machine :state, :initial => :validating_format do
     before_transition do |invoice,transition|
@@ -94,6 +95,15 @@ class ReceivedInvoice < InvoiceDocument
 
   def create_event
     Event.create(:name=>'validating_format',:invoice=>self,:md5=>md5)
+  end
+
+  def update_status
+    if is_paid?
+      paid if state?(:accepted)
+    else
+      unpaid if state?(:paid)
+    end
+    return true # always continue saving
   end
 
 end

@@ -15,6 +15,7 @@ class IssuedInvoice < InvoiceDocument
   before_save :update_imports
   after_create :create_event
   after_destroy :release_amended
+  before_save :update_status, :unless => Proc.new {|invoicedoc| invoicedoc.state_changed? }
 
   attr_accessor :export_errors
 
@@ -225,6 +226,18 @@ class IssuedInvoice < InvoiceDocument
       self.amend_of.amend_id = nil
       self.amend_of.save
     end
+  end
+
+  def update_status
+    update_imports
+    if is_paid?
+      if (state?(:sent) or state?(:accepted) or state?(:allegedly_paid))
+        paid
+      end
+    else
+      unpaid if state?(:closed)
+    end
+    return true # always continue saving
   end
 
 end
