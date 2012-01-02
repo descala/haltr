@@ -473,6 +473,8 @@ class InvoicesController < ApplicationController
 
   def create_pdf_file
     @is_pdf = true
+    curr_lang = I18n.locale
+    I18n.locale = @invoice.client.language rescue curr_lang
     pdf_file=Tempfile.new("invoice_#{@invoice.id}.pdf","tmp")
     xhtml_file=Tempfile.new("invoice_#{@invoice.id}.xhtml","tmp")
     xhtml_file.write(render_to_string(:action => "show", :layout => "invoice"))
@@ -481,6 +483,7 @@ class InvoicesController < ApplicationController
     cmd="java -classpath #{jarpath}/core-renderer.jar:#{jarpath}/iText-2.0.8.jar:#{jarpath}/minium.jar org.xhtmlrenderer.simple.PDFRenderer #{RAILS_ROOT}/#{xhtml_file.path} #{RAILS_ROOT}/#{pdf_file.path}"
     logger.info "create_pdf_file command = #{cmd}"
     discarded_output = `#{cmd} 2>&1`
+    I18n.locale = curr_lang
     $?.success? ? pdf_file : nil
   end
 
