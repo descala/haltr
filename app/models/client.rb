@@ -116,8 +116,8 @@ class Client < ActiveRecord::Base
 
   def set_hashid_value
     unless hashid
-      require "md5"
-      self.hashid=MD5.hexdigest(Time.now.to_f.to_s)[0...10]
+      require "digest/md5"
+      self.hashid=Digest::MD5.hexdigest(Time.now.to_f.to_s)[0...10]
     end
   end
 
