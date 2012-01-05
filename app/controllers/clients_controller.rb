@@ -93,7 +93,8 @@ class ClientsController < ApplicationController
   end
 
   def check_cif
-    @company = Company.find(:all, :conditions => ["taxcode = ? and (public='public' or public='semipublic')", params[:value]]).first
+    taxcode = params[:value].gsub(/\W/,'')
+    @company = Company.find(:all, :conditions => ["taxcode = ? and (public='public' or public='semipublic')", taxcode]).first
     @client = Client.find(params[:client]) unless params[:client].blank?
     render :partial => "cif_info"
   end
