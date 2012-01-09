@@ -19,6 +19,9 @@ class InvoiceDocument < Invoice
     self.events.collect {|e| e unless e.md5.blank? }.compact.sort.first.md5 rescue nil
   end
 
+  # retrieve invoice from external system
+  # to allow to download a modified invoice file
+  # (for example digitally signed file)
   def fetch_legal_by_http(md5=nil)
     md5 ||= self.initial_md5
     url = Setting.plugin_haltr["trace_url"]
