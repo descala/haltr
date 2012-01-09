@@ -36,7 +36,7 @@ INSTALL
 ::
 
   cd <Redmine root dir>
-  rake db:migrate_plugins RAILS_ENV='production'
+  rake db:migrate:plugins RAILS_ENV='production'
 
 * Clone iso_countries on Haltr's vendor/plugins folder
 
