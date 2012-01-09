@@ -356,3 +356,4 @@ ca:
   invoice_limit_reached: "S'ha arribat al límit d'enviament simultani (10 factures).<br />Pots tornar a enviar per processar-ne 10 més."
   zip_gem_required: "Cal instal·lar la gem 'zip' per fer servir aquesta funcionalitat"
   too_much_invoices: "Masses factures a descarregar (%{num} factures, màxim 10)"
+  field_send_invoices_by_mail: "Enviar factures a aquest email"

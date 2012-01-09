@@ -356,4 +356,5 @@ es:
   invoices_sent: "%{num} facturas enviadas"
   invoice_limit_reached: "Se ha alcanzado el límite de envio simultáneo (10 facturas).<br />Puedes volver a enviar para procesar 10 facturas más."
   zip_gem_required: "Se necesita instalar la gem 'zip' para usar esta funcionalidad"
-  too_much_invoices: "Masses factures a descarregar (%{num} factures, màxim 10)"
+  too_much_invoices: "Demasiadas facturas para descargar (%{num} facturas, máximo 10)"
+  field_send_invoices_by_mail: "Enviar facturas a este email"

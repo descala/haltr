@@ -341,4 +341,5 @@ fr:
   invoices_sent: "Envoyé factures %{num}"
   invoice_limit_reached: "Limite atteinte simultanée de livraison (10 factures).<br />Vous pouvez envoyer plus de 10 pour les traiter."
   zip_gem_required: "gem 'zip' requis pour utiliser cette fonctionnalité"
-  too_much_invoices: "Masses factures a descarregar (%{num} factures, màxim 10)"
+  too_much_invoices: "Trop de factures à télécharger (%{num} projets de loi, maximum 10)"
+  field_send_invoices_by_mail: "envoyer des factures à cet e-mail"

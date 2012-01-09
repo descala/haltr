@@ -36,6 +36,15 @@ class Client < ActiveRecord::Base
     self.language = "es" if self.language.blank?
   end
 
+  def emails
+    mails = []
+    mails << self.email unless self.email.blank?
+    people.each do |person|
+      mails << person.email unless person.email.blank?
+    end
+    mails.join(",")
+  end
+
   # Masks db value with default if db value is deprecated
   def invoice_format
     format = read_attribute(:invoice_format)
