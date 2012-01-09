@@ -190,6 +190,14 @@ class IssuedInvoice < InvoiceDocument
     end
   end
 
+  def sending_info
+    return export_errors.collect {|e| l(e)}.join(", ") if export_errors and export_errors.size > 0
+    if %w(ublinvoice_20 facturae_30 facturae_31 facturae_32 signed_pdf).include?(client.invoice_format)
+      return "recipients:\n#{client.emails.gsub(/,/,"\n")}"
+    end
+    ""
+  end
+
   protected
 
   def create_event

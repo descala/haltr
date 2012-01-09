@@ -5,9 +5,9 @@
   <li><%= change_state_link(@invoice) %></li>
   <li><%= link_to "#{l(:save_invoice)} PDF", {:action=>'pdf', :id=>@invoice}, :class=>'icon-haltr-save' %></li>
   <% if @invoice.can_be_exported? %>
-    <li><%= link_to "#{l(:label_send)} (#{l(@client.invoice_format)})", {:action=>'send_invoice', :id=>@invoice}, :class=>'icon-haltr-send' %></li>
+    <li><%= link_to "#{l(:label_send)} (#{l(@client.invoice_format)})", {:action=>'send_invoice', :id=>@invoice}, :class=>'icon-haltr-send', :title => @invoice.sending_info %></li>
   <% elsif @invoice.export_errors and @invoice.export_errors.size > 0 -%>
-    <li><%= link_to "#{l(:label_send)} (#{l(@client.invoice_format)})", "#", :class=>'icon-haltr-send disabled', :title => @invoice.export_errors.collect {|e| l(e)}.join(", ") %></li>
+    <li><%= link_to "#{l(:label_send)} (#{l(@client.invoice_format)})", "#", :class=>'icon-haltr-send disabled', :title => @invoice.sending_info %></li>
   <% end -%>
   <% if @invoice.state?(:sent) -%>
     <li><%= link_to l(:receive_payment), {:controller=>'payments', :action=>'new', :id=>@project, :invoice_id=>@invoice}, :class=>'icon-haltr-payment' %></li>
