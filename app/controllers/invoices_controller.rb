@@ -405,7 +405,7 @@ class InvoicesController < ApplicationController
       render_404
     else
       respond_to do |format|
-        format.html { render :text => invoice.client.email }
+        format.html { render :text => invoice.client.emails }
       end
     end
   end
