@@ -10,5 +10,5 @@
     <element etiqueta="Installment">Vencimiento</element>
     <element etiqueta="Notes">Notas</element>
     <element etiqueta="VAT">IVA</element>
-    <element etiqueta="VAT Nbr">CIF</element>
+    <element etiqueta="VAT Nbr">NIF</element>
 </diccionari>

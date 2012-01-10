@@ -11,7 +11,7 @@ module Estructura
 
     def initialize(doc,options={})
       super(doc)
-      @my_own_tax_id = options[:tax_id] # CIF del destinatari
+      @my_own_tax_id = options[:tax_id] # VAT ID del destinatari
     end
 
     def apply_rules
