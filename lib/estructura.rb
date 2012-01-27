@@ -1,3 +1,4 @@
+# encoding: utf-8
 $KCODE = 'u'
 require 'jcode' if RUBY_VERSION < '1.9'
 

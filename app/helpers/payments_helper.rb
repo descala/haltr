@@ -1,3 +1,4 @@
+# encoding: utf-8
 module PaymentsHelper
 
   def invoices_for_select(type=nil)
