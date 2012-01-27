@@ -39,7 +39,7 @@ ca:
   field_invoice_format: "Format i transport de factures preferit"
   field_currency: Moneda
   field_ponumber: Número de comanda
-  cif_belongs_to_company: "Aquest CIF correspon a l'empresa <span style='font-weight: bold;'>%{company}</span>."
+  cif_belongs_to_company: "Aquest NIF correspon a l'empresa <span style='font-weight: bold;'>%{company}</span>."
   link_to_profile_suggest: "Pots %{href} a aquest client"
   link_to_profile: "vincular el seu perfil públic"
   link_to_profile_ask: "demanar autorització per vincular el seu perfil públic"
@@ -282,7 +282,7 @@ ca:
   save_without_mail: "Desar sense enviar mail"
 
   # Settings
-  field_taxcode: "CIF"
+  field_taxcode: "NIF"
   field_website: "Lloc web"
   export_channels_path: "Path de les carpetes d'exportació"
   field_company: "Empresa"

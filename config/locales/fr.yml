@@ -28,7 +28,7 @@ fr:
   field_invoice_format: Mode de transimission et format préféré
   field_currency: Monnaie
   field_ponumber: Ordre d'achat
-  cif_belongs_to_company: "Ce CIF appartient à la compagnie <span style='font-weight: bold;'>%{company}</span>."
+  cif_belongs_to_company: "Ce TVA appartient à la compagnie <span style='font-weight: bold;'>%{company}</span>."
   link_to_profile_suggest: Vous pouvez %{href} à ce client
   link_to_profile: lier à son profil publique
   link_to_profile_ask: requiert authorisation pour lier à son profil publique

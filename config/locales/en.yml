@@ -28,7 +28,7 @@ en:
   field_invoice_format: Preferred invoice transport and format
   field_currency: Currency
   field_ponumber: Purchase Order
-  cif_belongs_to_company: "This CIF belongs to company <span style='font-weight: bold;'>%{company}</span>."
+  cif_belongs_to_company: "This VAT Id Number belongs to company <span style='font-weight: bold;'>%{company}</span>."
   link_to_profile_suggest: "You can %{href} to that client"
   link_to_profile: "link its public profile"
   link_to_profile_ask: "request authorization to link its public profile"
