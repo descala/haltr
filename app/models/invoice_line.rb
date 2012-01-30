@@ -40,7 +40,7 @@ class InvoiceLine < ActiveRecord::Base
   end
 
   def total
-    Money.new((price * quantity * 100).round.to_i, currency)
+    Money.new((price * quantity * Money::Currency.new(currency).subunit_to_unit).round.to_i, currency)
   end
 
   def taxable_base
