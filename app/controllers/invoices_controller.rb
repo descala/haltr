@@ -480,7 +480,7 @@ class InvoicesController < ApplicationController
     xhtml_file.write(render_to_string(:action => "show", :layout => "invoice"))
     xhtml_file.close
     jarpath = "#{File.dirname(__FILE__)}/../../vendor/xhtmlrenderer"
-    cmd="java -classpath #{jarpath}/core-renderer.jar:#{jarpath}/iText-2.0.8.jar:#{jarpath}/minium.jar org.xhtmlrenderer.simple.PDFRenderer #{RAILS_ROOT}/#{xhtml_file.path} #{RAILS_ROOT}/#{pdf_file.path}"
+    cmd="java -classpath #{jarpath}/core-renderer.jar:#{jarpath}/iText-2.0.8.jar:#{jarpath}/minium.jar org.xhtmlrenderer.simple.PDFRenderer #{xhtml_file.path} #{pdf_file.path}"
     logger.info "create_pdf_file command = #{cmd}"
     discarded_output = `#{cmd} 2>&1`
     I18n.locale = curr_lang
