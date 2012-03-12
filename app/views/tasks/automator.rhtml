@@ -4,9 +4,6 @@
 <% a=ActionController::Base.session %>
 export SESSION="<%= request.env['HTTP_COOKIE'] %>"
 
-################
-# Download pdf #
-################
 cat << EOF > factures_download.sh
 #!/bin/bash
 P="../factures-emeses"
@@ -15,10 +12,6 @@ curl -o \${P}/<%= invoice.pdf_name %> --cookie "\$SESSION" <%= url_for :controll
 <% end -%>
 EOF
 chmod +x factures_download.sh
-
-################
-# Send e-mail  #
-################
 
 cat << EOF > factures_enviar.sh
 #!/bin/bash
@@ -29,10 +22,6 @@ AS="/usr/bin/osascript factures_enviar.scpt"
 <% end -%>
 EOF
 chmod +x factures_enviar.sh
-
-################
-# Mark as sent #
-################
 
 cat << EOF > factures_marcar_enviades.sh
 #!/bin/bash
