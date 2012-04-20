@@ -343,3 +343,4 @@ fr:
   zip_gem_required: "gem 'zip' requis pour utiliser cette fonctionnalité"
   too_much_invoices: "Trop de factures à télécharger (%{num} projets de loi, maximum 10)"
   field_send_invoices_by_mail: "envoyer des factures à cet e-mail"
+  state_allegedly_paid: "Déclarés comme étant versés"

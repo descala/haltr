@@ -9,7 +9,7 @@
   <% elsif @invoice.export_errors and @invoice.export_errors.size > 0 -%>
     <li><%= link_to "#{l(:label_send)} (#{l(@client.invoice_format)})", "#", :class=>'icon-haltr-send disabled', :title => @invoice.sending_info %></li>
   <% end -%>
-  <% if @invoice.state?(:sent) -%>
+  <% if @invoice.state?(:sent) or @invoice.state?(:allegedly_paid) -%>
     <li><%= link_to l(:receive_payment), {:controller=>'payments', :action=>'new', :id=>@project, :invoice_id=>@invoice}, :class=>'icon-haltr-payment' %></li>
   <% end -%>
 

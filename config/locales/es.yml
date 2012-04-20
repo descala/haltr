@@ -358,3 +358,4 @@ es:
   zip_gem_required: "Se necesita instalar la gem 'zip' para usar esta funcionalidad"
   too_much_invoices: "Demasiadas facturas para descargar (%{num} facturas, máximo 10)"
   field_send_invoices_by_mail: "Enviar facturas a este email"
+  state_allegedly_paid: "Informada como pagada"
