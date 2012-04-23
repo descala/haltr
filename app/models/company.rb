@@ -10,7 +10,7 @@ class Company < ActiveRecord::Base
   validates_uniqueness_of :taxcode
   validates_numericality_of :bank_account, :allow_nil => true, :unless => Proc.new {|company| company.bank_account.blank?}
   validates_length_of :bank_account, :maximum => 20
-  validates_inclusion_of :currency, :in  => Money::Currency::TABLE.collect {|k,v| v[:iso_code] }
+  validates_inclusion_of :currency, :in  => Money::Currency.table.collect {|k,v| v[:iso_code] }
   validate :only_one_default_tax_per_name
   acts_as_attachable :view_permission => :free_use,
                      :delete_permission => :free_use

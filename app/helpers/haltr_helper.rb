@@ -64,7 +64,7 @@ module HaltrHelper
 
   def self.currency_options_for_select
     opts = []
-    Money::Currency::TABLE.each do |id,attributes|
+    Money::Currency.table.each do |id,attributes|
       if attributes[:priority] && attributes[:priority] < 105
         opts << ["#{id.to_s.upcase} - #{attributes[:name]}",id.to_s.upcase]
       end

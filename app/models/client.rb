@@ -15,7 +15,7 @@ class Client < ActiveRecord::Base
   validates_uniqueness_of :hashid
 
   validates_presence_of     :project_id, :name, :currency, :language, :invoice_format, :if => Proc.new {|c| c.company_id.blank? }
-  validates_inclusion_of    :currency, :in  => Money::Currency::TABLE.collect {|k,v| v[:iso_code] }, :if => Proc.new {|c| c.company_id.blank? }
+  validates_inclusion_of    :currency, :in  => Money::Currency.table.collect {|k,v| v[:iso_code] }, :if => Proc.new {|c| c.company_id.blank? }
   validates_numericality_of :bank_account, :unless => Proc.new { |c| c.bank_account.blank? }
   validates_length_of       :bank_account, :within => 16..40, :unless => Proc.new { |c| c.bank_account.blank? }
   validates_format_of       :email, :with => /\A([\w\.\-\+]+)@((?:[-a-z0-9]+\.)+[a-z]{2,})\z/i, :allow_nil => true, :allow_blank => true
