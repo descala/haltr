@@ -198,7 +198,6 @@ class IssuedInvoice < InvoiceDocument
     ""
   end
 
-  protected
 
   def create_event
     Event.create(:name=>'new',:invoice=>self,:user=>User.current)
@@ -228,6 +227,16 @@ class IssuedInvoice < InvoiceDocument
       false
     end
   end
+
+  def ubl_invoice_has_no_taxes_withheld
+    if self.taxes_withheld.any?
+      add_export_error(:ubl_invoice_has_taxes_withheld)
+      false
+    else
+      true
+    end
+  end
+  protected
 
   def release_amended
     if self.amend_of

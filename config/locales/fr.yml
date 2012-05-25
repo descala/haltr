@@ -344,3 +344,4 @@ fr:
   too_much_invoices: "Trop de factures à télécharger (%{num} projets de loi, maximum 10)"
   field_send_invoices_by_mail: "envoyer des factures à cet e-mail"
   state_allegedly_paid: "Déclarés comme étant versés"
+  ubl_invoice_has_taxes_withheld: "Impossible de générer une facture UBL avec impôts retenus"

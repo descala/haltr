@@ -6,7 +6,7 @@ class ExportChannels
   def self.available
     {
       'paper'         => { :format=>nil,          :channel=>nil} ,
-      'ublinvoice_20' => { :format=>'ubl21',      :channel=>'free_ubl', :validate => :client_has_email },
+      'ublinvoice_20' => { :format=>'ubl21',      :channel=>'free_ubl', :validate => [:client_has_email, :ubl_invoice_has_no_taxes_withheld] },
       'facturae_30'   => { :format=>'facturae30', :channel=>'free_xml', :validate => [:client_has_email, :invoice_has_taxes] },
       'facturae_31'   => { :format=>'facturae31', :channel=>'free_xml', :validate => [:client_has_email, :invoice_has_taxes] },
       'facturae_32'   => { :format=>'facturae32', :channel=>'free_xml', :validate => [:client_has_email, :invoice_has_taxes] },
