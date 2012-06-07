@@ -61,17 +61,24 @@ class TasksController < ApplicationController
     @date = Date.new(d.year,d.month,1)
     @invoices = {}
     @total    = {}
-    @tax      = {}
+    @taxes    = {}
+    @tax_names = {}
     IssuedInvoice.all(:include => [:client],
                       :conditions => ["clients.project_id = ? and date >= ? and amend_id is null", @project.id, @date],
                       :order => :number
     ).each do |i|
       @invoices[i.currency] ||= []
-      @total[i.currency]    ||= Money.new(0,i.currency)
-      @tax[i.currency]      ||= Money.new(0,i.currency)
       @invoices[i.currency] << i
-      @total[i.currency] += i.subtotal
-      @tax[i.currency]   += i.tax_amount
+      @total[i.currency]    ||= Money.new(0,i.currency)
+      @total[i.currency]     += i.subtotal
+      @tax_names[i.currency] ||= i.tax_names
+      @tax_names[i.currency] += i.tax_names
+      @tax_names[i.currency].uniq!
+      i.taxes_uniq.each do |tax|
+        @taxes[i.currency] ||= {}
+        @taxes[i.currency][tax.name]  ||= Money.new(0,i.currency)
+        @taxes[i.currency][tax.name]  += i.tax_amount(tax)
+      end
     end
   end
  

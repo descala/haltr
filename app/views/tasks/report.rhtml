@@ -14,7 +14,9 @@
       <th><%=l(:field_taxcode)%></th>
       <th><%=l(:field_firstname)%></th>
       <th><%=l(:field_amount)%></th>
-      <th><%=l(:label_tax_plural)%></th>
+      <% @tax_names[currency].sort.each do |tax_name| %>
+        <th><%= tax_name %></th>
+      <% end %>
       <th><%=l(:charge_bank_on_date)%></th>
       <th><%=l(:label_payment_plural)%></th>
     </tr>
@@ -26,7 +28,9 @@
         <td><%= i.client.taxcode %></td>
         <td><%= i.client.name %></td>
         <td style="text-align: right;"><%= money(i.subtotal) %></td>
-        <td style="text-align: right;"><%= money(i.tax_amount) %></td>
+        <% @tax_names[currency].sort.each do |tax_name| %>
+          <td style="text-align: right;"><%= i.tax_amount_for(tax_name).zero? ? '-' : money(i.tax_amount_for(tax_name)) %></td>
+        <% end %>
         <td style="text-align:center;"><%= i.due_date if i.debit? && i.client.bank_account %></td>
         <td style="text-align:center;"><%= i.payments.collect{|p|p.date}.join('<br/>') %></td>
       </tr>
@@ -35,7 +39,9 @@
     <tr>
       <td colspan="4"/>
         <th style="text-align: right;"><%= money(@total[currency]) %></th>
-        <th style="text-align: right;"><%= money(@tax[currency]) %></th>
+        <% @tax_names[currency].sort.each do |tax_name| %>
+          <th style="text-align: right;"><%= money(@taxes[currency][tax_name]) %></th>
+        <% end %>
       </td>
     </tr>
   </table>
