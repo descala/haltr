@@ -220,13 +220,9 @@ class IssuedInvoice < InvoiceDocument
   end
 
   # facturae 3.x needs taxes to be valid
+  # but now we always force a 0.00 tax in the template, so it will always have taxes
   def invoice_has_taxes
-    if self.taxes.any?
-      true
-    else
-      add_export_error(:invoice_has_no_taxes)
-      false
-    end
+    true
   end
 
   def ubl_invoice_has_no_taxes_withheld

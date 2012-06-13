@@ -117,6 +117,17 @@
                <TotalAmount><%=h precision @invoice.tax_amount(tax).dollars %></TotalAmount>
              </TaxAmount>
            </Tax>
+<% else -%>
+           <Tax>
+             <TaxTypeCode>01</TaxTypeCode>
+             <TaxRate>0.00</TaxRate>
+             <TaxableBase>
+               <TotalAmount><%=h precision(@invoice.subtotal(tax).dollars)%></TotalAmount>
+             </TaxableBase>
+             <TaxAmount>
+               <TotalAmount>0.00</TotalAmount>
+             </TaxAmount>
+           </Tax>
 <% end -%>
          </TaxesOutputs>
 <% end -%>
