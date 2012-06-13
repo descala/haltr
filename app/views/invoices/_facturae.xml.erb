@@ -104,8 +104,8 @@
             <TaxCurrencyCode><%=h @client.currency%></TaxCurrencyCode>
             <LanguageName><%=h @client.language%></LanguageName>
          </InvoiceIssueData>
-<% if @invoice.taxes_outputs.any? -%>
          <TaxesOutputs>
+<% if @invoice.taxes_outputs.any? -%>
 <% @invoice.taxes_outputs.each do |tax| -%>
            <Tax>
              <TaxTypeCode>01</TaxTypeCode>
@@ -117,12 +117,13 @@
                <TotalAmount><%=h precision @invoice.tax_amount(tax).dollars %></TotalAmount>
              </TaxAmount>
            </Tax>
+<% end -%>
 <% else -%>
            <Tax>
              <TaxTypeCode>01</TaxTypeCode>
              <TaxRate>0.00</TaxRate>
              <TaxableBase>
-               <TotalAmount><%=h precision(@invoice.subtotal(tax).dollars)%></TotalAmount>
+               <TotalAmount><%=h precision(@invoice.subtotal.dollars)%></TotalAmount>
              </TaxableBase>
              <TaxAmount>
                <TotalAmount>0.00</TotalAmount>
@@ -130,7 +131,6 @@
            </Tax>
 <% end -%>
          </TaxesOutputs>
-<% end -%>
 
 <% if @invoice.persontypecode == "F" and @invoice.taxes_withheld.any?-%>
          <TaxesWithheld>
