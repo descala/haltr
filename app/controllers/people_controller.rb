@@ -14,6 +14,8 @@ class PeopleController < ApplicationController
   include CompanyFilter
   before_filter :check_for_company
 
+  verify :method => :post, :only => [:create,:update], :redirect_to => :root_path
+
   def index
     sort_init 'last_name', 'asc'
     sort_update %w(first_name last_name email)

@@ -12,6 +12,8 @@ class CompaniesController < ApplicationController
   before_filter :authorize, :except => [:logo]
   skip_before_filter :check_if_login_required, :only => [:logo]
 
+  verify :method => :post, :only => [:update], :redirect_to => :root_path
+
   def index
     if @project.company.nil?
       @company = Company.new(:project=>@project, :name=>@project.name)

@@ -5,6 +5,8 @@ class EventsController < ApplicationController
   skip_before_filter :check_if_login_required, :only => [ :create ]
   before_filter :check_remote_ip
 
+  verify :method => :post, :only => [:create], :redirect_to => :root_path
+
   def create
     @event = Event.new(params[:event])
     respond_to do |format|

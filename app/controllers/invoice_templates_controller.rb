@@ -14,6 +14,8 @@ class InvoiceTemplatesController < ApplicationController
   before_filter :find_invoice, :only => [:new_from_invoice]
   before_filter :authorize
 
+  verify :method => :post, :only => [:create,:update], :redirect_to => :root_path
+
   include CompanyFilter
   before_filter :check_for_company
 
