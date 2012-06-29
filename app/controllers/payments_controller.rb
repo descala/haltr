@@ -15,7 +15,7 @@ class PaymentsController < ApplicationController
   include CompanyFilter
   before_filter :check_for_company
 
-  verify :method => :post, :only => [:create,:update], :redirect_to => :root_path
+  verify :method => [:post,:put], :only => [:create,:update], :redirect_to => :root_path
 
   def index
     sort_init 'payments.date', 'desc'

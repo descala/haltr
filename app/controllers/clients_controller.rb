@@ -14,7 +14,7 @@ class ClientsController < ApplicationController
   before_filter :set_iso_countries_language
   before_filter :authorize
 
-  verify :method => :post, :only => [:create,:update], :redirect_to => :root_path
+  verify :method => [:post,:put], :only => [:create,:update], :redirect_to => :root_path
 
   include CompanyFilter
   before_filter :check_for_company

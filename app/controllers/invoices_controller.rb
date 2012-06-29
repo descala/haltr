@@ -24,7 +24,7 @@ class InvoicesController < ApplicationController
     before_filter :check_remote_ip, :only => [:by_taxcode_and_num,:mail]
   end
 
-  verify :method => :post, :only => [:create,:update], :redirect_to => :root_path
+  verify :method => [:post,:put], :only => [:create,:update], :redirect_to => :root_path
 
   include CompanyFilter
   before_filter :check_for_company, :except => [:by_taxcode_and_num,:view,:download,:mail]
