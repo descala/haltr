@@ -209,6 +209,21 @@ class InvoicesController < ApplicationController
     render :text => "Template created"
   end
 
+  def duplicate_invoice
+    orig = InvoiceDocument.find(params[:id])
+    @invoice = IssuedInvoice.new orig.attributes
+    @invoice.number += "-dup"
+    orig.invoice_lines.each do |il|
+      l = InvoiceLine.new il.attributes
+      il.taxes.each do |tax|
+        l.taxes << Tax.new(:name=>tax.name,:percent=>tax.percent)
+      end
+      @invoice.invoice_lines << l
+    end
+    @client = @invoice.client
+    render :action => "new"
+  end
+
   def pdf
     pdf_file = create_pdf_file
     if pdf_file

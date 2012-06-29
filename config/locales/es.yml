@@ -84,6 +84,7 @@ es:
   field_state: Estado
   show_template: Ver plantilla
   generate_template_from_invoice: Generar nueva plantilla
+  duplicate_invoice: Duplicar esta factura
   generated_from_template: Generada de la plantilla
   receive_payment: Recibir pago
   make_payment: Efectuar pago

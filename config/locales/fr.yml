@@ -70,6 +70,7 @@ fr:
   field_state: Statut
   show_template: Montrer modèle
   generate_template_from_invoice: Générer nouveau modèle
+  duplicate_invoice: Dup facture
   generated_from_template: Généré depuis modèle
   receive_payment: Recevoir paiement
   make_payment: Faire paiement

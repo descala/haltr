@@ -22,7 +22,7 @@
   <% unless @invoice.amended? -%>
     <li><%= link_to l(:create_amend_invoice), {:controller => 'invoices', :action => 'amend_for_invoice', :id => @invoice}, :class => 'icon-haltr-template' %></li>
   <% end -%>
-
+    <li><%= link_to l(:duplicate_invoice), {:controller => 'invoices', :action => 'duplicate_invoice', :id => @invoice}, :class => 'icon-haltr-invoice' %></li>
 </ul>
 
 <%= render :partial => 'invoices/issued_invoice_list_other' %>

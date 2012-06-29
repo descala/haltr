@@ -71,6 +71,7 @@ en:
   field_state: Status
   show_template: Show template
   generate_template_from_invoice: Generate new template
+  duplicate_invoice: Duplicate invoce
   generated_from_template: Generated from template
   receive_payment: Receive payment
   make_payment: Make payment
