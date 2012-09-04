@@ -361,3 +361,5 @@ es:
   field_send_invoices_by_mail: "Enviar facturas a este email"
   state_allegedly_paid: "Informada como pagada"
   ubl_invoice_has_taxes_withheld: "No se puede generar una factura UBL con impuestos retenidos"
+
+  label_update_taxes: "Actualiza los impuestos de las plantillas"

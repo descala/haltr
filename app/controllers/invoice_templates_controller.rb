@@ -156,18 +156,23 @@ class InvoiceTemplatesController < ApplicationController
     from_percent = params[:from_percent].to_i
     @used_taxes = []
     @project.invoice_templates.each do |template|
+      template_changed = false
       template.invoice_lines.each do |line|
         line.taxes.each do |tax|
           if tax.name == from_name and tax.percent == from_percent
             tax.name = params[:to_name]
             tax.percent = params[:to_percent].to_i
-            num_changed = num_changed + 1 if tax.save
+            if tax.save
+              num_changed = num_changed + 1
+              template_changed = true
+            end
           end
           @used_taxes << tax unless @used_taxes.include? tax
         end
       end
+      template.save if template_changed
     end
-    flash.now[:notice] = "Updated #{num_changed} template lines"
+    flash.now[:notice] = "Updated #{num_changed} template lines" if from_name and from_percent
   end
 
   private

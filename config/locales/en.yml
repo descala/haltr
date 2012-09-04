@@ -349,3 +349,6 @@ en:
   field_send_invoices_by_mail: "Send invoices to this email"
   state_allegedly_paid: "Reported as paid"
   ubl_invoice_has_taxes_withheld: "Can't generate an UBL invoice with taxes withheld"
+
+  label_update_taxes: "Update the taxes of templates"
+
