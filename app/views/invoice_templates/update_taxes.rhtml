@@ -1,0 +1,45 @@
+<h2><%=l(:label_update_taxes)%></h2>
+
+
+<% form_tag(url_for(:action => 'update_taxes', :id => @project ) ) do |f| %>
+  <table>
+    <tr>
+      <td><%=l(:field_first_name)%></td>
+      <td>
+        <%= text_field_tag 'from_name', 'IVA' -%>
+      </td>
+      <td>
+        =&gt; <%= text_field_tag 'to_name', 'IVA' -%>
+      </td>
+    </tr>
+    <tr>
+      <td>%</td>
+      <td>
+        <%= text_field_tag 'from_percent', '18' -%>
+      </td>
+      <td>
+        =&gt; <%= text_field_tag 'to_percent', '21' -%>
+      </td>
+      <td>
+        <%= submit_tag l(:button_submit) %>
+      </td>
+    </tr>
+  </table>
+<% end %>
+
+<p>Used taxes:</p>
+
+<ul>
+  <% @used_taxes.each do |tax| %>
+    <li>
+    <%= tax.name %>
+    <%= tax.percent %> %
+    </li>
+  <% end %>
+</ul>
+
+<% html_title(l(:label_update_taxes)) -%>
+
+<% content_for :sidebar do %>
+  <%= render :partial => 'invoices/sidebar' %>
+<% end %>

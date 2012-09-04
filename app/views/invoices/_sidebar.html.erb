@@ -33,5 +33,7 @@
   <li>
   <%= link_to "#{l(:label_invoice_report)} #{l('datetime.distance_in_words.x_months',3)}", {:controller => 'tasks',:action => 'report', :id => @project, :months_ago => 3}, :class=>'icon-haltr-report' %>
   </li>
-
+  <% if params[:controller] == "invoice_templates" -%>
+    <li><%= link_to l(:label_update_taxes), {:controller => 'invoice_templates', :action => 'update_taxes', :id => @project}, :class=>'icon-haltr-tasks' %></li>
+  <% end %>
 </ul>

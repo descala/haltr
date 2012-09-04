@@ -37,7 +37,7 @@ Redmine::Plugin.register :haltr do
                       :send_invoice, :log, :legal, :update_currency_select, :amend_for_invoice, :download_new_invoices, :send_new_invoices,
                       :duplicate_invoice],
         :invoice_templates => [:index, :new, :edit, :create, :update, :destroy, :show, :new_from_invoice,
-                               :invoices, :create_invoices],
+                               :invoices, :create_invoices, :update_taxes],
         :tasks    => [:index, :n19, :n19_done, :report, :import_aeb43],
         :payments => [:index, :new, :edit, :create, :update, :destroy ],
         :companies => [:index,:edit,:update]},
