@@ -124,42 +124,28 @@
 
 <% @invoice.taxes_by_category.each do |tax_name,categories| -%>
 
-    <cac:TaxTotal>
-      <cbc:TaxAmount currencyID="<%=h @client.currency%>"><%=h precision @invoice.tax_amount_for(tax_name).dollars %></cbc:TaxAmount>
-  <% categories.each do |category,tax_example| -%>
-
-      <cac:TaxSubtotal>
-        <cbc:TaxableAmount currencyID="<%=h @client.currency%>"><%=h precision((category == "E" ? @invoice.exempt_taxable_base(tax_example) : @invoice.taxable_base(tax_example)).dollars)%></cbc:TaxableAmount>
-        <cbc:TaxAmount currencyID="<%=h @client.currency%>"><%=h precision (category == "E" ? 0 : @invoice.tax_amount(tax_example).dollars) %></cbc:TaxAmount>
-        <cac:TaxCategory>
-          <cbc:ID schemeID="UN/ECE 5305" schemeAgencyID="6"><%=category%></cbc:ID>
-          <cbc:Percent><%=h precision (category == "E" ? 0 : tax_example.percent)%></cbc:Percent>
-          <cac:TaxScheme>
-            <cbc:ID schemeID="UN/ECE 5153" schemeAgencyID="6"><%=TaxList.ubl(tax_example.name)%></cbc:ID>
-          </cac:TaxScheme>
-        </cac:TaxCategory>
-      </cac:TaxSubtotal>
-
-  <% end -%>
-    </cac:TaxTotal>
+      <cac:TaxTotal>
+        <cbc:TaxAmount currencyID="<%=h @client.currency%>"><%=h precision @invoice.tax_amount_for(tax_name).dollars %></cbc:TaxAmount>
 
         <% categories.each do |category,tax| -%>
-            <cac:TaxSubtotal>
-              <cbc:TaxableAmount currencyID="<%=h @client.currency%>"><%=h precision((category == "E" ? @invoice.exempt_taxable_base(tax) : @invoice.taxable_base(tax)).dollars)%></cbc:TaxableAmount>
-              <cbc:TaxAmount currencyID="<%=h @client.currency%>"><%=h precision (category == "E" ? 0 : @invoice.tax_amount(tax).dollars) %></cbc:TaxAmount>
-              <cac:TaxCategory>
-                <cbc:ID schemeID="UN/ECE 5305" schemeAgencyID="6"><%=category%></cbc:ID>
-                <cbc:Percent><%=h precision (category == "E" ? 0 : tax.percent)%></cbc:Percent>
-                <!-- TODO: SI ES E HAURIA DE PODER INCORPORAR EL MOTIU DE L'EXEMPCIÓ -->
-                <cbc:TaxExemptionReason>MOTIU D'EXEMPCIO</cbc:TaxExemptionReason>
-                <!-- TODO: FINAL -->
-                <cac:TaxScheme>
-                  <cbc:ID schemeID="UN/ECE 5153" schemeAgencyID="6"><%=TaxList.ubl(tax.name)%></cbc:ID>
-                </cac:TaxScheme>
-              </cac:TaxCategory>
-            </cac:TaxSubtotal>
+          <cac:TaxSubtotal>
+            <cbc:TaxableAmount currencyID="<%=h @client.currency%>"><%=h precision((category == "E" ? @invoice.exempt_taxable_base(tax) : @invoice.taxable_base(tax)).dollars)%></cbc:TaxableAmount>
+            <cbc:TaxAmount currencyID="<%=h @client.currency%>"><%=h precision (category == "E" ? 0 : @invoice.tax_amount(tax).dollars) %></cbc:TaxAmount>
+            <cac:TaxCategory>
+              <cbc:ID schemeID="UN/ECE 5305" schemeAgencyID="6"><%=category%></cbc:ID>
+              <cbc:Percent><%=h precision (category == "E" ? 0 : tax.percent)%></cbc:Percent>
+              <!-- TODO: SI ES E HAURIA DE PODER INCORPORAR EL MOTIU DE L'EXEMPCIÓ -->
+              <cbc:TaxExemptionReason>MOTIU D'EXEMPCIO</cbc:TaxExemptionReason>
+              <!-- TODO: FINAL -->
+              <cac:TaxScheme>
+                <cbc:ID schemeID="UN/ECE 5153" schemeAgencyID="6"><%=TaxList.ubl(tax.name)%></cbc:ID>
+              </cac:TaxScheme>
+            </cac:TaxCategory>
+          </cac:TaxSubtotal>
         <% end -%>
+
       </cac:TaxTotal>
+
 <% end -%>
 
 <% @invoice.taxes_withheld.each do |tax| -%>
