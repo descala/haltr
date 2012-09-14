@@ -34,7 +34,7 @@
           <cbc:Name><%=h @company.name%></cbc:Name>
         </cac:PartyName>
         <cac:PostalAddress>
-          <%= render :partial => "address.ubl.xml", :locals => {:entity => @company} %>
+          <%= render :partial => "ubl_address.xml", :locals => {:entity => @company} %>
         </cac:PostalAddress>
         <cac:PartyTaxScheme>
           <cbc:CompanyID><%=h @company.taxcode%></cbc:CompanyID>
@@ -42,12 +42,10 @@
             <cbc:ID>VAT</cbc:ID>
           </cac:TaxScheme>
         </cac:PartyTaxScheme>
+        <%= render :partial => "ubl_party_legal_entity.xml", :locals => {:entity => @company} %>
         <cac:Contact>
           <cbc:ElectronicMail><%=h @company.email%></cbc:ElectronicMail>
         </cac:Contact>
-        <cac:PartyLegalEntity>
-          <cbc:CompanyID><%=h @company.company_identifier%></cbc:CompanyID>
-        </cac:PartyLegalEntity>
       </cac:Party>
     </cac:AccountingSupplierParty>
     <cac:AccountingCustomerParty>
@@ -56,7 +54,7 @@
           <cbc:Name><%=h @client.name%></cbc:Name>
         </cac:PartyName>
         <cac:PostalAddress>
-          <%= render :partial => "address.ubl.xml", :locals => {:entity => @client} %>
+          <%= render :partial => "ubl_address.xml", :locals => {:entity => @client} %>
         </cac:PostalAddress>
         <cac:PartyTaxScheme>
           <cbc:CompanyID><%=h @client.taxcode%></cbc:CompanyID>
@@ -67,9 +65,7 @@
         <cac:Contact>
           <cbc:ElectronicMail><%=h @client.email%></cbc:ElectronicMail>
         </cac:Contact>
-        <cac:PartyLegalEntity>
-          <cbc:CompanyID><%=h @client.company_identifier%></cbc:CompanyID>
-        </cac:PartyLegalEntity>
+        <%= render :partial => "ubl_party_legal_entity.xml", :locals => {:entity => @client} %>
       </cac:Party>
     </cac:AccountingCustomerParty>
 <% unless @invoice.amend_of -%>
