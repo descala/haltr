@@ -35,6 +35,7 @@
     <p><%= f.text_field :city, :readonly => @client.linked? %></p>
     <p><%= f.text_field :province, :readonly => @client.linked? %></p>
     <p><%= f.text_field :postalcode, :readonly => @client.linked? %></p>
+    <p><%= f.text_field :company_identifier %></p>
     <% if @client.linked? -%>
       <p><%= label_tag I18n.t :field_country %>
       <%= text_field_tag :country, @client.country_name, :readonly => true %></p>

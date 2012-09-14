@@ -11,6 +11,7 @@
   <p><%= f.text_field :province %></p>
   <p><%= f.text_field :city %></p>
   <p><%= f.text_field :address %></p>
+  <p><%= f.text_field :company_identifier %></p>
   <p><%= f.text_field :website %></p>
   <% if @company.invoice_format.nil? or ExportChannels.for_select(@project).collect {|v| v.last }.include? @company.invoice_format -%>
     <p><%= f.select :invoice_format, ExportChannels.for_select(@project) %><%= help :help_invoice_format %></p>

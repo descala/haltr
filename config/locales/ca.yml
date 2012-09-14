@@ -362,3 +362,4 @@ ca:
   ubl_invoice_has_taxes_withheld: "No es pot generar una factura UBL amb impostos retinguts"
 
   label_update_taxes: "Actualitzar els impostos de les plantilles"
+  field_company_identifier: "ID d'empresa"

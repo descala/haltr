@@ -346,3 +346,6 @@ fr:
   field_send_invoices_by_mail: "envoyer des factures à cet e-mail"
   state_allegedly_paid: "Déclarés comme étant versés"
   ubl_invoice_has_taxes_withheld: "Impossible de générer une facture UBL avec impôts retenus"
+
+  label_update_taxes: "Update the taxes of templates"
+  field_company_identifier: "Organization ID"

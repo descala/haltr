@@ -363,3 +363,4 @@ es:
   ubl_invoice_has_taxes_withheld: "No se puede generar una factura UBL con impuestos retenidos"
 
   label_update_taxes: "Actualiza los impuestos de las plantillas"
+  field_company_identifier: "ID de empresa"
