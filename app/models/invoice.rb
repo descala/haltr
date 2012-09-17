@@ -111,32 +111,24 @@ class Invoice < ActiveRecord::Base
   end
 
   def payment_method_string
-    if international?
-      if debit?
-        iban = client.iban || ""
-        bic  = client.bic || ""
-        "#{l(:debit_str)} (#{bic}) #{iban[0..3]} #{iban[4..7]} #{iban[8..11]} **** **** #{iban[20..23]}"
-      elsif transfer?
-        iban = company.iban || ""
-        bic  = company.bic || ""
-        "#{l(:transfer_str)} (#{bic}) #{iban[0..3]} #{iban[4..7]} #{iban[8..11]} #{iban[12..15]} #{iban[16..19]} #{iban[20..23]}"
-      elsif special?
-        payment_method_text
-      else
-        l(:cash_str)
-      end
+    if debit? and client.use_iban?
+      iban = client.iban || ""
+      bic  = client.bic || ""
+      "#{l(:debit_str)} BIC #{bic} IBAN #{iban[0..3]} #{iban[4..7]} #{iban[8..11]} **** **** #{iban[20..23]}"
+    elsif transfer? and company.use_iban?
+      iban = company.iban || ""
+      bic  = company.bic || ""
+      "#{l(:transfer_str)} BIC #{bic} IBAN #{iban[0..3]} #{iban[4..7]} #{iban[8..11]} #{iban[12..15]} #{iban[16..19]} #{iban[20..23]}"
+    elsif debit?
+      ba = client.bank_account || ""
+      "#{l(:debit_str)} #{ba[0..3]} #{ba[4..7]} ** ******#{ba[16..19]}"
+    elsif transfer?
+      ba = company.bank_account ||= ""
+      "#{l(:transfer_str)} #{ba[0..3]} #{ba[4..7]} #{ba[8..9]} #{ba[10..19]}"
+    elsif special?
+      payment_method_text
     else
-      if debit?
-        ba = client.bank_account || ""
-        "#{l(:debit_str)} #{ba[0..3]} #{ba[4..7]} ** ******#{ba[16..19]}"
-      elsif transfer?
-        ba = company.bank_account ||= ""
-        "#{l(:transfer_str)} #{ba[0..3]} #{ba[4..7]} #{ba[8..9]} #{ba[10..19]}"
-      elsif special?
-        payment_method_text
-      else
-        l(:cash_str)
-      end
+      l(:cash_str)
     end
   end
 
@@ -187,12 +179,6 @@ class Invoice < ActiveRecord::Base
       I18n.default_locale
     end
   end 
-
-  def international?
-    # use Client.find to reload client info, sometimnes changed with ajax
-    c = Client.find client_id
-    company.country != c.country
-  end
 
   def amended?
     false # Only IssuedInvoices can be an amend
@@ -395,16 +381,11 @@ class Invoice < ActiveRecord::Base
   end
 
   def payment_method_requirements
-    if debit? and !international?
+    if debit?
       c = Client.find client_id
-      errors.add(:base, ("#{l(:field_payment_method)} (#{l(:debit)}) #{l(:requires_client_bank_account)}")) if c.bank_account.blank?
-    elsif debit? and international?
-      c = Client.find client_id
-      errors.add(:base, ("#{l(:field_payment_method)} (#{l(:debit)}) #{l(:requires_client_iban_bic)}")) if c.iban.blank? or c.bic.blank?
-    elsif transfer? and !international?
-      errors.add(:base, ("#{l(:field_payment_method)} (#{l(:transfer)}) #{l(:requires_company_bank_account)}")) if company.bank_account.blank?
-    elsif transfer? and international?
-      errors.add(:base, ("#{l(:field_payment_method)} (#{l(:transfer)}) #{l(:requires_company_iban_bic)}")) if company.iban.blank? or company.bic.blank?
+      errors.add(:base, ("#{l(:field_payment_method)} (#{l(:debit)}) #{l(:requires_client_bank_account)}")) if c.bank_account.blank? and !c.use_iban?
+    elsif transfer?
+      errors.add(:base, ("#{l(:field_payment_method)} (#{l(:transfer)}) #{l(:requires_company_bank_account)}")) if company.bank_account.blank? and !company.use_iban?
     end
   end
 

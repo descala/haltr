@@ -72,7 +72,7 @@
     <cac:PaymentMeans>
       <cbc:PaymentMeansCode><%=h @invoice.payment_method_code(:ubl) %></cbc:PaymentMeansCode>
       <cbc:PaymentDueDate><%=h @invoice.due_date%></cbc:PaymentDueDate>
-<% if @invoice.debit? and @invoice.international? -%>
+<% if @invoice.debit? and @client.use_iban? -%>
           <cbc:PaymentChannelCode>IBAN</cbc:PaymentChannelCode>
           <cac:PayerFinancialAccount>
             <cbc:ID><%=h @client.iban%></cbc:ID>
@@ -86,7 +86,7 @@
           <cac:PayerFinancialAccount>
             <cbc:ID><%=h @client.bank_account%></cbc:ID>
           </cac:PayerFinancialAccount>
-<% elsif @invoice.transfer? and @invoice.international? -%>
+<% elsif @invoice.transfer? and @company.use_iban? -%>
           <cbc:PaymentChannelCode>IBAN</cbc:PaymentChannelCode>
           <cac:PayeeFinancialAccount>
             <cbc:ID><%=h @company.iban%></cbc:ID>

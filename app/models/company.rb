@@ -92,6 +92,11 @@ class Company < ActiveRecord::Base
     end
   end
 
+  # use iban and bic if they are pressent
+  def use_iban?
+    !(self.iban.nil? or self.bic.nil? or self.iban.blank? or self.bic.blank?)
+  end
+
   private
 
   def update_linked_clients
