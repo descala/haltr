@@ -55,7 +55,7 @@
       <p><%= f.text_field :language, :value => l(:general_lang_name,:locale => @client.language), :readonly=>true %></p>
       <p><%= f.text_field :invoice_format, :value => l(@client.invoice_format), :readonly=>true %></p>
     <% else -%>
-      <p><%= f.select :language, %w(ca en es fr).collect {|l| [I18n.t(:general_lang_name,:locale=>l),l]}, :readonly => @client.linked? %></p>
+      <p><%= f.select :language, %w(ca en es fr sv).collect {|l| [I18n.t(:general_lang_name,:locale=>l),l]}, :readonly => @client.linked? %></p>
       <p><%= f.select :invoice_format, ExportChannels.for_select(@project) %></p>
       <%
         disabled = []
