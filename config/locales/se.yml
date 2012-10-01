@@ -1,0 +1,357 @@
+﻿se:
+
+  number:
+    # Used in number_to_tax_percent()
+    tax:
+      format:
+        # Var är procentsatsen? %n är siffran, %p är "%" tecknet
+        format: "%t %n%p"
+        separator: ","
+        delimiter: "."
+        precision: 2
+        significant: false
+        tax_name: "VAT"
+
+  # community
+  label_company: Företag
+  label_my_company: Mitt företag
+  label_companies: Företag
+  label_company_new: Nytt Företag
+  field_address: Adress
+  field_address2: Adress
+  field_city: Ort
+  field_province: Landskap
+  field_postalcode: Postnummer
+  field_country: Land
+  field_bank_account: Bankkonto
+  button_people: Personer
+  field_invoice_format: Valt fakturaformat och transportteknik
+  field_currency: Valuta
+  field_ponumber: Order
+  cif_belongs_to_company: "Detta VAT-nummer hör till följande företag: <span style='font-weight: bold;'>%{company}</span>."
+  link_to_profile_suggest: "Du kan %{href} till kunden"
+  link_to_profile: "Länk till den publika profilen"
+  link_to_profile_ask: "begär åtkomst till att länka till den publika profilen"
+  pending_authorization: "Väntar på acceptans från organisationen <span style='font-weight: bold;'>%{company}</span>"
+  denied_authorization: "Organisation <span style='font-weight: bold;'>%{company}</span> accepterade inte förfrågan om att länka till profilen"
+  linked_to_profile: "Länka till organisation <span style='font-weight: bold;'>%{company}</span>"
+  link_requests: "Önskar länka till din profil"
+  pending_requests: "%{i} stycken föfrågningar om länkning till din profil "
+  allow_link: "Godkänn"
+  deny_link: "Godkänn inte"
+  unlink: Unlink
+  field_company_public: "Profil"
+  public: "Publik"
+  semipublic: "Kräv tillstånd"
+  private: "Privat"
+  confirm_delete_client_with_invoices: "Observera! Kunden har %{count} fakturor kopplade.\nVill du ta bort kunden och alla fakturor?"
+
+  # Invoices
+  IssuedInvoice: Utställda fakturor
+  ReceivedInvoice: Mottagna fakturor
+  DraftInvoice: Utkast
+  label_invoice_plural: Fakturor
+  label_invoice: Faktura
+  label_draft: Fakturautkast
+  field_invoice: Faktura
+  label_invoice_new: Ny faktura
+  button_new_invoice: Ny faktura
+  button_add_invoice_line: Lägg till fakturarad
+  field_number: Nummer
+  label_last_invoice_number: "Senast använda"
+  field_date: Datum
+  field_client: Kund
+  field_extra_info: Anteckningar
+  field_terms: Termer
+  field_discount_text: Rabatt-text
+  field_discount_percent: "Rabatt %"
+  field_frequency: Frekvens
+  field_draft: Utkast
+  label_invoice_state: Status
+  field_state: Status
+  show_template: Visa mall
+  generate_template_from_invoice: Skapa ny mall
+  generated_from_template: Skapad ny mall
+  receive_payment: Ta emot betalning
+  make_payment: Skapa betalning
+  label_paid: Betald
+  label_tax: Skatt
+  label_tax_plural: Skatter
+  button_add_tax: Lägg till ny skatt
+  label_from: Från
+  label_to: Till
+  save_invoice: Spara faktura
+  recipients: Mottagare
+  open_invoices: Öppna fakturor
+  pending_invoices: Ej klara fakturor
+  closed_invoices: Färdiga fakturor
+  label_subtotal: Delsumma
+  over_taxable_base: över 
+  must_have_lines: Måste ha rader
+  send_invoice: Skicka faktura
+  label_send: Skicka
+  cash: Kontant
+  debit: Debit betalning
+  transfer: Bankbetalning
+  other: Annan
+  requires_client_bank_account: Kundens bankkonto krävs
+  requires_company_bank_account: Bankkonto måste registreras
+  requires_client_iban_bic: kräver kundens IBAN och BIC
+  requires_company_iban_bic: kräver IBAN och BIC
+  cash_str: "Kontant betalning"
+  debit_str: "Debit betalning till"
+  transfer_str: "Banköverföring till"
+  state_new_plural: Ny"
+  state_sending_plural: "Skickar"
+  state_sent_plural: "Skickat"
+  state_error_plural: "Ej signerade"
+  state_closed_plural: "Avslutade"
+  state_discarded_plural: "Avfärdade"
+  state_new: "Ny"
+  state_sending: "Skickar"
+  state_sent: "Skickat"
+  state_error: "Ej signerad"
+  state_closed: "Avslutad"
+  state_discarded: "Avfärdad"
+  state_validating_format: "Validerar format"
+  state_validating_signature: "Validerar signatur"
+  state_received: "Faktura mottagen"
+  state_accepted: "Accepterad"
+  state_refused: "Avvisad"
+  state_paid: "Betald"
+  sending_log: "Skickar log"
+  download_legal: "Ladda ner fakturafilen"
+  download_notification: "Ladda ner notifieringar"
+  label_all_invoices: "Alla fakturor"
+  label_issued: "Utställda fakturor"
+  label_received: "Mottagna fakturor"
+  mark_not_sent: "Markera som ej sänt"
+  mark_closed: "Markera som avslutad"
+  mark_sent: "Markera som skickad"
+  mark_accepted: "Acceptera faktura"
+  mark_refused: "Avvisa faktura"
+  accept: "Accepterad"
+  refuse: "Avvisad"
+  received_invoice_accepted: "%{company} accepterade faktura med nummer %{num}"
+  received_invoice_refused: "%{company} avvisade faktura med nummer %{num}"
+  refuse_notification_to: "Notifiera avvisade fakturor till %{mail}"
+  accept_notification_to: "Notifiera accepterade fakturor till %{mail}"
+  refuse_and_mail: "Avvisa med mail"
+  refuse_without_mail: "Avvisa utan mail"
+  accept_and_mail: "Acceptera med mail"
+  accept_without_mail: "Acceptera utan mail"
+  cancel: "Avbryt"
+  client_without_email: "Kunden har inte någon registrerad mail-adress"
+  report_issue_with_invoice: "Rapportera problem med denna faktura"
+  invoice_issue_subject: "Jag har ett problem med faktura med följande interna ID %{id}"
+  invoice_issue_body: "-- Beskriv vad problemet är --"
+  quick_pdf_view: "Snabb PDF-presentation"
+  pdf_invoice_expl: "This is an aproximation to received invoice, please, check fields are correct with original one"
+  no_pdf_support: "It appears you don't have Adobe Reader or PDF support in this web browser. <a href='%{pdf}'>Click here to download the PDF</a>"
+  client_has_no_email: "Kunden har inte någon registrerad email-adress." 
+  invoice_has_no_taxes: "Fakturan har inga skatteuppgifter"
+  invoice_no_taxes_and_discount: "En faktura kan itne ha rader utan skatt och en övergripande rabatt."
+  field_import: "Importera"
+  pdf_not_legal: "PDF not legal"
+  amended_invoice: "Rättning av %{link}"
+  amended_by_invoice: "Rättad av %{link}"
+  create_amend_invoice: "Skapa rättad faktura"
+  label_amendment_invoice: "Rättad faktura"
+  label_amended_invoice: "Rättad faktura"
+  line_specific_tax: "Skatt på rad"
+  default: "Default"
+  only_one_default_allowed_for: "%{tax_name}: Bara en default-skatt tillåten"
+  add_taxes_on_company: "Hantera skatter för \"My company\""
+  button_download_new_invoices: "Ladda ner zip-fil med mina fakturor"
+  label_download_new_invoices_info: "Skapa en zip-fil med alla nya fakturor i PDF-format"
+
+  # Events
+  events: "Händelselogg"
+  by: "av"
+  manual_send: "Markera som sänt"
+  queue: "Skicka till b2brouter"
+  requeue: "Skicka igen till b2brouter"
+  success_sending: "Skickat korrekt till mottagaren"
+  mark_unsent: "Manuellt markerad som ej skickad"
+  error_sending: "Fel vid sändning"
+  close: "Avslutad"
+  amend_and_close: "Rättad och avslutad"
+  discard_sending: "Ej skickad. Max antal försök har nåtts"
+  paid: "Markera som betald"
+  unpaid: "Markera som ej betald"
+  edited: "Ändrad"
+  new: "Skapad"
+  bounced: "Misslyckad sändning. Gick inte att skicka till registrerad mail-adress"
+  validating_format: "Mottagen faktura"
+  success_validating_format: "Formatvalidering lyckades"
+  error_validating_format: "Fel upptäckt vid formatvalidering"
+  discard_validating_format: "Fel vid formatvalidering"
+  success_validating_signature: "Validering av signatur lyckades"
+  error_validating_signature: "Fel vid signaturvalidering"
+  discard_validating_signature: "Fel vid signaturvalidering"
+  sent_notification: "AOC Notifiering: Mottagen"
+  delivered_notification: "AOC Notifiering: Skickad"
+  registered_notification: "AOC Notifiering: Registrerad"
+  accept_notification: "AOC Notifiering: Accepterad"
+  refuse_notification: "AOC Notifiering: Avvisad"
+  paid_notification: "AOC Notifiering: Betald"
+  by_mail_from: "med email från %{email}"
+  in_format: "i %{format} formatet"
+  back: "Tillbaka"
+  view_mail: "Visa mail"
+  public_link: "Publik länk"
+
+  # Invoice templates
+  label_invoice_template_new: Ny Mall
+  label_invoice_template: Mall
+  label_invoice_template_plural: Mallar
+  label_generated_invoices: Skapa fakturor
+  next_charge: Nästa avgift
+  invoices_to_generate: Fakturor att skapa
+  generate: Skapa
+  generate_selected: Skapa vald
+  label_no_issues_to_generate: Inga fakturor att skapa
+
+  # Invoice lines
+  field_price: Pris
+  field_quantity: Kvantitet
+  field_invoice_lines: Fakturarader
+  field_unit: enhet
+  units: enheter
+  hours: Timmar
+  kilograms: Kilo
+  litters: Liter
+  s_units: ""
+  s_hours: h
+  s_kilograms: kg
+  s_litters: l
+  days: Dagar
+  s_days: d
+
+  # People
+  label_person: Person
+  label_person_new: Ny person
+  label_person_plural: Personer
+  field_first_name: Namn
+  field_last_name: Förnamn
+  field_email: Email
+  field_phone_office: Jobbtelefon
+  field_phone_mobile: Mobiltelefon
+  field_invoice_recipient: Fakturamottagare
+  field_report_recipient: Rapportera mottagare
+
+  # Tasks
+  label_task_plural: Uppgifter
+  with_date: Med datum
+  charge_bank_on_date: Charge bank on date
+  nothing_to_report: Inget finns att rapportera
+  nothing_to_generate: Inget finns att skapa
+  button_generate_invoices: Ny faktura från mall
+  button_send_invoices: Skicka fakturor
+  label_automator_info: ladda ner PDFer, emaila och markera som skickad
+  label_charge_n19: Charge bank accounts with N19 format 
+  button_mark_done: Markering utförd
+  label_invoice_report: Fkaturarapport
+  label_import_aeb43: Importera AEB43
+
+  # Payments
+  label_payment: Betalning
+  label_payment_plural: Betalningar
+  label_payment_new: Ny betalning
+  field_amount: Belopp
+  field_amount_in_cents: Belopp
+  field_payment_method: Betalningssätt
+  field_reference: Referens
+  field_total_paid: Totalt belopp
+  received_invoice_paid: "%{company} har betalat faktura med nummer %{num}"
+  issued_invoice_paid: "%{company} har mottagit faktura med nummer %{num}"
+  paid_notification_to: "Skicka notifiering om betalning till %{mail}"
+  received_paid_notification_to: "Notifiera mottagaren om betalning %{mail}"
+  save_and_mail: "Spara och skicka mail"
+  save_without_mail: "Spara utan att skicka mail"
+
+  # Settings
+  field_taxcode: Momsregistreringsnummer
+  field_website: Webbsida
+  export_channels_path: "Sökväg till export-mapp"
+  field_company: "Företag"
+  logo: "Logga"
+  trace_url: "B2brouter URL"
+  b2brouter_ip: "B2brouter IP"
+  b2b_subtitle: "Your online invoicing service"
+  field_public: "Publik profil"
+  private_fields_info: "Följande fält är privata även om du har en publik profil"
+  issues_controller_name: "Issues controller name"
+  diba_cif: "DIBA CIF"
+  field_iban: IBAN
+  field_bic: BIC
+  default_country: "Förvald land"
+  default_currency: "Förvald valuta"
+
+  # Terms
+  "0": Direkt
+  "15": 15 dagar
+  "30": 30 dagar
+  "60": 60 dagar
+  "90": 90 dagar
+  "120": 120 dagar
+  "0m-1": Sista dagen denna månad
+  "1m-1": Sista dagen nästa månad
+  "1m1": Första dagen nästa månad
+  "2m1": "Första dagen om två månader"
+  "1m15": Den 15:e nästa månad
+  "1m20": Den 20:e nästa månad
+  "1m10": Den 10:e nästa månad
+  "custom": Annan
+
+  # Frequency
+  mf12: Årliga
+  mf6: Halvt år
+  mf3: Kvartal
+  mf2: Varannan månad
+  mf1: Månatlig
+
+  # ExportChannels
+  paper:       "Inga (manuell nedladdning av PDF)"
+  ublinvoice_20: "UBL Faktura 2.0 till email"
+  facturae_30: "Spanskt format Facturae 3.0 till email"
+  facturae_31: "Spanskt format Facturae 3.1 till email"
+  facturae_32: "Spanskt format Facturae 3.2 till email"
+  signed_pdf:  "Signerad PDF till email"
+  aoc: "Spanskt format Facturae 3.0 till e-FACT hub från AOC"
+  aoc31: "Spanskt format Facturae 3.1 till e-FACT hub från AOC"
+  aoc32: "Spanskt format Facturae 3.2 till e-FACT hub från AOC"
+
+  # Errors
+  cant_connect_trace: "Kan inte få kontakt med  b2brouter plattformen. {{value}}"
+  halt_configure_before_use: Var god och registera företag först
+  warning_can_not_generate_invoice: "Kan inte skapa fkatura från mall {{value}}"
+  notice_invoice_sent: "Faktura skickad"
+  error_invoice_not_sent: "Kunde inte skicka faktura %{num}"
+  notice_empty_n19: "Ingen data finns för att skapa N19"
+  notice_n19_done:  "Nº19 för betaldatum {{value}} markerad som utförd"
+  notice_uploaded_file_not_found: "Filen hittades inte"
+
+  hide_full_form: "Visa färre fält"
+  show_full_form: "Visa fler fält"
+
+  # DIBA
+  field_codi_centre_gestor: "Management center code"
+  field_num_contracte: "Kontraktnummer"
+  field_num_expedient: "Record num"
+  field_created_at: "Skapad vid"
+  info_default_taxes: "Skatter som används i ditt land skapas automatiskt"
+  label_invoices_min: "Minimum antal fakturor"
+  label_stastics: "Statistik"
+  label_received_with_num: "Mottagna fakturor ({{num}} nya)"
+  help_invoice_format: "Förvalt fakturaformat och transportteknik"
+  logo_not_image: "Logga sparades inte, det var inte en bild"
+  contact_us_for_cif: "If this is really your taxcode, %{link}"
+  contact_us: "kontakta oss"
+  add_own_certificate: "%{link} att signera fakturor med eget certifikat"
+  invoices_not_sent: "%{num} fakturor gick inte att skicka"
+  invoices_sent: "%{num} fakturor skickade"
+  invoice_limit_reached: "Begränsning av antal samtidiga försändelser (10 fakturor).<br />Skicka igen för ytterligare 10 stycken."
+  zip_gem_required: "'zip' gem krävs för att det ska fungera"
+  too_much_invoices: "För många fakturor att laddaa ner (%{num} fakturor, max 10)"
+  field_send_invoices_by_mail: "Skicka fakturor till detta mail"
