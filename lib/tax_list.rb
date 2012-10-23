@@ -45,8 +45,8 @@ module TaxList
   end
 
   COUNTRY_TAXES = {
-    "es" => { "IVA" => [4,8,18], "IRPF" => [-15,-19] },
-    "es_default" => { "IVA" => 18 },
+    "es" => { "IVA" => [4,10,21], "IRPF" => [-21] },
+    "es_default" => { "IVA" => 21 },
     "fr" => { "TVA" => [2.1,5.5,19.6] },
     "fr_default" => { "TVA" => 19.6 }
   }
