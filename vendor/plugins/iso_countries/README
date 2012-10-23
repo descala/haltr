@@ -1,0 +1,30 @@
+= iso_countries - Store countries using ISO 3166 codes
+
+This rails plugin enables you to store country info only with the country's ISO-3166 code
+
+== Example
+
+  class Company < ActiveRecord::Base
+    iso_country :country
+  end
+
+  c = Company.new :country => "es"
+  c.country                 # => "es"
+  c.country_name            # => "Spain"
+  c.country_name = "France"
+  c.country                 # => "fr"
+  ISO::Countries.set_language "es"
+  c.country_name            # => "Francia"
+
+  <% form_for @company do |f| %>
+    <%= f.iso_country_select :country, [:es, :en] %>
+  <% end %>
+
+== Acknowledgements
+
+Translations are provided by the iso-codes package
+http://pkg-isocodes.alioth.debian.org/
+
+== License
+
+Copyright (c) 2008 Jorge Bernal <jbernal@warp.es>, released under the MIT license

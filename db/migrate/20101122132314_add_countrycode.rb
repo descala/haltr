@@ -1,3 +1,5 @@
+# encoding: utf-8
+
 class AddCountrycode < ActiveRecord::Migration
 
   def self.up

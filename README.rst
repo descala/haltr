@@ -22,14 +22,6 @@ INSTALL
   cd <Redmine root dir>/vendor/plugins
   git clone git://github.com/descala/haltr.git
 
-* Clone iso_countries on Haltr's vendor/plugins folder
-
-::
-
-  cd <Redmine root dir>
-  cd vendor/plugins/haltr/vendor/plugins
-  git clone https://github.com/koke/iso_countries.git
-
 * Install necessary gems
 
 ::

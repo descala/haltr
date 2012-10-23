@@ -1,0 +1,1001 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: iso_countries plugin\n"
+"POT-Creation-Date: 2008-08-14 21:32+0200\n"
+"PO-Revision-Date: 2008-08-14 21:32+0200\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=INTEGER; plural=EXPRESSION;\n"
+
+#: lib/country_list.rb:4
+msgid "Afghanistan"
+msgstr ""
+
+#: lib/country_list.rb:5
+msgid "Åland islands"
+msgstr ""
+
+#: lib/country_list.rb:6
+msgid "Albania"
+msgstr ""
+
+#: lib/country_list.rb:7
+msgid "Algeria"
+msgstr ""
+
+#: lib/country_list.rb:8
+msgid "American samoa"
+msgstr ""
+
+#: lib/country_list.rb:9
+msgid "Andorra"
+msgstr ""
+
+#: lib/country_list.rb:10
+msgid "Angola"
+msgstr ""
+
+#: lib/country_list.rb:11
+msgid "Anguilla"
+msgstr ""
+
+#: lib/country_list.rb:12
+msgid "Antarctica"
+msgstr ""
+
+#: lib/country_list.rb:13
+msgid "Antigua and barbuda"
+msgstr ""
+
+#: lib/country_list.rb:14
+msgid "Argentina"
+msgstr ""
+
+#: lib/country_list.rb:15
+msgid "Armenia"
+msgstr ""
+
+#: lib/country_list.rb:16
+msgid "Aruba"
+msgstr ""
+
+#: lib/country_list.rb:17
+msgid "Australia"
+msgstr ""
+
+#: lib/country_list.rb:18
+msgid "Austria"
+msgstr ""
+
+#: lib/country_list.rb:19
+msgid "Azerbaijan"
+msgstr ""
+
+#: lib/country_list.rb:20
+msgid "Bahamas"
+msgstr ""
+
+#: lib/country_list.rb:21
+msgid "Bahrain"
+msgstr ""
+
+#: lib/country_list.rb:22
+msgid "Bangladesh"
+msgstr ""
+
+#: lib/country_list.rb:23
+msgid "Barbados"
+msgstr ""
+
+#: lib/country_list.rb:24
+msgid "Belarus"
+msgstr ""
+
+#: lib/country_list.rb:25
+msgid "Belgium"
+msgstr ""
+
+#: lib/country_list.rb:26
+msgid "Belize"
+msgstr ""
+
+#: lib/country_list.rb:27
+msgid "Benin"
+msgstr ""
+
+#: lib/country_list.rb:28
+msgid "Bermuda"
+msgstr ""
+
+#: lib/country_list.rb:29
+msgid "Bhutan"
+msgstr ""
+
+#: lib/country_list.rb:30
+msgid "Bolivia"
+msgstr ""
+
+#: lib/country_list.rb:31
+msgid "Bosnia and herzegovina"
+msgstr ""
+
+#: lib/country_list.rb:32
+msgid "Botswana"
+msgstr ""
+
+#: lib/country_list.rb:33
+msgid "Bouvet island"
+msgstr ""
+
+#: lib/country_list.rb:34
+msgid "Brazil"
+msgstr ""
+
+#: lib/country_list.rb:35
+msgid "British indian ocean territory"
+msgstr ""
+
+#: lib/country_list.rb:36
+msgid "Brunei darussalam"
+msgstr ""
+
+#: lib/country_list.rb:37
+msgid "Bulgaria"
+msgstr ""
+
+#: lib/country_list.rb:38
+msgid "Burkina faso"
+msgstr ""
+
+#: lib/country_list.rb:39
+msgid "Burundi"
+msgstr ""
+
+#: lib/country_list.rb:40
+msgid "Cambodia"
+msgstr ""
+
+#: lib/country_list.rb:41
+msgid "Cameroon"
+msgstr ""
+
+#: lib/country_list.rb:42
+msgid "Canada"
+msgstr ""
+
+#: lib/country_list.rb:43
+msgid "Cape verde"
+msgstr ""
+
+#: lib/country_list.rb:44
+msgid "Cayman islands"
+msgstr ""
+
+#: lib/country_list.rb:45
+msgid "Central african republic"
+msgstr ""
+
+#: lib/country_list.rb:46
+msgid "Chad"
+msgstr ""
+
+#: lib/country_list.rb:47
+msgid "Chile"
+msgstr ""
+
+#: lib/country_list.rb:48
+msgid "China"
+msgstr ""
+
+#: lib/country_list.rb:49
+msgid "Christmas island"
+msgstr ""
+
+#: lib/country_list.rb:50
+msgid "Cocos (keeling) islands"
+msgstr ""
+
+#: lib/country_list.rb:51
+msgid "Colombia"
+msgstr ""
+
+#: lib/country_list.rb:52
+msgid "Comoros"
+msgstr ""
+
+#: lib/country_list.rb:53
+msgid "Congo"
+msgstr ""
+
+#: lib/country_list.rb:54
+msgid "Congo, the democratic republic of the"
+msgstr ""
+
+#: lib/country_list.rb:55
+msgid "Cook islands"
+msgstr ""
+
+#: lib/country_list.rb:56
+msgid "Costa rica"
+msgstr ""
+
+#: lib/country_list.rb:57
+msgid "Côte d'ivoire"
+msgstr ""
+
+#: lib/country_list.rb:58
+msgid "Croatia"
+msgstr ""
+
+#: lib/country_list.rb:59
+msgid "Cuba"
+msgstr ""
+
+#: lib/country_list.rb:60
+msgid "Cyprus"
+msgstr ""
+
+#: lib/country_list.rb:61
+msgid "Czech republic"
+msgstr ""
+
+#: lib/country_list.rb:62
+msgid "Denmark"
+msgstr ""
+
+#: lib/country_list.rb:63
+msgid "Djibouti"
+msgstr ""
+
+#: lib/country_list.rb:64
+msgid "Dominica"
+msgstr ""
+
+#: lib/country_list.rb:65
+msgid "Dominican republic"
+msgstr ""
+
+#: lib/country_list.rb:66
+msgid "Ecuador"
+msgstr ""
+
+#: lib/country_list.rb:67
+msgid "Egypt"
+msgstr ""
+
+#: lib/country_list.rb:68
+msgid "El salvador"
+msgstr ""
+
+#: lib/country_list.rb:69
+msgid "Equatorial guinea"
+msgstr ""
+
+#: lib/country_list.rb:70
+msgid "Eritrea"
+msgstr ""
+
+#: lib/country_list.rb:71
+msgid "Estonia"
+msgstr ""
+
+#: lib/country_list.rb:72
+msgid "Ethiopia"
+msgstr ""
+
+#: lib/country_list.rb:73
+msgid "Falkland islands (malvinas)"
+msgstr ""
+
+#: lib/country_list.rb:74
+msgid "Faroe islands"
+msgstr ""
+
+#: lib/country_list.rb:75
+msgid "Fiji"
+msgstr ""
+
+#: lib/country_list.rb:76
+msgid "Finland"
+msgstr ""
+
+#: lib/country_list.rb:77
+msgid "France"
+msgstr ""
+
+#: lib/country_list.rb:78
+msgid "French guiana"
+msgstr ""
+
+#: lib/country_list.rb:79
+msgid "French polynesia"
+msgstr ""
+
+#: lib/country_list.rb:80
+msgid "French southern territories"
+msgstr ""
+
+#: lib/country_list.rb:81
+msgid "Gabon"
+msgstr ""
+
+#: lib/country_list.rb:82
+msgid "Gambia"
+msgstr ""
+
+#: lib/country_list.rb:83
+msgid "Georgia"
+msgstr ""
+
+#: lib/country_list.rb:84
+msgid "Germany"
+msgstr ""
+
+#: lib/country_list.rb:85
+msgid "Ghana"
+msgstr ""
+
+#: lib/country_list.rb:86
+msgid "Gibraltar"
+msgstr ""
+
+#: lib/country_list.rb:87
+msgid "Greece"
+msgstr ""
+
+#: lib/country_list.rb:88
+msgid "Greenland"
+msgstr ""
+
+#: lib/country_list.rb:89
+msgid "Grenada"
+msgstr ""
+
+#: lib/country_list.rb:90
+msgid "Guadeloupe"
+msgstr ""
+
+#: lib/country_list.rb:91
+msgid "Guam"
+msgstr ""
+
+#: lib/country_list.rb:92
+msgid "Guatemala"
+msgstr ""
+
+#: lib/country_list.rb:93
+msgid "Guernsey"
+msgstr ""
+
+#: lib/country_list.rb:94
+msgid "Guinea"
+msgstr ""
+
+#: lib/country_list.rb:95
+msgid "Guinea-bissau"
+msgstr ""
+
+#: lib/country_list.rb:96
+msgid "Guyana"
+msgstr ""
+
+#: lib/country_list.rb:97
+msgid "Haiti"
+msgstr ""
+
+#: lib/country_list.rb:98
+msgid "Heard island and mcdonald islands"
+msgstr ""
+
+#: lib/country_list.rb:99
+msgid "Holy see (vatican city state)"
+msgstr ""
+
+#: lib/country_list.rb:100
+msgid "Honduras"
+msgstr ""
+
+#: lib/country_list.rb:101
+msgid "Hong kong"
+msgstr ""
+
+#: lib/country_list.rb:102
+msgid "Hungary"
+msgstr ""
+
+#: lib/country_list.rb:103
+msgid "Iceland"
+msgstr ""
+
+#: lib/country_list.rb:104
+msgid "India"
+msgstr ""
+
+#: lib/country_list.rb:105
+msgid "Indonesia"
+msgstr ""
+
+#: lib/country_list.rb:106
+msgid "Iran, islamic republic of"
+msgstr ""
+
+#: lib/country_list.rb:107
+msgid "Iraq"
+msgstr ""
+
+#: lib/country_list.rb:108
+msgid "Ireland"
+msgstr ""
+
+#: lib/country_list.rb:109
+msgid "Isle of man"
+msgstr ""
+
+#: lib/country_list.rb:110
+msgid "Israel"
+msgstr ""
+
+#: lib/country_list.rb:111
+msgid "Italy"
+msgstr ""
+
+#: lib/country_list.rb:112
+msgid "Jamaica"
+msgstr ""
+
+#: lib/country_list.rb:113
+msgid "Japan"
+msgstr ""
+
+#: lib/country_list.rb:114
+msgid "Jersey"
+msgstr ""
+
+#: lib/country_list.rb:115
+msgid "Jordan"
+msgstr ""
+
+#: lib/country_list.rb:116
+msgid "Kazakhstan"
+msgstr ""
+
+#: lib/country_list.rb:117
+msgid "Kenya"
+msgstr ""
+
+#: lib/country_list.rb:118
+msgid "Kiribati"
+msgstr ""
+
+#: lib/country_list.rb:119
+msgid "Korea, democratic people's republic of"
+msgstr ""
+
+#: lib/country_list.rb:120
+msgid "Korea, republic of"
+msgstr ""
+
+#: lib/country_list.rb:121
+msgid "Kuwait"
+msgstr ""
+
+#: lib/country_list.rb:122
+msgid "Kyrgyzstan"
+msgstr ""
+
+#: lib/country_list.rb:123
+msgid "Lao people's democratic republic"
+msgstr ""
+
+#: lib/country_list.rb:124
+msgid "Latvia"
+msgstr ""
+
+#: lib/country_list.rb:125
+msgid "Lebanon"
+msgstr ""
+
+#: lib/country_list.rb:126
+msgid "Lesotho"
+msgstr ""
+
+#: lib/country_list.rb:127
+msgid "Liberia"
+msgstr ""
+
+#: lib/country_list.rb:128
+msgid "Libyan arab jamahiriya"
+msgstr ""
+
+#: lib/country_list.rb:129
+msgid "Liechtenstein"
+msgstr ""
+
+#: lib/country_list.rb:130
+msgid "Lithuania"
+msgstr ""
+
+#: lib/country_list.rb:131
+msgid "Luxembourg"
+msgstr ""
+
+#: lib/country_list.rb:132
+msgid "Macao"
+msgstr ""
+
+#: lib/country_list.rb:133
+msgid "Macedonia, the former yugoslav republic of"
+msgstr ""
+
+#: lib/country_list.rb:134
+msgid "Madagascar"
+msgstr ""
+
+#: lib/country_list.rb:135
+msgid "Malawi"
+msgstr ""
+
+#: lib/country_list.rb:136
+msgid "Malaysia"
+msgstr ""
+
+#: lib/country_list.rb:137
+msgid "Maldives"
+msgstr ""
+
+#: lib/country_list.rb:138
+msgid "Mali"
+msgstr ""
+
+#: lib/country_list.rb:139
+msgid "Malta"
+msgstr ""
+
+#: lib/country_list.rb:140
+msgid "Marshall islands"
+msgstr ""
+
+#: lib/country_list.rb:141
+msgid "Martinique"
+msgstr ""
+
+#: lib/country_list.rb:142
+msgid "Mauritania"
+msgstr ""
+
+#: lib/country_list.rb:143
+msgid "Mauritius"
+msgstr ""
+
+#: lib/country_list.rb:144
+msgid "Mayotte"
+msgstr ""
+
+#: lib/country_list.rb:145
+msgid "Mexico"
+msgstr ""
+
+#: lib/country_list.rb:146
+msgid "Micronesia, federated states of"
+msgstr ""
+
+#: lib/country_list.rb:147
+msgid "Moldova, republic of"
+msgstr ""
+
+#: lib/country_list.rb:148
+msgid "Monaco"
+msgstr ""
+
+#: lib/country_list.rb:149
+msgid "Mongolia"
+msgstr ""
+
+#: lib/country_list.rb:150
+msgid "Montenegro"
+msgstr ""
+
+#: lib/country_list.rb:151
+msgid "Montserrat"
+msgstr ""
+
+#: lib/country_list.rb:152
+msgid "Morocco"
+msgstr ""
+
+#: lib/country_list.rb:153
+msgid "Mozambique"
+msgstr ""
+
+#: lib/country_list.rb:154
+msgid "Myanmar"
+msgstr ""
+
+#: lib/country_list.rb:155
+msgid "Namibia"
+msgstr ""
+
+#: lib/country_list.rb:156
+msgid "Nauru"
+msgstr ""
+
+#: lib/country_list.rb:157
+msgid "Nepal"
+msgstr ""
+
+#: lib/country_list.rb:158
+msgid "Netherlands"
+msgstr ""
+
+#: lib/country_list.rb:159
+msgid "Netherlands antilles"
+msgstr ""
+
+#: lib/country_list.rb:160
+msgid "New caledonia"
+msgstr ""
+
+#: lib/country_list.rb:161
+msgid "New zealand"
+msgstr ""
+
+#: lib/country_list.rb:162
+msgid "Nicaragua"
+msgstr ""
+
+#: lib/country_list.rb:163
+msgid "Niger"
+msgstr ""
+
+#: lib/country_list.rb:164
+msgid "Nigeria"
+msgstr ""
+
+#: lib/country_list.rb:165
+msgid "Niue"
+msgstr ""
+
+#: lib/country_list.rb:166
+msgid "Norfolk island"
+msgstr ""
+
+#: lib/country_list.rb:167
+msgid "Northern mariana islands"
+msgstr ""
+
+#: lib/country_list.rb:168
+msgid "Norway"
+msgstr ""
+
+#: lib/country_list.rb:169
+msgid "Oman"
+msgstr ""
+
+#: lib/country_list.rb:170
+msgid "Pakistan"
+msgstr ""
+
+#: lib/country_list.rb:171
+msgid "Palau"
+msgstr ""
+
+#: lib/country_list.rb:172
+msgid "Palestinian territory, occupied"
+msgstr ""
+
+#: lib/country_list.rb:173
+msgid "Panama"
+msgstr ""
+
+#: lib/country_list.rb:174
+msgid "Papua new guinea"
+msgstr ""
+
+#: lib/country_list.rb:175
+msgid "Paraguay"
+msgstr ""
+
+#: lib/country_list.rb:176
+msgid "Peru"
+msgstr ""
+
+#: lib/country_list.rb:177
+msgid "Philippines"
+msgstr ""
+
+#: lib/country_list.rb:178
+msgid "Pitcairn"
+msgstr ""
+
+#: lib/country_list.rb:179
+msgid "Poland"
+msgstr ""
+
+#: lib/country_list.rb:180
+msgid "Portugal"
+msgstr ""
+
+#: lib/country_list.rb:181
+msgid "Puerto rico"
+msgstr ""
+
+#: lib/country_list.rb:182
+msgid "Qatar"
+msgstr ""
+
+#: lib/country_list.rb:183
+msgid "Reunion"
+msgstr ""
+
+#: lib/country_list.rb:184
+msgid "Romania"
+msgstr ""
+
+#: lib/country_list.rb:185
+msgid "Russian federation"
+msgstr ""
+
+#: lib/country_list.rb:186
+msgid "Rwanda"
+msgstr ""
+
+#: lib/country_list.rb:187
+msgid "Saint barthélemy"
+msgstr ""
+
+#: lib/country_list.rb:188
+msgid "Saint helena"
+msgstr ""
+
+#: lib/country_list.rb:189
+msgid "Saint kitts and nevis"
+msgstr ""
+
+#: lib/country_list.rb:190
+msgid "Saint lucia"
+msgstr ""
+
+#: lib/country_list.rb:191
+msgid "Saint martin"
+msgstr ""
+
+#: lib/country_list.rb:192
+msgid "Saint pierre and miquelon"
+msgstr ""
+
+#: lib/country_list.rb:193
+msgid "Saint vincent and the grenadines"
+msgstr ""
+
+#: lib/country_list.rb:194
+msgid "Samoa"
+msgstr ""
+
+#: lib/country_list.rb:195
+msgid "San marino"
+msgstr ""
+
+#: lib/country_list.rb:196
+msgid "Sao tome and principe"
+msgstr ""
+
+#: lib/country_list.rb:197
+msgid "Saudi arabia"
+msgstr ""
+
+#: lib/country_list.rb:198
+msgid "Senegal"
+msgstr ""
+
+#: lib/country_list.rb:199
+msgid "Serbia"
+msgstr ""
+
+#: lib/country_list.rb:200
+msgid "Seychelles"
+msgstr ""
+
+#: lib/country_list.rb:201
+msgid "Sierra leone"
+msgstr ""
+
+#: lib/country_list.rb:202
+msgid "Singapore"
+msgstr ""
+
+#: lib/country_list.rb:203
+msgid "Slovakia"
+msgstr ""
+
+#: lib/country_list.rb:204
+msgid "Slovenia"
+msgstr ""
+
+#: lib/country_list.rb:205
+msgid "Solomon islands"
+msgstr ""
+
+#: lib/country_list.rb:206
+msgid "Somalia"
+msgstr ""
+
+#: lib/country_list.rb:207
+msgid "South africa"
+msgstr ""
+
+#: lib/country_list.rb:208
+msgid "South georgia and the south sandwich islands"
+msgstr ""
+
+#: lib/country_list.rb:209
+msgid "Spain"
+msgstr ""
+
+#: lib/country_list.rb:210
+msgid "Sri lanka"
+msgstr ""
+
+#: lib/country_list.rb:211
+msgid "Sudan"
+msgstr ""
+
+#: lib/country_list.rb:212
+msgid "Suriname"
+msgstr ""
+
+#: lib/country_list.rb:213
+msgid "Svalbard and jan mayen"
+msgstr ""
+
+#: lib/country_list.rb:214
+msgid "Swaziland"
+msgstr ""
+
+#: lib/country_list.rb:215
+msgid "Sweden"
+msgstr ""
+
+#: lib/country_list.rb:216
+msgid "Switzerland"
+msgstr ""
+
+#: lib/country_list.rb:217
+msgid "Syrian arab republic"
+msgstr ""
+
+#: lib/country_list.rb:218
+msgid "Taiwan, province of china"
+msgstr ""
+
+#: lib/country_list.rb:219
+msgid "Tajikistan"
+msgstr ""
+
+#: lib/country_list.rb:220
+msgid "Tanzania, united republic of"
+msgstr ""
+
+#: lib/country_list.rb:221
+msgid "Thailand"
+msgstr ""
+
+#: lib/country_list.rb:222
+msgid "Timor-leste"
+msgstr ""
+
+#: lib/country_list.rb:223
+msgid "Togo"
+msgstr ""
+
+#: lib/country_list.rb:224
+msgid "Tokelau"
+msgstr ""
+
+#: lib/country_list.rb:225
+msgid "Tonga"
+msgstr ""
+
+#: lib/country_list.rb:226
+msgid "Trinidad and tobago"
+msgstr ""
+
+#: lib/country_list.rb:227
+msgid "Tunisia"
+msgstr ""
+
+#: lib/country_list.rb:228
+msgid "Turkey"
+msgstr ""
+
+#: lib/country_list.rb:229
+msgid "Turkmenistan"
+msgstr ""
+
+#: lib/country_list.rb:230
+msgid "Turks and caicos islands"
+msgstr ""
+
+#: lib/country_list.rb:231
+msgid "Tuvalu"
+msgstr ""
+
+#: lib/country_list.rb:232
+msgid "Uganda"
+msgstr ""
+
+#: lib/country_list.rb:233
+msgid "Ukraine"
+msgstr ""
+
+#: lib/country_list.rb:234
+msgid "United arab emirates"
+msgstr ""
+
+#: lib/country_list.rb:235
+msgid "United kingdom"
+msgstr ""
+
+#: lib/country_list.rb:236
+msgid "United states"
+msgstr ""
+
+#: lib/country_list.rb:237
+msgid "United states minor outlying islands"
+msgstr ""
+
+#: lib/country_list.rb:238
+msgid "Uruguay"
+msgstr ""
+
+#: lib/country_list.rb:239
+msgid "Uzbekistan"
+msgstr ""
+
+#: lib/country_list.rb:240
+msgid "Vanuatu"
+msgstr ""
+
+#: lib/country_list.rb:241
+msgid "Venezuela"
+msgstr ""
+
+#: lib/country_list.rb:242
+msgid "Viet nam"
+msgstr ""
+
+#: lib/country_list.rb:243
+msgid "Virgin islands, british"
+msgstr ""
+
+#: lib/country_list.rb:244
+msgid "Virgin islands, u.s."
+msgstr ""
+
+#: lib/country_list.rb:245
+msgid "Wallis and futuna"
+msgstr ""
+
+#: lib/country_list.rb:246
+msgid "Western sahara"
+msgstr ""
+
+#: lib/country_list.rb:247
+msgid "Yemen"
+msgstr ""
+
+#: lib/country_list.rb:248
+msgid "Zambia"
+msgstr ""
+
+#: lib/country_list.rb:249
+msgid "Zimbabwe"
+msgstr ""
