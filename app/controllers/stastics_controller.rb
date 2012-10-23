@@ -13,21 +13,16 @@ class StasticsController < ApplicationController
     sort_init 'name', 'invoices_count'
     sort_update %w(name invoices_count issued_invoices_count received_invoices_count invoice_templates_count)
 
-    c = ARCondition.new()
+    projects = Project.active.scoped :conditions => ["invoices_count >= ?", params[:invoices_min].blank? ? 1 : params[:invoices_min]]
 
-    unless params[:invoices_min].blank?
-      c << ["invoices_count >= ?", params[:invoices_min]]
-    end
-
-    @projects_count = Project.count(:conditions=>c.conditions)
+    @projects_count = projects.count
     @projects_pages = Paginator.new self, @projects_count, per_page_option, params['page']
-    @projects = Project.find :all,
+    @projects = projects.find :all,
       :order => sort_clause,
-      :conditions => c.conditions,
       :limit => @projects_pages.items_per_page,
       :offset => @projects_pages.current.offset
 
-    render :action => "index", :layout => false if request.xhr?
+    render :action => "index"
   end
 
   private

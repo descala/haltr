@@ -23,23 +23,21 @@ class ClientsController < ApplicationController
     sort_init 'name', 'asc'
     sort_update %w(taxcode name)
 
-    c = ARCondition.new(["project_id = ?", @project])
+    clients = @project.clients.scoped(nil)
 
     unless params[:name].blank?
       name = "%#{params[:name].strip.downcase}%"
-      c << ["LOWER(name) LIKE ? OR LOWER(address) LIKE ? OR LOWER(address2) LIKE ?", name, name, name]
+      clients = clients.scoped :conditions => ["LOWER(name) LIKE ? OR LOWER(address) LIKE ? OR LOWER(address2) LIKE ?", name, name, name]
     end
 
-    @client_count = Client.count(:conditions => c.conditions)
+    @client_count = clients.count
     @client_pages = Paginator.new self, @client_count,
 		per_page_option,
 		params['page']
-    @clients =  Client.find :all,:order => sort_clause,
-       :conditions => c.conditions,
+    @clients =  clients.find :all,
+       :order => sort_clause,
        :limit  =>  @client_pages.items_per_page,
        :offset =>  @client_pages.current.offset
-
-    render :action => "index", :layout => false if request.xhr?
   end
 
   def new

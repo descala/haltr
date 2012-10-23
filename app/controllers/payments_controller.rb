@@ -21,25 +21,21 @@ class PaymentsController < ApplicationController
     sort_init 'payments.date', 'desc'
     sort_update %w(payments.date amount_in_cents invoices.number)
 
-    c = ARCondition.new(["payments.project_id = ?", @project])
+    payments = @project.payments.scoped(nil)
 
     unless params[:name].blank?
       name = "%#{params[:name].strip.downcase}%"
-      c << ["LOWER(payments.payment_method) LIKE ? OR LOWER(reference) LIKE ?", name, name]
+      payments = payments.scoped :conditions => ["LOWER(payments.payment_method) LIKE ? OR LOWER(reference) LIKE ?", name, name]
     end
 
-    @payment_count = Payment.count(:conditions => c.conditions, :include => :invoice)
+    @payment_count = payments.count
     @payment_pages = Paginator.new self, @payment_count,
 		per_page_option,
 		params['page']
-    @payments = Payment.find :all, :order => sort_clause,
-       :conditions => c.conditions,
+    @payments = payments.find :all, :order => sort_clause,
        :include => :invoice,
        :limit  => @payment_pages.items_per_page,
        :offset => @payment_pages.current.offset
-
-    render :action => "index", :layout => false if request.xhr?
-
   end
 
 

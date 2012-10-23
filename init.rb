@@ -53,7 +53,7 @@ Redmine::Plugin.register :haltr do
   menu :project_menu, :haltr_community, { :controller => 'clients', :action => 'index' }, :caption => :label_companies
   menu :project_menu, :haltr_invoices, { :controller => 'invoices', :action => 'index' }, :caption => :label_invoice_plural
   menu :project_menu, :haltr_payments, { :controller => 'payments', :action => 'index' }, :caption => :label_payment_plural
-  menu :top_menu, :haltr_stastics, { :controller => 'stastics', :action => 'index', :invoices_min => 1 }, :caption => :label_stastics, :if => Proc.new {User.current.admin?}
+  menu :top_menu, :haltr_stastics, { :controller => 'stastics', :action => 'index' }, :caption => :label_stastics, :if => Proc.new {User.current.admin?}
 
 end
 

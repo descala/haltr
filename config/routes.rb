@@ -6,4 +6,13 @@ ActionController::Routing::Routes.draw do |map|
   map.connect '/invoices/legal/:id.:format', :controller => 'invoices', :action => 'legal'
   map.connect '/invoice/download/:id/:invoice_id', :controller => 'invoices', :action => 'download', :id => /.*/, :invoice_id => /\d+/
   map.connect '/invoice/:id/:invoice_id', :controller => 'invoices', :action => 'view', :id => /.*/, :invoice_id => /\d+/
+  map.connect '/statistics', :controller => 'stastics', :action => 'index'
+#  map.connect '/invoices/:id', :controller => 'invoices', :action => 'index'
+  map.connect '/invoices/:action/:id', :controller => 'invoices'
+  map.connect '/templates/:action/:id', :controller => 'invoice_templates'
+  map.connect '/clients/:action/:id', :controller => 'clients'
+  map.connect '/companies/:action/:id', :controller => 'companies'
+  map.connect '/payments/:action/:id', :controller => 'payments'
+  map.connect '/tasks/:action/:id', :controller => 'tasks'
+  map.connect '/people/:action/:id', :controller => 'people'
 end

@@ -20,23 +20,21 @@ class PeopleController < ApplicationController
     sort_init 'last_name', 'asc'
     sort_update %w(first_name last_name email)
 
-    c = ARCondition.new(["client_id = ?", @client])
+    people = @client.people.scoped(nil) 
 
     unless params[:name].blank?
       name = "%#{params[:name].strip.downcase}%"
-      c << ["LOWER(first_name) LIKE ? OR LOWER(last_name) LIKE ? OR LOWER(email) LIKE ?", name, name, name]
+      people = people.scoped :conditions => ["LOWER(first_name) LIKE ? OR LOWER(last_name) LIKE ? OR LOWER(email) LIKE ?", name, name, name]
     end
 
-    @person_count = Person.count(:conditions => c.conditions)
+    @person_count = people.count
     @person_pages = Paginator.new self, @person_count,
 		per_page_option,
 		params['page']
-    @people = Person.find :all, :order => sort_clause,
-       :conditions => c.conditions,
+    @people = people.find :all,
+       :order => sort_clause,
        :limit  => @person_pages.items_per_page,
        :offset => @person_pages.current.offset
-
-    render :action => "index", :layout => false if request.xhr?
   end
 
   def show

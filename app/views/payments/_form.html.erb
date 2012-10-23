@@ -6,7 +6,7 @@
   <% if @invoice -%>
     <%= f.hidden_field "invoice_id" %>
   <% else -%>
-    <p><%= f.select :invoice_id, invoices_for_select(@payment_type), :include_blank => true %></p>
+    <p><%= f.select :invoice_id, invoices_for_select, :include_blank => true %></p>
   <% end -%>
   <p><%= f.text_field :date, :size => 10, :required => true %><%= calendar_for('payment_date') %></p>
   <p><%= f.text_field :payment_method %></p>

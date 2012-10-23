@@ -23,24 +23,22 @@ class InvoiceTemplatesController < ApplicationController
     sort_init 'date', 'asc'
     sort_update %w(date number clients.name)
 
-    c = ARCondition.new(["clients.project_id = ?",@project.id])
+    templates = @project.invoice_templates.scoped(nil)
 
     unless params[:name].blank?
       name = "%#{params[:name].strip.downcase}%"
-      c << ["LOWER(name) LIKE ? OR LOWER(address) LIKE ? OR LOWER(address2) LIKE ?", name, name, name]
+      templates = templates.scoped :conditions => ["LOWER(name) LIKE ? OR LOWER(address) LIKE ? OR LOWER(address2) LIKE ?", name, name, name]
     end
 
-    @invoice_count = InvoiceTemplate.count(:conditions => c.conditions, :include => [:client])
+    @invoice_count = templates.count
     @invoice_pages = Paginator.new self, @invoice_count,
 		per_page_option,
 		params['page']
-    @invoices =  InvoiceTemplate.find :all,:order => sort_clause,
-       :conditions => c.conditions,
+    @invoices =  templates.find :all,
+       :order => sort_clause,
        :include => [:client],
        :limit  =>  @invoice_pages.items_per_page,
        :offset =>  @invoice_pages.current.offset
-
-    render :action => "index", :layout => false if request.xhr?
   end
 
   def new
