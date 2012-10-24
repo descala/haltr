@@ -1,7 +1,7 @@
 <h3><%= l(:label_payment_plural) %></h3>
 <ul class="invoice_menu">
   <li>
-  <%= link_to l(:label_payment_new), {:action => 'new', :id => @project}, :class=>'icon-haltr-payment' %>
+  <%= link_to l(:label_payment_new), {:controller => 'payments', :action => 'new', :id => @project}, :class=>'icon-haltr-payment' %>
   </li>
   <li><%= link_to l(:label_task_plural), {:controller => 'tasks', :action => 'index', :id => @project}, :class=>'icon-haltr-tasks' %></li>
 </ul>

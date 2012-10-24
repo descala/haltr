@@ -135,4 +135,12 @@ module InvoicesHelper
     end
   end
 
+  def client_name_with_link(client)
+    if authorize_for('clients', 'edit')
+      link_to h(client.name), {:controller=>'clients',:action=>'edit',:id=>client}
+    else
+      h(client.name)
+    end
+  end
+
 end
