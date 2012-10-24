@@ -1,0 +1,10 @@
+== Haltr changelog
+
+Haltr - Hackers dont do books 
+Copyright (C) 2009-2012  David Escala
+https://github.com/descala/haltr
+
+== 2012-10-24 v1.1
+
+* Issue #30: support redmine 1.4 
+* Issue #20: support ruby 1.9
