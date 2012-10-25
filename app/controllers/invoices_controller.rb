@@ -429,7 +429,6 @@ class InvoicesController < ApplicationController
   private
 
   def find_hashid
-    Project.send(:include, ProjectHaltrPatch) #TODO: perque nomes funciona el primer cop sense aixo?
     @client = Client.find_by_hashid params[:id]
     if @client.nil?
       render_404
@@ -457,7 +456,6 @@ class InvoicesController < ApplicationController
   end
 
   def find_invoice
-    Project.send(:include, ProjectHaltrPatch) #TODO: perque nomes funciona el primer cop sense aixo?
     @invoice = InvoiceDocument.find params[:id]
     @lines = @invoice.invoice_lines
     @client = @invoice.client || Client.new(:name=>"unknown",:project=>@invoice.project)

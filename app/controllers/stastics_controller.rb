@@ -7,7 +7,6 @@ class StasticsController < ApplicationController
   include SortHelper
 
   before_filter :require_admin
-  before_filter :project_patch
 
   def index
     sort_init 'name', 'invoices_count'
@@ -23,12 +22,6 @@ class StasticsController < ApplicationController
       :offset => @projects_pages.current.offset
 
     render :action => "index"
-  end
-
-  private
-
-  def project_patch
-    Project.send(:include, ProjectHaltrPatch) #TODO: perque nomes funciona el primer cop sense aixo?
   end
 
 end
