@@ -1,5 +1,3 @@
-require_dependency 'project'
-
 module ProjectHaltrPatch
   def self.included(base) # :nodoc:
     base.extend(ClassMethods)
@@ -27,6 +25,3 @@ module ProjectHaltrPatch
   end
 
 end
- 
-# Add module to Project
-Project.send(:include, ProjectHaltrPatch)

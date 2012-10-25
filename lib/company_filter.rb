@@ -3,7 +3,6 @@ module CompanyFilter
   unloadable
 
   def check_for_company
-    Project.send(:include, ProjectHaltrPatch) #TODO: perque nomes funciona el primer cop sense aixo?
     if @project.company.nil?
       c = Company.new(:project=>@project,:name=>@project.name)
       c.save(false)

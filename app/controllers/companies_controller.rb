@@ -5,7 +5,6 @@ class CompaniesController < ApplicationController
   layout 'haltr'
   helper :haltr
 
-  before_filter :project_patch
   before_filter :find_project, :except => [:update, :logo]
   before_filter :find_company, :only => [:update]
   before_filter :set_iso_countries_language
@@ -78,10 +77,6 @@ class CompaniesController < ApplicationController
   def find_company
     @company = Company.find params[:id]
     @project = @company.project
-  end
-
-  def project_patch
-    Project.send(:include, ProjectHaltrPatch) #TODO: perque nomes funciona el primer cop sense aixo?
   end
 
   def detect_content_type(attachment)
