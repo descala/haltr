@@ -27,10 +27,10 @@
   <p><%= f.select(:payment_method, Invoice.payment_methods, :disabled=>disabled) %></p>
   <div id="invoice_lines">
     <p style="font-weight:bold;">
-    <span class="invoiceLineHeader" style="width: 80px;"><%= l(:field_quantity) %></span>
-    <span class="invoiceLineHeader" style="width: 80px;">&nbsp;</span>
+    <span class="invoiceLineHeader" style="width: 70px;"><%= l(:field_quantity) %></span>
+    <span class="invoiceLineHeader" style="width: 74px;">&nbsp;</span>
     <span class="invoiceLineHeader" style="width: 215px;"><%= l(:field_description) %></span>
-    <span class="invoiceLineHeader" style="width: 80px;"><%= l(:field_price) %></span>
+    <span class="invoiceLineHeader" style="width: 75px;"><%= l(:field_price) %></span>
     </p>
     <% f.fields_for :invoice_lines do |line_form| %>
       <%= render :partial => 'received_invoices/invoice_line', :locals => { :f => line_form } %>
@@ -41,4 +41,3 @@
     <p><%= f.text_field :import, :value => f.object.import.to_s.gsub(/\.0+$/,'') %></p>
   </div>
 </div>
-
