@@ -1,7 +1,14 @@
 require 'redmine'
-require 'haltr'
 
 RAILS_DEFAULT_LOGGER.info 'Starting haltr plugin'
+
+# Patches to the Redmine core
+require 'dispatcher'
+require 'project_haltr_patch'
+Dispatcher.to_prepare do
+  Project.send(:include, ProjectHaltrPatch)
+end
+
 Date::DATE_FORMATS[:ddmmyy] = "%d%m%y"
 
 Dir[File.join(directory,'vendor','plugins','*')].each do |dir|
@@ -57,12 +64,18 @@ Redmine::Plugin.register :haltr do
 
 end
 
-# https://github.com/koke/iso_countries/
-require_dependency 'iso_countries'
-# https://github.com/SunDawg/country_codes
-config.gem 'sundawg_country_codes', :lib => 'country_iso_translater'
-# require money gem >= 5.0.0
-config.gem 'money', :version => '>=5.0.0'
+if Redmine::VERSION::MAJOR == 1 
+  require_dependency 'utils'
+  require_dependency 'iso_countries'
+  if Redmine::VERSION::MINOR >= 4
+    require_dependency 'country_iso_translater'
+  else
+    config.gem 'sundawg_country_codes', :lib => 'country_iso_translater'
+    config.gem 'money', :version => '>=5.0.0'
+  end
+else
+  raise "Redmine version #{Redmine::VERSION::STRING} not supported"
+end
 
 # avoid taxis error
 ActiveSupport::Inflector.inflections do |inflect|
