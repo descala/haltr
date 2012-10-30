@@ -1,0 +1,358 @@
+dk:
+ 
+  number:
+    # Used in number_to_tax_percent()
+    tax:
+      format:
+        # Hvor er den procentdel? %n er antallet, %p er "%" symbolet
+        format: "%t %n%p"
+        separator: ","
+        delimiter: "."
+        precision: 2
+        significant: false
+        tax_name: "MOMS"
+ 
+  # community
+  label_company: Virksomhed
+  label_my_company: Min virksomhed
+  label_companies: Virksomheder
+  label_company_new: Ny virksomhed
+  field_address: Adresse
+  field_address2: Adresse
+  field_city: By
+  field_province: Kommun
+  field_postalcode: Postnummer
+  field_country: Land
+  field_bank_account: Bank konto
+  button_people: Mennesker
+  field_invoice_format: Foretrukne faktura transport og format
+  field_currency: Valuta
+  field_ponumber: Indkøbsordre
+  cif_belongs_to_company: "Denne momsregistreringsnummer tilhører selskab <span style='font-weight: bold;'>%{company}</span>."
+  link_to_profile_suggest: "Du kan %{href}  til den pågældende kunde"
+  link_to_profile: "linke sin offentlige profil"
+  link_to_profile_ask: "anmodning om tilladelse til at knytte sin offentlige profil"
+  pending_authorization: "Afventer tilladelse fra firma <span style='font-weight: bold;'>%{company}</span>"
+  denied_authorization: "Firma<span style='font-weight: bold;'>%{company}</span>nægtet tilladelse til at knytte sin profil"
+  linked_to_profile: "Forbundet til selskab <span style='font-weight: bold;'>%{company}</span>"
+  link_requests: "Anmodninger om at linke din profil"
+  pending_requests: "%{i}ventende anmodninger"
+  allow_link: "Godkendelse"
+  deny_link: "afvis"
+  unlink: Fjern link
+  field_company_public: "Profil"
+  public: "Offentig"
+  semipublic: " Kræv tilladelse "
+  private: "Private"
+  confirm_delete_client_with_invoices: "Advarsel! klient har %{count}  fakturaer forbundet.\nSlette klient og alle hans fakturaer?"
+ 
+  # Invoices
+  IssuedInvoice: udstedt faktura
+  ReceivedInvoice: modtaget faktura
+  DraftInvoice: Afkast
+  label_invoice_plural: fakturaer
+  label_invoice: faktura
+  label_draft: faktura udkast
+  field_invoice: Faktura
+  label_invoice_new: Ny faktura
+  button_new_invoice: Ny faktura
+  button_add_invoice_line: Tilføj en ny faktura linje
+  field_number: Nummer
+  label_last_invoice_number: "Sidste brugt"
+  field_date: Dato
+  field_client: Kunde
+  field_extra_info: Noter
+  field_terms: betingelser
+  field_discount_text: Rabat text
+  field_discount_percent: "Rebat%"
+  field_frequency: Frequency
+  field_draft: Afkast
+  label_invoice_state: Status
+  field_state: Status
+  show_template: Vis skabelon
+  generate_template_from_invoice: Generer ny skabelon
+  generated_from_template: Genereret fra skabelon
+  receive_payment: Modtag betaling
+  make_payment: Foretag indbetaling
+  label_paid: Betalt
+  label_tax: Skat
+  label_tax_plural: Skatter
+  button_add_tax: Tilføj ny skat
+  label_from: Fra
+  label_to: Til
+  save_invoice: Gem faktura
+  recipients: modtager
+  open_invoices: Åben fakturaer
+  pending_invoices: Ventende fakturaer
+  closed_invoices: lukkede fakturaer
+  label_subtotal: Subtotal
+  over_taxable_base: over
+  must_have_lines: skal have linier
+  send_invoice: Send faktura
+  label_send: Send
+  cash: Kontant
+  debit: Debet betaling
+  transfer: Bankoverførsel
+  other: Andre
+  requires_client_bank_account: kræver klient bankkonto
+  requires_company_bank_account: kræver self-service bank konto
+  requires_client_iban_bic: kræver kunde IBAN og BIC
+  requires_company_iban_bic: kræver egen IBAN og BIC
+  cash_str: "Kontant betaling"
+  debit_str: "Debit betaling til"
+  transfer_str: "Bank overførsel til"
+  state_new_plural: "Ny"
+  state_sending_plural: "Sender"
+  state_sent_plural: "Sendt"
+  state_error_plural: "Ikke signeret"
+  state_closed_plural: "Lukket"
+  state_discarded_plural: "Kasseret"
+  state_new: "Ny"
+  state_sending: "Sender"
+  state_sent: "Sendt"
+  state_error: "Ikke signere"
+  state_closed: "Lukket"
+  state_discarded: "Kasseret"
+  state_validating_format: "Validering forma"
+  state_validating_signature: "Validering signatur"
+  state_received: "Factura rebuda"
+  state_accepted: "Accepteret"
+  state_refused: "Afvist"
+  state_paid: "Betalt"
+  sending_log: "Log d'enviament"
+  sending_log: "Sender log"
+  download_legal: "Download juridisk faktur"
+  download_notification: "Download meddelelse"
+  label_all_invoices: "Alle fakturaer"
+  label_issued: "Udstedte fakturaer"
+  label_received: "Modtagne fakturaer"
+  mark_not_sent: "Marker som ikke sendt"
+  mark_closed: "Marker som lukket"
+  mark_sent: "Marker som sendt"
+  mark_accepted: "Accepter faktura"
+  mark_refused: "Afvis faktura"
+  accept: "Accepteret"
+  refuse: "Afvist"
+  received_invoice_accepted: "%{company} accepterede fakturanummer %{num}"
+  received_invoice_refused: "%{company} nægtede fakturanummer%{num}"
+  refuse_notification_to: "Giv nægte at%{mail}"
+  accept_notification_to: "Giv accept til%{mail}"
+  refuse_and_mail: "Afvis med mail"
+  refuse_without_mail: "Afvis uden mail"
+  accept_and_mail: "Accepter med mail"
+  accept_without_mail: "Accepter uden mail"
+  cancel: "Annullere"
+  client_without_email: "Tilknytett klient har ingen e-mail defineret"
+  report_issue_with_invoice: "Rapporter et problemer med denne faktura"
+  invoice_issue_subject: "Jeg har et problem med faktura med intern id %{id}"
+  invoice_issue_body: "-- skriv her emne beskrivelse --"
+  quick_pdf_view: "Hurtig PDF visning"
+  pdf_invoice_expl: "Dette er en indbyrdes tilnærmelse til modtagne faktura, vær venlig at tjekke felter er korrekt udfyldt med oprindelige"
+  no_pdf_support: "Det ser du ikke har Adobe Reader eller PDF support i denne web browser. <a href='%{pdf}'> Klik her for at downloade PDF </a>"
+  client_has_no_email: "Faktura klient har ingen e-mail defineret"
+  invoice_has_no_taxes: "faktura ingen skat"
+  invoice_no_taxes_and_discount: "En faktura kan ikke have linier uden skat og en global rabat"
+  field_import: "Import"
+  pdf_not_legal: "PDF ikke legal"
+  amended_invoice: "Berigtigelse af%{link}"
+  amended_by_invoice: "Udbedret af %{link}"
+  create_amend_invoice: "Opret korrigeret faktura"
+  label_amendment_invoice: "Ændring Faktura"
+  label_amended_invoice: "Ændret faktura"
+  line_specific_tax: "Line skat"
+  default: "Default"
+  only_one_default_allowed_for: "%{tax_name}: Kun én standard skat tilladt"
+  add_taxes_on_company: "Administrer afgifter på \"Mit firma\""
+  button_download_new_invoices: "Download zip af nye fakturaer"
+  label_download_new_invoices_info: "Opretter en zip-fil med alle de nye fakturaer i PDF-format"
+ 
+  # Events
+  events: " hændelseslog "
+  by: "med"
+  manual_send: "Manuel markeret som sendt"
+  queue: "Sendt til b2brouter"
+  requeue: "Re-sendt til b2brouter"
+  success_sending: "Korrekt sendt til modtager"
+  mark_unsent: "Manuel markeret som ikke sendt"
+  error_sending: "Fejl ved afsendelse"
+  close: "Lukket"
+  amend_and_close: "Ændret og lukket"
+  discard_sending: " Ikke sendt Max forsøg nåede"
+  paid: "Markeret som betalt"
+  unpaid: "Markeret som ikke batalt"
+  edited: "Redigeret"
+  new: "Oprettet"
+  bounced: "Bounced: Kan ikke levere til angivne e-mail"
+  validating_format: "Modtaget faktura"
+  success_validating_format: "Format validering succes"
+  error_validating_format: "Fejl på format validering"
+  discard_validating_format: "Fejl på format validering"
+  success_validating_signature: "Signature validering succes"
+  error_validating_signature: "Fejl på signaturvalidering"
+  discard_validating_signature: "Fejl på signaturvalidering"
+  sent_notification: "AOC meddelelsesdato: Modtaget"
+  delivered_notification: "AOC meddelelsesdato: Sendt"
+  registered_notification: "AOC meddelelsesdato: Registreret"
+  accept_notification: "AOC meddelelsesdato: Accepteret"
+  refuse_notification: "AOC meddelelsesdato: Afvist"
+  paid_notification: "AOC meddelelsesdato: Betalt"
+  by_mail_from: "via e-mail fra %{email}"
+  in_format: "in %{format} format"
+  back: "Tilbage"
+  view_mail: "Vis email"
+  public_link: "Offentlig link"
+ 
+  # Invoice templates
+  label_invoice_template_new: Ny skablon
+  label_invoice_template: Skablon
+  label_invoice_template_plural: Skabloner
+  label_generated_invoices: Genererede fakturaer
+  next_charge: Næste afgift
+  invoices_to_generate: Fakturaer at generere
+  generate: Generer
+  generate_selected: Generer valgt
+  label_no_issues_to_generate: Ingen faktura at generer
+ 
+  # Invoice lines
+  field_price: Pris
+  field_quantity: Mængde
+  field_invoice_lines: Faktura linjer
+  field_unit: Enhed
+  units: Enheder
+  hours: Timer
+  kilograms: Kilogram
+  litters: Liter
+  s_units: ""
+  s_hours: h
+  s_kilograms: kg
+  s_litters: l
+  days: Dag
+  s_days: d
+ 
+  # People
+  label_person: Person
+  label_person_new: Ny person
+  label_person_plural: Mennesker
+  field_first_name: Navn
+  field_last_name: Efternavn
+  field_email: Email
+  field_phone_office: Kontor Telefon
+  field_phone_mobile: Mobile Telefon
+  field_invoice_recipient: Faktura modtager
+  field_report_recipient: Rapport modtager
+ 
+  # Tasks
+  label_task_plural: Opgaver
+  with_date: Med dato
+  charge_bank_on_date: Bank faktureres på dato 
+  nothing_to_report: Intet at rapportere
+  nothing_to_generate: Intet at generere
+  button_generate_invoices: Nye fakturaer fra skablon
+  button_send_invoices: Send fakturaer
+  label_automator_info: download PDFs, e-mail automator script and mark as sent
+  label_charge_n19: Charge bank accounts with N19 format
+  button_mark_done: Markér som udført
+  label_invoice_report: faktura rapport
+  label_import_aeb43: Importer AEB43
+ 
+  # Payments
+  label_payment: Betaling
+  label_payment_plural: Betalinger
+  label_payment_new: Ny betaling
+  field_amount: Beløb
+  field_amount_in_cents: Beløb
+  field_payment_method: Betalingsmetode
+  field_reference: Reference
+  field_total_paid: Total betalt
+  received_invoice_paid: "%{company} har betalt faktura nummer %{num}"
+  issued_invoice_paid: "%{company} har modtaget betaling for faktura nummer %{num}"
+  paid_notification_to: "Send betalt meddelelse til %{mail}"
+  received_paid_notification_to: "Giv modtagelse af betaling til %{mail}"
+  save_and_mail: "Gem og send e-mail"
+  save_without_mail: "Gem uden at sende e-mail"
+ 
+  # Settings
+  field_taxcode: MOMS Nummer
+  field_website: Webside
+  export_channels_path: "Eksport mapper sti"
+  field_company: "Selskabet"
+  logo: "Logo"
+  trace_url: "B2brouter URL"
+  b2brouter_ip: "B2brouter IP"
+  b2b_subtitle: "Din online fakturering service"
+  field_public: "Offentlig profi"
+  private_fields_info: "Disse felter er privat, uanset du vælger offentlig profil"
+  issues_controller_name: "Issues controller navn"
+  diba_cif: "DIBA CIF"
+  field_iban: IBAN
+  field_bic: BIC
+  default_country: "Default land"
+  default_currency: "Default valuta"
+ 
+  # Terms
+  "0": Omgående betaling
+  "15": 15 dage
+  "30": 30 dage
+  "60": 60 dage
+  "90": 90 dage
+  "120": 120 dage
+  "0m-1": Sidste dag i denne måned
+  "1m-1": Sidste dag i næste måned
+  "1m1": 1. dag i næste måned
+  "2m1": "1. dag i to måneder "
+  "1m15": 15. dag i næste måned
+  "1m20": 20. dag i næste måned
+  "1m10": 10. dag i næste måned
+  "custom": Toll
+ 
+  # Frequency
+  mf12: Årligt
+  mf6: Halvårligt
+  mf3: kvartalsvis
+  mf2: Bimånedligt
+  mf1: Månedligt
+ 
+  # ExportChannels
+  paper:       "Ingen (manual PDF download)"
+  ublinvoice_20: "UBL faktura 2.0 til email"
+  acturae_30: "Facturae 3.0 til email"
+  facturae_31: "Facturae 3.1 til email"
+  facturae_32: "Facturae 3.2 til email"
+  signed_pdf:  "Signed PDF til email"
+  aoc: "Facturae 3.0 til e-FACT hub fra AOC"
+  aoc31: "Facturae 3.1 til e-FACT hub fra AOC"
+  aoc32: "Facturae 3.2 til e-FACT hub fra AOC"
+ 
+  # Errors
+  cant_connect_trace: "Kan ikke forbinde til b2brouter platform. {{value}}"
+  halt_configure_before_use: Please first configure company settings
+  warning_can_not_generate_invoice: "Kan ikke generere faktura formularskabelon {{value}}"
+  notice_invoice_sent: "Faktura sendt"
+  error_invoice_not_sent: "Kunne ikke sende faktura %{num}"
+  notice_empty_n19: "Ingen data til at skabe N19"
+  notice_n19_done:  "N¬∫19for forfaldsdatoen {{value}} maked som udført"
+  notice_uploaded_file_not_found: "Fil ikke fundet"
+ 
+  hide_full_form: "Vis færre felter"
+  show_full_form: "Vis flere felter"
+ 
+  # DIBA
+  field_codi_centre_gestor: "Management center kode"
+  field_num_contracte: "Kontrakt num"
+  field_num_expedient: "Record num"
+  field_created_at: "Oprettet"
+  info_default_taxes: "Dit land afgifter vil blive skabt som standard"
+  label_invoices_min: "Mindste antal fakturaer"
+  label_stastics: "Stastics"
+  label_received_with_num: "Modtagne fakturaer ({{num}} new)"
+  help_invoice_format: "Foretrukken faktura transport og format"
+  logo_not_image: "Logo ikke gemt, det var ikke et billede"
+  contact_us_for_cif: "Hvis det virkelig er din taxcode, %{link}"
+  contact_us: "kontakt os"
+  add_own_certificate: "%{link} at underskrive fakturaer med dit eget certifikat"
+  invoices_not_sent: "%{num} fakturaer undladt at sende:"
+  invoices_sent: "%{num}  fakturaer sendt"
+  invoice_limit_reached: "Samtidig levering er nået (10 regninger).<br />Du kan sende igen at behandle 10 mere."
+  zip_gem_required: "zip' perle kræves for at bruge denne funktionalitet"
+  too_much_invoices: "for mange fakturaer for at downloade (%{num} invoices, max 10)"
+  field_send_invoices_by_mail: "Send fakturaer til denne e-mail"
