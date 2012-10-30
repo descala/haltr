@@ -96,7 +96,7 @@ en:
   transfer: Bank transfer
   other: Other
   requires_client_bank_account: requires client bank account
-  requires_company_bank_account: requires self bank account
+  requires_company_bank_account: requires a bank account in your company
   requires_client_iban_bic: requires client IBAN and BIC
   requires_company_iban_bic: requires self IBAN and BIC
   cash_str: "Cash payment"
@@ -246,11 +246,11 @@ en:
   label_task_plural: Tasks
   with_date: With date
   charge_bank_on_date: Charge bank on date
-  nothing_to_report: Nothing has to be reported
-  nothing_to_generate: Nothing has to be generated
+  nothing_to_report: Nothing to report
+  nothing_to_generate: Nothing ro generate
   button_generate_invoices: New invoices from template
   button_send_invoices: Send invoices
-  label_automator_info: download PDFs, e-mail automator script and mark as send
+  label_automator_info: download PDFs, e-mail automator script and mark as sent
   label_charge_n19: Charge bank accounts with N19 format 
   button_mark_done: Mark as done
   label_invoice_report: Invoices report
