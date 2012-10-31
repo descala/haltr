@@ -52,10 +52,6 @@ class ReceivedInvoice < InvoiceDocument
     self.has_been_read=false
   end
 
-  def total
-    import
-  end
-
   def to_label
     "#{number}"
   end
