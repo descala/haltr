@@ -1,5 +1,7 @@
 class MailNotifier < ActionMailer::Base
 
+  helper :haltr
+
   unloadable
 
   def received_invoice_accepted(invoice,reason)
