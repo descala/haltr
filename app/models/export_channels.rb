@@ -23,7 +23,7 @@ class ExportChannels
   end
 
   def self.channel(id)
-    available[id][:channel] if available? id
+    available[id][:folder] if available? id
   end
 
   def self.validations(id)
