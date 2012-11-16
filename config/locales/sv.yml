@@ -318,9 +318,6 @@ sv:
   facturae_31: "Spanskt format Facturae 3.1 till email"
   facturae_32: "Spanskt format Facturae 3.2 till email"
   signed_pdf:  "Signerad PDF till email"
-  aoc: "Spanskt format Facturae 3.0 till e-FACT hub från AOC"
-  aoc31: "Spanskt format Facturae 3.1 till e-FACT hub från AOC"
-  aoc32: "Spanskt format Facturae 3.2 till e-FACT hub från AOC"
 
   # Errors
   cant_connect_trace: "Kan inte få kontakt med  b2brouter plattformen. {{value}}"

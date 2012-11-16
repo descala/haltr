@@ -318,9 +318,6 @@ en:
   facturae_31: "Facturae 3.1 to email"
   facturae_32: "Facturae 3.2 to email"
   signed_pdf:  "Signed PDF to email"
-  aoc: "Facturae 3.0 to e-FACT hub from AOC"
-  aoc31: "Facturae 3.1 to e-FACT hub from AOC"
-  aoc32: "Facturae 3.2 to e-FACT hub from AOC"
 
   # Errors
   cant_connect_trace: "Can't connect to b2brouter platform. {{value}}"
