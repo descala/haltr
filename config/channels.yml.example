@@ -10,7 +10,7 @@ paper:
     es: "Ninguno (descarga de un PDF)"
     fr: "Aucun (Téléchargement manuel PDF)"
     sv: "Inga (manuell nedladdning av PDF)"
-  permissions:
+  allowed_permissions:
   - download_pdf
 
 signed_pdf:
@@ -24,7 +24,7 @@ signed_pdf:
     es: "PDF firmado, enviado por email"
     fr: "PDF signé par email"
     sv: "Signerad PDF till email"
-  permissions:
+  allowed_permissions:
   - send_by_mail
 
 facturae_30:
@@ -40,7 +40,7 @@ facturae_30:
     es: "Facturae 3.0 por email"
     fr: "Facturae 3.0 par email"
     sv: "Spanskt format Facturae 3.0 till email"
-  permissions:
+  allowed_permissions:
   - send_by_mail
 
 facturae_31:
@@ -56,7 +56,7 @@ facturae_31:
     es: "Facturae 3.1 por email"
     fr: "Facturae 3.1 par email"
     sv: "Spanskt format Facturae 3.1 till email"
-  permissions:
+  allowed_permissions:
   - send_by_mail
 
 facturae_32:
@@ -72,7 +72,7 @@ facturae_32:
     es: "Facturae 3.2 por email"
     fr: "Facturae 3.2 par email"
     sv: "Spanskt format Facturae 3.2 till email"
-  permissions:
+  allowed_permissions:
   - send_by_mail
 
 ublinvoice_20:
@@ -88,5 +88,5 @@ ublinvoice_20:
     es: "Factura UBL 2.0 por email"
     fr: "UBL Facture 2.0 par email"
     sv: "UBL Faktura 2.0 till email"
-  permissions:
+  allowed_permissions:
   - send_by_mail
