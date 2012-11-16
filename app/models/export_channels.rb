@@ -2,16 +2,12 @@ class ExportChannels
 
   unloadable
 
-  # TODO: move this settings to activerecord
   def self.available
-    {
-      'paper'         => { :format=>nil,          :channel=>nil} ,
-      'ublinvoice_20' => { :format=>'ubl21',      :channel=>'free_ubl', :validate => [:client_has_email, :ubl_invoice_has_no_taxes_withheld] },
-      'facturae_30'   => { :format=>'facturae30', :channel=>'free_xml', :validate => [:client_has_email, :invoice_has_taxes] },
-      'facturae_31'   => { :format=>'facturae31', :channel=>'free_xml', :validate => [:client_has_email, :invoice_has_taxes] },
-      'facturae_32'   => { :format=>'facturae32', :channel=>'free_xml', :validate => [:client_has_email, :invoice_has_taxes] },
-      'signed_pdf'    => { :format=>'pdf',        :channel=>'free_pdf', :validate => :client_has_email }
-    }
+    # See config/channels.yml.example
+    YAML.load(File.read( "#{RAILS_ROOT}/vendor/plugins/haltr/config/channels.yml"))
+  rescue Exception => e
+    puts "Exception while retrieving channels.yml: #{e.message}"
+    {}
   end
 
   def self.default
@@ -37,8 +33,12 @@ class ExportChannels
 
   def self.for_select(current_project)
     available.collect {|k,v|
-      unless User.current.admin? or User.current.allowed_to?(:use_restricted_channels, current_project)
-        next if v[:private]
+      unless User.current.admin?
+        allowed = false
+        v[:allowed_permissions].each do |perm|
+          allowed = true if User.current.allowed_to?(perm, current_project)
+        end
+        next unless allowed
       end
       [ I18n.t(k), k ]
     }.compact.sort {|a,b| a[1] <=> b[1] }

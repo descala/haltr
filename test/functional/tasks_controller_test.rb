@@ -12,7 +12,7 @@ class TasksControllerTest < ActionController::TestCase
     # with role 2 (developer)
     Project.find(2).enabled_modules << EnabledModule.new(:name => 'haltr')
     dev = Role.find(2)
-    dev.permissions += [:free_use]
+    dev.permissions += [:general_use]
     assert dev.save
     @controller = TasksController.new
     @request    = ActionController::TestRequest.new

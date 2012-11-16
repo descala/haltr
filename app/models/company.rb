@@ -12,8 +12,8 @@ class Company < ActiveRecord::Base
   validates_length_of :bank_account, :maximum => 20
   validates_inclusion_of :currency, :in  => Money::Currency.table.collect {|k,v| v[:iso_code] }
   validate :only_one_default_tax_per_name
-  acts_as_attachable :view_permission => :free_use,
-                     :delete_permission => :free_use
+  acts_as_attachable :view_permission => :general_use,
+                     :delete_permission => :general_use
   after_save :update_linked_clients
   iso_country :country
   include CountryUtils

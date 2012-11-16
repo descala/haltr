@@ -18,6 +18,11 @@ Dir[File.join(directory,'vendor','plugins','*')].each do |dir|
   ActiveSupport::Dependencies.load_once_paths.delete(path)
 end
 
+# channels can define its own permissions
+channel_permissions = ExportChannels.available.collect { |name,channel|
+  channel["allowed_permissions"]
+}.flatten.compact.uniq
+
 Redmine::Plugin.register :haltr do
   name 'haltr'
   author 'Ingent'
@@ -34,7 +39,7 @@ Redmine::Plugin.register :haltr do
   :partial => '/common/settings'
 
   project_module :haltr do
-    permission :free_use,
+    permission :general_use,
       { :clients  => [:index, :new, :edit, :create, :update, :destroy, :check_cif, :link_to_profile, :unlink,
                       :allow_link, :deny_link],
         :people   => [:index, :new, :show, :edit, :create, :update, :destroy],
@@ -43,18 +48,18 @@ Redmine::Plugin.register :haltr do
                       :mark_refused_with_mail, :destroy_payment, :efactura30, :efactura31, :efactura32, :ubl21,
                       :send_invoice, :log, :legal, :update_currency_select, :amend_for_invoice, :download_new_invoices, :send_new_invoices,
                       :duplicate_invoice],
-        :invoice_templates => [:index, :new, :edit, :create, :update, :destroy, :show, :new_from_invoice,
-                               :invoices, :create_invoices, :update_taxes],
         :tasks    => [:index, :n19, :n19_done, :report, :import_aeb43],
-        :payments => [:index, :new, :edit, :create, :update, :destroy ],
         :companies => [:index,:edit,:update]},
       :require => :member
-    permission :use_restricted_channels,
-      {},
-      :require => :member
-    permission :premium_use,
-      {:tasks => [:automator]},
-      :require => :member
+
+    permission :manage_payments, { :payments => [:index, :new, :edit, :create, :update, :destroy ] }, :require => :member
+    permission :use_templates, { :invoice_templates => [:index, :new, :edit, :create, :update, :destroy, :show, :new_from_invoice,
+                                 :invoices, :create_invoices, :update_taxes] }, :require => :member
+
+    channel_permissions.each do |permission|
+      permission permission, {}, :require => :member
+    end
+
   end
 
   menu :project_menu, :haltr_community, { :controller => 'clients', :action => 'index' }, :caption => :label_companies
