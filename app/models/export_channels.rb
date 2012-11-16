@@ -19,23 +19,23 @@ class ExportChannels
   end
 
   def self.format(id)
-    available[id][:format] if available? id
+    available[id]["format"] if available? id
   end
 
   def self.channel(id)
-    available[id][:folder] if available? id
+    available[id]["folder"] if available? id
   end
 
   def self.validations(id)
-    return [] if available[id][:validate].nil?
-    available[id][:validate].is_a?(Array) ? available[id][:validate] : [available[id][:validate]]
+    return [] if available[id]["validate"].nil?
+    available[id]["validate"].is_a?(Array) ? available[id]["validate"] : [available[id]["validate"]]
   end
 
   def self.for_select(current_project)
     available.collect {|k,v|
       unless User.current.admin?
         allowed = false
-        v[:allowed_permissions].each do |perm|
+        v["allowed_permissions"].each do |perm|
           allowed = true if User.current.allowed_to?(perm, current_project)
         end
         next unless allowed
