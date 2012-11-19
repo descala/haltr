@@ -19,9 +19,13 @@ Dir[File.join(directory,'vendor','plugins','*')].each do |dir|
 end
 
 # channels can define its own permissions
-channel_permissions = ExportChannels.available.collect { |name,channel|
-  channel["allowed_permissions"]
-}.flatten.compact.uniq
+channel_permissions = {}
+ExportChannels.available.values.each do |channel|
+  channel["allowed_permissions"].each do |permission,actions|
+    channel_permissions[permission] ||= {}
+    channel_permissions[permission].merge!(actions) if actions
+  end
+end
 
 Redmine::Plugin.register :haltr do
   name 'haltr'
@@ -43,11 +47,10 @@ Redmine::Plugin.register :haltr do
       { :clients  => [:index, :new, :edit, :create, :update, :destroy, :check_cif, :link_to_profile, :unlink,
                       :allow_link, :deny_link],
         :people   => [:index, :new, :show, :edit, :create, :update, :destroy],
-        :invoices => [:index, :new, :edit, :create, :update, :destroy, :show, :pdf, :mark_sent,
-                      :mark_closed, :mark_not_sent, :mark_accepted, :mark_accepted_with_mail, :mark_refused,
-                      :mark_refused_with_mail, :destroy_payment, :efactura30, :efactura31, :efactura32, :ubl21,
-                      :send_invoice, :log, :legal, :update_currency_select, :amend_for_invoice, :download_new_invoices, :send_new_invoices,
-                      :duplicate_invoice],
+        :invoices => [:index, :new, :edit, :create, :update, :destroy, :show, :mark_sent, :mark_closed, :mark_not_sent,
+                      :mark_accepted, :mark_accepted_with_mail, :mark_refused, :mark_refused_with_mail, :destroy_payment,
+                      :efactura30, :efactura31, :efactura32, :ubl21, :send_invoice, :log, :legal, :update_currency_select,
+                      :amend_for_invoice, :download_new_invoices, :send_new_invoices, :duplicate_invoice],
         :tasks    => [:index, :n19, :n19_done, :report, :import_aeb43],
         :companies => [:index,:edit,:update]},
       :require => :member
@@ -56,8 +59,9 @@ Redmine::Plugin.register :haltr do
     permission :use_templates, { :invoice_templates => [:index, :new, :edit, :create, :update, :destroy, :show, :new_from_invoice,
                                  :invoices, :create_invoices, :update_taxes] }, :require => :member
 
-    channel_permissions.each do |permission|
-      permission permission, {}, :require => :member
+    channel_permissions.each do |permission,actions|
+      puts "Setting permission #{permission}: #{actions.to_json}"
+      permission permission, actions, :require => :member
     end
 
   end
