@@ -18,15 +18,6 @@ Dir[File.join(directory,'vendor','plugins','*')].each do |dir|
   ActiveSupport::Dependencies.load_once_paths.delete(path)
 end
 
-# channels can define its own permissions
-channel_permissions = {}
-ExportChannels.available.values.each do |channel|
-  channel["allowed_permissions"].each do |permission,actions|
-    channel_permissions[permission] ||= {}
-    channel_permissions[permission].merge!(actions) if actions
-  end
-end
-
 Redmine::Plugin.register :haltr do
   name 'haltr'
   author 'Ingent'
@@ -59,8 +50,7 @@ Redmine::Plugin.register :haltr do
     permission :use_templates, { :invoice_templates => [:index, :new, :edit, :create, :update, :destroy, :show, :new_from_invoice,
                                  :invoices, :create_invoices, :update_taxes] }, :require => :member
 
-    channel_permissions.each do |permission,actions|
-      puts "Setting permission #{permission}: #{actions.to_json}"
+    ExportChannels.permissions.each do |permission,actions|
       permission permission, actions, :require => :member
     end
 

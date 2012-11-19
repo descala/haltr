@@ -10,6 +10,17 @@ class ExportChannels
     {}
   end
 
+  def self.permissions
+    channel_permissions = {}
+    self.available.values.each do |channel|
+      channel["allowed_permissions"].each do |permission,actions|
+        channel_permissions[permission] ||= {}
+        channel_permissions[permission].merge!(actions) if actions
+      end
+    end
+    channel_permissions
+  end
+
   def self.default
     'signed_pdf'
   end
