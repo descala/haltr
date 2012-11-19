@@ -191,23 +191,6 @@ class InvoicesController < ApplicationController
     render :text => "OK"
   end
 
-  # create a template from an invoice
-  def template
-    it = InvoiceTemplate.new @invoice.attributes
-    it.taxes = @invoice.taxes
-    it.frequency = 1
-    it.number = nil
-    it.save!
-    # copy template lines
-    @invoice.invoice_lines.each do |il|
-      l = InvoiceLine.new il.attributes
-      l.invoice = it
-      l.save!
-    end
-
-    render :text => "Template created"
-  end
-
   def duplicate_invoice
     orig = InvoiceDocument.find(params[:id])
     @invoice = IssuedInvoice.new orig.attributes
