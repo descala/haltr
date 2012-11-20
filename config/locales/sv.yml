@@ -311,14 +311,6 @@ sv:
   mf2: Varannan månad
   mf1: Månatlig
 
-  # ExportChannels
-  paper:       "Inga (manuell nedladdning av PDF)"
-  ublinvoice_20: "UBL Faktura 2.0 till email"
-  facturae_30: "Spanskt format Facturae 3.0 till email"
-  facturae_31: "Spanskt format Facturae 3.1 till email"
-  facturae_32: "Spanskt format Facturae 3.2 till email"
-  signed_pdf:  "Signerad PDF till email"
-
   # Errors
   cant_connect_trace: "Kan inte få kontakt med  b2brouter plattformen. {{value}}"
   halt_configure_before_use: Var god och registera företag först

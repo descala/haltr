@@ -46,12 +46,12 @@ class ExportChannels
     available.collect {|k,v|
       unless User.current.admin?
         allowed = false
-        v["allowed_permissions"].each do |perm|
+        v["allowed_permissions"].each_key do |perm|
           allowed = true if User.current.allowed_to?(perm, current_project)
         end
         next unless allowed
       end
-      [ I18n.t(k), k ]
+      [ v["locales"][I18n.locale.to_s], k ]
     }.compact.sort {|a,b| a[1] <=> b[1] }
   end
 

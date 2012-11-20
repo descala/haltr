@@ -312,17 +312,6 @@ da:
   mf2: Bimånedligt
   mf1: Månedligt
  
-  # ExportChannels
-  paper: "Ingen (manual PDF download)"
-  ublinvoice_20: "UBL faktura 2.0 til email"
-  acturae_30: "Facturae 3.0 til email"
-  facturae_31: "Facturae 3.1 til email"
-  facturae_32: "Facturae 3.2 til email"
-  signed_pdf: "Signed PDF til email"
-  aoc: "Facturae 3.0 til e-FACT hub fra AOC"
-  aoc31: "Facturae 3.1 til e-FACT hub fra AOC"
-  aoc32: "Facturae 3.2 til e-FACT hub fra AOC"
- 
   # Errors
   cant_connect_trace: "Kan ikke forbinde til b2brouter platform. {{value}}"
   halt_configure_before_use: Please first configure company settings

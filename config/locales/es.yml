@@ -323,14 +323,6 @@ es:
   mf2: Bimensual
   mf1: Mensual
 
-  # ExportChannels
-  paper:       "Ninguno (descarga de un PDF)"
-  ublinvoice_20: "Factura UBL 2.0 por email"
-  facturae_30: "Facturae 3.0 por email"
-  facturae_31: "Facturae 3.1 por email"
-  facturae_32: "Facturae 3.2 por email"
-  signed_pdf:  "PDF firmado, enviado por email"
-
   # Errors
   cant_connect_trace: "No se puede conectar con la plataforma b2brouter"
   halt_configure_before_use: "Por favor, primero configura los datos de la empresa"
