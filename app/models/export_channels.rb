@@ -38,7 +38,7 @@ class ExportChannels
   end
 
   def self.validations(id)
-    return [] if available[id]["validate"].nil?
+    return [] if available[id].nil? or available[id]["validate"].nil?
     available[id]["validate"].is_a?(Array) ? available[id]["validate"] : [available[id]["validate"]]
   end
 
