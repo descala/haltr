@@ -50,6 +50,8 @@ Redmine::Plugin.register :haltr do
     permission :use_templates, { :invoice_templates => [:index, :new, :edit, :create, :update, :destroy, :show, :new_from_invoice,
                                  :invoices, :create_invoices, :update_taxes] }, :require => :member
 
+    permission :batch_processes, { :tasks => [:automator] }, :require => :member
+
     ExportChannels.permissions.each do |permission,actions|
       permission permission, actions, :require => :member
     end
