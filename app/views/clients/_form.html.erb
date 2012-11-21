@@ -40,7 +40,7 @@
       <p><%= label_tag I18n.t :field_country %>
       <%= text_field_tag :country, @client.country_name, :readonly => true %></p>
     <% else -%>
-      <p><%= f.label_for_field :country, :required => true %><%= f.iso_country_select :country, [:es], :readonly => @client.linked? %></p>
+      <p><%= f.label_for_field :country, :required => true %><%= f.iso_country_select :country, valid_languages, :readonly => @client.linked? %></p>
     <% end -%>
     <p><%= f.text_field :bank_account, :size => 30 %></p>
     <p><%= f.text_field :iban, :size => 30 %></p>
@@ -55,7 +55,7 @@
       <p><%= f.text_field :language, :value => l(:general_lang_name,:locale => @client.language), :readonly=>true %></p>
       <p><%= f.text_field :invoice_format, :value => l(@client.invoice_format), :readonly=>true %></p>
     <% else -%>
-      <p><%= f.select :language, %w(ca en es fr sv dk).collect {|l| [I18n.t(:general_lang_name,:locale=>l),l]}, :readonly => @client.linked? %></p>
+      <p><%= f.select :language, lang_options_for_select , :readonly => @client.linked? %></p>
       <p><%= f.select :invoice_format, ExportChannels.for_select(@project) %></p>
       <%
         disabled = []

@@ -40,7 +40,12 @@ module ISO
       
       # Wrapper to get country name from country code. +code+ can be a symbol or a string containing the country code.
       def get_country(code)
-        _(COUNTRIES[code.to_sym]) rescue nil
+        if String.method_defined?(:encoding)
+          # avoid incompatible character encodings: ASCII-8BIT and UTF-8 in Ruby 1.9
+          _(COUNTRIES[code.to_sym]).dup.force_encoding(Encoding::UTF_8) rescue "_Unknown"
+        else
+          _(COUNTRIES[code.to_sym]) rescue "_Unknown"
+        end
       end
       
       # Wrapper to get country code from country name.
