@@ -143,4 +143,10 @@ module InvoicesHelper
     end
   end
 
+  def l_export_channel(export_channel)
+    if channel = ExportChannels.available[export_channel]
+      channel["locales"][I18n.locale.to_s]
+    end
+  end
+
 end
