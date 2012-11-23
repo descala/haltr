@@ -18,8 +18,8 @@ class InvoicesController < ApplicationController
   skip_before_filter :check_if_login_required, :only => [:by_taxcode_and_num,:view,:logo,:download,:mail]
   # on development skip auth so we can use curl to debug
   if RAILS_ENV == "development"
-    skip_before_filter :check_if_login_required, :only => [:by_taxcode_and_num,:view,:logo,:download,:mail,:efactura30,:efactura31,:efactura32,:ubl21]
-    skip_before_filter :authorize, :only => [:efactura30,:efactura31,:efactura32,:ubl21]
+    skip_before_filter :check_if_login_required, :only => [:by_taxcode_and_num,:view,:logo,:download,:mail,:efactura30,:efactura31,:efactura32,:peppolubl20,:biiubl20,:svefaktura]
+    skip_before_filter :authorize, :only => [:efactura30,:efactura31,:efactura32,:peppolubl20,:biiubl20,:svefaktura]
   else
     before_filter :check_remote_ip, :only => [:by_taxcode_and_num,:mail]
   end
@@ -220,20 +220,34 @@ class InvoicesController < ApplicationController
     @format = "facturae30"
     @company = @invoice.company
     render :template => 'invoices/facturae30.xml.erb', :layout => false
+    response.content_type = 'application/xml'
   end
   def efactura31
     @format = "facturae31"
     @company = @invoice.company
     render :template => 'invoices/facturae31.xml.erb', :layout => false
+    response.content_type = 'application/xml'
   end
   def efactura32
     @format = "facturae32"
     @company = @invoice.company
     render :template => 'invoices/facturae32.xml.erb', :layout => false
+    response.content_type = 'application/xml'
   end
-  def ubl21
+  def peppolubl20
     @company = @invoice.company
-    render :template => 'invoices/ubl21.xml.erb', :layout => false
+    render :template => 'invoices/peppolubl20.xml.erb', :layout => false
+    response.content_type = 'application/xml'
+  end
+  def biiubl20
+    @company = @invoice.company
+    render :template => 'invoices/biiubl20.xml.erb', :layout => false
+    response.content_type = 'application/xml'
+  end
+  def svefaktura
+    @company = @invoice.company
+    render :template => 'invoices/svefaktura.xml.erb', :layout => false
+    response.content_type = 'application/xml'
   end
 
   def show

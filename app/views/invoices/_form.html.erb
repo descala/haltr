@@ -12,10 +12,12 @@
   <% end -%>
   <p><%= f.text_field :ponumber %></p>
   <div id="payment_stuff">
-  <%= render :partial => 'invoices/payment_stuff' %>
+    <%= call_hook(:invoice_form_payment_extra_fields) %>
+    <%= render :partial => 'invoices/payment_stuff' %>
   </div>
   <p><%= f.text_field :discount_text %></p>
   <p><%= f.text_field :discount_percent %></p>
+  <p><%= f.text_field :accounting_cost %></p>
   <p><%= f.text_area :extra_info, :rows=>3 %></p>
   <p><%= label_tag l(:label_tax_plural) %></p>
   <% if @invoice.taxes_hash.empty? -%>

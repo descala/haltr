@@ -192,7 +192,7 @@ class IssuedInvoice < InvoiceDocument
 
   def sending_info
     return export_errors.collect {|e| l(e)}.join(", ") if export_errors and export_errors.size > 0
-    if %w(ublinvoice_20 facturae_30 facturae_31 facturae_32 signed_pdf).include?(client.invoice_format)
+    if %w(ublinvoice_20 facturae_30 facturae_31 facturae_32 signed_pdf svefaktura peppolbii peppol).include?(client.invoice_format)
       return "recipients:\n#{client.emails.gsub(/,/,"\n")}"
     end
     ""
@@ -232,6 +232,31 @@ class IssuedInvoice < InvoiceDocument
     else
       true
     end
+  end
+
+  def peppol_fields
+    if self.client.schemeid.blank? or self.client.endpointid.blank?
+      add_export_error(:missing_client_peppol_fields)
+      return false
+    elsif self.company.schemeid.blank? or self.company.endpointid.blank?
+      add_export_error(:missing_company_peppol_fields)
+      return false
+    end
+    true
+  end
+
+  def svefaktura_fields
+   if self.respond_to?(:accounting_cost) and self.accounting_cost.blank?
+      add_export_error(:missing_svefaktura_account)
+      return false
+   elsif self.company.company_identifier.blank? 
+      add_export_error(:missing_svefaktura_organization)
+      return false
+   elsif self.debit? 
+      add_export_error(:missing_svefaktura_debit)
+      return false
+    end
+    true
   end
 
   def release_amended

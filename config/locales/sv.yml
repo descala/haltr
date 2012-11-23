@@ -282,7 +282,6 @@ sv:
   field_public: "Publik profil"
   private_fields_info: "Följande fält är privata även om du har en publik profil"
   issues_controller_name: "Issues controller name"
-  diba_cif: "DIBA CIF"
   field_iban: IBAN
   field_bic: BIC
   default_country: "Förvald land"
@@ -323,11 +322,6 @@ sv:
 
   hide_full_form: "Visa färre fält"
   show_full_form: "Visa fler fält"
-
-  # DIBA
-  field_codi_centre_gestor: "Management center code"
-  field_num_contracte: "Kontraktnummer"
-  field_num_expedient: "Record num"
   field_created_at: "Skapad vid"
   info_default_taxes: "Skatter som används i ditt land skapas automatiskt"
   label_invoices_min: "Minimum antal fakturor"
@@ -344,3 +338,7 @@ sv:
   zip_gem_required: "'zip' gem krävs för att det ska fungera"
   too_much_invoices: "För många fakturor att laddaa ner (%{num} fakturor, max 10)"
   field_send_invoices_by_mail: "Skicka fakturor till detta mail"
+
+  missing_svefaktura_account: "Saknad Svefaktura konto kostnad"
+  missing_svefaktura_organization: "Saknad Svefaktura organisation identifierare"
+  missing_svefaktura_debit: "Autogiro tillåts inte"

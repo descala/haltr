@@ -46,7 +46,7 @@
   <% unless @invoice.ponumber.blank? -%>
     <span class="invoice-terms"><%=h "#{t(:field_ponumber)} #{@invoice.ponumber}" %></span><br/>
   <% end -%>
-
+  <%= call_hook(:invoice_view_invoice_info) %>
 </div>
 
 <!-- Client Info -->
@@ -64,7 +64,8 @@
       <div class="country-name"><%=h @client.country if @client.country and @client.country.downcase != @company.country.downcase %></div>
     </address>
       <div><strong><%=h l(:field_taxcode) %>:</strong><span class="tax-id"> <%=h @client.taxcode.upcase %></span></div>
-  </div>
+      <%= call_hook(:invoice_view_client_info) %>
+    </div>
 </div>
 
 <!-- Invoice Data -->

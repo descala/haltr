@@ -1,0 +1,200 @@
+---
+paper:
+  format:
+  folder:
+  validate:
+  locales:
+    ca: "Cap (descàrrega d'un PDF)"
+    da: "Ingen (manual PDF download)"
+    en: "None (manual PDF download)"
+    es: "Ninguno (descarga de un PDF)"
+    fr: "Aucun (Téléchargement manuel PDF)"
+    sv: "Inga (manuell nedladdning av PDF)"
+  allowed_permissions:
+    :download_pdf:
+      :invoices:
+        - :pdf
+
+signed_pdf:
+  format: pdf
+  folder: free_pdf
+  validate: client_has_email
+  locales:
+    ca: "PDF signat, enviat per email"
+    da: "Signed PDF til email"
+    en: "Signed PDF to email"
+    es: "PDF firmado, enviado por email"
+    fr: "PDF signé par email"
+    sv: "Signerad PDF till email"
+  allowed_permissions:
+    :send_by_mail:
+
+facturae_30:
+  format: facturae30
+  folder: free_xml
+  validate:
+  - client_has_email
+  - invoice_has_taxes
+  locales:
+    ca: "Facturae 3.0 per email"
+    da: "Facturae 3.0 to email"
+    en: "Facturae 3.0 to email"
+    es: "Facturae 3.0 por email"
+    fr: "Facturae 3.0 par email"
+    sv: "Spanskt format Facturae 3.0 till email"
+  allowed_permissions:
+    :send_by_mail:
+
+facturae_31:
+  format: facturae31
+  folder: free_xml
+  validate:
+  - client_has_email
+  - invoice_has_taxes
+  locales:
+    ca: "Facturae 3.1 per email"
+    da: "Facturae 3.1 til email"
+    en: "Facturae 3.1 to email"
+    es: "Facturae 3.1 por email"
+    fr: "Facturae 3.1 par email"
+    sv: "Spanskt format Facturae 3.1 till email"
+  allowed_permissions:
+    :send_by_mail:
+
+facturae_32:
+  format: facturae32
+  folder: free_xml
+  validate:
+  - client_has_email
+  - invoice_has_taxes
+  locales:
+    ca: "Facturae 3.2 per email"
+    da: "Facturae 3.2 til email"
+    en: "Facturae 3.2 to email"
+    es: "Facturae 3.2 por email"
+    fr: "Facturae 3.2 par email"
+    sv: "Spanskt format Facturae 3.2 till email"
+  allowed_permissions:
+    :send_by_mail:
+
+ublinvoice_20:
+  format: peppolubl20
+  folder: free_ubl
+  validate:
+  - client_has_email
+  - ubl_invoice_has_no_taxes_withheld
+  locales:
+    ca: "Factura UBL 2.0 per email"
+    da: "UBL faktura 2.0 til email"
+    en: "UBL Invoice 2.0 to email"
+    es: "Factura UBL 2.0 por email"
+    fr: "UBL Facture 2.0 par email"
+    sv: "UBL Faktura 2.0 till email"
+  allowed_permissions:
+    :send_by_mail:
+
+biiublinvoice_20:
+  format: biiubl20
+  folder: free_ubl
+  validate:
+  - client_has_email
+  - ubl_invoice_has_no_taxes_withheld
+  locales:
+    ca: "Factura CEN BII UBL 2.0 per email"
+    da: "CEN BII UBL 2.0 Invoice to email"
+    en: "CEN BII UBL 2.0 Invoice to email"
+    es: "Factura CEN BII UBL 2.0 por email"
+    fr: "CEN BII UBL 2.0 Facture par email"
+    sv: "CEN BII UBL 2.0 Faktura till email"
+  allowed_permissions:
+    :send_by_mail:
+
+aoc:
+  format: facturae30
+  folder: free_aoc
+  validate: invoice_has_taxes
+  locales:
+    ca: "Facturae 3.0 per Hub e-FACT de la AOC"
+    da: "Facturae 3.0 til e-FACT hub fra AOC"
+    en: "Facturae 3.0 to e-FACT hub from AOC"
+    es: "Facturae 3.0 por Hub e-FACT de la AOC"
+    fr: "Facturae 3.0 vers e-FACT hub depuis AOC"
+    sv: "Spanskt format Facturae 3.0 till e-FACT hub från AOC"
+  allowed_permissions:
+    :send_aoc:
+
+aoc31:
+  format: facturae31
+  folder: free_aoc
+  validate: invoice_has_taxes
+  locales:
+    ca: "Facturae 3.1 per Hub e-FACT de la AOC"
+    da: "Facturae 3.1 til e-FACT hub fra AOC"
+    en: "Facturae 3.1 to e-FACT hub from AOC"
+    es: "Facturae 3.1 por Hub e-FACT de la AOC"
+    fr: "Facturae 3.1 vers e-FACT hub depuis AOC"
+    sv: "Spanskt format Facturae 3.1 till e-FACT hub från AOC"
+  allowed_permissions:
+    :send_aoc:
+
+aoc32:
+  format: facturae32
+  folder: free_aoc
+  validate: invoice_has_taxes
+  locales:
+    ca: "Facturae 3.2 per Hub e-FACT de la AOC"
+    da: "Facturae 3.2 til e-FACT hub fra AOC"
+    en: "Facturae 3.2 to e-FACT hub from AOC"
+    es: "Facturae 3.2 por Hub e-FACT de la AOC"
+    fr: "Facturae 3.2 vers e-FACT hub depuis AOC"
+    sv: "Spanskt format Facturae 3.2 till e-FACT hub från AOC"
+  allowed_permissions:
+    :send_aoc:
+
+peppol:
+  format: peppolubl20
+  folder: free_peppol
+  validate:
+  - ubl_invoice_has_no_taxes_withheld
+  - peppol_fields
+  locales:
+    ca: "Factura PEPPOL UBL 2.0 per PEPPOL"
+    da: "PEPPOL UBL 2.0 Invoice through PEPPOL"
+    en: "PEPPOL UBL 2.0 Invoice through PEPPOL"
+    es: "Factura PEPPOL UBL 2.0 por PEPPOL"
+    fr: "PEPPOL UBL 2.0 par PEPPOL"
+    sv: "PEPPOL UBL 2.0 Faktura till PEPPOL"
+  allowed_permissions:
+    :send_peppol:
+
+peppol:
+  format: biiubl20
+  folder: free_peppol
+  validate:
+  - ubl_invoice_has_no_taxes_withheld
+  - peppol_fields
+  locales:
+    ca: "Factura PEPPOL BIIUBL 2.0 per PEPPOL"
+    da: "PEPPOL BIIUBL 2.0 Invoice through PEPPOL"
+    en: "PEPPOL BIIUBL 2.0 Invoice through PEPPOL"
+    es: "Factura PEPPOL BIIUBL 2.0 por PEPPOL"
+    fr: "PEPPOL BIIUBL 2.0 par PEPPOL"
+    sv: "PEPPOL BIIUBL 2.0 Faktura till PEPPOL"
+  allowed_permissions:
+    :send_peppol:
+
+svefaktura:
+  format: svefaktura
+  folder: free_svefaktura
+  validate:
+    - ubl_invoice_has_no_taxes_withheld
+    - svefaktura_fields
+  locales:
+    ca: "Factura Svefaktura per email"
+    da: "Svefaktura til email"
+    en: "Svefaktura invoice to email"
+    es: "Factura Svefaktura por email"
+    fr: "Svefaktura invoice to email"
+    sv: "Svefaktura till email"
+  allowed_permissions:
+    :send_by_mail:

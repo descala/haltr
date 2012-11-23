@@ -7,9 +7,6 @@
 <% if entity.postalcode and !entity.postalcode.blank? -%>
     <cbc:PostalZone><%=h entity.postalcode%></cbc:PostalZone>
 <% end -%>
-<% if entity.province and !entity.province.blank? -%>
-        <cbc:CountrySubentity><%=h entity.province%></cbc:CountrySubentity>
-<% end -%>
-<cac:Country>
-  <cbc:IdentificationCode listID="ISO3166-1" listAgencyID="6"><%=h entity.country_alpha2%></cbc:IdentificationCode>
-</cac:Country>
+<cac0:Country>
+  <cac0:IdentificationCode><%=h entity.country_alpha2%></cac0:IdentificationCode>
+</cac0:Country>

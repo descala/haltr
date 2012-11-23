@@ -302,6 +302,7 @@ en:
   "2m1": "1st day in two months"
   "1m15": 15th day next month
   "1m20": 20th day next month
+  "1m10": 10th day next month
   "custom": Custom
 
   # Frequency
@@ -330,6 +331,9 @@ en:
   label_received_with_num: "Received invoices ({{num}} new)"
   help_invoice_format: "Preferred invoice transport and format"
   logo_not_image: "Logo not saved, it wasn't an image"
+  contact_us_for_cif: "If this is really your taxcode, %{link}"
+  contact_us: "contact us"
+  add_own_certificate: "%{link} to sign invoices with your own certificate"
   invoices_not_sent: "%{num} invoices failed to send:"
   invoices_sent: "%{num} invoices sent"
   invoice_limit_reached: "Simultaneous delivery limit reached (10 bills).<br />You can send again to process 10 more."
@@ -338,6 +342,14 @@ en:
   field_send_invoices_by_mail: "Send invoices to this email"
   state_allegedly_paid: "Reported as paid"
   ubl_invoice_has_taxes_withheld: "Can't generate an UBL invoice with taxes withheld"
+  field_endpointid: "Peppol Endpoint ID"
+  field_schemeid: "Peppol Scheme ID"
+  missing_company_peppol_fields: "Missing Peppol fields on your company"
+  missing_client_peppol_fields: "Missing Peppol fields on client"
+  field_accounting_cost: "Accounting cost"
+  missing_svefaktura_account: "Missing Svefaktura account cost"
+  missing_svefaktura_organization: "Missing Svefaktura organization identifier"
+  missing_svefaktura_debit: "Direct debit not allowed"
 
   label_update_taxes: "Update the taxes of templates"
   field_company_identifier: "Organization ID"

@@ -1,0 +1,153 @@
+<% I18n.locale = :en -%>
+<?xml version="1.0" encoding="UTF-8"?>
+<Invoice xmlns="urn:sfti:documents:BasicInvoice:1:0"
+         xmlns:cac="urn:oasis:names:tc:ubl:CommonAggregateComponents:1:0"
+         xmlns:cbc="urn:oasis:names:tc:ubl:CommonBasicComponents:1:0"
+         xmlns:ccts="urn:oasis:names:tc:ubl:CoreComponentParameters:1:0"
+         xmlns:cct="urn:oasis:names:tc:ubl:CoreComponentTypes:1:0"
+         xmlns:sdt="urn:oasis:names:tc:ubl:SpecializedDatatypes:1:0"
+         xmlns:udt="urn:oasis:names:tc:ubl:UnspecializedDatatypes:1:0"
+         xmlns:rsn="urn:oasis:names:tc:ubl:codelist:AllowanceChargeReasonCode:1:0"
+         xmlns:chn="urn:oasis:names:tc:ubl:codelist:ChannelCode:1:0"
+         xmlns:chc="urn:oasis:names:tc:ubl:codelist:ChipCode:1:0"
+         xmlns:cnt="urn:oasis:names:tc:ubl:codelist:CountryIdentificationCode:1:0"
+         xmlns:cur="urn:oasis:names:tc:ubl:codelist:CurrencyCode:1:0"
+         xmlns:stat="urn:oasis:names:tc:ubl:codelist:DocumentStatusCode:1:0"
+         xmlns:lat="urn:oasis:names:tc:ubl:codelist:LatitudeDirectionCode:1:0"
+         xmlns:lstat="urn:oasis:names:tc:ubl:codelist:LineStatusCode:1:0"
+         xmlns:lon="urn:oasis:names:tc:ubl:codelist:LongitudeDirectionCode:1:0"
+         xmlns:pty="urn:oasis:names:tc:ubl:codelist:PaymentMeansCode:1:0"
+         xmlns:sst="urn:oasis:names:tc:ubl:codelist:SubstitutionStatusCode:1:0"
+         xmlns:cac0="urn:sfti:CommonAggregateComponents:1:0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+   <ID><%=h @invoice.number%></ID>
+   <cbc:IssueDate><%=h @invoice.date%></cbc:IssueDate>
+   <InvoiceTypeCode>380</InvoiceTypeCode>
+   <% if @invoice.extra_info? -%>
+   <cbc:Note><%=h @invoice.extra_info%></cbc:Note>
+   <% end -%>
+   <InvoiceCurrencyCode><%=h @client.currency%></InvoiceCurrencyCode>
+   <LineItemCountNumeric>2</LineItemCountNumeric>
+   <cac0:BuyerParty>
+      <cac0:Party>
+         <cac0:PartyName>
+           <cbc:Name><%=h @client.name%></cbc:Name>
+         </cac0:PartyName>
+         <cac0:Address>
+            <%= render :partial => "svefaktura_address.xml", :locals => {:entity => @client} %>
+         </cac0:Address>
+         <cac0:PartyTaxScheme>
+           <cac0:CompanyID><%=h @client.taxcode%></cac0:CompanyID>
+            <cac0:TaxScheme>
+               <cac0:ID>VAT</cac0:ID>
+            </cac0:TaxScheme>
+         </cac0:PartyTaxScheme>
+         <cac0:PartyTaxScheme>
+           <cac0:CompanyID><%=h @client.company_identifier%></cac0:CompanyID>
+            <cac0:TaxScheme>
+               <cac0:ID>SWT</cac0:ID>
+            </cac0:TaxScheme>
+         </cac0:PartyTaxScheme>
+         <% if @client.email and !@client.email.blank? -%>
+         <cac0:Contact>
+           <cbc:ElectronicMail><%=h @client.email%></cbc:ElectronicMail>
+         </cac0:Contact>
+         <% end -%>
+      </cac0:Party>
+   </cac0:BuyerParty>
+   <cac0:SellerParty>
+      <cac0:Party>
+         <cac0:PartyName>
+           <cbc:Name><%=h @company.name%></cbc:Name>
+         </cac0:PartyName>
+         <cac0:Address>
+            <%= render :partial => "svefaktura_address.xml", :locals => {:entity => @company} %>
+         </cac0:Address>
+         <cac0:PartyTaxScheme>
+           <cac0:CompanyID><%=h @company.company_identifier%></cac0:CompanyID>
+            <cac0:TaxScheme>
+               <cac0:ID>SWT</cac0:ID>
+            </cac0:TaxScheme>
+         </cac0:PartyTaxScheme>
+         <% if @company.email and !@company.email.blank? -%>
+         <cac0:Contact>
+           <cbc:ElectronicMail><%=h @company.email%></cbc:ElectronicMail>
+         </cac0:Contact>
+         <% end -%>
+      </cac0:Party>
+   </cac0:SellerParty>
+   <cac0:PaymentMeans>
+     <cac0:PaymentMeansTypeCode><%=h @invoice.payment_method_code(:ubl) %></cac0:PaymentMeansTypeCode>
+     <cbc:DuePaymentDate><%=h @invoice.due_date%></cbc:DuePaymentDate>
+     <% if @invoice.transfer? and @company.iban and @company.bic and !@company.iban.blank? and !@company.bic.blank? -%>
+     <cac0:PayeeFinancialAccount>
+        <cac0:ID><%=h @company.iban%></cac0:ID>
+        <cac0:FinancialInstitutionBranch>
+             <cac0:FinancialInstitution>
+               <cac0:ID><%=h @company.bic%></cac0:ID>
+             </cac0:FinancialInstitution>
+        </cac0:FinancialInstitutionBranch>
+     </cac0:PayeeFinancialAccount>
+     <% elsif @invoice.transfer? and @company.bank_account and !@company.bank_account.blank? -%>
+     <cac0:PayeeFinancialAccount>
+     <cac0:ID><%=h @company.bank_account%></cac0:ID>
+     </cac0:PayeeFinancialAccount>
+     <% end -%>
+   </cac0:PaymentMeans>
+   <% if @invoice.discount_percent > 0 -%>
+   <AllowanceCharge>
+      <cbc:ChargeIndicator>false</cbc:ChargeIndicator>
+      <% if @invoice.discount_text and !@invoice.discount_text.blank? -%>
+        <cac0:ReasonCode name="<%=h @invoice.discount_text%>">ZZZ</cac0:ReasonCode>
+      <% end -%>
+      <cbc:Amount amountCurrencyID="<%=h @client.currency%>"><%=h precision(@invoice.discount.dollars,2)%></cbc:Amount>
+      <cac0:TaxCategory>
+        <cac0:ID>S</cac0:ID>
+        <cbc:Percent>25</cbc:Percent>
+         <cac0:TaxScheme>
+           <cac0:ID>VAT</cac0:ID>
+         </cac0:TaxScheme>
+      </cac0:TaxCategory>
+  </AllowanceCharge>
+  <% end -%>
+  <% @invoice.taxes_by_category.each do |tax_name,categories| -%>
+   <cac0:TaxTotal>
+     <cbc:TotalTaxAmount amountCurrencyID="<%=h @client.currency%>"><%=h precision @invoice.tax_amount_for(tax_name).dollars %></cbc:TotalTaxAmount>
+      <% categories.each do |category,tax| -%>
+      <cac0:TaxSubTotal>
+        <cbc:TaxableAmount amountCurrencyID="<%=h @client.currency%>"><%=h precision((category == "E" ? @invoice.exempt_taxable_base(tax) : @invoice.taxable_base(tax)).dollars)%></cbc:TaxableAmount>
+        <cbc:TaxAmount amountCurrencyID="<%=h @client.currency%>"><%=h precision (category == "E" ? 0 : @invoice.tax_amount(tax).dollars) %></cbc:TaxAmount>
+         <cac0:TaxCategory>
+           <cac0:ID><%=category%></cac0:ID>
+           <cbc:Percent><%=h precision (category == "E" ? 0 : tax.percent)%></cbc:Percent>
+            <cac0:TaxScheme>
+              <cac0:ID><%=TaxList.ubl(tax.name)%></cac0:ID>
+            </cac0:TaxScheme>
+         </cac0:TaxCategory>
+      </cac0:TaxSubTotal>
+  </cac0:TaxTotal>
+<% end -%>
+   <cac0:LegalTotal>
+        <cbc:LineExtensionTotalAmount amountCurrencyID="<%=h @client.currency%>"><%=h precision @invoice.subtotal_without_discount.dollars%></cbc:LineExtensionTotalAmount>
+        <cbc:TaxExclusiveTotalAmount amountCurrencyID="<%=h @client.currency%>"><%=h precision(@invoice.subtotal.dollars)%></cbc:TaxExclusiveTotalAmount>
+        <cbc:TaxInclusiveTotalAmount amountCurrencyID="<%=h @client.currency%>"><%=h precision @invoice.total.dollars%></cbc:TaxInclusiveTotalAmount>
+   </cac0:LegalTotal>
+<% @invoice.invoice_lines.each do |invoice_line| -%>
+   <cac0:InvoiceLine>
+     <cac0:ID><%=h invoice_line.id%></cac0:ID>
+     <cbc:InvoicedQuantity quantityUnitCode="<%=h invoice_line.unit_code(:ubl) %>"><%=h invoice_line.quantity%></cbc:InvoicedQuantity>
+     <cbc:LineExtensionAmount amountCurrencyID="<%=h @client.currency%>"><%=h precision(invoice_line.price*invoice_line.quantity,2)%></cbc:LineExtensionAmount>
+      <cac0:Item>
+        <cbc:Description><%=h invoice_line.description%></cbc:Description>
+         <cac0:BasePrice>
+           <cbc:PriceAmount amountCurrencyID="<%=h @client.currency%>"><%=h precision(invoice_line.price,2)%></cbc:PriceAmount>
+         </cac0:BasePrice>
+      </cac0:Item>
+   </cac0:InvoiceLine>
+<% end -%>
+   <RequisitionistDocumentReference>
+     <cac0:ID><%=@invoice.accounting_cost%></cac0:ID>
+   </RequisitionistDocumentReference>
+<% end -%>
+</Invoice>
+<% lang = find_language(User.current.language); lang ||= Setting.default_language; set_language_if_valid(lang) -%>

@@ -21,6 +21,7 @@
   <% else -%>
     <p><%= f.text_field :taxcode, :size => 20, :required => true %></p>
   <% end -%>
+  <p><%= f.text_field :company_identifier %></p>
   <p><%= f.text_field :name, :required => true, :readonly => @client.linked? %></p>
   <p><%= f.text_field :email, :readonly => @client.linked? %></p>
   <% if short -%>
@@ -35,7 +36,6 @@
     <p><%= f.text_field :city, :readonly => @client.linked? %></p>
     <p><%= f.text_field :province, :readonly => @client.linked? %></p>
     <p><%= f.text_field :postalcode, :readonly => @client.linked? %></p>
-    <p><%= f.text_field :company_identifier %></p>
     <% if @client.linked? -%>
       <p><%= label_tag I18n.t :field_country %>
       <%= text_field_tag :country, @client.country_name, :readonly => true %></p>
@@ -45,6 +45,12 @@
     <p><%= f.text_field :bank_account, :size => 30 %></p>
     <p><%= f.text_field :iban, :size => 30 %></p>
     <p><%= f.text_field :bic, :size => 30 %></p>
+<% if User.current.admin? or User.current.allowed_to?(:use_restricted_channels, @project) -%>
+    <br />
+    <p><%= f.select :schemeid, Peppol::SCHEMEIDS %></p>
+    <p><%= f.text_field :endpointid %></p>
+<% end -%>
+
     <% if @client.linked? -%>
       <p><%= label_tag I18n.t :field_currency %>
       <%= text_field_tag :currency, "#{@client.currency} - #{Money.new(0,@client.currency).currency.name}", :readonly => true %></p>
