@@ -22,7 +22,7 @@ Redmine::Plugin.register :haltr do
   name 'haltr'
   author 'Ingent'
   description 'Hackers dont do books'
-  version '1.1'
+  version '1.2'
 
   settings :default => {
     'trace_url' => 'http://localhost:3000',
