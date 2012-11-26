@@ -23,6 +23,7 @@
   payment_method_text ||= ""
   terms ||= 0
 -%>
+<%= call_hook(:invoice_form_payment_extra_fields) %>
 <p>
 <label for="invoice_currency"><%= l(:field_currency) %><span class="required"> *</span></label>
 <%= select :invoice, :currency, currency_options_for_select, {:selected=>currency}, :required => true%>
