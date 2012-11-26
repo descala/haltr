@@ -313,6 +313,7 @@ ca:
   "2m1": "1er dia mes següent no l'altre"
   "1m15": Dia 15 mes següent
   "1m20": Dia 20 mes següent
+  "1m10": Dia 10 mes següent
   "custom": Personalitzat
 
   # Frequency
@@ -341,6 +342,9 @@ ca:
   label_received_with_num: "Factures rebudes ({{num}} noves)"
   help_invoice_format: "Format i transport preferit de recepció de factures"
   logo_not_image: "El logo no s'ha desat perquè no era una imatge"
+  contact_us_for_cif: "Si aquest es realment el seu CIF, %{link}"
+  contact_us: "contacti amb nosaltres"
+  add_own_certificate: "Per signar les factures amb el seu propi certificat, %{link}"
   invoices_not_sent: "%{num} factures no s'han pogut enviar:"
   invoices_sent: "%{num} factures enviades"
   invoice_limit_reached: "S'ha arribat al límit d'enviament simultani (10 factures).<br />Pots tornar a enviar per processar-ne 10 més."
@@ -349,6 +353,14 @@ ca:
   field_send_invoices_by_mail: "Enviar factures a aquest email"
   state_allegedly_paid: "Informada com a pagada"
   ubl_invoice_has_taxes_withheld: "No es pot generar una factura UBL amb impostos retinguts"
+  field_endpointid: "Peppol Endpoint ID"
+  field_schemeid: "Peppol Scheme ID"
+  missing_company_peppol_fields: "Falten camps de Peppol de la teva empresa"
+  missing_client_peppol_fields: "Falten camps de Peppol del client"
+  field_accounting_cost: "Centre de cost"
+  missing_svefaktura_account: "Manca el centre de cost"
+  missing_svefaktura_organization: "Manca l'identificador d'empresa"
+  missing_svefaktura_debit: "No es poden crear factures domiciliades"
 
   label_update_taxes: "Actualitzar els impostos de les plantilles"
   field_company_identifier: "ID d'empresa"

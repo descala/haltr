@@ -1,0 +1,189 @@
+  <cbc:ID><%=h @invoice.number%></cbc:ID>
+  <cbc:IssueDate><%=h @invoice.date%></cbc:IssueDate>
+<% if @invoice.extra_info? -%>	
+        <cbc:Note><%=h @invoice.extra_info%></cbc:Note>
+<% end -%>
+    <cbc:DocumentCurrencyCode listID="ISO 4217 Alpha" listAgencyID="6"><%=h @client.currency%></cbc:DocumentCurrencyCode>
+    <% if @invoice.respond_to?(:accounting_cost) and !@invoice.accounting_cost.blank? %>
+      <cbc:AccountingCost><%=@invoice.accounting_cost%></cbc:AccountingCost>
+    <% end %>
+<% if @invoice.amend_of -%>
+      <cac:DiscrepancyResponse>
+        <cbc:ReferenceID>1</cbc:ReferenceID>
+        <cbc:Description><%=h @invoice.extra_info%></cbc:Description>
+      </cac:DiscrepancyResponse>
+<% end -%>
+<% if @invoice.ponumber? -%>
+        <cac:OrderReference>
+          <cbc:ID><%=h @invoice.ponumber%></cbc:ID>
+        </cac:OrderReference>
+<% end -%>
+<% if @invoice.amend_of -%>
+          <cac:BillingReference>
+            <cac:InvoiceDocumentReference>
+              <cbc:ID><%=@invoice.amend_of.number%></cbc:ID>
+            </cac:InvoiceDocumentReference>
+          </cac:BillingReference>
+<% end -%>
+    <cac:AccountingSupplierParty>
+      <cac:Party>
+<% unless !@company.respond_to?(:endpointid) or @company.endpointid.blank? -%>
+        <cbc:EndpointID schemeID="<%= @company.schemeid %>"><%= @company.endpointid %></cbc:EndpointID>
+<% end -%>
+        <cac:PartyName>
+          <cbc:Name><%=h @company.name%></cbc:Name>
+        </cac:PartyName>
+        <cac:PostalAddress>
+          <%= render :partial => "ubl_address.xml", :locals => {:entity => @company} %>
+        </cac:PostalAddress>
+        <cac:PartyTaxScheme>
+          <cbc:CompanyID><%=h @company.taxcode%></cbc:CompanyID>
+          <cac:TaxScheme>
+            <cbc:ID>VAT</cbc:ID>
+          </cac:TaxScheme>
+        </cac:PartyTaxScheme>
+        <%= render :partial => "ubl_party_legal_entity.xml", :locals => {:entity => @company} %>
+        <% if @company.email and !@company.email.blank? -%>
+          <cac:Contact>
+            <cbc:ElectronicMail><%=h @company.email%></cbc:ElectronicMail>
+          </cac:Contact>
+        <% end -%>
+     </cac:Party>
+    </cac:AccountingSupplierParty>
+    <cac:AccountingCustomerParty>
+      <cac:Party>
+<% unless !@company.respond_to?(:endpointid) or @company.endpointid.blank? -%>
+        <cbc:EndpointID schemeID="<%= @client.schemeid %>"><%= @client.endpointid %></cbc:EndpointID>
+<% end -%>
+        <cac:PartyName>
+          <cbc:Name><%=h @client.name%></cbc:Name>
+        </cac:PartyName>
+        <cac:PostalAddress>
+          <%= render :partial => "ubl_address.xml", :locals => {:entity => @client} %>
+        </cac:PostalAddress>
+        <cac:PartyTaxScheme>
+          <cbc:CompanyID><%=h @client.taxcode%></cbc:CompanyID>
+          <cac:TaxScheme>
+            <cbc:ID>VAT</cbc:ID>
+          </cac:TaxScheme>
+        </cac:PartyTaxScheme>
+        <%= render :partial => "ubl_party_legal_entity.xml", :locals => {:entity => @client} %>
+        <% if @client.email and !@client.email.blank? -%>
+          <cac:Contact>
+            <cbc:ElectronicMail><%=h @client.email%></cbc:ElectronicMail>
+          </cac:Contact>
+        <% end -%>
+      </cac:Party>
+    </cac:AccountingCustomerParty>
+<% unless @invoice.amend_of -%>
+      <cac:PaymentMeans>
+        <cbc:PaymentMeansCode><%=h @invoice.payment_method_code(:ubl) %></cbc:PaymentMeansCode>
+        <cbc:PaymentDueDate><%=h @invoice.due_date%></cbc:PaymentDueDate>
+<% if @invoice.debit? and @client.iban and @client.bic and !@client.iban.blank? and !@client.bic.blank? -%>
+            <cbc:PaymentChannelCode>IBAN</cbc:PaymentChannelCode>
+            <cac:PayerFinancialAccount>
+              <cbc:ID schemeID="IBAN"><%=h @client.iban%></cbc:ID>
+              <cac:FinancialInstitutionBranch>
+                <cac:FinancialInstitution>
+                  <cbc:ID schemeID="BIC"><%=h @client.bic%></cbc:ID>
+                </cac:FinancialInstitution>
+              </cac:FinancialInstitutionBranch>
+            </cac:PayerFinancialAccount>
+<% elsif @invoice.debit? and @client.bank_account and !@client.bank_account.blank? -%>
+            <cac:PayerFinancialAccount>
+              <cbc:ID><%=h @client.bank_account%></cbc:ID>
+            </cac:PayerFinancialAccount>
+<% elsif @invoice.transfer? and @company.iban and @company.bic and !@company.iban.blank? and !@company.bic.blank? -%>
+            <cbc:PaymentChannelCode>IBAN</cbc:PaymentChannelCode>
+            <cac:PayeeFinancialAccount>
+              <cbc:ID schemeID="IBAN"><%=h @company.iban%></cbc:ID>
+              <cac:FinancialInstitutionBranch>
+                <cac:FinancialInstitution>
+                  <cbc:ID schemeID="BIC"><%=h @company.bic%></cbc:ID>
+                </cac:FinancialInstitution>
+              </cac:FinancialInstitutionBranch>
+            </cac:PayeeFinancialAccount>
+<% elsif @invoice.transfer? and @company.bank_account and !@company.bank_account.blank? -%>
+            <cac:PayeeFinancialAccount>
+              <cbc:ID><%=h @company.bank_account%></cbc:ID>
+            </cac:PayeeFinancialAccount>
+<% end -%>
+    </cac:PaymentMeans>
+<% end -%>
+<% if @invoice.discount_percent > 0 -%>
+        <cac:AllowanceCharge>
+          <cbc:ChargeIndicator>false</cbc:ChargeIndicator>
+          <% if @invoice.discount_text and !@invoice.discount_text.blank? -%>
+             <cbc:AllowanceChargeReason><%=h @invoice.discount_text%></cbc:AllowanceChargeReason>
+          <% end -%>
+          <cbc:Amount currencyID="<%=h @client.currency%>"><%=h precision(@invoice.discount.dollars,2)%></cbc:Amount>
+        </cac:AllowanceCharge>
+<% end -%>
+<% if @invoice.expenses.size > 0 -%>
+        <cac:AllowanceCharge>
+          <cbc:ChargeIndicator>true</cbc:ChargeIndicator>
+          <cbc:AllowanceChargeReason><%=h @invoice.extra_info%></cbc:AllowanceChargeReason>
+          <cbc:Amount currencyID="<%=h @client.currency%>"><%=h precision(@invoice.expenses_total.dollars,2)%></cbc:Amount>
+        </cac:AllowanceCharge>
+<% end -%>
+<% @invoice.taxes_by_category.each do |tax_name,categories| -%>
+
+      <cac:TaxTotal>
+        <cbc:TaxAmount currencyID="<%=h @client.currency%>"><%=h precision @invoice.tax_amount_for(tax_name).dollars %></cbc:TaxAmount>
+
+        <% categories.each do |category,tax| -%>
+          <cac:TaxSubtotal>
+            <cbc:TaxableAmount currencyID="<%=h @client.currency%>"><%=h precision((category == "E" ? @invoice.exempt_taxable_base(tax) : @invoice.taxable_base(tax)).dollars)%></cbc:TaxableAmount>
+            <cbc:TaxAmount currencyID="<%=h @client.currency%>"><%=h precision (category == "E" ? 0 : @invoice.tax_amount(tax).dollars) %></cbc:TaxAmount>
+            <cac:TaxCategory>
+              <cbc:ID schemeID="UN/ECE 5305" schemeAgencyID="6"><%=category%></cbc:ID>
+              <cbc:Percent><%=h precision (category == "E" ? 0 : tax.percent)%></cbc:Percent>
+              <cac:TaxScheme>
+                <cbc:ID schemeID="UN/ECE 5153" schemeAgencyID="6"><%=TaxList.ubl(tax.name)%></cbc:ID>
+              </cac:TaxScheme>
+            </cac:TaxCategory>
+          </cac:TaxSubtotal>
+        <% end -%>
+
+      </cac:TaxTotal>
+
+<% end -%>
+
+    <cac:LegalMonetaryTotal>
+      <cbc:LineExtensionAmount currencyID="<%=h @client.currency%>"><%=h precision @invoice.subtotal_without_discount.dollars%></cbc:LineExtensionAmount>
+      <cbc:TaxExclusiveAmount currencyID="<%=h @client.currency%>"><%=h precision(@invoice.subtotal.dollars)%></cbc:TaxExclusiveAmount>
+      <cbc:TaxInclusiveAmount currencyID="<%=h @client.currency%>"><%=h precision @invoice.total.dollars%></cbc:TaxInclusiveAmount>
+<% if @invoice.discount_percent > 0 -%>
+            <cbc:AllowanceTotalAmount currencyID="<%=h @client.currency%>"><%=h precision(@invoice.discount.dollars,2)%></cbc:AllowanceTotalAmount>
+<% end -%>
+<% if @invoice.expenses.size > 0 -%>
+            <cbc:ChargeTotalAmount currencyID="<%=h @client.currency%>"><%=h precision(@invoice.discount.dollars,2)%></cbc:ChargeTotalAmount>
+<% end -%>
+        <cbc:PayableAmount currencyID="<%=h @client.currency%>"><%=h precision @invoice.total.dollars%></cbc:PayableAmount>
+      </cac:LegalMonetaryTotal>
+<% @invoice.invoice_lines.each do |invoice_line| -%>	
+        <cac:<%= @invoice.amend_of ? "CreditNoteLine" : "InvoiceLine" %>>
+          <cbc:ID><%=h invoice_line.id%></cbc:ID>
+          <cbc:InvoicedQuantity unitCode="<%=h invoice_line.unit_code(:ubl) %>"><%=h invoice_line.quantity%></cbc:InvoicedQuantity>
+          <cbc:LineExtensionAmount currencyID="<%=h @client.currency%>"><%=h precision(invoice_line.price*invoice_line.quantity,2)%></cbc:LineExtensionAmount>
+          <cac:Item>
+            <cbc:Name><%=h invoice_line.description%></cbc:Name>
+            <% invoice_line.taxes.each do |tax_line| -%>
+            <% if @invoice.tax_per_line?(tax_line.name) -%>
+            <cac:ClassifiedTaxCategory>
+              <!-- Ha de ser la Categoria i no el percentatge -->
+              <cbc:ID schemeID="UN/ECE 5305" schemeAgencyID="6"><%=h tax_line.percent%></cbc:ID>
+              <cac:TaxScheme>
+                <cbc:ID schemeID="UN/ECE 5153" schemeAgencyID="6"><%= TaxList.ubl(tax_line.name) %></cbc:ID>
+              </cac:TaxScheme>
+            </cac:ClassifiedTaxCategory>
+          <% end -%>
+          <% end -%>
+          </cac:Item>
+          <cac:Price>
+            <cbc:PriceAmount currencyID="<%=h @client.currency%>"><%=h precision(invoice_line.price,2)%></cbc:PriceAmount>
+          </cac:Price>
+        </cac:<%= @invoice.amend_of ? "CreditNoteLine" : "InvoiceLine" %>>
+<% end -%>	
+</<%= @invoice.amend_of ? "CreditNote" : "Invoice" %>>
+<% lang = find_language(User.current.language); lang ||= Setting.default_language; set_language_if_valid(lang) -%>

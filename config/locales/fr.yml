@@ -27,7 +27,7 @@ fr:
   button_people: Personnes
   field_invoice_format: Mode de transimission et format préféré
   field_currency: Monnaie
-  field_ponumber: Ordre d'achat
+  field_ponumber: "Ordre d'achat"
   cif_belongs_to_company: "Ce TVA appartient à la compagnie <span style='font-weight: bold;'>%{company}</span>."
   link_to_profile_suggest: Vous pouvez %{href} à ce client
   link_to_profile: lier à son profil publique
@@ -243,11 +243,11 @@ fr:
   label_task_plural: Tâches
   with_date: Avec date
   charge_bank_on_date: Imputer la banque à la date
-  nothing_to_report: Rien n'a été rapporté
-  nothing_to_generate: Rien n'a à être généré
+  nothing_to_report: "Rien n'a été rapporté"
+  nothing_to_generate: "Rien n'a à être généré"
   button_generate_invoices: Nouvelles factures depuis le modèle
   button_send_invoices: Envoyer factures
-  label_automator_info: télécherger les PDFs, emailer script d'automation et marquer comme envoyé
+  label_automator_info: "télécherger les PDFs, emailer script d'automation et marquer comme envoyé"
   label_charge_n19: Imputer les comptes bancaires avec format N19
   button_mark_done: Marquer comme fait
   label_invoice_report: Rapport des factures
@@ -299,6 +299,7 @@ fr:
   "2m1": 1er jour dans deux mois
   "1m15": 15ème jour prochain mois
   "1m20": 20ème jour prochain mois
+  "1m10": 10ème jour prochain mois
   "custom": Personnalisé
 
   # Frequency
@@ -310,10 +311,10 @@ fr:
 
   # Errors
   cant_connect_trace: "Ne peut se connecter à la plate-forme b2brouter. {{value}}"
-  halt_configure_before_use: "Veuillez d'abord configurer votre compagnie"
+  halt_configure_before_use: "Veuillez d abord configurer votre compagnie"
   warning_can_not_generate_invoice: "Ne peut générer la facture depuis le modèle {{value}}"
   notice_invoice_sent: "Facture envoyée"
-  error_invoice_not_sent: "N'a pas pu envoyer la facture %{num}"
+  error_invoice_not_sent: "N a pas pu envoyer la facture %{num}"
   notice_empty_n19: "Aucune donnée pour créer N19"
   notice_n19_done:  "Nº19 pour date d'échéance {{value}} marquée comme faite"
   notice_uploaded_file_not_found: "Fichier non trouvé"
@@ -327,6 +328,9 @@ fr:
   label_received_with_num: "Factures reçues (%{num} nouveaux)"
   help_invoice_format: "Format de transport préféré et la réception des factures"
   logo_not_image: "Le logo n'a pas été sauvé parce qu'il y avait une image"
+  contact_us_for_cif: "Si c'est effectivement votre TVA, %{link}"
+  contact_us: "s'il vous plaît nous contacter"
+  add_own_certificate: "Pour signer les factures avec leur propre certificat, %{link}"
   invoices_not_sent: "%{num} pas réussi à envoyer les factures:"
   invoices_sent: "Envoyé factures %{num}"
   invoice_limit_reached: "Limite atteinte simultanée de livraison (10 factures).<br />Vous pouvez envoyer plus de 10 pour les traiter."
@@ -335,6 +339,14 @@ fr:
   field_send_invoices_by_mail: "envoyer des factures à cet e-mail"
   state_allegedly_paid: "Déclarés comme étant versés"
   ubl_invoice_has_taxes_withheld: "Impossible de générer une facture UBL avec impôts retenus"
+  field_endpointid: "Peppol Endpoint ID"
+  field_schemeid: "Peppol Scheme ID"
+  missing_company_peppol_fields: "champs manquants Peppol votre entreprise"
+  missing_client_peppol_fields: "champs manquants Peppol client"
+  field_accounting_cost: "comptabilisation des coûts"
+  missing_svefaktura_account: "Manque le centre de cost"
+  missing_svefaktura_organization: "Manque l'identifier de l'enterprise"
+  missing_svefaktura_debit: "On ne peut pas domicilier les factures"
 
   label_update_taxes: "Update the taxes of templates"
   field_company_identifier: "Organization ID"

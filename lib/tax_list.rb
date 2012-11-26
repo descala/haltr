@@ -50,7 +50,9 @@ module TaxList
     "fr" => { "TVA" => [2.1,5.5,19.6] },
     "fr_default" => { "TVA" => 19.6 },
     "se" => { "VAT" => [6,12,25] },
-    "se_default" => { "VAT" => 25 }
+    "se_default" => { "VAT" => 25 },
+    "dk" => {"MUMS" => [25] },
+    "dk_default" => { "MUMS" => 25 }
   }
 
 end

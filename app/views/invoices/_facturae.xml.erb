@@ -73,6 +73,7 @@
             <%= render :partial => "address.facturae.xml", :locals => {:entity => @client}%>
             <ContactDetails>
               <ElectronicMail><%=h @client.emails %></ElectronicMail>
+              <ContactPersons><%= @invoice.accounting_cost %></ContactPersons>
             </ContactDetails>
          </LegalEntity>
       </BuyerParty>
@@ -187,7 +188,9 @@
 <% @invoice.invoice_lines.each do |invoice_line| -%>
   <% next if invoice_line.expenses? -%>
             <InvoiceLine>
+              <%= call_hook(:facturae_receiver_contract_reference) %>
               <ReceiverTransactionReference><%=h(@invoice.ponumber)[0..19]%></ReceiverTransactionReference>
+              <%= call_hook(:facturae_file_reference) %>
               <ItemDescription><%=h invoice_line.description%></ItemDescription>
               <Quantity><%=h invoice_line.quantity%></Quantity>
               <UnitOfMeasure><%=h invoice_line.unit_code(:facturae)%></UnitOfMeasure>

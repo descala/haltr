@@ -1,4 +1,4 @@
-<% if entity.company_identifier %>
+<% if entity.company_identifier and !entity.company_identifier.blank? %>
 <cac:PartyLegalEntity>
   <cbc:CompanyID><%=h entity.company_identifier%></cbc:CompanyID>
 </cac:PartyLegalEntity>

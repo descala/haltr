@@ -22,7 +22,7 @@ Redmine::Plugin.register :haltr do
   name 'haltr'
   author 'Ingent'
   description 'Hackers dont do books'
-  version '1.1'
+  version '1.2'
 
   settings :default => {
     'trace_url' => 'http://localhost:3000',
@@ -40,7 +40,7 @@ Redmine::Plugin.register :haltr do
         :people   => [:index, :new, :show, :edit, :create, :update, :destroy],
         :invoices => [:index, :new, :edit, :create, :update, :destroy, :show, :mark_sent, :mark_closed, :mark_not_sent,
                       :mark_accepted, :mark_accepted_with_mail, :mark_refused, :mark_refused_with_mail, :destroy_payment,
-                      :efactura30, :efactura31, :efactura32, :ubl21, :send_invoice, :log, :legal, :update_currency_select,
+                      :efactura30, :efactura31, :efactura32, :peppolubl20, :send_invoice, :log, :legal, :update_currency_select,
                       :amend_for_invoice, :download_new_invoices, :send_new_invoices, :duplicate_invoice],
         :tasks    => [:index, :n19, :n19_done, :report, :import_aeb43],
         :companies => [:index,:edit,:update]},

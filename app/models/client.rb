@@ -10,7 +10,6 @@ class Client < ActiveRecord::Base
   belongs_to :company
 
   validates_presence_of   :taxcode, :hashid
-  validates_length_of     :taxcode, :maximum => 20
   validates_uniqueness_of :taxcode, :scope => :project_id
   validates_uniqueness_of :hashid
 
@@ -120,7 +119,7 @@ class Client < ActiveRecord::Base
 
   def copy_linked_profile
     if self.company and self.allowed?
-      %w(taxcode name email currency postalcode country province city address website invoice_format).each do |attr|
+      %w(taxcode company_identifier name email currency postalcode country province city address website invoice_format).each do |attr|
         self.send("#{attr}=",company.send(attr))
       end
       self.language = company.project.users.collect {|u| u unless u.admin?}.compact.first.language rescue I18n.default_locale
