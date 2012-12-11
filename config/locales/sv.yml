@@ -286,6 +286,7 @@ sv:
   field_bic: BIC
   default_country: "Förvald land"
   default_currency: "Förvald valuta"
+  hide_unauthorized: "Göm tillgängliga funktioner"
 
   # Terms
   "0": Direkt

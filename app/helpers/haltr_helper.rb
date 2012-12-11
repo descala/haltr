@@ -94,6 +94,10 @@ module HaltrHelper
     end
   end
 
+  def hide_to_user(action)
+    return (Setting.plugin_haltr['hide_unauthorized'] and !User.current.allowed_to?(action,@project))
+  end
+
   private
 
   def especial(path)

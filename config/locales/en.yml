@@ -288,6 +288,7 @@ en:
   field_bic: BIC
   default_country: "Default country"
   default_currency: "Default currency"
+  hide_unauthorized: "Hide unavailable features"
 
   # Terms
   "0": Immediately

@@ -285,6 +285,7 @@ fr:
   field_bic: BIC
   default_country: "Pays par défaut"
   default_currency: "Devise par défaut"
+  hide_unauthorized: "Masquer les fonctionnalités non disponibles"
 
   # Terms
   "0": Immédiatement
