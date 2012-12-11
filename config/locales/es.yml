@@ -300,6 +300,7 @@ es:
   field_bic: BIC
   default_country: "País por defecto"
   default_currency: "Moneda por defecto"
+  hide_unauthorized: "Ocultar funcionalidades no disponibles"
 
   # Terms
   "0": Al contado

@@ -6,11 +6,13 @@
   </li>
   <% end -%>
   <li><%= link_to l(:label_invoice_plural), {:controller => 'invoices', :action => 'index', :id => @project}, :class=>'icon-haltr-invoices' %></li>
-  <li><%= link_to l(:label_invoice_template_plural), {:controller => 'invoice_templates', :action => 'index', :id => @project}, :class=>'icon-haltr-templates' %></li>
-  <% if num_new_invoices > 0 %>
-  <li>
-  <%= link_to "#{l(:button_generate_invoices)} (#{num_new_invoices})", {:controller => 'invoice_templates', :action => 'invoices', :id => @project}, :class=>'icon-haltr-invoices-from-templates' %> 
-  </li>
+  <% unless hide_to_user(:use_templates) -%>
+    <li><%= link_to l(:label_invoice_template_plural), {:controller => 'invoice_templates', :action => 'index', :id => @project}, :class=>'icon-haltr-templates' %></li>
+    <% if num_new_invoices > 0 %>
+      <li>
+      <%= link_to "#{l(:button_generate_invoices)} (#{num_new_invoices})", {:controller => 'invoice_templates', :action => 'invoices', :id => @project}, :class=>'icon-haltr-invoices-from-templates' %> 
+      </li>
+    <% end -%>
   <% end -%>
   <% if authorize_for('tasks','automator') && num_not_sent > 0 -%>
   <li>

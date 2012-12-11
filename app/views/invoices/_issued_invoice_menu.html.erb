@@ -9,14 +9,18 @@
   <% elsif @invoice.export_errors and @invoice.export_errors.size > 0 -%>
     <li><%= link_to "#{l(:label_send)} (#{l_export_channel(@client.invoice_format)})", "#", :class=>'icon-haltr-send disabled', :title => @invoice.sending_info %></li>
   <% end -%>
-  <% if @invoice.state?(:sent) or @invoice.state?(:allegedly_paid) -%>
-    <li><%= link_to l(:receive_payment), {:controller=>'payments', :action=>'new', :id=>@project, :invoice_id=>@invoice}, :class=>'icon-haltr-payment' %></li>
+  <% unless hide_to_user(:manage_payments) -%>
+    <% if @invoice.state?(:sent) or @invoice.state?(:allegedly_paid) -%>
+      <li><%= link_to l(:receive_payment), {:controller=>'payments', :action=>'new', :id=>@project, :invoice_id=>@invoice}, :class=>'icon-haltr-payment' %></li>
+    <% end -%>
   <% end -%>
 
-  <% if @invoice.invoice_template_id and @invoice.invoice_template -%>
-    <li><%= link_to "#{l(:show_template)} #{@invoice.invoice_template.id}", {:controller=>'invoice_templates',:action=>'show', :id=>@invoice.invoice_template_id }, :class=>'icon-haltr-templates' %></li>
-  <% else -%>
-    <li><%= link_to l(:generate_template_from_invoice), {:controller=>'invoice_templates',:action=>'new_from_invoice',:id=>@invoice}, :class => 'icon-haltr-template' %></li>
+  <% unless hide_to_user(:use_templates) -%>
+    <% if @invoice.invoice_template_id and @invoice.invoice_template -%>
+      <li><%= link_to "#{l(:show_template)} #{@invoice.invoice_template.id}", {:controller=>'invoice_templates',:action=>'show', :id=>@invoice.invoice_template_id }, :class=>'icon-haltr-templates' %></li>
+    <% else -%>
+      <li><%= link_to l(:generate_template_from_invoice), {:controller=>'invoice_templates',:action=>'new_from_invoice',:id=>@invoice}, :class => 'icon-haltr-template' %></li>
+    <% end -%>
   <% end -%>
 
   <% unless @invoice.amended? -%>

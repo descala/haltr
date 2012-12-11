@@ -29,7 +29,8 @@ Redmine::Plugin.register :haltr do
     'export_channels_path' => '/tmp',
     'issues_controller_name' => 'issues',
     'default_country' => 'es',
-    'default_currency' => 'EUR'
+    'default_currency' => 'EUR',
+    'hide_unauthorized' => '1'
   },
   :partial => '/common/settings'
 

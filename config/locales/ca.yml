@@ -298,6 +298,7 @@ ca:
   field_bic: BIC
   default_country: "País per defecte"
   default_currency: "Moneda per defecte"
+  hide_unauthorized: "Amagar funcionalitats no disponibles"
 
 
   # Terms
