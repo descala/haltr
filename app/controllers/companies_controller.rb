@@ -5,6 +5,9 @@ class CompaniesController < ApplicationController
   layout 'haltr'
   helper :haltr
 
+  helper :sort
+  include SortHelper
+
   before_filter :find_project, :except => [:update, :logo]
   before_filter :find_company, :only => [:update]
   before_filter :set_iso_countries_language
@@ -21,6 +24,15 @@ class CompaniesController < ApplicationController
       @company = @project.company
     end
     render :action => 'edit'
+  end
+
+  def linked_to_mine
+    # TODO sort and paginate
+    sort_init 'name', 'asc'
+    sort_update %w(taxcode name)
+    @companies = Client.all(:conditions => ['company_id = ?', @project.company]).collect do |client|
+      client.project.company
+    end
   end
 
   def update

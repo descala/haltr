@@ -1,0 +1,25 @@
+<h2><%=l(:label_linked_to_mine)%></h2>
+
+<table class="list" id="companies">
+  <thead>
+      <th style="width: 3%;"></th>
+      <%= sort_header_tag('taxcode', :caption => l(:field_taxcode)) %>
+      <%= sort_header_tag('name', :caption => l(:field_name)) %>
+  </thead>
+  <tbody>
+<% for c in @companies -%>
+  <tr class="user <%= cycle("odd", "even") %>">
+    <td style="width: 3%;"><%=image_tag("link.png")%></td>
+    <td><%=h c.taxcode %></td>
+    <td><%=h c.name %></td>
+  </tr>
+<% end -%>
+  </tbody>
+</table>
+
+
+<% html_title(l(:label_companies)) -%>
+
+<% content_for :sidebar do %>
+    <%= render :partial => 'clients/sidebar' %>
+<% end %>
