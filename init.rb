@@ -44,7 +44,7 @@ Redmine::Plugin.register :haltr do
                       :efactura30, :efactura31, :efactura32, :peppolubl20, :send_invoice, :log, :legal, :update_currency_select,
                       :amend_for_invoice, :download_new_invoices, :send_new_invoices, :duplicate_invoice],
         :tasks    => [:index, :n19, :n19_done, :report, :import_aeb43],
-        :companies => [:index,:edit,:update]},
+        :companies => [:index,:edit,:update,:linked_to_mine]},
       :require => :member
 
     permission :manage_payments, { :payments => [:index, :new, :edit, :create, :update, :destroy ] }, :require => :member

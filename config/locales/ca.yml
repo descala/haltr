@@ -365,3 +365,5 @@ ca:
 
   label_update_taxes: "Actualitzar els impostos de les plantilles"
   field_company_identifier: "ID d'empresa"
+
+  label_linked_to_mine: "Empreses vinculades"

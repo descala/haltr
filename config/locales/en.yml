@@ -354,3 +354,5 @@ en:
 
   label_update_taxes: "Update the taxes of templates"
   field_company_identifier: "Organization ID"
+
+  label_linked_to_mine: "Linked companies"

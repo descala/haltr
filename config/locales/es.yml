@@ -366,3 +366,5 @@ es:
 
   label_update_taxes: "Actualiza los impuestos de las plantillas"
   field_company_identifier: "ID de empresa"
+
+  label_linked_to_mine: "Empresas vinculadas"
