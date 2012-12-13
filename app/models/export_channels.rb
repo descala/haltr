@@ -58,5 +58,10 @@ class ExportChannels
   def self.path(id)
     part1 = "#{Setting.plugin_haltr['export_channels_path']}/#{self.channel(id)}"
   end
+
+  def self.l(channel_name)
+    available[channel_name]['locales'][I18n.locale.to_s] rescue ''
+  end
+
 end
 
