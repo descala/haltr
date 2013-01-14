@@ -103,7 +103,7 @@
             <IssueDate><%=h @invoice.date%></IssueDate>
             <InvoiceCurrencyCode><%=h @client.currency%></InvoiceCurrencyCode>
             <TaxCurrencyCode><%=h @client.currency%></TaxCurrencyCode>
-            <LanguageName><%=h @client.language%></LanguageName>
+            <LanguageName><%=h @client.language_string%></LanguageName>
          </InvoiceIssueData>
          <TaxesOutputs>
 <% if @invoice.taxes_outputs.any? -%>

@@ -59,7 +59,7 @@
     <% end -%>
     <% if @client.linked? -%>
       <p><%= f.text_field :language, :value => l(:general_lang_name,:locale => @client.language), :readonly=>true %></p>
-      <p><%= f.text_field :invoice_format, :value => l(@client.invoice_format), :readonly=>true %></p>
+      <p><%= f.text_field :invoice_format, :value => ExportChannels.l(@client.invoice_format), :readonly=>true %></p>
     <% else -%>
       <p><%= f.select :language, lang_options_for_select , :readonly => @client.linked? %></p>
       <p><%= f.select :invoice_format, ExportChannels.for_select(@project) %></p>

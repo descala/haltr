@@ -104,6 +104,12 @@ class Client < ActiveRecord::Base
     end
   end
 
+  # removes non ascii characters from language code
+  # for safe xml generation
+  def language_string
+    self.language.scan(/[a-z]+/i).first
+  end
+
   def full_address
     addr = address
     addr += "\n#{address2}" if address2
@@ -122,7 +128,7 @@ class Client < ActiveRecord::Base
       %w(taxcode company_identifier name email currency postalcode country province city address website invoice_format).each do |attr|
         self.send("#{attr}=",company.send(attr))
       end
-      self.language = company.project.users.collect {|u| u unless u.admin?}.compact.first.language rescue I18n.default_locale
+      self.language = company.project.users.collect {|u| u unless u.admin?}.compact.first.language rescue I18n.default_locale.to_s
     elsif !self.company
       self.allowed = nil
     end

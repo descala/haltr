@@ -17,6 +17,9 @@ class Invoice < ActiveRecord::Base
     PAYMENT_SPECIAL  => {:facturae => '13', :ubl => '??'},
   }
 
+  # remove non-utf8 characters from those fields:
+  TO_UTF_FIELDS = %w(extra_info)
+
   attr_protected :created_at, :updated_at
 
   has_many :invoice_lines, :dependent => :destroy
@@ -30,6 +33,7 @@ class Invoice < ActiveRecord::Base
   validates_inclusion_of :currency, :in  => Money::Currency.table.collect {|k,v| v[:iso_code] }, :unless => Proc.new {|i| i.type == "ReceivedInvoice" }
   validate :payment_method_requirements, :unless => Proc.new {|i| i.type == "ReceivedInvoice" }
 
+  before_save :fields_to_utf8
   after_create :increment_counter
   before_destroy :decrement_counter
 
@@ -358,6 +362,14 @@ class Invoice < ActiveRecord::Base
 
   def decrement_counter
     Project.decrement_counter "#{type.to_s.pluralize.underscore}_count", project_id
+  end
+
+  # non-utf characters can break conversion to PDF and signature
+  # done with external java software
+  def fields_to_utf8
+    TO_UTF_FIELDS.each do |f|
+      self.send("#{f}=",Iconv.conv('UTF-8//IGNORE', 'UTF-8', self.send(f)))
+    end
   end
 
   private
