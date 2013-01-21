@@ -158,16 +158,16 @@ peppol:
   - ubl_invoice_has_no_taxes_withheld
   - peppol_fields
   locales:
-    ca: "Factura PEPPOL UBL 2.0 per PEPPOL"
-    da: "PEPPOL UBL 2.0 Invoice through PEPPOL"
-    en: "PEPPOL UBL 2.0 Invoice through PEPPOL"
-    es: "Factura PEPPOL UBL 2.0 por PEPPOL"
-    fr: "PEPPOL UBL 2.0 par PEPPOL"
-    sv: "PEPPOL UBL 2.0 Faktura till PEPPOL"
+    ca: "Factura PEPPOL BIS UBL 2.0 per PEPPOL"
+    da: "PEPPOL BIS UBL 2.0 Invoice through PEPPOL"
+    en: "PEPPOL BIS UBL 2.0 Invoice through PEPPOL"
+    es: "Factura PEPPOL BIS UBL 2.0 por PEPPOL"
+    fr: "PEPPOL BIS UBL 2.0 par PEPPOL"
+    sv: "PEPPOL BIS UBL 2.0 Faktura till PEPPOL"
   allowed_permissions:
     :send_peppol:
 
-peppol:
+peppolbii:
   format: biiubl20
   folder: free_peppol
   validate:

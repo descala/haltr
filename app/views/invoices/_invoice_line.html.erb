@@ -9,6 +9,7 @@
 <% end -%>
 <%= f.select :unit, InvoiceLine.units, {:no_label => true}, {:style => "width: 100px;"} %>
 <%= f.text_field :description, :style => "width: 288px;", :no_label => true %>
+<%= call_hook(:invoice_form_order_line_reference) %>
 <%= f.text_field :price, :value => f.object.price.to_s.gsub(/\.0+$/,''), :style => "width: 78px;", :no_label => true %>
 <% @invoice.taxes_hash.keys.sort.each do |name| -%>
   <%= f.select "tax_#{name}", @invoice.taxes_hash[name].collect {|p| ["#{p}%", p]}, {:include_blank => true, :no_label => true }, {:class => "tax tax_#{name} #{'hidden' unless @invoice.tax_per_line?(name)}"} %>
