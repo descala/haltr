@@ -54,6 +54,15 @@
   <p><%= image_tag "/attachments/#{@company.attachments.first.id}/#{@company.attachments.first.filename}" -%></p>
 <% end -%>
 
+<% if User.current.admin? or User.current.allowed_to?(:use_imap_draft, @project) -%>
+  <p><%=f.text_field :imap_host%></p>
+  <p><%=f.text_field :imap_port%></p>
+  <p><%=f.check_box  :imap_ssl%></p>
+  <p><%=f.text_field :imap_username%></p>
+  <p><%=f.text_field :imap_password%></p>
+  <p><%=f.text_field :imap_from%></p>
+<% end -%>
+
 <% if defined?(SupportController) %>
   <p>
     <br/>

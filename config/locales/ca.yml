@@ -367,3 +367,21 @@ ca:
   field_company_identifier: "ID d'empresa"
 
   label_linked_to_mine: "Empreses vinculades"
+
+  field_imap_host: "Servidor IMAP"
+  field_imap_port: "Port"
+  field_imap_ssl: "Fer servir SSL"
+  field_imap_username: "Nom d'usuari"
+  field_imap_password: "Contrasenya"
+  field_imap_from: "Remitent"
+
+  permission_general_use: "Utilitzar el plugin Haltr"
+  permission_manage_payments: "Gestionar pagaments"
+  permission_use_templates: "Plantilles de factures"
+  permission_batch_processes: "Processos amb scripts"
+
+  # this depends on permissions defined in channels.yml
+  permission_download_pdf: "B2BRouter - Descarregar PDF"
+  permission_send_by_mail: "B2BRouter - Enviar per email"
+  permission_send_aoc: "B2BRouter - Enviar a través de l'AOC"
+  permission_send_peppol: "B2BRouter - Enviar a PEPPOL"

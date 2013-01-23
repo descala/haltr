@@ -126,7 +126,7 @@ class IssuedInvoice < InvoiceDocument
 
   def can_be_exported?
     # TODO Test if endpoint is correcty configured
-    can_be = self.valid? and ExportChannels.channel(client.invoice_format) != nil
+    can_be = self.valid? and ExportChannels.folder(client.invoice_format) != nil
     ExportChannels.validations(client.invoice_format).each do |v|
       can_be &&= self.send(v)
     end
@@ -198,6 +198,24 @@ class IssuedInvoice < InvoiceDocument
     ""
   end
 
+  # stores the email in the draft folder of an email account
+  def store_imap_draft_pdf(pdf_file_path, channel_params)
+    message = InvoiceMailer.create_issued_invoice_mail(self, {:pdf_file_path=>pdf_file_path, :from => channel_params['imap_from']})
+    #TODO move imap parameters to Company
+    Haltr::IMAP.store_draft(:host=>company.imap_host,
+                            :imap_port=>company.imap_port,
+                            :imap_ssl=>company.imap_ssl,
+                            :username=>company.imap_username,
+                            :password=>company.imap_password,
+                            :message=>message)
+  end
+
+  def uniq_emails
+    mails = self.recipients.collect{|person| person.email if person.email and !person.email.blank?}
+    mails << self.client.email if self.client and self.client.email and !self.client.email.blank?
+    mails.uniq.compact
+  end
+
   protected
 
   def create_event
@@ -217,6 +235,18 @@ class IssuedInvoice < InvoiceDocument
       add_export_error(:client_has_no_email)
       false
     end
+  end
+
+  def client_or_people_have_email
+    self.uniq_emails.any?
+  end
+
+  def company_has_imap_config
+    company and
+      !company.imap_host.blank? and
+      !company.imap_username.blank? and
+      !company.imap_password.blank? and
+      !company.imap_port.nil?
   end
 
   # facturae 3.x needs taxes to be valid
@@ -249,10 +279,10 @@ class IssuedInvoice < InvoiceDocument
    if self.respond_to?(:accounting_cost) and self.accounting_cost.blank?
       add_export_error(:missing_svefaktura_account)
       return false
-   elsif self.company.company_identifier.blank? 
+   elsif self.company.company_identifier.blank?
       add_export_error(:missing_svefaktura_organization)
       return false
-   elsif self.debit? 
+   elsif self.debit?
       add_export_error(:missing_svefaktura_debit)
       return false
     end

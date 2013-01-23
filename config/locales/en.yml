@@ -356,3 +356,10 @@ en:
   field_company_identifier: "Organization ID"
 
   label_linked_to_mine: "Linked companies"
+
+  field_imap_host: "IMAP server"
+  field_imap_port: "Port"
+  field_imap_ssl: "Use SSL"
+  field_imap_username: "Username"
+  field_imap_password: "Password"
+  field_imap_from: "From"

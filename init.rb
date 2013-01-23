@@ -53,6 +53,7 @@ Redmine::Plugin.register :haltr do
 
     permission :batch_processes, { :tasks => [:automator] }, :require => :member
 
+    # Loads permisons from config/channels.yml
     ExportChannels.permissions.each do |permission,actions|
       permission permission, actions, :require => :member
     end

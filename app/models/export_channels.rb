@@ -33,8 +33,12 @@ class ExportChannels
     available[id]["format"] if available? id
   end
 
-  def self.channel(id)
+  def self.folder(id)
     available[id]["folder"] if available? id
+  end
+
+  def self.call_invoice_method(id)
+    available[id]["call_invoice_method"] if available? id
   end
 
   def self.validations(id)
@@ -56,11 +60,15 @@ class ExportChannels
   end
 
   def self.path(id)
-    part1 = "#{Setting.plugin_haltr['export_channels_path']}/#{self.channel(id)}"
+    part1 = "#{Setting.plugin_haltr['export_channels_path']}/#{self.folder(id)}"
   end
 
   def self.l(channel_name)
     available[channel_name]['locales'][I18n.locale.to_s] rescue ''
+  end
+
+  def self.[](id)
+    available[id]
   end
 
 end

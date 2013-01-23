@@ -343,3 +343,11 @@ sv:
   missing_svefaktura_account: "Saknad Svefaktura konto kostnad"
   missing_svefaktura_organization: "Saknad Svefaktura organisation identifierare"
   missing_svefaktura_debit: "Autogiro tillåts inte"
+
+  #TODO
+  field_imap_host: "IMAP server"
+  field_imap_port: "Port"
+  field_imap_ssl: "Use SSL"
+  field_imap_username: "Username"
+  field_imap_password: "Password"
+  field_imap_from: "From"

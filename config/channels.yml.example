@@ -1,3 +1,23 @@
+#
+# channels.yml
+#
+# channel_name:
+#   format:     [pdf or the name of a template at app/views/invoices/*.xml.erb] ex. facturae32
+#   folder:     [folder to leave the resulting document in] ex. /tmp
+#   validate:   [method name in IssuedInvoice,
+#                checks the conditions the invoice has to have to use this channel] ex. client_has_email
+#   call_invoice_method:  [method name in IssuedInvoice, called if no folder is specified] ex. store_imap_draft_pdf
+#   locales:
+#     en: "text ..."      [list of translations]
+#   allowed_permissions:
+#     :permision_name:      [as seen in Redmine - Roles and permissions]
+#       :controller1_name:  [optional: the permission needs an extra access to URLs]
+#         - :action1_name
+#         - :action2_name
+#       :controller2_name:
+#         - :action3_name
+#         - :action4_name
+
 ---
 paper:
   format:
@@ -78,7 +98,7 @@ facturae_32:
     :send_by_mail:
 
 ublinvoice_20:
-  format: ubl21
+  format: peppolubl20
   folder: free_ubl
   validate:
   - client_has_email
@@ -92,3 +112,17 @@ ublinvoice_20:
     sv: "UBL Faktura 2.0 till email"
   allowed_permissions:
     :send_by_mail:
+
+imap_draft_pdf:
+  format: pdf
+  validate: client_or_people_have_email
+  call_invoice_method: store_imap_draft_pdf
+  locales:
+    ca: "Desa un email amb PDF adjunt en una carpeta IMAP"
+    da: "Store PDF into IMAP folder"
+    en: "Store PDF into IMAP folder"
+    es: "Crea un email con PDF adjunto en una carpeta IMAP"
+    fr: "Store PDF into IMAP folder"
+    sv: "Store PDF into IMAP folder"
+  allowed_permissions:
+    :use_imap_draft:

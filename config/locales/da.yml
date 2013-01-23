@@ -364,3 +364,12 @@ da:
   missing_svefaktura_account: "Mangler Svefaktura konto cost"
   missing_svefaktura_organization: "Mangler Svefaktura organisation identifikator"
   missing_svefaktura_debit: "Direkte debitering ikke tilladt"
+
+  #TODO
+
+  field_imap_host: "IMAP server"
+  field_imap_port: "Port"
+  field_imap_ssl: "Use SSL"
+  field_imap_username: "Username"
+  field_imap_password: "Password"
+  field_imap_from: "From"

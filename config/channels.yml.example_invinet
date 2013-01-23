@@ -1,3 +1,21 @@
+#
+# channels.yml
+#
+# channel_name:
+#   format:     [pdf or the name of a template at app/views/invoices/*.xml.erb] ex. facturae32
+#   folder:     [folder to leave the resulting document in] ex. /tmp
+#   validate:   [method name in app/models/issued_invoice.rb] ex. client_has_email
+#   locales:
+#     en: "text ..."      [list of translations]
+#   allowed_permissions:
+#     :permision_name:      [as seen in Redmine - Roles and permissions]
+#       :controller1_name:  [optional: the permission needs an extra access to URLs]
+#         - :action1_name
+#         - :action2_name
+#       :controller2_name:
+#         - :action3_name
+#         - :action4_name
+
 ---
 paper:
   format:
@@ -198,3 +216,4 @@ svefaktura:
     sv: "Svefaktura till email"
   allowed_permissions:
     :send_by_mail:
+

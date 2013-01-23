@@ -275,6 +275,7 @@ class InvoicesController < ApplicationController
     # e.backtrace does not fit in session leading to
     #   ActionController::Session::CookieStore::CookieOverflow
     flash[:error] = "#{l(:error_invoice_not_sent, :num=>@invoice.number)}: #{e.message}"
+    raise e if RAILS_ENV == "development"
   ensure
     redirect_to :action => 'show', :id => @invoice
   end
@@ -512,16 +513,25 @@ class InvoicesController < ApplicationController
       invoice_file.write(render_to_string(:template => "invoices/#{@format}.xml.erb", :layout => false))
     end
     invoice_file.close
-    i=2
-    destination="#{path}/" + "#{@invoice.client.hashid}_#{@invoice.id}.#{file_ext}".gsub(/\//,'')
-    while File.exists? destination
-      destination="#{path}/" + "#{@invoice.client.hashid}_#{i}_#{@invoice.id}.#{file_ext}".gsub(/\//,'')
-      i+=1
+    if ExportChannels.folder(export_id).nil?
+      # call invoice method
+      method = ExportChannels.call_invoice_method(export_id)
+      if method and @invoice.respond_to?(method)
+        @invoice.send(method, invoice_file.path, ExportChannels[export_id])
+      end
+    else
+      # store file in a folder (queue)
+      i=2
+      destination="#{path}/" + "#{@invoice.client.hashid}_#{@invoice.id}.#{file_ext}".gsub(/\//,'')
+      while File.exists? destination
+        destination="#{path}/" + "#{@invoice.client.hashid}_#{i}_#{@invoice.id}.#{file_ext}".gsub(/\//,'')
+        i+=1
+      end
+      logger.info "Sending #{@format} to '#{destination}' for invoice id #{@invoice.id}."
+      FileUtils.mv(invoice_file.path,destination)
+      #TODO state restrictions
+      @invoice.queue || @invoice.requeue
     end
-    logger.info "Sending #{@format} to '#{destination}' for invoice id #{@invoice.id}."
-    FileUtils.mv(invoice_file.path,destination)
-    #TODO state restrictions
-    @invoice.queue || @invoice.requeue
   end
 
 end
