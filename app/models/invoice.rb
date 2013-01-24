@@ -31,7 +31,10 @@ class Invoice < ActiveRecord::Base
   has_one :amend_of, :class_name => "Invoice", :foreign_key => 'amend_id'
   validates_presence_of :client, :date, :currency, :project_id, :unless => Proc.new {|i| i.type == "ReceivedInvoice" }
   validates_inclusion_of :currency, :in  => Money::Currency.table.collect {|k,v| v[:iso_code] }, :unless => Proc.new {|i| i.type == "ReceivedInvoice" }
-  validate :payment_method_requirements, :unless => Proc.new {|i| i.type == "ReceivedInvoice" }
+
+  # TODO warn the user it may not have the company or client bank account
+  #      but does not force to have one (may be handled by an external system)
+  # validate :payment_method_requirements, :unless => Proc.new {|i| i.type == "ReceivedInvoice" }
 
   before_save :fields_to_utf8
   after_create :increment_counter
