@@ -29,6 +29,8 @@ class InvoicesController < ApplicationController
   include CompanyFilter
   before_filter :check_for_company, :except => [:by_taxcode_and_num,:view,:download,:mail]
 
+  skip_before_filter :verify_authenticity_token, :only => [:pdfbase64]
+
   def index
     sort_init 'invoices.created_at', 'desc'
     sort_update %w(invoices.created_at state number date due_date clients.name import_in_cents)
@@ -212,6 +214,35 @@ class InvoicesController < ApplicationController
       send_file(pdf_file.path, :filename => @invoice.pdf_name, :type => "application/pdf", :disposition => 'inline')
     else
       render :text => "Error in PDF creation"
+    end
+  end
+
+  def pdfbase64
+    if request.get?
+      # send a base64 encoded pdf document
+      pdf_file = create_pdf_file
+      base64_file=Tempfile.new("invoice_#{@invoice.id}.pdf.base64","tmp")
+      File.open(base64_file.path, 'w') do |f|
+        f.write(Base64::encode64(File.read(pdf_file.path)))
+      end
+      if base64_file
+        send_file(base64_file.path, :filename => @invoice.pdf_name, :type => "text/plain", :disposition => 'inline')
+      else
+        render :text => "Error in PDF creation"
+      end
+    else
+      # queue a signed pdf document
+      if file_contents = params['document']
+        logger.info "Invoice #{@invoice.id} #{file_contents[0..16]}(...) received"
+        file = Tempfile.new "invoice_signed_#{@invoice.id}.pdf", "tmp"
+        file.write Base64.decode64(file_contents)
+        file.close
+        queue_file file
+        logger.info "Invoice #{@invoice.id} #{file.path} queued"
+        render :text => "Document sent. document = #{file}"
+      else
+        render :text => "Missing document"
+      end
     end
   end
 
@@ -521,17 +552,26 @@ class InvoicesController < ApplicationController
       end
     else
       # store file in a folder (queue)
-      i=2
-      destination="#{path}/" + "#{@invoice.client.hashid}_#{@invoice.id}.#{file_ext}".gsub(/\//,'')
-      while File.exists? destination
-        destination="#{path}/" + "#{@invoice.client.hashid}_#{i}_#{@invoice.id}.#{file_ext}".gsub(/\//,'')
-        i+=1
-      end
-      logger.info "Sending #{@format} to '#{destination}' for invoice id #{@invoice.id}."
-      FileUtils.mv(invoice_file.path,destination)
-      #TODO state restrictions
-      @invoice.queue || @invoice.requeue
+      queue_file(invoice_file)
     end
+  end
+
+  def queue_file(invoice_file)
+    export_id = @invoice.client.invoice_format
+    path = ExportChannels.path export_id
+    format = ExportChannels.format export_id
+    file_ext = format == "pdf" ? "pdf" : "xml"
+    i=2
+    destination="#{path}/" + "#{@invoice.client.hashid}_#{@invoice.id}.#{file_ext}".gsub(/\//,'')
+    while File.exists? destination
+      destination="#{path}/" + "#{@invoice.client.hashid}_#{i}_#{@invoice.id}.#{file_ext}".gsub(/\//,'')
+      i+=1
+    end
+    logger.info "Sending #{format} to '#{destination}' for invoice id #{@invoice.id}."
+    destination = './queued_file.data' if RAILS_ENV == "development"
+    FileUtils.mv(invoice_file.path,destination)
+    #TODO state restrictions
+    @invoice.queue || @invoice.requeue
   end
 
 end

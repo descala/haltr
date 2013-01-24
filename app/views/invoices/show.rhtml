@@ -12,6 +12,9 @@
   </div>
 </div>
 
+<textarea id="console" rows="10" style="width:99%; visibility:hidden;">
+</textarea>
+
 <% unless @is_pdf -%>
   <% content_for :sidebar do %>
     <%= render :partial => 'invoices/sidebar' %>

@@ -47,6 +47,23 @@ signed_pdf:
   allowed_permissions:
     :send_by_mail:
 
+signed_pdf_local_cert:
+  format: pdf
+  folder: free_pdf_without_signature
+  validate: client_has_email
+  javascript: "doSign('/invoices/pdfbase64/:id')"
+  locales:
+    ca: "PDF signat amb certificat local, enviat per email"
+    da: "Signed PDF til email"
+    en: "Signed PDF to email"
+    es: "PDF firmado, enviado por email"
+    fr: "PDF signé par email"
+    sv: "Signerad PDF till email"
+  allowed_permissions:
+    :use_local_signature:
+      :invoices:
+        - :pdfbase64
+
 facturae_30:
   format: facturae30
   folder: free_xml
