@@ -109,7 +109,11 @@ function doSign(document_url) {
       success : function(dataB64){
         try {
           log('Cridant a la signatura ...');
-          var signed_document = sign( dataB64, 'SHA1withRSA', 'Adobe PDF', null);
+          // <option value="CAdES">CAdES</option>
+          // <option value="Adobe PDF">PAdES</option>
+          // <option value="XAdES">XAdES</option>
+          // <option value="ODF">ODF</option>
+          var signed_document = sign( dataB64, 'SHA1withRSA', "Adobe PDF", null);
           log('Enviant document signat al servidor ...');
           $.ajax({
             type: "POST",
@@ -117,8 +121,8 @@ function doSign(document_url) {
             data: "document=" + signed_document,
             success: function(result){
               // Reload page in 2 seconds
-              log('Document enviat al servidor.')
-            setTimeout(function() { location.reload(); }, 2000);
+              log('Document enviat al servidor.');
+              setTimeout(function() { location.reload(); }, 2000);
             },
             error: function(e){
               log('Error al enviar el document signat.');

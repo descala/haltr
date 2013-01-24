@@ -235,7 +235,9 @@ class InvoicesController < ApplicationController
       if file_contents = params['document']
         logger.info "Invoice #{@invoice.id} #{file_contents[0..16]}(...) received"
         file = Tempfile.new "invoice_signed_#{@invoice.id}.pdf", "tmp"
-        file.write Base64.decode64(file_contents)
+        # TODO hack the ' ' to '+' replacement
+        # rails replaces '+' with ' '. we undo that.
+        file.write Base64.decode64(file_contents.gsub(' ','+'))
         file.close
         queue_file file
         logger.info "Invoice #{@invoice.id} #{file.path} queued"
