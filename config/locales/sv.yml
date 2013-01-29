@@ -65,6 +65,8 @@ sv:
   field_terms: Termer
   field_discount_text: Rabatt-text
   field_discount_percent: "Rabatt %"
+  field_charge_amount: Charge amount
+  field_charge_reason: Charge reason
   field_frequency: Frekvens
   field_draft: Utkast
   label_invoice_state: Status

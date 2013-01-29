@@ -65,6 +65,8 @@ da:
   field_terms: betingelser
   field_discount_text: Rabat text
   field_discount_percent: "Rebat%"
+  field_charge_amount: Charge amount
+  field_charge_reason: Charge reason
   field_frequency: Frequency
   field_draft: Afkast
   label_invoice_state: Status

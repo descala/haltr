@@ -76,6 +76,8 @@ ca:
   field_terms: Venciment
   field_discount_text: Text del descompte
   field_discount_percent: "% de descompte"
+  field_charge_amount: Import del càrrec
+  field_charge_reason: Raó del càrrec
   field_frequency: Freqüència
   field_draft: Esborrany
   label_invoice_state: Estat

@@ -9,7 +9,6 @@ class IssuedInvoice < InvoiceDocument
   validates_presence_of :due_date
   validates_uniqueness_of :number, :scope => [:project_id,:type], :if => Proc.new {|i| i.type == "IssuedInvoice" }
   validate :invoice_must_have_lines
-  validate :validate_invoice_semantics
 
   before_validation :set_due_date
   before_save :update_imports
@@ -181,13 +180,6 @@ class IssuedInvoice < InvoiceDocument
   def amended?
     #!amend.nil?
     !self.amend_id.nil?
-  end
-
-  def validate_invoice_semantics
-    # Can not have lines without tax and a global discount
-    if discount_percent and discount_percent > 0 and expenses.any?
-      errors.add(:base, "#{l(:invoice_no_taxes_and_discount)}")
-    end
   end
 
   def sending_info
