@@ -132,9 +132,9 @@
         <cbc:TaxExclusiveTotalAmount amountCurrencyID="<%=h @client.currency%>"><%=h precision(@invoice.subtotal.dollars)%></cbc:TaxExclusiveTotalAmount>
         <cbc:TaxInclusiveTotalAmount amountCurrencyID="<%=h @client.currency%>"><%=h precision @invoice.total.dollars%></cbc:TaxInclusiveTotalAmount>
    </cac0:LegalTotal>
-<% @invoice.invoice_lines.each do |invoice_line| -%>
+<% @invoice.invoice_lines.each_with_index do |invoice_line, index| -%>
    <cac0:InvoiceLine>
-     <cac0:ID><%=h invoice_line.id%></cac0:ID>
+     <cac0:ID><%=h index + 1%></cac0:ID>
      <cbc:InvoicedQuantity quantityUnitCode="<%=h invoice_line.unit_code(:ubl) %>"><%=h invoice_line.quantity%></cbc:InvoicedQuantity>
      <cbc:LineExtensionAmount amountCurrencyID="<%=h @client.currency%>"><%=h precision(invoice_line.price*invoice_line.quantity,2)%></cbc:LineExtensionAmount>
       <cac0:Item>

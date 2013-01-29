@@ -161,9 +161,9 @@
 <% end -%>
         <cbc:PayableAmount currencyID="<%=h @client.currency%>"><%=h precision @invoice.total.dollars%></cbc:PayableAmount>
       </cac:LegalMonetaryTotal>
-<% @invoice.invoice_lines.each do |invoice_line| -%>	
+<% @invoice.invoice_lines.each_with_index do |invoice_line,index| -%>
         <cac:<%= @invoice.amend_of ? "CreditNoteLine" : "InvoiceLine" %>>
-          <cbc:ID><%=h invoice_line.id%></cbc:ID>
+          <cbc:ID><%=h index + 1%></cbc:ID>
           <cbc:InvoicedQuantity unitCode="<%=h invoice_line.unit_code(:ubl) %>"><%=h invoice_line.quantity%></cbc:InvoicedQuantity>
           <cbc:LineExtensionAmount currencyID="<%=h @client.currency%>"><%=h precision(invoice_line.price*invoice_line.quantity,2)%></cbc:LineExtensionAmount>
           <cac:Item>
