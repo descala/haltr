@@ -18,8 +18,8 @@ class InvoicesController < ApplicationController
   skip_before_filter :check_if_login_required, :only => [:by_taxcode_and_num,:view,:logo,:download,:mail]
   # on development skip auth so we can use curl to debug
   if RAILS_ENV == "development"
-    skip_before_filter :check_if_login_required, :only => [:by_taxcode_and_num,:view,:logo,:download,:mail,:efactura30,:efactura31,:efactura32,:peppolubl20,:biiubl20,:svefaktura]
-    skip_before_filter :authorize, :only => [:efactura30,:efactura31,:efactura32,:peppolubl20,:biiubl20,:svefaktura]
+    skip_before_filter :check_if_login_required, :only => [:by_taxcode_and_num,:view,:logo,:download,:mail,:facturae30,:facturae31,:facturae32,:peppolubl20,:biiubl20,:svefaktura]
+    skip_before_filter :authorize, :only => [:facturae30,:facturae31,:facturae32,:peppolubl20,:biiubl20,:svefaktura]
   else
     before_filter :check_remote_ip, :only => [:by_taxcode_and_num,:mail]
   end
@@ -249,19 +249,19 @@ class InvoicesController < ApplicationController
   end
 
   # methods to debugg xml
-  def efactura30
+  def facturae30
     @format = "facturae30"
     @company = @invoice.company
     render :template => 'invoices/facturae30.xml.erb', :layout => false
     response.content_type = 'application/xml'
   end
-  def efactura31
+  def facturae31
     @format = "facturae31"
     @company = @invoice.company
     render :template => 'invoices/facturae31.xml.erb', :layout => false
     response.content_type = 'application/xml'
   end
-  def efactura32
+  def facturae32
     @format = "facturae32"
     @company = @invoice.company
     render :template => 'invoices/facturae32.xml.erb', :layout => false

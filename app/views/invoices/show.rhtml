@@ -7,6 +7,10 @@
 
       <%= render :partial=>'invoices/events'%>
 
+      <% if User.current.admin? %>
+        <%= render :partial=>'invoices/channel_links'%>
+      <% end %>
+
       </div>
     </div>
   </div>
