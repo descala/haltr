@@ -71,5 +71,11 @@ class ExportChannels
     available[id]
   end
 
+  def self.formats
+    available.collect do |k,v|
+      v['format']
+    end.uniq.compact
+  end
+
 end
 
