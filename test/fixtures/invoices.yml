@@ -46,6 +46,7 @@ draft:
   currency: EUR
  
 invoices_001: 
+  id: 1
   discount_percent: 10
   number: "1"
   ponumber: ""
@@ -59,7 +60,6 @@ invoices_001:
   payment_method: 1
   invoice_template_id: 
   date: 2011-09-13
-  id: 1
   type: IssuedInvoice
   client_id: 1
   total_in_cents: 22770
@@ -72,6 +72,7 @@ invoices_001:
   state: new
 
 invoices_002: 
+  id: 2
   discount_percent: 15
   number: "2"
   ponumber: ""
@@ -85,7 +86,6 @@ invoices_002:
   payment_method: 1
   invoice_template_id: 
   date: 2011-09-13
-  id: 2
   type: IssuedInvoice
   client_id: 1
   total_in_cents: 10030
@@ -98,6 +98,7 @@ invoices_002:
   state: new
 
 invoices_003: 
+  id: 3
   discount_percent: 0
   number: "3"
   ponumber: ""
@@ -111,7 +112,6 @@ invoices_003:
   payment_method: 1
   invoice_template_id: 
   date: 2011-09-13
-  id: 3
   type: IssuedInvoice
   client_id: 1
   total_in_cents: 11800
