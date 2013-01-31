@@ -325,7 +325,8 @@ class Invoice < ActiveRecord::Base
     taxes_outputs.sort.each_with_index do |t,i|
       unless cts[t.name].values.flatten.include?(t)
         if t.percent == 0
-          cts[t.name]["Z"] = t
+          cts[t.name]["Z"] ||= []
+          cts[t.name]["Z"] << t
         elsif i == taxes_outputs.size - 1
           cts[t.name]["S"] ||= []
           cts[t.name]["S"] << t
@@ -337,7 +338,8 @@ class Invoice < ActiveRecord::Base
       invoice_lines.each do |l|
         # on type E, only add one tax per tax name, to add only one E definition on ubl
         next if l.taxes.collect {|lt| lt.name }.include?(t.name) or cts[t.name]["E"]
-        cts[t.name]["E"] = t
+        cts[t.name]["E"] ||= []
+        cts[t.name]["E"] << t
       end
     end
     cts

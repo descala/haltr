@@ -48,14 +48,14 @@ draft:
 invoices_001: 
   id: 1
   discount_percent: 10
-  number: "1"
+  number: "invoices_001"
   ponumber: ""
   created_at: 2011-09-13 14:01:11 +02:00
   invoice_format: 
   import_in_cents: 22500
   discount_text: discount
   from: 
-  project_id: 1
+  project_id: 2
   updated_at: 2011-09-13 14:01:11 +02:00
   payment_method: 1
   invoice_template_id: 
@@ -74,14 +74,14 @@ invoices_001:
 invoices_002: 
   id: 2
   discount_percent: 15
-  number: "2"
+  number: "invoices_002"
   ponumber: ""
   created_at: 2011-09-13 14:02:55 +02:00
   invoice_format: 
   import_in_cents: 8500
   discount_text: discount
   from: 
-  project_id: 1
+  project_id: 2
   updated_at: 2011-09-13 14:02:55 +02:00
   payment_method: 1
   invoice_template_id: 
@@ -100,7 +100,7 @@ invoices_002:
 invoices_003: 
   id: 3
   discount_percent: 0
-  number: "3"
+  number: "invoices_003"
   ponumber: ""
   created_at: 2011-09-13 14:03:50 +02:00
   invoice_format: 
@@ -113,7 +113,7 @@ invoices_003:
   invoice_template_id: 
   date: 2011-09-13
   type: IssuedInvoice
-  client_id: 1
+  client_id: 2
   total_in_cents: 11800
   due_date: 2011-09-13
   extra_info: ""

@@ -17,7 +17,7 @@ class InvoicesController < ApplicationController
   before_filter :authorize, :except => [:by_taxcode_and_num,:view,:logo,:download,:mail]
   skip_before_filter :check_if_login_required, :only => [:by_taxcode_and_num,:view,:logo,:download,:mail]
   # on development skip auth so we can use curl to debug
-  if RAILS_ENV == "development"
+  if RAILS_ENV == "development" or RAILS_ENV == 'test'
     skip_before_filter :check_if_login_required, :only => [:by_taxcode_and_num,:view,:logo,:download,:mail,:facturae30,:facturae31,:facturae32,:peppolubl20,:biiubl20,:svefaktura]
     skip_before_filter :authorize, :only => [:facturae30,:facturae31,:facturae32,:peppolubl20,:biiubl20,:svefaktura]
   else
