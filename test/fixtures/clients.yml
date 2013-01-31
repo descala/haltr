@@ -27,6 +27,9 @@ client1:
   project_id: 2
   bank_account: 11491086512695322115
   hashid: "a0123456789"
+  currency: EUR
+  language: en
+  country: es
 
 clients_001: 
   city: ""
