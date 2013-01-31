@@ -3,10 +3,27 @@
 
 <p>
 <span style="float:left; width: 90px;"><%= f.text_field :name, :style => "width: 78px;", :no_label => true %></span>
-<span style="float:left; width: 80px;"><%= f.text_field :percent, :style => "width: 48px; text-align: right;", :no_label => true %> %</span>
-<span style="float:left; margin-top:5px;"><%= f.check_box :default, :no_label => true %> <%= l(:default) %></span>
+<span id="span_percent_<%=taxid%>" style="float:left; width: 80px; display: <%=f.object.exempt? ? "none" : "inline"%>;">
+  <%= f.text_field :percent, :style => "width: 48px; text-align: right;", :no_label => true, :disabled => f.object.exempt? %> %
+</span>
+<span id="span_comment_<%=taxid%>" style="float:left; display: <%=f.object.exempt? ? "inline" : "none"%>;">
+   <%= l(:field_comment) %>&nbsp;<%= f.text_field :comment, :no_label => true %>
+</span>
+<span style="float:left; margin-top:5px;"><%= f.check_box :default, :no_label => true %> <%= l(:default) %>&nbsp;</span>
+<span style="float:left; margin-top:5px;"><%= f.text_field :category, :no_label => true, :onchange => "javascript: exempt_changed(#{taxid});" %> <%= l(:field_exempt) %></span>
 
 <span style="float:left; margin-top:7px; margin-left: 10px;"><%= link_to_function(image_tag("false.png"),"rm_tax(#{taxid});") %></span>
 </p>
 </div>
 <%= f.object.new_record? ? "" : f.hidden_field(:_destroy, {:value=>0, :id=>"destroy_tax_#{taxid}"}) %>
+
+<script type="text/javascript">
+  function exempt_changed(id) {
+    var span_percent = $("span_percent_" + id);
+    var span_comment = $("span_comment_" + id);
+    var field_percent = $("company_taxes_attributes_" + id + "_percent");
+    span_percent.toggle();
+    span_comment.toggle();
+    field_percent.disabled = !field_percent.disabled;
+  }
+</script>

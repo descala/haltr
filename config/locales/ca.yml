@@ -178,6 +178,8 @@ ca:
   add_taxes_on_company: "Pots gestionar els impostos a \"La meva empresa\""
   button_download_new_invoices: "Descarregar zip amb les noves"
   label_download_new_invoices_info: "Genera un zip que conté totes les factures noves en format PDF"
+  field_exempt: "Exempt"
+  field_comment: "Motiu"
 
   # Events
   events: "Log d'esdeveniments"

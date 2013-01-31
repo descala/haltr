@@ -300,6 +300,8 @@ class Invoice < ActiveRecord::Base
     return first_tax.percent
   end
 
+  # Returns a hash with an example of all taxes that invoice uses.
+  # Format of resulting hash:
   # { "VAT" => { "S" => tax_example, "E" => tax_example } }
   # tax_example should be passed to exempt_taxable_base, tax_amount, etc..
   def taxes_by_category

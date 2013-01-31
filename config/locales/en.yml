@@ -168,6 +168,8 @@ en:
   add_taxes_on_company: "Manage taxes at \"My company\""
   button_download_new_invoices: "Download zip of new invoices"
   label_download_new_invoices_info: "Creates a zip file with all the new invoices in PDF format"
+  field_exempt: "Exempt"
+  field_comment: "Reason"
 
   # Events
   events: "Event log"

@@ -165,6 +165,8 @@ fr:
   default: "Défault"
   only_one_default_allowed_for: "%{tax_name}: Une seule taxe par défaut autorisé"
   add_taxes_on_company: "Vous pouvez gérer vos impôts \"Ma compagnie\""
+  field_exempt: "Exempt"
+  field_comment: "Reason"
 
   # Events
   events: "Log des évènements"
