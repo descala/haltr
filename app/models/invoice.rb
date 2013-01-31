@@ -313,7 +313,9 @@ class Invoice < ActiveRecord::Base
     return first_tax.percent
   end
 
-  # { "VAT" => { "S" => tax_example, "E" => tax_example } }
+  # Returns a hash with an example of all taxes that invoice uses.
+  # Format of resulting hash:
+  # { "VAT" => { "S" => [ tax_example, tax_example2 ], "E" => [ tax_example ] } }
   # tax_example should be passed to exempt_taxable_base, tax_amount, etc..
   def taxes_by_category
     cts = {}
@@ -325,9 +327,11 @@ class Invoice < ActiveRecord::Base
         if t.percent == 0
           cts[t.name]["Z"] = t
         elsif i == taxes_outputs.size - 1
-          cts[t.name]["S"] = t
+          cts[t.name]["S"] ||= []
+          cts[t.name]["S"] << t
         else
-          cts[t.name]["AA"] = t
+          cts[t.name]["AA"] ||= []
+          cts[t.name]["AA"] << t
         end
       end
       invoice_lines.each do |l|
