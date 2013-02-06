@@ -1,6 +1,5 @@
 log/*.log
 tmp/*
-tmp/**/*
 doc/api
 doc/app
 config/database.yml
@@ -9,3 +8,4 @@ config/channels.yml
 **/.DS_Store
 .DS_Store
 haltr-*.sql
+Gemfile.lock

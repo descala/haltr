@@ -3,13 +3,15 @@ module Haltr
 
     # Use online service to validate facturae (spain)
     def facturae_errors(xml)
-      tmp_file_name = Tempfile.new("facturae_utils_tmp.xml","tmp").path
-      File.open(tmp_file_name, 'w') do |f|
+      tmp_file = Tempfile.new("facturae_errors.xml","tmp")
+      File.open(tmp_file.path, 'w') do |f|
         f.write(xml)
       end
-      command = "#{File.dirname(__FILE__)}/facturae-validate-invoice.sh #{tmp_file_name}"
+      tmp_file.close
+      command = "#{File.dirname(__FILE__)}/facturae-validate-invoice.sh #{tmp_file.path}"
       output = `#{ command }`
       if $?.success?
+        tmp_file.unlink
         return []
       else
         return output.split("\n")
@@ -27,7 +29,7 @@ module Haltr
     #   biirules-ubl-t14.xsl
     #   eugen-ubl-t10.xsl
     #   eugen-ubl-t14.xsl
-    def ubl_errors(xml)
+    def ubl_errors(xml, leave_xml_file=nil)
       errors = []
       doc = Nokogiri::XML(xml)
       xsl = File.read("#{File.dirname(__FILE__)}/xml_validation/BIIRULES-UBL-T10.xsl")
@@ -37,8 +39,15 @@ module Haltr
       #  <svrl:failed-assert test="..." flag="fatal" location="...">
       #      <svrl:text>[BIIRULE-T10-R016]-Total charges MUST be equal to the sum of document level charges.</svrl:text>
       #  </svrl:failed-assert>
-      svrl.xpath("//svrl:schematron-output/svrl:failed-assert").each do |error|
+      svrl.xpath("//svrl:schematron-output/svrl:failed-assert[@flag='fatal']").each do |error|
         errors << error.content
+      end
+      if errors.any? and leave_xml_file
+        tmp_file = Tempfile.new("ubl_errors.xml","tmp")
+        File.open(tmp_file.path, 'w') do |f|
+          f.write(xml)
+        end
+        tmp_file.close
       end
       return errors
     end 
