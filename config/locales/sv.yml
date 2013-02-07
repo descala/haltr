@@ -355,3 +355,8 @@ sv:
   field_imap_username: "Username"
   field_imap_password: "Password"
   field_imap_from: "From"
+  tax_exempt: "Exempt"
+  tax_zerorated: "Zero Rated"
+  tax_standard: "Standard"
+  tax_highrate: "High Rated"
+  tax_lowrate: "Low Rated"
