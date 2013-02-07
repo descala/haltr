@@ -51,20 +51,25 @@ class InvoicesControllerTest < ActionController::TestCase
     assert_equal [], facturae_errors(xml)
   end
 
-  # uses invoice 'i4'
+  test 'facturae_xml_i5_vat_excemption' do
+    get :facturae32, :id => 5
+    assert_response :success
+    xml = @response.body
+    assert_equal [], facturae_errors(xml,true)
+  end
+
   test 'biiubl20_xml_i4' do
     get :biiubl20, :id => 4
     assert_response :success
     xml = @response.body
-    assert_equal [], ubl_errors(xml,false)
+    assert_equal [], ubl_errors(xml)
   end
 
-  # uses invoice 'i5'
   test 'biiubl20_xml_i5_vat_excemption' do
     get :biiubl20, :id => 5
     assert_response :success
     xml = @response.body
-    assert_equal [], ubl_errors(xml,true)
+    assert_equal [], ubl_errors(xml)
   end
 
 

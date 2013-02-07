@@ -303,7 +303,7 @@ class Invoice < ActiveRecord::Base
   # Returns a hash with an example of all taxes that invoice uses.
   # Format of resulting hash:
   # { "VAT" => { "S" => [ tax_example, tax_example2 ], "E" => [ tax_example ] } }
-  # tax_example should be passed tax_amount_for
+  # tax_example should be passed tax_amount
   def taxes_by_category
     cts = {}
     taxes_outputs.each do |tax|
@@ -325,6 +325,17 @@ class Invoice < ActiveRecord::Base
       t += tax_amount(tax)
     end
     t
+  end
+
+  def extra_info_plus_tax_comments
+    tax_comments = self.taxes.collect do |tax|
+      tax.comment
+    end.join(". ")
+    if tax_comments
+      "#{extra_info}. #{tax_comments}".strip
+    else
+      extra_info
+    end
   end
 
   protected
