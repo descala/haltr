@@ -303,42 +303,19 @@ class Invoice < ActiveRecord::Base
   # Returns a hash with an example of all taxes that invoice uses.
   # Format of resulting hash:
   # { "VAT" => { "S" => [ tax_example, tax_example2 ], "E" => [ tax_example ] } }
-  # tax_example should be passed to exempt_taxable_base, tax_amount, etc..
+  # tax_example should be passed tax_amount
   def taxes_by_category
     cts = {}
     taxes_outputs.each do |tax|
       cts[tax.name] = {}
     end
-    taxes_outputs.sort.each_with_index do |t,i|
-      unless cts[t.name].values.flatten.include?(t)
-        if t.percent == 0
-          cts[t.name]["Z"] ||= []
-          cts[t.name]["Z"] << t
-        elsif i == taxes_outputs.size - 1
-          cts[t.name]["S"] ||= []
-          cts[t.name]["S"] << t
-        else
-          cts[t.name]["AA"] ||= []
-          cts[t.name]["AA"] << t
-        end
-      end
-      invoice_lines.each do |l|
-        # on type E, only add one tax per tax name, to add only one E definition on ubl
-        next if l.taxes.collect {|lt| lt.name }.include?(t.name) or cts[t.name]["E"]
-        cts[t.name]["E"] ||= []
-        cts[t.name]["E"] << t
+    taxes_outputs.each do |tax|
+      unless cts[tax.name].values.flatten.include?(tax)
+        cts[tax.name][tax.category] ||= []
+        cts[tax.name][tax.category] << tax
       end
     end
     cts
-  end
-
-  def exempt_taxable_base(tax)
-    etb = Money.new(0,currency)
-    invoice_lines.each do |line|
-      next if line.taxes.collect {|t| t.name }.include? tax.name
-      etb += line.taxable_base
-    end
-    etb
   end
 
   def tax_amount_for(tax_name)
@@ -348,6 +325,17 @@ class Invoice < ActiveRecord::Base
       t += tax_amount(tax)
     end
     t
+  end
+
+  def extra_info_plus_tax_comments
+    tax_comments = self.taxes.collect do |tax|
+      tax.comment
+    end.join(". ")
+    if tax_comments
+      "#{extra_info}. #{tax_comments}".strip
+    else
+      extra_info
+    end
   end
 
   protected

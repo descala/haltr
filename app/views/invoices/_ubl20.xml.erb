@@ -134,11 +134,14 @@
         <% categories.each do |category,taxes| -%>
           <% taxes.each do |tax| -%>
             <cac:TaxSubtotal>
-              <cbc:TaxableAmount currencyID="<%=h @client.currency%>"><%=h precision((category == "E" ? @invoice.exempt_taxable_base(tax) : @invoice.taxable_base(tax)).dollars)%></cbc:TaxableAmount>
-              <cbc:TaxAmount currencyID="<%=h @client.currency%>"><%=h precision(category == "E" ? 0 : @invoice.tax_amount(tax).dollars) %></cbc:TaxAmount>
+              <cbc:TaxableAmount currencyID="<%=h @client.currency%>"><%=h precision(@invoice.taxable_base(tax).dollars)%></cbc:TaxableAmount>
+              <cbc:TaxAmount currencyID="<%=h @client.currency%>"><%=h precision(@invoice.tax_amount(tax).dollars) %></cbc:TaxAmount>
               <cac:TaxCategory>
                 <cbc:ID schemeID="UN/ECE 5305" schemeAgencyID="6"><%=category%></cbc:ID>
-                <cbc:Percent><%=h precision(category == "E" ? 0 : tax.percent)%></cbc:Percent>
+                <cbc:Percent><%=h precision(tax.percent)%></cbc:Percento>
+                <% if tax.comment and tax.comment.size > 0 %>
+                  <cbc:TaxExemptionReason><%=h tax.comment%></cbc:TaxExemptionReason>
+                <% end %>
                 <cac:TaxScheme>
                   <cbc:ID schemeID="UN/ECE 5153" schemeAgencyID="6"><%=TaxList.ubl(tax.name)%></cbc:ID>
                 </cac:TaxScheme>
