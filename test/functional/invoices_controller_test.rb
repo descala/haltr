@@ -55,7 +55,14 @@ class InvoicesControllerTest < ActionController::TestCase
     get :facturae32, :id => 5
     assert_response :success
     xml = @response.body
-    assert_equal [], facturae_errors(xml,true)
+    assert_equal [], facturae_errors(xml)
+  end
+
+  test 'facturae_xml_i6_vat_and_charges' do
+    get :facturae32, :id => 6
+    assert_response :success
+    xml = @response.body
+    assert_equal [], facturae_errors(xml)
   end
 
   test 'biiubl20_xml_i4' do
@@ -72,5 +79,11 @@ class InvoicesControllerTest < ActionController::TestCase
     assert_equal [], ubl_errors(xml)
   end
 
+  test 'biiubl20_xml_i6_vat_and_charges' do
+    get :biiubl20, :id => 6
+    assert_response :success
+    xml = @response.body
+    assert_equal [], ubl_errors(xml)
+  end
 
 end
