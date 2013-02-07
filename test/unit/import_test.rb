@@ -3,6 +3,7 @@ require File.dirname(__FILE__) + '/../test_helper'
 class ImportTest < ActiveSupport::TestCase
   
   def setup
+    assert 'EUR', Setting.plugin_haltr['default_currency']
     filename = File.dirname(__FILE__) + '/../fixtures/txt/aeb43.txt'
     importer = Import::Aeb43.new filename
     @moviments = importer.moviments

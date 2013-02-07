@@ -32,7 +32,8 @@ client1:
   country: es
 
 clients_001: 
-  city: ""
+  id: 1
+  city: Barcelona
   address: ""
   name: client1
   taxcode: B12345678
@@ -46,7 +47,6 @@ clients_001:
   payment_method: 1
   language: en
   postalcode: 08080
-  id: 1
   bic: ""
   company_id: 
   website: 

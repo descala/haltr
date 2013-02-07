@@ -5,20 +5,15 @@ require 'tasks_controller'
 class TasksController; def rescue_action(e) raise e end; end
 
 class TasksControllerTest < ActionController::TestCase
-  fixtures :projects, :enabled_modules, :users, :roles, :members, :invoices, :companies
+  fixtures :clients, :invoices, :invoice_lines, :projects, :taxes, :companies
 
   def setup
-    # user 2 (jsmith) is member of project 2 (onlinesotre)
-    # with role 2 (developer)
-    Project.find(2).enabled_modules << EnabledModule.new(:name => 'haltr')
-    dev = Role.find(2)
-    dev.permissions += [:general_use]
-    assert dev.save
     @controller = TasksController.new
     @request    = ActionController::TestRequest.new
     @response   = ActionController::TestResponse.new
-    User.current = nil
- end
+    Haltr::TestHelper.haltr_setup
+    Haltr::TestHelper.fix_invoice_totals
+  end
 
   def test_n19
     @request.session[:user_id] = 2
@@ -26,10 +21,10 @@ class TasksControllerTest < ActionController::TestCase
     assert_response :success
     assert_template 'n19.rhtml'
     assert_not_nil assigns(:due_date)
-    assert_equal 'text', @response.content_type
+    assert_equal 'text/plain', @response.content_type
     lines = @response.body.chomp.split("\n")
     # spaces are relevant
-    assert_equal '568077310000G000B00000000   SOME NON ASCII CHARS  LONG NAME THAT MAY114910865126953221150000109230                FRA 08/001                      1.092,30        ', lines[2]
+    assert_equal '568077310000G000B00000000   SOME NON ASCII CHARS  LONG NAME THAT MAY114910865126953221150000092568                FRA 08/001                        925,68        ', lines[2]
   end
 
 end

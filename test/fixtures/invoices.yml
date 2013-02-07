@@ -7,7 +7,7 @@ invoice1:
   terms: 1m1
   project_id: 2 
   client: client1
-  payment_method: 1
+  payment_method: <%= Invoice::PAYMENT_DEBIT %>
   state: sent
   currency: EUR
 
@@ -48,14 +48,14 @@ draft:
 invoices_001: 
   id: 1
   discount_percent: 10
-  number: "1"
+  number: "invoices_001"
   ponumber: ""
   created_at: 2011-09-13 14:01:11 +02:00
   invoice_format: 
   import_in_cents: 22500
   discount_text: discount
   from: 
-  project_id: 1
+  project_id: 2
   updated_at: 2011-09-13 14:01:11 +02:00
   payment_method: 1
   invoice_template_id: 
@@ -74,14 +74,14 @@ invoices_001:
 invoices_002: 
   id: 2
   discount_percent: 15
-  number: "2"
+  number: "invoices_002"
   ponumber: ""
   created_at: 2011-09-13 14:02:55 +02:00
   invoice_format: 
   import_in_cents: 8500
   discount_text: discount
   from: 
-  project_id: 1
+  project_id: 2
   updated_at: 2011-09-13 14:02:55 +02:00
   payment_method: 1
   invoice_template_id: 
@@ -100,7 +100,7 @@ invoices_002:
 invoices_003: 
   id: 3
   discount_percent: 0
-  number: "3"
+  number: "invoices_003"
   ponumber: ""
   created_at: 2011-09-13 14:03:50 +02:00
   invoice_format: 
@@ -122,3 +122,22 @@ invoices_003:
   transport: 
   terms: "0"
   state: new
+
+i4:
+  id: 4
+  type: IssuedInvoice
+  client_id: 1
+  currency: EUR
+  date: 2011-09-13
+  discount_percent: 0
+  discount_text:
+  due_date: 2013-02-05
+  extra_info: "This is a simple invoice. 100 EUR with a 10% VAT tax"
+  number: "i4"
+  payment_method: 1
+  ponumber: "client order number 123"
+  project_id: 2
+  state: new
+  terms: "0"
+  import_in_cents: 10000
+  total_in_cents: 11000

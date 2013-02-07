@@ -41,7 +41,7 @@ class TasksController < ApplicationController
       send_data output, :filename => filename_for_content_disposition("n19-#{@fecha_cargo[4..5]}-#{@fecha_cargo[2..3]}-#{@fecha_cargo[0..1]}.txt"), :type => 'text/plain'
     else
       flash[:warning] = l(:notice_empty_n19)
-      redirect_to :action => 'menu', :id => @project
+      redirect_to :action => 'index', :id => @project
     end
   end
   

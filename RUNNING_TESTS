@@ -1,5 +1,31 @@
-rake db:migrate:plugins RAILS_ENV=test
+# use this to recreate test database:
+rake db:drop db:create db:migrate redmine:load_default_data db:fixtures:load RAILS_ENV=test REDMINE_LANG=en
+rake db:migrate:plugins test:plugins:setup_plugin_fixtures RAILS_ENV=test
+
+
+#
+# the old way
+#
+
+cd redmine
 rake test:engines:all PLUGIN=haltr
 
-# use this to recreate test database:
-rake db:drop db:create db:migrate db:migrate:plugins test:plugins:setup_plugin_fixtures redmine:load_default_data db:fixtures:load RAILS_ENV=test
+#
+# the new
+#
+
+export REDMINE_PATH='/path/to/redmine/install'
+cd haltr
+bundle install
+
+# (1) with spork only
+# rails environment is loaded only once
+bundle exec spork
+# and this goes into another terminal
+# rails is not loaded
+testdrb -Itest "test/all.rb"
+
+# (2) with guard + spork
+# rails environment is loaded only once
+# and tests are run automaticaly when files change
+bundle exec guard

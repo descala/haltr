@@ -58,3 +58,16 @@ taxes_009:
   id: 9
   company_id: 
   percent: 18.0
+
+
+# company tax template (has company)
+tax_vat_10:
+  name: VAT
+  percent: 10.0
+  company: company1
+
+# invoice tax (has invoice_line)
+tax_vat_10_i4_line1:
+  name: VAT
+  percent: 10.0
+  invoice_line: i4_line1
