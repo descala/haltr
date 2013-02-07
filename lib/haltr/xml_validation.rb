@@ -42,12 +42,13 @@ module Haltr
       svrl.xpath("//svrl:schematron-output/svrl:failed-assert[@flag='fatal']").each do |error|
         errors << error.content
       end
-      if errors.any? and leave_xml_file
+      if leave_xml_file
         tmp_file = Tempfile.new("ubl_errors.xml","tmp")
         File.open(tmp_file.path, 'w') do |f|
           f.write(xml)
         end
-        tmp_file.close
+        # TODO
+        puts xml.to_s
       end
       return errors
     end 

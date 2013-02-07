@@ -93,3 +93,11 @@ i4_line1:
   price: 100.0
   currency: EUR
   description: "Line 1 of invoice i4"
+
+i5_line1:
+  invoice_id: 5
+  quantity: 1.0
+  unit: 1
+  price: 100.0
+  currency: EUR
+  description: "Line 1 of invoice i5"

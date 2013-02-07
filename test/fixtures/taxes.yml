@@ -62,12 +62,29 @@ taxes_009:
 
 # company tax template (has company)
 tax_vat_10:
+  company: company1
   name: VAT
   percent: 10.0
-  company: company1
 
 # invoice tax (has invoice_line)
 tax_vat_10_i4_line1:
+  invoice_line: i4_line1
   name: VAT
   percent: 10.0
-  invoice_line: i4_line1
+
+# company tax template (has company)
+tax_vat_excempt:
+  company: company1
+  name: VAT
+  percent: 0
+  category: E
+  comment: Excempt because we do not have to pay it
+
+# invoice tax (has invoice_line)
+tax_vat_excempt_i5_line1:
+  invoice_line: i5_line1
+  name: VAT
+  percent: 0
+  category: E
+  comment: Excempt because we do not have to pay it
+

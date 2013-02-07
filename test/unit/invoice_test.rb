@@ -90,13 +90,11 @@ class InvoiceTest < ActiveSupport::TestCase
   end
 
   test "taxes_by_category" do
-    i=invoices(:invoices_001)
+    i=invoices(:i5)
     categories = i.taxes_by_category
     assert_equal 1, categories.size
-    assert_equal 3, categories["IVA"].size
-    assert categories["IVA"]["AA"]
-    assert categories["IVA"]["S"]
-    assert categories["IVA"]["E"]
+    assert_equal 1, categories["VAT"].size
+    assert categories["VAT"]["E"]
   end
 
 end
