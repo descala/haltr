@@ -242,9 +242,19 @@ class Invoice < ActiveRecord::Base
     th = company.taxes_hash
     taxes_uniq.each do |t|
       th[t.name] = [] unless th[t.name]
-      th[t.name] << t.percent unless th[t.name].include? t.percent
+      th[t.name] << t.code unless th[t.name].include? t.code
     end
     th
+  end
+
+  # merge company and invoice taxes
+  # to use in views
+  def available_taxes
+    available_taxes = company.taxes
+    taxes_uniq.each do |tax|
+      available_taxes << tax unless available_taxes.include? tax
+    end
+    available_taxes
   end
 
   def taxes_outputs
@@ -297,7 +307,7 @@ class Invoice < ActiveRecord::Base
     return "" if invoice_lines.first.nil?
     first_tax = invoice_lines.first.taxes.collect {|t| t if t.name == tax_name}.compact.first
     return "" if first_tax.nil?
-    return first_tax.percent
+    return first_tax.code
   end
 
   # Returns a hash with an example of all taxes that invoice uses.

@@ -83,11 +83,14 @@ class InvoiceLine < ActiveRecord::Base
 
   def attributes=(args)
     self.taxes=[]
-    args.keys.each do |k|
-      if k =~ /^tax_[a-zA-Z]+$/
-        percent=args.delete(k)
-        next if percent.blank?
-        self.taxes << Tax.new(:name=>k.gsub(/^tax_/,''),:percent=>percent)
+    args.each do |k,v|
+      # k = 'tax_VAT' = name
+      # v = '10.0_AA' = percent + category
+      if k =~ /^tax_([a-zA-Z]+)$/
+        name = $1
+        percent, category = v.split('_')
+        self.taxes << Tax.new(:name=>name,:category=>category,:percent=>percent.to_f)
+        args.delete k
       end
     end
     super
@@ -111,11 +114,11 @@ class InvoiceLine < ActiveRecord::Base
   end
 
   def method_missing(m, *args)
-#    if m.to_s =~ /^tax_[a-zA-Z]=$+/ and args.size == 1
-#      self.taxes << Tax.new(:name=>m.to_s.gsub(/tax_/,'').gsub(/=$/,''),:percent=>args[0])
     if m.to_s =~ /^tax_[a-zA-Z]+/ and args.size == 0
-      curr_tax = taxes.collect {|t| t if t.name == m.to_s.gsub(/tax_/,'')}.compact.first
-      return curr_tax.nil? ? nil : curr_tax.percent
+      curr_tax = taxes.collect do |t|
+        t if t.name == m.to_s.gsub(/tax_/,'')
+      end.compact.first
+      return curr_tax.nil? ? nil : curr_tax.code
     else
       super
     end

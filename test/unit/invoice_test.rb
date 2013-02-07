@@ -97,4 +97,14 @@ class InvoiceTest < ActiveSupport::TestCase
     assert categories["VAT"]["E"]
   end
 
+  test "taxes_without_company_tax" do
+    i = invoices(:i5)
+    line = i.invoice_lines.first
+    line.taxes << Tax.new(:company => nil, :invoice_line => line, :name => 'VAT', :percent => 99.0, :category => 'XL', :comment => 'This is unique to this invoice line. Company does not have a tax like this.')
+    line.save!
+
+    # invoice i5 and company share one tax
+    assert_equal i.taxes.count + i.company.taxes.count - 1, i.available_taxes.count
+  end
+
 end

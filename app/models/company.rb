@@ -82,7 +82,7 @@ class Company < ActiveRecord::Base
     th = {}
     taxes.each do |t|
       th[t.name] = [] unless th[t.name]
-      th[t.name] << t.percent
+      th[t.name] << t.code
     end
     th
   end

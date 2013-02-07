@@ -75,7 +75,7 @@ class InvoicesControllerTest < ActionController::TestCase
     get :facturae32, :id => 7
     assert_response :success
     xml = @response.body
-    assert_equal [], facturae_errors(xml,true)
+    assert_equal [], facturae_errors(xml)
   end
 
   test 'biiubl20_xml_i4' do

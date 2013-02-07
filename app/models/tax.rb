@@ -12,14 +12,14 @@ class Tax < ActiveRecord::Base
   validates_uniqueness_of :percent, :scope => [:invoice_line_id,:name],
     :unless => Proc.new { |tax| tax.invoice_line_id.nil? or tax.category == "E" }
   # only one name-percent combination per company:
-  validates_uniqueness_of :percent, :scope => [:company_id,:name],
+  validates_uniqueness_of :percent, :scope => [:company_id,:name,:category],
     :unless => Proc.new { |tax| tax.company_id.nil? }
   validates_numericality_of :percent, :equal_to => 0,
     :if => Proc.new { |tax| ["Z","E"].include? tax.category }
 
   def ==(oth)
     return false if oth.nil?
-    self.name == oth.name and self.percent == oth.percent
+    self.name == oth.name and self.percent == oth.percent and self.category == oth.category
   end
 
   def <=>(oth)
@@ -36,6 +36,10 @@ class Tax < ActiveRecord::Base
 
   def zero?
     category == "Z"
+  end
+
+  def code
+    "#{self.percent}_#{self.category}"
   end
 
   # E=Exempt, Z=ZeroRated, S=Standard, H=High Rate, AA=Low Rate

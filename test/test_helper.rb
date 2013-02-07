@@ -36,8 +36,6 @@ Spork.each_run do
 
   require  File.dirname(__FILE__) + '/haltr_test_helper'
 
-  require 'invoice'
-
   haltr_engine = Engines.plugins[:haltr]
   Engines::Testing.setup_plugin_fixtures([haltr_engine])
   Engines::Testing.set_fixture_path
