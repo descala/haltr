@@ -15,12 +15,14 @@ group :test do
 end
 
 # Hack to test plugin
-local_gemfile = File.join(ENV["REDMINE_PATH"], "Gemfile")
-if File.exists?(local_gemfile)
-  if !defined? HALTR_RECURSION
-    # to not get evaluated again from Redmine
-    HALTR_RECURSION=true
-    puts "Loading Redmine's Gemfile ..." if $DEBUG # `ruby -d` or `bundle -v`
-    instance_eval File.read(local_gemfile)
+if ENV["REDMINE_PATH"]
+  local_gemfile = File.join(ENV["REDMINE_PATH"], "Gemfile")
+  if File.exists?(local_gemfile)
+    if !defined? HALTR_RECURSION
+      # to not get evaluated again from Redmine
+      HALTR_RECURSION=true
+      puts "Loading Redmine's Gemfile ..." if $DEBUG # `ruby -d` or `bundle -v`
+      instance_eval File.read(local_gemfile)
+    end
   end
 end
