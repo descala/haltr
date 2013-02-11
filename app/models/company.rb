@@ -78,15 +78,6 @@ class Company < ActiveRecord::Base
     write_attribute(:taxcode,tc.to_s.gsub(/\W/,''))
   end
 
-  def taxes_hash
-    th = {}
-    taxes.each do |t|
-      th[t.name] = [] unless th[t.name]
-      th[t.name] << t.code
-    end
-    th
-  end
-
   def only_one_default_tax_per_name
     deftaxes = {}
     taxes.each do |tax|

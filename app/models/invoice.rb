@@ -239,7 +239,14 @@ class Invoice < ActiveRecord::Base
   end
 
   def taxes_hash
-    th = company.taxes_hash
+    th = {}
+    # taxes defined in company
+    company.taxes.each do |t|
+      th[t.name] = [] unless th[t.name]
+      th[t.name] << t.code
+    end
+    # add taxes from invoice, since we can have a tax
+    # on invoice that is no longer defined in company
     taxes_uniq.each do |t|
       th[t.name] = [] unless th[t.name]
       th[t.name] << t.code unless th[t.name].include? t.code
