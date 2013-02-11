@@ -2,6 +2,8 @@ require File.dirname(__FILE__) + '/../test_helper'
 
 class InvoiceEditTest < ActionController::IntegrationTest
 
+   # TODO fixtures here break other tests ???
+
   def test_edit_invoice_i4
     post "/login", :username => 'jsmith', :password => 'jsmith'
     assert_redirected_to "/my/page"

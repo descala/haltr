@@ -64,7 +64,7 @@ tax_vat_exempt_i5_line1:
   name: VAT
   percent: 0
   category: E
-  comment: Excempt because we do not have to pay it
+  comment: Exempt because we do not have to pay it
 
 tax_vat_10_i6_line1:
   invoice_line: i6_line1

@@ -1,7 +1,7 @@
 module Haltr
   module TaxHelper
 
-    def self.add_category_to_taxes
+    def add_category_to_taxes
       Company.all.each do |company|
         guess_tax_category company
       end

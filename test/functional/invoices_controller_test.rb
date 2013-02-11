@@ -5,7 +5,7 @@ require 'invoices_controller'
 class InvoicesController; def rescue_action(e) raise e end; end
 
 class InvoicesControllerTest < ActionController::TestCase
-  fixtures :companies
+  fixtures :companies, :invoices, :invoice_lines, :taxes
 
   include Haltr::XmlValidation
 
