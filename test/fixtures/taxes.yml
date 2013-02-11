@@ -2,61 +2,31 @@ taxes_010:
   name: IVA
   invoice_line_id: 5
   id: 12
-  company_id: 
   percent: 18.0
-taxes_001: 
-  name: IVA
-  invoice_line_id: 
-  id: 1
-  company_id: 1
-  percent: 8.0
-taxes_002: 
-  name: IVA
-  invoice_line_id: 
-  id: 2
-  company_id: 1
-  percent: 18.0
-taxes_003: 
-  name: IRPF
-  invoice_line_id: 
-  id: 3
-  company_id: 1
-  percent: -15.0
-taxes_004: 
-  name: IRPF
-  invoice_line_id: 
-  id: 4
-  company_id: 1
-  percent: -8.0
 taxes_005: 
   name: IVA
   invoice_line_id: 1
   id: 5
-  company_id: 
   percent: 18.0
 taxes_006: 
   name: IRPF
   invoice_line_id: 1
   id: 6
-  company_id: 
   percent: -15.0
 taxes_007: 
   name: IVA
   invoice_line_id: 2
   id: 7
-  company_id: 
   percent: 8.0
 taxes_008: 
   name: IRPF
   invoice_line_id: 2
   id: 8
-  company_id: 
   percent: -8.0
 taxes_009: 
   name: IVA
   invoice_line_id: 4
   id: 9
-  company_id: 
   percent: 18.0
 
 
