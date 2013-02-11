@@ -121,7 +121,7 @@
            <cac0:ID><%=category%></cac0:ID>
            <cbc:Percent><%=h precision (category == "E" ? 0 : tax.percent)%></cbc:Percent>
             <cac0:TaxScheme>
-              <cac0:ID><%=TaxList.ubl(tax.name)%></cac0:ID>
+              <cac0:ID><%=Haltr::TaxHelper.ubl(tax.name)%></cac0:ID>
             </cac0:TaxScheme>
          </cac0:TaxCategory>
       </cac0:TaxSubTotal>

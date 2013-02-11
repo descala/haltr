@@ -143,7 +143,7 @@
                   <cbc:TaxExemptionReason><%=h tax.comment%></cbc:TaxExemptionReason>
                 <% end %>
                 <cac:TaxScheme>
-                  <cbc:ID schemeID="UN/ECE 5153" schemeAgencyID="6"><%=TaxList.ubl(tax.name)%></cbc:ID>
+                  <cbc:ID schemeID="UN/ECE 5153" schemeAgencyID="6"><%=Haltr::TaxHelper.ubl(tax.name)%></cbc:ID>
                 </cac:TaxScheme>
               </cac:TaxCategory>
             </cac:TaxSubtotal>
@@ -192,7 +192,7 @@
             <cac:ClassifiedTaxCategory>
               <cbc:ID schemeID="UN/ECE 5305" schemeAgencyID="6"><%=h tax_line.category%></cbc:ID>
               <cac:TaxScheme>
-                <cbc:ID schemeID="UN/ECE 5153" schemeAgencyID="6"><%= TaxList.ubl(tax_line.name) %></cbc:ID>
+                <cbc:ID schemeID="UN/ECE 5153" schemeAgencyID="6"><%= Haltr::TaxHelper.ubl(tax_line.name) %></cbc:ID>
               </cac:TaxScheme>
             </cac:ClassifiedTaxCategory>
           <% end -%>
