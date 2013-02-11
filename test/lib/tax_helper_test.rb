@@ -65,16 +65,15 @@ class TaxHelperTest < ActiveSupport::TestCase
 
   test "default taxes" do
     default_taxes = default_taxes_for("es")
-    assert_equal 4, default_taxes.size
+    assert_equal 3, default_taxes.size
     taxes = {}
     default_taxes.each do |tax|
       taxes[tax.name] ||= []
       taxes[tax.name] << tax
     end
-    assert_equal 3, taxes["IVA"].size
+    assert_equal 2, taxes["IVA"].size
     assert_equal "AA", taxes["IVA"].sort[0].category
     assert_equal "S",  taxes["IVA"].sort[1].category
-    assert_equal "H",  taxes["IVA"].sort[2].category
     assert_equal 1, taxes["IRPF"].size
     assert_equal "S", taxes["IRPF"].first.category
   end
