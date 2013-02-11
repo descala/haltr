@@ -89,7 +89,17 @@ class InvoiceLine < ActiveRecord::Base
       if k =~ /^tax_([a-zA-Z]+)$/
         name = $1
         percent, category = v.split('_')
-        self.taxes << Tax.new(:name=>name,:category=>category,:percent=>percent.to_f)
+        comment = ""
+        # if tax is exempt, copy exempt reason from tax definition on company
+        if category == "E"
+          tax_template = invoice.company.taxes.find(:first,
+            :conditions => ["name=? AND category=? AND percent=0",name,category])
+          comment = tax_template.comment if tax_template
+        end
+        self.taxes << Tax.new(:name=>name,
+                              :category=>category,
+                              :percent=>percent.to_f,
+                              :comment=>comment)
         args.delete k
       end
     end
