@@ -46,7 +46,7 @@ module Haltr
     end
 
     COUNTRY_TAXES = {
-      "es" => { "IVA"  => [ 4, 10, 21 ],
+      "es" => { "IVA"  => [ 10, 21 ],
                 "IRPF" => [ -21 ] },
       "fr" => { "TVA"  => [ 2.1, 5.5, 19.6 ] },
       "se" => { "VAT"  => [ 6, 12, 25 ] },
