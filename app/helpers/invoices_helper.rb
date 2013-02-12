@@ -98,7 +98,7 @@ module InvoicesHelper
   def tax_name(tax, options = {})
     return nil if tax.nil?
 
-    return "#{tax.name} #{l(:tax_exempt)}" if tax.exempt?
+    return "#{tax.name} #{l(:tax_E)}" if tax.exempt?
 
     options.symbolize_keys!
     default_format = I18n.translate(:'number.format',
