@@ -33,9 +33,11 @@
     <span id="span_comment_<%=taxid%>" style="display: <%=f.object.exempt? ? "inline" : "none"%>;">
       <%= l(:field_comment) %> <%= f.text_field :comment, :no_label => true %>
     </span>
+
+    <%= f.object.new_record? ? "" : f.hidden_field(:_destroy, {:value=>0, :id=>"destroy_tax_#{taxid}"}) %>
+    <%= f.hidden_field :id %>
   </td>
 
 </tr>
 
 
-<%= f.object.new_record? ? "" : f.hidden_field(:_destroy, {:value=>0, :id=>"destroy_tax_#{taxid}"}) %>
