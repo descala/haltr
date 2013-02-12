@@ -154,7 +154,7 @@ module InvoicesHelper
     invoice.taxes_hash[tax_code].collect do |code|
       percent, category = code.split('_')
       ["#{percent}% #{category}", code]
-    end
+    end.insert(0,'')
   end
 
 end
