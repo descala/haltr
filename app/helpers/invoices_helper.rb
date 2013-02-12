@@ -95,29 +95,32 @@ module InvoicesHelper
     end
   end
 
-  def number_to_tax_percent(number, options = {})
-    return nil if number.nil?
+  def tax_name(tax, options = {})
+    return nil if tax.nil?
+
+    return "#{tax.name} #{l(:tax_exempt)}" if tax.exempt?
 
     options.symbolize_keys!
+    default_format = I18n.translate(:'number.format',
+                                    :locale => options[:locale],
+                                    :default => {})
+    tax_format   = I18n.translate(:'number.tax.format',
+                                  :locale => options[:locale],
+                                  :default => {})
+    default_format  = DEFAULT_TAX_PERCENT_VALUES.merge(default_format).merge!(tax_format)
+    default_format[:negative_format] = "-" + options[:format] if options[:format]
+    options = default_format.merge!(options)
+    format  = options.delete(:format)
 
-    defaults = I18n.translate(:'number.format', :locale => options[:locale], :default => {})
-    tax      = I18n.translate(:'number.tax.format', :locale => options[:locale], :default => {})
-
-    defaults  = DEFAULT_TAX_PERCENT_VALUES.merge(defaults).merge!(tax)
-    defaults[:negative_format] = "-" + options[:format] if options[:format]
-    options   = defaults.merge!(options)
-
-    tax_name  = options.delete(:tax_name)
-    format    = options.delete(:format)
-
-    if number.to_f < 0
+    number = tax.percent.to_f
+    if number < 0
       format = options.delete(:negative_format)
-      number = number.respond_to?("abs") ? number.abs : number.sub(/^-/, '')
+      number = tax.percent.respond_to?("abs") ? tax.percent.abs : tax.percent.sub(/^-/, '')
     end
 
     begin
       value = number_with_precision(number, options.merge(:raise => true))
-      format.gsub(/%n/, value).gsub(/%p/, '%').gsub(/%t/,tax_name)
+      format.gsub(/%n/, value).gsub(/%p/, '%').gsub(/%t/,tax.name)
     rescue
       number
     end
