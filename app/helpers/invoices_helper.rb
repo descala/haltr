@@ -156,7 +156,11 @@ module InvoicesHelper
     # tax_code = 'VAT'
     invoice.taxes_hash[tax_code].collect do |code|
       percent, category = code.split('_')
-      ["#{percent}% #{category}", code]
+      if category == 'E'
+        [l("tax_#{category}"), code]
+      else
+        ["#{percent}%", code]
+      end
     end.insert(0,'')
   end
 

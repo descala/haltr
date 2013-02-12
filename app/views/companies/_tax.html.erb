@@ -20,7 +20,7 @@
 
   <td width="120px">
     <%= f.select :category,
-      Tax.categories.collect {|name,code| [l("tax_#{name}"), code] },
+      Tax.categories.collect {|code| [l("tax_#{code}"), code] },
       {:no_label => true},
       :onchange => "javascript: category_changed(#{taxid});" %>
   </td>

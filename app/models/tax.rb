@@ -44,13 +44,7 @@ class Tax < ActiveRecord::Base
 
   # E=Exempt, Z=ZeroRated, S=Standard, H=High Rate, AA=Low Rate
   def self.categories
-    {
-      "exempt"    => "E",
-      "zerorated" => "Z",
-      "standard"  => "S",
-      "highrate"  => "H",
-      "lowrate"   => "AA",
-    }
+    ['E','Z','S','H','AA']
   end
 
 end
