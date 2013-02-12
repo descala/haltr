@@ -17,9 +17,6 @@ module Haltr
 
         # user 2 (jsmith) is member of project 2 (onlinesotre) with role 2 (developer)
 
-        # set jsmith project
-        u = User.find(2)
-        u.update_attribute(:project,Project.find(2))
       end
 
       def fix_invoice_totals
