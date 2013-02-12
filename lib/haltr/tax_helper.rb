@@ -46,7 +46,7 @@ module Haltr
     end
 
     COUNTRY_TAXES = {
-      "es" => { "IVA"  => [ 10, 21 ],
+      "es" => { "IVA"  => [ 4, 10, 21 ],
                 "IRPF" => [ -21 ] },
       "fr" => { "TVA"  => [ 2.1, 5.5, 19.6 ] },
       "se" => { "VAT"  => [ 6, 12, 25 ] },
@@ -69,20 +69,13 @@ module Haltr
       names = taxes.collect {|t| t.name }.uniq
       names.each do |name|
         tax_group = taxes.collect {|t| t if t.name == name }.compact
-        size = tax_group.size
-        position = 1
-        tax_group.sort.each do |tax|
+        tax_group.sort.each_with_index do |tax,i|
           if tax.percent == 0.0
             tax.category='Z'
-            size = size - 1
+          elsif i == tax_group.size - 1
+            tax.category='S'
           else
-            # sorted by percent
-            if size > 1 and position == 1
-              tax.category='AA'
-            elsif position == size and size > 2
-              tax.category='H'
-            end
-          position = position + 1
+            tax.category='AA'
           end
           result << tax
         end
