@@ -130,7 +130,24 @@ class InvoicesController < ApplicationController
   end
 
   def update
-    if @invoice.update_attributes(params[:invoice])
+    #TODO: need to access invoice taxes before update_attributes, if not
+    # updated taxes are not saved.
+    # maybe related to https://rails.lighthouseapp.com/projects/8994/tickets/4642
+    @invoice.invoice_lines.each {|l| l.taxes.each {|t| } }
+
+    # remove taxes with empty code
+    parsed_params = params[:invoice]
+    parsed_params["invoice_lines_attributes"].each do |i, invoice_line|
+      empty_code_taxes = []
+      invoice_line["taxes_attributes"].each do |j, tax|
+        empty_code_taxes << j if tax["code"].blank?
+      end
+      empty_code_taxes.each do |j|
+        invoice_line["taxes_attributes"].delete j
+      end
+    end
+    
+    if @invoice.update_attributes(parsed_params)
       Event.create(:name=>'edited',:invoice=>@invoice,:user=>User.current)
       flash[:notice] = l(:notice_successful_update)
       redirect_to :action => 'show', :id => @invoice

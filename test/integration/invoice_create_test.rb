@@ -40,15 +40,13 @@ class InvoiceCreaeteTest < ActionController::IntegrationTest
               "0"=>
               {
                 "name"=>"TAXA",
-                "percent"=>"10.0",
-                "category"=>"S",
+                "code"=>"10.0_S",
                 "comment"=>"comment for TAXA 10%"
               },
                 "1"=>
               {
                 "name"=>"TAXB",
-                "percent"=>"20.0",
-                "category"=>"S",
+                "code"=>"20.0_S",
                 "comment"=>"coment for TAXB 20%"
               }
             },

@@ -18,7 +18,6 @@ class InvoiceEditTest < ActionController::IntegrationTest
       "controller"=>"invoices",
       "_method"=>"put",
       "id"=>"4",
-      "VAT_global"=>"10.0",
       "invoice"=>
       {
         "date"=>"2011-09-13",
@@ -44,9 +43,15 @@ class InvoiceEditTest < ActionController::IntegrationTest
               "0"=>
               {
                 "name"=>"VAT",
-                "percent"=>"0.0",
-                "category"=>"E",
-                "comment"=>"Exempt because we do not have to pay it"
+                "code"=>"0.0_E",
+                "comment"=>"Exempt because we do not have to pay it",
+                "id"=>"363578707"
+              },
+              "1"=>
+              {
+                "name"=>"OTH",
+                "code"=>"",
+                "comment"=>"this tax is not applicable and should not be saved"
               }
             },
               "quantity"=>"1",
@@ -63,6 +68,8 @@ class InvoiceEditTest < ActionController::IntegrationTest
 
     invoice = Invoice.find(4)
     assert_kind_of IssuedInvoice, invoice
+    assert_equal 1, invoice.invoice_lines.size
+    assert_equal 1, invoice.invoice_lines.first.taxes.size
 
     # Tax comment should be copied if category is E
     tax = invoice.invoice_lines.first.taxes.first

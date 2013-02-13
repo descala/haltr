@@ -245,13 +245,13 @@ class Invoice < ActiveRecord::Base
     # taxes defined in company
     company.taxes.each do |t|
       th[t.name] = [] unless th[t.name]
-      th[t.name] << t.code
+      th[t.name] << t
     end
     # add taxes from invoice, since we can have a tax
     # on invoice that is no longer defined in company
     taxes_uniq.each do |t|
       th[t.name] = [] unless th[t.name]
-      th[t.name] << t.code unless th[t.name].include? t.code
+      th[t.name] << t unless th[t.name].include? t
     end
     th
   end

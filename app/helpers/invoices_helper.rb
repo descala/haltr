@@ -154,12 +154,12 @@ module InvoicesHelper
 
   def tax_categories_array(invoice,tax_code)
     # tax_code = 'VAT'
-    invoice.taxes_hash[tax_code].collect do |code|
-      percent, category = code.split('_')
+    invoice.taxes_hash[tax_code].collect do |tax|
+      percent, category = tax.code.split('_')
       if category == 'E'
-        [l("tax_#{category}"), code]
+        [l("tax_#{category}"), tax.code]
       else
-        ["#{percent}%", code]
+        ["#{percent}%", tax.code]
       end
     end.insert(0,'')
   end

@@ -39,7 +39,14 @@ class Tax < ActiveRecord::Base
   end
 
   def code
-    "#{self.percent}_#{self.category}"
+    [percent,category].compact.join("_")
+  end
+
+  # sets percent and category from a code string
+  def code=(v)
+    p, c = v.split("_")
+    self.percent=p
+    self.category=c
   end
 
   # E=Exempt, Z=ZeroRated, S=Standard, H=High Rate, AA=Low Rate
