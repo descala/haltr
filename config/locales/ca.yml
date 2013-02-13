@@ -386,5 +386,6 @@ ca:
   permission_download_pdf: "B2BRouter - Descarregar PDF"
   permission_send_by_mail: "B2BRouter - Enviar per email"
   permission_send_aoc: "B2BRouter - Enviar a través de l'AOC"
+  permission_send_face: "B2BRouter - Enviar a través del portal FACE"
   permission_send_peppol: "B2BRouter - Enviar a PEPPOL"
   permission_use_local_signature: "B2BRouter - Signar amb certificat local"
