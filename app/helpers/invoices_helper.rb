@@ -155,13 +155,17 @@ module InvoicesHelper
   def tax_categories_array(invoice,tax_code)
     # tax_code = 'VAT'
     invoice.taxes_hash[tax_code].collect do |tax|
-      percent, category = tax.code.split('_')
-      if category == 'E'
-        [l("tax_#{category}"), tax.code]
-      else
-        ["#{percent}%", tax.code]
-      end
+      tax_label tax.code
     end.insert(0,'')
+  end
+
+  def tax_label(tax_code)
+    percent, category = tax_code.split('_')
+    if category == 'E'
+      [l("tax_#{category}"), tax_code]
+    else
+      ["#{percent}%", tax_code]
+    end
   end
 
 end

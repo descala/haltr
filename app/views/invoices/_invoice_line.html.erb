@@ -14,7 +14,7 @@
 <% i=0 -%>
 <% @invoice.taxes_hash.each do |name,taxes| -%>
   <% current_tax = f.object.taxes.collect {|t| t if t.name == name }.compact.first || Tax.new(:category=>nil) %>
-  <%= select_tag("invoice[invoice_lines_attributes][#{lineid}][taxes_attributes][#{i.to_s}][code]", options_for_select([""] + taxes.collect {|t| t.code }, :selected => current_tax.code)) %>
+  <%= select_tag("invoice[invoice_lines_attributes][#{lineid}][taxes_attributes][#{i.to_s}][code]", options_for_select([""] + taxes.collect {|t| tax_label(t.code) }, :selected => current_tax.code)) %>
   <%= text_field_tag("invoice[invoice_lines_attributes][#{lineid}][taxes_attributes][#{i.to_s}][comment]", current_tax.comment) %>
   <%= hidden_field_tag("invoice[invoice_lines_attributes][#{lineid}][taxes_attributes][#{i.to_s}][name]", name) %>
   <%= hidden_field_tag("invoice[invoice_lines_attributes][#{lineid}][taxes_attributes][#{i.to_s}][id]", current_tax.id) %>
