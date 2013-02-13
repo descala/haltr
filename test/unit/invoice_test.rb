@@ -112,7 +112,6 @@ class InvoiceTest < ActiveSupport::TestCase
     assert i.to_s.split.size > 1
   end
 
-  #TODO: fails cause taxable_base doesn't check code, only percent!
   test "invoice_taxable_base_with_exempts_and_zeros" do
     i = invoices(:i7)
     assert_equal 2, i.invoice_lines.size

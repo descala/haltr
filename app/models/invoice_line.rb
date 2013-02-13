@@ -66,7 +66,7 @@ class InvoiceLine < ActiveRecord::Base
   def has_tax?(tax_type)
     return true if tax_type.nil?
     taxes.each do |tax|
-      return true if tax.name == tax_type.name and tax.percent == tax_type.percent
+      return true if tax == tax_type
     end
     false
   end
@@ -84,34 +84,6 @@ class InvoiceLine < ActiveRecord::Base
   def unit_short
     l("s_#{UNIT_CODES[unit][:name]}")
   end
-
-#  def attributes=(args)
-#    self.taxes=[]
-#    args.each do |k,v|
-#      # k = 'tax_VAT' = name
-#      # v = '10.0_AA' = percent + category
-#      if k =~ /^tax_([a-zA-Z]+)$/
-#        name = $1
-#        percent, category = v.split('_')
-#        comment = ""
-#        # if category is nil, no not add 0% tax
-#        if !category.nil?
-#          # if tax is exempt, copy exempt reason from tax definition on company
-#          if category == "E"
-#            tax_template = invoice.company.taxes.find(:first,
-#                                                      :conditions => ["name=? AND category=? AND percent=0",name,category])
-#            comment = tax_template.comment if tax_template
-#          end
-#          self.taxes << Tax.new(:name=>name,
-#                                :category=>category,
-#                                :percent=>percent.to_f,
-#                                :comment=>comment)
-#        end
-#        args.delete k
-#      end
-#    end
-#    super
-#  end
 
   def taxes_withheld
     taxes.find(:all, :conditions => "percent < 0")
