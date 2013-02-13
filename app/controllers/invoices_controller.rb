@@ -135,15 +135,13 @@ class InvoicesController < ApplicationController
     # maybe related to https://rails.lighthouseapp.com/projects/8994/tickets/4642
     @invoice.invoice_lines.each {|l| l.taxes.each {|t| } }
 
-    # remove taxes with empty code
+    # mark as "_destroy" all taxes with an empty tax code
     parsed_params = params[:invoice]
     parsed_params["invoice_lines_attributes"].each do |i, invoice_line|
-      empty_code_taxes = []
-      invoice_line["taxes_attributes"].each do |j, tax|
-        empty_code_taxes << j if tax["code"].blank?
-      end
-      empty_code_taxes.each do |j|
-        invoice_line["taxes_attributes"].delete j
+      if invoice_line["taxes_attributes"]
+        invoice_line["taxes_attributes"].each do |j, tax|
+          tax['_destroy'] = 1 if tax["code"].blank?
+        end
       end
     end
     

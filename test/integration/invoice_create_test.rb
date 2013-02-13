@@ -59,10 +59,11 @@ class InvoiceCreaeteTest < ActionController::IntegrationTest
       }
     }
 
-    i = Invoice.find_by_number 'invoice_created_test_1'
-    assert_redirected_to :controller => "invoices", :action => "show", :id => i
+    invoice = Invoice.find_by_number 'invoice_created_test_1'
+    assert_redirected_to :controller => "invoices", :action => "show", :id => invoice
+    assert_equal 1, invoice.invoice_lines.size
+    assert_equal 2, invoice.invoice_lines.first.taxes.size
 
-    puts i.to_s
   end
 
 end
