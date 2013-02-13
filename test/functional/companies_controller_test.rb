@@ -5,23 +5,13 @@ require 'companies_controller'
 class CompaniesController; def rescue_action(e) raise e end; end
 
 class CompaniesControllerTest < ActionController::TestCase
-  fixtures :projects, :enabled_modules, :users, :roles, :members, :companies
+  fixtures :companies
 
   def setup
-    Setting.plugin_haltr = { 'trace_url' => 'loclhost:3000',
-                             'export_channels_path' => '/tmp' }
-
-    # user 2 (jsmith) is member of project 2 (onlinesotre)
-    # with role 2 (developer)
-    Project.find(2).enabled_modules << EnabledModule.new(:name => 'haltr')
-    dev = Role.find(2)
-    dev.permissions += [:general_use]
-    assert dev.save
-
     @controller = CompaniesController.new
     @request    = ActionController::TestRequest.new
     @response   = ActionController::TestResponse.new
-    User.current = nil
+    Haltr::TestHelper.haltr_setup
  end
 
   def test_show_edit_on_index

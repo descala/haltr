@@ -2,24 +2,24 @@ require File.dirname(__FILE__) + '/../test_helper'
 
 class InvoiceTest < ActiveSupport::TestCase
 
-  fixtures :clients, :invoices, :invoice_lines, :projects, :taxes
+  fixtures :clients, :invoices, :invoice_lines, :taxes, :companies
 
   def setup
-    Setting.plugin_haltr = { "trace_url"=>"http://localhost:3001", "b2brouter_ip"=>"", "export_channels_path"=>"/tmp", "default_country"=>"es", "default_currency"=>"EUR", "issues_controller_name"=>"issues" }
+    Haltr::TestHelper.fix_invoice_totals
   end
 
   test "due dates" do
     date = Date.new(2000,12,1)
-    i = IssuedInvoice.new(:client=>clients(:client1),:project=>projects(:projects_002),:date=>date,:number=>1)
-    i.invoice_lines << invoice_lines(:invoice1_l1)
+    i = IssuedInvoice.new(:client=>clients(:client1),:project=>Project.find(2),:date=>date,:number=>111)
+    i.invoice_lines << invoice_lines(:invoice1_l1).dup
     i.save!
     assert_equal date, i.due_date
-    i = IssuedInvoice.new(:client=>clients(:client1),:project=>projects(:projects_002),:date=>date,:number=>2,:terms=>"1m15")
-    i.invoice_lines << invoice_lines(:invoice1_l1)
+    i = IssuedInvoice.new(:client=>clients(:client1),:project=>Project.find(2),:date=>date,:number=>222,:terms=>"1m15")
+    i.invoice_lines << invoice_lines(:invoice1_l1).dup
     i.save!
     assert_equal Date.new(2001,1,15), i.due_date
-    i = IssuedInvoice.new(:client=>clients(:client1),:project=>projects(:projects_002),:date=>date,:number=>3,:terms=>"3m15")
-    i.invoice_lines << invoice_lines(:invoice1_l1)
+    i = IssuedInvoice.new(:client=>clients(:client1),:project=>Project.find(2),:date=>date,:number=>333,:terms=>"3m15")
+    i.invoice_lines << invoice_lines(:invoice1_l1).dup
     i.save!
     assert_equal Date.new(2001,3,15), i.due_date
   end
@@ -92,17 +92,11 @@ class InvoiceTest < ActiveSupport::TestCase
   test "taxes_by_category" do
     i=invoices(:invoices_001)
     categories = i.taxes_by_category
-    assert_equal 2, categories.size
-    assert_equal 0, categories["IRPF"].size
+    assert_equal 1, categories.size
     assert_equal 3, categories["IVA"].size
-    assert_equal 1, categories["IVA"]["AA"].size
-    assert_equal 8, categories["IVA"]["AA"].first.percent
-    assert_equal 1, categories["IVA"]["S"].size
-    assert_equal 18, categories["IVA"]["S"].first.percent
-    assert_equal 2, categories["IVA"]["E"].size
-    e_percents = categories["IVA"]["E"].collect {|t| t.percent }
-    assert e_percents.include? 8
-    assert e_percents.include? 18
+    assert categories["IVA"]["AA"]
+    assert categories["IVA"]["S"]
+    assert categories["IVA"]["E"]
   end
 
 end

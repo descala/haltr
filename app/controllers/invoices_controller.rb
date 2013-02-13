@@ -17,7 +17,7 @@ class InvoicesController < ApplicationController
   before_filter :authorize, :except => [:by_taxcode_and_num,:view,:logo,:download,:mail]
   skip_before_filter :check_if_login_required, :only => [:by_taxcode_and_num,:view,:logo,:download,:mail]
   # on development skip auth so we can use curl to debug
-  if RAILS_ENV == "development"
+  if RAILS_ENV == "development" or RAILS_ENV == 'test'
     skip_before_filter :check_if_login_required, :only => [:by_taxcode_and_num,:view,:logo,:download,:mail,:facturae30,:facturae31,:facturae32,:peppolubl20,:biiubl20,:svefaktura]
     skip_before_filter :authorize, :only => [:facturae30,:facturae31,:facturae32,:peppolubl20,:biiubl20,:svefaktura]
   else
@@ -252,35 +252,29 @@ class InvoicesController < ApplicationController
   def facturae30
     @format = "facturae30"
     @company = @invoice.company
-    render :template => 'invoices/facturae30.xml.erb', :layout => false
-    response.content_type = 'application/xml'
+    render_clean_xml :template => 'invoices/facturae30.xml.erb', :layout => false
   end
   def facturae31
     @format = "facturae31"
     @company = @invoice.company
-    render :template => 'invoices/facturae31.xml.erb', :layout => false
-    response.content_type = 'application/xml'
+    render_clean_xml :template => 'invoices/facturae31.xml.erb', :layout => false
   end
   def facturae32
     @format = "facturae32"
     @company = @invoice.company
-    render :template => 'invoices/facturae32.xml.erb', :layout => false
-    response.content_type = 'application/xml'
+    render_clean_xml :template => 'invoices/facturae32.xml.erb', :layout => false
   end
   def peppolubl20
     @company = @invoice.company
-    render :template => 'invoices/peppolubl20.xml.erb', :layout => false
-    response.content_type = 'application/xml'
+    render_clean_xml :template => 'invoices/peppolubl20.xml.erb', :layout => false
   end
   def biiubl20
     @company = @invoice.company
-    render :template => 'invoices/biiubl20.xml.erb', :layout => false
-    response.content_type = 'application/xml'
+    render_clean_xml :template => 'invoices/biiubl20.xml.erb', :layout => false
   end
   def svefaktura
     @company = @invoice.company
-    render :template => 'invoices/svefaktura.xml.erb', :layout => false
-    response.content_type = 'application/xml'
+    render_clean_xml :template => 'invoices/svefaktura.xml.erb', :layout => false
   end
 
   def show
@@ -543,7 +537,7 @@ class InvoicesController < ApplicationController
       invoice_file = create_pdf_file
     else
       invoice_file=Tempfile.new("invoice_#{@invoice.id}.#{file_ext}","tmp")
-      invoice_file.write(render_to_string(:template => "invoices/#{@format}.xml.erb", :layout => false))
+      invoice_file.write(clean_xml(render_to_string(:template => "invoices/#{@format}.xml.erb", :layout => false)))
     end
     invoice_file.close
     if ExportChannels.folder(export_id).nil?
@@ -574,6 +568,28 @@ class InvoicesController < ApplicationController
     FileUtils.mv(invoice_file.path,destination)
     #TODO state restrictions
     @invoice.queue || @invoice.requeue
+  end
+
+  def render_clean_xml(options)
+    xml = render_to_string(options)
+    render :text => clean_xml(xml)
+    response.content_type = 'application/xml'
+  end
+
+  def clean_xml(xml)
+    xsl =<<XSL
+<xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
+  <xsl:output method="xml" encoding="UTF-8" indent="yes"/>
+  <xsl:strip-space elements="*"/>
+  <xsl:template match="/">
+    <xsl:copy-of select="."/>
+  </xsl:template>
+</xsl:stylesheet>
+XSL
+    doc  = Nokogiri::XML(xml)
+    xslt = Nokogiri::XSLT(xsl)
+    out  = xslt.transform(doc)
+    out.to_xml
   end
 
 end
