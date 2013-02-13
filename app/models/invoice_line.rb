@@ -24,6 +24,10 @@ class InvoiceLine < ActiveRecord::Base
   validates_numericality_of :quantity, :price
   attr_accessor :new_and_first
 
+  accepts_nested_attributes_for :taxes,
+    :allow_destroy => true
+  validates_associated :taxes
+
   # remove colons "1,23" => "1.23"
   def price=(v)
     write_attribute :price, (v.is_a?(String) ? v.gsub(',','.') : v)
@@ -81,33 +85,33 @@ class InvoiceLine < ActiveRecord::Base
     l("s_#{UNIT_CODES[unit][:name]}")
   end
 
-  def attributes=(args)
-    self.taxes=[]
-    args.each do |k,v|
-      # k = 'tax_VAT' = name
-      # v = '10.0_AA' = percent + category
-      if k =~ /^tax_([a-zA-Z]+)$/
-        name = $1
-        percent, category = v.split('_')
-        comment = ""
-        # if category is nil, no not add 0% tax
-        if !category.nil?
-          # if tax is exempt, copy exempt reason from tax definition on company
-          if category == "E"
-            tax_template = invoice.company.taxes.find(:first,
-                                                      :conditions => ["name=? AND category=? AND percent=0",name,category])
-            comment = tax_template.comment if tax_template
-          end
-          self.taxes << Tax.new(:name=>name,
-                                :category=>category,
-                                :percent=>percent.to_f,
-                                :comment=>comment)
-        end
-        args.delete k
-      end
-    end
-    super
-  end
+#  def attributes=(args)
+#    self.taxes=[]
+#    args.each do |k,v|
+#      # k = 'tax_VAT' = name
+#      # v = '10.0_AA' = percent + category
+#      if k =~ /^tax_([a-zA-Z]+)$/
+#        name = $1
+#        percent, category = v.split('_')
+#        comment = ""
+#        # if category is nil, no not add 0% tax
+#        if !category.nil?
+#          # if tax is exempt, copy exempt reason from tax definition on company
+#          if category == "E"
+#            tax_template = invoice.company.taxes.find(:first,
+#                                                      :conditions => ["name=? AND category=? AND percent=0",name,category])
+#            comment = tax_template.comment if tax_template
+#          end
+#          self.taxes << Tax.new(:name=>name,
+#                                :category=>category,
+#                                :percent=>percent.to_f,
+#                                :comment=>comment)
+#        end
+#        args.delete k
+#      end
+#    end
+#    super
+#  end
 
   def taxes_withheld
     taxes.find(:all, :conditions => "percent < 0")
@@ -115,6 +119,16 @@ class InvoiceLine < ActiveRecord::Base
 
   def taxes_outputs
     taxes.find(:all, :conditions => "percent >= 0")
+  end
+
+  def to_s
+    taxes_string = taxes.collect do |tax|
+      tax.to_s
+    end.join("\n").gsub(/\n$/,'')
+    <<_LINE
+  * #{quantity} x #{description} #{price}
+#{taxes_string}
+_LINE
   end
 
   private

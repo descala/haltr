@@ -107,4 +107,9 @@ class InvoiceTest < ActiveSupport::TestCase
     assert_equal i.taxes.count + i.company.taxes.count - 1, i.available_taxes.count
   end
 
+  test "to string" do
+    i = invoices(:i7)
+    assert i.to_s.split.size > 1
+  end
+
 end

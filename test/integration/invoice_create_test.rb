@@ -12,14 +12,13 @@ class InvoiceCreaeteTest < ActionController::IntegrationTest
     post "/invoices/create/onlinestore",
     {
       "commit"=>"Create",
-      "VAT_global"=>"0.0_E",
       "action"=>"create",
       "id"=>"onlinestore",
       "controller"=>"invoices",
       "invoice"=>
       {
         "discount_percent"=>"0",
-        "number"=>"invoices_003",
+        "number"=>"invoice_created_test_1",
         "ponumber"=>"",
         "discount_text"=>"",
         "accounting_cost"=>"",
@@ -36,17 +35,36 @@ class InvoiceCreaeteTest < ActionController::IntegrationTest
         {
           "0"=>
           {
-            "price"=>"10",
-            "tax_VAT"=>"0.0_E",
-            "quantity"=>"1",
-            "unit"=>"1",
-            "description"=>"item"
+            "taxes_attributes"=>
+            {
+              "0"=>
+              {
+                "name"=>"TAXA",
+                "percent"=>"10.0",
+                "category"=>"S",
+                "comment"=>"comment for TAXA 10%"
+              },
+                "1"=>
+              {
+                "name"=>"TAXB",
+                "percent"=>"20.0",
+                "category"=>"S",
+                "comment"=>"coment for TAXB 20%"
+              }
+            },
+              "quantity"=>"1",
+              "unit"=>"1",
+              "price"=>"100",
+              "description"=>"This line has two taxes TAX1 and TAX2 "
           }
-        },
-      },
+        }
+      }
     }
 
-    assert_redirected_to :controller => "invoices", :action => "show" #TODO: id?
+    i = Invoice.find_by_number 'invoice_created_test_1'
+    assert_redirected_to :controller => "invoices", :action => "show", :id => i
+
+    puts i.to_s
   end
 
 end

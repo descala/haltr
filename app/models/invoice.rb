@@ -1,5 +1,7 @@
 class Invoice < ActiveRecord::Base
 
+  include HaltrHelper
+
   unloadable
 
   # 1 - cash (al comptat)
@@ -353,6 +355,21 @@ class Invoice < ActiveRecord::Base
     else
       extra_info
     end
+  end
+
+  def to_s
+    lines_string = invoice_lines.collect do |line|
+      line.to_s
+    end.join("\n").gsub(/\n$/,'')
+    <<_INV
+#{self.class}
+--
+id = #{id}
+number = #{number}
+total = #{total}
+--
+#{lines_string}
+_INV
   end
 
   protected

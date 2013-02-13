@@ -47,4 +47,10 @@ class Tax < ActiveRecord::Base
     ['E','Z','S','H','AA']
   end
 
+  def to_s
+    <<_TAX
+    - #{code} #{category} #{comment}
+_TAX
+  end
+
 end

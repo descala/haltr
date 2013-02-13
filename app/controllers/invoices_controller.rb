@@ -124,6 +124,7 @@ class InvoicesController < ApplicationController
       flash[:notice] = l(:notice_successful_create)
       redirect_to :action => 'show', :id => @invoice
     else
+      logger.info "Invoice errors #{@invoice.errors.full_messages}"
       render :action => "new"
     end
   end
