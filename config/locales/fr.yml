@@ -64,6 +64,8 @@ fr:
   field_terms: Termes
   field_discount_text: Texte de réduction
   field_discount_percent: "% réduction"
+  field_charge_amount: Charge amount
+  field_charge_reason: Charge reason
   field_frequency: Fréquence
   field_draft: Brouillon
   label_invoice_state: Statut

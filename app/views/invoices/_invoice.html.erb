@@ -99,6 +99,15 @@
         </tr>
       <% end -%>
 
+      <% if @invoice.charge_amount.cents > 0 -%>
+        <tr>
+          <td class="item-quantity first"></td>
+          <td class="item-description"><%=h @invoice.charge_reason %></td>
+          <td class="item-price"></td>
+          <td class="line-total last"><%=h money(@invoice.charge_amount) %></td>
+        </tr>
+      <% end -%>
+
 
   </tbody></table>
 

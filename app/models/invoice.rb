@@ -55,6 +55,11 @@ class Invoice < ActiveRecord::Base
     :mapping => [%w(total_in_cents cents), %w(currency currency_as_string)],
     :constructor => Proc.new { |cents, currency| Money.new(cents || 0, currency || Money::Currency.new(Setting.plugin_haltr['default_currency'])) }
 
+  composed_of :charge_amount,
+    :class_name => "Money",
+    :mapping => [%w(charge_amount_in_cents cents), %w(currency currency_as_string)],
+    :constructor => Proc.new { |cents, currency| Money.new(cents || 0, currency || Money::Currency.new(Setting.plugin_haltr['default_currency'])) }
+
   def initialize(attributes=nil)
     super
     self.discount_percent ||= 0
@@ -72,13 +77,17 @@ class Invoice < ActiveRecord::Base
     end
   end
 
-  def subtotal_without_discount(tax_type=nil)
+  def gross_subtotal(tax_type=nil)
     amount = Money.new(0,currency)
     invoice_lines.each do |line|
       next if line.destroyed? or line.marked_for_destruction?
       amount += line.total if tax_type.nil? or line.has_tax?(tax_type)
     end
     amount
+  end
+
+  def subtotal_without_discount(tax_type=nil)
+    gross_subtotal(tax_type) + charge_amount
   end
 
   def subtotal(tax_type=nil)
@@ -95,14 +104,10 @@ class Invoice < ActiveRecord::Base
 
   def discount(tax_type=nil)
     if discount_percent
-      subtotal_without_discount(tax_type) * (discount_percent / 100.0)
+      (subtotal_without_discount(tax_type) - charge_amount) * (discount_percent / 100.0)
     else
       Money.new(0,currency)
     end
-  end
-
-  def discount_without_expenses
-    discount - ( expenses_total - total_general_surcharges )
   end
 
   def pdf_name
@@ -273,27 +278,9 @@ class Invoice < ActiveRecord::Base
     t * -1
   end
 
-  # suplidos
-  def expenses
-    invoice_lines.collect { |line|
-      line if line.expenses?
-    }.compact
-  end
-
-  def expenses_total
-    t = Money.new(0,currency)
-    expenses.each do |line|
-      t += line.total
-    end
-    t
-  end
-
-  def total_general_surcharges
-    t = Money.new(0,currency)
-    expenses.each do |line|
-      t += line.taxable_base
-    end
-    t
+  def charge_amount=(value)
+    value = Money.parse(value)
+    write_attribute :charge_amount_in_cents, value.cents
   end
 
   def tax_per_line?(tax_name)

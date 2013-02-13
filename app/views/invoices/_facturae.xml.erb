@@ -68,6 +68,7 @@
             <ResidenceTypeCode>R</ResidenceTypeCode>
             <TaxIdentificationNumber><%=h @client.taxcode%></TaxIdentificationNumber>
          </TaxIdentification>
+         <%= call_hook(:facturae_administrative_centres) %>
          <LegalEntity>
             <CorporateName><%=h @client.name%></CorporateName>
             <%= render :partial => "address.facturae.xml", :locals => {:entity => @client}%>
@@ -112,7 +113,7 @@
              <TaxTypeCode>01</TaxTypeCode>
              <TaxRate><%=h precision tax.percent%></TaxRate>
              <TaxableBase>
-               <TotalAmount><%=h precision(@invoice.subtotal(tax).dollars)%></TotalAmount>
+               <TotalAmount><%=h precision(@invoice.taxable_base(tax).dollars)%></TotalAmount>
              </TaxableBase>
              <TaxAmount>
                <TotalAmount><%=h precision @invoice.tax_amount(tax).dollars %></TotalAmount>
@@ -124,7 +125,7 @@
              <TaxTypeCode>01</TaxTypeCode>
              <TaxRate>0.00</TaxRate>
              <TaxableBase>
-               <TotalAmount><%=h precision(@invoice.subtotal.dollars)%></TotalAmount>
+               <TotalAmount><%=h precision(@invoice.taxable_base.dollars)%></TotalAmount>
              </TaxableBase>
              <TaxAmount>
                <TotalAmount>0.00</TotalAmount>
@@ -151,31 +152,29 @@
 <% end -%>
 
          <InvoiceTotals>
-            <TotalGrossAmount><%=h precision @invoice.subtotal_without_discount.dollars - @invoice.expenses_total.dollars%></TotalGrossAmount>
+            <TotalGrossAmount><%=h precision @invoice.gross_subtotal.dollars%></TotalGrossAmount>
 <% if @invoice.discount_percent and @invoice.discount_percent > 0 -%>
             <GeneralDiscounts>
                <Discount>
                  <DiscountReason><%=h @invoice.discount_text%></DiscountReason>
                  <DiscountRate><%=h precision(@invoice.discount_percent, 4) %></DiscountRate>
-                 <DiscountAmount><%=h precision(@invoice.discount_without_expenses.dollars,(@format == "facturae32" ? 6 : 2))%></DiscountAmount>
+                 <DiscountAmount><%=h precision(@invoice.discount.dollars,(@format == "facturae32" ? 6 : 2))%></DiscountAmount>
                </Discount>
             </GeneralDiscounts>
 <% end -%>
-<% if @invoice.expenses.any? -%>
+<% if @invoice.charge_amount.cents > 0 -%>
            <GeneralSurcharges>
-<% @invoice.expenses.each do |expense| -%>
-               <Charge>
-                   <ChargeReason><%=h expense.description%></ChargeReason>
-                   <ChargeAmount><%=h precision(expense.taxable_base.dollars,(@format == "facturae32" ? 6 : 2))%></ChargeAmount>
-               </Charge>
-<% end -%>
+             <Charge>
+               <ChargeReason><%=h @invoice.charge_reason%></ChargeReason>
+               <ChargeAmount><%=h precision(@invoice.charge_amount.dollars,(@format == "facturae32" ? 6 : 2))%></ChargeAmount>
+             </Charge>
            </GeneralSurcharges>
 <% end -%>
 <% if @invoice.discount_percent and @invoice.discount_percent > 0 -%>
-            <TotalGeneralDiscounts><%=h precision(@invoice.discount_without_expenses.dollars,2)%></TotalGeneralDiscounts>
+            <TotalGeneralDiscounts><%=h precision(@invoice.discount.dollars,2)%></TotalGeneralDiscounts>
 <% end -%>
-<% if @invoice.expenses.any? -%>
-           <TotalGeneralSurcharges><%=h precision(@invoice.total_general_surcharges.dollars,2)%></TotalGeneralSurcharges>
+<% if @invoice.charge_amount.cents > 0 -%>
+           <TotalGeneralSurcharges><%=h precision(@invoice.charge_amount.dollars,2)%></TotalGeneralSurcharges>
 <% end -%>
             <TotalGrossAmountBeforeTaxes><%=h precision(@invoice.subtotal.dollars)%></TotalGrossAmountBeforeTaxes>
             <TotalTaxOutputs><%=h precision @invoice.total_tax_outputs.dollars%></TotalTaxOutputs>
@@ -186,7 +185,6 @@
          </InvoiceTotals>
          <Items>
 <% @invoice.invoice_lines.each do |invoice_line| -%>
-  <% next if invoice_line.expenses? -%>
             <InvoiceLine>
               <%= call_hook(:facturae_receiver_contract_reference) %>
               <ReceiverTransactionReference><%=h(@invoice.ponumber)[0..19]%></ReceiverTransactionReference>

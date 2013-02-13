@@ -16,6 +16,8 @@
   </div>
   <p><%= f.text_field :discount_text %></p>
   <p><%= f.text_field :discount_percent %></p>
+  <p><%= f.text_field :charge_amount, :value => (@invoice.charge_amount.cents > 0 ? @invoice.charge_amount : "") %></p>
+  <p><%= f.text_field :charge_reason %></p>
   <p><%= f.text_field :accounting_cost %></p>
   <p><%= f.text_area :extra_info, :rows=>3 %></p>
   <p><%= label_tag l(:label_tax_plural) %></p>

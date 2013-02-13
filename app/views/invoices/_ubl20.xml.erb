@@ -119,11 +119,11 @@
           <cbc:Amount currencyID="<%=h @client.currency%>"><%=h precision(@invoice.discount.dollars,2)%></cbc:Amount>
         </cac:AllowanceCharge>
 <% end -%>
-<% if @invoice.expenses.size > 0 -%>
+<% if @invoice.charge_amount.cents > 0 -%>
         <cac:AllowanceCharge>
           <cbc:ChargeIndicator>true</cbc:ChargeIndicator>
-          <cbc:AllowanceChargeReason><%=h @invoice.extra_info%></cbc:AllowanceChargeReason>
-          <cbc:Amount currencyID="<%=h @client.currency%>"><%=h precision(@invoice.expenses_total.dollars,2)%></cbc:Amount>
+          <cbc:AllowanceChargeReason><%=h @invoice.charge_reason%></cbc:AllowanceChargeReason>
+          <cbc:Amount currencyID="<%=h @client.currency%>"><%=h precision(@invoice.charge_amount.dollars,2)%></cbc:Amount>
         </cac:AllowanceCharge>
 <% end -%>
 <% @invoice.taxes_by_category.each do |tax_name,categories| -%>
@@ -147,19 +147,33 @@
           <% end -%>
         <% end -%>
 
+<% if @invoice.charge_amount.cents > 0 -%>
+          <cac:TaxSubtotal>
+            <cbc:TaxableAmount currencyID="<%=h @client.currency%>"><%=@invoice.charge_amount.dollars%></cbc:TaxableAmount>
+            <cbc:TaxAmount currencyID="<%=h @client.currency%>">0.00</cbc:TaxAmount>
+            <cac:TaxCategory>
+              <cbc:ID schemeID="UN/ECE 5305" schemeAgencyID="6">Z</cbc:ID>
+              <cbc:Percent>0.00</cbc:Percent>
+              <cac:TaxScheme>
+                <cbc:ID schemeID="UN/ECE 5153" schemeAgencyID="6">VAT</cbc:ID>
+              </cac:TaxScheme>
+            </cac:TaxCategory>
+          </cac:TaxSubtotal>
+<% end -%>
+
       </cac:TaxTotal>
 
 <% end -%>
 
     <cac:LegalMonetaryTotal>
-      <cbc:LineExtensionAmount currencyID="<%=h @client.currency%>"><%=h precision @invoice.subtotal_without_discount.dollars%></cbc:LineExtensionAmount>
+      <cbc:LineExtensionAmount currencyID="<%=h @client.currency%>"><%=h precision @invoice.gross_subtotal.dollars%></cbc:LineExtensionAmount>
       <cbc:TaxExclusiveAmount currencyID="<%=h @client.currency%>"><%=h precision(@invoice.subtotal.dollars)%></cbc:TaxExclusiveAmount>
       <cbc:TaxInclusiveAmount currencyID="<%=h @client.currency%>"><%=h precision @invoice.total.dollars%></cbc:TaxInclusiveAmount>
 <% if @invoice.discount_percent > 0 -%>
             <cbc:AllowanceTotalAmount currencyID="<%=h @client.currency%>"><%=h precision(@invoice.discount.dollars,2)%></cbc:AllowanceTotalAmount>
 <% end -%>
-<% if @invoice.expenses.size > 0 -%>
-            <cbc:ChargeTotalAmount currencyID="<%=h @client.currency%>"><%=h precision(@invoice.discount.dollars,2)%></cbc:ChargeTotalAmount>
+<% if @invoice.charge_amount.cents > 0 -%>
+            <cbc:ChargeTotalAmount currencyID="<%=h @client.currency%>"><%=h precision(@invoice.charge_amount.dollars,2)%></cbc:ChargeTotalAmount>
 <% end -%>
         <cbc:PayableAmount currencyID="<%=h @client.currency%>"><%=h precision @invoice.total.dollars%></cbc:PayableAmount>
       </cac:LegalMonetaryTotal>

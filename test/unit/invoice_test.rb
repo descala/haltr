@@ -56,7 +56,6 @@ class InvoiceTest < ActiveSupport::TestCase
     assert_equal 1, invoices(:invoices_003).taxes_uniq.size
     assert_equal 100, invoices(:invoices_003).subtotal.dollars
     assert_equal 0, invoices(:invoices_003).discount.dollars
-    assert_equal 0, invoices(:invoices_003).discount_without_expenses.dollars
     assert_equal 118, invoices(:invoices_003).total.dollars
     assert_equal "J", invoices(:invoices_003).persontypecode
 
@@ -66,7 +65,6 @@ class InvoiceTest < ActiveSupport::TestCase
     assert_equal 1, invoices(:invoices_002).taxes_uniq.size
     assert_equal 85, invoices(:invoices_002).subtotal.dollars
     assert_equal 15, invoices(:invoices_002).discount.dollars
-    assert_equal 15, invoices(:invoices_002).discount_without_expenses.dollars
     assert_equal 100.30, invoices(:invoices_002).total.dollars
     assert_equal "J", invoices(:invoices_002).persontypecode
 
@@ -80,7 +78,6 @@ class InvoiceTest < ActiveSupport::TestCase
     assert_equal 4, invoices(:invoices_001).taxes_uniq.size
     assert_equal 225, invoices(:invoices_001).subtotal.dollars
     assert_equal 25, invoices(:invoices_001).discount.dollars
-    assert_equal 20, invoices(:invoices_001).discount_without_expenses.dollars
     assert_equal 227.7, invoices(:invoices_001).total.dollars
     assert_equal "F", invoices(:invoices_001).persontypecode
   end

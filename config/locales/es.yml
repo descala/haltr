@@ -78,6 +78,8 @@ es:
   field_terms: Vencimiento 
   field_discount_text: Texto del descuento
   field_discount_percent: "% de descuento"
+  field_charge_amount: Importe del suplido
+  field_charge_reason: Razon del suplido
   field_frequency: Frecuencia
   field_draft: Borrador
   label_invoice_state: Estado
