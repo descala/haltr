@@ -31,7 +31,7 @@ class InvoicesControllerTest < ActionController::TestCase
     assert_response :success
     xml = @response.body
     assert xml
-    assert_equal [], facturae_errors(xml)
+    assert_equal [], facturae_errors_online(xml)
   end
 
   test 'facturae31' do
@@ -41,17 +41,27 @@ class InvoicesControllerTest < ActionController::TestCase
     assert_response :success
     xml = @response.body
     assert xml
-    assert_equal [], facturae_errors(xml)
+    assert_equal [], facturae_errors_online(xml)
   end
 
-  test 'facturae32' do
+  test 'facturae32_online' do
     Invoice.find(2).save!
     @request.session[:user_id] = 2
     get :facturae32, :id => 4
     assert_response :success
     xml = @response.body
     assert xml
-    assert_equal [], facturae_errors(xml)
+    assert_equal [], facturae_errors_online(xml)
+  end
+
+  test 'facturae32_with_xsd' do
+    Invoice.find(2).save!
+    @request.session[:user_id] = 2
+    get :facturae32, :id => 4
+    assert_response :success
+    xml = @response.body
+    assert xml
+    assert_equal [], facturae_errors_xsd(xml)
   end
 
   test 'facturae_xml_i5_vat_excemption' do
@@ -59,7 +69,7 @@ class InvoicesControllerTest < ActionController::TestCase
     get :facturae32, :id => 5
     assert_response :success
     xml = @response.body
-    assert_equal [], facturae_errors(xml)
+    assert_equal [], facturae_errors_online(xml)
   end
 
   test 'facturae_xml_i6_vat_and_charges' do
@@ -67,7 +77,7 @@ class InvoicesControllerTest < ActionController::TestCase
     get :facturae32, :id => 6
     assert_response :success
     xml = @response.body
-    assert_equal [], facturae_errors(xml)
+    assert_equal [], facturae_errors_online(xml)
   end
 
   test 'facturae_xml_i7_vat_10_vat_20_and_charges' do
@@ -75,7 +85,7 @@ class InvoicesControllerTest < ActionController::TestCase
     get :facturae32, :id => 7
     assert_response :success
     xml = @response.body
-    assert_equal [], facturae_errors(xml)
+    assert_equal [], facturae_errors_online(xml)
   end
 
   test 'biiubl20_xml_i4' do

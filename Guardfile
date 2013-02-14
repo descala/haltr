@@ -9,6 +9,7 @@ end
 guard :test, :drb => true do
   watch(%r{^lib/(.+)\.rb$})     { |m| "test/#{m[1]}_test.rb" }
   watch(%r{^lib/haltr/(.+)\.rb$})     { |m| "test/lib/#{m[1]}_test.rb" }
+  watch(%r{^lib/haltr/xml_validation(.+)$})     { |m| "test/functional/invoices_controller_test.rb" }
   watch(%r{^test/.+_test\.rb$})
   watch('test/test_helper.rb')  { "test" }
   watch(%r{^app/models/(.+)\.rb$})                   { |m| "test/unit/#{m[1]}_test.rb" }
