@@ -68,6 +68,7 @@
             <ResidenceTypeCode>R</ResidenceTypeCode>
             <TaxIdentificationNumber><%=h @client.taxcode%></TaxIdentificationNumber>
          </TaxIdentification>
+         <%= call_hook(:facturae_administrative_centres) %>
          <LegalEntity>
             <CorporateName><%=h @client.name%></CorporateName>
             <%= render :partial => "address.facturae.xml", :locals => {:entity => @client}%>

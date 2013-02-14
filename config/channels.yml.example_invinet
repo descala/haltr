@@ -112,6 +112,21 @@ facturae_32:
   allowed_permissions:
     :send_by_mail:
 
+facturae_32_face:
+  format: facturae32
+  folder: free_face
+  validate:
+  - invoice_has_taxes
+  locales:
+    ca: "Facturae 3.2 a FACE"
+    da: "Facturae 3.2 til FACE"
+    en: "Facturae 3.2 to FACE"
+    es: "Facturae 3.2 por FACE"
+    fr: "Facturae 3.2 par FACE"
+    sv: "Spanskt format Facturae 3.2 till FACE"
+  allowed_permissions:
+    :send_face:
+
 ublinvoice_20:
   format: peppolubl20
   folder: free_ubl
