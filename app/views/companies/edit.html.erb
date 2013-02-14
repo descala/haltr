@@ -1,8 +1,8 @@
 <h2><%= l(:label_my_company) %></h2>
 
-<% labelled_tabular_form_for :company, @company,
+<% labelled_form_for :company, @company,
   :url => { :action => 'update', :id => @company },
-  :html => {:method => :put, :multipart => true } do |f| %>
+  :html => {:method => :put, :multipart => true, :class => 'tabular' } do |f| %>
 <%= render :partial => 'form', :locals => { :f => f } %>
 <%= submit_tag l(:button_save) %>
 <% end %>

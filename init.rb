@@ -14,8 +14,8 @@ Date::DATE_FORMATS[:ddmmyy] = "%d%m%y"
 Dir[File.join(directory,'vendor','plugins','*')].each do |dir|
   path = File.join(dir, 'lib')
   $LOAD_PATH << path
-  ActiveSupport::Dependencies.load_paths << path
-  ActiveSupport::Dependencies.load_once_paths.delete(path)
+  ActiveSupport::Dependencies.autoload_paths << path
+  ActiveSupport::Dependencies.autoload_once_paths.delete(path)
 end
 
 Redmine::Plugin.register :haltr do
