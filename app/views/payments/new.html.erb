@@ -1,6 +1,6 @@
 <h2><%= l(:label_payment_new) %></h2>
 
-<% labelled_form_for :payment, @payment, :url => { :action => 'create', :id => @project } do |f| %>
+<% labelled_form_for :payment, @payment, :url => { :action => 'create', :id => @project }, :html => {:class=>'tabular'} do |f| %>
   <%= render :partial => 'form', :locals => { :f => f } %>
   <% if @invoice -%>
     <div id="mail_notification">

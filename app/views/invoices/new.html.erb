@@ -1,6 +1,6 @@
 <h2><%= controller.controller_name == "invoice_templates" ? l(:label_invoice_template_new) : l(:label_invoice_new) %></h2>
 
-<% labelled_form_for :invoice, @invoice, :url => { :action => 'create', :id => @project } do |f| %>
+<% labelled_form_for :invoice, @invoice, :url => { :action => 'create', :id => @project }, :html => {:class=>'tabular'} do |f| %>
 <%= render :partial => 'invoices/form', :locals => { :f => f } %>
 <%= submit_tag l(:button_create) %>
 <% end %>

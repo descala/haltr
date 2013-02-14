@@ -19,7 +19,7 @@
 
 <%= render :partial => "events" -%>
 
-<% labelled_form_for :invoice, @invoice, {:url => { :action => 'update', :id => @invoice }, :html => {:method => :put}}  do |f| %>
+<% labelled_form_for :invoice, @invoice, :url => { :action => 'update', :id => @invoice }, :html => {:method => :put, :class => 'tabular'} do |f| %>
   <% if @invoice.is_a? ReceivedInvoice -%>
     <%= render :partial => 'received_invoices/form', :locals => { :f => f } %>
   <% else -%>
