@@ -19,12 +19,19 @@ class Tax < ActiveRecord::Base
 
   def ==(oth)
     return false if oth.nil?
-    self.name == oth.name and self.percent == oth.percent and self.category == oth.category
+    self.name == oth.name and
+      self.percent == oth.percent and
+      self.category == oth.category
   end
 
   def <=>(oth)
     if (self.name <=> oth.name) == 0
-      self.percent.abs <=> oth.percent.abs
+      if self.percent.abs == oth.percent.abs
+        #TODO: sort categories manually
+        self.category <=> oth.category
+      else
+        self.percent.abs <=> oth.percent.abs
+      end
     else
       self.name <=> oth.name
     end
@@ -56,7 +63,7 @@ class Tax < ActiveRecord::Base
 
   def to_s
     <<_TAX
-    - #{code} #{category} #{comment}
+    - #{name} #{code} #{category} #{comment}
 _TAX
   end
 

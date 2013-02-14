@@ -18,6 +18,7 @@ class InvoiceEditTest < ActionController::IntegrationTest
       "controller"=>"invoices",
       "_method"=>"put",
       "id"=>"4",
+      "VAT_comment"=>"Exempt because we do not have to pay it",
       "invoice"=>
       {
         "date"=>"2011-09-13",
@@ -44,14 +45,12 @@ class InvoiceEditTest < ActionController::IntegrationTest
               {
                 "name"=>"VAT",
                 "code"=>"0.0_E",
-                "comment"=>"Exempt because we do not have to pay it",
                 "id"=>"363578707"
               },
               "1"=>
               {
                 "name"=>"OTH",
-                "code"=>"",
-                "comment"=>"this tax is not applicable and should not be saved"
+                "code"=>"", # this tax code is empty, so should not be saved
               }
             },
               "quantity"=>"1",

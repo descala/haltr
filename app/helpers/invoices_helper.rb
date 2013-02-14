@@ -152,19 +152,37 @@ module InvoicesHelper
     end
   end
 
-  def tax_categories_array(invoice,tax_code)
-    # tax_code = 'VAT'
-    invoice.taxes_hash[tax_code].collect do |tax|
-      tax_label tax.code
+  def tax_categories_array(invoice,tax_name)
+    # tax_name = 'VAT'
+    taxes = invoice.taxes_hash[tax_name].sort
+    show_category = false
+    if taxes.size != taxes.collect {|t| t.percent}.uniq.size
+      show_category = true
+    end
+    taxes.collect do |tax|
+      tax_label(tax.code,show_category)
     end.insert(0,'')
   end
 
-  def tax_label(tax_code)
+  def tax_label(tax_code,show_category=false)
+    # tax_code = '21.0_S'
     percent, category = tax_code.split('_')
     if category == 'E'
       [l("tax_#{category}"), tax_code]
     else
-      ["#{percent}%", tax_code]
+      if show_category
+        ["#{percent}% #{l("tax_#{category}")}", tax_code]
+      else
+        ["#{percent}%", tax_code]
+      end
+    end
+  end
+
+  def hide_if_not_exempt_tax(name)
+    if @invoice.taxes.collect {|t| t if t.name==name and t.exempt?}.compact.any?
+      return ""
+    else
+      return "hidden"
     end
   end
 

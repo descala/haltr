@@ -63,7 +63,9 @@ class InvoiceCreaeteTest < ActionController::IntegrationTest
     assert_redirected_to :controller => "invoices", :action => "show", :id => invoice
     assert_equal 1, invoice.invoice_lines.size
     assert_equal 2, invoice.invoice_lines.first.taxes.size
-
+    # comments should be blank since taxes not exempt
+    assert_equal "", invoice.invoice_lines.first.taxes.first.comment
+    assert_equal "", invoice.invoice_lines.first.taxes.last.comment
   end
 
 end

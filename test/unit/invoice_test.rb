@@ -124,4 +124,14 @@ class InvoiceTest < ActiveSupport::TestCase
     assert_equal i.invoice_lines[1].total,  i.taxable_base(Tax.new(:code=>"0.0_Z",:name=>"VAT"))
   end
 
+  test "invoice check tax_per_line? method" do
+    i = invoices(:i7)
+    assert i.tax_per_line?('VAT')
+    i.taxes.each do |tax|
+      tax.code = "20.0_S"
+      tax.save
+    end
+    assert (i.tax_per_line?('VAT') == false)
+  end
+
 end

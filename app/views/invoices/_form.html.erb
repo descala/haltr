@@ -29,8 +29,11 @@
     <%= label_tag "#{name}_global", name%>
     <span>
     <%= select_tag("#{name}_global",
-                   options_for_select(tax_categories_array(@invoice,name), :selected => @invoice.global_percent_for(name)),
-                   :disabled=>@invoice.tax_per_line?(name), :onchange => "tax_changed('#{name}',$('#{name}_global').value);", :style => "width: 90px;")
+                   options_for_select(tax_categories_array(@invoice,name),
+                                      :selected => @invoice.global_code_for(name)),
+                   :disabled=>@invoice.tax_per_line?(name),
+                   :onchange => "global_tax_changed('#{name}',this.value);",
+                   :style => "width: 90px;")
     %>
     </span>
     <span>
@@ -39,6 +42,10 @@
     <span>
     <%= l(:line_specific_tax) %>
     </span>
+    </p>
+    <p id="<%=name%>_comment" class="<%= hide_if_not_exempt_tax(name) %>">
+      <%= label_tag l("comment",:tax_name=>name), "#{name} comment" %>
+      <%= text_field_tag("#{name}_comment", @invoice.global_comment_for(name)) %>
     </p>
   <% end -%>
   <hr />

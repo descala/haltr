@@ -311,12 +311,24 @@ class Invoice < ActiveRecord::Base
     false
   end
 
-  def global_percent_for(tax_name)
+  def global_code_for(tax_name)
     return "" if tax_per_line? tax_name
     return "" if invoice_lines.first.nil?
     first_tax = invoice_lines.first.taxes.collect {|t| t if t.name == tax_name}.compact.first
     return "" if first_tax.nil?
     return first_tax.code
+  end
+
+  # Comments are stored on taxes but belong to invoices:
+  # given a tax_name invoice can have a comment if there's one
+  # line exempt from this tax.
+  def global_comment_for(tax_name)
+    (taxes + company.taxes).each do |tax|
+      if tax.name == tax_name and tax.exempt?
+        return tax.comment
+      end
+    end
+    return ""
   end
 
   # Returns a hash with an example of all taxes that invoice uses.
