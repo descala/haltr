@@ -60,7 +60,7 @@ module Haltr
     def add_category_to_taxes
       Company.all.each do |company|
         company.taxes = guess_tax_category(company.taxes)
-        company.save!
+        company.save(false)
       end
     end
 
