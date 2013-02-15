@@ -1,3 +1,17 @@
+/**
+ * Removes invoice line form. If line is not a new record
+ * it has a hidden_field that must be set to 1 in order to
+ * really delete line.
+ */
+function rm_line(id) {
+  $("invoice_line_"+id).remove();
+  // set hidden_field to 1 to really delete line
+  var hf = $("destroy_line_"+id);
+  if (hf != null) {
+    hf.value = 1;
+  }
+}
+
 /* Iterate over all selects of a tax and update its values */
 function global_tax_changed(tax_name, tax_code) {
   $$('select.tax_'+tax_name).each(function(select_element) {
