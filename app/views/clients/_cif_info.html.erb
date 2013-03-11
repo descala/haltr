@@ -23,6 +23,10 @@
     <%= l(:cif_belongs_to_company,{:company=>@company.name}) %>
     <% if @company.public? -%>
       <%= l(:link_to_profile_suggest, :href=>link_to(l(:link_to_profile),{:action=>'link_to_profile',:id=>@project,:company=>@company,:client=>@client})) %>
+      <script language="javascript">
+        alert("<%= l(:cif_belongs_to_company_text_only,{:company=>@company.name}) %>");
+        self.location="<%=url_for(:action=>'link_to_profile',:id=>@project,:company=>@company,:client=>@client)%>";
+      </script>
     <% else -%>
       <%= l(:link_to_profile_suggest, :href=>link_to(l(:link_to_profile_ask),{:action=>'link_to_profile',:id=>@project,:company=>@company,:client=>@client})) %>
     <% end -%>
