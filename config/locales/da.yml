@@ -29,6 +29,7 @@ da:
   field_currency: Valuta
   field_ponumber: Indkøbsordre
   cif_belongs_to_company: "Denne momsregistreringsnummer tilhører selskab <span style='font-weight: bold;'>%{company}</span>."
+  cif_belongs_to_company_text_only: "Denne momsregistreringsnummer tilhører selskab '%{company}'. Linke sin offentlige profil."
   link_to_profile_suggest: "Du kan %{href}  til den pågældende kunde"
   link_to_profile: "linke sin offentlige profil"
   link_to_profile_ask: "anmodning om tilladelse til at knytte sin offentlige profil"

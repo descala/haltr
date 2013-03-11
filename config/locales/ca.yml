@@ -40,6 +40,7 @@ ca:
   field_currency: Moneda
   field_ponumber: Número de comanda
   cif_belongs_to_company: "Aquest NIF correspon a l'empresa <span style='font-weight: bold;'>%{company}</span>."
+  cif_belongs_to_company_text_only: "Aquest NIF correspon a l'empresa '%{company}'. Es farà servir el seu perfil públic."
   link_to_profile_suggest: "Pots %{href} a aquest client"
   link_to_profile: "vincular el seu perfil públic"
   link_to_profile_ask: "demanar autorització per vincular el seu perfil públic"
