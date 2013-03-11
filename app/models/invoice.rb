@@ -1,5 +1,7 @@
 class Invoice < ActiveRecord::Base
 
+  include HaltrHelper
+
   unloadable
 
   # 1 - cash (al comptat)
@@ -239,12 +241,29 @@ class Invoice < ActiveRecord::Base
   end
 
   def taxes_hash
-    th = company.taxes_hash
+    th = {}
+    # taxes defined in company
+    company.taxes.each do |t|
+      th[t.name] = [] unless th[t.name]
+      th[t.name] << t
+    end
+    # add taxes from invoice, since we can have a tax
+    # on invoice that is no longer defined in company
     taxes_uniq.each do |t|
       th[t.name] = [] unless th[t.name]
-      th[t.name] << t.percent unless th[t.name].include? t.percent
+      th[t.name] << t unless th[t.name].include? t
     end
     th
+  end
+
+  # merge company and invoice taxes
+  # to use in views
+  def available_taxes
+    available_taxes = company.taxes
+    taxes_uniq.each do |tax|
+      available_taxes << tax unless available_taxes.include? tax
+    end
+    available_taxes
   end
 
   def taxes_outputs
@@ -292,53 +311,42 @@ class Invoice < ActiveRecord::Base
     false
   end
 
-  def global_percent_for(tax_name)
+  def global_code_for(tax_name)
     return "" if tax_per_line? tax_name
     return "" if invoice_lines.first.nil?
     first_tax = invoice_lines.first.taxes.collect {|t| t if t.name == tax_name}.compact.first
     return "" if first_tax.nil?
-    return first_tax.percent
+    return first_tax.code
+  end
+
+  # Comments are stored on taxes but belong to invoices:
+  # given a tax_name invoice can have a comment if there's one
+  # line exempt from this tax.
+  def global_comment_for(tax_name)
+    (taxes + company.taxes).each do |tax|
+      if tax.name == tax_name and tax.exempt?
+        return tax.comment
+      end
+    end
+    return ""
   end
 
   # Returns a hash with an example of all taxes that invoice uses.
   # Format of resulting hash:
   # { "VAT" => { "S" => [ tax_example, tax_example2 ], "E" => [ tax_example ] } }
-  # tax_example should be passed to exempt_taxable_base, tax_amount, etc..
+  # tax_example should be passed tax_amount
   def taxes_by_category
     cts = {}
     taxes_outputs.each do |tax|
       cts[tax.name] = {}
     end
-    taxes_outputs.sort.each_with_index do |t,i|
-      unless cts[t.name].values.flatten.include?(t)
-        if t.percent == 0
-          cts[t.name]["Z"] ||= []
-          cts[t.name]["Z"] << t
-        elsif i == taxes_outputs.size - 1
-          cts[t.name]["S"] ||= []
-          cts[t.name]["S"] << t
-        else
-          cts[t.name]["AA"] ||= []
-          cts[t.name]["AA"] << t
-        end
-      end
-      invoice_lines.each do |l|
-        # on type E, only add one tax per tax name, to add only one E definition on ubl
-        next if l.taxes.collect {|lt| lt.name }.include?(t.name) or cts[t.name]["E"]
-        cts[t.name]["E"] ||= []
-        cts[t.name]["E"] << t
+    taxes_outputs.each do |tax|
+      unless cts[tax.name].values.flatten.include?(tax)
+        cts[tax.name][tax.category] ||= []
+        cts[tax.name][tax.category] << tax
       end
     end
     cts
-  end
-
-  def exempt_taxable_base(tax)
-    etb = Money.new(0,currency)
-    invoice_lines.each do |line|
-      next if line.taxes.collect {|t| t.name }.include? tax.name
-      etb += line.taxable_base
-    end
-    etb
   end
 
   def tax_amount_for(tax_name)
@@ -348,6 +356,32 @@ class Invoice < ActiveRecord::Base
       t += tax_amount(tax)
     end
     t
+  end
+
+  def extra_info_plus_tax_comments
+    tax_comments = self.taxes.collect do |tax|
+      tax.comment
+    end.compact.join(". ")
+    if tax_comments and tax_comments.size > 0
+      "#{extra_info}. #{tax_comments}".strip
+    else
+      extra_info
+    end
+  end
+
+  def to_s
+    lines_string = invoice_lines.collect do |line|
+      line.to_s
+    end.join("\n").gsub(/\n$/,'')
+    <<_INV
+#{self.class}
+--
+id = #{id}
+number = #{number}
+total = #{total}
+--
+#{lines_string}
+_INV
   end
 
   protected

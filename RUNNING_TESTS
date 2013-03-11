@@ -29,3 +29,19 @@ testdrb -Itest "test/all.rb"
 # rails environment is loaded only once
 # and tests are run automaticaly when files change
 bundle exec guard
+
+# NOTE
+
+# To reload .erb templates:
+
+# In Redmine update the 'config/environments/test.rb' file to change:
+#
+#  config.cache_classes = true
+#
+# To:
+#
+#  config.cache_classes = false
+#
+# This allows reloading vieiws
+
+# But then integration tests fail! :(

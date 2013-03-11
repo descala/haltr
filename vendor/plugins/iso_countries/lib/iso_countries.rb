@@ -10,7 +10,7 @@ rescue
     str
   end
 end
-stubs = %w(activesupport activerecord actionpack actionmailer activeresource)
+stubs = %w(active_support active_record action_pack action_mailer active_resource)
 stubs.each do |stub|
   require stub
 end

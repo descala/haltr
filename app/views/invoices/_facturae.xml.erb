@@ -251,10 +251,12 @@
                </AccountToBeCredited>
 <% end -%>
             </Installment>
-         </PaymentDetails>
-         <AdditionalData>
-           <InvoiceAdditionalInformation><%=h @invoice.extra_info%></InvoiceAdditionalInformation>
-         </AdditionalData>
+          </PaymentDetails>
+          <% if @invoice.extra_info_plus_tax_comments and @invoice.extra_info_plus_tax_comments.size > 0 %>
+            <AdditionalData>
+              <InvoiceAdditionalInformation><%=h @invoice.extra_info_plus_tax_comments%></InvoiceAdditionalInformation>
+            </AdditionalData>
+          <% end %>
       </Invoice>
    </Invoices>
  </facturae:Facturae>

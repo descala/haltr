@@ -7,6 +7,7 @@ class CompaniesController < ApplicationController
 
   helper :sort
   include SortHelper
+  include Haltr::TaxHelper
 
   before_filter :find_project, :except => [:update, :logo]
   before_filter :find_company, :only => [:update]
@@ -43,7 +44,7 @@ class CompaniesController < ApplicationController
     if @company.update_attributes(params[:company])
       unless @company.taxes.collect {|t| t unless t.marked_for_destruction? }.compact.any?
         @company.taxes = []
-        @company.taxes = TaxList.default_taxes_for(@company.country)
+        @company.taxes = default_taxes_for(@company.country)
       end
       if params[:attachments]
         #TODO: validate content-type ?

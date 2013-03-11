@@ -95,29 +95,32 @@ module InvoicesHelper
     end
   end
 
-  def number_to_tax_percent(number, options = {})
-    return nil if number.nil?
+  def tax_name(tax, options = {})
+    return nil if tax.nil?
+
+    return "#{tax.name} #{l(:tax_E)}" if tax.exempt?
 
     options.symbolize_keys!
+    default_format = I18n.translate(:'number.format',
+                                    :locale => options[:locale],
+                                    :default => {})
+    tax_format   = I18n.translate(:'number.tax.format',
+                                  :locale => options[:locale],
+                                  :default => {})
+    default_format  = DEFAULT_TAX_PERCENT_VALUES.merge(default_format).merge!(tax_format)
+    default_format[:negative_format] = "-" + options[:format] if options[:format]
+    options = default_format.merge!(options)
+    format  = options.delete(:format)
 
-    defaults = I18n.translate(:'number.format', :locale => options[:locale], :default => {})
-    tax      = I18n.translate(:'number.tax.format', :locale => options[:locale], :default => {})
-
-    defaults  = DEFAULT_TAX_PERCENT_VALUES.merge(defaults).merge!(tax)
-    defaults[:negative_format] = "-" + options[:format] if options[:format]
-    options   = defaults.merge!(options)
-
-    tax_name  = options.delete(:tax_name)
-    format    = options.delete(:format)
-
-    if number.to_f < 0
+    number = tax.percent.to_f
+    if number < 0
       format = options.delete(:negative_format)
-      number = number.respond_to?("abs") ? number.abs : number.sub(/^-/, '')
+      number = tax.percent.respond_to?("abs") ? tax.percent.abs : tax.percent.sub(/^-/, '')
     end
 
     begin
       value = number_with_precision(number, options.merge(:raise => true))
-      format.gsub(/%n/, value).gsub(/%p/, '%').gsub(/%t/,tax_name)
+      format.gsub(/%n/, value).gsub(/%p/, '%').gsub(/%t/,tax.name)
     rescue
       number
     end
@@ -146,6 +149,40 @@ module InvoicesHelper
   def l_export_channel(export_channel)
     if channel = ExportChannels.available[export_channel]
       channel["locales"][I18n.locale.to_s]
+    end
+  end
+
+  def tax_categories_array(invoice,tax_name)
+    # tax_name = 'VAT'
+    taxes = invoice.taxes_hash[tax_name].sort
+    show_category = false
+    if taxes.size != taxes.collect {|t| t.percent}.uniq.size
+      show_category = true
+    end
+    taxes.collect do |tax|
+      tax_label(tax.code,show_category)
+    end.insert(0,'')
+  end
+
+  def tax_label(tax_code,show_category=false)
+    # tax_code = '21.0_S'
+    percent, category = tax_code.split('_')
+    if category == 'E'
+      [l("tax_#{category}"), tax_code]
+    else
+      if show_category
+        ["#{percent}% #{l("tax_#{category}")}", tax_code]
+      else
+        ["#{percent}%", tax_code]
+      end
+    end
+  end
+
+  def hide_if_not_exempt_tax(name)
+    if @invoice.taxes.collect {|t| t if t.name==name and t.exempt?}.compact.any?
+      return ""
+    else
+      return "hidden"
     end
   end
 

@@ -141,3 +141,65 @@ i4:
   terms: "0"
   import_in_cents: 10000
   total_in_cents: 11000
+
+i5:
+  id: 5
+  type: IssuedInvoice
+  client_id: 1
+  currency: EUR
+  date: 2011-09-13
+  discount_percent: 0
+  discount_text:
+  due_date: 2013-02-05
+  extra_info: "This is a simple invoice. 100 EUR with VAT exemption"
+  number: "i5"
+  payment_method: 1
+  ponumber: "client order number 123"
+  project_id: 2
+  state: new
+  terms: "0"
+  import_in_cents: 10000
+  total_in_cents: 10000
+
+i6:
+  id: 6
+  type: IssuedInvoice
+  client_id: 1
+  currency: EUR
+  date: 2011-09-13
+  discount_percent: 0
+  discount_text:
+  due_date: 2013-02-05
+  extra_info: "This is a simple invoice. 1000 EUR with 10 EUR charges and 10% VAT tax"
+  charge_amount_in_cents: 1000
+  charge_reason: "This are payments we made in the name of the client"
+  number: "i6"
+  payment_method: 1
+  ponumber: "client order number 123"
+  project_id: 2
+  state: new
+  terms: "0"
+  import_in_cents: 100000
+  total_in_cents: 111000
+
+i7:
+  id: 7
+  type: IssuedInvoice
+  client_id: 1
+  currency: EUR
+  date: 2011-09-13
+  discount_percent: 0
+  discount_text:
+  due_date: 2013-02-05
+  extra_info: "This is an invoice. 1000 EUR with 10% VAT tax, 20% VAT tax. And 10 EUR charges."
+  charge_amount_in_cents: 1000
+  charge_reason: "This are payments we made in the name of the client"
+  number: "i7"
+  payment_method: 1
+  ponumber: "client order number 123"
+  project_id: 2
+  state: new
+  terms: "0"
+  import_in_cents: 20000
+  total_in_cents:  24000
+

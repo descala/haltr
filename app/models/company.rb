@@ -3,7 +3,11 @@ class Company < ActiveRecord::Base
   unloadable
 
   belongs_to :project
+
+  # these are the linked clients: where this company apears in other 
+  # companies' client list
   has_many :clients, :dependent => :nullify
+
   has_many :taxes, :class_name => "Tax", :dependent => :destroy, :order => "name,percent DESC"
   validates_presence_of :name, :project_id, :email
   validates_length_of :taxcode, :maximum => 20
@@ -76,15 +80,6 @@ class Company < ActiveRecord::Base
     # taxcode is used to retrieve logo on xhtml when transforming to PDF,
     # some chars will make logo retrieval fail (i.e. spaces)
     write_attribute(:taxcode,tc.to_s.gsub(/\W/,''))
-  end
-
-  def taxes_hash
-    th = {}
-    taxes.each do |t|
-      th[t.name] = [] unless th[t.name]
-      th[t.name] << t.percent
-    end
-    th
   end
 
   def only_one_default_tax_per_name

@@ -110,6 +110,22 @@ class InvoicesController < ApplicationController
   end
 
   def create
+    # mark as "_destroy" all taxes with an empty tax code
+    # and copy global "exempt comment" to all exempt taxes
+    parsed_params = params[:invoice]
+    parsed_params["invoice_lines_attributes"].each do |i, invoice_line|
+      if invoice_line["taxes_attributes"]
+        invoice_line["taxes_attributes"].each do |j, tax|
+          tax['_destroy'] = 1 if tax["code"].blank?
+          if tax["code"] =~ /_E$/
+            tax['comment'] = params["#{tax["name"]}_comment"]
+          else
+            tax['comment'] = ''
+          end
+        end
+      end
+    end
+
     @invoice = IssuedInvoice.new(params[:invoice])
     if @invoice.invoice_lines.empty?
       il = InvoiceLine.new(:new_and_first=>true)
@@ -124,12 +140,34 @@ class InvoicesController < ApplicationController
       flash[:notice] = l(:notice_successful_create)
       redirect_to :action => 'show', :id => @invoice
     else
+      logger.info "Invoice errors #{@invoice.errors.full_messages}"
       render :action => "new"
     end
   end
 
   def update
-    if @invoice.update_attributes(params[:invoice])
+    #TODO: need to access invoice taxes before update_attributes, if not
+    # updated taxes are not saved.
+    # maybe related to https://rails.lighthouseapp.com/projects/8994/tickets/4642
+    @invoice.invoice_lines.each {|l| l.taxes.each {|t| } }
+
+    # mark as "_destroy" all taxes with an empty tax code
+    # and copy global "exempt comment" to all exempt taxes
+    parsed_params = params[:invoice]
+    parsed_params["invoice_lines_attributes"].each do |i, invoice_line|
+      if invoice_line["taxes_attributes"]
+        invoice_line["taxes_attributes"].each do |j, tax|
+          tax['_destroy'] = 1 if tax["code"].blank?
+          if tax["code"] =~ /_E$/
+            tax['comment'] = params["#{tax["name"]}_comment"]
+          else
+            tax['comment'] = ''
+          end
+        end
+      end
+    end
+
+    if @invoice.update_attributes(parsed_params)
       Event.create(:name=>'edited',:invoice=>@invoice,:user=>User.current)
       flash[:notice] = l(:notice_successful_update)
       redirect_to :action => 'show', :id => @invoice

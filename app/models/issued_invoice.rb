@@ -59,7 +59,7 @@ class IssuedInvoice < InvoiceDocument
       transition :sent => :discarded
     end
     event :accept_notification do
-      transition :sent => :accepted
+      transition [:sent,:refused] => :accepted
     end
     event :refuse_notification do
       transition :sent => :refused

@@ -31,46 +31,57 @@
   <p><%= f.text_field :bank_account, :maxlength => 20, :size => 30 %></p>
   <p><%= f.text_field :iban, :size => 30 %></p>
   <p><%= f.text_field :bic, :size => 30 %></p>
-<% if User.current.admin? or User.current.allowed_to?(:send_peppol, @project) -%>
-  <br />
-  <p><%= f.select :schemeid, Peppol::SCHEMEIDS %></p>
-  <p><%= f.text_field :endpointid %></p>
-<% end -%>
+  <% if User.current.admin? or User.current.allowed_to?(:send_peppol, @project) -%>
+    <br />
+    <p><%= f.select :schemeid, Peppol::SCHEMEIDS %></p>
+    <p><%= f.text_field :endpointid %></p>
+  <% end -%>
 
   <div id="taxes">
     <p style="padding-left: 20px;"><%= I18n.t :label_tax_plural %>:</p>
     (<%= l(:info_default_taxes) %>)
-    <p style="font-weight:bold;">
-    <span class="invoiceLineHeader" style="width: 80px;"><%= l(:field_name) %></span>
-    </p>
-    <% f.fields_for :taxes do |tax_form| %>
-      <%= render :partial => 'companies/tax', :locals => { :f => tax_form } %>
-    <% end %>
+
+      <table id="taxes_table" style="margin-left: 40px;">
+        <thead>
+        <tr>
+          <th><%= l(:field_name) %></th>
+          <th>%</th>
+          <th><%= l(:default) %></th>
+          <th><%= l(:field_category) %></th>
+          <th></th>
+          <th></th>
+        </tr>
+      </thead>
+          <% f.fields_for :taxes do |tax_form| %>
+            <%= render :partial => 'companies/tax', :locals => { :f => tax_form } %>
+          <% end %>
+      </table>
   </div>
+
   <p><%= add_tax_link(f) %></p>
 
   <p><%=label_tag('attachments[1][file]', l(:logo))%><%= file_field_tag 'attachments[1][file]', :size => 30, :id => nil, :accept => 'image/png,image/gif,image/jpeg' -%></p>
-<% if @company.attachments.size > 0 -%>
-  <p><%= image_tag "/attachments/#{@company.attachments.first.id}/#{@company.attachments.first.filename}" -%></p>
-<% end -%>
+  <% if @company.attachments.size > 0 -%>
+    <p><%= image_tag "/attachments/#{@company.attachments.first.id}/#{@company.attachments.first.filename}" -%></p>
+  <% end -%>
 
-<% if User.current.admin? or User.current.allowed_to?(:use_imap_draft, @project) -%>
-  <p><%=f.text_field :imap_host%></p>
-  <p><%=f.text_field :imap_port%></p>
-  <p><%=f.check_box  :imap_ssl%></p>
-  <p><%=f.text_field :imap_username%></p>
-  <p><%=f.text_field :imap_password%></p>
-  <p><%=f.text_field :imap_from%></p>
-<% end -%>
+  <% if User.current.admin? or User.current.allowed_to?(:use_imap_draft, @project) -%>
+    <p><%=f.text_field :imap_host%></p>
+    <p><%=f.text_field :imap_port%></p>
+    <p><%=f.check_box  :imap_ssl%></p>
+    <p><%=f.text_field :imap_username%></p>
+    <p><%=f.text_field :imap_password%></p>
+    <p><%=f.text_field :imap_from%></p>
+  <% end -%>
 
-<% if defined?(SupportController) %>
-  <p>
+  <% if defined?(SupportController) %>
+    <p>
     <br/>
     <span class="ownCertificate">
       <%= l(:add_own_certificate,:link=>link_to(l(:contact_us),:controller=>'support',:action=>'new',:project_id=>@project)) %>
     </span>
-  </p>
-<% end -%>
+    </p>
+  <% end -%>
 
 </div>
 

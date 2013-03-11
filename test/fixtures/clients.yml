@@ -42,7 +42,7 @@ clients_001:
   hashid: 40091a34ba
   invoice_format: signed_pdf
   country: es
-  project_id: 1
+  project_id: 2
   updated_at: 2011-09-13 13:50:02 +02:00
   payment_method: 1
   language: en

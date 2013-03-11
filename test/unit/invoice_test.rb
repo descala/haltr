@@ -90,13 +90,48 @@ class InvoiceTest < ActiveSupport::TestCase
   end
 
   test "taxes_by_category" do
-    i=invoices(:invoices_001)
+    i=invoices(:i5)
     categories = i.taxes_by_category
     assert_equal 1, categories.size
-    assert_equal 3, categories["IVA"].size
-    assert categories["IVA"]["AA"]
-    assert categories["IVA"]["S"]
-    assert categories["IVA"]["E"]
+    assert_equal 1, categories["VAT"].size
+    assert categories["VAT"]["E"]
+  end
+
+  test "taxes_without_company_tax" do
+    i = invoices(:i5)
+    line = i.invoice_lines.first
+    line.taxes << Tax.new(:company => nil, :invoice_line => line, :name => 'VAT', :percent => 99.0, :category => 'XL', :comment => 'This is unique to this invoice line. Company does not have a tax like this.')
+    line.save!
+
+    # invoice i5 and company share one tax
+    assert_equal i.taxes.count + i.company.taxes.count - 1, i.available_taxes.count
+  end
+
+  test "to string" do
+    i = invoices(:i7)
+    assert i.to_s.split.size > 1
+  end
+
+  test "invoice_taxable_base_with_exempts_and_zeros" do
+    i = invoices(:i7)
+    assert_equal 2, i.invoice_lines.size
+    i.invoice_lines[0].taxes = [ Tax.new(:code=>"0.0_E",:name=>"VAT") ]
+    i.invoice_lines[1].taxes = [ Tax.new(:code=>"0.0_Z",:name=>"VAT") ]
+    i.save
+    assert_equal 1, i.invoice_lines[0].taxes.size
+    assert_equal 1, i.invoice_lines[1].taxes.size
+    assert_equal i.invoice_lines[0].total, i.taxable_base(Tax.new(:code=>"0.0_E",:name=>"VAT"))
+    assert_equal i.invoice_lines[1].total,  i.taxable_base(Tax.new(:code=>"0.0_Z",:name=>"VAT"))
+  end
+
+  test "invoice check tax_per_line? method" do
+    i = invoices(:i7)
+    assert i.tax_per_line?('VAT')
+    i.taxes.each do |tax|
+      tax.code = "20.0_S"
+      tax.save
+    end
+    assert (i.tax_per_line?('VAT') == false)
   end
 
 end

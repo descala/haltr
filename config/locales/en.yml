@@ -29,6 +29,7 @@ en:
   field_currency: Currency
   field_ponumber: Purchase Order
   cif_belongs_to_company: "This VAT Id Number belongs to company <span style='font-weight: bold;'>%{company}</span>."
+  cif_belongs_to_company_text_only: "This VAT Id Number belongs to '%{company}'. Using its public profile."
   link_to_profile_suggest: "You can %{href} to that client"
   link_to_profile: "link its public profile"
   link_to_profile_ask: "request authorization to link its public profile"
@@ -168,6 +169,8 @@ en:
   add_taxes_on_company: "Manage taxes at \"My company\""
   button_download_new_invoices: "Download zip of new invoices"
   label_download_new_invoices_info: "Creates a zip file with all the new invoices in PDF format"
+  field_exempt: "Exempt"
+  field_comment: "Reason"
 
   # Events
   events: "Event log"
@@ -365,3 +368,8 @@ en:
   field_imap_username: "Username"
   field_imap_password: "Password"
   field_imap_from: "From"
+  tax_E: "Exempt"
+  tax_Z: "Zero Rated"
+  tax_S: "Standard"
+  tax_H: "High Rated"
+  tax_AA: "Low Rated"

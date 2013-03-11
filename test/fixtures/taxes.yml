@@ -2,72 +2,85 @@ taxes_010:
   name: IVA
   invoice_line_id: 5
   id: 12
-  company_id: 
   percent: 18.0
-taxes_001: 
-  name: IVA
-  invoice_line_id: 
-  id: 1
-  company_id: 1
-  percent: 8.0
-taxes_002: 
-  name: IVA
-  invoice_line_id: 
-  id: 2
-  company_id: 1
-  percent: 18.0
-taxes_003: 
-  name: IRPF
-  invoice_line_id: 
-  id: 3
-  company_id: 1
-  percent: -15.0
-taxes_004: 
-  name: IRPF
-  invoice_line_id: 
-  id: 4
-  company_id: 1
-  percent: -8.0
 taxes_005: 
   name: IVA
   invoice_line_id: 1
   id: 5
-  company_id: 
   percent: 18.0
 taxes_006: 
   name: IRPF
   invoice_line_id: 1
   id: 6
-  company_id: 
   percent: -15.0
 taxes_007: 
   name: IVA
   invoice_line_id: 2
   id: 7
-  company_id: 
   percent: 8.0
 taxes_008: 
   name: IRPF
   invoice_line_id: 2
   id: 8
-  company_id: 
   percent: -8.0
 taxes_009: 
   name: IVA
   invoice_line_id: 4
   id: 9
-  company_id: 
   percent: 18.0
 
 
-# company tax template (has company)
-tax_vat_10:
-  name: VAT
-  percent: 10.0
-  company: company1
+# company tax templates (has company)
 
-# invoice tax (has invoice_line)
-tax_vat_10_i4_line1:
+tax_vat_10:
+  company: company1
   name: VAT
   percent: 10.0
+  category: AA
+
+tax_vat_20:
+  company: company1
+  name: VAT
+  percent: 20.0
+  category: S
+
+tax_vat_exempt:
+  company: company1
+  name: VAT
+  percent: 0
+  category: E
+  comment: Exempt because we do not have to pay it
+
+# invoice taxes (has invoice_line)
+
+tax_vat_10_i4_line1:
   invoice_line: i4_line1
+  name: VAT
+  percent: 10.0
+  category: AA
+
+tax_vat_exempt_i5_line1:
+  invoice_line: i5_line1
+  name: VAT
+  percent: 0
+  category: E
+  comment: Exempt because we do not have to pay it
+
+tax_vat_10_i6_line1:
+  invoice_line: i6_line1
+  name: VAT
+  percent: 10
+  category: AA
+
+tax_vat_10_i7_line1:
+  invoice_line: i7_line1
+  name: VAT
+  percent: 10
+  category: AA
+
+tax_vat_20_i7_line2:
+  invoice_line: i7_line2
+  name: VAT
+  percent: 20
+  category: S
+

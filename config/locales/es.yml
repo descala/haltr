@@ -181,6 +181,8 @@ es:
   add_taxes_on_company: "Puedes gestionar los impuestos en \"Mi empresa\""
   button_download_new_invoices: "Descargar zip de facturas nuevas"
   label_download_new_invoices_info: "Genera un zip con todas las facturas nuevas en formato PDF"
+  field_exempt: "Exempto"
+  field_comment: "Razón"
 
   # Events
   events: "Log de eventos"
@@ -377,3 +379,8 @@ es:
   field_imap_username: "Usuario"
   field_imap_password: "Contraseña"
   field_imap_from: "Remitente"
+  tax_E: "Exempt"
+  tax_Z: "Zero Rated"
+  tax_S: "Standard"
+  tax_H: "High Rated"
+  tax_AA: "Low Rated"

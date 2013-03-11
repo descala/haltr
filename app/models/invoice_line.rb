@@ -24,6 +24,10 @@ class InvoiceLine < ActiveRecord::Base
   validates_numericality_of :quantity, :price
   attr_accessor :new_and_first
 
+  accepts_nested_attributes_for :taxes,
+    :allow_destroy => true
+  validates_associated :taxes
+
   # remove colons "1,23" => "1.23"
   def price=(v)
     write_attribute :price, (v.is_a?(String) ? v.gsub(',','.') : v)
@@ -62,7 +66,7 @@ class InvoiceLine < ActiveRecord::Base
   def has_tax?(tax_type)
     return true if tax_type.nil?
     taxes.each do |tax|
-      return true if tax.name == tax_type.name and tax.percent == tax_type.percent
+      return true if tax == tax_type
     end
     false
   end
@@ -81,24 +85,22 @@ class InvoiceLine < ActiveRecord::Base
     l("s_#{UNIT_CODES[unit][:name]}")
   end
 
-  def attributes=(args)
-    self.taxes=[]
-    args.keys.each do |k|
-      if k =~ /^tax_[a-zA-Z]+$/
-        percent=args.delete(k)
-        next if percent.blank?
-        self.taxes << Tax.new(:name=>k.gsub(/^tax_/,''),:percent=>percent)
-      end
-    end
-    super
-  end
-
   def taxes_withheld
     taxes.find(:all, :conditions => "percent < 0")
   end
 
   def taxes_outputs
     taxes.find(:all, :conditions => "percent >= 0")
+  end
+
+  def to_s
+    taxes_string = taxes.collect do |tax|
+      tax.to_s
+    end.join("\n").gsub(/\n$/,'')
+    <<_LINE
+  * #{quantity} x #{description} #{price}
+#{taxes_string}
+_LINE
   end
 
   private
@@ -111,11 +113,11 @@ class InvoiceLine < ActiveRecord::Base
   end
 
   def method_missing(m, *args)
-#    if m.to_s =~ /^tax_[a-zA-Z]=$+/ and args.size == 1
-#      self.taxes << Tax.new(:name=>m.to_s.gsub(/tax_/,'').gsub(/=$/,''),:percent=>args[0])
     if m.to_s =~ /^tax_[a-zA-Z]+/ and args.size == 0
-      curr_tax = taxes.collect {|t| t if t.name == m.to_s.gsub(/tax_/,'')}.compact.first
-      return curr_tax.nil? ? nil : curr_tax.percent
+      curr_tax = taxes.collect do |t|
+        t if t.name == m.to_s.gsub(/tax_/,'')
+      end.compact.first
+      return curr_tax.nil? ? nil : curr_tax.code
     else
       super
     end
