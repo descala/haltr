@@ -241,8 +241,6 @@ fr:
   field_email: Email
   field_phone_office: Tél bureau
   field_phone_mobile: Mobile
-  field_invoice_recipient: Facturer destinataire
-  field_report_recipient: Rapport destinataire
 
   # Tasks
   label_task_plural: Tâches

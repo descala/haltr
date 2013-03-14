@@ -6,7 +6,6 @@ invoice1:
   client: client1 
   terms: 1m1
   project_id: 2 
-  client: client1
   payment_method: <%= Invoice::PAYMENT_DEBIT %>
   state: sent
   currency: EUR
@@ -18,7 +17,6 @@ template1:
   extra_info: "periode: Desembre 2008"
   frequency: 1
   project_id: 2 
-  client: client1
   currency: EUR
 
 test_import:
@@ -30,7 +28,6 @@ test_import:
   due_date: "2008-12-24"
   terms: "30"
   project_id: 2
-  client: client1
   currency: EUR
 
 draft:
@@ -40,7 +37,6 @@ draft:
   client: client1
   terms: 1m1
   project_id: 2
-  client: client1
   payment_method: 2
   state: sent
   currency: EUR

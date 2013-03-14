@@ -256,8 +256,6 @@ es:
   field_email: Email
   field_phone_office: Teléfono oficina
   field_phone_mobile: Teléfono movil
-  field_invoice_recipient: Receptor de facturas
-  field_report_recipient: Receptor de informes
 
   # Tasks
   label_task_plural: Tareas

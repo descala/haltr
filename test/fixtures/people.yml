@@ -1,25 +1,19 @@
-# == Schema Information
-# Schema version: 20091016144057
-#
-# Table name: people
-#
-#  id                :integer(4)      not null, primary key
-#  client_id         :integer(4)
-#  first_name        :string(255)
-#  last_name         :string(255)
-#  email             :string(255)
-#  phone_office      :string(255)
-#  phone_mobile      :string(255)
-#  created_at        :datetime
-#  updated_at        :datetime
-#  invoice_recipient :boolean(1)
-#  report_recipient  :boolean(1)
-#
+person1:
+  client_id: 1
+  first_name: John
+  last_name: Smith
+  email: person1@example.com
+  phone_office: 938900000
+  phone_mobile: 678678678
+  send_invoices_by_mail: true
 
-# Read about fixtures at http://ar.rubyonrails.org/classes/Fixtures.html
+person2:
+  client_id: 1
+  first_name: John
+  last_name: Do not want mail
+  email: secret@example.com
+  phone_office: 938900000
+  phone_mobile: 678678678
+  send_invoices_by_mail: false
 
-# one:
-#   column: value
-#
-# two:
-#   column: value
+

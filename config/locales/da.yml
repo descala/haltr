@@ -243,8 +243,6 @@ da:
   field_email: Email
   field_phone_office: Kontor Telefon
   field_phone_mobile: Mobile Telefon
-  field_invoice_recipient: Faktura modtager
-  field_report_recipient: Rapport modtager
  
   # Tasks
   label_task_plural: Opgaver
