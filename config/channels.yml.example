@@ -116,7 +116,7 @@ ublinvoice_20:
 imap_draft_pdf:
   format: pdf
   validate:
-  - client_or_people_have_email
+  - client_has_email
   - company_has_imap_config
   call_invoice_method: store_imap_draft_pdf
   locales:

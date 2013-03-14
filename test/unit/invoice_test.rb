@@ -2,7 +2,7 @@ require File.dirname(__FILE__) + '/../test_helper'
 
 class InvoiceTest < ActiveSupport::TestCase
 
-  fixtures :clients, :invoices, :invoice_lines, :taxes, :companies
+  fixtures :clients, :invoices, :invoice_lines, :taxes, :companies, :people
 
   def setup
     Haltr::TestHelper.fix_invoice_totals
@@ -132,6 +132,19 @@ class InvoiceTest < ActiveSupport::TestCase
       tax.save
     end
     assert (i.tax_per_line?('VAT') == false)
+  end
+
+  test "recipient_emails returns a hash of email addresses" do
+    i = invoices(:i7)
+    assert i.recipient_emails
+  end
+
+  test 'only people with send_invoices_by_mail are included' do
+    # i7 -> client_001 -> person1
+    i = invoices(:i7)
+    # recipient_emails contains also the client's main email
+    assert_equal 2, i.recipient_emails.count
+    assert_equal 'person1@example.com', i.recipient_emails.first
   end
 
 end

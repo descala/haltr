@@ -484,7 +484,7 @@ class InvoicesController < ApplicationController
       render_404
     else
       respond_to do |format|
-        format.html { render :text => invoice.client.emails }
+        format.html { render :text => invoice.recipient_emails.join(',') }
       end
     end
   end

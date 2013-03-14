@@ -242,8 +242,6 @@ sv:
   field_email: Email
   field_phone_office: Jobbtelefon
   field_phone_mobile: Mobiltelefon
-  field_invoice_recipient: Fakturamottagare
-  field_report_recipient: Rapportera mottagare
 
   # Tasks
   label_task_plural: Uppgifter

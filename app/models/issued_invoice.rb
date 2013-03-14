@@ -185,7 +185,7 @@ class IssuedInvoice < InvoiceDocument
   def sending_info
     return export_errors.collect {|e| l(e)}.join(", ") if export_errors and export_errors.size > 0
     if %w(ublinvoice_20 facturae_30 facturae_31 facturae_32 signed_pdf svefaktura peppolbii peppol).include?(client.invoice_format)
-      return "recipients:\n#{client.emails.gsub(/,/,"\n")}"
+      return "recipients:\n#{self.recipient_emails.join("\n")}"
     end
     ""
   end
@@ -202,13 +202,7 @@ class IssuedInvoice < InvoiceDocument
                             :message=>message)
   end
 
-  def uniq_emails
-    mails = self.recipients.collect{|person| person.email if person.email and !person.email.blank?}
-    mails << self.client.email if self.client and self.client.email and !self.client.email.blank?
-    mails.uniq.compact
-  end
-
-  protected
+ protected
 
   def create_event
     Event.create(:name=>'new',:invoice=>self,:user=>User.current)
@@ -221,16 +215,12 @@ class IssuedInvoice < InvoiceDocument
   end
 
   def client_has_email
-    if self.client and !self.client.email.blank?
+    if self.recipient_emails.any?
       true
     else
       add_export_error(:client_has_no_email)
       false
     end
-  end
-
-  def client_or_people_have_email
-    self.uniq_emails.any?
   end
 
   def company_has_imap_config

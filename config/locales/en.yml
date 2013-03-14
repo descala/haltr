@@ -244,8 +244,6 @@ en:
   field_email: Email
   field_phone_office: Office phone
   field_phone_mobile: Mobile phone
-  field_invoice_recipient: Invoice recipient
-  field_report_recipient: Report recipient
 
   # Tasks
   label_task_plural: Tasks
