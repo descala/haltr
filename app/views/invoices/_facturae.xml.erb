@@ -73,7 +73,7 @@
             <CorporateName><%=h @client.name%></CorporateName>
             <%= render :partial => "address.facturae.xml", :locals => {:entity => @client}%>
             <ContactDetails>
-              <ElectronicMail><%=h @client.emails %></ElectronicMail>
+              <ElectronicMail><%= @invoice.recipient_emails.join(',') %></ElectronicMail>
               <ContactPersons><%= @invoice.accounting_cost %></ContactPersons>
             </ContactDetails>
          </LegalEntity>

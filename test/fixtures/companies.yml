@@ -1,4 +1,5 @@
 company1:
+  # OnlineStore
   project_id: 2
   name: Company1
   taxcode: 77310000G
@@ -8,3 +9,17 @@ company1:
   email: test@example.com
   country: es
   city: Barcelona
+  public: private
+
+company2:
+  # eCookbook 
+  project_id: 1
+  name: Company 2 is public
+  taxcode: pubtaxcode
+  postalcode: 08720
+  bank_account: 1111111111
+  currency: EUR
+  email: test2@example.com
+  country: es
+  city: Barcelona
+  public: public

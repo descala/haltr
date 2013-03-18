@@ -3,7 +3,11 @@ class Company < ActiveRecord::Base
   unloadable
 
   belongs_to :project
+
+  # these are the linked clients: where this company apears in other 
+  # companies' client list
   has_many :clients, :dependent => :nullify
+
   has_many :taxes, :class_name => "Tax", :dependent => :destroy, :order => "name,percent DESC"
   validates_presence_of :name, :project_id, :email
   validates_length_of :taxcode, :maximum => 20

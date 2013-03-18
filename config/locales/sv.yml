@@ -29,6 +29,7 @@ sv:
   field_currency: Valuta
   field_ponumber: Order
   cif_belongs_to_company: "Detta VAT-nummer hör till följande företag: <span style='font-weight: bold;'>%{company}</span>."
+  cif_belongs_to_company_text_only: "Detta VAT-nummer hör till följande företag '%{company}'. Länk till den publika profilen."
   link_to_profile_suggest: "Du kan %{href} till kunden"
   link_to_profile: "Länk till den publika profilen"
   link_to_profile_ask: "begär åtkomst till att länka till den publika profilen"
@@ -241,8 +242,6 @@ sv:
   field_email: Email
   field_phone_office: Jobbtelefon
   field_phone_mobile: Mobiltelefon
-  field_invoice_recipient: Fakturamottagare
-  field_report_recipient: Rapportera mottagare
 
   # Tasks
   label_task_plural: Uppgifter

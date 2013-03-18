@@ -6,7 +6,7 @@ class InvoiceMailer < ActionMailer::Base
 
     pdf_file_path = options[:pdf_file_path]
 
-    recipients invoice.uniq_emails.join(', ')
+    recipients invoice.recipient_emails.join(', ')
     from options[:from] || "#{invoice.company.name} <#{invoice.company.email}>"
     bcc options[:from] || invoice.company.email
     subject "#{l(:label_invoice)} #{invoice.number} (#{invoice.company.name})"

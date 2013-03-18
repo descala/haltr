@@ -29,6 +29,7 @@ da:
   field_currency: Valuta
   field_ponumber: Indkøbsordre
   cif_belongs_to_company: "Denne momsregistreringsnummer tilhører selskab <span style='font-weight: bold;'>%{company}</span>."
+  cif_belongs_to_company_text_only: "Denne momsregistreringsnummer tilhører selskab '%{company}'. Linke sin offentlige profil."
   link_to_profile_suggest: "Du kan %{href}  til den pågældende kunde"
   link_to_profile: "linke sin offentlige profil"
   link_to_profile_ask: "anmodning om tilladelse til at knytte sin offentlige profil"
@@ -242,8 +243,6 @@ da:
   field_email: Email
   field_phone_office: Kontor Telefon
   field_phone_mobile: Mobile Telefon
-  field_invoice_recipient: Faktura modtager
-  field_report_recipient: Rapport modtager
  
   # Tasks
   label_task_plural: Opgaver
