@@ -141,7 +141,7 @@
                <TaxTypeCode>04</TaxTypeCode>
                <TaxRate><%=h precision tax.percent * -1 %></TaxRate>
                <TaxableBase>
-                  <TotalAmount><%=h precision @invoice.subtotal(tax).dollars%></TotalAmount>
+                  <TotalAmount><%=h precision @invoice.taxable_base(tax).dollars%></TotalAmount>
                </TaxableBase>
                <TaxAmount>
                  <TotalAmount><%=h precision @invoice.tax_amount(tax).dollars * -1 %></TotalAmount>
