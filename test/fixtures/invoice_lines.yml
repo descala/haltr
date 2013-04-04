@@ -126,4 +126,12 @@ i7_line2:
   currency: EUR
   description: "Line 2 of invoice i7"
 
+i8_line1:
+  invoice_id: 8
+  quantity: 1.0
+  unit: 1
+  price: 100.0
+  currency: EUR
+  description: "Line 1 of invoice i8"
+
 

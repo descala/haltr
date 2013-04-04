@@ -120,4 +120,12 @@ class InvoicesControllerTest < ActionController::TestCase
     assert_equal [], ubl_errors(xml)
   end
 
+  test 'facturae_xml_i8_vat_10_irpf_10_and_charges' do
+    Invoice.find(8).save!
+    get :facturae32, :id => 8
+    assert_response :success
+    xml = @response.body
+    assert_equal [], facturae_errors_online(xml)
+  end
+
 end

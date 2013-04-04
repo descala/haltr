@@ -8,7 +8,7 @@ OUTPUT=$(curl -s -F "formato=formato" -F "contable=contable" -F "firma=firma" -F
 
 echo "$OUTPUT" | grep -o "\/.*title=.*\" "
 
-echo "$OUTPUT" | grep -o "errormsg.*"
+echo "$OUTPUT" | grep -A 1 "errormsg.*"
 
 # Bash's exit status is the exit status of the last command executed in the script
 echo $OUTPUT | grep -qv "error.jpg"
