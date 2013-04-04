@@ -70,6 +70,7 @@ facturae_30:
   validate:
   - client_has_email
   - invoice_has_taxes
+  - valid_payment_method
   locales:
     ca: "Facturae 3.0 per email"
     da: "Facturae 3.0 to email"
@@ -86,6 +87,7 @@ facturae_31:
   validate:
   - client_has_email
   - invoice_has_taxes
+  - valid_payment_method
   locales:
     ca: "Facturae 3.1 per email"
     da: "Facturae 3.1 til email"
@@ -102,6 +104,7 @@ facturae_32:
   validate:
   - client_has_email
   - invoice_has_taxes
+  - valid_payment_method
   locales:
     ca: "Facturae 3.2 per email"
     da: "Facturae 3.2 til email"
@@ -117,6 +120,7 @@ facturae_32_face:
   folder: free_face
   validate:
   - invoice_has_taxes
+  - valid_payment_method
   locales:
     ca: "Facturae 3.2 a FACE"
     da: "Facturae 3.2 til FACE"

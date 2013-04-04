@@ -125,11 +125,13 @@ class IssuedInvoice < InvoiceDocument
 
   def can_be_exported?
     # TODO Test if endpoint is correcty configured
-    can_be = self.valid? and ExportChannels.folder(client.invoice_format) != nil
+    return @can_be_exported unless @can_be_exported.nil?
+    @can_be_exported = self.valid? and ExportChannels.folder(client.invoice_format) != nil
     ExportChannels.validations(client.invoice_format).each do |v|
-      can_be &&= self.send(v)
+      can = self.send(v)
+      @can_be_exported &&= can
     end
-    can_be
+    @can_be_exported
   end
 
   def self.last_number(project)
@@ -183,7 +185,7 @@ class IssuedInvoice < InvoiceDocument
   end
 
   def sending_info
-    return export_errors.collect {|e| l(e)}.join(", ") if export_errors and export_errors.size > 0
+    return export_errors.collect {|e| e}.join(", ") if export_errors and export_errors.size > 0
     if %w(ublinvoice_20 facturae_30 facturae_31 facturae_32 signed_pdf svefaktura peppolbii peppol oioubl20).include?(client.invoice_format)
       return "recipients:\n#{self.recipient_emails.join("\n")}"
     end
@@ -218,7 +220,7 @@ class IssuedInvoice < InvoiceDocument
     if self.recipient_emails.any?
       true
     else
-      add_export_error(:client_has_no_email)
+      add_export_error(l(:client_has_no_email))
       false
     end
   end
@@ -237,9 +239,20 @@ class IssuedInvoice < InvoiceDocument
     true
   end
 
+  def valid_payment_method
+    if debit?
+      c = Client.find client_id
+      add_export_error("#{l(:field_payment_method)} (#{l(:debit)}) #{l(:requires_client_bank_account)}") if c.bank_account.blank? and !c.use_iban?
+      return false
+    elsif transfer?
+      add_export_error("#{l(:field_payment_method)} (#{l(:transfer)}) #{l(:requires_company_bank_account)}") if company.bank_account.blank? and !company.use_iban?
+      return false
+    end
+  end
+
   def ubl_invoice_has_no_taxes_withheld
     if self.taxes_withheld.any?
-      add_export_error(:ubl_invoice_has_taxes_withheld)
+      add_export_error(l(:ubl_invoice_has_taxes_withheld))
       false
     else
       true
@@ -248,10 +261,10 @@ class IssuedInvoice < InvoiceDocument
 
   def peppol_fields
     if self.client.schemeid.blank? or self.client.endpointid.blank?
-      add_export_error(:missing_client_peppol_fields)
+      add_export_error(l(:missing_client_peppol_fields))
       return false
     elsif self.company.schemeid.blank? or self.company.endpointid.blank?
-      add_export_error(:missing_company_peppol_fields)
+      add_export_error(l(:missing_company_peppol_fields))
       return false
     end
     true
@@ -259,13 +272,13 @@ class IssuedInvoice < InvoiceDocument
 
   def svefaktura_fields
    if self.respond_to?(:accounting_cost) and self.accounting_cost.blank?
-      add_export_error(:missing_svefaktura_account)
+      add_export_error(l(:missing_svefaktura_account))
       return false
    elsif self.company.company_identifier.blank?
-      add_export_error(:missing_svefaktura_organization)
+      add_export_error(l(:missing_svefaktura_organization))
       return false
    elsif self.debit?
-      add_export_error(:missing_svefaktura_debit)
+      add_export_error(l(:missing_svefaktura_debit))
       return false
     end
     true
