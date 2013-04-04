@@ -1,0 +1,5 @@
+<% if entity.company_identifier and !entity.company_identifier.blank? %>
+<cac:PartyLegalEntity>
+  <cbc:CompanyID schemeDataURI="urn:oioubl:scheme:partyidentification-1.0" schemeName="CVR"><%=h entity.company_identifier%></cbc:CompanyID>
+</cac:PartyLegalEntity>
+<% end %>

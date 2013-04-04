@@ -184,7 +184,7 @@ class IssuedInvoice < InvoiceDocument
 
   def sending_info
     return export_errors.collect {|e| l(e)}.join(", ") if export_errors and export_errors.size > 0
-    if %w(ublinvoice_20 facturae_30 facturae_31 facturae_32 signed_pdf svefaktura peppolbii peppol).include?(client.invoice_format)
+    if %w(ublinvoice_20 facturae_30 facturae_31 facturae_32 signed_pdf svefaktura peppolbii peppol oioubl20).include?(client.invoice_format)
       return "recipients:\n#{self.recipient_emails.join("\n")}"
     end
     ""
@@ -269,6 +269,9 @@ class IssuedInvoice < InvoiceDocument
       return false
     end
     true
+  end
+
+  def oioubl20_fields
   end
 
   def release_amended
