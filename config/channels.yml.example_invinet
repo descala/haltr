@@ -70,6 +70,7 @@ facturae_30:
   validate:
   - client_has_email
   - invoice_has_taxes
+  - valid_payment_method
   locales:
     ca: "Facturae 3.0 per email"
     da: "Facturae 3.0 to email"
@@ -86,6 +87,7 @@ facturae_31:
   validate:
   - client_has_email
   - invoice_has_taxes
+  - valid_payment_method
   locales:
     ca: "Facturae 3.1 per email"
     da: "Facturae 3.1 til email"
@@ -102,6 +104,7 @@ facturae_32:
   validate:
   - client_has_email
   - invoice_has_taxes
+  - valid_payment_method
   locales:
     ca: "Facturae 3.2 per email"
     da: "Facturae 3.2 til email"
@@ -117,6 +120,7 @@ facturae_32_face:
   folder: free_face
   validate:
   - invoice_has_taxes
+  - valid_payment_method
   locales:
     ca: "Facturae 3.2 a FACE"
     da: "Facturae 3.2 til FACE"
@@ -244,8 +248,24 @@ svefaktura:
     da: "Svefaktura til email"
     en: "Svefaktura invoice to email"
     es: "Factura Svefaktura por email"
-    fr: "Svefaktura invoice to email"
+    fr: "Svefaktura facture par email"
     sv: "Svefaktura till email"
+  allowed_permissions:
+    :send_by_mail:
+
+oioubl20:
+  format: oioubl20 
+  folder: free_oioubl
+  validate:
+    - ubl_invoice_has_no_taxes_withheld
+    - oioubl20_fields
+  locales:
+    ca: "Factura OIO UBL per email"
+    da: "OIO UBL til email"
+    en: "OIO UBL invoice to email"
+    es: "Factura OIO UBL por email"
+    fr: "OIO UBL facture par email"
+    sv: "OIO UBL faktura till email"
   allowed_permissions:
     :send_by_mail:
 

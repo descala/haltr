@@ -42,7 +42,8 @@ Redmine::Plugin.register :haltr do
         :invoices => [:index, :new, :edit, :create, :update, :destroy, :show, :mark_sent, :mark_closed, :mark_not_sent,
                       :mark_accepted, :mark_accepted_with_mail, :mark_refused, :mark_refused_with_mail, :destroy_payment,
                       :facturae30, :facturae31, :facturae32, :peppolubl20, :send_invoice, :log, :legal, :update_currency_select,
-                      :amend_for_invoice, :download_new_invoices, :send_new_invoices, :duplicate_invoice, :biiubl20],
+                      :amend_for_invoice, :download_new_invoices, :send_new_invoices, :duplicate_invoice, :biiubl20, 
+                      :svefaktura, :oioubl20],
         :tasks    => [:index, :n19, :n19_done, :report, :import_aeb43],
         :companies => [:index,:edit,:update,:linked_to_mine]},
       :require => :member
