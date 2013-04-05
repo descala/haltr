@@ -34,10 +34,13 @@
       <%= l(:field_comment) %> <%= f.text_field :comment, :no_label => true %>
     </span>
 
-    <%= f.object.new_record? ? "" : f.hidden_field(:_destroy, {:value=>0, :id=>"destroy_tax_#{taxid}"}) %>
-    <%= f.hidden_field :id %>
   </td>
 
 </tr>
 
-
+<tr>
+  <td colspan="0">
+    <%= f.object.new_record? ? "" : f.hidden_field(:_destroy, {:value=>0, :id=>"destroy_tax_#{taxid}"}) %>
+    <%= f.hidden_field :id %>
+  </td>
+</tr>
