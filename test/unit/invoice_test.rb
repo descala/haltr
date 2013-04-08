@@ -147,4 +147,12 @@ class InvoiceTest < ActiveSupport::TestCase
     assert_equal 'person1@example.com', i.recipient_emails.first
   end
 
+  test 'valid_payment_method' do
+    i = invoices(:i8)
+    assert_true i.valid_payment_method
+    i = invoices(:i9)
+    assert_false i.valid_payment_method
+  end
+
+
 end

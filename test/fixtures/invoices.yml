@@ -220,3 +220,17 @@ i8:
   import_in_cents: 10000
   total_in_cents:  11000
 
+i9:
+  id: 9
+  type: IssuedInvoice
+  client_id: 1
+  currency: EUR
+  date: 2013-04-04
+  due_date: 2013-04-04
+  extra_info: "Payment method DEBIT and client does not have a bank account"
+  number: "i9"
+  payment_method: 2
+  ponumber: "client order number 123"
+  project_id: 2
+  state: new
+

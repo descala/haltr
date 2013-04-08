@@ -204,7 +204,24 @@ class IssuedInvoice < InvoiceDocument
                             :message=>message)
   end
 
- protected
+  def valid_payment_method
+    valid_payment_method = true
+    if debit?
+      c = Client.find client_id
+      if c.bank_account.blank? and !c.use_iban?
+        add_export_error("#{l(:field_payment_method)} (#{l(:debit)}) #{l(:requires_client_bank_account)}")
+        valid_payment_method = false
+      end
+    elsif transfer?
+      if company.bank_account.blank? and !company.use_iban?
+        add_export_error("#{l(:field_payment_method)} (#{l(:transfer)}) #{l(:requires_company_bank_account)}")
+        valid_payment_method = false
+      end
+    end
+    valid_payment_method
+  end
+
+  protected
 
   def create_event
     Event.create(:name=>'new',:invoice=>self,:user=>User.current)
@@ -237,23 +254,6 @@ class IssuedInvoice < InvoiceDocument
   # but now we always force a 0.00 tax in the template, so it will always have taxes
   def invoice_has_taxes
     true
-  end
-
-  def valid_payment_method
-    valid_payment_method = true
-    if debit?
-      c = Client.find client_id
-      if c.bank_account.blank? and !c.use_iban?
-        add_export_error("#{l(:field_payment_method)} (#{l(:debit)}) #{l(:requires_client_bank_account)}")
-        valid = false
-      end
-    elsif transfer?
-      if company.bank_account.blank? and !company.use_iban?
-        add_export_error("#{l(:field_payment_method)} (#{l(:transfer)}) #{l(:requires_company_bank_account)}")
-        valid = false
-      end
-    end
-    valid_payment_method
   end
 
   def ubl_invoice_has_no_taxes_withheld
