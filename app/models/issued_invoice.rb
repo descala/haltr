@@ -240,14 +240,20 @@ class IssuedInvoice < InvoiceDocument
   end
 
   def valid_payment_method
+    valid_payment_method = true
     if debit?
       c = Client.find client_id
-      add_export_error("#{l(:field_payment_method)} (#{l(:debit)}) #{l(:requires_client_bank_account)}") if c.bank_account.blank? and !c.use_iban?
-      return false
+      if c.bank_account.blank? and !c.use_iban?
+        add_export_error("#{l(:field_payment_method)} (#{l(:debit)}) #{l(:requires_client_bank_account)}")
+        valid = false
+      end
     elsif transfer?
-      add_export_error("#{l(:field_payment_method)} (#{l(:transfer)}) #{l(:requires_company_bank_account)}") if company.bank_account.blank? and !company.use_iban?
-      return false
+      if company.bank_account.blank? and !company.use_iban?
+        add_export_error("#{l(:field_payment_method)} (#{l(:transfer)}) #{l(:requires_company_bank_account)}")
+        valid = false
+      end
     end
+    valid_payment_method
   end
 
   def ubl_invoice_has_no_taxes_withheld
