@@ -154,7 +154,7 @@ en:
   pdf_invoice_expl: "This is an aproximation to received invoice, please, check fields are correct with original one"
   no_pdf_support: "It appears you don't have Adobe Reader or PDF support in this web browser. <a href='%{pdf}'>Click here to download the PDF</a>"
   client_has_no_email: "Invoice's client has no email defined"
-  invoice_has_no_taxes: "Invoice has no taxes"
+  invoice_has_no_taxes: "Invoice has a line without taxes"
   invoice_no_taxes_and_discount: "An invoice can not have lines without tax and a global discount"
   field_import: "Import"
   pdf_not_legal: "PDF not legal"

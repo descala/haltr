@@ -221,6 +221,17 @@ class IssuedInvoice < InvoiceDocument
     valid_payment_method
   end
 
+  # facturae 3.x needs taxes to be valid
+  def invoice_has_taxes
+    self.invoice_lines.each do |line|
+      unless line.taxes_outputs.any?
+        add_export_error(l(:invoice_has_no_taxes))
+        return false
+      end
+    end
+    true
+  end
+
   protected
 
   def create_event
@@ -250,12 +261,6 @@ class IssuedInvoice < InvoiceDocument
       !company.imap_port.nil?
   end
 
-  # facturae 3.x needs taxes to be valid
-  # but now we always force a 0.00 tax in the template, so it will always have taxes
-  def invoice_has_taxes
-    true
-  end
-
   def ubl_invoice_has_no_taxes_withheld
     if self.taxes_withheld.any?
       add_export_error(l(:ubl_invoice_has_taxes_withheld))
@@ -277,13 +282,13 @@ class IssuedInvoice < InvoiceDocument
   end
 
   def svefaktura_fields
-   if self.respond_to?(:accounting_cost) and self.accounting_cost.blank?
+    if self.respond_to?(:accounting_cost) and self.accounting_cost.blank?
       add_export_error(l(:missing_svefaktura_account))
       return false
-   elsif self.company.company_identifier.blank?
+    elsif self.company.company_identifier.blank?
       add_export_error(l(:missing_svefaktura_organization))
       return false
-   elsif self.debit?
+    elsif self.debit?
       add_export_error(l(:missing_svefaktura_debit))
       return false
     end

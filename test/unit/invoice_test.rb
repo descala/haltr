@@ -154,5 +154,11 @@ class InvoiceTest < ActiveSupport::TestCase
     assert_false i.valid_payment_method
   end
 
+  test 'invoice_has_taxes' do
+     i = invoices(:i8)
+    assert_true i.invoice_has_taxes
+    i = invoices(:i9)
+    assert_false i.invoice_has_taxes
+  end
 
 end

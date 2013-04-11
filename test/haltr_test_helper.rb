@@ -12,7 +12,7 @@ module Haltr
 
         # Adds haltr permissions to role 'delveloper'
         dev = Role.find(2)
-        dev.permissions += [:general_use]
+        dev.permissions += [:general_use,:send_by_mail]
         dev.save
 
         # user 2 (jsmith) is member of project 2 (onlinesotre) with role 2 (developer)

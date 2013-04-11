@@ -167,7 +167,7 @@ es:
   pdf_invoice_expl: "Esta és una aproximación a la factura recibida, por favor, compruebe que los datos sean correctos con la original"
   no_pdf_support: "Parece que no tienes Adobe Reader o soporte para PDF en este navegador. <a href='%{pdf}'>Clica aquí para descargar el PDF</a>"
   client_has_no_email: "El cliente asociado a la factura no tiene correo electrónico definido"
-  invoice_has_no_taxes: "La factura no tiene impuestos"
+  invoice_has_no_taxes: "La factura tiene aluna línea sin impuestos"
   invoice_no_taxes_and_discount: "Una factura no puede tener a la vez líneas de suplidos y un descuento" 
   field_import: "Importe"
   pdf_not_legal: "PDF no legal"

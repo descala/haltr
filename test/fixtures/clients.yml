@@ -10,6 +10,7 @@ client1:
   currency: EUR
   language: en
   country: es
+  invoice_format: facturae_32
 
 clients_001: 
   id: 1
