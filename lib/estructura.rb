@@ -16,7 +16,7 @@ module Estructura
       @str = str
       @x = x
       @y = y
-      @size = str.to_s.jsize
+      @size = RUBY_VERSION < '1.9.0' ? str.to_s.jsize : str.to_s.size
       @x1 = @x + @size - 1 if @x
     end
     def overlaps?(other)
@@ -183,7 +183,11 @@ module Estructura
         strings = one_space ? Utils.strings_one_space(line) : Utils.strings_two_spaces(line)
         strings.each do |str|
           x_not_unicode = line.rindex(str)
-          x = line[0..x_not_unicode].jsize - 1
+          if RUBY_VERSION < '1.9.0'
+            x = line[0..x_not_unicode].jsize - 1
+          else
+            x = line[0..x_not_unicode].size - 1
+          end
           tokens << Token.new(str,x,y)
         end
         y = y + 1
