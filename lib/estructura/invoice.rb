@@ -20,8 +20,8 @@ module Estructura
       tag :tax_rate, /i\.?v\.?a|v\.?a\.?t/, :number => true, :depth => 2, :extra => /\d+\s*%|\d{1,2}[.,]0{1,2}/
       tag :amount, /\b[+-]?\d+[\.,]*\b/, :exact => true
       tag :total_amount, /\b[+-]?\d+[\.,]\d+\b/, :exact => true, :weight => 5
-      tag :total_amount, /total|amount/, :import => true, :depth => 3, :extra => /^(\342\202\254)*[\$\€\s]*[+-]?\s*\d+[\.,\d]*[\$\s]*(\342\202\254)*$/i
-      tag :total_amount, /base impo[a-z]+ble/, :weight => 5, :import => true, :depth => 3, :extra => /^(\342\202\254)*[\$\€\s]*[+-]?\s*\d+[\.,\d]*[\$\s]*(\342\202\254)*$/i
+      tag :total_amount, /total|amount/, :import => true, :depth => 3, :extra => /^(\342\202\254)*[\$€\s]*[+-]?\s*\d+[\.,\d]*[\$\s]*(\342\202\254)*$/i
+      tag :total_amount, /base impo[a-z]+ble/, :weight => 5, :import => true, :depth => 3, :extra => /^(\342\202\254)*[\$€\s]*[+-]?\s*\d+[\.,\d]*[\$\s]*(\342\202\254)*$/i
       tag :tax_identification_number, /tva\s+id|vat\s+n/
       tag :tax_identification_number, /[nc].*i.*f/
       tag :tax_identification_number, /\bCVR\b/

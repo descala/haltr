@@ -1,5 +1,5 @@
 # encoding: utf-8
-$KCODE = 'u'
+$KCODE = 'u' if RUBY_VERSION < '1.9.0'
 require 'jcode' if RUBY_VERSION < '1.9'
 
 require 'estructura/taggable'
@@ -268,7 +268,7 @@ module Estructura
       return pretty_one
     end
     def self.seems_import?(str)
-      cur = "((\342\202\254)|[\$\€])?\s?"
+      cur = "((\342\202\254)|[\$€])?\s?"
       str =~ /(\A|\s)#{cur}[+-]?\d+#{cur}(\Z|\s)/ or
       str =~ /(\A|\s)#{cur}[+-]?\d+[\.,]\d+#{cur}(\Z|\s)/ or
       str =~ /(\A|\s)#{cur}[+-]?\d+,\d+\.\d+#{cur}(\Z|\s)/ or
