@@ -260,8 +260,11 @@ module Estructura
       possible_results={}
       date_str.split.each do |substr|
         next if substr =~ /^\d+$/
-        unless Chronic.parse(substr, :endian_precedence => [:little, :middle]).nil?
-          possible_results[substr] = Chronic.parse(substr, :endian_precedence => [:little, :middle])
+        begin
+          unless Chronic.parse(substr, :endian_precedence => [:little, :middle]).nil?
+            possible_results[substr] = Chronic.parse(substr, :endian_precedence => [:little, :middle])
+          end
+        rescue
         end
       end
       pretty_one=nil
