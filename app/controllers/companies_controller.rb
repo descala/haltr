@@ -19,7 +19,10 @@ class CompaniesController < ApplicationController
 
   def index
     if @project.company.nil?
-      @company = Company.new(:project=>@project, :name=>@project.name)
+      user_mail = User.find_by_project_id(@project.id).mail rescue ""
+      @company = Company.new(:project=>@project,
+                             :name=>@project.name,
+                             :email=>user_mail)
       @company.save(false)
     else
       @company = @project.company
