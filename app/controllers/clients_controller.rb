@@ -61,9 +61,9 @@ class ClientsController < ApplicationController
           render(:update) { |page|
             page.replace_html "new_client_wrapper", :partial => 'invoices/new_client'
             page.replace_html "client_select", :partial => 'invoices/clients', :locals=>{:selected=>new_client.id}
+            page.hide "new_client_wrapper"
             page.replace_html "payment_stuff", :partial => 'invoices/payment_stuff',
               :locals=>{:currency=>new_client.currency,:payment_method=>new_client.payment_method,:terms=>new_client.terms}
-            page.hide "new_client_wrapper"
           }
         }
       else
