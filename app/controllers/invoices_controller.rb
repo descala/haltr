@@ -154,6 +154,7 @@ class InvoicesController < ApplicationController
     # mark as "_destroy" all taxes with an empty tax code
     # and copy global "exempt comment" to all exempt taxes
     parsed_params = params[:invoice]
+    parsed_params["invoice_lines_attributes"] ||= {}
     parsed_params["invoice_lines_attributes"].each do |i, invoice_line|
       if invoice_line["taxes_attributes"]
         invoice_line["taxes_attributes"].each do |j, tax|
