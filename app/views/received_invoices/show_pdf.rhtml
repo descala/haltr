@@ -1,5 +1,9 @@
 <h4><%= "#{l :ReceivedInvoice} #{l :by_mail_from, :email => @invoice.from} #{l :in_format, :format => @invoice.invoice_format}" %></h4>
 
+<div id="new_client_wrapper" style="display:none;">
+  <%= render :partial => 'invoices/new_client' %>
+</div>
+
 <div id="invoice-refuse" style="display: none;">
   <%= render :partial => "invoice_refuse_form" %>
 </div>
@@ -20,12 +24,8 @@
 <%= render :partial => "events" -%>
 
 <% labelled_form_for :invoice, @invoice, :url => { :action => 'update', :id => @invoice }, :html => {:method => :put, :class => 'tabular'} do |f| %>
-  <% if @invoice.is_a? ReceivedInvoice -%>
-    <%= render :partial => 'received_invoices/form', :locals => { :f => f } %>
-  <% else -%>
-    <%= render :partial => 'invoices/form', :locals => { :f => f } %>
-  <% end -%>
-<%= submit_tag l(:button_save) %>
+  <%= render :partial => 'received_invoices/form', :locals => { :f => f } %>
+  <%= submit_tag l(:button_save) %>
 <% end %>
 
 <% content_for :sidebar do %>

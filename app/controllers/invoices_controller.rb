@@ -327,12 +327,12 @@ class InvoicesController < ApplicationController
     elsif @invoice.is_a? ReceivedInvoice
       @invoice.update_attribute(:has_been_read, true)
       if @invoice.invoice_format == "pdf"
-        render :template => 'invoices/show_pdf'
+        render :template => 'received_invoices/show_pdf'
       else
         # TODO also show the database record version?
         # Redel XML with XSLT in browser
         @xsl = 'facturae32'
-        render :template => 'invoices/show_with_xsl'
+        render :template => 'received_invoices/show_with_xsl'
       end
     end
   end
