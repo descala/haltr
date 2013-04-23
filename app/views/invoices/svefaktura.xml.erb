@@ -113,19 +113,22 @@
   <% @invoice.taxes_by_category.each do |tax_name,categories| -%>
    <cac0:TaxTotal>
      <cbc:TotalTaxAmount amountCurrencyID="<%=h @client.currency%>"><%=h precision @invoice.tax_amount_for(tax_name).dollars %></cbc:TotalTaxAmount>
-      <% categories.each do |category,tax| -%>
+
+      <% categories.each do |category,taxes| -%>
+      <% taxes.each do |tax| -%>
       <cac0:TaxSubTotal>
-        <cbc:TaxableAmount amountCurrencyID="<%=h @client.currency%>"><%=h precision((category == "E" ? @invoice.exempt_taxable_base(tax) : @invoice.taxable_base(tax)).dollars)%></cbc:TaxableAmount>
-        <cbc:TaxAmount amountCurrencyID="<%=h @client.currency%>"><%=h precision (category == "E" ? 0 : @invoice.tax_amount(tax).dollars) %></cbc:TaxAmount>
+        <cbc:TaxableAmount amountcurrencyID="<%=h @client.currency%>"><%=h precision(@invoice.taxable_base(tax).dollars)%></cbc:TaxableAmount>
+        <cbc:TaxAmount amountcurrencyID="<%=h @client.currency%>"><%=h precision(@invoice.tax_amount(tax).dollars) %></cbc:TaxAmount>
          <cac0:TaxCategory>
            <cac0:ID><%=category%></cac0:ID>
-           <cbc:Percent><%=h precision (category == "E" ? 0 : tax.percent)%></cbc:Percent>
+           <cbc:Percent><%=h precision (tax.percent)%></cbc:Percent>
             <cac0:TaxScheme>
               <cac0:ID><%=Haltr::TaxHelper.ubl(tax.name)%></cac0:ID>
             </cac0:TaxScheme>
          </cac0:TaxCategory>
       </cac0:TaxSubTotal>
   </cac0:TaxTotal>
+<% end -%>
 <% end -%>
    <cac0:LegalTotal>
         <cbc:LineExtensionTotalAmount amountCurrencyID="<%=h @client.currency%>"><%=h precision @invoice.subtotal_without_discount.dollars%></cbc:LineExtensionTotalAmount>
