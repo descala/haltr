@@ -32,30 +32,26 @@ module Haltr
 
     def default_taxes_for(country)
       taxes = []
-      if COUNTRY_TAXES[country]
-        COUNTRY_TAXES[country].each do |name,percents|
-          percents.each do |percent|
-            default = COUNTRY_TAXES["#{country}_default"] &&
-              COUNTRY_TAXES["#{country}_default"][name] &&
-              COUNTRY_TAXES["#{country}_default"][name] == percent
-            taxes << Tax.new(:name => name, :percent => percent, :default => default)
-          end
-        end
+      case country
+      when 'es'
+        taxes << Tax.new(:name=>'IVA',:percent=>21.0,:default=>true,:category=>'S')
+        taxes << Tax.new(:name=>'IVA',:percent=>10.0,:default=>false,:category=>'AA')
+        taxes << Tax.new(:name=>'IVA',:percent=>4.0, :default=>false,:category=>'AA')
+        taxes << Tax.new(:name=>'IVA',:percent=>0.0, :default=>false,:category=>'Z')
+        taxes << Tax.new(:name=>'IVA',:percent=>0.0, :default=>false,:category=>'E')
+        taxes << Tax.new(:name=>'IRPF',:percent=>-21.0, :default=>false,:category=>'S')
+      when 'fr'
+        taxes << Tax.new(:name=>'TVA',:percent=>19.6,:default=>true,:category=>'S')
+        taxes << Tax.new(:name=>'TVA',:percent=>5.5, :default=>false,:category=>'AA')
+        taxes << Tax.new(:name=>'TVA',:percent=>2.1, :default=>false,:category=>'AAA')
+      when 'se'
+        taxes << Tax.new(:name=>'VAT',:percent=>25.0,:default=>true,:category=>'S')
+        taxes << Tax.new(:name=>'VAT',:percent=>12.0,:default=>false,:category=>'AA')
+        taxes << Tax.new(:name=>'VAT',:percent=>6.0, :default=>false,:category=>'AAA')
+      when 'dk'
+        taxes << Tax.new(:name=>'NUMS',:percent=>25.0,:default=>true,:category=>'S')
       end
-      guess_tax_category(taxes)
     end
-
-    COUNTRY_TAXES = {
-      "es" => { "IVA"  => [ 4, 10, 21 ],
-                "IRPF" => [ -21 ] },
-      "fr" => { "TVA"  => [ 2.1, 5.5, 19.6 ] },
-      "se" => { "VAT"  => [ 6, 12, 25 ] },
-      "dk" => { "MUMS" => [ 25 ] },
-      "es_default" => { "IVA" => 21 },
-      "fr_default" => { "TVA" => 19.6 },
-      "se_default" => { "VAT" => 25 },
-      "dk_default" => { "MUMS" => 25 }
-    }
 
     def add_category_to_taxes
       Company.all.each do |company|
