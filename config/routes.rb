@@ -8,6 +8,7 @@ ActionController::Routing::Routes.draw do |map|
   map.connect '/invoice/:id/:invoice_id', :controller => 'invoices', :action => 'view', :id => /.*/, :invoice_id => /\d+/
   map.connect '/statistics', :controller => 'stastics', :action => 'index'
   map.connect '/invoices/:action/:id', :controller => 'invoices'
+  map.connect '/received/:action/:id', :controller => 'received'
   map.connect '/templates/:action/:id', :controller => 'invoice_templates'
   map.connect '/clients/:action/:id', :controller => 'clients'
   map.connect '/companies/:action/:id', :controller => 'companies'

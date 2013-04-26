@@ -60,13 +60,14 @@ ca:
 
   # Invoices
   IssuedInvoice: Factura emesa
-  ReceivedInvoice: Factura rebuda
+  ReceivedInvoice: Rebudes
   DraftInvoice: Esborrany
   label_invoice_plural: Factures
   label_invoice: Factura
   label_draft: Esborrany de factura
   field_invoice: Factura
   label_invoice_new: Nova factura
+  label_received_invoice_new: Afegir factura rebuda
   button_new_invoice: Nova factura
   button_add_invoice_line: Afegeix una nova línia a la factura
   field_number: Número
@@ -340,6 +341,7 @@ ca:
   hide_full_form: "Mostrar menys camps"
   show_full_form: "Mostrar mes camps"
   field_created_at: "Creada el"
+  field_received_at: "Rebuda el"
   info_default_taxes: "Per defecte es crearan els impostos del teu país"
   label_invoices_min: "Mínim de factures"
   label_stastics: "Estadístiques"

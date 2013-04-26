@@ -1,7 +1,7 @@
-<h2><%= controller.controller_name == "invoice_templates" ? l(:label_invoice_template_plural) : l(:label_invoice_plural)%></h2>
+<h2><%= l(:label_received) %></h2>
 
   <% form_tag({:id=>@project}, :method => :get) do %>
-     <fieldset id="filters" class="collapsible collapsed"><legend onclick="toggleFieldset(this);"><%= l(:label_filter_plural) %></legend>
+    <fieldset id="filters" class="collapsible collapsed"><legend onclick="toggleFieldset(this);"><%= l(:label_filter_plural) %></legend>
       <div id="query_form_content" class="hide-when-print" style="display: none;">
       <table>
         <tr>
@@ -34,10 +34,10 @@
     </fieldset>
   <% end %>
 
-<%= render :partial=>'invoices/issued_invoices' %>
+  <%= render :partial=>'invoices/received_invoices',:label => [:label_received_with_num, {:num=>@unread}] %>
 
 <% html_title(l(:label_invoice_plural)) -%>
 
 <% content_for :sidebar do %>
-  <%= render :partial => 'sidebar' %>
+  <%= render :partial => 'invoices/sidebar' %>
 <% end %>

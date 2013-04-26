@@ -3,14 +3,14 @@
 <%= javascript_include_tag 'invoice', :plugin => 'haltr' %>
 
 <div class="box">
-  <p id="client_select"><%= render :partial=>'received_invoices/clients', :locals=>{:selected=>@invoice.client_id} %></p>
+  <p id="client_select"><%= render :partial=>'received/clients', :locals=>{:selected=>@invoice.client_id} %></p>
   <p><%= f.text_field :date, :size => 10 %><%= calendar_for('invoice_date') %></p>
   <% if controller.controller_name == "invoice_templates" -%>
     <p><%= f.select :frequency, frequencies_for_select %></p>
   <% else -%>
     <p><%= f.text_field :number, :size => 10 %> <%= "#{l(:label_last_invoice_number)}: #{IssuedInvoice.last_number(@project)}" if IssuedInvoice.all.any?%></p>
   <% end -%>
-  <p id="currency_select"><%= render :partial=>'received_invoices/currency', :locals => {:selected=>@invoice.currency} %></p>
+  <p id="currency_select"><%= render :partial=>'received/currency', :locals => {:selected=>@invoice.currency} %></p>
   <p><%= f.text_field :ponumber %></p>
   <p><%= f.select(:terms, Terms.for_select, {}, {:onchange=>"terms()"}) %></p>
   <p><%= f.text_field :due_date, :size => 10, :disabled => !@invoice.custom_due? %><span id="due_date_cal" style="visibility: <%=@invoice.custom_due? ? "visible" : "hidden" %>;"><%= calendar_for('invoice_due_date') %></span></p>
@@ -33,7 +33,7 @@
     <span class="invoiceLineHeader" style="width: 75px;"><%= l(:field_price) %></span>
     </p>
     <% f.fields_for :invoice_lines do |line_form| %>
-      <%= render :partial => 'received_invoices/invoice_line', :locals => { :f => line_form } %>
+      <%= render :partial => 'received/invoice_line', :locals => { :f => line_form } %>
     <% end %>
   </div>
   <p><%= add_invoice_line_link(f,true) %></p>
