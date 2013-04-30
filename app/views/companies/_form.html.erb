@@ -52,7 +52,7 @@
           <th></th>
         </tr>
       </thead>
-          <% f.fields_for :taxes do |tax_form| %>
+          <%= f.fields_for :taxes do |tax_form| %>
             <%= render :partial => 'companies/tax', :locals => { :f => tax_form } %>
           <% end %>
       </table>

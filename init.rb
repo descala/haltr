@@ -1,9 +1,43 @@
 require 'redmine'
+
+Rails.logger.info 'Starting haltr plugin'
+
 require 'haltr'
 
-Project.send(:include, ProjectHaltrPatch)
+# Haltr has plugins of his own
+# similar to config/initializers/00-core_plugins.rb in Redmine
+# Loads the core plugins located in lib/plugins
+Dir.glob(File.join(File.dirname(__FILE__), "lib/plugins/*")).sort.each do |directory|
+  if File.directory?(directory)
+    lib = File.join(directory, "lib")
+    if File.directory?(lib)
+      $:.unshift lib
+      ActiveSupport::Dependencies.autoload_paths += [lib]
+    end
+    initializer = File.join(directory, "init.rb")
+    if File.file?(initializer)
+      config = config = RedmineApp::Application.config
+      eval(File.read(initializer), binding, initializer)
+    end
+  end
+end
 
 Date::DATE_FORMATS[:ddmmyy] = "%d%m%y"
+
+require_dependency 'utils'
+require_dependency 'iso_countries'
+require_dependency File.expand_path(File.join(File.dirname(__FILE__), 'app/models/export_channels'))
+
+if (Redmine::VERSION::MAJOR == 1 and Redmine::VERSION::MINOR >= 4) or Redmine::VERSION::MAJOR == 2
+  require_dependency 'country_iso_translater'
+else
+  config.gem 'sundawg_country_codes', :lib => 'country_iso_translater'
+  config.gem 'money', :version => '>=5.0.0'
+end
+
+Rails.configuration.to_prepare do
+  Project.send(:include, ProjectHaltrPatch)
+end
 
 Redmine::Plugin.register :haltr do
   name 'haltr'
@@ -41,10 +75,10 @@ Redmine::Plugin.register :haltr do
 
     permission :batch_processes, { :tasks => [:automator] }, :require => :member
 
-#    # Loads permisons from config/channels.yml
-#    ExportChannels.permissions.each do |permission,actions|
-#      permission permission, actions, :require => :member
-#    end
+    # Loads permisons from config/channels.yml
+    ExportChannels.permissions.each do |permission,actions|
+      permission permission, actions, :require => :member
+    end
 
   end
 
@@ -55,16 +89,4 @@ Redmine::Plugin.register :haltr do
 
 end
 
-require_dependency 'utils'
-require_dependency 'iso_countries'
-if (Redmine::VERSION::MAJOR == 1 and Redmine::VERSION::MINOR >= 4) or Redmine::VERSION::MAJOR == 2
-  require_dependency 'country_iso_translater'
-else
-  config.gem 'sundawg_country_codes', :lib => 'country_iso_translater'
-  config.gem 'money', :version => '>=5.0.0'
-end
 
-# avoid taxis error
-ActiveSupport::Inflector.inflections do |inflect|
-  inflect.singular 'taxes', 'tax'
-end

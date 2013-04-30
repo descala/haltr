@@ -1,6 +1,6 @@
 require 'redmine'
 
-RAILS_DEFAULT_LOGGER.info 'Starting haltr plugin'
+Rails.logger.info 'Starting haltr plugin'
 
 # Patches to the Redmine core
 require 'dispatcher'

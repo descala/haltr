@@ -4,10 +4,10 @@
  * really delete tax.
  */
 function rm_tax(id) {
-  var tr = document.getElementById("tax_"+id);
+  var tr = $("#tax_"+id);
   tr.remove();
   // set hidden_field to 1 to really delete line
-  var hf = document.getElementById("destroy_tax_"+id);
+  var hf = $("destroy_tax_"+id);
   if (hf != null) {
     hf.setAttribute("value", "1");
   }

@@ -31,7 +31,7 @@ module ActionView #:nodoc:
           country_options += options_for_select(countries_for_select.sort, selected)
         end
 
-        return country_options
+        return country_options.html_safe
       end
 
       def to_iso_select_tag(priority_countries, options, html_options) #:nodoc:

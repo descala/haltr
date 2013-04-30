@@ -26,7 +26,7 @@ module HaltrHelper
     flash.each do |k,v|
       s << content_tag('div', v, :class => "flash #{k}")
     end
-    s
+    s.html_safe
   end
 
   def money(import)

@@ -4,7 +4,7 @@ class ExportChannels
 
   def self.available
     # See config/channels.yml.example
-    YAML.load(File.read( "#{RAILS_ROOT}/vendor/plugins/haltr/config/channels.yml"))
+    YAML.load(File.read(File.join(File.dirname(__FILE__), "../../config/channels.yml")))
   rescue Exception => e
     puts "Exception while retrieving channels.yml: #{e.message}"
     {}
@@ -60,7 +60,7 @@ class ExportChannels
   end
 
   def self.path(id)
-    part1 = "#{Setting.plugin_haltr['export_channels_path']}/#{self.folder(id)}"
+    "#{Setting.plugin_haltr['export_channels_path']}/#{self.folder(id)}"
   end
 
   def self.l(channel_name)
