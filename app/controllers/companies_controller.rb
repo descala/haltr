@@ -59,9 +59,9 @@ class CompaniesController < ApplicationController
           if attachment.content_type =~ /^image/
             begin
               require 'RMagick'
-              image = Magick::Image.read("#{attachment.storage_path}/#{attachment.disk_filename}").first
+              image = Magick::Image.read("#{attachment.diskfile}").first
               image.change_geometry!('350x130>') {|cols,rows,img| img.resize!(cols, rows)}
-              image.write("#{attachment.storage_path}/#{attachment.disk_filename}")
+              image.write("#{attachment.diskfile}")
             rescue LoadError
             end
           else
