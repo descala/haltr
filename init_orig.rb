@@ -1,9 +1,22 @@
 require 'redmine'
-require 'haltr'
 
-Project.send(:include, ProjectHaltrPatch)
+RAILS_DEFAULT_LOGGER.info 'Starting haltr plugin'
+
+# Patches to the Redmine core
+require 'dispatcher'
+require 'project_haltr_patch'
+Dispatcher.to_prepare do
+  Project.send(:include, ProjectHaltrPatch)
+end
 
 Date::DATE_FORMATS[:ddmmyy] = "%d%m%y"
+
+Dir[File.join(directory,'vendor','plugins','*')].each do |dir|
+  path = File.join(dir, 'lib')
+  $LOAD_PATH << path
+  ActiveSupport::Dependencies.autoload_paths << path
+  ActiveSupport::Dependencies.autoload_once_paths.delete(path)
+end
 
 Redmine::Plugin.register :haltr do
   name 'haltr'
@@ -41,10 +54,10 @@ Redmine::Plugin.register :haltr do
 
     permission :batch_processes, { :tasks => [:automator] }, :require => :member
 
-#    # Loads permisons from config/channels.yml
-#    ExportChannels.permissions.each do |permission,actions|
-#      permission permission, actions, :require => :member
-#    end
+    # Loads permisons from config/channels.yml
+    ExportChannels.permissions.each do |permission,actions|
+      permission permission, actions, :require => :member
+    end
 
   end
 
@@ -55,13 +68,17 @@ Redmine::Plugin.register :haltr do
 
 end
 
-require_dependency 'utils'
-require_dependency 'iso_countries'
-if (Redmine::VERSION::MAJOR == 1 and Redmine::VERSION::MINOR >= 4) or Redmine::VERSION::MAJOR == 2
-  require_dependency 'country_iso_translater'
+if Redmine::VERSION::MAJOR == 1 
+  require_dependency 'utils'
+  require_dependency 'iso_countries'
+  if Redmine::VERSION::MINOR >= 4
+    require_dependency 'country_iso_translater'
+  else
+    config.gem 'sundawg_country_codes', :lib => 'country_iso_translater'
+    config.gem 'money', :version => '>=5.0.0'
+  end
 else
-  config.gem 'sundawg_country_codes', :lib => 'country_iso_translater'
-  config.gem 'money', :version => '>=5.0.0'
+  raise "Redmine version #{Redmine::VERSION::STRING} not supported"
 end
 
 # avoid taxis error

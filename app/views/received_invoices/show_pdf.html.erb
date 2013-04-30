@@ -23,7 +23,7 @@
 
 <%= render :partial => "events" -%>
 
-<% labelled_form_for :invoice, @invoice, :url => { :action => 'update', :id => @invoice }, :html => {:method => :put, :class => 'tabular'} do |f| %>
+<%= labelled_form_for :invoice, @invoice, :url => { :action => 'update', :id => @invoice }, :html => {:method => :put, :class => 'tabular'} do |f| %>
   <%= render :partial => 'received_invoices/form', :locals => { :f => f } %>
   <%= submit_tag l(:button_save) %>
 <% end %>

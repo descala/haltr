@@ -17,14 +17,15 @@ class InvoicesController < ApplicationController
   before_filter :authorize, :except => [:by_taxcode_and_num,:view,:logo,:download,:mail]
   skip_before_filter :check_if_login_required, :only => [:by_taxcode_and_num,:view,:logo,:download,:mail]
   # on development skip auth so we can use curl to debug
-  if RAILS_ENV == "development" or RAILS_ENV == 'test'
+  if Rails.env.development? or Rails.env.test?
     skip_before_filter :check_if_login_required, :only => [:by_taxcode_and_num,:view,:logo,:download,:mail,:facturae30,:facturae31,:facturae32,:peppolubl20,:biiubl20,:svefaktura, :oioubl20]
     skip_before_filter :authorize, :only => [:facturae30,:facturae31,:facturae32,:peppolubl20,:biiubl20,:svefaktura,:oioubl20]
   else
     before_filter :check_remote_ip, :only => [:by_taxcode_and_num,:mail]
   end
 
-  verify :method => [:post,:put], :only => [:create,:update], :redirect_to => :root_path
+  # TODO http://stackoverflow.com/questions/3707071/rails-2-to-rails-3-method-verification-in-controllers-gone 
+  # verify :method => [:post,:put], :only => [:create,:update], :redirect_to => :root_path
 
   include CompanyFilter
   before_filter :check_for_company, :except => [:by_taxcode_and_num,:view,:download,:mail]
@@ -190,21 +191,21 @@ class InvoicesController < ApplicationController
   def mark_sent
     @invoice.manual_send
     redirect_to :back
-  rescue ActionController::RedirectBackError => e
+  rescue ActionController::RedirectBackError
     render :text => "OK"
   end
 
   def mark_closed
     @invoice.close
     redirect_to :back
-  rescue ActionController::RedirectBackError => e
+  rescue ActionController::RedirectBackError
     render :text => "OK"
   end
 
   def mark_not_sent
     @invoice.mark_unsent
     redirect_to :back
-  rescue ActionController::RedirectBackError => e
+  rescue ActionController::RedirectBackError
     render :text => "OK"
   end
 
@@ -216,7 +217,7 @@ class InvoicesController < ApplicationController
   def mark_accepted
     Event.create(:name=>'accept',:invoice=>@invoice,:user=>User.current,:info=>params[:reason])
     redirect_to :back
-  rescue ActionController::RedirectBackError => e
+  rescue ActionController::RedirectBackError
     render :text => "OK"
   end
 
@@ -228,7 +229,7 @@ class InvoicesController < ApplicationController
   def mark_refused
     Event.create(:name=>'refuse',:invoice=>@invoice,:user=>User.current,:info=>params[:reason])
     redirect_to :back
-  rescue ActionController::RedirectBackError => e
+  rescue ActionController::RedirectBackError
     render :text => "OK"
   end
 
@@ -564,7 +565,7 @@ class InvoicesController < ApplicationController
     jarpath = "#{File.dirname(__FILE__)}/../../vendor/xhtmlrenderer"
     cmd="java -classpath #{jarpath}/core-renderer.jar:#{jarpath}/iText-2.0.8.jar:#{jarpath}/minium.jar org.xhtmlrenderer.simple.PDFRenderer #{xhtml_file.path} #{pdf_file.path}"
     logger.info "create_pdf_file command = #{cmd}"
-    discarded_output = `#{cmd} 2>&1`
+    `#{cmd} 2>&1`
     I18n.locale = curr_lang
     $?.success? ? pdf_file : nil
   end
@@ -572,7 +573,6 @@ class InvoicesController < ApplicationController
   def create_and_queue_file
     raise @invoice.export_errors.collect {|e| l(e)}.join(", ") unless @invoice.can_be_exported?
     export_id = @invoice.client.invoice_format
-    path = ExportChannels.path export_id
     @format = ExportChannels.format export_id
     @company = @project.company
     file_ext = @format == "pdf" ? "pdf" : "xml"

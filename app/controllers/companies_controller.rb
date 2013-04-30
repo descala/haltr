@@ -15,7 +15,8 @@ class CompaniesController < ApplicationController
   before_filter :authorize, :except => [:logo]
   skip_before_filter :check_if_login_required, :only => [:logo]
 
-  verify :method => [:post,:put], :only => [:update], :redirect_to => :root_path
+  # TODO
+  # verify :method => [:post,:put], :only => [:update], :redirect_to => :root_path
 
   def index
     if @project.company.nil?
@@ -23,8 +24,9 @@ class CompaniesController < ApplicationController
       @company = Company.new(:project=>@project,
                              :name=>@project.name,
                              :email=>user_mail)
-      @company.save(false)
+      @company.save(:validate=>false)
     else
+#      require 'debugger'; debugger
       @company = @project.company
     end
     render :action => 'edit'
@@ -60,7 +62,7 @@ class CompaniesController < ApplicationController
               image = Magick::Image.read("#{attachment.storage_path}/#{attachment.disk_filename}").first
               image.change_geometry!('350x130>') {|cols,rows,img| img.resize!(cols, rows)}
               image.write("#{attachment.storage_path}/#{attachment.disk_filename}")
-            rescue LoadError => e
+            rescue LoadError
             end
           else
             flash[:warning] = l(:logo_not_image)

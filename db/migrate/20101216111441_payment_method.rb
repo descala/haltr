@@ -10,7 +10,7 @@ class PaymentMethod < ActiveRecord::Migration
       else
         i.payment_method = 1
       end
-      i.save(false)
+      i.save(:validate=>false)
     end
     remove_column :invoices, :use_bank_account
   end

@@ -23,7 +23,7 @@ class RemoveTaxesFromInvoices < ActiveRecord::Migration
             il.taxes << Tax.new(:name => "IRPF", :percent => tax_percent)
           end
         end
-        invoice.save(false) # to trigger update_imports method and update invoice imports
+        invoice.save(:validate=>false) # to trigger update_imports method and update invoice imports
       end
     end
     remove_column :invoices, :withholding_tax_in_cents

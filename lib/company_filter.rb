@@ -5,7 +5,7 @@ module CompanyFilter
   def check_for_company
     if @project.company.nil?
       c = Company.new(:project=>@project,:name=>@project.name)
-      c.save(false)
+      c.save(:validate=> false)
       @project.reload
     end
     unless @project.company.valid?

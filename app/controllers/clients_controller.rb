@@ -14,7 +14,8 @@ class ClientsController < ApplicationController
   before_filter :set_iso_countries_language
   before_filter :authorize
 
-  verify :method => [:post,:put], :only => [:create,:update], :redirect_to => :root_path
+  # TODO
+  # verify :method => [:post,:put], :only => [:create,:update], :redirect_to => :root_path
 
   include CompanyFilter
   before_filter :check_for_company
@@ -117,7 +118,7 @@ class ClientsController < ApplicationController
     @company = @client.company
     @client.company=nil
     @client.allowed=nil
-    @client.save(false)
+    @client.save(:validate=>false)
     redirect_to :action => 'edit', :id => @client
   end
 

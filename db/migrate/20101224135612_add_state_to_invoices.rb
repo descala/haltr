@@ -10,7 +10,7 @@ class AddStateToInvoices < ActiveRecord::Migration
       else
         i.state="new"
       end
-      i.save(false)
+      i.save(:validate=>false)
     end
     remove_column :invoices, :status
   end

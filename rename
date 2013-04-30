@@ -1,0 +1,18 @@
+#!/bin/sh
+
+git mv app/views/invoice_templates/update_taxes.rhtml             app/views/invoice_templates/update_taxes.html.erb
+git mv app/views/layouts/invoice.rhtml                            app/views/layouts/invoice.html.erb
+git mv app/views/common/_tabs.rhtml                               app/views/common/_tabs.html.erb
+git mv app/views/mail_notifier/received_invoice_refused.rhtml     app/views/mail_notifier/received_invoice_refused.html.erb
+git mv app/views/mail_notifier/_invoice.rhtml                     app/views/mail_notifier/_invoice.html.erb
+git mv app/views/mail_notifier/invoice_paid.rhtml                 app/views/mail_notifier/invoice_paid.html.erb
+git mv app/views/mail_notifier/received_invoice_accepted.rhtml    app/views/mail_notifier/received_invoice_accepted.html.erb
+git mv app/views/tasks/report.rhtml                               app/views/tasks/report.html.erb
+git mv app/views/tasks/create_more.rhtml                          app/views/tasks/create_more.html.erb
+git mv app/views/tasks/automator.rhtml                            app/views/tasks/automator.html.erb
+git mv app/views/tasks/n19.rhtml                                  app/views/tasks/n19.html.erb
+git mv app/views/received_invoices/show_pdf.rhtml                 app/views/received_invoices/show_pdf.html.erb
+git mv app/views/invoices/show.rhtml                              app/views/invoices/show.html.erb
+git mv app/views/invoices/_invoice_refuse_form.rhtml              app/views/invoices/_invoice_refuse_form.html.erb
+git mv app/views/invoices/view.rhtml                              app/views/invoices/view.html.erb
+git mv app/views/invoices/_invoice_accept_form.rhtml              app/views/invoices/_invoice_accept_form.html.erb

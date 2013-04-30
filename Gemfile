@@ -1,4 +1,5 @@
 source 'https://rubygems.org'
+
 gem "money", "=5.0.0"
 gem "state_machine"
 gem "gettext"
@@ -14,15 +15,15 @@ group :test do
   gem 'rb-inotify', '~> 0.8.8'
 end
 
-# Hack to test plugin
-if ENV["REDMINE_PATH"]
-  local_gemfile = File.join(ENV["REDMINE_PATH"], "Gemfile")
-  if File.exists?(local_gemfile)
-    if !defined? HALTR_RECURSION
-      # to not get evaluated again from Redmine
-      HALTR_RECURSION=true
-      puts "Loading Redmine's Gemfile ..." if $DEBUG # `ruby -d` or `bundle -v`
-      instance_eval File.read(local_gemfile)
-    end
-  end
-end
+# # Hack to test plugin
+# if ENV["REDMINE_PATH"]
+#   local_gemfile = File.join(ENV["REDMINE_PATH"], "Gemfile")
+#   if File.exists?(local_gemfile)
+#     if !defined? HALTR_RECURSION
+#       # to not get evaluated again from Redmine
+#       HALTR_RECURSION=true
+#       puts "Loading Redmine's Gemfile ..." if $DEBUG # `ruby -d` or `bundle -v`
+#       instance_eval File.read(local_gemfile)
+#     end
+#   end
+# end

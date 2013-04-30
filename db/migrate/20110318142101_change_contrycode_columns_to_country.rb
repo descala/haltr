@@ -5,14 +5,14 @@ class ChangeContrycodeColumnsToCountry < ActiveRecord::Migration
     Client.all.each do |client|
       begin
         client.country = SunDawg::CountryIsoTranslater.translate_standard(client.country,"alpha3","alpha2").downcase rescue "es"
-        client.save(false)
+        client.save(:validate=>false)
       rescue
       end
     end
     Company.all.each do |company|
       begin
         company.country = SunDawg::CountryIsoTranslater.translate_standard(company.country,"alpha3","alpha2").downcase rescue "es"
-        company.save(false)
+        company.save(:validate=>false)
       rescue
       end
     end
@@ -28,14 +28,14 @@ class ChangeContrycodeColumnsToCountry < ActiveRecord::Migration
     Client.all.each do |client|
       begin
         client.country = SunDawg::CountryIsoTranslater.translate_standard(client.country.upcase,"alpha2","alpha3") rescue "ESP"
-        client.save(false)
+        client.save(:validate=>false)
       rescue
       end
     end
     Company.all.each do |company|
       begin
         company.country = SunDawg::CountryIsoTranslater.translate_standard(company.country.upcase,"alpha2","alpha3") rescue "ESP"
-        company.save(false)
+        company.save(:validate=>false)
       rescue
       end
     end

@@ -1,7 +1,7 @@
 <h2><%= l(:label_company_new) %></h2>
 
 
-<% labelled_form_for :client, @client, :url => {:action=>'create', :id=>@project}, :html => {:class=>'tabular'} do |f| %>
+<%= labelled_form_for :client, @client, :url => {:action=>'create', :id=>@project}, :html => {:class=>'tabular'} do |f| %>
 <%= render :partial => 'form', :locals => { :f => f } %>
 <%= submit_tag l(:button_create) %>
 <% end %>
