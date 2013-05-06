@@ -236,7 +236,7 @@
                  <IBAN><%=h @client.iban%></IBAN>
                  <BankCode><%=h @client.bic%></BankCode>
                </AccountToBeDebited>
-<% elsif @invoice.debit? and @client.bank_account?-%>
+<% elsif @invoice.debit? and !@client.bank_account.blank?-%>
                <AccountToBeDebited>
                  <AccountNumber><%=h @client.bank_account%></AccountNumber>
                </AccountToBeDebited>
@@ -245,7 +245,7 @@
                  <IBAN><%=h @company.iban%></IBAN>
                  <BankCode><%=h @company.bic%></BankCode>
                </AccountToBeCredited>
-<% elsif @invoice.transfer? -%>
+<% elsif @invoice.transfer? and !@company.bank_account.blank? -%>
                <AccountToBeCredited>
                  <AccountNumber><%=h @company.bank_account%></AccountNumber>
                </AccountToBeCredited>
