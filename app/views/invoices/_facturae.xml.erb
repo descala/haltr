@@ -245,7 +245,7 @@
                  <IBAN><%=h @company.iban%></IBAN>
                  <BankCode><%=h @company.bic%></BankCode>
                </AccountToBeCredited>
-<% elsif @invoice.transfer? -%>
+<% elsif @invoice.transfer? and !@company.bank_account.blank? -%>
                <AccountToBeCredited>
                  <AccountNumber><%=h @company.bank_account%></AccountNumber>
                </AccountToBeCredited>
