@@ -24,7 +24,7 @@ class ClientsController < ApplicationController
     sort_init 'name', 'asc'
     sort_update %w(taxcode name)
 
-    clients = @project.clients.scoped(nil)
+    clients = @project.clients.scoped
 
     unless params[:name].blank?
       name = "%#{params[:name].strip.downcase}%"

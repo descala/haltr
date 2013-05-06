@@ -20,7 +20,7 @@ class PeopleController < ApplicationController
     sort_init 'last_name', 'asc'
     sort_update %w(first_name last_name email)
 
-    people = @client.people.scoped(nil) 
+    people = @client.people.scoped
 
     unless params[:name].blank?
       name = "%#{params[:name].strip.downcase}%"

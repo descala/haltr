@@ -21,7 +21,7 @@ class PaymentsController < ApplicationController
     sort_init 'payments.date', 'desc'
     sort_update %w(payments.date amount_in_cents invoices.number)
 
-    payments = @project.payments.scoped(nil)
+    payments = @project.payments.scoped
 
     unless params[:name].blank?
       name = "%#{params[:name].strip.downcase}%"

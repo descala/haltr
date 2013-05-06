@@ -1,13 +1,17 @@
 <%= error_messages_for 'client' %>
-<%
-  ajax_opts = {
-    :method => :get,
-    :url => url_for({:controller=>'clients', :action=>'check_cif',:id=>@project.id, :client => @client}),
-    :with => "'value=' + this.value",
-    :update => 'cif_info'
-  }
-  short ||= false
--%>
+
+<% short ||= false -%>
+<% unless short -%>
+<script type="text/javascript">
+$(function($) {
+    $("#client_taxcode").change(function() {
+        $.ajax({url: '<%= url_for :controller=>'clients', :action=>'check_cif',:id=>@project.id, :client => @client %>',
+        data: 'value=' + this.value,
+        dataType: 'script'})
+    });
+});
+</script>
+<% end -%>
 
 <div id="cif_info">
   <%= render :partial => "clients/cif_info", :locals => { :client => @client, :company => @client.company } %>
@@ -17,7 +21,7 @@
   <% if @client.linked? -%>
     <p><%= f.text_field :taxcode, :size => 20, :required => true, :readonly => @client.linked? %></p>
   <% elsif !short -%>
-    <p><%= f.text_field :taxcode, :size => 20, :required => true, :onblur => remote_function(ajax_opts) %></p>
+    <p><%= f.text_field :taxcode, :size => 20, :required => true %></p>
   <% else -%>
     <p><%= f.text_field :taxcode, :size => 20, :required => true %></p>
   <% end -%>

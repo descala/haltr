@@ -23,7 +23,7 @@ class InvoiceTemplatesController < ApplicationController
     sort_init 'date', 'asc'
     sort_update %w(date number clients.name)
 
-    templates = @project.invoice_templates.scoped(nil)
+    templates = @project.invoice_templates.scoped
 
     unless params[:name].blank?
       name = "%#{params[:name].strip.downcase}%"
