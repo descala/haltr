@@ -106,7 +106,7 @@ _LINE
   private
 
   def update_currency
-    self.currency = self.invoice.currency rescue nil
+    self.currency ||= self.invoice.currency rescue nil
     self.currency ||= self.invoice.client.currency rescue nil
     self.currency ||= self.invoice.company.currency rescue nil
     self.currency ||= Setting.plugin_haltr['default_currency']
