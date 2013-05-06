@@ -236,7 +236,7 @@
                  <IBAN><%=h @client.iban%></IBAN>
                  <BankCode><%=h @client.bic%></BankCode>
                </AccountToBeDebited>
-<% elsif @invoice.debit? and @client.bank_account?-%>
+<% elsif @invoice.debit? and !@client.bank_account.blank?-%>
                <AccountToBeDebited>
                  <AccountNumber><%=h @client.bank_account%></AccountNumber>
                </AccountToBeDebited>
