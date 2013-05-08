@@ -140,7 +140,7 @@ es:
   sending_log: "Log de envio"
   download_legal: "Descargar factura legal"
   download_notification: "Descargar notificación"
-  label_all_invoices: "Todas las facturas"
+  label_all_invoices: "Todas"
   label_issued: "Facturas emitidas"
   label_received: "Facturas recibidas"
   mark_not_sent: "Marcar como no enviada"

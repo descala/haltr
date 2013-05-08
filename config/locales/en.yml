@@ -127,7 +127,7 @@ en:
   sending_log: "Sending log"
   download_legal: "Download legal invoice"
   download_notification: "Download notification"
-  label_all_invoices: "All invoices"
+  label_all_invoices: "All"
   label_issued: "Issued invoices"
   label_received: "Received invoices"
   mark_not_sent: "Mark as not sent"

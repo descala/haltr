@@ -1,53 +1,143 @@
-<h2><%= controller.controller_name == "invoice_templates" ? l(:label_invoice_template_plural) : l(:label_invoice_plural)%></h2>
+          <!--continguts-->
+          <div class="col span-3-de-4">
+<!--menu rapid-->
+<div class="seccio grup">
+  <div class="col span-2-de-2">
+    <ul class="menu-rapid">
+      <li><%= link_to l("label_#{params[:controller].singularize}_new"), {:action => 'new', :id => @project} %></li>
+    </ul>
+  </div>
+</div>
+<!--final menu rapid-->
 
-  <% form_tag({:id=>@project}, :method => :get) do %>
-    <fieldset id="filters" class="collapsible"><legend onclick="toggleFieldset(this);"><%= l(:label_filter_plural) %></legend>
-    <div id="query_form_content" class="hide-when-print">
-      <table>
-        <tr>
-          <th><%= l(:label_invoice_state) %>:</th>
-          <td>
-            <%= check_box_tag("state_all", "1", params["state_all"]) %> <span style="font-weight:bold;">All</span>
-            <% %w(new sending sent error closed discarded).each do |state| -%>
-              <%= check_box_tag(state, "1", params[state]) %> <%=l("state_#{state}_plural")%>
-            <% end -%>
-          </td>
-        </tr>
-        <tr>
-          <th><%=l(:label_from)%>:</th>
-          <td><%= text_field_tag :date_from, (params[:date_from].nil? ? Date.new(Date.today.year) : params[:date_from]), :size => 10 %><%= calendar_for('date_from') %></td>
-        </tr>
-        <tr>
-          <th><%=l(:label_to)%>:</th>
-          <td><%= text_field_tag :date_to, (params[:date_to].nil? ? Date.today : params[:date_to]), :size => 10 %><%= calendar_for('date_to') %></td>
-        </tr>
-        <tr>
-          <th><%= l(:label_company) %>:</th>
-          <td><%= collection_select(nil, :client_id, Client.find(:all, :order => 'name', :conditions => ["project_id = ?", @project]), :id, :name, {:include_blank => true, :selected => @client_id}) %></td>
-        </tr>
-        <tr>
-          <th></th>
-          <td><%= submit_tag l(:button_apply), :class => "small", :name => nil %></td>
-        </tr>
-      </table>
+<!--filtres-->
+<div class="seccio grup">
+  <div class="col span-2-de-2">
+    <div class="filtres">
+      <div class="titularAcc">
+        <%= l(:label_filter_plural) %>
+      </div>
+      <div class="contingutAcc">
+        <% form_tag({:id=>@project}, :method => :get, :class => 'formee') do %>
+          <fieldset>
+            <legend><%= l(:label_search) %></legend>
+            <div id="query_form_content" class="hide-when-print seccio grup">
+              <div class="col span-2-de-2">
+                <label class="inline"><%= check_box_tag("state_all", "1", params["state_all"]) %> <%=l("label_all_invoices")%></label>
+                <% %w(new sending sent error closed discarded).each do |state| -%>
+                  <label class="inline"><%= check_box_tag(state, "1", params[state]) %> <%=l("state_#{state}_plural")%></label>
+                <% end -%>
+              </div>
+            </div>
+            <div class="seccio grup">
+              <div class="col span-1-de-3">
+                <label for="date_from"><%=l(:label_from)%></label>
+                <%= text_field_tag :date_from, (params[:date_from].nil? ? Date.new(Date.today.year) : params[:date_from]), :size => 10, :style => "width: 90%;" %><%= calendar_for('date_from') %>
+              </div>
+              <div class="col span-1-de-3">
+                <label for="date_to"><%=l(:label_to)%></label>
+                <%= text_field_tag :date_to, (params[:date_to].nil? ? Date.today : params[:date_to]), :size => 10, :style => "width: 90%;" %><%= calendar_for('date_to') %>
+              </div>
+            </div>
+            <div class="seccio grup">
+              <div class="col span-2-de-3">
+                <label for="_client_id"><%= l(:label_company) %></label>
+                <%= collection_select(nil, :client_id, Client.find(:all, :order => 'name', :conditions => ["project_id = ?", @project]), :id, :name, {:include_blank => true, :selected => @client_id}) %>
+              </div>
+            </div>
+            <div class="seccio grup">
+              <div class="col span-2-de-2">
+                <%= submit_tag l(:button_apply), :class => "small", :name => nil %>
+              </div>
+            </div>
+          </fieldset>
+        <% end %>
+      </div>
     </div>
-    </fieldset>
-  <% end %>
+  </div>
+</div>
+<!--final filtres-->
 
-  <% if @unread > 0 -%>
-  <%= render_tabs [
-    {:name=>'issued',:partial=>'invoices/issued_invoices',:label=>:label_issued},
-    {:name=>'received_with_new',:partial=>'invoices/received_invoices',:label => [:label_received_with_num, {:num=>@unread}] }
-  ] %>
-  <% else -%>
-  <%= render_tabs [
-    {:name=>'issued',:partial=>'invoices/issued_invoices',:label=>:label_issued},
-    {:name=>'received',:partial=>'invoices/received_invoices',:label => :label_received }
-  ] %>
-  <% end -%>
+<!--taula factures-->
+<div class="seccio grup">
+  <div class="col span-2-de-2">
+    <table class="taula-1">
+      <thead>
+        <tr>
+          <%= sort_header_tag('invoices.created_at', :caption => l(:field_created_at)) %>
+          <%= sort_header_tag('state', :caption => l(:field_state)) %>
+          <%= sort_header_tag('number', :caption => l(:field_number)) %>
+          <%= sort_header_tag('date', :caption => l(:field_date)) %>
+          <%= sort_header_tag('due_date', :caption => l(:field_due_date)) %>
+          <%= sort_header_tag('clients.name', :caption => l(:field_company)) %>
+          <%= sort_header_tag('import_in_cents', :caption => l(:label_total)) %>
+        </tr>
+      </thead>
+      <tbody>	
+        <% for invoice in @i_invoices -%>
+          <tr class="<%= ' amended' if invoice.amended? %>" onclick="javascript: document.location = '<%=url_for(:action=>'show', :id=>invoice)%>'" style="cursor:pointer;">
+            <td><%=h invoice.created_at.to_date %></td>
+            <td><%=h l("state_#{invoice.state}").capitalize %></td>
+            <td><%=h invoice.number %></td>
+            <td><%=h invoice.date %></td>
+            <td <%='class="pastdue"' if invoice.past_due?%>><%=h invoice.due_date %></td>
+            <td><%=h invoice.client %></td>
+            <td><%= money(invoice.total).gsub(/ /,'&nbsp;') %></td>
+          </tr>
+        <% end -%>
+      </tbody>
+      <tfoot>
+        <tr>
+          <td colspan="7">&nbsp;</td>
+        </tr>
+      </tfoot>
+    </table>
+  </div>
+</div>
+<!--final taula factures-->
+
+
+
+<!--paginacio-->
+<div class="seccio grup">
+  <%= pagination_links_full @i_invoice_pages, @i_invoice_count, :page_param => :i_page, :always_show_anchors => true %>
+</div>
+<!--final paginacio-->
+
+
+<!--paginacio
+<div class="seccio grup">
+
+  <div class="col span-2-de-2">
+    <p class="pag-mostrar">
+      P&agrave;gina 44 de 256 | Mostrar per p&agrave;gina: <a href="#">25</a>, <a href="#">50</a>, <a href="#">100</a>
+    </p>
+  </div>
+
+  <div class="col span-2-de-2">
+    <p class="paginacio">
+      <a href="#">&laquo; inici</a>
+      <span class="extended">...</span>
+      <a href="#">&laquo;</a>
+      <a href="#">3</a>
+      <a href="#">4</a>
+      <span class="current">5</span>
+      <a href="#">6</a>
+      <a href="#">7</a>
+      <a href="#">&raquo;</a>
+      <span class="extended">...</span>
+      <a href="#">final &raquo;</a>
+    </p>
+  </div>
+
+</div>
+final paginacio-->
 
 <% html_title(l(:label_invoice_plural)) -%>
 
 <% content_for :sidebar do %>
   <%= render :partial => 'sidebar' %>
 <% end %>
+
+          </div>
+          <!--final continguts-->
