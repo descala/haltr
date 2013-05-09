@@ -82,7 +82,7 @@
             <td><%=h invoice.date %></td>
             <td <%='class="pastdue"' if invoice.past_due?%>><%=h invoice.due_date %></td>
             <td><%=h invoice.client %></td>
-            <td><%= money(invoice.total).gsub(/ /,'&nbsp;') %></td>
+            <td class="money"><%= money(invoice.total) %></td>
           </tr>
         <% end -%>
       </tbody>

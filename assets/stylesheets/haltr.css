@@ -182,3 +182,6 @@ span.ownCertificate {
 span.ownCertificate a {
   font-weight: bold;
 }
+.taula-1 th, .money {
+    white-space: nowrap;
+}
