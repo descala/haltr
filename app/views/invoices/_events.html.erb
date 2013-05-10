@@ -19,7 +19,7 @@
               end -%>
               <%= t(label, :num => @invoice.number, :company => @invoice.company.name) %><br /><br />
               <%= simple_format e.info %><br />
-              <%= link_to_function(l(:back), "$('event_#{e.id}').hide();") %>
+              <%= link_to_function(l(:back), "$('#event_#{e.id}').hide();") %>
             </div>
           </div>
           <div class="overlay"></div>

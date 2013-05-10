@@ -2,10 +2,10 @@
   ajax_opts = {
     :method => :get,
     :url => url_for({:action=>'update_currency_select',:id=>@project.id}),
-    :with => "'value=' + this.value + '&curr_sel=' + $('invoice_currency').value + '&required=' + #{@invoice.invoice_format!="pdf"}",
+    :with => "'value=' + this.value + '&curr_sel=' + $('#invoice_currency').value + '&required=' + #{@invoice.invoice_format!="pdf"}",
     :update => 'currency_select'
   }
 -%>
 <label for="invoice_client_id"><%= l(:field_client) %></label>
 <%= select :invoice, :client_id, clients_for_select, {:selected=>selected,:include_blank=>true}, :onchange => remote_function(ajax_opts) %>
-<%= link_to_function(l(:label_company_new), "$('new_client_wrapper').show();", :class => 'icon icon-add') %>
+<%= link_to_function(l(:label_company_new), "$('#new_client_wrapper').show();", :class => 'icon icon-add') %>

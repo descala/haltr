@@ -35,7 +35,7 @@ module InvoicesHelper
         else
           html = render(:partial => 'invoices/invoice_line', :locals => { :f => line_form })
         end
-        page << "$('invoice_lines').insert({ bottom: '#{escape_javascript(html)}'.replace(/NEW_RECORD/g, new Date().getTime()) });"
+        page << "$('#invoice_lines').insert({ bottom: '#{escape_javascript(html)}'.replace(/NEW_RECORD/g, new Date().getTime()) });"
         @invoice.taxes_hash.each_key do |tax_name|
           #TODO: global_tax_check_changed does more things than necessary here
           page << "global_tax_check_changed('#{tax_name}');"
@@ -60,7 +60,7 @@ module InvoicesHelper
     elsif e.name =~ /_notification$/ and !e.md5.blank?
       "( #{link_to l(:download_notification), :controller=>'invoices', :action=>'legal', :id=>e.invoice, :md5=>e.md5} )"
     elsif ( e.name == "accept" || e.name == "refuse" || e.name == "paid" ) && !e.info.blank?
-      "( #{link_to_function(l(:view_mail), "$('event_#{e.id}').show();")} )"
+      "( #{link_to_function(l(:view_mail), "$('#event_#{e.id}').show();")} )"
     elsif e.name == "new" and e.invoice and e.invoice.client and e.invoice.visible_by_client?
       " (#{link_to(l(:public_link), :controller=>'invoices', :action=>'view', :id=>e.invoice.client.hashid, :invoice_id=>e.invoice.id)})"
     else

@@ -4,9 +4,9 @@
  * really delete line.
  */
 function rm_line(id) {
-  $("invoice_line_"+id).remove();
+  $("#invoice_line_"+id).remove();
   // set hidden_field to 1 to really delete line
-  var hf = $("destroy_line_"+id);
+  var hf = $("#destroy_line_"+id);
   if (hf != null) {
     hf.value = 1;
   }
@@ -14,7 +14,7 @@ function rm_line(id) {
 
 /* Iterate over all selects of a tax and update its values */
 function global_tax_changed(tax_name, tax_code) {
-  $$('select.tax_'+tax_name).each(function(select_element) {
+  $$('#select.tax_'+tax_name).each(function(select_element) {
     select_element.value=tax_code;
   });
   // call tax_changed to show/hide tax comment if exempt
@@ -29,13 +29,13 @@ function global_tax_check_changed(tax_name) {
   $(tax_name+'_global').disabled=$(tax_name+'_multiple').checked;
   if ($(tax_name+'_multiple').checked) {
     $(tax_name+'_title').removeClassName('hidden');
-    $$('select.tax_'+tax_name).each(function(select_element) {
+    $$('#select.tax_'+tax_name).each(function(select_element) {
       select_element.removeClassName('hidden');
     });
   } else {
     global_tax_changed(tax_name,$(tax_name+'_global').value);
     $(tax_name+'_title').addClassName('hidden');
-    $$('select.tax_'+tax_name).each(function(select_element) {
+    $$('#select.tax_'+tax_name).each(function(select_element) {
       select_element.addClassName('hidden');
     });
   }
@@ -44,7 +44,7 @@ function global_tax_check_changed(tax_name) {
 /* Copy last line tax percent */
 function copy_last_line_tax(tax_name) {
   var last_value;
-  var tax_selects = $$('select.tax_'+tax_name);
+  var tax_selects = $$('#select.tax_'+tax_name);
   if (tax_selects.size() > 1) {
     last_value = tax_selects[tax_selects.size() - 2].value;
   } else {
@@ -62,7 +62,7 @@ function tax_changed(tax_name, tax_code) {
     $(tax_name+'_comment').removeClassName('hidden');
   } else {
     var hide_comment = true;
-    $$('select.tax_'+tax_name).each(function(select_element) {
+    $$('#select.tax_'+tax_name).each(function(select_element) {
       if (select_element.value.match(/_E$/)) {
         hide_comment = false;
       }

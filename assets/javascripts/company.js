@@ -18,10 +18,10 @@ function rm_tax(id) {
  * comment and hides percent text_fields
  */
 function category_changed(id) {
-  var sel = $("company_taxes_attributes_" + id + "_category");
-  var span_percent = $("span_percent_" + id);
-  var span_comment = $("span_comment_" + id);
-  var field_percent = $("company_taxes_attributes_" + id + "_percent");
+  var sel = $("#company_taxes_attributes_" + id + "_category");
+  var span_percent = $("#span_percent_" + id);
+  var span_comment = $("#span_comment_" + id);
+  var field_percent = $("#company_taxes_attributes_" + id + "_percent");
   if ( sel[sel.selectedIndex].value == "E" ) { // Exempt
     span_percent.hide();
     span_comment.show();
