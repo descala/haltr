@@ -129,6 +129,9 @@
       <%= render :partial => 'invoices/invoice_line', :locals => { :f => line_form } %>
     <% end %>
   </div>
-  <p style="font-weight:bold; padding:10px;"><%= add_invoice_line_link(f) %></p>
-  <hr />
+  <div class="seccio grup">
+    <div class="col span-2-de-2">
+      <span class="mes"><%= add_invoice_line_link(f) %></span>
+    </div>
+  </div>
 </fieldset>

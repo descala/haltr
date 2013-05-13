@@ -9,7 +9,7 @@
 <%= f.select :unit, InvoiceLine.units, {:no_label => true}, {:style => "width: 100px;"} %>
 <%= f.text_field :description, :style => "width: 288px;", :no_label => true %>
 <%= call_hook(:invoice_form_order_line_reference) %>
-<%= f.text_field :price, :value => f.object.price.to_s.gsub(/\.0+$/,''), :style => "width: 78px;", :no_label => true %>
+<%= f.text_field :price, :value => f.object.price.to_s.gsub(/\.0+$/,''), :class => "formee-medium", :style => "width: 78px;", :no_label => true %>
 
 <% i=0 -%>
 <% @invoice.taxes_hash.keys.sort.each do |name| -%>
@@ -26,7 +26,7 @@
   <% i+=1 -%>
 <% end -%>
 
-<%= f.object.new_and_first ? "" : link_to_function(image_tag("false.png"),"rm_line(#{lineid});") %>
+<%= f.object.new_and_first ? "" : link_to_function("X","rm_line(#{lineid});", :class=>"eliminar") %>
 
 </div>
 <%= f.object.new_record? ? "" : f.hidden_field(:_destroy, {:value=>0, :id=>"destroy_line_#{lineid}"}) %>
