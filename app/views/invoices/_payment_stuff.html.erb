@@ -45,7 +45,7 @@ disabled << Invoice::PAYMENT_TRANSFER if @project.company.bank_account.blank?
     <% if payment_method == 13 -%>
       <%= text_area(:invoice, :payment_method_text, :cols => 40, :rows => 2, :value => payment_method_text) %>
     <% else -%>
-      <%= text_area(:invoice, :payment_method_text, :cols => 40, :rows => 2, :value => payment_method_text, :class => "hidden") %>
+      <%= text_area(:invoice, :payment_method_text, :cols => 40, :rows => 2, :value => payment_method_text, :style => "display: none;") %>
     <% end -%>
 
   </div>

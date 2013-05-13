@@ -35,7 +35,7 @@ module InvoicesHelper
         else
           html = render(:partial => 'invoices/invoice_line', :locals => { :f => line_form })
         end
-        page << "$('#invoice_lines').insert({ bottom: '#{escape_javascript(html)}'.replace(/NEW_RECORD/g, new Date().getTime()) });"
+        page << "$('#invoice_lines').append('#{escape_javascript(html)}'.replace(/NEW_RECORD/g, new Date().getTime()));"
         @invoice.taxes_hash.each_key do |tax_name|
           #TODO: global_tax_check_changed does more things than necessary here
           page << "global_tax_check_changed('#{tax_name}');"
@@ -182,7 +182,7 @@ module InvoicesHelper
     if @invoice.taxes.collect {|t| t if t.name==name and t.exempt?}.compact.any?
       return ""
     else
-      return "hidden"
+      return "display: none"
     end
   end
 

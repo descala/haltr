@@ -142,8 +142,9 @@ select.tax {
 }
 
 .hidden {
-  display: none !important;
-  /* useful to debug background-color: yellow !important; */
+  /* display: none !important; */
+  /* useful to debug: */
+  /* background-color: yellow !important; */
 }
 
 #invoice_taxes_global span, #invoice_lines span {
