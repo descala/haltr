@@ -395,3 +395,5 @@ ca:
   tax_S: "Standard"
   tax_H: "High Rated"
   tax_AA: "Low Rated"
+  invoice_data: "Dades factura"
+  concept: "Concepte"

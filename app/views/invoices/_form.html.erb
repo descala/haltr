@@ -3,7 +3,7 @@
 <%= javascript_include_tag 'invoice', :plugin => 'haltr' %>
 
 <fieldset>
-  <legend>Dades factura</legend>
+  <legend><%=l(:invoice_data)%></legend>
 
   <div class="seccio grup">
     <div class="col span-2-de-2">
@@ -67,7 +67,7 @@
 
 
 <fieldset>
-  <legend><%= label_tag l(:label_tax_plural) %></legend>
+  <legend><%=l(:label_tax_plural)%></legend>
 
   <% if @invoice.taxes_hash.empty? -%>
     <%= link_to l(:add_taxes_on_company), :controller => 'companies', :id => @project -%>
@@ -104,7 +104,7 @@
 
 
 <fieldset>
-  <legend>Concepte</legend>
+  <legend><%=l(:concept)%></legend>
   <div id="invoice_lines">
     <div class="seccio grup">
       <div class="col span-1-de-6">
