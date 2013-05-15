@@ -2,17 +2,26 @@
 <div class="col span-1-de-4">
   <ul class="menu-lateral">
     <% unless params[:controller] == "tasks" -%>
-      <li>
-      <%= link_to l("label_#{params[:controller].singularize}_new"), {:action => 'new', :id => @project} %>
-      </li>
+      <li><%= link_to l("label_invoice_new"), {:action => 'new', :id => @project} %></li>
     <% end -%>
     <li><%= link_to l(:label_invoice_plural), {:controller => 'invoices', :action => 'index', :id => @project} %></li>
-    <% unless hide_to_user(:use_templates) -%>
+    <li><%= link_to l(:label_received_invoice_new), {:controller=> 'received', :action => 'new', :id => @project} %></li>
+    <li><%= link_to l(:label_received), {:controller => 'received', :action => 'index', :id => @project} %></li>
+    <% unless true or hide_to_user(:use_templates) -%>
       <li><%= link_to l(:label_invoice_template_plural), {:controller => 'invoice_templates', :action => 'index', :id => @project} %></li>
       <% if num_new_invoices > 0 %>
         <li>
-        <%= link_to "#{l(:button_generate_invoices)} (#{num_new_invoices})", {:controller => 'invoice_templates', :action => 'invoices', :id => @project} %> 
+        <%= link_to l("label_#{params[:controller].singularize}_new"), {:action => 'new', :id => @project} %>
         </li>
+      <% end -%>
+      <li><%= link_to l(:label_invoice_plural), {:controller => 'invoices', :action => 'index', :id => @project} %></li>
+      <% unless hide_to_user(:use_templates) -%>
+        <li><%= link_to l(:label_invoice_template_plural), {:controller => 'invoice_templates', :action => 'index', :id => @project} %></li>
+        <% if num_new_invoices > 0 %>
+          <li>
+          <%= link_to "#{l(:button_generate_invoices)} (#{num_new_invoices})", {:controller => 'invoice_templates', :action => 'invoices', :id => @project} %> 
+          </li>
+        <% end -%>
       <% end -%>
     <% end -%>
     <% if authorize_for('tasks','automator') && num_not_sent > 0 -%>
