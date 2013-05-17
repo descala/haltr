@@ -51,6 +51,7 @@ module Haltr
       when 'dk'
         taxes << Tax.new(:name=>'NUMS',:percent=>25.0,:default=>true,:category=>'S')
       end
+      taxes
     end
 
     def add_category_to_taxes
