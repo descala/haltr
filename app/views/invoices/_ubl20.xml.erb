@@ -188,14 +188,12 @@
           <cac:Item>
             <cbc:Name><%=h invoice_line.description%></cbc:Name>
             <% invoice_line.taxes.each do |tax_line| -%>
-            <% if @invoice.tax_per_line?(tax_line.name) -%>
             <cac:ClassifiedTaxCategory>
               <cbc:ID schemeID="UN/ECE 5305" schemeAgencyID="6"><%=h tax_line.category%></cbc:ID>
               <cac:TaxScheme>
                 <cbc:ID schemeID="UN/ECE 5153" schemeAgencyID="6"><%= Haltr::TaxHelper.ubl(tax_line.name) %></cbc:ID>
               </cac:TaxScheme>
             </cac:ClassifiedTaxCategory>
-          <% end -%>
           <% end -%>
           </cac:Item>
           <cac:Price>
