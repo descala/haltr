@@ -10,17 +10,17 @@ class ReceivedController < ApplicationController
   helper :sort
   include SortHelper
 
-  before_filter :find_invoice, :except => [:index,:new,:create,:destroy_payment,:update_currency_select,:by_taxcode_and_num,:view,:logo,:download,:mail,:send_new_invoices, :download_new_invoices]
+  before_filter :find_invoice, :except => [:index,:new,:create,:destroy_payment,:update_currency_select,:by_taxcode_and_num,:view,:logo,:mail,:send_new_invoices, :download_new_invoices]
   before_filter :find_project, :only => [:index,:new,:create,:update_currency_select,:send_new_invoices, :download_new_invoices]
   before_filter :find_payment, :only => [:destroy_payment]
-  before_filter :find_hashid, :only => [:view,:download]
+  before_filter :find_hashid, :only => [:view]
   before_filter :find_attachment, :only => [:logo]
   before_filter :set_iso_countries_language
-  before_filter :authorize, :except => [:by_taxcode_and_num,:view,:logo,:download,:mail]
-  skip_before_filter :check_if_login_required, :only => [:by_taxcode_and_num,:view,:logo,:download,:mail]
+  before_filter :authorize, :except => [:by_taxcode_and_num,:view,:logo,:mail]
+  skip_before_filter :check_if_login_required, :only => [:by_taxcode_and_num,:view,:logo,:mail]
   # on development skip auth so we can use curl to debug
   if RAILS_ENV == "development" or RAILS_ENV == 'test'
-    skip_before_filter :check_if_login_required, :only => [:by_taxcode_and_num,:view,:logo,:download,:mail,:facturae30,:facturae31,:facturae32,:peppolubl20,:biiubl20,:svefaktura, :oioubl20]
+    skip_before_filter :check_if_login_required, :only => [:by_taxcode_and_num,:view,:logo,:mail,:facturae30,:facturae31,:facturae32,:peppolubl20,:biiubl20,:svefaktura, :oioubl20]
     skip_before_filter :authorize, :only => [:facturae30,:facturae31,:facturae32,:peppolubl20,:biiubl20,:svefaktura,:oioubl20]
   else
     before_filter :check_remote_ip, :only => [:by_taxcode_and_num,:mail]
@@ -29,7 +29,7 @@ class ReceivedController < ApplicationController
   verify :method => [:post,:put], :only => [:create,:update], :redirect_to => :root_path
 
   include CompanyFilter
-  before_filter :check_for_company, :except => [:by_taxcode_and_num,:view,:download,:mail]
+  before_filter :check_for_company, :except => [:by_taxcode_and_num,:view,:mail]
 
   skip_before_filter :verify_authenticity_token, :only => [:pdfbase64]
 
@@ -406,10 +406,6 @@ class ReceivedController < ApplicationController
     redirect_to :action => 'index', :id => @project
   end
 
-  def legal
-    download
-  end
-
   def update_currency_select
     @client = Client.find(params[:value]) unless params[:value].blank?
     selected = @client.nil? ? params[:curr_sel] : @client.currency
@@ -459,25 +455,6 @@ class ReceivedController < ApplicationController
         :type => 'image/gif',
         :disposition => 'inline'
     end
-  end
-
-  def download
-    #TODO: several B2bRouters
-    if @invoice.fetch_legal_by_http(params[:md5])
-      respond_to do |format|
-        format.html do
-          send_data @invoice.legal_invoice, :filename => @invoice.legal_filename
-        end
-        format.xml do
-          render :xml => @invoice.legal_invoice
-        end
-      end
-    else
-      render_404
-    end
-  rescue Errno::ECONNREFUSED, Errno::EHOSTUNREACH => e
-    flash[:warning]=l(:cant_connect_trace, e.message)
-    redirect_to :action => 'show', :id => @invoice
   end
 
   def amend_for_invoice
