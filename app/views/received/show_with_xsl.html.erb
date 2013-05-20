@@ -1,26 +1,25 @@
-<h4><%= "#{l :ReceivedInvoice} #{transport_text(@invoice)} #{l :in_format, :format => @invoice.invoice_format}" %></h4>
+<div class="col span-3-de-4">
 
-<div id="invoice-refuse" style="display: none;">
-  <%= render :partial => "invoice_refuse_form" %>
-</div>
-<div id="invoice-accept" style="display: none;">
-  <%= render :partial => "invoice_accept_form" %>
-</div>
-<div id="invoice_wrapper">
-  
-  <div id="InvoiceOutput">
-    ............
+  <div id="invoice-refuse" style="display: none;">
+    <%= render :partial => "invoice_refuse_form" %>
   </div>
+  <div id="invoice-accept" style="display: none;">
+    <%= render :partial => "invoice_accept_form" %>
+  </div>
+  <div id="invoice_wrapper">
 
-  <%= render :partial => "payments" -%>
+    <div id="InvoiceOutput">
+      ............
+    </div>
 
-  <%= render :partial => "events" -%>
+    <%= render :partial => "invoices/payments" -%>
+    <%= render :partial => "invoices/events" -%>
 
+  </div>
 </div>
 
 <% content_for :sidebar do %>
-  <%= render :partial => 'sidebar' %>
-  <%= render :partial => "invoice_menu" %>
+  <%= render :partial => 'invoices/sidebar' %>
 <% end %>
 
 <% content_for :header_tags do %>
@@ -29,20 +28,19 @@
   <%= javascript_include_tag 'sarissa', :plugin => 'haltr' %>
   <%= javascript_include_tag 'received_invoice', :plugin => 'haltr' %>
   <script type="text/javascript">
- 
-  function XsltTransform() {
-    sourceXml= loadFile("<%= url_for(:action => 'legal', :id => @invoice, :format => :xml, :kk => 123) %>");
-    xml = (new DOMParser()).parseFromString(sourceXml, "text/xml");
-    sourceXslt = loadFile("/plugin_assets/haltr/xsl/<%= @xsl %>.xsl");
-    xslt = (new DOMParser()).parseFromString(sourceXslt, "text/xml");
-    var processor = new XSLTProcessor();
-    processor.importStylesheet(xslt);
-    var XmlDom = processor.transformToDocument(xml)
-    var serializer = new XMLSerializer(); 
-    var output = serializer.serializeToString(XmlDom.documentElement);
-    var outputDiv = document.getElementById("InvoiceOutput");
-    outputDiv.innerHTML = output;
-  }
-  addLoadEvent(XsltTransform);
-  </script>
+
+    xsltTransform = function () {
+      sourceXml= loadFile("<%= url_for(:action => 'legal', :id => @invoice, :format => :xml, :kk => 123) %>");
+      xml = (new DOMParser()).parseFromString(sourceXml, "text/xml");
+      sourceXslt = loadFile("/plugin_assets/haltr/xsl/<%= @xsl %>.xsl");
+      xslt = (new DOMParser()).parseFromString(sourceXslt, "text/xml");
+      var processor = new XSLTProcessor();
+      processor.importStylesheet(xslt);
+      var XmlDom = processor.transformToDocument(xml);
+      var serializer = new XMLSerializer();
+      var output = serializer.serializeToString(XmlDom.documentElement);
+      $('#InvoiceOutput').html(output);
+    }
+    $(window).load(xsltTransform);
+</script>
 <% end %>

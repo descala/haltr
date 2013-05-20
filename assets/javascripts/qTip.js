@@ -96,4 +96,4 @@ tooltip.hide = function () {
 }
 
 
-addLoadEvent(function() { tooltip.init (); });
+$(window).load(function() { tooltip.init (); });

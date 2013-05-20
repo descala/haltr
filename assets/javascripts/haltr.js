@@ -7,35 +7,21 @@ function payment_method_changed(obj_name) {
   }
 }
 
-/* Add function to window.onload */
-function addLoadEvent(func) {
-  var oldonload = window.onload;
-  if (typeof window.onload != 'function') {
-    window.onload = func;
-  } else {
-    window.onload = function() {
-      if (oldonload) {
-        oldonload();
-      }
-      func();
-    }
-  }
-}
-
 /* Load file (located in relative path on the server) via AJAX (in synchronous mode) */
 function loadFile(sUrl){
 
   var response;
 
-  new Ajax.Request(sUrl,
-      {
-         method:'get',
-         asynchronous:false,
-         onSuccess: function(transport) {
-             response = transport.responseText || "no response text";
-         },
-         onFailure: function(){ alert('Something went wrong loading the xslt resource...') }
-      });
-   
+  $.ajax({
+    url: sUrl,
+    method: 'get',
+    dataType: 'text',
+    async: false
+  }).done( function(html) {
+    response = html;
+  }).fail( function(html) {
+    alert('Something went wrong loading the xslt resource...');
+  });
+
   return response;
 }
