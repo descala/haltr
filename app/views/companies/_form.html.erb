@@ -37,12 +37,12 @@
     <p><%= f.text_field :endpointid %></p>
   <% end -%>
 
-  <div id="taxes">
+  <div>
     <p style="padding-left: 20px;"><%= I18n.t :label_tax_plural %>:</p>
     (<%= l(:info_default_taxes) %>)
 
-      <table id="taxes_table" style="margin-left: 40px;">
-        <thead>
+    <table id="taxes" style="margin-left: 40px;">
+      <thead>
         <tr>
           <th><%= l(:field_name) %></th>
           <th>%</th>
@@ -52,13 +52,14 @@
           <th></th>
         </tr>
       </thead>
-          <%= f.fields_for :taxes do |tax_form| %>
-            <%= render :partial => 'companies/tax', :locals => { :f => tax_form } %>
-          <% end %>
-      </table>
+      <%= f.fields_for :taxes do |tax_form| %>
+        <%= render :partial => 'companies/tax_fields', :locals => { :f => tax_form } %>
+      <% end %>
+    </table>
+    <!-- cocoon -->
+    <p><%= link_to_add_association l(:button_add_tax), f, :taxes, 'data-association-insertion-node' => '#taxes', 'data-association-insertion-method' => 'append' %></p>
   </div>
 
-  <p><%= add_tax_link(f) %></p>
 
   <p><%=label_tag('attachments[1][file]', l(:logo))%><%= file_field_tag 'attachments[1][file]', :size => 30, :id => nil, :accept => 'image/png,image/gif,image/jpeg' -%></p>
   <% if @company.attachments.size > 0 -%>

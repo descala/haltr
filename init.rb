@@ -89,4 +89,7 @@ Redmine::Plugin.register :haltr do
 
 end
 
-
+# avoid taxis error
+ActiveSupport::Inflector.inflections do |inflect|
+  inflect.singular 'taxes', 'tax'
+end

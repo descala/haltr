@@ -1,13 +1,13 @@
 <% taxid = f.object_name.split("[").last.gsub(/\]/,'') -%>
 
-<tr id="tax_<%=taxid%>" class="tax">
+<tr class="nested-fields">
 
   <td>
     <%= f.text_field :name, :style => "width: 78px;", :no_label => true %>
   </td>
 
   <td>
-    <span id="span_percent_<%=taxid%>" style="display: <%=f.object.exempt? ? "none" : "inline"%>;">
+    <span class="span_percent" style="display: <%=f.object.exempt? ? "none" : "inline"%>;">
       <%= f.text_field :percent,
         :style => "width: 48px; text-align: right;",
         :no_label => true,
@@ -22,25 +22,17 @@
     <%= f.select :category,
       Tax.categories.collect {|code| [l("tax_#{code}"), code] },
       {:no_label => true},
-      :onchange => "javascript: category_changed(#{taxid});" %>
+      :class => 'tax_category'  %>
   </td>
 
   <td>
-    <%= link_to_function(image_tag("false.png"),"rm_tax(#{taxid});") %>
+    <%= link_to_remove_association image_tag('false.png'), f %>
   </td>
 
   <td>
-    <span id="span_comment_<%=taxid%>" style="display: <%=f.object.exempt? ? "inline" : "none"%>;">
+    <span class="span_comment" style="display: <%=f.object.exempt? ? "inline" : "none"%>;">
       <%= l(:field_comment) %> <%= f.text_field :comment, :no_label => true %>
     </span>
-
   </td>
 
-</tr>
-
-<tr>
-  <td colspan="0">
-    <%= f.object.new_record? ? "" : f.hidden_field(:_destroy, {:value=>0, :id=>"destroy_tax_#{taxid}"}) %>
-    <%= f.hidden_field :id %>
-  </td>
 </tr>
