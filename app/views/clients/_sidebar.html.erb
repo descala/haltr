@@ -1,9 +1,14 @@
-<h3><%= l(:label_companies) %></h3>
-<ul class="invoice_menu">
-  <li><%=link_to l(:label_company_new), {:action => 'new', :id => @project}, :class=>'icon-haltr-company' %></li>
-  <li><%=link_to l(:label_companies), {:controller=>'clients',:action => 'index', :id => @project}, :class=>'icon-haltr-company' %></li>
-  <li><%=link_to l(:label_my_company), {:controller=>'companies', :action=>'index', :id=>@project}, :class=>'icon-haltr-my-company' %></li>
-  <% if Client.all(:conditions => ['company_id = ?', @project.company]).any? %>
-    <li><%=link_to l(:label_linked_to_mine), {:controller=>'companies', :action=>'linked_to_mine', :id=>@project}, :class=>'icon-haltr-company' %></li>
-  <% end -%>
-</ul>
+<!--menu lateral-->
+<div class="col span-1-de-4">
+  <ul class="menu-lateral">
+    <li><%=link_to l(:label_company_new), {:action => 'new', :id => @project} %></li>
+    <li><%=link_to l(:label_companies), {:controller=>'clients',:action => 'index', :id => @project} %></li>
+    <li><%=link_to l(:label_my_company), {:controller=>'companies', :action=>'index', :id=>@project} %></li>
+    <% if Client.all(:conditions => ['company_id = ?', @project.company]).any? %>
+      <li>
+      <%=link_to l(:label_linked_to_mine), {:controller=>'companies', :action=>'linked_to_mine', :id=>@project} %>
+      </li>
+    <% end -%>
+  </ul>
+</div>
+<!--final menu lateral-->
