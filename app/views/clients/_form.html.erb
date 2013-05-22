@@ -9,7 +9,7 @@ $(document).on('change', '#client_taxcode', function(e) {
       data: 'value=' + this.value,
       dataType: "html"
       }).done(function( html ) {
-        $("#cif_info").append(html);
+        $("#cif_info").html(html);
         })
     });
 </script>

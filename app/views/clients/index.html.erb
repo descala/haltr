@@ -25,8 +25,8 @@
   <% onclick_edit = "onclick=\"javascript: document.location = '#{url_for(:action=>'edit', :id=>client)}'\"" -%>
   <tr class="user <%= cycle("odd", "even") %>">
     <td style="width: 3%;"><%=image_tag("link.png") if client.linked?%></td>
-    <td <%=onclick_edit%>><%=h client.taxcode %></td>
-    <td <%=onclick_edit%>><%=h client.name %></td>
+    <td><%= link_to client.taxcode, url_for(:action=>'edit', :id=>client) %></td>
+    <td><%= link_to client.name, url_for(:action=>'edit', :id=>client) %></td>
     <td align="center" <%=onclick_edit%>><%= link_to l(:label_invoice_plural), {:controller=>'invoices',:action=>'index',:id=>@project, :client_id => client} %></td>
     <td align="center" <%=onclick_edit%>><%= link_to l(:button_people), {:controller=>'people', :id=>client}, :class => 'icon' %></td>
     <td align="center" <%=onclick_edit%>><%= link_to l(:button_new_invoice), {:controller=>'invoices',:action=>'new',:id=>@project,:client=>client}, :class => 'icon icon-edit' %></td>
