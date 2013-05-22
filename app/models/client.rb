@@ -5,8 +5,7 @@ class Client < ActiveRecord::Base
   has_many :invoices, :dependent => :destroy
   has_many :people, :dependent => :destroy
 
-  # TODO: only in Redmine
-  belongs_to :project, :include => true
+  belongs_to :project
   belongs_to :company
 
   validates_presence_of   :taxcode, :hashid

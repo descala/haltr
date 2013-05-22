@@ -70,10 +70,10 @@ class Company < ActiveRecord::Base
   end
 
   def companies_with_link_requests
-    self.clients.collect { |c|
-      next unless c.project and c.project.company
-      c.project.company if c.allowed?.nil?
-    }.compact
+    self.clients.collect do |client|
+      next unless client.project and client.project.company
+      client.project.company if client.allowed?.nil?
+    end.compact
   end
 
   def taxcode=(tc)

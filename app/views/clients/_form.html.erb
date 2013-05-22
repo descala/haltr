@@ -3,13 +3,15 @@
 <% short ||= false -%>
 <% unless short -%>
 <script type="text/javascript">
-$(function($) {
-    $("#client_taxcode").change(function() {
-        $.ajax({url: '<%= url_for :controller=>'clients', :action=>'check_cif',:id=>@project.id, :client => @client %>',
-        data: 'value=' + this.value,
-        dataType: 'script'})
+$(document).on('change', '#client_taxcode', function(e) {
+    $.ajax({
+      url: '<%= url_for :controller=>'clients', :action=>'check_cif',:id=>@project.id, :client => @client %>',
+      data: 'value=' + this.value,
+      dataType: "html"
+      }).done(function( html ) {
+        $("#cif_info").append(html);
+        })
     });
-});
 </script>
 <% end -%>
 
