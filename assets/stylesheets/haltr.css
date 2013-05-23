@@ -32,12 +32,12 @@
   color: red;
 }
 
-div.profilelink {
+.profilelink {
   height: 30px;
   color: #005f00;
 }
 
-div.profilelinkred {
+.profilelinkred {
   height: 30px;
   color: #dd6600;
 }

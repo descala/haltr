@@ -6,20 +6,20 @@
 <% if @client and @client.company and (@client.company == @company || @company.nil?) -%>
 
   <% if @client.allowed? -%>
-    <div class="profilelink">
+    <span class="profilelink">
       <%= l(:linked_to_profile, :company => @client.company.name).html_safe %> (<%=link_to(l(:unlink),{:action=>'unlink',:id=>@client})%>)
   <% elsif @client.denied? -%>
-    <div class="profilelinkred">
+    <span class="profilelinkred">
       <%= l(:denied_authorization, :company => @client.company.name).html_safe %> (<%=link_to(l(:unlink),{:action=>'unlink',:id=>@client})%>)
   <% else -%>
-    <div class="profilelink">
+    <span class="profilelink">
       <%= l(:pending_authorization, :company => @client.company.name).html_safe %> (<%=link_to(l(:unlink),{:action=>'unlink',:id=>@client})%>)
   <% end -%>
-    </div>
+    </span>
 
 <% elsif @company -%>
 
-  <div class="profilelink">
+  <span class="profilelink">
     <%= l(:cif_belongs_to_company,{:company=>@company.name}).html_safe %>
     <% if @company.public? -%>
       <%= l(:link_to_profile_suggest, :href=>link_to(l(:link_to_profile),{:action=>'link_to_profile',:id=>@project,:company=>@company,:client=>@client})).html_safe %>
@@ -32,6 +32,6 @@
     <% else -%>
       <%= l(:link_to_profile_suggest, :href=>link_to(l(:link_to_profile_ask),{:action=>'link_to_profile',:id=>@project,:company=>@company,:client=>@client})).html_safe %>
     <% end -%>
-    </div>
+    </span>
 
 <% end -%>

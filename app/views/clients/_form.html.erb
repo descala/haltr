@@ -15,18 +15,11 @@ $(document).on('change', '#client_taxcode', function(e) {
 </script>
 <% end -%>
 
-<div id="cif_info">
-  <%= render :partial => "clients/cif_info", :locals => { :client => @client, :company => @client.company } %>
-</div>
-
 <div class="box">
-  <% if @client.linked? -%>
-    <p><%= f.text_field :taxcode, :size => 20, :required => true, :readonly => @client.linked? %></p>
-  <% elsif !short -%>
-    <p><%= f.text_field :taxcode, :size => 20, :required => true %></p>
-  <% else -%>
-    <p><%= f.text_field :taxcode, :size => 20, :required => true %></p>
-  <% end -%>
+  <p><%= f.text_field :taxcode, :size => 20, :required => true, :readonly => @client.linked? %></p>
+  <p id="cif_info">
+    <%= render :partial => "clients/cif_info", :locals => { :client => @client, :company => @client.company } %>
+  </p>
   <p><%= f.text_field :company_identifier %></p>
   <p><%= f.text_field :name, :required => true, :readonly => @client.linked? %></p>
   <p><%= f.text_field :email, :readonly => @client.linked? %></p>
