@@ -9,9 +9,10 @@
   <td>
     <span id="span_percent_<%=taxid%>" style="display: <%=f.object.exempt? ? "none" : "inline"%>;">
       <%= f.text_field :percent,
-        :style => "width: 48px; text-align: right;",
+        :style => "width: 50px; text-align: right;",
         :no_label => true,
-        :readonly => f.object.zero? %> %</span>
+        :readonly => f.object.zero? %> %
+    </span>
   </td>
 
   <td style="text-align:center;">
@@ -26,7 +27,7 @@
   </td>
 
   <td>
-    <%= link_to_function(image_tag("false.png"),"rm_tax(#{taxid});") %>
+    <%= link_to_function("x","rm_tax(#{taxid});",:class=>"eliminar") %>
   </td>
 
   <td>

@@ -186,3 +186,11 @@ span.ownCertificate a {
 .taula-1 th, .money {
     white-space: nowrap;
 }
+tr.tax th {
+  vertical-align: middle;
+  text-align: center;
+  color: #2B2B2B;
+  font-family: 'Ubuntu',sans-serif;
+  font-size: 1.4em;
+  line-height: 1.3em;
+}
