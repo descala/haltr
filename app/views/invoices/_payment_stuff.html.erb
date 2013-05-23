@@ -52,7 +52,7 @@ disabled << Invoice::PAYMENT_TRANSFER if @project.company.bank_account.blank?
   <div class="col span-1-de-3">
 
     <label for="invoice_terms"><%= l(:field_terms) %></label>
-    <%= select(:invoice, :terms, Terms.for_select, {:selected=>terms}, {:onchange=>"terms()"}) %>
+    <%= select(:invoice, :terms, Terms.for_select, {:selected=>terms} ) %>
     <div id="due_date_cal" style="display: <%= terms == "custom" ? "inline" : "none" %>">
       <label for="invoice_due_date"><%= l(:field_due_date) %></label>
       <%= text_field :invoice, :due_date, :size => 10 %><span><%= calendar_for('invoice_due_date') %></span>
@@ -60,5 +60,3 @@ disabled << Invoice::PAYMENT_TRANSFER if @project.company.bank_account.blank?
   </div>
 </div>
 
-
-<script type="text/javascript">terms();</script>

@@ -1,12 +1,3 @@
-<%
-  ajax_opts = {
-    :method => :get,
-    :url => url_for({:controller=>'invoices',:action=>'update_currency_select',:id=>@project.id}),
-    :with => "'value=' + this.value + '&curr_sel=' + $('#invoice_currency').value",
-    :update => 'payment_stuff'
-  }
--%>
-
 <label for="invoice_client_id"><%= l(:field_client) %><span class="required"> *</span></label>
 <%= select :invoice, :client_id, clients_for_select, {:selected=>selected}, :data => { :remote => true, :url => url_for(:controller => 'invoices', :action => 'update_payment_stuff') }, :class => "formee-medium" %>
 <span class="mes">
