@@ -29,11 +29,11 @@ function global_tax_check_changed(tax_name) {
   $('#'+tax_name+'_global').prop('disabled', $('#'+tax_name+'_multiple').prop('checked'));
   if ($('#'+tax_name+'_multiple').prop('checked')) {
     $('#'+tax_name+'_title').show();
-    $('select.tax_'+tax_name).show();
+    $('td.tax_'+tax_name).show();
   } else {
     global_tax_changed(tax_name,$('#'+tax_name+'_global').val());
     $('#'+tax_name+'_title').hide();
-    $('select.tax_'+tax_name).hide();
+    $('td.tax_'+tax_name).hide();
   }
 }
 

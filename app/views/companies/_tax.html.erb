@@ -1,6 +1,6 @@
 <% taxid = f.object_name.split("[").last.gsub(/\]/,'') -%>
 
-<tr id="tax_<%=taxid%>" class="tax">
+<tr id="tax_<%=taxid%>">
 
   <td>
     <%= f.text_field :name, :style => "width: 78px;", :no_label => true %>

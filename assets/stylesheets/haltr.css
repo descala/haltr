@@ -187,11 +187,18 @@ span.ownCertificate a {
 .taula-1 th, .money {
     white-space: nowrap;
 }
-tr.tax th {
+table.formee {
+  border-collapse: inherit;
+  border-spacing: 5px;
+}
+table.formee th {
   vertical-align: middle;
   text-align: center;
   color: #2B2B2B;
   font-family: 'Ubuntu',sans-serif;
   font-size: 1.4em;
   line-height: 1.3em;
+}
+table.formee td {
+  vertical-align: middle;
 }
