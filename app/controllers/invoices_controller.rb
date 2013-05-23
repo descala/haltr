@@ -8,8 +8,8 @@ class InvoicesController < ApplicationController
   helper :sort
   include SortHelper
 
-  before_filter :find_invoice, :except => [:index,:new,:create,:destroy_payment,:update_currency_select,:by_taxcode_and_num,:view,:logo,:download,:mail,:send_new_invoices, :download_new_invoices]
-  before_filter :find_project, :only => [:index,:new,:create,:update_currency_select,:send_new_invoices, :download_new_invoices]
+  before_filter :find_invoice, :except => [:index,:new,:create,:destroy_payment,:update_payment_stuff,:by_taxcode_and_num,:view,:logo,:download,:mail,:send_new_invoices, :download_new_invoices]
+  before_filter :find_project, :only => [:index,:new,:create,:update_payment_stuff,:send_new_invoices, :download_new_invoices]
   before_filter :find_payment, :only => [:destroy_payment]
   before_filter :find_hashid, :only => [:view,:download]
   before_filter :find_attachment, :only => [:logo]
@@ -36,7 +36,7 @@ class InvoicesController < ApplicationController
     sort_init 'invoices.created_at', 'desc'
     sort_update %w(invoices.created_at state number date due_date clients.name import_in_cents)
 
-    invoices = @project.invoices.scoped :conditions => ["type != ?","DraftInvoice"]
+    invoices = @project.invoices.scoped.where("type != ?","DraftInvoice")
 
     unless params["state_all"] == "1"
       statelist=[]
@@ -46,26 +46,26 @@ class InvoicesController < ApplicationController
         end
       end
       if statelist.any?
-        invoices = invoices.scoped :conditions => ["state in (#{statelist.join(",")})"]
+        invoices = invoices.where("state in (#{statelist.join(",")})")
       end
     end
 
     # client filter
     # TODO: change view collection_select (doesnt display previously selected client)
     unless params[:client_id].blank?
-      invoices = invoices.scoped :conditions => ["client_id = ?", params[:client_id]]
+      invoices = invoices.where("client_id = ?", params[:client_id])
       @client_id = params[:client_id].to_i rescue nil
     end
 
     # date filter
     unless params[:date_from].blank?
-      invoices = invoices.scoped :conditions => ["date >= ?",params[:date_from]]
+      invoices = invoices.where("date >= ?",params[:date_from])
     end
     unless params["date_to"].blank?
-      invoices = invoices.scoped :conditions => ["date <= ?",params[:date_to]]
+      invoices = invoices.where("date <= ?",params[:date_to])
     end
 
-    issued_invoices = invoices.scoped :conditions => ['type = ?', 'IssuedInvoice']
+    issued_invoices = invoices.where('type = ?', 'IssuedInvoice')
 
     @i_invoice_count = issued_invoices.count
     @i_invoice_pages = Paginator.new self, @i_invoice_count,
@@ -77,7 +77,7 @@ class InvoicesController < ApplicationController
        :limit  =>  @i_invoice_pages.items_per_page,
        :offset =>  @i_invoice_pages.current.offset
 
-    received_invoices = invoices.scoped :conditions => ['type = ?', 'ReceivedInvoice']
+    received_invoices = invoices.where('type = ?', 'ReceivedInvoice')
 
     @r_invoice_count = received_invoices.count
     @r_invoice_pages = Paginator.new self, @r_invoice_count,
@@ -89,7 +89,7 @@ class InvoicesController < ApplicationController
        :limit  =>  @r_invoice_pages.items_per_page,
        :offset =>  @r_invoice_pages.current.offset
 
-    @unread = received_invoices.count :all, :conditions => ["has_been_read = ?", false]
+    @unread = received_invoices.where("has_been_read = ?", false).count
 
   end
 
@@ -411,7 +411,9 @@ class InvoicesController < ApplicationController
     download
   end
 
-  def update_currency_select
+  # Renders a partial to update curreny, payment_method, and invoice_terms
+  # into an invoice form (ajax)
+  def update_payment_stuff
     @client = Client.find(params[:value]) unless params[:value].blank?
     selected = @client.nil? ? params[:curr_sel] : @client.currency
     if params[:required] == "false"

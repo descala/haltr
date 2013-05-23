@@ -2,8 +2,8 @@
   <div id="new_client">
     <h2><%= l(:label_company_new) %></h2>
 
-    <% @client = Client.new
-       labelled_remote_form_for(:client, @client,
+    <% @client = Client.new %>
+    <%= labelled_form_for(:client, @client,
                        :url     => {:controller=>'clients', :action=>'create', :id=>@project},
                        :html    => {:class => 'tabular'},
                        :lang    => current_language

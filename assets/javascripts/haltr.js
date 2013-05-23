@@ -24,4 +24,11 @@ function loadFile(sUrl){
   });
 
   return response;
+
+/* Update currency selected */
+
+$('.button-link').bind('ajax:success', function(){
+  alert("Success!");
+});
+
 }
