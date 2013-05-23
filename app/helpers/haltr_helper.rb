@@ -98,6 +98,13 @@ module HaltrHelper
     return (Setting.plugin_haltr['hide_unauthorized'] and !User.current.allowed_to?(action,@project))
   end
 
+  def selclass(controller,action)
+    if params[:controller].to_s == controller.to_s and
+      params[:action].to_s == action.to_s
+      "sel"
+    end
+  end
+
   private
 
   def especial(path)

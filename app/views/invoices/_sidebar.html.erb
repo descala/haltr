@@ -2,9 +2,21 @@
 <div class="seccio grup">
   <div class="col span-2-de-2">
     <ul class="menu-secundari">
-      <li><%= link_to l(:label_invoice_plural), {:controller => 'invoices', :action => 'index', :id => @project}, :class=>"" %></li>
-      <li><%= link_to l(:label_received_invoice_new), {:controller=> 'received', :action => 'new', :id => @project} %></li>
-      <li><%= link_to l(:label_received), {:controller => 'received', :action => 'index', :id => @project} %></li>
+      <li>
+      <%= link_to l(:label_invoice_plural),
+        {:controller => 'invoices', :action => 'index', :id => @project},
+        :class => selclass(:invoices,:index) %>
+      </li>
+      <li>
+      <%= link_to l(:label_received_invoice_new),
+        {:controller=> 'received', :action => 'new', :id => @project},
+        :class => selclass(:received,:new) %>
+      </li>
+      <li>
+      <%= link_to l(:label_received),
+        {:controller => 'received', :action => 'index', :id => @project},
+        :class => selclass(:received,:index) %>
+      </li>
       <% unless true or hide_to_user(:use_templates) -%>
         <li><%= link_to l(:label_invoice_template_plural), {:controller => 'invoice_templates', :action => 'index', :id => @project} %></li>
         <% if num_new_invoices > 0 %>
