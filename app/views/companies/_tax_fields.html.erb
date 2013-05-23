@@ -9,9 +9,10 @@
   <td>
     <span class="span_percent" style="display: <%=f.object.exempt? ? "none" : "inline"%>;">
       <%= f.text_field :percent,
-        :style => "width: 48px; text-align: right;",
+        :style => "width: 50px; text-align: right;",
         :no_label => true,
-        :readonly => f.object.zero? %> %</span>
+        :readonly => f.object.zero? %> %
+    </span>
   </td>
 
   <td style="text-align:center;">
@@ -26,10 +27,11 @@
   </td>
 
   <td>
+    <!-- cocoon -->
     <%= link_to_remove_association image_tag('false.png'), f %>
   </td>
 
-  <td>
+  <td width="400px">
     <span class="span_comment" style="display: <%=f.object.exempt? ? "inline" : "none"%>;">
       <%= l(:field_comment) %> <%= f.text_field :comment, :no_label => true %>
     </span>

@@ -180,6 +180,7 @@ span.ownCertificate {
   border: 2px solid;
   padding: 4px 4px 4px 4px;
   margin-left: 10px;
+  float: right;
 }
 
 span.ownCertificate a {
@@ -458,3 +459,18 @@ table.compact thead tr td {
 	font-size: 13px;
 }
 
+table.formee {
+  border-collapse: inherit;
+  border-spacing: 5px;
+}
+table.formee th {
+  vertical-align: middle;
+  text-align: center;
+  color: #2B2B2B;
+  font-family: 'Ubuntu',sans-serif;
+  font-size: 1.4em;
+  line-height: 1.3em;
+}
+table.formee td {
+  vertical-align: middle;
+}
