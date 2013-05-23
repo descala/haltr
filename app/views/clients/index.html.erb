@@ -1,104 +1,98 @@
-<!--continguts-->
-<div class="col span-3-de-4">
-
-  <!--filtres-->
-  <div class="seccio grup">
-    <div class="col span-2-de-2">
-      <div class="filtres">
-        <div class="titularAcc">
-          <%= l(:label_filter_plural) %>
-        </div>
-        <div class="contingutAcc">
-          <% form_tag({:id=>@project}, :method => :get, :class => 'formee') do %>
-            <fieldset>
-              <legend><%= l(:label_search) %></legend>
-              <div class="seccio grup">
-                <div class="col span-1-de-2">
-                  <label for="name"><%=l(:label_company)%></label>
-                  <%= text_field_tag 'name', params[:name], :size => 30 %>
-                </div>
+<!--filtres-->
+<div class="seccio grup">
+  <div class="col span-2-de-2">
+    <div class="filtres">
+      <div class="titularAcc">
+        <%= l(:label_filter_plural) %>
+      </div>
+      <div class="contingutAcc">
+        <% form_tag({:id=>@project}, :method => :get, :class => 'formee') do %>
+          <fieldset>
+            <legend><%= l(:label_search) %></legend>
+            <div class="seccio grup">
+              <div class="col span-1-de-2">
+                <label for="name"><%=l(:label_company)%></label>
+                <%= text_field_tag 'name', params[:name], :size => 30 %>
               </div>
-              <div class="seccio grup">
-                <div class="col span-2-de-2">
-                  <%= submit_tag l(:button_apply), :name => nil %>
-                </div>
+            </div>
+            <div class="seccio grup">
+              <div class="col span-2-de-2">
+                <%= submit_tag l(:button_apply), :name => nil %>
               </div>
-            </fieldset>
-          <% end %>
-        </div>
+            </div>
+          </fieldset>
+        <% end %>
       </div>
     </div>
   </div>
-  <!--final filtres-->
-
-
-  <!--taula-->
-  <div class="seccio grup">
-    <div class="col span-2-de-2">
-      <table class="taula-1">
-        <thead>
-          <%= sort_header_tag('taxcode', :caption => l(:field_taxcode)) %>
-          <%= sort_header_tag('name', :caption => l(:field_name)) %>
-          <th><%=l(:label_invoice_plural)%></th>
-          <th><%=l(:label_person_plural)%></th>
-          <th><%=l(:label_invoice_new)%></th>
-          <th><%=l(:button_delete)%></th>
-        </thead>
-        <tbody>
-          <% for client in @clients -%>
-            <% onclick_edit = "onclick=\"javascript: document.location = '#{url_for(:action=>'edit', :id=>client)}'\"" -%>
-            <tr style="cursor:pointer;">
-              <td <%=onclick_edit%>><%=image_tag("link.png") if client.linked?%><%=h client.taxcode%></td>
-              <td <%=onclick_edit%>><%=h client.name%></td>
-              <td <%=onclick_edit%>><%= link_to l(:label_invoice_plural), {:controller=>'invoices', :action=>'index', :id=>@project, :client_id=>client}, :class=>'factura-btt', :title=>l(:label_invoice_plural) %></td>
-              <td <%=onclick_edit%>><%= link_to l(:label_person_plural), {:controller=>'people', :id=>client}, :class=>'persones-btt', :title=>l(:label_person_plural) %></td>
-              <td <%=onclick_edit%>><%= link_to l(:button_new_invoice), {:controller=>'invoices',:action=>'new',:id=>@project,:client=>client}, :class => 'nova-f-btt', :title=>l(:label_invoice_new) %></td>
-              <% if client.invoices.any? -%>
-                <td>
-                  <%= link_to l(:button_delete), {:action=>'destroy',:id=>client},
-                    :confirm => l(:confirm_delete_client_with_invoices, :count=>client.invoices.count),
-                    :method => :delete, :class=>'eliminar', :title=>l(:button_delete) %>
-                </td>
-              <% else -%>
-                <td><%= link_to l(:button_delete), {:action=>'destroy',:id=>client}, :confirm => l(:text_are_you_sure), :method=>:delete, :class=>'eliminar', :title=>l(:button_delete) %></td>
-              <% end -%>
-            </tr>
-          <% end -%>
-        </tbody>
-        <tfoot>
-          <tr>
-            <td colspan="6">&nbsp;</td>
-          </tr>
-        </tfoot>
-      </table>
-    </div>
-  </div>
-  <!--final taula-->
-
-  <!--paginacio-->
-  <div class="seccio grup">
-    <%= pagination_links_full @client_pages, @client_count, :always_show_anchors => true %>
-  </div>
-  <!--final paginacio-->
-
-  <% if @project.company.companies_with_link_requests.any? -%>
-    <h3><%=l(:link_requests)%></h3>
-    <ul>
-      <% @project.company.companies_with_link_requests.each do |req| -%>
-        <li>
-        <%=req.taxcode%> <span style="font-weight: bold;"><%=req.name%></span> - 
-        <%=link_to l(:allow_link), {:action=>'allow_link',:id=>@project,:req=>req}%> / 
-        <%=link_to l(:deny_link), {:action=>'deny_link',:id=>@project,:req=>req} %>
-        </li>
-      <% end -%>
-    </ul>
-  <% end -%>
-
-  <% html_title(l(:label_companies)) -%>
-
-  <% content_for :sidebar do %>
-    <%= render :partial => 'sidebar' %>
-  <% end %>
-
 </div>
-<!--final continguts-->
+<!--final filtres-->
+
+
+<!--taula-->
+<div class="seccio grup">
+  <div class="col span-2-de-2">
+    <table class="taula-1">
+      <thead>
+        <%= sort_header_tag('taxcode', :caption => l(:field_taxcode)) %>
+        <%= sort_header_tag('name', :caption => l(:field_name)) %>
+        <th><%=l(:label_invoice_plural)%></th>
+        <th><%=l(:label_person_plural)%></th>
+        <th><%=l(:label_invoice_new)%></th>
+        <th><%=l(:button_delete)%></th>
+      </thead>
+      <tbody>
+        <% for client in @clients -%>
+          <% onclick_edit = "onclick=\"javascript: document.location = '#{url_for(:action=>'edit', :id=>client)}'\"" -%>
+          <tr style="cursor:pointer;">
+            <td <%=onclick_edit%>><%=image_tag("link.png") if client.linked?%><%=h client.taxcode%></td>
+            <td <%=onclick_edit%>><%=h client.name%></td>
+            <td <%=onclick_edit%>><%= link_to l(:label_invoice_plural), {:controller=>'invoices', :action=>'index', :id=>@project, :client_id=>client}, :class=>'factura-btt', :title=>l(:label_invoice_plural) %></td>
+            <td <%=onclick_edit%>><%= link_to l(:label_person_plural), {:controller=>'people', :id=>client}, :class=>'persones-btt', :title=>l(:label_person_plural) %></td>
+            <td <%=onclick_edit%>><%= link_to l(:button_new_invoice), {:controller=>'invoices',:action=>'new',:id=>@project,:client=>client}, :class => 'nova-f-btt', :title=>l(:label_invoice_new) %></td>
+            <% if client.invoices.any? -%>
+              <td>
+                <%= link_to l(:button_delete), {:action=>'destroy',:id=>client},
+                  :confirm => l(:confirm_delete_client_with_invoices, :count=>client.invoices.count),
+                  :method => :delete, :class=>'eliminar', :title=>l(:button_delete) %>
+              </td>
+            <% else -%>
+              <td><%= link_to l(:button_delete), {:action=>'destroy',:id=>client}, :confirm => l(:text_are_you_sure), :method=>:delete, :class=>'eliminar', :title=>l(:button_delete) %></td>
+            <% end -%>
+          </tr>
+        <% end -%>
+      </tbody>
+      <tfoot>
+        <tr>
+          <td colspan="6">&nbsp;</td>
+        </tr>
+      </tfoot>
+    </table>
+  </div>
+</div>
+<!--final taula-->
+
+<!--paginacio-->
+<div class="seccio grup">
+  <%= pagination_links_full @client_pages, @client_count, :always_show_anchors => true %>
+</div>
+<!--final paginacio-->
+
+<% if @project.company.companies_with_link_requests.any? -%>
+  <h3><%=l(:link_requests)%></h3>
+  <ul>
+    <% @project.company.companies_with_link_requests.each do |req| -%>
+      <li>
+      <%=req.taxcode%> <span style="font-weight: bold;"><%=req.name%></span> - 
+      <%=link_to l(:allow_link), {:action=>'allow_link',:id=>@project,:req=>req}%> / 
+      <%=link_to l(:deny_link), {:action=>'deny_link',:id=>@project,:req=>req} %>
+      </li>
+    <% end -%>
+  </ul>
+<% end -%>
+
+<% html_title(l(:label_companies)) -%>
+
+<% content_for :sidebar do %>
+  <%= render :partial => 'sidebar' %>
+<% end %>

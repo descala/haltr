@@ -1,21 +1,18 @@
-<div class="col span-3-de-4">
+<div id="invoice-refuse" style="display: none;">
+  <%= render :partial => "invoice_refuse_form" %>
+</div>
+<div id="invoice-accept" style="display: none;">
+  <%= render :partial => "invoice_accept_form" %>
+</div>
+<div id="invoice_wrapper">
 
-  <div id="invoice-refuse" style="display: none;">
-    <%= render :partial => "invoice_refuse_form" %>
+  <div id="InvoiceOutput">
+    ............
   </div>
-  <div id="invoice-accept" style="display: none;">
-    <%= render :partial => "invoice_accept_form" %>
-  </div>
-  <div id="invoice_wrapper">
 
-    <div id="InvoiceOutput">
-      ............
-    </div>
+  <%= render :partial => "invoices/payments" -%>
+  <%= render :partial => "invoices/events" -%>
 
-    <%= render :partial => "invoices/payments" -%>
-    <%= render :partial => "invoices/events" -%>
-
-  </div>
 </div>
 
 <% content_for :sidebar do %>
@@ -41,6 +38,6 @@
       var output = serializer.serializeToString(XmlDom.documentElement);
       $('#InvoiceOutput').html(output);
     }
-    $(window).load(xsltTransform);
+$(window).load(xsltTransform);
 </script>
 <% end %>

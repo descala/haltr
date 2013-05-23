@@ -1,14 +1,16 @@
-<!--menu lateral-->
-<div class="col span-1-de-4">
-  <ul class="menu-lateral">
-    <li><%=link_to l(:label_company_new), {:action => 'new', :id => @project} %></li>
-    <li><%=link_to l(:label_companies), {:controller=>'clients',:action => 'index', :id => @project} %></li>
-    <li><%=link_to l(:label_my_company), {:controller=>'companies', :action=>'index', :id=>@project} %></li>
-    <% if Client.all(:conditions => ['company_id = ?', @project.company]).any? %>
-      <li>
-      <%=link_to l(:label_linked_to_mine), {:controller=>'companies', :action=>'linked_to_mine', :id=>@project} %>
-      </li>
-    <% end -%>
-  </ul>
+<!--menu secundari-->
+<div class="seccio grup">
+  <div class="col span-2-de-2">
+    <ul class="menu-secundari">
+      <li><%=link_to l(:label_company_new), {:action => 'new', :id => @project} %></li>
+      <li><%=link_to l(:label_companies), {:controller=>'clients',:action => 'index', :id => @project} %></li>
+      <li><%=link_to l(:label_my_company), {:controller=>'companies', :action=>'index', :id=>@project} %></li>
+      <% if Client.all(:conditions => ['company_id = ?', @project.company]).any? %>
+        <li>
+        <%=link_to l(:label_linked_to_mine), {:controller=>'companies', :action=>'linked_to_mine', :id=>@project} %>
+        </li>
+      <% end -%>
+    </ul>
+  </div>
 </div>
-<!--final menu lateral-->
+<!--final menu secundari-->
