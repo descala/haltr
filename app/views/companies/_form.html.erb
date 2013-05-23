@@ -177,10 +177,7 @@
 <% end -%>
 
 <% if defined?(SupportController) %>
-  <p>
-  <br/>
-  <span class="ownCertificate">
+  <p><span class="ownCertificate">
     <%= l(:add_own_certificate,:link=>link_to(l(:contact_us),:controller=>'support',:action=>'new',:project_id=>@project)) %>
-  </span>
-  </p>
+  </span></p>
 <% end -%>

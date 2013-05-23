@@ -178,6 +178,7 @@ span.ownCertificate {
   border: 2px solid;
   padding: 4px 4px 4px 4px;
   margin-left: 10px;
+  float: right;
 }
 
 span.ownCertificate a {
