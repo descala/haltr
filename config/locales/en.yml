@@ -372,3 +372,5 @@ en:
   tax_H: "High Rated"
   tax_AA: "Low Rated"
   bank_info: "Bank info"
+  invoice_data: "Invoice data"
+  concept: "Lines"
