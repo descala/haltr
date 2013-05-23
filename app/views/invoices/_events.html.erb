@@ -1,32 +1,35 @@
 <% if @invoice.events.any? -%>
-  <div id="events">
-    <h4><%=h l(:events)%></h4>
-    <p></p>
-    <ul>
-    <% @invoice.events.each do |e| -%>
-      <li><%=h e %> <%= download_link_for(e) %></li>
-
-      <% if (e.name == "accept" || e.name == "refuse" || e.name == "paid") && !e.info.blank? -%>
-        <div id="event_<%=e.id%>" style="display:none;">
-          <div class="mail_box">
-            <div id="mail">
-              <%= t(:field_subject) %>:
-              <% label = case e.name
-              when "accept" then :received_invoice_accepted
-              when "refuse" then :received_invoice_refused
-              when "paid"   then (@invoice.type == "ReceivedInvoice" ? :received_invoice_paid : :issued_invoice_paid)
-              else ""
-              end -%>
-              <%= t(label, :num => @invoice.number, :company => @invoice.company.name) %><br /><br />
-              <%= simple_format e.info %><br />
-              <%= link_to_function(l(:back), "$('event_#{e.id}').hide();") %>
+  <!--missatge info-->
+  <div class="seccio grup">
+    <div class="col span-2-de-2">
+      <div class="formee-msg-info">
+        <h3><%=h l(:events)%></h3>
+        <ul>
+          <% @invoice.events.each do |e| -%>
+          <li><strong><%=format_time e.created_at%></strong> - <%=h e %> <%= download_link_for(e) %></li>
+          <% if (e.name == "accept" || e.name == "refuse" || e.name == "paid") && !e.info.blank? -%>
+            <div id="event_<%=e.id%>" style="display:none;">
+              <div class="mail_box">
+                <div id="mail">
+                  <%= t(:field_subject) %>:
+                  <% label = case e.name
+                  when "accept" then :received_invoice_accepted
+                  when "refuse" then :received_invoice_refused
+                  when "paid"   then (@invoice.type == "ReceivedInvoice" ? :received_invoice_paid : :issued_invoice_paid)
+                  else ""
+                  end -%>
+                  <%= t(label, :num => @invoice.number, :company => @invoice.company.name) %><br /><br />
+                  <%= simple_format e.info %><br />
+                  <%= link_to_function(l(:back), "$('#event_#{e.id}').hide();") %>
+                </div>
+              </div>
+              <div class="overlay"></div>
             </div>
-          </div>
-          <div class="overlay"></div>
-        </div>
-      <% end -%>
-
-    <% end -%>
-    </ul>
+          <% end -%>
+        <% end -%>
+        </ul>
+      </div>
+    </div>
   </div>
+  <!--final missatge info-->
 <% end -%>

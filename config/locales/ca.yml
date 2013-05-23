@@ -60,13 +60,14 @@ ca:
 
   # Invoices
   IssuedInvoice: Factura emesa
-  ReceivedInvoice: Factura rebuda
+  ReceivedInvoice: Rebudes
   DraftInvoice: Esborrany
   label_invoice_plural: Factures
   label_invoice: Factura
   label_draft: Esborrany de factura
   field_invoice: Factura
   label_invoice_new: Nova factura
+  label_received_invoice_new: Afegir factura rebuda
   button_new_invoice: Nova factura
   button_add_invoice_line: Afegeix una nova línia a la factura
   field_number: Número
@@ -137,7 +138,7 @@ ca:
   sending_log: "Log d'enviament"
   download_legal: "Descarregar factura legal"
   download_notification: "Descarregar notificació"
-  label_all_invoices: "Totes les factures"
+  label_all_invoices: "Totes"
   label_issued: "Factures emeses"
   label_received: "Factures rebudes"
   mark_not_sent: "Marcar com a no enviada"
@@ -180,7 +181,7 @@ ca:
   button_download_new_invoices: "Descarregar zip amb les noves"
   label_download_new_invoices_info: "Genera un zip que conté totes les factures noves en format PDF"
   field_exempt: "Exempt"
-  field_comment: "Motiu"
+  field_comment: "Motiu d'exempció"
 
   # Events
   events: "Log d'esdeveniments"
@@ -340,6 +341,7 @@ ca:
   hide_full_form: "Mostrar menys camps"
   show_full_form: "Mostrar mes camps"
   field_created_at: "Creada el"
+  field_received_at: "Rebuda el"
   info_default_taxes: "Per defecte es crearan els impostos del teu país"
   label_invoices_min: "Mínim de factures"
   label_stastics: "Estadístiques"
@@ -395,3 +397,5 @@ ca:
   tax_S: "Standard"
   tax_H: "High Rated"
   tax_AA: "Low Rated"
+  invoice_data: "Dades factura"
+  concept: "Concepte"

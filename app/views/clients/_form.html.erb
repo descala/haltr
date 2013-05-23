@@ -24,11 +24,11 @@ $(document).on('change', '#client_taxcode', function(e) {
   <p><%= f.text_field :name, :required => true, :readonly => @client.linked? %></p>
   <p><%= f.text_field :email, :readonly => @client.linked? %></p>
   <% if short -%>
-  <p id="show_full_form"><%= link_to_function("--- #{l(:show_full_form)} ---", "$('client_hiden_fields').show(); $('show_full_form').hide()") %></p>
+  <p id="show_full_form"><%= link_to_function("--- #{l(:show_full_form)} ---", "$('#client_hiden_fields').show(); $('#show_full_form').hide()") %></p>
   <% end -%>
   <div id="client_hiden_fields" style="<%= short ? "display:none;" : "" %>">
     <% if short -%>
-    <p><%= link_to_function("--- #{l(:hide_full_form)} ---", "$('client_hiden_fields').hide(); $('show_full_form').show()") %></p>
+    <p><%= link_to_function("--- #{l(:hide_full_form)} ---", "$('#client_hiden_fields').hide(); $('#show_full_form').show()") %></p>
     <% end -%>
     <p><%= f.text_field :address, :readonly => @client.linked? %></p>
     <p><%= f.text_field :address2, :readonly => @client.linked? %></p>

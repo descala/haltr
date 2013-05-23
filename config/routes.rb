@@ -10,6 +10,7 @@ if Redmine::VERSION::MAJOR == 1
     map.connect '/invoice/:id/:invoice_id', :controller => 'invoices', :action => 'view', :id => /.*/, :invoice_id => /\d+/
     map.connect '/statistics', :controller => 'stastics', :action => 'index'
     map.connect '/invoices/:action/:id', :controller => 'invoices'
+    map.connect '/received/:action/:id', :controller => 'received'
     map.connect '/templates/:action/:id', :controller => 'invoice_templates'
     map.connect '/clients/:action/:id', :controller => 'clients'
     map.connect '/companies/:action/:id', :controller => 'companies'
@@ -28,11 +29,11 @@ else
     match '/invoice/:id/:invoice_id' => 'invoices#view', :id => /.*/, :invoice_id => /\d+/
     match '/statistics' => 'stastics#index'
     match '/invoices/:action/:id' => 'invoices'
+    match '/received/:action/:id' => 'received'
     match '/templates/:action/:id' => 'invoice_templates'
     match '/clients/:action/:id' => 'clients'
     match '/companies/:action/:id' => 'companies'
     match '/payments/:action/:id' => 'payments'
     match '/tasks/:action/:id' => 'tasks'
     match '/people/:action/:id' => 'people'
-
 end

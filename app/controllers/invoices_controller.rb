@@ -124,10 +124,12 @@ class InvoicesController < ApplicationController
             tax['comment'] = ''
           end
         end
+        # set currency from invoice on each line
+        invoice_line['currency'] = params[:invoice][:currency]
       end
     end
 
-    @invoice = IssuedInvoice.new(params[:invoice])
+    @invoice = IssuedInvoice.new(parsed_params)
     if @invoice.invoice_lines.empty?
       il = InvoiceLine.new(:new_and_first=>true)
       @project.company.taxes.each do |tax|

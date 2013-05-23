@@ -1,0 +1,39 @@
+<h4><%= "#{l :ReceivedInvoice} #{l :by_mail_from, :email => @invoice.from} #{l :in_format, :format => @invoice.invoice_format}" %></h4>
+
+<div id="new_client_wrapper" style="display:none;">
+  <%= render :partial => 'invoices/new_client' %>
+</div>
+
+<div id="invoice-refuse" style="display: none;">
+  <%= render :partial => "invoice_refuse_form" %>
+</div>
+<div id="invoice-accept" style="display: none;">
+  <%= render :partial => "invoice_accept_form" %>
+</div>
+
+<div id="pdfobject" style="height:500px; text-align:center;">
+  <object data='<%=url_for({:controller=>'invoices', :action=>'legal', :id=>@invoice, :md5=>@invoice.events.first.md5})%>#viewrect=670,900,0,0' type='application/pdf' width='100%' height='500px'>
+  <p style="padding-top:150px;">
+  <%= l :no_pdf_support, :pdf => url_for({:controller=>'invoices', :action=>'legal', :id=>@invoice, :md5=>@invoice.events.first.md5}) %>
+  </p>
+</object>
+</div>
+
+<%= render :partial => "invoices/payments" -%>
+
+<%= render :partial => "invoices/events" -%>
+
+<% labelled_form_for :invoice, @invoice, :url => { :action => 'update', :id => @invoice }, :html => {:method => :put, :class => 'tabular'} do |f| %>
+  <%= render :partial => 'received/form', :locals => { :f => f } %>
+  <%= submit_tag l(:button_save) %>
+<% end %>
+
+<% content_for :sidebar do %>
+    <%= render :partial => 'invoices/sidebar' %>
+    <%= render :partial => "invoices/invoice_menu" %>
+<% end %>
+
+<% content_for :header_tags do %>
+  <%= stylesheet_link_tag 'minimal', :plugin => 'haltr' %>
+  <%= javascript_include_tag 'received_invoice', :plugin => 'haltr' %>
+<% end %>

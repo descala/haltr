@@ -11,7 +11,7 @@
 
       <%= render :partial=>'clients/form', :locals=>{ :f=>form, :short=>true } %>
       <%= submit_tag l(:button_create) %>
-      <%= button_to_function(l(:cancel), "$('new_client_wrapper').hide();") %>
+      <%= button_to_function(l(:cancel), "$('#new_client_wrapper').hide();") %>
     <% end -%>
   </div>
 </div>

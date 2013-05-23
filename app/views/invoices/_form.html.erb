@@ -2,67 +2,136 @@
 <%= javascript_include_tag 'terms', :plugin => 'haltr' %>
 <%= javascript_include_tag 'invoice', :plugin => 'haltr' %>
 
-<div class="box">
-  <p id="client_select"><%= render :partial=>'invoices/clients', :locals=>{:selected=>@invoice.client_id} %></p>
-  <p><%= f.text_field :date, :size => 10, :required => true %><%= calendar_for('invoice_date') %></p>
-  <% if controller.controller_name == "invoice_templates" -%>
-    <p><%= f.select :frequency, frequencies_for_select, :required => true %></p>
-  <% else -%>
-    <p><%= f.text_field :number, :size => 10, :required => true %> <%= "#{l(:label_last_invoice_number)}: #{IssuedInvoice.last_number(@project)}" if IssuedInvoice.all.any?%></p>
-  <% end -%>
-  <p><%= f.text_field :ponumber %></p>
+<fieldset>
+  <legend><%=l(:invoice_data)%></legend>
+
+  <div class="seccio grup">
+    <div class="col span-2-de-2">
+      <span id="client_select"><%= render :partial=>'invoices/clients', :locals=>{:selected=>@invoice.client_id} %></span>
+    </div>
+  </div>
+
+  <div class="seccio grup">
+    <div class="col span-1-de-3">
+      <%= f.text_field :date, :size => 10, :required => true %><%= calendar_for('invoice_date') %>
+    </div>
+    <div class="col span-1-de-3">
+      <% if controller.controller_name == "invoice_templates" -%>
+        <%= f.select :frequency, frequencies_for_select, :required => true %>
+      <% else -%>
+        <%= f.text_field :number, :size => 10, :required => true %> <span class="text"><%= "#{l(:label_last_invoice_number)}: #{IssuedInvoice.last_number(@project)}" if IssuedInvoice.all.any?%></span>
+      <% end -%>
+    </div>
+    <div class="col span-1-de-3">
+      <%= f.text_field :ponumber %>
+    </div>
+  </div>
+
   <div id="payment_stuff">
     <%= render :partial => 'invoices/payment_stuff' %>
   </div>
-  <p><%= f.text_field :discount_text %></p>
-  <p><%= f.text_field :discount_percent %></p>
-  <p><%= f.text_field :charge_amount, :value => (@invoice.charge_amount.cents > 0 ? @invoice.charge_amount : "") %></p>
-  <p><%= f.text_field :charge_reason %></p>
-  <p><%= f.text_field :accounting_cost %></p>
-  <p><%= f.text_area :extra_info, :rows=>3 %></p>
-  <p><%= label_tag l(:label_tax_plural) %></p>
+
+  <div class="seccio grup">
+    <div class="col span-1-de-2">
+      <%= f.text_field :discount_text %>
+    </div>
+    <div class="col span-1-de-2">
+      <%= f.text_field :discount_percent %>
+    </div>
+  </div>
+
+
+  <div class="seccio grup">
+    <div class="col span-1-de-2">
+      <%= f.text_field :charge_amount, :value => (@invoice.charge_amount.cents > 0 ? @invoice.charge_amount : "") %>
+    </div>
+    <div class="col span-1-de-2">
+      <%= f.text_field :charge_reason %>
+    </div>
+  </div>
+
+  <div class="seccio grup">
+    <div class="col span-1-de-2">
+      <%= f.text_field :accounting_cost %>
+    </div>
+  </div>
+
+
+  <div class="seccio grup">
+    <div class="col span-2-de-2">
+      <%= f.text_area :extra_info, :rows=>3 %>
+    </div>
+  </div>
+
+</fieldset>
+
+
+<fieldset>
+  <legend><%=l(:label_tax_plural)%></legend>
+
   <% if @invoice.taxes_hash.empty? -%>
-    <p><%= link_to l(:add_taxes_on_company), :controller => 'companies', :id => @project -%></p>
+    <%= link_to l(:add_taxes_on_company), :controller => 'companies', :id => @project -%>
   <% end -%>
+
   <% @invoice.taxes_hash.keys.sort.each do |name| -%>
-    <p id="invoice_taxes_global">
-    <%= label_tag "#{name}_global", name%>
-    <span>
-    <%= select_tag("#{name}_global",
-                   options_for_select(tax_categories_array(@invoice,name),
-                                      :selected => @invoice.global_code_for(name)),
-                   :disabled=>@invoice.tax_per_line?(name),
-                   :onchange => "global_tax_changed('#{name}',this.value);",
-                   :style => "width: 90px;")
-    %>
-    </span>
-    <span>
-    <%= check_box_tag("#{name}_multiple", 1, @invoice.tax_per_line?(name), :onclick => "global_tax_check_changed('#{name}');") %>
-    </span>
-    <span>
-    <%= l(:line_specific_tax) %>
-    </span>
-    </p>
-    <p id="<%=name%>_comment" class="<%= hide_if_not_exempt_tax(name) %>">
-      <%= label_tag l("comment",:tax_name=>name), "#{name} comment" %>
-      <%= text_field_tag("#{name}_comment", @invoice.global_comment_for(name)) %>
-    </p>
+    <div class="seccio grup">
+      <div class="col span-1-de-5">
+        <%= label_tag "#{name}_global", name%>
+        <span>
+          <%= select_tag("#{name}_global",
+                         options_for_select(tax_categories_array(@invoice,name),
+                         :selected => @invoice.global_code_for(name)),
+                         :disabled=>@invoice.tax_per_line?(name),
+                         :onchange => "global_tax_changed('#{name}',this.value);",
+                         :style => "width: 90px;") %>
+        </span>
+      </div>
+      <div class="col span-1-de-5 check-box-alineat">
+        <span>
+          <%= check_box_tag("#{name}_multiple", 1, @invoice.tax_per_line?(name), :onclick => "global_tax_check_changed('#{name}');") %>
+        </span>
+        <span>
+          <%= l(:line_specific_tax) %>
+        </span>
+      </div>
+      <div id="<%=name%>_comment" style="<%= hide_if_not_exempt_tax(name) %>" class="col span-3-de-5">
+        <%= label_tag "#{name}_comment", l("field_comment") %>
+        <%= text_field_tag("#{name}_comment", @invoice.global_comment_for(name)) %>
+      </div>
+    </div>
   <% end -%>
-  <hr />
+</fieldset>
+
+
+<fieldset>
+  <legend><%=l(:concept)%></legend>
   <div id="invoice_lines">
-    <p style="font-weight:bold; padding:10px;">
-    <span class="invoiceLineHeader" style="width: 70px;"><%= l(:field_quantity) %></span>
-    <span class="invoiceLineHeader" style="width: 93px;">&nbsp;</span>
-    <span class="invoiceLineHeader" style="width: 285px;"><%= l(:field_description) %></span>
-    <span class="invoiceLineHeader" style="width: 76px;"><%= l(:field_price) %></span>
-    <% @invoice.taxes_hash.keys.sort.each do |name| -%>
-      <span id="<%=name%>_title" class="invoiceLineHeader <%= 'hidden' unless @invoice.tax_per_line?(name)%>" style="width: 70px;"><%= name %></span>
-    <% end -%>
-    </p>
+    <div class="seccio grup">
+      <div class="col span-1-de-6">
+        <label><%= l(:field_quantity) %></label>
+      </div>
+      <div class="col span-1-de-6">
+        &nbsp;
+      </div>
+      <div class="col span-1-de-3">
+        <label><%= l(:field_description) %></label>
+      </div>
+      <div class="col span-1-de-3">
+        <label><%= l(:field_price) %></label>
+      </div>
+      <% @invoice.taxes_hash.keys.sort.each do |name| -%>
+      <div class="col span-1-de-3">
+        <label id="<%=name%>_title" style="<%= 'display: none;' unless @invoice.tax_per_line?(name)%>"><%= name %></label>
+      </div>
+      <% end -%>
+    </div>
     <% f.fields_for :invoice_lines do |line_form| %>
       <%= render :partial => 'invoices/invoice_line', :locals => { :f => line_form } %>
     <% end %>
   </div>
-  <p style="font-weight:bold; padding:10px;"><%= add_invoice_line_link(f) %></p>
-  <hr />
-</div>
+  <div class="seccio grup">
+    <div class="col span-2-de-2">
+      <span class="mes"><%= add_invoice_line_link(f) %></span>
+    </div>
+  </div>
+</fieldset>
