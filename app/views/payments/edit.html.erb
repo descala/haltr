@@ -1,6 +1,14 @@
-<h2><%= l(:label_payment) %></h2>
+<!--formulari-->
+<div class="seccio grup">
+  <div class="col span-2-de-2">
+    <%= labelled_form_for :payment, @payment, :url => { :action => 'update', :id => @payment }, :html => { :class => 'formee' } do |f| %>
+      <%= render :partial => 'form', :locals => { :f => f } %>
+      <%= submit_tag l(:button_save) %>
+    <% end %>
+  </div>
+</div>
+<!--final formulari-->
 
-<%= labelled_form_for :payment, @payment, :url => { :action => 'update', :id => @payment }, :html => { :class => 'tabular' } do |f| %>
-  <%= render :partial => 'form', :locals => { :f => f } %>
-  <%= submit_tag l(:button_save) %>
+<% content_for :sidebar do %>
+  <%= render :partial => 'sidebar' %>
 <% end %>

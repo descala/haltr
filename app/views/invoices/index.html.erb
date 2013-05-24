@@ -62,24 +62,24 @@
     <table class="taula-1">
       <thead>
         <tr>
-          <%= sort_header_tag('invoices.created_at', :caption => l(:field_created_at)) %>
           <%= sort_header_tag('state', :caption => l(:field_state)) %>
           <%= sort_header_tag('number', :caption => l(:field_number)) %>
           <%= sort_header_tag('date', :caption => l(:field_date)) %>
           <%= sort_header_tag('due_date', :caption => l(:field_due_date)) %>
           <%= sort_header_tag('clients.name', :caption => l(:field_company)) %>
+          <%= sort_header_tag('import_in_cents', :caption => l(:label_subtotal)) %>
           <%= sort_header_tag('import_in_cents', :caption => l(:label_total)) %>
         </tr>
       </thead>
       <tbody>
         <% for invoice in @i_invoices -%>
           <tr class="<%= ' amended' if invoice.amended? %>" onclick="javascript: document.location = '<%=url_for(:action=>'show', :id=>invoice)%>'" style="cursor:pointer;">
-            <td><%=h invoice.created_at.to_date %></td>
             <td><%=h l("state_#{invoice.state}").capitalize %></td>
             <td><%=h invoice.number %></td>
             <td><%=h invoice.date %></td>
             <td <%='class="pastdue"' if invoice.past_due?%>><%=h invoice.due_date %></td>
             <td><%=h invoice.client %></td>
+            <td class="money"><%= money(invoice.subtotal) %></td>
             <td class="money"><%= money(invoice.total) %></td>
           </tr>
         <% end -%>

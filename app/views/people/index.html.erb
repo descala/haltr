@@ -1,37 +1,75 @@
-<h2><%=@client%> - <%=l(:label_person_plural)%></h2>
+<!--filtres-->
+<div class="seccio grup">
+  <div class="col span-2-de-2">
+    <div class="filtres">
+      <div class="titularAcc">
+        <%= l(:label_filter_plural) %>
+      </div>
+      <div class="contingutAcc">
+        <form class="formee">
+          <fieldset>
+            <legend><%=l(:label_search)%></legend>
 
-<% form_tag({}, :method => :get) do %>
-<fieldset><legend><%= l(:label_filter_plural) %></legend>
-<label><%= l(:label_person) %>:</label>
-<%= text_field_tag 'name', params[:name], :size => 30 %>
-<%= submit_tag l(:button_apply), :class => "small", :name => nil %>
-</fieldset>
-<% end %>
-&nbsp;
+            <% form_tag({}, :method => :get) do %>
+              <div class="seccio grup">
+                <div class="col span-1-de-2">
+                  <%= text_field_tag 'name', params[:name] %>
+                </div>
+              </div>
+              <div class="seccio grup">
+                <div class="col span-2-de-2">
+                  <%= submit_tag l(:button_apply), :name => nil %>
+                </div>
+              </div>
+            <% end %>
+          </fieldset>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+<!--final filtres-->
 
 
-<table class="list">
-  <thead>
-      <%= sort_header_tag('first_name', :caption => l(:field_first_name)) %>
-      <%= sort_header_tag('last_name', :caption => l(:field_last_name)) %>
-      <%= sort_header_tag('email', :caption => l(:field_email)) %>
-      <th style="width:10%"></th>
-      <th style="width:10%"></th>
-  </thead>
-  <tbody>
-<% for person in @people -%>
-  <tr class="user <%= cycle("odd", "even") %>" />
-    <td><%=h person.first_name %></td>
-    <td><%=h person.last_name %></td>
-    <td><%=h person.email %></td>
-    <td align="center"><%= link_to l(:button_edit), {:action=>'edit',:id=>person}, :class => 'icon icon-edit' %></td>
-    <td align="center"><%= link_to l(:button_delete), {:action=>'destroy',:id=>person} , :confirm => l(:text_are_you_sure), :method => :post, :class => 'icon icon-del' %></td>
-  </tr>
-<% end -%>
-  </tbody>
-</table>
+<!--taula-->
+<div class="seccio grup">
+  <div class="col span-2-de-2">
+    <table class="taula-1">
+      <thead>
+        <tr>
+          <%= sort_header_tag('first_name', :caption => l(:field_first_name)) %>
+          <%= sort_header_tag('last_name', :caption => l(:field_last_name)) %>
+          <%= sort_header_tag('email', :caption => l(:field_email)) %>
+          <th style="width:10%"></th>
+          <th style="width:10%"></th>
+        </tr>
+      </thead>
+      <tbody>
+        <% for person in @people -%>
+          <tr class="user <%= cycle("odd", "even") %>" />
+            <td><%=h person.first_name %></td>
+            <td><%=h person.last_name %></td>
+            <td><%=h person.email %></td>
+            <td align="center"><%= link_to l(:button_edit), {:action=>'edit',:id=>person}, :class => 'icon icon-edit' %></td>
+            <td align="center"><%= link_to l(:button_delete), {:action=>'destroy',:id=>person} , :confirm => l(:text_are_you_sure), :method => :post, :class => 'icon icon-del' %></td>
+          </tr>
+        <% end -%>
+      </tbody>
+      <tfoot>
+        <tr>
+          <td colspan="5">&nbsp;</td>
+        </tr>
+      </tfoot>
+    </table>
+  </div>
+</div>
+<!--final taula-->
 
-<p class="pagination"><%= pagination_links_full @person_pages, @person_count %></p>
+<!--paginacio-->
+<div class="seccio grup">
+  <%= pagination_links_full @person_pages, @person_count %>
+</div>
+<!--final paginacio-->
 
 
 <% html_title(l(:label_companies)) -%>

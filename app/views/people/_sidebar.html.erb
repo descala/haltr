@@ -1,5 +1,10 @@
-<h3><%= l(:label_person_plural) %></h3>
-<ul class="invoice_menu">
-  <li><%= link_to l(:label_companies), {:controller =>'clients', :action => 'index', :id => @project}, :class=>'icon-haltr-companies' %></li>
-  <li><%= link_to l(:label_person_new), {:action => 'new', :id => @client}, :class=>'icon-haltr-person' %></li>
-</ul>
+<!--menu secundari-->
+<div class="seccio grup">
+  <div class="col span-2-de-2">
+    <ul class="menu-secundari">
+      <li><%= link_to l(:label_companies), {:controller =>'clients', :action => 'index', :id => @project} %></li>
+      <li><%= link_to l(:label_person_new), {:action => 'new', :id => @client} %></li>
+    </ul>
+  </div>
+</div>
+<!--final menu secundari-->

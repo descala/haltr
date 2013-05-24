@@ -1,13 +1,21 @@
-<h2><%= l(:label_payment_new) %></h2>
+<!--formulari-->
+<div class="seccio grup">
+  <div class="col span-2-de-2">
 
-<%= labelled_form_for :payment, @payment, :url => { :action => 'create', :id => @project }, :html => {:class=>'tabular'} do |f| %>
-  <%= render :partial => 'form', :locals => { :f => f } %>
-  <% if @invoice -%>
-    <div id="mail_notification">
-      <%= render :partial => 'paid_notification' %>
-    </div>
-    <%= submit_tag I18n.t(:save_without_mail) %>
-  <% else -%>
-    <%= submit_tag l(:button_create) %>
-  <% end -%>
+    <%= labelled_form_for :payment, @payment, :url => { :action => 'create', :id => @project }, :html => {:class=>'formee'} do |f| %>
+      <%= render :partial => 'form', :locals => { :f => f } %>
+      <% if @invoice -%>
+        <%= render :partial => 'paid_notification' %>
+        <%= submit_tag I18n.t(:save_without_mail) %>
+      <% else -%>
+        <%= submit_tag l(:button_create) %>
+      <% end -%>
+    <% end %>
+
+  </div>
+</div>
+<!--final formulari-->
+
+<% content_for :sidebar do %>
+  <%= render :partial => 'sidebar' %>
 <% end %>

@@ -1,10 +1,34 @@
 <%= error_messages_for 'person' %>
 
-<div class="box">
-<p><%= f.text_field :first_name, :required => true %></p>
-<p><%= f.text_field :last_name, :required => true %></p>
-<p><%= f.text_field :email, :required => true %></p>
-<p><%= f.check_box  :send_invoices_by_mail %></p>
-<p><%= f.text_field :phone_office %></p>
-<p><%= f.text_field :phone_mobile %></p>
-</div>
+<fieldset>
+  <legend><%=l(@person.new_record? ? :label_person_new : :label_person)%></legend>
+
+  <div class="seccio grup">
+    <div class="col span-1-de-2">
+      <%= f.text_field :first_name, :required => true %>
+    </div>
+    <div class="col span-1-de-2">
+      <%= f.text_field :last_name, :required => true %>
+    </div>
+  </div>
+
+  <div class="seccio grup">
+    <div class="col span-1-de-2">
+      <%= f.text_field :email, :required => true %>
+    </div>
+    <div class="col span-1-de-2">
+      <%= f.check_box  :send_invoices_by_mail, :no_label => true, :style => "float:left; margin-right: 7px; margin-top: 41px;" %>
+      <%= label_tag :person_send_invoices_by_email, l(:field_send_invoices_by_mail), :style => "margin-top: 38px;" %>
+    </div>
+  </div>
+
+  <div class="seccio grup">
+    <div class="col span-1-de-2">
+      <%= f.text_field :phone_office %>
+    </div>
+    <div class="col span-1-de-2">
+      <%= f.text_field :phone_mobile %>
+    </div>
+  </div>
+
+</fieldset>

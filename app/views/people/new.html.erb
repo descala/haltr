@@ -1,7 +1,14 @@
-<h2><%= l(:label_person_new) %></h2>
+<!--formulari-->
+<div class="seccio grup">
+  <div class="col span-2-de-2">
+    <%= labelled_form_for :person, @person, :url => { :action => 'create', :id => @client }, :html => {:class=>'formee'} do |f| %>
+      <%= render :partial => 'form', :locals => { :f => f } %>
+      <%= submit_tag l(:button_create) %>
+    <% end %>
+  </div>
+</div>
+<!--final formulari-->
 
-
-<%= labelled_form_for :person, @person, :url => { :action => 'create', :id => @client }, :html => {:class=>'tabular'} do |f| %>
-<%= render :partial => 'form', :locals => { :f => f } %>
-<%= submit_tag l(:button_create) %>
+<% content_for :sidebar do %>
+    <%= render :partial => 'sidebar' %>
 <% end %>
