@@ -42,8 +42,8 @@
             <li><%=h @company.province %></li>
             <li><%=h @company.country_name if @client.country.downcase != @company.country.downcase %></li>
             <li><%=h l(:field_taxcode) %>: <%=h @company.taxcode %></li>
-            <li><span><%= auto_link(@company.website) %></span></li>
-            <li><span><%= auto_link(@company.email) %></span></li>
+            <li><span><%= @company.website %></span></li>
+            <li><span><%= @company.email %></span></li>
           </ul>
         </div>
         <div class="col span-1-de-2 dades-2">

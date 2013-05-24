@@ -38,7 +38,8 @@ class InvoiceLine < ActiveRecord::Base
     write_attribute :quantity, (v.is_a?(String) ? v.gsub(',','.') : v)
   end
 
-  def initialize(attributes=nil)
+  #TODO change to callbacks 
+  def initialize(attributes=nil, *args)
     super
     update_currency
   end

@@ -8,9 +8,6 @@ gem "zip"
 gem 'csv-mapper'
 gem 'nokogiri'
 
-# Dynamic nested forms using jQuery made easy
-gem 'cocoon'
-
 group :test do
   gem 'spork-testunit'
   gem 'guard-spork'

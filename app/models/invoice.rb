@@ -408,7 +408,7 @@ _INV
   # done with external java software
   def fields_to_utf8
     TO_UTF_FIELDS.each do |f|
-      self.send("#{f}=",Iconv.conv('UTF-8//IGNORE', 'UTF-8', self.send(f)))
+      self.send("#{f}=",Redmine::CodesetUtil.replace_invalid_utf8(self.send(f)))
     end
   end
 

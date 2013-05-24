@@ -1,6 +1,6 @@
 <% lineid = f.object_name.split("[").last.gsub(/\]/,'') -%>
 
-<tr id="invoice_line_<%=lineid%>">
+<tr class="nested-fields">
   <% if f.object.new_and_first -%>
     <td><%= f.text_field :quantity, :value => f.object.quantity.to_s.gsub(/\.0+$/,''), :style => "width: 78px;", :no_label => true %></td>
   <% else -%>
@@ -27,12 +27,7 @@
 <% end -%>
 
   <td>
-    <%= f.object.new_and_first ? "" : link_to_function("X","rm_line(#{lineid});", :class=>"eliminar") %>
-  </td>
-</tr>
-
-<tr>
-  <td colspan="0">
-    <%= f.object.new_record? ? "" : f.hidden_field(:_destroy, {:value=>0, :id=>"destroy_line_#{lineid}"}) %>
+    <!-- cocoon -->
+    <%= link_to_remove_association image_tag('false.png'), f, :class=>'eliminar' %>
   </td>
 </tr>

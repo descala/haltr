@@ -2,7 +2,7 @@ class Payment < ActiveRecord::Base
 
   unloadable
 
-  belongs_to :invoice
+  belongs_to :invoice_document
   belongs_to :project
   validates_numericality_of :amount_in_cents, :greater_than => 0
 

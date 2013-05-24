@@ -56,6 +56,7 @@ en:
   label_draft: Invoice draft
   field_invoice: Invoice
   label_invoice_new: New invoice
+  label_received_invoice_new: New received invoice
   button_new_invoice: New invoice
   button_add_invoice_line: Add a new invoice line
   field_number: Number

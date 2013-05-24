@@ -1,5 +1,4 @@
 <%= error_messages_for 'invoice' %>
-<%= javascript_include_tag 'invoice', :plugin => 'haltr' %>
 
 <fieldset>
   <legend><%=l(:invoice_data)%></legend>
@@ -80,14 +79,15 @@
           <%= select_tag("#{name}_global",
                          options_for_select(tax_categories_array(@invoice,name),
                          :selected => @invoice.global_code_for(name)),
-                         :disabled=>@invoice.tax_per_line?(name),
-                         :onchange => "global_tax_changed('#{name}',this.value);",
-                         :style => "width: 90px;") %>
+                         :disabled => @invoice.tax_per_line?(name),
+                         :style => "width: 90px;",
+                         'class' => 'global_tax',
+                         'data-tax-name' => name ) %>
         </span>
       </div>
       <div class="col span-1-de-5 check-box-alineat">
         <span>
-          <%= check_box_tag("#{name}_multiple", 1, @invoice.tax_per_line?(name), :onclick => "global_tax_check_changed('#{name}');") %>
+          <%= check_box_tag("#{name}_multiple", 1, @invoice.tax_per_line?(name), :class => 'global_tax_check', 'data-tax-name' => name) %>
         </span>
         <span>
           <%= l(:line_specific_tax) %>
@@ -104,7 +104,7 @@
 
 <fieldset>
   <legend><%=l(:concept)%></legend>
-  <table class="formee" id="invoice_lines">
+  <table class="formee" id="invoice_lines" data-tax-names="<%= @invoice.tax_names.join(' ') %>">
     <thead>
       <tr>
         <th><%=l(:field_quantity)%></th>
@@ -120,14 +120,15 @@
       </tr>
     </thead>
     <tbody>
-      <% f.fields_for :invoice_lines do |line_form| %>
-        <%= render :partial => 'invoices/invoice_line', :locals => { :f => line_form } %>
+      <%= f.fields_for :invoice_lines do |line_form| %>
+        <%=  render :partial => 'invoice_line_fields', :locals => { :f => line_form } %>
       <% end %>
     </tbody>
   </table>
   <div class="seccio grup">
     <div class="col span-2-de-2">
-      <span class="mes"><%= add_invoice_line_link(f) %></span>
+      <!-- cocoon -->
+      <span class='mes'><%= link_to_add_association l(:button_add_invoice_line), f, :invoice_lines, 'data-association-insertion-node' => '#invoice_lines', 'data-association-insertion-method' => 'append' %></span>
     </div>
   </div>
 </fieldset>

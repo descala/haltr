@@ -27,24 +27,6 @@ module InvoicesHelper
     clients.collect {|c| [c.name, c.id] if c.valid? }.compact
   end
 
-  def add_invoice_line_link(invoice_form,received=false)
-    link_to_function l(:button_add_invoice_line), :class=>"icon icon-add" do |page|
-      invoice_form.fields_for(:invoice_lines, InvoiceLine.new, :child_index => 'NEW_RECORD') do |line_form|
-        if received
-          html = render(:partial => 'received/invoice_line', :locals => { :f => line_form })
-        else
-          html = render(:partial => 'invoices/invoice_line', :locals => { :f => line_form })
-        end
-        page << "$('#invoice_lines').append('#{escape_javascript(html)}'.replace(/NEW_RECORD/g, new Date().getTime()));"
-        @invoice.taxes_hash.each_key do |tax_name|
-          #TODO: global_tax_check_changed does more things than necessary here
-          page << "global_tax_check_changed('#{tax_name}');"
-          page << "copy_last_line_tax('#{tax_name}');"
-        end
-      end
-    end
-  end
-
   def precision(num,precision=2)
     num=0 if num.nil?
     number_with_precision(num,:precision=>precision,:significant => true)

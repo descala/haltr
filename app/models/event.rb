@@ -8,7 +8,7 @@ class Event < ActiveRecord::Base
 
   after_create :update_invoice
 
-  def initialize(attributes=nil)
+  def initialize(attributes=nil, *args)
     super
   end
 

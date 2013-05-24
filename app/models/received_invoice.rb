@@ -46,7 +46,7 @@ class ReceivedInvoice < InvoiceDocument
     end
   end
 
-  def initialize(attributes)
+  def initialize(attributes=nil,*args)
     super
     self.has_been_read=false
   end

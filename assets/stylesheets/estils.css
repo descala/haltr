@@ -2,6 +2,9 @@
 @import url(formee-structure.css);
 @import url(formee-style.css);
 
+ul{list-style:none}
+li{display:list-item}
+
 #tot {
 	min-height: 100%;
 	height: auto !important;
@@ -43,7 +46,7 @@ header {
 	width: 100%;
 }
 nav li {
-	display: inline-block;
+	display: ireset.css;
 }
 nav li a {
 	font-size: 16px;
