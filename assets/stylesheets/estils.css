@@ -290,7 +290,6 @@ a.boto {
 }
 /*titulars*/
 .titular {
-	font: 400 18px 'Ubuntu', sans-serif;
 	text-transform: uppercase;
 	margin-bottom: 15px;
 }
@@ -379,7 +378,6 @@ a.boto {
 }
 /*TAULA FUNCIONALITATS*/
 .plans .titularAcc, .filtres .titularAcc {
-	background: #F7F7F7 url(../img/plans/saber-ne-mes.png) no-repeat 10px center;
     border-radius: 4px 4px 4px 4px;
     box-shadow: 0 0 2px 1px #CCC;
     cursor: pointer;
@@ -392,9 +390,6 @@ a.boto {
 }
 .plans .titularAcc:hover, .filtres .titularAcc:hover {
 	background-color: #F0F0F0;
-}
-.plans .titularAccAc, .filtres .titularAccAc {
-	background: #F7F7F7 url(../img/plans/saber-ne-mes-2.png) no-repeat 10px center;
 }
 .plans .contingutAcc a, .filtres .titularAcc a {
 	color: #666;

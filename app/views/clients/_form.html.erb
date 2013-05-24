@@ -69,12 +69,9 @@ $(document).on('change', '#client_taxcode', function(e) {
         #    end
         disabled << Invoice::PAYMENT_TRANSFER if @project.company.bank_account.blank?
       -%>
-      <p><%= f.select(:payment_method, Invoice.payment_methods, {:disabled=>disabled}, :onchange => "payment_method_changed('client');") %><br />
-      <% if @client.payment_method == 13 -%>
-        <%= f.text_area(:payment_method_text, :cols => 40, :rows => 2, :no_label => true) %>
-      <% else -%>
-        <%= f.text_area(:payment_method_text, :cols => 40, :rows => 2, :no_label => true, :class => "hidden") %>
-      <% end -%>
+      <p>
+      <%= f.select(:payment_method, Invoice.payment_methods, {:disabled=>disabled}) %><br/>
+      <%= f.text_area(:payment_method_text, :cols => 40, :rows => 2, :no_label => true, :id => 'payment_other', :style => (@client.payment_method==13) ? '' : 'display: none;') %>
       </p>
       <p><%= f.select(:terms, Terms.for_select, {}) %></p>
     <% end -%>

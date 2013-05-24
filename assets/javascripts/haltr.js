@@ -1,12 +1,3 @@
-/* Show/hide payment method textarea */
-function payment_method_changed(obj_name) {
-  if ($('#'+obj_name+'_payment_method').value == 13) {
-    $('#'+obj_name+'_payment_method_text').removeClassName('hidden');
-  } else {
-    $('#'+obj_name+'_payment_method_text').addClassName('hidden');
-  }
-}
-
 /* Load file (located in relative path on the server) via AJAX (in synchronous mode) */
 function loadFile(sUrl){
 
@@ -47,6 +38,14 @@ $(document).ready(function() {
 
   $(document).on('change', '#invoice_terms', function(e) {
     terms();
+  });
+
+  $(document).on('change', '#invoice_payment_method, #client_payment_method', function(e) {
+    if ($(this).val()==13) {
+      $('#payment_other').show();
+    } else {
+      $('#payment_other').hide();
+    }
   });
 
 });

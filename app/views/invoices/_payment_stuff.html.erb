@@ -41,13 +41,8 @@ disabled << Invoice::PAYMENT_TRANSFER if @project.company.bank_account.blank?
   </div>
   <div class="col span-1-de-3">
     <label for="invoice_payment_method"><%= l(:field_payment_method) %></label>
-    <%= select(:invoice, :payment_method, Invoice.payment_methods, {:selected=>payment_method }, :required => true, :onchange => "payment_method_changed('invoice');") %><br />
-    <% if payment_method == 13 -%>
-      <%= text_area(:invoice, :payment_method_text, :cols => 40, :rows => 2, :value => payment_method_text) %>
-    <% else -%>
-      <%= text_area(:invoice, :payment_method_text, :cols => 40, :rows => 2, :value => payment_method_text, :style => "display: none;") %>
-    <% end -%>
-
+    <%= select(:invoice, :payment_method, Invoice.payment_methods, {:selected=>payment_method }, :required => true) %>
+    <%= text_area(:invoice, :payment_method_text, :cols => 40, :rows => 2, :value => payment_method_text, :id => 'payment_other', :style => (payment_method==13) ? '' : 'display: none;') %>
   </div>
   <div class="col span-1-de-3">
 
