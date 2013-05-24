@@ -24,13 +24,6 @@
         <div class="col span-2-de-3">
           <p class="fac-num"><%=h @invoice.label %> <%=h @invoice.number %></p>
           <p class="fac-data"><%=l(:generation_date)%>: <%=h format_date @invoice.date %></p>
-          <p class="fac-tot-head">
-          <i><%=h l(:label_subtotal)%>: <%=h money(@invoice.subtotal) %></i>
-<!--          <% @invoice.taxes_uniq.each do |tax| -%>
-            <i><%= h tax_name(tax) %>: <%= h money(@invoice.tax_amount(tax)) %></i>
-          <% end -%>-->
-          <b><%=h l(:label_total)%>: <%=h money(@invoice.total) %></b>
-          </p>
         </div>
       </div>
       <div class="seccio grup">
