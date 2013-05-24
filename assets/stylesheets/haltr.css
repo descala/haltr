@@ -187,6 +187,9 @@ span.ownCertificate a {
 .taula-1 th, .money {
     white-space: nowrap;
 }
+.taula-1 a {
+  color: black;
+}
 table.formee {
   border-collapse: inherit;
   border-spacing: 5px;

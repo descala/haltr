@@ -1,4 +1,4 @@
-<fieldset style="padding:5px 30px;">
+<fieldset>
   <% if !@invoice.client or @invoice.client.email.blank? -%>
     <p><%= l :client_without_email %></p>
   <% else -%>
@@ -7,6 +7,9 @@
         :mail => @invoice.client.email %>
     </legend>
 
+
+    <div class="seccio grup">
+      <div class="col span-2-de-2">
 
 <pre>
 <%= l((@invoice.type == "ReceivedInvoice" ? :received_invoice_paid : :issued_invoice_paid), :num => @invoice.number, :company => @invoice.company.name) %>
@@ -18,8 +21,11 @@
 <%= render :partial => "mail_notifier/invoice", :locals => { :invoice => @invoice } %>
 </pre>
 
-    <%= submit_tag l(:save_and_mail), :name => 'save_and_mail' %>
+      </div>
+    </div>
+
 
   <% end -%>
 
 </fieldset>
+<%= submit_tag l(:save_and_mail), :name => 'save_and_mail' %>
