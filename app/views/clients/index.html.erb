@@ -43,8 +43,8 @@
       <tbody>
         <% for client in @clients -%>
           <% onclick_edit = "onclick=\"javascript: document.location = '#{url_for(:action=>'edit', :id=>client)}'\"".html_safe -%>
-          <tr style="cursor:pointer;" onclick="javascript: document.location = '<%= url_for(:action=>'edit', :id=>client) %>'">
-            <td><%=image_tag("link.png") if client.linked?%><%= link_to client.taxcode, :action=>'edit', :id=>client %></td>
+          <tr>
+            <td style="cursor:pointer;" <%= onclick_edit %>><%=image_tag("link.png") if client.linked?%><%= link_to client.taxcode, :action=>'edit', :id=>client %></td>
             <td><%=h client.name%></td>
             <td><%= link_to l(:label_invoice_plural), {:controller=>'invoices', :action=>'index', :id=>@project, :client_id=>client}, :class=>'factura-btt', :title=>l(:label_invoice_plural) %></td>
             <td><%= link_to l(:label_person_plural), {:controller=>'people', :id=>client}, :class=>'persones-btt', :title=>l(:label_person_plural) %></td>
