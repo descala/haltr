@@ -1,7 +1,12 @@
-<h2><%= l(:label_company) %></h2>
-
-<% labelled_form_for :client, @client, :url => {:action => 'update', :id => @client}, :html => {:class => 'tabular'} do |f| %>
-<%= render :partial => 'form', :locals => { :f => f } %>
-<%= submit_tag l(:button_save) %>
-<% end %>
-
+<!--formulari-->
+<div class="seccio grup">
+  <div class="col span-2-de-2">
+    <% labelled_form_for :client, @client,
+      :url => {:action => 'update', :id => @client},
+      :html => {:class => 'formee'} do |f| %>
+      <%= render :partial => 'form', :locals => { :f => f } %>
+      <%= submit_tag l(:button_save) %>
+    <% end %>
+  </div>
+</div>
+<!--final formulari-->

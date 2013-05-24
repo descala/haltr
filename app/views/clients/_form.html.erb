@@ -13,71 +13,138 @@
   <%= render :partial => "clients/cif_info", :locals => { :client => @client, :company => @client.company } %>
 </div>
 
-<div class="box">
-  <% if @client.linked? -%>
-    <p><%= f.text_field :taxcode, :size => 20, :required => true, :readonly => @client.linked? %></p>
-  <% elsif !short -%>
-    <p><%= f.text_field :taxcode, :size => 20, :required => true, :onblur => remote_function(ajax_opts) %></p>
-  <% else -%>
-    <p><%= f.text_field :taxcode, :size => 20, :required => true %></p>
-  <% end -%>
-  <p><%= f.text_field :company_identifier %></p>
-  <p><%= f.text_field :name, :required => true, :readonly => @client.linked? %></p>
-  <p><%= f.text_field :email, :readonly => @client.linked? %></p>
-  <% if short -%>
-  <p id="show_full_form"><%= link_to_function("--- #{l(:show_full_form)} ---", "$('#client_hiden_fields').show(); $('#show_full_form').hide()") %></p>
-  <% end -%>
-  <div id="client_hiden_fields" style="<%= short ? "display:none;" : "" %>">
-    <% if short -%>
-    <p><%= link_to_function("--- #{l(:hide_full_form)} ---", "$('#client_hiden_fields').hide(); $('#show_full_form').show()") %></p>
-    <% end -%>
-    <p><%= f.text_field :address, :readonly => @client.linked? %></p>
-    <p><%= f.text_field :address2, :readonly => @client.linked? %></p>
-    <p><%= f.text_field :city, :readonly => @client.linked? %></p>
-    <p><%= f.text_field :province, :readonly => @client.linked? %></p>
-    <p><%= f.text_field :postalcode, :readonly => @client.linked? %></p>
-    <% if @client.linked? -%>
-      <p><%= label_tag I18n.t :field_country %>
-      <%= text_field_tag :country, @client.country_name, :readonly => true %></p>
-    <% else -%>
-      <p><%= f.label_for_field :country, :required => true %><%= f.iso_country_select :country, valid_languages, :readonly => @client.linked? %></p>
-    <% end -%>
-    <p><%= f.text_field :bank_account, :size => 30 %></p>
-    <p><%= f.text_field :iban, :size => 30 %></p>
-    <p><%= f.text_field :bic, :size => 30 %></p>
-<% if User.current.admin? or User.current.allowed_to?(:send_peppol, @project) -%>
-    <br />
-    <p><%= f.select :schemeid, Peppol::SCHEMEIDS %></p>
-    <p><%= f.text_field :endpointid %></p>
-<% end -%>
 
-    <% if @client.linked? -%>
-      <p><%= label_tag I18n.t :field_currency %>
-      <%= text_field_tag :currency, "#{@client.currency} - #{Money.new(0,@client.currency).currency.name}", :readonly => true %></p>
-    <% else -%>
-      <p><%= f.select :currency, currency_options_for_select, :required => true %></p>
-    <% end -%>
-    <% if @client.linked? -%>
-      <p><%= f.text_field :language, :value => l(:general_lang_name,:locale => @client.language), :readonly=>true %></p>
-      <p><%= f.text_field :invoice_format, :value => ExportChannels.l(@client.invoice_format), :readonly=>true %></p>
-    <% else -%>
-      <p><%= f.select :language, lang_options_for_select , :readonly => @client.linked? %></p>
-      <p><%= f.select :invoice_format, ExportChannels.for_select(@project) %></p>
-      <%
-        disabled = []
-        #    unless @invoice.new_record?
-        #      disabled << Invoice::PAYMENT_DEBIT if @invoice.client and @invoice.client.bank_account.blank?
-        #    end
-        disabled << Invoice::PAYMENT_TRANSFER if @project.company.bank_account.blank?
-      -%>
-      <p><%= f.select(:payment_method, Invoice.payment_methods, {:disabled=>disabled}, :onchange => "payment_method_changed('client');") %><br />
-      <% if @client.payment_method == 13 -%>
-        <%= f.text_area(:payment_method_text, :cols => 40, :rows => 2, :no_label => true) %>
+<fieldset>
+  <legend><%=l(:label_company)%></legend>
+  <div class="seccio grup">
+    <div class="col span-1-de-2">
+      <% if @client.linked? -%>
+        <%= f.text_field :taxcode, :required => true, :readonly => @client.linked? %>
+      <% elsif !short -%>
+        <%= f.text_field :taxcode, :required => true, :onblur => remote_function(ajax_opts) %>
       <% else -%>
-        <%= f.text_area(:payment_method_text, :cols => 40, :rows => 2, :no_label => true, :class => "hidden") %>
+        <%= f.text_field :taxcode, :required => true %>
       <% end -%>
-      </p>
-      <p><%= f.select(:terms, Terms.for_select, {}) %></p>
-    <% end -%>
+    </div>
+    <div class="col span-1-de-2">
+      <%= f.text_field :company_identifier %>
+    </div>
   </div>
+  <div class="seccio grup">
+    <div class="col span-1-de-3">
+      <%= f.text_field :name, :required => true, :readonly => @client.linked? %>
+    </div>
+    <div class="col span-1-de-3">
+      <%= f.text_field :email, :required => true, :readonly => @client.linked? %>
+    </div>
+    <div class="col span-1-de-3">
+      <%= f.text_field :website %>
+    </div>
+  </div>
+  <% if short -%>
+    <p id="show_full_form">
+    <%= link_to_function("--- #{l(:show_full_form)} ---", "$('.client_hiden_fields').show(); $('#show_full_form').hide()") %>
+    </p>
+  <% end -%>
+  <div class="client_hiden_fields" style="<%= short ? "display:none;" : "" %>">
+    <% if short -%>
+      <p><%= link_to_function("--- #{l(:hide_full_form)} ---", "$('.client_hiden_fields').hide(); $('#show_full_form').show()") %></p>
+    <% end -%>
+    <div class="seccio grup">
+      <div class="col span-2-de-2">
+        <%= f.text_field :address, :readonly => @client.linked? %>
+      </div>
+    </div>
+    <div class="seccio grup">
+      <div class="col span-2-de-2">
+        <%= f.text_field :address2, :readonly => @client.linked? %>
+      </div>
+    </div>
+    <div class="seccio grup">
+      <div class="col span-1-de-4">
+        <%= f.text_field :postalcode, :required => true, :readonly => @client.linked? %>
+      </div>
+      <div class="col span-1-de-4">
+        <%= f.text_field :city, :readonly => @client.linked? %>
+      </div>
+      <div class="col span-1-de-4">
+        <%= f.text_field :province, :readonly => @client.linked? %>
+      </div>
+      <div class="col span-1-de-4">
+        <%= f.label_for_field :country, :required => true %>
+        <%= f.iso_country_select :country, valid_languages, :readonly => @client.linked? %>
+      </div>
+    </div>
+    <% if @client.linked? -%>
+      <div class="seccio grup">
+        <div class="col span-1-de-3">
+          <%= f.text_field :language, :value => l(:general_lang_name,:locale => @client.language), :readonly=>true %>
+        </div>
+        <div class="col span-1-de-3">
+          <%= f.select :currency, currency_options_for_select, :required => true %>
+        </div>
+        <div class="col span-1-de-3">
+          <%= f.text_field :invoice_format, :value => ExportChannels.l(@client.invoice_format), :readonly=>true %>
+        </div>
+      </div>
+    <% else -%>
+      <div class="seccio grup">
+        <div class="col span-1-de-3">
+          <%= f.select :language, lang_options_for_select %>
+        </div>
+        <div class="col span-1-de-3">
+          <%= f.select :currency, currency_options_for_select, :required => true %>
+        </div>
+        <div class="col span-1-de-3">
+          <%= f.select :invoice_format, ExportChannels.for_select(@project) %>
+        </div>
+      </div>
+    <% end -%>
+</fieldset>
+
+<div class="client_hiden_fields" style="<%= short ? "display:none;" : "" %>">
+<fieldset>
+  <legend><%=l(:bank_info)%></legend>
+  <div class="seccio grup">
+    <div class="col span-1-de-3">
+      <%= f.text_field :bank_account, :size => 30 %>
+    </div>
+    <div class="col span-1-de-3">
+      <%= f.text_field :iban, :size => 30 %>
+    </div>
+    <div class="col span-1-de-3">
+      <%= f.text_field :bic, :size => 30 %>
+    </div>
+  </div>
+
+  <% unless @client.linked? -%>
+    <div class="seccio grup">
+      <div class="col span-1-de-2">
+        <% disabled = [] ; disabled << Invoice::PAYMENT_TRANSFER if @project.company.bank_account.blank? -%>
+        <%= f.select(:payment_method, Invoice.payment_methods, {:disabled=>disabled}, :onchange => "payment_method_changed('client');") %>
+        <% if @client.payment_method == 13 -%>
+          <%= f.text_area(:payment_method_text, :cols => 40, :rows => 2, :no_label => true, :style => "height: 6em;") %>
+        <% else -%>
+          <%= f.text_area(:payment_method_text, :cols => 40, :rows => 2, :no_label => true, :style => "height: 6em; display: none;") %>
+        <% end -%>
+      </div>
+      <div class="col span-1-de-2">
+        <%= f.select(:terms, Terms.for_select, {}) %>
+      </div>
+    </div>
+  <% end -%>
+</fieldset>
+
+<% if User.current.admin? or User.current.allowed_to?(:send_peppol, @project) -%>
+  <fieldset>
+    <legend>PEPPOL</legend>
+    <div class="seccio grup">
+      <div class="col span-1-de-2">
+        <%= f.select :schemeid, Peppol::SCHEMEIDS %>
+      </div>
+      <div class="col span-1-de-2">
+        <%= f.text_field :endpointid %>
+      </div>
+  </fieldset>
+<% end -%>
 </div>

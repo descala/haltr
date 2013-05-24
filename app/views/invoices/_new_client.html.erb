@@ -4,10 +4,10 @@
 
     <% @client = Client.new
        labelled_remote_form_for(:client, @client,
-                       :url     => {:controller=>'clients', :action=>'create', :id=>@project},
-                       :html    => {:class => 'tabular'},
-                       :lang    => current_language
-                      ) do |form| -%>
+         :url     => {:controller=>'clients', :action=>'create', :id=>@project},
+         :html    => {:class => 'formee'},
+         :lang    => current_language
+       ) do |form| -%>
 
       <%= render :partial=>'clients/form', :locals=>{ :f=>form, :short=>true } %>
       <%= submit_tag l(:button_create) %>
