@@ -77,7 +77,7 @@
 
 <!--paginacio-->
 <div class="seccio grup">
-  <%= pagination_links_full @r_invoice_pages, @r_invoice_count, :page_param => :r_page, :always_show_anchors => true %>
+  <%= pagination_links_full @r_invoice_pages, @r_invoice_count %>
 </div>
 
 <% html_title(l(:label_invoice_plural)) -%>

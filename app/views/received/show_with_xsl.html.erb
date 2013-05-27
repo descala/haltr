@@ -23,11 +23,10 @@
   <%= stylesheet_link_tag 'minimal', :plugin => 'haltr' %>
   <%= javascript_include_tag 'haltr', :plugin => 'haltr' %>
   <%= javascript_include_tag 'sarissa', :plugin => 'haltr' %>
-  <%= javascript_include_tag 'received_invoice', :plugin => 'haltr' %>
   <script type="text/javascript">
 
     xsltTransform = function () {
-      sourceXml= loadFile("<%= url_for(:controller => 'invoices', :action => 'legal', :id => @invoice, :format => :xml, :kk => 123) %>");
+      sourceXml= loadFile("<%= url_for(:controller => 'invoices', :action => 'legal', :id => @invoice) %>");
       xml = (new DOMParser()).parseFromString(sourceXml, "text/xml");
       sourceXslt = loadFile("/plugin_assets/haltr/xsl/<%= @xsl %>.xsl");
       xslt = (new DOMParser()).parseFromString(sourceXslt, "text/xml");

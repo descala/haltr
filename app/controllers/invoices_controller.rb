@@ -328,12 +328,12 @@ class InvoicesController < ApplicationController
     elsif @invoice.is_a? ReceivedInvoice
       @invoice.update_attribute(:has_been_read, true)
       if @invoice.invoice_format == "pdf"
-        render :template => 'received_invoices/show_pdf'
+        render :template => 'received/show_pdf'
       else
         # TODO also show the database record version?
         # Redel XML with XSLT in browser
         @xsl = 'facturae32'
-        render :template => 'received_invoices/show_with_xsl'
+        render :template => 'received/show_with_xsl'
       end
     end
   end
@@ -405,7 +405,8 @@ class InvoicesController < ApplicationController
   end
 
   def legal
-    download
+    logger.debug "This is a test XML invoice"
+    send_file Rails.root.join("plugins/haltr/test/fixtures/xml/test_invoice_facturae32.xml")
   end
 
   # Renders a partial to update curreny, payment_method, and invoice_terms
@@ -455,25 +456,30 @@ class InvoicesController < ApplicationController
         :type => @attachment.content_type,
         :disposition => 'inline'
     else
-      send_file "#{RAILS_ROOT}/public/plugin_assets/haltr/images/transparent.gif",
+      send_file  Rails.root.join("public/plugin_assets/haltr/images/transparent.gif"),
         :type => 'image/gif',
         :disposition => 'inline'
     end
   end
 
   def download
-    #TODO: several B2bRouters
-    if @invoice.fetch_legal_by_http(params[:md5])
-      respond_to do |format|
-        format.html do
-          send_data @invoice.legal_invoice, :filename => @invoice.legal_filename
-        end
-        format.xml do
-          render :xml => @invoice.legal_invoice
-        end
-      end
+    if Rails.env.development? or Rails.env.test?
+      logger.debug "This is a test XML invoice"
+      send_file Rails.root.join("plugins/haltr/test/fixtures/xml/test_invoice_facturae32.xml")
     else
-      render_404
+      #TODO: several B2bRouters
+      if @invoice.fetch_legal_by_http(params[:md5])
+        respond_to do |format|
+          format.html do
+            send_data @invoice.legal_invoice, :filename => @invoice.legal_filename
+          end
+          format.xml do
+            render :xml => @invoice.legal_invoice
+          end
+        end
+      else
+        render_404
+      end
     end
   rescue Errno::ECONNREFUSED, Errno::EHOSTUNREACH => e
     flash[:warning]=l(:cant_connect_trace, e.message)
