@@ -1,7 +1,5 @@
-/*Author: Eduard Gimenez*/
-
 .seccio {
-	clear: both;
+	clear: left;
 	padding: 0px;
 	margin: 0px;
 }
@@ -11,7 +9,7 @@
     display:table;
 }
 .grup:after {
-    clear:both;
+    clear:left;
 }
 .grup {
     zoom:1;

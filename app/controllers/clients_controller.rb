@@ -2,7 +2,8 @@ class ClientsController < ApplicationController
 
   unloadable
 
-  menu_item :haltr_community
+  menu_item :companies
+
   layout 'haltr'
   helper :haltr, :invoices
 

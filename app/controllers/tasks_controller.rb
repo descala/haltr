@@ -1,8 +1,8 @@
 class TasksController < ApplicationController
 
   unloadable
-  menu_item :haltr_invoices
-  menu_item :haltr_payments, :only => [:index,:n19,:n19_done,:import_aeb43]
+  menu_item :invoices
+  menu_item :payments, :only => [:index,:n19,:n19_done,:import_aeb43]
   helper :haltr
   layout 'haltr'
   helper :invoices
@@ -93,7 +93,7 @@ class TasksController < ApplicationController
           begin
           p =Payment.new :date => m.date_o, :amount => m.amount, :payment_method => "Account #{m.account}", :reference => "#{m.ref1} #{m.ref2} #{m.txt1} #{m.txt2}".strip, :project => @project
           p.save!
-          rescue ActiveRecord::RecordInvalid => e
+          rescue ActiveRecord::RecordInvalid
             @errors << p
           end
         end

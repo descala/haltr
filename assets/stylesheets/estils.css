@@ -558,17 +558,9 @@ dl.ajuda dd {
 	color: #333;
 	cursor: default;
 }
-.menu-secundari {
-    /*border-top: solid 2px #f4f4f4;
-    border-bottom: solid 2px #CCC;*/
-    padding: 10px 0;
-    margin-bottom: 10px;
-    background: url(../img/separador.gif) repeat-x top left, url(../img/separador.gif) repeat-x bottom left;
-}   
-.menu-secundari li {
-    display: inline-block;
-    margin-right: 10px;
-}
+#sidebar ul {
+    padding-left: 0;
+  }
 .menu-secundari li a {
     display: block;
     padding: 5px;
@@ -578,7 +570,9 @@ dl.ajuda dd {
     border-radius: 5px;
     color: #333;
 }
-.menu-rapid {}
+.menu-rapid {
+  padding-left: 0;
+}
 .menu-rapid li {
 	float: left;
 	margin-right: 10px;

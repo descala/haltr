@@ -1,7 +1,7 @@
 class InvoiceTemplatesController < ApplicationController 
 
   unloadable
-  menu_item :haltr_invoices
+  menu_item :haltr
 
   helper :invoices
   layout 'haltr'
