@@ -1,36 +1,31 @@
-<%
-  @client ||= client rescue nil
-  @company ||= company rescue nil
--%>
+<% if client and client.company and (client.company == company || company.nil?) -%>
 
-<% if @client and @client.company and (@client.company == @company || @company.nil?) -%>
-
-  <% if @client.allowed? -%>
+  <% if client.allowed? -%>
     <span class="profilelink">
-      <%= l(:linked_to_profile, :company => @client.company.name).html_safe %> (<%=link_to(l(:unlink),{:action=>'unlink',:id=>@client})%>)
-  <% elsif @client.denied? -%>
+      <%= l(:linked_to_profile, :company => client.company.name).html_safe %> (<%=link_to(l(:unlink),{:action=>'unlink',:id=>client})%>)
+  <% elsif client.denied? -%>
     <span class="profilelinkred">
-      <%= l(:denied_authorization, :company => @client.company.name).html_safe %> (<%=link_to(l(:unlink),{:action=>'unlink',:id=>@client})%>)
+      <%= l(:denied_authorization, :company => client.company.name).html_safe %> (<%=link_to(l(:unlink),{:action=>'unlink',:id=>client})%>)
   <% else -%>
     <span class="profilelink">
-      <%= l(:pending_authorization, :company => @client.company.name).html_safe %> (<%=link_to(l(:unlink),{:action=>'unlink',:id=>@client})%>)
+      <%= l(:pending_authorization, :company => client.company.name).html_safe %> (<%=link_to(l(:unlink),{:action=>'unlink',:id=>client})%>)
   <% end -%>
     </span>
 
-<% elsif @company -%>
+<% elsif company -%>
 
   <span class="profilelink">
-    <%= l(:cif_belongs_to_company,{:company=>@company.name}).html_safe %>
-    <% if @company.public? -%>
-      <%= l(:link_to_profile_suggest, :href=>link_to(l(:link_to_profile),{:action=>'link_to_profile',:id=>@project,:company=>@company,:client=>@client})).html_safe %>
-      <% if !@client or @client.new_record? %>
+    <%= l(:cif_belongs_to_company,{:company=>company.name}).html_safe %>
+    <% if company.public? -%>
+      <%= l(:link_to_profile_suggest, :href=>link_to(l(:link_to_profile),{:action=>'link_to_profile',:id=>@project,:company=>company,:client=>client})).html_safe %>
+      <% if !client or client.new_record? %>
         <script language="javascript">
-          alert("<%= l(:cif_belongs_to_company_text_only,{:company=>@company.name}) %>");
-          self.location="<%=url_for(:action=>'link_to_profile',:id=>@project,:company=>@company,:client=>@client)%>";
+          alert("<%= l(:cif_belongs_to_company_text_only,{:company=>company.name}) %>");
+          self.location="<%=url_for(:action=>'link_to_profile',:id=>@project,:company=>company,:client=>client)%>";
         </script>
       <% end -%>
     <% else -%>
-      <%= l(:link_to_profile_suggest, :href=>link_to(l(:link_to_profile_ask),{:action=>'link_to_profile',:id=>@project,:company=>@company,:client=>@client})).html_safe %>
+      <%= l(:link_to_profile_suggest, :href=>link_to(l(:link_to_profile_ask),{:action=>'link_to_profile',:id=>@project,:company=>company,:client=>client})).html_safe %>
     <% end -%>
     </span>
 

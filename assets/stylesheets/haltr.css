@@ -77,25 +77,6 @@ span.invoiceLineHeader {
 .invoice_menu a:hover {
   background-color: #fff;
 }
-.icon-haltr-invoice , .icon-haltr-invoices-from-templates {  background-image: url(../images/invoice.gif); }
-.icon-haltr-invoices      {  background-image: url(../images/invoices.gif); }
-.icon-haltr-templates     {  background-image: url(../images/templates.gif); }
-.icon-haltr-report        {  background-image: url(../images/report.gif); }
-.icon-haltr-edit          {  background-image: url(../images/edit.gif); }
-.icon-haltr-delete        {  background-image: url(../images/delete.gif); }
-.icon-haltr-mark-sent     {  background-image: url(../images/mark_sent.gif); }
-.icon-haltr-mark-not-sent {  background-image: url(../images/mark_not_sent.gif); }
-.icon-haltr-mark-closed   {  background-image: url(../images/mark_closed.gif); }
-.icon-haltr-save          {  background-image: url(../images/save.gif); }
-.icon-haltr-send          {  background-image: url(../images/send.gif); }
-.icon-haltr-template      {  background-image: url(../images/template.gif); }
-.icon-haltr-my-company    {  background-image: url(../images/my_company.gif); }
-.icon-haltr-company       {  background-image: url(../images/company.gif); }
-.icon-haltr-companies     {  background-image: url(../images/companies.gif); }
-.icon-haltr-person        {  background-image: url(../images/person.gif); }
-.icon-haltr-payment       {  background-image: url(../images/payment.gif); }
-.icon-haltr-tasks         {  background-image: url(../images/tasks.gif); }
-
 .disabled {
   text-decoration: line-through !important;
 }
@@ -105,7 +86,7 @@ span.invoiceLineHeader {
   width:100%; height:100%;
   /* width: 1138px; height: 1132px; */
   z-index: 1001;
-  background: transparent url(../images/overlay.png) 50% 50% repeat;
+  background: transparent url(../img/overlay.png) 50% 50% repeat;
   opacity: 0.9;
 }
 

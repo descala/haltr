@@ -23,7 +23,6 @@ class CompaniesController < ApplicationController
                              :email=>user_mail)
       @company.save(:validate=>false)
     else
-#      require 'debugger'; debugger
       @company = @project.company
     end
     render :action => 'edit'

@@ -415,7 +415,7 @@ class InvoicesController < ApplicationController
     @client = Client.find(params[:invoice][:client_id]) unless params[:invoice][:client_id].blank?
     selected = @client.nil? ? params[:curr_sel] : @client.currency
     if params[:required] == "false"
-      render :partial => "received_invoices/currency", :locals => {:selected=>selected}
+      render :partial => "received/currency", :locals => {:selected=>selected}
     else
       render :partial => "payment_stuff", :locals => {:client=>@client}
     end

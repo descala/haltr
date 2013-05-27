@@ -48,30 +48,17 @@ class ClientsController < ApplicationController
   end
 
   def create
-    new_client = Client.new(params[:client].merge({:project=>@project}))
+    @new_client = Client.new(params[:client].merge({:project=>@project}))
     respond_to do |format|
-      if new_client.save
+      if @new_client.save
         format.html {
           flash[:notice] = l(:notice_successful_create)
           redirect_to :controller=>'clients', :action=>'index', :id=>@project
         }
-        format.js {
-          render(:update) { |page|
-            page.replace_html "new_client_wrapper", :partial => 'invoices/new_client'
-            page.replace_html "client_select", :partial => 'invoices/clients', :locals=>{:selected=>new_client.id}
-            page.hide "new_client_wrapper"
-            page.replace_html "payment_stuff", :partial => 'invoices/payment_stuff',
-              :locals=>{:currency=>new_client.currency,:payment_method=>new_client.payment_method,:terms=>new_client.terms}
-          }
-        }
+        format.js
       else
-        @client=new_client
         format.html { render :action => 'new' }
-        format.js {
-          render(:update) { |page|
-            page.alert(l(:notice_failed_to_save_members, :errors => @client.errors.full_messages.join(', ')))
-          }
-        }
+        format.js  { render :action => 'create_error' }
       end
     end
   end
@@ -92,9 +79,9 @@ class ClientsController < ApplicationController
 
   def check_cif
     taxcode = params[:value].gsub(/\W/,'')
-    @company = Company.find(:all, :conditions => ["taxcode = ? and (public='public' or public='semipublic')", taxcode]).first
-    @client = Client.find(params[:client]) unless params[:client].blank?
-    render :partial => "cif_info"
+    company = Company.find(:all, :conditions => ["taxcode = ? and (public='public' or public='semipublic')", taxcode]).first
+    client = Client.find(params[:client]) unless params[:client].blank?
+    render :partial => "cif_info", :locals => { :client => client, :company => company }
   end
 
   def link_to_profile
