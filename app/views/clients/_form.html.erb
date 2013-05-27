@@ -36,7 +36,7 @@ $(document).on('change', '#client_taxcode', function(e) {
       <%= f.text_field :name, :required => true, :readonly => @client.linked? %>
     </div>
     <div class="col span-1-de-3">
-      <%= f.text_field :email, :required => true, :readonly => @client.linked? %>
+      <%= f.text_field :email, :readonly => @client.linked? %>
     </div>
     <div class="col span-1-de-3">
       <%= f.text_field :website %>
