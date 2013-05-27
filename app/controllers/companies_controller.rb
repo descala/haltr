@@ -15,9 +15,6 @@ class CompaniesController < ApplicationController
   before_filter :authorize, :except => [:logo]
   skip_before_filter :check_if_login_required, :only => [:logo]
 
-  # TODO
-  # verify :method => [:post,:put], :only => [:update], :redirect_to => :root_path
-
   def index
     if @project.company.nil?
       user_mail = User.find_by_project_id(@project.id).mail rescue ""

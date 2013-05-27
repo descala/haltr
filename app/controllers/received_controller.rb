@@ -26,8 +26,6 @@ class ReceivedController < ApplicationController
     before_filter :check_remote_ip, :only => [:by_taxcode_and_num,:mail]
   end
 
-  verify :method => [:post,:put], :only => [:create,:update], :redirect_to => :root_path
-
   include CompanyFilter
   before_filter :check_for_company, :except => [:by_taxcode_and_num,:view,:mail]
 
@@ -192,21 +190,21 @@ class ReceivedController < ApplicationController
   def mark_sent
     @invoice.manual_send
     redirect_to :back
-  rescue ActionController::RedirectBackError => e
+  rescue ActionController::RedirectBackError
     render :text => "OK"
   end
 
   def mark_closed
     @invoice.close
     redirect_to :back
-  rescue ActionController::RedirectBackError => e
+  rescue ActionController::RedirectBackError
     render :text => "OK"
   end
 
   def mark_not_sent
     @invoice.mark_unsent
     redirect_to :back
-  rescue ActionController::RedirectBackError => e
+  rescue ActionController::RedirectBackError
     render :text => "OK"
   end
 
@@ -551,7 +549,6 @@ class ReceivedController < ApplicationController
   def create_and_queue_file
     raise @invoice.export_errors.collect {|e| l(e)}.join(", ") unless @invoice.can_be_exported?
     export_id = @invoice.client.invoice_format
-    path = ExportChannels.path export_id
     @format = ExportChannels.format export_id
     @company = @project.company
     file_ext = @format == "pdf" ? "pdf" : "xml"
