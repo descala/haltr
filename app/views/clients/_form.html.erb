@@ -16,7 +16,7 @@ $(document).on('change', '#client_taxcode', function(e) {
 </script>
 <% end -%>
 
-<fieldset>
+<fieldset class="tabular box">
   <legend><%=l(:label_company)%></legend>
   <div class="seccio grup" id='cif_info'>
     <div class="col span-1-de-1">
@@ -104,7 +104,7 @@ $(document).on('change', '#client_taxcode', function(e) {
 </fieldset>
 
 <div class="client_hiden_fields" style="<%= short ? "display:none;" : "" %>">
-<fieldset>
+<fieldset class="tabular box">
   <legend><%=l(:bank_info)%></legend>
   <div class="seccio grup">
     <div class="col span-1-de-3">
@@ -133,7 +133,7 @@ $(document).on('change', '#client_taxcode', function(e) {
 </fieldset>
 
 <% if User.current.admin? or User.current.allowed_to?(:send_peppol, @project) -%>
-  <fieldset>
+  <fieldset class="tabular box">
     <legend>PEPPOL</legend>
     <div class="seccio grup">
       <div class="col span-1-de-2">

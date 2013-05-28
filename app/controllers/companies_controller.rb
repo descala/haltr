@@ -1,8 +1,7 @@
 class CompaniesController < ApplicationController
 
   unloadable
-  menu_item :companies
-  menu_item :my_company, :only =>[:index,:update]
+  menu_item Haltr::MenuItem.new(:companies,:my_company)
   layout 'haltr'
   helper :haltr
 

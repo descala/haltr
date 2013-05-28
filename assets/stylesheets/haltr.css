@@ -10,3 +10,7 @@
 
 html>body .tabular div {overflow:hidden;}
 
+.client_hiden_fields {
+  display: inline;
+}
+

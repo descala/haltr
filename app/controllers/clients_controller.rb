@@ -2,7 +2,7 @@ class ClientsController < ApplicationController
 
   unloadable
 
-  menu_item :companies
+  menu_item Haltr::MenuItem.new(:companies,:companies_level2)
 
   layout 'haltr'
   helper :haltr, :invoices
@@ -44,6 +44,7 @@ class ClientsController < ApplicationController
   end
 
   def edit
+    debugger
     @client = Client.find(params[:id])
     @company = Company.find(:all, :conditions => ["taxcode = ? and (public='public' or public='semipublic')", @client.taxcode]).first
   end
