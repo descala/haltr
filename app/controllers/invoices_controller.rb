@@ -33,7 +33,7 @@ class InvoicesController < ApplicationController
     sort_init 'invoices.created_at', 'desc'
     sort_update %w(invoices.created_at state number date due_date clients.name import_in_cents)
 
-    invoices = @project.invoices.scoped.where("type != ?","DraftInvoice")
+    invoices = @project.invoices.scoped.where("type = ?","IssuedInvoice")
 
     unless params["state_all"] == "1"
       statelist=[]
@@ -62,32 +62,17 @@ class InvoicesController < ApplicationController
       invoices = invoices.where("date <= ?",params[:date_to])
     end
 
-    issued_invoices = invoices.where('type = ?', 'IssuedInvoice')
-
-    @i_invoice_count = issued_invoices.count
-    @i_invoice_pages = Paginator.new self, @i_invoice_count,
+    @invoice_count = invoices.count
+    @invoice_pages = Paginator.new self, @invoice_count,
 		per_page_option,
-		params['i_page']
-    @i_invoices =  issued_invoices.find :all,
+		params['page']
+    @invoices =  invoices.find :all,
        :order => sort_clause,
        :include => [:client],
-       :limit  =>  @i_invoice_pages.items_per_page,
-       :offset =>  @i_invoice_pages.current.offset
+       :limit  =>  @invoice_pages.items_per_page,
+       :offset =>  @invoice_pages.current.offset
 
-    received_invoices = invoices.where('type = ?', 'ReceivedInvoice')
-
-    @r_invoice_count = received_invoices.count
-    @r_invoice_pages = Paginator.new self, @r_invoice_count,
-		per_page_option,
-		params['r_page']
-    @r_invoices =  received_invoices.find :all,
-       :order => sort_clause,
-       :include => [:client],
-       :limit  =>  @r_invoice_pages.items_per_page,
-       :offset =>  @r_invoice_pages.current.offset
-
-    @unread = received_invoices.where("has_been_read = ?", false).count
-
+    @unread = invoices.where("type = ? AND has_been_read = ?", 'ReceivedInvoice', false).count
   end
 
   def new

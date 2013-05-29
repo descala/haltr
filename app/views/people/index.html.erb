@@ -66,8 +66,8 @@
 <!--final taula-->
 
 <!--paginacio-->
-<div class="seccio grup">
-  <%= pagination_links_full @person_pages, @person_count %>
+<div class="seccio grup pagination paginacio">
+  <%= pagination_links_full @person_pages, @person_count, {:per_page_links=>false} %>
 </div>
 <!--final paginacio-->
 

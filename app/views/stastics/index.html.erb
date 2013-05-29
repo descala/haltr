@@ -39,5 +39,7 @@
 <% end -%>
 </table>
 
-<p class="pagination"><%= pagination_links_full @projects_pages, @projects_count %></p>
+<div class="seccio grup paginacio pagination">
+  <%= pagination_links_full @projects_pages, @projects_count, {:per_page_links=>false} %>
+</div>
 

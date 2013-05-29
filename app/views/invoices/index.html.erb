@@ -72,7 +72,7 @@
         </tr>
       </thead>
       <tbody>
-        <% for invoice in @i_invoices -%>
+        <% for invoice in @invoices -%>
           <tr class="<%= ' amended' if invoice.amended? %>" onclick="javascript: document.location = '<%=url_for(:action=>'show', :id=>invoice)%>'" style="cursor:pointer;">
             <td><%=h l("state_#{invoice.state}").capitalize %></td>
             <td><%=h invoice.number %></td>
@@ -97,8 +97,8 @@
 
 
 <!--paginacio-->
-<div class="seccio grup">
-  <%= pagination_links_full @i_invoice_pages, @i_invoice_count %>
+<div class="seccio grup paginacio pagination">
+  <%= pagination_links_full @invoice_pages, @invoice_count, {:per_page_links=>false} %>
 </div>
 <!--final paginacio-->
 

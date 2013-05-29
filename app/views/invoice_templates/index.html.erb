@@ -2,31 +2,40 @@
   <%= stylesheet_link_tag 'haltr', :plugin => 'haltr' %>
 <% end %>
 
-<h2><%= l(:label_invoice_template_plural) %></h2>
 
-<table class="list" id="invoices">
-  <thead>
-    <%= sort_header_tag('date', :caption => l(:field_date)) %>
-    <th><%=l(:field_frequency)%></th>
-    <%= sort_header_tag('clients.name', :caption => l(:field_company)) %>
-    <th><%= l(:label_total) %></th>
-  </thead>
-  <tbody>
-<% for invoice in @invoices -%>
-  <tr class="user <%= cycle("odd", "even") %>" onclick="javascript: document.location = '<%=url_for(:action=>'show', :id=>invoice)%>'">
-    <td align="center"><%=h invoice.date %></td>
-    <td align="center"><%= l("mf#{invoice.frequency}") %></td>
-    <td><%=link_to h(invoice.client), {:controller => 'clients', :action => 'edit', :id => invoice.client} %></td>
-    <td align="right"><%= money(invoice.total) %></td>
-  </tr>
-<% end -%>
-  </tbody>
-</table>
+<!--taula factures-->
+<div class="seccio grup">
+  <div class="col span-2-de-2">
+    <table class="taula-1 list invoices" id="invoices">
+      <thead>
+        <%= sort_header_tag('date', :caption => l(:field_date)) %>
+        <th><%=l(:field_frequency)%></th>
+        <%= sort_header_tag('clients.name', :caption => l(:field_company)) %>
+        <th><%= l(:label_total) %></th>
+      </thead>
+      <tbody>
+        <% for invoice in @invoices -%>
+          <tr class="user <%= cycle("odd", "even") %>" onclick="javascript: document.location = '<%=url_for(:action=>'show', :id=>invoice)%>'">
+            <td align="center"><%=h invoice.date %></td>
+            <td align="center"><%= l("mf#{invoice.frequency}") %></td>
+            <td><%=link_to h(invoice.client), {:controller => 'clients', :action => 'edit', :id => invoice.client} %></td>
+            <td align="right"><%= money(invoice.total) %></td>
+          </tr>
+        <% end -%>
+      </tbody>
+    </table>
+  </div>
+</div>
+<!--final taula factures-->
 
-<p class="pagination"><%= pagination_links_full @invoice_pages, @invoice_count %></p>
+<!--paginacio-->
+<div class="seccio grup paginacio pagination">
+  <%= pagination_links_full @invoice_pages, @invoice_count, {:per_page_links=>false} %>
+</div>
+<!--final paginacio-->
 
 <% html_title(l(:label_invoice_plural)) -%>
 
 <% content_for :sidebar do %>
-      <%= render :partial => 'invoices/sidebar' %>
+  <%= render :partial => 'invoices/sidebar' %>
 <% end %>

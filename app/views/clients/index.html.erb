@@ -72,8 +72,8 @@
 <!--final taula-->
 
 <!--paginacio-->
-<div class="seccio grup">
-  <%= pagination_links_full @client_pages, @client_count%>
+<div class="seccio grup paginacio pagination">
+  <%= pagination_links_full @client_pages, @client_count, {:per_page_links=>false} %>
 </div>
 <!--final paginacio-->
 

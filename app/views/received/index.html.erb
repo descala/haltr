@@ -58,7 +58,7 @@
     <%= sort_header_tag('import_in_cents', :caption => l(:label_total)) %>
   </thead>
   <tbody>
-    <% for invoice in @r_invoices -%>
+    <% for invoice in @invoices -%>
       <tr onclick="javascript: document.location = '<%=url_for(:action=>'show', :id=>invoice)%>'" style="cursor:pointer;">
         <td><%=h invoice.created_at.to_date %></td>
         <td><%=h l("state_#{invoice.state}").capitalize %></td>
@@ -76,8 +76,8 @@
 
 
 <!--paginacio-->
-<div class="seccio grup">
-  <%= pagination_links_full @r_invoice_pages, @r_invoice_count %>
+<div class="seccio grup paginacio pagination">
+  <%= pagination_links_full @invoice_pages, @invoice_count, {:per_page_links=>false} %>
 </div>
 
 <% html_title(l(:label_invoice_plural)) -%>
