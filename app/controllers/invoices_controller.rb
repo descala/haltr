@@ -567,12 +567,13 @@ class InvoicesController < ApplicationController
     I18n.locale = @invoice.client.language rescue curr_lang
     pdf_file=Tempfile.new("invoice_#{@invoice.id}.pdf","tmp")
     xhtml_file=Tempfile.new("invoice_#{@invoice.id}.xhtml","tmp")
-    xhtml_file.write(Iconv.conv('UTF-8//IGNORE', 'UTF-8', render_to_string(:action => "show", :layout => "invoice")))
+    xhtml_file.write(render_to_string(:action => "show", :layout => "invoice").encode("UTF-8", :invalid => :replace, :undef => :replace, :replace => "?"))
     xhtml_file.close
     jarpath = "#{File.dirname(__FILE__)}/../../vendor/xhtmlrenderer"
     cmd="java -classpath #{jarpath}/core-renderer.jar:#{jarpath}/iText-2.0.8.jar:#{jarpath}/minium.jar org.xhtmlrenderer.simple.PDFRenderer #{xhtml_file.path} #{pdf_file.path}"
     logger.info "create_pdf_file command = #{cmd}"
-    `#{cmd} 2>&1`
+    out = `#{cmd} 2>&1`
+    logger.info "error creating pdf: #{out}" unless $?.success?
     I18n.locale = curr_lang
     $?.success? ? pdf_file : nil
   end

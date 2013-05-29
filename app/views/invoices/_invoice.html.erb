@@ -103,7 +103,7 @@
             </tr>
             <% @invoice.taxes_uniq.each do |tax| -%>
               <tr>
-                <td colspan="3" class="dr"><%= h tax_name(tax) %> <%= " #{l(:over_taxable_base)} #{money(@invoice.taxable_base(tax))}" unless @invoice.tax_applies_to_all_lines?(tax) %>:</th>
+                <td colspan="3" class="dr"><%= h tax_name(tax) %> <%= " #{l(:over_taxable_base)} #{money(@invoice.taxable_base(tax))}" unless @invoice.tax_applies_to_all_lines?(tax) %>:</td>
                 <td class="dr"><%= h money(@invoice.tax_amount(tax)) %></td>
               </tr>
             <% end -%>
@@ -123,10 +123,10 @@
         <table class="taula-2">
           <thead>
             <tr>
-              <td class="c-1"></th>
-              <td class="c-2"><%=h l :field_description%></th>
-              <td class="c-3 dr"><%=h l :field_date%></th>
-              <td class="c-4 dr"><%=h l :field_quantity %></th>
+              <th class="c-1"></th>
+              <th class="c-2"><%=h l :field_description%></th>
+              <th class="c-3 dr"><%=h l :field_date%></th>
+              <th class="c-4 dr"><%=h l :field_quantity %></th>
             </tr>
           </thead>
           <tbody>
@@ -141,7 +141,7 @@
           </tbody>
           <tfoot>
             <tr>
-              <td class="dr" colspan="3"><%=h l :field_total_paid %>:</th>
+              <td class="dr" colspan="3"><%=h l :field_total_paid %>:</td>
               <td class="dr"><%=h money(@invoice.total_paid) %></td>
             </tr>
           </tfoot>
