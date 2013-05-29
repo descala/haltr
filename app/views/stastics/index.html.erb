@@ -1,4 +1,4 @@
-<% form_tag({:id=>@project}, :method => :get) do %>
+<%= form_tag({:id=>@project}, :method => :get) do %>
   <fieldset id="filters" class="collapsible"><legend onclick="toggleFieldset(this);"><%= l(:label_filter_plural) %></legend>
   <div id="query_form_content" class="hide-when-print">
     <table>

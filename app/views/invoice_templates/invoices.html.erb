@@ -34,7 +34,7 @@
 <% if @drafts.any? -%>
 
   <h2><%= l(:invoices_to_generate)%></h2>
-  <% form_tag(url_for(:action => 'create_invoices', :id=>@project)) do -%>
+  <%= form_tag(url_for(:action => 'create_invoices', :id=>@project)) do %>
   <table class="list">
     <thead>
       <tr>

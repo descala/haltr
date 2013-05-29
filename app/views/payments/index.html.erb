@@ -10,7 +10,7 @@
           <fieldset>
             <legend><%=l(:label_search)%></legend>
 
-            <% form_tag({}, :method => :get) do %>
+            <%= form_tag({}, :method => :get) do %>
               <div class="seccio grup">
                 <div class="col span-1-de-2">
                   <%= text_field_tag 'name', params[:name] %>

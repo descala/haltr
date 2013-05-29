@@ -16,7 +16,7 @@
         <%= l(:label_filter_plural) %>
       </div>
       <div class="contingutAcc">
-        <% form_tag({:id=>@project}, :method => :get, :class => 'formee') do %>
+        <%= form_tag({:id=>@project}, :method => :get, :class => 'formee') do %>
           <fieldset>
             <legend><%= l(:label_search) %></legend>
             <div id="query_form_content" class="hide-when-print seccio grup">

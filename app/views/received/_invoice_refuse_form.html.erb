@@ -5,7 +5,7 @@
     </p>
   <% else -%>
   <legend><%= l :refuse_notification_to, :mail => @invoice.client.email %></legend>
-<% form_tag(:controller=>'invoices',:action=>'mark_refused_with_mail') do -%>
+<%= form_tag(:controller=>'invoices',:action=>'mark_refused_with_mail') do %>
 
  <%=hidden_field_tag "id", @invoice.id %>
 
@@ -25,7 +25,7 @@
 <% end -%>
   <% end -%>
 
-<% form_tag(:controller=>'invoices',:action=>'mark_refused') do -%>
+<%= form_tag(:controller=>'invoices',:action=>'mark_refused') do %>
   <%=hidden_field_tag "id", @invoice.id %>
   <%= submit_tag I18n.t(:refuse_without_mail) %>
   <%= button_to_function I18n.t(:cancel), "document.getElementById('invoice-refuse').hide();" %>

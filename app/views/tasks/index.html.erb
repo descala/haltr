@@ -17,7 +17,7 @@
     <% end -%>
   </li>
   <li>
-  <% form_tag(url_for(:action => 'import_aeb43', :id => @project ), :multipart => true ) do |f| %>
+  <%= form_tag(url_for(:action => 'import_aeb43', :id => @project ), :multipart => true ) do |f| %>
     <%= l(:label_import_aeb43) %> <%= file_field_tag 'file', :size => 30, :id => nil  -%>
     <%= submit_tag l(:button_submit) %>
   <% end %>

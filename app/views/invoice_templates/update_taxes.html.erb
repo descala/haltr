@@ -1,7 +1,7 @@
 <h2><%=l(:label_update_taxes)%></h2>
 
 
-<% form_tag(url_for(:action => 'update_taxes', :id => @project ) ) do |f| %>
+<%= form_tag(url_for(:action => 'update_taxes', :id => @project ) ) do |f| %>
   <table>
     <tr>
       <td><%=l(:field_first_name)%></td>
