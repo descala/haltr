@@ -2,6 +2,7 @@ class CompaniesController < ApplicationController
 
   unloadable
   menu_item Haltr::MenuItem.new(:companies,:my_company)
+  menu_item Haltr::MenuItem.new(:companies,:linked_to_mine), :only => [:linked_to_mine]
   layout 'haltr'
   helper :haltr
 

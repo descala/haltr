@@ -14,3 +14,4 @@ html>body .tabular div {overflow:hidden;}
   display: inline;
 }
 
+ul.menu-rapid li, #sidebar ul li {list-style-type:none;}

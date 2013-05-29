@@ -10,8 +10,9 @@ class ClientsController < ApplicationController
   helper :sort
   include SortHelper
 
-  before_filter :find_project,  :only => [:index,:new,:create,:check_cif,:link_to_profile,:allow_link,:deny_link]
-  before_filter :find_client, :except => [:index,:new,:create,:check_cif,:link_to_profile,:allow_link,:deny_link]
+  before_filter :find_project_by_project_id, :only => [:index,:new,:create]
+  before_filter :find_project,  :only => [:link_to_profile,:allow_link,:deny_link]
+  before_filter :find_client, :except => [:index,:new,:create,:link_to_profile,:allow_link,:deny_link]
   before_filter :set_iso_countries_language
   before_filter :authorize
 
@@ -54,7 +55,7 @@ class ClientsController < ApplicationController
       if @new_client.save
         format.html {
           flash[:notice] = l(:notice_successful_create)
-          redirect_to :controller=>'clients', :action=>'index', :id=>@project
+          redirect_to :action=>'index', :project_id=>@project
         }
         format.js
       else
@@ -67,7 +68,7 @@ class ClientsController < ApplicationController
   def update
     if @client.update_attributes(params[:client])
       flash[:notice] = l(:notice_successful_update)
-      redirect_to :action => 'index', :id => @project
+      redirect_to :action => 'index', :project_id => @project
     else
       render :action => "edit"
     end
@@ -75,7 +76,7 @@ class ClientsController < ApplicationController
 
   def destroy
     @client.destroy
-    redirect_to :action => 'index', :id => @project
+    redirect_to :action => 'index', :project_id => @project
   end
 
   def check_cif
@@ -112,7 +113,7 @@ class ClientsController < ApplicationController
     client = req.project.clients.find_by_taxcode(@project.company.taxcode)
     client.allowed = true
     client.save
-    redirect_to :action => 'index', :id => @project
+    redirect_to :action => 'index', :project_id => @project
   end
 
   def deny_link
@@ -120,7 +121,7 @@ class ClientsController < ApplicationController
     client = req.project.clients.find_by_taxcode(@project.company.taxcode)
     client.allowed = false
     client.save
-    redirect_to :action => 'index', :id => @project
+    redirect_to :action => 'index', :project_id => @project
   end
 
   private

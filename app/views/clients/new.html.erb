@@ -1,12 +1,14 @@
-<!--formulari-->
 <div class="seccio grup">
   <div class="col span-2-de-2">
-    <%= labelled_form_for :client, @client,
-      :url => {:action => 'create', :id => @project},
+    <%= labelled_form_for @client,
+      :url => project_clients_path(@project),
       :html => {:class => 'formee'} do |f| %>
       <%= render :partial => 'form', :locals => { :f => f } %>
       <%= submit_tag l(:button_create) %>
     <% end %>
   </div>
 </div>
-<!--final formulari-->
+
+<% content_for :sidebar do %>
+  <%= render_menu :companies_menu, @project %>
+<% end %>

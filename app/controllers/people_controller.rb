@@ -1,14 +1,15 @@
 class PeopleController < ApplicationController
 
   unloadable
-  menu_item :companies
+  menu_item Haltr::MenuItem.new(:companies,:people)
   layout 'haltr'
   helper :haltr
   helper :sort
   include SortHelper
 
-  before_filter :find_client, :except => [:show,:edit,:destroy,:update]
-  before_filter :find_person, :only   => [:show,:edit,:destroy,:update]
+  before_filter :find_optional_client, :only => [:index]
+  before_filter :find_client, :only => [:new,:create]
+  before_filter :find_person, :only => [:show,:edit,:destroy,:update]
   before_filter :authorize
 
   include CompanyFilter
@@ -18,7 +19,7 @@ class PeopleController < ApplicationController
     sort_init 'last_name', 'asc'
     sort_update %w(first_name last_name email)
 
-    people = @client.people.scoped
+    people = @client.nil? ? @project.people.scoped :  @client.people.scoped
 
     unless params[:name].blank?
       name = "%#{params[:name].strip.downcase}%"
@@ -58,7 +59,7 @@ class PeopleController < ApplicationController
   def update
     if @person.update_attributes(params[:person])
       flash[:notice] = l(:notice_successful_update)
-      redirect_to :action => 'index', :id => @person.client
+      redirect_to :action => 'index', :client_id => @person.client
     else
       render :action => "edit"
     end
@@ -66,13 +67,24 @@ class PeopleController < ApplicationController
 
   def destroy
     @person.destroy
-    redirect_to :action => 'index', :id => @person.client
+    redirect_to :action => 'index', :client_id => @person.client
   end
 
   private
 
+  def find_optional_client
+    @client = Client.find params[:client_id] unless params[:client_id].blank?
+    if @client
+      @project = @client.project
+    else 
+      @project = Project.find(params[:project_id])
+    end
+    rescue ActiveRecord::RecordNotFound
+    render_404
+  end
+
   def find_client
-    @client = Client.find params[:id]
+    @client = Client.find params[:client_id]
     @project = @client.project
   rescue ActiveRecord::RecordNotFound
     render_404
