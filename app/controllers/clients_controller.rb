@@ -44,7 +44,6 @@ class ClientsController < ApplicationController
   end
 
   def edit
-    debugger
     @client = Client.find(params[:id])
     @company = Company.find(:all, :conditions => ["taxcode = ? and (public='public' or public='semipublic')", @client.taxcode]).first
   end
