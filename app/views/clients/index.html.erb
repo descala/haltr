@@ -1,3 +1,13 @@
+<div class="seccio grup">
+  <div class="col span-2-de-2">
+    <ul class="menu-rapid">
+      <li>
+      <%= link_to l(:label_company_new), new_project_client_path, :class => 'icon icon-add' %>
+      </li>
+    </ul>
+  </div>
+</div>
+
 <!--filtres-->
 <div class="seccio grup">
   <div class="col span-2-de-2">
@@ -47,7 +57,7 @@
             <td class"taxcode" style="cursor:pointer;" <%= onclick_edit %>><%=image_tag("link.png") if client.linked?%><%= link_to client.taxcode, :action=>'edit', :id=>client %></td>
             <td class="name"><%=h client.name%></td>
             <td class="invoices"><%= link_to(l(:label_invoice_plural), {:controller=>'invoices', :action=>'index', :id=>@project, :client_id=>client}, :class=>'factura-btt', :title=>l(:label_invoice_plural)) if client.invoices.any? %></td>
-            <td class="people"><%= link_to l(:label_person_plural), {:controller=>'people', :id=>client}, :class=>'persones-btt', :title=>l(:label_person_plural) %></td>
+            <td class="people"><%= link_to l(:label_person_plural), client_people_path(client), :class=>'persones-btt', :title=>l(:label_person_plural) %></td>
             <td class="new"><%= link_to l(:button_new_invoice), {:controller=>'invoices',:action=>'new',:id=>@project,:client=>client}, :class => 'nova-f-btt', :title=>l(:label_invoice_new) %></td>
             <td class="delete">
               <% if client.invoices.any? -%>
@@ -93,5 +103,5 @@
 <% html_title(l(:label_companies)) -%>
 
 <% content_for :sidebar do %>
-  <%= render_menu :companies_menu %>
+  <%= render_menu :companies_menu, @project %>
 <% end %>

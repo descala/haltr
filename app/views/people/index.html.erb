@@ -1,3 +1,15 @@
+<% if @client %>
+<div class="seccio grup">
+  <div class="col span-2-de-2">
+    <ul class="menu-rapid">
+      <li>
+      <%= link_to l(:label_person_new), new_client_person_path(@client), :class => 'icon icon-add' %>
+      </li>
+    </ul>
+  </div>
+</div>
+<%end%>
+
 <!--filtres-->
 <div class="seccio grup">
   <div class="col span-2-de-2">
@@ -51,7 +63,7 @@
             <td><%=h person.last_name %></td>
             <td><%=h person.email %></td>
             <td align="center"><%= link_to l(:button_edit), {:action=>'edit',:id=>person}, :class => 'icon icon-edit' %></td>
-            <td align="center"><%= link_to l(:button_delete), {:action=>'destroy',:id=>person} , :confirm => l(:text_are_you_sure), :method => :post, :class => 'icon icon-del' %></td>
+            <td align="center"><%= link_to l(:button_delete), {:action=>'destroy',:id=>person} , :confirm => l(:text_are_you_sure), :method => :delete, :class => 'icon icon-del' %></td>
           </tr>
         <% end -%>
       </tbody>
@@ -72,8 +84,8 @@
 <!--final paginacio-->
 
 
-<% html_title(l(:label_companies)) -%>
+<% html_title(l(:button_people)) -%>
 
 <% content_for :sidebar do %>
-    <%= render :partial => 'sidebar' %>
+  <%= render_menu :companies_menu, @project %>
 <% end %>

@@ -9,6 +9,7 @@ module ProjectHaltrPatch
       unloadable # Send unloadable so it will not be unloaded in development
       has_one :company
       has_many :clients
+      has_many :people, :through => :clients
       has_many :invoices
       has_many :invoice_templates
       has_many :issued_invoices

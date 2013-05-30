@@ -6,7 +6,7 @@
 <script type="text/javascript">
 $(document).on('change', '#client_taxcode', function(e) {
     $.ajax({
-      url: '<%= url_for :controller=>'clients', :action=>'check_cif',:id=>@project.id, :client => @client %>',
+url: '<%= url_for :controller=>'clients', :action=>'check_cif', :id => @project.id, :client => @client.id %>',
       data: 'value=' + this.value,
       dataType: "html"
       }).done(function( html ) {

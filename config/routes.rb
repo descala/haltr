@@ -32,9 +32,21 @@ else
   match '/invoices/:action/:id' => 'invoices'
   match '/received/:action/:id' => 'received'
   match '/templates/:action/:id' => 'invoice_templates'
-  match '/clients/:action/:id' => 'clients'
   match '/companies/:action/:id' => 'companies'
   match '/payments/:action/:id' => 'payments'
   match '/tasks/:action/:id' => 'tasks'
-  match '/people/:action/:id' => 'people'
+
+  match '/clients/check_cif/:id' => 'clients#check_cif', :via => :get
+  match '/clients/link_to_profile/:id' => 'clients#link_to_profile', :via => :get
+  match '/clients/unlink/:id' => 'clients#unlink', :via => :get
+  match '/clients/allow_link/:id' => 'clients#allow_link', :via => :get
+  match '/clients/deny_link/:id' => 'clients#deny_link', :via => :get
+  resources :projects do
+    resources :clients, :only => [:index, :new, :create]
+    match :people, :controller => 'people', :action => 'index', :via => :get
+  end
+  resources :clients do
+    resources :people, :only => [:index, :new, :create]
+  end
+  resources :people
 end
