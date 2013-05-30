@@ -11,8 +11,8 @@ class ClientsController < ApplicationController
   include SortHelper
 
   before_filter :find_project_by_project_id, :only => [:index,:new,:create]
-  before_filter :find_project,  :only => [:link_to_profile,:allow_link,:deny_link]
-  before_filter :find_client, :except => [:index,:new,:create,:link_to_profile,:allow_link,:deny_link]
+  before_filter :find_project,  :only => [:link_to_profile,:allow_link,:deny_link,:check_cif]
+  before_filter :find_client, :except => [:index,:new,:create,:link_to_profile,:allow_link,:deny_link,:check_cif]
   before_filter :set_iso_countries_language
   before_filter :authorize
 
@@ -45,7 +45,6 @@ class ClientsController < ApplicationController
   end
 
   def edit
-    @client = Client.find(params[:id])
     @company = Company.find(:all, :conditions => ["taxcode = ? and (public='public' or public='semipublic')", @client.taxcode]).first
   end
 

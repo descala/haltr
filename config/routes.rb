@@ -32,7 +32,6 @@ else
   match '/invoices/:action/:id' => 'invoices'
   match '/received/:action/:id' => 'received'
   match '/templates/:action/:id' => 'invoice_templates'
-  match '/companies/:action/:id' => 'companies'
   match '/payments/:action/:id' => 'payments'
   match '/tasks/:action/:id' => 'tasks'
 
@@ -44,9 +43,14 @@ else
   resources :projects do
     resources :clients, :only => [:index, :new, :create]
     match :people, :controller => 'people', :action => 'index', :via => :get
+    match 'companies/linked_to_mine', :controller => 'companies', :action => 'linked_to_mine', :via => :get
+    resources :companies, :only => [:index]
   end
   resources :clients do
     resources :people, :only => [:index, :new, :create]
   end
   resources :people
+
+  match '/companies/logo/:taxcode' => 'companies#logo', :via => :get
+  resources :companies, :only => [:update]
 end
