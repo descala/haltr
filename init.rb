@@ -84,7 +84,7 @@ Redmine::Plugin.register :haltr do
   end
 
   menu :project_menu, :companies,  { :controller => 'clients',  :action => 'index' }, :param => :project_id, :caption => :label_companies
-  menu :project_menu, :invoices,   { :controller => 'invoices', :action => 'index' }, :caption => :label_invoice_plural
+  menu :project_menu, :invoices,   { :controller => 'invoices', :action => 'index' }, :param => :project_id, :caption => :label_invoice_plural
   menu :project_menu, :payments,   { :controller => 'payments', :action => 'index' }, :caption => :label_payment_plural
   menu :top_menu, :admin_haltr_stastics, { :controller => 'stastics', :action => 'index' }, :caption => :label_stastics, :if => Proc.new {User.current.admin?}
 
@@ -94,3 +94,11 @@ end
 ActiveSupport::Inflector.inflections do |inflect|
   inflect.singular 'taxes', 'tax'
 end
+
+Mime::Type.register "text/xml", :facturae30
+Mime::Type.register "text/xml", :facturae31
+Mime::Type.register "text/xml", :facturae32
+Mime::Type.register "text/xml", :peppolubl20
+Mime::Type.register "text/xml", :biiubl20
+Mime::Type.register "text/xml", :svefaktura
+Mime::Type.register "text/xml", :oioubl20

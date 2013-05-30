@@ -11,8 +11,7 @@
 
 <% unless @is_pdf -%>
   <% content_for :sidebar do %>
-    <%= render :partial => 'invoices/sidebar' %>
-    <!--<%= render :partial => "invoices/invoice_menu" %>-->
+    <%= render_menu :invoices_menu %>
   <% end %>
   <% content_for :header_tags do %>
     <%= stylesheet_link_tag 'minimal', :plugin => 'haltr' %>

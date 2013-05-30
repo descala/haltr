@@ -1,6 +1,6 @@
 <%= error_messages_for 'invoice' %>
 
-<fieldset>
+<fieldset class="tabular box">
   <legend><%=l(:invoice_data)%></legend>
 
   <div class="seccio grup">
@@ -64,7 +64,7 @@
 </fieldset>
 
 
-<fieldset>
+<fieldset class="tabular box">
   <legend><%=l(:label_tax_plural)%></legend>
 
   <% if @invoice.taxes_hash.empty? -%>
@@ -102,7 +102,7 @@
 </fieldset>
 
 
-<fieldset>
+<fieldset class="tabular box">
   <legend><%=l(:concept)%></legend>
   <table class="formee" id="invoice_lines" data-tax-names="<%= @invoice.tax_names.join(' ') %>">
     <thead>

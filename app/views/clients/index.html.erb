@@ -48,7 +48,6 @@
         <th><%=l(:label_invoice_plural)%></th>
         <th><%=l(:label_person_plural)%></th>
         <th><%=l(:label_invoice_new)%></th>
-        <th><%=l(:button_delete)%></th>
       </thead>
       <tbody>
         <% for client in @clients -%>
@@ -59,15 +58,6 @@
             <td class="invoices"><%= link_to(l(:label_invoice_plural), {:controller=>'invoices', :action=>'index', :id=>@project, :client_id=>client}, :class=>'factura-btt', :title=>l(:label_invoice_plural)) if client.invoices.any? %></td>
             <td class="people"><%= link_to l(:label_person_plural), client_people_path(client), :class=>'persones-btt', :title=>l(:label_person_plural) %></td>
             <td class="new"><%= link_to l(:button_new_invoice), {:controller=>'invoices',:action=>'new',:id=>@project,:client=>client}, :class => 'nova-f-btt', :title=>l(:label_invoice_new) %></td>
-            <td class="delete">
-              <% if client.invoices.any? -%>
-                <%= link_to l(:button_delete), {:action=>'destroy',:id=>client},
-                  :confirm => l(:confirm_delete_client_with_invoices, :count=>client.invoices.count),
-                  :method => :delete, :class=>'eliminar', :title=>l(:button_delete) %>
-              <% else -%>
-                 <%= link_to l(:button_delete), {:action=>'destroy',:id=>client}, :confirm => l(:text_are_you_sure), :method=>:delete, :class=>'eliminar', :title=>l(:button_delete) %>
-              <% end -%>
-            </td>
           </tr>
         <% end -%>
       </tbody>
