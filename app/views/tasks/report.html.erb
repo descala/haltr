@@ -52,5 +52,5 @@
 <% end -%>
 
 <% content_for :sidebar do %>
-  <%= render :partial => 'invoices/sidebar' %>
+  <%= render_menu :invoices_menu, @project %>
 <% end %>

@@ -1,5 +1,7 @@
 class ReceivedController < InvoicesController
 
+  menu_item Haltr::MenuItem.new(:invoices,:received)
+
   def index
     sort_init 'invoices.created_at', 'desc'
     sort_update %w(invoices.created_at state number date due_date clients.name import_in_cents)

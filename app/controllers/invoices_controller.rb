@@ -106,8 +106,6 @@ class InvoicesController < ApplicationController
             tax['comment'] = ''
           end
         end
-        # set currency from invoice on each line
-        invoice_line['currency'] = params[:invoice][:currency]
       end
     end
 
@@ -164,12 +162,12 @@ class InvoicesController < ApplicationController
 
   def destroy
     @invoice.destroy
-    redirect_to :action => 'index', :id => @project
+    redirect_to :action => 'index', :project_id => @project
   end
 
   def destroy_payment
     @payment.destroy
-    redirect_to :action => 'show', :id => @invoice
+    redirect_to :action => 'show', :ptroject_id => @invoice
   end
 
   def mark_sent
@@ -278,9 +276,7 @@ class InvoicesController < ApplicationController
       @invoices_sent = InvoiceDocument.find(:all,:conditions => ["client_id = ? and state = 'sent'",@client.id]).sort
       @invoices_closed = InvoiceDocument.find(:all,:conditions => ["client_id = ? and state = 'closed'",@client.id]).sort
       respond_to do |format|
-        format.html do
-          render :template => 'invoices/show_original'
-        end
+        format.html
         format.facturae30  { render_clean_xml :template => 'invoices/facturae30.xml.erb', :layout => false }
         format.facturae31  { render_clean_xml :template => 'invoices/facturae31.xml.erb', :layout => false }
         format.facturae32  { render_clean_xml :template => 'invoices/facturae32.xml.erb', :layout => false }
@@ -344,7 +340,7 @@ class InvoicesController < ApplicationController
     invoices = IssuedInvoice.find_not_sent @project
     if invoices.size > 10
       flash[:error] = l(:too_much_invoices,:num=>invoices.size)
-      redirect_to :action=>'index', :id=>@project
+      redirect_to :action=>'index', :project_id=>@project
       return
     end
     zip_file = Tempfile.new "#{@project.identifier}_invoices.zip", 'tmp'
@@ -365,7 +361,7 @@ class InvoicesController < ApplicationController
     zip_file.close
   rescue LoadError
     flash[:error] = l(:zip_gem_required)
-    redirect_to :action => 'index', :id => @project
+    redirect_to :action => 'index', :project_id => @project
   end
 
   def legal

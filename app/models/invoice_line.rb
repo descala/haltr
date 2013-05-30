@@ -38,14 +38,8 @@ class InvoiceLine < ActiveRecord::Base
     write_attribute :quantity, (v.is_a?(String) ? v.gsub(',','.') : v)
   end
 
-  #TODO change to callbacks 
-  def initialize(attributes=nil, *args)
-    super
-    update_currency
-  end
-
   def total
-    Money.new((price * quantity * Money::Currency.new(currency).subunit_to_unit).round.to_i, currency)
+    Money.new((price * quantity * Money::Currency.new(invoice.currency).subunit_to_unit).round.to_i, invoice.currency)
   end
 
   def taxable_base
@@ -105,13 +99,6 @@ _LINE
   end
 
   private
-
-  def update_currency
-    self.currency ||= self.invoice.currency rescue nil
-    self.currency ||= self.invoice.client.currency rescue nil
-    self.currency ||= self.invoice.company.currency rescue nil
-    self.currency ||= Setting.plugin_haltr['default_currency']
-  end
 
   def method_missing(m, *args)
     if m.to_s =~ /^tax_[a-zA-Z]+/ and args.size == 0

@@ -1,7 +1,7 @@
 class InvoiceTemplatesController < ApplicationController 
 
   unloadable
-  menu_item :haltr
+  menu_item Haltr::MenuItem.new(:invoices,:templates)
 
   helper :invoices
   layout 'haltr'
@@ -9,8 +9,9 @@ class InvoiceTemplatesController < ApplicationController
   helper :sort
   include SortHelper
 
+  before_filter :find_project_by_project_id, :only => [:index,:new,:create]
   before_filter :find_invoice_template, :except => [:index,:new,:create,:new_from_invoice,:invoices,:create_invoices,:update_taxes]
-  before_filter :find_project, :only => [:index,:new,:create,:invoices,:create_invoices,:update_taxes]
+  before_filter :find_project, :only => [:invoices,:create_invoices,:update_taxes]
   before_filter :find_invoice, :only => [:new_from_invoice]
   before_filter :authorize
 

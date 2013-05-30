@@ -1,13 +1,14 @@
 class TasksController < ApplicationController
 
   unloadable
-  menu_item :invoices
+  menu_item Haltr::MenuItem.new(:invoices,:reports)
   menu_item :payments, :only => [:index,:n19,:n19_done,:import_aeb43]
   helper :haltr
   layout 'haltr'
   helper :invoices
 
-  before_filter :find_project, :except => [:n19, :n19_done]
+  before_filter :find_project_by_project_id, :only => [:report]
+  before_filter :find_project, :except => [:n19, :n19_done, :report]
   before_filter :find_invoice, :only => [:n19, :n19_done]
   before_filter :authorize
 
@@ -18,10 +19,6 @@ class TasksController < ApplicationController
     @charge_bank_on_due_date = IssuedInvoice.find_due_dates(@project)
   end
 
-  def automator
-    @invoices = IssuedInvoice.find_not_sent(@project)
-  end
-  
   # generate spanish AEB Nº19
   def n19
     @due_date = @invoice.due_date

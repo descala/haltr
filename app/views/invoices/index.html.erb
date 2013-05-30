@@ -2,7 +2,7 @@
 <div class="seccio grup">
   <div class="col span-2-de-2">
     <ul class="menu-rapid">
-      <li><%= link_to l("label_#{params[:controller].singularize}_new"), {:action => 'new', :id => @project} %></li>
+      <li><%= link_to l("label_invoice_new"), new_project_invoice_path(@project), :class => 'icon icon-add' %></li>
     </ul>
   </div>
 </div>
