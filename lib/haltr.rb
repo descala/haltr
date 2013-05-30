@@ -19,7 +19,9 @@ end
 
 Redmine::MenuManager.map :invoices_menu do |menu|
   menu.push :invoices_level2, {:controller=>'invoices', :action => 'index' }, :param => :project_id, :caption => :label_issued
-  menu.push :recurring, {:controller=>'invoice_templates', :action => 'index' }, :param => :project_id, :caption => :label_invoice_template_plural
+  menu.push :templates, {:controller=>'invoice_templates', :action => 'index' }, :param => :project_id, :caption => :label_invoice_template_plural
+  menu.push :received, {:controller=>'received', :action => 'index' }, :param => :project_id
+  menu.push :reports, {:controller=>'tasks', :action => 'report' }, :param => :project_id
 
 end
 

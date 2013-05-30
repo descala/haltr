@@ -1,0 +1,19 @@
+<div class="seccio grup">
+  <%= render :partial=>'invoices/invoice' %>
+  <%= render :partial=>'invoices/events'%>
+  <% if User.current.admin? %>
+    <%= render :partial=>'invoices/channel_links'%>
+  <% end %>
+</div>
+
+<textarea id="console" rows="10" style="width:99%; visibility:hidden;">
+</textarea>
+
+<% unless @is_pdf -%>
+  <% content_for :sidebar do %>
+    <%= render_menu :invoices_menu, @project %>
+  <% end %>
+  <% content_for :header_tags do %>
+    <%= stylesheet_link_tag 'minimal', :plugin => 'haltr' %>
+  <% end %>
+<% end %>

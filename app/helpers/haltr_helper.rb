@@ -43,7 +43,7 @@ module HaltrHelper
   def line_price(line)
     precision = line.price.to_s.split(".").last.size
     precision = 2 if precision == 1
-    currency = Money::Currency.new(line.currency)
+    currency = Money::Currency.new(line.invoice.currency)
     if currency.subunit_to_unit == 1 and precision == 2
       precision = 0
     end

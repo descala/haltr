@@ -104,7 +104,7 @@
 
 <fieldset class="tabular box">
   <legend><%=l(:concept)%></legend>
-  <table class="formee" id="invoice_lines" data-tax-names="<%= @invoice.tax_names.join(' ') %>">
+  <table class="formee" id="invoice_lines" data-tax-names="<%= @project.company.tax_names.join(' ') %>">
     <thead>
       <tr>
         <th><%=l(:field_quantity)%></th>

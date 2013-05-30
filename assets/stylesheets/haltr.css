@@ -15,3 +15,12 @@ html>body .tabular div {overflow:hidden;}
 }
 
 ul.menu-rapid li, #sidebar ul li {list-style-type:none;}
+
+.money {
+  text-align: right;
+}
+
+.menu-rapid li {
+  display: inline-block;
+  margin-left: 20px;
+}
