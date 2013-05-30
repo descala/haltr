@@ -55,6 +55,8 @@ else
 
   resources :people
 
+  resources :invoices
+
   resources :invoice_templates
 
   match '/companies/logo/:taxcode' => 'companies#logo', :via => :get
