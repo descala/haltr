@@ -1,6 +1,6 @@
 <h4>Check gemerated documents</h4>
 <ul>
   <% ExportChannels.formats.sort.each do |format| %>
-    <li><%= link_to format, {:controller=>'invoices',:action=>format,:id=>@invoice} %><li>
+    <li><%= link_to format, {:controller=>'invoices',:action=>'show' ,:id=>@invoice, :format => format} %><li>
   <% end %>
 </ul>

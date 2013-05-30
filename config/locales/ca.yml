@@ -220,9 +220,9 @@ ca:
   public_link: "Enllaç públic"
 
   # Invoice templates
-  label_invoice_template_new: Nova plantilla
-  label_invoice_template: Plantilla
-  label_invoice_template_plural: Plantilles
+  label_invoice_template_new: Nova factura recurrent
+  label_invoice_template: Recurrent
+  label_invoice_template_plural: Recurrents
   label_generated_invoices: Factures generades
   next_charge: Següent pagament
   invoices_to_generate: Factures a generar

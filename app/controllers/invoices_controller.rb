@@ -1,15 +1,15 @@
 class InvoicesController < ApplicationController
 
   unloadable
-  menu_item :invoices
+  menu_item Haltr::MenuItem.new(:invoices,:invoices_level2)
   helper :haltr
   layout 'haltr'
 
   helper :sort
   include SortHelper
 
+  before_filter :find_project_by_project_id, :only => [:index,:new,:create,:send_new_invoices, :download_new_invoices, :update_payment_stuff]
   before_filter :find_invoice, :except => [:index,:new,:create,:destroy_payment,:update_payment_stuff,:by_taxcode_and_num,:view,:logo,:download,:mail,:send_new_invoices, :download_new_invoices]
-  before_filter :find_project, :only => [:index,:new,:create,:update_payment_stuff,:send_new_invoices, :download_new_invoices]
   before_filter :find_payment, :only => [:destroy_payment]
   before_filter :find_hashid, :only => [:view,:download]
   before_filter :find_attachment, :only => [:logo]
@@ -18,8 +18,8 @@ class InvoicesController < ApplicationController
   skip_before_filter :check_if_login_required, :only => [:by_taxcode_and_num,:view,:logo,:download,:mail]
   # on development skip auth so we can use curl to debug
   if Rails.env.development? or Rails.env.test?
-    skip_before_filter :check_if_login_required, :only => [:by_taxcode_and_num,:view,:logo,:download,:mail,:facturae30,:facturae31,:facturae32,:peppolubl20,:biiubl20,:svefaktura, :oioubl20]
-    skip_before_filter :authorize, :only => [:facturae30,:facturae31,:facturae32,:peppolubl20,:biiubl20,:svefaktura,:oioubl20]
+    skip_before_filter :check_if_login_required, :only => [:by_taxcode_and_num,:view,:logo,:download,:mail,:show]
+    skip_before_filter :authorize, :only => [:show]
   else
     before_filter :check_remote_ip, :only => [:by_taxcode_and_num,:mail]
   end
@@ -287,44 +287,23 @@ class InvoicesController < ApplicationController
     end
   end
 
-  # methods to debugg xml
-  def facturae30
-    @format = "facturae30"
-    @company = @invoice.company
-    render_clean_xml :template => 'invoices/facturae30.xml.erb', :layout => false
-  end
-  def facturae31
-    @format = "facturae31"
-    @company = @invoice.company
-    render_clean_xml :template => 'invoices/facturae31.xml.erb', :layout => false
-  end
-  def facturae32
-    @format = "facturae32"
-    @company = @invoice.company
-    render_clean_xml :template => 'invoices/facturae32.xml.erb', :layout => false
-  end
-  def peppolubl20
-    @company = @invoice.company
-    render_clean_xml :template => 'invoices/peppolubl20.xml.erb', :layout => false
-  end
-  def biiubl20
-    @company = @invoice.company
-    render_clean_xml :template => 'invoices/biiubl20.xml.erb', :layout => false
-  end
-  def svefaktura
-    @company = @invoice.company
-    render_clean_xml :template => 'invoices/svefaktura.xml.erb', :layout => false
-  end
-  def oioubl20 
-    @company = @invoice.company
-    render_clean_xml :template => 'invoices/oioubl20.xml.erb', :layout => false
-  end
-
   def show
     if @invoice.is_a? IssuedInvoice
       @invoices_not_sent = InvoiceDocument.find(:all,:conditions => ["client_id = ? and state = 'new'",@client.id]).sort
       @invoices_sent = InvoiceDocument.find(:all,:conditions => ["client_id = ? and state = 'sent'",@client.id]).sort
       @invoices_closed = InvoiceDocument.find(:all,:conditions => ["client_id = ? and state = 'closed'",@client.id]).sort
+      respond_to do |format|
+        format.html do
+          render :template => 'invoices/show_original'
+        end
+        format.facturae30  { render_clean_xml :template => 'invoices/facturae30.xml.erb', :layout => false }
+        format.facturae31  { render_clean_xml :template => 'invoices/facturae31.xml.erb', :layout => false }
+        format.facturae32  { render_clean_xml :template => 'invoices/facturae32.xml.erb', :layout => false }
+        format.peppolubl20 { render_clean_xml :template => 'invoices/peppolubl20.xml.erb', :layout => false }
+        format.biiubl20    { render_clean_xml :template => 'invoices/biiubl20.xml.erb', :layout => false }
+        format.svefaktura  { render_clean_xml :template => 'invoices/svefaktura.xml.erb', :layout => false }
+        format.oioubl20    { render_clean_xml :template => 'invoices/oioubl20.xml.erb', :layout => false }
+      end
     elsif @invoice.is_a? ReceivedInvoice
       @invoice.update_attribute(:has_been_read, true)
       if @invoice.invoice_format == "pdf"
@@ -624,7 +603,6 @@ class InvoicesController < ApplicationController
   def render_clean_xml(options)
     xml = render_to_string(options)
     render :text => clean_xml(xml)
-    response.content_type = 'application/xml'
   end
 
   def clean_xml(xml)

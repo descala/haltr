@@ -1,5 +1,5 @@
 <label for="invoice_client_id"><%= l(:field_client) %><span class="required"> *</span></label>
-<%= select :invoice, :client_id, clients_for_select, {:selected=>selected}, :data => { :remote => true, :url => url_for(:controller => 'invoices', :action => 'update_payment_stuff') }, :class => "formee-medium" %>
+<%= select :invoice, :client_id, clients_for_select, {:selected=>selected}, :data => { :remote => true, :url => url_for(:controller => 'invoices', :action => 'update_payment_stuff', :project_id=>@project) }, :class => "formee-medium" %>
 <span class="mes">
   <%=link_to_function(l(:label_company_new),"$('#new_client_wrapper').show();")%>
 </span>

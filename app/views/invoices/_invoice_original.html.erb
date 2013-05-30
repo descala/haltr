@@ -1,0 +1,179 @@
+<div id="amends">
+<% if @invoice.amend -%>
+  <h3><%=l(:amended_by_invoice, :link => link_to("#{l(:label_amendment_invoice)} #{@invoice.amend.number}",
+                                                 :controller => 'invoices', :action=>'show', :id=>@invoice.amend)) %></h3>
+<% end -%>
+</div>
+<!-- Vendor Info -->
+<div class="vcard vendor">
+  <div class="logo">
+    <% if @company.attachments.any? -%>
+      <% if @is_pdf %>
+        <%= tag 'img', :src => "#{Attachment.storage_path}/#{@company.attachments.first.disk_filename}" -%>
+      <% else -%>
+        <%= tag 'img', :src => "/invoices/logo/#{@company.attachments.first.id}/#{@company.attachments.first.filename}", :alt => "#{@company.name} Logo" -%>
+      <% end -%>
+    <% end -%>
+  </div>
+  <div class="vendor-info">
+    <h3 class="org fn"><%=h @company.name %></h3>
+    <address class="adr">
+      <div class="street-address"><%=h @company.address %></div>
+      <span class="postal-code"><%=h @company.postalcode %></span> <span class="locality"><%=h @company.city %></span>
+      <div class="region"><%=h @company.province %></div>
+      <div class="country-name"></div>
+    </address>
+    <div><strong><%=h l(:field_taxcode) %></strong><span class="tax-id"> <%=h @company.taxcode %></span></div>
+    <div style="height:10px;"></div>
+    <div><%= @company.website %></div>
+    <div><%= @company.email %></div>
+  </div>
+</div>
+
+<!-- Invoice Number and Info -->
+<h2 class="invoice-ID"><%=h @invoice.label %> <%=h @invoice.number %></h2>
+<div class="invoice-info">
+  <span class="date"><strong><%=h format_date @invoice.date %></strong></span><br/>
+  <% if @invoice.amend_of -%>
+    <span class="invoice-terms"><%=h l(:label_amended_invoice)%>: <%= link_to @invoice.amend_of.number,{:controller => 'invoices', :action => 'show', :id => @invoice.amend_of} %></span><br/>
+  <% end -%>
+  <% unless @invoice.due_date.blank? -%>
+    <span class="invoice-terms<%=h " pastdue" if @invoice.past_due?%>"><%=h l(:field_due_date)%> <%=h format_date @invoice.due_date %> <%= "(#{@invoice.terms_description})" unless @invoice.custom_due? %></span><br/>
+  <% end -%>
+  <% unless @invoice.payment_method_string.blank? -%>
+    <span class="invoice-terms"><%=h @invoice.payment_method_string %></span><br/>
+  <% end -%>
+  <% unless @invoice.ponumber.blank? -%>
+    <span class="invoice-terms"><%=h "#{t(:field_ponumber)} #{@invoice.ponumber}" %></span><br/>
+  <% end -%>
+  <%= call_hook(:invoice_view_invoice_info) %>
+</div>
+
+<!-- Client Info -->
+<div class="vcard client">
+  <div class="client-info">
+    <h3 class="org fn"><%= client_name_with_link @client %></h3>
+    <address class="adr">
+      <div class="street-address"><%=h @client.address %></div>
+      <div class="street-address"><%=h @client.address2 %></div>
+      <span class="postal-code"><%=h @client.postalcode %></span>
+      <% if !@client.city.blank? or !@client.province.blank? -%>
+        <span class="locality"><%=h @client.city.strip unless @client.city.blank? %></span>
+      <% unless @client.province.blank? -%>, <span class="region"><%=h @client.province %></span><% end -%>
+      <% end -%>
+      <div class="country-name"><%=h @client.country if @client.country and @client.country.downcase != @company.country.downcase %></div>
+    </address>
+      <div><strong><%=h l(:field_taxcode) %>:</strong><span class="tax-id"> <%=h @client.taxcode.upcase %></span></div>
+      <%= call_hook(:invoice_view_client_info) %>
+    </div>
+</div>
+
+<!-- Invoice Data -->
+<div class="invoice">
+
+  <!-- Line Details -->
+  <table class="line-items" border="0" cellpadding="0" cellspacing="0">
+    <tbody>
+      <tr>
+        <th class="item-quantity first"><abbr title="Quantitat">Q</abbr></th>
+        <th class="item-description"><%=h l(:field_description)%></th>
+        <th class="item-price"><%=h l(:field_amount) %></th>
+        <th class="line-total last"><%=h l(:label_total)%></th>
+      </tr>
+
+      <% @lines.each do |line| -%>
+        <tr>
+          <td class="item-quantity first"><%=h quantity(line.quantity) %> <%=h line.unit_short%></td>
+          <td class="item-description"><%=h line.description %></td>
+          <td class="item-price"><%=h line_price(line) %></td>
+          <td class="line-total last"><%=h money(line.total) %></td>
+        </tr>
+      <% end -%>
+
+      <% if @invoice.discount_percent and @invoice.discount_percent > 0 -%>
+        <tr>
+          <td class="item-quantity first"></td>
+          <td class="item-description"><%=h @invoice.discount_text %></td>
+          <td class="item-price"><%=h number_to_percentage(@invoice.discount_percent, :precision=>0) %></td>
+          <td class="line-total last">- <%=h money(@invoice.discount) %></td>
+        </tr>
+      <% end -%>
+
+      <% if @invoice.charge_amount.cents > 0 -%>
+        <tr>
+          <td class="item-quantity first"></td>
+          <td class="item-description"><%=h @invoice.charge_reason %></td>
+          <td class="item-price"></td>
+          <td class="line-total last"><%=h money(@invoice.charge_amount) %></td>
+        </tr>
+      <% end -%>
+
+
+  </tbody></table>
+
+  <!-- Totals Details -->
+  <table class="invoice-calculations" border="0" cellpadding="0" cellspacing="0">
+    <tbody><tr class="invoice-subtotal">
+        <th><%=h l(:label_subtotal)%>:</th>
+        <td><%=h money(@invoice.subtotal) %></td>
+      </tr>
+      <% @invoice.taxes_uniq.each do |tax| -%>
+      <tr class="sales-tax">
+        <th><%= h tax_name(tax) %> <%= " #{l(:over_taxable_base)} #{money(@invoice.taxable_base(tax))}" unless @invoice.tax_applies_to_all_lines?(tax) %>:</th>
+        <td><%= h money(@invoice.tax_amount(tax)) %></td>
+      </tr>
+      <% end -%>
+      <tr class="invoice-total">
+        <th><%=h l(:label_total)%>:</th>
+        <td><%=h money(@invoice.total) %></td>
+      </tr>
+  </tbody></table>
+
+  <% if @invoice.is_a?(IssuedInvoice) and @invoice.payments.any? -%>
+
+    <!-- Payment Details -->
+    <table class="line-items payments" border="0" cellpadding="0" cellspacing="0">
+      <tbody>
+        <tr>
+          <th class="item-delete first"></th>
+          <th class="item-date"><%=h l :field_due_date %></th>
+          <th class="item-description"><%=h l :field_description%></th>
+          <th class="line-total last"><%=h l :field_quantity %></th>
+        </tr>
+        <% @invoice.payments.each do |payment| -%>
+          <tr>
+            <td class="item-delete first"><%= link_to "", {:action=>'destroy_payment',:id=>payment} , :confirm => l(:text_are_you_sure), :method => :post, :class => 'icon icon-del' %></td>
+            <td class="item-date first"><%=h format_date payment.date %></td>
+            <td class="item-description"><%=h payment.description %></td>
+            <td class="line-total last"><%=h money(payment.amount) %></td>
+          </tr>
+        <% end -%>
+      </tbody>
+    </table>
+
+    <!-- Payment Total Details -->
+    <table class="invoice-calculations payments" border="0" cellpadding="0" cellspacing="0">
+      <tbody>
+        <tr class="invoice-total">
+          <th><%=h l :field_total_paid %>:</th>
+          <td><%=h money(@invoice.total_paid) %></td>
+        </tr>
+    </tbody></table>
+
+  <% end -%>
+
+</div>
+
+<% if !@invoice.extra_info.blank? or
+     @invoice.taxes.collect {|t| t if t.exempt? and !t.comment.blank? }.compact.any? -%>
+  <div class="notes">
+    <h3><%=h l(:field_extra_info)%></h3>
+    <% unless @invoice.extra_info.blank? -%>
+      <span class="invoice-terms"><%= simple_format(h @invoice.extra_info) %></span>
+    <% end -%>
+    <% @invoice.taxes_uniq.each do |t| -%>
+      <% next unless t.exempt? and !t.comment.blank? -%>
+      <span class="invoice-terms"><%= simple_format(h "#{tax_name(t)}: #{t.comment}") %></span>
+    <% end -%><br/>
+  </div>
+<% end -%>

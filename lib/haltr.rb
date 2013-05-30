@@ -17,3 +17,9 @@ Redmine::MenuManager.map :companies_menu do |menu|
 
 end
 
+Redmine::MenuManager.map :invoices_menu do |menu|
+  menu.push :invoices_level2, {:controller=>'invoices', :action => 'index' }, :param => :project_id, :caption => :label_issued
+  menu.push :recurring, {:controller=>'invoice_templates', :action => 'index' }, :param => :project_id, :caption => :label_invoice_template_plural
+
+end
+
