@@ -1,13 +1,5 @@
 /* Redmine tabular forms, but with div instead of p */
 
-.tabular div{
-  margin: 0;
-  padding: 3px 0 3px 0;
-  padding-left: 180px; /* width of left column containing the label elements */
-  min-height: 1.8em;
-  clear:left;
-}
-
 html>body .tabular div {overflow:hidden;}
 
 #payment_stuff, .client_hiden_fields {
@@ -23,4 +15,12 @@ ul.menu-rapid li, #sidebar ul li {list-style-type:none;}
 .menu-rapid li {
   display: inline-block;
   margin-left: 20px;
+}
+
+.invoice-channel-links h3, .invoice-events h3 {
+  border-bottom: 1px dotted #bbb;
+}
+
+.invoice-channel-links, .invoice-events {
+  margin: 50px;
 }

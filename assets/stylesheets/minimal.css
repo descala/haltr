@@ -1,3 +1,6 @@
+.haltrinvoice {
+  font-size: 14px;
+}
 .haltrinvoice ul {
 	margin: 0;
 	padding: 0;
@@ -37,7 +40,7 @@
 	}
 .haltrinvoice acronym {
 	font-style: normal;
-	border-bottom: 1px dotted #333;
+	border-bottom: 1px dotted;
 	cursor: help;
 	}
 .haltrinvoice address {
@@ -45,15 +48,12 @@
 	}
 
 .haltrinvoice a:link {
-	color: #29c;
 	text-decoration: none;
 	}
 .haltrinvoice a:visited {
-	color: #29c;
 	text-decoration: none;
 	}
 .haltrinvoice a:hover {
-	color: #29c;
 	text-decoration: underline;
 	}
 .haltrinvoice a:link img,
@@ -67,18 +67,14 @@
 	margin: 0;
 	padding: 6px 0;
 	text-align: center;
-	color: #fff;
-	background: #268;
-	border-bottom: 1px solid #146;
+	border-bottom: 1px solid;
 	}
 #counter strong {
-	color: #c8f6b6;
 	}
 #workspace1 {
 	margin: 0;
 	padding: 50px;
     border: 1px solid;
-	background: #F5FFF5;
     margin-left:auto;
     margin-right:auto;
 	}
@@ -98,7 +94,6 @@
 	}
 #col2 h2 {
 	margin: 0 0 10px;
-	color: #1a8;
 	}
 .clear {
 	clear: both;
@@ -110,15 +105,12 @@
 .pagehelp {
 	margin: 0 0 20px;
 	padding: -1px 10px 20px;
-	background: #bbb;
 	}
 
 .new {
 	margin: 0;
 	padding: 10px 20px 16px;
 	font-size: 18px;
-	color: #bef;
-	background: #145c7b;
 	border-bottom: 1px solid #146;
 	}
 .new a:link,
@@ -151,66 +143,6 @@
 #col2 .paid { background: #1a8; }
 #col2 .recurring { background: #145c7b; padding-top: 10px; }
 
-.recurringBox {
-	margin: 20px 0;
-	padding: 0 20px;
-	}
-.recurringBox h2 {
-	line-height: 17px;
-	}
-.recurringBox span {
-	display: block;
-	font-size: 11px;
-	font-weight: normal;
-	color: #222;
-	}
-.recurringBox ul {
-	margin: 0;
-	padding: 0;
-	font-size: 11px;
-	border-top: 1px solid #c8f6b6;
-	}
-.recurringBox li {
-	margin: 0;
-	padding: 2px 0 2px 20px;
-	line-height: 15px;
-	border-bottom: 1px solid #c8f6b6;
-	}
-.tagBox {
-	margin: 20px 0;
-	padding: 0 20px;
-	font-size: 11px;
-	line-height: 16px;
-	}
-.tags {
-	margin: 0 0 5px;
-	padding: 0;
-	line-height: 24px;
-	}
-.tags li {
-	display: inline;
-	margin-right: 5px;
-	}
-.tag1 { font-size: 11px;}
-.tag2 { font-size: 13px;}
-.tag3 { font-size: 16px;}
-.tag4 { font-size: 20px; letter-spacing:-.03em;}
-.tag5 { font-size: 24px; letter-spacing:-.03em;}
-.adBox {
-	margin: 0 0 20px;
-	padding: 0 20px;
-	font-size: 11px;
-	line-height: 16px;
-	}
-
-.cancel {
-	float: right;
-	margin-top: -4px;
-	font-size: 11px;
-	}
-.cancel a:link, .cancel a:visited { color: #f40; }
-.client {
-	}
 #col2 .client {
 	margin: 0 0 10px;
 	padding: 20px 20px 16px;
@@ -237,7 +169,6 @@
 .invoice {
 	clear: both;
 	margin: 0 0 20px;
-	font-size: 11px;
 	}
 .invoice h4 {
 	margin: 0 12px 4px;
@@ -248,7 +179,6 @@
 	float:right;
 	margin: 0 0 10px;
 	text-align:right;
-	font-size:12px;
 	}
 .invoice-edit .invoice-info,
 .recurring-edit .invoice-info {
@@ -285,7 +215,6 @@
 	margin: 0 0 10px;
 	padding: 0;
 	width: 100%;
-	font-size: 11px;
 	}
 .line-items tr {
 	margin: 0;
@@ -296,10 +225,11 @@
 	margin: 0;
 	padding: 0 4px;
 	line-height: 24px;
-	background: #dfb;
+    background-color: #DEEEFE;
+    color: #3B6BBF;
 	}
-.line-items th.first { padding-left:12px;background: #dfb; }
-.line-items th.last { padding-right:12px;background: #dfb; }
+.line-items th.first { padding-left:12px; }
+.line-items th.last { padding-right:12px; }
 .line-items td {
 	margin: 0;
 	padding: 5px 4px 3px;
@@ -337,7 +267,6 @@ lpayments .item-date { width: 116px; }
 .newline {
 	margin: -6px 12px 10px;
 	padding: 0;
-	font-size: 11px;
 	text-align: right;
 	}
 .invoice-calculations {
@@ -363,23 +292,21 @@ lpayments .item-date { width: 116px; }
 	}
 .invoice-calculations .invoice-total th,
 .invoice-calculations .invoice-total td {
-	font-size: 13px;
 	}
 .invoice-calculations .invoice-total td {
 	font-weight: bold;
-	color: #1a8;
+    background-color: #DEEEFE;
+    color: #3B6BBF;
 	}
 .invoice-details {
 	margin: 20px 0;
 	padding: 0 20px;
-	font-size: 11px;
 	}
 .invoice-details h3 {
 	margin: 0;
 	color: #1a8;
 	}
 .invoice-details h4 {
-	font-size: 11px;
 	margin: .5em 0 -.25em;
 	}
 .invoice-details div {
@@ -409,7 +336,6 @@ lpayments .item-date { width: 116px; }
 	}
 .invoice-notes h3 {
 	margin: 0 0 .25em;
-	font-size: 11px;
 	}
 .invoice-notes span {
 	font-weight: normal;
@@ -424,7 +350,6 @@ lpayments .item-date { width: 116px; }
 .invoice-tags {
 	margin: 0 0 20px;
 	padding: 0 20px;
-	font-size: 11px;
 	}
 .invoice-tags h3 {
 	margin: 0;
@@ -461,7 +386,6 @@ lpayments .item-date { width: 116px; }
 	margin: 0 0 10px;
 	padding: 0;
 	width: 620px;
-	font-size: 11px;
 	}
 .client-list tr {
 	margin: 0;
@@ -576,7 +500,6 @@ body.client_view .form-details  {
 	margin: 10px 0;
 	padding: 3px 6px;
 	width: 596px;
-	font-size: 11px;
 	line-height: 20px;
 	background: #ccc;
 	border: 1px solid #bbb;
