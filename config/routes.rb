@@ -28,7 +28,6 @@ else
   match '/invoice/download/:id/:invoice_id' => 'invoices#download', :id => /.*/, :invoice_id => /\d+/
   match '/invoice/:id/:invoice_id' => 'invoices#view', :id => /.*/, :invoice_id => /\d+/
   match '/statistics' => 'stastics#index'
-  match '/payments/:action/:id' => 'payments'
 
   match '/clients/check_cif/:id' => 'clients#check_cif', :via => :get
   match '/clients/link_to_profile/:id' => 'clients#link_to_profile', :via => :get
@@ -47,6 +46,7 @@ else
     resources :received, :only => [:index, :new, :create]
     resources :invoice_templates, :only => [:index, :new, :create]
     match 'report/issued_3m' => 'tasks#report', :via => :get
+    resources :payments, :only => [:index, :new, :create]
   end
   resources :clients do
     resources :people, :only => [:index, :new, :create]
@@ -57,6 +57,7 @@ else
   resources :invoices, :has_many => :events, :collection => { :by_taxcode_and_num => :get }
   resources :received
   resources :invoice_templates
+  resources :payments
 
   match '/companies/logo/:taxcode' => 'companies#logo', :via => :get
   resources :companies, :only => [:update]
