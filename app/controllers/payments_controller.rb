@@ -8,7 +8,7 @@ class PaymentsController < ApplicationController
 
   include SortHelper
 
-  before_filter :find_project, :except => [:destroy,:edit,:update]
+  before_filter :find_project_by_project_id, :except => [:destroy,:edit,:update]
   before_filter :find_payment, :only   => [:destroy,:edit,:update]
   before_filter :authorize
 
