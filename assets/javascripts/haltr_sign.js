@@ -91,7 +91,7 @@ function log(msg) {
 
 function doSign_init() {
   $('#console').val("");
-  $('#console').css("visibility","visible");
+  $('#console').show();
   $('#ajax-indicator').css('display','inline');
 }
 
