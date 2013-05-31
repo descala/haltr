@@ -24,3 +24,45 @@ ul.menu-rapid li, #sidebar ul li {list-style-type:none;}
 .invoice-channel-links, .invoice-events {
   margin: 50px;
 }
+
+.overlay {
+  position:absolute; top:0; left:0;
+  width:100%; height:100%;
+  /* width: 1138px; height: 1132px; */
+  z-index: 1001;
+  background: transparent url(../img/overlay.png) 50% 50% repeat;
+  opacity: 0.9;
+}
+
+.new_client_box {
+  position:absolute; top:200px; left:160px;
+  background-color: snow;
+  width: 650px;
+  z-index: 1002;
+  border: 4px solid #333333;
+}
+
+#new_client {
+  margin: 30px;
+}
+
+.mail_box {
+  position:absolute; top:200px; left:250px;
+  background-color: #FFFFCC;
+  width: 650px;
+  z-index: 1002;
+  border: 4px solid #333333;
+}
+
+#mail {
+  margin: 30px;
+}
+
+.amended {
+  text-decoration: line-through;
+} 
+
+select.tax {
+  width: 77px;
+}
+

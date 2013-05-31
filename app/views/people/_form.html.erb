@@ -4,31 +4,30 @@
   <legend><%=l(@person.new_record? ? :label_person_new : :label_person)%></legend>
 
   <div class="seccio grup">
-    <div class="col span-1-de-2">
+    <p class="col span-1-de-2">
       <%= f.text_field :first_name, :required => true %>
-    </div>
-    <div class="col span-1-de-2">
+    </p>
+    <p class="col span-1-de-2">
       <%= f.text_field :last_name, :required => true %>
-    </div>
+    </p>
   </div>
 
   <div class="seccio grup">
-    <div class="col span-1-de-2">
+    <p class="col span-1-de-2">
       <%= f.text_field :email, :required => true %>
-    </div>
-    <div class="col span-1-de-2">
-      <%= f.check_box  :send_invoices_by_mail, :no_label => true, :style => "float:left; margin-right: 7px; margin-top: 41px;" %>
-      <%= label_tag :person_send_invoices_by_email, l(:field_send_invoices_by_mail), :style => "margin-top: 38px;" %>
-    </div>
+    </p>
+    <p class="col span-1-de-2">
+      <%= f.check_box  :send_invoices_by_mail%>
+    </p>
   </div>
 
   <div class="seccio grup">
-    <div class="col span-1-de-2">
+    <p class="col span-1-de-2">
       <%= f.text_field :phone_office %>
-    </div>
-    <div class="col span-1-de-2">
+    </p>
+    <p class="col span-1-de-2">
       <%= f.text_field :phone_mobile %>
-    </div>
+    </p>
   </div>
 
 </fieldset>

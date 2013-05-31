@@ -4,25 +4,25 @@
   <legend><%=l(:invoice_data)%></legend>
 
   <div class="seccio grup">
-    <div class="col span-2-de-2">
-      <span id="client_select"><%= render :partial=>'invoices/clients', :locals=>{:selected=>@invoice.client_id} %></span>
-    </div>
+    <p class="col span-2-de-2" id="client_select">
+        <%= render :partial=>'invoices/clients', :locals=>{:selected=>@invoice.client_id} %>
+    </p>
   </div>
 
   <div class="seccio grup">
-    <div class="col span-1-de-3">
+    <p class="col span-1-de-3">
       <%= f.text_field :date, :size => 10, :required => true %><%= calendar_for('invoice_date') %>
-    </div>
-    <div class="col span-1-de-3">
+    </p>
+    <p class="col span-1-de-3">
       <% if controller.controller_name == "invoice_templates" -%>
         <%= f.select :frequency, frequencies_for_select, :required => true %>
       <% else -%>
         <%= f.text_field :number, :size => 10, :required => true %> <span class="text"><%= "#{l(:label_last_invoice_number)}: #{IssuedInvoice.last_number(@project)}" if IssuedInvoice.all.any?%></span>
       <% end -%>
-    </div>
-    <div class="col span-1-de-3">
+    </p>
+    <p class="col span-1-de-3">
       <%= f.text_field :ponumber %>
-    </div>
+    </p>
   </div>
 
   <div id="payment_stuff">
@@ -30,35 +30,35 @@
   </div>
 
   <div class="seccio grup">
-    <div class="col span-1-de-2">
+    <p class="col span-1-de-2">
       <%= f.text_field :discount_text %>
-    </div>
-    <div class="col span-1-de-2">
+    </p>
+    <p class="col span-1-de-2">
       <%= f.text_field :discount_percent %>
-    </div>
+    </p>
   </div>
 
 
   <div class="seccio grup">
-    <div class="col span-1-de-2">
+    <p class="col span-1-de-2">
       <%= f.text_field :charge_amount, :value => (@invoice.charge_amount.cents > 0 ? @invoice.charge_amount : "") %>
-    </div>
-    <div class="col span-1-de-2">
+    </p>
+    <p class="col span-1-de-2">
       <%= f.text_field :charge_reason %>
-    </div>
+    </p>
   </div>
 
   <div class="seccio grup">
-    <div class="col span-1-de-2">
+    <p class="col span-1-de-2">
       <%= f.text_field :accounting_cost %>
-    </div>
+    </p>
   </div>
 
 
   <div class="seccio grup">
-    <div class="col span-2-de-2">
+    <p class="col span-2-de-2">
       <%= f.text_area :extra_info, :rows=>3 %>
-    </div>
+    </p>
   </div>
 
 </fieldset>
@@ -73,7 +73,7 @@
 
   <% @invoice.taxes_hash.keys.sort.each do |name| -%>
     <div class="seccio grup">
-      <div class="col span-1-de-5">
+      <p class="col span-1-de-5">
         <%= label_tag "#{name}_global", name%>
         <span>
           <%= select_tag("#{name}_global",
@@ -84,19 +84,19 @@
                          'class' => 'global_tax',
                          'data-tax-name' => name ) %>
         </span>
-      </div>
-      <div class="col span-1-de-5 check-box-alineat">
+      </p>
+      <p class="col span-1-de-5 check-box-alineat">
         <span>
           <%= check_box_tag("#{name}_multiple", 1, @invoice.tax_per_line?(name), :class => 'global_tax_check', 'data-tax-name' => name) %>
         </span>
         <span>
           <%= l(:line_specific_tax) %>
         </span>
-      </div>
-      <div id="<%=name%>_comment" style="<%= hide_if_not_exempt_tax(name) %>" class="col span-3-de-5">
+      </p>
+      <p id="<%=name%>_comment" style="<%= hide_if_not_exempt_tax(name) %>" class="col span-3-de-5">
         <%= label_tag "#{name}_comment", l("field_comment") %>
         <%= text_field_tag("#{name}_comment", @invoice.global_comment_for(name)) %>
-      </div>
+      </p>
     </div>
   <% end -%>
 </fieldset>
@@ -126,9 +126,9 @@
     </tbody>
   </table>
   <div class="seccio grup">
-    <div class="col span-2-de-2">
+    <p class="col span-2-de-2">
       <!-- cocoon -->
       <span class='mes'><%= link_to_add_association l(:button_add_invoice_line), f, :invoice_lines, 'data-association-insertion-node' => '#invoice_lines', 'data-association-insertion-method' => 'append' %></span>
-    </div>
+    </p>
   </div>
 </fieldset>
