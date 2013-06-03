@@ -1,11 +1,7 @@
 <% lineid = f.object_name.split("[").last.gsub(/\]/,'') -%>
 
 <tr class="nested-fields">
-  <% if f.object.new_and_first -%>
-    <td><%= f.text_field :quantity, :value => f.object.quantity.to_s.gsub(/\.0+$/,''), :style => "width: 78px;", :no_label => true %></td>
-  <% else -%>
-    <td><%= f.text_field :quantity, :value => f.object.quantity.to_s.gsub(/\.0+$/,''), :style => "width: 78px;", :no_label => true %></td>
-  <% end -%>
+  <td><%= f.text_field :quantity, :value => f.object.quantity.to_s.gsub(/\.0+$/,''), :style => "width: 78px;", :no_label => true %></td>
   <td><%=f.select :unit, InvoiceLine.units, {:no_label => true}, {:style => "width: 100px;"}%></td>
   <td><%=f.text_field :description, :style => "width: 288px;", :no_label => true%></td>
   <%= call_hook(:invoice_form_order_line_reference) %>
