@@ -81,7 +81,7 @@ class InvoicesController < ApplicationController
     @client ||= Client.new
     @invoice = IssuedInvoice.new(:client=>@client,:project=>@project,:date=>Date.today,:number=>IssuedInvoice.next_number(@project))
     @invoice.currency = @client.currency
-    il = InvoiceLine.new(:new_and_first=>true)
+    il = InvoiceLine.new
     @project.company.taxes.each do |tax|
       il.taxes << Tax.new(:name=>tax.name, :percent=>tax.percent) if tax.default
     end
@@ -111,7 +111,7 @@ class InvoicesController < ApplicationController
 
     @invoice = IssuedInvoice.new(parsed_params)
     if @invoice.invoice_lines.empty?
-      il = InvoiceLine.new(:new_and_first=>true)
+      il = InvoiceLine.new
       @project.company.taxes.each do |tax|
         il.taxes << Tax.new(:name=>tax.name, :percent=>tax.percent) if tax.default
       end

@@ -22,7 +22,6 @@ class InvoiceLine < ActiveRecord::Base
   has_many :taxes, :class_name => "Tax", :order => "percent", :dependent => :destroy
   validates_presence_of :description, :unit
   validates_numericality_of :quantity, :price
-  attr_accessor :new_and_first
 
   accepts_nested_attributes_for :taxes,
     :allow_destroy => true
