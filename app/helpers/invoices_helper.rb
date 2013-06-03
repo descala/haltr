@@ -168,4 +168,20 @@ module InvoicesHelper
     end
   end
 
+  def edit_invoice_path_multiclass(invoice)
+    if invoice.is_a? InvoiceTemplate
+      edit_invoice_template_path invoice
+    else
+      edit_invoice_path invoice
+    end
+  end
+
+  def invoice_path_multiclass(invoice)
+    if invoice.is_a? InvoiceTemplate
+      invoice_template_path invoice
+    else
+      invoice_path invoice
+    end
+  end
+
 end

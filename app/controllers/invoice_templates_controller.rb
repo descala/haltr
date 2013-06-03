@@ -1,22 +1,10 @@
-class InvoiceTemplatesController < ApplicationController 
+class InvoiceTemplatesController < InvoicesController 
 
   unloadable
   menu_item Haltr::MenuItem.new(:invoices,:templates)
 
-  helper :invoices
-  layout 'haltr'
-  helper :haltr
-  helper :sort
-  include SortHelper
-
-  before_filter :find_project_by_project_id, :only => [:index,:new,:create]
-  before_filter :find_invoice_template, :except => [:index,:new,:create,:new_from_invoice,:invoices,:create_invoices,:update_taxes]
   before_filter :find_project, :only => [:invoices,:create_invoices,:update_taxes]
-  before_filter :find_invoice, :only => [:new_from_invoice]
-  before_filter :authorize
-
-  include CompanyFilter
-  before_filter :check_for_company
+  before_filter :find_issued_invoice, :only => [:new_from_invoice]
 
   def index
     sort_init 'date', 'asc'
@@ -40,50 +28,6 @@ class InvoiceTemplatesController < ApplicationController
        :offset =>  @invoice_pages.current.offset
   end
 
-  def new
-    @invoice = InvoiceTemplate.new(:client_id=>params[:client],:project=>@project,:date=>Date.today)
-    @client = Client.find(params[:client]) if params[:client]
-    @client ||= Client.find(:all, :order => 'name', :conditions => ["project_id = ?", @project]).first
-    @client ||= Client.new
-    render :template => "invoices/new"
-  end
-
-  def edit
-    @invoice = InvoiceTemplate.find(params[:id])
-    render :template => "invoices/edit"
-  end
-
-  def create
-    @invoice = InvoiceTemplate.new(params[:invoice])
-    @client = @invoice.client
-    @invoice.project=@project
-    if @invoice.save
-      flash[:notice] = l(:notice_successful_create)
-      redirect_to :action => 'index', :id => @project
-    else
-      render :template => "invoices/new"
-    end
-  end
-
-  def update
-    if @invoice.update_attributes(params[:invoice])
-      flash[:notice] = l(:notice_successful_update)
-      redirect_to :action => 'index', :id => @project
-    else
-      render :template => "invoices/edit"
-    end
-  end
-
-  def destroy
-    @invoice.destroy
-    redirect_to :action => 'index', :id => @project
-  end
-
-  def show
-    @invoices_generated = @invoice.issued_invoices.sort
-    render :template => "invoices/show"
-  end
-
   def new_from_invoice
     @invoice = InvoiceTemplate.new(@issued_invoice.attributes)
     @invoice.number=nil
@@ -97,6 +41,7 @@ class InvoiceTemplatesController < ApplicationController
     render :template => "invoices/new"
   end
 
+  # creates new draft invoices from template
   def invoices
     @number = IssuedInvoice.next_number(@project)
     days = params[:date] || 10
@@ -112,9 +57,9 @@ class InvoiceTemplatesController < ApplicationController
       end
     end
     @drafts.flatten!
-
   end
 
+  # creates invoices form draft invoices
   def create_invoices
     @number = IssuedInvoice.next_number(@project)
     drafts_to_process=[]
@@ -147,6 +92,7 @@ class InvoiceTemplatesController < ApplicationController
     render :action => 'invoices'
   end
 
+  # this is a helper to mass-update the taxes of templates
   def update_taxes
     num_changed = 0
     from_name = params[:from_name]
@@ -174,17 +120,11 @@ class InvoiceTemplatesController < ApplicationController
 
   private
 
-  def find_invoice_template
-    @invoice = InvoiceTemplate.find params[:id]
-    @lines = @invoice.invoice_lines
-    @client = @invoice.client
-    @project = @invoice.project
-    @company = @invoice.company
-  rescue ActiveRecord::RecordNotFound
-    render_404
+  def invoice_class
+    InvoiceTemplate
   end
 
-  def find_invoice
+  def find_issued_invoice
     @issued_invoice = IssuedInvoice.find params[:id]
     @client = @issued_invoice.client
     @project = @issued_invoice.project

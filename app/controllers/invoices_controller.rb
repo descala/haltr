@@ -79,7 +79,7 @@ class InvoicesController < ApplicationController
     @client = Client.find(params[:client]) if params[:client]
     @client ||= Client.find(:all, :order => 'name', :conditions => ["project_id = ?", @project]).first
     @client ||= Client.new
-    @invoice = IssuedInvoice.new(:client=>@client,:project=>@project,:date=>Date.today,:number=>IssuedInvoice.next_number(@project))
+    @invoice = invoice_class.new(:client=>@client,:project=>@project,:date=>Date.today,:number=>IssuedInvoice.next_number(@project))
     @invoice.currency = @client.currency
     il = InvoiceLine.new
     @project.company.taxes.each do |tax|
@@ -89,7 +89,6 @@ class InvoicesController < ApplicationController
   end
 
   def edit
-    @invoice = InvoiceDocument.find(params[:id])
   end
 
   def create
@@ -109,7 +108,7 @@ class InvoicesController < ApplicationController
       end
     end
 
-    @invoice = IssuedInvoice.new(parsed_params)
+    @invoice = invoice_class.new(parsed_params)
     if @invoice.invoice_lines.empty?
       il = InvoiceLine.new
       @project.company.taxes.each do |tax|
@@ -295,6 +294,8 @@ class InvoicesController < ApplicationController
         @xsl = 'facturae32'
         render :template => 'received/show_with_xsl'
       end
+    elsif @invoice.is_a? InvoiceTemplate
+      @invoices_generated = @invoice.issued_invoices.sort
     end
   end
 
@@ -464,6 +465,10 @@ class InvoicesController < ApplicationController
 
   private
 
+  def invoice_class
+    IssuedInvoice
+  end
+
   def find_hashid
     @client = Client.find_by_hashid params[:id]
     if @client.nil?
@@ -492,7 +497,7 @@ class InvoicesController < ApplicationController
   end
 
   def find_invoice
-    @invoice = InvoiceDocument.find params[:id]
+    @invoice = invoice_class.find params[:id]
     @lines = @invoice.invoice_lines
     @client = @invoice.client || Client.new(:name=>"unknown",:project=>@invoice.project)
     @project = @invoice.project

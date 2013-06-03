@@ -2,8 +2,8 @@
 <div class="seccio grup">
   <div class="col span-2-de-2">
     <ul class="menu-rapid">
-      <li><%= link_to l(:button_edit), edit_invoice_path(@invoice), :class => 'icon icon-edit' %></li>
-      <li><%= link_to l(:button_delete), invoice_path(@invoice), :confirm=>l(:text_are_you_sure), :method=>:delete, :class=>'icon icon-del' %></li>
+      <li><%= link_to l(:button_edit), { :action => 'edit', :id => @invoice }, :class => 'icon icon-edit' %></li>
+      <li><%= link_to l(:button_delete), { :action => 'destroy', :id => @invoice}, :confirm=>l(:text_are_you_sure), :method=>:delete, :class=>'icon icon-del' %></li>
     </ul>
   </div>
 </div>
@@ -25,7 +25,7 @@
 </textarea>
 
 <%= render :partial=>'invoices/events'%>
-<%= render :partial=>'invoices/channel_links' if User.current.admin? %>
+<%= render :partial=>'invoices/channel_links' if User.current.admin? and @invoice.is_a? IssuedInvoice %>
 
 
 <% unless @is_pdf -%>
