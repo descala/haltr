@@ -5,7 +5,8 @@
   <legend><%=l(:label_my_company)%></legend>
   <div class="seccio grup">
     <p class="col span-1-de-2">
-      <%= f.text_field :taxcode, :required => true %><%= contact_us_for_cif if !@company.taxcode.blank? and @company.errors["taxcode"] %>
+    <%= f.text_field :taxcode, :required => true %>
+    <%= call_hook(:company_form_taxcode) %>
     </p>
     <p class="col span-1-de-2">
       <%= f.text_field :company_identifier %>
@@ -174,10 +175,4 @@
       </p>
     </div>
   </fieldset>
-<% end -%>
-
-<% if defined?(SupportController) %>
-  <p><span class="ownCertificate">
-    <%= l(:add_own_certificate,:link=>link_to(l(:contact_us),:controller=>'support',:action=>'new',:project_id=>@project)) %>
-  </span></p>
 <% end -%>
