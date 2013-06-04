@@ -24,9 +24,6 @@ else
   #        %w(xml json).include? params[:format]
   match '/tasks/report/:id/:months_ago' => 'tasks#report'
   resources :events
-  match '/invoices/logo/:id/:filename' => 'invoices#logo', :id => /\d+/, :filename => /.*/
-  match '/invoice/download/:id/:invoice_id' => 'invoices#download', :id => /.*/, :invoice_id => /\d+/
-  match '/invoice/:id/:invoice_id' => 'invoices#view', :id => /.*/, :invoice_id => /\d+/
   match '/statistics' => 'stastics#index'
 
   match '/clients/check_cif/:id' => 'clients#check_cif', :via => :get
@@ -54,6 +51,21 @@ else
 
   resources :people
   resources :invoices
+  match 'inovices/mark_sent/:id' => 'invoices#mark_sent', :via => :get
+  match 'invoices/mark_not_sent/:id' => 'invoices#mark_not_sent', :via => :get
+  match 'invoices/mark_closed/:id' => 'invoices#mark_closed', :via => :get
+  match 'invoices/pdf/:id' => 'invoices#pdf', :via => :get
+  match 'invoices/send_invoice/:id' => 'invoices#send_invoice', :via => :get
+  match 'invoices/legal/:id' => 'invoices#legal', :via => :get
+
+  # public access to an invoice using the client hash
+  match 'invoice/download/:client_hashid/:invoice_id' => 'invoices#download', :client_hashid => /.*/, :invoice_id => /\d+/
+  match 'invoice/:client_hashid/:invoice_id' => 'invoices#view', :client_hashid => /.*/, :invoice_id => /\d+/
+
+  # public access to a company logo, knowing the id and the file name
+  # TODO should be companies controller
+  match 'invoices/logo/:attachment_id/:filename' => 'invoices#logo', :attachment_id => /\d+/, :filename => /.*/
+
   resources :invoices, :has_many => :events, :collection => { :by_taxcode_and_num => :get }
   resources :received
   resources :invoice_templates

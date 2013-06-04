@@ -14,8 +14,7 @@ module HaltrHelper
   end
 
   def environment
-    e = ENV['RAILS_ENV']
-    if e == 'production'
+    if Rails.env == 'production'
       content_tag :span, e, :style => 'color: red'
     else
       content_tag :span, e, :style => 'color: green'

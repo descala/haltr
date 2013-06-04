@@ -47,7 +47,7 @@ module InvoicesHelper
       " (#{link_to(l(:public_link), :controller=>'invoices', :action=>'view', :id=>e.invoice.client.hashid, :invoice_id=>e.invoice.id)})"
     else
       ""
-    end
+    end.html_safe
   end
 
   def frequencies_for_select

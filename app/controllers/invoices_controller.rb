@@ -306,7 +306,7 @@ class InvoicesController < ApplicationController
     # e.backtrace does not fit in session leading to
     #   ActionController::Session::CookieStore::CookieOverflow
     flash[:error] = "#{l(:error_invoice_not_sent, :num=>@invoice.number)}: #{e.message}"
-    raise e if RAILS_ENV == "development"
+    raise e if Rails.env == "development"
   ensure
     redirect_to :action => 'show', :id => @invoice
   end
@@ -365,11 +365,6 @@ class InvoicesController < ApplicationController
     redirect_to :action => 'index', :project_id => @project
   end
 
-  def legal
-    logger.debug "This is a test XML invoice"
-    send_file Rails.root.join("plugins/haltr/test/fixtures/xml/test_invoice_facturae32.xml")
-  end
-
   # Renders a partial to update curreny, payment_method, and invoice_terms
   # into an invoice form (ajax)
   def update_payment_stuff
@@ -399,6 +394,7 @@ class InvoicesController < ApplicationController
     end
   end
 
+  # public view of invoice, without a session, using :find_hashid
   def view
     @lines = @invoice.invoice_lines
     @invoices_not_sent = []
@@ -423,6 +419,12 @@ class InvoicesController < ApplicationController
     end
   end
 
+  # this is the same as download, but without the befor filter :find_hashid 
+  def legal
+    download
+  end
+
+  # downloads an invoice without login using its hash_id and its md5 as credentials
   def download
     if Rails.env.development? or Rails.env.test?
       logger.debug "This is a test XML invoice"
@@ -470,7 +472,7 @@ class InvoicesController < ApplicationController
   end
 
   def find_hashid
-    @client = Client.find_by_hashid params[:id]
+    @client = Client.find_by_hashid params[:client_hashid]
     if @client.nil?
       render_404
       return
@@ -488,7 +490,7 @@ class InvoicesController < ApplicationController
   end
 
   def find_attachment
-    @attachment = Attachment.find(params[:id])
+    @attachment = Attachment.find(params[:attachment_id])
     # Show 404 if the filename in the url is wrong
     raise ActiveRecord::RecordNotFound if params[:filename] && params[:filename] != @attachment.filename
     @project = @attachment.project
@@ -580,7 +582,7 @@ class InvoicesController < ApplicationController
       i+=1
     end
     logger.info "Sending #{format} to '#{destination}' for invoice id #{@invoice.id}."
-    destination = './queued_file.data' if RAILS_ENV == "development"
+    destination = './queued_file.data' if Rails.env == "development"
     FileUtils.mv(invoice_file.path,destination)
     #TODO state restrictions
     @invoice.queue || @invoice.requeue
