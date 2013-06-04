@@ -1,7 +1,8 @@
 class PaymentsController < ApplicationController
 
   unloadable
-  menu_item :payments
+  menu_item Haltr::MenuItem.new(:payments,:payments_level2), :only => [:index]
+  menu_item Haltr::MenuItem.new(:payments,:payment_new), :only => :new
   layout 'haltr'
   helper :haltr
   helper :sort
@@ -64,9 +65,9 @@ class PaymentsController < ApplicationController
           @payment.invoice.events.last.destroy
           Event.create(:name=>'paid',:invoice=>@payment.invoice,:user=>User.current,:info=>params[:reason])
         end
-        redirect_to :controller => 'invoices', :action => 'show', :id => @payment.invoice
+        redirect_to invoice_path(@payment.invoice)
       else
-        redirect_to :action => 'index', :id => @project
+        redirect_to project_payments_path(@project)
       end
     else
       render :action => "new"
@@ -76,7 +77,7 @@ class PaymentsController < ApplicationController
   def update
     if @payment.update_attributes(params[:payment])
       flash[:notice] = l(:notice_successful_update)
-      redirect_to :action => 'index', :id => @project
+      redirect_to project_payments_path(@project)
     else
       render :action => "edit"
     end
@@ -84,7 +85,7 @@ class PaymentsController < ApplicationController
 
   def destroy
     @payment.destroy
-    redirect_to :action => 'index', :id => @project
+    redirect_to project_payments_path(@project)
   end
 
   private
