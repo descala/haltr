@@ -4,20 +4,7 @@
     <ul class="menu-rapid">
       <li><%= link_to l(:button_edit), { :action => 'edit', :id => @invoice }, :class => 'icon icon-edit' %></li>
       <li><%= link_to l(:button_delete), { :action => 'destroy', :id => @invoice}, :confirm=>l(:text_are_you_sure), :method=>:delete, :class=>'icon icon-del' %></li>
-      <li><%= change_state_link(@invoice) %></li>
-      <li><%= link_to "#{l(:save_invoice)} PDF", {:action=>'pdf', :id=>@invoice}, :class=>'icon-haltr-save' %></li>
-      <% if @invoice.can_be_exported? and js=ExportChannels[@client.invoice_format]['javascript'] %>
-        <% content_for :header_tags do %>
-          <%= javascript_include_tag 'jquery.js' %>
-          <%= javascript_include_tag 'haltr_sign.js', :plugin => 'haltr' %> 
-          <%= javascript_include_tag 'deployjava.js', :plugin => 'haltr' %> 
-        <% end %>
-        <li><%= link_to "#{l(:label_send)} (#{l_export_channel(@client.invoice_format)})", "#", :class=>'icon-haltr-send', :title => @invoice.sending_info, :onclick => js.gsub(':id',@invoice.id.to_s) %></li>
-      <% elsif @invoice.can_be_exported? and @client.invoice_format != 'paper'%>
-        <li><%= link_to "#{l(:label_send)} (#{l_export_channel(@client.invoice_format)})", {:action=>'send_invoice', :id=>@invoice}, :class=>'icon-haltr-send', :title => @invoice.sending_info %></li>
-      <% elsif @invoice.export_errors and @invoice.export_errors.size > 0 -%>
-        <li><%= link_to "#{l(:label_send)} (#{l_export_channel(@client.invoice_format)})", "#", :class=>'icon-haltr-send disabled', :title => @invoice.sending_info %></li>
-      <% end -%>
+      <%= render :partial => "invoices/#{@invoice.class.to_s.underscore}_menu" %>
     </ul>
   </div>
 </div>
@@ -38,9 +25,18 @@
 <textarea id="console" rows="10" style="width:99%; display:none;">
 </textarea>
 
-<%= render :partial=>'invoices/events'%>
-<%= render :partial=>'invoices/channel_links' if User.current.admin? and @invoice.is_a? IssuedInvoice %>
+<%= render :partial => 'invoices/events'%>
+<%= render :partial => 'invoices/issued_invoice_list_other' if @invoice.is_a? IssuedInvoice %>
+<%= render :partial => 'invoices/channel_links' if User.current.admin? and @invoice.is_a? IssuedInvoice %>
 
+<% if @invoice.is_a? InvoiceTemplate and @invoices_generated.any? -%>
+  <h3><%= l(:label_generated_invoices)%></h3>
+  <p>
+  <% @invoices_generated.each do |invoice| -%>
+    <%=link_to invoice.number, :controller => 'invoices', :action => 'show', :id => invoice %><%= ", " unless invoice == @invoices_generated.last %>
+  <% end -%>
+  </p>
+<% end -%>
 
 <% unless @is_pdf -%>
   <% content_for :sidebar do %>

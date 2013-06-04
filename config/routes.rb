@@ -55,16 +55,19 @@ else
 
   resources :people
   resources :invoices
-  match 'inovices/mark_sent/:id' => 'invoices#mark_sent', :via => :get
+  match 'invoices/mark_sent/:id' => 'invoices#mark_sent', :via => :get
   match 'invoices/mark_not_sent/:id' => 'invoices#mark_not_sent', :via => :get
   match 'invoices/mark_closed/:id' => 'invoices#mark_closed', :via => :get
   match 'invoices/pdf/:id' => 'invoices#pdf', :via => :get
   match 'invoices/send_invoice/:id' => 'invoices#send_invoice', :via => :get
   match 'invoices/legal/:id' => 'invoices#legal', :via => :get
+  match 'invoices/amend_for_invoice/:id' => 'invoices#amend_for_invoice', :via => :post
+  match 'invoices/duplicate_invoice/:id' => 'invoices#duplicate_invoice', :via => :get
+  match 'invoices/destroy_payment/:id' => 'invoices#destroy_payment', :via => :delete
 
   # public access to an invoice using the client hash
-  match 'invoice/download/:client_hashid/:invoice_id' => 'invoices#download', :client_hashid => /.*/, :invoice_id => /\d+/
-  match 'invoice/:client_hashid/:invoice_id' => 'invoices#view', :client_hashid => /.*/, :invoice_id => /\d+/
+  match 'invoice/download/:client_hashid/:invoice_id' => 'invoices#download', :client_hashid => /.*/, :invoice_id => /\d+/, :via => :get
+  match 'invoice/:client_hashid/:invoice_id' => 'invoices#view', :client_hashid => /.*/, :invoice_id => /\d+/, :via => :get
 
   # public access to a company logo, knowing the id and the file name
   # TODO should be companies controller
@@ -72,7 +75,11 @@ else
 
   resources :invoices, :has_many => :events, :collection => { :by_taxcode_and_num => :get }
   resources :received
+
   resources :invoice_templates
+  match 'invoice_templates/new_from_invoice/:id' => 'invoice_templates#new_from_invoice'
+
+  match 'projects/:project_id/payments/new/:invoice_id(/:payment_type)' => 'payments#new'
   resources :payments
 
   match '/companies/logo/:taxcode' => 'companies#logo', :via => :get

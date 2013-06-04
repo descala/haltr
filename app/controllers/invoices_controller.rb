@@ -166,7 +166,7 @@ class InvoicesController < ApplicationController
 
   def destroy_payment
     @payment.destroy
-    redirect_to :action => 'show', :ptroject_id => @invoice
+    redirect_to :action => 'show', :id => @invoice
   end
 
   def mark_sent

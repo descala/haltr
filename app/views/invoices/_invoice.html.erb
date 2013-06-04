@@ -1,7 +1,7 @@
 <div id="amends">
 <% if @invoice.amend -%>
   <h3><%=l(:amended_by_invoice, :link => link_to("#{l(:label_amendment_invoice)} #{@invoice.amend.number}",
-                                                 :controller => 'invoices', :action=>'show', :id=>@invoice.amend)) %></h3>
+                                                 :controller => 'invoices', :action=>'show', :id=>@invoice.amend)).html_safe %></h3>
 <% end -%>
 </div>
 <!-- Vendor Info -->
@@ -142,7 +142,7 @@
         </tr>
         <% @invoice.payments.each do |payment| -%>
           <tr>
-            <td class="item-delete first"><%= link_to "", {:action=>'destroy_payment',:id=>payment} , :confirm => l(:text_are_you_sure), :method => :post, :class => 'icon icon-del' %></td>
+            <td class="item-delete first"><%= link_to "", {:action=>'destroy_payment',:id=>payment} , :confirm => l(:text_are_you_sure), :method => :delete, :class => 'icon icon-del' %></td>
             <td class="item-date first"><%=h format_date payment.date %></td>
             <td class="item-description"><%=h payment.description %></td>
             <td class="line-total last"><%=h money(payment.amount) %></td>
