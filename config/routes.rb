@@ -44,7 +44,11 @@ else
     resources :invoice_templates, :only => [:index, :new, :create]
     match 'report/issued_3m' => 'tasks#report', :via => :get
     resources :payments, :only => [:index, :new, :create]
+    resources :tasks
+    match 'tasks/import_aeb43' => 'tasks#import_aeb43'
   end
+  match 'tasks/n19/:id' => 'tasks#n19'
+  match 'tasks/n19_done/:id' => 'tasks#n19_done'
   resources :clients do
     resources :people, :only => [:index, :new, :create]
   end

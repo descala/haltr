@@ -1,14 +1,13 @@
 class TasksController < ApplicationController
 
   unloadable
-  menu_item Haltr::MenuItem.new(:invoices,:reports)
-  menu_item :payments, :only => [:index,:n19,:n19_done,:import_aeb43]
+  menu_item Haltr::MenuItem.new(:invoices,:reports), :only => :report
+  menu_item Haltr::MenuItem.new(:payments,:tasks), :only => [:index,:n19,:n19_done,:import_aeb43]
   helper :haltr
   layout 'haltr'
   helper :invoices
 
-  before_filter :find_project_by_project_id, :only => [:report]
-  before_filter :find_project, :except => [:n19, :n19_done, :report]
+  before_filter :find_project_by_project_id, :except => [:n19, :n19_done]
   before_filter :find_invoice, :only => [:n19, :n19_done]
   before_filter :authorize
 

@@ -77,5 +77,5 @@
 <% html_title(l(:label_payment_plural)) -%>
 
 <% content_for :sidebar do %>
-    <%= render :partial => 'sidebar' %>
+    <%= render_menu :payments_menu, @project %>
 <% end %>
