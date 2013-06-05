@@ -194,7 +194,6 @@
           <cbc:LineExtensionAmount currencyID="<%=h @client.currency%>"><%=h precision(invoice_line.price*invoice_line.quantity,2)%></cbc:LineExtensionAmount>
           <cac:TaxTotal>
             <% invoice_line.taxes.each do |tax_line| -%>
-            <% if @invoice.tax_per_line?(tax_line.name) -%>
               <cbc:TaxAmount currencyID="<%=h @client.currency%>"><%=h precision(invoice_line.price*invoice_line.quantity*tax_line.percent,2)%></cbc:TaxAmount>
             <cac:TaxCategory>
               <cbc:ID schemeID="UN/ECE 5305" schemeAgencyID="6"><%=h tax_line.category%></cbc:ID>
@@ -202,7 +201,6 @@
                 <cbc:ID schemeID="UN/ECE 5153" schemeAgencyID="6"><%= Haltr::TaxHelper.ubl(tax_line.name) %></cbc:ID>
               </cac:TaxScheme>
             </cac:TaxCategory>
-          <% end -%>
           <% end -%>
 
           </cac:TaxTotal>
