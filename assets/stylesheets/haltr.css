@@ -75,3 +75,7 @@ select.tax {
 .lineErrorExplanation a {
   font-weight: bold;
 }
+
+pastdue {
+  color: red;
+}

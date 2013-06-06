@@ -7,6 +7,7 @@ gem "sundawg_country_codes" #, :lib => 'country_iso_translater'
 gem "zip"
 gem 'csv-mapper'
 gem 'nokogiri'
+gem 'wicked_pdf'
 
 group :test do
   gem 'spork-testunit'

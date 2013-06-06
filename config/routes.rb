@@ -58,7 +58,6 @@ else
   match 'invoices/mark_sent/:id' => 'invoices#mark_sent', :via => :get
   match 'invoices/mark_not_sent/:id' => 'invoices#mark_not_sent', :via => :get
   match 'invoices/mark_closed/:id' => 'invoices#mark_closed', :via => :get
-  match 'invoices/pdf/:id' => 'invoices#pdf', :via => :get
   match 'invoices/send_invoice/:id' => 'invoices#send_invoice', :via => :get
   match 'invoices/legal/:id' => 'invoices#legal', :via => :get
   match 'invoices/amend_for_invoice/:id' => 'invoices#amend_for_invoice', :via => :post

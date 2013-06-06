@@ -3,24 +3,6 @@ module HaltrHelper
 
   include Cocoon::ViewHelpers
 
-  def path_to_stylesheet(source)
-    path = super(source)
-    especial path
-  end
-
-  def path_to_image(source)
-    path = super(source)
-    especial path
-  end
-
-  def environment
-    if Rails.env == 'production'
-      content_tag :span, e, :style => 'color: red'
-    else
-      content_tag :span, e, :style => 'color: green'
-    end
-  end
-
   # Renders flash messages
   def render_flash_messages
     s = ''
@@ -103,16 +85,6 @@ module HaltrHelper
     if params[:controller].to_s == controller.to_s and
       params[:action].to_s == action.to_s
       "sel"
-    end
-  end
-
-  private
-
-  def especial(path)
-    if @is_pdf and !(path =~ /^https?:\/\//)
-      "../public#{path}"
-    else
-      path
     end
   end
 

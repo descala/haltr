@@ -1,5 +1,5 @@
   <li><%= change_state_link(@invoice) %></li>
-  <li><%= link_to "#{l(:save_invoice)} PDF", {:action=>'pdf', :id=>@invoice}, :class=>'icon-haltr-save' %></li>
+  <li><%= link_to "#{l(:save_invoice)} PDF", {:action=>'show', :id=>@invoice, :format => 'pdf'}, :class=>'icon-haltr-save' %></li>
 
   <% if @invoice.can_be_exported? and js=ExportChannels[@client.invoice_format]['javascript'] %>
     <% content_for :header_tags do %>

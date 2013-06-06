@@ -1,34 +1,18 @@
 body {
-	margin: 0;
+	margin: 40px 40px 40px 100px;
   	padding: 0;
-  	font: 12px/1.5em "Helvetice Neue", Helvetica, Verdana, Sans-serif;
+    font-family: "Helvetica Neue",Helvetica,Arial,sans-serif;
+    font-size: 14px;
+    line-height: 20px;
    	color: #000;
  	}
-ul {
-	margin: 0;
-	padding: 0;
-	list-style: none;
-	}
-ul li {
-	margin: 0;
-	padding: 0;
-	list-style: none;
-	}
-ol {
-	margin: 0;
-	padding: 0 0 0 20px;
-	}
-ol li {
-	margin: 0;
-	padding: 0;
-	}
 h2 {
 	margin: 0 0 .75em;
-	font-size: 18px;
+	font-size: 1.5em;
 	}
 h3 {
 	margin: 0 0 .75em;
-	font-size: 14px;
+	font-size: 1.5em;
 	}
 h4 {
 	margin: 0;
@@ -36,25 +20,9 @@ h4 {
 p {
 	margin: 0 0 .75em;
 	}
-input, select, textarea {
-	margin: 0;
-	}
-acronym {
-	font-style: normal;
-	border-bottom: 1px dotted #333;
-	cursor: help;
-	}
-
-#navigation1,
-.flash,
-.drop-form,
-.history,
-#col2,
-#footer1,
-.payments, #events, #amends {
+.payments, #amends {
 	display: none;
 	}
-
 a:link {
 	color: #000;
 	text-decoration: none;
@@ -73,35 +41,30 @@ a:hover img {
 	border: 0;
 	background: none;
 	}
-
-#col1 {
-	margin: .25in .25in .5in;
-	padding: 0;
-	}
 .vcard {
 	margin: 0 0 30px;
 	line-height: 1.5em;
-	font-size: 12px;
 	}
 .vcard h3 {
 	margin: 0;
 	}
 .client h3 {
 	margin: -4px 0 .25em;
-	font-size: 18px;
-/*	letter-spacing: -.025em; */
+	font-size: 1.4em;
 	}
+.vendor h3 {
+  font-size: 1.3em;
+}
 .invoice {
 	margin: 0 0 20px;
-	font-size: 11px;
 	}
 .invoice h4 {
 	margin: 0 12px 4px;
-	font-size: 14px;
+	font-size: 1.5em;
 	}
 .invoice-info {
 	float:right;
-	margin: 0 0 10px;
+	margin: 0 0 40px;
 	text-align:right;
 	}
 .invoice-info th {
@@ -127,7 +90,6 @@ a:hover img {
 	margin: 0 0 10px;
 	padding: 0;
 	width: 100%;
-	font-size: 11px;
 	}
 .line-items tr {
 	margin: 0;
@@ -137,26 +99,22 @@ a:hover img {
 .line-items th {
 	margin: 0;
 	padding: 0 4px;
-	line-height: 24px;
+	line-height: 2em;
 	border-bottom: 2px solid #000;
 	}
 .line-items th.first { padding-left:12px; }
 .line-items th.last { padding-right:12px; }
+
 .line-items td {
 	margin: 0;
-	padding: 4px 4px 3px;
+	padding: 0.5em;
 	vertical-align: top;
-	line-height: 20px;
 	border-bottom: 1px solid #999;
 	}
 .line-items td.first { padding-left:12px; }
 .line-items td.last { padding-right:12px; }
-.line-items .item-delete { width: 14px; }
-.line-items .item-delete img { padding-top: 2px; }
 .line-items .item-date { width: 75px; }
 .line-items .item-date input { width: 65px; height: 18px; }
-.line-items .item-kind { width: 85px; }
-.line-items .item-kind select { width: 75px; margin: 0; padding: 0; }
 .line-items .item-quantity { width: 45px; }
 .line-items .item-quantity input { width: 35px; height: 18px; }
 .line-items .item-description textarea { width: 180px; height: 18px; }
@@ -168,18 +126,9 @@ a:hover img {
 	text-align: right;
 	width: 90px;
 	}
-.line-items img {
-	display: none;
-	}
 .show .item-date { width: 70px; }
 .show .item-quantity { width: 60px; }
 .payments .item-date { width: 116px; }
-.newline {
-	margin: -6px 12px 10px;
-	padding: 0;
-	font-size: 11px;
-	text-align: right;
-	}
 .invoice-calculations {
 	float: right;
 	margin: 0 0 .5in;
@@ -187,11 +136,11 @@ a:hover img {
 	}
 .invoice-calculations th {
 	text-align: left;
-	line-height: 20px;
+	line-height: 25px;
 	}
 .invoice-calculations td {
 	text-align: right;
-	line-height: 20px;
+	line-height: 25px;
 	padding-left: .75in;
 	padding-right: 12px;
 	}
@@ -203,7 +152,7 @@ a:hover img {
 	}
 .invoice-calculations .invoice-total th,
 .invoice-calculations .invoice-total td {
-	font-size: 13px;
+	font-size: 1.2em;
 	}
 .invoice-calculations .invoice-total td {
 	font-weight: bold;
@@ -217,11 +166,11 @@ a:hover img {
 	}
 .invoice-notes h3 {
 	margin: 0 0 .25em;
-	font-size: 11px;
+	font-size: 0.9em;
 	}
 .invoice-notes p {
 	margin: 0 0 .25em;
-	font-size: 11px;
+	font-size: 0.9em;
 	}
 .vendor {
 	overflow: hidden;

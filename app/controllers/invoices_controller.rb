@@ -229,15 +229,6 @@ class InvoicesController < ApplicationController
     render :action => "new"
   end
 
-  def pdf
-    pdf_file = create_pdf_file
-    if pdf_file
-      send_file(pdf_file.path, :filename => @invoice.pdf_name, :type => "application/pdf", :disposition => 'inline')
-    else
-      render :text => "Error in PDF creation"
-    end
-  end
-
   def pdfbase64
     if request.get?
       # send a base64 encoded pdf document
@@ -276,6 +267,12 @@ class InvoicesController < ApplicationController
       @invoices_closed = InvoiceDocument.find(:all,:conditions => ["client_id = ? and state = 'closed'",@client.id]).sort
       respond_to do |format|
         format.html
+        format.pdf do
+          # TODO show.pdf.erb is very similar to _invoice.html.erb (used by show.html.erb)
+          render :pdf => @invoice.pdf_name,
+            :layout => "invoice.html",
+            :show_as_html => params[:debug]
+        end
         format.facturae30  { render_clean_xml :template => 'invoices/facturae30.xml.erb', :layout => false }
         format.facturae31  { render_clean_xml :template => 'invoices/facturae31.xml.erb', :layout => false }
         format.facturae32  { render_clean_xml :template => 'invoices/facturae32.xml.erb', :layout => false }
