@@ -8,5 +8,5 @@
 <% end -%>
 <% html_title(l(:button_send_invoices)) -%>
 <% content_for :sidebar do %>
-  <%= render :partial => 'sidebar' %>
+  <%= render_menu :invoices_menu, @project %>
 <% end %>

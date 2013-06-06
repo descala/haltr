@@ -7,9 +7,13 @@
 <!-- Vendor Info -->
 <div class="vcard vendor">
   <div class="logo">
-    <% if @company.attachments.any? -%>
-        <%= tag 'img', :src => "#{Attachment.storage_path}/#{@company.attachments.first.disk_filename}" -%>
+  <% if @company.attachments.any? -%>
+    <%if params[:debug].present? %>
+      <%= tag 'img', :src => "/invoices/logo/#{@company.attachments.first.id}/#{@company.attachments.first.filename}", :alt => "#{@company.name} Logo" -%>
+    <% else %>
+      <%= tag 'img', :src => @company.attachments.first.diskfile -%>
     <% end -%>
+  <% end -%>
   </div>
   <div class="vendor-info">
     <h3><%=h @company.name %></h3>

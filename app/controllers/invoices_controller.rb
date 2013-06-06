@@ -328,7 +328,8 @@ class InvoicesController < ApplicationController
       end
     end
     @num_sent = num
-    @is_pdf = false  # Remove this global flag used in app/helpers/haltr_helper.rb 
+    # NOTE is this necessari to change format back to html?
+    render :formats=>'html'
   end
   
   def download_new_invoices
@@ -526,20 +527,14 @@ class InvoicesController < ApplicationController
   end
 
   def create_pdf_file
-    @is_pdf = true
     curr_lang = I18n.locale
     I18n.locale = @invoice.client.language rescue curr_lang
-    pdf_file=Tempfile.new("invoice_#{@invoice.id}.pdf","tmp")
-    xhtml_file=Tempfile.new("invoice_#{@invoice.id}.xhtml","tmp")
-    xhtml_file.write(render_to_string(:action => "show", :layout => "invoice").encode("UTF-8", :invalid => :replace, :undef => :replace, :replace => "?"))
-    xhtml_file.close
-    jarpath = "#{File.dirname(__FILE__)}/../../vendor/xhtmlrenderer"
-    cmd="java -classpath #{jarpath}/core-renderer.jar:#{jarpath}/iText-2.0.8.jar:#{jarpath}/minium.jar org.xhtmlrenderer.simple.PDFRenderer #{xhtml_file.path} #{pdf_file.path}"
-    logger.info "create_pdf_file command = #{cmd}"
-    out = `#{cmd} 2>&1`
-    logger.info "error creating pdf: #{out}" unless $?.success?
+    pdf = render_to_string :pdf => @invoice.pdf_name, :layout => "invoice.html", :template=>'invoices/show', :formats=>'pdf'
+    pdf_file = Tempfile.new(@invoice.pdf_name,:encoding => 'ascii-8bit')
+    pdf_file.write pdf
+    logger.info "Created PDF #{pdf_file.path}"
     I18n.locale = curr_lang
-    $?.success? ? pdf_file : nil
+    return pdf_file
   end
 
   def create_and_queue_file

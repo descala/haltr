@@ -3,6 +3,16 @@
   <div class="col span-2-de-2">
     <ul class="menu-rapid">
       <li><%= link_to l("label_invoice_new"), new_project_invoice_path(@project), :class => 'icon icon-add' %></li>
+      <% if num_can_be_sent > 0 -%>
+        <li>
+        <%= link_to "#{l(:button_send_invoices)} (#{num_can_be_sent})",{:action => 'send_new_invoices'} %>
+        </li>
+      <% end -%>
+      <% if num_not_sent > 0 -%>
+        <li>
+        <%= link_to "#{l(:button_download_new_invoices)} (#{num_not_sent})",{:action => 'download_new_invoices'}, :title => l(:label_download_new_invoices_info) %>
+        </li>
+      <% end -%>
     </ul>
   </div>
 </div>
