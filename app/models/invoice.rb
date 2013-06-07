@@ -113,7 +113,11 @@ class Invoice < ActiveRecord::Base
   end
 
   def pdf_name
-    "factura-#{number.gsub('/','')}.pdf" rescue "factura-___.pdf"
+    "#{self.pdf_name_without_extension}.pdf" rescue "factura-___.pdf"
+  end
+
+  def pdf_name_without_extension
+    "factura-#{number.gsub('/','')}" rescue "factura-___"
   end
 
   def recipient_people

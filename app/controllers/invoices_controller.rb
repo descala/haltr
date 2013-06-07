@@ -269,7 +269,7 @@ class InvoicesController < ApplicationController
         format.html
         format.pdf do
           @is_pdf = true
-          render :pdf => @invoice.pdf_name,
+          render :pdf => @invoice.pdf_name_without_extension,
             :layout => "invoice.html",
             :template=>"invoices/show_pdf",
             :formats => :html,
@@ -530,7 +530,7 @@ class InvoicesController < ApplicationController
     curr_lang = I18n.locale
     I18n.locale = @invoice.client.language rescue curr_lang
     @is_pdf = true
-    pdf = render_to_string :pdf => @invoice.pdf_name, :layout => "invoice.html", :template=>'invoices/show_pdf'
+    pdf = render_to_string :pdf => @invoice.pdf_name_without_extension, :layout => "invoice.html", :template=>'invoices/show_pdf'
     pdf_file = Tempfile.new(@invoice.pdf_name,:encoding => 'ascii-8bit')
     pdf_file.write pdf
     logger.info "Created PDF #{pdf_file.path}"
