@@ -268,9 +268,11 @@ class InvoicesController < ApplicationController
       respond_to do |format|
         format.html
         format.pdf do
-          # TODO show.pdf.erb is very similar to _invoice.html.erb (used by show.html.erb)
+          @is_pdf = true
           render :pdf => @invoice.pdf_name,
             :layout => "invoice.html",
+            :template=>"invoices/show_pdf",
+            :formats => :html,
             :show_as_html => params[:debug]
         end
         format.facturae30  { render_clean_xml :template => 'invoices/facturae30.xml.erb', :layout => false }
@@ -328,8 +330,6 @@ class InvoicesController < ApplicationController
       end
     end
     @num_sent = num
-    # NOTE is this necessari to change format back to html?
-    render :formats=>'html'
   end
   
   def download_new_invoices
@@ -529,7 +529,8 @@ class InvoicesController < ApplicationController
   def create_pdf_file
     curr_lang = I18n.locale
     I18n.locale = @invoice.client.language rescue curr_lang
-    pdf = render_to_string :pdf => @invoice.pdf_name, :layout => "invoice.html", :template=>'invoices/show', :formats=>'pdf'
+    @is_pdf = true
+    pdf = render_to_string :pdf => @invoice.pdf_name, :layout => "invoice.html", :template=>'invoices/show_pdf'
     pdf_file = Tempfile.new(@invoice.pdf_name,:encoding => 'ascii-8bit')
     pdf_file.write pdf
     logger.info "Created PDF #{pdf_file.path}"
