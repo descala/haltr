@@ -215,7 +215,7 @@ es:
   refuse_notification: "Notificación AOC: Rechazada"
   paid_notification: "Notificación AOC: Pagada"
   by_mail_from: "por email desde %{email}"
-  in_format: "en formato %{format}"
+  in_format: "en formato %{f}"
   back: "Volver"
   view_mail: "Ver email"
   public_link: "Enlace público"

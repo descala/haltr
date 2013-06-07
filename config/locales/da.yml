@@ -202,7 +202,7 @@ da:
   refuse_notification: "AOC meddelelsesdato: Afvist"
   paid_notification: "AOC meddelelsesdato: Betalt"
   by_mail_from: "via e-mail fra %{email}"
-  in_format: "in %{format} format"
+  in_format: "in %{f} format"
   back: "Tilbage"
   view_mail: "Vis email"
   public_link: "Offentlig link"

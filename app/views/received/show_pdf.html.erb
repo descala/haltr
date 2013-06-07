@@ -1,4 +1,4 @@
-<h4><%= "#{l :ReceivedInvoice} #{l :by_mail_from, :email => @invoice.from} #{l :in_format, :format => @invoice.invoice_format}" %></h4>
+<h4><%= "#{l :ReceivedInvoice} #{l :by_mail_from, :email => @invoice.from} #{l(:in_format, :f=>@invoice.invoice_format)}" %></h4>
 
 <div id="new_client_wrapper" style="display:none;">
   <%= render :partial => 'invoices/new_client' %>
