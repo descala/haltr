@@ -14,7 +14,7 @@
 <div id="pdfobject" style="height:500px; text-align:center;">
   <object data='<%=url_for({:controller=>'invoices', :action=>'legal', :id=>@invoice, :md5=>@invoice.events.first.md5})%>#viewrect=670,900,0,0' type='application/pdf' width='100%' height='500px'>
   <p style="padding-top:150px;">
-  <%= l :no_pdf_support, :pdf => url_for({:controller=>'invoices', :action=>'legal', :id=>@invoice, :md5=>@invoice.events.first.md5}) %>
+  <%= l(:no_pdf_support, :pdf => legal_path(@invoice, :md5=>@invoice.events.first.md5)).html_safe %>
   </p>
 </object>
 </div>
@@ -23,14 +23,21 @@
 
 <%= render :partial => "invoices/events" -%>
 
-<%= labelled_form_for :invoice, @invoice, :url => { :action => 'update', :id => @invoice }, :html => {:method => :put, :class => 'tabular'} do |f| %>
-  <%= render :partial => 'received/form', :locals => { :f => f } %>
-  <%= submit_tag l(:button_save) %>
-<% end %>
+<!--formulari-->
+<div class="seccio grup">
+  <div class="col span-2-de-2">
+
+    <%= labelled_form_for :invoice, @invoice, :url => { :action => 'update', :id => @invoice }, :html => {:method => :put, :class => 'tabular formee'} do |f| %>
+      <%= render :partial => 'form', :locals => { :f => f } %>
+      <%= submit_tag l(:button_save) %>
+    <% end %>
+
+  </div>
+</div>
+<!--final formulari-->
 
 <% content_for :sidebar do %>
-    <%= render :partial => 'invoices/sidebar' %>
-    <%= render :partial => "invoices/invoice_menu" %>
+    <%= render_menu :invoices_menu, @project %>
 <% end %>
 
 <% content_for :header_tags do %>

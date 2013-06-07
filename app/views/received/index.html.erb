@@ -59,7 +59,7 @@
   </thead>
   <tbody>
     <% for invoice in @invoices -%>
-      <tr onclick="javascript: document.location = '<%=url_for(:action=>'show', :id=>invoice)%>'" style="cursor:pointer;">
+      <tr onclick="javascript: document.location = '<%=received_path(invoice)%>'" style="cursor:pointer;">
         <td><%=h invoice.created_at.to_date %></td>
         <td><%=h l("state_#{invoice.state}").capitalize %></td>
         <td><%=h invoice.number %></td>
