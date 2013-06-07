@@ -201,7 +201,7 @@ sv:
   refuse_notification: "AOC Notifiering: Avvisad"
   paid_notification: "AOC Notifiering: Betald"
   by_mail_from: "med email från %{email}"
-  in_format: "i %{format} formatet"
+  in_format: "i %{f} formatet"
   back: "Tillbaka"
   view_mail: "Visa mail"
   public_link: "Publik länk"

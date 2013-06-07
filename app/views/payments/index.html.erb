@@ -48,13 +48,13 @@
       <tbody>
         <% for payment in @payments -%>
           <tr class="user <%= cycle("odd", "even") %>" />
-            <td align="center"><%=link_to(h(payment.invoice.number), :controller=>'invoices', :action=>'show', :id=>payment.invoice) unless payment.invoice.nil? %></td>
+            <td align="center"><%=link_to(h(payment.invoice.number), invoice_path(payment.invoice)) unless payment.invoice.nil? %></td>
             <td align="right" style="color: <%=payment.invoice.is_a?(IssuedInvoice) ? "green" : "red" %>"><%= money(payment.amount) %></td>
             <td align="center"><%=h payment.date %></td>
             <td><%=h(truncate(payment.payment_method,:length=>20)) %></td>
             <td><%=h(truncate(payment.reference,:length=>30)) %></td>
-            <td align="center"><%= link_to l(:button_edit), {:action=>'edit',:id=>payment}, :class => 'icon icon-edit' %></td>
-            <td align="center"><%= link_to l(:button_delete), {:action=>'destroy',:id=>payment} , :confirm => l(:text_are_you_sure), :method => :post, :class => 'icon icon-del' %></td>
+            <td align="center"><%= link_to l(:button_edit), edit_payment_path(payment), :class => 'icon icon-edit' %></td>
+            <td align="center"><%= link_to l(:button_delete), payment_path(payment), :method=>:delete, :confirm => l(:text_are_you_sure), :class => 'icon icon-del' %></td>
           </tr>
         <% end -%>
       </tbody>

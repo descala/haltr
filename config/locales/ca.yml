@@ -214,7 +214,7 @@ ca:
   refuse_notification: "Notificació AOC: Refusada"
   paid_notification: "Notificació AOC: Pagada"
   by_mail_from: "per correu des de %{email}"
-  in_format: "en format %{format}"
+  in_format: "en format %{f}"
   back: "Tornar"
   view_mail: "Veure email"
   public_link: "Enllaç públic"

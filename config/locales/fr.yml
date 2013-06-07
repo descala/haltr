@@ -200,7 +200,7 @@ fr:
   refuse_notification: "Notification AOC: Refus"
   paid_notification: "Notification AOC: Paiement"
   by_mail_from: "par email de %{email}"
-  in_format: "en format %{format}"
+  in_format: "en format %{f}"
   back: "Retour"
   view_mail: Voir email
   public_link: "Lien public"

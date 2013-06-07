@@ -204,7 +204,7 @@ en:
   refuse_notification: "AOC notification: Refused"
   paid_notification: "AOC notification: Paid"
   by_mail_from: "by email from %{email}"
-  in_format: "in %{format} format"
+  in_format: "in %{f} format"
   back: "Back"
   view_mail: "View email"
   public_link: "Public link"

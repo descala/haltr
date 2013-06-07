@@ -5,10 +5,7 @@
     </p>
   <% else -%>
   <legend><%= l :accept_notification_to, :mail => @invoice.client.email %></legend>
-<%= form_tag(:controller=>'invoices',:action=>'mark_accepted_with_mail') do %>
-
- <%=hidden_field_tag "id", @invoice.id %>
-
+<%= form_tag(mark_accepted_with_mail_path(@invoice)) do %>
 <pre>
 
 <%= I18n.t(:received_invoice_accepted, :num => @invoice.number, :company => @invoice.company.name) %>
@@ -25,8 +22,7 @@
 <% end -%>
   <% end -%>
 
-<%= form_tag(:controller=>'invoices',:action=>'mark_accepted') do %>
-  <%=hidden_field_tag "id", @invoice.id %>
+<%= form_tag(mark_accepted_path(@invoice)) do %>
   <%= submit_tag I18n.t(:accept_without_mail) %>
   <%= button_to_function I18n.t(:cancel), "document.getElementById('invoice-accept').hide();" %>
 <% end -%>

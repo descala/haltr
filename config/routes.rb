@@ -55,14 +55,14 @@ else
 
   resources :people
   resources :invoices
-  match 'invoices/mark_sent/:id' => 'invoices#mark_sent', :via => :get
-  match 'invoices/mark_not_sent/:id' => 'invoices#mark_not_sent', :via => :get
-  match 'invoices/mark_closed/:id' => 'invoices#mark_closed', :via => :get
-  match 'invoices/send_invoice/:id' => 'invoices#send_invoice', :via => :get
-  match 'invoices/legal/:id' => 'invoices#legal', :via => :get
-  match 'invoices/amend_for_invoice/:id' => 'invoices#amend_for_invoice', :via => :post
-  match 'invoices/duplicate_invoice/:id' => 'invoices#duplicate_invoice', :via => :get
-  match 'invoices/destroy_payment/:id' => 'invoices#destroy_payment', :via => :delete
+  match 'invoices/mark_sent/:id' => 'invoices#mark_sent', :via => :get, :as => :mark_sent
+  match 'invoices/mark_not_sent/:id' => 'invoices#mark_not_sent', :via => :get, :as => :mark_not_sent
+  match 'invoices/mark_closed/:id' => 'invoices#mark_closed', :via => :get, :as => :mark_closed
+  match 'invoices/send_invoice/:id' => 'invoices#send_invoice', :via => :get, :as => :send_invoice
+  match 'invoices/legal/:id' => 'invoices#legal', :via => :get, :as => :legal
+  match 'invoices/amend_for_invoice/:id' => 'invoices#amend_for_invoice', :via => :post, :as => :amend_for_invoice
+  match 'invoices/duplicate_invoice/:id' => 'invoices#duplicate_invoice', :via => :get, :as => :duplicate_invoice
+  match 'invoices/destroy_payment/:id' => 'invoices#destroy_payment', :via => :delete, :as => :destroy_payment
 
   # public access to an invoice using the client hash
   match 'invoice/download/:client_hashid/:invoice_id' => 'invoices#download', :client_hashid => /.*/, :invoice_id => /\d+/, :via => :get
@@ -74,6 +74,10 @@ else
 
   resources :invoices, :has_many => :events, :collection => { :by_taxcode_and_num => :get }
   resources :received
+  match 'received/mark_refused/:id' => 'received#mark_refused', :as => :mark_refused
+  match 'received/mark_refused_with_mail/:id' => 'received#mark_refused_with_mail', :as => :mark_refused_with_mail
+  match 'received/mark_accepted/:id' => 'received#mark_accepted', :as => :mark_accepted
+  match 'received/mark_accepted_with_mail/:id' => 'received#mark_accepted_with_mail', :as => :mark_accepted_with_mail
 
   resources :invoice_templates
   match 'invoice_templates/new_from_invoice/:id' => 'invoice_templates#new_from_invoice'

@@ -58,6 +58,7 @@ class ClientsController < ApplicationController
         }
         format.js
       else
+        @client = @new_client
         format.html { render :action => 'new' }
         format.js  { render :action => 'create_error' }
       end
