@@ -179,7 +179,7 @@ a:hover img {
 	text-align: right;
 	border-bottom: 4px solid #000;
 	}
-.vendor .logo {
+.vendor .invoicelogo {
 	float: left;
 	}
 .firm {
@@ -188,6 +188,6 @@ a:hover img {
 	text-align: right;
 	border-bottom: 4px solid #000;
 	}
-.firm .logo {
+.firm .invoicelogo {
 	float: left;
 	}

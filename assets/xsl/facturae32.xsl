@@ -135,7 +135,7 @@
 <xsl:template match="SellerParty">
     <!-- Vendor Info -->
     <div class="vcard vendor">
-        <div class="logo">
+        <div class="invoicelogo">
             <xsl:element name="img">
                 <xsl:attribute name="alt"><xsl:value-of select="LegalEntity/CorporateName"/></xsl:attribute>
                 <xsl:attribute name="src">/companies/logo/<xsl:value-of select="TaxIdentification/TaxIdentificationNumber"/></xsl:attribute>

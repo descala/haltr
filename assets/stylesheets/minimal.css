@@ -431,10 +431,10 @@ lpayments .item-date { width: 116px; }
 	text-align: right;
 	border-bottom: 2px solid #ddd;
 	}
-.vendor .logo {
+.vendor .invoicelogo {
 	float: left;
 	}
-.vendor.box .logo {
+.vendor.box .invoicelogo {
 	display:none;
 	}
 .invoice-show .vendor {

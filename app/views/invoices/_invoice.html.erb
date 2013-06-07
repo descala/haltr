@@ -6,7 +6,7 @@
 </div>
 <!-- Vendor Info -->
 <div class="vcard vendor">
-  <div class="logo">
+  <div class="invoicelogo">
     <% if @company.attachments.any? -%>
       <%= tag 'img', :src => "/invoices/logo/#{@company.attachments.first.id}/#{@company.attachments.first.filename}", :alt => "#{@company.name} Logo" -%>
     <% end -%>
