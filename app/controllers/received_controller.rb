@@ -48,4 +48,10 @@ class ReceivedController < InvoicesController
     @unread = invoices.where("type = ? AND has_been_read = ?", 'ReceivedInvoice', false).count
   end
 
+  private
+
+  def invoice_class
+    ReceivedInvoice
+  end
+
 end
