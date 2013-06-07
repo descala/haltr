@@ -3,7 +3,7 @@
 <% if @errors.any? -%>
   <p><%= l(:invoices_not_sent,:num=>@errors.size) %></p>
   <ul>
-    <%= @errors.map{|e| content_tag("li", e)} %>
+    <%= @errors.collect{|e| content_tag("li", e)}.join("\n").html_safe %>
   </ul>
 <% end -%>
 <% html_title(l(:button_send_invoices)) -%>

@@ -8,11 +8,15 @@
 <div class="vcard vendor">
   <div class="invoicelogo">
     <% if @company.attachments.any? -%>
+    <%if !@is_pdf  or params[:debug].present? %>
       <%= tag 'img', :src => "/invoices/logo/#{@company.attachments.first.id}/#{@company.attachments.first.filename}", :alt => "#{@company.name} Logo" -%>
+    <% else %>
+      <%= tag 'img', :src => @company.attachments.first.diskfile -%>
     <% end -%>
+  <% end -%>
   </div>
   <div class="vendor-info">
-    <h3 class="org fn"><%=h @company.name %></h3>
+    <h3><%=h @company.name %></h3>
     <address class="adr">
       <div class="street-address"><%=h @company.address %></div>
       <span class="postal-code"><%=h @company.postalcode %></span> <span class="locality"><%=h @company.city %></span>
@@ -48,7 +52,7 @@
 <!-- Client Info -->
 <div class="vcard client">
   <div class="client-info">
-    <h3 class="org fn"><%= client_name_with_link @client %></h3>
+    <h3><%= client_name_with_link @client %></h3>
     <address class="adr">
       <div class="street-address"><%=h @client.address %></div>
       <div class="street-address"><%=h @client.address2 %></div>
