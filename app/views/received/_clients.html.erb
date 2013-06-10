@@ -5,7 +5,6 @@
 #    :with => "'value=' + this.value + '&curr_sel=' + $('#invoice_currency').value + '&required=' + #{@invoice.invoice_format!="pdf"}",
 #    :update => 'currency_select'
 #  }
-  debugger
 -%>
 <label for="invoice_client_id"><%= l(:field_client) %></label>
 <%= select :invoice,
