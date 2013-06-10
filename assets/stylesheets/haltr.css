@@ -35,7 +35,9 @@ ul.menu-rapid li, #sidebar ul li {list-style-type:none;}
 }
 
 .new_client_box {
-  position:absolute; top:200px; left:160px;
+  position:fixed; top:50%; left:50%;
+  margin-left: -325px;
+  margin-top: -235px;
   background-color: snow;
   width: 650px;
   z-index: 1002;
