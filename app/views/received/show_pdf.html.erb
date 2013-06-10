@@ -21,8 +21,6 @@
 
 <%= render :partial => "invoices/payments" -%>
 
-<%= render :partial => "invoices/events" -%>
-
 <!--formulari-->
 <div class="seccio grup">
   <div class="col span-2-de-2">
@@ -35,6 +33,8 @@
   </div>
 </div>
 <!--final formulari-->
+
+<%= render :partial => "invoices/events" -%>
 
 <% content_for :sidebar do %>
     <%= render_menu :invoices_menu, @project %>
