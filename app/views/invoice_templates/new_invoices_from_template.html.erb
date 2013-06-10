@@ -33,8 +33,21 @@
 
 <% if @drafts.any? -%>
 
+  <%= form_tag(url_for(:action => 'create_invoices'), :method=>'post') do %>
+
+<div class="seccio grup">
+  <div class="col span-2-de-2">
+    <ul class="menu-rapid">
+      <li><%= link_to l("label_invoice_template_new"), new_project_invoice_template_path(@project), :class => 'icon icon-add' %></li>
+      <% if num_new_invoices > 0 %>
+        <li><%= link_to "#{l(:button_generate_invoices)} (#{num_new_invoices})", {:action => 'new_invoices_from_template'}, :method => :post %></li>
+  <%= submit_tag(l(:generate_selected)) %>
+      <% end -%>
+    </ul>
+  </div>
+</div>
+
   <h2><%= l(:invoices_to_generate)%></h2>
-  <%= form_tag(url_for(:action => 'create_invoices', :id=>@project)) do %>
   <table class="list">
     <thead>
       <tr>
@@ -61,7 +74,6 @@
     </tbody>
   </table>
 
-  <%= submit_tag(l(:generate_selected)) %>
   <% end -%>
 
 <% end -%>
@@ -74,6 +86,6 @@
 <% html_title(l(:label_invoice_plural)) -%>
 
 <% content_for :sidebar do %>
-      <%= render :partial => 'invoices/sidebar' %>
+  <%= render_menu :invoice_templates_menu, @project %>
 <% end %>
 

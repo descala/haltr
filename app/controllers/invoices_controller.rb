@@ -8,8 +8,8 @@ class InvoicesController < ApplicationController
   helper :sort
   include SortHelper
 
-  before_filter :find_project_by_project_id, :only => [:index,:new,:create,:send_new_invoices, :download_new_invoices, :update_payment_stuff]
-  before_filter :find_invoice, :except => [:index,:new,:create,:destroy_payment,:update_payment_stuff,:by_taxcode_and_num,:view,:logo,:download,:mail,:send_new_invoices, :download_new_invoices]
+  before_filter :find_project_by_project_id, :only => [:index,:new,:create,:send_new_invoices, :download_new_invoices, :update_payment_stuff,:new_invoices_from_template,:create_invoices]
+  before_filter :find_invoice, :except => [:index,:new,:create,:destroy_payment,:update_payment_stuff,:by_taxcode_and_num,:view,:logo,:download,:mail,:send_new_invoices, :download_new_invoices,:new_invoices_from_template,:create_invoices]
   before_filter :find_payment, :only => [:destroy_payment]
   before_filter :find_hashid, :only => [:view,:download]
   before_filter :find_attachment, :only => [:logo]
@@ -462,8 +462,6 @@ class InvoicesController < ApplicationController
       end
     end
   end
-
-  private
 
   def invoice_class
     IssuedInvoice

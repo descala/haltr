@@ -42,6 +42,8 @@ else
     resources :invoices, :only => [:index, :new, :create]
     resources :received, :only => [:index, :new, :create]
     resources :invoice_templates, :only => [:index, :new, :create]
+    match 'new_invoices_from_template' => 'invoice_templates#new_invoices_from_template', :via => :post
+    match 'create_invoices' => 'invoice_templates#create_invoices', :via => :post
     match 'report/issued_3m' => 'tasks#report', :via => :get
     resources :payments, :only => [:index, :new, :create]
     resources :tasks

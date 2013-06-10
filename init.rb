@@ -73,7 +73,7 @@ Redmine::Plugin.register :haltr do
 
     permission :manage_payments, { :payments => [:index, :new, :edit, :create, :update, :destroy ] }, :require => :member
     permission :use_templates, { :invoice_templates => [:index, :new, :edit, :create, :update, :destroy, :show, :new_from_invoice,
-                                 :invoices, :create_invoices, :update_taxes] }, :require => :member
+                                 :new_invoices_from_template, :create_invoices, :update_taxes] }, :require => :member
 
     permission :batch_processes, { :tasks => [:automator] }, :require => :member
 

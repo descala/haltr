@@ -3,7 +3,7 @@ class InvoiceTemplatesController < InvoicesController
   unloadable
   menu_item Haltr::MenuItem.new(:invoices,:templates)
 
-  before_filter :find_project, :only => [:invoices,:create_invoices,:update_taxes]
+  before_filter :find_project, :only => [:update_taxes]
   before_filter :find_issued_invoice, :only => [:new_from_invoice]
 
   def index
@@ -42,7 +42,7 @@ class InvoiceTemplatesController < InvoicesController
   end
 
   # creates new draft invoices from template
-  def invoices
+  def new_invoices_from_template
     @number = IssuedInvoice.next_number(@project)
     days = params[:date] || 10
     @date = Date.today + days.to_i.day
@@ -89,7 +89,7 @@ class InvoiceTemplatesController < InvoicesController
       end
     end
     @drafts = DraftInvoice.find :all, :include => [:client], :conditions => ["clients.project_id = ?", @project.id], :order => "date ASC"
-    render :action => 'invoices'
+    render :action => 'new_invoices_from_template'
   end
 
   # this is a helper to mass-update the taxes of templates
@@ -117,8 +117,6 @@ class InvoiceTemplatesController < InvoicesController
     end
     flash.now[:notice] = "Updated #{num_changed} template lines" if from_name and from_percent
   end
-
-  private
 
   def invoice_class
     InvoiceTemplate
