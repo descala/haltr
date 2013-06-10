@@ -10,13 +10,13 @@ class CompaniesController < ApplicationController
   include SortHelper
   include Haltr::TaxHelper
 
-  before_filter :find_project_by_project_id, :only => [:index,:linked_to_mine]
+  before_filter :find_project_by_project_id, :only => [:my_company,:linked_to_mine]
   before_filter :find_company, :only => [:update]
   before_filter :set_iso_countries_language
   before_filter :authorize, :except => [:logo]
   skip_before_filter :check_if_login_required, :only => [:logo]
 
-  def index
+  def my_company
     if @project.company.nil?
       user_mail = User.find_by_project_id(@project.id).mail rescue ""
       @company = Company.new(:project=>@project,
@@ -69,7 +69,7 @@ class CompaniesController < ApplicationController
         render_attachment_warning_if_needed(@company)
       end
       flash[:notice] = l(:notice_successful_update) 
-      redirect_to :action => 'index', :project_id => @project
+      redirect_to :action => 'my_company', :project_id => @project
     else
       render :action => 'edit'
     end

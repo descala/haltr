@@ -35,7 +35,7 @@ else
     resources :clients, :only => [:index, :new, :create]
     match :people, :controller => 'people', :action => 'index', :via => :get
     match 'companies/linked_to_mine', :controller => 'companies', :action => 'linked_to_mine', :via => :get
-    resources :companies, :only => [:index]
+    match 'my_company', :controller => 'companies', :action => 'my_company', :via => :get
     match 'invoices/send_new' => 'invoices#send_new_invoices', :via => :get
     match 'invoices/download_new' => 'invoices#download_new_invoices', :via => :get
     match 'invoices/update_payment_stuff' => 'invoices#update_payment_stuff', :via => :get

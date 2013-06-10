@@ -68,7 +68,7 @@ Redmine::Plugin.register :haltr do
                       :svefaktura, :oioubl20],
         :received => [:index, :new, :edit, :create, :update, :destroy, :show, :legal],
         :tasks    => [:index, :n19, :n19_done, :report, :import_aeb43],
-        :companies => [:index,:edit,:update,:linked_to_mine]},
+        :companies => [:my_company,:edit,:update,:linked_to_mine]},
       :require => :member
 
     permission :manage_payments, { :payments => [:index, :new, :edit, :create, :update, :destroy ] }, :require => :member
