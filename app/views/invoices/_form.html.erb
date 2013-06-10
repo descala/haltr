@@ -75,7 +75,6 @@
     <div class="seccio grup">
       <p class="col span-1-de-5">
         <%= label_tag "#{name}_global", name%>
-        <span>
           <%= select_tag("#{name}_global",
                          options_for_select(tax_categories_array(@invoice,name),
                          :selected => @invoice.global_code_for(name)),
@@ -83,12 +82,9 @@
                          :style => "width: 90px;",
                          'class' => 'global_tax',
                          'data-tax-name' => name ) %>
-        </span>
       </p>
       <p class="col span-1-de-5 check-box-alineat">
-        <span>
           <%= check_box_tag("#{name}_multiple", 1, @invoice.tax_per_line?(name), :class => 'global_tax_check', 'data-tax-name' => name) %>
-        </span>
         <span>
           <%= l(:line_specific_tax) %>
         </span>
@@ -110,6 +106,7 @@
         <th><%=l(:field_quantity)%></th>
         <th></th>
         <th><%=l(:field_description)%></th>
+        <%= call_hook(:invoice_form_order_line_reference_header) %>
         <th><%=l(:field_price)%></th>
         <% @invoice.taxes_hash.keys.sort.each do |name| -%>
           <th id="<%=name%>_title" style="<%= 'display: none;' unless @invoice.tax_per_line?(name)%>">

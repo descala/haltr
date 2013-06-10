@@ -7,7 +7,7 @@
           :confirm => l(:confirm_delete_client_with_invoices, :count=>@client.invoices.count),
           :method => :delete, :class=>'icon icon-del', :title=>l(:button_delete) %>
         <% else -%>
-          <%= link_to l(:button_delete), {:action=>'destroy',:id=>@client}, :confirm => l(:text_are_you_sure), :method=>:delete, :class=>'eliminar icon icon-del', :title=>l(:button_delete) %>
+          <%= link_to l(:button_delete), {:action=>'destroy',:id=>@client}, :confirm => l(:text_are_you_sure), :method=>:delete, :class=>'icon icon-del', :title=>l(:button_delete) %>
         <% end -%>
       </li>
     </ul>

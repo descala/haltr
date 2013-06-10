@@ -37,6 +37,7 @@ end
 
 Rails.configuration.to_prepare do
   Project.send(:include, ProjectHaltrPatch)
+  User.send(:include, UserHaltrPatch)
 end
 
 Redmine::Plugin.register :haltr do

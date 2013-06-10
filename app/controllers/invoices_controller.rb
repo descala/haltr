@@ -275,13 +275,13 @@ class InvoicesController < ApplicationController
             :formats => :html,
             :show_as_html => params[:debug]
         end
-        format.facturae30  { render_clean_xml :template => 'invoices/facturae30.xml.erb', :layout => false }
-        format.facturae31  { render_clean_xml :template => 'invoices/facturae31.xml.erb', :layout => false }
-        format.facturae32  { render_clean_xml :template => 'invoices/facturae32.xml.erb', :layout => false }
-        format.peppolubl20 { render_clean_xml :template => 'invoices/peppolubl20.xml.erb', :layout => false }
-        format.biiubl20    { render_clean_xml :template => 'invoices/biiubl20.xml.erb', :layout => false }
-        format.svefaktura  { render_clean_xml :template => 'invoices/svefaktura.xml.erb', :layout => false }
-        format.oioubl20    { render_clean_xml :template => 'invoices/oioubl20.xml.erb', :layout => false }
+        format.facturae30  { render_clean_xml :formats => :xml, :template => 'invoices/facturae30',  :layout => false }
+        format.facturae31  { render_clean_xml :formats => :xml, :template => 'invoices/facturae31',  :layout => false }
+        format.facturae32  { render_clean_xml :formats => :xml, :template => 'invoices/facturae32',  :layout => false }
+        format.peppolubl20 { render_clean_xml :formats => :xml, :template => 'invoices/peppolubl20', :layout => false }
+        format.biiubl20    { render_clean_xml :formats => :xml, :template => 'invoices/biiubl20',    :layout => false }
+        format.svefaktura  { render_clean_xml :formats => :xml, :template => 'invoices/svefaktura',  :layout => false }
+        format.oioubl20    { render_clean_xml :formats => :xml, :template => 'invoices/oioubl20',    :layout => false }
       end
     elsif @invoice.is_a? ReceivedInvoice
       @invoice.update_attribute(:has_been_read, true)
