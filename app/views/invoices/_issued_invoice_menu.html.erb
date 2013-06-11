@@ -1,7 +1,9 @@
   <li><%= change_state_link(@invoice) %></li>
   <li><%= link_to "PDF", {:action=>'show', :id=>@invoice, :format => 'pdf'}, :class=>'icon-haltr-save' %></li>
 
-  <% if @invoice.can_be_exported? and js=ExportChannels[@client.invoice_format]['javascript'] %>
+  <% if @invoice.can_be_exported? and
+       ExportChannels[@client.invoice_format] and
+       js=ExportChannels[@client.invoice_format]['javascript'] %>
     <% content_for :header_tags do %>
       <%= javascript_include_tag 'jquery.js' %>
       <%= javascript_include_tag 'haltr_sign.js', :plugin => 'haltr' %> 
