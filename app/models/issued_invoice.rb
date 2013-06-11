@@ -185,11 +185,16 @@ class IssuedInvoice < InvoiceDocument
   end
 
   def sending_info
-    return export_errors.collect {|e| e}.join(", ") if export_errors and export_errors.size > 0
-    if %w(ublinvoice_20 facturae_30 facturae_31 facturae_32 signed_pdf svefaktura peppolbii peppol oioubl20).include?(client.invoice_format)
-      return "recipients:\n#{self.recipient_emails.join("\n")}"
+    format = nil
+    if channel = ExportChannels.available[self.client.invoice_format]
+      format = channel["locales"][I18n.locale.to_s]
     end
-    ""
+    errors =  export_errors.collect {|e| e}.join(", ") if export_errors and export_errors.size > 0
+    recipients = nil
+    if %w(ublinvoice_20 facturae_30 facturae_31 facturae_32 signed_pdf svefaktura peppolbii peppol oioubl20).include?(client.invoice_format)
+      recipients = "\n#{self.recipient_emails.join("\n")}"
+    end
+    "#{format}<br/>#{errors}<br/>#{recipients}".html_safe
   end
 
   # stores the email in the draft folder of an email account

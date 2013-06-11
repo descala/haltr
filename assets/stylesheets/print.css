@@ -35,12 +35,6 @@ a:hover {
 	color: #000;
 	text-decoration: underline;
 	}
-a:link img,
-a:visited img,
-a:hover img {
-	border: 0;
-	background: none;
-	}
 .vcard {
 	margin: 0 0 30px;
 	line-height: 1.5em;
@@ -172,6 +166,9 @@ a:hover img {
 	margin: 0 0 .25em;
 	font-size: 0.9em;
 	}
+.notes {
+  clear: both;
+}
 .vendor {
 	overflow: hidden;
 	margin: 0 0 .25in 0;
@@ -191,3 +188,7 @@ a:hover img {
 .firm .invoicelogo {
 	float: left;
 	}
+.invoicelogo img {
+  max-height: 5cm;
+  max-width: 10cm;
+}

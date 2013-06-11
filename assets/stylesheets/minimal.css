@@ -496,37 +496,10 @@ body.client_view .form-details  {
 	background: #ccc;
 	border: 1px solid #bbb;
 	}
-.blinksale-add {
-	margin: 10px 0;
-	padding: 3px 6px;
-	width: 596px;
-	line-height: 20px;
-	background: #ccc;
-	border: 1px solid #bbb;
-	}
-.blinksale-add th {
-	margin: 0;
-	padding: 1px 0;
-	width: 146px;
-	text-align: left;
-	font-weight: normal;
-	}
-.blinksale-add .blinksaleID th {
-	font-weight: bold;
-	}
-.blinksale-add .blinksaleID input {
-	font-weight: bold;
-	}
-.blinksale-add td {
-	margin: 0;
-	padding: 3px 0;
-	}
-.blinksale-add input {
-	margin: 0;
-	padding: 0;
-	width: 220px;
-	}
-
 .pastdue {
   color: red;
+}
+.invoicelogo img {
+  max-height: 200px;
+  max-width: 500px;
 }

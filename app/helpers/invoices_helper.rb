@@ -128,12 +128,6 @@ module InvoicesHelper
     end
   end
 
-  def l_export_channel(export_channel)
-    if channel = ExportChannels.available[export_channel]
-      channel["locales"][I18n.locale.to_s]
-    end
-  end
-
   def tax_categories_array(invoice,tax_name)
     # tax_name = 'VAT'
     taxes = invoice.taxes_hash[tax_name].sort

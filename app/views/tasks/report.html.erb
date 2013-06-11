@@ -6,9 +6,9 @@
 
   <% @invoices.keys.each do |currency| -%>
 
-  <table class="list" width="100%">
+  <table class="taula-1 list" width="100%">
 
-    <tr>
+    <tr class="imparell">
       <th><%=l(:field_number)%></th>
       <th><%=l(:field_date)%></th>
       <th><%=l(:field_taxcode)%></th>
@@ -22,7 +22,7 @@
     </tr>
 
     <% @invoices[currency].each do |i| -%>
-      <tr class="<%= cycle("odd", "even") %>">
+      <tr class="<%= cycle("odd imparell", "even parell") %>">
         <td><%= i.number %></td>
         <td><%= i.date %></td>
         <td><%= i.client.taxcode %></td>
@@ -43,6 +43,7 @@
           <th style="text-align: right;"><%= money(@taxes[currency][tax_name]) %></th>
         <% end %>
       </td>
+      <td colspan="2"/>
     </tr>
   </table>
   <% end -%>
