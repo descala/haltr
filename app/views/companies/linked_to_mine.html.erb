@@ -1,12 +1,14 @@
-<table class="list" id="companies">
+<table class="taula-1 list" id=" companies">
   <thead>
+    <tr class="parell">
       <th style="width: 3%;"></th>
       <%= sort_header_tag('taxcode', :caption => l(:field_taxcode)) %>
       <%= sort_header_tag('name', :caption => l(:field_name)) %>
+    </tr>
   </thead>
   <tbody>
 <% for c in @companies -%>
-  <tr class="user <%= cycle("odd", "even") %>">
+  <tr class="user <%= cycle("imparell", "parell") %>">
     <td style="width: 3%;"><%=image_tag("link.png")%></td>
     <td><%=h c.taxcode %></td>
     <td><%=h c.name %></td>
