@@ -77,7 +77,7 @@ en:
   generate_template_from_invoice: Generate new template
   duplicate_invoice: Duplicate invoce
   generated_from_template: Generated from template
-  receive_payment: Receive payment
+  receive_payment: Payment
   make_payment: Make payment
   label_paid: Paid
   label_tax: Tax

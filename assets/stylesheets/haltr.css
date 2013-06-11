@@ -84,3 +84,6 @@ pastdue {
 .disabled {
   text-decoration: none !important;
 }
+table#invoice_lines {
+  min-width: 50%;
+}

@@ -75,7 +75,7 @@ sv:
   show_template: Visa mall
   generate_template_from_invoice: Skapa ny mall
   generated_from_template: Skapad ny mall
-  receive_payment: Ta emot betalning
+  receive_payment: Betalning
   make_payment: Skapa betalning
   label_paid: Betald
   label_tax: Skatt

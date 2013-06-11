@@ -88,7 +88,7 @@ ca:
   generate_template_from_invoice: Generar nova plantilla
   duplicate_invoice: Duplicar la factura
   generated_from_template: Generada de la plantilla
-  receive_payment: Rebre pagament
+  receive_payment: Pagament
   make_payment: Efectuar pagament
   label_paid: Pagat
   label_tax: Impost

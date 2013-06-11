@@ -75,7 +75,7 @@ da:
   show_template: Vis skabelon
   generate_template_from_invoice: Generer ny skabelon
   generated_from_template: Genereret fra skabelon
-  receive_payment: Modtag betaling
+  receive_payment: Betaling
   make_payment: Foretag indbetaling
   label_paid: Betalt
   label_tax: Skat

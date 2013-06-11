@@ -89,7 +89,7 @@ es:
   generate_template_from_invoice: Generar nueva plantilla
   duplicate_invoice: Duplicar esta factura
   generated_from_template: Generada de la plantilla
-  receive_payment: Recibir pago
+  receive_payment: Pago
   make_payment: Efectuar pago
   label_paid: Pagado
   label_tax: Impuesto
