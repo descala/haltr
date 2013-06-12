@@ -96,7 +96,7 @@ class ClientsController < ApplicationController
       redirect_to :action => 'edit', :id => @client
     else
       @client.company = nil
-      render :action => 'edit'
+      render :action => 'new'
     end
   end
 
