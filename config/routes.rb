@@ -8,7 +8,7 @@ if Redmine::VERSION::MAJOR == 1
     map.connect '/invoices/legal/:id.:format', :controller => 'invoices', :action => 'legal'
     map.connect '/invoice/download/:id/:invoice_id', :controller => 'invoices', :action => 'download', :id => /.*/, :invoice_id => /\d+/
     map.connect '/invoice/:id/:invoice_id', :controller => 'invoices', :action => 'view', :id => /.*/, :invoice_id => /\d+/
-    map.connect '/statistics', :controller => 'stastics', :action => 'index'
+    map.connect '/statistics', :controller => 'statistics', :action => 'index'
     map.connect '/invoices/:action/:id', :controller => 'invoices'
     map.connect '/received/:action/:id', :controller => 'received'
     map.connect '/templates/:action/:id', :controller => 'invoice_templates'
@@ -24,7 +24,7 @@ else
   #        %w(xml json).include? params[:format]
   match '/tasks/report/:id/:months_ago' => 'tasks#report'
   resources :events
-  match '/statistics' => 'stastics#index'
+  match '/statistics' => 'statistics#index'
 
   match '/clients/check_cif/:id' => 'clients#check_cif', :via => :get
   match '/clients/link_to_profile/:id' => 'clients#link_to_profile', :via => :get

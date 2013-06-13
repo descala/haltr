@@ -28,3 +28,7 @@ Redmine::MenuManager.map :payments_menu do |menu|
   menu.push :payment_new, {:controller=>'payments',:action=>'new'}, :param => :project_id
   menu.push :tasks, {:controller=>'tasks',:action=>'index'}, :param => :project_id
 end
+
+Redmine::MenuManager.map :admin_menu do |menu|
+  menu.push :statistics, {:controller => 'statistics', :action => 'index'}, :caption => :label_statistics
+end

@@ -1,4 +1,4 @@
-class StasticsController < ApplicationController
+class StatisticsController < ApplicationController
 
   unloadable
   layout 'admin'
