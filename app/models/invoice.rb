@@ -245,7 +245,7 @@ class Invoice < ActiveRecord::Base
     #taxes.find :all, :group=> 'name,percent'
     tt=[]
     taxes.each {|tax|
-      tt << tax unless tt.include? tax
+      tt << tax unless tt.include? tax or tax.marked_for_destruction?
     }
     tt
   end
