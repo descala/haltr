@@ -263,7 +263,7 @@ ca:
   nothing_to_report: Res a mostrar
   nothing_to_generate: Res a generar
   button_generate_invoices: Noves factures des de plantilla
-  button_send_invoices: Enviar factures
+  button_send_invoices: Enviar noves
   label_automator_info: "descarregar els PDFs, script de l'Automator per enviar emails i marcar-les com a enviades"
   label_charge_n19: Girar rebuts mitjançant fitxers N19 
   button_mark_done: Marcar com a cobrat
@@ -352,7 +352,7 @@ ca:
   invoices_sent: "%{num} factures enviades"
   invoice_limit_reached: "S'ha arribat al límit d'enviament simultani (10 factures).<br />Pots tornar a enviar per processar-ne 10 més."
   zip_gem_required: "Cal instal·lar la gem 'zip' per fer servir aquesta funcionalitat"
-  too_much_invoices: "Masses factures a descarregar (%{num} factures, màxim 10)"
+  too_much_invoices: "Masses factures a descarregar (%{num} factures, màxim 100)"
   field_send_invoices_by_mail: "Enviar factures a aquest email"
   state_allegedly_paid: "Informada com a pagada"
   ubl_invoice_has_taxes_withheld: "No es pot generar una factura UBL amb impostos retinguts"

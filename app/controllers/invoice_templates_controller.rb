@@ -3,8 +3,13 @@ class InvoiceTemplatesController < InvoicesController
   unloadable
   menu_item Haltr::MenuItem.new(:invoices,:templates)
 
+  # skip parent controller filters, add later
+  # otherwise they get executed before ours
+  skip_before_filter :authorize, :check_for_company
+
   before_filter :find_project, :only => [:update_taxes]
   before_filter :find_issued_invoice, :only => [:new_from_invoice]
+  before_filter :authorize, :check_for_company
 
   def index
     sort_init 'date', 'asc'

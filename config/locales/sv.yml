@@ -337,7 +337,7 @@ sv:
   invoices_sent: "%{num} fakturor skickade"
   invoice_limit_reached: "Begränsning av antal samtidiga försändelser (10 fakturor).<br />Skicka igen för ytterligare 10 stycken."
   zip_gem_required: "'zip' gem krävs för att det ska fungera"
-  too_much_invoices: "För många fakturor att laddaa ner (%{num} fakturor, max 10)"
+  too_much_invoices: "För många fakturor att laddaa ner (%{num} fakturor, max 100)"
   field_send_invoices_by_mail: "Skicka fakturor till detta mail"
 
   missing_svefaktura_account: "Saknad Svefaktura konto kostnad"

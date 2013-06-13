@@ -9,7 +9,7 @@ class InvoicesController < ApplicationController
   include SortHelper
 
   before_filter :find_project_by_project_id, :only => [:index,:new,:create,:send_new_invoices, :download_new_invoices, :update_payment_stuff,:new_invoices_from_template,:create_invoices]
-  before_filter :find_invoice, :except => [:index,:new,:create,:destroy_payment,:update_payment_stuff,:by_taxcode_and_num,:view,:logo,:download,:mail,:send_new_invoices, :download_new_invoices,:new_invoices_from_template,:create_invoices]
+  before_filter :find_invoice, :only => [:edit,:update,:destroy,:mark_sent,:mark_closed,:mark_not_sent,:mark_accepted_with_mail,:mark_accepted,:mark_refused_with_mail,:mark_refused,:duplicate_invoice,:pdfbase64,:show,:send_invoice,:legal,:amend_for_invoice] 
   before_filter :find_payment, :only => [:destroy_payment]
   before_filter :find_hashid, :only => [:view,:download]
   before_filter :find_attachment, :only => [:logo]
@@ -337,7 +337,8 @@ class InvoicesController < ApplicationController
     require 'zip/zipfilesystem'
     @company = @project.company
     invoices = IssuedInvoice.find_not_sent @project
-    if invoices.size > 10
+    # just a safe big limit
+    if invoices.size > 100
       flash[:error] = l(:too_much_invoices,:num=>invoices.size)
       redirect_to :action=>'index', :project_id=>@project
       return
@@ -462,6 +463,8 @@ class InvoicesController < ApplicationController
       end
     end
   end
+
+  ### methods not reachable with any route:
 
   def invoice_class
     IssuedInvoice

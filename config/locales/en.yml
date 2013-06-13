@@ -340,7 +340,7 @@ en:
   invoices_sent: "%{num} invoices sent"
   invoice_limit_reached: "Simultaneous delivery limit reached (10 bills).<br />You can send again to process 10 more."
   zip_gem_required: "'zip' gem required to use this functionality"
-  too_much_invoices: "Too much invoices to download (%{num} invoices, max 10)"
+  too_much_invoices: "Too much invoices to download (%{num} invoices, max 100)"
   field_send_invoices_by_mail: "Send invoices to this email"
   state_allegedly_paid: "Reported as paid"
   ubl_invoice_has_taxes_withheld: "Can't generate an UBL invoice with taxes withheld"

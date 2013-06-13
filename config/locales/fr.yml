@@ -336,7 +336,7 @@ fr:
   invoices_sent: "Envoyé factures %{num}"
   invoice_limit_reached: "Limite atteinte simultanée de livraison (10 factures).<br />Vous pouvez envoyer plus de 10 pour les traiter."
   zip_gem_required: "gem 'zip' requis pour utiliser cette fonctionnalité"
-  too_much_invoices: "Trop de factures à télécharger (%{num} projets de loi, maximum 10)"
+  too_much_invoices: "Trop de factures à télécharger (%{num} projets de loi, maximum 100)"
   field_send_invoices_by_mail: "envoyer des factures à cet e-mail"
   state_allegedly_paid: "Déclarés comme étant versés"
   ubl_invoice_has_taxes_withheld: "Impossible de générer une facture UBL avec impôts retenus"
