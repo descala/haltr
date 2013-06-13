@@ -71,8 +71,29 @@ $(document).ready(function() {
     global_tax_check_changed(tax_name);
   });
 
+  $(document).on('change', '#client_taxcode', function(e) {
+    client_taxcode_changed();
+  });
+  $('#client_taxcode').ready(client_taxcode_changed());
 
 });
+
+
+function client_taxcode_changed() {
+  var taxcode = $('#client_taxcode').val();
+  // do nothing if rendering a short form
+  // (on invoices / invoice_templates)
+  // or if taxcode is empty
+  if (!$('#client_taxcode').data('short') && taxcode != "") {
+    $.ajax({
+      url: $('#client_taxcode').data('checkCifUrl'),
+      data: 'value=' + taxcode,
+      dataType: "html"
+    }).done(function( html ) {
+      $("#cif_info").html(html);
+    })
+  }
+}
 
 /* Iterate over all selects of a tax and update its values */
 function global_tax_changed(tax_name, tax_code) {

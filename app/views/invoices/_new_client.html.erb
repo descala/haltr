@@ -1,15 +1,14 @@
 <div class="new_client_box">
   <div id="new_client">
     <h2><%= l(:label_company_new) %></h2>
-    <% @client = Client.new %>
-    <%= labelled_form_for(:client, @client,
+    <%= labelled_form_for(:client, Client.new(),
          :url     => {:controller=>'clients', :action=>'create', :project_id=>@project},
          :html    => {:class => 'formee'},
          :remote  => true,
          :lang    => current_language
        ) do |form| -%>
 
-      <%= render :partial=>'clients/form', :locals=>{ :f=>form, :short=>true } %>
+      <%= render :partial=>'clients/form', :locals=>{ :f=>form, :short=>true, :client=>Client.new() } %>
       <%= submit_tag l(:button_create) %>
       <%= button_to_function(l(:cancel), "$('#new_client_wrapper').hide();") %>
     <% end -%>

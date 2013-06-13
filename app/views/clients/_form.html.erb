@@ -2,30 +2,24 @@
 
 <% short ||= false -%>
 
-<% unless short -%>
-<script type="text/javascript">
-$(document).on('change', '#client_taxcode', function(e) {
-    $.ajax({
-url: '<%= url_for :controller=>'clients', :action=>'check_cif', :id => @project.id, :client => @client.id %>',
-      data: 'value=' + this.value,
-      dataType: "html"
-      }).done(function( html ) {
-        $("#cif_info").html(html);
-        })
-    });
-</script>
-<% end -%>
-
 <fieldset class="tabular box">
   <legend><%=l(:label_company)%></legend>
   <div class="seccio grup" id='cif_info'>
-    <p class="col span-1-de-1">
-      <%= render :partial => "clients/cif_info", :locals => { :client => @client, :company => @client.company } %>
-    </p>
+    <%= render :partial => "clients/cif_info",
+      :locals => { :client => @client, :company => @client.company } %>
   </div>
   <div class="seccio grup">
     <p class="col span-1-de-2">
-      <%= f.text_field :taxcode, :size => 20, :required => true, :readonly => @client.linked? %>
+    <%= f.text_field :taxcode,
+      :size => 20,
+      :required => true,
+      :readonly => @client.linked?,
+      'data-short' => short, #TODO: allow link from short forms too
+      'data-check-cif-url' => url_for(:controller=>'clients',
+                                      :action=>'check_cif',
+                                      :id => @project.id,
+                                      :client => @client.id)
+    %>
     </p>
     <p class="col span-1-de-2">
       <%= f.text_field :company_identifier %>

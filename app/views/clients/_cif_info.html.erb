@@ -1,4 +1,11 @@
-<% if client and client.company and (client.company == company || company.nil?) -%>
+<%
+  # client is the new / edited client
+  # client.company is the company linked to the client (if any)
+  # company is the company we found that matches the entered taxcode
+  # we have a client and client is linked and (is already linked to the
+  # company we found or we did not found any company)
+  if client and client.company and (client.company == company || company.nil?)
+-%>
 
   <% if client.allowed? -%>
     <span class="profilelink">
@@ -12,11 +19,14 @@
   <% end -%>
     </span>
 
-<% elsif company -%>
+<%
+  # we found a company to link to
+  elsif company
+-%>
 
   <span class="profilelink">
     <%= l(:cif_belongs_to_company,{:company=>company.name}).html_safe %>
-    <% if company.public? -%>
+    <% if company.public? # public profile -%>
       <%= l(:link_to_profile_suggest, :href=>link_to(l(:link_to_profile),{:action=>'link_to_profile',:id=>@project,:company=>company,:client=>client})).html_safe %>
       <% if !client or client.new_record? %>
         <script language="javascript">
@@ -24,7 +34,7 @@
           self.location="<%=url_for(:action=>'link_to_profile',:id=>@project,:company=>company,:client=>client)%>";
         </script>
       <% end -%>
-    <% else -%>
+    <% else # semipublic profile -%>
       <%= l(:link_to_profile_suggest, :href=>link_to(l(:link_to_profile_ask),{:action=>'link_to_profile',:id=>@project,:company=>company,:client=>client})).html_safe %>
     <% end -%>
     </span>

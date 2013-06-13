@@ -49,16 +49,15 @@ class ClientsController < ApplicationController
   end
 
   def create
-    @new_client = Client.new(params[:client].merge({:project=>@project}))
+    @client = Client.new(params[:client].merge({:project=>@project}))
     respond_to do |format|
-      if @new_client.save
+      if @client.save
         format.html {
           flash[:notice] = l(:notice_successful_create)
           redirect_to :action=>'index', :project_id=>@project
         }
         format.js
       else
-        @client = @new_client
         format.html { render :action => 'new' }
         format.js  { render :action => 'create_error' }
       end
@@ -80,10 +79,23 @@ class ClientsController < ApplicationController
   end
 
   def check_cif
-    taxcode = params[:value].gsub(/\W/,'')
-    company = Company.find(:all, :conditions => ["taxcode = ? and (public='public' or public='semipublic')", taxcode]).first
+    taxcode = params[:value].gsub(/\W/,'') if params[:value]
+    # the client we are editing (or nil if creating new one)
     client = Client.find(params[:client]) unless params[:client].blank?
-    render :partial => "cif_info", :locals => { :client => client, :company => company }
+    # search for an existing client with the specified taxcode
+    existing_client = @project.clients.collect {|c| c if c.taxcode == taxcode }.compact.first
+    # check if we are editing or creating a client and entered a taxcode that
+    # already exists on another of our clients
+    if existing_client and (( client and client.id != existing_client.id ) or !client )
+      # render nothing, activerecord validations will raise an error
+      render :partial => 'cif_info', :locals => {:client=>nil,:company=>nil}
+    else
+      # we are creating/editing a new client
+      # search a company with specified taxcode and (semi)public profile
+      company = Company.find(:all,
+                  :conditions => ["taxcode = ? and (public='public' or public='semipublic')", taxcode]).first
+      render :partial => "cif_info", :locals => { :client => client, :company => company }
+    end
   end
 
   def link_to_profile
