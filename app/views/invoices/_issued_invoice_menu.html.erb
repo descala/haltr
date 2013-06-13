@@ -1,4 +1,3 @@
-  <li><%= change_state_link(@invoice) %></li>
   <li><%= link_to "PDF", {:action=>'show', :id=>@invoice, :format => 'pdf'}, :class=>'icon-haltr-save' %></li>
 
   <% if @invoice.can_be_exported? and
@@ -15,24 +14,31 @@
     <li><%= link_to l(:label_send), "#", :class=>'icon-haltr-send disabled', :title => @invoice.sending_info %></li>
   <% end -%>
 
-  <% unless hide_to_user(:manage_payments) -%>
-    <% if @invoice.state?(:sent) or @invoice.state?(:allegedly_paid) -%>
-      <li><%= link_to l(:receive_payment), {:controller=>'payments', :action=>'new', :project_id=>@project, :invoice_id=>@invoice}, :class=>'icon-haltr-payment' %></li>
-    <% end -%>
-  <% end -%>
+  <li>
+  <a href="#"><%= l(:more_options) %></a>
+  <ul>
+    <li><%= change_state_link(@invoice) %></li>
 
-  <% unless hide_to_user(:use_templates) -%>
-    <% if @invoice.invoice_template_id and @invoice.invoice_template -%>
-      <li><%= link_to "#{l(:show_template)} #{@invoice.invoice_template.id}", {:controller=>'invoice_templates',:action=>'show', :id=>@invoice.invoice_template_id }, :class=>'icon-haltr-templates' %></li>
-    <% else -%>
-      <li><%= link_to l(:generate_template_from_invoice), {:controller=>'invoice_templates',:action=>'new_from_invoice',:id=>@invoice}, :class => 'icon-haltr-template' %></li>
+    <% unless hide_to_user(:manage_payments) -%>
+      <% if @invoice.state?(:sent) or @invoice.state?(:allegedly_paid) -%>
+        <li><%= link_to l(:receive_payment), {:controller=>'payments', :action=>'new', :project_id=>@project, :invoice_id=>@invoice}, :class=>'icon-haltr-payment' %></li>
+      <% end -%>
     <% end -%>
-  <% end -%>
 
-  <% unless @invoice.amended? -%>
-    <li><%= link_to l(:create_amend_invoice), {:controller => 'invoices', :action => 'amend_for_invoice', :id => @invoice}, :method => :post, :class => 'icon-haltr-template' %></li>
-  <% end -%>
+    <% unless hide_to_user(:use_templates) -%>
+      <% if @invoice.invoice_template_id and @invoice.invoice_template -%>
+        <li><%= link_to "#{l(:show_template)} #{@invoice.invoice_template.id}", {:controller=>'invoice_templates',:action=>'show', :id=>@invoice.invoice_template_id }, :class=>'icon-haltr-templates' %></li>
+      <% else -%>
+        <li><%= link_to l(:generate_template_from_invoice), {:controller=>'invoice_templates',:action=>'new_from_invoice',:id=>@invoice}, :class => 'icon-haltr-template' %></li>
+      <% end -%>
+    <% end -%>
+
+    <% unless @invoice.amended? -%>
+      <li><%= link_to l(:create_amend_invoice), {:controller => 'invoices', :action => 'amend_for_invoice', :id => @invoice}, :method => :post, :class => 'icon-haltr-template' %></li>
+    <% end -%>
     <li><%= link_to l(:duplicate_invoice), {:controller => 'invoices', :action => 'duplicate_invoice', :id => @invoice}, :class => 'icon-haltr-invoice' %></li>
+  </ul>
+  </li>
 
 
 <script type="text/javascript">

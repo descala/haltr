@@ -397,3 +397,5 @@ ca:
   invoice_data: "Dades factura"
   concept: "Concepte"
   bank_info: "Dades bancàries"
+
+  more_options: Més accions ...
