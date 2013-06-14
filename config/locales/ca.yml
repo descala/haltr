@@ -395,7 +395,6 @@ ca:
   tax_H: "High Rated"
   tax_AA: "Low Rated"
   invoice_data: "Dades factura"
-  concept: "Concepte"
   bank_info: "Dades bancàries"
 
   more_options: Més accions ...
