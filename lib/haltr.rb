@@ -25,7 +25,6 @@ end
 
 Redmine::MenuManager.map :payments_menu do |menu|
   menu.push :payments_level2, {:controller=>'payments',:action=>'index'}, :param => :project_id, :caption => :label_payment_plural
-  menu.push :payment_new, {:controller=>'payments',:action=>'new'}, :param => :project_id
   menu.push :tasks, {:controller=>'tasks',:action=>'index'}, :param => :project_id
 end
 
