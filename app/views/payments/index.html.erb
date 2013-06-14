@@ -1,3 +1,11 @@
+<div class="seccio grup">
+  <div class="col span-2-de-2">
+    <ul class="menu-rapid">
+      <li><%= link_to l("label_payment_new"), new_project_payment_path(@project), :class => 'icon icon-add' %></li>
+    </ul>
+  </div>
+</div>
+
 <!--filtres-->
 <div class="seccio grup">
   <div class="col span-2-de-2">
@@ -36,25 +44,24 @@
     <table class="taula-1 list">
       <thead>
         <tr>
-          <%= sort_header_tag('invoices.number', :caption => l(:field_invoice)) %>
-          <%= sort_header_tag('amount_in_cents', :caption => l(:field_amount)) %>
           <%= sort_header_tag('payments.date', :caption => l(:field_date)) %>
+          <%= sort_header_tag('amount_in_cents', :caption => l(:field_amount)) %>
           <%= content_tag('th', l(:field_payment_method)) %>
           <%= content_tag('th', l(:field_reference)) %>
-          <th style="width:10%"></th>
-          <th style="width:10%"></th>
+          <%= sort_header_tag('invoices.number', :caption => l(:field_invoice)) %>
+          <th></th>
         </tr>
       </thead>
       <tbody>
         <% for payment in @payments -%>
           <tr class="user <%= cycle("odd", "even") %>" />
-            <td align="center"><%=link_to(h(payment.invoice.number), invoice_path(payment.invoice)) unless payment.invoice.nil? %></td>
-            <td align="right" style="color: <%=payment.invoice.is_a?(IssuedInvoice) ? "green" : "red" %>"><%= money(payment.amount) %></td>
             <td align="center"><%=h payment.date %></td>
+            <td align="right" style="color: <%=payment.invoice.is_a?(IssuedInvoice) ? "green" : "red" %>"><%= money(payment.amount) %></td>
             <td><%=h(truncate(payment.payment_method,:length=>20)) %></td>
             <td><%=h(truncate(payment.reference,:length=>30)) %></td>
-            <td align="center"><%= link_to l(:button_edit), edit_payment_path(payment), :class => 'icon icon-edit' %></td>
-            <td align="center"><%= link_to l(:button_delete), payment_path(payment), :method=>:delete, :confirm => l(:text_are_you_sure), :class => 'icon icon-del' %></td>
+            <td href="#" align="center"><%=link_to(h(payment.invoice.number), invoice_path(payment.invoice)) unless payment.invoice.nil? %></td>
+            <td align="center"><%= link_to l(:button_edit), edit_payment_path(payment), :class => 'icon icon-edit' %>
+            <%= link_to l(:button_delete), payment_path(payment), :method=>:delete, :confirm => l(:text_are_you_sure), :class => 'icon icon-del' %></td>
           </tr>
         <% end -%>
       </tbody>

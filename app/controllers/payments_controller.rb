@@ -65,10 +65,8 @@ class PaymentsController < ApplicationController
           @payment.invoice.events.last.destroy
           Event.create(:name=>'paid',:invoice=>@payment.invoice,:user=>User.current,:info=>params[:reason])
         end
-        redirect_to invoice_path(@payment.invoice)
-      else
-        redirect_to project_payments_path(@project)
       end
+      redirect_to project_payments_path(@project)
     else
       render :action => "new"
     end
