@@ -45,7 +45,7 @@ da:
   public: "Offentig"
   semipublic: " Kræv tilladelse "
   private: "Private"
-  confirm_delete_client_with_invoices: "Advarsel! klient har %{count}  fakturaer forbundet.\nSlette klient og alle hans fakturaer?"
+  confirm_delete_client_with_invoices: "Advarsel! klient har fakturaer forbundet:\n  %{issued} udstedt\n  %{received} modtaget\n  %{templates} skabelon\nSlette klient og alle hans fakturaer?"
  
   # Invoices
   IssuedInvoice: udstedt faktura

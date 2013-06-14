@@ -45,7 +45,7 @@ sv:
   public: "Publik"
   semipublic: "Kräv tillstånd"
   private: "Privat"
-  confirm_delete_client_with_invoices: "Observera! Kunden har %{count} fakturor kopplade.\nVill du ta bort kunden och alla fakturor?"
+  confirm_delete_client_with_invoices: "Observera! Kunden har fakturor kopplade:\n  %{issued} utställda\n  %{received} mottagna\n  %{templates} mall\nVill du ta bort kunden och alla fakturor?"
 
   # Invoices
   IssuedInvoice: Utställda fakturor

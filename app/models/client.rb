@@ -74,6 +74,10 @@ class Client < ActiveRecord::Base
     self.invoices.find(:all,:conditions=>["type=?","IssuedInvoice"])
   end
 
+  def received_invoices
+    self.invoices.find(:all,:conditions=>["type=?","ReceivedInvoice"])
+  end
+
   def allowed?
     self.company and ( self.company.public? || ( self.company.semipublic? and self.allowed ) )
   end

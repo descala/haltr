@@ -56,7 +56,7 @@ ca:
   public: "Públic"
   semipublic: "Requerir autorització"
   private: "Privat"
-  confirm_delete_client_with_invoices: "Atenció! El client té %{count} factures associades.\nEsborrar el client i totes les seves factures?"
+  confirm_delete_client_with_invoices: "Atenció! El client té factures associades:\n  %{issued} emeses\n  %{received} rebudes\n  %{templates} recurrents\nEsborrar el client i totes les seves factures?"
 
   # Invoices
   IssuedInvoice: Factura emesa

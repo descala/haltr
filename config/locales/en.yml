@@ -45,7 +45,7 @@ en:
   public: "Public"
   semipublic: "Require authorization"
   private: "Private"
-  confirm_delete_client_with_invoices: "Warning! Client has %{count} invoices associated.\nDelete client and all his invoices?"
+  confirm_delete_client_with_invoices: "Warning! Client has associated invoices:\n  %{issued} issued\n  %{received} received\n  %{templates} templates\nDelete client and all his invoices?"
 
   # Invoices
   IssuedInvoice: Issued invoice
