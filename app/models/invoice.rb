@@ -33,6 +33,7 @@ class Invoice < ActiveRecord::Base
   has_one :amend_of, :class_name => "Invoice", :foreign_key => 'amend_id'
   validates_presence_of :client, :date, :currency, :project_id, :unless => Proc.new {|i| i.type == "ReceivedInvoice" }
   validates_inclusion_of :currency, :in  => Money::Currency.table.collect {|k,v| v[:iso_code] }, :unless => Proc.new {|i| i.type == "ReceivedInvoice" }
+  validates_numericality_of :charge_amount_in_cents
 
   # TODO warn the user it may not have the company or client bank account
   #      but does not force to have one (may be handled by an external system)
@@ -312,8 +313,13 @@ class Invoice < ActiveRecord::Base
   end
 
   def charge_amount=(value)
-    value = Money.parse(value)
-    write_attribute :charge_amount_in_cents, value.cents
+    if value =~ /^[0-9,.']*$/
+      value = Money.parse(value)
+      write_attribute :charge_amount_in_cents, value.cents
+    else
+      # this + validates_numericality_of will raise an error if not a number
+      write_attribute :charge_amount_in_cents, value
+    end
   end
 
   def tax_per_line?(tax_name)
