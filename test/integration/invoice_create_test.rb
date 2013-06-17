@@ -6,10 +6,10 @@ class InvoiceCreaeteTest < ActionController::IntegrationTest
     post "/login", :username => 'jsmith', :password => 'jsmith'
     assert_redirected_to "/my/page"
 
-    get "/invoices/new/onlinestore"
+    get "/projects/onlinestore/invoices/new"
     assert_response :success
 
-    post "/invoices/create/onlinestore",
+    post "/projects/onlinestore/invoices",
     {
       "commit"=>"Create",
       "action"=>"create",
@@ -72,10 +72,10 @@ class InvoiceCreaeteTest < ActionController::IntegrationTest
     post "/login", :username => 'jsmith', :password => 'jsmith'
     assert_redirected_to "/my/page"
 
-    get "/invoices/new/onlinestore"
+    get "/projects/onlinestore/invoices/new"
     assert_response :success
 
-    post "/invoices/create/onlinestore",
+    post "/projects/onlinestore/invoices",
     {
       "commit"=>"Create",
       "action"=>"create",
