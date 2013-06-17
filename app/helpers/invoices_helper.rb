@@ -29,7 +29,8 @@ module InvoicesHelper
 
   def precision(num,precision=2)
     num=0 if num.nil?
-    number_with_precision(num,:precision=>precision,:significant => true)
+    # :significant - If true, precision will be the # of significant_digits. If false, the # of fractional digits
+    number_with_precision(num,:precision=>precision,:significant => false)
   end
 
   def download_link_for(e)
