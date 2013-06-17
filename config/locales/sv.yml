@@ -25,6 +25,7 @@ sv:
   field_country: Land
   field_bank_account: Bankkonto
   button_people: Personer
+  label_people: Personer
   field_invoice_format: Valt fakturaformat och transportteknik
   field_currency: Valuta
   field_ponumber: Order

@@ -36,6 +36,7 @@ ca:
   field_country: País
   field_bank_account: Compte bancari
   button_people: Persones
+  label_people: Persones
   field_invoice_format: "Format i transport de factures preferit"
   field_currency: Moneda
   field_ponumber: Número de comanda

@@ -25,6 +25,7 @@ da:
   field_country: Land
   field_bank_account: Bank konto
   button_people: Mennesker
+  label_people: Mennesker
   field_invoice_format: Foretrukne faktura transport og format
   field_currency: Valuta
   field_ponumber: Indkøbsordre
