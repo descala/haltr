@@ -102,4 +102,3 @@ Mime::Type.register "text/xml", :peppolubl20
 Mime::Type.register "text/xml", :biiubl20
 Mime::Type.register "text/xml", :svefaktura
 Mime::Type.register "text/xml", :oioubl20
-Mime::Type.register "application/pdf", :pdf
