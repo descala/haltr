@@ -8,8 +8,9 @@ html>body .tabular div {overflow:hidden;}
 
 ul.menu-rapid li, #sidebar ul li {list-style-type:none;}
 
-.money {
+th.money, td.money, .money{
   text-align: right;
+  white-space: nowrap;
 }
 
 .menu-rapid li {

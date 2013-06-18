@@ -27,20 +27,20 @@
         <td><%= i.date %></td>
         <td><%= i.client.taxcode %></td>
         <td><%= i.client.name %></td>
-        <td style="text-align: right;"><%= money(i.subtotal) %></td>
+        <td class="money"><%= money(i.subtotal) %></td>
         <% @tax_names[currency].sort.each do |tax_name| %>
-          <td style="text-align: right;"><%= i.tax_amount_for(tax_name).zero? ? '-' : money(i.tax_amount_for(tax_name)) %></td>
+          <td class="money"><%= i.tax_amount_for(tax_name).zero? ? '-' : money(i.tax_amount_for(tax_name)) %></td>
         <% end %>
-        <td style="text-align:center;"><%= i.due_date if i.debit? && i.client.bank_account %></td>
-        <td style="text-align:center;"><%= i.payments.collect{|p|p.date}.join('<br/>') %></td>
+        <td><%= i.due_date if i.debit? && i.client.bank_account %></td>
+        <td><%= i.payments.collect{|p|p.date}.join('<br/>') %></td>
       </tr>
     <% end -%>
 
     <tr>
-      <td colspan="4"/>
-        <th style="text-align: right;"><%= money(@total[currency]) %></th>
+      <td colspan="4"><%= l(:label_total) %></td>
+        <th class="money"><%= money(@total[currency]) %></th>
         <% @tax_names[currency].sort.each do |tax_name| %>
-          <th style="text-align: right;"><%= money(@taxes[currency][tax_name]) %></th>
+          <th class="money"><%= money(@taxes[currency][tax_name]) %></th>
         <% end %>
       </td>
       <td colspan="2"/>

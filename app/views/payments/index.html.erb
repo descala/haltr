@@ -55,12 +55,12 @@
       <tbody>
         <% for payment in @payments -%>
           <tr class="user <%= cycle("odd", "even") %>" />
-            <td align="center"><%=h payment.date %></td>
-            <td align="right" style="color: <%=payment.invoice.is_a?(IssuedInvoice) ? "green" : "red" %>"><%= money(payment.amount) %></td>
+            <td><%=h payment.date %></td>
+            <td class="money" style="color: <%=payment.invoice.is_a?(IssuedInvoice) ? "green" : "red" %>"><%= money(payment.amount) %></td>
             <td><%=h(truncate(payment.payment_method,:length=>20)) %></td>
             <td><%=h(truncate(payment.reference,:length=>30)) %></td>
-            <td align="center"><%=link_to(h(payment.invoice.number), invoice_path(payment.invoice)) unless payment.invoice.nil? %></td>
-            <td align="center"><%= link_to l(:button_edit), edit_payment_path(payment), :class => 'icon icon-edit' %>
+            <td><%=link_to(h(payment.invoice.number), invoice_path(payment.invoice)) unless payment.invoice.nil? %></td>
+            <td><%= link_to l(:button_edit), edit_payment_path(payment), :class => 'icon icon-edit' %>
             <%= link_to l(:button_delete), payment_path(payment), :method=>:delete, :confirm => l(:text_are_you_sure), :class => 'icon icon-del' %></td>
           </tr>
         <% end -%>

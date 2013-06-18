@@ -24,10 +24,10 @@
       <tbody>
         <% for invoice in @invoices -%>
           <tr class="user <%= cycle("odd", "even") %>" onclick="javascript: document.location = '<%=url_for(:action=>'show', :id=>invoice)%>'">
-            <td align="center"><%=h invoice.date %></td>
-            <td align="center"><%= l("mf#{invoice.frequency}") %></td>
+            <td><%=h invoice.date %></td>
+            <td><%= l("mf#{invoice.frequency}") %></td>
             <td><%=link_to h(invoice.client), {:controller => 'clients', :action => 'edit', :id => invoice.client} %></td>
-            <td align="right"><%= money(invoice.total) %></td>
+            <td class="money"><%= money(invoice.total) %></td>
           </tr>
         <% end -%>
       </tbody>
