@@ -74,7 +74,8 @@ $(document).ready(function() {
   $(document).on('change', '#client_taxcode', function(e) {
     client_taxcode_changed();
   });
-  $('#client_taxcode').ready(client_taxcode_changed());
+
+  if ( $('#client_taxcode')[0] ) { client_taxcode_changed() };
 
 });
 
