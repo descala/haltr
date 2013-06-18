@@ -9,5 +9,5 @@
 <%= @errors %>
 
 <% content_for :sidebar do %>
-  <%= render :partial => 'payments/sidebar' %>
+  <%= render_menu :payments_menu, @project %>
 <% end %>

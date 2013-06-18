@@ -20,12 +20,13 @@ Redmine::MenuManager.map :invoices_menu do |menu|
   menu.push :invoices_level2, {:controller=>'invoices', :action => 'index' }, :param => :project_id, :caption => :label_issued
   menu.push :templates, {:controller=>'invoice_templates', :action => 'index' }, :param => :project_id, :caption => :label_invoice_template_plural
   menu.push :received, {:controller=>'received', :action => 'index' }, :param => :project_id
-  menu.push :reports, {:controller=>'tasks', :action => 'report' }, :param => :project_id
+  menu.push :reports, {:controller=>'invoices', :action => 'report' }, :param => :project_id
 end
 
 Redmine::MenuManager.map :payments_menu do |menu|
   menu.push :payments_level2, {:controller=>'payments',:action=>'index'}, :param => :project_id, :caption => :label_payment_plural
-  menu.push :tasks, {:controller=>'tasks',:action=>'index'}, :param => :project_id
+  menu.push :charge_n19, {:controller=>'payments',:action=>'n19_index'}, :param => :project_id
+  menu.push :import_aeb43, {:controller=>'payments',:action=>'import_aeb43_index'}, :param => :project_id
 end
 
 Redmine::MenuManager.map :admin_menu do |menu|

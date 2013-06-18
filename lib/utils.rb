@@ -7,7 +7,7 @@ module Utils
       months.each do |m|
         text.gsub!(/#{m}/i, months[date.month]) unless m.nil?
       end
-      text.gsub! /20[0-5][0-9]/, date.year.to_s
+      text.gsub!(/20[0-5][0-9]/, date.year.to_s)
       text
     end
     
@@ -16,6 +16,6 @@ end
 
 class String
   def to_ascii
-    Iconv.conv('ASCII//IGNORE','UTF-8',self)
+    Redmine::CodesetUtil.from_utf8(self,'ASCII')
   end
 end

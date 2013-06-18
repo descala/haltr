@@ -1,0 +1,8 @@
+<%= form_tag(url_for(:action => 'import_aeb43',:project_id=>@project ), :multipart => true ) do |f| %>
+  <%= l(:label_import_aeb43) %> <%= file_field_tag 'file', :size => 30, :id => nil  -%>
+  <%= submit_tag l(:button_submit) %>
+<% end %>
+
+<% content_for :sidebar do %>
+  <%= render_menu :payments_menu, @project %>
+<% end %>

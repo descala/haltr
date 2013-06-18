@@ -2,13 +2,14 @@ class InvoicesController < ApplicationController
 
   unloadable
   menu_item Haltr::MenuItem.new(:invoices,:invoices_level2)
+  menu_item Haltr::MenuItem.new(:invoices,:reports), :only => :report
   helper :haltr
   layout 'haltr'
 
   helper :sort
   include SortHelper
 
-  before_filter :find_project_by_project_id, :only => [:index,:new,:create,:send_new_invoices, :download_new_invoices, :update_payment_stuff,:new_invoices_from_template,:create_invoices]
+  before_filter :find_project_by_project_id, :only => [:index,:new,:create,:send_new_invoices, :download_new_invoices, :update_payment_stuff,:new_invoices_from_template,:create_invoices,:report]
   before_filter :find_invoice, :only => [:edit,:update,:destroy,:mark_sent,:mark_closed,:mark_not_sent,:mark_accepted_with_mail,:mark_accepted,:mark_refused_with_mail,:mark_refused,:duplicate_invoice,:pdfbase64,:show,:send_invoice,:legal,:amend_for_invoice] 
   before_filter :find_payment, :only => [:destroy_payment]
   before_filter :find_hashid, :only => [:view,:download]
@@ -460,6 +461,33 @@ class InvoicesController < ApplicationController
     else
       respond_to do |format|
         format.html { render :text => invoice.recipient_emails.join(',') }
+      end
+    end
+  end
+
+  def report
+    m = params[:months_ago] || 3
+    d = Date.today - m.to_i.months
+    @date = Date.new(d.year,d.month,1)
+    @invoices = {}
+    @total    = {}
+    @taxes    = {}
+    @tax_names = {}
+    IssuedInvoice.all(:include => [:client],
+                      :conditions => ["clients.project_id = ? and date >= ? and amend_id is null", @project.id, @date],
+                      :order => :number
+    ).each do |i|
+      @invoices[i.currency] ||= []
+      @invoices[i.currency] << i
+      @total[i.currency]    ||= Money.new(0,i.currency)
+      @total[i.currency]     += i.subtotal
+      @tax_names[i.currency] ||= i.tax_names
+      @tax_names[i.currency] += i.tax_names
+      @tax_names[i.currency].uniq!
+      i.taxes_uniq.each do |tax|
+        @taxes[i.currency] ||= {}
+        @taxes[i.currency][tax.name]  ||= Money.new(0,i.currency)
+        @taxes[i.currency][tax.name]  += i.tax_amount(tax)
       end
     end
   end
