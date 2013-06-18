@@ -2,15 +2,15 @@ require File.dirname(__FILE__) + '/../test_helper'
 
 class InvoiceEditTest < ActionController::IntegrationTest
 
-   # TODO fixtures here break other tests ???
+  # TODO fixtures here break other tests ???
 
   def test_edit_invoice_tax_with_comment
     post "/login", :username => 'jsmith', :password => 'jsmith'
     assert_redirected_to "/my/page"
 
     # This is a simple invoice. 100 EUR with a 10% VAT tax
-    get "/invoices/4"
-    assert_response :success
+#    get "/invoices/4"
+#    assert_response :success
 
     post "/invoices/4",
       {

@@ -195,8 +195,8 @@
               <Quantity><%=h invoice_line.quantity%></Quantity>
               <UnitOfMeasure><%=h invoice_line.unit_code(:facturae)%></UnitOfMeasure>
               <UnitPriceWithoutTax><%=h precision(invoice_line.price,6)%></UnitPriceWithoutTax>
-              <TotalCost><%=h precision(invoice_line.price*invoice_line.quantity,(@format == "facturae32" ? 6 : 2))%></TotalCost>
-              <GrossAmount><%=h precision(invoice_line.price*invoice_line.quantity,(@format == "facturae32" ? 6 : 2))%></GrossAmount>
+              <TotalCost><%=h precision(invoice_line.price*invoice_line.quantity,(format == "facturae32" ? 6 : 2))%></TotalCost>
+              <GrossAmount><%=h precision(invoice_line.price*invoice_line.quantity,(format == "facturae32" ? 6 : 2))%></GrossAmount>
 <% if invoice_line.taxes_withheld.any? -%>
               <TaxesWithheld>
 <% invoice_line.taxes_withheld.each do |tax| -%>

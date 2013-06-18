@@ -25,6 +25,7 @@ en:
   field_country: Country
   field_bank_account: Banck account
   button_people: People
+  label_people: People
   field_invoice_format: Preferred invoice transport and format
   field_currency: Currency
   field_ponumber: Purchase Order

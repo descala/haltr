@@ -5,4 +5,4 @@
    xsi:schemaLocation="http://www.facturae.es/Facturae/2009/v3.2/Facturae http://www.facturae.es/NR/rdonlyres/2DF1A921-9E57-4A24-85D8-14FE74E0FB31/0/Facturaev3_2.xsd">
    <FileHeader>
       <SchemaVersion>3.2</SchemaVersion>
-<%= render :partial => "facturae.xml" %>
+<%= render :partial => "facturae.xml", :locals=>{:format => 'facturae32'} %>

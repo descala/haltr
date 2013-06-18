@@ -1,44 +1,37 @@
-require 'rubygems'
-require 'spork'
-#uncomment the following line to use spork with the debugger
-#require 'spork/ext/ruby-debug'
+require File.dirname(__FILE__) + '../../test/test_helper'
 
+module Haltr
+  module TestHelper
+    def self.haltr_setup
 
-Spork.prefork do
-  # Loading more in this block will cause your tests to run faster. However,
-  # if you change any configuration or code from libraries loaded here, you'll
-  # need to restart spork for it take effect.
+      # Plugin config
+      Setting.plugin_haltr = { "trace_url"=>"http://localhost:3001", "b2brouter_ip"=>"", "export_channels_path"=>"/tmp", "default_country"=>"es", "default_currency"=>"EUR", "issues_controller_name"=>"issues" }
 
-  require  File.dirname(__FILE__) + '/haltr_test_helper'
+      # Enables haltr module on project 'OnlineStore'
+      Project.find(2).enabled_modules << EnabledModule.new(:name => 'haltr')
 
-  redmine_path = ENV['REDMINE_PATH'].nil? ? File.dirname(__FILE__) + '/../../../' : ENV['REDMINE_PATH']
-  redmine_test_helper_path = File.expand_path(redmine_path + '/test/test_helper') 
-  begin
-    require redmine_test_helper_path
-  rescue LoadError => e
-    # we are alone
-    puts("I'm a plugin. I need Redmine to run my tests. Please set env REDMINE_PATH='/path/to/redmine/install'.")
-    raise e
-  ensure
-    puts ">> require '#{redmine_test_helper_path}'"
+      # Adds haltr permissions to role 'delveloper'
+      dev = Role.find(2)
+      dev.permissions += [:general_use,:manage_payments,:use_templates]
+      dev.save
+
+      # user 2 (jsmith) is member of project 2 (onlinesotre) with role 2 (developer)
+
+    end
+
+    def self.fix_invoice_totals
+      # ensure totals are ok for invoice fixtures
+      Invoice.all.each do |i|
+        i.save!
+      end
+    end
+
   end
-
-  haltr_engine = Engines.plugins[:haltr]
-  Engines::Testing.setup_plugin_fixtures([haltr_engine])
-  Engines::Testing.set_fixture_path
-
-  Haltr::TestHelper.haltr_setup
-
 end
 
-Spork.each_run do
-  # This code will be run each time you run your specs.
+Haltr::TestHelper.haltr_setup
 
-  require  File.dirname(__FILE__) + '/haltr_test_helper'
-
-  haltr_engine = Engines.plugins[:haltr]
-  Engines::Testing.setup_plugin_fixtures([haltr_engine])
-  Engines::Testing.set_fixture_path
-
+class ActiveSupport::TestCase
+    self.fixture_path = File.dirname(__FILE__) + '/fixtures'
 end
 

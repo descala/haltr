@@ -49,8 +49,8 @@ else
     resources :tasks
     match 'tasks/import_aeb43' => 'tasks#import_aeb43'
   end
-  match 'tasks/n19/:id' => 'tasks#n19'
-  match 'tasks/n19_done/:id' => 'tasks#n19_done'
+  match 'tasks/n19/:id' => 'tasks#n19', :via => :get
+  match 'tasks/n19_done/:id' => 'tasks#n19_done', :via => :get
   resources :clients do
     resources :people, :only => [:index, :new, :create]
   end

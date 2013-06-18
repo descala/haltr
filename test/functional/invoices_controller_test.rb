@@ -1,8 +1,4 @@
 require File.dirname(__FILE__) + '/../test_helper'
-require 'invoices_controller'
-
-# Re-raise errors caught by the controller.
-class InvoicesController; def rescue_action(e) raise e end; end
 
 class InvoicesControllerTest < ActionController::TestCase
   fixtures :companies, :invoices, :invoice_lines, :taxes
@@ -10,9 +6,6 @@ class InvoicesControllerTest < ActionController::TestCase
   include Haltr::XmlValidation
 
   def setup
-    @controller = InvoicesController.new
-    @request    = ActionController::TestRequest.new
-    @response   = ActionController::TestResponse.new
     User.current = nil
     @request.session[:user_id] = 2
   end
@@ -20,44 +13,28 @@ class InvoicesControllerTest < ActionController::TestCase
   test "must_redirect_if_not_configured" do
     # deconfigure onlinestore
     companies(:company1).destroy
-    @request.session[:user_id] = 2
     get :index, :id => 'onlinestore'
   end
 
   test 'facturae30' do
-    Invoice.find(4).save!
-    @request.session[:user_id] = 2
-    get :facturae30, :id => 4
+    get :show, :id => 4, :format => 'facturae30'
     assert_response :success
     xml = @response.body
     assert xml
-    assert_equal [], facturae_errors_online(xml)
+    #TODO assert_equal [], facturae_errors_xsd(xml)
   end
 
   test 'facturae31' do
-    Invoice.find(2).save!
-    @request.session[:user_id] = 2
-    get :facturae31, :id => 4
+    get :show, :id => 4, :format => 'facturae31'
     assert_response :success
     xml = @response.body
     assert xml
-    assert_equal [], facturae_errors_online(xml)
+    # TODO assert_equal [], facturae_errors_xsd(xml)
   end
 
-  test 'facturae32_online' do
+  test 'facturae32' do
     Invoice.find(2).save!
-    @request.session[:user_id] = 2
-    get :facturae32, :id => 4
-    assert_response :success
-    xml = @response.body
-    assert xml
-    assert_equal [], facturae_errors_online(xml)
-  end
-
-  test 'facturae32_with_xsd' do
-    Invoice.find(2).save!
-    @request.session[:user_id] = 2
-    get :facturae32, :id => 4
+    get :show, :id => 4, :format => 'facturae32'
     assert_response :success
     xml = @response.body
     assert xml
@@ -65,64 +42,56 @@ class InvoicesControllerTest < ActionController::TestCase
   end
 
   test 'facturae_xml_i5_vat_excemption' do
-    Invoice.find(5).save!
-    get :facturae32, :id => 5
+    get :show, :id => 5, :format => 'facturae32'
     assert_response :success
     xml = @response.body
     assert_equal [], facturae_errors_online(xml)
   end
 
   test 'facturae_xml_i6_vat_and_charges' do
-    Invoice.find(6).save!
-    get :facturae32, :id => 6
+    get :show, :id => 6, :format => 'facturae32'
     assert_response :success
     xml = @response.body
     assert_equal [], facturae_errors_online(xml)
   end
 
   test 'facturae_xml_i7_vat_10_vat_20_and_charges' do
-    Invoice.find(7).save!
-    get :facturae32, :id => 7
+    get :show, :id => 7, :format => 'facturae32'
     assert_response :success
     xml = @response.body
     assert_equal [], facturae_errors_online(xml)
   end
 
   test 'biiubl20_xml_i4' do
-    Invoice.find(4).save!
-    get :biiubl20, :id => 4
+    get :show, :id => 4, :format => 'biiubl20'
     assert_response :success
     xml = @response.body
     assert_equal [], ubl_errors(xml)
   end
 
   test 'biiubl20_xml_i5_vat_excemption' do
-    Invoice.find(5).save!
-    get :biiubl20, :id => 5
+    get :show, :id => 5, :format => 'biiubl20'
     assert_response :success
     xml = @response.body
     assert_equal [], ubl_errors(xml)
   end
 
   test 'biiubl20_xml_i6_vat_and_charges' do
-    Invoice.find(6).save!
-    get :biiubl20, :id => 6
+    get :show, :id => 6, :format => 'biiubl20'
     assert_response :success
     xml = @response.body
     assert_equal [], ubl_errors(xml)
   end
 
   test 'peppolubl20_xml_i7_vat_10_vat_20_and_charges' do
-    Invoice.find(7).save!
-    get :peppolubl20, :id => 7
+    get :show, :id => 7, :format => 'peppolubl20'
     assert_response :success
     xml = @response.body
     assert_equal [], ubl_errors(xml)
   end
 
   test 'facturae_xml_i8_vat_10_irpf_10_and_charges' do
-    Invoice.find(8).save!
-    get :facturae32, :id => 8
+    get :show, :id => 8, :format => 'facturae32'
     assert_response :success
     xml = @response.body
     assert_equal [], facturae_errors_online(xml)

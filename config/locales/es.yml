@@ -38,6 +38,7 @@ es:
   field_country: País
   field_bank_account: Cuenta bancaria
   button_people: Personas
+  label_people: Personas
   field_invoice_format: Formato y transporte de facturas preferido
   field_currency: Moneda
   field_ponumber: Número de pedido

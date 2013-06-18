@@ -4,6 +4,7 @@ class Invoice < ActiveRecord::Base
 
   unloadable
 
+
   # 1 - cash (al comptat)
   # 2 - debit (rebut domiciliat)
   # 4 - transfer (transferència)
@@ -75,9 +76,6 @@ class Invoice < ActiveRecord::Base
   def currency=(v)
     return unless v
     write_attribute(:currency,v.upcase)
-    invoice_lines.each do |il|
-      il.currency=v.upcase
-    end
   end
 
   def gross_subtotal(tax_type=nil)

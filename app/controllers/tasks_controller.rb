@@ -37,7 +37,7 @@ class TasksController < ApplicationController
       send_data output, :filename => filename_for_content_disposition("n19-#{@fecha_cargo[4..5]}-#{@fecha_cargo[2..3]}-#{@fecha_cargo[0..1]}.txt"), :type => 'text/plain'
     else
       flash[:warning] = l(:notice_empty_n19)
-      redirect_to :action => 'index', :id => @project
+      redirect_to :action => 'index', :project_id => @project
     end
   end
   
@@ -48,7 +48,7 @@ class TasksController < ApplicationController
       invoice.close
     end
     flash[:notice] = l(:notice_n19_done, @invoice.due_date.to_s)
-    redirect_to :action => 'index', :id => @project
+    redirect_to :action => 'index', :project_id => @project
   end
   
   def report
@@ -96,7 +96,7 @@ class TasksController < ApplicationController
       end
     else
       flash[:warning] = l(:notice_uploaded_uploaded_file_not_found)
-      redirect_to :action => 'index', :id => @project
+      redirect_to :action => 'index', :project_id => @project
     end
   end
 
