@@ -2,36 +2,35 @@
 
 <tr class="nested-fields">
 
-  <td>
-    <%= f.text_field :name, :style => "width: 78px;", :no_label => true %>
+  <td class="tax_name">
+    <%= f.text_field :name, :no_label => true %>
   </td>
 
-  <td>
+  <td class="tax_percent">
     <span class="span_percent" style="display: <%=f.object.exempt? ? "none" : "inline"%>;">
       <%= f.text_field :percent,
-        :style => "width: 50px; text-align: right;",
         :no_label => true,
         :readonly => f.object.zero? %>
     </span>
   </td>
 
-  <td style="text-align:center;">
+  <td class="tax_default">
     <%= f.check_box :default, :no_label => true %>
   </td>
 
-  <td width="120px">
+  <td class="tax_category">
     <%= f.select :category,
       Tax.categories.collect {|code| [l("tax_#{code}"), code] },
       {:no_label => true},
       :class => 'tax_category'  %>
   </td>
 
-  <td>
+  <td class="tax_remove">
     <!-- cocoon -->
     <%= link_to_remove_association image_tag('false.png'), f, :class=>'eliminar' %>
   </td>
 
-  <td width="400px">
+  <td class="tax_exempt">
     <span class="span_comment" style="display: <%=f.object.exempt? ? "inline" : "none"%>;">
       <%= f.text_field :comment, :no_label => true %>
     </span>

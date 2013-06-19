@@ -111,14 +111,14 @@
     </div>
   </div>
   <div class="seccio grup">
-    <table id="taxes" width="90%">
+    <table id="taxes">
       <tr>
-        <th><%= l(:field_name) %></th>
-        <th>%</th>
-        <th><%= l(:default) %></th>
-        <th><%= l(:field_category) %></th>
-        <th><%= l(:field_comment) %> </th>
-        <th></th>
+        <th class="tax_name"><%= l(:field_name) %></th>
+        <th class="tax_percent">%</th>
+        <th class="tax_default"><%= l(:default) %></th>
+        <th class="tax_category"><%= l(:field_category) %></th>
+        <th class="tax_remove"><%= l(:field_comment) %> </th>
+        <th class="tax_exempt"></th>
       </tr>
       <%= f.fields_for :taxes do |tax_form| %>
         <%= render :partial => 'companies/tax_fields', :locals => { :f => tax_form } %>
