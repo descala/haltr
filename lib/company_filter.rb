@@ -11,7 +11,7 @@ module CompanyFilter
     unless @project.company.valid?
       flash[:error] = l(:halt_configure_before_use)
       unless User.current.admin?
-        redirect_to :controller => :companies, :action => :index, :id => @project
+        redirect_to :controller => :companies, :action => :my_company, :project_id => @project
       end
     end
   end
