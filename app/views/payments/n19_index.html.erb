@@ -1,5 +1,5 @@
 <% if @charge_bank_on_due_date.size > 0 -%>
-  <ul>
+  <ul class="n19list">
     <% @charge_bank_on_due_date.each do |invoice| -%>
       <li>
       <%= invoice.due_date %> (<%= invoice.invoice_count %>) - <%= link_to l(:button_download), :action => 'n19', :id => invoice %> - <%= link_to l(:button_mark_done), {:action => 'n19_done', :id => invoice}, :confirm => l(:text_are_you_sure), :method => :post %>

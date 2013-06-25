@@ -49,7 +49,8 @@
           <%= content_tag('th', l(:field_payment_method)) %>
           <%= content_tag('th', l(:field_reference)) %>
           <%= sort_header_tag('invoices.number', :caption => l(:field_invoice)) %>
-          <th></th>
+          <th><%= l(:button_edit) %></th>
+          <th><%= l(:button_delete) %></th>
         </tr>
       </thead>
       <tbody>
@@ -60,8 +61,8 @@
             <td><%=h(truncate(payment.payment_method,:length=>20)) %></td>
             <td><%=h(truncate(payment.reference,:length=>30)) %></td>
             <td><%=link_to(h(payment.invoice.number), invoice_path(payment.invoice)) unless payment.invoice.nil? %></td>
-            <td><%= link_to l(:button_edit), edit_payment_path(payment), :class => 'icon icon-edit' %>
-            <%= link_to l(:button_delete), payment_path(payment), :method=>:delete, :confirm => l(:text_are_you_sure), :class => 'icon icon-del' %></td>
+            <td><%= link_to l(:button_edit), edit_payment_path(payment), :class => 'icon icon-edit editar' %></td>
+            <td><%= link_to l(:button_delete), payment_path(payment), :method=>:delete, :confirm => l(:text_are_you_sure), :class => 'icon icon-del eliminar' %></td>
           </tr>
         <% end -%>
       </tbody>

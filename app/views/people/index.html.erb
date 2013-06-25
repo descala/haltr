@@ -52,8 +52,8 @@
           <%= sort_header_tag('first_name', :caption => l(:field_first_name)) %>
           <%= sort_header_tag('last_name', :caption => l(:field_last_name)) %>
           <%= sort_header_tag('email', :caption => l(:field_email)) %>
-          <th style="width:10%"></th>
-          <th style="width:10%"></th>
+          <th><%= l(:button_edit) %></th>
+          <th><%= l(:button_delete) %></th>
         </tr>
       </thead>
       <tbody>
@@ -62,8 +62,8 @@
             <td><%=h person.first_name %></td>
             <td><%=h person.last_name %></td>
             <td><%=h person.email %></td>
-            <td align="center"><%= link_to l(:button_edit), {:action=>'edit',:id=>person}, :class => 'icon icon-edit' %></td>
-            <td align="center"><%= link_to l(:button_delete), {:action=>'destroy',:id=>person} , :confirm => l(:text_are_you_sure), :method => :delete, :class => 'icon icon-del' %></td>
+            <td align="center"><%= link_to l(:button_edit), {:action=>'edit',:id=>person}, :class => 'icon icon-edit editar' %></td>
+            <td align="center"><%= link_to l(:button_delete), {:action=>'destroy',:id=>person} , :confirm => l(:text_are_you_sure), :method => :delete, :class => 'icon icon-del eliminar' %></td>
           </tr>
         <% end -%>
       </tbody>
