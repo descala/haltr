@@ -117,8 +117,8 @@
         <th class="tax_percent">%</th>
         <th class="tax_default"><%= l(:default) %></th>
         <th class="tax_category"><%= l(:field_category) %></th>
-        <th class="tax_remove"><%= l(:field_comment) %> </th>
-        <th class="tax_exempt"></th>
+        <th class="tax_remove"></th>
+        <th class="tax_exempt"><%= l(:field_comment) %></th>
       </tr>
       <%= f.fields_for :taxes do |tax_form| %>
         <%= render :partial => 'companies/tax_fields', :locals => { :f => tax_form } %>
