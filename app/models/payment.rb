@@ -6,8 +6,16 @@ class Payment < ActiveRecord::Base
   belongs_to :project
   validates_numericality_of :amount_in_cents, :greater_than => 0
 
-  after_save :save_invoice, :if => Proc.new {|payment| payment.invoice.is_a? InvoiceDocument }
-  after_destroy :save_invoice, :if => Proc.new {|payment| payment.invoice.is_a? InvoiceDocument }
+  after_save do
+    old_invoice = InvoiceDocument.find invoice_id_was rescue nil
+    if old_invoice != invoice
+      old_invoice.save if old_invoice.is_a? InvoiceDocument
+    end
+    invoice.save if invoice.is_a? InvoiceDocument
+  end
+  after_destroy do
+    invoice.save if invoice.is_a? InvoiceDocument
+  end
 
   before_save :guess_invoice, :unless => :invoice
 
@@ -26,10 +34,6 @@ class Payment < ActiveRecord::Base
     desc = ""
     desc += self.payment_method unless self.payment_method.blank?
     desc += "#{' - ' if desc.size > 0}#{self.reference}" unless self.reference.blank?
-  end
-
-  def save_invoice
-    invoice.save
   end
 
   def guess_invoice
