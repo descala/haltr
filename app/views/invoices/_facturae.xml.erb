@@ -237,8 +237,12 @@
                  <BankCode><%=h @client.bic%></BankCode>
                </AccountToBeDebited>
 <% elsif @invoice.debit? and !@client.bank_account.blank?-%>
-               <AccountToBeDebited>
-                 <AccountNumber><%=h @client.bank_account%></AccountNumber>
+                 <AccountToBeDebited>
+                   <% if (@format == "facturae32") -%>
+                     <AccountNumber><%=h @client.bank_account%></AccountNumnber>
+                   <% else -%>
+                     <IBAN><%=h @client.bank_account%></IBAN>
+                   <% end -%>
                </AccountToBeDebited>
 <% elsif @invoice.transfer? and @company.use_iban? -%>
                <AccountToBeCredited>
@@ -247,7 +251,11 @@
                </AccountToBeCredited>
 <% elsif @invoice.transfer? and !@company.bank_account.blank? -%>
                <AccountToBeCredited>
-                 <AccountNumber><%=h @company.bank_account%></AccountNumber>
+                 <% if (@format == "facturae32") -%>
+                   <AccountNumber><%=h @company.bank_account%></AccountNumnber>
+                 <% else -%>
+                   <IBAN><%=h @company.bank_account%></IBAN>
+                 <% end -%>
                </AccountToBeCredited>
 <% end -%>
             </Installment>
