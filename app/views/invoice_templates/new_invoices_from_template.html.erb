@@ -21,8 +21,8 @@
               <td align="center"><%=h l(invoice.type) %></td>
               <td align="center"><%=h l("state_#{invoice.state}").capitalize %></td>
               <td align="center"><%=h invoice.number %></td>
-              <td align="center"><%=h invoice.date %></td>
-              <td align="center"<%='class="pastdue"' if invoice.past_due?%>><%=h invoice.due_date %></td>
+              <td align="center"><%=h format_date invoice.date %></td>
+              <td align="center"<%='class="pastdue"' if invoice.past_due?%>><%=h format_date invoice.due_date %></td>
               <td><%=h invoice.client %></td>
               <td align="right"><%= money invoice.import %></td>
             </tr>
@@ -65,8 +65,8 @@
               <tr class="user <%= cycle("odd", "even") %>">
                 <td align="center"><%= check_box_tag "draft_ids[]", draft.id, true %></td>
                 <td align="center"><%= text_field_tag "draft_#{draft.id}", @number, :size => 5 %></td>
-                <td align="center"><%=h draft.date %></td>
-                <td align="center"<%='class="pastdue"' if draft.past_due?%>><%=h draft.due_date %></td>
+                <td align="center"><%=h format_date draft.date %></td>
+                <td align="center"<%='class="pastdue"' if draft.past_due?%>><%=h format_date draft.due_date %></td>
                 <td><%=h draft.client %></td>
                 <td align="right"><%= money draft.import %></td>
               </tr>

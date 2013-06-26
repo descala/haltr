@@ -1,6 +1,6 @@
 <div class="invoices_report">
 <h2><%= l(:label_invoice_report) %></h2>
-<p><%=l(:with_date) %> &gt;= <%= @date %>.</p>
+<p><%=l(:with_date) %> &gt;= <%= format_date @date %>.</p>
 </div>
 
 <% if @invoices.keys.any? -%>
@@ -25,7 +25,7 @@
     <% @invoices[currency].each do |i| -%>
       <tr class="<%= cycle("odd imparell", "even parell") %>">
         <td><%= i.number %></td>
-        <td><%= i.date %></td>
+        <td><%= format_date i.date %></td>
         <td><%= i.client.taxcode %></td>
         <td><%= i.client.name %></td>
         <td class="money"><%= money(i.subtotal) %></td>
@@ -33,7 +33,7 @@
           <td class="money"><%= i.tax_amount_for(tax_name).zero? ? '-' : money(i.tax_amount_for(tax_name)) %></td>
         <% end %>
         <td><%= i.due_date if i.debit? && i.client.bank_account %></td>
-        <td><%= i.payments.collect{|p|p.date}.join('<br/>') %></td>
+        <td><%= i.payments.collect{|p|format_date p.date}.join('<br/>').html_safe %></td>
       </tr>
     <% end -%>
 

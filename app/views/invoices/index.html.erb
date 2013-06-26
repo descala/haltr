@@ -86,8 +86,8 @@
           <tr class="<%= ' amended' if invoice.amended? %><%= cycle("odd", "even") %>" onclick="javascript: document.location = '<%=url_for(:action=>'show', :id=>invoice)%>'" style="cursor:pointer;">
             <td><%=h l("state_#{invoice.state}").capitalize %></td>
             <td><%=h invoice.number %></td>
-            <td><%=h invoice.date %></td>
-            <td <%='class="pastdue"' if invoice.past_due?%>><%=h invoice.due_date %></td>
+            <td><%=h format_date invoice.date %></td>
+            <td <%='class="pastdue"' if invoice.past_due?%>><%=h format_date invoice.due_date %></td>
             <td><%=h invoice.client %></td>
             <td class="money"><%= money(invoice.subtotal) %></td>
             <td class="money"><%= money(invoice.total) %></td>
