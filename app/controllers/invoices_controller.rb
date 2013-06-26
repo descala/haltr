@@ -148,6 +148,8 @@ class InvoicesController < ApplicationController
             tax['comment'] = ''
           end
         end
+        # set currency from invoice on each line
+        invoice_line['currency'] = params[:invoice][:currency]
       end
     end
 
