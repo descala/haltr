@@ -33,7 +33,7 @@
           <td class="money"><%= i.tax_amount_for(tax_name).zero? ? '-' : money(i.tax_amount_for(tax_name)) %></td>
         <% end %>
         <td><%= i.due_date if i.debit? && i.client.bank_account %></td>
-        <td><%= i.payments.collect{|p|format_date p.date}.join('<br/>').html_safe %></td>
+        <td><%= i.payments.collect{|p|format_date p.date}.uniq.join('<br/>').html_safe %></td>
       </tr>
     <% end -%>
 
