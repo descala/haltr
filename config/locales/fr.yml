@@ -242,6 +242,7 @@ fr:
   field_email: Email
   field_phone_office: Tél bureau
   field_phone_mobile: Mobile
+  label_phone: Tél
 
   # Tasks
   label_task_plural: Tâches

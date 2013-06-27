@@ -256,6 +256,7 @@ ca:
   field_email: Email
   field_phone_office: Telèfon oficina
   field_phone_mobile: Telèfon mòbil
+  label_phone: Telèfon
 
   # Tasks
   label_task_plural: Tasques

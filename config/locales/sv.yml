@@ -243,6 +243,7 @@ sv:
   field_email: Email
   field_phone_office: Jobbtelefon
   field_phone_mobile: Mobiltelefon
+  label_phone: Telefon
 
   # Tasks
   label_task_plural: Uppgifter

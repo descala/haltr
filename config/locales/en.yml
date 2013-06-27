@@ -246,6 +246,7 @@ en:
   field_email: Email
   field_phone_office: Office phone
   field_phone_mobile: Mobile phone
+  label_phone: Phone
 
   # Tasks
   label_task_plural: Tasks
