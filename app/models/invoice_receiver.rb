@@ -11,14 +11,15 @@ class InvoiceReceiver < ActionMailer::Base
   def receive(email)
     return unless email.multipart? # email has no attachments
     invoices = attached_invoices(email)
+    puts invoices.first.class
 
     # bounced invoice
     if is_bounce?(email)
       if invoices.size == 1 # we send only 1 invoice on each mail
-        InvoiceReceiver.log "Bounced invoice mail received (#{invoices.first.original_filename})"
+        InvoiceReceiver.log "Bounced invoice mail received (#{invoices.first.filename})"
         IncomingBouncedInvoice.process_file(invoices.first)
       else
-        InvoiceReceiver.log "Discarding bounce mail with != 1 (#{invoices.size}) invoices attached (#{invoices.collect {|i| i.original_filename}.join(',')})"
+        InvoiceReceiver.log "Discarding bounce mail with != 1 (#{invoices.size}) invoices attached (#{invoices.collect {|i| i.filename}.join(',')})"
       end
 
     # incoming invoices (PDF/XML)
@@ -36,7 +37,7 @@ class InvoiceReceiver < ActionMailer::Base
             elsif invoice.content_type =~ /pdf/
               IncomingPdfInvoice.process_file(invoice,company,"email",from)
             else
-              InvoiceReceiver.log "Discarding #{invoice.original_filename} on incoming mail (#{invoice.content_type})"
+              InvoiceReceiver.log "Discarding #{invoice.filename} on incoming mail (#{invoice.content_type})"
             end
           end
           break #TODO: allow incoming invoice to several companies?
@@ -49,7 +50,7 @@ class InvoiceReceiver < ActionMailer::Base
   end
 
   def self.log(message,level="info")
-    RAILS_DEFAULT_LOGGER.send(level,message)
+    Rails.logger.send(level,message)
     puts message
   end
 

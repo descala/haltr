@@ -80,16 +80,15 @@ class IncomingXmlInvoice
     ri.invoice_format = invoice_format
     ri.transport=transport
     ri.from=from
-    invoice.rewind
-    tmpfile = Tempfile.new("invoice.xml")
+    tmpfile = Tempfile.new("invoice.xml", :encoding => 'ascii-8bit')
     tmpfile.write(invoice.read.chomp)
     tmpfile.close
     ri.md5 = `md5sum #{tmpfile.path} | cut -d" " -f1`.chomp
     ri.save!
     if File.directory? channel
       i=2
-      extension = File.extname(invoice.original_filename)
-      base = invoice.original_filename.gsub(/#{extension}$/,'')
+      extension = File.extname(invoice.filename)
+      base = invoice.filename.gsub(/#{extension}$/,'')
         destination = "#{channel}/#{base}_#{ri.id}#{extension}"
       while File.exist? destination do
         destination = "#{channel}/#{base}_#{i}_#{ri.id}#{extension}"

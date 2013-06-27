@@ -16,8 +16,8 @@ class IncomingPdfInvoice
     channel="/var/spool/b2brouter/input/free_receive_pdf"
     if File.directory? channel
       i=2
-      extension = File.extname(invoice.original_filename)
-      base = invoice.original_filename.gsub(/#{extension}$/,'')
+      extension = File.extname(invoice.filename)
+      base = invoice.filename.gsub(/#{extension}$/,'')
         destination = "#{channel}/#{base}_#{ri.id}#{extension}"
       while File.exist? destination do
         destination = "#{channel}/#{base}_#{i}_#{ri.id}#{extension}"
