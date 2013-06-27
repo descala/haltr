@@ -159,7 +159,7 @@ class IncomingXmlInvoice
     val=""
     if xpath.is_a?(Array)
       xpath.each do |xp|
-        txt = REXML::XPath.first(doc,xp).text rescue ""
+        txt = REXML::XPath.first(doc,xp).text.to_s rescue ""
         unless txt.blank?
           val += txt
           val += " " unless xp == xpath.last
@@ -168,7 +168,7 @@ class IncomingXmlInvoice
     elsif xpath.nil?
       nil
     else
-      val += REXML::XPath.first(doc,xpath).text rescue ""
+      val += REXML::XPath.first(doc,xpath).text.to_s rescue ""
     end
     val.blank? ? nil : val
   end

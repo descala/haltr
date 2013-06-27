@@ -11,7 +11,6 @@ class InvoiceReceiver < ActionMailer::Base
   def receive(email)
     return unless email.multipart? # email has no attachments
     invoices = attached_invoices(email)
-    puts invoices.first.class
 
     # bounced invoice
     if is_bounce?(email)
