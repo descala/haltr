@@ -528,7 +528,7 @@ class InvoicesController < ApplicationController
   end
 
   def find_invoice
-    @invoice = invoice_class.find params[:id]
+    @invoice = Invoice.find params[:id]
     @lines = @invoice.invoice_lines
     @client = @invoice.client || Client.new(:name=>"unknown",:project=>@invoice.project)
     @project = @invoice.project
