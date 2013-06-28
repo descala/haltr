@@ -38,7 +38,7 @@ INSTALL
 ::
 
   cd <Redmine root dir>
-  rake db:migrate:plugins RAILS_ENV='production'
+  rake redmine:plugins:migrate RAILS_ENV='production'
 
 * poppler-utils package and chronic gem are required to receive PDF invoices by mail.
 * imagemagick library is required to resize automatically uploaded images (for company logos).
