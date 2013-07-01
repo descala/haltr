@@ -15,12 +15,6 @@ module InvoicesHelper
     end
   end
 
-  def accept_link(invoice)
-    if invoice.state?(:received)
-      link_to(I18n.t(:mark_accepted), {:action => :mark_accepted, :id => invoice})
-    end
-  end
-
   def clients_for_select
     clients = Client.find(:all, :order => 'name', :conditions => ["project_id = ?", @project])
     # check if client.valid?: if you request to link profile, and then unlink it, client is invalid

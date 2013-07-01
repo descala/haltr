@@ -55,11 +55,13 @@ class PaymentsController < ApplicationController
 
   def create
     @payment = Payment.new(params[:payment].merge({:project=>@project}))
+    @invoice = @payment.invoice
+    @reason = params[:reason]
     if @payment.save
       flash[:notice] = l(:notice_successful_create)
       if @payment.invoice
         if params[:save_and_mail]
-          MailNotifier.deliver_invoice_paid(@payment.invoice,params[:reason])
+          MailNotifier.invoice_paid(@payment.invoice,params[:reason]).deliver
         end
         if @payment.invoice.is_paid?
           # paid state change automatically creates an Event,

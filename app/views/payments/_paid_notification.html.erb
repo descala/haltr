@@ -14,7 +14,7 @@
 <pre>
 <%= l((@invoice.type == "ReceivedInvoice" ? :received_invoice_paid : :issued_invoice_paid), :num => @invoice.number, :company => @invoice.company.name) %>
 
-<%= text_area_tag 'reason', "", :rows => 4, :cols => 40 %>
+<%= text_area_tag 'reason', @reason, :rows => 4, :cols => 40 %>
 
 ----------------------------------------
 

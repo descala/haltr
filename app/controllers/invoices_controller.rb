@@ -148,8 +148,6 @@ class InvoicesController < ApplicationController
             tax['comment'] = ''
           end
         end
-        # set currency from invoice on each line
-        invoice_line['currency'] = params[:invoice][:currency]
       end
     end
 
@@ -188,30 +186,6 @@ class InvoicesController < ApplicationController
 
   def mark_not_sent
     @invoice.mark_unsent
-    redirect_to :back
-  rescue ActionController::RedirectBackError
-    render :text => "OK"
-  end
-
-  def mark_accepted_with_mail
-    MailNotifier.deliver_received_invoice_accepted(@invoice,params[:reason])
-    mark_accepted
-  end
-
-  def mark_accepted
-    Event.create(:name=>'accept',:invoice=>@invoice,:user=>User.current,:info=>params[:reason])
-    redirect_to :back
-  rescue ActionController::RedirectBackError
-    render :text => "OK"
-  end
-
-  def mark_refused_with_mail
-    MailNotifier.deliver_received_invoice_refused(@invoice,params[:reason])
-    mark_refused
-  end
-
-  def mark_refused
-    Event.create(:name=>'refuse',:invoice=>@invoice,:user=>User.current,:info=>params[:reason])
     redirect_to :back
   rescue ActionController::RedirectBackError
     render :text => "OK"

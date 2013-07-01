@@ -48,6 +48,30 @@ class ReceivedController < InvoicesController
     @unread = invoices.where("type = ? AND has_been_read = ?", 'ReceivedInvoice', false).count
   end
 
+  def mark_accepted_with_mail
+    MailNotifier.received_invoice_accepted(@invoice,params[:reason]).deliver
+    mark_accepted
+  end
+
+  def mark_accepted
+    Event.create(:name=>'accept',:invoice=>@invoice,:user=>User.current,:info=>params[:reason])
+    redirect_to :back
+  rescue ActionController::RedirectBackError
+    render :text => "OK"
+  end
+
+  def mark_refused_with_mail
+    MailNotifier.received_invoice_refused(@invoice,params[:reason]).deliver
+    mark_refused
+  end
+
+  def mark_refused
+    Event.create(:name=>'refuse',:invoice=>@invoice,:user=>User.current,:info=>params[:reason])
+    redirect_to :back
+  rescue ActionController::RedirectBackError
+    render :text => "OK"
+  end
+
   private
 
   def invoice_class

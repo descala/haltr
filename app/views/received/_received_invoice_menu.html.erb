@@ -10,5 +10,5 @@
 <% end -%>
 
 <% if @invoice.state?(:accepted) -%>
-  <li><%= link_to l(:make_payment), {:controller=>'payments', :action=>'new', :id=>@project, :invoice_id=>@invoice, :payment_type=>@invoice.type}, :class=>'icon-haltr-payment' %></li>
+  <li><%= link_to l(:make_payment), new_project_payment_path(:project_id=>@project,:invoice_id=>@invoice, :payment_type=>@invoice.type), :class=>'icon-haltr-payment' %></li>
 <% end -%>

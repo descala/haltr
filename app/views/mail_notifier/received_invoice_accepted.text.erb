@@ -1,0 +1,8 @@
+<%= I18n.t(:received_invoice_accepted, :num => @invoice.number, :company => @invoice.company.name) %>
+
+<% unless @reason.blank? -%>
+  <%= @reason %>
+
+<% end -%>
+----------------------------------------
+<%= render :partial => "invoice", :locals => { :invoice => @invoice } %>
