@@ -6,7 +6,6 @@ class InvoiceEditTest < ActionController::IntegrationTest
 
   def test_edit_invoice_tax_with_comment
     post "/login", :username => 'jsmith', :password => 'jsmith'
-    assert_redirected_to project_invoices_path(User.find_by_login('jsmith').project)
 
     # This is a simple invoice. 100 EUR with a 10% VAT tax
 #    get "/invoices/4"
