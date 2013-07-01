@@ -9,13 +9,13 @@
 
   <% if client.allowed? -%>
     <span class="profilelink">
-      <%= l(:linked_to_profile, :company => client.company.name).html_safe %> (<%=link_to(l(:unlink),{:action=>'unlink',:id=>client})%>)
+      <%= l(:linked_to_profile, :company => client.company.name).html_safe %> (<%=link_to(l(:unlink),{:controller=>'clients',:action=>'unlink',:id=>client})%>)
   <% elsif client.denied? -%>
     <span class="profilelinkred">
-      <%= l(:denied_authorization, :company => client.company.name).html_safe %> (<%=link_to(l(:unlink),{:action=>'unlink',:id=>client})%>)
+      <%= l(:denied_authorization, :company => client.company.name).html_safe %> (<%=link_to(l(:unlink),{:controller=>'clients',:action=>'unlink',:id=>client})%>)
   <% else -%>
     <span class="profilelink">
-      <%= l(:pending_authorization, :company => client.company.name).html_safe %> (<%=link_to(l(:unlink),{:action=>'unlink',:id=>client})%>)
+      <%= l(:pending_authorization, :company => client.company.name).html_safe %> (<%=link_to(l(:unlink),{:controller=>'clients',:action=>'unlink',:id=>client})%>)
   <% end -%>
     </span>
 
@@ -27,15 +27,15 @@
   <span class="profilelink">
     <%= l(:cif_belongs_to_company,{:company=>company.name}).html_safe %>
     <% if company.public? # public profile -%>
-      <%= l(:link_to_profile_suggest, :href=>link_to(l(:link_to_profile),{:action=>'link_to_profile',:id=>@project,:company=>company,:client=>client})).html_safe %>
+      <%= l(:link_to_profile_suggest, :href=>link_to(l(:link_to_profile),{:controller=>'clients',:action=>'link_to_profile',:id=>@project,:company=>company,:client=>client})).html_safe %>
       <% if !client or client.new_record? %>
         <script language="javascript">
           alert("<%= l(:cif_belongs_to_company_text_only,{:company=>company.name}) %>");
-          self.location="<%=url_for(:action=>'link_to_profile',:id=>@project,:company=>company,:client=>client)%>";
+          self.location="<%=url_for(:action=>'link_to_profile',:controller=>'clients',:id=>@project,:company=>company,:client=>client)%>";
         </script>
       <% end -%>
     <% else # semipublic profile -%>
-      <%= l(:link_to_profile_suggest, :href=>link_to(l(:link_to_profile_ask),{:action=>'link_to_profile',:id=>@project,:company=>company,:client=>client})).html_safe %>
+      <%= l(:link_to_profile_suggest, :href=>link_to(l(:link_to_profile_ask),{:controller=>'clients',:action=>'link_to_profile',:id=>@project,:company=>company,:client=>client})).html_safe %>
     <% end -%>
     </span>
 
