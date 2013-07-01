@@ -7,7 +7,7 @@ class MailNotifier < ActionMailer::Base
     @invoice = invoice
     @reason = reason
     mail :to => invoice.client.email,
-      :from => 'noreply@b2brouter.net',
+      :from => Setting.mail_from,
       :subject => I18n.t(:received_invoice_accepted,
                          :num => invoice.number,
                          :company => invoice.company.name)
@@ -20,7 +20,7 @@ class MailNotifier < ActionMailer::Base
       attachments[invoice.legal_filename] = invoice.legal_invoice
     end
     mail :to => invoice.client.email,
-      :from => 'noreply@b2brouter.net',
+      :from => Setting.mail_from,
       :subject => I18n.t(:received_invoice_refused,
                          :num => invoice.number,
                          :company => invoice.company.name)
@@ -36,7 +36,7 @@ class MailNotifier < ActionMailer::Base
                       :received_invoice_paid : :issued_invoice_paid),
         :num => invoice.number, :company => invoice.company.name
     mail :to => invoice.client.email,
-      :from => 'noreply@b2brouter.net',
+      :from => Setting.mail_from,
       :subject => subject
   end
 
