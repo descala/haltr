@@ -78,7 +78,7 @@ select.tax {
   font-weight: bold;
 }
 
-pastdue {
+.pastdue {
   color: red;
 }
 .disabled {

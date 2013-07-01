@@ -89,7 +89,7 @@
             <td><%=h invoice.client %></td>
             <td class="money"><%= money(invoice.subtotal) %></td>
             <td class="money"><%= money(invoice.total) %></td>
-            <td <%='class="pastdue"' if invoice.past_due?%>><%=h format_date invoice.due_date %></td>
+            <td <%='class="pastdue"'.html_safe if invoice.past_due?%>><%=h format_date invoice.due_date %></td>
             <td><%=h l("state_#{invoice.state}").capitalize %></td>
           </tr>
         <% end -%>
