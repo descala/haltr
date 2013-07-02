@@ -24,6 +24,7 @@ class InvoicesController < ApplicationController
   else
     before_filter :check_remote_ip, :only => [:by_taxcode_and_num,:mail]
   end
+  before_filter :redirect_to_correct_controller, :only => [:show]
 
   include CompanyFilter
   before_filter :check_for_company, :except => [:by_taxcode_and_num,:view,:download,:mail]
@@ -238,40 +239,26 @@ class InvoicesController < ApplicationController
   end
 
   def show
-    if @invoice.is_a? IssuedInvoice
-      @invoices_not_sent = InvoiceDocument.find(:all,:conditions => ["client_id = ? and state = 'new'",@client.id]).sort
-      @invoices_sent = InvoiceDocument.find(:all,:conditions => ["client_id = ? and state = 'sent'",@client.id]).sort
-      @invoices_closed = InvoiceDocument.find(:all,:conditions => ["client_id = ? and state = 'closed'",@client.id]).sort
-      respond_to do |format|
-        format.html
-        format.pdf do
-          @is_pdf = true
-          render :pdf => @invoice.pdf_name_without_extension,
-            :layout => "invoice.html",
-            :template=>"invoices/show_pdf",
-            :formats => :html,
-            :show_as_html => params[:debug]
-        end
-        format.facturae30  { render_clean_xml :formats => :xml, :template => 'invoices/facturae30',  :layout => false }
-        format.facturae31  { render_clean_xml :formats => :xml, :template => 'invoices/facturae31',  :layout => false }
-        format.facturae32  { render_clean_xml :formats => :xml, :template => 'invoices/facturae32',  :layout => false }
-        format.peppolubl20 { render_clean_xml :formats => :xml, :template => 'invoices/peppolubl20', :layout => false }
-        format.biiubl20    { render_clean_xml :formats => :xml, :template => 'invoices/biiubl20',    :layout => false }
-        format.svefaktura  { render_clean_xml :formats => :xml, :template => 'invoices/svefaktura',  :layout => false }
-        format.oioubl20    { render_clean_xml :formats => :xml, :template => 'invoices/oioubl20',    :layout => false }
+    @invoices_not_sent = InvoiceDocument.find(:all,:conditions => ["client_id = ? and state = 'new'",@client.id]).sort
+    @invoices_sent = InvoiceDocument.find(:all,:conditions => ["client_id = ? and state = 'sent'",@client.id]).sort
+    @invoices_closed = InvoiceDocument.find(:all,:conditions => ["client_id = ? and state = 'closed'",@client.id]).sort
+    respond_to do |format|
+      format.html
+      format.pdf do
+        @is_pdf = true
+        render :pdf => @invoice.pdf_name_without_extension,
+          :layout => "invoice.html",
+          :template=>"invoices/show_pdf",
+          :formats => :html,
+          :show_as_html => params[:debug]
       end
-    elsif @invoice.is_a? ReceivedInvoice
-      @invoice.update_attribute(:has_been_read, true)
-      if @invoice.invoice_format == "pdf"
-        render :template => 'received/show_pdf'
-      else
-        # TODO also show the database record version?
-        # Redel XML with XSLT in browser
-        @xsl = 'facturae32'
-        render :template => 'received/show_with_xsl'
-      end
-    elsif @invoice.is_a? InvoiceTemplate
-      @invoices_generated = @invoice.issued_invoices.sort
+      format.facturae30  { render_clean_xml :formats => :xml, :template => 'invoices/facturae30',  :layout => false }
+      format.facturae31  { render_clean_xml :formats => :xml, :template => 'invoices/facturae31',  :layout => false }
+      format.facturae32  { render_clean_xml :formats => :xml, :template => 'invoices/facturae32',  :layout => false }
+      format.peppolubl20 { render_clean_xml :formats => :xml, :template => 'invoices/peppolubl20', :layout => false }
+      format.biiubl20    { render_clean_xml :formats => :xml, :template => 'invoices/biiubl20',    :layout => false }
+      format.svefaktura  { render_clean_xml :formats => :xml, :template => 'invoices/svefaktura',  :layout => false }
+      format.oioubl20    { render_clean_xml :formats => :xml, :template => 'invoices/oioubl20',    :layout => false }
     end
   end
 
@@ -605,6 +592,15 @@ XSL
     xslt = Nokogiri::XSLT(xsl)
     out  = xslt.transform(doc)
     out.to_xml
+  end
+
+  def redirect_to_correct_controller
+    if @invoice.is_a? IssuedInvoice and params[:controller] != "invoices"
+    elsif @invoice.is_a? ReceivedInvoice and params[:controller] != "received"
+      redirect_to(received_path(@invoice)) && return
+    elsif @invoice.is_a? InvoiceTemplate and params[:controller] != "invoice_templates"
+      redirect_to invoice_template_path(@invoice) && return
+    end
   end
 
 end

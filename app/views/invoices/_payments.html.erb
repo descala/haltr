@@ -2,7 +2,7 @@
   <h4><%=h l(:label_payment_plural)%></h4>
   <% @invoice.payments.each do |payment| -%>
     <table>
-      <td class="item-delete first"><%= link_to "", {:action=>'destroy_payment',:id=>payment} , :confirm => l(:text_are_you_sure), :method => :post, :class => 'icon icon-del' %></td>
+      <td class="item-delete first"><%= link_to "", destroy_payment_path(payment), :confirm => l(:text_are_you_sure), :method => :delete, :class => 'icon icon-del' %></td>
       <td class="item-date first"><%=h payment.date %></td>
       <td class="item-description"><%=h payment.description %></td>
       <td class="line-total last"><%=h money(payment.amount) %></td>

@@ -48,6 +48,18 @@ class ReceivedController < InvoicesController
     @unread = invoices.where("type = ? AND has_been_read = ?", 'ReceivedInvoice', false).count
   end
 
+  def show
+    @invoice.update_attribute(:has_been_read, true)
+    if @invoice.invoice_format == "pdf"
+      render :template => 'received/show_pdf'
+    else
+      # TODO also show the database record version?
+      # Redel XML with XSLT in browser
+      @xsl = 'facturae32'
+      render :template => 'received/show_with_xsl'
+    end
+  end
+
   def mark_accepted_with_mail
     MailNotifier.received_invoice_accepted(@invoice,params[:reason]).deliver
     mark_accepted

@@ -46,6 +46,10 @@ class InvoiceTemplatesController < InvoicesController
     render :template => "invoices/new"
   end
 
+  def show
+    @invoices_generated = @invoice.issued_invoices.sort
+  end
+
   # creates new draft invoices from template
   def new_invoices_from_template
     @number = IssuedInvoice.next_number(@project)
