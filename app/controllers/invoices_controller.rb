@@ -596,6 +596,7 @@ XSL
 
   def redirect_to_correct_controller
     if @invoice.is_a? IssuedInvoice and params[:controller] != "invoices"
+      redirect_to(invoice_path(@invoice)) && return
     elsif @invoice.is_a? ReceivedInvoice and params[:controller] != "received"
       redirect_to(received_path(@invoice)) && return
     elsif @invoice.is_a? InvoiceTemplate and params[:controller] != "invoice_templates"
