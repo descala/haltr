@@ -6,19 +6,19 @@
   <legend><%=l(:label_company)%></legend>
   <div class="seccio grup" id='cif_info'>
     <%= render :partial => "clients/cif_info",
-      :locals => { :client => @client, :company => @client.company } %>
+      :locals => { :client => client, :company => client.company } %>
   </div>
   <div class="seccio grup">
     <p class="col span-1-de-2">
     <%= f.text_field :taxcode,
       :size => 20,
       :required => true,
-      :readonly => @client.linked?,
+      :readonly => client.linked?,
       'data-short' => short, #TODO: allow link from short forms too
       'data-check-cif-url' => url_for(:controller=>'clients',
                                       :action=>'check_cif',
                                       :id => @project.id,
-                                      :client => @client.id)
+                                      :client => client.id)
     %>
     </p>
     <p class="col span-1-de-2">
@@ -27,10 +27,10 @@
   </div>
   <div class="seccio grup">
     <p class="col span-1-de-3">
-      <%= f.text_field :name, :required => true, :readonly => @client.linked? %>
+      <%= f.text_field :name, :required => true, :readonly => client.linked? %>
     </p>
     <p class="col span-1-de-3">
-      <%= f.text_field :email, :readonly => @client.linked? %>
+      <%= f.text_field :email, :readonly => client.linked? %>
     </p>
     <p class="col span-1-de-3">
       <%= f.text_field :website %>
@@ -47,39 +47,39 @@
     <% end -%>
     <div class="seccio grup">
       <p class="col span-2-de-2">
-        <%= f.text_field :address, :readonly => @client.linked? %>
+        <%= f.text_field :address, :readonly => client.linked? %>
       </p>
     </div>
     <div class="seccio grup">
       <p class="col span-2-de-2">
-        <%= f.text_field :address2, :readonly => @client.linked? %>
+        <%= f.text_field :address2, :readonly => client.linked? %>
       </p>
     </div>
     <div class="seccio grup">
       <p class="col span-1-de-4">
-        <%= f.text_field :postalcode, :required => true, :readonly => @client.linked? %>
+        <%= f.text_field :postalcode, :required => true, :readonly => client.linked? %>
       </p>
       <p class="col span-1-de-4">
-        <%= f.text_field :city, :readonly => @client.linked? %>
+        <%= f.text_field :city, :readonly => client.linked? %>
       </p>
       <p class="col span-1-de-4">
-        <%= f.text_field :province, :readonly => @client.linked? %>
+        <%= f.text_field :province, :readonly => client.linked? %>
       </p>
       <p class="col span-1-de-4">
         <%= f.label_for_field :country, :required => true %>
-        <%= f.iso_country_select :country, valid_languages, :readonly => @client.linked? %>
+        <%= f.iso_country_select :country, valid_languages, :readonly => client.linked? %>
       </p>
     </div>
-    <% if @client.linked? -%>
+    <% if client.linked? -%>
       <div class="seccio grup">
         <p class="col span-1-de-3">
-          <%= f.text_field :language, :value => l(:general_lang_name,:locale => @client.language), :readonly=>true %>
+          <%= f.text_field :language, :value => l(:general_lang_name,:locale => client.language), :readonly=>true %>
         </p>
         <p class="col span-1-de-3">
           <%= f.select :currency, currency_options_for_select, :required => true %>
         </p>
         <p class="col span-1-de-3">
-          <%= f.text_field :invoice_format, :value => ExportChannels.l(@client.invoice_format), :readonly=>true %>
+          <%= f.text_field :invoice_format, :value => ExportChannels.l(client.invoice_format), :readonly=>true %>
         </p>
       </div>
     <% else -%>
@@ -113,12 +113,12 @@
     </p>
   </div>
 
-  <% unless @client.linked? -%>
+  <% unless client.linked? -%>
     <div class="seccio grup">
       <p class="col span-1-de-2">
         <% disabled = [] ; disabled << Invoice::PAYMENT_TRANSFER if @project.company.bank_account.blank? -%>
         <%= f.select(:payment_method, Invoice.payment_methods, {:disabled=>disabled}) %><br/>
-        <%= f.text_area(:payment_method_text, :cols => 40, :rows => 2, :no_label => true, :id => 'payment_other', :style => (@client.payment_method==13) ? '' : 'display: none;') %>
+        <%= f.text_area(:payment_method_text, :cols => 40, :rows => 2, :no_label => true, :id => 'payment_other', :style => (client.payment_method==13) ? '' : 'display: none;') %>
       </p>
       <p class="col span-1-de-2">
         <%= f.select(:terms, Terms.for_select, {}) %>
