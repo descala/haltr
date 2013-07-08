@@ -2,7 +2,7 @@
 <div class="seccio grup">
   <div class="col span-2-de-2">
 
-    <%= labelled_form_for :payment, @payment, :url => { :action => 'create', :id => @project }, :html => {:class=>'formee'} do |f| %>
+    <%= labelled_form_for :payment, @payment, :url => { :action => 'create', :project_id => @project }, :html => {:class=>'formee'} do |f| %>
       <%= render :partial => 'form', :locals => { :f => f } %>
       <% if @invoice -%>
         <%= render :partial => 'paid_notification' %>

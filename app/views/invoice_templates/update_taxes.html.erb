@@ -1,7 +1,7 @@
 <h2><%=l(:label_update_taxes)%></h2>
 
 
-<%= form_tag(url_for(:action => 'update_taxes', :id => @project ) ) do |f| %>
+<%= form_tag(project_update_taxes_path(@project)) do |f| %>
   <table>
     <tr>
       <td><%=l(:field_first_name)%></td>
@@ -41,5 +41,5 @@
 <% html_title(l(:label_update_taxes)) -%>
 
 <% content_for :sidebar do %>
-  <%= render :partial => 'invoices/sidebar' %>
+  <%= render_menu :invoices_menu, @project %>
 <% end %>
