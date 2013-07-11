@@ -83,7 +83,7 @@
       </thead>
       <tbody>
         <% for invoice in @invoices -%>
-          <tr class="<%= ' amended' if invoice.amended? %><%= cycle("odd", "even") %>" onclick="javascript: document.location = '<%=url_for(:action=>'show', :id=>invoice)%>'" style="cursor:pointer;">
+          <tr class="<%= 'amended ' if invoice.amended? %><%= cycle("odd", "even") %>" onclick="javascript: document.location = '<%=url_for(:action=>'show', :id=>invoice)%>'" style="cursor:pointer;">
             <td><%=h invoice.number %></td>
             <td><%=h format_date invoice.date %></td>
             <td><%=h invoice.client %></td>
