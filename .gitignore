@@ -9,3 +9,4 @@ config/channels.yml
 .DS_Store
 haltr-*.sql
 Gemfile.lock
+README.html

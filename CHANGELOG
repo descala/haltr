@@ -1,8 +1,14 @@
 == Haltr changelog
 
 Haltr - Hackers dont do books 
-Copyright (C) 2009-2012  David Escala
+Copyright (C) 2009-2013  David Escala
 https://github.com/descala/haltr
+
+== 2013-07-11 v2.0
+
+* Issue #32: Support Redmine 2.x
+* Refactoring of menus and CSS styles
+
 
 == 2012-11-26 v1.2
 
