@@ -4,6 +4,10 @@ Haltr - Hackers dont do books
 Copyright (C) 2009-2012  David Escala
 https://github.com/descala/haltr
 
+== 1.2.x
+
+* Bugfixes
+
 == 2012-11-26 v1.2
 
 * Adds extension points (Redmine plugin hooks)
