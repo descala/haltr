@@ -7,7 +7,6 @@ class InvoiceTemplatesController < InvoicesController
   # otherwise they get executed before ours
   skip_before_filter :authorize, :check_for_company
 
-  before_filter :find_project_by_project_id, :only => [:update_taxes]
   before_filter :find_issued_invoice, :only => [:new_from_invoice]
   before_filter :authorize, :check_for_company
 

@@ -9,7 +9,7 @@ class InvoicesController < ApplicationController
   helper :sort
   include SortHelper
 
-  before_filter :find_project_by_project_id, :only => [:index,:new,:create,:send_new_invoices, :download_new_invoices, :update_payment_stuff,:new_invoices_from_template,:create_invoices,:report]
+  before_filter :find_project_by_project_id, :only => [:index,:new,:create,:send_new_invoices, :download_new_invoices, :update_payment_stuff,:new_invoices_from_template,:create_invoices,:report,:update_taxes]
   before_filter :find_invoice, :only => [:edit,:update,:destroy,:mark_sent,:mark_closed,:mark_not_sent,:mark_accepted_with_mail,:mark_accepted,:mark_refused_with_mail,:mark_refused,:duplicate_invoice,:pdfbase64,:show,:send_invoice,:legal,:amend_for_invoice] 
   before_filter :find_payment, :only => [:destroy_payment]
   before_filter :find_hashid, :only => [:view,:download]
