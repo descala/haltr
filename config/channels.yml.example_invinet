@@ -122,12 +122,12 @@ facturae_32_face:
   - invoice_has_taxes
   - valid_payment_method
   locales:
-    ca: "Facturae 3.2 a FACE"
-    da: "Facturae 3.2 til FACE"
-    en: "Facturae 3.2 to FACE"
-    es: "Facturae 3.2 por FACE"
-    fr: "Facturae 3.2 par FACE"
-    sv: "Spanskt format Facturae 3.2 till FACE"
+    ca: "Facturae 3.2 a FACe"
+    da: "Facturae 3.2 til FACe"
+    en: "Facturae 3.2 to FACe"
+    es: "Facturae 3.2 por FACe"
+    fr: "Facturae 3.2 par FACe"
+    sv: "Spanskt format Facturae 3.2 till FACe"
   allowed_permissions:
     :send_face:
 

@@ -37,3 +37,16 @@ clients_001:
   province: ""
   allowed: 
   email: mail@client1.com
+
+linked_client:
+  project_id: 2
+  name: Company 2 is public
+  taxcode: S2802214E
+  postalcode: 08720
+  currency: EUR
+  email: test2@example.com
+  country: es
+  city: Barcelona
+  invoice_format: facturae_32_face
+  company: company2
+  hashid: b406f5f495

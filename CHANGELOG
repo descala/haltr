@@ -8,7 +8,7 @@ https://github.com/descala/haltr
 
 * Issue #32: Support Redmine 2.x
 * Refactoring of menus and CSS styles
-
+* Adds a way of running tests inside Redmine
 
 == 2012-11-26 v1.2
 

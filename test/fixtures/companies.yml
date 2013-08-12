@@ -15,7 +15,7 @@ company2:
   # eCookbook 
   project_id: 1
   name: Company 2 is public
-  taxcode: pubtaxcode
+  taxcode: S2802214E
   postalcode: 08720
   bank_account: 1111111111
   currency: EUR
@@ -23,3 +23,4 @@ company2:
   country: es
   city: Barcelona
   public: public
+  invoice_format: facturae_32_face

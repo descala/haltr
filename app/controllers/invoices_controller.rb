@@ -390,7 +390,7 @@ class InvoicesController < ApplicationController
 
   # downloads an invoice without login using its hash_id and its md5 as credentials
   def download
-    if Rails.env.development? or Rails.env.test?
+    if (Rails.env.development? or Rails.env.test?) and !Setting['plugin_haltr']['b2brouter_ip'] 
       logger.debug "This is a test XML invoice"
       send_file Rails.root.join("plugins/haltr/test/fixtures/xml/test_invoice_facturae32.xml")
     else
@@ -568,7 +568,9 @@ class InvoicesController < ApplicationController
       i+=1
     end
     logger.info "Sending #{format} to '#{destination}' for invoice id #{@invoice.id}."
-    destination = './queued_file.data' if Rails.env == "development"
+    if Rails.env == "development"
+      FileUtils.cp(invoice_file.path,'./queued_file.data')
+    end
     FileUtils.mv(invoice_file.path,destination)
     #TODO state restrictions
     @invoice.queue || @invoice.requeue

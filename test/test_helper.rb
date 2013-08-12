@@ -1,11 +1,19 @@
 require File.dirname(__FILE__) + '../../test/test_helper'
 
+
 module Haltr
   module TestHelper
+
+    # method to obtain local IP address
+    require 'socket'
+    def self.my_first_private_ipv4
+      Socket.ip_address_list.detect{|intf| intf.ipv4_private?}
+    end
+
     def self.haltr_setup
 
       # Plugin config
-      Setting.plugin_haltr = { "trace_url"=>"http://localhost:3001", "b2brouter_ip"=>"", "export_channels_path"=>"/tmp", "default_country"=>"es", "default_currency"=>"EUR", "issues_controller_name"=>"issues" }
+      Setting.plugin_haltr = { "trace_url"=>"http://10.39.10.50", "b2brouter_ip"=>my_first_private_ipv4.ip_address, "export_channels_path"=>"#{ENV['HOME']}/git/b2brouter/spool/input", "default_country"=>"es", "default_currency"=>"EUR", "issues_controller_name"=>"issues" }
 
       # Enables haltr module on project 'OnlineStore'
       Project.find(2).enabled_modules << EnabledModule.new(:name => 'haltr')
