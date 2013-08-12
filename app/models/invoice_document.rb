@@ -18,14 +18,14 @@ class InvoiceDocument < Invoice
   # retrieve invoice from external system
   # to allow to download a modified invoice file
   # (for example digitally signed file)
-  def fetch_legal_by_http(md5=nil)
+  def fetch_from_backup(md5=nil,backup_name=nil)
     md5 ||= self.initial_md5
     url = Setting.plugin_haltr["trace_url"]
     url = URI.parse(url.gsub(/\/$/,'')) # remove trailing slash
     http = Net::HTTP.new(url.host,url.port)
     http.start() do |http|
-      full_url = "#{url.path.blank? ? "/" : "#{url.path}/"}b2b_messages/get_legal_invoice?md5=#{md5}"
-      logger.debug "Fetching legal GET #{full_url}" if logger && logger.debug?
+      full_url = "#{url.path.blank? ? "/" : "#{url.path}/"}b2b_messages/get_backup?md5=#{md5}&name=#{backup_name}"
+      logger.debug "Fetching backup GET #{full_url}" if logger && logger.debug?
       req = Net::HTTP::Get.new(full_url)
       response = http.request(req)
       if response.is_a? Net::HTTPOK
@@ -43,7 +43,7 @@ class InvoiceDocument < Invoice
       end
     end
   rescue Exception => e
-    logger.error "Error retrieving invoice #{id} legal by http: #{e.message}"
+    logger.error "Error retrieving invoice #{id} from backup: #{e.message}"
     return false
   end
 

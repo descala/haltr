@@ -16,7 +16,7 @@ class MailNotifier < ActionMailer::Base
   def received_invoice_refused(invoice,reason)
     @invoice = invoice
     @reason = reason
-    if invoice.fetch_legal_by_http
+    if invoice.fetch_from_backup
       attachments[invoice.legal_filename] = invoice.legal_invoice
     end
     mail :to => invoice.client.email,
@@ -29,7 +29,7 @@ class MailNotifier < ActionMailer::Base
   def invoice_paid(invoice,reason)
     @invoice = invoice
     @reason = reason
-    if invoice.fetch_legal_by_http
+    if invoice.fetch_from_backup
       attachments[invoice.legal_filename] = invoice.legal_invoice
     end
     subject = I18n.t (invoice.type == "ReceivedInvoice" ?

@@ -32,7 +32,11 @@ module InvoicesHelper
       if e.invoice.type == "ReceivedInvoice"
         "( #{link_to l(:button_download), :controller=>'invoices', :action=>'legal', :id=>e.invoice, :md5=>e.md5} )"
       else
-        "( #{link_to l(:download_legal), :controller=>'invoices', :action=>'legal', :id=>e.invoice, :md5=>e.md5} )"
+        if e.invoice.client.invoice_format == "facturae_32_face"
+          "( #{link_to l(:download_legal), :controller=>'invoices', :action=>'legal', :id=>e.invoice, :md5=>e.md5},  #{link_to l(:download_proof), :controller=>'invoices', :action=>'legal', :id=>e.invoice, :md5=>e.md5, :backup_name=>'justificante'} )"
+        else
+          "( #{link_to l(:download_legal), :controller=>'invoices', :action=>'legal', :id=>e.invoice, :md5=>e.md5} )"
+        end
       end
     elsif e.name =~ /_notification$/ and !e.md5.blank?
       "( #{link_to l(:download_notification), :controller=>'invoices', :action=>'legal', :id=>e.invoice, :md5=>e.md5} )"

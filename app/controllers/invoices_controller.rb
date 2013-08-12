@@ -395,7 +395,7 @@ class InvoicesController < ApplicationController
       send_file Rails.root.join("plugins/haltr/test/fixtures/xml/test_invoice_facturae32.xml")
     else
       #TODO: several B2bRouters
-      if @invoice.fetch_legal_by_http(params[:md5])
+      if @invoice.fetch_from_backup(params[:md5],params[:backup_name])
         respond_to do |format|
           format.html do
             send_data @invoice.legal_invoice, :filename => @invoice.legal_filename
