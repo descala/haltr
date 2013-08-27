@@ -341,21 +341,52 @@ sv:
   zip_gem_required: "'zip' gem krävs för att det ska fungera"
   too_much_invoices: "För många fakturor att laddaa ner (%{num} fakturor, max 100)"
   field_send_invoices_by_mail: "Skicka fakturor till detta mail"
-
+  state_allegedly_paid: "Reported as paid"
+  ubl_invoice_has_taxes_withheld: "Can't generate an UBL invoice with taxes withheld"
+  missing_company_peppol_fields: "Manglende PEPPOL felter på din virksomhed"
+  missing_client_peppol_fields: "Manglende PEPPOL felter på klient"
+  field_accounting_cost: "konto cost"
   missing_svefaktura_account: "Saknad Svefaktura konto kostnad"
   missing_svefaktura_organization: "Saknad Svefaktura organisation identifierare"
   missing_svefaktura_debit: "Autogiro tillåts inte"
 
   #TODO
+  label_received_invoice_new: New received invoice
+  field_received_at: "Received at"
+  duplicate_invoice: Duplicate invoce
+  field_endpointid: "Peppol Endpoint ID"
+  field_schemeid: "Peppol Scheme ID"
+  label_update_taxes: "Update the taxes of templates"
+  field_company_identifier: "Organization ID"
+
+  label_linked_to_mine: "Linked companies"
+
   field_imap_host: "IMAP server"
   field_imap_port: "Port"
   field_imap_ssl: "Use SSL"
   field_imap_username: "Username"
   field_imap_password: "Password"
   field_imap_from: "From"
+
+  permission_general_use: "Use Haltr plugin"
+  permission_manage_payments: "Manage payments"
+  permission_use_templates: "Invoice templates"
+  permission_batch_processes: "Processes with scripts"
+
+  # this depends on permissions defined in channels.yml
+  permission_download_pdf: "B2BRouter - Download PDF"
+  permission_send_by_mail: "B2BRouter - Send by email"
+  permission_send_aoc: "B2BRouter - Send through AOC"
+  permission_send_face: "B2BRouter - Send through FACE"
+  permission_send_peppol: "B2BRouter - Send through PEPPOL"
+  permission_use_local_signature: "B2BRouter - Sign with local certificate"
   tax_E: "Exempt"
   tax_Z: "Zero Rated"
   tax_S: "Standard"
   tax_H: "High Rated"
   tax_AA: "Low Rated"
   bank_info: "Bank info"
+  invoice_data: "Invoice data"
+
+  more_options: More options ...
+  download_proof: Download proof
