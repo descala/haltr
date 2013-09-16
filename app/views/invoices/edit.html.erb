@@ -8,7 +8,8 @@
       <% else -%>
         <%= render :partial => 'invoices/form', :locals => { :f => f } %>
       <% end -%>
-      <%= submit_tag l(:button_save) %>
+      <%= f.submit l(:button_save), :name => 'save' %>
+      <%= f.submit l(:button_save_and_send), :name => 'save_and_send' %>
     <% end %>
 
   </div>

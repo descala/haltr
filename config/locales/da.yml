@@ -381,3 +381,6 @@ da:
   tax_H: "High Rated"
   tax_AA: "Low Rated"
   bank_info: "Bank info"
+
+  button_save_and_send: Save and send
+  button_create_and_send: Create and send

@@ -124,7 +124,11 @@ class InvoicesController < ApplicationController
     @invoice.project = @project
     if @invoice.save
       flash[:notice] = l(:notice_successful_create)
-      redirect_to :action => 'show', :id => @invoice
+      if params[:create_and_send]
+        redirect_to :action => 'send_invoice', :id => @invoice
+      else
+        redirect_to :action => 'show', :id => @invoice
+      end
     else
       logger.info "Invoice errors #{@invoice.errors.full_messages}"
       render :action => "new"
@@ -157,7 +161,11 @@ class InvoicesController < ApplicationController
     if @invoice.update_attributes(parsed_params)
       Event.create(:name=>'edited',:invoice=>@invoice,:user=>User.current)
       flash[:notice] = l(:notice_successful_update)
-      redirect_to :action => 'show', :id => @invoice
+      if params[:save_and_send]
+        redirect_to :action => 'send_invoice', :id => @invoice
+      else
+        redirect_to :action => 'show', :id => @invoice
+      end
     else
       render :action => "edit"
     end
