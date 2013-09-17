@@ -111,6 +111,8 @@ class ClientsController < ApplicationController
                                                     :client=>@client.id)
       when "edit_invoice" then
         #TODO need invoice id here
+        #redirect_to edit_invoice_path()
+        redirect_to project_invoices_path(:project_id=>@project.id)
       else
         redirect_to :action => 'edit', :id => @client
       end

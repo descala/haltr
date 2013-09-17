@@ -13,7 +13,7 @@
 <!--final formulari-->
 
 <div id="new_client_wrapper" style="display:none;">
-  <%= render :partial => 'invoices/new_client' %>
+  <%= render :partial => 'invoices/new_client', :locals => {:context => "new_invoice"} %>
 </div>
 
 <% content_for :sidebar do %>
