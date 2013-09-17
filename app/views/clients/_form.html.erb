@@ -1,7 +1,5 @@
 <%= error_messages_for 'client' %>
 
-<% short ||= false -%>
-
 <fieldset class="tabular box">
   <legend><%=l(:label_company)%></legend>
   <div class="seccio grup" id='cif_info'>
@@ -14,7 +12,7 @@
       :size => 20,
       :required => true,
       :readonly => client.linked?,
-      'data-short' => short, #TODO: allow link from short forms too
+      'data-context' => context,
       'data-check-cif-url' => url_for(:controller=>'clients',
                                       :action=>'check_cif',
                                       :id => @project.id,
@@ -36,13 +34,13 @@
       <%= f.text_field :website %>
     </p>
   </div>
-  <% if short -%>
+  <% if context =~ /_invoice$/ -%>
     <p id="show_full_form">
     <%= link_to_function("--- #{l(:show_full_form)} ---", "$('.client_hiden_fields').show(); $('#show_full_form').hide()") %>
     </p>
   <% end -%>
-  <div class="client_hiden_fields" style="<%= short ? "display:none;" : "" %>">
-    <% if short -%>
+  <div class="client_hiden_fields" style="<%= context =~ /_invoice$/ ? "display:none;" : "" %>">
+    <% if context =~ /_invoice$/ -%>
       <p><%= link_to_function("--- #{l(:hide_full_form)} ---", "$('.client_hiden_fields').hide(); $('#show_full_form').show()") %></p>
     <% end -%>
     <div class="seccio grup">
@@ -98,7 +96,7 @@
   </div>
 </fieldset>
 
-<div class="client_hiden_fields" style="<%= short ? "display:none;" : "" %>">
+<div class="client_hiden_fields" style="<%= context =~ /_invoice$/ ? "display:none;" : "" %>">
 <fieldset class="tabular box">
   <legend><%=l(:bank_info)%></legend>
   <div class="seccio grup">

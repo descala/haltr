@@ -82,13 +82,11 @@ $(document).ready(function() {
 
 function client_taxcode_changed() {
   var taxcode = $('#client_taxcode').val();
-  // do nothing if rendering a short form
-  // (on invoices / invoice_templates)
-  // or if taxcode is empty
-  if (!$('#client_taxcode').data('short') && taxcode != "") {
+  // do nothing if taxcode is empty
+  if (taxcode != "") {
     $.ajax({
       url: $('#client_taxcode').data('checkCifUrl'),
-      data: 'value=' + taxcode,
+      data: 'value=' + taxcode + "&context=" + $('#client_taxcode').data('context'),
       dataType: "html"
     }).done(function( html ) {
       $("#cif_info").html(html);

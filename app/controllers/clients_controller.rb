@@ -94,7 +94,7 @@ class ClientsController < ApplicationController
       # search a company with specified taxcode and (semi)public profile
       company = Company.find(:all,
                   :conditions => ["taxcode = ? and (public='public' or public='semipublic')", taxcode]).first
-      render :partial => "cif_info", :locals => { :client => client, :company => company }
+      render :partial => "cif_info", :locals => { :client => client, :company => company, :context => params[:context] }
     end
   end
 
@@ -105,7 +105,15 @@ class ClientsController < ApplicationController
     @client.company = @company
     @client.taxcode = @company.taxcode
     if @client.save
-      redirect_to :action => 'edit', :id => @client
+      case params[:context]
+      when "new_invoice" then
+        redirect_to project_client_new_invoice_path(:project_id=>@project.id,
+                                                    :client=>@client.id)
+      when "edit_invoice" then
+        #TODO need invoice id here
+      else
+        redirect_to :action => 'edit', :id => @client
+      end
     else
       @client.company = nil
       render :action => 'new'

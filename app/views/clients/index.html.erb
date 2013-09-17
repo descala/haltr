@@ -59,7 +59,7 @@
             <td class="invoices"><%= client.issued_invoices.any? ? link_to(client.issued_invoices.count, {:controller=>'invoices', :action=>'index', :id=>@project, :client_id=>client}, :title=>l(:label_received)) : "-" %></td>
             <td class="invoices"><%= client.received_invoices.any? ? link_to(client.received_invoices.count, {:controller=>'received', :action=>'index', :id=>@project, :client_id=>client}, :title=>l(:label_received)) : "-" %></td>
             <td class="people"><%= link_to l(:label_person_plural), client_people_path(client), :class=>'persones-btt', :title=>l(:label_person_plural) %></td>
-            <td class="new"><%= link_to l(:button_new_invoice), {:controller=>'invoices',:action=>'new',:id=>@project,:client=>client}, :class => 'nova-f-btt', :title=>l(:label_invoice_new) %></td>
+            <td class="new"><%= link_to l(:button_new_invoice), project_client_new_invoice_path(:project_id=>@project.id,:client=>client.id), :class => 'nova-f-btt', :title=>l(:label_invoice_new) %></td>
           </tr>
         <% end -%>
       </tbody>
