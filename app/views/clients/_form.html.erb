@@ -16,7 +16,8 @@
       'data-check-cif-url' => url_for(:controller=>'clients',
                                       :action=>'check_cif',
                                       :id => @project.id,
-                                      :client => client.id)
+                                      :client => client.id,
+                                      :invoice_id => context == "edit_invoice" ? @invoice.id : nil)
     %>
     </p>
     <p class="col span-1-de-2">

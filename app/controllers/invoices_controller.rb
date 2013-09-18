@@ -91,6 +91,9 @@ class InvoicesController < ApplicationController
   end
 
   def edit
+    if params[:created_client_id]
+      @created_client = Client.find params[:created_client_id]
+    end
   end
 
   def create
