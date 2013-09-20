@@ -131,7 +131,7 @@ class Invoice < ActiveRecord::Base
     # additional mails hook. it returns an array
     mails = mails + Redmine::Hook.call_hook(:model_invoice_additional_recipient_emails, :invoice=>self)
     replace_mails = Redmine::Hook.call_hook(:model_invoice_replace_recipient_emails, :invoice=>self)
-    mails = replace_mails if replace_mails
+    mails = replace_mails if replace_mails.any?
     mails.uniq.compact
   end
 
