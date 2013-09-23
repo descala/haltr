@@ -46,6 +46,7 @@ fr:
   public: Publique
   semipublic: Requiert authentification
   private: Privé
+  confirm_delete_client_with_invoices: "Attention! Le client a des factures associées:\n  %{issued} envoyé\n  %{received} reçu\n  %{templates} récurrent\nRetirez le client et toutes leurs factures?"
 
   # Invoices
   IssuedInvoice: Facture émise
@@ -56,6 +57,7 @@ fr:
   label_draft: Brouillon facture
   field_invoice: Facture
   label_invoice_new: Nouvelle facture
+  label_received_invoice_new: Ajouter factures entrantes
   button_new_invoice: Nouvelle facture
   button_add_invoice_line: Ajouter une nouvelle ligne
   field_number: Numéro
@@ -98,10 +100,10 @@ fr:
   debit: Débiter paiement
   transfer: Transfert bancaire
   other: Autres
-  requires_client_bank_account: requiert compte bancaire client
-  requires_company_bank_account: requiert propre compte bancaire
-#  requires_client_iban_bic: requires client IBAN and BIC
-#  requires_company_iban_bic: requires self IBAN and BIC
+  requires_client_bank_account: exige le compte bancaire du client
+  requires_company_bank_account: exige le propre compte bancaire
+  requires_client_iban_bic: exige le IBAN et le BIC du client
+  requires_company_iban_bic: exige IBAN et BIC propre
   cash_str: "Paiement liquide"
   debit_str: "Débite paiement à"
   transfer_str: "Transfert bancaire à"
@@ -155,7 +157,7 @@ fr:
   no_pdf_support: "Il semble que vous n'ayez pas Adobe Reader ou le support PDF dans ce navigateur web. <a href='%{pdf}'>Cliquez ici pour télécharger le PDF</a>"
   client_has_no_email: "Le client de cette facture n'a pas d'email défini"
   invoice_has_no_taxes: "la facture n'a pas d'impôts"
-  invoice_no_taxes_and_discount: "(TODO) Can not have lines without tax and a global discount"
+  invoice_no_taxes_and_discount: "Vous ne pouvez pas avoir des lignes sans impôt et une réduction globale"
   field_import: "Importer"
   pdf_not_legal: "PDF illégal"
   amended_invoice: "Ajustements au %{link}"
@@ -167,6 +169,8 @@ fr:
   default: "Défault"
   only_one_default_allowed_for: "%{tax_name}: Une seule taxe par défaut autorisé"
   add_taxes_on_company: "Vous pouvez gérer vos impôts \"Ma compagnie\""
+  button_download_new_invoices: "Téléchargez le nouveau zip"
+  label_download_new_invoices_info: "Génère un zip contenant toutes les nouvelles factures en PDF"
   field_exempt: "Exempt"
   field_comment: "Reason"
 
@@ -267,12 +271,12 @@ fr:
   field_payment_method: Méthode de paiement
   field_reference: Référence
   field_total_paid: Total payé
-#  received_invoice_paid: "%{company} has paid invoice number %{num}"
-#  issued_invoice_paid: "%{company} has received payment for invoice number %{num}"
-#  paid_notification_to: "Send paid notification to %{mail}"
-#  received_paid_notification_to: "Notify receipt of payment to %{mail}"
-#  save_and_mail: "Save and send mail"
-#  save_without_mail: "Save without sending mail"
+  received_invoice_paid: "%{company} a payé la facture %{num}"
+  issued_invoice_paid: "%{company} a reçu le paiement pour la facture %{num}"
+  paid_notification_to: "Envoyé une notification versée à %{mail}"
+  received_paid_notification_to: "Notifier réception du paiement à %{mail}"
+  save_and_mail: "Enregistrer et envoyer du email"
+  save_without_mail: "Enregistrer sans l'envoi du email"
 
   # Settings
   field_taxcode: N° TVA
@@ -320,17 +324,18 @@ fr:
   halt_configure_before_use: "Veuillez d abord configurer votre compagnie"
   warning_can_not_generate_invoice: "Ne peut générer la facture depuis le modèle {{value}}"
   notice_invoice_sent: "Facture envoyée"
-  error_invoice_not_sent: "N a pas pu envoyer la facture %{num}"
+  error_invoice_not_sent: "N'a pas pu envoyer la facture %{num}"
   notice_empty_n19: "Aucune donnée pour créer N19"
   notice_n19_done:  "Nº19 pour date d'échéance {{value}} marquée comme faite"
   notice_uploaded_file_not_found: "Fichier non trouvé"
 
   hide_full_form: "Montrer moins de champs"
   show_full_form: "Montrer plus de champs"
-  field_created_at: "Created at"
+  field_created_at: "Créé à"
+  field_received_at: "Reçu à"
   info_default_taxes: "Par défaut, il va créer des taxes dans votre pays"
   label_invoices_min: "nombre minimum de factures"
-  label_stastics: "Stastics"
+  label_stastics: "Statistiques"
   label_received_with_num: "Factures reçues (%{num} nouveaux)"
   help_invoice_format: "Format de transport préféré et la réception des factures"
   logo_not_image: "Le logo n'a pas été sauvé parce qu'il y avait une image"
@@ -354,19 +359,38 @@ fr:
   label_update_taxes: "Update the taxes of templates"
   field_company_identifier: "Organization ID"
 
-  #TODO
-  field_imap_host: "IMAP server"
-  field_imap_port: "Port"
-  field_imap_ssl: "Use SSL"
-  field_imap_username: "Username"
-  field_imap_password: "Password"
-  field_imap_from: "From"
-  tax_E: "Exempt"
-  tax_Z: "Zero Rated"
-  tax_S: "Standard"
-  tax_H: "High Rated"
-  tax_AA: "Low Rated"
-  bank_info: "Bank info"
+  label_linked_to_mine: "Entreprises associées"
 
-  button_save_and_send: Save and send
-  button_create_and_send: Create and send
+  field_imap_host: "Serveur IMAP"
+  field_imap_port: "Port"
+  field_imap_ssl: "Utiliser SSL"
+  field_imap_username: "Utilisateur"
+  field_imap_password: "Mot de passe"
+  field_imap_from: "De"
+
+  permission_general_use: "Utiliser le plugin Haltr"
+  permission_manage_payments: "Gére les paiements"
+  permission_use_templates: "Modèles de factures"
+  permission_batch_processes: "Processus avec scripts"
+
+  # this depends on permissions defined in channels.yml
+  permission_download_pdf: "B2BRouter - Télécharger PDF"
+  permission_send_by_mail: "B2BRouter - Envoyer à email"
+  permission_send_aoc: "B2BRouter - Envoyer à AOC"
+  permission_send_face: "B2BRouter - Envoyer à FACE"
+  permission_send_peppol: "B2BRouter - Envoyer à PEPPOL"
+  permission_use_local_signature: "B2BRouter - Signé avec un certificat local"
+
+  tax_E: "Exempt"
+  tax_Z: "Détaxés"
+  tax_S: "Standard"
+  tax_H: "Haute impôt"
+  tax_AA: "Bas impôt"
+  invoice_data: "Données de la facture"
+  bank_info: "Information bancaire"
+
+  more_options: "Plus d'actions..."
+  download_proof: "Télécharger le coupon"
+
+  button_save_and_send: Enregistrer et envoyer
+  button_create_and_send: Créer et envoyer
