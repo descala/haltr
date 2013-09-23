@@ -4,8 +4,14 @@ class IncomingPdfInvoice
 
   def self.process_file(invoice,company,transport,from="")
     @company = company
+
+    # PDF attachment has #<Encoding:ASCII-8BIT>
+    # without force_encoding write halts with: "\xFE" from ASCII-8BIT to UTF-8
+    attachment = invoice.read.chomp
+    attachment.force_encoding('UTF-8')
+
     tmpfile = Tempfile.new "pdf"
-    tmpfile.write(invoice.read.chomp)
+    tmpfile.write(attachment)
     tmpfile.close
     ri = invoice_from_pdf(tmpfile.path)
     ri.md5 = `md5sum #{tmpfile.path} | cut -d" " -f1`.chomp

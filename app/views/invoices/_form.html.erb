@@ -5,7 +5,8 @@
 
   <div class="seccio grup">
     <p class="col span-2-de-2" id="client_select">
-        <%= render :partial=>'invoices/clients', :locals=>{:selected=>@invoice.client_id} %>
+    <%= render :partial=>'invoices/clients',
+      :locals => { :selected => @created_client || @invoice.client_id } %>
     </p>
   </div>
 

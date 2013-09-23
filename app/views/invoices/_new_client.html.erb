@@ -8,7 +8,7 @@
          :lang    => current_language
        ) do |form| -%>
 
-      <%= render :partial=>'clients/form', :locals=>{ :f=>form, :short=>true, :client=>Client.new() } %>
+      <%= render :partial=>'clients/form', :locals=>{ :f=>form, :context=>context, :client=>Client.new() } %>
       <%= submit_tag l(:button_create) %>
       <%= button_to_function(l(:cancel), "$('#new_client_wrapper').hide();") %>
     <% end -%>

@@ -3,7 +3,8 @@
 #
 # Assuming that mail is a file with raw email message,
 # you can test it from command line with:
-# script/runner 'InvoiceReceiver.receive(`cat mail`)'
+#
+#  bundle exec rails runner -e development "InvoiceReceiver.receive(File.read('/path/to/mail'))"
 #
 class InvoiceReceiver < ActionMailer::Base
   unloadable

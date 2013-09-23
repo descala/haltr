@@ -31,7 +31,7 @@
       <% if !client or client.new_record? %>
         <script language="javascript">
           alert("<%= l(:cif_belongs_to_company_text_only,{:company=>company.name}) %>");
-          self.location="<%=url_for(:action=>'link_to_profile',:controller=>'clients',:id=>@project,:company=>company,:client=>client)%>";
+          self.location="<%=url_for(:action=>'link_to_profile',:controller=>'clients',:id=>@project,:company=>company,:client=>client,:context=>context,:invoice_id=>invoice_id)%>";
         </script>
       <% end -%>
     <% else # semipublic profile -%>

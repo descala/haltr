@@ -1,5 +1,5 @@
 /* Clear hidden form */
-$('#new_client_wrapper').html('<%= escape_javascript(render(:partial =>'invoices/new_client')) %>');
+$('#new_client_wrapper').html('<%= escape_javascript(render(:partial =>'invoices/new_client', :locals=>{:context => "new_invoice"} )) %>');
 
 /* Change client and re-bind client select*/
 $('#client_select').html('<%= escape_javascript(render(:partial =>'invoices/clients',:locals=>{:selected=>@client.id})) %>');

@@ -18,5 +18,10 @@ module Haltr
     def to_sym
       @items.first.to_sym
     end
+
+    def to_s
+      @items.first
+    end
+
   end
 end

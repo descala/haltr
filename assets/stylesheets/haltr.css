@@ -83,6 +83,7 @@ select.tax {
 }
 .disabled {
   text-decoration: none !important;
+  color: #A3A3A3 !important;
 }
 table#invoice_lines {
   min-width: 50%;
