@@ -135,8 +135,14 @@ class IssuedInvoice < InvoiceDocument
   end
 
   def self.last_number(project)
-    i = IssuedInvoice.last(:order => "number", :conditions => ["project_id = ?", project.id])
-    i.number if i
+    numbers = project.issued_invoices.collect {|i| i.number }
+    numbers.sort_by do |num|
+      if num =~ /^\d+$/
+        [2, $&.to_i]
+      else
+        [1, num]
+      end
+    end.last
   end
 
   def self.next_number(project)
