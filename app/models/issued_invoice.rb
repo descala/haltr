@@ -137,7 +137,7 @@ class IssuedInvoice < InvoiceDocument
   def self.last_number(project)
     numbers = project.issued_invoices.collect {|i| i.number }
     numbers.sort_by do |num|
-      if num =~ /^\d+$/
+      if num =~ /\d+/
         [2, $&.to_i]
       else
         [1, num]
