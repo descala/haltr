@@ -69,7 +69,7 @@
   <legend><%=l(:label_tax_plural)%></legend>
 
   <% if @invoice.taxes_hash.empty? -%>
-    <%= link_to l(:add_taxes_on_company), project_my_company_path(@project) -%>
+    <%= link_to_if_authorized l(:add_taxes_on_company), project_my_company_path(@project) -%>
   <% end -%>
 
   <% @invoice.taxes_hash.keys.sort.each do |name| -%>

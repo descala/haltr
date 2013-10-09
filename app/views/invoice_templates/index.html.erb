@@ -2,9 +2,9 @@
 <div class="seccio grup">
   <div class="col span-2-de-2">
     <ul class="menu-rapid">
-      <li><%= link_to l("label_invoice_template_new"), new_project_invoice_template_path(@project), :class => 'icon icon-add' %></li>
+      <li><%= link_to_if_authorized l("label_invoice_template_new"), new_project_invoice_template_path(@project), :class => 'icon icon-add' %></li>
       <% if num_new_invoices > 0 %>
-        <li><%= link_to "#{l(:button_generate_invoices)} (#{num_new_invoices})", {:action => 'new_invoices_from_template'}, :method => :post %></li>
+        <li><%= link_to_if_authorized "#{l(:button_generate_invoices)} (#{num_new_invoices})", {:action => 'new_invoices_from_template'}, :method => :post %></li>
       <% end -%>
     </ul>
   </div>
@@ -26,7 +26,7 @@
           <tr class="user <%= cycle("odd", "even") %>" onclick="javascript: document.location = '<%=url_for(:action=>'show', :id=>invoice)%>'">
             <td><%=h format_date invoice.date %></td>
             <td><%= l("mf#{invoice.frequency}") %></td>
-            <td><%=link_to h(invoice.client), {:controller => 'clients', :action => 'edit', :id => invoice.client} %></td>
+            <td><%=link_to_if_authorized h(invoice.client), {:controller => 'clients', :action => 'edit', :id => invoice.client} %></td>
             <td class="money"><%= money(invoice.total) %></td>
           </tr>
         <% end -%>

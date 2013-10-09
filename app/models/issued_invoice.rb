@@ -138,7 +138,7 @@ class IssuedInvoice < InvoiceDocument
     numbers = project.issued_invoices.collect {|i| i.number }
     numbers.sort_by do |num|
       if num =~ /\d+/
-        [2, $&.to_i]
+        [2, $&.to_i] # $& contains the complete matched text
       else
         [1, num]
       end

@@ -3,7 +3,7 @@
     <ul class="menu-rapid">
       <li>
       <% if @client.invoices.any? -%>
-        <%= link_to l(:button_delete), {:action=>'destroy',:id=>@client},
+        <%= link_to_if_authorized l(:button_delete), {:action=>'destroy',:id=>@client},
           :confirm => l(:confirm_delete_client_with_invoices,
                         :issued=>@client.issued_invoices.count,
                         :received=>@client.received_invoices.count,
@@ -11,7 +11,7 @@
                        ),
           :method => :delete, :class=>'icon icon-del', :title=>l(:button_delete) %>
         <% else -%>
-          <%= link_to l(:button_delete), {:action=>'destroy',:id=>@client}, :confirm => l(:text_are_you_sure), :method=>:delete, :class=>'icon icon-del', :title=>l(:button_delete) %>
+          <%= link_to_if_authorized l(:button_delete), {:action=>'destroy',:id=>@client}, :confirm => l(:text_are_you_sure), :method=>:delete, :class=>'icon icon-del', :title=>l(:button_delete) %>
         <% end -%>
       </li>
     </ul>

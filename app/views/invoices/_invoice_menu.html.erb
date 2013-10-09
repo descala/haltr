@@ -3,7 +3,7 @@
 <% unless Setting.plugin_haltr['issues_controller_name'].blank? -%>
 <ul class="invoice_menu">
   <li>
-  <%= link_to l(:report_issue_with_invoice),
+  <%= link_to_if_authorized l(:report_issue_with_invoice),
       { :controller => Setting.plugin_haltr['issues_controller_name'],
         :action => 'new',
         :project_id => @project,

@@ -2,7 +2,7 @@
   <div class="col span-2-de-2">
     <ul class="menu-rapid">
       <li>
-      <%= link_to l(:label_company_new), new_project_client_path, :class => 'icon icon-add' %>
+      <%= link_to_if_authorized l(:label_company_new), new_project_client_path, :class => 'icon icon-add' %>
       </li>
     </ul>
   </div>
@@ -54,12 +54,12 @@
         <% for client in @clients -%>
           <% onclick_edit = "onclick=\"javascript: document.location = '#{url_for(:action=>'edit', :id=>client)}'\"".html_safe -%>
           <tr class="user <%= cycle("odd senar", "even parell") %>">
-            <td class"taxcode" style="cursor:pointer;" <%= onclick_edit %>><%=image_tag("link.png") if client.linked?%><%= link_to client.taxcode, :action=>'edit', :id=>client %></td>
+            <td class"taxcode" style="cursor:pointer;" <%= onclick_edit %>><%=image_tag("link.png") if client.linked?%><%= link_to_if_authorized client.taxcode, :action=>'edit', :id=>client %></td>
             <td class="name"><%=h client.name%></td>
-            <td class="invoices"><%= client.issued_invoices.any? ? link_to(client.issued_invoices.count, {:controller=>'invoices', :action=>'index', :id=>@project, :client_id=>client}, :title=>l(:label_received)) : "-" %></td>
-            <td class="invoices"><%= client.received_invoices.any? ? link_to(client.received_invoices.count, {:controller=>'received', :action=>'index', :id=>@project, :client_id=>client}, :title=>l(:label_received)) : "-" %></td>
-            <td class="people"><%= link_to l(:label_person_plural), client_people_path(client), :class=>'persones-btt', :title=>l(:label_person_plural) %></td>
-            <td class="new"><%= link_to l(:button_new_invoice), project_client_new_invoice_path(:project_id=>@project.id,:client=>client.id), :class => 'nova-f-btt', :title=>l(:label_invoice_new) %></td>
+            <td class="invoices"><%= client.issued_invoices.any? ? link_to_if_authorized(client.issued_invoices.count, {:controller=>'invoices', :action=>'index', :id=>@project, :client_id=>client}, :title=>l(:label_received)) : "-" %></td>
+            <td class="invoices"><%= client.received_invoices.any? ? link_to_if_authorized(client.received_invoices.count, {:controller=>'received', :action=>'index', :id=>@project, :client_id=>client}, :title=>l(:label_received)) : "-" %></td>
+            <td class="people"><%= link_to_if_authorized l(:label_person_plural), client_people_path(client), :class=>'persones-btt', :title=>l(:label_person_plural) %></td>
+            <td class="new"><%= link_to_if_authorized l(:button_new_invoice), project_client_new_invoice_path(:project_id=>@project.id,:client=>client.id), :class => 'nova-f-btt', :title=>l(:label_invoice_new) %></td>
           </tr>
         <% end -%>
       </tbody>
@@ -85,8 +85,8 @@
     <% @project.company.companies_with_link_requests.each do |req| -%>
       <li>
       <%=req.taxcode%> <span style="font-weight: bold;"><%=req.name%></span> - 
-      <%=link_to l(:allow_link), {:action=>'allow_link',:id=>@project,:req=>req}%> / 
-      <%=link_to l(:deny_link), {:action=>'deny_link',:id=>@project,:req=>req} %>
+      <%=link_to_if_authorized l(:allow_link), {:action=>'allow_link',:id=>@project,:req=>req}%> / 
+      <%=link_to_if_authorized l(:deny_link), {:action=>'deny_link',:id=>@project,:req=>req} %>
       </li>
     <% end -%>
   </ul>

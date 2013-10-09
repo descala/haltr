@@ -2,7 +2,7 @@
 <h3>Check gemerated documents</h3>
 <ul>
   <% ExportChannels.formats.sort.each do |format| %>
-    <li><%= link_to format, {:controller=>'invoices',:action=>'show' ,:id=>@invoice, :format => format} %></li>
+    <li><%= link_to_if_authorized format, {:controller=>'invoices',:action=>'show' ,:id=>@invoice, :format => format} %></li>
   <% end %>
 </ul>
 </div>

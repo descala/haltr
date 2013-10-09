@@ -3,7 +3,7 @@
   <div class="col span-2-de-2">
     <ul class="menu-rapid">
       <li>
-      <%= link_to l(:label_person_new), new_client_person_path(@client), :class => 'icon icon-add' %>
+      <%= link_to_if_authorized l(:label_person_new), new_client_person_path(@client), :class => 'icon icon-add' %>
       </li>
     </ul>
   </div>
@@ -64,8 +64,8 @@
             <td><%=h person.last_name %></td>
             <td><%=h person.email %></td>
             <td><%=h person.phone %></td>
-            <td align="center"><%= link_to l(:button_edit), {:action=>'edit',:id=>person}, :class => 'icon icon-edit editar' %></td>
-            <td align="center"><%= link_to l(:button_delete), {:action=>'destroy',:id=>person} , :confirm => l(:text_are_you_sure), :method => :delete, :class => 'icon icon-del eliminar' %></td>
+            <td align="center"><%= link_to_if_authorized l(:button_edit), {:action=>'edit',:id=>person}, :class => 'icon icon-edit editar' %></td>
+            <td align="center"><%= link_to_if_authorized l(:button_delete), {:action=>'destroy',:id=>person} , :confirm => l(:text_are_you_sure), :method => :delete, :class => 'icon icon-del eliminar' %></td>
           </tr>
         <% end -%>
       </tbody>

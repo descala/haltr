@@ -5,13 +5,13 @@ module InvoicesHelper
 
   def change_state_link(invoice)
     if invoice.state?(:closed)
-      link_to(I18n.t(:mark_not_sent), mark_not_sent_path(invoice), :class=>'icon-haltr-mark-not-sent')
+      link_to_if_authorized(I18n.t(:mark_not_sent), mark_not_sent_path(invoice), :class=>'icon-haltr-mark-not-sent')
     elsif invoice.sent? and invoice.is_paid?
-      link_to(I18n.t(:mark_closed), mark_closed_path(invoice), :class=>'icon-haltr-mark-closed')
+      link_to_if_authorized(I18n.t(:mark_closed), mark_closed_path(invoice), :class=>'icon-haltr-mark-closed')
     elsif invoice.sent?
-      link_to(I18n.t(:mark_not_sent), mark_not_sent_path(invoice), :class=>'icon-haltr-mark-not-sent')
+      link_to_if_authorized(I18n.t(:mark_not_sent), mark_not_sent_path(invoice), :class=>'icon-haltr-mark-not-sent')
     else
-      link_to(I18n.t(:mark_sent), mark_sent_path(invoice), :class=>'icon-haltr-mark-sent')
+      link_to_if_authorized(I18n.t(:mark_sent), mark_sent_path(invoice), :class=>'icon-haltr-mark-sent')
     end
   end
 
@@ -30,20 +30,20 @@ module InvoicesHelper
   def download_link_for(e)
     if (e.name == "success_sending"||e.name == "validating_format") and !e.md5.blank?
       if e.invoice.type == "ReceivedInvoice"
-        "( #{link_to l(:button_download), :controller=>'invoices', :action=>'legal', :id=>e.invoice, :md5=>e.md5} )"
+        "( #{link_to_if_authorized l(:button_download), :controller=>'invoices', :action=>'legal', :id=>e.invoice, :md5=>e.md5} )"
       else
         if e.invoice.client.invoice_format == "facturae_32_face"
-          "( #{link_to l(:download_legal), :controller=>'invoices', :action=>'legal', :id=>e.invoice, :md5=>e.md5},  #{link_to l(:download_proof), :controller=>'invoices', :action=>'legal', :id=>e.invoice, :md5=>e.md5, :backup_name=>'justificante'} )"
+          "( #{link_to_if_authorized l(:download_legal), :controller=>'invoices', :action=>'legal', :id=>e.invoice, :md5=>e.md5},  #{link_to_if_authorized l(:download_proof), :controller=>'invoices', :action=>'legal', :id=>e.invoice, :md5=>e.md5, :backup_name=>'justificante'} )"
         else
-          "( #{link_to l(:download_legal), :controller=>'invoices', :action=>'legal', :id=>e.invoice, :md5=>e.md5} )"
+          "( #{link_to_if_authorized l(:download_legal), :controller=>'invoices', :action=>'legal', :id=>e.invoice, :md5=>e.md5} )"
         end
       end
     elsif e.name =~ /_notification$/ and !e.md5.blank?
-      "( #{link_to l(:download_notification), :controller=>'invoices', :action=>'legal', :id=>e.invoice, :md5=>e.md5} )"
+      "( #{link_to_if_authorized l(:download_notification), :controller=>'invoices', :action=>'legal', :id=>e.invoice, :md5=>e.md5} )"
     elsif ( e.name == "accept" || e.name == "refuse" || e.name == "paid" ) && !e.info.blank?
       "( #{link_to_function(l(:view_mail), "$('#event_#{e.id}').show();")} )"
     elsif e.name == "new" and e.invoice and e.invoice.client and e.invoice.visible_by_client?
-      " (#{link_to(l(:public_link), :controller=>'invoices', :action=>'view', :client_hashid=>e.invoice.client.hashid, :invoice_id=>e.invoice.id)})"
+      " (#{link_to_if_authorized(l(:public_link), :controller=>'invoices', :action=>'view', :client_hashid=>e.invoice.client.hashid, :invoice_id=>e.invoice.id)})"
     else
       ""
     end.html_safe
@@ -112,7 +112,7 @@ module InvoicesHelper
       invoice.number
     else
       if User.current.logged?
-        link_to(invoice.number, {:action=>'show', :id=>invoice})
+        link_to_if_authorized(invoice.number, {:action=>'show', :id=>invoice})
       else
         link_to(invoice.number, {:action=>'view', :id=>invoice.client.hashid, :invoice_id=>invoice.id})
       end

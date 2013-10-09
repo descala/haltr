@@ -15,11 +15,11 @@ class InvoicesController < ApplicationController
   before_filter :find_hashid, :only => [:view,:download]
   before_filter :find_attachment, :only => [:logo]
   before_filter :set_iso_countries_language
-  before_filter :authorize, :except => [:by_taxcode_and_num,:view,:logo,:download,:mail]
-  skip_before_filter :check_if_login_required, :only => [:by_taxcode_and_num,:view,:logo,:download,:mail]
+  before_filter :authorize, :except => [:by_taxcode_and_num,:view,:download,:mail]
+  skip_before_filter :check_if_login_required, :only => [:by_taxcode_and_num,:view,:download,:mail]
   # on development skip auth so we can use curl to debug
   if Rails.env.development? or Rails.env.test?
-    skip_before_filter :check_if_login_required, :only => [:by_taxcode_and_num,:view,:logo,:download,:mail,:show]
+    skip_before_filter :check_if_login_required, :only => [:by_taxcode_and_num,:view,:download,:mail,:show]
     skip_before_filter :authorize, :only => [:show]
   else
     before_filter :check_remote_ip, :only => [:by_taxcode_and_num,:mail]
