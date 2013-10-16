@@ -394,3 +394,5 @@ sv:
 
   button_save_and_send: Save and send
   button_create_and_send: Create and send
+  bank_account_empty: You must specify your bank account when payment method is transfer
+  errors_prevented_invoice_sent: Invoice not sent since it contains errors

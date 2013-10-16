@@ -165,7 +165,12 @@ class InvoicesController < ApplicationController
       Event.create(:name=>'edited',:invoice=>@invoice,:user=>User.current)
       flash[:notice] = l(:notice_successful_update)
       if params[:save_and_send]
-        redirect_to :action => 'send_invoice', :id => @invoice
+        if @invoice.can_be_exported?
+          redirect_to :action => 'send_invoice', :id => @invoice
+        else
+          flash[:error] = l(:errors_prevented_invoice_sent)
+          redirect_to :action => 'show', :id => @invoice
+        end
       else
         redirect_to :action => 'show', :id => @invoice
       end

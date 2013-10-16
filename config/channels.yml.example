@@ -87,6 +87,7 @@ facturae_32:
   validate:
   - client_has_email
   - invoice_has_taxes
+  - company_has_bank_account_if_needed
   locales:
     ca: "Facturae 3.2 per email"
     da: "Facturae 3.2 til email"

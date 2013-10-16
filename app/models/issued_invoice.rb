@@ -18,6 +18,10 @@ class IssuedInvoice < InvoiceDocument
 
   attr_accessor :export_errors
 
+  after_initialize do |user|
+    user.export_errors ||= []
+  end
+
   # new sending sent error discarded closed
   state_machine :state, :initial => :new do
     before_transition do |invoice,transition|
@@ -243,6 +247,15 @@ class IssuedInvoice < InvoiceDocument
       end
     end
     true
+  end
+
+  # facturae 32 needs bank_account if payment method is transfer to be valid
+  def company_has_bank_account_if_needed
+    if self.transfer? and self.company.bank_account.empty?
+      add_export_error(l(:bank_account_empty))
+      return false
+    end
+    return true
   end
 
   protected

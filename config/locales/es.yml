@@ -408,3 +408,5 @@ es:
 
   button_save_and_send: Guardar y enviar
   button_create_and_send: Crear y enviar
+  bank_account_empty: Tiene que especificar el numero de cuenta si el método de pago és transferéncia
+  errors_prevented_invoice_sent: No se ha enviado la factura porque contiene errores

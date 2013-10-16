@@ -391,3 +391,5 @@ en:
 
   more_options: More options ...
   download_proof: Download proof
+  bank_account_empty: You must specify your bank account when payment method is transfer
+  errors_prevented_invoice_sent: Invoice not sent since it contains errors

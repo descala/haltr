@@ -7,11 +7,11 @@
       <%= javascript_include_tag 'haltr_sign.js', :plugin => 'haltr' %> 
       <%= javascript_include_tag 'deployjava.js', :plugin => 'haltr' %> 
     <% end %>
-   <li><%= link_to_if_authorized l(:label_send), "#", :class=>'icon-haltr-send', :title => @invoice.sending_info, :onclick => js.gsub(':id',@invoice.id.to_s) %></li>
+   <li><%= link_to l(:label_send), "#", :class=>'icon-haltr-send', :title => @invoice.sending_info, :onclick => js.gsub(':id',@invoice.id.to_s) %></li>
   <% elsif @invoice.can_be_exported? and @client.invoice_format != 'paper'%>
     <li><%= link_to_if_authorized l(:label_send), {:action=>'send_invoice', :id=>@invoice}, :class=>'icon-haltr-send', :title => @invoice.sending_info %></li>
   <% else -%>
-    <li><%= link_to_if_authorized l(:label_send), "#", :class=>'icon-haltr-send disabled', :title => @invoice.sending_info %></li>
+    <li><%= link_to l(:label_send), "#", :class=>'icon-haltr-send disabled', :title => @invoice.sending_info %></li>
   <% end -%>
 
   <li>
