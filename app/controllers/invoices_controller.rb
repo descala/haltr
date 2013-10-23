@@ -416,7 +416,10 @@ class InvoicesController < ApplicationController
       if @invoice.fetch_from_backup(params[:md5],params[:backup_name])
         respond_to do |format|
           format.html do
-            send_data @invoice.legal_invoice, :filename => @invoice.legal_filename
+            send_data @invoice.legal_invoice,
+                :type => @invoice.legal_content_type,
+                :filename => @invoice.legal_filename,
+                :disposition => params[:disposition] == 'inline' ? 'inline' : 'attachment'
           end
           format.xml do
             render :xml => @invoice.legal_invoice
