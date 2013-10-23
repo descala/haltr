@@ -95,6 +95,7 @@ module HaltrHelper
       options = Rails.application.routes.recognize_path(options)
     end
     link_to(name, options, html_options, *parameters_for_method_reference) if authorize_for(options[:controller] || params[:controller], options[:action])
+  rescue ActionController::RoutingError
   end
 
 end
