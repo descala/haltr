@@ -78,7 +78,7 @@ Redmine::Plugin.register :haltr do
     permission :use_all_readonly,
       { :clients  => [:index, :edit, :check_cif],
         :people   => [:index, :edit],
-        :invoices => [:index, :show, :facturae30, :facturae31, :facturae32, :peppolubl20, :send_invoice,
+        :invoices => [:index, :show, :facturae30, :facturae31, :facturae32, :peppolubl20,
                       :logo, :legal, :download_new_invoices, :biiubl20, :svefaktura, :oioubl20, :report],
         :received => [:index, :show, :legal],
         :companies => [:my_company, :update, :linked_to_mine],
