@@ -5,7 +5,7 @@
  * Sarissa is an ECMAScript library acting as a cross-browser wrapper for native XML APIs.
  * The library supports Gecko based browsers like Mozilla and Firefox,
  * Internet Explorer (5.5+ with MSXML3.0+), Konqueror, Safari and Opera
- * @version 0.9.9.5
+ * @version 0.9.9.6
  * @author: Copyright 2004-2008 Emmanouil Batsis, mailto: mbatsis at users full stop sourceforge full stop net
  * ====================================================================
  * Licence
@@ -34,7 +34,7 @@
  * @static
  */
 function Sarissa(){}
-Sarissa.VERSION = "0.9.9.5";
+Sarissa.VERSION = "0.9.9.6";
 Sarissa.PARSED_OK = "Document contains no parsing errors";
 Sarissa.PARSED_EMPTY = "Document is empty";
 Sarissa.PARSED_UNKNOWN_ERROR = "Not well-formed or other error";
@@ -62,6 +62,8 @@ Sarissa._SARISSA_IS_SAFARI = navigator.userAgent.toLowerCase().indexOf("safari")
 Sarissa._SARISSA_IS_SAFARI_OLD = Sarissa._SARISSA_IS_SAFARI && (parseInt((navigator.userAgent.match(/AppleWebKit\/(\d+)/)||{})[1], 10) < 420);
 /** @private */
 Sarissa._SARISSA_IS_IE = document.all && window.ActiveXObject && navigator.userAgent.toLowerCase().indexOf("msie") > -1  && navigator.userAgent.toLowerCase().indexOf("opera") == -1;
+/** @private */
+Sarissa._SARISSA_IS_IE9 = Sarissa._SARISSA_IS_IE && navigator.userAgent.toLowerCase().indexOf("msie 9") > -1;
 /** @private */
 Sarissa._SARISSA_IS_OPERA = navigator.userAgent.toLowerCase().indexOf("opera") != -1;
 if(!window.Node || !Node.ELEMENT_NODE){
@@ -471,7 +473,7 @@ if(Sarissa._SARISSA_IS_IE){
 //==========================================
 // Common stuff
 //==========================================
-if(!window.DOMParser){
+if(!window.DOMParser || Sarissa._SARISSA_IS_IE9){
     if(Sarissa._SARISSA_IS_SAFARI){
         /**
          * DOMParser is a utility class, used to construct DOMDocuments from XML strings
@@ -605,6 +607,17 @@ if(!window.XMLSerializer && Sarissa.getDomDocument && Sarissa.getDomDocument("",
      */
     XMLSerializer.prototype.serializeToString = function(oNode) {
         return oNode.xml;
+    };
+} else if (Sarissa._SARISSA_IS_IE9 && window.XMLSerializer) {
+    // We save old object for any futur use with IE Document (not xml)
+    IE9XMLSerializer= XMLSerializer;
+    XMLSerializer = function(){ this._oldSerializer=new IE9XMLSerializer() };
+    XMLSerializer.prototype.serializeToString = function(oNode) {
+        if (typeof(oNode)=='object' && 'xml' in oNode) {
+            return oNode.xml;
+        } else {
+            return this._oldSerializer.serializeToString(oNode);
+        }
     };
 }
 
