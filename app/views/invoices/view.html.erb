@@ -2,7 +2,7 @@
 <div>
   <% if @invoice.final_md5 -%>
     <div>
-      <p><%= link_to_if_authorized "Download", :controller=>"invoices", :action=>"download", :id=>@client.hashid, :invoice_id=>@invoice.id %></p>
+      <p><%= link_to "Download", :controller=>"invoices", :action=>"download", :id=>@client.hashid, :invoice_id=>@invoice.id %></p>
     </div>
   <% end -%>
   <div id="invoice_wrapper">
