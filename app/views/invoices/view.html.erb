@@ -1,11 +1,11 @@
 <!-- Wrapper -->
-<div style="width:100%; text-align:center;">
+<div>
   <% if @invoice.final_md5 -%>
-    <div style="text-align:right;">
-      <p style="margin:10px;"><%= link_to_if_authorized "Download", :controller=>"invoices", :action=>"download", :id=>@client.hashid, :invoice_id=>@invoice.id %></p>
+    <div>
+      <p><%= link_to_if_authorized "Download", :controller=>"invoices", :action=>"download", :id=>@client.hashid, :invoice_id=>@invoice.id %></p>
     </div>
   <% end -%>
-  <div id="invoice_wrapper" style="width:671px; margin:auto; text-align:left;">
+  <div id="invoice_wrapper">
     <!-- Workspace -->
     <div id="workspace1" class="haltrinvoice"><div id="workspace2">
       <div id="col1">
