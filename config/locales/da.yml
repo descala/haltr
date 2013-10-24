@@ -318,13 +318,13 @@ da:
   mf1: Månedligt
  
   # Errors
-  cant_connect_trace: "Kan ikke forbinde til b2brouter platform. {{value}}"
+  cant_connect_trace: "Kan ikke forbinde til b2brouter platform. %{value}"
   halt_configure_before_use: Please first configure company settings
-  warning_can_not_generate_invoice: "Kan ikke generere faktura formularskabelon {{value}}"
+  warning_can_not_generate_invoice: "Kan ikke generere faktura formularskabelon %{value}"
   notice_invoice_sent: "Faktura sendt"
   error_invoice_not_sent: "Kunne ikke sende faktura %{num}"
   notice_empty_n19: "Ingen data til at skabe N19"
-  notice_n19_done: "N19 for forfaldsdatoen {{value}} maked som udført"
+  notice_n19_done: "N19 for forfaldsdatoen %{value} maked som udført"
   notice_uploaded_file_not_found: "Fil ikke fundet"
  
   hide_full_form: "Vis færre felter"
@@ -333,7 +333,7 @@ da:
   info_default_taxes: "Your country taxes will be created by default"
   label_invoices_min: "Minimum number of invoices"
   label_stastics: "Stastics"
-  label_received_with_num: "Received invoices ({{num}} new)"
+  label_received_with_num: "Received invoices (%{num} new)"
   help_invoice_format: "Preferred invoice transport and format"
   logo_not_image: "Logo not saved, it wasn't an image"
   invoices_not_sent: "%{num} invoices failed to send:"
@@ -349,7 +349,7 @@ da:
   info_default_taxes: "Dit land afgifter vil blive skabt som standard"
   label_invoices_min: "Mindste antal fakturaer"
   label_stastics: "Stastics"
-  label_received_with_num: "Modtagne fakturaer ({{num}} new)"
+  label_received_with_num: "Modtagne fakturaer (%{num} new)"
   help_invoice_format: "Foretrukken faktura transport og format"
   logo_not_image: "Logo ikke gemt, det var ikke et billede"
   invoices_not_sent: "%{num} fakturaer undladt at sende:"
@@ -411,3 +411,5 @@ da:
   button_create_and_send: Create and send
   bank_account_empty: You must specify your bank account when payment method is transfer
   errors_prevented_invoice_sent: Invoice not sent since it contains errors
+  invoice_total: "Invoice total"
+  total_executable: "Total to pay"

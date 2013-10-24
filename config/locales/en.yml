@@ -320,13 +320,13 @@ en:
   mf1: Monthly
 
   # Errors
-  cant_connect_trace: "Can't connect to b2brouter platform. {{value}}"
+  cant_connect_trace: "Can't connect to b2brouter platform. %{value}"
   halt_configure_before_use: Please first configure company settings
-  warning_can_not_generate_invoice: "Can not generate invoice form template {{value}}"
+  warning_can_not_generate_invoice: "Can not generate invoice form template %{value}"
   notice_invoice_sent: "Invoice sent"
   error_invoice_not_sent: "Could not send invoice %{num}"
   notice_empty_n19: "No data to create N19"
-  notice_n19_done:  "Nº19 for due date {{value}} maked as done"
+  notice_n19_done:  "Nº19 for due date %{value} maked as done"
   notice_uploaded_file_not_found: "File not found"
 
   hide_full_form: "Show less fields"
@@ -336,7 +336,7 @@ en:
   info_default_taxes: "Your country taxes will be created by default"
   label_invoices_min: "Minimum number of invoices"
   label_stastics: "Stastics"
-  label_received_with_num: "Received invoices ({{num}} new)"
+  label_received_with_num: "Received invoices (%{num} new)"
   help_invoice_format: "Preferred invoice transport and format"
   logo_not_image: "Logo not saved, it wasn't an image"
   invoices_not_sent: "%{num} invoices failed to send:"
@@ -396,3 +396,5 @@ en:
   button_create_and_send: Create and send
   bank_account_empty: You must specify your bank account when payment method is transfer
   errors_prevented_invoice_sent: Invoice not sent since it contains errors
+  invoice_total: "Invoice total"
+  total_executable: "Total to pay"

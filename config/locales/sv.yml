@@ -317,13 +317,13 @@ sv:
   mf1: Månatlig
 
   # Errors
-  cant_connect_trace: "Kan inte få kontakt med  b2brouter plattformen. {{value}}"
+  cant_connect_trace: "Kan inte få kontakt med  b2brouter plattformen. %{value}"
   halt_configure_before_use: Var god och registera företag först
-  warning_can_not_generate_invoice: "Kan inte skapa fkatura från mall {{value}}"
+  warning_can_not_generate_invoice: "Kan inte skapa fkatura från mall %{value}"
   notice_invoice_sent: "Faktura skickad"
   error_invoice_not_sent: "Kunde inte skicka faktura %{num}"
   notice_empty_n19: "Ingen data finns för att skapa N19"
-  notice_n19_done:  "Nº19 för betaldatum {{value}} markerad som utförd"
+  notice_n19_done:  "Nº19 för betaldatum %{value} markerad som utförd"
   notice_uploaded_file_not_found: "Filen hittades inte"
 
   hide_full_form: "Visa färre fält"
@@ -332,7 +332,7 @@ sv:
   info_default_taxes: "Skatter som används i ditt land skapas automatiskt"
   label_invoices_min: "Minimum antal fakturor"
   label_stastics: "Statistik"
-  label_received_with_num: "Mottagna fakturor ({{num}} nya)"
+  label_received_with_num: "Mottagna fakturor (%{num} nya)"
   help_invoice_format: "Förvalt fakturaformat och transportteknik"
   logo_not_image: "Logga sparades inte, det var inte en bild"
   invoices_not_sent: "%{num} fakturor gick inte att skicka"
@@ -396,3 +396,5 @@ sv:
   button_create_and_send: Create and send
   bank_account_empty: You must specify your bank account when payment method is transfer
   errors_prevented_invoice_sent: Invoice not sent since it contains errors
+  invoice_total: "Invoice total"
+  total_executable: "Total to pay"

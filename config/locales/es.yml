@@ -335,11 +335,11 @@ es:
   # Errors
   cant_connect_trace: "No se puede conectar con la plataforma b2brouter"
   halt_configure_before_use: "Por favor, primero configura los datos de la empresa"
-  warning_can_not_generate_invoice: "No se ha podido generar la factura de la plantilla {{value}}"
+  warning_can_not_generate_invoice: "No se ha podido generar la factura de la plantilla %{value}"
   notice_invoice_sent: "La factura se ha enviado"
   error_invoice_not_sent: "La factura %{num} no se ha podido enviar"
   notice_empty_n19: "No hay datos para generar un N19"
-  notice_n19_done:  "Se ha cerrado el N19 de fecha {{value}}"
+  notice_n19_done:  "Se ha cerrado el N19 de fecha %{value}"
   notice_uploaded_file_not_found: "No s'ha encontrado el fichero"
 
   hide_full_form: "Mostrar menos campos"
@@ -410,3 +410,5 @@ es:
   button_create_and_send: Crear y enviar
   bank_account_empty: Tiene que especificar el numero de cuenta si el método de pago és transferéncia
   errors_prevented_invoice_sent: No se ha enviado la factura porque contiene errores
+  invoice_total: "Total factura"
+  total_executable: "Total a pagar"
