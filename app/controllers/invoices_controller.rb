@@ -426,6 +426,7 @@ class InvoicesController < ApplicationController
           end
         end
       else
+        flash[:warning]=l(:cant_connect_trace, "")
         render_404
       end
     end

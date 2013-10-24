@@ -18,7 +18,7 @@
 <div id="invoice_wrapper">
 
   <div id="InvoiceOutput">
-    ............
+    <%=@out.to_html.html_safe%>
   </div>
 
   <%= render :partial => "invoices/payments" -%>
@@ -33,21 +33,4 @@
 <% content_for :header_tags do %>
   <%= stylesheet_link_tag 'minimal', :plugin => 'haltr' %>
   <%= javascript_include_tag 'haltr', :plugin => 'haltr' %>
-  <%= javascript_include_tag 'sarissa', :plugin => 'haltr' %>
-  <script type="text/javascript">
-
-    xsltTransform = function () {
-      sourceXml= loadFile("<%= url_for(legal_path(@invoice)) %>");
-      xml = (new DOMParser()).parseFromString(sourceXml, "text/xml");
-      sourceXslt = loadFile("/plugin_assets/haltr/xsl/<%= @xsl %>.xsl");
-      xslt = (new DOMParser()).parseFromString(sourceXslt, "text/xml");
-      var processor = new XSLTProcessor();
-      processor.importStylesheet(xslt);
-      var XmlDom = processor.transformToDocument(xml);
-      var serializer = new XMLSerializer();
-      var output = serializer.serializeToString(XmlDom.documentElement);
-      $('#InvoiceOutput').html(output);
-    }
-$(window).load(xsltTransform);
-</script>
 <% end %>

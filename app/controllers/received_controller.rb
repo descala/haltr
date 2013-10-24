@@ -54,9 +54,15 @@ class ReceivedController < InvoicesController
       render :template => 'received/show_pdf'
     else
       # TODO also show the database record version?
-      # Redel XML with XSLT in browser
-      @xsl = 'facturae32'
-      render :template => 'received/show_with_xsl'
+      if @invoice.fetch_from_backup
+        doc  = Nokogiri::XML(@invoice.legal_invoice)
+        xslt = Nokogiri::XSLT(render_to_string(:template=>'received/facturae32.xsl.erb',:layout=>false))
+        @out  = xslt.transform(doc)
+        render :template => 'received/show_with_xsl'
+      else
+        flash[:error] = l(:cant_connect_trace, "")
+        render_404
+      end
     end
   end
 

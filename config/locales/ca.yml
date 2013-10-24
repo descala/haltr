@@ -333,11 +333,11 @@ ca:
   # Errors
   cant_connect_trace: "No es pot connectar a la plataforma b2brouter"
   halt_configure_before_use: "Si us plau, primer de tot configura les dades de l'empresa"
-  warning_can_not_generate_invoice: "No s'ha pogut generar la factura de la plantilla {{value}}"
+  warning_can_not_generate_invoice: "No s'ha pogut generar la factura de la plantilla %{value}"
   notice_invoice_sent: "La factura s'ha enviat"
   error_invoice_not_sent: "La factura %{num} no s'ha pogut enviar"
   notice_empty_n19: "No hi ha dades per generar un N19"
-  notice_n19_done: "S'ha tancat el N19 de data {{value}}"
+  notice_n19_done: "S'ha tancat el N19 de data %{value}"
   notice_uploaded_file_not_found: "No s'ha trobat el fitxer"
 
   hide_full_form: "Mostrar menys camps"
@@ -347,7 +347,7 @@ ca:
   info_default_taxes: "Per defecte es crearan els impostos del teu país"
   label_invoices_min: "Mínim de factures"
   label_stastics: "Estadístiques"
-  label_received_with_num: "Factures rebudes ({{num}} noves)"
+  label_received_with_num: "Factures rebudes (%{num} noves)"
   help_invoice_format: "Format i transport preferit de recepció de factures"
   logo_not_image: "El logo no s'ha desat perquè no era una imatge"
   invoices_not_sent: "%{num} factures no s'han pogut enviar:"
@@ -407,3 +407,5 @@ ca:
   button_create_and_send: Crear i enviar
   bank_account_empty: Cal especificar el numero de conta si el mètode de pagament és transferència
   errors_prevented_invoice_sent: No s'ha enviat la factura perquè conté errors
+  invoice_total: "Total factura"
+  total_executable: "Total a pagar"
