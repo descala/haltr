@@ -1,19 +1,19 @@
-<!-- Wrapper -->
 <div>
   <% if @invoice.final_md5 -%>
-    <div>
-      <p><%= link_to "Download", :controller=>"invoices", :action=>"download", :id=>@client.hashid, :invoice_id=>@invoice.id %></p>
-    </div>
-  <% end -%>
+    <ul class='menu'>
+      <li>
+      <%= link_to l(:download_legal), :controller=>"invoices", :action=>"download", :client_hashid=>@client.hashid, :invoice_id=>@invoice.id %>
+      </li>
+    </ul>
+  <% end %>
   <div id="invoice_wrapper">
-    <!-- Workspace -->
-    <div id="workspace1" class="haltrinvoice"><div id="workspace2">
-      <div id="col1">
+    <div id="workspace1" class="haltrinvoice">
+      <div id="workspace2">
+        <div id="col1">
 
-        <% I18n.locale = @invoice.locale %>
-        <%= render :partial=>'invoices/invoice' %>
-        <% lang = find_language(User.current.language); lang ||= Setting.default_language; set_language_if_valid(lang) -%>
+          <%= render :partial=>'invoices/invoice' %>
 
+        </div>
       </div>
     </div>
   </div>
