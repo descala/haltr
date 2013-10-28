@@ -21,6 +21,8 @@ class MailNotifierTest < ActiveSupport::TestCase
     end
   end
 
+  # TODO may hang until time out in invoice.fetch_from_backup
+  # if Setting.plugin_haltr["trace_url"] is not 127.0.0.1
   def test_received_invoice_refused
     invoice = Invoice.first
     reason = "reason"
@@ -31,6 +33,8 @@ class MailNotifierTest < ActiveSupport::TestCase
     end
   end
 
+  # TODO may hang until time out in invoice.fetch_from_backup
+  # if Setting.plugin_haltr["trace_url"] is not 127.0.0.1
   def test_invoice_paid
     invoice = Invoice.first
     assert_equal invoice.type, "IssuedInvoice"

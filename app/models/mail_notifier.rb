@@ -1,4 +1,4 @@
-class MailNotifier < ActionMailer::Base
+class MailNotifier < Mailer
   layout 'mail_notifier'
   helper :haltr
   unloadable

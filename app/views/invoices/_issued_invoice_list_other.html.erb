@@ -1,6 +1,6 @@
 <% if @invoices_not_sent.any? -%>
 <h3><%=l(:open_invoices)%></h3>
-<p style="padding:7px 20px;">
+<p>
 <% @invoices_not_sent.each do |invoice| -%>
   <%=link_to_invoice invoice, @invoice %><%= ", " unless invoice == @invoices_not_sent.last %>
 <% end -%>
@@ -8,7 +8,7 @@
 <% end -%>
 <% if @invoices_sent.any? -%>
 <h3><%=l(:pending_invoices)%></h3>
-<p style="padding:7px 20px;">
+<p>
 <% @invoices_sent.each do |invoice| -%>
   <%=link_to_invoice invoice, @invoice %><%= ", " unless invoice == @invoices_sent.last %>
 <% end -%>
@@ -16,7 +16,7 @@
 <% end -%>
 <% if @invoices_closed.any? -%>
 <h3><%=l(:closed_invoices)%></h3>
-<p style="padding:7px 20px;">
+<p>
 <% @invoices_closed.each do |invoice| -%>
   <%=link_to_invoice invoice, @invoice %><%= ", " unless invoice == @invoices_closed.last %>
 <% end -%>

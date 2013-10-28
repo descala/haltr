@@ -9,14 +9,16 @@ class InvoicesController < ApplicationController
   helper :sort
   include SortHelper
 
+  PUBLIC_METHODS = [:by_taxcode_and_num,:view,:download,:mail,:logo]
+
   before_filter :find_project_by_project_id, :only => [:index,:new,:create,:send_new_invoices, :download_new_invoices, :update_payment_stuff,:new_invoices_from_template,:create_invoices,:report,:update_taxes]
   before_filter :find_invoice, :only => [:edit,:update,:destroy,:mark_sent,:mark_closed,:mark_not_sent,:mark_accepted_with_mail,:mark_accepted,:mark_refused_with_mail,:mark_refused,:duplicate_invoice,:pdfbase64,:show,:send_invoice,:legal,:amend_for_invoice] 
   before_filter :find_payment, :only => [:destroy_payment]
   before_filter :find_hashid, :only => [:view,:download]
   before_filter :find_attachment, :only => [:logo]
   before_filter :set_iso_countries_language
-  before_filter :authorize, :except => [:by_taxcode_and_num,:view,:download,:mail]
-  skip_before_filter :check_if_login_required, :only => [:by_taxcode_and_num,:view,:download,:mail]
+  before_filter :authorize, :except => PUBLIC_METHODS
+  skip_before_filter :check_if_login_required, :only => PUBLIC_METHODS
   # on development skip auth so we can use curl to debug
   if Rails.env.development? or Rails.env.test?
     skip_before_filter :check_if_login_required, :only => [:by_taxcode_and_num,:view,:download,:mail,:show]
@@ -27,7 +29,7 @@ class InvoicesController < ApplicationController
   before_filter :redirect_to_correct_controller, :only => [:show]
 
   include CompanyFilter
-  before_filter :check_for_company, :except => [:by_taxcode_and_num,:view,:download,:mail]
+  before_filter :check_for_company, :except => PUBLIC_METHODS
 
   skip_before_filter :verify_authenticity_token, :only => [:pdfbase64]
 
