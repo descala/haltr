@@ -30,7 +30,7 @@
   </tr>
 <% @projects.each do |p| -%>
   <tr class="<%= cycle("odd", "even") %>">
-    <td><%= link_to_if_authorized(p.name, project_invoices_path(p)) %></td>
+    <td><%= link_to(p.name, project_invoices_path(p)) %></td>
     <td align="center"><%= p.invoices.size %></td>
     <td align="center"><%= p.issued_invoices.size %></td>
     <td align="center"><%= p.received_invoices.size %></td>
