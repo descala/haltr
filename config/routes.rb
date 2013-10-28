@@ -4,7 +4,6 @@
 #        %w(xml json).include? params[:format]
 
 resources :events
-match '/statistics' => 'statistics#index'
 
 match '/clients/check_cif/:id' => 'clients#check_cif', :via => :get
 match '/clients/link_to_profile/:id' => 'clients#link_to_profile', :via => :get
