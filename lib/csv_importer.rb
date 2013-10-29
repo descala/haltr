@@ -29,8 +29,8 @@ module CsvImporter
 
       next if result_line['nifcli'].nil?
 
-      # check existing taxcodes in the project 
-      client = @project.clients.find_by_taxcode(result_line['nifcli'])
+      # check existing taxcodes in the project
+      client = result_line['nifcli'].blank? ? nil : @project.clients.find_by_taxcode(result_line['nifcli'])
 
       # if not found then it is a new taxcode
       client = Client.new(:project=> @project,
@@ -101,7 +101,7 @@ module CsvImporter
       end
 
       client_taxcode = result_line['nifcli'].gsub(" ","") unless result_line['nifcli'].nil?
-      invoice.client = @project.clients.find_by_taxcode(client_taxcode)
+      invoice.client = client_taxcode.blank? ? nil : @project.clients.find_by_taxcode(client_taxcode)
       if invoice.client.nil?
         puts "Invoice #{invoice.number}: client #{client_taxcode} not found"
         next

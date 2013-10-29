@@ -138,18 +138,22 @@ class ClientsController < ApplicationController
   end
 
   def allow_link
-    req = Company.find params[:req]
-    client = req.project.clients.find_by_taxcode(@project.company.taxcode)
-    client.allowed = true
-    client.save
+    unless @project.company.taxcode.blank?
+      req = Company.find params[:req]
+      client = req.project.clients.find_by_taxcode(@project.company.taxcode)
+      client.allowed = true
+      client.save
+    end
     redirect_to :action => 'index', :project_id => @project
   end
 
   def deny_link
-    req = Company.find params[:req]
-    client = req.project.clients.find_by_taxcode(@project.company.taxcode)
-    client.allowed = false
-    client.save
+    unless @project.company.taxcode.blank?
+      req = Company.find params[:req]
+      client = req.project.clients.find_by_taxcode(@project.company.taxcode)
+      client.allowed = false
+      client.save
+    end
     redirect_to :action => 'index', :project_id => @project
   end
 

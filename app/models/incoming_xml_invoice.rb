@@ -110,7 +110,7 @@ class IncomingXmlInvoice
 #    raise "Company with taxcode '#{buyer_taxcode}' not found" unless company #TODO: bounce message
 
     seller_taxcode = get_xpath(doc,xpaths[:seller_taxcode])
-    client         = @company.project.clients.find_by_taxcode(seller_taxcode)
+    client         = seller_taxcode.blank? ? nil : @company.project.clients.find_by_taxcode(seller_taxcode)
     currency       = get_xpath(doc,xpaths[:currency])
     unless client
       seller_name           = get_xpath(doc,xpaths[:seller_name]) || get_xpath(doc,xpaths[:seller_name2])

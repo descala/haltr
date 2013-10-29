@@ -362,7 +362,7 @@ class InvoicesController < ApplicationController
   end
 
   def by_taxcode_and_num
-    company = Company.find_by_taxcode params[:taxcode]
+    company = params[:taxcode].blank? ? nil : Company.find_by_taxcode(params[:taxcode])
     if company
       project = company.project
       number = params[:num]

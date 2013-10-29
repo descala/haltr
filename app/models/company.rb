@@ -9,9 +9,13 @@ class Company < ActiveRecord::Base
   has_many :clients, :dependent => :nullify
 
   has_many :taxes, :class_name => "Tax", :dependent => :destroy, :order => "name,percent DESC"
-  validates_presence_of :name, :project_id, :email, :taxcode, :postalcode, :country
+  COUNTRIES_WITHOUT_TAXCODE = ["is"]
+  validates_presence_of :name, :project_id, :email, :postalcode, :country
+  validates_presence_of :taxcode, :unless => Proc.new {|company|
+    COUNTRIES_WITHOUT_TAXCODE.include? company.country
+  }
   validates_length_of :taxcode, :maximum => 20
-  validates_uniqueness_of :taxcode
+  validates_uniqueness_of :taxcode, :allow_blank => true
   validates_numericality_of :bank_account, :allow_nil => true, :unless => Proc.new {|company| company.bank_account.blank?}
   validates_length_of :bank_account, :maximum => 20
   validates_inclusion_of :currency, :in  => Money::Currency.table.collect {|k,v| v[:iso_code] }

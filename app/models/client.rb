@@ -5,11 +5,14 @@ class Client < ActiveRecord::Base
   has_many :invoices, :dependent => :destroy
   has_many :people, :dependent => :destroy
 
-  belongs_to :project
-  belongs_to :company
+  belongs_to :project # client of
+  belongs_to :company # linked to
 
-  validates_presence_of   :taxcode, :hashid
-  validates_uniqueness_of :taxcode, :scope => :project_id
+  validates_presence_of :taxcode, :unless => Proc.new { |client|
+    Company::COUNTRIES_WITHOUT_TAXCODE.include? client.country
+  }
+  validates_presence_of :hashid
+  validates_uniqueness_of :taxcode, :scope => :project_id, :allow_blank => true
   validates_uniqueness_of :hashid
 
   validates_presence_of     :project_id, :name, :currency, :language, :invoice_format, :if => Proc.new {|c| c.company_id.blank? }

@@ -70,5 +70,6 @@ match 'invoice_templates/new_from_invoice/:id' => 'invoice_templates#new_from_in
 match 'projects/:project_id/payments/new/:invoice_id(/:payment_type)' => 'payments#new'
 resources :payments
 
-match '/companies/logo/:taxcode' => 'companies#logo', :via => :get
+match '/companies/logo/:project_id' => 'companies#logo', :via => :get
+match '/companies/logo_by_taxcode/:taxcode' => 'companies#logo_by_taxcode', :via => :get
 resources :companies, :only => [:update]

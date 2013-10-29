@@ -36,12 +36,14 @@
         <cac:PostalAddress>
           <%= render :partial => "ubl_address.xml", :locals => {:entity => @company} %>
         </cac:PostalAddress>
+<% if @company.taxcode.blank? -%>
         <cac:PartyTaxScheme>
           <cbc:CompanyID><%=h @company.taxcode%></cbc:CompanyID>
           <cac:TaxScheme>
             <cbc:ID>VAT</cbc:ID>
           </cac:TaxScheme>
         </cac:PartyTaxScheme>
+<% end -%>
         <%= render :partial => "ubl_party_legal_entity.xml", :locals => {:entity => @company} %>
         <% if @company.email and !@company.email.blank? -%>
           <cac:Contact>
@@ -61,12 +63,14 @@
         <cac:PostalAddress>
           <%= render :partial => "ubl_address.xml", :locals => {:entity => @client} %>
         </cac:PostalAddress>
+<% if @client.taxcode.blank? -%>
         <cac:PartyTaxScheme>
           <cbc:CompanyID><%=h @client.taxcode%></cbc:CompanyID>
           <cac:TaxScheme>
             <cbc:ID>VAT</cbc:ID>
           </cac:TaxScheme>
         </cac:PartyTaxScheme>
+<% end -%>
         <%= render :partial => "ubl_party_legal_entity.xml", :locals => {:entity => @client} %>
         <% if @client.email and !@client.email.blank? -%>
           <cac:Contact>

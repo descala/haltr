@@ -10,11 +10,11 @@ class CompaniesController < ApplicationController
   include SortHelper
   include Haltr::TaxHelper
 
-  before_filter :find_project_by_project_id, :only => [:my_company,:linked_to_mine]
+  before_filter :find_project_by_project_id, :only => [:my_company,:linked_to_mine,:logo]
   before_filter :find_company, :only => [:update]
   before_filter :set_iso_countries_language
-  before_filter :authorize, :except => [:logo]
-  skip_before_filter :check_if_login_required, :only => [:logo]
+  before_filter :authorize, :except => [:logo,:logo_by_taxcode]
+  skip_before_filter :check_if_login_required, :only => [:logo,:logo_by_taxcode]
 
   def my_company
     if @project.company.nil?
@@ -77,8 +77,7 @@ class CompaniesController < ApplicationController
   end
 
   def logo
-    c = Company.find_by_taxcode params[:taxcode]
-    a = c.attachments.first
+    a = @project.company.attachments.first
     send_file a.diskfile, :filename => filename_for_content_disposition(a.filename),
       :type => detect_content_type(a),
       :disposition => (a.image? ? 'inline' : 'attachment')
@@ -86,6 +85,12 @@ class CompaniesController < ApplicationController
     send_file Rails.root.join("public/plugin_assets/haltr/img/transparent.gif"),
       :type => 'image/gif',
       :disposition => 'inline'
+  end
+
+  def logo_by_taxcode
+    @project = Company.find_by_taxcode(params[:taxcode]).project
+  ensure
+    logo
   end
 
   private
