@@ -41,7 +41,8 @@ class ClientsController < ApplicationController
   end
 
   def new
-    @client = Client.new
+    @client = Client.new(:country=>@project.company.country,
+                         :currency=>@project.company.currency)
   end
 
   def edit

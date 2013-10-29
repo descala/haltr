@@ -19,6 +19,7 @@ class CompaniesController < ApplicationController
   def my_company
     if @project.company.nil?
       user_mail = User.find_by_project_id(@project.id).mail rescue ""
+      # company should be already created by lib/company_filter
       @company = Company.new(:project=>@project,
                              :name=>@project.name,
                              :email=>user_mail)

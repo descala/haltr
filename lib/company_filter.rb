@@ -4,7 +4,10 @@ module CompanyFilter
 
   def check_for_company
     if @project.company.nil?
-      c = Company.new(:project=>@project,:name=>@project.name)
+      user_mail = User.find_by_project_id(@project.id).mail rescue ""
+      c = Company.new(:project=>@project,
+                      :name=>@project.name,
+                      :email=>user_mail)
       c.save(:validate=> false)
       @project.reload
     end
