@@ -398,3 +398,5 @@ sv:
   errors_prevented_invoice_sent: Invoice not sent since it contains errors
   invoice_total: "Invoice total"
   total_executable: "Total to pay"
+  company_taxcode_needed: "No podem generar el document perquè la teva empresa no té NIF"
+  client_taxcode_needed: "No podem generar el document perquè el client no té NIF"

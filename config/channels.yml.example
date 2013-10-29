@@ -55,6 +55,8 @@ facturae_30:
   validate:
   - client_has_email
   - invoice_has_taxes
+  - company_has_taxcode
+  - client_has_taxcode
   locales:
     ca: "Facturae 3.0 per email"
     da: "Facturae 3.0 to email"
@@ -71,6 +73,8 @@ facturae_31:
   validate:
   - client_has_email
   - invoice_has_taxes
+  - company_has_taxcode
+  - client_has_taxcode
   locales:
     ca: "Facturae 3.1 per email"
     da: "Facturae 3.1 til email"
@@ -88,6 +92,8 @@ facturae_32:
   - client_has_email
   - invoice_has_taxes
   - company_has_bank_account_if_needed
+  - company_has_taxcode
+  - client_has_taxcode
   locales:
     ca: "Facturae 3.2 per email"
     da: "Facturae 3.2 til email"

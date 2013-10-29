@@ -409,3 +409,5 @@ ca:
   errors_prevented_invoice_sent: No s'ha enviat la factura perquè conté errors
   invoice_total: "Total factura"
   total_executable: "Total a pagar"
+  company_taxcode_needed: "No podem generar el document perquè la teva empresa no té NIF"
+  client_taxcode_needed: "No podem generar el document perquè el client no té NIF"

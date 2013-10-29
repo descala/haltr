@@ -393,3 +393,5 @@ en:
   download_proof: Download proof
   bank_account_empty: You must specify your bank account when payment method is transfer
   errors_prevented_invoice_sent: Invoice not sent since it contains errors
+  company_taxcode_needed: "No podem generar el document perquè la teva empresa no té NIF"
+  client_taxcode_needed: "No podem generar el document perquè el client no té NIF"

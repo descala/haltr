@@ -9,7 +9,7 @@ class Company < ActiveRecord::Base
   has_many :clients, :dependent => :nullify
 
   has_many :taxes, :class_name => "Tax", :dependent => :destroy, :order => "name,percent DESC"
-  COUNTRIES_WITHOUT_TAXCODE = ["is"]
+  COUNTRIES_WITHOUT_TAXCODE = ["is","no"]
   validates_presence_of :name, :project_id, :email, :postalcode, :country
   validates_presence_of :taxcode, :unless => Proc.new {|company|
     COUNTRIES_WITHOUT_TAXCODE.include? company.country

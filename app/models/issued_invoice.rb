@@ -249,6 +249,24 @@ class IssuedInvoice < InvoiceDocument
     true
   end
 
+  # facturae needs taxcode
+  def company_has_taxcode
+    if self.company.taxcode.blank?
+      add_export_error(l(:company_taxcode_needed))
+      return false
+    end
+    return true
+  end
+
+  # facturae needs taxcode
+  def client_has_taxcode
+    if self.client.taxcode.blank?
+      add_export_error(l(:client_taxcode_needed))
+      return false
+    end
+    return true
+  end
+
   # facturae 32 needs bank_account if payment method is transfer to be valid
   def company_has_bank_account_if_needed
     if self.transfer? and self.company.bank_account.empty?

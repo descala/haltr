@@ -71,6 +71,8 @@ facturae_30:
   - client_has_email
   - invoice_has_taxes
   - valid_payment_method
+  - company_has_taxcode
+  - client_has_taxcode
   locales:
     ca: "Facturae 3.0 per email"
     da: "Facturae 3.0 to email"
@@ -88,6 +90,8 @@ facturae_31:
   - client_has_email
   - invoice_has_taxes
   - valid_payment_method
+  - company_has_taxcode
+  - client_has_taxcode
   locales:
     ca: "Facturae 3.1 per email"
     da: "Facturae 3.1 til email"
@@ -105,6 +109,8 @@ facturae_32:
   - client_has_email
   - invoice_has_taxes
   - valid_payment_method
+  - company_has_taxcode
+  - client_has_taxcode
   locales:
     ca: "Facturae 3.2 per email"
     da: "Facturae 3.2 til email"
@@ -121,6 +127,8 @@ facturae_32_face:
   validate:
   - invoice_has_taxes
   - valid_payment_method
+  - company_has_taxcode
+  - client_has_taxcode
   locales:
     ca: "Facturae 3.2 a FACe"
     da: "Facturae 3.2 til FACe"
@@ -166,7 +174,10 @@ biiublinvoice_20:
 aoc:
   format: facturae30
   folder: free_aoc
-  validate: invoice_has_taxes
+  validate:
+  - invoice_has_taxes
+  - company_has_taxcode
+  - client_has_taxcode
   locales:
     ca: "Facturae 3.0 per Hub e-FACT de la AOC"
     da: "Facturae 3.0 til e-FACT hub fra AOC"
@@ -180,7 +191,10 @@ aoc:
 aoc31:
   format: facturae31
   folder: free_aoc
-  validate: invoice_has_taxes
+  validate:
+  - invoice_has_taxes
+  - company_has_taxcode
+  - client_has_taxcode
   locales:
     ca: "Facturae 3.1 per Hub e-FACT de la AOC"
     da: "Facturae 3.1 til e-FACT hub fra AOC"
@@ -194,7 +208,10 @@ aoc31:
 aoc32:
   format: facturae32
   folder: free_aoc
-  validate: invoice_has_taxes
+  validate:
+  - invoice_has_taxes
+  - company_has_taxcode
+  - client_has_taxcode
   locales:
     ca: "Facturae 3.2 per Hub e-FACT de la AOC"
     da: "Facturae 3.2 til e-FACT hub fra AOC"
