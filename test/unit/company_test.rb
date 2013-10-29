@@ -9,4 +9,17 @@ class CompanyTest < ActiveSupport::TestCase
     assert_true  companies(:company1).private?
     assert_true  companies(:company2).public?
   end
+
+  test "taxcode required in some countries" do
+    c = Company.new(:name => "test_company_taxcode",
+                    :project_id => 1,
+                    :email => "email@example.com",
+                    :postalcode => "08080",
+                    :country => "is")
+    assert_true c.valid?
+    c.country = "es"
+    assert_false c.valid?
+    c.taxcode = "B776655"
+    assert_true c.valid?
+  end
 end
