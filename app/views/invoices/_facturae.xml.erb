@@ -260,6 +260,8 @@
                    <IBAN><%=h @company.bank_account%></IBAN>
                  <% end -%>
                </AccountToBeCredited>
+<% else -%>
+               <PaymentMeans><%=h @invoice.payment_method_code(:facturae) %></PaymentMeans>
 <% end -%>
             </Installment>
           </PaymentDetails>
