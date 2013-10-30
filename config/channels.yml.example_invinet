@@ -73,6 +73,7 @@ facturae_30:
   - valid_payment_method
   - company_has_taxcode
   - client_has_taxcode
+  - payment_method_requirements
   locales:
     ca: "Facturae 3.0 per email"
     da: "Facturae 3.0 to email"
@@ -92,6 +93,7 @@ facturae_31:
   - valid_payment_method
   - company_has_taxcode
   - client_has_taxcode
+  - payment_method_requirements
   locales:
     ca: "Facturae 3.1 per email"
     da: "Facturae 3.1 til email"
@@ -111,6 +113,7 @@ facturae_32:
   - valid_payment_method
   - company_has_taxcode
   - client_has_taxcode
+  - payment_method_requirements
   locales:
     ca: "Facturae 3.2 per email"
     da: "Facturae 3.2 til email"
@@ -129,6 +132,7 @@ facturae_32_face:
   - valid_payment_method
   - company_has_taxcode
   - client_has_taxcode
+  - payment_method_requirements
   locales:
     ca: "Facturae 3.2 a FACe"
     da: "Facturae 3.2 til FACe"
@@ -178,6 +182,7 @@ aoc:
   - invoice_has_taxes
   - company_has_taxcode
   - client_has_taxcode
+  - payment_method_requirements
   locales:
     ca: "Facturae 3.0 per Hub e-FACT de la AOC"
     da: "Facturae 3.0 til e-FACT hub fra AOC"
@@ -195,6 +200,7 @@ aoc31:
   - invoice_has_taxes
   - company_has_taxcode
   - client_has_taxcode
+  - payment_method_requirements
   locales:
     ca: "Facturae 3.1 per Hub e-FACT de la AOC"
     da: "Facturae 3.1 til e-FACT hub fra AOC"
@@ -212,6 +218,7 @@ aoc32:
   - invoice_has_taxes
   - company_has_taxcode
   - client_has_taxcode
+  - payment_method_requirements
   locales:
     ca: "Facturae 3.2 per Hub e-FACT de la AOC"
     da: "Facturae 3.2 til e-FACT hub fra AOC"

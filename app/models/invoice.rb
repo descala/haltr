@@ -36,10 +36,6 @@ class Invoice < ActiveRecord::Base
   validates_inclusion_of :currency, :in  => Money::Currency.table.collect {|k,v| v[:iso_code] }, :unless => Proc.new {|i| i.type == "ReceivedInvoice" }
   validates_numericality_of :charge_amount_in_cents
 
-  # TODO warn the user it may not have the company or client bank account
-  #      but does not force to have one (may be handled by an external system)
-  # validate :payment_method_requirements, :unless => Proc.new {|i| i.type == "ReceivedInvoice" }
-
   before_save :fields_to_utf8
   after_create :increment_counter
   before_destroy :decrement_counter
@@ -440,15 +436,6 @@ _INV
     end
     self.import_in_cents = subtotal.cents
     self.total_in_cents = subtotal.cents + tax_amount.cents
-  end
-
-  def payment_method_requirements
-    if debit?
-      c = Client.find client_id
-      errors.add(:base, ("#{l(:field_payment_method)} (#{l(:debit)}) #{l(:requires_client_bank_account)}")) if c.bank_account.blank? and !c.use_iban?
-    elsif transfer?
-      errors.add(:base, ("#{l(:field_payment_method)} (#{l(:transfer)}) #{l(:requires_company_bank_account)}")) if company.bank_account.blank? and !company.use_iban?
-    end
   end
 
   def invoice_must_have_lines

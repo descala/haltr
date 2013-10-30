@@ -339,6 +339,16 @@ class IssuedInvoice < InvoiceDocument
     true
   end
 
+  def payment_method_requirements
+    if debit?
+      c = Client.find client_id
+      add_export_error("#{l(:field_payment_method)} (#{l(:debit)}) #{l(:requires_client_bank_account)}") if c.bank_account.blank? and !c.use_iban?
+    elsif transfer?
+      add_export_error("#{l(:field_payment_method)} (#{l(:transfer)}) #{l(:requires_company_bank_account)}") if company.bank_account.blank? and !company.use_iban?
+    end
+  end
+
+
   def oioubl20_fields
   end
 

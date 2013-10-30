@@ -230,14 +230,13 @@
             <Installment>
               <InstallmentDueDate><%=h @invoice.due_date%></InstallmentDueDate>
                <InstallmentAmount><%=h precision @invoice.total.dollars%></InstallmentAmount>
-<% if @invoice.debit? and @client.use_iban? -%>
                <PaymentMeans><%=h @invoice.payment_method_code(:facturae) %></PaymentMeans>
+<% if @invoice.debit? and @client.use_iban? -%>
                <AccountToBeDebited>
                  <IBAN><%=h @client.iban%></IBAN>
                  <BankCode><%=h @client.bic%></BankCode>
                </AccountToBeDebited>
 <% elsif @invoice.debit? and !@client.bank_account.blank?-%>
-               <PaymentMeans><%=h @invoice.payment_method_code(:facturae) %></PaymentMeans>
                  <AccountToBeDebited>
                    <% if (@format == "facturae32") -%>
                      <AccountNumber><%=h @client.bank_account%></AccountNumnber>
@@ -246,13 +245,11 @@
                    <% end -%>
                </AccountToBeDebited>
 <% elsif @invoice.transfer? and @company.use_iban? -%>
-               <PaymentMeans><%=h @invoice.payment_method_code(:facturae) %></PaymentMeans>
                <AccountToBeCredited>
                  <IBAN><%=h @company.iban%></IBAN>
                  <BankCode><%=h @company.bic%></BankCode>
                </AccountToBeCredited>
 <% elsif @invoice.transfer? and !@company.bank_account.blank? -%>
-               <PaymentMeans><%=h @invoice.payment_method_code(:facturae) %></PaymentMeans>
                <AccountToBeCredited>
                  <% if (@format == "facturae32") -%>
                    <AccountNumber><%=h @company.bank_account%></AccountNumnber>
@@ -260,8 +257,6 @@
                    <IBAN><%=h @company.bank_account%></IBAN>
                  <% end -%>
                </AccountToBeCredited>
-<% else -%>
-               <PaymentMeans><%=h @invoice.payment_method_code(:facturae) %></PaymentMeans>
 <% end -%>
             </Installment>
           </PaymentDetails>
