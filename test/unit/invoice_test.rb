@@ -44,7 +44,7 @@ class InvoiceTest < ActiveSupport::TestCase
   end
 
   test "sort draft invoices" do
-    assert_equal -1 , invoices(:draft) <=> invoices(:invoice1)
+    assert_equal(-1 , invoices(:draft) <=> invoices(:invoice1))
     assert_equal 1 , invoices(:invoice1) <=> invoices(:draft)
     assert_equal 0 , invoices(:draft) <=> invoices(:draft)
   end
@@ -71,10 +71,10 @@ class InvoiceTest < ActiveSupport::TestCase
     assert_equal 250, invoices(:invoices_001).subtotal_without_discount.dollars
     assert_equal 225, invoices(:invoices_001).taxable_base.dollars
     assert_equal 2.7, invoices(:invoices_001).tax_amount.dollars
-    assert_equal -13.5, invoices(:invoices_001).tax_amount(taxes(:taxes_006)).dollars
+    assert_equal(-13.5, invoices(:invoices_001).tax_amount(taxes(:taxes_006)).dollars)
     assert_equal 16.2, invoices(:invoices_001).tax_amount(taxes(:taxes_005)).dollars
     assert_equal 7.2, invoices(:invoices_001).tax_amount(taxes(:taxes_007)).dollars
-    assert_equal -7.2, invoices(:invoices_001).tax_amount(taxes(:taxes_008)).dollars
+    assert_equal(-7.2, invoices(:invoices_001).tax_amount(taxes(:taxes_008)).dollars)
     assert_equal 4, invoices(:invoices_001).taxes_uniq.size
     assert_equal 225, invoices(:invoices_001).subtotal.dollars
     assert_equal 25, invoices(:invoices_001).discount.dollars
@@ -131,7 +131,7 @@ class InvoiceTest < ActiveSupport::TestCase
       tax.code = "20.0_S"
       tax.save
     end
-    assert (i.tax_per_line?('VAT') == false)
+    assert_equal false, i.tax_per_line?('VAT')
   end
 
   test "recipient_emails returns a hash of email addresses" do
@@ -149,16 +149,20 @@ class InvoiceTest < ActiveSupport::TestCase
 
   test 'valid_payment_method' do
     i = invoices(:i8)
-    assert_true i.valid_payment_method
+    i.valid_payment_method
+    assert_equal(0,i.export_errors.size)
     i = invoices(:i9)
-    assert_false i.valid_payment_method
+    i.valid_payment_method
+    assert_equal(1,i.export_errors.size)
   end
 
   test 'invoice_has_taxes' do
-     i = invoices(:i8)
-    assert_true i.invoice_has_taxes
+    i = invoices(:i8)
+    i.invoice_has_taxes
+    assert_equal(0, i.export_errors.size)
     i = invoices(:i9)
-    assert_false i.invoice_has_taxes
+    i.invoice_has_taxes
+    assert_equal(1, i.export_errors.size)
   end
 
 end
