@@ -134,7 +134,8 @@ class IssuedInvoice < InvoiceDocument
     ExportChannels.validations(client.invoice_format).each do |v|
       self.send(v)
     end
-    @can_be_exported and export_errors.size == 0
+    @can_be_exported &&= (export_errors.size == 0)
+    @can_be_exported
   end
 
   def self.last_number(project)
