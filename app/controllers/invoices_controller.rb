@@ -384,7 +384,7 @@ class InvoicesController < ApplicationController
     @invoices_not_sent = []
     @invoices_sent = IssuedInvoice.find(:all,:conditions => ["client_id = ? and state = 'sent'",@client.id]).sort
     @invoices_closed = IssuedInvoice.find(:all,:conditions => ["client_id = ? and state = 'closed'",@client.id]).sort
-    unless @invoice.has_been_read or User.current.project == @invoice.project
+    unless @invoice.has_been_read or User.current.project == @invoice.project or User.current.admin?
       Event.create!(:name=>'read',:invoice=>@invoice,:user=>User.current)
       @invoice.update_attribute(:has_been_read,true)
     end
