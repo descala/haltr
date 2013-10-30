@@ -6,6 +6,8 @@ class InvoiceDocument < Invoice
 
   attr_accessor :legal_filename, :legal_content_type, :legal_invoice
 
+  before_create :set_default_values
+
   def final_md5
     #TODO: check #2451 to store md5 on invoice.
     self.events.collect {|e| e unless e.final_md5.blank? }.compact.sort.last.final_md5 rescue nil
@@ -22,8 +24,8 @@ class InvoiceDocument < Invoice
     md5 ||= self.initial_md5
     url = Setting.plugin_haltr["trace_url"]
     url = URI.parse(url.gsub(/\/$/,'')) # remove trailing slash
-    http = Net::HTTP.new(url.host,url.port)
-    http.start() do |http|
+    connection = Net::HTTP.new(url.host,url.port)
+    connection.start() do |http|
       full_url = "#{url.path.blank? ? "/" : "#{url.path}/"}b2b_messages/get_backup?md5=#{md5}&name=#{backup_name}"
       logger.debug "Fetching backup GET #{full_url}" if logger && logger.debug?
       req = Net::HTTP::Get.new(full_url)
@@ -69,6 +71,9 @@ class InvoiceDocument < Invoice
     require_dependency r
   end if Rails.env.development?
 
+  def set_default_values
+    self.has_been_read = false unless self.has_been_read
+  end
  
 
 end
