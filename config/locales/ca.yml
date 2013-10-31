@@ -413,3 +413,4 @@ ca:
   client_taxcode_needed: "No podem generar el document perquè el client no té NIF"
   read: "Llegit"
   text_invoices_destroy_confirmation: "Segur que voleu suprimir les factures seleccionades?"
+  mark_as: "Marcar com a"

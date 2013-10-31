@@ -14,7 +14,7 @@ class InvoicesController < ApplicationController
 
   before_filter :find_project_by_project_id, :only => [:index,:new,:create,:send_new_invoices,:download_new_invoices,:update_payment_stuff,:new_invoices_from_template,:report,:create_invoices,:update_taxes]
   before_filter :find_invoice, :only => [:edit,:update,:destroy,:mark_sent,:mark_closed,:mark_not_sent,:mark_accepted_with_mail,:mark_accepted,:mark_refused_with_mail,:mark_refused,:duplicate_invoice,:pdfbase64,:show,:send_invoice,:legal,:amend_for_invoice]
-  before_filter :find_invoices, :only => [:context_menu,:bulk_download]
+  before_filter :find_invoices, :only => [:context_menu,:bulk_download,:bulk_mark_as]
   before_filter :find_payment, :only => [:destroy_payment]
   before_filter :find_hashid, :only => [:view,:download]
   before_filter :find_attachment, :only => [:logo]
@@ -706,6 +706,20 @@ XSL
   rescue LoadError
     flash[:error] = l(:zip_gem_required)
     redirect_to :action => 'index', :project_id => @project
+  end
+
+  def bulk_mark_as
+    @invoices.each do |i|
+      case params[:state]
+      when "sent"
+        unless i.manual_send || i.success_sending || i.unpaid
+          #TODO state not changed, show message to user?
+        end
+      else
+        flash[:error] = "unknown state #{params[:state]}"
+      end
+    end
+    redirect_back_or_default(:action=>'index',:project_id=>@project.id)
   end
 
 end

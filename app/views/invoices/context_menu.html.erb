@@ -2,6 +2,7 @@
   <%= call_hook(:view_invoices_context_menu_start, {:invoices=>@invoices, :can=>@can, :back=>@back }) %>
 
   <% if @invoice -%>
+    <!-- actions for a single invoice -->
     <li>
     <%= context_menu_link l(:button_edit), edit_invoice_path(@invoice),
       :class=>'icon-edit', :disabled=>!@can[:edit] %>
@@ -11,6 +12,7 @@
       :class=>'icon-file application-pdf', :disabled=>!@can[:read] %>
     </li>
   <% else -%>
+    <!-- actions for multiple invoices -->
     <li class="folder">
     <a href="#" class="submenu"><%= l(:button_download) %></a>
     <ul>
@@ -48,6 +50,16 @@
       <%= context_menu_link "OIO",
         invoices_bulk_download_path(:ids=>@invoice_ids, :in=>'oioubl20', :back_url=>@back),
         :disabled=>!@can[:read] %>
+      </li>
+    </ul>
+    </li>
+    <li class="folder">
+    <a href="#" class="submenu"><%= l(:mark_as) %></a>
+    <ul>
+      <li>
+      <%= context_menu_link l(:state_sent_plural),
+        invoices_bulk_mark_as_path(:ids=>@invoice_ids, :state=>'sent', :back_url=>@back),
+        :disabled=>!@can[:edit] %>
       </li>
     </ul>
     </li>

@@ -64,7 +64,7 @@ Redmine::Plugin.register :haltr do
         :invoices => [:index, :new, :edit, :create, :update, :destroy, :show, :mark_sent, :mark_closed, :mark_not_sent,
                       :destroy_payment, :facturae30, :facturae31, :facturae32, :peppolubl20, :send_invoice, :legal,
                       :update_payment_stuff, :amend_for_invoice, :download_new_invoices, :send_new_invoices, :duplicate_invoice,
-                      :biiubl20, :svefaktura, :oioubl20, :report, :context_menu],
+                      :biiubl20, :svefaktura, :oioubl20, :report, :context_menu, :bulk_mark_as],
         :received => [:index, :new, :edit, :create, :update, :destroy, :show,
                       :mark_accepted, :mark_accepted_with_mail, :mark_refused,
                       :mark_refused_with_mail, :legal],

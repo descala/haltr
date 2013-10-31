@@ -402,3 +402,4 @@ en:
   client_taxcode_needed: "No podem generar el document perquè el client no té NIF"
   read: "Read"
   text_invoices_destroy_confirmation: 'Are you sure you want to delete the selected invoice(s)?'
+  mark_as: "Mark as"
