@@ -657,8 +657,6 @@ XSL
     end
     @invoice_ids = @invoices.map(&:id).sort
 
-    @allowed_statuses = @invoices.map(&:new_statuses_allowed_to).reduce(:&)
-
     @can = { :edit => User.current.allowed_to?(:general_use, @project),
              :read => (User.current.allowed_to?(:general_use, @project) ||
                       User.current.allowed_to?(:use_all_readonly, @project))
