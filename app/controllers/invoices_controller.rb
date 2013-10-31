@@ -340,12 +340,11 @@ class InvoicesController < ApplicationController
         pdf_file = create_pdf_file
         zos.put_next_entry(@invoice.pdf_name)
         zos.print IO.read(pdf_file.path)
-        pdf_file.close
         logger.info "Added #{@invoice.pdf_name} from #{pdf_file.path}"
       end
     end
-    send_file zip_file.path, :type => "application/zip", :filename => "#{@project.identifier}-invoices.zip"
     zip_file.close
+    send_file zip_file.path, :type => "application/zip", :filename => "#{@project.identifier}-invoices.zip"
   rescue LoadError
     flash[:error] = l(:zip_gem_required)
     redirect_to :action => 'index', :project_id => @project
@@ -568,14 +567,16 @@ class InvoicesController < ApplicationController
     pdf_file.write pdf
     logger.info "Created PDF #{pdf_file.path}"
     I18n.locale = curr_lang
+    pdf_file.close
     return pdf_file
   end
 
   def create_xml_file(format)
-    xml_file = Tempfile.new("invoice_#{@invoice.id}.xml","tmp")
-    xml_file.write(clean_xml(render_to_string(:template => "invoices/#{format}.xml.erb",
-                                              :layout => false)))
+    xml = render_to_string(:template => "invoices/#{format}.xml.erb", :layout => false)
+    xml_file = Tempfile.new("invoice_#{@invoice.id}.xml")
+    xml_file.write(clean_xml(xml))
     logger.info "Created XML #{xml_file.path}"
+    xml_file.close
     return xml_file
   end
 
@@ -585,7 +586,6 @@ class InvoicesController < ApplicationController
     @format = ExportChannels.format export_id
     @company = @project.company
     invoice_file = @format == 'pdf' ? create_pdf_file : create_xml_file(@format)
-    invoice_file.close
     if ExportChannels.folder(export_id).nil?
       # call invoice method
       method = ExportChannels.call_invoice_method(export_id)
@@ -698,7 +698,6 @@ XSL
         end
         zos.put_next_entry(file_name)
         zos.print IO.read(file.path)
-        file.close
         logger.info "Added #{file_name} from #{file.path}"
       end
     end
