@@ -396,3 +396,4 @@ en:
   company_taxcode_needed: "No podem generar el document perquè la teva empresa no té NIF"
   client_taxcode_needed: "No podem generar el document perquè el client no té NIF"
   read: "Read"
+  text_invoices_destroy_confirmation: 'Weet u zeker dat u deze facture(n) wil verwijderen?'

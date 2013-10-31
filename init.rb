@@ -64,7 +64,7 @@ Redmine::Plugin.register :haltr do
         :invoices => [:index, :new, :edit, :create, :update, :destroy, :show, :mark_sent, :mark_closed, :mark_not_sent,
                       :destroy_payment, :facturae30, :facturae31, :facturae32, :peppolubl20, :send_invoice, :legal,
                       :update_payment_stuff, :amend_for_invoice, :download_new_invoices, :send_new_invoices, :duplicate_invoice,
-                      :biiubl20, :svefaktura, :oioubl20, :report],
+                      :biiubl20, :svefaktura, :oioubl20, :report, :context_menu],
         :received => [:index, :new, :edit, :create, :update, :destroy, :show,
                       :mark_accepted, :mark_accepted_with_mail, :mark_refused,
                       :mark_refused_with_mail, :legal],
@@ -79,11 +79,15 @@ Redmine::Plugin.register :haltr do
       { :clients  => [:index, :edit, :check_cif],
         :people   => [:index, :edit],
         :invoices => [:index, :show, :facturae30, :facturae31, :facturae32, :peppolubl20,
-                      :legal, :download_new_invoices, :biiubl20, :svefaktura, :oioubl20, :report],
+                      :legal, :download_new_invoices, :biiubl20, :svefaktura, :oioubl20, :report,
+                      :context_menu],
         :received => [:index, :show, :legal],
         :companies => [:my_company, :update, :linked_to_mine],
         :payments => [:index, :n19],
         :invoice_templates => [:index, :show] }, :require => :member
+
+    permission :bulk_download,
+      { :invoices => [:bulk_download] }, :require => :member
 
     # Loads permisons from config/channels.yml
     ExportChannels.permissions.each do |permission,actions|

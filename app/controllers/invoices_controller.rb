@@ -4,6 +4,7 @@ class InvoicesController < ApplicationController
   menu_item Haltr::MenuItem.new(:invoices,:invoices_level2)
   menu_item Haltr::MenuItem.new(:invoices,:reports), :only => :report
   helper :haltr
+  helper :context_menus
   layout 'haltr'
 
   helper :sort
@@ -11,8 +12,9 @@ class InvoicesController < ApplicationController
 
   PUBLIC_METHODS = [:by_taxcode_and_num,:view,:download,:mail,:logo]
 
-  before_filter :find_project_by_project_id, :only => [:index,:new,:create,:send_new_invoices, :download_new_invoices, :update_payment_stuff,:new_invoices_from_template,:create_invoices,:report,:update_taxes]
-  before_filter :find_invoice, :only => [:edit,:update,:destroy,:mark_sent,:mark_closed,:mark_not_sent,:mark_accepted_with_mail,:mark_accepted,:mark_refused_with_mail,:mark_refused,:duplicate_invoice,:pdfbase64,:show,:send_invoice,:legal,:amend_for_invoice] 
+  before_filter :find_project_by_project_id, :only => [:index,:new,:create,:send_new_invoices,:download_new_invoices,:update_payment_stuff,:new_invoices_from_template,:report,:create_invoices,:update_taxes]
+  before_filter :find_invoice, :only => [:edit,:update,:destroy,:mark_sent,:mark_closed,:mark_not_sent,:mark_accepted_with_mail,:mark_accepted,:mark_refused_with_mail,:mark_refused,:duplicate_invoice,:pdfbase64,:show,:send_invoice,:legal,:amend_for_invoice]
+  before_filter :find_invoices, :only => [:context_menu,:bulk_download]
   before_filter :find_payment, :only => [:destroy_payment]
   before_filter :find_hashid, :only => [:view,:download]
   before_filter :find_attachment, :only => [:logo]
@@ -316,7 +318,7 @@ class InvoicesController < ApplicationController
     end
     @num_sent = num
   end
-  
+
   def download_new_invoices
     require 'zip/zip'
     require 'zip/zipfilesystem'
@@ -407,14 +409,14 @@ class InvoicesController < ApplicationController
     end
   end
 
-  # this is the same as download, but without the befor filter :find_hashid 
+  # this is the same as download, but without the befor filter :find_hashid
   def legal
     download
   end
 
   # downloads an invoice without login using its hash_id and its md5 as credentials
   def download
-    if (Rails.env.development? or Rails.env.test?) and !Setting['plugin_haltr']['b2brouter_ip'] 
+    if (Rails.env.development? or Rails.env.test?) and !Setting['plugin_haltr']['b2brouter_ip']
       logger.debug "This is a test XML invoice"
       send_file Rails.root.join("plugins/haltr/test/fixtures/xml/test_invoice_facturae32.xml")
     else
@@ -527,6 +529,16 @@ class InvoicesController < ApplicationController
     render_404
   end
 
+  def find_invoices
+    @invoices = Invoice.find_all_by_id(params[:id] || params[:ids])
+    raise ActiveRecord::RecordNotFound if @invoices.empty?
+    raise Unauthorized unless @invoices.collect {|i| i.project }.uniq.size == 1
+    @project = @invoices.first.project
+    @company = @project.company
+  rescue ActiveRecord::RecordNotFound
+    render_404
+  end
+
   def find_payment
     @payment = Payment.find(params[:id])
     @invoice = @payment.invoice
@@ -559,18 +571,20 @@ class InvoicesController < ApplicationController
     return pdf_file
   end
 
+  def create_xml_file(format)
+    xml_file = Tempfile.new("invoice_#{@invoice.id}.xml","tmp")
+    xml_file.write(clean_xml(render_to_string(:template => "invoices/#{format}.xml.erb",
+                                              :layout => false)))
+    logger.info "Created XML #{xml_file.path}"
+    return xml_file
+  end
+
   def create_and_queue_file
     raise @invoice.export_errors.collect {|e| l(e)}.join(", ") unless @invoice.can_be_exported?
     export_id = @invoice.client.invoice_format
     @format = ExportChannels.format export_id
     @company = @project.company
-    file_ext = @format == "pdf" ? "pdf" : "xml"
-    if @format == 'pdf'
-      invoice_file = create_pdf_file
-    else
-      invoice_file=Tempfile.new("invoice_#{@invoice.id}.#{file_ext}","tmp")
-      invoice_file.write(clean_xml(render_to_string(:template => "invoices/#{@format}.xml.erb", :layout => false)))
-    end
+    invoice_file = @format == 'pdf' ? create_pdf_file : create_xml_file(@format)
     invoice_file.close
     if ExportChannels.folder(export_id).nil?
       # call invoice method
@@ -633,6 +647,68 @@ XSL
     elsif @invoice.is_a? InvoiceTemplate and params[:controller] != "invoice_templates"
       redirect_to invoice_template_path(@invoice) && return
     end
+  end
+
+  # see redmine's context_menu controller
+  def context_menu
+    (render_404; return) unless @invoices.present?
+    if (@invoices.size == 1)
+      @invoice = @invoices.first
+    end
+    @invoice_ids = @invoices.map(&:id).sort
+
+    @allowed_statuses = @invoices.map(&:new_statuses_allowed_to).reduce(:&)
+
+    @can = { :edit => User.current.allowed_to?(:general_use, @project),
+             :read => (User.current.allowed_to?(:general_use, @project) ||
+                      User.current.allowed_to?(:use_all_readonly, @project))
+           }
+    @back = back_url
+
+    render :layout => false
+  end
+
+  def bulk_download
+    unless ExportChannels.formats.include? params[:in]
+      flash[:error] = "unknown format #{params[:in]}"
+      redirect_back_or_default(:action=>'index',:project_id=>@project.id)
+      return
+    end
+    require 'zip/zip'
+    require 'zip/zipfilesystem'
+    # just a safe big limit
+    if @invoices.size > 100
+      flash[:error] = l(:too_much_invoices,:num=>@invoices.size)
+      redirect_to :action=>'index', :project_id=>@project
+      return
+    end
+    zip_file = Tempfile.new "#{@project.identifier}_invoices.zip", 'tmp'
+    logger.info "Creating zip file '#{zip_file.path}' for invoice ids #{@invoices.collect{|i|i.id}.join(',')}."
+    Zip::ZipOutputStream.open(zip_file.path) do |zos|
+      @invoices.each do |invoice|
+        @invoice = invoice
+        @lines = @invoice.invoice_lines
+        @client = @invoice.client
+        file_name = @invoice.pdf_name_without_extension
+        case params[:in]
+        when "pdf"
+          file = create_pdf_file
+          file_name += ".pdf"
+        else
+          file = create_xml_file(params[:in])
+          file_name += ".xml"
+        end
+        zos.put_next_entry(file_name)
+        zos.print IO.read(file.path)
+        file.close
+        logger.info "Added #{file_name} from #{file.path}"
+      end
+    end
+    zip_file.close
+    send_file zip_file.path, :type => "application/zip", :filename => "#{@project.identifier}-invoices.zip"
+  rescue LoadError
+    flash[:error] = l(:zip_gem_required)
+    redirect_to :action => 'index', :project_id => @project
   end
 
 end

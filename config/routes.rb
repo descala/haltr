@@ -30,6 +30,7 @@ resources :projects do
   match 'payments/import_aeb43_index' => 'payments#import_aeb43_index'
   match 'payments/import_aeb43' => 'payments#import_aeb43'
   match 'payments/n19_index' => 'payments#n19_index'
+  match 'invoices', :controller => 'invoices', :action => 'destroy', :via => :delete
 end
 match 'payments/n19/:id' => 'payments#n19', :via => :get
 match 'payments/n19_done/:id' => 'payments#n19_done', :via => :post
@@ -38,6 +39,8 @@ resources :clients do
 end
 
 resources :people
+match 'invoices/context_menu', :to => 'invoices#context_menu', :as => 'invoices_context_menu', :via => [:get, :post]
+match 'invoices/bulk_download' => 'invoices#bulk_download'
 resources :invoices
 match 'invoices/mark_sent/:id' => 'invoices#mark_sent', :via => :get, :as => :mark_sent
 match 'invoices/mark_not_sent/:id' => 'invoices#mark_not_sent', :via => :get, :as => :mark_not_sent
@@ -57,7 +60,7 @@ match 'invoice/:client_hashid/:invoice_id' => 'invoices#view', :client_hashid =>
 # TODO should be companies controller
 match 'invoices/logo/:attachment_id/:filename' => 'invoices#logo', :attachment_id => /\d+/, :filename => /.*/
 
-  resources :invoices, :has_many => :events, :collection => { :by_taxcode_and_num => :get }
+resources :invoices, :has_many => :events, :collection => { :by_taxcode_and_num => :get }
 resources :received
 match 'received/mark_refused/:id' => 'received#mark_refused', :as => :mark_refused
 match 'received/mark_refused_with_mail/:id' => 'received#mark_refused_with_mail', :as => :mark_refused_with_mail
