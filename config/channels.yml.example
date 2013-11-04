@@ -2,7 +2,7 @@
 # channels.yml
 #
 # channel_name:
-#   format:     [pdf or the name of a template at app/views/invoices/*.xml.erb] ex. facturae32
+#   format:     [format in formats.yml (if any)] ex. facturae32
 #   folder:     [folder to leave the resulting document in] ex. /tmp
 #   validate:   [method name in IssuedInvoice,
 #                checks the conditions the invoice has to have to use this channel] ex. client_has_email

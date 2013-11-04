@@ -7,50 +7,49 @@
     <%= context_menu_link l(:button_edit), edit_invoice_path(@invoice),
       :class=>'icon-edit', :disabled=>!@can[:edit] %>
     </li>
-    <li>
-    <%= context_menu_link "PDF", {:action=>'show', :id=>@invoice, :format=>'pdf'},
-      :class=>'icon-file application-pdf', :disabled=>!@can[:read] %>
+    <li class="folder">
+    <a href="#" class="submenu"><%= l(:button_download) %></a>
+    <ul>
+      <% ExportFormats.available.each do |format,conf| -%>
+      <li>
+      <%= context_menu_link conf["name"], {:action=>'show', :id=>@invoice, :format=>format},
+        :class=>"icon-file #{conf["content-type"]}", :disabled=>!@can[:read] %>
+      </li>
+      <% end -%>
+    </ul>
+    </li>
+    <li class="folder">
+    <a href="#" class="submenu"><%= l(:mark_as) %></a>
+    <ul>
+      <li>
+      <%= context_menu_link l(:state_new_plural),
+        invoices_bulk_mark_as_path(:ids=>@invoice_ids, :state=>'new', :back_url=>@back),
+        :disabled=>!@can[:edit] %>
+      </li>
+      <li>
+      <%= context_menu_link l(:state_sent_plural),
+        invoices_bulk_mark_as_path(:ids=>@invoice_ids, :state=>'sent', :back_url=>@back),
+        :disabled=>!@can[:edit] %>
+      </li>
+      <li>
+      <%= context_menu_link l(:state_closed_plural),
+        invoices_bulk_mark_as_path(:ids=>@invoice_ids, :state=>'closed', :back_url=>@back),
+        :disabled=>!@can[:edit] %>
+      </li>
+    </ul>
     </li>
   <% else -%>
     <!-- actions for multiple invoices -->
     <li class="folder">
     <a href="#" class="submenu"><%= l(:button_download) %></a>
     <ul>
+      <% ExportFormats.available.each do |format,conf| -%>
       <li>
-      <%= context_menu_link "PDF",
-        invoices_bulk_download_path(:ids=>@invoice_ids, :in=>'pdf', :back_url=>@back),
-        :disabled=>!@can[:bulk_download] %>
+      <%= context_menu_link conf["name"],
+        invoices_bulk_download_path(:ids=>@invoice_ids, :in=>format, :back_url=>@back),
+        :class=>"icon-file #{conf["content-type"]}", :disabled=>!@can[:bulk_download] %>
       </li>
-      <li>
-      <%= context_menu_link "Facturae 3.0",
-        invoices_bulk_download_path(:ids=>@invoice_ids, :in=>'facturae30', :back_url=>@back),
-        :disabled=>!@can[:bulk_download] %>
-      </li>
-      <li>
-      <%= context_menu_link "Facturae 3.1",
-        invoices_bulk_download_path(:ids=>@invoice_ids, :in=>'facturae31', :back_url=>@back),
-        :disabled=>!@can[:bulk_download] %>
-      </li>
-      <li>
-      <%= context_menu_link "Facturae 3.2",
-        invoices_bulk_download_path(:ids=>@invoice_ids, :in=>'facturae32', :back_url=>@back),
-        :disabled=>!@can[:bulk_download] %>
-      </li>
-      <li>
-      <%= context_menu_link "PEPPOL BIS 1",
-        invoices_bulk_download_path(:ids=>@invoice_ids, :in=>'peppolubl20', :back_url=>@back),
-        :disabled=>!@can[:bulk_download] %>
-      </li>
-      <li>
-      <%= context_menu_link "BII UBL",
-        invoices_bulk_download_path(:ids=>@invoice_ids, :in=>'biiubl20', :back_url=>@back),
-        :disabled=>!@can[:bulk_download] %>
-      </li>
-      <li>
-      <%= context_menu_link "OIO",
-        invoices_bulk_download_path(:ids=>@invoice_ids, :in=>'oioubl20', :back_url=>@back),
-        :disabled=>!@can[:bulk_download] %>
-      </li>
+      <% end -%>
     </ul>
     </li>
     <li class="folder">

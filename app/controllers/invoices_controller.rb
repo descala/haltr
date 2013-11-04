@@ -275,13 +275,23 @@ class InvoicesController < ApplicationController
           :formats => :html,
           :show_as_html => params[:debug]
       end
-      format.facturae30  { render_clean_xml :formats => :xml, :template => 'invoices/facturae30',  :layout => false }
-      format.facturae31  { render_clean_xml :formats => :xml, :template => 'invoices/facturae31',  :layout => false }
-      format.facturae32  { render_clean_xml :formats => :xml, :template => 'invoices/facturae32',  :layout => false }
-      format.peppolubl20 { render_clean_xml :formats => :xml, :template => 'invoices/peppolubl20', :layout => false }
-      format.biiubl20    { render_clean_xml :formats => :xml, :template => 'invoices/biiubl20',    :layout => false }
-      format.svefaktura  { render_clean_xml :formats => :xml, :template => 'invoices/svefaktura',  :layout => false }
-      format.oioubl20    { render_clean_xml :formats => :xml, :template => 'invoices/oioubl20',    :layout => false }
+      if params[:debug]
+        format.facturae30  { render_clean_xml :formats => :xml, :template => 'invoices/facturae30',  :layout => false }
+        format.facturae31  { render_clean_xml :formats => :xml, :template => 'invoices/facturae31',  :layout => false }
+        format.facturae32  { render_clean_xml :formats => :xml, :template => 'invoices/facturae32',  :layout => false }
+        format.peppolubl20 { render_clean_xml :formats => :xml, :template => 'invoices/peppolubl20', :layout => false }
+        format.biiubl20    { render_clean_xml :formats => :xml, :template => 'invoices/biiubl20',    :layout => false }
+        format.svefaktura  { render_clean_xml :formats => :xml, :template => 'invoices/svefaktura',  :layout => false }
+        format.oioubl20    { render_clean_xml :formats => :xml, :template => 'invoices/oioubl20',    :layout => false }
+      else
+        format.facturae30  { download_clean_xml :formats => :xml, :template => 'invoices/facturae30',  :layout => false }
+        format.facturae31  { download_clean_xml :formats => :xml, :template => 'invoices/facturae31',  :layout => false }
+        format.facturae32  { download_clean_xml :formats => :xml, :template => 'invoices/facturae32',  :layout => false }
+        format.peppolubl20 { download_clean_xml :formats => :xml, :template => 'invoices/peppolubl20', :layout => false }
+        format.biiubl20    { download_clean_xml :formats => :xml, :template => 'invoices/biiubl20',    :layout => false }
+        format.svefaktura  { download_clean_xml :formats => :xml, :template => 'invoices/svefaktura',  :layout => false }
+        format.oioubl20    { download_clean_xml :formats => :xml, :template => 'invoices/oioubl20',    :layout => false }
+      end
     end
   end
 
@@ -623,6 +633,13 @@ class InvoicesController < ApplicationController
     render :text => clean_xml(xml)
   end
 
+  def download_clean_xml(options)
+    xml = render_to_string(options)
+    send_data clean_xml(xml),
+    :type => 'text/xml; charset=UTF-8;',
+    :disposition => "attachment; filename=#{@invoice.pdf_name_without_extension}.xml"
+  end
+
   def clean_xml(xml)
     xsl =<<XSL
 <xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
@@ -668,7 +685,7 @@ XSL
   end
 
   def bulk_download
-    unless ExportChannels.formats.include? params[:in]
+    unless ExportFormats.available.keys.include? params[:in]
       flash[:error] = "unknown format #{params[:in]}"
       redirect_back_or_default(:action=>'index',:project_id=>@project.id)
       return

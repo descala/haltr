@@ -4,7 +4,8 @@ class ExportChannels
 
   def self.available
     # See config/channels.yml.example
-    YAML.load(File.read(File.join(File.dirname(__FILE__), "../../config/channels.yml")))
+    @@channels ||= File.read(File.join(File.dirname(__FILE__), "../../config/channels.yml"))
+    YAML.load(@@channels)
   rescue Exception => e
     puts "Exception while retrieving channels.yml: #{e.message}"
     {}
@@ -42,8 +43,15 @@ class ExportChannels
   end
 
   def self.validations(id)
-    return [] if available[id].nil? or available[id]["validate"].nil?
-    available[id]["validate"].is_a?(Array) ? available[id]["validate"] : [available[id]["validate"]]
+    puts "checking validation for #{id}"
+    return [] if available[id].nil?
+    if available[id]["validate"].nil?
+      validations = []
+    else
+      validations = available[id]["validate"].is_a?(Array) ? available[id]["validate"] : [available[id]["validate"]]
+    end
+    validations += ExportFormats.validations(available[id]["format"]) if available[id]["format"]
+    validations.compact.uniq
   end
 
   def self.for_select(current_project)
@@ -69,12 +77,6 @@ class ExportChannels
 
   def self.[](id)
     available[id]
-  end
-
-  def self.formats
-    available.collect do |k,v|
-      v['format']
-    end.uniq.compact
   end
 
 end

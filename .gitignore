@@ -5,6 +5,7 @@ doc/app
 config/database.yml
 config/settings.yml
 config/channels.yml
+config/formats.yml
 **/.DS_Store
 .DS_Store
 haltr-*.sql
