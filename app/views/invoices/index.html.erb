@@ -67,9 +67,9 @@
 <!--final filtres-->
 
 <!--taula factures-->
-<div class="seccio grup">
-  <%= form_tag({}) do -%>
-    <%= hidden_field_tag 'back_url', url_for(params), :id => nil %>
+<%= form_tag({}) do -%>
+  <%= hidden_field_tag 'back_url', url_for(params), :id => nil %>
+  <div class="seccio grup">
     <div class="col span-2-de-2">
       <table class="taula-1 list invoices">
         <thead>
@@ -105,8 +105,8 @@
         </tfoot>
       </table>
     </div>
-  <% end -%>
-</div>
+  </div>
+<% end -%>
 <!--final taula factures-->
 
 
