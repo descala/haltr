@@ -6,8 +6,6 @@ class InvoiceDocument < Invoice
 
   attr_accessor :legal_filename, :legal_content_type, :legal_invoice
 
-  before_create :set_default_values
-
   def final_md5
     #TODO: check #2451 to store md5 on invoice.
     self.events.collect {|e| e unless e.final_md5.blank? }.compact.sort.last.final_md5 rescue nil
@@ -70,11 +68,6 @@ class InvoiceDocument < Invoice
   %w(received_invoice issued_invoice).each do |r| 
     require_dependency r
   end if Rails.env.development?
-
-  def set_default_values
-    self.has_been_read = false unless self.has_been_read
-  end
- 
 
 end
 
