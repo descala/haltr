@@ -19,37 +19,37 @@
       <li>
       <%= context_menu_link "PDF",
         invoices_bulk_download_path(:ids=>@invoice_ids, :in=>'pdf', :back_url=>@back),
-        :disabled=>!@can[:read] %>
+        :disabled=>!@can[:bulk_download] %>
       </li>
       <li>
       <%= context_menu_link "Facturae 3.0",
         invoices_bulk_download_path(:ids=>@invoice_ids, :in=>'facturae30', :back_url=>@back),
-        :disabled=>!@can[:read] %>
+        :disabled=>!@can[:bulk_download] %>
       </li>
       <li>
       <%= context_menu_link "Facturae 3.1",
         invoices_bulk_download_path(:ids=>@invoice_ids, :in=>'facturae31', :back_url=>@back),
-        :disabled=>!@can[:read] %>
+        :disabled=>!@can[:bulk_download] %>
       </li>
       <li>
       <%= context_menu_link "Facturae 3.2",
         invoices_bulk_download_path(:ids=>@invoice_ids, :in=>'facturae32', :back_url=>@back),
-        :disabled=>!@can[:read] %>
+        :disabled=>!@can[:bulk_download] %>
       </li>
       <li>
       <%= context_menu_link "PEPPOL BIS 1",
         invoices_bulk_download_path(:ids=>@invoice_ids, :in=>'peppolubl20', :back_url=>@back),
-        :disabled=>!@can[:read] %>
+        :disabled=>!@can[:bulk_download] %>
       </li>
       <li>
       <%= context_menu_link "BII UBL",
         invoices_bulk_download_path(:ids=>@invoice_ids, :in=>'biiubl20', :back_url=>@back),
-        :disabled=>!@can[:read] %>
+        :disabled=>!@can[:bulk_download] %>
       </li>
       <li>
       <%= context_menu_link "OIO",
         invoices_bulk_download_path(:ids=>@invoice_ids, :in=>'oioubl20', :back_url=>@back),
-        :disabled=>!@can[:read] %>
+        :disabled=>!@can[:bulk_download] %>
       </li>
     </ul>
     </li>
