@@ -712,8 +712,16 @@ XSL
   def bulk_mark_as
     @invoices.each do |i|
       case params[:state]
+      when "new"
+        unless i.mark_unsent
+          #TODO state not changed, show message to user?
+        end
       when "sent"
         unless i.manual_send || i.success_sending || i.unpaid
+          #TODO state not changed, show message to user?
+        end
+      when "closed"
+        unless i.close || i.paid
           #TODO state not changed, show message to user?
         end
       else
