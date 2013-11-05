@@ -90,6 +90,87 @@ class ReceivedController < InvoicesController
     render :text => "OK"
   end
 
+  def bulk_download
+    require 'zip/zip'
+    require 'zip/zipfilesystem'
+    # just a safe big limit
+    if @invoices.size > 100
+      flash[:error] = l(:too_much_invoices,:num=>@invoices.size)
+      redirect_to :action=>'index', :project_id=>@project
+      return
+    end
+    failed = []
+    zipped = []
+    zip_file = Tempfile.new "#{@project.identifier}_invoices.zip", 'tmp'
+    logger.info "Creating zip file '#{zip_file.path}' for invoice ids #{@invoices.collect{|i|i.id}.join(',')}."
+    Zip::ZipOutputStream.open(zip_file.path) do |zos|
+      @invoices.each do |invoice|
+        #TODO: several B2bRouters
+        if invoice.fetch_from_backup
+          file = Tempfile.new(invoice.legal_filename,:encoding => 'ascii-8bit')
+          file.write invoice.legal_invoice
+          logger.info "Created #{file.path}"
+          file.close
+          filename = invoice.legal_filename
+          i=2
+          while zipped.include?(filename)
+            extension = File.extname(filename)
+            base      = filename.gsub(/#{extension}$/,'')
+            filename  = "#{base}_#{i}#{extension}"
+            i += 1
+          end
+          zipped << filename
+          zos.put_next_entry(filename)
+          zos.print IO.read(file.path)
+          logger.info "Added #{filename} from #{file.path}"
+        else
+          logger.info "Failed to get legal document for invoice with id #{invoice.id}"
+          #TODO warn user about failed downloads
+          failed << "Failed to get invoice number #{invoice.number} with id #{invoice.id}"
+        end
+      end
+      if failed.any?
+        file = Tempfile.new("FAILED.txt",:encoding => 'ascii-8bit')
+        failed.each do |line|
+          file.puts line
+        end
+        file.close
+        zos.put_next_entry("FAILED.txt")
+        zos.print IO.read(file.path)
+        logger.info "Added FAILED.txt with failed downloads"
+      end
+    end
+    zip_file.close
+    send_file zip_file.path, :type => "application/zip", :filename => "#{@project.identifier}-invoices.zip"
+  rescue LoadError
+    flash[:error] = l(:zip_gem_required)
+    redirect_to :action => 'index', :project_id => @project
+  rescue Errno::ECONNREFUSED, Errno::EHOSTUNREACH => e
+    flash[:warning]=l(:cant_connect_trace, e.message)
+    redirect_to :action => 'show', :id => @invoice
+  end
+
+  def bulk_mark_as
+    all_changed = true
+    @invoices.each do |i|
+      next if i.state == params[:state]
+      case params[:state]
+      when "received"
+        all_changed &&= i.mark_as_received
+      when "accepted"
+        all_changed &&= (i.accept || i.unpaid)
+      when "paid"
+        all_changed &&= i.paid
+      when "refused"
+        all_changed &&= i.refuse
+      else
+        flash[:error] = "unknown state #{params[:state]}"
+      end
+    end
+    flash[:warn] = l(:some_states_not_changed) unless all_changed
+    redirect_back_or_default(:action=>'index',:project_id=>@project.id)
+  end
+
   private
 
   def invoice_class

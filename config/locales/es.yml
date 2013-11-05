@@ -138,6 +138,10 @@ es:
   state_accepted: "Aceptada"
   state_refused: "Rechazada"
   state_paid: "Pagada"
+  state_received_plural: "Recibidas"
+  state_accepted_plural: "Aceptadas"
+  state_refused_plural: "Rechazadas"
+  state_paid_plural: "Pagadas"
   sending_log: "Log d'enviament"
   sending_log: "Log de envio"
   download_legal: "Descargar factura legal"
@@ -222,6 +226,7 @@ es:
   back: "Volver"
   view_mail: "Ver email"
   public_link: "Enlace público"
+  mark_as_received: "Marcada como recibida"
 
   # Invoice templates
   label_invoice_template_new: Nueva plantilla
@@ -417,3 +422,4 @@ es:
   read: "Leído"
   text_invoices_destroy_confirmation: '¿Seguro que quiere borrar las facturas seleccionadas?'
   mark_as: "Marcar como"
+  some_states_not_changed: "Algunos estados no se pudieron cambiar"

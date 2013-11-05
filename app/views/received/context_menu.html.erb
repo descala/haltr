@@ -1,0 +1,52 @@
+<ul>
+  <%= call_hook(:view_received_context_menu_start, {:invoices=>@invoices, :can=>@can, :back=>@back }) %>
+
+  <% if @invoice -%>
+    <!-- actions for a single invoice -->
+    <li>
+    <%= context_menu_link l(:button_show), received_path(@invoice),
+      :class=>'icon-show', :disabled=>!@can[:edit] %>
+    </li>
+    <%= context_menu_link l(:button_download), {:controller=>'invoices', :action=>'legal', :id=>@invoice.id, :md5=>@invoice.md5},
+      :class=>"icon-download", :disabled=>(!@can[:read] or @invoice.events.first.md5.nil?) %>
+    </li>
+    <li class="folder">
+    <a href="#" class="submenu"><%= l(:mark_as) %></a>
+    <ul>
+      <% %w(received accepted paid refused).each do |state| -%>
+      <li>
+      <%= context_menu_link l("state_#{state}"),
+        received_bulk_mark_as_path(:ids=>@invoice_ids, :state=>state, :back_url=>@back),
+        :disabled=>!@can[:edit] %>
+      </li>
+      <% end -%>
+    </ul>
+    </li>
+  <% else -%>
+    <!-- actions for multiple invoices -->
+    </li>
+    <%= context_menu_link l(:button_download), received_bulk_download_path(:ids=>@invoice_ids, :back_url=>@back),
+      :class=>"icon-download", :disabled=>(!@can[:bulk_download]) %>
+    </li>
+    <li class="folder">
+    <a href="#" class="submenu"><%= l(:mark_as) %></a>
+    <ul>
+      <% %w(received accepted paid refused).each do |state| -%>
+      <li>
+      <%= context_menu_link l("state_#{state}_plural"),
+        received_bulk_mark_as_path(:ids=>@invoice_ids, :state=>state, :back_url=>@back),
+        :disabled=>!@can[:edit] %>
+      </li>
+      <% end -%>
+    </ul>
+    </li>
+  <% end %>
+
+  <%= call_hook(:view_received_context_menu_end, {:invoices=>@invoices, :can=>@can, :back=>@back }) %>
+
+  <li>
+  <%= context_menu_link l(:button_delete), invoices_path(:ids=>@invoice_ids, :back_url=>@back),
+    :method=>:delete, :data=>{:confirm=>l(:text_invoices_destroy_confirmation)}, :class=>'icon-del', :disabled=>!@can[:edit] %>
+  </li>
+
+</ul>

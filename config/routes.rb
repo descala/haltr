@@ -40,9 +40,13 @@ end
 
 resources :people
 match 'invoices/context_menu', :to => 'invoices#context_menu', :as => 'invoices_context_menu', :via => [:get, :post]
+match 'received/context_menu', :to => 'received#context_menu', :as => 'received_context_menu', :via => [:get, :post]
 match 'invoices/bulk_download' => 'invoices#bulk_download'
+match 'received/bulk_download' => 'received#bulk_download'
 match 'invoices/bulk_mark_as' => 'invoices#bulk_mark_as'
+match 'received/bulk_mark_as' => 'received#bulk_mark_as'
 resources :invoices
+match 'invoices', :controller => 'invoices', :action => 'destroy', :via => :delete
 match 'invoices/mark_sent/:id' => 'invoices#mark_sent', :via => :get, :as => :mark_sent
 match 'invoices/mark_not_sent/:id' => 'invoices#mark_not_sent', :via => :get, :as => :mark_not_sent
 match 'invoices/mark_closed/:id' => 'invoices#mark_closed', :via => :get, :as => :mark_closed

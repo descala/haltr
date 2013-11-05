@@ -22,17 +22,17 @@
     <a href="#" class="submenu"><%= l(:mark_as) %></a>
     <ul>
       <li>
-      <%= context_menu_link l(:state_new_plural),
+      <%= context_menu_link l(:state_new),
         invoices_bulk_mark_as_path(:ids=>@invoice_ids, :state=>'new', :back_url=>@back),
         :disabled=>!@can[:edit] %>
       </li>
       <li>
-      <%= context_menu_link l(:state_sent_plural),
+      <%= context_menu_link l(:state_sent),
         invoices_bulk_mark_as_path(:ids=>@invoice_ids, :state=>'sent', :back_url=>@back),
         :disabled=>!@can[:edit] %>
       </li>
       <li>
-      <%= context_menu_link l(:state_closed_plural),
+      <%= context_menu_link l(:state_closed),
         invoices_bulk_mark_as_path(:ids=>@invoice_ids, :state=>'closed', :back_url=>@back),
         :disabled=>!@can[:edit] %>
       </li>

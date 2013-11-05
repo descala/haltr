@@ -123,6 +123,10 @@ sv:
   state_accepted: "Accepterad"
   state_refused: "Avvisad"
   state_paid: "Betald"
+  state_received_plural: "Mottagen"
+  state_accepted_plural: "Accepterad"
+  state_refused_plural: "Avvisad"
+  state_paid_plural: "Betald"
   sending_log: "Skickar log"
   download_legal: "Ladda ner fakturafilen"
   download_notification: "Ladda ner notifieringar"
@@ -206,6 +210,7 @@ sv:
   back: "Tillbaka"
   view_mail: "Visa mail"
   public_link: "Publik länk"
+  mark_as_received: "Marked as received"
 
   # Invoice templates
   label_invoice_template_new: Ny Mall
@@ -403,3 +408,4 @@ sv:
   read: "Read"
   text_invoices_destroy_confirmation: 'Är du säker på att du vill radera markerade faktura ?'
   mark_as: "Mark as"
+  some_states_not_changed: "Some states could not be changed"

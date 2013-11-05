@@ -32,6 +32,9 @@ class ReceivedInvoice < InvoiceDocument
     event :discard_validating_signature do
       transition [:validating_format, :validating_signature] => :received
     end
+    event :mark_as_received do
+      transition [:error, :accepted, :refused, :paid] => :received
+    end
     event :refuse do
       transition [:accepted,:received,:error] => :refused
     end

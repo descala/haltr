@@ -119,10 +119,14 @@ da:
   state_discarded: "Kasseret"
   state_validating_format: "Validering forma"
   state_validating_signature: "Validering signatur"
-  state_received: "Factura rebuda"
+  state_received: "Received invoice"
   state_accepted: "Accepteret"
   state_refused: "Afvist"
   state_paid: "Betalt"
+  state_received_plural: "Received"
+  state_accepted_plural: "Accepteret"
+  state_refused_plural: "Afvist"
+  state_paid_plural: "Betalt"
   sending_log: "Log d'enviament"
   sending_log: "Sender log"
   download_legal: "Download juridisk faktur"
@@ -207,6 +211,7 @@ da:
   back: "Tilbage"
   view_mail: "Vis email"
   public_link: "Offentlig link"
+  mark_as_received: "Marked as received"
  
   # Invoice templates
   label_invoice_template_new: Ny skablon
@@ -418,3 +423,4 @@ da:
   read: "Read"
   text_invoices_destroy_confirmation: 'Er du sikker på du ønsker at slette den/de valgte faktura?'
   mark_as: "Mark as"
+  some_states_not_changed: "Some states could not be changed"

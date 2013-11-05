@@ -121,10 +121,14 @@ en:
   state_discarded: "Discarded"
   state_validating_format: "Validating format"
   state_validating_signature: "Validating signature"
-  state_received: "Factura rebuda"
+  state_received: "Received invoice"
   state_accepted: "Accepted"
   state_refused: "Refused"
   state_paid: "Paid"
+  state_received_plural: "Received"
+  state_accepted_plural: "Accepted"
+  state_refused_plural: "Refused"
+  state_paid_plural: "Paid"
   sending_log: "Log d'enviament"
   sending_log: "Sending log"
   download_legal: "Download legal invoice"
@@ -209,6 +213,7 @@ en:
   back: "Back"
   view_mail: "View email"
   public_link: "Public link"
+  mark_as_received: "Marked as received"
 
   # Invoice templates
   label_invoice_template_new: New template
@@ -403,3 +408,4 @@ en:
   read: "Read"
   text_invoices_destroy_confirmation: 'Are you sure you want to delete the selected invoice(s)?'
   mark_as: "Mark as"
+  some_states_not_changed: "Some states could not be changed"

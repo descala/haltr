@@ -13,8 +13,8 @@ class InvoicesController < ApplicationController
   PUBLIC_METHODS = [:by_taxcode_and_num,:view,:download,:mail,:logo]
 
   before_filter :find_project_by_project_id, :only => [:index,:new,:create,:send_new_invoices,:download_new_invoices,:update_payment_stuff,:new_invoices_from_template,:report,:create_invoices,:update_taxes]
-  before_filter :find_invoice, :only => [:edit,:update,:destroy,:mark_sent,:mark_closed,:mark_not_sent,:mark_accepted_with_mail,:mark_accepted,:mark_refused_with_mail,:mark_refused,:duplicate_invoice,:pdfbase64,:show,:send_invoice,:legal,:amend_for_invoice]
-  before_filter :find_invoices, :only => [:context_menu,:bulk_download,:bulk_mark_as]
+  before_filter :find_invoice, :only => [:edit,:update,:mark_sent,:mark_closed,:mark_not_sent,:mark_accepted_with_mail,:mark_accepted,:mark_refused_with_mail,:mark_refused,:duplicate_invoice,:pdfbase64,:show,:send_invoice,:legal,:amend_for_invoice]
+  before_filter :find_invoices, :only => [:context_menu,:bulk_download,:bulk_mark_as,:destroy]
   before_filter :find_payment, :only => [:destroy_payment]
   before_filter :find_hashid, :only => [:view,:download]
   before_filter :find_attachment, :only => [:logo]
@@ -184,8 +184,14 @@ class InvoicesController < ApplicationController
   end
 
   def destroy
-    @invoice.destroy
-    redirect_to :action => 'index', :project_id => @project
+    @invoices.each do |invoice|
+      begin
+        invoice.reload.destroy
+      rescue ::ActiveRecord::RecordNotFound # raised by #reload if invoice no longer exists
+        # nothing to do, invoice was already deleted (eg. by a parent)
+      end
+    end
+    redirect_back_or_default(:action => 'index', :project_id => @project)
   end
 
   def destroy_payment
@@ -727,24 +733,21 @@ XSL
   end
 
   def bulk_mark_as
+    all_changed = true
     @invoices.each do |i|
+      next if i.state == params[:state]
       case params[:state]
       when "new"
-        unless i.mark_unsent
-          #TODO state not changed, show message to user?
-        end
+        all_changed &&= (i.mark_unsent)
       when "sent"
-        unless i.manual_send || i.success_sending || i.unpaid
-          #TODO state not changed, show message to user?
-        end
+        all_changed &&= (i.manual_send || i.success_sending || i.unpaid)
       when "closed"
-        unless i.close || i.paid
-          #TODO state not changed, show message to user?
-        end
+        all_changed &&= (i.close || i.paid)
       else
         flash[:error] = "unknown state #{params[:state]}"
       end
     end
+    flash[:warn] = l(:some_states_not_changed) unless all_changed
     redirect_back_or_default(:action=>'index',:project_id=>@project.id)
   end
 

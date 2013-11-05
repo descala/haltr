@@ -136,6 +136,10 @@ ca:
   state_accepted: "Acceptada"
   state_refused: "Refusada"
   state_paid: "Pagada"
+  state_received_plural: "Rebudes"
+  state_accepted_plural: "Acceptades"
+  state_refused_plural: "Refusades"
+  state_paid_plural: "Pagades"
   sending_log: "Log d'enviament"
   download_legal: "Descarregar factura legal"
   download_notification: "Descarregar notificació"
@@ -219,6 +223,7 @@ ca:
   back: "Tornar"
   view_mail: "Veure email"
   public_link: "Enllaç públic"
+  mark_as_received: "Marcada com a rebuda"
 
   # Invoice templates
   label_invoice_template_new: Nova factura recurrent
@@ -414,3 +419,4 @@ ca:
   read: "Llegit"
   text_invoices_destroy_confirmation: "Segur que voleu suprimir les factures seleccionades?"
   mark_as: "Marcar com a"
+  some_states_not_changed: "Alguns estats no s'han pogut canviar"
