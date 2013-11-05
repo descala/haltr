@@ -47,7 +47,7 @@
       <li>
       <%= context_menu_link conf["name"],
         invoices_bulk_download_path(:ids=>@invoice_ids, :in=>format, :back_url=>@back),
-        :class=>"icon-file #{conf["content-type"]}", :disabled=>!@can[:bulk_download] %>
+        :class=>"icon-file #{conf["content-type"]}" %>
       </li>
       <% end -%>
     </ul>

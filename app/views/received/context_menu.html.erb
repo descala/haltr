@@ -26,7 +26,7 @@
     <!-- actions for multiple invoices -->
     </li>
     <%= context_menu_link l(:button_download), received_bulk_download_path(:ids=>@invoice_ids, :back_url=>@back),
-      :class=>"icon-download", :disabled=>(!@can[:bulk_download]) %>
+      :class=>"icon-download" %>
     </li>
     <li class="folder">
     <a href="#" class="submenu"><%= l(:mark_as) %></a>
