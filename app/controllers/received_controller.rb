@@ -155,8 +155,6 @@ class ReceivedController < InvoicesController
     @invoices.each do |i|
       next if i.state == params[:state]
       case params[:state]
-      when "received"
-        all_changed &&= i.mark_as_received
       when "accepted"
         all_changed &&= (i.accept || i.unpaid)
       when "paid"

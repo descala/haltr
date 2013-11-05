@@ -13,7 +13,7 @@
     <li class="folder">
     <a href="#" class="submenu"><%= l(:mark_as) %></a>
     <ul>
-      <% %w(received accepted paid refused).each do |state| -%>
+      <% %w(accepted paid refused).each do |state| -%>
       <li>
       <%= context_menu_link l("state_#{state}"),
         received_bulk_mark_as_path(:ids=>@invoice_ids, :state=>state, :back_url=>@back),
