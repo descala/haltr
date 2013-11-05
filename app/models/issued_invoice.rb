@@ -130,7 +130,7 @@ class IssuedInvoice < InvoiceDocument
   def can_be_exported?
     # TODO Test if endpoint is correcty configured
     return @can_be_exported unless @can_be_exported.nil?
-    @can_be_exported = self.valid? and ExportChannels.folder(client.invoice_format) != nil
+    @can_be_exported = (self.valid? and !ExportChannels.folder(client.invoice_format).blank?)
     ExportChannels.validations(client.invoice_format).each do |v|
       self.send(v)
     end
