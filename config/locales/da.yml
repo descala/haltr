@@ -424,3 +424,6 @@ da:
   text_invoices_destroy_confirmation: 'Er du sikker på du ønsker at slette den/de valgte faktura?'
   mark_as: "Mark as"
   some_states_not_changed: "Some states could not be changed"
+  button_send: "Send"
+  some_invoices_sent: "Some invoices could not be sent (sent %{sent} of %{total})"
+  all_invoices_sent: "Invoices have been sent"

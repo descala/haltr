@@ -45,6 +45,7 @@ match 'invoices/bulk_download' => 'invoices#bulk_download'
 match 'received/bulk_download' => 'received#bulk_download'
 match 'invoices/bulk_mark_as' => 'invoices#bulk_mark_as'
 match 'received/bulk_mark_as' => 'received#bulk_mark_as'
+match 'invoices/bulk_send' => 'invoices#bulk_send'
 resources :invoices
 match 'invoices', :controller => 'invoices', :action => 'destroy', :via => :delete
 match 'invoices/mark_sent/:id' => 'invoices#mark_sent', :via => :get, :as => :mark_sent

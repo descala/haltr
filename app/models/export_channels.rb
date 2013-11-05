@@ -43,7 +43,6 @@ class ExportChannels
   end
 
   def self.validations(id)
-    puts "checking validation for #{id}"
     return [] if available[id].nil?
     if available[id]["validate"].nil?
       validations = []

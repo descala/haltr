@@ -4,6 +4,9 @@
   <% if @invoice -%>
     <!-- actions for a single invoice -->
     <li>
+    <%= context_menu_link l(:button_send), send_invoice_path(@invoice, :back_url=>@back), :class => 'icon-send' %>
+    </li>
+    <li>
     <%= context_menu_link l(:button_edit), edit_invoice_path(@invoice),
       :class=>'icon-edit', :disabled=>!@can[:edit] %>
     </li>
@@ -40,6 +43,10 @@
     </li>
   <% else -%>
     <!-- actions for multiple invoices -->
+    <li>
+    <%= context_menu_link l(:button_send), invoices_bulk_send_path(:ids=>@invoice_ids, :back_url=>@back),
+      :class => 'icon-send' %>
+    </li>
     <li class="folder">
     <a href="#" class="submenu"><%= l(:button_download) %></a>
     <ul>

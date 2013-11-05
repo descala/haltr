@@ -423,3 +423,6 @@ es:
   text_invoices_destroy_confirmation: '¿Seguro que quiere borrar las facturas seleccionadas?'
   mark_as: "Marcar como"
   some_states_not_changed: "Algunos estados no se pudieron cambiar"
+  button_send: "Enviar"
+  some_invoices_sent: "Algunas facturas no se pudieron enviar (enviadas %{sent} de %{total})"
+  all_invoices_sent: "Se han enviado las facturas"

@@ -14,7 +14,7 @@ class InvoicesController < ApplicationController
 
   before_filter :find_project_by_project_id, :only => [:index,:new,:create,:send_new_invoices,:download_new_invoices,:update_payment_stuff,:new_invoices_from_template,:report,:create_invoices,:update_taxes]
   before_filter :find_invoice, :only => [:edit,:update,:mark_sent,:mark_closed,:mark_not_sent,:mark_accepted_with_mail,:mark_accepted,:mark_refused_with_mail,:mark_refused,:duplicate_invoice,:pdfbase64,:show,:send_invoice,:legal,:amend_for_invoice]
-  before_filter :find_invoices, :only => [:context_menu,:bulk_download,:bulk_mark_as,:destroy]
+  before_filter :find_invoices, :only => [:context_menu,:bulk_download,:bulk_mark_as,:bulk_send,:destroy]
   before_filter :find_payment, :only => [:destroy_payment]
   before_filter :find_hashid, :only => [:view,:download]
   before_filter :find_attachment, :only => [:logo]
@@ -308,9 +308,9 @@ class InvoicesController < ApplicationController
     # e.backtrace does not fit in session leading to
     #   ActionController::Session::CookieStore::CookieOverflow
     flash[:error] = "#{l(:error_invoice_not_sent, :num=>@invoice.number)}: #{e.message}"
-    raise e if Rails.env == "development"
+    #raise e if Rails.env == "development"
   ensure
-    redirect_to :action => 'show', :id => @invoice
+    redirect_back_or_default(:action => 'show', :id => @invoice)
   end
 
   def send_new_invoices
@@ -749,6 +749,27 @@ XSL
     end
     flash[:warn] = l(:some_states_not_changed) unless all_changed
     redirect_back_or_default(:action=>'index',:project_id=>@project.id)
+  end
+
+  def bulk_send
+    sent = 0
+    @invoices.each do |invoice|
+      @invoice = invoice
+      @lines = @invoice.invoice_lines
+      @client = @invoice.client || Client.new(:name=>"unknown",:project=>@invoice.project)
+      @company = @project.company
+      begin
+        create_and_queue_file
+        sent += 1
+      rescue Exception
+      end
+    end
+    if sent < @invoices.size
+      flash[:error] = l(:some_invoices_sent,:sent=>sent,:total=>@invoices.size)
+    else
+      flash[:notice] = l(:all_invoices_sent)
+    end
+    redirect_back_or_default(:action => 'index', :project_id => @project.id)
   end
 
 end
