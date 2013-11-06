@@ -1,1 +1,10 @@
+<% if @invoice.client.language -%>
+  <% before_locale = I18n.locale %>
+  <% I18n.locale = @invoice.client.language rescue before_locale %>
+<% end -%>
+
 <%= render :partial=>'invoices/invoice' %>
+
+<% if defined?(before_locale) -%>
+  <% I18n.locale = before_locale %>
+<% end -%>

@@ -400,3 +400,4 @@ sv:
   total_executable: "Total to pay"
   company_taxcode_needed: "No podem generar el document perquè la teva empresa no té NIF"
   client_taxcode_needed: "No podem generar el document perquè el client no té NIF"
+  read: "Read"

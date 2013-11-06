@@ -132,9 +132,9 @@ class IssuedInvoice < InvoiceDocument
     return @can_be_exported unless @can_be_exported.nil?
     @can_be_exported = self.valid? and ExportChannels.folder(client.invoice_format) != nil
     ExportChannels.validations(client.invoice_format).each do |v|
-      can = self.send(v)
-      @can_be_exported &&= can
+      self.send(v)
     end
+    @can_be_exported &&= (export_errors.size == 0)
     @can_be_exported
   end
 
@@ -222,20 +222,16 @@ class IssuedInvoice < InvoiceDocument
   end
 
   def valid_payment_method
-    valid_payment_method = true
     if debit?
       c = Client.find client_id
       if c.bank_account.blank? and !c.use_iban?
         add_export_error("#{l(:field_payment_method)} (#{l(:debit)}) #{l(:requires_client_bank_account)}")
-        valid_payment_method = false
       end
     elsif transfer?
       if company.bank_account.blank? and !company.use_iban?
         add_export_error("#{l(:field_payment_method)} (#{l(:transfer)}) #{l(:requires_company_bank_account)}")
-        valid_payment_method = false
       end
     end
-    valid_payment_method
   end
 
   # facturae 3.x needs taxes to be valid
@@ -243,37 +239,29 @@ class IssuedInvoice < InvoiceDocument
     self.invoice_lines.each do |line|
       unless line.taxes_outputs.any?
         add_export_error(l(:invoice_has_no_taxes))
-        return false
       end
     end
-    true
   end
 
   # facturae needs taxcode
   def company_has_taxcode
     if self.company.taxcode.blank?
       add_export_error(l(:company_taxcode_needed))
-      return false
     end
-    return true
   end
 
   # facturae needs taxcode
   def client_has_taxcode
     if self.client.taxcode.blank?
       add_export_error(l(:client_taxcode_needed))
-      return false
     end
-    return true
   end
 
   # facturae 32 needs bank_account if payment method is transfer to be valid
   def company_has_bank_account_if_needed
     if self.transfer? and self.company.bank_account.empty?
       add_export_error(l(:bank_account_empty))
-      return false
     end
-    return true
   end
 
   protected
@@ -289,11 +277,8 @@ class IssuedInvoice < InvoiceDocument
   end
 
   def client_has_email
-    if self.recipient_emails.any?
-      true
-    else
+    unless self.recipient_emails.any?
       add_export_error(l(:client_has_no_email))
-      false
     end
   end
 
@@ -308,36 +293,40 @@ class IssuedInvoice < InvoiceDocument
   def ubl_invoice_has_no_taxes_withheld
     if self.taxes_withheld.any?
       add_export_error(l(:ubl_invoice_has_taxes_withheld))
-      false
-    else
-      true
     end
   end
 
   def peppol_fields
     if self.client.schemeid.blank? or self.client.endpointid.blank?
       add_export_error(l(:missing_client_peppol_fields))
-      return false
     elsif self.company.schemeid.blank? or self.company.endpointid.blank?
       add_export_error(l(:missing_company_peppol_fields))
-      return false
     end
-    true
   end
 
   def svefaktura_fields
     if self.respond_to?(:accounting_cost) and self.accounting_cost.blank?
       add_export_error(l(:missing_svefaktura_account))
-      return false
     elsif self.company.company_identifier.blank?
       add_export_error(l(:missing_svefaktura_organization))
-      return false
     elsif self.debit?
       add_export_error(l(:missing_svefaktura_debit))
-      return false
     end
-    true
   end
+
+  def payment_method_requirements
+    if debit?
+      c = Client.find client_id
+      if c.bank_account.blank? and !c.use_iban?
+        add_export_error("#{l(:field_payment_method)} (#{l(:debit)}) #{l(:requires_client_bank_account)}")
+      end
+    elsif transfer?
+      if company.bank_account.blank? and !company.use_iban?
+        add_export_error("#{l(:field_payment_method)} (#{l(:transfer)}) #{l(:requires_company_bank_account)}")
+      end
+    end
+  end
+
 
   def oioubl20_fields
   end

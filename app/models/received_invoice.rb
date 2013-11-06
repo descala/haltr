@@ -46,11 +46,6 @@ class ReceivedInvoice < InvoiceDocument
     end
   end
 
-  def initialize(attributes=nil,*args)
-    super
-    self.has_been_read=false
-  end
-
   def to_label
     "#{number}"
   end

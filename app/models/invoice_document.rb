@@ -22,8 +22,8 @@ class InvoiceDocument < Invoice
     md5 ||= self.initial_md5
     url = Setting.plugin_haltr["trace_url"]
     url = URI.parse(url.gsub(/\/$/,'')) # remove trailing slash
-    http = Net::HTTP.new(url.host,url.port)
-    http.start() do |http|
+    connection = Net::HTTP.new(url.host,url.port)
+    connection.start() do |http|
       full_url = "#{url.path.blank? ? "/" : "#{url.path}/"}b2b_messages/get_backup?md5=#{md5}&name=#{backup_name}"
       logger.debug "Fetching backup GET #{full_url}" if logger && logger.debug?
       req = Net::HTTP::Get.new(full_url)
@@ -68,8 +68,6 @@ class InvoiceDocument < Invoice
   %w(received_invoice issued_invoice).each do |r| 
     require_dependency r
   end if Rails.env.development?
-
- 
 
 end
 

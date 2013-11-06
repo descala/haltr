@@ -384,6 +384,10 @@ class InvoicesController < ApplicationController
     @invoices_not_sent = []
     @invoices_sent = IssuedInvoice.find(:all,:conditions => ["client_id = ? and state = 'sent'",@client.id]).sort
     @invoices_closed = IssuedInvoice.find(:all,:conditions => ["client_id = ? and state = 'closed'",@client.id]).sort
+    unless @invoice.has_been_read or User.current.project == @invoice.project or User.current.admin?
+      Event.create!(:name=>'read',:invoice=>@invoice,:user=>User.current)
+      @invoice.update_attribute(:has_been_read,true)
+    end
     render :layout=>"public"
   rescue ActionView::MissingTemplate
     nil
@@ -544,14 +548,11 @@ class InvoicesController < ApplicationController
   end
 
   def create_pdf_file
-    curr_lang = I18n.locale
-    I18n.locale = @invoice.client.language rescue curr_lang
     @is_pdf = true
     pdf = render_to_string :pdf => @invoice.pdf_name_without_extension, :layout => "invoice.html", :template=>'invoices/show_pdf'
     pdf_file = Tempfile.new(@invoice.pdf_name,:encoding => 'ascii-8bit')
     pdf_file.write pdf
     logger.info "Created PDF #{pdf_file.path}"
-    I18n.locale = curr_lang
     return pdf_file
   end
 

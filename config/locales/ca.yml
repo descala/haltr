@@ -411,3 +411,4 @@ ca:
   total_executable: "Total a pagar"
   company_taxcode_needed: "No podem generar el document perquè la teva empresa no té NIF"
   client_taxcode_needed: "No podem generar el document perquè el client no té NIF"
+  read: "Llegit"
