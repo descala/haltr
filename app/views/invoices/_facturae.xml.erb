@@ -156,7 +156,7 @@
 <% if @invoice.discount_percent and @invoice.discount_percent > 0 -%>
             <GeneralDiscounts>
                <Discount>
-                 <DiscountReason><%=h @invoice.discount_text.blank? ? " " : @invoice.discount_text %></DiscountReason>
+                 <DiscountReason><%=h @invoice.discount_text.blank? ? "." : @invoice.discount_text %></DiscountReason>
                  <DiscountRate><%=h precision(@invoice.discount_percent, 4) %></DiscountRate>
                  <DiscountAmount><%=h precision(@invoice.discount.dollars,(@format == "facturae32" ? 6 : 2))%></DiscountAmount>
                </Discount>
