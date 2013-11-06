@@ -575,14 +575,11 @@ class InvoicesController < ApplicationController
   end
 
   def create_pdf_file
-    curr_lang = I18n.locale
-    I18n.locale = @invoice.client.language rescue curr_lang
     @is_pdf = true
     pdf = render_to_string :pdf => @invoice.pdf_name_without_extension, :layout => "invoice.html", :template=>'invoices/show_pdf'
     pdf_file = Tempfile.new(@invoice.pdf_name,:encoding => 'ascii-8bit')
     pdf_file.write pdf
     logger.info "Created PDF #{pdf_file.path}"
-    I18n.locale = curr_lang
     pdf_file.close
     return pdf_file
   end
