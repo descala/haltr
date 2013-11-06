@@ -89,6 +89,7 @@ class CompaniesController < ApplicationController
 
   def logo_by_taxcode
     @project = Company.find_by_taxcode(params[:taxcode]).project
+  rescue
   ensure
     logo
   end
