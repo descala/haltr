@@ -16,7 +16,6 @@ resources :projects do
   match 'companies/linked_to_mine', :controller => 'companies', :action => 'linked_to_mine', :via => :get
   match 'my_company', :controller => 'companies', :action => 'my_company', :via => :get
   match 'invoices/send_new' => 'invoices#send_new_invoices', :via => :get
-  match 'invoices/download_new' => 'invoices#download_new_invoices', :via => :get
   match 'invoices/update_payment_stuff' => 'invoices#update_payment_stuff', :via => :get
   match 'invoices/new/:client' => 'invoices#new', :via => :get, :as => :client_new_invoice
   resources :invoices, :only => [:index, :new, :create]
