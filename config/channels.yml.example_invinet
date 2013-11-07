@@ -51,7 +51,7 @@ signed_pdf_local_cert:
   format: pdf
   folder: free_pdf_without_signature
   validate: client_has_email
-  javascript: "doSign('/invoices/pdfbase64/:id')"
+  javascript: "doSign('/invoices/base64doc/:id/pdf','Adobe PDF')"
   locales:
     ca: "PDF signat amb certificat local, enviat per email"
     da: "Signed PDF til email"
@@ -62,7 +62,24 @@ signed_pdf_local_cert:
   allowed_permissions:
     :use_local_signature:
       :invoices:
-        - :pdfbase64
+        - :base64doc
+
+signed_facturae32_local_cert:
+  format: facturae32
+  folder: free_facturae32_without_signature
+  validate: client_has_email
+  javascript: "doSign('/invoices/base64doc/:id/facturae32','XAdES Enveloped')"
+  locales:
+    ca: "Facturae32 signat amb certificat local, enviat per email"
+    da: "Signed Facturae32 til email"
+    en: "Signed Facturae32 to email"
+    es: "Facturae32 firmado, enviado por email"
+    fr: "Facturae32 signé par email"
+    sv: "Signerad Facturae32 till email"
+  allowed_permissions:
+    :use_local_signature:
+      :invoices:
+        - :base64doc
 
 facturae_30:
   format: facturae30

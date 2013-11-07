@@ -13,7 +13,7 @@ class InvoicesController < ApplicationController
   PUBLIC_METHODS = [:by_taxcode_and_num,:view,:download,:mail,:logo]
 
   before_filter :find_project_by_project_id, :only => [:index,:new,:create,:send_new_invoices,:update_payment_stuff,:new_invoices_from_template,:report,:create_invoices,:update_taxes]
-  before_filter :find_invoice, :only => [:edit,:update,:mark_sent,:mark_closed,:mark_not_sent,:mark_accepted_with_mail,:mark_accepted,:mark_refused_with_mail,:mark_refused,:duplicate_invoice,:pdfbase64,:show,:send_invoice,:legal,:amend_for_invoice]
+  before_filter :find_invoice, :only => [:edit,:update,:mark_sent,:mark_closed,:mark_not_sent,:mark_accepted_with_mail,:mark_accepted,:mark_refused_with_mail,:mark_refused,:duplicate_invoice,:base64doc,:show,:send_invoice,:legal,:amend_for_invoice]
   before_filter :find_invoices, :only => [:context_menu,:bulk_download,:bulk_mark_as,:bulk_send,:destroy]
   before_filter :find_payment, :only => [:destroy_payment]
   before_filter :find_hashid, :only => [:view,:download]
@@ -33,7 +33,7 @@ class InvoicesController < ApplicationController
   include CompanyFilter
   before_filter :check_for_company, :except => PUBLIC_METHODS
 
-  skip_before_filter :verify_authenticity_token, :only => [:pdfbase64]
+  skip_before_filter :verify_authenticity_token, :only => [:base64doc]
 
   def index
     sort_init 'invoices.created_at', 'desc'
@@ -235,25 +235,29 @@ class InvoicesController < ApplicationController
     render :action => "new"
   end
 
-  def pdfbase64
+  def base64doc
+    doc_format=params[:doc_format]
     if request.get?
       # send a base64 encoded pdf document
-      pdf_file = create_pdf_file
-      base64_file=Tempfile.new("invoice_#{@invoice.id}.pdf.base64","tmp")
+      file = doc_format == "pdf" ? create_pdf_file : create_xml_file(doc_format)
+      base64_file=Tempfile.new("invoice_#{@invoice.id}.base64","tmp")
       File.open(base64_file.path, 'w') do |f|
-        f.write(Base64::encode64(File.read(pdf_file.path)))
+        f.write(Base64::encode64(File.read(file.path)))
       end
       if base64_file
-        send_file(base64_file.path, :filename => @invoice.pdf_name, :type => "text/plain", :disposition => 'inline')
+        send_file(base64_file.path,
+                  :filename => (doc_format == "pdf" ? @invoice.pdf_name : @invoice.xml_name),
+                  :type => "text/plain",
+                  :disposition => 'inline')
       else
-        render :text => "Error in PDF creation"
+        render :text => "Error in #{doc_format} creation"
       end
     else
       # queue a signed pdf document
       if file_contents = params['document']
         logger.info "Invoice #{@invoice.id} #{file_contents[0..16]}(...) received"
-        file = Tempfile.new "invoice_signed_#{@invoice.id}.pdf", "tmp"
-        file.binmode
+        file = Tempfile.new "invoice_signed_#{@invoice.id}.#{doc_format == "pdf" ? "pdf" : "xml"}", "tmp"
+        file.binmode if doc_format == "pdf"
         # TODO hack the ' ' to '+' replacement
         # rails replaces '+' with ' '. we undo that.
         file.write Base64.decode64(file_contents.gsub(' ','+'))
