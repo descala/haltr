@@ -45,7 +45,7 @@ match 'received/bulk_download' => 'received#bulk_download'
 match 'invoices/bulk_mark_as' => 'invoices#bulk_mark_as'
 match 'received/bulk_mark_as' => 'received#bulk_mark_as'
 match 'invoices/bulk_send' => 'invoices#bulk_send'
-resources :invoices
+match 'invoices/by_taxcode_and_num' => 'invoices#by_taxcode_and_num', :via => :get
 match 'invoices', :controller => 'invoices', :action => 'destroy', :via => :delete
 match 'invoices/mark_sent/:id' => 'invoices#mark_sent', :via => :get, :as => :mark_sent
 match 'invoices/mark_not_sent/:id' => 'invoices#mark_not_sent', :via => :get, :as => :mark_not_sent
@@ -56,6 +56,7 @@ match 'invoices/amend_for_invoice/:id' => 'invoices#amend_for_invoice', :via => 
 match 'invoices/duplicate_invoice/:id' => 'invoices#duplicate_invoice', :via => :get, :as => :duplicate_invoice
 match 'invoices/destroy_payment/:id' => 'invoices#destroy_payment', :via => :delete, :as => :destroy_payment
 match 'invoices/mail/:id' => 'invoices#mail', :via => :get
+resources :invoices
 
 # public access to an invoice using the client hash
 match 'invoice/download/:client_hashid/:invoice_id' => 'invoices#download', :client_hashid => /.*/, :invoice_id => /\d+/, :via => :get
@@ -66,7 +67,6 @@ match 'invoice/:client_hashid/:invoice_id' => 'invoices#view', :client_hashid =>
 match 'invoices/logo/:attachment_id/:filename' => 'invoices#logo', :attachment_id => /\d+/, :filename => /.*/
 
 resources :invoices, :has_many => :events
-match 'invoices/by_taxcode_and_num/:taxcode/:num' => 'invoices#by_taxcode_and_num', :via => :get
 resources :received
 match 'received/mark_refused/:id' => 'received#mark_refused', :as => :mark_refused
 match 'received/mark_refused_with_mail/:id' => 'received#mark_refused_with_mail', :as => :mark_refused_with_mail
