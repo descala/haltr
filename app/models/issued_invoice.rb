@@ -147,6 +147,8 @@ class IssuedInvoice < InvoiceDocument
         [1, num]
       end
     end.last
+  rescue
+    ""
   end
 
   def self.next_number(project)
