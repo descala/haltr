@@ -15,9 +15,7 @@ class ExportFormats
   end
 
   def self.validations(id)
-    puts 1
     return [] if available[id].nil? or available[id]["validate"].nil?
-    puts 2
     available[id]["validate"].is_a?(Array) ? available[id]["validate"] : [available[id]["validate"]]
   end
 
