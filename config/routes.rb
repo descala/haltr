@@ -65,7 +65,8 @@ match 'invoice/:client_hashid/:invoice_id' => 'invoices#view', :client_hashid =>
 # TODO should be companies controller
 match 'invoices/logo/:attachment_id/:filename' => 'invoices#logo', :attachment_id => /\d+/, :filename => /.*/
 
-resources :invoices, :has_many => :events, :collection => { :by_taxcode_and_num => :get }
+resources :invoices, :has_many => :events
+match 'invoices/by_taxcode_and_num/:taxcode/:num' => 'invoices#by_taxcode_and_num', :via => :get
 resources :received
 match 'received/mark_refused/:id' => 'received#mark_refused', :as => :mark_refused
 match 'received/mark_refused_with_mail/:id' => 'received#mark_refused_with_mail', :as => :mark_refused_with_mail
