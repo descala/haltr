@@ -56,6 +56,7 @@ match 'invoices/amend_for_invoice/:id' => 'invoices#amend_for_invoice', :via => 
 match 'invoices/duplicate_invoice/:id' => 'invoices#duplicate_invoice', :via => :get, :as => :duplicate_invoice
 match 'invoices/destroy_payment/:id' => 'invoices#destroy_payment', :via => :delete, :as => :destroy_payment
 match 'invoices/mail/:id' => 'invoices#mail', :via => :get
+match 'invoices/pdfbase64/:id' => 'invoices#pdfbase64', :via => [:get,:post]
 resources :invoices
 
 # public access to an invoice using the client hash
