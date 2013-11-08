@@ -1,15 +1,22 @@
-<% if @charge_bank_on_due_date.size > 0 -%>
-  <ul class="n19list">
-    <% @charge_bank_on_due_date.each do |invoice| -%>
-      <li>
-      <%= invoice.due_date %> (<%= invoice.invoice_count %>) - <%= link_to_if_authorized l(:button_download), :action => 'n19', :id => invoice %> - <%= link_to_if_authorized l(:button_mark_done), {:action => 'n19_done', :id => invoice}, :confirm => l(:text_are_you_sure), :method => :post %>
-      </li>
+<div class="formee">
+  <% if @charge_bank_on_due_date.size == 0 -%>
+    <p class="nodata"><%= l(:label_no_data) %></p>
+  <% elsif @charge_bank_on_due_date.size == 1 -%>
+    <ul class="n19list">
+      <%= render :partial => 'n19', :locals => { :bank_account => @charge_bank_on_due_date.keys.first, :invoices => @charge_bank_on_due_date.values.first } %>
+    </ul>
+  <% else -%>
+    <% @charge_bank_on_due_date.each do |bank_info, invoices| -%>
+      <fieldset class="tabular box">
+        <legend><%=bank_info.bank_account%></legend>
+        <ul class="n19list">
+          <%= render :partial => 'n19', :locals => { :bank_account => bank_info.bank_account, :invoices => invoices } %>
+        </ul>
+      </fieldset>
     <% end -%>
-  </ul>
-<% else -%>
-  (0)
-<% end -%>
-  
+  <% end -%>
+</div>
+
 <% content_for :sidebar do %>
   <%= render_menu :payments_menu, @project %>
 <% end %>

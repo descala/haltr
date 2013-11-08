@@ -31,6 +31,7 @@ class Invoice < ActiveRecord::Base
   belongs_to :project, :counter_cache => true
   belongs_to :client
   belongs_to :amend, :class_name => "Invoice", :foreign_key => 'amend_id'
+  belongs_to :bank_info
   has_one :amend_of, :class_name => "Invoice", :foreign_key => 'amend_id'
   validates_presence_of :client, :date, :currency, :project_id, :unless => Proc.new {|i| i.type == "ReceivedInvoice" }
   validates_inclusion_of :currency, :in  => Money::Currency.table.collect {|k,v| v[:iso_code] }, :unless => Proc.new {|i| i.type == "ReceivedInvoice" }
@@ -44,6 +45,8 @@ class Invoice < ActiveRecord::Base
     :allow_destroy => true,
     :reject_if => proc { |attributes| attributes.all? { |_, value| value.blank? } }
   validates_associated :invoice_lines
+
+  validate :bank_info_belongs_to_self
 
   composed_of :import,
     :class_name => "Money",
@@ -144,15 +147,15 @@ class Invoice < ActiveRecord::Base
       iban = client.iban || ""
       bic  = client.bic || ""
       "#{l(:debit_str)} BIC #{bic} IBAN #{iban[0..3]} #{iban[4..7]} #{iban[8..11]} **** **** #{iban[20..23]}"
-    elsif transfer? and company.use_iban?
-      iban = company.iban || ""
-      bic  = company.bic || ""
+    elsif transfer? and bank_info.use_iban?
+      iban = bank_info.iban || ""
+      bic  = bank_info.bic || ""
       "#{l(:transfer_str)} BIC #{bic} IBAN #{iban[0..3]} #{iban[4..7]} #{iban[8..11]} #{iban[12..15]} #{iban[16..19]} #{iban[20..23]}"
     elsif debit?
       ba = client.bank_account || ""
       "#{l(:debit_str)} #{ba[0..3]} #{ba[4..7]} ** ******#{ba[16..19]}"
     elsif transfer?
-      ba = company.bank_account ||= ""
+      ba = bank_info.bank_account ||= ""
       "#{l(:transfer_str)} #{ba[0..3]} #{ba[4..7]} #{ba[8..9]} #{ba[10..19]}"
     elsif special?
       payment_method_text
@@ -445,6 +448,12 @@ _INV
   def invoice_must_have_lines
     if invoice_lines.empty? or invoice_lines.all? {|i| i.marked_for_destruction?}
       errors.add(:base, "#{l(:label_invoice)} #{l(:must_have_lines)}")
+    end
+  end
+
+  def bank_info_belongs_to_self
+    if bank_info and bank_info.company != client.project.company
+      errors.add(:base, "Bank info is from other company!")
     end
   end
 

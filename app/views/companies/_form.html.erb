@@ -90,15 +90,30 @@
       <p><%= I18n.t :private_fields_info %></p>
     </p>
   </div>
+  <div id="bank_infos">
+    <div class="col span-1-de-4">
+    <%= f.label_for_field :name %>
+    </div>
+    <div class="col span-1-de-4">
+    <%= f.label_for_field :bank_account %>
+    </div>
+    <div class="col span-1-de-4">
+    <%= f.label_for_field :iban %>
+    </div>
+    <div class="col span-1-de-4">
+    <%= f.label_for_field :bic %>
+    </div>
+
+    <%= f.fields_for :bank_infos do |bank_info_form| %>
+      <%=render :partial => 'companies/bank_info_fields', :locals => {:f => bank_info_form}%>
+    <% end -%>
+  </div>
   <div class="seccio grup">
-    <p class="col span-1-de-3">
-      <%= f.text_field :bank_account, :maxlength => 20, :size => 30 %>
-    </p>
-    <p class="col span-1-de-3">
-      <%= f.text_field :iban, :size => 30 %>
-    </p>
-    <p class="col span-1-de-3">
-      <%= f.text_field :bic, :size => 30 %>
+    <p class="col span-2-de-2">
+      <!-- cocoon -->
+      <span class="mes">
+        <%= link_to_add_association l(:button_add_bank_info), f, :bank_infos, 'data-association-insertion-node' => '#bank_infos', 'data-association-insertion-method' => 'append' %>
+      </span>
     </p>
   </div>
 </fieldset>

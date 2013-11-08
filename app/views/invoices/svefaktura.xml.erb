@@ -79,18 +79,18 @@
    <cac0:PaymentMeans>
      <cac0:PaymentMeansTypeCode><%=h @invoice.payment_method_code(:ubl) %></cac0:PaymentMeansTypeCode>
      <cbc:DuePaymentDate><%=h @invoice.due_date%></cbc:DuePaymentDate>
-     <% if @invoice.transfer? and @company.iban and @company.bic and !@company.iban.blank? and !@company.bic.blank? -%>
+     <% if @invoice.transfer? and @invoice.bank_info.iban and @invoice.bank_info.bic and !@invoice.bank_info.iban.blank? and !@invoice.bank_info.bic.blank? -%>
      <cac0:PayeeFinancialAccount>
-        <cac0:ID><%=h @company.iban%></cac0:ID>
+        <cac0:ID><%=h @invoice.bank_info.iban%></cac0:ID>
         <cac0:FinancialInstitutionBranch>
              <cac0:FinancialInstitution>
-               <cac0:ID><%=h @company.bic%></cac0:ID>
+               <cac0:ID><%=h @invoice.bank_info.bic%></cac0:ID>
              </cac0:FinancialInstitution>
         </cac0:FinancialInstitutionBranch>
      </cac0:PayeeFinancialAccount>
-     <% elsif @invoice.transfer? and @company.bank_account and !@company.bank_account.blank? -%>
+     <% elsif @invoice.transfer? and @invoice.bank_info.bank_account and !@invoice.bank_info.bank_account.blank? -%>
      <cac0:PayeeFinancialAccount>
-     <cac0:ID><%=h @company.bank_account%></cac0:ID>
+     <cac0:ID><%=h @invoice.bank_info.bank_account%></cac0:ID>
      </cac0:PayeeFinancialAccount>
      <% end -%>
    </cac0:PaymentMeans>

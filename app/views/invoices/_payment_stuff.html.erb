@@ -27,11 +27,11 @@
 <%= call_hook(:invoice_form_payment_extra_fields) %>
 
 <%
-    disabled = []
+#    disabled = []
 #    unless @invoice.new_record?
 #      disabled << Invoice::PAYMENT_DEBIT if @invoice.client and @invoice.client.bank_account.blank?
 #    end
-disabled << Invoice::PAYMENT_TRANSFER if @project.company.bank_account.blank?
+#disabled << Invoice::PAYMENT_TRANSFER if @project.company.bank_account.blank?
 -%>
 
 <div class="seccio grup">

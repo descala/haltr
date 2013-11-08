@@ -1,0 +1,18 @@
+<% bank_info_id = f.object_name.split("[").last.gsub(/\]/,'') -%>
+
+<div class="seccio grup nested-fields">
+  <p class="col span-1-de-4">
+  <%= f.text_field :name, :no_label => true %>
+  </p>
+  <p class="col span-1-de-4">
+  <%= f.text_field :bank_account, :maxlength => 20, :size => 30, :no_label => true %>
+  </p>
+  <p class="col span-1-de-4">
+  <%= f.text_field :iban, :size => 30, :no_label => true %>
+  </p>
+  <p class="col span-1-de-4">
+  <%= f.text_field :bic, :style => "width: 80%;", :no_label => true %>
+  <!-- cocoon -->
+  <%= link_to_remove_association image_tag('false.png'), f, :class=>'eliminar', :style => "margin-left: 8px; vertical-align: middle;" %>
+  </p>
+</div>
