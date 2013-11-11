@@ -97,6 +97,7 @@ da:
   cash: Kontant
   debit: Debet betaling
   transfer: Bankoverførsel
+  transfer_to: Bankoverførsel til %{bank_account}
   other: Andre
   requires_client_bank_account: kræver klient bankkonto
   requires_company_bank_account: kræver self-service bank konto

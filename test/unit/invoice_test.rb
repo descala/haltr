@@ -2,7 +2,7 @@ require File.dirname(__FILE__) + '/../test_helper'
 
 class InvoiceTest < ActiveSupport::TestCase
 
-  fixtures :clients, :invoices, :invoice_lines, :taxes, :companies, :people
+  fixtures :clients, :invoices, :invoice_lines, :taxes, :companies, :people, :bank_infos
 
   def setup
     Haltr::TestHelper.fix_invoice_totals
@@ -163,6 +163,22 @@ class InvoiceTest < ActiveSupport::TestCase
     i = invoices(:i9)
     i.invoice_has_taxes
     assert_equal(1, i.export_errors.size)
+  end
+
+  test 'invoice payment_method' do
+    i = invoices(:i8)
+    assert_equal(Invoice::PAYMENT_CASH, i.payment_method)
+    assert_nil i.bank_info
+    i.payment_method = "#{Invoice::PAYMENT_TRANSFER}_1"
+    assert i.transfer?
+    assert_equal(i.bank_info.bank_account,bank_infos(:bi1).bank_account)
+    assert i.valid?
+    i.payment_method = "#{Invoice::PAYMENT_TRANSFER}_2"
+    assert_false i.valid? # bank_info is from other company
+    i.payment_method = Invoice::PAYMENT_TRANSFER
+    assert i.valid?
+    assert i.transfer?
+    assert_nil i.bank_info
   end
 
 end

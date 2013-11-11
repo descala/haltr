@@ -8,7 +8,7 @@
   <% else -%>
     <% @charge_bank_on_due_date.each do |bank_info, invoices| -%>
       <fieldset class="tabular box">
-        <legend><%=bank_info.bank_account%></legend>
+        <legend><%=bank_info.name%></legend>
         <ul class="n19list">
           <%= render :partial => 'n19', :locals => { :bank_account => bank_info.bank_account, :invoices => invoices } %>
         </ul>

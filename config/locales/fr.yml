@@ -99,6 +99,7 @@ fr:
   cash: Liquide
   debit: Débiter paiement
   transfer: Transfert bancaire
+  transfer_to: Transfert bancaire au %{bank_account}
   other: Autres
   requires_client_bank_account: exige le compte bancaire du client
   requires_company_bank_account: exige le propre compte bancaire

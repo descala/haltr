@@ -244,12 +244,12 @@
                      <IBAN><%=h @client.bank_account%></IBAN>
                    <% end -%>
                </AccountToBeDebited>
-<% elsif @invoice.transfer? and @invoice.bank_info.use_iban? -%>
+<% elsif @invoice.transfer? and @invoice.bank_info and @invoice.bank_info.use_iban? -%>
                <AccountToBeCredited>
                  <IBAN><%=h @invoice.bank_info.iban%></IBAN>
                  <BankCode><%=h @invoice.bank_info.bic%></BankCode>
                </AccountToBeCredited>
-<% elsif @invoice.transfer? and !@invoice.bank_info.bank_account.blank? -%>
+<% elsif @invoice.transfer? and @invoice.bank_info and !@invoice.bank_info.bank_account.blank? -%>
                <AccountToBeCredited>
                  <% if (@format == "facturae32") -%>
                    <AccountNumber><%=h @invoice.bank_info.bank_account%></AccountNumnber>

@@ -112,6 +112,7 @@ es:
   cash: En efectivo
   debit: Cargar en cuenta
   transfer: Transferencia bancaria
+  transfer_to: Transferencia bancaria a %{bank_account}
   other: Otros
   requires_client_bank_account: requiere cuenta bancaria del cliente
   requires_company_bank_account: requiere cuenta bancaria propia

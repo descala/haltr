@@ -1,7 +1,7 @@
 class BankInfo < ActiveRecord::Base
   unloadable
   belongs_to :company
-  has_many :invoices
+  has_many :invoices, :dependent => :nullify
 
   validates_numericality_of :bank_account, :allow_nil => true, :allow_blank => true
   validates_length_of :bank_account, :maximum => 20
@@ -20,6 +20,7 @@ class BankInfo < ActiveRecord::Base
       return iban         unless iban.blank?
       return bic          unless bic.blank?
     end
+    return read_attribute(:name)
   end
 
   # use iban and bic if they are present

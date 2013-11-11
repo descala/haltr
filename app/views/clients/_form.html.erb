@@ -115,9 +115,8 @@
   <% unless client.linked? -%>
     <div class="seccio grup">
       <p class="col span-1-de-2">
-        <% disabled = [] ; disabled << Invoice::PAYMENT_TRANSFER if @project.company.bank_infos.empty? -%>
-        <%= f.select(:payment_method, Invoice.payment_methods, {:disabled=>disabled}) %><br/>
-        <%= f.text_area(:payment_method_text, :cols => 40, :rows => 2, :no_label => true, :id => 'payment_other', :style => (client.payment_method==13) ? '' : 'display: none;') %>
+        <%= f.select(:payment_method, Invoice.payment_methods) %><br/>
+        <%= f.text_area(:payment_method_text, :cols => 40, :rows => 2, :no_label => true, :id => 'payment_other', :style => (client.payment_method==Invoice::PAYMENT_SPECIAL) ? '' : 'display: none;') %>
       </p>
       <p class="col span-1-de-2">
         <%= f.select(:terms, Terms.for_select, {}) %>

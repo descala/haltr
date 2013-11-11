@@ -97,6 +97,7 @@ sv:
   cash: Kontant
   debit: Debit betalning
   transfer: Bankbetalning
+  transfer_to: Bankbetalning till %{bank_account}
   other: Annan
   requires_client_bank_account: Kundens bankkonto krävs
   requires_company_bank_account: Bankkonto måste registreras

@@ -97,7 +97,7 @@
             <cac:PayerFinancialAccount>
               <cbc:ID><%=h @client.bank_account%></cbc:ID>
             </cac:PayerFinancialAccount>
-<% elsif @invoice.transfer? and @invoice.bank_info.iban and @invoice.bank_info.bic and !@invoice.bank_info.iban.blank? and !@invoice.bank_info.bic.blank? -%>
+<% elsif @invoice.transfer? and @invoice.bank_info and !@invoice.bank_info.iban.blank? and !@invoice.bank_info.bic.blank? -%>
             <cbc:PaymentChannelCode>IBAN</cbc:PaymentChannelCode>
             <cac:PayeeFinancialAccount>
               <cbc:ID schemeID="IBAN"><%=h @invoice.bank_info.iban%></cbc:ID>
@@ -107,7 +107,7 @@
                 </cac:FinancialInstitution>
               </cac:FinancialInstitutionBranch>
             </cac:PayeeFinancialAccount>
-<% elsif @invoice.transfer? and @invoice.bank_info.bank_account and !@invoice.bank_info.bank_account.blank? -%>
+<% elsif @invoice.transfer? and @invoice.bank_info and !@invoice.bank_info.bank_account.blank? -%>
             <cac:PayeeFinancialAccount>
               <cbc:ID><%=h @invoice.bank_info.bank_account%></cbc:ID>
             </cac:PayeeFinancialAccount>

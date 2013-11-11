@@ -19,20 +19,12 @@
     terms = @client.terms
   end
   currency ||= Setting.plugin_haltr['default_currency']
-  payment_method ||= 1
+  payment_method ||= Invoice::PAYMENT_CASH
   payment_method_text ||= ""
   terms ||= 0
 -%>
 
 <%= call_hook(:invoice_form_payment_extra_fields) %>
-
-<%
-#    disabled = []
-#    unless @invoice.new_record?
-#      disabled << Invoice::PAYMENT_DEBIT if @invoice.client and @invoice.client.bank_account.blank?
-#    end
-#disabled << Invoice::PAYMENT_TRANSFER if @project.company.bank_account.blank?
--%>
 
 <div class="seccio grup">
   <p class="col span-1-de-3">
@@ -41,8 +33,8 @@
   </p>
   <p class="col span-1-de-3">
     <label for="invoice_payment_method"><%= l(:field_payment_method) %></label>
-    <%= select(:invoice, :payment_method, Invoice.payment_methods, {:selected=>payment_method }, :required => true, :style => 'vertical-align: top;') %>
-    <%= text_area(:invoice, :payment_method_text, :cols => 40, :rows => 2, :value => payment_method_text, :id => 'payment_other', :style => (payment_method==13) ? '' : 'display: none;') %>
+    <%= select(:invoice, :payment_method, @invoice.payment_methods, {:selected=>payment_method}, :required => true, :style => 'vertical-align: top;') %>
+    <%= text_area(:invoice, :payment_method_text, :cols => 40, :rows => 2, :value => payment_method_text, :id => 'payment_other', :style => (payment_method==Invoice::PAYMENT_SPECIAL) ? '' : 'display: none;') %>
   </p>
   <p class="col span-1-de-3">
     <label for="invoice_terms"><%= l(:field_terms) %></label>
