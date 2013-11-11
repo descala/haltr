@@ -4,6 +4,7 @@ class InvoicesController < ApplicationController
   menu_item Haltr::MenuItem.new(:invoices,:invoices_level2)
   menu_item Haltr::MenuItem.new(:invoices,:reports), :only => :report
   helper :haltr
+  helper :context_menus
   layout 'haltr'
 
   helper :sort
@@ -11,8 +12,9 @@ class InvoicesController < ApplicationController
 
   PUBLIC_METHODS = [:by_taxcode_and_num,:view,:download,:mail,:logo]
 
-  before_filter :find_project_by_project_id, :only => [:index,:new,:create,:send_new_invoices, :download_new_invoices, :update_payment_stuff,:new_invoices_from_template,:create_invoices,:report,:update_taxes]
-  before_filter :find_invoice, :only => [:edit,:update,:destroy,:mark_sent,:mark_closed,:mark_not_sent,:mark_accepted_with_mail,:mark_accepted,:mark_refused_with_mail,:mark_refused,:duplicate_invoice,:pdfbase64,:show,:send_invoice,:legal,:amend_for_invoice] 
+  before_filter :find_project_by_project_id, :only => [:index,:new,:create,:send_new_invoices,:update_payment_stuff,:new_invoices_from_template,:report,:create_invoices,:update_taxes]
+  before_filter :find_invoice, :only => [:edit,:update,:mark_sent,:mark_closed,:mark_not_sent,:mark_accepted_with_mail,:mark_accepted,:mark_refused_with_mail,:mark_refused,:duplicate_invoice,:base64doc,:show,:send_invoice,:legal,:amend_for_invoice]
+  before_filter :find_invoices, :only => [:context_menu,:bulk_download,:bulk_mark_as,:bulk_send,:destroy]
   before_filter :find_payment, :only => [:destroy_payment]
   before_filter :find_hashid, :only => [:view,:download]
   before_filter :find_attachment, :only => [:logo]
@@ -31,7 +33,7 @@ class InvoicesController < ApplicationController
   include CompanyFilter
   before_filter :check_for_company, :except => PUBLIC_METHODS
 
-  skip_before_filter :verify_authenticity_token, :only => [:pdfbase64]
+  skip_before_filter :verify_authenticity_token, :only => [:base64doc]
 
   def index
     sort_init 'invoices.created_at', 'desc'
@@ -182,8 +184,14 @@ class InvoicesController < ApplicationController
   end
 
   def destroy
-    @invoice.destroy
-    redirect_to :action => 'index', :project_id => @project
+    @invoices.each do |invoice|
+      begin
+        invoice.reload.destroy
+      rescue ::ActiveRecord::RecordNotFound # raised by #reload if invoice no longer exists
+        # nothing to do, invoice was already deleted (eg. by a parent)
+      end
+    end
+    redirect_back_or_default(:action => 'index', :project_id => @project)
   end
 
   def destroy_payment
@@ -227,24 +235,29 @@ class InvoicesController < ApplicationController
     render :action => "new"
   end
 
-  def pdfbase64
+  def base64doc
+    doc_format=params[:doc_format]
     if request.get?
       # send a base64 encoded pdf document
-      pdf_file = create_pdf_file
-      base64_file=Tempfile.new("invoice_#{@invoice.id}.pdf.base64","tmp")
+      file = doc_format == "pdf" ? create_pdf_file : create_xml_file(doc_format)
+      base64_file=Tempfile.new("invoice_#{@invoice.id}.base64","tmp")
       File.open(base64_file.path, 'w') do |f|
-        f.write(Base64::encode64(File.read(pdf_file.path)))
+        f.write(Base64::encode64(File.read(file.path)))
       end
       if base64_file
-        send_file(base64_file.path, :filename => @invoice.pdf_name, :type => "text/plain", :disposition => 'inline')
+        send_file(base64_file.path,
+                  :filename => (doc_format == "pdf" ? @invoice.pdf_name : @invoice.xml_name),
+                  :type => "text/plain",
+                  :disposition => 'inline')
       else
-        render :text => "Error in PDF creation"
+        render :text => "Error in #{doc_format} creation"
       end
     else
       # queue a signed pdf document
       if file_contents = params['document']
         logger.info "Invoice #{@invoice.id} #{file_contents[0..16]}(...) received"
-        file = Tempfile.new "invoice_signed_#{@invoice.id}.pdf", "tmp"
+        file = Tempfile.new "invoice_signed_#{@invoice.id}.#{doc_format == "pdf" ? "pdf" : "xml"}", "tmp"
+        file.binmode
         # TODO hack the ' ' to '+' replacement
         # rails replaces '+' with ' '. we undo that.
         file.write Base64.decode64(file_contents.gsub(' ','+'))
@@ -273,13 +286,23 @@ class InvoicesController < ApplicationController
           :formats => :html,
           :show_as_html => params[:debug]
       end
-      format.facturae30  { render_clean_xml :formats => :xml, :template => 'invoices/facturae30',  :layout => false }
-      format.facturae31  { render_clean_xml :formats => :xml, :template => 'invoices/facturae31',  :layout => false }
-      format.facturae32  { render_clean_xml :formats => :xml, :template => 'invoices/facturae32',  :layout => false }
-      format.peppolubl20 { render_clean_xml :formats => :xml, :template => 'invoices/peppolubl20', :layout => false }
-      format.biiubl20    { render_clean_xml :formats => :xml, :template => 'invoices/biiubl20',    :layout => false }
-      format.svefaktura  { render_clean_xml :formats => :xml, :template => 'invoices/svefaktura',  :layout => false }
-      format.oioubl20    { render_clean_xml :formats => :xml, :template => 'invoices/oioubl20',    :layout => false }
+      if params[:debug]
+        format.facturae30  { render_clean_xml :formats => :xml, :template => 'invoices/facturae30',  :layout => false }
+        format.facturae31  { render_clean_xml :formats => :xml, :template => 'invoices/facturae31',  :layout => false }
+        format.facturae32  { render_clean_xml :formats => :xml, :template => 'invoices/facturae32',  :layout => false }
+        format.peppolubl20 { render_clean_xml :formats => :xml, :template => 'invoices/peppolubl20', :layout => false }
+        format.biiubl20    { render_clean_xml :formats => :xml, :template => 'invoices/biiubl20',    :layout => false }
+        format.svefaktura  { render_clean_xml :formats => :xml, :template => 'invoices/svefaktura',  :layout => false }
+        format.oioubl20    { render_clean_xml :formats => :xml, :template => 'invoices/oioubl20',    :layout => false }
+      else
+        format.facturae30  { download_clean_xml :formats => :xml, :template => 'invoices/facturae30',  :layout => false }
+        format.facturae31  { download_clean_xml :formats => :xml, :template => 'invoices/facturae31',  :layout => false }
+        format.facturae32  { download_clean_xml :formats => :xml, :template => 'invoices/facturae32',  :layout => false }
+        format.peppolubl20 { download_clean_xml :formats => :xml, :template => 'invoices/peppolubl20', :layout => false }
+        format.biiubl20    { download_clean_xml :formats => :xml, :template => 'invoices/biiubl20',    :layout => false }
+        format.svefaktura  { download_clean_xml :formats => :xml, :template => 'invoices/svefaktura',  :layout => false }
+        format.oioubl20    { download_clean_xml :formats => :xml, :template => 'invoices/oioubl20',    :layout => false }
+      end
     end
   end
 
@@ -290,9 +313,9 @@ class InvoicesController < ApplicationController
     # e.backtrace does not fit in session leading to
     #   ActionController::Session::CookieStore::CookieOverflow
     flash[:error] = "#{l(:error_invoice_not_sent, :num=>@invoice.number)}: #{e.message}"
-    raise e if Rails.env == "development"
+    #raise e if Rails.env == "development"
   ensure
-    redirect_to :action => 'show', :id => @invoice
+    redirect_back_or_default(:action => 'show', :id => @invoice)
   end
 
   def send_new_invoices
@@ -315,38 +338,6 @@ class InvoicesController < ApplicationController
       end
     end
     @num_sent = num
-  end
-  
-  def download_new_invoices
-    require 'zip/zip'
-    require 'zip/zipfilesystem'
-    @company = @project.company
-    invoices = IssuedInvoice.find_not_sent @project
-    # just a safe big limit
-    if invoices.size > 100
-      flash[:error] = l(:too_much_invoices,:num=>invoices.size)
-      redirect_to :action=>'index', :project_id=>@project
-      return
-    end
-    zip_file = Tempfile.new "#{@project.identifier}_invoices.zip", 'tmp'
-    logger.info "Creating zip file '#{zip_file.path}' for invoice ids #{invoices.collect{|i|i.id}.join(',')}."
-    Zip::ZipOutputStream.open(zip_file.path) do |zos|
-      invoices.each do |invoice|
-        @invoice = invoice
-        @lines = @invoice.invoice_lines
-        @client = @invoice.client
-        pdf_file = create_pdf_file
-        zos.put_next_entry(@invoice.pdf_name)
-        zos.print IO.read(pdf_file.path)
-        pdf_file.close
-        logger.info "Added #{@invoice.pdf_name} from #{pdf_file.path}"
-      end
-    end
-    send_file zip_file.path, :type => "application/zip", :filename => "#{@project.identifier}-invoices.zip"
-    zip_file.close
-  rescue LoadError
-    flash[:error] = l(:zip_gem_required)
-    redirect_to :action => 'index', :project_id => @project
   end
 
   # Renders a partial to update curreny, payment_method, and invoice_terms
@@ -407,14 +398,14 @@ class InvoicesController < ApplicationController
     end
   end
 
-  # this is the same as download, but without the befor filter :find_hashid 
+  # this is the same as download, but without the befor filter :find_hashid
   def legal
     download
   end
 
   # downloads an invoice without login using its hash_id and its md5 as credentials
   def download
-    if (Rails.env.development? or Rails.env.test?) and !Setting['plugin_haltr']['b2brouter_ip'] 
+    if (Rails.env.development? or Rails.env.test?) and !Setting['plugin_haltr']['b2brouter_ip']
       logger.debug "This is a test XML invoice"
       send_file Rails.root.join("plugins/haltr/test/fixtures/xml/test_invoice_facturae32.xml")
     else
@@ -527,6 +518,16 @@ class InvoicesController < ApplicationController
     render_404
   end
 
+  def find_invoices
+    @invoices = Invoice.find_all_by_id(params[:id] || params[:ids])
+    raise ActiveRecord::RecordNotFound if @invoices.empty?
+    raise Unauthorized unless @invoices.collect {|i| i.project }.uniq.size == 1
+    @project = @invoices.first.project
+    @company = @project.company
+  rescue ActiveRecord::RecordNotFound
+    render_404
+  end
+
   def find_payment
     @payment = Payment.find(params[:id])
     @invoice = @payment.invoice
@@ -553,7 +554,17 @@ class InvoicesController < ApplicationController
     pdf_file = Tempfile.new(@invoice.pdf_name,:encoding => 'ascii-8bit')
     pdf_file.write pdf
     logger.info "Created PDF #{pdf_file.path}"
+    pdf_file.close
     return pdf_file
+  end
+
+  def create_xml_file(format)
+    xml = render_to_string(:template => "invoices/#{format}.xml.erb", :layout => false)
+    xml_file = Tempfile.new("invoice_#{@invoice.id}.xml")
+    xml_file.write(clean_xml(xml))
+    logger.info "Created XML #{xml_file.path}"
+    xml_file.close
+    return xml_file
   end
 
   def create_and_queue_file
@@ -561,14 +572,7 @@ class InvoicesController < ApplicationController
     export_id = @invoice.client.invoice_format
     @format = ExportChannels.format export_id
     @company = @project.company
-    file_ext = @format == "pdf" ? "pdf" : "xml"
-    if @format == 'pdf'
-      invoice_file = create_pdf_file
-    else
-      invoice_file=Tempfile.new("invoice_#{@invoice.id}.#{file_ext}","tmp")
-      invoice_file.write(clean_xml(render_to_string(:template => "invoices/#{@format}.xml.erb", :layout => false)))
-    end
-    invoice_file.close
+    invoice_file = @format == 'pdf' ? create_pdf_file : create_xml_file(@format)
     if ExportChannels.folder(export_id).nil?
       # call invoice method
       method = ExportChannels.call_invoice_method(export_id)
@@ -606,6 +610,13 @@ class InvoicesController < ApplicationController
     render :text => clean_xml(xml)
   end
 
+  def download_clean_xml(options)
+    xml = render_to_string(options)
+    send_data clean_xml(xml),
+    :type => 'text/xml; charset=UTF-8;',
+    :disposition => "attachment; filename=#{@invoice.pdf_name_without_extension}.xml"
+  end
+
   def clean_xml(xml)
     xsl =<<XSL
 <xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
@@ -630,6 +641,106 @@ XSL
     elsif @invoice.is_a? InvoiceTemplate and params[:controller] != "invoice_templates"
       redirect_to invoice_template_path(@invoice) && return
     end
+  end
+
+  # see redmine's context_menu controller
+  def context_menu
+    (render_404; return) unless @invoices.present?
+    if (@invoices.size == 1)
+      @invoice = @invoices.first
+    end
+    @invoice_ids = @invoices.map(&:id).sort
+
+    @can = { :edit => User.current.allowed_to?(:general_use, @project),
+             :read => (User.current.allowed_to?(:general_use, @project) ||
+                      User.current.allowed_to?(:use_all_readonly, @project)),
+             :bulk_download => User.current.allowed_to?(:bulk_download, @project)
+           }
+    @back = back_url
+
+    render :layout => false
+  end
+
+  def bulk_download
+    unless ExportFormats.available.keys.include? params[:in]
+      flash[:error] = "unknown format #{params[:in]}"
+      redirect_back_or_default(:action=>'index',:project_id=>@project.id)
+      return
+    end
+    require 'zip/zip'
+    require 'zip/zipfilesystem'
+    # just a safe big limit
+    if @invoices.size > 100
+      flash[:error] = l(:too_much_invoices,:num=>@invoices.size)
+      redirect_to :action=>'index', :project_id=>@project
+      return
+    end
+    zip_file = Tempfile.new "#{@project.identifier}_invoices.zip", 'tmp'
+    logger.info "Creating zip file '#{zip_file.path}' for invoice ids #{@invoices.collect{|i|i.id}.join(',')}."
+    Zip::ZipOutputStream.open(zip_file.path) do |zos|
+      @invoices.each do |invoice|
+        @invoice = invoice
+        @lines = @invoice.invoice_lines
+        @client = @invoice.client
+        file_name = @invoice.pdf_name_without_extension
+        case params[:in]
+        when "pdf"
+          file = create_pdf_file
+          file_name += ".pdf"
+        else
+          file = create_xml_file(params[:in])
+          file_name += ".xml"
+        end
+        zos.put_next_entry(file_name)
+        zos.print IO.read(file.path)
+        logger.info "Added #{file_name} from #{file.path}"
+      end
+    end
+    zip_file.close
+    send_file zip_file.path, :type => "application/zip", :filename => "#{@project.identifier}-invoices.zip"
+  rescue LoadError
+    flash[:error] = l(:zip_gem_required)
+    redirect_to :action => 'index', :project_id => @project
+  end
+
+  def bulk_mark_as
+    all_changed = true
+    @invoices.each do |i|
+      next if i.state == params[:state]
+      case params[:state]
+      when "new"
+        all_changed &&= (i.mark_unsent)
+      when "sent"
+        all_changed &&= (i.manual_send || i.success_sending || i.unpaid)
+      when "closed"
+        all_changed &&= (i.close || i.paid)
+      else
+        flash[:error] = "unknown state #{params[:state]}"
+      end
+    end
+    flash[:warn] = l(:some_states_not_changed) unless all_changed
+    redirect_back_or_default(:action=>'index',:project_id=>@project.id)
+  end
+
+  def bulk_send
+    sent = 0
+    @invoices.each do |invoice|
+      @invoice = invoice
+      @lines = @invoice.invoice_lines
+      @client = @invoice.client || Client.new(:name=>"unknown",:project=>@invoice.project)
+      @company = @project.company
+      begin
+        create_and_queue_file
+        sent += 1
+      rescue Exception
+      end
+    end
+    if sent < @invoices.size
+      flash[:error] = l(:some_invoices_sent,:sent=>sent,:total=>@invoices.size)
+    else
+      flash[:notice] = l(:all_invoices_sent)
+    end
+    redirect_back_or_default(:action => 'index', :project_id => @project.id)
   end
 
 end

@@ -16,7 +16,6 @@ resources :projects do
   match 'companies/linked_to_mine', :controller => 'companies', :action => 'linked_to_mine', :via => :get
   match 'my_company', :controller => 'companies', :action => 'my_company', :via => :get
   match 'invoices/send_new' => 'invoices#send_new_invoices', :via => :get
-  match 'invoices/download_new' => 'invoices#download_new_invoices', :via => :get
   match 'invoices/update_payment_stuff' => 'invoices#update_payment_stuff', :via => :get
   match 'invoices/new/:client' => 'invoices#new', :via => :get, :as => :client_new_invoice
   resources :invoices, :only => [:index, :new, :create]
@@ -30,6 +29,7 @@ resources :projects do
   match 'payments/import_aeb43_index' => 'payments#import_aeb43_index'
   match 'payments/import_aeb43' => 'payments#import_aeb43'
   match 'payments/n19_index' => 'payments#n19_index'
+  match 'invoices', :controller => 'invoices', :action => 'destroy', :via => :delete
 end
 match 'payments/n19/:id' => 'payments#n19', :via => :get
 match 'payments/n19_done/:id' => 'payments#n19_done', :via => :post
@@ -38,7 +38,15 @@ resources :clients do
 end
 
 resources :people
-resources :invoices
+match 'invoices/context_menu', :to => 'invoices#context_menu', :as => 'invoices_context_menu', :via => [:get, :post]
+match 'received/context_menu', :to => 'received#context_menu', :as => 'received_context_menu', :via => [:get, :post]
+match 'invoices/bulk_download' => 'invoices#bulk_download'
+match 'received/bulk_download' => 'received#bulk_download'
+match 'invoices/bulk_mark_as' => 'invoices#bulk_mark_as'
+match 'received/bulk_mark_as' => 'received#bulk_mark_as'
+match 'invoices/bulk_send' => 'invoices#bulk_send'
+match 'invoices/by_taxcode_and_num' => 'invoices#by_taxcode_and_num', :via => :get
+match 'invoices', :controller => 'invoices', :action => 'destroy', :via => :delete
 match 'invoices/mark_sent/:id' => 'invoices#mark_sent', :via => :get, :as => :mark_sent
 match 'invoices/mark_not_sent/:id' => 'invoices#mark_not_sent', :via => :get, :as => :mark_not_sent
 match 'invoices/mark_closed/:id' => 'invoices#mark_closed', :via => :get, :as => :mark_closed
@@ -48,6 +56,8 @@ match 'invoices/amend_for_invoice/:id' => 'invoices#amend_for_invoice', :via => 
 match 'invoices/duplicate_invoice/:id' => 'invoices#duplicate_invoice', :via => :get, :as => :duplicate_invoice
 match 'invoices/destroy_payment/:id' => 'invoices#destroy_payment', :via => :delete, :as => :destroy_payment
 match 'invoices/mail/:id' => 'invoices#mail', :via => :get
+match 'invoices/base64doc/:id/:doc_format' => 'invoices#base64doc', :via => [:get,:post]
+resources :invoices
 
 # public access to an invoice using the client hash
 match 'invoice/download/:client_hashid/:invoice_id' => 'invoices#download', :client_hashid => /.*/, :invoice_id => /\d+/, :via => :get
@@ -57,7 +67,7 @@ match 'invoice/:client_hashid/:invoice_id' => 'invoices#view', :client_hashid =>
 # TODO should be companies controller
 match 'invoices/logo/:attachment_id/:filename' => 'invoices#logo', :attachment_id => /\d+/, :filename => /.*/
 
-  resources :invoices, :has_many => :events, :collection => { :by_taxcode_and_num => :get }
+resources :invoices, :has_many => :events
 resources :received
 match 'received/mark_refused/:id' => 'received#mark_refused', :as => :mark_refused
 match 'received/mark_refused_with_mail/:id' => 'received#mark_refused_with_mail', :as => :mark_refused_with_mail

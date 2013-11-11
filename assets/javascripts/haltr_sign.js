@@ -99,7 +99,7 @@ function doSign_end() {
   $('#ajax-indicator').css('display','none');
 }
 
-function doSign(document_url) {
+function doSign(document_url,signature_type) {
   try {
     var dataB64;
     doSign_init();
@@ -113,7 +113,9 @@ function doSign(document_url) {
           // <option value="Adobe PDF">PAdES</option>
           // <option value="XAdES">XAdES</option>
           // <option value="ODF">ODF</option>
-          var signed_document = sign( dataB64, 'SHA1withRSA', "Adobe PDF", null);
+          // signature_type for PDF: 'Adobe PDF'
+          // signature_type for Facturae: 'XAdES Enveloped'
+          var signed_document = sign(dataB64, 'SHA1withRSA', signature_type, null);
           log('Enviant document signat al servidor ...');
           $.ajax({
             type: "POST",

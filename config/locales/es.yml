@@ -138,6 +138,10 @@ es:
   state_accepted: "Aceptada"
   state_refused: "Rechazada"
   state_paid: "Pagada"
+  state_received_plural: "Recibidas"
+  state_accepted_plural: "Aceptadas"
+  state_refused_plural: "Rechazadas"
+  state_paid_plural: "Pagadas"
   sending_log: "Log d'enviament"
   sending_log: "Log de envio"
   download_legal: "Descargar factura legal"
@@ -182,8 +186,6 @@ es:
   default: "Por defecto"
   only_one_default_allowed_for: "%{tax_name}: Solo se acepta un impuesto por defecto"
   add_taxes_on_company: "Puedes gestionar los impuestos en \"Mi empresa\""
-  button_download_new_invoices: "Descargar zip de facturas nuevas"
-  label_download_new_invoices_info: "Genera un zip con todas las facturas nuevas en formato PDF"
   field_exempt: "Exempto"
   field_comment: "Razón de exempción"
 
@@ -222,6 +224,7 @@ es:
   back: "Volver"
   view_mail: "Ver email"
   public_link: "Enlace público"
+  mark_as_received: "Marcada como recibida"
 
   # Invoice templates
   label_invoice_template_new: Nueva plantilla
@@ -415,3 +418,9 @@ es:
   company_taxcode_needed: "No podem generar el document perquè la teva empresa no té NIF"
   client_taxcode_needed: "No podem generar el document perquè el client no té NIF"
   read: "Leído"
+  text_invoices_destroy_confirmation: '¿Seguro que quiere borrar las facturas seleccionadas?'
+  mark_as: "Marcar como"
+  some_states_not_changed: "Algunos estados no se pudieron cambiar"
+  button_send: "Enviar"
+  some_invoices_sent: "Algunas facturas no se pudieron enviar (enviadas %{sent} de %{total})"
+  all_invoices_sent: "Se han enviado las facturas"

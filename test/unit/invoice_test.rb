@@ -147,12 +147,12 @@ class InvoiceTest < ActiveSupport::TestCase
     assert_equal 'person1@example.com', i.recipient_emails.first
   end
 
-  test 'valid_payment_method' do
+  test 'payment_method_requirements' do
     i = invoices(:i8)
-    i.valid_payment_method
+    i.payment_method_requirements
     assert_equal(0,i.export_errors.size)
     i = invoices(:i9)
-    i.valid_payment_method
+    i.payment_method_requirements
     assert_equal(1,i.export_errors.size)
   end
 

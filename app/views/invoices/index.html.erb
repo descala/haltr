@@ -8,11 +8,6 @@
         <%= link_to_if_authorized "#{l(:button_send_invoices)} (#{num_can_be_sent})",{:action => 'send_new_invoices'} %>
         </li>
       <% end -%>
-      <% if num_not_sent > 0 -%>
-        <li>
-        <%= link_to_if_authorized "#{l(:button_download_new_invoices)} (#{num_not_sent})",{:action => 'download_new_invoices'}, :title => l(:label_download_new_invoices_info) %>
-        </li>
-      <% end -%>
     </ul>
   </div>
 </div>
@@ -67,41 +62,46 @@
 <!--final filtres-->
 
 <!--taula factures-->
-<div class="seccio grup">
-  <div class="col span-2-de-2">
-    <table class="taula-1 list invoices">
-      <thead>
-        <tr>
-          <%= sort_header_tag('number', :caption => l(:field_number)) %>
-          <%= sort_header_tag('date', :caption => l(:field_date)) %>
-          <%= sort_header_tag('clients.name', :caption => l(:field_company)) %>
-          <%= sort_header_tag('import_in_cents', :caption => l(:label_subtotal)) %>
-          <%= sort_header_tag('import_in_cents', :caption => l(:label_total)) %>
-          <%= sort_header_tag('due_date', :caption => l(:field_due_date)) %>
-          <%= sort_header_tag('state', :caption => l(:field_state)) %>
-        </tr>
-      </thead>
-      <tbody>
-        <% for invoice in @invoices -%>
-          <tr class="<%= 'amended ' if invoice.amended? %><%= cycle("odd", "even") %>" onclick="javascript: document.location = '<%=url_for(:action=>'show', :id=>invoice)%>'" style="cursor:pointer;">
-            <td><%=h invoice.number %></td>
-            <td><%=h format_date invoice.date %></td>
-            <td><%=h invoice.client %></td>
-            <td class="money"><%= money(invoice.subtotal) %></td>
-            <td class="money"><%= money(invoice.total) %></td>
-            <td <%='class="pastdue"'.html_safe if invoice.past_due?%>><%=h format_date invoice.due_date %></td>
-            <td><%=h l("state_#{invoice.state}").capitalize %></td>
+<%= form_tag({}) do -%>
+  <%= hidden_field_tag 'back_url', url_for(params), :id => nil %>
+  <div class="seccio grup">
+    <div class="col span-2-de-2">
+      <table class="taula-1 list invoices">
+        <thead>
+          <tr>
+            <th></th>
+            <%= sort_header_tag('number', :caption => l(:field_number)) %>
+            <%= sort_header_tag('date', :caption => l(:field_date)) %>
+            <%= sort_header_tag('clients.name', :caption => l(:field_company)) %>
+            <%= sort_header_tag('import_in_cents', :caption => l(:label_subtotal)) %>
+            <%= sort_header_tag('import_in_cents', :caption => l(:label_total)) %>
+            <%= sort_header_tag('due_date', :caption => l(:field_due_date)) %>
+            <%= sort_header_tag('state', :caption => l(:field_state)) %>
           </tr>
-        <% end -%>
-      </tbody>
-      <tfoot>
-        <tr>
-          <td colspan="7">&nbsp;</td>
-        </tr>
-      </tfoot>
-    </table>
+        </thead>
+        <tbody>
+          <% for invoice in @invoices -%>
+            <tr id="invoice-<%=invoice.id%>" class="hascontextmenu <%= 'amended ' if invoice.amended? %><%= cycle("odd", "even") %>">
+              <td><%= check_box_tag("ids[]", invoice.id, false, :id => nil) %></td>
+              <td onclick="javascript: document.location = '<%=url_for(:action=>'show', :id=>invoice)%>'" style="cursor:pointer;"><%=h link_to_if_authorized invoice.number, :action => 'show', :id => invoice %></td>
+              <td><%=h format_date invoice.date %></td>
+              <td><%=h invoice.client %></td>
+              <td class="money"><%= money(invoice.subtotal) %></td>
+              <td class="money"><%= money(invoice.total) %></td>
+              <td <%='class="pastdue"'.html_safe if invoice.past_due?%>><%=h format_date invoice.due_date %></td>
+              <td><%=h l("state_#{invoice.state}").capitalize %></td>
+            </tr>
+          <% end -%>
+        </tbody>
+        <tfoot>
+          <tr>
+            <td colspan="7">&nbsp;</td>
+          </tr>
+        </tfoot>
+      </table>
+    </div>
   </div>
-</div>
+<% end -%>
 <!--final taula factures-->
 
 
@@ -118,3 +118,4 @@
   <%= render_menu :invoices_menu, @project %>
 <% end %>
 
+<%= context_menu invoices_context_menu_path %>

@@ -97,4 +97,12 @@ class InvoicesControllerTest < ActionController::TestCase
     assert_equal [], facturae_errors_online(xml)
   end
 
+  test 'by_taxcode_and_num' do
+    @request.session[:user_id] = nil
+    get :by_taxcode_and_num, :num => "08/001", "taxcode"=>"77310000G"
+    assert_response :success
+    assert_equal "855445292", @response.body
+    @request.session[:user_id] = 2
+  end
+
 end

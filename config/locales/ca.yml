@@ -136,6 +136,10 @@ ca:
   state_accepted: "Acceptada"
   state_refused: "Refusada"
   state_paid: "Pagada"
+  state_received_plural: "Rebudes"
+  state_accepted_plural: "Acceptades"
+  state_refused_plural: "Refusades"
+  state_paid_plural: "Pagades"
   sending_log: "Log d'enviament"
   download_legal: "Descarregar factura legal"
   download_notification: "Descarregar notificació"
@@ -179,8 +183,6 @@ ca:
   default: "Per defecte"
   only_one_default_allowed_for: "%{tax_name}: Només es permet un impost per defecte"
   add_taxes_on_company: "Pots gestionar els impostos a \"La meva empresa\""
-  button_download_new_invoices: "Descarregar zip amb les noves"
-  label_download_new_invoices_info: "Genera un zip que conté totes les factures noves en format PDF"
   field_exempt: "Exempt"
   field_comment: "Motiu d'exempció"
 
@@ -219,6 +221,7 @@ ca:
   back: "Tornar"
   view_mail: "Veure email"
   public_link: "Enllaç públic"
+  mark_as_received: "Marcada com a rebuda"
 
   # Invoice templates
   label_invoice_template_new: Nova factura recurrent
@@ -412,3 +415,9 @@ ca:
   company_taxcode_needed: "No podem generar el document perquè la teva empresa no té NIF"
   client_taxcode_needed: "No podem generar el document perquè el client no té NIF"
   read: "Llegit"
+  text_invoices_destroy_confirmation: "Segur que voleu suprimir les factures seleccionades?"
+  mark_as: "Marca com a"
+  some_states_not_changed: "Alguns estats no s'han pogut canviar"
+  button_send: "Envia"
+  some_invoices_sent: "Algunes factures no s'han pogut enviar (enviades %{sent} de %{total})"
+  all_invoices_sent: "S'han enviat les factures"

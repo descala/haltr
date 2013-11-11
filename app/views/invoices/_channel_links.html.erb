@@ -1,8 +1,8 @@
 <div class="invoice-channel-links">
 <h3>Check gemerated documents</h3>
 <ul>
-  <% ExportChannels.formats.sort.each do |format| %>
-    <li><%= link_to_if_authorized format, {:controller=>'invoices',:action=>'show' ,:id=>@invoice, :format => format} %></li>
+  <% ExportFormats.available.each do |format,conf| %>
+    <li><%= link_to_if_authorized conf["name"], {:controller=>'invoices',:action=>'show' ,:id=>@invoice, :format=>format, :debug=>true} %></li>
   <% end %>
   <% if @invoice.visible_by_client? -%>
     <li><%= link_to("public link", {:action=>'view', :client_hashid=>@invoice.client.hashid, :invoice_id=>@invoice.id}, :class=>'public') %></li>

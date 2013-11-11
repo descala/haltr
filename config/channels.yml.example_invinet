@@ -2,7 +2,7 @@
 # channels.yml
 #
 # channel_name:
-#   format:     [pdf or the name of a template at app/views/invoices/*.xml.erb] ex. facturae32
+#   format:     [format in formats.yml (if any)] ex. facturae32
 #   folder:     [folder to leave the resulting document in] ex. /tmp
 #   validate:   [method name in app/models/issued_invoice.rb] ex. client_has_email
 #   locales:
@@ -51,7 +51,7 @@ signed_pdf_local_cert:
   format: pdf
   folder: free_pdf_without_signature
   validate: client_has_email
-  javascript: "doSign('/invoices/pdfbase64/:id')"
+  javascript: "doSign('/invoices/base64doc/:id/pdf','Adobe PDF')"
   locales:
     ca: "PDF signat amb certificat local, enviat per email"
     da: "Signed PDF til email"
@@ -62,18 +62,30 @@ signed_pdf_local_cert:
   allowed_permissions:
     :use_local_signature:
       :invoices:
-        - :pdfbase64
+        - :base64doc
+
+signed_facturae32_local_cert:
+  format: facturae32
+  folder: free_pdf_without_signature
+  validate: client_has_email
+  javascript: "doSign('/invoices/base64doc/:id/facturae32','XAdES Enveloped')"
+  locales:
+    ca: "Facturae32 signat amb certificat local, enviat per email"
+    da: "Signed Facturae32 til email"
+    en: "Signed Facturae32 to email"
+    es: "Facturae32 firmado, enviado por email"
+    fr: "Facturae32 signé par email"
+    sv: "Signerad Facturae32 till email"
+  allowed_permissions:
+    :use_local_signature:
+      :invoices:
+        - :base64doc
 
 facturae_30:
   format: facturae30
   folder: free_xml
   validate:
   - client_has_email
-  - invoice_has_taxes
-  - valid_payment_method
-  - company_has_taxcode
-  - client_has_taxcode
-  - payment_method_requirements
   locales:
     ca: "Facturae 3.0 per email"
     da: "Facturae 3.0 to email"
@@ -89,11 +101,6 @@ facturae_31:
   folder: free_xml
   validate:
   - client_has_email
-  - invoice_has_taxes
-  - valid_payment_method
-  - company_has_taxcode
-  - client_has_taxcode
-  - payment_method_requirements
   locales:
     ca: "Facturae 3.1 per email"
     da: "Facturae 3.1 til email"
@@ -109,11 +116,6 @@ facturae_32:
   folder: free_xml
   validate:
   - client_has_email
-  - invoice_has_taxes
-  - valid_payment_method
-  - company_has_taxcode
-  - client_has_taxcode
-  - payment_method_requirements
   locales:
     ca: "Facturae 3.2 per email"
     da: "Facturae 3.2 til email"
@@ -128,11 +130,6 @@ facturae_32_face:
   format: facturae32
   folder: free_face
   validate:
-  - invoice_has_taxes
-  - valid_payment_method
-  - company_has_taxcode
-  - client_has_taxcode
-  - payment_method_requirements
   locales:
     ca: "Facturae 3.2 a FACe"
     da: "Facturae 3.2 til FACe"
@@ -148,7 +145,6 @@ ublinvoice_20:
   folder: free_ubl
   validate:
   - client_has_email
-  - ubl_invoice_has_no_taxes_withheld
   locales:
     ca: "Factura UBL 2.0 per email"
     da: "UBL faktura 2.0 til email"
@@ -164,7 +160,6 @@ biiublinvoice_20:
   folder: free_ubl
   validate:
   - client_has_email
-  - ubl_invoice_has_no_taxes_withheld
   locales:
     ca: "Factura CEN BII UBL 2.0 per email"
     da: "CEN BII UBL 2.0 Invoice to email"
@@ -179,10 +174,6 @@ aoc:
   format: facturae30
   folder: free_aoc
   validate:
-  - invoice_has_taxes
-  - company_has_taxcode
-  - client_has_taxcode
-  - payment_method_requirements
   locales:
     ca: "Facturae 3.0 per Hub e-FACT de la AOC"
     da: "Facturae 3.0 til e-FACT hub fra AOC"
@@ -197,10 +188,6 @@ aoc31:
   format: facturae31
   folder: free_aoc
   validate:
-  - invoice_has_taxes
-  - company_has_taxcode
-  - client_has_taxcode
-  - payment_method_requirements
   locales:
     ca: "Facturae 3.1 per Hub e-FACT de la AOC"
     da: "Facturae 3.1 til e-FACT hub fra AOC"
@@ -215,10 +202,6 @@ aoc32:
   format: facturae32
   folder: free_aoc
   validate:
-  - invoice_has_taxes
-  - company_has_taxcode
-  - client_has_taxcode
-  - payment_method_requirements
   locales:
     ca: "Facturae 3.2 per Hub e-FACT de la AOC"
     da: "Facturae 3.2 til e-FACT hub fra AOC"
@@ -233,7 +216,6 @@ peppol:
   format: peppolubl20
   folder: free_peppol
   validate:
-  - ubl_invoice_has_no_taxes_withheld
   - peppol_fields
   locales:
     ca: "Factura PEPPOL BIS UBL 2.0 per PEPPOL"
@@ -249,7 +231,6 @@ peppolbii:
   format: biiubl20
   folder: free_peppol
   validate:
-  - ubl_invoice_has_no_taxes_withheld
   - peppol_fields
   locales:
     ca: "Factura PEPPOL BIIUBL 2.0 per PEPPOL"
@@ -265,8 +246,6 @@ svefaktura:
   format: svefaktura
   folder: free_svefaktura
   validate:
-    - ubl_invoice_has_no_taxes_withheld
-    - svefaktura_fields
   locales:
     ca: "Factura Svefaktura per email"
     da: "Svefaktura til email"
@@ -281,8 +260,6 @@ oioubl20:
   format: oioubl20 
   folder: free_oioubl
   validate:
-    - ubl_invoice_has_no_taxes_withheld
-    - oioubl20_fields
   locales:
     ca: "Factura OIO UBL per email"
     da: "OIO UBL til email"
