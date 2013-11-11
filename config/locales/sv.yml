@@ -96,6 +96,7 @@ sv:
   label_send: Skicka
   cash: Kontant
   debit: Debit betalning
+  debit_through: betalning, igenom %{bank_account}
   transfer: Bankbetalning
   transfer_to: Bankbetalning till %{bank_account}
   other: Annan

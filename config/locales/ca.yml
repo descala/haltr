@@ -109,6 +109,7 @@ ca:
   label_send: Enviar
   cash: En efectiu
   debit: Carregar al compte
+  debit_through: Carregar al compte, mitjançant %{bank_account}
   transfer: Transferència bancària
   transfer_to: Transferència bancària a %{bank_account}
   other: Altres

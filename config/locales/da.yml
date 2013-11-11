@@ -96,6 +96,7 @@ da:
   label_send: Send
   cash: Kontant
   debit: Debet betaling
+  debit_through: Debet betaling, durch %{bank_account}
   transfer: Bankoverførsel
   transfer_to: Bankoverførsel til %{bank_account}
   other: Andre

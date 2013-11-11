@@ -98,6 +98,7 @@ fr:
   label_send: Envoyer
   cash: Liquide
   debit: Débiter paiement
+  debit_through: Débiter paiement, à travers %{bank_account}
   transfer: Transfert bancaire
   transfer_to: Transfert bancaire au %{bank_account}
   other: Autres

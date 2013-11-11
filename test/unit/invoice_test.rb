@@ -171,7 +171,7 @@ class InvoiceTest < ActiveSupport::TestCase
     assert_nil i.bank_info
     i.payment_method = "#{Invoice::PAYMENT_TRANSFER}_1"
     assert i.transfer?
-    assert_equal(i.bank_info.bank_account,bank_infos(:bi1).bank_account)
+    assert_equal(i.bank_info,bank_infos(:bi1))
     assert i.valid?
     i.payment_method = "#{Invoice::PAYMENT_TRANSFER}_2"
     assert_false i.valid? # bank_info is from other company
@@ -179,6 +179,10 @@ class InvoiceTest < ActiveSupport::TestCase
     assert i.valid?
     assert i.transfer?
     assert_nil i.bank_info
+    i.payment_method = "#{Invoice::PAYMENT_DEBIT}_1"
+    assert i.debit?
+    assert_equal(i.bank_info,bank_infos(:bi1))
+    assert i.valid?
   end
 
 end

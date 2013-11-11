@@ -175,13 +175,16 @@ class Invoice < ActiveRecord::Base
   # or one generic entry if there are no bank_infos on company:
   # ["transfer", PAYMENT_TRANSFER]
   def payment_methods
-    pm = [[l("cash"), PAYMENT_CASH],
-          [l("debit"), PAYMENT_DEBIT]]
-    if company.bank_accounts.any?
+    pm = [[l("cash"), PAYMENT_CASH]]
+    if company.bank_infos.any?
+      tr = []
+      db = []
       company.bank_infos.each do |bank_info|
-        next if bank_info.bank_account.empty?
-        pm << [l("transfer_to",:bank_account=>bank_info.name),"#{PAYMENT_TRANSFER}_#{bank_info.id}"]
+        tr << [l("debit_through",:bank_account=>bank_info.name), "#{PAYMENT_DEBIT}_#{bank_info.id}"]
+        db << [l("transfer_to",:bank_account=>bank_info.name),"#{PAYMENT_TRANSFER}_#{bank_info.id}"]
       end
+      pm += tr
+      pm += db
     else
       pm << [l("transfer"),PAYMENT_TRANSFER]
     end
@@ -199,9 +202,8 @@ class Invoice < ActiveRecord::Base
   end
 
   def payment_method
-    if read_attribute(:payment_method) == PAYMENT_TRANSFER and
-      bank_info and !bank_info.bank_account.blank?
-      "#{PAYMENT_TRANSFER}_#{bank_info.id}"
+    if [PAYMENT_TRANSFER, PAYMENT_DEBIT].include?(read_attribute(:payment_method)) and bank_info
+      "#{read_attribute(:payment_method)}_#{bank_info.id}"
     else
       read_attribute(:payment_method)
     end
