@@ -405,6 +405,7 @@ sv:
   total_executable: "Total to pay"
   company_taxcode_needed: "No podem generar el document perquè la teva empresa no té NIF"
   client_taxcode_needed: "No podem generar el document perquè el client no té NIF"
+  client_postalcode_needed: "No podem generar el document perquè el client no té codi postal"
   read: "Read"
   text_invoices_destroy_confirmation: 'Är du säker på att du vill radera markerade faktura ?'
   mark_as: "Mark as"

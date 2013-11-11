@@ -419,6 +419,7 @@ es:
   total_executable: "Total a pagar"
   company_taxcode_needed: "No podem generar el document perquè la teva empresa no té NIF"
   client_taxcode_needed: "No podem generar el document perquè el client no té NIF"
+  client_postalcode_needed: "No podem generar el document perquè el client no té codi postal"
   read: "Leído"
   text_invoices_destroy_confirmation: '¿Seguro que quiere borrar las facturas seleccionadas?'
   mark_as: "Marcar como"
