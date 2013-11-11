@@ -41,10 +41,6 @@ class CompaniesController < ApplicationController
   end
 
   def update
-    #TODO: need to access company taxes before update_attributes, if not
-    # updated taxes are not saved.
-    # maybe related to https://rails.lighthouseapp.com/projects/8994/tickets/4642
-    @company.taxes.each {|t| }
     # check if user trying to add multiple bank_infos without role
     unless User.current.allowed_to?(:add_multiple_bank_infos,@project)
       if params[:company][:bank_infos_attributes].reject {|i,b| b["_destroy"] == "1" }.size > 1
