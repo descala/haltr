@@ -202,12 +202,12 @@ class HaltrMailHandler < MailHandler # < ActionMailer::Base
   end
 
 
-  def process_pdf_file(invoice,company,from="",md5)
+  def process_pdf_file(raw_invoice,company,from="",md5)
     @company = company
 
     # PDF attachment has #<Encoding:ASCII-8BIT>
     # without force_encoding write halts with: "\xFE" from ASCII-8BIT to UTF-8
-    attachment = invoice.read.chomp
+    attachment = raw_invoice.read.chomp
     attachment.force_encoding('UTF-8')
     tmpfile = Tempfile.new "pdf"
     tmpfile.write(attachment)
@@ -234,7 +234,6 @@ class HaltrMailHandler < MailHandler # < ActionMailer::Base
                             :due_date        => ds.due_date,
                             :project         => @company.project)
 
-    debugger
     ri.md5 = `md5sum #{tmpfile.path} | cut -d" " -f1`.chomp
     ri.transport='email'
     ri.from=from
