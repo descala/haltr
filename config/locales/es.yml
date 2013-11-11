@@ -427,3 +427,5 @@ es:
   button_send: "Enviar"
   some_invoices_sent: "Algunas facturas no se pudieron enviar (enviadas %{sent} de %{total})"
   all_invoices_sent: "Se han enviado las facturas"
+  button_add_bank_info: "Añadir cuenta bancaria"
+  page_redirecting_will_lose_unsaved_data: "La pàgina es redirigirà i perdreu les dades no desades, voleu continuar?"

@@ -424,3 +424,5 @@ ca:
   button_send: "Envia"
   some_invoices_sent: "Algunes factures no s'han pogut enviar (enviades %{sent} de %{total})"
   all_invoices_sent: "S'han enviat les factures"
+  button_add_bank_info: "Afegir compte bancari"
+  page_redirecting_will_lose_unsaved_data: "La pàgina es redirigirà i perdreu les dades no desades, voleu continuar?"

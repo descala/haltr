@@ -13,6 +13,8 @@
   <p class="col span-1-de-4">
   <%= f.text_field :bic, :style => "width: 80%;", :no_label => true %>
   <!-- cocoon -->
-  <%= link_to_remove_association image_tag('false.png'), f, :class=>'eliminar', :style => "margin-left: 8px; vertical-align: middle;" %>
+  <% if User.current.allowed_to?(:add_multiple_bank_infos,@project) or @project.company.bank_infos.size > 1 -%>
+    <%= link_to_remove_association image_tag('false.png'), f, :class=>'eliminar', :style => "margin-left: 8px; vertical-align: middle;" %>
+  <% end -%>
   </p>
 </div>

@@ -428,3 +428,5 @@ da:
   button_send: "Send"
   some_invoices_sent: "Some invoices could not be sent (sent %{sent} of %{total})"
   all_invoices_sent: "Invoices have been sent"
+  button_add_bank_info: "Add bank account"
+  page_redirecting_will_lose_unsaved_data: "La pàgina es redirigirà i perdreu les dades no desades, voleu continuar?"
