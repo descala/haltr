@@ -91,7 +91,7 @@ class PaymentsController < ApplicationController
   end
 
   def n19_index
-    @charge_bank_on_due_date = IssuedInvoice.find(:all, :conditions => ["state = 'sent' AND clients.bank_account != '' AND invoices.payment_method=?",Invoice::PAYMENT_DEBIT], :include => :client).reject {|i|
+    @charge_bank_on_due_date = IssuedInvoice.find(:all, :conditions => ["state = 'sent' AND clients.bank_account != '' AND invoices.payment_method=? AND clients.project_id=?",Invoice::PAYMENT_DEBIT,@project.id], :include => :client).reject {|i|
       !i.bank_info or i.bank_info.bank_account.blank?
     }.group_by(&:bank_info)
   end
