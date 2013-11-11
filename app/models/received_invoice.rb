@@ -4,7 +4,6 @@ class ReceivedInvoice < InvoiceDocument
 
   unloadable
 
-  attr_accessor :md5
   after_create :create_event
 
   state_machine :state, :initial => :validating_format do

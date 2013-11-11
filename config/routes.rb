@@ -73,6 +73,7 @@ match 'received/mark_refused/:id' => 'received#mark_refused', :as => :mark_refus
 match 'received/mark_refused_with_mail/:id' => 'received#mark_refused_with_mail', :as => :mark_refused_with_mail
 match 'received/mark_accepted/:id' => 'received#mark_accepted', :as => :mark_accepted
 match 'received/mark_accepted_with_mail/:id' => 'received#mark_accepted_with_mail', :as => :mark_accepted_with_mail
+match 'received/original/:id' => 'received#original', :via => :get
 
 resources :invoice_templates
 match 'invoice_templates/new_from_invoice/:id' => 'invoice_templates#new_from_invoice'

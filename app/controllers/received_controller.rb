@@ -54,15 +54,22 @@ class ReceivedController < InvoicesController
       render :template => 'received/show_pdf'
     else
       # TODO also show the database record version?
-      if @invoice.fetch_from_backup
-        doc  = Nokogiri::XML(@invoice.legal_invoice)
-        xslt = Nokogiri::XSLT(render_to_string(:template=>'received/facturae32.xsl.erb',:layout=>false))
-        @out  = xslt.transform(doc)
-        render :template => 'received/show_with_xsl'
-      else
-        flash[:error] = l(:cant_connect_trace, "")
-        render_404
-      end
+      doc  = Nokogiri::XML(@invoice.original)
+      xslt = Nokogiri::XSLT(render_to_string(:template=>'received/facturae32.xsl.erb',:layout=>false))
+      @out  = xslt.transform(doc)
+      render :template => 'received/show_with_xsl'
+    end
+  end
+
+  def original
+    if @invoice.invoice_format == 'pdf'
+      send_data @invoice.original,
+        :type => 'application/pdf',
+        :disposition => "attachment; filename=#{@invoice.pdf_name}"
+    else
+      send_data @invoice.original,
+        :type => 'text/xml; charset=UTF-8;',
+        :disposition => "attachment; filename=#{@invoice.xml_name}"
     end
   end
 
@@ -106,28 +113,22 @@ class ReceivedController < InvoicesController
     Zip::ZipOutputStream.open(zip_file.path) do |zos|
       @invoices.each do |invoice|
         #TODO: several B2bRouters
-        if invoice.fetch_from_backup
-          file = Tempfile.new(invoice.legal_filename,:encoding => 'ascii-8bit')
-          file.write invoice.legal_invoice
-          logger.info "Created #{file.path}"
-          file.close
-          filename = invoice.legal_filename
-          i=2
-          while zipped.include?(filename)
-            extension = File.extname(filename)
-            base      = filename.gsub(/#{extension}$/,'')
+        file = Tempfile.new(invoice.filename,:encoding => 'ascii-8bit')
+        file.write invoice.original
+        logger.info "Created #{file.path}"
+        file.close
+        filename = invoice.filename
+        i=2
+        while zipped.include?(filename)
+          extension = File.extname(filename)
+          base      = filename.gsub(/#{extension}$/,'')
             filename  = "#{base}_#{i}#{extension}"
-            i += 1
-          end
-          zipped << filename
-          zos.put_next_entry(filename)
-          zos.print IO.read(file.path)
-          logger.info "Added #{filename} from #{file.path}"
-        else
-          logger.info "Failed to get legal document for invoice with id #{invoice.id}"
-          #TODO warn user about failed downloads
-          failed << "Failed to get invoice number #{invoice.number} with id #{invoice.id}"
+          i += 1
         end
+        zipped << filename
+        zos.put_next_entry(filename)
+        zos.print IO.read(file.path)
+        logger.info "Added #{filename} from #{file.path}"
       end
       if failed.any?
         file = Tempfile.new("FAILED.txt",:encoding => 'ascii-8bit')

@@ -1,0 +1,205 @@
+Received: from localhost (localhost [127.0.0.1])
+	by bester.ingent.net (mailer) with ESMTP id 6EF7211C003
+	for <77310000g@b2brouter.net>; Mon, 11 Nov 2013 11:27:41 +0100 (CET)
+Date: Mon, 11 Nov 2013 11:27:39 +0100
+From: "B2B Router.net" <noreply@b2brouter.net>
+To: 77310000g@b2brouter.net
+Subject: invoice
+Message-ID: <20131111102739.GA13333@s15429496.onlinehome-server.info>
+MIME-Version: 1.0
+Content-Type: multipart/mixed; boundary="tKW2IUtsqtDRztdT"
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+X-B2B-MD5: 3e006451ed2a77ec6d6e944c82eb1fc5
+X-B2B-Filename: 1d2e686a77_3579.xml
+User-Agent: Mutt/1.5.21 (2010-09-15)
+
+
+--tKW2IUtsqtDRztdT
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+
+Factura en formato Facturae enviada desde https://www.b2brouter.net/
+
+--tKW2IUtsqtDRztdT
+Content-Type: application/xml
+Content-Disposition: attachment; filename="1d2e686a77_3579.xml"
+Content-Transfer-Encoding: quoted-printable
+
+<?xml version=3D"1.0" encoding=3D"UTF-8"?><facturae:Facturae xmlns:facturae=
+=3D"http://www.facturae.es/Facturae/2009/v3.2/Facturae" xmlns:xsi=3D"http:/=
+/www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation=3D"http://www.factu=
+rae.es/Facturae/2009/v3.2/Facturae http://www.facturae.es/NR/rdonlyres/2DF1=
+A921-9E57-4A24-85D8-14FE74E0FB31/0/Facturaev3_2.xsd">=0A  <FileHeader>=0A  =
+  <SchemaVersion>3.2</SchemaVersion>=0A    <Modality>I</Modality>=0A    <In=
+voiceIssuerType>TE</InvoiceIssuerType>=0A    <ThirdParty>=0A      <TaxIdent=
+ification>=0A        <PersonTypeCode>J</PersonTypeCode>=0A        <Residenc=
+eTypeCode>R</ResidenceTypeCode>=0A        <TaxIdentificationNumber>B6327617=
+4</TaxIdentificationNumber>=0A      </TaxIdentification>=0A      <LegalEnti=
+ty>=0A        <CorporateName>Invinet Sistemes 2003, S.L</CorporateName>=0A =
+       <AddressInSpain>=0A          <Address>Ribes 31</Address>=0A         =
+ <PostCode>08013</PostCode>=0A          <Town>Barcelona</Town>=0A          =
+<Province>Barcelona</Province>=0A          <CountryCode>ESP</CountryCode>=
+=0A        </AddressInSpain>=0A      </LegalEntity>=0A    </ThirdParty>=0A =
+   <Batch>=0A      <BatchIdentifier>3579</BatchIdentifier>=0A      <Invoice=
+sCount>1</InvoicesCount>=0A      <TotalInvoicesAmount>=0A        <TotalAmou=
+nt>658.00</TotalAmount>=0A      </TotalInvoicesAmount>=0A      <TotalOutsta=
+ndingAmount>=0A        <TotalAmount>658.00</TotalAmount>=0A      </TotalOut=
+standingAmount>=0A      <TotalExecutableAmount>=0A        <TotalAmount>658.=
+00</TotalAmount>=0A      </TotalExecutableAmount>=0A      <InvoiceCurrencyC=
+ode>EUR</InvoiceCurrencyCode>=0A    </Batch>=0A  </FileHeader>=0A  <Parties=
+>=0A    <SellerParty>=0A      <TaxIdentification>=0A        <PersonTypeCode=
+>J</PersonTypeCode>=0A        <ResidenceTypeCode>R</ResidenceTypeCode>=0A  =
+      <TaxIdentificationNumber>ESP6611142C</TaxIdentificationNumber>=0A    =
+  </TaxIdentification>=0A      <LegalEntity>=0A        <CorporateName>Ingen=
+t-llu=C3=ADs</CorporateName>=0A        <OverseasAddress>=0A          <Addre=
+ss>Meli=C3=B3 113</Address>=0A          <PostCodeAndTown>08720 Vilafranca</=
+PostCodeAndTown>=0A          <Province>Barcelona</Province>=0A          <Co=
+untryCode>TUR</CountryCode>=0A        </OverseasAddress>=0A        <Contact=
+Details>=0A          <WebAddress/>=0A          <ElectronicMail>ESP6611111C@=
+b2brouter.net</ElectronicMail>=0A        </ContactDetails>=0A      </LegalE=
+ntity>=0A    </SellerParty>=0A    <BuyerParty>=0A      <TaxIdentification>=
+=0A        <PersonTypeCode>J</PersonTypeCode>=0A        <ResidenceTypeCode>=
+R</ResidenceTypeCode>=0A        <TaxIdentificationNumber>77310058H</TaxIden=
+tificationNumber>=0A      </TaxIdentification>=0A      <LegalEntity>=0A    =
+    <CorporateName>David Copperfield</CorporateName>=0A        <AddressInSp=
+ain>=0A          <Address>Address1</Address>=0A          <PostCode>08720</P=
+ostCode>=0A          <Town>city</Town>=0A          <Province>state</Provinc=
+e>=0A          <CountryCode>ESP</CountryCode>=0A        </AddressInSpain>=
+=0A        <ContactDetails>=0A          <ElectronicMail>suport@ingent.net</=
+ElectronicMail>=0A          <ContactPersons/>=0A        </ContactDetails>=
+=0A      </LegalEntity>=0A    </BuyerParty>=0A  </Parties>=0A  <Invoices>=
+=0A    <Invoice>=0A      <InvoiceHeader>=0A        <InvoiceNumber>766</Invo=
+iceNumber>=0A        <InvoiceDocumentType>FC</InvoiceDocumentType>=0A      =
+  <InvoiceClass>OO</InvoiceClass>=0A      </InvoiceHeader>=0A      <Invoice=
+IssueData>=0A        <IssueDate>2012-04-20</IssueDate>=0A        <InvoiceCu=
+rrencyCode>EUR</InvoiceCurrencyCode>=0A        <TaxCurrencyCode>EUR</TaxCur=
+rencyCode>=0A        <LanguageName>en</LanguageName>=0A      </InvoiceIssue=
+Data>=0A      <TaxesOutputs>=0A        <Tax>=0A          <TaxTypeCode>01</T=
+axTypeCode>=0A          <TaxRate>18.00</TaxRate>=0A          <TaxableBase>=
+=0A            <TotalAmount>100.00</TotalAmount>=0A          </TaxableBase>=
+=0A          <TaxAmount>=0A            <TotalAmount>18.00</TotalAmount>=0A =
+         </TaxAmount>=0A        </Tax>=0A        <Tax>=0A          <TaxType=
+Code>01</TaxTypeCode>=0A          <TaxRate>8.00</TaxRate>=0A          <Taxa=
+bleBase>=0A            <TotalAmount>500.00</TotalAmount>=0A          </Taxa=
+bleBase>=0A          <TaxAmount>=0A            <TotalAmount>40.00</TotalAmo=
+unt>=0A          </TaxAmount>=0A        </Tax>=0A      </TaxesOutputs>=0A  =
+    <InvoiceTotals>=0A        <TotalGrossAmount>600.00</TotalGrossAmount>=
+=0A        <TotalGrossAmountBeforeTaxes>600.00</TotalGrossAmountBeforeTaxes=
+>=0A        <TotalTaxOutputs>58.00</TotalTaxOutputs>=0A        <TotalTaxesW=
+ithheld>0.00</TotalTaxesWithheld>=0A        <InvoiceTotal>658.00</InvoiceTo=
+tal>=0A        <TotalOutstandingAmount>658.00</TotalOutstandingAmount>=0A  =
+      <TotalExecutableAmount>658.00</TotalExecutableAmount>=0A      </Invoi=
+ceTotals>=0A      <Items>=0A        <InvoiceLine>=0A          <ReceiverTran=
+sactionReference/>=0A          <ItemDescription>thing 1</ItemDescription>=
+=0A          <Quantity>1.0</Quantity>=0A          <UnitOfMeasure>01</UnitOf=
+Measure>=0A          <UnitPriceWithoutTax>100.000000</UnitPriceWithoutTax>=
+=0A          <TotalCost>100.000000</TotalCost>=0A          <GrossAmount>100=
+=2E000000</GrossAmount>=0A          <TaxesOutputs>=0A            <Tax>=0A  =
+            <TaxTypeCode>01</TaxTypeCode>=0A              <TaxRate>18.00</T=
+axRate>=0A              <TaxableBase>=0A                <TotalAmount>100.00=
+</TotalAmount>=0A              </TaxableBase>=0A            </Tax>=0A      =
+    </TaxesOutputs>=0A        </InvoiceLine>=0A        <InvoiceLine>=0A    =
+      <ReceiverTransactionReference/>=0A          <ItemDescription>thing 2<=
+/ItemDescription>=0A          <Quantity>2.0</Quantity>=0A          <UnitOfM=
+easure>01</UnitOfMeasure>=0A          <UnitPriceWithoutTax>100.000000</Unit=
+PriceWithoutTax>=0A          <TotalCost>200.000000</TotalCost>=0A          =
+<GrossAmount>200.000000</GrossAmount>=0A          <TaxesOutputs>=0A        =
+    <Tax>=0A              <TaxTypeCode>01</TaxTypeCode>=0A              <Ta=
+xRate>8.00</TaxRate>=0A              <TaxableBase>=0A                <Total=
+Amount>200.00</TotalAmount>=0A              </TaxableBase>=0A            </=
+Tax>=0A          </TaxesOutputs>=0A        </InvoiceLine>=0A        <Invoic=
+eLine>=0A          <ReceiverTransactionReference/>=0A          <ItemDescrip=
+tion>thing 3</ItemDescription>=0A          <Quantity>3.0</Quantity>=0A     =
+     <UnitOfMeasure>01</UnitOfMeasure>=0A          <UnitPriceWithoutTax>100=
+=2E000000</UnitPriceWithoutTax>=0A          <TotalCost>300.000000</TotalCos=
+t>=0A          <GrossAmount>300.000000</GrossAmount>=0A          <TaxesOutp=
+uts>=0A            <Tax>=0A              <TaxTypeCode>01</TaxTypeCode>=0A  =
+            <TaxRate>8.00</TaxRate>=0A              <TaxableBase>=0A       =
+         <TotalAmount>300.00</TotalAmount>=0A              </TaxableBase>=
+=0A            </Tax>=0A          </TaxesOutputs>=0A        </InvoiceLine>=
+=0A      </Items>=0A      <PaymentDetails>=0A        <Installment>=0A      =
+    <InstallmentDueDate>2012-06-01</InstallmentDueDate>=0A          <Instal=
+lmentAmount>658.00</InstallmentAmount>=0A          <PaymentMeans>02</Paymen=
+tMeans>=0A          <AccountToBeDebited>=0A            <IBAN>ibaaaaaaan</IB=
+AN>=0A            <BankCode>biiiiiiiiic</BankCode>=0A          </AccountToB=
+eDebited>=0A        </Installment>=0A      </PaymentDetails>=0A      <Addit=
+ionalData>=0A        <InvoiceAdditionalInformation>. . .</InvoiceAdditional=
+Information>=0A      </AdditionalData>=0A    </Invoice>=0A  </Invoices>=0A<=
+ds:Signature xmlns:ds=3D"http://www.w3.org/2000/09/xmldsig#" Id=3D"Signatur=
+e_1"><ds:SignedInfo Id=3D"Signature_1_SignedInfo_1"><ds:CanonicalizationMet=
+hod Algorithm=3D"http://www.w3.org/TR/2001/REC-xml-c14n-20010315"/><ds:Sign=
+atureMethod Algorithm=3D"http://www.w3.org/2000/09/xmldsig#rsa-sha1"/><ds:R=
+eference Id=3D"Signature_1_Reference_1" URI=3D""><ds:Transforms><ds:Transfo=
+rm Algorithm=3D"http://www.w3.org/2000/09/xmldsig#enveloped-signature"/></d=
+s:Transforms><ds:DigestMethod Algorithm=3D"http://www.w3.org/2000/09/xmldsi=
+g#sha1"/><ds:DigestValue>ubTtfmYX4BaaNKP1JE77+F3mvCo=3D</ds:DigestValue></d=
+s:Reference><ds:Reference Id=3D"Signature_1_Reference_2" Type=3D"http://uri=
+=2Eetsi.org/01903#SignedProperties" URI=3D"#Signature_1_SignedProperties_1"=
+><ds:DigestMethod Algorithm=3D"http://www.w3.org/2000/09/xmldsig#sha1"/><ds=
+:DigestValue>+J9PffoLzNg1kOWNsOOolD252pw=3D</ds:DigestValue></ds:Reference>=
+<ds:Reference Id=3D"Signature_1_Reference_3" URI=3D"#Signature_1_KeyInfo_1"=
+><ds:DigestMethod Algorithm=3D"http://www.w3.org/2000/09/xmldsig#sha1"/><ds=
+:DigestValue>iR416MzxHndTSQddAZ34CthvOFg=3D</ds:DigestValue></ds:Reference>=
+</ds:SignedInfo><ds:SignatureValue Id=3D"Signature_1_SignatureValue_1">eLjz=
+pvwlvjYJLqt9sUJ2+SmEwoVKhd7/oYg85bzxD95dl/Sy/CpzCidr1YeK33aS=0AhJd8SmfwrMXr=
+r0TjbuNJDaY1+hAwByiunCW4HjKM/3eYUlh/n2ibVAWSCg858wMN=0AEnQZTYjFTMK6qEF6N1O7=
+95QfLwuZANJ+omNr9RlcfeJiWnPQKTZzdXEB+GbXjAqW=0AgD5dhW+Fg+HKQ3ECGAyKz1ED1YSW=
+TPCO0MLYOxoy2YNEYgtrYPMhepIeDQ1sJMpY=0A0rhp2LNHegWrq/WL4IkFuW4unvif0l4NoqS0=
+IL3IyRQ7XMHXuPpPDHlOqJBwzmvQ=0AYQ5D12T8U/i7eqccvUU49g=3D=3D</ds:SignatureVa=
+lue><ds:KeyInfo Id=3D"Signature_1_KeyInfo_1"><ds:X509Data><ds:X509Certifica=
+te>MIIE0zCCBDygAwIBAgIEPO1pODANBgkqhkiG9w0BAQUFADA2MQswCQYDVQQGEwJF=0AUzENM=
+AsGA1UEChMERk5NVDEYMBYGA1UECxMPRk5NVCBDbGFzZSAyIENBMB4XDTEz=0AMDExMDExMzYzO=
+FoXDTE1MDExMDExMzYzOFowgbAxCzAJBgNVBAYTAkVTMQ0wCwYD=0AVQQKEwRGTk1UMRgwFgYDV=
+QQLEw9GTk1UIENsYXNlIDIgQ0ExEjAQBgNVBAsTCTcw=0AMzAxMTI1MTFkMGIGA1UEAxNbRU5US=
+URBRCBJTlZJTkVUIFNJU1RFTUVTIDIwMDMg=0AU0wgLSBDSUYgQjYzMjc2MTc0IC0gTk9NQlJFI=
+EJBVVNBIFBFUklTIE9SSU9MIC0g=0ATklGIDQ2MjI4MTYwVDCCASIwDQYJKoZIhvcNAQEBBQADg=
+gEPADCCAQoCggEBANcW=0AV8R8MrYAOyoX5GawaXNvLuMkeKKFbyOl8nLlclw5oToe5l1UIG2YN=
+llN1X7jUWbw=0AF4RRKooX598hCCvsyVpH9BVRflahDDzh2FrJo65hFnHKvxf5SLIGbpswh2Utt=
+Kx4=0AWtizH0BV75Y4ReFjpu7tanT+h6mdbLz1J/mH2T06Lr4JTC2DWJAH7jE1Zmpj5Ig5=0AZT=
+6V6o6LHZRH/Yt1f9h9Y+arWXzVjySre3H/aWb0/WAmw/1YXt66cnwF/sB/g0UI=0AejZurtEwHr=
+NVc4FE36z+q91UeT1o56svexvz/uF8wV6OOmQkDKQBI/05NgLjbuIw=0AgFb/7BUGzYV1doKqEY=
+8CAwEAAaOCAe0wggHpMIGwBgNVHREEgagwgaWkgaIwgZ8x=0AGDAWBgkrBgEEAaxmAQcTCUI2Mz=
+I3NjE3NDEnMCUGCSsGAQQBrGYBBhMYSU5WSU5F=0AVCBTSVNURU1FUyAyMDAzIFNMMRgwFgYJKw=
+YBBAGsZgEEEwk0NjIyODE2MFQxFDAS=0ABgkrBgEEAaxmAQMTBVBFUklTMRQwEgYJKwYBBAGsZg=
+ECEwVCQVVTQTEUMBIGCSsG=0AAQQBrGYBARMFT1JJT0wwCQYDVR0TBAIwADArBgNVHRAEJDAigA=
+8yMDEzMDExMDEx=0AMzYzOFqBDzIwMTUwMTEwMTEzNjM4WjALBgNVHQ8EBAMCBaAwEQYJYIZIAY=
+b4QgEB=0ABAQDAgWgMB0GA1UdDgQWBBRDqrffgRbJB3ugce23sFHe28flojAfBgNVHSMEGDAW=
+=0AgBRAmnZEl3QHxKwUyx6NTzpFfDDXYTA+BgkrBgEEAaxmASEEMRYvQ0VSVElGSUNB=0ARE8gR=
+VhDTFVTSVZPIFBBUkEgRUwgQU1CSVRPIFRSSUJVVEFSSU8wXAYDVR0fBFUw=0AUzBRoE+gTaRLM=
+EkxCzAJBgNVBAYTAkVTMQ0wCwYDVQQKEwRGTk1UMRgwFgYDVQQL=0AEw9GTk1UIENsYXNlIDIgQ=
+0ExETAPBgNVBAMTCENSTDExMzY1MA0GCSqGSIb3DQEB=0ABQUAA4GBAEVpNyY7UxE8KCLkp06xR=
+TPsvqUgFar9b3R+alyg8+I5lKvAI7XJaovU=0APp3qdhkt54huyD8TXQ9o/1gKbfv/RRSsozBs8=
++pCvMyXLWVbRHXhNq9TeN6+HzFK=0AbMC8hAU9a5SuqXyDlOL3XutA3RuJfXk9hX0P8hgAMKteX=
+rF+15iv</ds:X509Certificate></ds:X509Data><ds:KeyValue><ds:RSAKeyValue><ds:=
+Modulus>1xZXxHwytgA7KhfkZrBpc28u4yR4ooVvI6XycuVyXDmhOh7mXVQgbZg2WU3VfuNR=0A=
+ZvAXhFEqihfn3yEIK+zJWkf0FVF+VqEMPOHYWsmjrmEWccq/F/lIsgZumzCHZS20=0ArHha2LMf=
+QFXvljhF4WOm7u1qdP6HqZ1svPUn+YfZPTouvglMLYNYkAfuMTVmamPk=0AiDllPpXqjosdlEf9=
+i3V/2H1j5qtZfNWPJKt7cf9pZvT9YCbD/Vhe3rpyfAX+wH+D=0ARQh6Nm6u0TAes1VzgUTfrP6r=
+3VR5PWjnqy97G/P+4XzBXo46ZCQMpAEj/Tk2AuNu=0A4jCAVv/sFQbNhXV2gqoRjw=3D=3D</ds=
+:Modulus><ds:Exponent>AQAB</ds:Exponent></ds:RSAKeyValue></ds:KeyValue></ds=
+:KeyInfo><ds:Object Id=3D"Signature_1_Object_1"><xades:QualifyingProperties=
+ xmlns:xades=3D"http://uri.etsi.org/01903/v1.3.2#" Id=3D"Signature_1_Qualif=
+yingProperties_1" Target=3D"#Signature_1"><xades:SignedProperties Id=3D"Sig=
+nature_1_SignedProperties_1"><xades:SignedSignatureProperties Id=3D"Signatu=
+re_1_SignedSignatureProperties_1"><xades:SigningTime>2013-11-11T11:27:39+01=
+:00</xades:SigningTime><xades:SigningCertificate><xades:Cert><xades:CertDig=
+est><ds:DigestMethod Algorithm=3D"http://www.w3.org/2000/09/xmldsig#sha1"/>=
+<ds:DigestValue>JqvyxsV2JUCK4K8k/EplFevLsTs=3D</ds:DigestValue></xades:Cert=
+Digest><xades:IssuerSerial><ds:X509IssuerName>OU=3DFNMT Clase 2 CA,O=3DFNMT=
+,C=3DES</ds:X509IssuerName><ds:X509SerialNumber>1022191928</ds:X509SerialNu=
+mber></xades:IssuerSerial></xades:Cert></xades:SigningCertificate><xades:Si=
+gnaturePolicyIdentifier><xades:SignaturePolicyId><xades:SigPolicyId><xades:=
+Identifier Qualifier=3D"OIDAsURI">http://www.facturae.es/politica_de_firma_=
+formato_facturae/politica_de_firma_formato_facturae_v3_1.pdf</xades:Identif=
+ier><xades:Description>Pol=C3=ADtica de firma electr=C3=B3nica para factura=
+ci=C3=B3n electr=C3=B3nica con formato Facturae</xades:Description></xades:=
+SigPolicyId><xades:SigPolicyHash><ds:DigestMethod Algorithm=3D"http://www.w=
+3.org/2000/09/xmldsig#sha1"/><ds:DigestValue>Ohixl6upD6av8N7pEvDABhEL6hM=3D=
+</ds:DigestValue></xades:SigPolicyHash></xades:SignaturePolicyId></xades:Si=
+gnaturePolicyIdentifier><xades:SignerRole><xades:ClaimedRoles><xades:Claime=
+dRole>Emisor</xades:ClaimedRole></xades:ClaimedRoles></xades:SignerRole></x=
+ades:SignedSignatureProperties></xades:SignedProperties></xades:QualifyingP=
+roperties></ds:Object></ds:Signature></facturae:Facturae>
+--tKW2IUtsqtDRztdT--

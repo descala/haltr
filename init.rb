@@ -67,7 +67,7 @@ Redmine::Plugin.register :haltr do
                       :biiubl20, :svefaktura, :oioubl20, :report, :context_menu, :bulk_mark_as,:bulk_send],
         :received => [:index, :new, :edit, :create, :update, :destroy, :show,
                       :mark_accepted, :mark_accepted_with_mail, :mark_refused,
-                      :mark_refused_with_mail, :legal, :context_menu, :bulk_mark_as],
+                      :mark_refused_with_mail, :legal, :context_menu, :bulk_mark_as, :original],
         :companies => [:my_company,:update,:linked_to_mine]},
       :require => :member
 

@@ -1,4 +1,69 @@
-class IncomingXmlInvoice
+# Receives an email extract its attachments and determines if it is a bounced
+# mail for a sent invoice, or an incoming invoice.
+#
+# Assuming that mail is a file with raw email message,
+# you can test it from command line with:
+#
+#  bundle exec rails runner -e development "InvoiceReceiver.receive(File.read('/path/to/mail'))"
+#
+class HaltrMailHandler < MailHandler # < ActionMailer::Base
+  unloadable
+
+  def receive(email)
+    invoices = []
+    if email.multipart?
+      raw_invoices = attached_invoices(email)
+
+      if email.to and email.to.include? "noreply@b2brouter.net"
+        # bounced invoice
+        if raw_invoices.size == 1 # we send only 1 invoice on each mail
+          logger.info "Bounced invoice mail received (#{raw_invoices.first.filename})"
+          process_bounced_file(raw_invoices.first)
+        else
+          logger.info "Discarding bounce mail with != 1 (#{raw_invoices.size}) invoices attached (#{raw_invoices.collect {|i| i.filename}.join(',')})"
+        end
+      else
+        # incoming invoices (PDF/XML)
+        logger.info "Incoming invoice mail with #{raw_invoices.size} attached invoices"
+        company_found=false
+        email['to'].to_s.scan(/[\w.]+@[\w.]+/).each do |to|
+          company = Company.find_by_taxcode(to.split("@").first)
+          if company
+            from = email['from'].to_s.scan(/[\w.]+@[\w.]+/).first
+            company_found=true
+            raw_invoices.each do |raw_invoice|
+
+              # discard invoice if md5 exists
+              tmpfile = Tempfile.new("invoice.xml", :encoding => 'ascii-8bit')
+              tmpfile.write(raw_invoice.read.chomp)
+              tmpfile.close
+              md5 = `md5sum #{tmpfile.path} | cut -d" " -f1`.chomp
+              if found_invoice = Invoice.find_by_md5(md5)
+                invoices << found_invoice
+                logger.error "Discarding repeated invoice with md5 #{md5}. Invoice.id = #{found_invoice.id}"
+              else
+                if raw_invoice.content_type =~ /xml/
+                  invoices << process_xml_file(raw_invoice,company,from,md5)
+                elsif raw_invoice.content_type =~ /pdf/
+                  invoices << process_pdf_file(raw_invoice,company,from,md5)
+                else
+                  logger.info "Discarding #{raw_invoice.filename} on incoming mail (#{raw_invoice.content_type})"
+                end
+              end
+            end
+            break #TODO: allow incoming invoice to several companies?
+          end
+        end
+        unless company_found
+          logger.info "Discarding email for #{email['to'].to_s} (Can't find company with taxcode #{email['to'].to_s.split("@").first})"
+        end
+      end
+    else
+      # we do not process emails without attachments
+      logger.info "email has no attachments"
+    end
+    return invoices
+  end
 
   require "rexml/document"
   require "tempfile"
@@ -10,16 +75,16 @@ class IncomingXmlInvoice
     "ubl2.0"      => "free_receive_ubl20"
   }
 
-  def self.process_file(invoice,company,transport,from="")
+  def process_xml_file(raw_invoice,company,from="",md5)
     @company = company
-    doc = REXML::Document.new(invoice.read.chomp)
+    doc = REXML::Document.new(raw_invoice.read.chomp)
     facturae_version = REXML::XPath.first(doc,"//FileHeader/SchemaVersion")
     ubl_version = REXML::XPath.first(doc,"//Invoice/*:UBLVersionID")
     xpaths = {}
     channel=""
     if facturae_version
       invoice_format="facturae#{facturae_version.text}"
-      InvoiceReceiver.log "Incoming invoice is FacturaE #{facturae_version.text}"
+      logger.info "Incoming invoice is FacturaE #{facturae_version.text}"
       xpaths[:invoice_number]          = [ "//Invoices/Invoice/InvoiceHeader/InvoiceNumber",
         "//Invoices/Invoice/InvoiceHeader/InvoiceSeriesCode" ]
       xpaths[:invoice_date]            = "//Invoices/Invoice/InvoiceIssueData/IssueDate"
@@ -48,7 +113,7 @@ class IncomingXmlInvoice
       end
     elsif ubl_version
       invoice_format="ubl#{ubl_version.text}"
-      InvoiceReceiver.log "Incoming invoice is UBL #{ubl_version.text}"
+      logger.info "Incoming invoice is UBL #{ubl_version.text}"
       xpaths[:invoice_number]          = "/Invoice/cbc:ID"
       xpaths[:invoice_date]            = "/Invoice/cbc:IssueDate"
       xpaths[:invoice_total]           = "/Invoice/cac:LegalMonetaryTotal/cbc:TaxInclusiveAmount"
@@ -73,41 +138,14 @@ class IncomingXmlInvoice
         channel="/var/spool/b2brouter/input/#{ch_name}"
       end
     else
-      InvoiceReceiver.log "Incoming invoice with unknown format"
+      logger.info "Incoming invoice with unknown format"
       #TODO: bounce message
     end
-    ri = invoice_from_xml(doc,xpaths)
-    ri.invoice_format = invoice_format
-    ri.transport=transport
-    ri.from=from
-    tmpfile = Tempfile.new("invoice.xml", :encoding => 'ascii-8bit')
-    tmpfile.write(invoice.read.chomp)
-    tmpfile.close
-    ri.md5 = `md5sum #{tmpfile.path} | cut -d" " -f1`.chomp
-    ri.save!
-    if File.directory? channel
-      i=2
-      extension = File.extname(invoice.filename)
-      base = invoice.filename.gsub(/#{extension}$/,'')
-        destination = "#{channel}/#{base}_#{ri.id}#{extension}"
-      while File.exist? destination do
-        destination = "#{channel}/#{base}_#{i}_#{ri.id}#{extension}"
-        i+=1
-      end
-      FileUtils.mv(tmpfile.path, destination)
-      InvoiceReceiver.log "Invoice sent to validation channel: #{destination} (MD5: #{ri.md5})"
-    else
-      InvoiceReceiver.log "Invoice format without validation channel #{channel}"
-    end
-  rescue Exception => e
-    InvoiceReceiver.log e.message
-  end
 
-  def self.invoice_from_xml(doc,xpaths)
     #TODO: check buyer_taxcode == company.taxcode
-#    buyer_taxcode  = get_xpath(doc,xpaths[:buyer_taxcode])
-#    company = Company.find_by_taxcode(buyer_taxcode)
-#    raise "Company with taxcode '#{buyer_taxcode}' not found" unless company #TODO: bounce message
+    #    buyer_taxcode  = get_xpath(doc,xpaths[:buyer_taxcode])
+    #    company = Company.find_by_taxcode(buyer_taxcode)
+    #    raise "Company with taxcode '#{buyer_taxcode}' not found" unless company #TODO: bounce message
 
     seller_taxcode = get_xpath(doc,xpaths[:seller_taxcode])
     client         = seller_taxcode.blank? ? nil : @company.project.clients.find_by_taxcode(seller_taxcode)
@@ -142,7 +180,7 @@ class IncomingXmlInvoice
     invoice_import      = get_xpath(doc,xpaths[:invoice_import])
     invoice_due_date    = get_xpath(doc,xpaths[:invoice_due_date])
 
-    r = ReceivedInvoice.new(:number          => invoice_number,
+    ri = ReceivedInvoice.new(:number          => invoice_number,
                             :client          => client,
                             :date            => invoice_date,
                             :total           => invoice_total.to_money(currency),
@@ -150,12 +188,71 @@ class IncomingXmlInvoice
                             :import          => invoice_import.to_money(currency),
                             :due_date        => invoice_due_date,
                             :project         => @company.project)
-    return r
+
+    ri.invoice_format = invoice_format
+    ri.transport='email'
+    ri.from=from
+    ri.md5 = md5
+    ri.original = raw_invoice.read.chomp
+    ri.file_name = raw_invoice.filename
+    ri.save!
+    return ri
+  rescue Exception => e
+    logger.info e.message
   end
+
+
+  def process_pdf_file(invoice,company,from="",md5)
+    @company = company
+
+    # PDF attachment has #<Encoding:ASCII-8BIT>
+    # without force_encoding write halts with: "\xFE" from ASCII-8BIT to UTF-8
+    attachment = invoice.read.chomp
+    attachment.force_encoding('UTF-8')
+    tmpfile = Tempfile.new "pdf"
+    tmpfile.write(attachment)
+    tmpfile.close
+
+    text_file = Tempfile.new "txt"
+    cmd = "pdftotext -f 1 -l 1 -layout #{tmpfile.path} #{text_file.path}"
+    out = `#{cmd} 2>&1`
+    raise "Error with pdftotext <br /><pre>#{cmd}</pre><pre>#{out}</pre>" unless $?.success?
+    ds = Estructura::Invoice.new(text_file.read.chomp,:tax_id=>@company.taxcode)
+    text_file.close
+    text_file.unlink
+    ds.apply_rules
+    ds.fix_amounts
+    client = Client.find(:all, :conditions => ["project_id = ? AND taxcode = ?",@company.project_id,ds.tax_identification_number]).first
+    ri = ReceivedInvoice.new(:number          => ds.invoice_number,
+                            :client          => client,
+                            :date            => ds.issue_date,
+                            :import          => ds.total_amount.to_money,
+#                            :currency        => ds.currency,
+#                            :tax_percent     => ds.tax_rate,
+#                            :subtotal        => ds.invoice_subtotal.to_money,
+#                            :withholding_tax => ds.withholding_tax.to_money,
+                            :due_date        => ds.due_date,
+                            :project         => @company.project)
+
+    debugger
+    ri.md5 = `md5sum #{tmpfile.path} | cut -d" " -f1`.chomp
+    ri.transport='email'
+    ri.from=from
+    ri.invoice_format = "pdf"
+    ri.original = raw_invoice.read.chomp
+    ri.file_name = raw_invoice.filename
+    ri.save!
+    return ri
+  rescue Exception => e
+    logger.info e.message
+  end
+
+
+  private
 
   # retrieve xpath from document
   # if xpath is an array, concatenates its values
-  def self.get_xpath(doc,xpath)
+  def get_xpath(doc,xpath)
     val=""
     if xpath.is_a?(Array)
       xpath.each do |xp|
@@ -171,6 +268,22 @@ class IncomingXmlInvoice
       val += REXML::XPath.first(doc,xpath).text.to_s rescue ""
     end
     val.blank? ? nil : val
+  end
+
+  def attached_invoices(email)
+    invoices = []
+    email.attachments.each do |attachment|
+      invoices << attachment if attachment.content_type =~ /xml/ || attachment.content_type =~ /pdf/
+    end
+    email.parts.each do |part|
+      attached_mail = nil
+      attached_mail = TMail::Mail.parse(part.body) if email.attachment?(part) rescue nil
+      next if attached_mail.nil? || attached_mail.attachments.nil?
+      attached_mail.attachments.each do |attachment|
+        invoices << attachment if attachment.content_type =~ /xml/ || attachment.content_type =~ /pdf/
+      end
+    end
+    invoices
   end
 
 end
