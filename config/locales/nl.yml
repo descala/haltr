@@ -398,6 +398,7 @@ en:
   errors_prevented_invoice_sent: Invoice not sent since it contains errors
   company_taxcode_needed: "No podem generar el document perquè la teva empresa no té NIF"
   client_taxcode_needed: "No podem generar el document perquè el client no té NIF"
+  client_postalcode_needed: "No podem generar el document perquè el client no té codi postal"
   read: "Read"
   text_invoices_destroy_confirmation: 'Weet u zeker dat u deze facture(n) wil verwijderen?'
   mark_as: "Mark as"

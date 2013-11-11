@@ -246,6 +246,12 @@ class IssuedInvoice < InvoiceDocument
     end
   end
 
+  def client_has_postalcode
+    if self.client.postalcode.blank?
+      add_export_error(l(:client_postalcode_needed))
+    end
+  end
+
   # facturae 32 needs bank_account if payment method is transfer to be valid
   def company_has_bank_account_if_needed
     if self.transfer? and self.company.bank_account.empty?
