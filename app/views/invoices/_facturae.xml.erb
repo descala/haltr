@@ -1,5 +1,6 @@
       <Modality>I</Modality>
-      <InvoiceIssuerType>TE</InvoiceIssuerType>
+      <InvoiceIssuerType><%= @local_certificate ? 'EM' : 'TE' %></InvoiceIssuerType>
+      <% unless @local_certificate -%>
       <ThirdParty>
          <TaxIdentification>
             <PersonTypeCode>J</PersonTypeCode>
@@ -17,6 +18,7 @@
             </AddressInSpain>
          </LegalEntity>
       </ThirdParty>
+      <% end -%>
       <Batch>
          <BatchIdentifier><%=h  @invoice.id %></BatchIdentifier>
          <InvoicesCount>1</InvoicesCount>
