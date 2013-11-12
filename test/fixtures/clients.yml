@@ -11,6 +11,7 @@ client1:
   language: en
   country: es
   invoice_format: facturae_32
+  payment_method: 1
 
 clients_001: 
   id: 1

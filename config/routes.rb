@@ -15,6 +15,7 @@ resources :projects do
   match :people, :controller => 'people', :action => 'index', :via => :get
   match 'companies/linked_to_mine', :controller => 'companies', :action => 'linked_to_mine', :via => :get
   match 'my_company', :controller => 'companies', :action => 'my_company', :via => :get
+  match 'add_bank_info', :controller => 'companies', :action => 'add_bank_info', :via => :get
   match 'invoices/send_new' => 'invoices#send_new_invoices', :via => :get
   match 'invoices/update_payment_stuff' => 'invoices#update_payment_stuff', :via => :get
   match 'invoices/new/:client' => 'invoices#new', :via => :get, :as => :client_new_invoice
