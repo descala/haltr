@@ -263,7 +263,7 @@ class IssuedInvoice < InvoiceDocument
         add_export_error("#{l(:field_payment_method)} (#{l(:debit)}) #{l(:requires_client_bank_account)}")
       end
     elsif transfer?
-      if bank_info.bank_account.blank? and !bank_info.use_iban?
+      if !bank_info or (bank_info.bank_account.blank? and !bank_info.use_iban?)
         add_export_error("#{l(:field_payment_method)} (#{l(:transfer)}) #{l(:requires_company_bank_account)}")
       end
     end
