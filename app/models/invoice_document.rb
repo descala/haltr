@@ -7,19 +7,14 @@ class InvoiceDocument < Invoice
   attr_accessor :legal_filename, :legal_content_type, :legal_invoice
 
   def final_md5
-    #TODO: check #2451 to store md5 on invoice.
     self.events.collect {|e| e unless e.final_md5.blank? }.compact.sort.last.final_md5 rescue nil
-  end
-
-  def initial_md5
-    self.events.collect {|e| e unless e.md5.blank? }.compact.sort.first.md5 rescue nil
   end
 
   # retrieve invoice from external system
   # to allow to download a modified invoice file
   # (for example digitally signed file)
   def fetch_from_backup(md5=nil,backup_name=nil)
-    md5 ||= self.initial_md5
+    md5 ||= self.final_md5
     url = Setting.plugin_haltr["trace_url"]
     url = URI.parse(url.gsub(/\/$/,'')) # remove trailing slash
     connection = Net::HTTP.new(url.host,url.port)
