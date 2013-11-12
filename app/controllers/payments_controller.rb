@@ -91,13 +91,17 @@ class PaymentsController < ApplicationController
   end
 
   def n19_index
-    @charge_bank_on_due_date = IssuedInvoice.find_due_dates(@project)
+    @charge_bank_on_due_date = IssuedInvoice.find(:all, :conditions => ["state = 'sent' AND clients.bank_account != '' AND invoices.payment_method=? AND clients.project_id=?",Invoice::PAYMENT_DEBIT,@project.id], :include => :client).reject {|i|
+      !i.bank_info or i.bank_info.bank_account.blank?
+    }.group_by(&:bank_info)
   end
 
   # generate spanish AEB Nº19
   def n19
     @due_date = @invoice.due_date
     @fecha_cargo = @due_date.to_formatted_s :ddmmyy
+    @bank_account = params[:bank_account]
+    render_404 && return if @bank_account.blank?
     @clients = Client.find :all, :conditions => ["bank_account != '' and project_id = ?", @project.id], :order => 'taxcode'
     @fecha_confeccion = Date.today.to_formatted_s :ddmmyy
     @total = Money.new 0, Money::Currency.new(Setting.plugin_haltr['default_currency'])
