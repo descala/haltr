@@ -81,6 +81,23 @@ signed_facturae32_local_cert:
       :invoices:
         - :base64doc
 
+signed_facturae31_local_cert:
+  format: facturae31
+  folder: free_pdf_without_signature
+  validate: client_has_email
+  javascript: "doSign('/invoices/base64doc/:id/facturae31','XAdES Enveloped')"
+  locales:
+    ca: "Facturae31 signat amb certificat local, enviat per email"
+    da: "Signed Facturae31 til email"
+    en: "Signed Facturae31 to email"
+    es: "Facturae31 firmado, enviado por email"
+    fr: "Facturae31 signé par email"
+    sv: "Signerad Facturae31 till email"
+  allowed_permissions:
+    :use_local_signature:
+      :invoices:
+        - :base64doc
+
 facturae_30:
   format: facturae30
   folder: free_xml
