@@ -16,8 +16,7 @@ class AddBankInfosTable < ActiveRecord::Migration
                          :company_id   => company.id)
       end
     end
-    Invoice.all.each do |invoice|
-      next unless [Invoice::PAYMENT_TRANSFER, Invoice::PAYMENT_DEBIT].include?(invoice.payment_method)
+    Invoice.find(:all, :conditions => ["payment_method in (?, ?)", Invoice::PAYMENT_TRANSFER, Invoice::PAYMENT_DEBIT]).each do |invoice|
       if invoice.project.company.bank_infos.size == 1
         invoice.bank_info = invoice.client.project.company.bank_infos.first
         invoice.save
