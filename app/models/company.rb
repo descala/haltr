@@ -7,8 +7,8 @@ class Company < ActiveRecord::Base
   # these are the linked clients: where this company apears in other 
   # companies' client list
   has_many :clients, :dependent => :nullify
-
   has_many :taxes, :class_name => "Tax", :dependent => :destroy, :order => "name,percent DESC"
+  has_many :bank_infos, :dependent => :destroy, :order => "name,bank_account,iban,bic DESC"
   COUNTRIES_WITHOUT_TAXCODE = ["is","no"]
   validates_presence_of :name, :project_id, :email, :postalcode, :country
   validates_presence_of :taxcode, :unless => Proc.new {|company|
@@ -16,8 +16,6 @@ class Company < ActiveRecord::Base
   }
   validates_length_of :taxcode, :maximum => 20
   validates_uniqueness_of :taxcode, :allow_blank => true
-  validates_numericality_of :bank_account, :allow_nil => true, :unless => Proc.new {|company| company.bank_account.blank?}
-  validates_length_of :bank_account, :maximum => 20
   validates_inclusion_of :currency, :in  => Money::Currency.table.collect {|k,v| v[:iso_code] }
   validates_format_of :email,
     :with => /\A[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]+(,[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]+)*\z/,
@@ -33,6 +31,11 @@ class Company < ActiveRecord::Base
     :allow_destroy => true,
     :reject_if => proc { |attributes| attributes.all? { |_, value| value.blank? } }
   validates_associated :taxes
+
+  accepts_nested_attributes_for :bank_infos,
+    :allow_destroy => true,
+    :reject_if => proc { |attributes| attributes.all? { |_, value| value.blank? } }
+  validates_associated :bank_infos
 
   def initialize(attributes=nil)
     super
@@ -98,9 +101,10 @@ class Company < ActiveRecord::Base
     taxes.collect {|tax| tax.name }.uniq
   end
 
-  # use iban and bic if they are pressent
-  def use_iban?
-    !(self.iban.nil? or self.bic.nil? or self.iban.blank? or self.bic.blank?)
+  def bank_accounts
+    self.bank_infos.collect {|bi|
+      bi.bank_account
+    }.compact.uniq
   end
 
   private

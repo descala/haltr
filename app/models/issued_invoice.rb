@@ -89,11 +89,6 @@ class IssuedInvoice < InvoiceDocument
     state?(:sent) or state?(:closed)
   end
 
-  # List dates in which invoices are due, an *example* invoice and count
-  def self.find_due_dates(project)
-    find_by_sql "SELECT due_date, invoices.id, count(*) AS invoice_count FROM invoices, clients WHERE type='IssuedInvoice' AND client_id = clients.id AND clients.project_id = #{project.id} AND state = 'sent' AND bank_account != '' AND invoices.payment_method=#{Invoice::PAYMENT_DEBIT} GROUP BY due_date ORDER BY due_date DESC"
-  end
-
   def label
     if self.amend_of
       l :label_amendment_invoice
@@ -253,8 +248,10 @@ class IssuedInvoice < InvoiceDocument
   end
 
   # facturae 32 needs bank_account if payment method is transfer to be valid
+  #TODO change this method name
   def company_has_bank_account_if_needed
-    if self.transfer? and self.company.bank_account.empty?
+    #TODO: iban+bic not valid here?
+    if transfer? and bank_info.bank_account.empty?
       add_export_error(l(:bank_account_empty))
     end
   end
@@ -266,7 +263,7 @@ class IssuedInvoice < InvoiceDocument
         add_export_error("#{l(:field_payment_method)} (#{l(:debit)}) #{l(:requires_client_bank_account)}")
       end
     elsif transfer?
-      if company.bank_account.blank? and !company.use_iban?
+      if !bank_info or (bank_info.bank_account.blank? and !bank_info.use_iban?)
         add_export_error("#{l(:field_payment_method)} (#{l(:transfer)}) #{l(:requires_company_bank_account)}")
       end
     end

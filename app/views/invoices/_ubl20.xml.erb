@@ -97,19 +97,19 @@
             <cac:PayerFinancialAccount>
               <cbc:ID><%=h @client.bank_account%></cbc:ID>
             </cac:PayerFinancialAccount>
-<% elsif @invoice.transfer? and @company.iban and @company.bic and !@company.iban.blank? and !@company.bic.blank? -%>
+<% elsif @invoice.transfer? and @invoice.bank_info and !@invoice.bank_info.iban.blank? and !@invoice.bank_info.bic.blank? -%>
             <cbc:PaymentChannelCode>IBAN</cbc:PaymentChannelCode>
             <cac:PayeeFinancialAccount>
-              <cbc:ID schemeID="IBAN"><%=h @company.iban%></cbc:ID>
+              <cbc:ID schemeID="IBAN"><%=h @invoice.bank_info.iban%></cbc:ID>
               <cac:FinancialInstitutionBranch>
                 <cac:FinancialInstitution>
-                  <cbc:ID schemeID="BIC"><%=h @company.bic%></cbc:ID>
+                  <cbc:ID schemeID="BIC"><%=h @invoice.bank_info.bic%></cbc:ID>
                 </cac:FinancialInstitution>
               </cac:FinancialInstitutionBranch>
             </cac:PayeeFinancialAccount>
-<% elsif @invoice.transfer? and @company.bank_account and !@company.bank_account.blank? -%>
+<% elsif @invoice.transfer? and @invoice.bank_info and !@invoice.bank_info.bank_account.blank? -%>
             <cac:PayeeFinancialAccount>
-              <cbc:ID><%=h @company.bank_account%></cbc:ID>
+              <cbc:ID><%=h @invoice.bank_info.bank_account%></cbc:ID>
             </cac:PayeeFinancialAccount>
 <% end -%>
     </cac:PaymentMeans>
