@@ -16,6 +16,13 @@ class AddBankInfosTable < ActiveRecord::Migration
                          :company_id   => company.id)
       end
     end
+    Invoice.all.each do |invoice|
+      next unless [Invoice::PAYMENT_TRANSFER, Invoice::PAYMENT_DEBIT].include?(invoice.payment_method)
+      if invoice.project.company.bank_infos.size == 1
+        invoice.bank_info = invoice.client.project.company.bank_infos.first
+        invoice.save
+      end
+    end
     remove_column :companies, :bank_account
     remove_column :companies, :iban
     remove_column :companies, :bic
