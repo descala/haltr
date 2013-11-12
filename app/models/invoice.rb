@@ -163,18 +163,11 @@ class Invoice < ActiveRecord::Base
     end
   end
 
-  def self.payment_methods
-    [[l("cash"), PAYMENT_CASH],
-     [l("debit"), PAYMENT_DEBIT],
-     [l("transfer"), PAYMENT_TRANSFER],
-     [l("other"),PAYMENT_SPECIAL]]
-  end
-
   # for transfer payment method it returns an entry for each bank_account on company:
   # ["transfer to <bank_info.name>", "<PAYMENT_TRANSFER>_<bank_info.id>"]
   # or one generic entry if there are no bank_infos on company:
   # ["transfer", PAYMENT_TRANSFER]
-  def payment_methods
+  def self.payment_methods(company)
     pm = [[l("cash"), PAYMENT_CASH]]
     if company.bank_infos.any?
       tr = []

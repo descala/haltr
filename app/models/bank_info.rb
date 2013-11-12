@@ -2,6 +2,7 @@ class BankInfo < ActiveRecord::Base
   unloadable
   belongs_to :company
   has_many :invoices, :dependent => :nullify
+  has_many :clients, :dependent => :nullify
 
   validates_numericality_of :bank_account, :allow_nil => true, :allow_blank => true
   validates_length_of :bank_account, :maximum => 20

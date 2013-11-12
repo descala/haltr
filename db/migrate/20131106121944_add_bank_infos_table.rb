@@ -27,5 +27,6 @@ class AddBankInfosTable < ActiveRecord::Migration
     add_column :companies, :bank_account, :string
     add_column :companies, :iban,         :string
     add_column :companies, :bic,          :string
+    remove_column :invoices, :bank_info_id
   end
 end

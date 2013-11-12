@@ -7,6 +7,7 @@ class Client < ActiveRecord::Base
 
   belongs_to :project # client of
   belongs_to :company # linked to
+  belongs_to :bank_info
 
   validates_presence_of :taxcode, :unless => Proc.new { |client|
     Company::COUNTRIES_WITHOUT_TAXCODE.include? client.country
@@ -20,6 +21,7 @@ class Client < ActiveRecord::Base
   validates_numericality_of :bank_account, :unless => Proc.new { |c| c.bank_account.blank? }
   validates_length_of       :bank_account, :within => 16..40, :unless => Proc.new { |c| c.bank_account.blank? }
   validates_format_of       :email, :with => /\A([\w\.\-\+]+)@((?:[-a-z0-9]+\.)+[a-z]{2,})\z/i, :allow_nil => true, :allow_blank => true
+  validate :bank_info_belongs_to_self
 #  validates_uniqueness_of :name, :scope => :project_id
 #  validates_length_of :name, :maximum => 30
 #  validates_format_of :identifier, :with => /^[a-z0-9\-]*$/
@@ -118,6 +120,24 @@ class Client < ActiveRecord::Base
     !(self.iban.nil? or self.bic.nil? or self.iban.blank? or self.bic.blank?)
   end
 
+  def payment_method=(v)
+    if v =~ /_/
+      write_attribute(:payment_method,v.split("_")[0])
+      self.bank_info_id=v.split("_")[1]
+    else
+      write_attribute(:payment_method,v)
+      self.bank_info=nil
+    end
+  end
+
+  def payment_method
+    if [Invoice::PAYMENT_TRANSFER, Invoice::PAYMENT_DEBIT].include?(read_attribute(:payment_method)) and bank_info
+      "#{read_attribute(:payment_method)}_#{bank_info.id}"
+    else
+      read_attribute(:payment_method)
+    end
+  end
+
   private
 
   def copy_linked_profile
@@ -135,6 +155,12 @@ class Client < ActiveRecord::Base
     unless hashid
       require "digest/md5"
       self.hashid=Digest::MD5.hexdigest(Time.now.to_f.to_s)[0...10]
+    end
+  end
+
+  def bank_info_belongs_to_self
+    if bank_info and bank_info.company != project.company
+      errors.add(:base, "Bank info is from other company!")
     end
   end
 
