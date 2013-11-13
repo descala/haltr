@@ -10,7 +10,7 @@ class CompaniesController < ApplicationController
   include SortHelper
   include Haltr::TaxHelper
 
-  before_filter :find_project_by_project_id, :only => [:my_company,:linked_to_mine,:logo]
+  before_filter :find_project_by_project_id, :only => [:my_company,:linked_to_mine,:logo,:add_bank_info]
   before_filter :find_company, :only => [:update]
   before_filter :set_iso_countries_language
   before_filter :authorize, :except => [:logo,:logo_by_taxcode]
@@ -27,6 +27,7 @@ class CompaniesController < ApplicationController
     else
       @company = @project.company
     end
+    @company.bank_infos.build if @company.bank_infos.empty?
     render :action => 'edit'
   end
 
@@ -40,10 +41,13 @@ class CompaniesController < ApplicationController
   end
 
   def update
-    #TODO: need to access company taxes before update_attributes, if not
-    # updated taxes are not saved.
-    # maybe related to https://rails.lighthouseapp.com/projects/8994/tickets/4642
-    @company.taxes.each {|t| }
+    # check if user trying to add multiple bank_infos without role
+    unless User.current.allowed_to?(:add_multiple_bank_infos,@project)
+      if params[:company][:bank_infos_attributes].reject {|i,b| b["_destroy"] == "1" }.size > 1
+        redirect_to project_add_bank_info_path(@project), :alert => "You are not allowed to add multiple bank accounts"
+        return
+      end
+    end
     if @company.update_attributes(params[:company])
       unless @company.taxes.collect {|t| t unless t.marked_for_destruction? }.compact.any?
         @company.taxes = []
@@ -92,6 +96,11 @@ class CompaniesController < ApplicationController
   rescue
   ensure
     logo
+  end
+
+  def add_bank_info
+    #dummy action to allow check if user is authorized
+    redirect_to project_my_company_path(@project)
   end
 
   private

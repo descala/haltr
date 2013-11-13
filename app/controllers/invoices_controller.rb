@@ -239,6 +239,8 @@ class InvoicesController < ApplicationController
     doc_format=params[:doc_format]
     if request.get?
       # send a base64 encoded pdf document
+      # this is used to sign invoices with a local certificate
+      @local_certificate = true
       file = doc_format == "pdf" ? create_pdf_file : create_xml_file(doc_format)
       base64_file=Tempfile.new("invoice_#{@invoice.id}.base64","tmp")
       File.open(base64_file.path, 'w') do |f|

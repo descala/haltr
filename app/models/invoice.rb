@@ -4,7 +4,6 @@ class Invoice < ActiveRecord::Base
 
   unloadable
 
-
   # 1 - cash (al comptat)
   # 2 - debit (rebut domiciliat)
   # 4 - transfer (transferència)
@@ -31,6 +30,7 @@ class Invoice < ActiveRecord::Base
   belongs_to :project, :counter_cache => true
   belongs_to :client
   belongs_to :amend, :class_name => "Invoice", :foreign_key => 'amend_id'
+  belongs_to :bank_info
   has_one :amend_of, :class_name => "Invoice", :foreign_key => 'amend_id'
   validates_presence_of :client, :date, :currency, :project_id, :unless => Proc.new {|i| i.type == "ReceivedInvoice" }
   validates_inclusion_of :currency, :in  => Money::Currency.table.collect {|k,v| v[:iso_code] }, :unless => Proc.new {|i| i.type == "ReceivedInvoice" }
@@ -44,6 +44,8 @@ class Invoice < ActiveRecord::Base
     :allow_destroy => true,
     :reject_if => proc { |attributes| attributes.all? { |_, value| value.blank? } }
   validates_associated :invoice_lines
+
+  validate :bank_info_belongs_to_self
 
   composed_of :import,
     :class_name => "Money",
@@ -66,7 +68,7 @@ class Invoice < ActiveRecord::Base
     self.currency ||= self.client.currency rescue nil
     self.currency ||= self.company.currency rescue nil
     self.currency ||= Setting.plugin_haltr['default_currency']
-    self.payment_method ||= 1
+    self.payment_method ||= PAYMENT_CASH
   end
 
   def currency=(v)
@@ -144,15 +146,15 @@ class Invoice < ActiveRecord::Base
       iban = client.iban || ""
       bic  = client.bic || ""
       "#{l(:debit_str)} BIC #{bic} IBAN #{iban[0..3]} #{iban[4..7]} #{iban[8..11]} **** **** #{iban[20..23]}"
-    elsif transfer? and company.use_iban?
-      iban = company.iban || ""
-      bic  = company.bic || ""
+    elsif transfer? and bank_info and bank_info.use_iban?
+      iban = bank_info.iban || ""
+      bic  = bank_info.bic || ""
       "#{l(:transfer_str)} BIC #{bic} IBAN #{iban[0..3]} #{iban[4..7]} #{iban[8..11]} #{iban[12..15]} #{iban[16..19]} #{iban[20..23]}"
     elsif debit?
       ba = client.bank_account || ""
       "#{l(:debit_str)} #{ba[0..3]} #{ba[4..7]} ** ******#{ba[16..19]}"
     elsif transfer?
-      ba = company.bank_account ||= ""
+      ba = bank_info.bank_account ||= "" rescue ""
       "#{l(:transfer_str)} #{ba[0..3]} #{ba[4..7]} #{ba[8..9]} #{ba[10..19]}"
     elsif special?
       payment_method_text
@@ -161,24 +163,59 @@ class Invoice < ActiveRecord::Base
     end
   end
 
-  def self.payment_methods
-    [[l("cash"), 1],[l("debit"), 2],[l("transfer"), 4],[l("other"),13]]
+  # for transfer payment method it returns an entry for each bank_account on company:
+  # ["transfer to <bank_info.name>", "<PAYMENT_TRANSFER>_<bank_info.id>"]
+  # or one generic entry if there are no bank_infos on company:
+  # ["transfer", PAYMENT_TRANSFER]
+  def self.payment_methods(company)
+    pm = [[l("cash"), PAYMENT_CASH]]
+    if company.bank_infos.any?
+      tr = []
+      db = []
+      company.bank_infos.each do |bank_info|
+        tr << [l("debit_through",:bank_account=>bank_info.name), "#{PAYMENT_DEBIT}_#{bank_info.id}"]
+        db << [l("transfer_to",:bank_account=>bank_info.name),"#{PAYMENT_TRANSFER}_#{bank_info.id}"]
+      end
+      pm += tr
+      pm += db
+    else
+      pm << [l("transfer"),PAYMENT_TRANSFER]
+    end
+    pm << [l("other"),PAYMENT_SPECIAL]
+  end
+
+  def payment_method=(v)
+    if v =~ /_/
+      write_attribute(:payment_method,v.split("_")[0])
+      self.bank_info_id=v.split("_")[1]
+    else
+      write_attribute(:payment_method,v)
+      self.bank_info=nil
+    end
+  end
+
+  def payment_method
+    if [PAYMENT_TRANSFER, PAYMENT_DEBIT].include?(read_attribute(:payment_method)) and bank_info
+      "#{read_attribute(:payment_method)}_#{bank_info.id}"
+    else
+      read_attribute(:payment_method)
+    end
   end
 
   def debit?
-    payment_method == PAYMENT_DEBIT
+    read_attribute(:payment_method) == PAYMENT_DEBIT
   end
 
   def transfer?
-    payment_method == PAYMENT_TRANSFER
+    read_attribute(:payment_method) == PAYMENT_TRANSFER
   end
 
   def special?
-    payment_method == PAYMENT_SPECIAL
+    read_attribute(:payment_method) == PAYMENT_SPECIAL
   end
 
   def payment_method_code(format)
-    PAYMENT_CODES[payment_method][format]
+    PAYMENT_CODES[read_attribute(:payment_method)][format]
   end
 
   def <=>(oth)
@@ -445,6 +482,12 @@ _INV
   def invoice_must_have_lines
     if invoice_lines.empty? or invoice_lines.all? {|i| i.marked_for_destruction?}
       errors.add(:base, "#{l(:label_invoice)} #{l(:must_have_lines)}")
+    end
+  end
+
+  def bank_info_belongs_to_self
+    if bank_info and bank_info.company != client.project.company
+      errors.add(:base, "Bank info is from other company!")
     end
   end
 

@@ -1,5 +1,6 @@
       <Modality>I</Modality>
-      <InvoiceIssuerType>TE</InvoiceIssuerType>
+      <InvoiceIssuerType><%= @local_certificate ? 'EM' : 'TE' %></InvoiceIssuerType>
+      <% unless @local_certificate -%>
       <ThirdParty>
          <TaxIdentification>
             <PersonTypeCode>J</PersonTypeCode>
@@ -17,6 +18,7 @@
             </AddressInSpain>
          </LegalEntity>
       </ThirdParty>
+      <% end -%>
       <Batch>
          <BatchIdentifier><%=h  @invoice.id %></BatchIdentifier>
          <InvoicesCount>1</InvoicesCount>
@@ -244,17 +246,17 @@
                      <IBAN><%=h @client.bank_account%></IBAN>
                    <% end -%>
                </AccountToBeDebited>
-<% elsif @invoice.transfer? and @company.use_iban? -%>
+<% elsif @invoice.transfer? and @invoice.bank_info and @invoice.bank_info.use_iban? -%>
                <AccountToBeCredited>
-                 <IBAN><%=h @company.iban%></IBAN>
-                 <BankCode><%=h @company.bic%></BankCode>
+                 <IBAN><%=h @invoice.bank_info.iban%></IBAN>
+                 <BankCode><%=h @invoice.bank_info.bic%></BankCode>
                </AccountToBeCredited>
-<% elsif @invoice.transfer? and !@company.bank_account.blank? -%>
+<% elsif @invoice.transfer? and @invoice.bank_info and !@invoice.bank_info.bank_account.blank? -%>
                <AccountToBeCredited>
                  <% if (@format == "facturae32") -%>
-                   <AccountNumber><%=h @company.bank_account%></AccountNumnber>
+                   <AccountNumber><%=h @invoice.bank_info.bank_account%></AccountNumnber>
                  <% else -%>
-                   <IBAN><%=h @company.bank_account%></IBAN>
+                   <IBAN><%=h @invoice.bank_info.bank_account%></IBAN>
                  <% end -%>
                </AccountToBeCredited>
 <% end -%>

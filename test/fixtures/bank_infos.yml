@@ -1,0 +1,11 @@
+bi1:
+  id: 1
+  name: "bank account 1"
+  bank_account: "1234567890123666"
+  company: company1
+
+bi2:
+  id: 2
+  name: ""
+  bank_account: "1234567890123777"
+  company: company2

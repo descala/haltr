@@ -18,6 +18,7 @@ facturae30:
     - company_has_taxcode
     - client_has_taxcode
     - payment_method_requirements
+    - client_has_postalcode
   content-type: "text-xml"
 
 facturae31:
@@ -27,6 +28,7 @@ facturae31:
     - company_has_taxcode
     - client_has_taxcode
     - payment_method_requirements
+    - client_has_postalcode
   content-type: "text-xml"
 
 facturae32:
@@ -36,6 +38,7 @@ facturae32:
     - company_has_taxcode
     - client_has_taxcode
     - payment_method_requirements
+    - client_has_postalcode
   content-type: "text-xml"
 
 peppolubl20:

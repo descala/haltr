@@ -21,7 +21,7 @@
     %>
     </p>
     <p class="col span-1-de-2">
-      <%= f.text_field :company_identifier %>
+      <%= f.text_field :company_identifier, :readonly => client.linked? %>
     </p>
   </div>
   <div class="seccio grup">
@@ -32,7 +32,7 @@
       <%= f.text_field :email, :readonly => client.linked? %>
     </p>
     <p class="col span-1-de-3">
-      <%= f.text_field :website %>
+      <%= f.text_field :website, :readonly => client.linked? %>
     </p>
   </div>
   <% if context =~ /_invoice$/ -%>
@@ -65,8 +65,12 @@
         <%= f.text_field :province, :readonly => client.linked? %>
       </p>
       <p class="col span-1-de-4">
+      <% if client.linked? -%>
+        <%= f.text_field :country, :value => ISO::Countries.get_country(client.country), :readonly => client.linked?, :required => true %>
+      <% else -%>
         <%= f.label_for_field :country, :required => true %>
-        <%= f.iso_country_select :country, valid_languages, :readonly => client.linked? %>
+        <%= f.iso_country_select :country, valid_languages %>
+      <% end -%>
       </p>
     </div>
     <% if client.linked? -%>
@@ -75,7 +79,7 @@
           <%= f.text_field :language, :value => l(:general_lang_name,:locale => client.language), :readonly=>true %>
         </p>
         <p class="col span-1-de-3">
-          <%= f.select :currency, currency_options_for_select, :required => true %>
+          <%= f.text_field :currency, :value => client.currency, :required => true, :readonly => client.linked? %>
         </p>
         <p class="col span-1-de-3">
           <%= f.text_field :invoice_format, :value => ExportChannels.l(client.invoice_format), :readonly=>true %>
@@ -112,18 +116,15 @@
     </p>
   </div>
 
-  <% unless client.linked? -%>
     <div class="seccio grup">
       <p class="col span-1-de-2">
-        <% disabled = [] ; disabled << Invoice::PAYMENT_TRANSFER if @project.company.bank_account.blank? -%>
-        <%= f.select(:payment_method, Invoice.payment_methods, {:disabled=>disabled}) %><br/>
-        <%= f.text_area(:payment_method_text, :cols => 40, :rows => 2, :no_label => true, :id => 'payment_other', :style => (client.payment_method==13) ? '' : 'display: none;') %>
+        <%= f.select(:payment_method, Invoice.payment_methods(@project.company)) %><br/>
+        <%= f.text_area(:payment_method_text, :cols => 40, :rows => 2, :no_label => true, :id => 'payment_other', :style => (client.payment_method==Invoice::PAYMENT_SPECIAL) ? '' : 'display: none;') %>
       </p>
       <p class="col span-1-de-2">
         <%= f.select(:terms, Terms.for_select, {}) %>
       </p>
     </div>
-  <% end -%>
 </fieldset>
 
 <% if User.current.admin? or User.current.allowed_to?(:send_peppol, @project) -%>

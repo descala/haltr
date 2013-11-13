@@ -98,7 +98,9 @@ fr:
   label_send: Envoyer
   cash: Liquide
   debit: Débiter paiement
+  debit_through: Débiter paiement, à travers %{bank_account}
   transfer: Transfert bancaire
+  transfer_to: Transfert bancaire au %{bank_account}
   other: Autres
   requires_client_bank_account: exige le compte bancaire du client
   requires_company_bank_account: exige le propre compte bancaire
@@ -404,6 +406,7 @@ fr:
   total_executable: "Total to pay"
   company_taxcode_needed: "No podem generar el document perquè la teva empresa no té NIF"
   client_taxcode_needed: "No podem generar el document perquè el client no té NIF"
+  client_postalcode_needed: "No podem generar el document perquè el client no té codi postal"
   read: "Read"
   text_invoices_destroy_confirmation: 'Êtes-vous sûr de vouloir supprimer la ou les facture(s) selectionnée(s) ?'
   mark_as: "Mark as"
@@ -411,3 +414,5 @@ fr:
   button_send: "Send"
   some_invoices_sent: "Some invoices could not be sent (sent %{sent} of %{total})"
   all_invoices_sent: "Invoices have been sent"
+  button_add_bank_info: "Add bank account"
+  page_redirecting_will_lose_unsaved_data: "La pàgina es redirigirà i perdreu les dades no desades, voleu continuar?"

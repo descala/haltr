@@ -90,6 +90,9 @@ Redmine::Plugin.register :haltr do
       { :invoices => [:bulk_download],
         :received => [:bulk_download] }, :require => :member
 
+    permission :add_multiple_bank_infos,
+      { :companies => [:add_bank_info] }, :require => :member
+
     # Loads permisons from config/channels.yml
     ExportChannels.permissions.each do |permission,actions|
       permission permission, actions, :require => :member

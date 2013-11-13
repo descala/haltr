@@ -96,7 +96,9 @@ da:
   label_send: Send
   cash: Kontant
   debit: Debet betaling
+  debit_through: Debet betaling, durch %{bank_account}
   transfer: Bankoverførsel
+  transfer_to: Bankoverførsel til %{bank_account}
   other: Andre
   requires_client_bank_account: kræver klient bankkonto
   requires_company_bank_account: kræver self-service bank konto
@@ -418,6 +420,7 @@ da:
   total_executable: "Total to pay"
   company_taxcode_needed: "No podem generar el document perquè la teva empresa no té NIF"
   client_taxcode_needed: "No podem generar el document perquè el client no té NIF"
+  client_postalcode_needed: "No podem generar el document perquè el client no té codi postal"
   read: "Read"
   text_invoices_destroy_confirmation: 'Er du sikker på du ønsker at slette den/de valgte faktura?'
   mark_as: "Mark as"
@@ -425,3 +428,5 @@ da:
   button_send: "Send"
   some_invoices_sent: "Some invoices could not be sent (sent %{sent} of %{total})"
   all_invoices_sent: "Invoices have been sent"
+  button_add_bank_info: "Add bank account"
+  page_redirecting_will_lose_unsaved_data: "La pàgina es redirigirà i perdreu les dades no desades, voleu continuar?"

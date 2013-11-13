@@ -111,7 +111,9 @@ es:
   label_send: Enviar
   cash: En efectivo
   debit: Cargar en cuenta
+  debit_through: Cargar en cuenta, usando %{bank_account}
   transfer: Transferencia bancaria
+  transfer_to: Transferencia bancaria a %{bank_account}
   other: Otros
   requires_client_bank_account: requiere cuenta bancaria del cliente
   requires_company_bank_account: requiere cuenta bancaria propia
@@ -417,6 +419,7 @@ es:
   total_executable: "Total a pagar"
   company_taxcode_needed: "No podem generar el document perquè la teva empresa no té NIF"
   client_taxcode_needed: "No podem generar el document perquè el client no té NIF"
+  client_postalcode_needed: "No podem generar el document perquè el client no té codi postal"
   read: "Leído"
   text_invoices_destroy_confirmation: '¿Seguro que quiere borrar las facturas seleccionadas?'
   mark_as: "Marcar como"
@@ -424,3 +427,5 @@ es:
   button_send: "Enviar"
   some_invoices_sent: "Algunas facturas no se pudieron enviar (enviadas %{sent} de %{total})"
   all_invoices_sent: "Se han enviado las facturas"
+  button_add_bank_info: "Añadir cuenta bancaria"
+  page_redirecting_will_lose_unsaved_data: "La pàgina es redirigirà i perdreu les dades no desades, voleu continuar?"
