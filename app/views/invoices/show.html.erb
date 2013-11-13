@@ -23,9 +23,6 @@
   </div>
 </div>
 
-<textarea id="console" rows="10" style="width:99%; display:none;">
-</textarea>
-
 <%= render :partial => 'invoices/events'%>
 <%= render :partial => 'invoices/issued_invoice_list_other' if @invoice.is_a? IssuedInvoice %>
 <%= render :partial => 'invoices/channel_links' if (Rails.env == "development" or User.current.admin?) and @invoice.is_a? IssuedInvoice %>

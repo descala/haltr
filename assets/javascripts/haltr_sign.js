@@ -85,8 +85,20 @@ function getErrorMessage() {
 	return clienteFirma.getErrorMessage();
 }
 
-function log(msg) {
-  $('#console').val( $('#console').val() + msg + "\n");
+function log(msg,level) {
+  if ( !$('div.flash.'+level).length ) {
+    jQuery('<div/>', {
+      class: 'flash ' + level
+    }).prependTo('div.controller-invoices.action-show');
+  }
+  if ( !$('ul#haltr_'+level+'_messages').length ) {
+    jQuery('<ul/>', {
+      id: 'haltr_'+level+'_messages'
+    }).appendTo('div.flash.'+level)
+  }
+  jQuery('<li/>', {
+    text: msg
+  }).appendTo('#haltr_'+level+'_messages')
 }
 
 function doSign_init() {
@@ -103,12 +115,12 @@ function doSign(document_url,signature_type) {
   try {
     var dataB64;
     doSign_init();
-    log('Descarregant document ...');
+    log('Descarregant document ...','info');
     $.ajax({
       url : document_url,
       success : function(dataB64){
         try {
-          log('Cridant a la signatura ...');
+          log('Cridant a la signatura ...','info');
           // <option value="CAdES">CAdES</option>
           // <option value="Adobe PDF">PAdES</option>
           // <option value="XAdES">XAdES</option>
@@ -116,33 +128,33 @@ function doSign(document_url,signature_type) {
           // signature_type for PDF: 'Adobe PDF'
           // signature_type for Facturae: 'XAdES Enveloped'
           var signed_document = sign(dataB64, 'SHA1withRSA', signature_type, null);
-          log('Enviant document signat al servidor ...');
+          log('Enviant document signat al servidor ...','info');
           $.ajax({
             type: "POST",
             url: document_url,
             data: "document=" + signed_document,
             success: function(result){
               // Reload page in 2 seconds
-              log('Document enviat al servidor.');
+              log('Document enviat al servidor.','info');
               setTimeout(function() { location.reload(); }, 2000);
             },
             error: function(e){
-              log('Error al enviar el document signat.');
+              log('Error al enviar el document signat.','error');
               doSign_end();
             }
           });
         } catch(e) {
-          log(getErrorMessage());
+          log(getErrorMessage(),'error');
           doSign_end();
         }
       },
       error: function(e){
-        log('Error al descarregar el document.');
+        log('Error al descarregar el document.','error');
         doSign_end();
       }
     });
   } catch(e) {
-    log(getErrorMessage());
+    log(getErrorMessage(),'error');
     doSign_end();
   }
 }
