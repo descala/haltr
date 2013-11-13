@@ -134,9 +134,9 @@ function doSign(document_url,signature_type) {
             url: document_url,
             data: "document=" + signed_document,
             success: function(result){
-              // Reload page in 2 seconds
               log('Document enviat al servidor.','notice');
-              setTimeout(function() { location.reload(); }, 2000);
+              // Reload page in 2 seconds
+              //setTimeout(function() { location.reload(); }, 2000);
             },
             error: function(e){
               log('Error al enviar el document signat.','error');
