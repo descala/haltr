@@ -58,3 +58,9 @@
   cargarMiniApplet('/plugin_assets/haltr/java/');
 </script>
 
+<%=
+  # @autocall will be automatically called from javascript (haltr_sign.js)
+  # we can get here when pressing "save and send" button on invoice form if
+  # invoice is sent with javascript method (javascript attribute on channels.yml)
+  tag("div", :id => 'autocall', 'data-function' => @autocall, 'data-args' => @autocall_args) if @autocall
+%>

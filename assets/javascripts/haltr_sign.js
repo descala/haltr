@@ -146,3 +146,14 @@ function doSign(document_url,signature_type) {
     doSign_end();
   }
 }
+
+$(document).ready(function() {
+
+  // if a div with id autocall exists, call function from data-function with args from data-args
+  if ( $('div#autocall').length ) {
+    var func = window[$('div#autocall').data('function')];
+    var args = $('div#autocall').data('args').split(',');
+    func.apply(this, args);
+  };
+
+});

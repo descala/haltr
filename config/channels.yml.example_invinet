@@ -4,7 +4,9 @@
 # channel_name:
 #   format:     [format in formats.yml (if any)] ex. facturae32
 #   folder:     [folder to leave the resulting document in] ex. /tmp
-#   validate:   [method name in app/models/issued_invoice.rb] ex. client_has_email
+#   validate:   [method name in IssuedInvoice,
+#                checks the conditions the invoice has to have to use this channel] ex. client_has_email
+#   call_invoice_method:  [method name in IssuedInvoice, called if no folder is specified] ex. store_imap_draft_pdf
 #   locales:
 #     en: "text ..."      [list of translations]
 #   allowed_permissions:
