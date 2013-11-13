@@ -115,12 +115,12 @@ function doSign(document_url,signature_type) {
   try {
     var dataB64;
     doSign_init();
-    log('Descarregant document ...','info');
+    log('Descarregant document ...','notice');
     $.ajax({
       url : document_url,
       success : function(dataB64){
         try {
-          log('Cridant a la signatura ...','info');
+          log('Cridant a la signatura ...','notice');
           // <option value="CAdES">CAdES</option>
           // <option value="Adobe PDF">PAdES</option>
           // <option value="XAdES">XAdES</option>
@@ -128,14 +128,14 @@ function doSign(document_url,signature_type) {
           // signature_type for PDF: 'Adobe PDF'
           // signature_type for Facturae: 'XAdES Enveloped'
           var signed_document = sign(dataB64, 'SHA1withRSA', signature_type, null);
-          log('Enviant document signat al servidor ...','info');
+          log('Enviant document signat al servidor ...','notice');
           $.ajax({
             type: "POST",
             url: document_url,
             data: "document=" + signed_document,
             success: function(result){
               // Reload page in 2 seconds
-              log('Document enviat al servidor.','info');
+              log('Document enviat al servidor.','notice');
               setTimeout(function() { location.reload(); }, 2000);
             },
             error: function(e){
