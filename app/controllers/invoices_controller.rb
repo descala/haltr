@@ -13,8 +13,8 @@ class InvoicesController < ApplicationController
   PUBLIC_METHODS = [:by_taxcode_and_num,:view,:download,:mail,:logo]
 
   before_filter :find_project_by_project_id, :only => [:index,:new,:create,:send_new_invoices,:update_payment_stuff,:new_invoices_from_template,:report,:create_invoices,:update_taxes]
-  before_filter :find_invoice, :only => [:edit,:update,:mark_sent,:mark_closed,:mark_not_sent,:mark_accepted_with_mail,:mark_accepted,:mark_refused_with_mail,:mark_refused,:duplicate_invoice,:base64doc,:show,:send_invoice,:legal,:amend_for_invoice,:original]
-  before_filter :find_invoices, :only => [:context_menu,:bulk_download,:bulk_mark_as,:bulk_send,:destroy]
+  before_filter :find_invoice, :only => [:edit,:update,:mark_sent,:mark_closed,:mark_not_sent,:mark_accepted_with_mail,:mark_accepted,:mark_refused_with_mail,:mark_refused,:duplicate_invoice,:base64doc,:show,:send_invoice,:legal,:amend_for_invoice,:original,:validate]
+  before_filter :find_invoices, :only => [:context_menu,:bulk_download,:bulk_mark_as,:bulk_send,:destroy,:bulk_validate]
   before_filter :find_payment, :only => [:destroy_payment]
   before_filter :find_hashid, :only => [:view,:download]
   before_filter :find_attachment, :only => [:logo]

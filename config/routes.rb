@@ -45,6 +45,7 @@ match 'invoices/bulk_download' => 'invoices#bulk_download'
 match 'received/bulk_download' => 'received#bulk_download'
 match 'invoices/bulk_mark_as' => 'invoices#bulk_mark_as'
 match 'received/bulk_mark_as' => 'received#bulk_mark_as'
+match 'received/bulk_validate' => 'received#bulk_validate'
 match 'invoices/bulk_send' => 'invoices#bulk_send'
 match 'invoices/by_taxcode_and_num' => 'invoices#by_taxcode_and_num', :via => :get
 match 'invoices', :controller => 'invoices', :action => 'destroy', :via => :delete
@@ -74,7 +75,8 @@ match 'received/mark_refused/:id' => 'received#mark_refused', :as => :mark_refus
 match 'received/mark_refused_with_mail/:id' => 'received#mark_refused_with_mail', :as => :mark_refused_with_mail
 match 'received/mark_accepted/:id' => 'received#mark_accepted', :as => :mark_accepted
 match 'received/mark_accepted_with_mail/:id' => 'received#mark_accepted_with_mail', :as => :mark_accepted_with_mail
-match 'received/original/:id' => 'received#original', :via => :get
+match 'received/original/:id' => 'received#original', :via => :get, :as => :received_original
+match 'received/validate/:id' => 'received#validate', :via => :get, :as => :received_validate
 
 resources :invoice_templates
 match 'invoice_templates/new_from_invoice/:id' => 'invoice_templates#new_from_invoice'

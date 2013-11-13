@@ -6,36 +6,18 @@ class ReceivedInvoice < InvoiceDocument
 
   after_create :create_event
 
-  state_machine :state, :initial => :validating_format do
+  state_machine :state, :initial => :received do
     before_transition do |invoice,transition|
       unless Event.automatic.include?(transition.event.to_s)
         Event.create(:name=>transition.event.to_s,:invoice=>invoice,:user=>User.current)
       end
     end
 
-    event :success_validating_format do
-      transition :validating_format => :validating_signature
-    end
-    event :error_validating_format do
-      transition :validating_format => :error
-    end
-    event :discard_validating_format do
-      transition :validating_format => :error
-    end
-    event :success_validating_signature do
-      transition [:validating_format, :validating_signature] => :received
-    end
-    event :error_validating_signature do
-      transition [:validating_format, :validating_signature] => :received
-    end
-    event :discard_validating_signature do
-      transition [:validating_format, :validating_signature] => :received
-    end
     event :refuse do
-      transition [:accepted,:received,:error] => :refused
+      transition [:accepted,:received] => :refused
     end
     event :accept do
-      transition [:received,:error,:accepted] => :accepted
+      transition [:received,:accepted] => :accepted
     end
     event :paid do
       transition :accepted => :paid
@@ -80,10 +62,36 @@ class ReceivedInvoice < InvoiceDocument
     write_attribute :import_in_cents, i.cents
   end
 
+  def original=(s)
+    write_attribute(:original, compress(s))
+  end
+
+  def original
+    decompress(read_attribute(:original))
+  end
+
   protected
 
   def create_event
     Event.create(:name=>'validating_format',:invoice=>self,:md5=>md5)
+  end
+
+  private
+
+  def compress(string)
+    return nil if string.nil?
+    buf = ActiveSupport::Gzip.compress(string)
+    Base64::encode64(buf).chomp
+  end
+
+  def decompress(string)
+    return nil if string.nil?
+    begin
+      buf = Base64::decode64(string)
+      ActiveSupport::Gzip.decompress(buf)
+    rescue
+      string
+    end
   end
 
 end

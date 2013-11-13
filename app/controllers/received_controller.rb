@@ -106,39 +106,28 @@ class ReceivedController < InvoicesController
       redirect_to :action=>'index', :project_id=>@project
       return
     end
-    failed = []
     zipped = []
     zip_file = Tempfile.new "#{@project.identifier}_invoices.zip", 'tmp'
     logger.info "Creating zip file '#{zip_file.path}' for invoice ids #{@invoices.collect{|i|i.id}.join(',')}."
     Zip::ZipOutputStream.open(zip_file.path) do |zos|
       @invoices.each do |invoice|
-        #TODO: several B2bRouters
-        file = Tempfile.new(invoice.filename,:encoding => 'ascii-8bit')
+        file = Tempfile.new(invoice.file_name)
+        file.binmode
         file.write invoice.original
         logger.info "Created #{file.path}"
         file.close
-        filename = invoice.filename
+        filename = invoice.file_name
         i=2
         while zipped.include?(filename)
           extension = File.extname(filename)
           base      = filename.gsub(/#{extension}$/,'')
-            filename  = "#{base}_#{i}#{extension}"
+          filename  = "#{base}_#{i}#{extension}"
           i += 1
         end
         zipped << filename
         zos.put_next_entry(filename)
         zos.print IO.read(file.path)
         logger.info "Added #{filename} from #{file.path}"
-      end
-      if failed.any?
-        file = Tempfile.new("FAILED.txt",:encoding => 'ascii-8bit')
-        failed.each do |line|
-          file.puts line
-        end
-        file.close
-        zos.put_next_entry("FAILED.txt")
-        zos.print IO.read(file.path)
-        logger.info "Added FAILED.txt with failed downloads"
       end
     end
     zip_file.close
@@ -168,6 +157,12 @@ class ReceivedController < InvoicesController
     end
     flash[:warn] = l(:some_states_not_changed) unless all_changed
     redirect_back_or_default(:action=>'index',:project_id=>@project.id)
+  end
+
+  def validate
+  end
+
+  def bulk_validate
   end
 
   private

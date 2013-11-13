@@ -7,40 +7,34 @@
     <%= context_menu_link l(:button_show), received_path(@invoice),
       :class=>'icon-show', :disabled=>!@can[:edit] %>
     </li>
-    <%= context_menu_link l(:button_download), {:controller=>'invoices', :action=>'legal', :id=>@invoice.id, :md5=>@invoice.md5},
-      :class=>"icon-download", :disabled=>(!@can[:read] or @invoice.events.first.md5.nil?) %>
+    <li>
+    <%= context_menu_link l(:button_validate), received_validate_path(@invoice), :class=>'icon-checked' %>
     </li>
+    <%= context_menu_link l(:button_download), {:controller=>'received', :action=>'original', :id=>@invoice.id},
+      :class=>"icon-download", :disabled=>(!@can[:read] or @invoice.original.nil?) %>
     <li class="folder">
     <a href="#" class="submenu"><%= l(:mark_as) %></a>
-    <ul>
-      <% %w(accepted paid refused).each do |state| -%>
-      <li>
-      <%= context_menu_link l("state_#{state}"),
-        received_bulk_mark_as_path(:ids=>@invoice_ids, :state=>state, :back_url=>@back),
-        :disabled=>!@can[:edit] %>
-      </li>
-      <% end -%>
-    </ul>
-    </li>
   <% else -%>
     <!-- actions for multiple invoices -->
+    <li>
+    <%= context_menu_link l(:button_validate), received_bulk_validate_path(:ids=>@invoice_ids, :back_url=>@back),
+      :class=>'icon-checked' %>
     </li>
     <%= context_menu_link l(:button_download), received_bulk_download_path(:ids=>@invoice_ids, :back_url=>@back),
       :class=>"icon-download" %>
-    </li>
     <li class="folder">
     <a href="#" class="submenu"><%= l(:mark_as) %></a>
+  <% end %>
+
     <ul>
-      <% %w(received accepted paid refused).each do |state| -%>
+      <% %w(accepted paid refused).each do |state| -%>
       <li>
-      <%= context_menu_link l("state_#{state}_plural"),
+      <%= context_menu_link l("state_#{state}#{@invoice ? '' : '_plural'}"),
         received_bulk_mark_as_path(:ids=>@invoice_ids, :state=>state, :back_url=>@back),
         :disabled=>!@can[:edit] %>
       </li>
       <% end -%>
     </ul>
-    </li>
-  <% end %>
 
   <%= call_hook(:view_received_context_menu_end, {:invoices=>@invoices, :can=>@can, :back=>@back }) %>
 

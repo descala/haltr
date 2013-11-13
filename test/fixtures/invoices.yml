@@ -234,3 +234,33 @@ i9:
   project_id: 2
   state: new
 
+received_1:
+  id: 10
+  type: ReceivedInvoice
+  client_id: 1
+  currency: EUR
+  date: 2013-11-13
+  due_date: 2013-11-13
+  number: "received_1"
+  project_id: 2
+  import_in_cents: 10000
+  total_in_cents:  11000
+  state: received
+  invoice_format: xml
+  original: "<invoice>received_1</invoice>"
+
+received_2:
+  id: 11
+  type: ReceivedInvoice
+  client_id: 1
+  currency: EUR
+  date: 2013-11-12
+  due_date: 2013-11-12
+  number: "received_2"
+  project_id: 2
+  import_in_cents: 10000
+  total_in_cents:  11000
+  state: accepted
+  invoice_format: facturae3.2
+  original: "<facturae:Facturae>bla bla bla</facturae:Facturae>"
+

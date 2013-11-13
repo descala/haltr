@@ -242,8 +242,6 @@ class HaltrMailHandler < MailHandler # < ActionMailer::Base
     ri.file_name = raw_invoice.filename
     ri.save!
     return ri
-  rescue Exception => e
-    logger.info e.message
   end
 
 

@@ -15,11 +15,21 @@ class HaltrMailHandlerTest < ActiveSupport::TestCase
   end
 
   test "creates invoice from facturae32" do
+    # create, it may exist (same md5)
+    invoices = submit_email('invoice_facturae32_signed.eml')
+    assert_invoices_created(invoices)
+    # delete and create again
+    assert invoices.first.destroy
     invoices = submit_email('invoice_facturae32_signed.eml')
     assert_invoices_created(invoices)
   end
 
   test "creates invoice from pdf" do
+    # create, it may exist (same md5)
+    invoices = submit_email('invoice_pdf_signed.eml')
+    assert_invoices_created(invoices)
+    # delete and create again
+    assert invoices.first.destroy
     invoices = submit_email('invoice_pdf_signed.eml')
     assert_invoices_created(invoices)
   end

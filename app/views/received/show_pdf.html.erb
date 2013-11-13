@@ -23,9 +23,9 @@
 </div>
 
 <div id="pdfobject" style="height:500px; text-align:center;">
-  <object data='<%=url_for({:controller=>'invoices', :action=>'legal', :id=>@invoice, :md5=>@invoice.events.first.md5, :disposition=>'inline'})%>#viewrect=670,900,0,0' type='application/pdf' width='100%' height='500px'>
+  <object data='<%=url_for({:controller=>'received', :action=>'original', :id=>@invoice, :disposition=>'inline'})%>#viewrect=670,900,0,0' type='application/pdf' width='100%' height='500px'>
   <p style="padding-top:150px;">
-  <%= l(:no_pdf_support, :pdf => legal_path(@invoice, :md5=>@invoice.events.first.md5)).html_safe %>
+  <%= l(:no_pdf_support, :pdf => url_for({:controller=>'received', :action=>'original', :id=>@invoice})).html_safe %>
   </p>
 </object>
 </div>

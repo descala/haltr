@@ -64,10 +64,10 @@ Redmine::Plugin.register :haltr do
         :invoices => [:index, :new, :edit, :create, :update, :destroy, :show, :mark_sent, :mark_closed, :mark_not_sent,
                       :destroy_payment, :facturae30, :facturae31, :facturae32, :peppolubl20, :send_invoice, :legal,
                       :update_payment_stuff, :amend_for_invoice, :send_new_invoices, :duplicate_invoice,
-                      :biiubl20, :svefaktura, :oioubl20, :report, :context_menu, :bulk_mark_as,:bulk_send],
+                      :biiubl20, :svefaktura, :oioubl20, :report, :context_menu, :bulk_mark_as],
         :received => [:index, :new, :edit, :create, :update, :destroy, :show,
                       :mark_accepted, :mark_accepted_with_mail, :mark_refused,
-                      :mark_refused_with_mail, :legal, :context_menu, :bulk_mark_as, :original],
+                      :mark_refused_with_mail, :legal, :context_menu, :original,:validate, :bulk_mark_as],
         :companies => [:my_company,:update,:linked_to_mine]},
       :require => :member
 
@@ -87,8 +87,8 @@ Redmine::Plugin.register :haltr do
         :invoice_templates => [:index, :show] }, :require => :member
 
     permission :bulk_download,
-      { :invoices => [:bulk_download],
-        :received => [:bulk_download] }, :require => :member
+      { :invoices => [:bulk_download, :bulk_send],
+        :received => [:bulk_download, :bulk_validate] }, :require => :member
 
     permission :add_multiple_bank_infos,
       { :companies => [:add_bank_info] }, :require => :member
