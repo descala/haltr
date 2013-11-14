@@ -6,5 +6,5 @@
 <% end -%>
 
 <% if @invoice.state?(:accepted) -%>
-  <li><%= link_to_if_authorized l(:make_payment), new_project_payment_path(:project_id=>@project,:invoice_id=>@invoice, :payment_type=>@invoice.type), :class=>'icon-haltr-payment' %></li>
+  <li><%= link_to_if_authorized l(:make_payment), {:controller=>'payments', :action=>'new', :project_id=>@project, :invoice_id=>@invoice}, :class=>'icon-haltr-payment' %></li>
 <% end -%>

@@ -66,7 +66,7 @@ class PaymentsController < ApplicationController
         if @payment.invoice.is_paid?
           # paid state change automatically creates an Event,
           # delete it and create new one with email info (params[:reason])
-          @payment.invoice.events.last.destroy
+          @payment.invoice.events.last.destroy rescue nil
           Event.create(:name=>'paid',:invoice=>@payment.invoice,:user=>User.current,:info=>params[:reason])
         end
       end
