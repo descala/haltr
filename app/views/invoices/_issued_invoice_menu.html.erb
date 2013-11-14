@@ -5,7 +5,7 @@
        js=ExportChannels[@client.invoice_format]['javascript'] %>
     <% if User.current.allowed_to?(:general_use, @project) -%>
       <% content_for :header_tags do %>
-        <%= javascript_include_tag 'haltr_sign.js', :plugin => 'haltr' %>
+        <%= javascript_include_tag '/invoices/haltr_sign.js' %>
         <%= javascript_include_tag 'deployjava.js', :plugin => 'haltr' %>
       <% end %>
       <li><%= link_to l(:label_send), "#", :class=>'icon-haltr-send', :title => @invoice.sending_info.html_safe, :onclick => js.gsub(':id',@invoice.id.to_s).html_safe %></li>

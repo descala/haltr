@@ -415,3 +415,9 @@ sv:
   all_invoices_sent: "Invoices have been sent"
   button_add_bank_info: "Add bank account"
   page_redirecting_will_lose_unsaved_data: "La pàgina es redirigirà i perdreu les dades no desades, voleu continuar?"
+  downloading_doc: 'Downloading document...'
+  calling_signature: 'Calling signature...'
+  sending_signed_doc: 'Sending signed document to server...'
+  document_sent: 'Document sent to server.'
+  error_sending_signed_doc: 'Error sending signed document.'
+  error_downloading_doc: 'Error downloading document.'

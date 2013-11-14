@@ -58,6 +58,7 @@ match 'invoices/duplicate_invoice/:id' => 'invoices#duplicate_invoice', :via => 
 match 'invoices/destroy_payment/:id' => 'invoices#destroy_payment', :via => :delete, :as => :destroy_payment
 match 'invoices/mail/:id' => 'invoices#mail', :via => :get
 match 'invoices/base64doc/:id/:doc_format' => 'invoices#base64doc', :via => [:get,:post]
+match 'invoices/haltr_sign' => 'invoices#haltr_sign', :via => :get
 resources :invoices
 
 # public access to an invoice using the client hash

@@ -10,7 +10,7 @@ class InvoicesController < ApplicationController
   helper :sort
   include SortHelper
 
-  PUBLIC_METHODS = [:by_taxcode_and_num,:view,:download,:mail,:logo]
+  PUBLIC_METHODS = [:by_taxcode_and_num,:view,:download,:mail,:logo,:haltr_sign]
 
   before_filter :find_project_by_project_id, :only => [:index,:new,:create,:send_new_invoices,:update_payment_stuff,:new_invoices_from_template,:report,:create_invoices,:update_taxes]
   before_filter :find_invoice, :only => [:edit,:update,:mark_sent,:mark_closed,:mark_not_sent,:mark_accepted_with_mail,:mark_accepted,:mark_refused_with_mail,:mark_refused,:duplicate_invoice,:base64doc,:show,:send_invoice,:legal,:amend_for_invoice]
@@ -755,6 +755,12 @@ XSL
       flash[:notice] = l(:all_invoices_sent)
     end
     redirect_back_or_default(:action => 'index', :project_id => @project.id)
+  end
+
+  def haltr_sign
+    respond_to do |format|
+      format.js  { render :action => 'haltr_sign' }
+    end
   end
 
 end
