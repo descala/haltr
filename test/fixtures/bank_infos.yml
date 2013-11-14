@@ -9,3 +9,11 @@ bi2:
   name: ""
   bank_account: "1234567890123777"
   company: company2
+
+bi3:
+  id: 3
+  name: ""
+  bank_account: "1234567890123888"
+  company: company2
+  iban: "123"
+  bic: ""

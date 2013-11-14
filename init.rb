@@ -86,9 +86,9 @@ Redmine::Plugin.register :haltr do
         :payments => [:index, :n19],
         :invoice_templates => [:index, :show] }, :require => :member
 
-    permission :bulk_download,
-      { :invoices => [:bulk_download, :bulk_send],
-        :received => [:bulk_download, :bulk_validate] }, :require => :member
+    permission :bulk_operations,
+      { :invoices => [:bulk_download,:bulk_send],
+        :received => [:bulk_download,:bulk_validate] }, :require => :member
 
     permission :add_multiple_bank_infos,
       { :companies => [:add_bank_info] }, :require => :member

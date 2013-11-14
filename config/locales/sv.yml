@@ -417,3 +417,9 @@ sv:
   page_redirecting_will_lose_unsaved_data: "La pàgina es redirigirà i perdreu les dades no desades, voleu continuar?"
   label_format: "Format"
   button_validate: "Validar"
+  downloading_doc: 'Downloading document...'
+  calling_signature: 'Calling signature...'
+  sending_signed_doc: 'Sending signed document to server...'
+  document_sent: 'Document sent to server.'
+  error_sending_signed_doc: 'Error sending signed document.'
+  error_downloading_doc: 'Error downloading document.'

@@ -10,7 +10,7 @@ class InvoicesController < ApplicationController
   helper :sort
   include SortHelper
 
-  PUBLIC_METHODS = [:by_taxcode_and_num,:view,:download,:mail,:logo]
+  PUBLIC_METHODS = [:by_taxcode_and_num,:view,:download,:mail,:logo,:haltr_sign]
 
   before_filter :find_project_by_project_id, :only => [:index,:new,:create,:send_new_invoices,:update_payment_stuff,:new_invoices_from_template,:report,:create_invoices,:update_taxes]
   before_filter :find_invoice, :only => [:edit,:update,:mark_sent,:mark_closed,:mark_not_sent,:mark_accepted_with_mail,:mark_accepted,:mark_refused_with_mail,:mark_refused,:duplicate_invoice,:base64doc,:show,:send_invoice,:legal,:amend_for_invoice,:original,:validate]
@@ -170,7 +170,17 @@ class InvoicesController < ApplicationController
       flash[:notice] = l(:notice_successful_update)
       if params[:save_and_send]
         if @invoice.can_be_exported?
-          redirect_to :action => 'send_invoice', :id => @invoice
+          if ExportChannels[@invoice.client.invoice_format]['javascript']
+            # channel sends via javascript, set autocall and autocall_args
+            # 'show' action will set a div to tell javascript to automatically
+            # call this function
+            js = ExportChannels[@invoice.client.invoice_format]['javascript'].
+              gsub(':id',@invoice.id.to_s).gsub(/'/,"").split(/\(|\)/)
+            redirect_to :action => 'show', :id => @invoice,
+              :autocall => js[0].html_safe, :autocall_args => js[1]
+          else
+            redirect_to :action => 'send_invoice', :id => @invoice
+          end
         else
           flash[:error] = l(:errors_prevented_invoice_sent)
           redirect_to :action => 'show', :id => @invoice
@@ -277,6 +287,8 @@ class InvoicesController < ApplicationController
     @invoices_not_sent = InvoiceDocument.find(:all,:conditions => ["client_id = ? and state = 'new'",@client.id]).sort
     @invoices_sent = InvoiceDocument.find(:all,:conditions => ["client_id = ? and state = 'sent'",@client.id]).sort
     @invoices_closed = InvoiceDocument.find(:all,:conditions => ["client_id = ? and state = 'closed'",@client.id]).sort
+    @autocall = params[:autocall]
+    @autocall_args = params[:autocall_args]
     respond_to do |format|
       format.html
       format.pdf do
@@ -743,6 +755,12 @@ XSL
       flash[:notice] = l(:all_invoices_sent)
     end
     redirect_back_or_default(:action => 'index', :project_id => @project.id)
+  end
+
+  def haltr_sign
+    respond_to do |format|
+      format.js  { render :action => 'haltr_sign' }
+    end
   end
 
 end

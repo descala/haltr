@@ -1,5 +1,19 @@
 var clienteFirma;
 
+function docWriteWrapper(func) {
+  var writeTo = document.createElement('del'),
+      oldwrite = document.write,
+      content = '';
+  writeTo.id = "me";
+  document.write = function(text) {
+    content += text;
+  }
+  func();
+  writeTo.innerHTML += content;
+  document.write = oldwrite;
+  document.body.appendChild(writeTo);
+}
+
 function cargarMiniApplet(base, keystore)
 {
 	var codeBase = base;
@@ -26,11 +40,13 @@ function cargarMiniApplet(base, keystore)
 		code: 'es.gob.afirma.miniapplet.MiniAfirmaApplet.class',
 		archive: jarArchive,
 		codebase: codeBase,
-		java_arguments: '-Djnlp.packEnabled=true -Xms512M -Xmx512M',
+		java_arguments: '-Djnlp.packEnabled=false -Xms512M -Xmx512M',
 		separate_jvm: true
 	};
 
- 	deployJava.runApplet(attributes, parameters, '1.6');
+    docWriteWrapper(function () {
+	  deployJava.runApplet(attributes, parameters, '1.6');
+    });
 
 	clienteFirma = document.getElementById("miniApplet");
 }
@@ -85,8 +101,20 @@ function getErrorMessage() {
 	return clienteFirma.getErrorMessage();
 }
 
-function log(msg) {
-  $('#console').val( $('#console').val() + msg + "\n");
+function log(msg,level) {
+  if ( !$('div.flash.'+level).length ) {
+    jQuery('<div/>', {
+      class: 'flash ' + level
+    }).prependTo('div.controller-invoices.action-show');
+  }
+  if ( !$('ul#haltr_'+level+'_messages').length ) {
+    jQuery('<ul/>', {
+      id: 'haltr_'+level+'_messages'
+    }).appendTo('div.flash.'+level)
+  }
+  jQuery('<li/>', {
+    text: msg
+  }).appendTo('#haltr_'+level+'_messages')
 }
 
 function doSign_init() {
@@ -103,12 +131,12 @@ function doSign(document_url,signature_type) {
   try {
     var dataB64;
     doSign_init();
-    log('Descarregant document ...');
+    log('<%=l :downloading_doc %>','notice');
     $.ajax({
       url : document_url,
       success : function(dataB64){
         try {
-          log('Cridant a la signatura ...');
+          log('<%=l :calling_signature %>','notice');
           // <option value="CAdES">CAdES</option>
           // <option value="Adobe PDF">PAdES</option>
           // <option value="XAdES">XAdES</option>
@@ -116,33 +144,46 @@ function doSign(document_url,signature_type) {
           // signature_type for PDF: 'Adobe PDF'
           // signature_type for Facturae: 'XAdES Enveloped'
           var signed_document = sign(dataB64, 'SHA1withRSA', signature_type, null);
-          log('Enviant document signat al servidor ...');
+          log('<%=l :sending_signed_doc %>','notice');
           $.ajax({
             type: "POST",
             url: document_url,
             data: "document=" + signed_document,
             success: function(result){
+              log('<%=l :document_sent %>','notice');
               // Reload page in 2 seconds
-              log('Document enviat al servidor.');
-              setTimeout(function() { location.reload(); }, 2000);
+              //setTimeout(function() { location.reload(); }, 2000);
             },
             error: function(e){
-              log('Error al enviar el document signat.');
+              log('<%=l :error_sending_signed_doc %>','error');
               doSign_end();
             }
           });
         } catch(e) {
-          log(getErrorMessage());
+          log(e.message, 'error');
+          log(getErrorMessage(),'error');
           doSign_end();
         }
       },
       error: function(e){
-        log('Error al descarregar el document.');
+        log('<%=l :error_downloading_doc %>','error');
         doSign_end();
       }
     });
   } catch(e) {
-    log(getErrorMessage());
+    log(e.message, 'error');
+    log(getErrorMessage(),'error');
     doSign_end();
   }
 }
+
+$(document).ready(function() {
+
+  // if a div with id autocall exists, call function from data-function with args from data-args
+  if ( $('div#autocall').length ) {
+    var func = window[$('div#autocall').data('function')];
+    var args = $('div#autocall').data('args').split(',');
+    func.apply(this, args);
+  };
+
+});
