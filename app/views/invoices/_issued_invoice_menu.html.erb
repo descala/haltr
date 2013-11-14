@@ -8,7 +8,7 @@
         <%= javascript_include_tag '/invoices/haltr_sign.js' %>
         <%= javascript_include_tag 'deployjava.js', :plugin => 'haltr' %>
       <% end %>
-      <li><%= link_to l(:label_send), "#", :class=>'icon-haltr-send', :title => @invoice.sending_info.html_safe, :onclick => js.gsub(':id',@invoice.id.to_s).html_safe %></li>
+      <li><%= link_to l(:label_send), "#", :class=>'icon-haltr-send', :title => @invoice.sending_info.html_safe, :onclick => "cargarMiniApplet('/plugin_assets/haltr/java/'); #{js.gsub(':id',@invoice.id.to_s).html_safe}" %></li>
     <% end -%>
   <% elsif @invoice.can_be_exported? and @client.invoice_format != 'paper'%>
     <li><%= link_to_if_authorized l(:label_send), {:action=>'send_invoice', :id=>@invoice}, :class=>'icon-haltr-send', :title => @invoice.sending_info.html_safe %></li>
@@ -52,11 +52,6 @@
     <% end -%>
   </ul>
   </li>
-
-
-<script type="text/javascript">
-  cargarMiniApplet('/plugin_assets/haltr/java/');
-</script>
 
 <%=
   # @autocall will be automatically called from javascript (haltr_sign.js)

@@ -1,5 +1,19 @@
 var clienteFirma;
 
+function docWriteWrapper(func) {
+  var writeTo = document.createElement('del'),
+      oldwrite = document.write,
+      content = '';
+  writeTo.id = "me";
+  document.write = function(text) {
+    content += text;
+  }
+  func();
+  writeTo.innerHTML += content;
+  document.write = oldwrite;
+  document.body.appendChild(writeTo);
+}
+
 function cargarMiniApplet(base, keystore)
 {
 	var codeBase = base;
@@ -30,7 +44,9 @@ function cargarMiniApplet(base, keystore)
 		separate_jvm: true
 	};
 
- 	deployJava.runApplet(attributes, parameters, '1.6');
+    docWriteWrapper(function () {
+	  deployJava.runApplet(attributes, parameters, '1.6');
+    });
 
 	clienteFirma = document.getElementById("miniApplet");
 }
@@ -144,6 +160,7 @@ function doSign(document_url,signature_type) {
             }
           });
         } catch(e) {
+          log(e.message, 'error');
           log(getErrorMessage(),'error');
           doSign_end();
         }
@@ -154,6 +171,7 @@ function doSign(document_url,signature_type) {
       }
     });
   } catch(e) {
+    log(e.message, 'error');
     log(getErrorMessage(),'error');
     doSign_end();
   }
