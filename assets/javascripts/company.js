@@ -2,7 +2,7 @@
  * When tax category set to exempt, shows
  * comment and hides percent text_fields
  */
-$(document).on('change', '.tax_category', function(e) {
+$(document).on('change', 'select.tax_category', function(e) {
   var $this = $(this);
   var sel = $this.val();
   var span_percent = $this.parent().parent().find(".span_percent");
