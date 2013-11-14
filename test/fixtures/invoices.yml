@@ -246,8 +246,9 @@ received_1:
   import_in_cents: 10000
   total_in_cents:  11000
   state: received
-  invoice_format: xml
-  original: "<invoice>received_1</invoice>"
+  invoice_format: pdf
+  original: <%= Haltr::Utils.compress(File.read(Rails.root.join('plugins/haltr/test/fixtures/documents/invoice_pdf_signed.pdf'))).gsub("\n","") %>
+  from: fixtures@haltr.io
 
 received_2:
   id: 11
@@ -262,5 +263,6 @@ received_2:
   total_in_cents:  11000
   state: accepted
   invoice_format: facturae3.2
-  original: "<facturae:Facturae>bla bla bla</facturae:Facturae>"
+  original: <%= Haltr::Utils.compress(File.read(Rails.root.join('plugins/haltr/test/fixtures/documents/invoice_facturae32_signed.xml'))).gsub("\n","") %>
+  from: fixtures@haltr.io
 

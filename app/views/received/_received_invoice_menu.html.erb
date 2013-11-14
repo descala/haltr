@@ -1,6 +1,6 @@
 <li><%= link_to_if_authorized "#{l(:button_download)} #{@invoice.invoice_format}", {:controller=>'received', :action=>'original', :id=>@invoice}, :class=>'icon-haltr-save' %></li>
 
-<% if @invoice.state?(:received) or @invoice.state?(:error) -%>
+<% if @invoice.state?(:received) -%>
   <li><%= link_to_function(I18n.t(:mark_accepted), "show_accepted_form();") if authorize_for(:received || :received, :mark_accepted) %></li>
   <li><%= link_to_function(I18n.t(:mark_refused),  "show_refused_form();") if authorize_for(:received || :received, :mark_refused) %></li>
 <% end -%>

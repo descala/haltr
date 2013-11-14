@@ -63,35 +63,17 @@ class ReceivedInvoice < InvoiceDocument
   end
 
   def original=(s)
-    write_attribute(:original, compress(s))
+    write_attribute(:original, Haltr::Utils.compress(s))
   end
 
   def original
-    decompress(read_attribute(:original))
+    Haltr::Utils.decompress(read_attribute(:original))
   end
 
   protected
 
   def create_event
     Event.create(:name=>'validating_format',:invoice=>self,:md5=>md5)
-  end
-
-  private
-
-  def compress(string)
-    return nil if string.nil?
-    buf = ActiveSupport::Gzip.compress(string)
-    Base64::encode64(buf).chomp
-  end
-
-  def decompress(string)
-    return nil if string.nil?
-    begin
-      buf = Base64::decode64(string)
-      ActiveSupport::Gzip.decompress(buf)
-    rescue
-      string
-    end
   end
 
 end
