@@ -175,6 +175,8 @@ fr:
   default: "Défault"
   only_one_default_allowed_for: "%{tax_name}: Une seule taxe par défaut autorisé"
   add_taxes_on_company: "Vous pouvez gérer vos impôts \"Ma compagnie\""
+  button_download_new_invoices: "Téléchargez le nouveau zip"
+  label_download_new_invoices_info: "Génère un zip contenant toutes les nouvelles factures en PDF"
   field_exempt: "Exempt"
   field_comment: "Reason"
 
@@ -424,3 +426,9 @@ fr:
   document_sent: 'Document sent to server.'
   error_sending_signed_doc: 'Error sending signed document.'
   error_downloading_doc: 'Error downloading document.'
+  loading_applet: 'Loading applet...'
+  applet_already_loaded: "Applet already loaded."
+  applet_loaded: "Applet loaded."
+  applet_not_loaded: "Error loading applet."
+  sure_to_resend_invoice: "Are you sure to re-send invoice %{num}?"
+  sure_to_resend_invoices: "Are you sure to re-send invoices %{nums}?"

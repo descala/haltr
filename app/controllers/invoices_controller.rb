@@ -12,7 +12,7 @@ class InvoicesController < ApplicationController
 
   PUBLIC_METHODS = [:by_taxcode_and_num,:view,:download,:mail,:logo,:haltr_sign]
 
-  before_filter :find_project_by_project_id, :only => [:index,:new,:create,:send_new_invoices,:update_payment_stuff,:new_invoices_from_template,:report,:create_invoices,:update_taxes]
+  before_filter :find_project_by_project_id, :only => [:index,:new,:create,:send_new_invoices,:download_new_invoices,:update_payment_stuff,:new_invoices_from_template,:report,:create_invoices,:update_taxes]
   before_filter :find_invoice, :only => [:edit,:update,:mark_sent,:mark_closed,:mark_not_sent,:mark_accepted_with_mail,:mark_accepted,:mark_refused_with_mail,:mark_refused,:duplicate_invoice,:base64doc,:show,:send_invoice,:legal,:amend_for_invoice,:original,:validate]
   before_filter :find_invoices, :only => [:context_menu,:bulk_download,:bulk_mark_as,:bulk_send,:destroy,:bulk_validate]
   before_filter :find_payment, :only => [:destroy_payment]
@@ -287,6 +287,7 @@ class InvoicesController < ApplicationController
     @invoices_not_sent = InvoiceDocument.find(:all,:conditions => ["client_id = ? and state = 'new'",@client.id]).sort
     @invoices_sent = InvoiceDocument.find(:all,:conditions => ["client_id = ? and state = 'sent'",@client.id]).sort
     @invoices_closed = InvoiceDocument.find(:all,:conditions => ["client_id = ? and state = 'closed'",@client.id]).sort
+    @js = ExportChannels[@client.invoice_format]['javascript'] rescue nil
     @autocall = params[:autocall]
     @autocall_args = params[:autocall_args]
     respond_to do |format|
@@ -352,6 +353,37 @@ class InvoicesController < ApplicationController
       end
     end
     @num_sent = num
+  end
+
+  def download_new_invoices
+    require 'zip/zip'
+    require 'zip/zipfilesystem'
+    @company = @project.company
+    invoices = IssuedInvoice.find_not_sent @project
+    # just a safe big limit
+    if invoices.size > 100
+      flash[:error] = l(:too_much_invoices,:num=>invoices.size)
+      redirect_to :action=>'index', :project_id=>@project
+      return
+    end
+    zip_file = Tempfile.new "#{@project.identifier}_invoices.zip", 'tmp'
+    logger.info "Creating zip file '#{zip_file.path}' for invoice ids #{invoices.collect{|i|i.id}.join(',')}."
+    Zip::ZipOutputStream.open(zip_file.path) do |zos|
+      invoices.each do |invoice|
+        @invoice = invoice
+        @lines = @invoice.invoice_lines
+        @client = @invoice.client
+        pdf_file = create_pdf_file
+        zos.put_next_entry(@invoice.pdf_name)
+        zos.print IO.read(pdf_file.path)
+        logger.info "Added #{@invoice.pdf_name} from #{pdf_file.path}"
+      end
+    end
+    zip_file.close
+    send_file zip_file.path, :type => "application/zip", :filename => "#{@project.identifier}-invoices.zip"
+  rescue LoadError
+    flash[:error] = l(:zip_gem_required)
+    redirect_to :action => 'index', :project_id => @project
   end
 
   # Renders a partial to update curreny, payment_method, and invoice_terms

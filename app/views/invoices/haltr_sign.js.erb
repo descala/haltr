@@ -1,5 +1,39 @@
 var clienteFirma;
 
+function isIE () {
+  var myNav = navigator.userAgent.toLowerCase();
+  return (myNav.indexOf('msie') != -1) ? parseInt(myNav.split('msie')[1]) : false;
+}
+
+function clear_logs() {
+  if ($('div.flash.notice').length) {
+    $('div.flash.notice').remove();
+  }
+  if ($('div.flash.error').length) {
+    $('div.flash.error').remove();
+  }
+}
+
+function log(msg,level) {
+  if ( !$('div.flash.'+level).length ) {
+    jQuery('<div/>', {
+      'class': 'flash ' + level
+    }).prependTo('div.controller-invoices.action-show');
+  }
+  if ( !$('ul#haltr_'+level+'_messages').length ) {
+    jQuery('<ul/>', {
+      id: 'haltr_'+level+'_messages'
+    }).appendTo('div.flash.'+level)
+  }
+  jQuery('<li/>', {
+    text: msg
+  }).appendTo('#haltr_'+level+'_messages')
+}
+
+function appletIsLoaded() {
+  return (typeof clienteFirma === 'undefined' || !('getErrorMessage' in clienteFirma && (typeof(clienteFirma.getErrorMessage) == "function") || isIE()));
+}
+
 function docWriteWrapper(func) {
   var writeTo = document.createElement('del'),
       oldwrite = document.write,
@@ -16,6 +50,13 @@ function docWriteWrapper(func) {
 
 function cargarMiniApplet(base, keystore)
 {
+  clear_logs();
+  if ( appletIsLoaded() ) {
+    // remove old applet
+    $('del#me').remove();
+    clienteFirma = null;
+
+    log('<%=j l(:loading_applet).html_safe %>', 'notice');
 	var codeBase = base;
 	if (codeBase == undefined || codeBase == null) {
 		codeBase = '.';
@@ -49,6 +90,18 @@ function cargarMiniApplet(base, keystore)
     });
 
 	clienteFirma = document.getElementById("miniApplet");
+
+    if ( appletIsLoaded() ) {
+      log('<%=j l(:applet_not_loaded).html_safe %>','error');
+      return false;
+    } else {
+      log('<%=j l(:applet_loaded).html_safe %>','notice');
+      return true;
+    }
+  } else {
+    log('<%=j l(:applet_already_loaded).html_safe %>', 'notice');
+    return true;
+  }
 }
 
 var KEYSTORE_WINDOWS = "WINDOWS";
@@ -101,22 +154,6 @@ function getErrorMessage() {
 	return clienteFirma.getErrorMessage();
 }
 
-function log(msg,level) {
-  if ( !$('div.flash.'+level).length ) {
-    jQuery('<div/>', {
-      class: 'flash ' + level
-    }).prependTo('div.controller-invoices.action-show');
-  }
-  if ( !$('ul#haltr_'+level+'_messages').length ) {
-    jQuery('<ul/>', {
-      id: 'haltr_'+level+'_messages'
-    }).appendTo('div.flash.'+level)
-  }
-  jQuery('<li/>', {
-    text: msg
-  }).appendTo('#haltr_'+level+'_messages')
-}
-
 function doSign_init() {
   $('#console').val("");
   $('#console').show();
@@ -131,12 +168,12 @@ function doSign(document_url,signature_type) {
   try {
     var dataB64;
     doSign_init();
-    log('<%=l :downloading_doc %>','notice');
+    log('<%=j l(:downloading_doc).html_safe %>','notice');
     $.ajax({
       url : document_url,
       success : function(dataB64){
         try {
-          log('<%=l :calling_signature %>','notice');
+          log('<%=j l(:calling_signature).html_safe %>','notice');
           // <option value="CAdES">CAdES</option>
           // <option value="Adobe PDF">PAdES</option>
           // <option value="XAdES">XAdES</option>
@@ -144,18 +181,18 @@ function doSign(document_url,signature_type) {
           // signature_type for PDF: 'Adobe PDF'
           // signature_type for Facturae: 'XAdES Enveloped'
           var signed_document = sign(dataB64, 'SHA1withRSA', signature_type, null);
-          log('<%=l :sending_signed_doc %>','notice');
+          log('<%=j l(:sending_signed_doc).html_safe %>','notice');
           $.ajax({
             type: "POST",
             url: document_url,
             data: "document=" + signed_document,
             success: function(result){
-              log('<%=l :document_sent %>','notice');
+              log('<%=j l(:document_sent).html_safe %>','notice');
               // Reload page in 2 seconds
               //setTimeout(function() { location.reload(); }, 2000);
             },
             error: function(e){
-              log('<%=l :error_sending_signed_doc %>','error');
+              log('<%=j l(:error_sending_signed_doc).html_safe %>','error');
               doSign_end();
             }
           });
@@ -166,7 +203,7 @@ function doSign(document_url,signature_type) {
         }
       },
       error: function(e){
-        log('<%=l :error_downloading_doc %>','error');
+        log('<%=j l(:error_downloading_doc).html_safe %>','error');
         doSign_end();
       }
     });

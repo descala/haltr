@@ -49,6 +49,46 @@ module InvoicesHelper
     end.html_safe
   end
 
+  def send_link_for_invoice
+    confirm = @invoice.sent? ? j(l(:sure_to_resend_invoice, :num=>@invoice.number).html_safe) : nil
+    if @invoice.can_be_exported?
+      unless @js.blank?
+        # channel uses javascript to send invoice
+        if User.current.allowed_to?(:general_use, @project)
+          link_to(l(:label_send), "#", :class=>'icon-haltr-send',
+            :title   => @invoice.sending_info.html_safe,
+            :onclick => ((confirm ? "confirm('#{confirm}') && " : "") +
+                        "cargarMiniApplet('/plugin_assets/haltr/java/') && " +
+                        @js.gsub(':id',@invoice.id.to_s)).html_safe)
+        end
+      else
+        # sending through invoices#send_invoice
+        link_to_if_authorized l(:label_send),
+          {:action=>'send_invoice', :id=>@invoice},
+          :class=>'icon-haltr-send', :title => @invoice.sending_info.html_safe,
+          :confirm => confirm
+      end
+    else
+      # invoice has export errors (related to the format or channel)
+      # or a format without channel, like "paper"
+      link_to l(:label_send), "#", :class=>'icon-haltr-send disabled',
+        :title => @invoice.sending_info.html_safe
+    end
+  end
+
+  def confirm_for(invoice_ids)
+    to_confirm = Invoice.find(invoice_ids).select { |invoice|
+      invoice.sent?
+    }.collect {|invoice| invoice.number }
+    if to_confirm.empty?
+      return nil
+    elsif to_confirm.size == 1
+      return l(:sure_to_resend_invoice, :num => to_confirm.first)
+    else
+      return l(:sure_to_resend_invoices, :nums => to_confirm.join(", "))
+    end
+  end
+
   def frequencies_for_select
     [1,2,3,6,12].collect do |f|
       [I18n.t("mf#{f}"), f]
@@ -59,6 +99,10 @@ module InvoicesHelper
     pre_drafts = InvoiceTemplate.count(:include=>[:client],:conditions => ["clients.project_id = ? AND date <= ?", @project, Date.today + 10.day])
     drafts = DraftInvoice.count(:include=>[:client],:conditions => ["clients.project_id = ?", @project])
     pre_drafts + drafts
+  end
+
+  def num_not_sent
+    @project.issued_invoices.count(:conditions => "state='new' and number is not null")
   end
 
   def num_can_be_sent
