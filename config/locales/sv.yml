@@ -172,6 +172,8 @@ sv:
   default: "Default"
   only_one_default_allowed_for: "%{tax_name}: Bara en default-skatt tillåten"
   add_taxes_on_company: "Hantera skatter för \"My company\""
+  button_download_new_invoices: "Ladda ner zip-fil med mina fakturor"
+  label_download_new_invoices_info: "Skapa en zip-fil med alla nya fakturor i PDF-format"
   field_exempt: "Exempt"
   field_comment: "Reason"
 
