@@ -441,3 +441,4 @@ es:
   applet_already_loaded: "Applet ya cargado."
   applet_loaded: "Applet cargado."
   applet_not_loaded: "Error cargando applet."
+  sure_to_resend_invoice: "Seguro que quieres reenviar la factura %{num}?"

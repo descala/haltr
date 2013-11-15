@@ -428,3 +428,4 @@ fr:
   applet_already_loaded: "Applet already loaded."
   applet_loaded: "Applet loaded."
   applet_not_loaded: "Error loading applet."
+  sure_to_resend_invoice: "Are you sure to re-send invoice %{num}?"

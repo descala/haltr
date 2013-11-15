@@ -50,20 +50,23 @@ module InvoicesHelper
   end
 
   def send_link_for_invoice
+    confirm = @invoice.sent? ? j(l(:sure_to_resend_invoice, :num=>@invoice.number).html_safe) : nil
     if @invoice.can_be_exported?
       unless @js.blank?
         # channel uses javascript to send invoice
         if User.current.allowed_to?(:general_use, @project)
           link_to l(:label_send), "#", :class=>'icon-haltr-send',
-            :title => @invoice.sending_info.html_safe,
-            :onclick => "cargarMiniApplet('/plugin_assets/haltr/java/'); " +
+            :title   => @invoice.sending_info.html_safe,
+            :onclick => (confirm ? "confirm('#{confirm}') && " : "") +
+                        "cargarMiniApplet('/plugin_assets/haltr/java/') && " +
                         @js.gsub(':id',@invoice.id.to_s).html_safe
         end
       else
         # sending through invoices#send_invoice
         link_to_if_authorized l(:label_send),
           {:action=>'send_invoice', :id=>@invoice},
-          :class=>'icon-haltr-send', :title => @invoice.sending_info.html_safe
+          :class=>'icon-haltr-send', :title => @invoice.sending_info.html_safe,
+          :confirm => confirm
       end
     else
       # invoice has export errors (related to the format or channel)

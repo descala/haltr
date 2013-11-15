@@ -438,3 +438,4 @@ ca:
   applet_already_loaded: "Applet ja carregat."
   applet_loaded: "Applet carregat correctament."
   applet_not_loaded: "Error carregant l'applet."
+  sure_to_resend_invoice: "Segur que voleu reenviar la factura %{num}?"
