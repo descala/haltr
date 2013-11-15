@@ -434,3 +434,5 @@ ca:
   document_sent: 'Document enviat al servidor.'
   error_sending_signed_doc: 'Error al enviar el document signat.'
   error_downloading_doc: 'Error al descarregar el document.'
+  loading_applet: 'Carregant applet...'
+  applet_already_loaded: "Applet ja carregat."

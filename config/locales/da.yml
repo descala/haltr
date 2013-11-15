@@ -438,3 +438,5 @@ da:
   document_sent: 'Document sent to server.'
   error_sending_signed_doc: 'Error sending signed document.'
   error_downloading_doc: 'Error downloading document.'
+  loading_applet: 'Loading applet...'
+  applet_already_loaded: "Applet already loaded."
