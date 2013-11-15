@@ -55,11 +55,11 @@ module InvoicesHelper
       unless @js.blank?
         # channel uses javascript to send invoice
         if User.current.allowed_to?(:general_use, @project)
-          link_to l(:label_send), "#", :class=>'icon-haltr-send',
+          link_to(l(:label_send), "#", :class=>'icon-haltr-send',
             :title   => @invoice.sending_info.html_safe,
-            :onclick => (confirm ? "confirm('#{confirm}') && " : "") +
+            :onclick => ((confirm ? "confirm('#{confirm}') && " : "") +
                         "cargarMiniApplet('/plugin_assets/haltr/java/') && " +
-                        @js.gsub(':id',@invoice.id.to_s).html_safe
+                        @js.gsub(':id',@invoice.id.to_s)).html_safe)
         end
       else
         # sending through invoices#send_invoice
