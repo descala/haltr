@@ -1,5 +1,10 @@
 var clienteFirma;
 
+function isIE () {
+  var myNav = navigator.userAgent.toLowerCase();
+  return (myNav.indexOf('msie') != -1) ? parseInt(myNav.split('msie')[1]) : false;
+}
+
 function clear_logs() {
   if ($('div.flash.notice').length) {
     $('div.flash.notice').remove();
@@ -82,7 +87,7 @@ function cargarMiniApplet(base, keystore)
 
 	clienteFirma = document.getElementById("miniApplet");
 
-    if (typeof clienteFirma === 'undefined' || !('getErrorMessage' in clienteFirma && typeof(clienteFirma.getErrorMessage) == "function")) {
+    if (typeof clienteFirma === 'undefined' || !('getErrorMessage' in clienteFirma && (typeof(clienteFirma.getErrorMessage) == "function") || isIE())) {
       log('<%=j l(:applet_not_loaded).html_safe %>','error');
       return false;
     } else {
