@@ -104,7 +104,7 @@ function getErrorMessage() {
 function log(msg,level) {
   if ( !$('div.flash.'+level).length ) {
     jQuery('<div/>', {
-      class: 'flash ' + level
+      'class': 'flash ' + level
     }).prependTo('div.controller-invoices.action-show');
   }
   if ( !$('ul#haltr_'+level+'_messages').length ) {
