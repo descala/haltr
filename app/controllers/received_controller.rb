@@ -65,7 +65,8 @@ class ReceivedController < InvoicesController
     if @invoice.invoice_format == 'pdf'
       send_data @invoice.original,
         :type => 'application/pdf',
-        :disposition => "attachment; filename=#{@invoice.pdf_name}"
+        :filename => @invoice.pdf_name,
+        :disposition => params[:disposition] == 'inline' ? 'inline' : 'attachment'
     else
       send_data @invoice.original,
         :type => 'text/xml; charset=UTF-8;',

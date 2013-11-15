@@ -9,12 +9,15 @@
 </div>
 <!--final menu rapid-->
 
+<h4><%= "#{l :ReceivedInvoice} #{l :by_mail_from, :email => @invoice.from} #{l(:in_format, :f=>@invoice.invoice_format)}" %></h4>
+
 <div id="invoice-refuse" style="display: none;">
   <%= render :partial => "invoice_refuse_form" %>
 </div>
 <div id="invoice-accept" style="display: none;">
   <%= render :partial => "invoice_accept_form" %>
 </div>
+
 <div id="invoice_wrapper">
 
   <div id="InvoiceOutput">

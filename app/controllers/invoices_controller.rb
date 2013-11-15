@@ -23,8 +23,8 @@ class InvoicesController < ApplicationController
   skip_before_filter :check_if_login_required, :only => PUBLIC_METHODS
   # on development skip auth so we can use curl to debug
   if Rails.env.development? or Rails.env.test?
-    skip_before_filter :check_if_login_required, :only => [:by_taxcode_and_num,:view,:download,:mail,:show]
-    skip_before_filter :authorize, :only => [:show]
+    skip_before_filter :check_if_login_required, :only => [:by_taxcode_and_num,:view,:download,:mail,:show,:original]
+    skip_before_filter :authorize, :only => [:show,:original]
   else
     before_filter :check_remote_ip, :only => [:by_taxcode_and_num,:mail]
   end
