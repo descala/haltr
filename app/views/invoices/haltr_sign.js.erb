@@ -101,6 +101,15 @@ function getErrorMessage() {
 	return clienteFirma.getErrorMessage();
 }
 
+function clear_logs() {
+  if ($('div.flash.notice').length) {
+    $('div.flash.notice').remove();
+  }
+  if ($('div.flash.error').length) {
+    $('div.flash.error').remove();
+  }
+}
+
 function log(msg,level) {
   if ( !$('div.flash.'+level).length ) {
     jQuery('<div/>', {
@@ -129,6 +138,7 @@ function doSign_end() {
 
 function doSign(document_url,signature_type) {
   try {
+    clear_logs();
     var dataB64;
     doSign_init();
     log('<%=l :downloading_doc %>','notice');
