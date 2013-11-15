@@ -30,6 +30,10 @@ function log(msg,level) {
   }).appendTo('#haltr_'+level+'_messages')
 }
 
+function appletIsLoaded() {
+  return (typeof clienteFirma === 'undefined' || !('getErrorMessage' in clienteFirma && (typeof(clienteFirma.getErrorMessage) == "function") || isIE()));
+}
+
 function docWriteWrapper(func) {
   var writeTo = document.createElement('del'),
       oldwrite = document.write,
@@ -47,7 +51,7 @@ function docWriteWrapper(func) {
 function cargarMiniApplet(base, keystore)
 {
   clear_logs();
-  if (typeof clienteFirma === 'undefined' || !('getErrorMessage' in clienteFirma && typeof(clienteFirma.getErrorMessage) == "function")) {
+  if ( appletIsLoaded() ) {
     // remove old applet
     $('del#me').remove();
     clienteFirma = null;
@@ -87,7 +91,7 @@ function cargarMiniApplet(base, keystore)
 
 	clienteFirma = document.getElementById("miniApplet");
 
-    if (typeof clienteFirma === 'undefined' || !('getErrorMessage' in clienteFirma && (typeof(clienteFirma.getErrorMessage) == "function") || isIE())) {
+    if ( appletIsLoaded() ) {
       log('<%=j l(:applet_not_loaded).html_safe %>','error');
       return false;
     } else {
