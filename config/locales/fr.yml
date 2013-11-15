@@ -426,3 +426,5 @@ fr:
   error_downloading_doc: 'Error downloading document.'
   loading_applet: 'Loading applet...'
   applet_already_loaded: "Applet already loaded."
+  applet_loaded: "Applet loaded."
+  applet_not_loaded: "Error loading applet."

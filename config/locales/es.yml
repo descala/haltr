@@ -439,3 +439,5 @@ es:
   error_downloading_doc: 'Error Descargando el documento firmado.'
   loading_applet: 'Cargando applet...'
   applet_already_loaded: "Applet ya cargado."
+  applet_loaded: "Applet cargado."
+  applet_not_loaded: "Error cargando applet."

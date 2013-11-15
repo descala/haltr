@@ -42,10 +42,12 @@ function docWriteWrapper(func) {
 function cargarMiniApplet(base, keystore)
 {
   clear_logs();
-  if (typeof clienteFirma === 'undefined' ||
-      !('getErrorMessage' in clienteFirma && typeof(clienteFirma.getErrorMessage) == "function")) {
-      log('<%=l :loading_applet %>', 'notice');
+  if (typeof clienteFirma === 'undefined' || !('getErrorMessage' in clienteFirma && typeof(clienteFirma.getErrorMessage) == "function")) {
+    // remove old applet
+    $('del#me').remove();
     clienteFirma = null;
+
+    log('<%=j l(:loading_applet).html_safe %>', 'notice');
 	var codeBase = base;
 	if (codeBase == undefined || codeBase == null) {
 		codeBase = '.';
@@ -79,8 +81,17 @@ function cargarMiniApplet(base, keystore)
     });
 
 	clienteFirma = document.getElementById("miniApplet");
+
+    if (typeof clienteFirma === 'undefined' || !('getErrorMessage' in clienteFirma && typeof(clienteFirma.getErrorMessage) == "function")) {
+      log('<%=j l(:applet_not_loaded).html_safe %>','error');
+      return false;
+    } else {
+      log('<%=j l(:applet_loaded).html_safe %>','notice');
+      return true;
+    }
   } else {
-    log('<%=l :applet_already_loaded %>', 'notice');
+    log('<%=j l(:applet_already_loaded).html_safe %>', 'notice');
+    return true;
   }
 }
 
@@ -148,12 +159,12 @@ function doSign(document_url,signature_type) {
   try {
     var dataB64;
     doSign_init();
-    log('<%=l :downloading_doc %>','notice');
+    log('<%=j l(:downloading_doc).html_safe %>','notice');
     $.ajax({
       url : document_url,
       success : function(dataB64){
         try {
-          log('<%=l :calling_signature %>','notice');
+          log('<%=j l(:calling_signature).html_safe %>','notice');
           // <option value="CAdES">CAdES</option>
           // <option value="Adobe PDF">PAdES</option>
           // <option value="XAdES">XAdES</option>
@@ -161,18 +172,18 @@ function doSign(document_url,signature_type) {
           // signature_type for PDF: 'Adobe PDF'
           // signature_type for Facturae: 'XAdES Enveloped'
           var signed_document = sign(dataB64, 'SHA1withRSA', signature_type, null);
-          log('<%=l :sending_signed_doc %>','notice');
+          log('<%=j l(:sending_signed_doc).html_safe %>','notice');
           $.ajax({
             type: "POST",
             url: document_url,
             data: "document=" + signed_document,
             success: function(result){
-              log('<%=l :document_sent %>','notice');
+              log('<%=j l(:document_sent).html_safe %>','notice');
               // Reload page in 2 seconds
               //setTimeout(function() { location.reload(); }, 2000);
             },
             error: function(e){
-              log('<%=l :error_sending_signed_doc %>','error');
+              log('<%=j l(:error_sending_signed_doc).html_safe %>','error');
               doSign_end();
             }
           });
@@ -183,7 +194,7 @@ function doSign(document_url,signature_type) {
         }
       },
       error: function(e){
-        log('<%=l :error_downloading_doc %>','error');
+        log('<%=j l(:error_downloading_doc).html_safe %>','error');
         doSign_end();
       }
     });
