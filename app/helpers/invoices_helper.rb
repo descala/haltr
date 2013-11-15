@@ -76,6 +76,19 @@ module InvoicesHelper
     end
   end
 
+  def confirm_for(invoice_ids)
+    to_confirm = Invoice.find(invoice_ids).select { |invoice|
+      invoice.sent?
+    }.collect {|invoice| invoice.number }
+    if to_confirm.empty?
+      return nil
+    elsif to_confirm.size == 1
+      return l(:sure_to_resend_invoice, :num => to_confirm.first)
+    else
+      return l(:sure_to_resend_invoices, :nums => to_confirm.join(", "))
+    end
+  end
+
   def frequencies_for_select
     [1,2,3,6,12].collect do |f|
       [I18n.t("mf#{f}"), f]

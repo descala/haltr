@@ -48,7 +48,7 @@
     <!-- actions for multiple invoices -->
     <li>
     <%= context_menu_link l(:button_send), invoices_bulk_send_path(:ids=>@invoice_ids, :back_url=>@back),
-      :class => 'icon-send' %>
+      :class => 'icon-send', :confirm => confirm_for(@invoice_ids) %>
     </li>
     <li class="folder">
     <a href="#" class="submenu"><%= l(:button_download) %></a>
