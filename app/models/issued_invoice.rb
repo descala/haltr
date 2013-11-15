@@ -86,7 +86,7 @@ class IssuedInvoice < InvoiceDocument
   end
 
   def sent?
-    state?(:sent) or state?(:closed)
+    state?(:sent) or state?(:closed) or state?(:sending)
   end
 
   def label
