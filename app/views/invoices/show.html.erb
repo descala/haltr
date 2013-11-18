@@ -42,3 +42,19 @@
 <% content_for :header_tags do %>
   <%= stylesheet_link_tag 'minimal', :plugin => 'haltr' %>
 <% end %>
+
+<%=
+  # @autocall will be automatically called from javascript (haltr_sign.js)
+  # we can get here when pressing "save and send" button on invoice form if
+  # invoice is sent with javascript method (javascript attribute on channels.yml)
+  tag("div", :id => 'autocall', 'data-function' => @autocall, 'data-args' => @autocall_args) if @autocall
+%>
+
+<%=
+  unless @js.blank?
+    content_for :header_tags do
+      javascript_include_tag('/invoices/haltr_sign.js') +
+      javascript_include_tag('deployjava.js', :plugin => 'haltr')
+    end
+  end
+%>

@@ -1,56 +1,41 @@
-  <li><%= link_to_if_authorized "PDF", {:action=>'show', :id=>@invoice, :format => 'pdf'}, :class=>'icon-haltr-save' %></li>
+<li><%= link_to_if_authorized "PDF", {:action=>'show', :id=>@invoice, :format => 'pdf'}, :class=>'icon-haltr-save' %></li>
 
-  <li><%= send_link_for_invoice %></li>
+<li><%= send_link_for_invoice %></li>
 
-  <li>
-  <a href="#"><%= l(:more_options) %></a>
-  <ul>
-    <li><%= change_state_link(@invoice) %></li>
+<li>
+<a href="#"><%= l(:more_options) %></a>
+<ul>
+  <li><%= change_state_link(@invoice) %></li>
 
-    <% unless hide_to_user(:manage_payments) -%>
-      <% if @invoice.state?(:sent) or @invoice.state?(:allegedly_paid) -%>
-        <li><%= link_to_if_authorized l(:receive_payment), {:controller=>'payments', :action=>'new', :project_id=>@project, :invoice_id=>@invoice}, :class=>'icon-haltr-payment' %></li>
-      <% end -%>
+  <% unless hide_to_user(:manage_payments) -%>
+    <% if @invoice.state?(:sent) or @invoice.state?(:allegedly_paid) -%>
+      <li><%= link_to_if_authorized l(:receive_payment), {:controller=>'payments', :action=>'new', :project_id=>@project, :invoice_id=>@invoice}, :class=>'icon-haltr-payment' %></li>
     <% end -%>
+  <% end -%>
 
-    <% unless hide_to_user(:use_templates) -%>
-      <% if @invoice.invoice_template_id and @invoice.invoice_template -%>
-        <li><%= link_to_if_authorized "#{l(:show_template)} #{@invoice.invoice_template.id}", {:controller=>'invoice_templates',:action=>'show', :id=>@invoice.invoice_template_id }, :class=>'icon-haltr-templates' %></li>
-      <% else -%>
-        <li><%= link_to_if_authorized l(:generate_template_from_invoice), {:controller=>'invoice_templates',:action=>'new_from_invoice',:id=>@invoice}, :class => 'icon-haltr-template' %></li>
-      <% end -%>
+  <% unless hide_to_user(:use_templates) -%>
+    <% if @invoice.invoice_template_id and @invoice.invoice_template -%>
+      <li><%= link_to_if_authorized "#{l(:show_template)} #{@invoice.invoice_template.id}", {:controller=>'invoice_templates',:action=>'show', :id=>@invoice.invoice_template_id }, :class=>'icon-haltr-templates' %></li>
+    <% else -%>
+      <li><%= link_to_if_authorized l(:generate_template_from_invoice), {:controller=>'invoice_templates',:action=>'new_from_invoice',:id=>@invoice}, :class => 'icon-haltr-template' %></li>
     <% end -%>
+  <% end -%>
 
-    <% unless @invoice.amended? -%>
-      <li><%= link_to_if_authorized l(:create_amend_invoice), {:controller => 'invoices', :action => 'amend_for_invoice', :id => @invoice}, :method => :post, :class => 'icon-haltr-template' %></li>
-    <% end -%>
-    <li><%= link_to_if_authorized l(:duplicate_invoice), {:controller => 'invoices', :action => 'duplicate_invoice', :id => @invoice}, :class => 'icon-haltr-invoice' %></li>
-    <% unless Setting.plugin_haltr['issues_controller_name'].blank? -%>
-      <li>
-      <%= link_to_if_authorized l(:report_issue_with_invoice),
-        { :controller => Setting.plugin_haltr['issues_controller_name'],
-          :action => 'new',
-          :project_id => @project,
-          'issue[subject]' => l(:invoice_issue_subject, :id=>@invoice.id),
-          'issue[description]' => l(:invoice_issue_body) },
-        :class => 'icon-haltr-report' %>
-      </li>
-    <% end -%>
-  </ul>
-  </li>
+  <% unless @invoice.amended? -%>
+    <li><%= link_to_if_authorized l(:create_amend_invoice), {:controller => 'invoices', :action => 'amend_for_invoice', :id => @invoice}, :method => :post, :class => 'icon-haltr-template' %></li>
+  <% end -%>
+  <li><%= link_to_if_authorized l(:duplicate_invoice), {:controller => 'invoices', :action => 'duplicate_invoice', :id => @invoice}, :class => 'icon-haltr-invoice' %></li>
+  <% unless Setting.plugin_haltr['issues_controller_name'].blank? -%>
+    <li>
+    <%= link_to_if_authorized l(:report_issue_with_invoice),
+      { :controller => Setting.plugin_haltr['issues_controller_name'],
+        :action => 'new',
+        :project_id => @project,
+        'issue[subject]' => l(:invoice_issue_subject, :id=>@invoice.id),
+        'issue[description]' => l(:invoice_issue_body) },
+      :class => 'icon-haltr-report' %>
+    </li>
+  <% end -%>
+</ul>
+</li>
 
-<%=
-  # @autocall will be automatically called from javascript (haltr_sign.js)
-  # we can get here when pressing "save and send" button on invoice form if
-  # invoice is sent with javascript method (javascript attribute on channels.yml)
-  tag("div", :id => 'autocall', 'data-function' => @autocall, 'data-args' => @autocall_args) if @autocall
-%>
-
-<%=
-  unless @js.blank?
-    content_for :header_tags do
-      javascript_include_tag('/invoices/haltr_sign.js') +
-      javascript_include_tag('deployjava.js', :plugin => 'haltr')
-    end
-  end
-%>
