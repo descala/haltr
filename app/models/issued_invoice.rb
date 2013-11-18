@@ -247,15 +247,6 @@ class IssuedInvoice < InvoiceDocument
     end
   end
 
-  # facturae 32 needs bank_account if payment method is transfer to be valid
-  #TODO change this method name
-  def company_has_bank_account_if_needed
-    #TODO: iban+bic not valid here?
-    if transfer? and bank_info.bank_account.empty?
-      add_export_error(l(:bank_account_empty))
-    end
-  end
-
   def payment_method_requirements
     if debit?
       c = Client.find client_id
