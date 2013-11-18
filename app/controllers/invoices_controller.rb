@@ -611,7 +611,10 @@ class InvoicesController < ApplicationController
 
   def create_pdf_file
     @is_pdf = true
-    pdf = render_to_string :pdf => @invoice.pdf_name_without_extension, :layout => "invoice.html", :template=>'invoices/show_pdf'
+    pdf = render_to_string :pdf => @invoice.pdf_name_without_extension,
+      :layout   => "invoice.html",
+      :template => 'invoices/show_pdf',
+      :formats  => :html
     pdf_file = Tempfile.new(@invoice.pdf_name,:encoding => 'ascii-8bit')
     pdf_file.write pdf
     logger.info "Created PDF #{pdf_file.path}"
@@ -620,7 +623,8 @@ class InvoicesController < ApplicationController
   end
 
   def create_xml_file(format)
-    xml = render_to_string(:template => "invoices/#{format}.xml.erb", :layout => false)
+    xml = render_to_string(:template => "invoices/#{format}",
+                           :formats => :xml, :layout => false)
     xml_file = Tempfile.new("invoice_#{@invoice.id}.xml")
     xml_file.write(clean_xml(xml))
     logger.info "Created XML #{xml_file.path}"
@@ -785,6 +789,7 @@ XSL
 
   def bulk_send
     sent = 0
+    errors = {}
     @invoices.each do |invoice|
       @invoice = invoice
       @lines = @invoice.invoice_lines
@@ -793,11 +798,17 @@ XSL
       begin
         create_and_queue_file
         sent += 1
-      rescue Exception
+      rescue Exception => e
+        errors[@invoice.number] = e.message
       end
     end
     if sent < @invoices.size
-      flash[:error] = l(:some_invoices_sent,:sent=>sent,:total=>@invoices.size)
+      if Rails.env.development?
+        flash[:error] = l(:some_invoices_sent,:sent=>sent,:total=>@invoices.size) +
+          errors.collect {|num, err| "#{num}: #{err}" }.join(", ")
+      else
+        flash[:error] = l(:some_invoices_sent,:sent=>sent,:total=>@invoices.size)
+      end
     else
       flash[:notice] = l(:all_invoices_sent)
     end
