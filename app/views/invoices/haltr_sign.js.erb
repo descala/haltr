@@ -31,7 +31,22 @@ function log(msg,level) {
 }
 
 function appletIsLoaded() {
-  return (typeof clienteFirma === 'undefined' || !('getErrorMessage' in clienteFirma && (typeof(clienteFirma.getErrorMessage) == "function") || isIE()));
+  if (typeof clienteFirma === 'undefined') {
+    // clienteFirma undefined so not loaded
+    return false;
+  } else if ('getErrorMessage' in clienteFirma && (typeof(clienteFirma.getErrorMessage) == "function")) {
+    // clienteFirma has getErrorMessage function, so loaded
+    return true;
+  } else {
+    // on IE previous check does not work (typeof(clienteFirma.getErrorMessage))
+    // try to call function and catch the exception if not exist
+    try {
+      clienteFirma.getErrorMessage();
+      return true;
+    } catch(e) {
+      return false;
+    }
+  }
 }
 
 function docWriteWrapper(func) {
@@ -51,7 +66,7 @@ function docWriteWrapper(func) {
 function cargarMiniApplet(base, keystore)
 {
   clear_logs();
-  if ( appletIsLoaded() ) {
+  if ( !appletIsLoaded() ) {
     // remove old applet
     $('del#me').remove();
     clienteFirma = null;
@@ -91,7 +106,7 @@ function cargarMiniApplet(base, keystore)
 
 	clienteFirma = document.getElementById("miniApplet");
 
-    if ( appletIsLoaded() ) {
+    if ( !appletIsLoaded() ) {
       log('<%=j l(:applet_not_loaded).html_safe %>','error');
       return false;
     } else {
@@ -166,6 +181,7 @@ function doSign_end() {
 
 function doSign(document_url,signature_type) {
   try {
+    cargarMiniApplet('/plugin_assets/haltr/java/');
     var dataB64;
     doSign_init();
     log('<%=j l(:downloading_doc).html_safe %>','notice');
