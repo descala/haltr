@@ -132,7 +132,22 @@ class InvoicesController < ApplicationController
     if @invoice.save
       flash[:notice] = l(:notice_successful_create)
       if params[:create_and_send]
-        redirect_to :action => 'send_invoice', :id => @invoice
+        if @invoice.can_be_exported?
+          if ExportChannels[@invoice.client.invoice_format]['javascript']
+            # channel sends via javascript, set autocall and autocall_args
+            # 'show' action will set a div to tell javascript to automatically
+            # call this function
+            js = ExportChannels[@invoice.client.invoice_format]['javascript'].
+              gsub(':id',@invoice.id.to_s).gsub(/'/,"").split(/\(|\)/)
+            redirect_to :action => 'show', :id => @invoice,
+              :autocall => js[0].html_safe, :autocall_args => js[1]
+          else
+            redirect_to :action => 'send_invoice', :id => @invoice
+          end
+        else
+          flash[:error] = l(:errors_prevented_invoice_sent)
+          redirect_to :action => 'show', :id => @invoice
+        end
       else
         redirect_to :action => 'show', :id => @invoice
       end
