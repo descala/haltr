@@ -796,6 +796,9 @@ XSL
       @client = @invoice.client || Client.new(:name=>"unknown",:project=>@invoice.project)
       @company = @project.company
       begin
+        if ExportChannels[@invoice.client.invoice_format]['javascript']
+          raise Exception.new("Must be processed individually (channel with javascript)")
+        end
         create_and_queue_file
         sent += 1
       rescue Exception => e
