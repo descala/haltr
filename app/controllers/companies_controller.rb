@@ -43,7 +43,8 @@ class CompaniesController < ApplicationController
   def update
     # check if user trying to add multiple bank_infos without role
     unless User.current.allowed_to?(:add_multiple_bank_infos,@project)
-      if params[:company][:bank_infos_attributes].reject {|i,b| b["_destroy"] == "1" }.size > 1
+      if params[:company][:bank_infos_attributes] and 
+        params[:company][:bank_infos_attributes].reject {|i,b| b["_destroy"] == "1" }.size > 1
         redirect_to project_add_bank_info_path(@project), :alert => "You are not allowed to add multiple bank accounts"
         return
       end
