@@ -1,7 +1,7 @@
 client1:
   city: Barcelona
   address: Ribes, 00
-  name: Some non ascii chars ñª long name that may be truncated, Inc
+  name: Some non'ascii chars ñª long name that may be truncated, Inc
   taxcode: B00000000
   postalcode: 08013
   project_id: 2
