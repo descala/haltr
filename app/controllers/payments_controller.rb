@@ -100,7 +100,7 @@ class PaymentsController < ApplicationController
   def n19
     @due_date = @invoice.due_date
     @fecha_cargo = @due_date.to_formatted_s :ddmmyy
-    @bank_account = params[:bank_account]
+    @bank_account = @invoice.bank_info.bank_account
     render_404 && return if @bank_account.blank?
     @clients = Client.find :all, :conditions => ["bank_account != '' and project_id = ?", @project.id], :order => 'taxcode'
     @fecha_confeccion = Date.today.to_formatted_s :ddmmyy

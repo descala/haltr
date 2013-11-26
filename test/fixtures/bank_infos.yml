@@ -1,19 +1,19 @@
 bi1:
   id: 1
   name: "bank account 1"
-  bank_account: "1234567890123666"
+  bank_account: "12345678901234567890"
   company: company1
 
 bi2:
   id: 2
   name: ""
-  bank_account: "1234567890123777"
+  bank_account: "22345678901234567890"
   company: company2
 
 bi3:
   id: 3
   name: ""
-  bank_account: "1234567890123888"
+  bank_account: "32345678901234567890"
   company: company2
   iban: "123"
   bic: ""

@@ -9,6 +9,7 @@ invoice1:
   payment_method: <%= Invoice::PAYMENT_DEBIT %>
   state: sent
   currency: EUR
+  bank_info_id: 1
 
 template1:
   type: InvoiceTemplate
