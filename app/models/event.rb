@@ -6,7 +6,7 @@ class Event < ActiveRecord::Base
   belongs_to :user
   belongs_to :invoice
 
-  after_create :update_invoice
+  after_create :update_invoice, :unless => Proc.new {|event| event.invoice.nil?}
 
   def to_s
     # TODO: log the origin of the REST event. i.e. "Sent by host4"
