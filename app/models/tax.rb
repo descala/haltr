@@ -9,9 +9,13 @@ class Tax < ActiveRecord::Base
     :unless => Proc.new { |tax| tax.category == "E" }
   validates_format_of :name, :with => /^[a-zA-Z]+$/
   # only one name-percent combination per invoice_line:
+  #TODO: see rails bug https://github.com/rails/rails/issues/4568 on
+  # validates_uniqueness_of with accepts_nested_attributes_for
   validates_uniqueness_of :percent, :scope => [:invoice_line_id,:name],
     :unless => Proc.new { |tax| tax.invoice_line_id.nil? or tax.category == "E" }
   # only one name-percent combination per company:
+  # see rails bug https://github.com/rails/rails/issues/4568 on
+  # validates_uniqueness_of with accepts_nested_attributes_for
   validates_uniqueness_of :percent, :scope => [:company_id,:name,:category],
     :unless => Proc.new { |tax| tax.company_id.nil? }
   validates_numericality_of :percent, :equal_to => 0,

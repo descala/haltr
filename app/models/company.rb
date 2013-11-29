@@ -37,6 +37,8 @@ class Company < ActiveRecord::Base
     :reject_if => proc { |attributes| attributes.all? { |_, value| value.blank? } }
   validates_associated :bank_infos
 
+  validate :uniqueness_of_taxes
+
   def initialize(attributes=nil)
     super
     #TODO: Add default country taxes
@@ -105,6 +107,19 @@ class Company < ActiveRecord::Base
     self.bank_infos.collect {|bi|
       bi.bank_account
     }.compact.uniq
+  end
+
+  # workaround rails bug that allows to save invalid taxes on company
+  # see https://github.com/rails/rails/issues/4568
+  def uniqueness_of_taxes
+    my_taxes = {}
+    taxes.each do |tax|
+      next if tax.marked_for_destruction?
+      nc = "#{tax[:name]}#{tax[:category]}"
+      my_taxes[tax.percent] = [] unless my_taxes.has_key?(tax.percent)
+      errors.add(:taxes, :invalid) if my_taxes[tax.percent].include?(nc)
+      my_taxes[tax.percent] << nc
+    end
   end
 
   private
