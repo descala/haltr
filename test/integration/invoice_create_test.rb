@@ -2,6 +2,8 @@ require File.dirname(__FILE__) + '/../test_helper'
 
 class InvoiceCreaeteTest < ActionController::IntegrationTest
 
+  fixtures :companies, :invoices, :invoice_lines, :taxes
+
   def test_create_new_invoice
     post "/login", :username => 'jsmith', :password => 'jsmith'
 

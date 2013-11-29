@@ -40,6 +40,13 @@ end
 Haltr::TestHelper.haltr_setup
 
 class ActiveSupport::TestCase
-    self.fixture_path = File.dirname(__FILE__) + '/fixtures'
+  self.fixture_path = File.dirname(__FILE__) + '/fixtures'
+#  self.use_transactional_fixtures = true
+#  self.use_instantiated_fixtures  = true
 end
 
+class ActionController::IntegrationTest
+  self.fixture_path = File.dirname(__FILE__) + '/fixtures'
+#  self.use_transactional_fixtures = true
+#  self.use_instantiated_fixtures  = true
+end
