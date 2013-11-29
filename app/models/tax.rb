@@ -16,8 +16,8 @@ class Tax < ActiveRecord::Base
   # only one name-percent combination per company:
   # see rails bug https://github.com/rails/rails/issues/4568 on
   # validates_uniqueness_of with accepts_nested_attributes_for
-  validates_uniqueness_of :percent, :scope => [:company_id,:name,:category],
-    :unless => Proc.new { |tax| tax.company_id.nil? }
+  #validates_uniqueness_of :percent, :scope => [:company_id,:name,:category],
+  #  :unless => Proc.new { |tax| tax.company_id.nil? }
   validates_numericality_of :percent, :equal_to => 0,
     :if => Proc.new { |tax| ["Z","E"].include? tax.category }
 
