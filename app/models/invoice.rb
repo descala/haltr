@@ -311,11 +311,11 @@ class Invoice < ActiveRecord::Base
   # merge company and invoice taxes
   # to use in views
   def available_taxes
-    available_taxes = company.taxes
-    taxes_uniq.each do |tax|
-      available_taxes << tax unless available_taxes.include? tax
+    tt = []
+    (company.taxes + taxes_uniq).each do |t|
+      tt << t unless tt.include?(t)
     end
-    available_taxes
+    tt
   end
 
   def taxes_outputs

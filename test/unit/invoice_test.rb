@@ -99,12 +99,15 @@ class InvoiceTest < ActiveSupport::TestCase
 
   test "taxes_without_company_tax" do
     i = invoices(:i5)
+    c = companies(:company1)
+    assert_equal 1, i.taxes.size
     line = i.invoice_lines.first
     line.taxes << Tax.new(:company => nil, :invoice_line => line, :name => 'VAT', :percent => 99.0, :category => 'XL', :comment => 'This is unique to this invoice line. Company does not have a tax like this.')
     line.save!
-
-    # invoice i5 and company share one tax
-    assert_equal i.taxes.count + i.company.taxes.count - 1, i.available_taxes.count
+    assert_equal 2, i.taxes.size
+    assert_equal 4, c.taxes.size
+    # invoice i5 and company share one tax, so 2 + 4 - 1 = 5
+    assert_equal(5, i.available_taxes.size)
   end
 
   test "to string" do
