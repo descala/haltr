@@ -99,7 +99,7 @@ class InvoicesControllerTest < ActionController::TestCase
 
   test 'by_taxcode_and_num' do
     @request.session[:user_id] = nil
-    get :by_taxcode_and_num, :num => "08/001", "taxcode"=>"77310000G"
+    get :by_taxcode_and_num, :num => "08/001", "taxcode"=>"77310058H"
     assert_response :success
     assert_equal "855445292", @response.body
     @request.session[:user_id] = 2

@@ -15,9 +15,9 @@ class PaymentsControllerTest < ActionController::TestCase
     lines = @response.body.chomp.split("\n")
     fecha_confeccion = Date.today.to_formatted_s :ddmmyy
     # spaces are relevant
-    assert_equal "518077310000G000#{fecha_confeccion}      COMPANY1                                                    12345678                                                                  ", lines[0]
-    assert_equal "538077310000G000#{fecha_confeccion}011208Company1                                12345678901234567890        01                                                                ", lines[1]
-    assert_equal "568077310000G000B00000000   SOME NON'ASCII CHARS ?? LONG NAME THAT M114910865126953221150000092568                FRA 08/001                        925,68        ", lines[2]
+    assert_equal "518077310058H000#{fecha_confeccion}      COMPANY1                                                    12345678                                                                  ", lines[0]
+    assert_equal "538077310058H000#{fecha_confeccion}011208Company1                                12345678901234567890        01                                                                ", lines[1]
+    assert_equal "568077310058H000B00000000   SOME NON'ASCII CHARS ?? LONG NAME THAT M114910865126953221150000092568                FRA 08/001                        925,68        ", lines[2]
   end
 
   def test_aeb43

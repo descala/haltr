@@ -477,7 +477,7 @@ _INV
       client = buyer_taxcode.blank? ? nil : company.project.clients.find_by_taxcode(buyer_taxcode)
       client_role = "buyer"
     else
-      raise "Invoice taxcodes does not belong to self (#{buyer_taxcode} - #{seller_taxcode})"
+      raise "Invoice taxcodes (#{buyer_taxcode} - #{seller_taxcode}) does not belong to self (#{company.taxcode})"
     end
 
     # create client if not exists
@@ -492,8 +492,8 @@ _INV
       client_email       = Haltr::Utils.get_xpath(doc,xpaths["#{client_role}_email"])
       client_cp_city     = Haltr::Utils.get_xpath(doc,xpaths["#{client_role}_cp_city"]) ||
                            Haltr::Utils.get_xpath(doc,xpaths["#{client_role}_cp_city2"])
-      client_postalcode = client_cp_city.split(" ").first
-      client_city       = client_cp_city.gsub(/^#{client_postalcode} /,'')
+      client_postalcode = client_cp_city.split(" ").first rescue ""
+      client_city       = client_cp_city.gsub(/^#{client_postalcode} /,'') rescue ""
 
       client = Client.new(:taxcode    => client_taxcode,
                           :name       => client_name,
@@ -530,7 +530,11 @@ _INV
     invoice.from           = from           # u@mail.com, User Name...
     invoice.md5            = md5
     invoice.original       = raw_invoice.read.chomp
-    invoice.file_name      = raw_invoice.original_filename
+    if transport == "upload"
+      invoice.file_name    = raw_invoice.original_filename
+    elsif transport == "mail"
+      invoice.file_name    = raw_invoice.filename
+    end
     invoice.save!
     logger.info "created new invoice with id #{invoice.id} for company #{company.name}"
     return invoice
