@@ -441,6 +441,101 @@ total = #{total}
 _INV
   end
 
+  def self.create_from_xml(raw_invoice,company,from,md5,transport)
+    doc = REXML::Document.new(raw_invoice.read.chomp)
+    facturae_version = REXML::XPath.first(doc,"//FileHeader/SchemaVersion")
+    ubl_version = REXML::XPath.first(doc,"//Invoice/*:UBLVersionID")
+    if facturae_version
+      invoice_format="facturae#{facturae_version.text}"
+      logger.info "Creating invoice from xml - format is FacturaE #{facturae_version.text}"
+    elsif ubl_version
+      invoice_format="ubl#{ubl_version.text}"
+      logger.info "Creating invoice from xml - format is UBL #{ubl_version.text}"
+    else
+      logger.info "Creating invoice from xml - unknown format"
+      raise "Unknown format"
+    end
+
+    #TODO: check buyer_taxcode == company.taxcode
+    #    buyer_taxcode  = Haltr::Utils.get_xpath(doc,xpaths[:buyer_taxcode])
+    #    company = Company.find_by_taxcode(buyer_taxcode)
+    #    raise "Company with taxcode '#{buyer_taxcode}' not found" unless company #TODO: bounce message
+
+    xpaths         = Haltr::Utils.xpaths_for(invoice_format)
+    seller_taxcode = Haltr::Utils.get_xpath(doc,xpaths[:seller_taxcode])
+    buyer_taxcode  = Haltr::Utils.get_xpath(doc,xpaths[:buyer_taxcode])
+    currency       = Haltr::Utils.get_xpath(doc,xpaths[:currency])
+    invoice, client, client_role = nil
+
+    # check if it is a received_invoice or an issued_invoice.
+    if company.taxcode == buyer_taxcode
+      invoice = ReceivedInvoice.new
+      client = seller_taxcode.blank? ? nil : company.project.clients.find_by_taxcode(seller_taxcode)
+      client_role= "seller"
+    elsif company.taxcode == seller_taxcode
+      invoice = IssuedInvoice.new
+      client = buyer_taxcode.blank? ? nil : company.project.clients.find_by_taxcode(buyer_taxcode)
+      client_role = "buyer"
+    else
+      raise "Invoice taxcodes does not belong to self (#{buyer_taxcode} - #{seller_taxcode})"
+    end
+
+    # create client if not exists
+    unless client
+      client_taxcode     = client_role == "seller" ? seller_taxcode : buyer_taxcode
+      client_name        = Haltr::Utils.get_xpath(doc,xpaths["#{client_role}_name"]) ||
+                           Haltr::Utils.get_xpath(doc,xpaths["#{client_role}_name2"])
+      client_address     = Haltr::Utils.get_xpath(doc,xpaths["#{client_role}_address"])
+      client_province    = Haltr::Utils.get_xpath(doc,xpaths["#{client_role}_province"])
+      client_countrycode = Haltr::Utils.get_xpath(doc,xpaths["#{client_role}_countrycode"])
+      client_website     = Haltr::Utils.get_xpath(doc,xpaths["#{client_role}_website"])
+      client_email       = Haltr::Utils.get_xpath(doc,xpaths["#{client_role}_email"])
+      client_cp_city     = Haltr::Utils.get_xpath(doc,xpaths["#{client_role}_cp_city"]) ||
+                           Haltr::Utils.get_xpath(doc,xpaths["#{client_role}_cp_city2"])
+      client_postalcode = client_cp_city.split(" ").first
+      client_city       = client_cp_city.gsub(/^#{client_postalcode} /,'')
+
+      client = Client.new(:taxcode    => client_taxcode,
+                          :name       => client_name,
+                          :address    => client_address,
+                          :province   => client_province,
+                          :country    => client_countrycode,
+                          :website    => client_website,
+                          :email      => client_email,
+                          :postalcode => client_postalcode,
+                          :city       => client_city,
+                          :currency   => currency,
+                          :project    => company.project)
+      client.save!(:validate=>false)
+      logger.info "created new client \"#{client_name}\" with cif #{client_taxcode} for company #{company.name}"
+    end
+
+    invoice_number   = Haltr::Utils.get_xpath(doc,xpaths[:invoice_number])
+    invoice_date     = Haltr::Utils.get_xpath(doc,xpaths[:invoice_date])
+    invoice_total    = Haltr::Utils.get_xpath(doc,xpaths[:invoice_total])
+    invoice_import   = Haltr::Utils.get_xpath(doc,xpaths[:invoice_import])
+    invoice_due_date = Haltr::Utils.get_xpath(doc,xpaths[:invoice_due_date])
+
+    invoice.assign_attributes(:number   => invoice_number,
+                              :client   => client,
+                              :date     => invoice_date,
+                              :total    => invoice_total.to_money(currency),
+                              :currency => currency,
+                              :import   => invoice_import.to_money(currency),
+                              :due_date => invoice_due_date,
+                              :project  => company.project)
+
+    invoice.invoice_format = invoice_format # facturae32, ubl21...
+    invoice.transport      = transport      # mail, upload...
+    invoice.from           = from           # u@mail.com, User Name...
+    invoice.md5            = md5
+    invoice.original       = raw_invoice.read.chomp
+    invoice.file_name      = raw_invoice.original_filename
+    invoice.save!
+    logger.info "created new invoice with id #{invoice.id} for company #{company.name}"
+    return invoice
+  end
+
   protected
 
   def increment_counter
