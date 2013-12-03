@@ -10,6 +10,7 @@ module PaymentsHelper
     invoices = {I18n.t("IssuedInvoice")=>[],I18n.t("ReceivedInvoice")=>[]}
     InvoiceDocument.find(:all, :order => 'number DESC', :include => 'client', :conditions => cond).collect do |c|
       #[ "#{c.class} - #{c.number} #{c.total.to_s.rjust(10).gsub(' ','_')}€ #{c.client}", c.id ]
+      next unless invoices.keys.include?(I18n.t(c.type))
       invoices[I18n.t(c.type)] << [ "#{c.number} #{c.total.to_s.rjust(10).gsub(' ','_')}€ #{c.client}", c.id ]
     end
     invoices
