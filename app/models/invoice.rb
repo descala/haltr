@@ -441,6 +441,10 @@ total = #{total}
 _INV
   end
 
+  def can_be_exported?
+    false
+  end
+
   protected
 
   def increment_counter
