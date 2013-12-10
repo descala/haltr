@@ -540,6 +540,10 @@ _INV
     return invoice
   end
 
+  def can_be_exported?
+    false
+  end
+
   protected
 
   def increment_counter
@@ -585,7 +589,7 @@ _INV
   end
 
   def bank_info_belongs_to_self
-    if bank_info and bank_info.company != client.project.company
+    if bank_info and client and bank_info.company != client.project.company
       errors.add(:base, "Bank info is from other company!")
     end
   end
