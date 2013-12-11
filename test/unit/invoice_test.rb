@@ -188,4 +188,26 @@ class InvoiceTest < ActiveSupport::TestCase
     assert i.valid?
   end
 
+  test 'create received_invoice from facturae32' do
+    assert_nil Client.find_by_taxcode "ESP6611142C"
+    file = File.new(File.join(File.dirname(__FILE__),'..','fixtures','documents','invoice_facturae32_signed.xml'))
+    invoice = Invoice.create_from_xml(file,companies(:company1),User.current.name,"1234",'upload')
+    assert_not_nil Client.find_by_taxcode "ESP6611142C"
+    assert_equal "ESP6611142C", invoice.client.taxcode
+    assert_equal companies(:company1), invoice.company
+    assert_equal "766", invoice.number
+    assert_equal "2012-04-20", invoice.date.to_s
+    assert_equal 658.00, invoice.total.to_f
+    assert_equal 600.00, invoice.import.to_f
+    assert_equal "2012-06-01", invoice.due_date.to_s
+    assert_equal "EUR", invoice.currency
+    assert_equal "facturae3.2", invoice.invoice_format
+    assert_equal "upload", invoice.transport
+    #TODO:
+    #assert_equal "Anonymous", invoice.from
+    assert_equal "1234", invoice.md5
+    assert_not_nil invoice.original
+    assert_equal "invoice_facturae32_signed.xml", invoice.file_name
+  end
+
 end

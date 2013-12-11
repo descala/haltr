@@ -23,21 +23,8 @@ module Haltr
       # retrieve xpath from document
       # if xpath is an array, concatenates its values
       def get_xpath(doc,xpath)
-        val=""
-        if xpath.is_a?(Array)
-          xpath.each do |xp|
-            txt = REXML::XPath.first(doc,xp).text.to_s rescue ""
-            unless txt.blank?
-              val += txt
-              val += " " unless xp == xpath.last
-            end
-          end
-        elsif xpath.nil?
-          nil
-        else
-          val += REXML::XPath.first(doc,xpath).text.to_s rescue ""
-        end
-        val.blank? ? nil : val
+        val = doc.xpath(*xpath)
+        val.blank? ? nil : val.text
       end
 
       def xpaths_for(format)

@@ -442,24 +442,20 @@ _INV
   end
 
   def self.create_from_xml(raw_invoice,company,from,md5,transport)
-    doc = REXML::Document.new(raw_invoice.read.chomp)
-    facturae_version = REXML::XPath.first(doc,"//FileHeader/SchemaVersion")
-    ubl_version = REXML::XPath.first(doc,"//Invoice/*:UBLVersionID")
+    doc               = Nokogiri::XML(raw_invoice.read)
+    doc_no_namespaces = doc.dup.remove_namespaces!
+    facturae_version  = doc.at_xpath("//FileHeader/SchemaVersion")
+    ubl_version       = doc_no_namespaces.at_xpath("//Invoice/UBLVersionID")
     if facturae_version
-      invoice_format="facturae#{facturae_version.text}"
+      invoice_format  = "facturae#{facturae_version.text}"
       logger.info "Creating invoice from xml - format is FacturaE #{facturae_version.text}"
     elsif ubl_version
-      invoice_format="ubl#{ubl_version.text}"
+      invoice_format  = "ubl#{ubl_version.text}"
       logger.info "Creating invoice from xml - format is UBL #{ubl_version.text}"
     else
       logger.info "Creating invoice from xml - unknown format"
       raise "Unknown format"
     end
-
-    #TODO: check buyer_taxcode == company.taxcode
-    #    buyer_taxcode  = Haltr::Utils.get_xpath(doc,xpaths[:buyer_taxcode])
-    #    company = Company.find_by_taxcode(buyer_taxcode)
-    #    raise "Company with taxcode '#{buyer_taxcode}' not found" unless company #TODO: bounce message
 
     xpaths         = Haltr::Utils.xpaths_for(invoice_format)
     seller_taxcode = Haltr::Utils.get_xpath(doc,xpaths[:seller_taxcode])
@@ -530,11 +526,17 @@ _INV
     invoice.from           = from           # u@mail.com, User Name...
     invoice.md5            = md5
     invoice.original       = raw_invoice.read.chomp
-    if transport == "upload"
-      invoice.file_name    = raw_invoice.original_filename
-    elsif transport == "mail"
+
+    if raw_invoice.respond_to? :filename # Mail::Part
       invoice.file_name    = raw_invoice.filename
+    elsif raw_invoice.respond_to? :original_filename # UploadedFile
+      invoice.file_name    = raw_invoice.original_filename
+    elsif raw_invoice.respond_to? :path # File (on tests)
+      File.basename(raw_invoice.path)
+    else
+      invoice.file_name    = "don't know how to get filename from #{raw_invoice.class}"
     end
+
     invoice.save!
     logger.info "created new invoice with id #{invoice.id} for company #{company.name}"
     return invoice
