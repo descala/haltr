@@ -266,6 +266,7 @@ class Invoice < ActiveRecord::Base
   def taxable_base(tax_type=nil)
     t = Money.new(0,currency)
     invoice_lines.each do |il|
+      next if il.marked_for_destruction?
       t += il.taxable_base if tax_type.nil? or il.has_tax?(tax_type)
     end
     t
