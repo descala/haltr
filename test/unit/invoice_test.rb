@@ -1,3 +1,4 @@
+# encoding: utf-8
 require File.dirname(__FILE__) + '/../test_helper'
 
 class InvoiceTest < ActiveSupport::TestCase
@@ -5,6 +6,7 @@ class InvoiceTest < ActiveSupport::TestCase
   fixtures :clients, :invoices, :invoice_lines, :taxes, :companies, :people, :bank_infos
 
   def setup
+    User.current=nil
     Haltr::TestHelper.fix_invoice_totals
   end
 
@@ -190,10 +192,24 @@ class InvoiceTest < ActiveSupport::TestCase
 
   test 'create received_invoice from facturae32' do
     assert_nil Client.find_by_taxcode "ESP6611142C"
-    file = File.new(File.join(File.dirname(__FILE__),'..','fixtures','documents','invoice_facturae32_signed.xml'))
+    file    = File.new(File.join(File.dirname(__FILE__),'..','fixtures','documents','invoice_facturae32_signed.xml'))
     invoice = Invoice.create_from_xml(file,companies(:company1),User.current.name,"1234",'upload')
-    assert_not_nil Client.find_by_taxcode "ESP6611142C"
-    assert_equal "ESP6611142C", invoice.client.taxcode
+    client  = Client.find_by_taxcode "ESP6611142C"
+    assert_not_nil client
+    # client
+    assert_equal "ESP6611142C", client.taxcode
+    assert_equal "Ingent-lluís", client.name
+    assert_equal "Melió 113", client.address
+    assert_equal "Barcelona", client.province
+    assert_equal "TUR", client.country
+    assert_equal "", client.website
+    assert_equal "ESP6611111C@b2brouter.net", client.email
+    assert_equal "08720", client.postalcode
+    assert_equal "Vilafranca", client.city
+    assert_equal "EUR", client.currency
+    assert_equal invoice.company.project, client.project
+    # invoice
+    assert_equal client, invoice.client
     assert_equal companies(:company1), invoice.company
     assert_equal "766", invoice.number
     assert_equal "2012-04-20", invoice.date.to_s
@@ -203,11 +219,19 @@ class InvoiceTest < ActiveSupport::TestCase
     assert_equal "EUR", invoice.currency
     assert_equal "facturae3.2", invoice.invoice_format
     assert_equal "upload", invoice.transport
-    #TODO:
-    #assert_equal "Anonymous", invoice.from
+    assert_equal "Anonymous", invoice.from
     assert_equal "1234", invoice.md5
     assert_equal 12501, invoice.original.size
     assert_equal "invoice_facturae32_signed.xml", invoice.file_name
+    # invoice lines
+    assert_equal 3, invoice.invoice_lines.size
+    assert_equal 600.00, invoice.invoice_lines.collect {|l| l.quantity*l.price }.sum.to_f
+    invoice.invoice_lines.each do |il|
+      assert_equal 100, il.price
+      assert_equal 1, il.taxes.size
+    end
+    assert_equal 1, invoice.invoice_lines[0].quantity
+    assert_equal 2, invoice.invoice_lines[1].quantity
+    assert_equal 3, invoice.invoice_lines[2].quantity
   end
-
 end

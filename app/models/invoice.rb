@@ -492,8 +492,11 @@ _INV
       client_email       = Haltr::Utils.get_xpath(doc,xpaths["#{client_role}_email"])
       client_cp_city     = Haltr::Utils.get_xpath(doc,xpaths["#{client_role}_cp_city"]) ||
                            Haltr::Utils.get_xpath(doc,xpaths["#{client_role}_cp_city2"])
-      client_postalcode = client_cp_city.split(" ").first rescue ""
-      client_city       = client_cp_city.gsub(/^#{client_postalcode} /,'') rescue ""
+      client_postalcode  = client_cp_city.split(" ").first rescue ""
+      client_city        = client_cp_city.gsub(/^#{client_postalcode} /,'') rescue ""
+      if client_postalcode.blank?
+        client_postalcode  = Haltr::Utils.get_xpath(doc,xpaths["#{client_role}_cp"])
+      end
 
       client = Client.new(:taxcode    => client_taxcode,
                           :name       => client_name,
@@ -510,6 +513,7 @@ _INV
       logger.info "created new client \"#{client_name}\" with cif #{client_taxcode} for company #{company.name}"
     end
 
+    # invoice data
     invoice_number   = Haltr::Utils.get_xpath(doc,xpaths[:invoice_number])
     invoice_date     = Haltr::Utils.get_xpath(doc,xpaths[:invoice_date])
     invoice_total    = Haltr::Utils.get_xpath(doc,xpaths[:invoice_total])
@@ -539,6 +543,17 @@ _INV
       invoice.file_name    = File.basename(raw_invoice.path)
     else
       invoice.file_name    = "can't get filename from #{raw_invoice.class}"
+    end
+
+    # invoice lines
+    doc.xpath(xpaths[:invoice_lines]).each do |line|
+      il = InvoiceLine.new(
+             :quantity    => line.at_xpath(xpaths[:line_quantity]).text,
+             :description => line.at_xpath(xpaths[:line_description]).text,
+             :price       => line.at_xpath(xpaths[:line_price]).text,
+             :unit        => line.at_xpath(xpaths[:line_unit]).text
+           )
+      invoice.invoice_lines << il
     end
 
     invoice.save!

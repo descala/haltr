@@ -28,7 +28,7 @@ module Haltr
       end
 
       def xpaths_for(format)
-        xpaths = {}
+        xpaths = HashWithIndifferentAccess.new
         if format =~ /facturae/
           xpaths[:invoice_number]     = [ "//Invoices/Invoice/InvoiceHeader/InvoiceNumber",
                                           "//Invoices/Invoice/InvoiceHeader/InvoiceSeriesCode" ]
@@ -49,6 +49,7 @@ module Haltr
           xpaths[:seller_cp_city]     = [ "//Parties/SellerParty/*/*/PostCode",
                                           "//Parties/SellerParty/*/*/Town" ]
           xpaths[:seller_cp_city2]    = "//Parties/SellerParty/*/*/PostCodeAndTown"
+          xpaths[:seller_cp]          = "//Parties/SellerParty/*/*/PostCode"
           xpaths[:buyer_taxcode]      = "//Parties/BuyerParty/TaxIdentification/TaxIdentificationNumber"
           xpaths[:buyer_name]         = "//Parties/BuyerParty/LegalEntity/CorporateName"
           xpaths[:buyer_name2]        = [ "//Parties/BuyerParty/Individual/Name",
@@ -62,7 +63,18 @@ module Haltr
           xpaths[:buyer_cp_city]      = [ "//Parties/BuyerParty/*/*/PostCode",
                                           "//Parties/BuyerParty/*/*/Town" ]
           xpaths[:buyer_cp_city2]     = "//Parties/BuyerParty/*/*/PostCodeAndTown"
+          xpaths[:buyer_cp]           = "//Parties/BuyerParty/*/*/PostCode"
           xpaths[:currency]           = "//FileHeader/Batch/InvoiceCurrencyCode"
+          xpaths[:invoice_lines]      = "//Invoices/Invoice/Items/InvoiceLine"
+          # relative to invoice_lines
+          xpaths[:line_quantity]      = "Quantity"
+          xpaths[:line_description]   = "ItemDescription"
+          xpaths[:line_price]         = "UnitPriceWithoutTax"
+          xpaths[:line_unit]          = "UnitOfMeasure"
+          xpaths[:line_taxes]         = "TaxesOutputs/Tax"
+          # relative to invoice_lines/taxes
+          #xpaths[:tax_name]           = ""
+          xpaths[:tax_percent]        = "TaxRate"
         elsif format =~ /ubl/
           xpaths[:invoice_number]     = "/Invoice/cbc:ID"
           xpaths[:invoice_date]       = "/Invoice/cbc:IssueDate"
