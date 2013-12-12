@@ -833,7 +833,7 @@ XSL
         invoice = Invoice.create_from_xml(file,@project.company,User.current.name,md5,'upload')
         redirect_to invoice_path(invoice)
       else
-        flash[:warning] = l(:notice_uploaded_uploaded_file_not_found)
+        flash[:warning] = l(:notice_uploaded_file_not_found)
         redirect_to :action => 'import', :project_id => @project
       end
     end
