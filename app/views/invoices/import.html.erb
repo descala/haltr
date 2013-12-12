@@ -4,7 +4,7 @@
 
     <%= form_tag({:action => 'import', :project_id => @project}, :class=>'formee', :multipart => true) do %>
       <%= file_field_tag "file" %>
-      <%= submit_tag l(:button_import) %>
+      <%= submit_tag l(:label_import) %>
     <% end %>
 
   </div>

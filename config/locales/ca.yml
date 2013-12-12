@@ -442,3 +442,5 @@ ca:
   applet_not_loaded: "Error carregant l'applet."
   sure_to_resend_invoice: "Segur que voleu reenviar la factura %{num}?"
   sure_to_resend_invoices: "Segur que voleu reenviar les factures %{nums}?"
+  taxcodes_does_not_belong_to_self: "Els NIF de la factura (%{tcs}) no son de la teva empresa (%{tc})"
+  label_import: "Importar"

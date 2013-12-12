@@ -474,7 +474,9 @@ _INV
       client = buyer_taxcode.blank? ? nil : company.project.clients.find_by_taxcode(buyer_taxcode)
       client_role = "buyer"
     else
-      raise "Invoice taxcodes (#{buyer_taxcode} - #{seller_taxcode}) does not belong to self (#{company.taxcode})"
+      raise I18n.t :taxcodes_does_not_belong_to_self,
+        :tcs => "#{buyer_taxcode} - #{seller_taxcode}",
+        :tc  => company.taxcode
     end
 
     # create client if not exists

@@ -837,5 +837,8 @@ XSL
         redirect_to :action => 'import', :project_id => @project
       end
     end
+  rescue
+    flash[:error] = $!.message
+    redirect_to :action => 'import', :project_id => @project
   end
 end

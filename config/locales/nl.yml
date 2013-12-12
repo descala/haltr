@@ -426,3 +426,5 @@ en:
   applet_not_loaded: "Error loading applet."
   sure_to_resend_invoice: "Are you sure to re-send invoice %{num}?"
   sure_to_resend_invoices: "Are you sure to re-send invoices %{nums}?"
+  taxcodes_does_not_belong_to_self: "Invoice taxcodes (%{tcs}) does not belong to self (%{tc})"
+  label_import: "Import"
