@@ -442,7 +442,8 @@ _INV
   end
 
   def self.create_from_xml(raw_invoice,company,from,md5,transport)
-    doc               = Nokogiri::XML(raw_invoice.read)
+    raw_xml           = raw_invoice.read
+    doc               = Nokogiri::XML(raw_xml)
     doc_no_namespaces = doc.dup.remove_namespaces!
     facturae_version  = doc.at_xpath("//FileHeader/SchemaVersion")
     ubl_version       = doc_no_namespaces.at_xpath("//Invoice/UBLVersionID")
@@ -525,16 +526,16 @@ _INV
     invoice.transport      = transport      # mail, upload...
     invoice.from           = from           # u@mail.com, User Name...
     invoice.md5            = md5
-    invoice.original       = raw_invoice.read.chomp
+    invoice.original       = raw_xml
 
     if raw_invoice.respond_to? :filename # Mail::Part
       invoice.file_name    = raw_invoice.filename
     elsif raw_invoice.respond_to? :original_filename # UploadedFile
       invoice.file_name    = raw_invoice.original_filename
     elsif raw_invoice.respond_to? :path # File (on tests)
-      File.basename(raw_invoice.path)
+      invoice.file_name    = File.basename(raw_invoice.path)
     else
-      invoice.file_name    = "don't know how to get filename from #{raw_invoice.class}"
+      invoice.file_name    = "can't get filename from #{raw_invoice.class}"
     end
 
     invoice.save!

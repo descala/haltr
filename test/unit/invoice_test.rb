@@ -206,7 +206,7 @@ class InvoiceTest < ActiveSupport::TestCase
     #TODO:
     #assert_equal "Anonymous", invoice.from
     assert_equal "1234", invoice.md5
-    assert_not_nil invoice.original
+    assert_equal 12501, invoice.original.size
     assert_equal "invoice_facturae32_signed.xml", invoice.file_name
   end
 
