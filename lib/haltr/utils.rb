@@ -24,11 +24,11 @@ module Haltr
       # if xpath is an array, concatenates its values
       def get_xpath(doc,xpath)
         val = doc.xpath(*xpath)
-        val.blank? ? nil : val.text
+        val.blank? ? nil : val.collect {|v| v.text }.join(" ")
       end
 
       def xpaths_for(format)
-        xpaths = HashWithIndifferentAccess.new
+        xpaths = {}.with_indifferent_access
         if format =~ /facturae/
           xpaths[:invoice_number]     = [ "//Invoices/Invoice/InvoiceHeader/InvoiceNumber",
                                           "//Invoices/Invoice/InvoiceHeader/InvoiceSeriesCode" ]
@@ -73,7 +73,7 @@ module Haltr
           xpaths[:line_unit]          = "UnitOfMeasure"
           xpaths[:line_taxes]         = "TaxesOutputs/Tax"
           # relative to invoice_lines/taxes
-          #xpaths[:tax_name]           = ""
+          xpaths[:tax_id]             = "TaxTypeCode"
           xpaths[:tax_percent]        = "TaxRate"
         elsif format =~ /ubl/
           xpaths[:invoice_number]     = "/Invoice/cbc:ID"

@@ -527,9 +527,10 @@ _INV
                               :currency => currency,
                               :import   => invoice_import.to_money(currency),
                               :due_date => invoice_due_date,
-                              :project  => company.project)
+                              :project  => company.project,
+                              :terms    => "custom")
 
-    invoice.invoice_format = invoice_format # facturae32, ubl21...
+    invoice.invoice_format = invoice_format # facturae3.2, ubl21...
     invoice.transport      = transport      # mail, upload...
     invoice.from           = from           # u@mail.com, User Name...
     invoice.md5            = md5
@@ -553,6 +554,14 @@ _INV
              :price       => line.at_xpath(xpaths[:line_price]).text,
              :unit        => line.at_xpath(xpaths[:line_unit]).text
            )
+      line.xpath(xpaths[:line_taxes]).each do |line_tax|
+        tax = Haltr::TaxHelper.new_tax(
+          :format  => invoice_format,
+          :id      => line_tax.at_xpath(xpaths[:tax_id]).text,
+          :percent => line_tax.at_xpath(xpaths[:tax_percent]).text
+        )
+        il.taxes << tax
+      end
       invoice.invoice_lines << il
     end
 

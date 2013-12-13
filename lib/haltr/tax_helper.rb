@@ -1,6 +1,40 @@
 module Haltr
   module TaxHelper
 
+    TAX_LIST = YAML.load(File.read(
+      File.join(File.dirname(__FILE__),"..","..","config","taxes.yml")
+    )).with_indifferent_access
+
+    def self.new_tax(attributes={})
+      case attributes[:format]
+      when /facturae/
+        taxes = TAX_LIST[:es].select {|t| t[:facturae_id] == attributes[:id]}
+        taxes.each do |t|
+          if t[:percent] == attributes[:percent].to_f
+            return Tax.new(t.dup.keep_if {|k,v| %w(name percent category).include?(k)})
+          end
+        end
+        # there's no tax matching name and percent, check only for name now
+        if taxes.any?
+          return Tax.new(
+            name:     taxes[0][:name],
+            percent:  attributes[:percent],
+            category: 'S'
+          )
+        end
+
+
+      when /ubl/
+        #TODO
+      end
+
+      return Tax.new(
+        name:     :unknown,
+        percent:  attributes[:percent],
+        category: :S
+      )
+    end
+
     def self.facturae(tax_name)
       val = self.check(FACTURAE,tax_name)
       val.nil? ? "05" : val
