@@ -306,6 +306,7 @@ class InvoicesController < ApplicationController
     @js = ExportChannels[@client.invoice_format]['javascript'] rescue nil
     @autocall = params[:autocall]
     @autocall_args = params[:autocall_args]
+    @format = params["format"]
     respond_to do |format|
       format.html
       format.pdf do
