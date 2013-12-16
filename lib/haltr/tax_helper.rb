@@ -99,7 +99,7 @@ module Haltr
       result = []
       names = taxes.collect {|t| t.name }.uniq
       names.each do |name|
-        tax_group = taxes.collect {|t| t if t.name == name }.compact
+        tax_group = taxes.select {|t| t.name == name }
         tax_group.sort.each_with_index do |tax,i|
           if tax.percent == 0.0
             tax.category='Z'

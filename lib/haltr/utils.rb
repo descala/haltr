@@ -35,6 +35,8 @@ module Haltr
           xpaths[:invoice_date]       = "//Invoices/Invoice/InvoiceIssueData/IssueDate"
           xpaths[:invoice_total]      = "//Invoices/Invoice/InvoiceTotals/InvoiceTotal"
           xpaths[:invoice_import]     = "//Invoices/Invoice/InvoiceTotals/TotalGrossAmountBeforeTaxes"
+          xpaths[:discount_percent]   = "//Invoices/Invoice/InvoiceTotals/GeneralDiscounts/Discount/DiscountRate"
+          xpaths[:discount_text]      = "//Invoices/Invoice/InvoiceTotals/GeneralDiscounts/Discount/DiscountReason"
           xpaths[:invoice_due_date]   = "//Invoices/Invoice/PaymentDetails/Installment/InstallmentDueDate"
           xpaths[:seller_taxcode]     = "//Parties/SellerParty/TaxIdentification/TaxIdentificationNumber"
           xpaths[:seller_name]        = "//Parties/SellerParty/LegalEntity/CorporateName"
@@ -65,13 +67,14 @@ module Haltr
           xpaths[:buyer_cp_city2]     = "//Parties/BuyerParty/*/*/PostCodeAndTown"
           xpaths[:buyer_cp]           = "//Parties/BuyerParty/*/*/PostCode"
           xpaths[:currency]           = "//FileHeader/Batch/InvoiceCurrencyCode"
+          xpaths[:extra_info]         = "//Invoices/Invoice/AdditionalData/InvoiceAdditionalInformation"
           xpaths[:invoice_lines]      = "//Invoices/Invoice/Items/InvoiceLine"
           # relative to invoice_lines
           xpaths[:line_quantity]      = "Quantity"
           xpaths[:line_description]   = "ItemDescription"
           xpaths[:line_price]         = "UnitPriceWithoutTax"
           xpaths[:line_unit]          = "UnitOfMeasure"
-          xpaths[:line_taxes]         = "TaxesOutputs/Tax"
+          xpaths[:line_taxes]         = ["TaxesOutputs/Tax","TaxesWithheld/Tax"]
           # relative to invoice_lines/taxes
           xpaths[:tax_id]             = "TaxTypeCode"
           xpaths[:tax_percent]        = "TaxRate"

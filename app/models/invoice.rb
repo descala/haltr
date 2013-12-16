@@ -418,12 +418,12 @@ class Invoice < ActiveRecord::Base
 
   def extra_info_plus_tax_comments
     tax_comments = self.taxes.collect do |tax|
-      tax.comment
+      tax.comment unless tax.comment.blank?
     end.compact.join(". ")
-    if tax_comments and tax_comments.size > 0
-      "#{extra_info}. #{tax_comments}".strip
-    else
+    if tax_comments.blank?
       extra_info
+    else
+      "#{extra_info}. #{tax_comments}".strip
     end
   end
 
@@ -519,31 +519,38 @@ _INV
     invoice_total    = Haltr::Utils.get_xpath(doc,xpaths[:invoice_total])
     invoice_import   = Haltr::Utils.get_xpath(doc,xpaths[:invoice_import])
     invoice_due_date = Haltr::Utils.get_xpath(doc,xpaths[:invoice_due_date])
+    discount_percent = Haltr::Utils.get_xpath(doc,xpaths[:discount_percent])
+    discount_text    = Haltr::Utils.get_xpath(doc,xpaths[:discount_text])
+    extra_info       = Haltr::Utils.get_xpath(doc,xpaths[:extra_info])
 
-    invoice.assign_attributes(:number   => invoice_number,
-                              :client   => client,
-                              :date     => invoice_date,
-                              :total    => invoice_total.to_money(currency),
-                              :currency => currency,
-                              :import   => invoice_import.to_money(currency),
-                              :due_date => invoice_due_date,
-                              :project  => company.project,
-                              :terms    => "custom")
+    invoice.assign_attributes(
+      :number           => invoice_number,
+      :client           => client,
+      :date             => invoice_date,
+      :total            => invoice_total.to_money(currency),
+      :currency         => currency,
+      :import           => invoice_import.to_money(currency),
+      :due_date         => invoice_due_date,
+      :project          => company.project,
+      :terms            => "custom",
+      :invoice_format   => invoice_format, # facturae3.2, ubl21...
+      :transport        => transport,      # mail, upload...
+      :from             => from,           # u@mail.com, User Name...
+      :md5              => md5,
+      :original         => raw_xml,
+      :discount_percent => discount_percent.to_f,
+      :discount_text    => discount_text,
+      :extra_info       => extra_info,
+    )
 
-    invoice.invoice_format = invoice_format # facturae3.2, ubl21...
-    invoice.transport      = transport      # mail, upload...
-    invoice.from           = from           # u@mail.com, User Name...
-    invoice.md5            = md5
-    invoice.original       = raw_xml
-
-    if raw_invoice.respond_to? :filename # Mail::Part
-      invoice.file_name    = raw_invoice.filename
+    if raw_invoice.respond_to? :filename             # Mail::Part
+      invoice.file_name = raw_invoice.filename
     elsif raw_invoice.respond_to? :original_filename # UploadedFile
-      invoice.file_name    = raw_invoice.original_filename
-    elsif raw_invoice.respond_to? :path # File (on tests)
-      invoice.file_name    = File.basename(raw_invoice.path)
+      invoice.file_name = raw_invoice.original_filename
+    elsif raw_invoice.respond_to? :path              # File (tests)
+      invoice.file_name = File.basename(raw_invoice.path)
     else
-      invoice.file_name    = "can't get filename from #{raw_invoice.class}"
+      invoice.file_name = "can't get filename from #{raw_invoice.class}"
     end
 
     # invoice lines
@@ -554,7 +561,7 @@ _INV
              :price       => line.at_xpath(xpaths[:line_price]).text,
              :unit        => line.at_xpath(xpaths[:line_unit]).text
            )
-      line.xpath(xpaths[:line_taxes]).each do |line_tax|
+      line.xpath(*xpaths[:line_taxes]).each do |line_tax|
         tax = Haltr::TaxHelper.new_tax(
           :format  => invoice_format,
           :id      => line_tax.at_xpath(xpaths[:tax_id]).text,
