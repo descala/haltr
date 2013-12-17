@@ -266,6 +266,7 @@ class Invoice < ActiveRecord::Base
   def taxable_base(tax_type=nil)
     t = Money.new(0,currency)
     invoice_lines.each do |il|
+      next if il.marked_for_destruction?
       t += il.taxable_base if tax_type.nil? or il.has_tax?(tax_type)
     end
     t
@@ -441,6 +442,10 @@ total = #{total}
 _INV
   end
 
+  def can_be_exported?
+    false
+  end
+
   protected
 
   def increment_counter
@@ -486,7 +491,7 @@ _INV
   end
 
   def bank_info_belongs_to_self
-    if bank_info and bank_info.company != client.project.company
+    if bank_info and client and bank_info.company != client.project.company
       errors.add(:base, "Bank info is from other company!")
     end
   end
