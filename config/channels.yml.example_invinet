@@ -289,3 +289,17 @@ oioubl20:
   allowed_permissions:
     :send_by_mail:
 
+efffubl:
+  format: efffubl 
+  folder: free_efffubl
+  validate:
+  locales:
+    ca: "Factura EFFF UBL per email"
+    da: "EFFF UBL til email"
+    en: "EFFF UBL invoice to email"
+    es: "Factura EFFF UBL por email"
+    fr: "EFFF UBL facture par email"
+    sv: "EFFF UBL faktura till email"
+  allowed_permissions:
+    :send_by_mail:
+

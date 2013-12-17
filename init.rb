@@ -64,7 +64,7 @@ Redmine::Plugin.register :haltr do
         :invoices => [:index, :new, :edit, :create, :update, :destroy, :show, :mark_sent, :mark_closed, :mark_not_sent,
                       :destroy_payment, :facturae30, :facturae31, :facturae32, :peppolubl20, :send_invoice, :legal,
                       :update_payment_stuff, :amend_for_invoice, :download_new_invoices, :send_new_invoices, :duplicate_invoice,
-                      :biiubl20, :svefaktura, :oioubl20, :report, :context_menu, :bulk_mark_as],
+                      :biiubl20, :svefaktura, :oioubl20, :efffubl, :report, :context_menu, :bulk_mark_as],
         :received => [:index, :new, :edit, :create, :update, :destroy, :show,
                       :mark_accepted, :mark_accepted_with_mail, :mark_refused,
                       :mark_refused_with_mail, :legal, :context_menu, :original,:validate, :bulk_mark_as],
@@ -79,7 +79,7 @@ Redmine::Plugin.register :haltr do
       { :clients  => [:index, :edit, :check_cif],
         :people   => [:index, :edit],
         :invoices => [:index, :show, :facturae30, :facturae31, :facturae32, :peppolubl20,
-                      :legal, :download_new_invoices, :biiubl20, :svefaktura, :oioubl20, :report,
+                      :legal, :download_new_invoices, :biiubl20, :svefaktura, :oioubl20, :efffubl; :report,
                       :context_menu],
         :received => [:index, :show, :legal, :context_menu],
         :companies => [:my_company, :update, :linked_to_mine],
@@ -119,3 +119,4 @@ Mime::Type.register "text/xml", :peppolubl20
 Mime::Type.register "text/xml", :biiubl20
 Mime::Type.register "text/xml", :svefaktura
 Mime::Type.register "text/xml", :oioubl20
+Mime::Type.register "text/xml", :efffubl

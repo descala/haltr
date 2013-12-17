@@ -324,6 +324,7 @@ class InvoicesController < ApplicationController
         format.biiubl20    { render_clean_xml :formats => :xml, :template => 'invoices/biiubl20',    :layout => false }
         format.svefaktura  { render_clean_xml :formats => :xml, :template => 'invoices/svefaktura',  :layout => false }
         format.oioubl20    { render_clean_xml :formats => :xml, :template => 'invoices/oioubl20',    :layout => false }
+        format.efffubl     { render_clean_xml :formats => :xml, :template => 'invoices/efffubl',    :layout => false }
       else
         format.facturae30  { download_clean_xml :formats => :xml, :template => 'invoices/facturae30',  :layout => false }
         format.facturae31  { download_clean_xml :formats => :xml, :template => 'invoices/facturae31',  :layout => false }
@@ -332,6 +333,7 @@ class InvoicesController < ApplicationController
         format.biiubl20    { download_clean_xml :formats => :xml, :template => 'invoices/biiubl20',    :layout => false }
         format.svefaktura  { download_clean_xml :formats => :xml, :template => 'invoices/svefaktura',  :layout => false }
         format.oioubl20    { download_clean_xml :formats => :xml, :template => 'invoices/oioubl20',    :layout => false }
+        format.efffubl     { download_clean_xml :formats => :xml, :template => 'invoices/efffubl',     :layout => false }
       end
     end
   end
