@@ -138,6 +138,14 @@ class Client < ActiveRecord::Base
     end
   end
 
+  def set_if_blank(atr,val)
+    if send(atr).blank?
+      send("#{atr}=",val)
+    elsif send(atr) != val
+      raise "client #{atr} does not match (#{send(atr)} != #{val})"
+    end
+  end
+
   private
 
   def copy_linked_profile

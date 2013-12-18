@@ -153,10 +153,24 @@ class InvoiceTest < ActiveSupport::TestCase
   end
 
   test 'payment_method_requirements' do
+    # invoice with payment cash (no requirements)
     i = invoices(:i8)
     i.payment_method_requirements
     assert_equal(0,i.export_errors.size)
+    # invoice with payment debit (client has bank_account)
     i = invoices(:i9)
+    i.payment_method_requirements
+    assert_equal(0,i.export_errors.size)
+    # remove client bank_account
+    i.client.bank_account = ""
+    i.payment_method_requirements
+    assert_equal(1,i.export_errors.size)
+    # invoice with payment transfer (invoice has bank_info)
+    i = invoices(:i7)
+    assert_not_nil i.bank_info
+    i.payment_method_requirements
+    assert_equal(0,i.export_errors.size)
+    i.bank_info = nil
     i.payment_method_requirements
     assert_equal(1,i.export_errors.size)
   end
@@ -201,7 +215,7 @@ class InvoiceTest < ActiveSupport::TestCase
     assert_equal "Ingent-lluís", client.name
     assert_equal "Melió 113", client.address
     assert_equal "Barcelona", client.province
-    assert_equal "TUR", client.country
+    assert_equal "tr", client.country
     assert_equal "", client.website
     assert_equal "ESP6611111C@b2brouter.net", client.email
     assert_equal "08720", client.postalcode
@@ -255,13 +269,15 @@ class InvoiceTest < ActiveSupport::TestCase
     assert_equal "David Copperfield", client.name
     assert_equal "Address1", client.address
     assert_equal "state", client.province
-    assert_equal "ESP", client.country
-    assert_equal nil, client.website
+    assert_equal "es", client.country
+    assert_equal  nil, client.website
     assert_equal "suport@ingent.net", client.email
     assert_equal "08720", client.postalcode
     assert_equal "city", client.city
     assert_equal "EUR", client.currency
     assert_equal invoice.company.project, client.project
+    assert_equal "ibaaaaaaan", client.iban
+    assert_equal "biiiiiiiiic", client.bic
     # invoice
     assert       invoice.is_a?(IssuedInvoice)
     assert_equal client, invoice.client
@@ -277,6 +293,7 @@ class InvoiceTest < ActiveSupport::TestCase
     assert_equal "Anonymous", invoice.from
     assert_equal "1234", invoice.md5
     assert_equal 7089, invoice.original.size
+    assert invoice.debit?
     assert_equal "invoice_facturae32_issued.xml", invoice.file_name
     # invoice lines
     assert_equal 3, invoice.invoice_lines.size
@@ -302,6 +319,7 @@ class InvoiceTest < ActiveSupport::TestCase
     client = Client.find_by_taxcode "B12345678"
     client_count = Client.count
     assert_not_nil client
+    assert_equal "1233333333333333", client.bank_account
     client_last_changed = client.updated_at
     file    = File.new(File.join(File.dirname(__FILE__),'..','fixtures','documents','invoice_facturae32_issued2.xml'))
     invoice = Invoice.create_from_xml(file,companies(:company1),User.current.name,"1234",'upload')
@@ -321,14 +339,15 @@ class InvoiceTest < ActiveSupport::TestCase
     assert_equal "upload", invoice.transport
     assert_equal "Anonymous", invoice.from
     assert_equal "1234", invoice.md5
-    assert_equal 6419, invoice.original.size
+    assert_equal 6415, invoice.original.size
     assert_equal "invoice_facturae32_issued2.xml", invoice.file_name
     assert_equal 15, invoice.discount_percent
     assert_equal 18.00, invoice.discount.to_f
     assert_equal "promo", invoice.discount_text
     assert_equal "invoice notes", invoice.extra_info
-    assert_not_nil invoice.bank_info
-    assert_equal "1233333333333333", invoice.bank_info.bank_account
+    assert invoice.debit?
+    assert_equal "1233333333333333", invoice.client.bank_account
+    assert_nil invoice.bank_info
     # invoice lines
     assert_equal 1, invoice.invoice_lines.size
     il = invoice.invoice_lines.first

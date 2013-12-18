@@ -68,6 +68,13 @@ module Haltr
           xpaths[:buyer_cp]           = "//Parties/BuyerParty/*/*/PostCode"
           xpaths[:currency]           = "//FileHeader/Batch/InvoiceCurrencyCode"
           xpaths[:extra_info]         = "//Invoices/Invoice/AdditionalData/InvoiceAdditionalInformation"
+          xpaths[:to_be_debited]      = "//Invoices/Invoice/PaymentDetails/Installment/AccountToBeDebited"
+          xpaths[:to_be_credited]     = "//Invoices/Invoice/PaymentDetails/Installment/AccountToBeCredited"
+          # relative to AccountToBe*
+          xpaths[:bank_account]       = "*/AccountNumber"
+          xpaths[:iban]               = "*/IBAN"
+          xpaths[:bic]                = "*/BankCode"
+
           xpaths[:invoice_lines]      = "//Invoices/Invoice/Items/InvoiceLine"
           # relative to invoice_lines
           xpaths[:line_quantity]      = "Quantity"

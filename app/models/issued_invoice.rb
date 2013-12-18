@@ -249,7 +249,7 @@ class IssuedInvoice < InvoiceDocument
 
   def payment_method_requirements
     if debit?
-      c = Client.find client_id
+      c = self.client
       if c.bank_account.blank? and !c.use_iban?
         add_export_error("#{l(:field_payment_method)} (#{l(:debit)}) #{l(:requires_client_bank_account)}")
       end

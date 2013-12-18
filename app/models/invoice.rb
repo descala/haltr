@@ -244,7 +244,7 @@ class Invoice < ActiveRecord::Base
     rescue
       I18n.default_locale
     end
-  end 
+  end
 
   def amended?
     false # Only IssuedInvoices can be an amend
@@ -487,7 +487,12 @@ _INV
                            Haltr::Utils.get_xpath(doc,xpaths["#{client_role}_name2"])
       client_address     = Haltr::Utils.get_xpath(doc,xpaths["#{client_role}_address"])
       client_province    = Haltr::Utils.get_xpath(doc,xpaths["#{client_role}_province"])
-      client_countrycode = Haltr::Utils.get_xpath(doc,xpaths["#{client_role}_countrycode"])
+      if invoice_format =~ /^facturae/
+        country_alpha3 = Haltr::Utils.get_xpath(doc,xpaths["#{client_role}_countrycode"])
+        client_countrycode = SunDawg::CountryIsoTranslater.translate_standard(country_alpha3,"alpha3","alpha2").downcase
+      else
+        client_countrycode = Haltr::Utils.get_xpath(doc,xpaths["#{client_role}_countrycode"])
+      end
       client_website     = Haltr::Utils.get_xpath(doc,xpaths["#{client_role}_website"])
       client_email       = Haltr::Utils.get_xpath(doc,xpaths["#{client_role}_email"])
       client_cp_city     = Haltr::Utils.get_xpath(doc,xpaths["#{client_role}_cp_city"]) ||
@@ -553,6 +558,19 @@ _INV
       invoice.file_name = "can't get filename from #{raw_invoice.class}"
     end
 
+    if Haltr::Utils.get_xpath(doc,xpaths[:to_be_debited])
+      invoice.payment_method=PAYMENT_DEBIT
+    elsif Haltr::Utils.get_xpath(doc,xpaths[:to_be_credited])
+      invoice.payment_method=PAYMENT_TRANSFER
+    end
+
+    # bank info
+    if invoice.debit?
+      invoice.parse_xml_bank_info(doc.xpath(xpaths[:to_be_debited]).to_s)
+    elsif invoice.transfer?
+      invoice.parse_xml_bank_info(doc.xpath(xpaths[:to_be_credited]).to_s)
+    end
+
     # invoice lines
     doc.xpath(xpaths[:invoice_lines]).each do |line|
       il = InvoiceLine.new(
@@ -575,6 +593,41 @@ _INV
     invoice.save!
     logger.info "created new invoice with id #{invoice.id} for company #{company.name}"
     return invoice
+  end
+
+  def parse_xml_bank_info(xml)
+    doc          = Nokogiri::XML(xml)
+    xpaths       = Haltr::Utils.xpaths_for(invoice_format)
+    bank_account = Haltr::Utils.get_xpath(doc,xpaths[:bank_account])
+    iban         = Haltr::Utils.get_xpath(doc,xpaths[:iban])
+    bic          = Haltr::Utils.get_xpath(doc,xpaths[:bic])
+    return unless bank_account or ( iban and bic )
+    if (is_a? IssuedInvoice and debit?) or (is_a? ReceivedInvoice and transfer?)
+      # account is client account, where we should charge
+      # or         client account, where we should transfer
+      if bank_account
+        client.set_if_blank(:bank_account,bank_account)
+      else
+        client.set_if_blank(:iban,iban)
+        client.set_if_blank(:bic,bic)
+      end
+      client.save!
+    elsif (is_a? ReceivedInvoice and debit?) or (is_a? IssuedInvoice and transfer?)
+      # account is our account, where we should be charged
+      # or         our account, where client should transfer
+      if bank_account
+        self.bank_info = company.bank_infos.find_by_bank_accont(bank_account)
+      else
+        self.bank_info = company.bank_infos.find_by_iban_and_bic(iban,bic)
+      end
+      unless self.bank_info
+        #TODO: check if user can add more bank infos to his company
+        self.bank_info = BankInfo.new(:bank_account => bank_account,
+                                      :iban         => iban,
+                                      :bic          => bic,
+                                      :company_id   => company.id)
+      end
+    end
   end
 
   def can_be_exported?
