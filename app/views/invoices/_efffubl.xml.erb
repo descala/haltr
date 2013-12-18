@@ -24,7 +24,7 @@
     <cac:AdditionalDocumentReference>
       <cbc:ID><%= "efff_invoice_#{@invoice.id}.pdf" %></cbc:ID>
       <cac:Attachment>
-        <cbc:EmbeddedDocumentBinaryObject><%= @efffubl_base64_pdf %></cbc:EmbeddedDocumentBinaryObject>
+        <cbc:EmbeddedDocumentBinaryObject mimeCode="application/pdf"><%= @efffubl_base64_pdf %></cbc:EmbeddedDocumentBinaryObject>
       </cac:Attachment>
     </cac:AdditionalDocumentReference>
     <cac:AccountingSupplierParty>
@@ -47,10 +47,10 @@
      </cac:Party>
     </cac:AccountingSupplierParty>
     <cac:AccountingCustomerParty>
+      <cac:Party>
         <cac:PartyIdentification>
           <cbc:ID><%=h @client.taxcode%></cbc:ID>
         </cac:PartyIdentification>
-      <cac:Party>
         <cac:PartyName>
           <cbc:Name><%=h @client.name%></cbc:Name>
         </cac:PartyName>
