@@ -64,3 +64,10 @@ oioubl20:
     - ubl_invoice_has_no_taxes_withheld
     - oioubl20_fields
   content-type: "text-xml"
+
+efffubl:
+  name: "EFFF"
+  validate:
+    - ubl_invoice_has_no_taxes_withheld
+    - efffubl_fields
+  content-type: "text-xml"

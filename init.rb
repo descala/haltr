@@ -79,7 +79,7 @@ Redmine::Plugin.register :haltr do
       { :clients  => [:index, :edit, :check_cif],
         :people   => [:index, :edit],
         :invoices => [:index, :show, :facturae30, :facturae31, :facturae32, :peppolubl20,
-                      :legal, :download_new_invoices, :biiubl20, :svefaktura, :oioubl20, :efffubl; :report,
+                      :legal, :download_new_invoices, :biiubl20, :svefaktura, :oioubl20, :efffubl, :report,
                       :context_menu],
         :received => [:index, :show, :legal, :context_menu],
         :companies => [:my_company, :update, :linked_to_mine],

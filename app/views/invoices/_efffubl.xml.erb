@@ -22,11 +22,9 @@
           </cac:BillingReference>
 <% end -%>
     <cac:AdditionalDocumentReference>
-      <cbc:ID><!-- TODO Nom del pdf generat --></cbc:ID>
+      <cbc:ID><%= "efff_invoice_#{@invoice.id}.pdf" %></cbc:ID>
       <cac:Attachment>
-        <cbc:EmbeddedDocumentBinaryObject>
-          <!-- TODO Base64 PDF File -->
-        </cbc:EmbeddedDocumentBinaryObject>
+        <cbc:EmbeddedDocumentBinaryObject><%= @efffubl_base64_pdf %></cbc:EmbeddedDocumentBinaryObject>
       </cac:Attachment>
     </cac:AdditionalDocumentReference>
     <cac:AccountingSupplierParty>
@@ -80,18 +78,13 @@
                 </cac:FinancialInstitution>
               </cac:FinancialInstitutionBranch>
             </cac:PayeeFinancialAccount>
+<% end -%>
     </cac:PaymentMeans>
 <% end -%>
 <% if @invoice.discount_percent > 0 -%>
         <cac:AllowanceCharge>
           <cbc:ChargeIndicator>false</cbc:ChargeIndicator>
           <cbc:Amount currencyID="<%=h @client.currency%>"><%=h precision(@invoice.discount.dollars,2)%></cbc:Amount>
-          <cac:TaxCategory>
-            <cbc:Percent><!-- TODO Posar el percentatge de IVA --></cbc:Percent>
-            <cac:TaxScheme>
-               <cbc:ID schemeID="UN/ECE 5153" schemeAgencyID="6">VAT</cbc:ID>
-            </cac:TaxScheme>
-          </cac:TaxCategory>
         </cac:AllowanceCharge>
 <% end -%>
 <% @invoice.taxes_by_category.each do |tax_name,categories| -%>
@@ -107,9 +100,6 @@
               <cbc:Percent><%=h precision(tax.percent)%></cbc:Percento>
               <cac:TaxCategory>
                 <cbc:ID schemeID="UN/ECE 5305" schemeAgencyID="6"><%=category%></cbc:ID>
-                <% if tax.comment and tax.comment.size > 0 %>
-                  <cbc:TaxExemptionReasonCode><!-- TODO ha de ser un code i no el  tax.comment --></cbc:TaxExemptionReasonCode>
-                <% end %>
                 <cac:TaxScheme>
                   <cbc:ID schemeID="UN/ECE 5153" schemeAgencyID="6"><%=Haltr::TaxHelper.ubl(tax.name)%></cbc:ID>
                 </cac:TaxScheme>
@@ -133,15 +123,7 @@
           <cac:TaxTotal>
             <% invoice_line.taxes.each do |tax_line| -%>
               <cbc:TaxAmount currencyID="<%=h @client.currency%>"><%=h precision(invoice_line.price*invoice_line.quantity*tax_line.percent,2)%></cbc:TaxAmount>
-              <!-- TODO Veure si cal el cac:TaxSubtotal -->
-            <cac:TaxCategory>
-              <cbc:ID schemeID="UN/ECE 5305" schemeAgencyID="6"><%=h tax_line.category%></cbc:ID>
-              <cac:TaxScheme>
-                <cbc:ID schemeID="UN/ECE 5153" schemeAgencyID="6"><%= Haltr::TaxHelper.ubl(tax_line.name) %></cbc:ID>
-              </cac:TaxScheme>
-            </cac:TaxCategory>
-          <% end -%>
-
+            <% end -%>
           </cac:TaxTotal>
           <cac:Item>
             <cbc:Description><%=h invoice_line.description%></cbc:Description>
