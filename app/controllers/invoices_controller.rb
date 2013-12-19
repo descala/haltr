@@ -326,6 +326,7 @@ class InvoicesController < ApplicationController
         format.biiubl20    { render_clean_xml :formats => :xml, :template => 'invoices/biiubl20',    :layout => false }
         format.svefaktura  { render_clean_xml :formats => :xml, :template => 'invoices/svefaktura',  :layout => false }
         format.oioubl20    { render_clean_xml :formats => :xml, :template => 'invoices/oioubl20',    :layout => false }
+        format.efffubl     { add_efffubl_base64_pdf; render_clean_xml :formats => :xml, :template => 'invoices/efffubl',    :layout => false }
       else
         format.facturae30  { download_clean_xml :formats => :xml, :template => 'invoices/facturae30',  :layout => false }
         format.facturae31  { download_clean_xml :formats => :xml, :template => 'invoices/facturae31',  :layout => false }
@@ -334,6 +335,7 @@ class InvoicesController < ApplicationController
         format.biiubl20    { download_clean_xml :formats => :xml, :template => 'invoices/biiubl20',    :layout => false }
         format.svefaktura  { download_clean_xml :formats => :xml, :template => 'invoices/svefaktura',  :layout => false }
         format.oioubl20    { download_clean_xml :formats => :xml, :template => 'invoices/oioubl20',    :layout => false }
+        format.efffubl     { add_efffubl_base64_pdf; download_clean_xml :formats => :xml, :template => 'invoices/efffubl',    :layout => false }
       end
     end
   end
@@ -625,6 +627,7 @@ class InvoicesController < ApplicationController
   end
 
   def create_xml_file(format)
+    add_efffubl_base64_pdf if format == 'efffubl'
     xml = render_to_string(:template => "invoices/#{format}",
                            :formats => :xml, :layout => false)
     xml_file = Tempfile.new("invoice_#{@invoice.id}.xml")
@@ -826,6 +829,11 @@ XSL
     end
   end
 
+  def add_efffubl_base64_pdf
+    file = create_pdf_file
+    @efffubl_base64_pdf = Base64::encode64(File.read(file.path))
+  end
+
   def import
     if request.post?
       file = params[:file]
@@ -842,4 +850,5 @@ XSL
     flash[:error] = $!.message
     redirect_to :action => 'import', :project_id => @project
   end
+
 end

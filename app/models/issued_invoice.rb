@@ -200,7 +200,7 @@ class IssuedInvoice < InvoiceDocument
     errors +=  export_errors.collect {|e| e}.join(", ") if export_errors and export_errors.size > 0
     errors += self.errors.full_messages.join(", ")
     recipients = nil
-    if %w(ublinvoice_20 facturae_30 facturae_31 facturae_32 signed_pdf svefaktura peppolbii peppol oioubl20).include?(client.invoice_format)
+    if %w(ublinvoice_20 facturae_30 facturae_31 facturae_32 signed_pdf svefaktura peppolbii peppol oioubl20 efffubl).include?(client.invoice_format)
       recipients = "\n#{self.recipient_emails.join("\n")}"
     end
     "#{format}<br/>#{errors}<br/>#{recipients}".html_safe
@@ -311,6 +311,9 @@ class IssuedInvoice < InvoiceDocument
   end
 
   def oioubl20_fields
+  end
+
+  def efffubl_fields
   end
 
   def release_amended
