@@ -29,7 +29,3 @@ Redmine::MenuManager.map :payments_menu do |menu|
   menu.push :charge_n19, {:controller=>'payments',:action=>'n19_index'}, :param => :project_id
   menu.push :import_aeb43, {:controller=>'payments',:action=>'import_aeb43_index'}, :param => :project_id
 end
-
-Redmine::MenuManager.map :admin_menu do |menu|
-  menu.push :statistics, {:controller => 'statistics', :action => 'index'}, :caption => :label_statistics
-end
