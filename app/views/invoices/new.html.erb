@@ -5,7 +5,9 @@
     <%= labelled_form_for :invoice, @invoice, :url => { :action => 'create', :project_id => @project }, :html => {:class=>'formee'} do |f| %>
       <%= render :partial => 'invoices/form', :locals => { :f => f } %>
       <%= f.submit l(:button_create), :name => 'create' %>
-      <%= f.submit l(:button_create_and_send), :name => 'create_and_send' %>
+      <% unless @invoice.is_a? InvoiceTemplate or @invoice.is_a? DraftInvoice -%>
+        <%= f.submit l(:button_create_and_send), :name => 'create_and_send' %>
+      <% end -%>
     <% end %>
 
   </div>
