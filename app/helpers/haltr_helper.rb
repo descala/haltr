@@ -16,9 +16,9 @@ module HaltrHelper
     currency = Money::Currency.new(import.currency)
     currency_symbol = currency.symbol || ""
     if currency.subunit_to_unit == 1
-      number_to_currency(import, :unit => import.currency_symbol, :precision => 0)
+      number_to_currency(import, :unit => currency_symbol, :precision => 0)
     else
-      number_to_currency(import, :unit => import.currency_symbol)
+      number_to_currency(import, :unit => currency_symbol)
     end
   end
 
