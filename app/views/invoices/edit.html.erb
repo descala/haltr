@@ -9,7 +9,9 @@
         <%= render :partial => 'invoices/form', :locals => { :f => f } %>
       <% end -%>
       <%= f.submit l(:button_save), :name => 'save' %>
-      <%= f.submit l(:button_save_and_send), :name => 'save_and_send' %>
+      <% unless @invoice.is_a? InvoiceTemplate or @invoice.is_a? DraftInvoice -%>
+        <%= f.submit l(:button_save_and_send), :name => 'save_and_send' %>
+      <% end -%>
     <% end %>
 
   </div>

@@ -14,10 +14,11 @@ module HaltrHelper
 
   def money(import)
     currency = Money::Currency.new(import.currency)
+    currency_symbol = currency.symbol || ""
     if currency.subunit_to_unit == 1
-      number_to_currency(import, :unit => import.currency.symbol, :precision => 0)
+      number_to_currency(import, :unit => currency_symbol, :precision => 0)
     else
-      number_to_currency(import, :unit => import.currency.symbol)
+      number_to_currency(import, :unit => currency_symbol)
     end
   end
 
@@ -25,10 +26,11 @@ module HaltrHelper
     precision = line.price.to_s.split(".").last.size
     precision = 2 if precision == 1
     currency = Money::Currency.new(line.invoice.currency)
+    currency_symbol = currency.symbol || ""
     if currency.subunit_to_unit == 1 and precision == 2
       precision = 0
     end
-    number_to_currency(line.price, :unit => currency.symbol, :precision => precision)
+    number_to_currency(line.price, :unit => currency_symbol, :precision => precision)
   end
 
   def quantity(q)
