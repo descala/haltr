@@ -579,6 +579,7 @@ _INV
              :price       => line.at_xpath(xpaths[:line_price]).text,
              :unit        => line.at_xpath(xpaths[:line_unit]).text
            )
+      # invoice taxes. Known taxes are described at config/taxes.yml
       line.xpath(*xpaths[:line_taxes]).each do |line_tax|
         tax = Haltr::TaxHelper.new_tax(
           :format  => invoice_format,

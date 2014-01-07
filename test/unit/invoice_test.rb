@@ -34,7 +34,7 @@ class InvoiceTest < ActiveSupport::TestCase
     i = Invoice.find i.id
     assert_equal Date.new(2008,12,1), i.due_date
   end
- 
+
   test "invoice number increment right" do
     assert_equal "not_an_i1", IssuedInvoice.increment_right("not_an_i")
     assert_equal "1", IssuedInvoice.increment_right(nil)
