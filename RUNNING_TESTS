@@ -29,3 +29,5 @@ rm -rf test/fixtures/configuration/
 # hopefully fixed in next zeus release
 
 # guard notifications doesn't work due to this bug: https://github.com/guard/guard-rspec/issues/134
+
+# changing some models fully reloads zeus, making it so slow: https://github.com/burke/zeus/issues/433#issuecomment-31518132
