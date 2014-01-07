@@ -27,6 +27,8 @@ rm -rf test/fixtures/configuration/
 
 # running all tests on guard crashes due to this bug: https://github.com/burke/zeus/issues/352
 # hopefully fixed in next zeus release
+# You can run all tests with:
+zeus test plugins/haltr/test
 
 # guard notifications doesn't work due to this bug: https://github.com/guard/guard-rspec/issues/134
 
