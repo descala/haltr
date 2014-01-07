@@ -12,6 +12,8 @@ gem 'wicked_pdf'
 group :test do
   gem 'spork-testunit'
   gem 'guard-spork'
-  gem 'guard-test'
+  gem 'guard-test', :git => 'https://github.com/lluis/guard-test.git', :branch => 'add_test_paths_to_zeus_test_command'
+  gem 'zeus'
   gem 'rb-inotify', '~> 0.9'
+  gem 'libnotify'
 end

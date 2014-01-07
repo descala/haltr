@@ -6,14 +6,17 @@ rake db:drop db:create db:migrate redmine:load_default_data RAILS_ENV=test REDMI
 
 rake db:fixtures:load redmine:plugins:migrate RAILS_ENV=test
 
-# to run test with Guard - https://github.com/guard/guard
+# to run test with Zeus + Guard
+#
+# https://github.com/burke/zeus
+# https://github.com/guard/guard
 
-ln -s plugins/haltr/Guardfile
-bundle exec spork --bootstrap
-# and edit test/test_helper.rb 
+# start zeus
+zeus start
 
-bundle exec guard
-
+# start guard in another terminal
+# need to use bundle since guard-test is installed from github on non standard place, see Gemfile
+bundle exec guard -G plugins/haltr/Guardfile
 
 # ISSUES
 
@@ -22,3 +25,7 @@ bundle exec guard
 
 rm -rf test/fixtures/configuration/
 
+# running all tests on guard crashes due to this bug: https://github.com/burke/zeus/issues/352
+# hopefully fixed in next zeus release
+
+# guard notifications doesn't work due to this bug: https://github.com/guard/guard-rspec/issues/134
