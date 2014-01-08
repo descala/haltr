@@ -13,7 +13,7 @@ class ClientTest < ActiveSupport::TestCase
     assert_equal(bank_infos(:bi1),c.bank_info)
     assert c.valid?
     c.payment_method = "#{Invoice::PAYMENT_TRANSFER}_2"
-    assert_false c.valid? # bank_info is from other company
+    assert !c.valid? # bank_info is from other company
     c.payment_method = Invoice::PAYMENT_TRANSFER
     assert c.valid?
     assert_nil c.bank_info
