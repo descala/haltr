@@ -141,28 +141,6 @@ class Invoice < ActiveRecord::Base
     terms_object.description
   end
 
-  def payment_method_string
-    if debit? and client.use_iban?
-      iban = client.iban || ""
-      bic  = client.bic || ""
-      "#{l(:debit_str)} BIC #{bic} IBAN #{iban[0..3]} #{iban[4..7]} #{iban[8..11]} **** **** #{iban[20..23]}"
-    elsif transfer? and bank_info and bank_info.use_iban?
-      iban = bank_info.iban || ""
-      bic  = bank_info.bic || ""
-      "#{l(:transfer_str)} BIC #{bic} IBAN #{iban[0..3]} #{iban[4..7]} #{iban[8..11]} #{iban[12..15]} #{iban[16..19]} #{iban[20..23]}"
-    elsif debit?
-      ba = client.bank_account || ""
-      "#{l(:debit_str)} #{ba[0..3]} #{ba[4..7]} ** ******#{ba[16..19]}"
-    elsif transfer?
-      ba = bank_info.bank_account ||= "" rescue ""
-      "#{l(:transfer_str)} #{ba[0..3]} #{ba[4..7]} #{ba[8..9]} #{ba[10..19]}"
-    elsif special?
-      payment_method_text
-    else
-      l(:cash_str)
-    end
-  end
-
   # for transfer payment method it returns an entry for each bank_account on company:
   # ["transfer to <bank_info.name>", "<PAYMENT_TRANSFER>_<bank_info.id>"]
   # or one generic entry if there are no bank_infos on company:

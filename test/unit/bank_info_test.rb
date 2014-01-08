@@ -11,7 +11,7 @@ class BankInfoTest < ActiveSupport::TestCase
   test "iban requires bic" do
     bi3 = bank_infos(:bi3)
     assert_false bi3.valid?
-    bi3.bic = "1"
+    bi3.bic = "12345678"
     assert bi3.valid?
   end
 
