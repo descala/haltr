@@ -11,9 +11,9 @@ guard :test, :zeus => true, :all_on_start => false, :all_after_pass => false, :t
   watch(%r{^#{H}/app/controllers/(.+)\.rb$})              { |m| "#{H}/test/functional/#{m[1]}_test.rb" }
   watch(%r{^#{H}/app/views/.+\.erb$})                     { ["#{H}/test/functional", "#{H}/test/integration"] }
   watch(%r{^#{H}/test/.+_test\.rb$})
-  watch('#{H}/app/controllers/application_controller.rb') { ["#{H}/test/functional", "#{H}/test/integration"] }
-  watch('#{H}/app/controllers/invoices_controller.rb')    { "#{H}/test/integration/invoice_edit_test.rb" }
-  watch('#{H}/test/test_helper.rb')                       { "#{H}/test" }
+  watch("#{H}/app/controllers/application_controller.rb") { ["#{H}/test/functional", "#{H}/test/integration"] }
+  watch("#{H}/app/controllers/invoices_controller.rb")    { "#{H}/test/integration/invoice_edit_test.rb" }
+  watch("#{H}/test/test_helper.rb")                       { "#{H}/test" }
 end
 
 #notification :notifysend

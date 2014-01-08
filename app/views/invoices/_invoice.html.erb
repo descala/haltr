@@ -40,8 +40,8 @@
   <% unless @invoice.due_date.blank? -%>
     <span class="invoice-terms<%=h " pastdue" if @invoice.past_due?%>"><%=h l(:field_due_date)%> <%=h format_date @invoice.due_date %> <%= "(#{@invoice.terms_description})" unless @invoice.custom_due? %></span><br/>
   <% end -%>
-  <% unless @invoice.payment_method_string.blank? -%>
-    <span class="invoice-terms"><%=h @invoice.payment_method_string %></span><br/>
+  <% unless payment_method_info.blank? -%>
+    <span class="invoice-terms"><%=h payment_method_info.html_safe %></span><br/>
   <% end -%>
   <% unless @invoice.ponumber.blank? -%>
     <span class="invoice-terms"><%=h "#{t(:field_ponumber)} #{@invoice.ponumber}" %></span><br/>
