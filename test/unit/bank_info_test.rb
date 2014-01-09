@@ -15,4 +15,20 @@ class BankInfoTest < ActiveSupport::TestCase
     assert bi3.valid?
   end
 
+  test "bic too long" do
+    bi3 = bank_infos(:bi3)
+    bi3.bic = "123456789012"
+    assert !bi3.valid?
+  end
+
+  test "bic allow nil and blank" do
+    bi3 = bank_infos(:bi3)
+    bi3.iban = ""
+    bi3.bic = ""
+    assert bi3.valid?
+    bi3.bic = nil
+    bi3.bic = nil
+    assert bi3.valid?
+  end
+
 end
