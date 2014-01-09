@@ -1,6 +1,5 @@
 = Haltr - Hackers don't do books
 
-
 Haltr is a simple invoicing solution. Manages clients, providers, invoices,
 templates and payments. Imports and exports invoices. Supported formats include
 PDF, UBL and facturae.
