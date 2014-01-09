@@ -229,6 +229,9 @@ es:
   view_mail: "Ver email"
   public_link: "Enlace público"
   mark_as_received: "Marcada como recibida"
+  uploaded: "Subida"
+  by_email: "Enviada por correo"
+  download_original: "Descargar original"
 
   # Invoice templates
   label_invoice_template_new: Nueva plantilla

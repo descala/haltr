@@ -61,19 +61,6 @@ class ReceivedController < InvoicesController
     end
   end
 
-  def original
-    if @invoice.invoice_format == 'pdf'
-      send_data @invoice.original,
-        :type => 'application/pdf',
-        :filename => @invoice.pdf_name,
-        :disposition => params[:disposition] == 'inline' ? 'inline' : 'attachment'
-    else
-      send_data @invoice.original,
-        :type => 'text/xml; charset=UTF-8;',
-        :disposition => "attachment; filename=#{@invoice.xml_name}"
-    end
-  end
-
   def mark_accepted_with_mail
     MailNotifier.received_invoice_accepted(@invoice,params[:reason]).deliver
     mark_accepted

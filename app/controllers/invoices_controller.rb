@@ -839,7 +839,7 @@ XSL
       file = params[:file]
       if file && file.size > 0
         md5 = `md5sum #{file.path} | cut -d" " -f1`.chomp
-        invoice = Invoice.create_from_xml(file,@project.company,User.current.name,md5,'upload')
+        invoice = Invoice.create_from_xml(file,@project.company,User.current.name,md5,'uploaded')
         redirect_to invoice_path(invoice)
       else
         flash[:warning] = l(:notice_uploaded_file_not_found)
@@ -849,6 +849,19 @@ XSL
   rescue
     flash[:error] = $!.message
     redirect_to :action => 'import', :project_id => @project
+  end
+
+  def original
+    if @invoice.invoice_format == 'pdf'
+      send_data @invoice.original,
+        :type => 'application/pdf',
+        :filename => @invoice.pdf_name,
+        :disposition => params[:disposition] == 'inline' ? 'inline' : 'attachment'
+    else
+      send_data @invoice.original,
+        :type => 'text/xml; charset=UTF-8;',
+        :disposition => "attachment; filename=#{@invoice.xml_name}"
+    end
   end
 
 end

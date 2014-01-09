@@ -44,6 +44,8 @@ module InvoicesHelper
       "( #{link_to_function(l(:view_mail), "$('#event_#{e.id}').show();")} )"
     elsif e.name == "new" and e.invoice and e.invoice.client and e.invoice.visible_by_client?
       " (#{link_to_if_authorized(l(:public_link), :controller=>'invoices', :action=>'view', :client_hashid=>e.invoice.client.hashid, :invoice_id=>e.invoice.id)})"
+    elsif %w(uploaded by_email).include? e.name
+      " (#{link_to_if_authorized(l(:download_original), invoices_original_path(e.invoice))})"
     else
       ""
     end.html_safe
@@ -109,9 +111,9 @@ module InvoicesHelper
   end
 
   def transport_text(invoice)
-    if invoice.transport == "email"
+    if invoice.transport == "by_email"
       l(:by_mail_from, :email => invoice.from)
-    #eslif invoice.transport == "upload" ...
+    #eslif invoice.transport == "uploaded" ...
     end
   end
 

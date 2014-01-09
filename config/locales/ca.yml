@@ -226,6 +226,9 @@ ca:
   view_mail: "Veure email"
   public_link: "Enllaç públic"
   mark_as_received: "Marcada com a rebuda"
+  uploaded: "Pujada"
+  by_email: "Enviada per correu"
+  download_original: "Descarregar original"
 
   # Invoice templates
   label_invoice_template_new: Nova factura recurrent

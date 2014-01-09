@@ -62,6 +62,8 @@ match 'invoices/destroy_payment/:id' => 'invoices#destroy_payment', :via => :del
 match 'invoices/mail/:id' => 'invoices#mail', :via => :get
 match 'invoices/base64doc/:id/:doc_format' => 'invoices#base64doc', :via => [:get,:post]
 match 'invoices/haltr_sign' => 'invoices#haltr_sign', :via => :get
+match 'invoices/original/:id' => 'invoices#original', :via => :get, :as => :invoices_original
+match 'received/original/:id' => 'received#original', :via => :get, :as => :received_original
 resources :invoices
 
 # public access to an invoice using the client hash
@@ -78,7 +80,6 @@ match 'received/mark_refused/:id' => 'received#mark_refused', :as => :mark_refus
 match 'received/mark_refused_with_mail/:id' => 'received#mark_refused_with_mail', :as => :mark_refused_with_mail
 match 'received/mark_accepted/:id' => 'received#mark_accepted', :as => :mark_accepted
 match 'received/mark_accepted_with_mail/:id' => 'received#mark_accepted_with_mail', :as => :mark_accepted_with_mail
-match 'received/original/:id' => 'received#original', :via => :get, :as => :received_original
 match 'received/validate/:id' => 'received#validate', :via => :get, :as => :received_validate
 
 resources :invoice_templates

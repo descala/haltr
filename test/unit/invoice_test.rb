@@ -208,7 +208,7 @@ class InvoiceTest < ActiveSupport::TestCase
   test 'create received_invoice from facturae32' do
     assert_nil Client.find_by_taxcode "ESP6611142C"
     file    = File.new(File.join(File.dirname(__FILE__),'..','fixtures','documents','invoice_facturae32_signed.xml'))
-    invoice = Invoice.create_from_xml(file,companies(:company1),User.current.name,"1234",'upload')
+    invoice = Invoice.create_from_xml(file,companies(:company1),User.current.name,"1234",'uploaded')
     client  = Client.find_by_taxcode "ESP6611142C"
     assert_not_nil client
     # client
@@ -234,7 +234,7 @@ class InvoiceTest < ActiveSupport::TestCase
     assert_equal "2012-06-01", invoice.due_date.to_s
     assert_equal "EUR", invoice.currency
     assert_equal "facturae3.2", invoice.invoice_format
-    assert_equal "upload", invoice.transport
+    assert_equal "uploaded", invoice.transport
     assert_equal "Anonymous", invoice.from
     assert_equal "1234", invoice.md5
     assert_equal 12501, invoice.original.size
@@ -263,7 +263,7 @@ class InvoiceTest < ActiveSupport::TestCase
   test 'create issued_invoice from facturae32' do
     assert_nil Client.find_by_taxcode "ESP6611142C"
     file    = File.new(File.join(File.dirname(__FILE__),'..','fixtures','documents','invoice_facturae32_issued.xml'))
-    invoice = Invoice.create_from_xml(file,companies(:company1),User.current.name,"1234",'upload')
+    invoice = Invoice.create_from_xml(file,companies(:company1),User.current.name,"1234",'uploaded')
     client  = Client.find_by_taxcode "ESP6611142C"
     assert_not_nil client
     # client
@@ -291,7 +291,7 @@ class InvoiceTest < ActiveSupport::TestCase
     assert_equal "2012-06-01", invoice.due_date.to_s
     assert_equal "EUR", invoice.currency
     assert_equal "facturae3.2", invoice.invoice_format
-    assert_equal "upload", invoice.transport
+    assert_equal "uploaded", invoice.transport
     assert_equal "Anonymous", invoice.from
     assert_equal "1234", invoice.md5
     assert_equal 7089, invoice.original.size
@@ -325,7 +325,7 @@ class InvoiceTest < ActiveSupport::TestCase
     assert_equal "1233333333333333", client.bank_account
     client_last_changed = client.updated_at
     file    = File.new(File.join(File.dirname(__FILE__),'..','fixtures','documents','invoice_facturae32_issued2.xml'))
-    invoice = Invoice.create_from_xml(file,companies(:company1),User.current.name,"1234",'upload')
+    invoice = Invoice.create_from_xml(file,companies(:company1),User.current.name,"1234",'uploaded')
     assert_equal client_last_changed, client.updated_at
     assert_equal client_count, Client.count
     # invoice
@@ -339,7 +339,7 @@ class InvoiceTest < ActiveSupport::TestCase
     assert_equal "2014-01-31", invoice.due_date.to_s
     assert_equal "USD", invoice.currency
     assert_equal "facturae3.2", invoice.invoice_format
-    assert_equal "upload", invoice.transport
+    assert_equal "uploaded", invoice.transport
     assert_equal "Anonymous", invoice.from
     assert_equal "1234", invoice.md5
     assert_equal 6415, invoice.original.size
@@ -374,7 +374,7 @@ class InvoiceTest < ActiveSupport::TestCase
     assert_equal "1233333333333333", client.bank_account
     client_last_changed = client.updated_at
     file    = File.new(File.join(File.dirname(__FILE__),'..','fixtures','documents','invoice_facturae32_issued3.xml'))
-    invoice = Invoice.create_from_xml(file,companies(:company1),User.current.name,"1234",'upload')
+    invoice = Invoice.create_from_xml(file,companies(:company1),User.current.name,"1234",'uploaded')
     assert_equal client_last_changed, client.updated_at
     assert_equal client_count, Client.count
     # invoice
@@ -388,10 +388,10 @@ class InvoiceTest < ActiveSupport::TestCase
     assert_equal "2014-02-08", invoice.due_date.to_s
     assert_equal "EUR", invoice.currency
     assert_equal "facturae3.2", invoice.invoice_format
-    assert_equal "upload", invoice.transport
+    assert_equal "uploaded", invoice.transport
     assert_equal "Anonymous", invoice.from
     assert_equal "1234", invoice.md5
-#    assert_equal 6415, invoice.original.size
+    assert_equal 6517, invoice.original.size
     assert_equal "invoice_facturae32_issued3.xml", invoice.file_name
     assert invoice.cash?, "invoice payment is cash"
     assert_equal "1233333333333333", invoice.client.bank_account
@@ -416,6 +416,9 @@ class InvoiceTest < ActiveSupport::TestCase
     assert_equal 'IVA',       il.taxes[0].name
     assert_equal 21.0,        il.taxes[0].percent
     assert_equal 'S',         il.taxes[0].category
+    # events
+    assert_equal 1,        invoice.events.size
+    assert_equal "uploaded", invoice.events.first.name
   end
 
 end

@@ -46,7 +46,7 @@ class HaltrMailHandler < MailHandler # < ActionMailer::Base
                 logger.error "Discarding repeated invoice with md5 #{md5}. Invoice.id = #{found_invoice.id}"
               else
                 if raw_invoice.content_type =~ /xml/
-                  invoices << Invoice.create_from_xml(raw_invoice,company,from,md5,'email')
+                  invoices << Invoice.create_from_xml(raw_invoice,company,from,md5,'by_email')
                   #TODO rescue and bounce?
                 elsif raw_invoice.content_type =~ /pdf/
                   invoices << process_pdf_file(raw_invoice,company,from,md5)

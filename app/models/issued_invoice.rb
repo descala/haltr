@@ -263,7 +263,11 @@ class IssuedInvoice < InvoiceDocument
   protected
 
   def create_event
-    Event.create(:name=>'new',:invoice=>self,:user=>User.current)
+    if self.transport.blank?
+      Event.create(:name=>'new',:invoice=>self,:user=>User.current)
+    else
+      Event.create(:name=>self.transport,:invoice=>self,:user=>User.current)
+    end
   end
 
   # errors to be raised on sending invoice
