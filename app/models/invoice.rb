@@ -34,7 +34,7 @@ class Invoice < ActiveRecord::Base
   has_one :amend_of, :class_name => "Invoice", :foreign_key => 'amend_id'
   validates_presence_of :client, :date, :currency, :project_id, :unless => Proc.new {|i| i.type == "ReceivedInvoice" }
   validates_inclusion_of :currency, :in  => Money::Currency.table.collect {|k,v| v[:iso_code] }, :unless => Proc.new {|i| i.type == "ReceivedInvoice" }
-  validates_numericality_of :charge_amount_in_cents
+  validates_numericality_of :charge_amount_in_cents, :allow_nil => true
 
   before_save :fields_to_utf8
   after_create :increment_counter
@@ -178,6 +178,10 @@ class Invoice < ActiveRecord::Base
     else
       read_attribute(:payment_method)
     end
+  end
+
+  def cash?
+    read_attribute(:payment_method) == PAYMENT_CASH
   end
 
   def debit?
@@ -505,6 +509,8 @@ _INV
     discount_percent = Haltr::Utils.get_xpath(doc,xpaths[:discount_percent])
     discount_text    = Haltr::Utils.get_xpath(doc,xpaths[:discount_text])
     extra_info       = Haltr::Utils.get_xpath(doc,xpaths[:extra_info])
+    charge           = Haltr::Utils.get_xpath(doc,xpaths[:charge])
+    charge_reason    = Haltr::Utils.get_xpath(doc,xpaths[:charge_reason])
 
     invoice.assign_attributes(
       :number           => invoice_number,
@@ -524,6 +530,8 @@ _INV
       :discount_percent => discount_percent.to_f,
       :discount_text    => discount_text,
       :extra_info       => extra_info,
+      :charge_amount    => charge,
+      :charge_reason    => charge_reason,
     )
 
     if raw_invoice.respond_to? :filename             # Mail::Part
@@ -595,7 +603,7 @@ _INV
       # account is our account, where we should be charged
       # or         our account, where client should transfer
       if bank_account
-        self.bank_info = company.bank_infos.find_by_bank_accont(bank_account)
+        self.bank_info = company.bank_infos.find_by_bank_account(bank_account)
       else
         self.bank_info = company.bank_infos.find_by_iban_and_bic(iban,bic)
       end
