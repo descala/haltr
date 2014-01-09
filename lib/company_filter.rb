@@ -8,6 +8,8 @@ module CompanyFilter
       c = Company.new(:project=>@project,
                       :name=>@project.name,
                       :email=>user_mail)
+      #TODO: this should be a Setting:
+      c.invoice_format = "signed_pdf" if ExportChannels.available? "signed_pdf"
       c.save(:validate=> false)
       @project.reload
     end
