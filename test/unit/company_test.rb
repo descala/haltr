@@ -4,10 +4,10 @@ class CompanyTest < ActiveSupport::TestCase
   fixtures :clients, :companies
 
   test "public, semipublic and private accessors" do
-    assert_false companies(:company1).public?
-    assert_false companies(:company1).semipublic?
-    assert_true  companies(:company1).private?
-    assert_true  companies(:company2).public?
+    assert !companies(:company1).public?
+    assert !companies(:company1).semipublic?
+    assert companies(:company1).private?
+    assert companies(:company2).public?
   end
 
   test "taxcode required in some countries" do
@@ -16,10 +16,10 @@ class CompanyTest < ActiveSupport::TestCase
                     :email => "email@example.com",
                     :postalcode => "08080",
                     :country => "is")
-    assert_true c.valid?
+    assert c.valid?
     c.country = "es"
-    assert_false c.valid?
+    assert !c.valid?
     c.taxcode = "B776655"
-    assert_true c.valid?
+    assert c.valid?
   end
 end

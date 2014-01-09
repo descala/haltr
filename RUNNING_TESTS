@@ -15,10 +15,9 @@ rake db:fixtures:load redmine:plugins:migrate RAILS_ENV=test
 zeus start
 
 # start guard in another terminal
-# need to use bundle since guard-test is installed from github on non standard place, see Gemfile
-bundle exec guard -G plugins/haltr/Guardfile
+guard -G plugins/haltr/Guardfile
 
-# ISSUES
+##### ISSUES #####
 
 # In redmine-2.3 some fixtures do not load.
 # Remove them
@@ -26,10 +25,11 @@ bundle exec guard -G plugins/haltr/Guardfile
 rm -rf test/fixtures/configuration/
 
 # running all tests on guard crashes due to this bug: https://github.com/burke/zeus/issues/352
-# hopefully fixed in next zeus release
-# You can run all tests with:
+# hopefully fixed in next zeus release, but you can still run all tests with:
 zeus test plugins/haltr/test
 
-# guard notifications doesn't work due to this bug: https://github.com/guard/guard-rspec/issues/134
-
 # changing some models fully reloads zeus, making it so slow: https://github.com/burke/zeus/issues/433#issuecomment-31518132
+
+# https://github.com/guard/guard-minitest/pull/98
+# tests run twice after saving file on vim. To avoid this, use last guard-minitest from github (included in bundle):
+bundle exec guard -G plugins/haltr/Guardfile

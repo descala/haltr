@@ -10,9 +10,8 @@ gem 'nokogiri', '< 1.6.0'
 gem 'wicked_pdf'
 
 group :test do
-  gem 'spork-testunit'
-  gem 'guard-spork'
-  gem 'guard-test', :git => 'https://github.com/lluis/guard-test.git', :branch => 'add_test_paths_to_zeus_test_command'
+  gem 'guard-minitest', :github => 'guard/guard-minitest'
+  gem "minitest", "~> 4.0"
   gem 'zeus'
   gem 'rb-inotify', '~> 0.9'
   gem 'libnotify'

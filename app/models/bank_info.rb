@@ -6,7 +6,7 @@ class BankInfo < ActiveRecord::Base
 
   validates_numericality_of :bank_account, :allow_nil => true, :allow_blank => true
   validates_length_of :bank_account, :maximum => 20
-  validates_length_of :bic, :is => 8, :allow_nil => true
+  validates_length_of :bic, :minimum => 8, :maximum => 11, :allow_nil => true
   validates_length_of :iban, :maximum => 24, :allow_nil => true
   validate :has_one_account
   validate :iban_requires_bic
