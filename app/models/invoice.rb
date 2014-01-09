@@ -515,6 +515,7 @@ _INV
     extra_info       = Haltr::Utils.get_xpath(doc,xpaths[:extra_info])
     charge           = Haltr::Utils.get_xpath(doc,xpaths[:charge])
     charge_reason    = Haltr::Utils.get_xpath(doc,xpaths[:charge_reason])
+    accounting_cost  = Haltr::Utils.get_xpath(doc,xpaths[:accounting_cost])
 
     invoice.assign_attributes(
       :number           => invoice_number,
@@ -536,6 +537,7 @@ _INV
       :extra_info       => extra_info,
       :charge_amount    => charge,
       :charge_reason    => charge_reason,
+      :accounting_cost  => accounting_cost,
     )
 
     if raw_invoice.respond_to? :filename             # Mail::Part

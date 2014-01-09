@@ -76,7 +76,7 @@
         </AddressInSpain>
         <ContactDetails>
           <ElectronicMail>lluis@ingent.net</ElectronicMail>
-          <ContactPersons/>
+          <ContactPersons>23</ContactPersons>
         </ContactDetails>
       </LegalEntity>
     </BuyerParty>

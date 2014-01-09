@@ -367,7 +367,7 @@ class InvoiceTest < ActiveSupport::TestCase
   end
 
   # import invoice_facturae32_issued3.xml
-  test 'create issued_invoice from facturae32 with charge and different taxes per line' do
+  test 'create issued_invoice from facturae32 with charge, different taxes per line and accounting_cost' do
     client = Client.find_by_taxcode "B12345678"
     client_count = Client.count
     assert_not_nil client
@@ -391,13 +391,14 @@ class InvoiceTest < ActiveSupport::TestCase
     assert_equal "uploaded", invoice.transport
     assert_equal "Anonymous", invoice.from
     assert_equal "1234", invoice.md5
-    assert_equal 6517, invoice.original.size
+    assert_equal 6535, invoice.original.size
     assert_equal "invoice_facturae32_issued3.xml", invoice.file_name
     assert invoice.cash?, "invoice payment is cash"
     assert_equal "1233333333333333", invoice.client.bank_account
     assert_nil invoice.bank_info
     assert_equal 100.00, invoice.charge_amount.dollars
     assert_equal "paid in clients name", invoice.charge_reason
+    assert_equal "23", invoice.accounting_cost
     # invoice lines
     assert_equal 2, invoice.invoice_lines.size
     il = invoice.invoice_lines.first
