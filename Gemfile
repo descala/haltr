@@ -10,7 +10,7 @@ gem 'nokogiri', '< 1.6.0'
 gem 'wicked_pdf'
 
 group :test do
-  gem 'guard-minitest'
+  gem 'guard-minitest', :github => 'guard/guard-minitest'
   gem "minitest", "~> 4.0"
   gem 'zeus'
   gem 'rb-inotify', '~> 0.9'

@@ -17,7 +17,7 @@ zeus start
 # start guard in another terminal
 guard -G plugins/haltr/Guardfile
 
-# ISSUES
+##### ISSUES #####
 
 # In redmine-2.3 some fixtures do not load.
 # Remove them
@@ -29,3 +29,7 @@ rm -rf test/fixtures/configuration/
 zeus test plugins/haltr/test
 
 # changing some models fully reloads zeus, making it so slow: https://github.com/burke/zeus/issues/433#issuecomment-31518132
+
+# https://github.com/guard/guard-minitest/pull/98
+# tests run twice after saving file on vim. To avoid this, use last guard-minitest from github (included in bundle):
+bundle exec guard -G plugins/haltr/Guardfile
