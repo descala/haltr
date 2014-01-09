@@ -8,7 +8,7 @@
       <% else -%>
         <%= render :partial => 'invoices/form', :locals => { :f => f } %>
       <% end -%>
-      <% if true -%>
+      <% if @invoice.original and !@invoice.modified_since_created? -%>
         <%= f.submit l(:button_save), :name => 'save', :confirm => l(:overriding_original_warn) %>
       <% else -%>
         <%= f.submit l(:button_save), :name => 'save' %>
