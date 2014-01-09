@@ -8,9 +8,17 @@
       <% else -%>
         <%= render :partial => 'invoices/form', :locals => { :f => f } %>
       <% end -%>
-      <%= f.submit l(:button_save), :name => 'save' %>
+      <% if true -%>
+        <%= f.submit l(:button_save), :name => 'save', :confirm => l(:overriding_original_warn) %>
+      <% else -%>
+        <%= f.submit l(:button_save), :name => 'save' %>
+      <% end -%>
       <% unless @invoice.is_a? InvoiceTemplate or @invoice.is_a? DraftInvoice -%>
-        <%= f.submit l(:button_save_and_send), :name => 'save_and_send' %>
+        <% if @invoice.original and !@invoice.modified_since_created? -%>
+          <%= f.submit l(:button_save_and_send), :name => 'save_and_send', :confirm => l(:overriding_original_warn) %>
+        <% else -%>
+          <%= f.submit l(:button_save_and_send), :name => 'save_and_send' %>
+        <% end -%>
       <% end -%>
     <% end %>
 

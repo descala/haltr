@@ -450,3 +450,4 @@ es:
   sure_to_resend_invoices: "Seguro que quieres reenviar las facturas %{nums}?"
   taxcodes_does_not_belong_to_self: "Los NIF de la factura (%{tcs}) no son de tu empresa (%{tc})"
   label_import: "Importar"
+  overriding_original_warn: "Si guardas esta factura, a partir de ahora se usara la version modificada en lugar del fichero original, estas seguro?"

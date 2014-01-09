@@ -447,3 +447,4 @@ ca:
   sure_to_resend_invoices: "Segur que voleu reenviar les factures %{nums}?"
   taxcodes_does_not_belong_to_self: "Els NIF de la factura (%{tcs}) no son de la teva empresa (%{tc})"
   label_import: "Importar"
+  overriding_original_warn: "Si deses aquesta factura, a partir d'ara es farà servir la modificada en comptes del fitxer original, n'estàs segur?"
