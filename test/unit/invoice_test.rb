@@ -419,6 +419,11 @@ class InvoiceTest < ActiveSupport::TestCase
     # events
     assert_equal 1,        invoice.events.size
     assert_equal "uploaded", invoice.events.first.name
+    # modified since uploaded?
+    assert !invoice.modified_since_created?, "not modified since created"
+    invoice.extra_info = "change something"
+    assert invoice.save
+    assert invoice.modified_since_created?, "modified since created"
   end
 
 end

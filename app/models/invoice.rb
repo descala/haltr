@@ -424,6 +424,10 @@ total = #{total}
 _INV
   end
 
+  def modified_since_created?
+    updated_at > created_at
+  end
+
   def self.create_from_xml(raw_invoice,company,from,md5,transport)
     raw_xml           = raw_invoice.read
     doc               = Nokogiri::XML(raw_xml)
