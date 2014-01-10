@@ -688,4 +688,9 @@ _INV
     end
   end
 
+  # we do not want to update timpestamps (updated_at) when only state changes
+  def should_record_timestamps?
+    (self.changes.keys.map(&:to_sym) - [:state]).present? && super
+  end
+
 end
