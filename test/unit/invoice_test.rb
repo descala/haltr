@@ -427,9 +427,9 @@ class InvoiceTest < ActiveSupport::TestCase
     assert_equal "uploaded", invoice.events.first.name
     # modified since uploaded?
     assert !invoice.modified_since_created?, "not modified since created"
-    invoice.extra_info = "change something"
     assert invoice.queue
     assert !invoice.modified_since_created?, "state changes do not update timestamps"
+    invoice.extra_info = "change something"
     assert invoice.save
     assert invoice.modified_since_created?, "modified since created"
   end
