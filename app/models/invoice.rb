@@ -434,10 +434,13 @@ _INV
     doc_no_namespaces = doc.dup.remove_namespaces!
     facturae_version  = doc.at_xpath("//FileHeader/SchemaVersion")
     ubl_version       = doc_no_namespaces.at_xpath("//Invoice/UBLVersionID")
+    # invoice_format should match format in config/channels.yml
     if facturae_version
-      invoice_format  = "facturae#{facturae_version.text}"
+      # facturae30 facturae31 facturae32
+      invoice_format  = "facturae#{facturae_version.text.gsub(/[^\d]/,'')}"
       logger.info "Creating invoice from xml - format is FacturaE #{facturae_version.text}"
     elsif ubl_version
+      #TODO: biiubl20 efffubl oioubl20 pdf peppolubl20 svefaktura
       invoice_format  = "ubl#{ubl_version.text}"
       logger.info "Creating invoice from xml - format is UBL #{ubl_version.text}"
     else
@@ -488,18 +491,26 @@ _INV
       if client_postalcode.blank?
         client_postalcode  = Haltr::Utils.get_xpath(doc,xpaths["#{client_role}_cp"])
       end
+      # set new client's channel to match invoice format, and sent by mail
+      case invoice_format
+      when /^facturae3/
+        client_invoice_format = invoice_format.gsub(/facturae3(\d)/,"facturae_3\\1")
+      else
+        client_invoice_format = "#TODO"
+      end
 
-      client = Client.new(:taxcode    => client_taxcode,
-                          :name       => client_name,
-                          :address    => client_address,
-                          :province   => client_province,
-                          :country    => client_countrycode,
-                          :website    => client_website,
-                          :email      => client_email,
-                          :postalcode => client_postalcode,
-                          :city       => client_city,
-                          :currency   => currency,
-                          :project    => company.project)
+      client = Client.new(:taxcode        => client_taxcode,
+                          :name           => client_name,
+                          :address        => client_address,
+                          :province       => client_province,
+                          :country        => client_countrycode,
+                          :website        => client_website,
+                          :email          => client_email,
+                          :postalcode     => client_postalcode,
+                          :city           => client_city,
+                          :currency       => currency,
+                          :project        => company.project,
+                          :invoice_format => client_invoice_format)
       client.save!(:validate=>false)
       logger.info "created new client \"#{client_name}\" with cif #{client_taxcode} for company #{company.name}"
     end

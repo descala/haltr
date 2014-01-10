@@ -206,6 +206,7 @@ class InvoiceTest < ActiveSupport::TestCase
 
   # import invoice_facturae32_signed.xml
   test 'create received_invoice from facturae32' do
+    # client does not exist
     assert_nil Client.find_by_taxcode "ESP6611142C"
     file    = File.new(File.join(File.dirname(__FILE__),'..','fixtures','documents','invoice_facturae32_signed.xml'))
     invoice = Invoice.create_from_xml(file,companies(:company1),User.current.name,"1234",'uploaded')
@@ -233,7 +234,7 @@ class InvoiceTest < ActiveSupport::TestCase
     assert_equal 600.00, invoice.import.to_f
     assert_equal "2012-06-01", invoice.due_date.to_s
     assert_equal "EUR", invoice.currency
-    assert_equal "facturae3.2", invoice.invoice_format
+    assert_equal "facturae32", invoice.invoice_format
     assert_equal "uploaded", invoice.transport
     assert_equal "Anonymous", invoice.from
     assert_equal "1234", invoice.md5
@@ -261,6 +262,7 @@ class InvoiceTest < ActiveSupport::TestCase
 
   # import invoice_facturae32_issued.xml
   test 'create issued_invoice from facturae32' do
+    # client does not exist
     assert_nil Client.find_by_taxcode "ESP6611142C"
     file    = File.new(File.join(File.dirname(__FILE__),'..','fixtures','documents','invoice_facturae32_issued.xml'))
     invoice = Invoice.create_from_xml(file,companies(:company1),User.current.name,"1234",'uploaded')
@@ -280,6 +282,7 @@ class InvoiceTest < ActiveSupport::TestCase
     assert_equal invoice.company.project, client.project
     assert_equal "ibaaaaaaan", client.iban
     assert_equal "biiiiiiiiic", client.bic
+    assert_equal "facturae_32", client.invoice_format
     # invoice
     assert       invoice.is_a?(IssuedInvoice)
     assert_equal client, invoice.client
@@ -290,7 +293,7 @@ class InvoiceTest < ActiveSupport::TestCase
     assert_equal 600.00, invoice.import.to_f
     assert_equal "2012-06-01", invoice.due_date.to_s
     assert_equal "EUR", invoice.currency
-    assert_equal "facturae3.2", invoice.invoice_format
+    assert_equal "facturae32", invoice.invoice_format
     assert_equal "uploaded", invoice.transport
     assert_equal "Anonymous", invoice.from
     assert_equal "1234", invoice.md5
@@ -321,6 +324,7 @@ class InvoiceTest < ActiveSupport::TestCase
   test 'create issued_invoice from facturae32 with irpf, discount, bank_account and existing client' do
     client = Client.find_by_taxcode "B12345678"
     client_count = Client.count
+    # client exists
     assert_not_nil client
     assert_equal "1233333333333333", client.bank_account
     client_last_changed = client.updated_at
@@ -338,7 +342,7 @@ class InvoiceTest < ActiveSupport::TestCase
     assert_equal 102.00, invoice.import.to_f
     assert_equal "2014-01-31", invoice.due_date.to_s
     assert_equal "USD", invoice.currency
-    assert_equal "facturae3.2", invoice.invoice_format
+    assert_equal "facturae32", invoice.invoice_format
     assert_equal "uploaded", invoice.transport
     assert_equal "Anonymous", invoice.from
     assert_equal "1234", invoice.md5
@@ -370,6 +374,7 @@ class InvoiceTest < ActiveSupport::TestCase
   test 'create issued_invoice from facturae32 with charge, different taxes per line and accounting_cost' do
     client = Client.find_by_taxcode "B12345678"
     client_count = Client.count
+    # client exists
     assert_not_nil client
     assert_equal "1233333333333333", client.bank_account
     client_last_changed = client.updated_at
@@ -387,7 +392,7 @@ class InvoiceTest < ActiveSupport::TestCase
     assert_equal 120.00, invoice.import.to_f
     assert_equal "2014-02-08", invoice.due_date.to_s
     assert_equal "EUR", invoice.currency
-    assert_equal "facturae3.2", invoice.invoice_format
+    assert_equal "facturae32", invoice.invoice_format
     assert_equal "uploaded", invoice.transport
     assert_equal "Anonymous", invoice.from
     assert_equal "1234", invoice.md5
