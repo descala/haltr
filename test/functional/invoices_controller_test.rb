@@ -105,4 +105,17 @@ class InvoicesControllerTest < ActionController::TestCase
     @request.session[:user_id] = 2
   end
 
+  test 'import invoice' do
+    post :import, {
+      file:       fixture_file_upload('/documents/invoice_facturae32_issued.xml'),
+      commit:     'Importar',
+      project_id: 'onlinestore'
+    }
+    assert_response :found
+    invoice = IssuedInvoice.find_by_number '767'
+    assert invoice.valid?
+    assert !invoice.modified_since_created?
+    assert invoice.original
+  end
+
 end

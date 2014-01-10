@@ -628,8 +628,14 @@ class InvoicesController < ApplicationController
 
   def create_xml_file(format)
     add_efffubl_base64_pdf if format == 'efffubl'
-    xml = render_to_string(:template => "invoices/#{format}",
-                           :formats => :xml, :layout => false)
+    # if it is an imported invoice, has not been modified and
+    # invoice format  matches client format, send original file
+    if @invoice.original and !@invoice.modified_since_created? and format == @invoice.invoice_format
+      xml = @invoice.original
+    else
+      xml = render_to_string(:template => "invoices/#{format}",
+                             :formats => :xml, :layout => false)
+    end
     xml_file = Tempfile.new("invoice_#{@invoice.id}.xml")
     xml_file.write(clean_xml(xml))
     logger.info "Created XML #{xml_file.path}"
