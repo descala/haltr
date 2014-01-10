@@ -134,4 +134,9 @@ class Company < ActiveRecord::Base
     end
   end
 
+  # translations for accepts_nested_attributes_for
+  def self.human_attribute_name(attribute_key_name, *args)
+    super(attribute_key_name.to_s.gsub(/invoice_lines\./,''), *args)
+  end
+
 end
