@@ -73,7 +73,11 @@ class ReceivedInvoice < InvoiceDocument
   protected
 
   def create_event
-    Event.create(:name=>'validating_format',:invoice=>self,:md5=>md5)
+    if self.transport == "email"
+      Event.create(:name=>'validating_format',:invoice=>self,:md5=>md5)
+    else
+      Event.create(:name=>self.transport,:invoice=>self,:user=>User.current)
+    end
   end
 
 end

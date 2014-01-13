@@ -13,11 +13,8 @@ class Event < ActiveRecord::Base
     str = l(name)
     if name == "validating_format" and invoice.transport == "email"
       str += " #{l(:by_mail_from, :email=>invoice.from)} "
-    end
-    if user and name != "by_email"
+    elsif user
       str += " #{l(:by)} #{user.name}"
-    elsif name == "by_email"
-      str += " #{l(:by)} #{invoice.from}"
     end
     if info
       unless name == "accept" or name == "refuse" or name == "paid" # accept and refuse stores mail on info

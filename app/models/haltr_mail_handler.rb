@@ -46,10 +46,10 @@ class HaltrMailHandler < MailHandler # < ActionMailer::Base
                 logger.error "Discarding repeated invoice with md5 #{md5}. Invoice.id = #{found_invoice.id}"
               else
                 if raw_invoice.content_type =~ /xml/
-                  invoices << Invoice.create_from_xml(raw_invoice,company,from,md5,'by_email')
+                  invoices << Invoice.create_from_xml(raw_invoice,company,from,md5,'email')
                   #TODO rescue and bounce?
                 elsif raw_invoice.content_type =~ /pdf/
-                  invoices << process_pdf_file(raw_invoice,company,from,md5)
+                  invoices << process_pdf_file(raw_invoice,company,from,md5,'email')
                 else
                   logger.info "Discarding #{raw_invoice.filename} on incoming mail (#{raw_invoice.content_type})"
                 end
@@ -69,7 +69,7 @@ class HaltrMailHandler < MailHandler # < ActionMailer::Base
     return invoices
   end
 
-  def process_pdf_file(raw_invoice,company,from="",md5)
+  def process_pdf_file(raw_invoice,company,from="",md5,transport)
     @company = company
 
     # PDF attachment has #<Encoding:ASCII-8BIT>
@@ -102,7 +102,7 @@ class HaltrMailHandler < MailHandler # < ActionMailer::Base
                             :project         => @company.project)
 
     ri.md5 = `md5sum #{tmpfile.path} | cut -d" " -f1`.chomp
-    ri.transport='email'
+    ri.transport=transport
     ri.from=from
     ri.invoice_format = "pdf"
     ri.original = raw_invoice.read.chomp

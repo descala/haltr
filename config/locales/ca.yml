@@ -227,7 +227,6 @@ ca:
   public_link: "Enllaç públic"
   mark_as_received: "Marcada com a rebuda"
   uploaded: "Pujada"
-  by_email: "Enviada per correu"
   download_original: "Descarregar original"
 
   # Invoice templates

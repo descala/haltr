@@ -217,7 +217,6 @@ en:
   public_link: "Public link"
   mark_as_received: "Marked as received"
   uploaded: "Uploaded"
-  by_email: "Sent by mail from"
   download_original: "Download original"
 
   # Invoice templates

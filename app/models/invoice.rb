@@ -539,7 +539,7 @@ _INV
       :project          => company.project,
       :terms            => "custom",
       :invoice_format   => invoice_format, # facturae3.2, ubl21...
-      :transport        => transport,      # by_email, uploaded
+      :transport        => transport,      # email, uploaded
       :from             => from,           # u@mail.com, User Name...
       :md5              => md5,
       :original         => raw_xml,
