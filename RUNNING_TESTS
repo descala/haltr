@@ -1,6 +1,7 @@
 # use this to recreate test database
 
-rake db:drop db:create db:migrate redmine:load_default_data RAILS_ENV=test REDMINE_LANG=en
+rake db:drop db:create db:migrate RAILS_ENV=test REDMINE_LANG=en
+rake redmine:load_default_data RAILS_ENV=test REDMINE_LANG=en
 
 # preload Redmine fixtures
 
