@@ -11,7 +11,7 @@ class Event < ActiveRecord::Base
   def to_s
     # TODO: log the origin of the REST event. i.e. "Sent by host4"
     str = l(name)
-    if name == "validating_format" and invoice.transport == "email"
+    if name == "email" and invoice.transport == "email"
       str += " #{l(:by_mail_from, :email=>invoice.from)} "
     elsif user
       str += " #{l(:by)} #{user.name}"

@@ -40,14 +40,6 @@ class ReceivedInvoice < InvoiceDocument
     l(self.class)
   end
 
-  def valid_format?
-    events.sort.each do |e|
-      return true  if %w( success_validating_format ).include? e.name
-      return false if %w( error_validating_format discard_validating_format ).include? e.name
-    end
-    return false
-  end
-
   def valid_signature?
     events.sort.each do |e|
       return true  if %w( success_validating_signature ).include? e.name
@@ -73,11 +65,7 @@ class ReceivedInvoice < InvoiceDocument
   protected
 
   def create_event
-    if self.transport == "email"
-      Event.create(:name=>'validating_format',:invoice=>self,:md5=>md5)
-    else
-      Event.create(:name=>self.transport,:invoice=>self,:user=>User.current)
-    end
+    Event.create(:name=>self.transport,:invoice=>self,:user=>User.current)
   end
 
 end
