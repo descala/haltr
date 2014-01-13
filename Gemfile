@@ -16,3 +16,5 @@ group :test do
   gem 'rb-inotify', '~> 0.9'
   gem 'libnotify'
 end
+
+gem 'sepa_king'

@@ -93,6 +93,9 @@ Redmine::Plugin.register :haltr do
     permission :add_multiple_bank_infos,
       { :companies => [:add_bank_info] }, :require => :member
 
+    permission :use_sepa,
+      { :payments => [:sepa, :sepa_index] }, :require => :member
+
     # Loads permisons from config/channels.yml
     ExportChannels.permissions.each do |permission,actions|
       permission permission, actions, :require => :member

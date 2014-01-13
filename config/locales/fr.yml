@@ -265,6 +265,7 @@ fr:
   button_send_invoices: Envoyer factures
   label_automator_info: "télécherger les PDFs, emailer script d'automation et marquer comme envoyé"
   label_charge_n19: Imputer les comptes bancaires avec format N19
+  label_charge_sepa: Charge bank accounts with SEPA format
   button_mark_done: Marquer comme fait
   label_invoice_report: Rapport des factures
   label_import_aeb43: Importer AEB43

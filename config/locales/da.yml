@@ -263,6 +263,7 @@ da:
   button_send_invoices: Send fakturaer
   label_automator_info: download PDFs, e-mail automator script and mark as sent
   label_charge_n19: Charge bank accounts with N19 format
+  label_charge_sepa: Charge bank accounts with SEPA format
   button_mark_done: Markér som udført
   label_invoice_report: faktura rapport
   label_import_aeb43: Importer AEB43

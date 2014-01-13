@@ -3,6 +3,7 @@ class PaymentsController < ApplicationController
   unloadable
   menu_item Haltr::MenuItem.new(:payments,:payments_level2)
   menu_item Haltr::MenuItem.new(:payments,:charge_n19), :only=> [:n19_index,:n19,:n19_done]
+  menu_item Haltr::MenuItem.new(:payments,:charge_sepa), :only=> [:sepa_index, :sepa]
   menu_item Haltr::MenuItem.new(:payments,:import_aeb43), :only=> [:import_aeb43_index,:import_aeb43]
   layout 'haltr'
   helper :haltr
@@ -10,9 +11,9 @@ class PaymentsController < ApplicationController
 
   include SortHelper
 
-  before_filter :find_project_by_project_id, :only => [:index,:new,:create,:n19_index,:import_aeb43_index,:import_aeb43]
+  before_filter :find_project_by_project_id, :only => [:index,:new,:create,:n19_index,:import_aeb43_index,:import_aeb43,:sepa_index]
   before_filter :find_payment, :only => [:destroy,:edit,:update]
-  before_filter :find_invoice, :only => [:n19, :n19_done]
+  before_filter :find_invoice, :only => [:n19, :n19_done, :sepa]
   before_filter :authorize
 
   include CompanyFilter
@@ -156,7 +157,35 @@ class PaymentsController < ApplicationController
     end
   end
 
+  def sepa_index
+    @charge_bank_on_due_date = IssuedInvoice.find(:all, :conditions => ["state = 'sent' AND clients.bank_account != '' AND invoices.payment_method=? AND clients.project_id=?",Invoice::PAYMENT_DEBIT,@project.id], :include => :client).reject {|i|
+      !i.bank_info or i.bank_info.iban.blank?
+    }.group_by(&:bank_info)
+  end
 
+  def sepa
+    @due_date = @invoice.due_date
+    @fecha_cargo = @due_date.to_formatted_s :ddmmyy
+    @bank_account = @invoice.bank_info.bank_account
+    render_404 && return if @bank_account.blank?
+    @clients = Client.find :all, :conditions => ["bank_account != '' and project_id = ?", @project.id], :order => 'taxcode'
+    @fecha_confeccion = Date.today.to_formatted_s :ddmmyy
+    @total = Money.new 0, Money::Currency.new(Setting.plugin_haltr['default_currency'])
+    @clients.each do |client|
+      money = client.bank_invoices_total(@due_date)
+      @clients = @clients - [client] if money.zero?
+      @total += money
+    end
+
+    if @clients.size > 0
+      I18n.locale = :es
+      output = render_to_string :layout => false
+      send_data output, :filename => filename_for_content_disposition("n19-#{@fecha_cargo[4..5]}-#{@fecha_cargo[2..3]}-#{@fecha_cargo[0..1]}.txt"), :type => 'text/plain'
+    else
+      flash[:warning] = l(:notice_empty_n19)
+      redirect_to :action => 'n19_index', :project_id => @project
+    end
+  end
 
   private
 
