@@ -64,6 +64,8 @@ match 'invoices/base64doc/:id/:doc_format' => 'invoices#base64doc', :via => [:ge
 match 'invoices/haltr_sign' => 'invoices#haltr_sign', :via => :get
 match 'invoices/original/:id' => 'invoices#original', :via => :get, :as => :invoices_original
 match 'received/original/:id' => 'received#original', :via => :get, :as => :received_original
+match 'invoices/show_original/:id' => 'invoices#show_original', :via => :get, :as => :invoices_show_original
+match 'received/show_original/:id' => 'received#show_original', :via => :get, :as => :received_show_original
 resources :invoices
 
 # public access to an invoice using the client hash

@@ -4,7 +4,7 @@
 
     <%= labelled_form_for :invoice, @invoice, :url => { :action => 'update', :id => @invoice }, :html => {:method => :put, :class => 'formee'}  do |f| %>
       <% if @invoice.is_a? ReceivedInvoice -%>
-        <%= render :partial => 'received_invoices/form', :locals => { :f => f } %>
+        <%= render :partial => 'received/form', :locals => { :f => f } %>
       <% else -%>
         <%= render :partial => 'invoices/form', :locals => { :f => f } %>
       <% end -%>

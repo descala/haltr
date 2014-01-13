@@ -14,7 +14,7 @@ class InvoicesController < ApplicationController
   PUBLIC_METHODS = [:by_taxcode_and_num,:view,:download,:mail,:logo,:haltr_sign]
 
   before_filter :find_project_by_project_id, :only => [:index,:new,:create,:send_new_invoices,:download_new_invoices,:update_payment_stuff,:new_invoices_from_template,:report,:create_invoices,:update_taxes,:import]
-  before_filter :find_invoice, :only => [:edit,:update,:mark_sent,:mark_closed,:mark_not_sent,:mark_accepted_with_mail,:mark_accepted,:mark_refused_with_mail,:mark_refused,:duplicate_invoice,:base64doc,:show,:send_invoice,:legal,:amend_for_invoice,:original,:validate]
+  before_filter :find_invoice, :only => [:edit,:update,:mark_sent,:mark_closed,:mark_not_sent,:mark_accepted_with_mail,:mark_accepted,:mark_refused_with_mail,:mark_refused,:duplicate_invoice,:base64doc,:show,:send_invoice,:legal,:amend_for_invoice,:original,:validate,:show_original]
   before_filter :find_invoices, :only => [:context_menu,:bulk_download,:bulk_mark_as,:bulk_send,:destroy,:bulk_validate]
   before_filter :find_payment, :only => [:destroy_payment]
   before_filter :find_hashid, :only => [:view,:download]
@@ -337,6 +337,19 @@ class InvoicesController < ApplicationController
         format.oioubl20    { download_clean_xml :formats => :xml, :template => 'invoices/oioubl20',    :layout => false }
         format.efffubl     { add_efffubl_base64_pdf; download_clean_xml :formats => :xml, :template => 'invoices/efffubl',    :layout => false }
       end
+    end
+  end
+
+  def show_original
+    @invoice.update_attribute(:has_been_read, true) if @invoice.is_a? ReceivedInvoice
+    if @invoice.invoice_format == "pdf"
+      render :template => 'received/show_pdf'
+    else
+      doc  = Nokogiri::XML(@invoice.original)
+      # TODO: received/facturae31.xsl.erb and received/facturae30.xsl.erb templates
+      xslt = Nokogiri::XSLT(render_to_string(:template=>'received/facturae32.xsl.erb',:layout=>false))
+      @out  = xslt.transform(doc)
+      render :template => 'received/show_with_xsl'
     end
   end
 

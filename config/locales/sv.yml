@@ -216,6 +216,7 @@ sv:
   uploaded: "Uploaded"
   email: "Received"
   download_original: "Download original"
+  view_original: "View original"
 
   # Invoice templates
   label_invoice_template_new: Ny Mall

@@ -45,7 +45,7 @@ module InvoicesHelper
     elsif e.name == "new" and e.invoice and e.invoice.client and e.invoice.visible_by_client?
       " (#{link_to_if_authorized(l(:public_link), :controller=>'invoices', :action=>'view', :client_hashid=>e.invoice.client.hashid, :invoice_id=>e.invoice.id)})"
     elsif %w(uploaded email).include? e.name
-      " (#{link_to_if_authorized(l(:download_original), invoices_original_path(e.invoice))})"
+      " (#{link_to_if_authorized(l(:download_original), invoices_original_path(e.invoice))} / #{link_to_if_authorized(l(:view_original), {:action=>'show_original',:id=>e.invoice_id})})"
     else
       ""
     end.html_safe

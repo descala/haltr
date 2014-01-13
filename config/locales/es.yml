@@ -232,6 +232,7 @@ es:
   uploaded: "Subida"
   email: "Recibida"
   download_original: "Descargar original"
+  view_original: "Ver original"
 
   # Invoice templates
   label_invoice_template_new: Nueva plantilla

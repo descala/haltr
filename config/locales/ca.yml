@@ -229,6 +229,7 @@ ca:
   uploaded: "Pujada"
   email: "Rebuda"
   download_original: "Descarregar original"
+  view_original: "Veure original"
 
   # Invoice templates
   label_invoice_template_new: Nova factura recurrent
