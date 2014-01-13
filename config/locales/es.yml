@@ -230,6 +230,7 @@ es:
   public_link: "Enlace público"
   mark_as_received: "Marcada como recibida"
   uploaded: "Subida"
+  email: "Recibida"
   download_original: "Descargar original"
 
   # Invoice templates
