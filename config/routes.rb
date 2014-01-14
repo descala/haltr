@@ -32,11 +32,11 @@ resources :projects do
   match 'payments/import_aeb43' => 'payments#import_aeb43'
   match 'payments/n19_index' => 'payments#n19_index'
   match 'payments/sepa_index' => 'payments#sepa_index', :via => :get
+  match 'payments/sepa' => 'payments#sepa', :via => :get
   match 'invoices', :controller => 'invoices', :action => 'destroy', :via => :delete
 end
 match 'payments/n19/:id' => 'payments#n19', :via => :get
 match 'payments/n19_done/:id' => 'payments#n19_done', :via => :post
-match 'payments/sepa/:id'   => 'payments#sepa', :via => :get
 resources :clients do
   resources :people, :only => [:index, :new, :create]
 end

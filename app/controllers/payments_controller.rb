@@ -11,9 +11,9 @@ class PaymentsController < ApplicationController
 
   include SortHelper
 
-  before_filter :find_project_by_project_id, :only => [:index,:new,:create,:n19_index,:import_aeb43_index,:import_aeb43,:sepa_index]
+  before_filter :find_project_by_project_id, :only => [:index,:new,:create,:n19_index,:import_aeb43_index,:import_aeb43,:sepa_index,:sepa]
   before_filter :find_payment, :only => [:destroy,:edit,:update]
-  before_filter :find_invoice, :only => [:n19, :n19_done, :sepa]
+  before_filter :find_invoice, :only => [:n19, :n19_done]
   before_filter :authorize
 
   include CompanyFilter
@@ -101,13 +101,13 @@ class PaymentsController < ApplicationController
   def n19
     @due_date = @invoice.due_date
     @fecha_cargo = @due_date.to_formatted_s :ddmmyy
-    @bank_account = @invoice.bank_info.bank_account
-    render_404 && return if @bank_account.blank?
+    @bank_info = BankInfo.find params[:bank_info]
+    render_404 && return if @bank_info.iban.blank?
     @clients = Client.find :all, :conditions => ["bank_account != '' and project_id = ?", @project.id], :order => 'taxcode'
     @fecha_confeccion = Date.today.to_formatted_s :ddmmyy
     @total = Money.new 0, Money::Currency.new(Setting.plugin_haltr['default_currency'])
     @clients.each do |client|
-      money = client.bank_invoices_total(@due_date,@invoice.bank_info_id)
+      money = client.bank_invoices_total(@due_date,@bank_info.id)
       @clients = @clients - [client] if money.zero?
       @total += money
     end
@@ -158,29 +158,50 @@ class PaymentsController < ApplicationController
   end
 
   def sepa_index
-    @charge_bank_on_due_date = IssuedInvoice.find(:all, :conditions => ["state = 'sent' AND clients.bank_account != '' AND invoices.payment_method=? AND clients.project_id=?",Invoice::PAYMENT_DEBIT,@project.id], :include => :client).reject {|i|
+    @charge_bank_on_due_date = IssuedInvoice.find(:all,
+      :conditions => ["state = 'sent' AND clients.bank_account != '' AND invoices.payment_method=? AND clients.project_id=?",Invoice::PAYMENT_DEBIT,@project.id],
+      :include => :client
+    ).reject {|i|
       !i.bank_info or i.bank_info.iban.blank?
     }.group_by(&:bank_info)
   end
 
   def sepa
-    @due_date = @invoice.due_date
-    @fecha_cargo = @due_date.to_formatted_s :ddmmyy
-    @bank_account = @invoice.bank_info.bank_account
-    render_404 && return if @bank_account.blank?
-    @clients = Client.find :all, :conditions => ["bank_account != '' and project_id = ?", @project.id], :order => 'taxcode'
-    @fecha_confeccion = Date.today.to_formatted_s :ddmmyy
+    require "sepa_king"
+    @due_date = params[:due_date]
+    @bank_info = BankInfo.find params[:bank_info]
+    render_404 && return if @bank_info.blank?
+    @clients = Client.find(:all,
+                           :conditions => ["bank_account != '' and project_id = ?", @project.id],
+                           :order => 'taxcode')
     @total = Money.new 0, Money::Currency.new(Setting.plugin_haltr['default_currency'])
     @clients.each do |client|
-      money = client.bank_invoices_total(@due_date,@invoice.bank_info_id)
+      money = client.bank_invoices_total(@due_date,@bank_info.id)
       @clients = @clients - [client] if money.zero?
       @total += money
     end
 
     if @clients.size > 0
+      sdd = SEPA::DirectDebit.new(
+        name:                @project.company.name,
+        iban:                @bank_info.iban,
+        creditor_identifier: @project.company.sepa_creditor_identifier,
+      )
+      @clients.each do |client|
+        sdd.add_transaction(
+          name:                      client.taxcode,
+          iban:                      @bank_info.iban,
+          amount:                    @total.dollars,
+          mandate_id:                @bank_info.id,
+          mandate_date_of_signature: Date.new(2009,10,31),
+          local_instrument:          'CORE',
+          sequence_type:             'RCUR',
+        )
+      end
       I18n.locale = :es
-      output = render_to_string :layout => false
-      send_data output, :filename => filename_for_content_disposition("n19-#{@fecha_cargo[4..5]}-#{@fecha_cargo[2..3]}-#{@fecha_cargo[0..1]}.txt"), :type => 'text/plain'
+      #output = render_to_string :layout => false
+      #send_data output, :filename => filename_for_content_disposition("n19-#{@fecha_cargo[4..5]}-#{@fecha_cargo[2..3]}-#{@fecha_cargo[0..1]}.txt"), :type => 'text/plain'
+      render :xml => sdd.to_xml
     else
       flash[:warning] = l(:notice_empty_n19)
       redirect_to :action => 'n19_index', :project_id => @project

@@ -1,0 +1,7 @@
+<% invoices.group_by(&:due_date).each do |due_date, invoices| -%>
+
+  <li>
+  <p><%= due_date %> (<%= invoices.size %> <%=l(:label_invoice_plural)-%> <%=h money(invoices.collect {|i| i.total}.sum) %>) - <%= link_to_if_authorized l(:button_download), :action => 'sepa', :project_id => @project, :due_date => due_date, :bank_info => bank_info %> - <%= link_to_if_authorized l(:button_mark_done), {:action => 'sepa_done', :id => invoices.first}, :confirm => l(:text_are_you_sure), :method => :post %></p>
+  </li>
+
+<% end -%>
