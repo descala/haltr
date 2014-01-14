@@ -5,6 +5,6 @@ class ChangeCompaniesPublic < ActiveRecord::Migration
   end
 
   def self.down
-    change_column :companies, :public, :boolean, :default => 'false'
+    change_column :companies, :public, :boolean, :default => false
   end
 end
