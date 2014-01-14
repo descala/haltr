@@ -22,3 +22,27 @@ company2:
   city: Barcelona
   public: public
   invoice_format: facturae_32_face
+
+company3:
+  project_id: 3
+  name: Ingent Grup
+  taxcode: B63354724
+  postalcode: 08720
+  currency: EUR
+  email: test3@example.com
+  country: es
+  city: Barcelona
+  public: public
+  invoice_format: facturae_32_face
+
+company4:
+  project_id: 4
+  name: EADTrust
+  taxcode: B85626240
+  postalcode: 08720
+  currency: EUR
+  email: test4@example.com
+  country: es
+  city: Barcelona
+  public: public
+  invoice_format: facturae_32_face
