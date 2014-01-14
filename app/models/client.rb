@@ -51,13 +51,19 @@ class Client < ActiveRecord::Base
     write_attribute(:currency,v.upcase)
   end
 
-  def bank_invoices(due_date)
-    IssuedInvoice.find :all, :conditions => ["client_id = ? and state = 'sent' and payment_method=#{Invoice::PAYMENT_DEBIT} and due_date = ?", self, due_date ]
+  def bank_invoices(due_date,bank_info_id)
+    IssuedInvoice.where(
+      client_id:      self.id,
+      state:          'sent',
+      payment_method: Invoice::PAYMENT_DEBIT,
+      due_date:       due_date,
+      bank_info_id:   bank_info_id
+    )
   end
 
-  def bank_invoices_total(due_date)
+  def bank_invoices_total(due_date, bank_info_id)
     a = Money.new 0, Money::Currency.new(Setting.plugin_haltr['default_currency'])
-    bank_invoices(due_date).each { |i| a = i.total + a }
+    bank_invoices(due_date, bank_info_id).each { |i| a = i.total + a }
     a
   end
 

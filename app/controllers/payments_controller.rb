@@ -107,7 +107,7 @@ class PaymentsController < ApplicationController
     @fecha_confeccion = Date.today.to_formatted_s :ddmmyy
     @total = Money.new 0, Money::Currency.new(Setting.plugin_haltr['default_currency'])
     @clients.each do |client|
-      money = client.bank_invoices_total(@due_date)
+      money = client.bank_invoices_total(@due_date,@invoice.bank_info_id)
       @clients = @clients - [client] if money.zero?
       @total += money
     end
@@ -172,7 +172,7 @@ class PaymentsController < ApplicationController
     @fecha_confeccion = Date.today.to_formatted_s :ddmmyy
     @total = Money.new 0, Money::Currency.new(Setting.plugin_haltr['default_currency'])
     @clients.each do |client|
-      money = client.bank_invoices_total(@due_date)
+      money = client.bank_invoices_total(@due_date,@invoice.bank_info_id)
       @clients = @clients - [client] if money.zero?
       @total += money
     end
