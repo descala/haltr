@@ -6,7 +6,7 @@
       <fieldset class="tabular box">
         <legend><%=bank_info.name%></legend>
         <ul class="n19list">
-          <%= render :partial => 'n19', :locals => { :invoices => invoices } %>
+          <%= render :partial => 'n19', :locals => { :invoices => invoices, :bank_info => bank_info.id } %>
         </ul>
       </fieldset>
     <% end -%>

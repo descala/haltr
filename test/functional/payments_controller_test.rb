@@ -7,7 +7,7 @@ class PaymentsControllerTest < ActionController::TestCase
   def test_n19
     Haltr::TestHelper.fix_invoice_totals
     @request.session[:user_id] = 2
-    get "n19", :id => invoices(:invoice1), :bank_account => "1234567890"
+    get "n19", :project_id => 2, :due_date => "2008-12-01", :bank_info => 1
     assert_response :success
     assert_template 'payments/n19'
     assert_not_nil assigns(:due_date)
@@ -26,7 +26,7 @@ class PaymentsControllerTest < ActionController::TestCase
     c.save
     Haltr::TestHelper.fix_invoice_totals
     @request.session[:user_id] = 2
-    get "n19", :id => invoices(:invoice1), :bank_account => "1234567890"
+    get "n19", :project_id => 2, :due_date => "2008-12-01", :bank_info => 1
     assert_response :success
     assert_template 'payments/n19'
     assert_not_nil assigns(:due_date)

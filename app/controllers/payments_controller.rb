@@ -11,9 +11,8 @@ class PaymentsController < ApplicationController
 
   include SortHelper
 
-  before_filter :find_project_by_project_id, :only => [:index,:new,:create,:n19_index,:import_aeb43_index,:import_aeb43,:sepa_index,:sepa]
-  before_filter :find_payment, :only => [:destroy,:edit,:update]
-  before_filter :find_invoice, :only => [:n19, :n19_done]
+  before_filter :find_project_by_project_id, :except => [:destroy,:edit,:update]
+  before_filter :find_payment,               :only   => [:destroy,:edit,:update]
   before_filter :authorize
 
   include CompanyFilter
@@ -99,10 +98,10 @@ class PaymentsController < ApplicationController
 
   # generate spanish AEB Nº19
   def n19
-    @due_date = @invoice.due_date
-    @fecha_cargo = @due_date.to_formatted_s :ddmmyy
+    @due_date = Date.parse(params[:due_date])
+    @fecha_cargo = @due_date.to_formatted_s(:ddmmyy)
     @bank_info = BankInfo.find params[:bank_info]
-    render_404 && return if @bank_info.iban.blank?
+    render_404 && return if @bank_info.bank_account.blank?
     @clients = Client.find :all, :conditions => ["bank_account != '' and project_id = ?", @project.id], :order => 'taxcode'
     @fecha_confeccion = Date.today.to_formatted_s :ddmmyy
     @total = Money.new 0, Money::Currency.new(Setting.plugin_haltr['default_currency'])
@@ -123,12 +122,12 @@ class PaymentsController < ApplicationController
   end
   
   def n19_done
-    invoices = IssuedInvoice.find :all, :include => [:client], :conditions => ["clients.project_id = ? and due_date = ? and invoices.payment_method = #{Invoice::PAYMENT_DEBIT}", @project.id, @invoice.due_date]
+    invoices = IssuedInvoice.find :all, :include => [:client], :conditions => ["clients.project_id = ? and due_date = ? and invoices.payment_method = #{Invoice::PAYMENT_DEBIT} and clients.bank_info_id = ?", @project.id, params[:due_date], params[:bank_info]]
     invoices.each do |invoice|
       Payment.new_to_close(invoice).save
       invoice.close
     end
-    flash[:notice] = l(:notice_n19_done, @invoice.due_date.to_s)
+    flash[:notice] = l(:notice_n19_done, params[:due_date])
     redirect_to :action => 'n19_index', :project_id => @project
   end
  
