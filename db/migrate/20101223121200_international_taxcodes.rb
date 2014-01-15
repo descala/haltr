@@ -8,7 +8,7 @@ class InternationalTaxcodes < ActiveRecord::Migration
 
   def self.down
     rename_column :companies, :taxcode, :taxid
-    change_column :companies, :taxcode, :string, :limit => 9
+    change_column :companies, :taxid, :string, :limit => 9
     change_column :clients,   :taxcode, :string, :limit => 9
   end
 

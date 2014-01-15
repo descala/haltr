@@ -17,7 +17,7 @@ class CompaniesControllerTest < ActionController::TestCase
     put(:update,
       {
                 "commit" => "Desa",
-                    "id" => user.project.company.id,
+                    "id" => companies('company1').id ,
                "company" => {
                  "taxcode" => "1234567",
       "company_identifier" => "",
@@ -54,8 +54,6 @@ class CompaniesControllerTest < ActionController::TestCase
       })
     assert_equal ['is invalid'],
              assigns(:company).errors.messages[:taxes]
-    company = user.project.company
-    assert_equal "Company1", company.name
   end
 
 end
