@@ -298,6 +298,7 @@ es:
   received_paid_notification_to: "Notificar recepción del pago a %{mail}"
   save_and_mail: "Guardar y enviar mail"
   save_without_mail: "Guardar sin enviar mail"
+  field_sepa_type: "tipo de pagos SEPA"
 
   # Settings
   field_taxcode: "NIF"

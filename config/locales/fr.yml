@@ -285,6 +285,7 @@ fr:
   received_paid_notification_to: "Notifier réception du paiement à %{mail}"
   save_and_mail: "Enregistrer et envoyer du email"
   save_without_mail: "Enregistrer sans l'envoi du email"
+  field_sepa_type: "SEPA payments type"
 
   # Settings
   field_taxcode: N° TVA

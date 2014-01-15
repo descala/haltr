@@ -295,6 +295,7 @@ ca:
   received_paid_notification_to: "Notificar recepció de pagament a %{mail}"
   save_and_mail: "Desar i enviar mail"
   save_without_mail: "Desar sense enviar mail"
+  field_sepa_type: "Tipus de pagaments SEPA"
 
   # Settings
   field_taxcode: "NIF"

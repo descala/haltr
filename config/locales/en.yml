@@ -285,6 +285,7 @@ en:
   received_paid_notification_to: "Notify receipt of payment to %{mail}"
   save_and_mail: "Save and send mail"
   save_without_mail: "Save without sending mail"
+  field_sepa_type: "SEPA payments type"
 
   # Settings
   field_taxcode: VAT Id Number

@@ -38,6 +38,7 @@ class Client < ActiveRecord::Base
     self.invoice_format ||= ExportChannels.default
     self.language ||= User.current.language
     self.language = "es" if self.language.blank?
+    self.sepa_type ||= "CORE"
   end
 
   # Masks db value with default if db value is deprecated

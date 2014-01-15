@@ -282,6 +282,7 @@ sv:
   received_paid_notification_to: "Notifiera mottagaren om betalning %{mail}"
   save_and_mail: "Spara och skicka mail"
   save_without_mail: "Spara utan att skicka mail"
+  field_sepa_type: "SEPA payments type"
 
   # Settings
   field_taxcode: Momsregistreringsnummer

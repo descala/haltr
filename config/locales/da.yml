@@ -283,6 +283,7 @@ da:
   received_paid_notification_to: "Giv modtagelse af betaling til %{mail}"
   save_and_mail: "Gem og send e-mail"
   save_without_mail: "Gem uden at sende e-mail"
+  field_sepa_type: "SEPA payments type"
  
   # Settings
   field_taxcode: MOMS Nummer

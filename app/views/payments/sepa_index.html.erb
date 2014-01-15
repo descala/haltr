@@ -2,11 +2,20 @@
   <% if @charge_bank_on_due_date.size == 0 -%>
     <p class="nodata"><%= l(:label_no_data) %></p>
   <% else -%>
-    <% @charge_bank_on_due_date.each do |bank_info, invoices| -%>
+    <% @charge_bank_on_due_date.each do |bank_info, sepa_types| -%>
       <fieldset class="tabular box">
         <legend><%=bank_info.name%></legend>
-        <ul class="n19list">
-          <%= render :partial => 'sepa', :locals => { :invoices => invoices, :bank_info => bank_info.id } %>
+        <ul>
+          <% sepa_types.each do |sepa_type, invoices| -%>
+            <li style="margin-bottom:30px;"><p>----- <%=sepa_type%> -----</p>
+              <ul class="n19list">
+                <%= render :partial => 'sepa',
+                  :locals => { :invoices  => invoices,
+                               :bank_info => bank_info.id,
+                               :sepa_type => sepa_type } %>
+              </ul>
+            </li>
+          <% end -%>
         </ul>
       </fieldset>
     <% end -%>
