@@ -331,7 +331,7 @@ sv:
   notice_invoice_sent: "Faktura skickad"
   error_invoice_not_sent: "Kunde inte skicka faktura %{num}"
   notice_empty_n19: "Ingen data finns för att skapa N19"
-  notice_n19_done:  "Nº19 för betaldatum %{value} markerad som utförd"
+  notice_payment_done: "%{payment_type} för betaldatum %{value} markerad som utförd"
   notice_uploaded_file_not_found: "Filen hittades inte"
 
   hide_full_form: "Visa färre fält"

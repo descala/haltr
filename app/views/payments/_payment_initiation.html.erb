@@ -1,0 +1,24 @@
+<tr>
+  <td width="10%"><%=payment_type.split("_").last%></td>
+  <td width="40%">
+    (<%=invoices.size%> <%=l(:label_invoice_plural)-%> <%=h money(invoices.collect {|i| i.total}.sum) %>)
+  </td>
+  <td>
+    <%= link_to l(:button_download),
+      :action     => payment_type.split("_").first, # n19 / sepa
+      :project_id => @project,
+      :due_date   => due_date,
+      :bank_info  => bank_info,
+      :sepa_type  => payment_type.split("_").last,
+      :invoices   => invoices.collect {|i| i.id } %> /
+    <%= link_to l(:button_mark_done),
+      { :action       => "payment_done",
+        :project_id   => @project,
+        :due_date     => due_date,
+        :bank_info    => bank_info,
+        :payment_type => payment_type.split("_").first,
+        :invoices     => invoices.collect {|i| i.id } },
+      :confirm => l(:text_are_you_sure),
+      :method  => :post %>
+  </td>
+</tr>

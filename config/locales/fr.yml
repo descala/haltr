@@ -334,7 +334,7 @@ fr:
   notice_invoice_sent: "Facture envoyée"
   error_invoice_not_sent: "N'a pas pu envoyer la facture %{num}"
   notice_empty_n19: "Aucune donnée pour créer N19"
-  notice_n19_done:  "Nº19 pour date d'échéance %{value} marquée comme faite"
+  notice_payment_done: "%{payment_type} pour date d'échéance %{value} marquée comme faite"
   notice_uploaded_file_not_found: "Fichier non trouvé"
 
   hide_full_form: "Montrer moins de champs"

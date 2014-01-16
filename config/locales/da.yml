@@ -332,7 +332,7 @@ da:
   notice_invoice_sent: "Faktura sendt"
   error_invoice_not_sent: "Kunne ikke sende faktura %{num}"
   notice_empty_n19: "Ingen data til at skabe N19"
-  notice_n19_done: "N19 for forfaldsdatoen %{value} maked som udført"
+  notice_payment_done: "%{payment_type} for forfaldsdatoen %{value} maked som udført"
   notice_uploaded_file_not_found: "Fil ikke fundet"
  
   hide_full_form: "Vis færre felter"

@@ -345,7 +345,7 @@ ca:
   notice_invoice_sent: "La factura s'ha enviat"
   error_invoice_not_sent: "La factura %{num} no s'ha pogut enviar"
   notice_empty_n19: "No hi ha dades per generar un N19"
-  notice_n19_done: "S'ha tancat el N19 de data %{value}"
+  notice_payment_done: "S'ha tancat el %{payment_type} de data %{value}"
   notice_uploaded_file_not_found: "No s'ha trobat el fitxer"
 
   hide_full_form: "Mostrar menys camps"

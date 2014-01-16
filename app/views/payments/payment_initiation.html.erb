@@ -3,41 +3,49 @@
     <p class="nodata"><%= l(:label_no_data) %></p>
   <% else -%>
     <% @invoices_to_pay_by_bank_info.each do |bank_info, invoices_by_due_date| -%>
-      <fieldset class="tabular box">
-        <legend><%=bank_info.name%></legend>
-        <ul class="n19list">
+      <h3><%=l :field_bank_account %> <%=bank_info.name%></h3>
+
+        <table class="payment_initiation">
+          <tr>
+            <th><%=l(:field_due_date)%></th>
+            <th>SEPA</th>
+            <th>N19</th>
+          </tr>
           <% invoices_by_due_date.each do |due_date, invoices_by_payment_type| -%>
-            <li>
-            <p><%=due_date%></p>
-            <ul>
-              <% invoices_by_payment_type.each do |payment_type, invoices| -%>
-                <li>
-                <p>
-                <%=payment_type%> (<%=invoices.size%> <%=l(:label_invoice_plural)-%> <%=h money(invoices.collect {|i| i.total}.sum) %>)
-                <%= link_to_if_authorized l(:button_download),
-                  :action     => payment_type.split("_").first, # n19 / sepa
-                  :project_id => @project,
-                  :due_date   => due_date,
-                  :bank_info  => bank_info,
-                  :sepa_type  => payment_type.split("_").last,
-                  :invoices   => invoices.collect {|i| i.id } %>
-                <%= link_to_if_authorized l(:button_mark_done),
-                  { :action     => "#{payment_type.split("_").first}_done", # n19_done / sepa_done
-                    :project_id => @project,
-                    :due_date   => due_date,
-                    :bank_info  => bank_info,
-                    :sepa_type  => payment_type.split("_").last,
-                    :invoices   => invoices.collect {|i| i.id } },
-                  :confirm    => l(:text_are_you_sure),
-                  :method     => :post %>
-                </p>
-                </li>
-              <% end -%>
-            </ul>
-            </li>
+            <tr>
+              <td width="10%"><%=due_date%></td>
+              <td width="45%">
+                <table width="100%">
+                <% invoices_by_payment_type.each do |payment_type, invoices| -%>
+                  <% next unless payment_type =~ /^sepa/i -%>
+                  <%= render partial: 'payment_initiation',
+                    locals: {
+                      payment_type: payment_type,
+                      invoices: invoices,
+                      due_date: due_date,
+                      bank_info: bank_info
+                    } %>
+                <% end -%>
+                </table>
+              </td>
+              <td width="45%">
+                <table width="100%">
+                <% invoices_by_payment_type.each do |payment_type, invoices| -%>
+                  <% next unless payment_type =~ /^n19/i -%>
+                  <%= render partial: 'payment_initiation',
+                    locals: {
+                      payment_type: payment_type,
+                      invoices: invoices,
+                      due_date: due_date,
+                      bank_info: bank_info
+                    } %>
+                <% end -%>
+                </table>
+              </td>
+            </tr>
           <% end -%>
-        </ul>
-      </fieldset>
+        </table>
+
     <% end -%>
   <% end -%>
 </div>

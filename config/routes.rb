@@ -33,7 +33,7 @@ resources :projects do
   match 'payments/payment_initiation'  => 'payments#payment_initiation',  :via => :get
   match 'payments/n19'  => 'payments#n19',  :via => :get
   match 'payments/sepa' => 'payments#sepa', :via => :get
-  match 'payments/n19_done' => 'payments#n19_done', :via => :post
+  match 'payments/payment_done' => 'payments#payment_done', :via => :post
   match 'invoices', :controller => 'invoices', :action => 'destroy', :via => :delete
 end
 resources :clients do
