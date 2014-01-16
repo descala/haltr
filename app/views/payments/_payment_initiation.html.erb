@@ -1,7 +1,7 @@
 <tr>
   <td width="10%"><%=payment_type.split("_").last%></td>
   <td width="40%">
-    (<%=invoices.size%> <%=l(:label_invoice_plural)-%> <%=h money(invoices.collect {|i| i.total}.sum) %>)
+    (<%= link_to("#{invoices.size} #{l(:label_invoice_plural)}", :action => 'invoices', :project_id => @project, :invoices => invoices.collect {|i| i.id })-%> <%=h money(invoices.collect {|i| i.total}.sum) %>)
   </td>
   <td>
     <%= link_to l(:button_download),

@@ -2,7 +2,7 @@ class PaymentsController < ApplicationController
 
   unloadable
   menu_item Haltr::MenuItem.new(:payments,:payments_level2)
-  menu_item Haltr::MenuItem.new(:payments,:payment_initiation), :only=> [:payment_initiation,:payment_done,:n19,:sepa]
+  menu_item Haltr::MenuItem.new(:payments,:payment_initiation), :only=> [:payment_initiation,:payment_done,:n19,:sepa,:invoices]
   menu_item Haltr::MenuItem.new(:payments,:import_aeb43),       :only=> [:import_aeb43_index,:import_aeb43]
   layout 'haltr'
   helper :haltr
@@ -208,6 +208,10 @@ class PaymentsController < ApplicationController
       flash[:warning] = l(:notice_uploaded_uploaded_file_not_found)
       redirect_to :action => 'import_aeb43_index', :project_id => @project
     end
+  end
+
+  def invoices
+    @invoices = @project.issued_invoices.find(params[:invoices])
   end
 
   private

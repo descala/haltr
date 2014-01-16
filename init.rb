@@ -71,7 +71,7 @@ Redmine::Plugin.register :haltr do
         :companies => [:my_company,:update,:linked_to_mine]},
       :require => :member
 
-    permission :manage_payments, { :payments => [:index, :new, :edit, :create, :update, :destroy, :payment_initiation, :n19, :payment_done, :import_aeb43_index,:import_aeb43 ] }, :require => :member
+    permission :manage_payments, { :payments => [:index, :new, :edit, :create, :update, :destroy, :payment_initiation, :n19, :payment_done, :import_aeb43_index, :import_aeb43, :invoices] }, :require => :member
     permission :use_templates, { :invoice_templates => [:index, :new, :edit, :create, :update, :destroy, :show, :new_from_invoice,
                                  :new_invoices_from_template, :create_invoices, :update_taxes] }, :require => :member
 

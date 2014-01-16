@@ -34,6 +34,7 @@ resources :projects do
   match 'payments/n19'  => 'payments#n19',  :via => :get
   match 'payments/sepa' => 'payments#sepa', :via => :get
   match 'payments/payment_done' => 'payments#payment_done', :via => :post
+  match 'payments/invoices' => 'payments#invoices', :via => :get
   match 'invoices', :controller => 'invoices', :action => 'destroy', :via => :delete
 end
 resources :clients do
