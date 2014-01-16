@@ -30,8 +30,7 @@ resources :projects do
   resources :payments, :only => [:index, :new, :create]
   match 'payments/import_aeb43_index' => 'payments#import_aeb43_index'
   match 'payments/import_aeb43' => 'payments#import_aeb43'
-  match 'payments/n19_index'  => 'payments#n19_index',  :via => :get
-  match 'payments/sepa_index' => 'payments#sepa_index', :via => :get
+  match 'payments/payment_initiation'  => 'payments#payment_initiation',  :via => :get
   match 'payments/n19'  => 'payments#n19',  :via => :get
   match 'payments/sepa' => 'payments#sepa', :via => :get
   match 'payments/n19_done' => 'payments#n19_done', :via => :post

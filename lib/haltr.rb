@@ -26,7 +26,6 @@ end
 
 Redmine::MenuManager.map :payments_menu do |menu|
   menu.push :payments_level2, {:controller=>'payments',:action=>'index'}, :param => :project_id, :caption => :label_payment_plural
-  menu.push :charge_n19, {:controller=>'payments',:action=>'n19_index'}, :param => :project_id
-  menu.push :charge_sepa, {:controller=>'payments',:action=>'sepa_index'}, :param => :project_id
+  menu.push :payment_initiation, {:controller=>'payments',:action=>'payment_initiation'}, :param => :project_id
   menu.push :import_aeb43, {:controller=>'payments',:action=>'import_aeb43_index'}, :param => :project_id
 end

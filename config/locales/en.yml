@@ -264,8 +264,6 @@ en:
   button_generate_invoices: New invoices from template
   button_send_invoices: Send invoices
   label_automator_info: download PDFs, e-mail automator script and mark as sent
-  label_charge_n19: Charge bank accounts with N19 format 
-  label_charge_sepa: Charge bank accounts with SEPA format
   button_mark_done: Mark as done
   label_invoice_report: Invoices report
   label_import_aeb43: Import AEB43
@@ -286,6 +284,7 @@ en:
   save_and_mail: "Save and send mail"
   save_without_mail: "Save without sending mail"
   field_sepa_type: "SEPA payments type"
+  label_payment_initiation: "Payment initiation"
 
   # Settings
   field_taxcode: VAT Id Number

@@ -277,8 +277,6 @@ es:
   button_generate_invoices: Nuevas facturas desde plantilla
   button_send_invoices: Enviar facturas
   label_automator_info: "descargar PDFs, script de Automator para enviar emails y marcar como enviadas"
-  label_charge_n19: Generar recibos mediante ficheros N19
-  label_charge_sepa: Generar recibos mediante ficheros SEPA
   button_mark_done: Marcar como cobrado
   label_invoice_report: Informe de facturación
   label_import_aeb43: Importar movimientos en formato AEB43
@@ -299,6 +297,7 @@ es:
   save_and_mail: "Guardar y enviar mail"
   save_without_mail: "Guardar sin enviar mail"
   field_sepa_type: "tipo de pagos SEPA"
+  label_payment_initiation: "Iniciar pagos"
 
   # Settings
   field_taxcode: "NIF"

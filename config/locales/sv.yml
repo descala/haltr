@@ -261,8 +261,6 @@ sv:
   button_generate_invoices: Ny faktura från mall
   button_send_invoices: Skicka fakturor
   label_automator_info: ladda ner PDFer, emaila och markera som skickad
-  label_charge_n19: Charge bank accounts with N19 format 
-  label_charge_sepa: Charge bank accounts with SEPA format
   button_mark_done: Markering utförd
   label_invoice_report: Fkaturarapport
   label_import_aeb43: Importera AEB43
@@ -283,6 +281,7 @@ sv:
   save_and_mail: "Spara och skicka mail"
   save_without_mail: "Spara utan att skicka mail"
   field_sepa_type: "SEPA payments type"
+  label_payment_initiation: "Payment initiation"
 
   # Settings
   field_taxcode: Momsregistreringsnummer

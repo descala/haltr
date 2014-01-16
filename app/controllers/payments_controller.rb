@@ -2,8 +2,7 @@ class PaymentsController < ApplicationController
 
   unloadable
   menu_item Haltr::MenuItem.new(:payments,:payments_level2)
-  menu_item Haltr::MenuItem.new(:payments,:charge_n19), :only=> [:n19_index,:n19,:n19_done]
-  menu_item Haltr::MenuItem.new(:payments,:charge_sepa), :only=> [:sepa_index, :sepa, :sepa_done]
+  menu_item Haltr::MenuItem.new(:payments,:payment_initiation), :only=> [:payment_initiation,:n19,:n19_done,:sepa,:sepa_done]
   menu_item Haltr::MenuItem.new(:payments,:import_aeb43), :only=> [:import_aeb43_index,:import_aeb43]
   layout 'haltr'
   helper :haltr
@@ -11,8 +10,9 @@ class PaymentsController < ApplicationController
 
   include SortHelper
 
-  before_filter :find_project_by_project_id, :except => [:destroy,:edit,:update]
-  before_filter :find_payment,               :only   => [:destroy,:edit,:update]
+  before_filter :find_project_by_project_id,       :except => [:destroy,:edit,:update]
+  before_filter :find_payment,                     :only   => [:destroy,:edit,:update]
+  before_filter :set_invoices_to_pay_by_bank_info, :only   => [:payment_initiation,:n19,:n19_done,:sepa,:sepa_done]
   before_filter :authorize
 
   include CompanyFilter
@@ -90,35 +90,27 @@ class PaymentsController < ApplicationController
     redirect_to project_payments_path(@project)
   end
 
-  def n19_index
-    @charge_bank_on_due_date = IssuedInvoice.find(:all, :conditions => ["state = 'sent' AND clients.bank_account != '' AND invoices.payment_method=? AND clients.project_id=?",Invoice::PAYMENT_DEBIT,@project.id], :include => :client).reject {|i|
-      !i.bank_info or i.bank_info.bank_account.blank?
-    }.group_by(&:bank_info)
+  def payment_initiation
+    # @invoices_to_pay_by_bank_info set on filter
   end
 
   # generate spanish AEB Nº19
   def n19
-    @due_date = Date.parse(params[:due_date])
-    @fecha_cargo = @due_date.to_formatted_s(:ddmmyy)
-    @bank_info = BankInfo.find params[:bank_info]
+    # @invoices_to_pay_by_bank_info set on filter
+    @due_date         = Date.parse(params[:due_date])
+    @fecha_cargo      = @due_date.to_formatted_s(:ddmmyy)
+    @fecha_confeccion = Date.today.to_formatted_s(:ddmmyy)
+    @bank_info        = BankInfo.find params[:bank_info]
     render_404 && return if @bank_info.bank_account.blank?
-    @clients = Client.find :all, :conditions => ["bank_account != '' and project_id = ?", @project.id], :order => 'taxcode'
-    @fecha_confeccion = Date.today.to_formatted_s :ddmmyy
-    @total = Money.new 0, Money::Currency.new(Setting.plugin_haltr['default_currency'])
-    @clients.each do |client|
-      money = client.bank_invoices_total(@due_date,@bank_info.id)
-      @clients = @clients - [client] if money.zero?
-      @total += money
+    @clients          = @bank_info.invoices.find(params[:invoices]).group_by(&:client)
+    @total            = Money.new 0, Money::Currency.new(Setting.plugin_haltr['default_currency'])
+    @clients.values.flatten.each do |invoice|
+      @total += invoice.total
     end
 
-    if @clients.size > 0
-      I18n.locale = :es
-      output = render_to_string :layout => false
-      send_data output, :filename => filename_for_content_disposition("n19-#{@fecha_cargo[4..5]}-#{@fecha_cargo[2..3]}-#{@fecha_cargo[0..1]}.txt"), :type => 'text/plain'
-    else
-      flash[:warning] = l(:notice_empty_n19)
-      redirect_to :action => 'n19_index', :project_id => @project
-    end
+    I18n.locale = :es
+    output = render_to_string :layout => false
+    send_data output, :filename => filename_for_content_disposition("n19-#{@fecha_cargo[4..5]}-#{@fecha_cargo[2..3]}-#{@fecha_cargo[0..1]}.txt"), :type => 'text/plain'
   end
   
   def n19_done
@@ -128,7 +120,7 @@ class PaymentsController < ApplicationController
       invoice.close
     end
     flash[:notice] = l(:notice_n19_done, params[:due_date])
-    redirect_to :action => 'n19_index', :project_id => @project
+    redirect_to :action => 'payment_initiation', :project_id => @project
   end
  
   def import_aeb43_index
@@ -153,19 +145,6 @@ class PaymentsController < ApplicationController
     else
       flash[:warning] = l(:notice_uploaded_uploaded_file_not_found)
       redirect_to :action => 'import_aeb43_index', :project_id => @project
-    end
-  end
-
-  def sepa_index
-    @charge_bank_on_due_date = {}
-    IssuedInvoice.find(:all, :conditions => ["state = 'sent' AND clients.iban != '' AND invoices.payment_method=? AND clients.project_id=?",Invoice::PAYMENT_DEBIT,@project.id], :include => :client).reject {|i|
-      !i.bank_info or i.bank_info.iban.blank?
-    }.group_by(&:bank_info).each do |due_date, invoices|
-      @charge_bank_on_due_date[due_date] = {}
-      invoices.each do |i|
-        @charge_bank_on_due_date[due_date][i.client.sepa_type] ||= []
-        @charge_bank_on_due_date[due_date][i.client.sepa_type] << i
-      end
     end
   end
 
@@ -207,7 +186,7 @@ class PaymentsController < ApplicationController
       render :xml => sdd.to_xml
     else
       flash[:warning] = l(:notice_empty_n19)
-      redirect_to :action => 'n19_index', :project_id => @project
+      redirect_to :action => 'payment_initiation', :project_id => @project
     end
   end
 
@@ -225,5 +204,27 @@ class PaymentsController < ApplicationController
     @project = @invoice.project
   end
 
+  # hash [bank_info][due_date][payment_type][invoices]
+  def set_invoices_to_pay_by_bank_info
+    @invoices_to_pay_by_bank_info = {}
+    @project.company.bank_infos.each do |bi|
+      @invoices_to_pay_by_bank_info[bi] = {}
+      bi.invoices.find(:all,
+        :conditions => ["state = 'sent' AND payment_method = ?", Invoice::PAYMENT_DEBIT],
+      ).group_by(&:due_date).each do |due_date, invoices|
+        @invoices_to_pay_by_bank_info[bi][due_date]         = {}
+        invoices.each do |invoice|
+          unless invoice.client.bank_account.blank?
+            @invoices_to_pay_by_bank_info[bi][due_date]["n19"] ||= []
+            @invoices_to_pay_by_bank_info[bi][due_date]["n19"] << invoice
+          end
+          unless invoice.client.iban.blank?
+            @invoices_to_pay_by_bank_info[bi][due_date]["sepa_#{invoice.client.sepa_type}"] ||= []
+            @invoices_to_pay_by_bank_info[bi][due_date]["sepa_#{invoice.client.sepa_type}"] << invoice
+          end
+        end
+      end
+    end
+  end
 
 end
