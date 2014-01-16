@@ -170,7 +170,6 @@ class PaymentsController < ApplicationController
   end
   
   def payment_done
-    debugger
     if params[:payment_type] == "sepa" and !User.current.allowed_to?(:use_sepa,@project)
       render_403
       return
