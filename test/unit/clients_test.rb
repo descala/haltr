@@ -22,4 +22,11 @@ class ClientTest < ActiveSupport::TestCase
     assert c.valid?
   end
 
+  test 'client without iban or bank_account' do
+    c = clients(:clients_001)
+    assert c.valid?
+    c.bank_account = ""
+    assert c.valid?, "client is not valid (#{c.errors.full_messages.join(" / ")})"
+  end
+
 end

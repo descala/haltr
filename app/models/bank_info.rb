@@ -4,6 +4,13 @@ class BankInfo < ActiveRecord::Base
   belongs_to :company
   has_many :invoices, :dependent => :nullify
   has_many :clients, :dependent => :nullify
+  validate :has_one_account
+
+  def has_one_account
+    if [bank_account, iban, bic].compact.reject(&:blank?).empty?
+      errors.add(:base, "empty values for bank_account, iban and bic")
+    end
+  end
 
   # used on dropdowns
   def name
