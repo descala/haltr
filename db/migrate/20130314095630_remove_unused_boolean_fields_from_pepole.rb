@@ -5,7 +5,7 @@ class RemoveUnusedBooleanFieldsFromPepole < ActiveRecord::Migration
   end
 
   def self.down
-    boolean :people, "invoice_recipient", :default => false
-    boolean :people, "report_recipient",  :default => false
+    add_column :people, "invoice_recipient", :boolean, :default => false
+    add_column :people, "report_recipient",  :boolean, :default => false
   end
 end

@@ -2,12 +2,14 @@ class Client < ActiveRecord::Base
 
   unloadable
 
+  include Haltr::BankInfoValidator
   has_many :invoices, :dependent => :destroy
   has_many :people, :dependent => :destroy
 
   belongs_to :project # client of
   belongs_to :company # linked to
-  belongs_to :bank_info
+  belongs_to :bank_info # refers to company's bank_info
+                        # default one when creating new invoices
 
   validates_presence_of :taxcode, :unless => Proc.new { |client|
     Company::COUNTRIES_WITHOUT_TAXCODE.include? client.country
@@ -18,8 +20,6 @@ class Client < ActiveRecord::Base
 
   validates_presence_of     :project_id, :name, :currency, :language, :invoice_format, :if => Proc.new {|c| c.company_id.blank? }
   validates_inclusion_of    :currency, :in  => Money::Currency.table.collect {|k,v| v[:iso_code] }, :if => Proc.new {|c| c.company_id.blank? }
-  validates_numericality_of :bank_account, :unless => Proc.new { |c| c.bank_account.blank? }
-  validates_length_of       :bank_account, :within => 16..40, :unless => Proc.new { |c| c.bank_account.blank? }
   validates_format_of       :email, :with => /\A([\w\.\-\+]+)@((?:[-a-z0-9]+\.)+[a-z]{2,})\z/i, :allow_nil => true, :allow_blank => true
   validate :bank_info_belongs_to_self
 #  validates_uniqueness_of :name, :scope => :project_id
@@ -113,11 +113,6 @@ class Client < ActiveRecord::Base
     addr = address
     addr += "\n#{address2}" if address2
     addr
-  end
-
-  # use iban and bic if they are pressent
-  def use_iban?
-    !(self.iban.nil? or self.bic.nil? or self.iban.blank? or self.bic.blank?)
   end
 
   def payment_method=(v)

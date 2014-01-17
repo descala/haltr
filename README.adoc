@@ -83,4 +83,8 @@ The call looks like this:
 
 Redmine's plugin installation instructions: http://www.redmine.org/projects/redmine/wiki/Plugins
 
+== Uninstall
+
+  bundle exec rake redmine:plugins:migrate NAME=haltr VERSION=0
+
 // vim: set syntax=asciidoc:
