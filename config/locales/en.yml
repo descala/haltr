@@ -216,6 +216,10 @@ en:
   view_mail: "View email"
   public_link: "Public link"
   mark_as_received: "Marked as received"
+  uploaded: "Uploaded"
+  email: "Received"
+  download_original: "Download original"
+  view_original: "View original"
 
   # Invoice templates
   label_invoice_template_new: New template
@@ -386,6 +390,7 @@ en:
   permission_download_pdf: "B2BRouter - Download PDF"
   permission_send_by_mail: "B2BRouter - Send by email"
   permission_send_aoc: "B2BRouter - Send through AOC"
+  permission_send_seres: "B2BRouter - Send through SERES"
   permission_send_face: "B2BRouter - Send through FACE"
   permission_send_peppol: "B2BRouter - Send through PEPPOL"
   permission_use_local_signature: "B2BRouter - Sign with local certificate"
@@ -432,3 +437,6 @@ en:
   applet_not_loaded: "Error loading applet."
   sure_to_resend_invoice: "Are you sure to re-send invoice %{num}?"
   sure_to_resend_invoices: "Are you sure to re-send invoices %{nums}?"
+  taxcodes_does_not_belong_to_self: "Invoice taxcodes (%{tcs}) does not belong to self (%{tc})"
+  label_import: "Import"
+  overriding_original_warn: "If you save this invoice, modified version will be used instead of the original file, are you sure?"

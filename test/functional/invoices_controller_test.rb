@@ -99,10 +99,24 @@ class InvoicesControllerTest < ActionController::TestCase
 
   test 'by_taxcode_and_num' do
     @request.session[:user_id] = nil
-    get :by_taxcode_and_num, :num => "08/001", "taxcode"=>"77310000G"
+    get :by_taxcode_and_num, :num => "08/001", "taxcode"=>"77310058H"
     assert_response :success
     assert_equal "855445292", @response.body
     @request.session[:user_id] = 2
+  end
+
+  test 'import invoice' do
+    post :import, {
+      file:       fixture_file_upload('/documents/invoice_facturae32_issued.xml'),
+      commit:     'Importar',
+      project_id: 'onlinestore'
+    }
+    assert User.current.allowed_to?(:import_invoices,User.current.project), "user #{User.current.login} has not import_invoices permission in project #{User.current.project.name}"
+    assert_response :found
+    invoice = IssuedInvoice.find_by_number '767'
+    assert invoice.valid?
+    assert !invoice.modified_since_created?
+    assert invoice.original
   end
 
 end

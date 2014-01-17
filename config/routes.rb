@@ -16,6 +16,7 @@ resources :projects do
   match 'companies/linked_to_mine', :controller => 'companies', :action => 'linked_to_mine', :via => :get
   match 'my_company', :controller => 'companies', :action => 'my_company', :via => :get
   match 'add_bank_info', :controller => 'companies', :action => 'add_bank_info', :via => :get
+  match 'invoices/import' => 'invoices#import', :via => [:get,:post]
   match 'invoices/send_new' => 'invoices#send_new_invoices', :via => :get
   match 'invoices/download_new' => 'invoices#download_new_invoices', :via => :get
   match 'invoices/update_payment_stuff' => 'invoices#update_payment_stuff', :via => :get
@@ -63,6 +64,10 @@ match 'invoices/destroy_payment/:id' => 'invoices#destroy_payment', :via => :del
 match 'invoices/mail/:id' => 'invoices#mail', :via => :get
 match 'invoices/base64doc/:id/:doc_format' => 'invoices#base64doc', :via => [:get,:post]
 match 'invoices/haltr_sign' => 'invoices#haltr_sign', :via => :get
+match 'invoices/original/:id' => 'invoices#original', :via => :get, :as => :invoices_original
+match 'received/original/:id' => 'received#original', :via => :get, :as => :received_original
+match 'invoices/show_original/:id' => 'invoices#show_original', :via => :get, :as => :invoices_show_original
+match 'received/show_original/:id' => 'received#show_original', :via => :get, :as => :received_show_original
 resources :invoices
 
 # public access to an invoice using the client hash
@@ -79,7 +84,6 @@ match 'received/mark_refused/:id' => 'received#mark_refused', :as => :mark_refus
 match 'received/mark_refused_with_mail/:id' => 'received#mark_refused_with_mail', :as => :mark_refused_with_mail
 match 'received/mark_accepted/:id' => 'received#mark_accepted', :as => :mark_accepted
 match 'received/mark_accepted_with_mail/:id' => 'received#mark_accepted_with_mail', :as => :mark_accepted_with_mail
-match 'received/original/:id' => 'received#original', :via => :get, :as => :received_original
 match 'received/validate/:id' => 'received#validate', :via => :get, :as => :received_validate
 
 resources :invoice_templates

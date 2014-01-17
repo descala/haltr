@@ -50,28 +50,6 @@ class ReceivedController < InvoicesController
 
   def show
     @invoice.update_attribute(:has_been_read, true)
-    if @invoice.invoice_format == "pdf"
-      render :template => 'received/show_pdf'
-    else
-      # TODO also show the database record version?
-      doc  = Nokogiri::XML(@invoice.original)
-      xslt = Nokogiri::XSLT(render_to_string(:template=>'received/facturae32.xsl.erb',:layout=>false))
-      @out  = xslt.transform(doc)
-      render :template => 'received/show_with_xsl'
-    end
-  end
-
-  def original
-    if @invoice.invoice_format == 'pdf'
-      send_data @invoice.original,
-        :type => 'application/pdf',
-        :filename => @invoice.pdf_name,
-        :disposition => params[:disposition] == 'inline' ? 'inline' : 'attachment'
-    else
-      send_data @invoice.original,
-        :type => 'text/xml; charset=UTF-8;',
-        :disposition => "attachment; filename=#{@invoice.xml_name}"
-    end
   end
 
   def mark_accepted_with_mail
