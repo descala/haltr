@@ -42,7 +42,7 @@ class Invoice < ActiveRecord::Base
 
   accepts_nested_attributes_for :invoice_lines,
     :allow_destroy => true,
-    :reject_if => proc { |attributes| attributes.all? { |_, value| value.blank? } }
+    :reject_if => :all_blank
   validates_associated :invoice_lines
 
   validate :bank_info_belongs_to_self

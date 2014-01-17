@@ -29,12 +29,12 @@ class Company < ActiveRecord::Base
 
   accepts_nested_attributes_for :taxes,
     :allow_destroy => true,
-    :reject_if => proc { |attributes| attributes.all? { |_, value| value.blank? } }
+    :reject_if => :all_blank
   validates_associated :taxes
 
   accepts_nested_attributes_for :bank_infos,
     :allow_destroy => true,
-    :reject_if => proc { |attributes| attributes.all? { |_, value| value.blank? } }
+    :reject_if => :all_blank
   validates_associated :bank_infos
 
   validate :uniqueness_of_taxes
