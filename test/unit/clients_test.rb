@@ -46,4 +46,11 @@ class ClientTest < ActiveSupport::TestCase
     assert_equal c.issued_invoices.first.total, c.bank_invoices_total(due_date, bank_infos(:bi1))
   end
 
+  test 'client without iban or bank_account' do
+    c = clients(:clients_001)
+    assert c.valid?
+    c.bank_account = ""
+    assert c.valid?, "client is not valid (#{c.errors.full_messages.join(" / ")})"
+  end
+
 end
