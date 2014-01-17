@@ -111,6 +111,7 @@ class InvoicesControllerTest < ActionController::TestCase
       commit:     'Importar',
       project_id: 'onlinestore'
     }
+    assert User.current.allowed_to?(:import_invoices,User.current.project), "user #{User.current.login} has not import_invoices permission in project #{User.current.project.name}"
     assert_response :found
     invoice = IssuedInvoice.find_by_number '767'
     assert invoice.valid?
