@@ -27,7 +27,7 @@ class CompanyTest < ActiveSupport::TestCase
   test 'sepa_creditor_identifier generated correctly' do
     assert_equal "ES73000B63354724", companies(:company3).sepa_creditor_identifier
     assert_equal "ES77000B85626240", companies(:company4).sepa_creditor_identifier
-    assert_equal "ES3300077310000G", companies(:company1).sepa_creditor_identifier
+    assert_equal "ES6100077310058H", companies(:company1).sepa_creditor_identifier
     assert_equal "ES80000S2802214E", companies(:company2).sepa_creditor_identifier
   end
 end
