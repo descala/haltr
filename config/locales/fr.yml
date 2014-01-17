@@ -389,6 +389,7 @@ fr:
   permission_download_pdf: "B2BRouter - Télécharger PDF"
   permission_send_by_mail: "B2BRouter - Envoyer à email"
   permission_send_aoc: "B2BRouter - Envoyer à AOC"
+  permission_send_seres: "B2BRouter - Enviar à SERES"
   permission_send_face: "B2BRouter - Envoyer à FACE"
   permission_send_peppol: "B2BRouter - Envoyer à PEPPOL"
   permission_use_local_signature: "B2BRouter - Signé avec un certificat local"

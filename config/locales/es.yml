@@ -402,6 +402,7 @@ es:
   permission_download_pdf: "B2BRouter - Descargar PDF"
   permission_send_by_mail: "B2BRouter - Enviar por email"
   permission_send_aoc: "B2BRouter - Enviar a través del AOC"
+  permission_send_seres: "B2BRouter - Enviar a través de SERES"
   permission_send_face: "B2BRouter - Enviar a través de FACE"
   permission_send_peppol: "B2BRouter - Enviar a PEPPOL"
   permission_use_local_signature: "B2BRouter - Firmar con certificado local"

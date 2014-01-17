@@ -389,6 +389,7 @@ sv:
   permission_download_pdf: "B2BRouter - Download PDF"
   permission_send_by_mail: "B2BRouter - Send by email"
   permission_send_aoc: "B2BRouter - Send through AOC"
+  permission_send_seres: "B2BRouter - Send through SERES"
   permission_send_face: "B2BRouter - Send through FACE"
   permission_send_peppol: "B2BRouter - Send through PEPPOL"
   permission_use_local_signature: "B2BRouter - Sign with local certificate"

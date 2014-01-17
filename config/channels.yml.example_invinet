@@ -231,6 +231,20 @@ aoc32:
   allowed_permissions:
     :send_aoc:
 
+seres32:
+  format: facturae32
+  folder: free_seres
+  validate:
+  locales:
+    ca: "Facturae 3.2 per SERES"
+    da: "Facturae 3.2 til SERES"
+    en: "Facturae 3.2 to SERES"
+    es: "Facturae 3.2 por SERES"
+    fr: "Facturae 3.2 vers SERES"
+    sv: "Spanskt format Facturae 3.2 till SERES"
+  allowed_permissions:
+    :send_seres:
+
 peppol:
   format: peppolubl20
   folder: free_peppol
