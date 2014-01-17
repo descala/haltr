@@ -132,7 +132,7 @@ class Company < ActiveRecord::Base
       end
     end.join.to_i
     # MOD97-10 from ISO 7064
-    control = 98 - ( num % 97 )
+    control = (98 - ( num % 97 )).to_s.rjust(2,'0')
     "#{country_alpha2}#{control}000#{taxcode}"
   end
 

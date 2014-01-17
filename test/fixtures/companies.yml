@@ -46,3 +46,15 @@ company4:
   city: Barcelona
   public: public
   invoice_format: facturae_32_face
+
+company5:
+  project_id: 5
+  name: Test5
+  taxcode: 77310058C
+  postalcode: 08720
+  currency: EUR
+  email: test4@example.com
+  country: es
+  city: Barcelona
+  public: public
+  invoice_format: facturae_32_face
