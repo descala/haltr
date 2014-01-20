@@ -1,0 +1,42 @@
+<div class="seccio grup">
+  <div class="col span-2-de-2">
+    <ul class="menu-rapid">
+      <li><%= link_to("label_mandate_new", new_project_mandate_path(@project), :class => 'icon icon-add') %></li>
+    </ul>
+  </div>
+</div>
+
+<!--taula-->
+<div class="seccio grup">
+  <div class="col span-2-de-2">
+    <table class="taula-1 list">
+      <thead>
+        <tr>
+          <th><%=l(:field_identifier)%></th>
+          <th><%=l(:field_signature_date)%></th>
+          <th><%=l(:field_client)%></th>
+          <th><%=l(:field_signed_doc)%></th>
+          <th><%=l(:button_edit)%></th>
+          <th><%=l(:button_delete)%></th>
+        </tr>
+      </thead>
+      <tbody>
+        <% @mandates.each do |mandate| -%>
+          <tr>
+            <td><%= mandate.identifier %></td>
+            <td><%= mandate.signature_date %></td>
+            <td><%= mandate.client.name %></td>
+            <td><%= link_to mandate.signed_doc_filename, project_mandate_signed_doc_path(mandate,:project_id=>@project) if mandate.signed_doc %></td>
+            <td><%= link_to l(:button_edit), edit_project_mandate_path(mandate, :project_id => @project), :class => 'icon icon-edit editar' %></td>
+            <td><%= link_to l(:button_delete), project_mandate_path(mandate, :project_id => @project), :method => :delete, :confirm => l(:text_are_you_sure), :method => :delete, :class => 'icon icon-del eliminar' %></td>
+          </tr>
+        <% end -%>
+      </tbody>
+    </table>
+  </div>
+</div>
+<!--final taula-->
+
+<% content_for :sidebar do %>
+  <%= render_menu :payments_menu, @project %>
+<% end %>

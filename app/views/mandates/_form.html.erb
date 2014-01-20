@@ -1,0 +1,47 @@
+<%= error_messages_for 'mandate' %>
+
+<fieldset>
+  <legend><%=l(@mandate.new_record? ? :label_mandate_new : :label_mandate)%></legend>
+
+  <div class="seccio grup">
+    <div class="col span-1-de-2">
+      <%= f.select :client_id, @project.clients.collect {|c| [c.name, c.id] } -%>
+    </div>
+  </div>
+
+  <div class="seccio grup">
+    <div class="col span-1-de-2">
+      <%= f.text_field :identifier, :required => true %>
+    </div>
+    <div class="col span-1-de-2">
+      <%= f.text_field :signature_date, :size => 10 %><%= calendar_for('mandate_signature_date') %>
+    </div>
+  </div>
+
+  <div class="seccio grup">
+    <div class="col span-1-de-2">
+      <label><%= f.radio_button :recurrent, true  %><%=l(:mandate_recurrent)%></label>
+      <label><%= f.radio_button :recurrent, false %><%=l(:mandate_non_recurrent)%></label>
+    </div>
+    <div class="col span-1-de-2">
+      <%= f.text_field :end_date, :size => 10 %><%= calendar_for('mandate_end_date') %>
+    </div>
+  </div>
+
+  <div class="seccio grup">
+    <div class="col span-1-de-2">
+      <label><%= l(:current_signed_doc) %></label>
+      <% if @mandate.signed_doc -%>
+        <p>
+        <%= link_to @mandate.signed_doc_filename, project_mandate_signed_doc_path(@mandate,:project_id=>@project) %>
+        <%= f.check_box :delete_signed_doc %>
+        </p>
+      <% end -%>
+    </div>
+    <div class="col span-1-de-2">
+      <%= f.file_field :signed_doc -%>
+    </div>
+  </div>
+</fieldset>
+
+<%= javascript_include_tag 'mandates', :plugin => 'haltr' %>
