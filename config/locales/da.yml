@@ -461,3 +461,4 @@ da:
   mandate_non_recurrent: "Unique mandate"
   field_end_date: "End of charging"
   label_mandate: "Mandate"
+  field_delete_signed_doc: "Delete signed document"

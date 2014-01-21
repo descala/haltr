@@ -95,7 +95,7 @@ Redmine::Plugin.register :haltr do
 
     permission :use_sepa,
       { :payments => [:sepa],
-        :mandates => [:index,:new,:create,:edit,:update,:destroy,:signed_doc] }, :require => :member
+        :mandates => [:index,:new,:show,:create,:edit,:update,:destroy,:signed_doc,:pdf] }, :require => :member
 
     permission :import_invoices,
       { :invoices => [:import] }, :require => :member

@@ -462,3 +462,4 @@ es:
   mandate_non_recurrent: "Mandato unico"
   field_end_date: "Fin de cobro"
   label_mandate: "Mandato"
+  field_delete_signed_doc: "Eliminar documento firmado"

@@ -108,4 +108,13 @@ module HaltrHelper
     end
   end
 
+  def iban_for_mandate
+    if @client.iban.blank?
+      iban = "#{@client.country_alpha2}______________________"
+    else
+      iban = @client.iban
+    end
+    iban.gsub(/(.)/,'\1 ').gsub(/(. . . .)/,'\1 ').gsub(/ /,'&nbsp;')
+  end
+
 end

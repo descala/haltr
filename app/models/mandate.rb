@@ -2,8 +2,7 @@ class Mandate < ActiveRecord::Base
 
   unloadable
   belongs_to :client
-  validates_presence_of :identifier, :client
-  validates_uniqueness_of :identifier, :scope => :client_id
+  validates_presence_of :client
   validate :signed_doc_is_pdf
 
   attr_accessor :signed_doc_content_type, :delete_signed_doc
@@ -15,6 +14,7 @@ class Mandate < ActiveRecord::Base
   end
 
   after_initialize do
+    self.sepa_type ||= "core"
     self.recurrent = true if self.recurrent.nil?
   end
 
@@ -30,7 +30,7 @@ class Mandate < ActiveRecord::Base
   end
 
   def signed_doc_filename
-    "mandate_#{identifier}.pdf"
+    "mandate.pdf"
   end
 
   private

@@ -5,13 +5,19 @@ class MandatesController < ApplicationController
   layout 'haltr'
   helper :haltr
   before_filter :find_project_by_project_id
-  before_filter :find_mandate, :only => [:edit,:update,:destroy,:signed_doc]
+  before_filter :find_mandate, :only => [:show,:edit,:update,:destroy,:signed_doc]
   before_filter :authorize
   include CompanyFilter
   before_filter :check_for_company
 
   def index
     @mandates = Mandate.all
+  end
+
+  def show
+    @company = @project.company
+    @client = @mandate.client
+    @is_pdf = false
   end
 
   def new
@@ -60,6 +66,10 @@ class MandatesController < ApplicationController
     else
       flash[:error] = "asd"
     end
+  end
+
+  def pdf
+    #TODO
   end
 
   private
