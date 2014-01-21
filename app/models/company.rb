@@ -136,6 +136,12 @@ class Company < ActiveRecord::Base
     "#{country_alpha2}#{control}000#{taxcode}"
   end
 
+  def default_tax_code_for(name)
+    taxes.collect {|t| t if t.name == name and t.default }.compact.first.code
+  rescue
+    ""
+  end
+
   private
 
   def update_linked_clients
