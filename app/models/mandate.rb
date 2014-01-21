@@ -30,7 +30,7 @@ class Mandate < ActiveRecord::Base
   end
 
   def signed_doc_filename
-    "mandate.pdf"
+    "signed_mandate.pdf"
   end
 
   private

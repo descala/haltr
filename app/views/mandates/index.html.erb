@@ -15,7 +15,7 @@
           <th><%=l(:field_client)%></th>
           <th><%=l(:field_signature_date)%></th>
           <th><%=l(:field_signed_doc)%></th>
-          <th><%=l(:button_show)%></th>
+          <th><%=l(:button_download)%></th>
           <th><%=l(:button_edit)%></th>
           <th><%=l(:button_delete)%></th>
         </tr>
@@ -26,7 +26,7 @@
             <td><%= mandate.client.name %></td>
             <td><%= mandate.signature_date %></td>
             <td><%= link_to mandate.signed_doc_filename, project_mandate_signed_doc_path(mandate,:project_id=>@project) if mandate.signed_doc %></td>
-            <td><%= link_to l(:button_show), project_mandate_path(mandate, :project_id => @project), :class => 'icon icon-show mostrar' %></td>
+            <td><%= link_to l(:button_download), project_mandate_path(mandate, :project_id => @project, :format=>'pdf'), :class => 'icon icon-download' %></td>
             <td><%= link_to l(:button_edit), edit_project_mandate_path(mandate, :project_id => @project), :class => 'icon icon-edit editar' %></td>
             <td><%= link_to l(:button_delete), project_mandate_path(mandate, :project_id => @project), :method => :delete, :confirm => l(:text_are_you_sure), :method => :delete, :class => 'icon icon-del eliminar' %></td>
           </tr>

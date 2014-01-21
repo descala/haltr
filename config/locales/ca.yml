@@ -460,3 +460,4 @@ ca:
   field_end_date: "Fi de cobrament"
   label_mandate: "Mandat"
   field_delete_signed_doc: "Eliminar document signat"
+  label_mandates: "Mandats"

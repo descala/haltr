@@ -463,3 +463,4 @@ es:
   field_end_date: "Fin de cobro"
   label_mandate: "Mandato"
   field_delete_signed_doc: "Eliminar documento firmado"
+  label_mandates: "Mandatos"

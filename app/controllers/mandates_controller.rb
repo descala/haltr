@@ -18,6 +18,18 @@ class MandatesController < ApplicationController
     @company = @project.company
     @client = @mandate.client
     @is_pdf = false
+    respond_to do |format|
+      format.html
+      format.pdf do
+        @is_pdf = true
+        render :pdf => "mandate.pdf",
+          :disposition => 'attachment',
+          :layout => "mandate.html",
+          :template=>"mandates/show",
+          :formats => :html,
+          :show_as_html => params[:debug]
+      end
+    end
   end
 
   def new
@@ -66,10 +78,6 @@ class MandatesController < ApplicationController
     else
       flash[:error] = "asd"
     end
-  end
-
-  def pdf
-    #TODO
   end
 
   private
