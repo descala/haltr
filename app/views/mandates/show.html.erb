@@ -10,71 +10,7 @@
 <!--final menu rapid-->
 <% end -%>
 
-<div id="mandate_wrapper">
-  <div id="workspace1" class="haltrmandate">
-
-    <div id="vendor">
-      <div id="logo">
-        <% if @company.attachments.any? -%>
-          <%if !@is_pdf or params[:debug].present? %>
-            <%= tag 'img', :src => "/invoices/logo/#{@company.attachments.first.id}/#{@company.attachments.first.filename}", :alt => "#{@company.name} Logo" -%>
-          <% else %>
-            <%= tag 'img', :src => @company.attachments.first.diskfile -%>
-          <% end -%>
-        <% end -%>
-      </div>
-      <h3><%=h @company.name %></h3>
-      <address class="adr">
-        <div class="street-address"><%=h @company.address %></div>
-        <span class="postal-code"><%=h @company.postalcode %></span> <span class="locality"><%=h @company.city %></span>
-        <div class="region"><%=h @company.province %></div>
-        <div class="country-name"></div>
-      </address>
-      <div><strong><%=h l(:field_taxcode) %></strong><span class="tax-id"> <%=h @company.taxcode %></span></div>
-      <div style="height:10px;"></div>
-      <div><%= @company.website %></div>
-      <div><%= @company.email %></div>
-    </div>
-
-    <div id="mandate_body">
-    <h1 class="center">Orden de domiciliación de adeudo directo SEPA B2B</h1>
-    <h2 class="center">Identificador del acreedor: <%=@company.sepa_creditor_identifier%></h2>
-
-    <p>Mediante la firma de esta orden de domiciliación, el deudor autoriza (A) al acreedor a enviar instrucciones a la entidad del deudor para adeudar su cuenta y (B) a la entidad a efectuar los adeudos en su cuenta siguiendo las instrucciones del acreedor. Esta orden de domiciliación está prevista para operaciones exclusivamente entre empresas y/o autónomos. El deudor no tiene derecho a que su entidad le reembolse una vez que se haya realizado el cargo en cuenta, pero puede solicitar a su entidad que no efectúe el adeudo en la cuenta hasta la fecha debida.</p>
-
-    <table>
-      <tbody>
-        <tr>
-          <td>Nombre del deudor:</td><td><%=@client.name%></td>
-        </tr>
-        <tr>
-          <td>Dirección del deudor:</td><td><%=@client.address%></td>
-        </tr>
-        <tr>
-          <td>Número de cuenta IBAN:</td><td></td>
-        </tr>
-        <tr>
-          <td colspan="2" class="iban"><%= iban_for_mandate.html_safe %></td>
-        </tr>
-        <tr>
-          <td>Tipo de pago:</td><td><%=@mandate.recurrent ? "Pago recurrente<br/>Este mandato se puede usar para adeudos recurrentes".html_safe : "Pago único" %></td>
-        </tr>
-      </tbody>
-    </table>
-
-    <p>Confirma el firmante que tiene poderes suficientes para la firma de la presente autorización.</p>
-    <p>Fecha: El ............... de .................................................... de <%=Date.today.year%>.</p>
-    <p>Firma de la persona y sello de la empresa.</p>
-    <div id="blank_space">
-    </div>
-
-    <p>Una vez firmada esta orden de domiciliación debe ser enviada al acreedor para su custodia. La entidad de deudor requiere autorización de éste previa al cargo en cuenta de los Adeudos Directos B2B. El deudor podrá gestionar dicha autorización con los medios que su entidad ponga a su disposición.</p>
-
-    </div>
-
-  </div>
-</div>
-
+<%= render :partial => "mandate.#{I18n.locale}" rescue ActionView::MissingTemplate ; render :partial => "mandate.en" %>
 
 <% content_for :sidebar do %>
   <%= render_menu :payments_menu, @project %>
