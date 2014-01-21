@@ -460,3 +460,4 @@ da:
   mandate_recurrent: "Recurrent mandate"
   mandate_non_recurrent: "Unique mandate"
   field_end_date: "End of charging"
+  label_mandate: "Mandate"

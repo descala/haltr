@@ -458,3 +458,4 @@ ca:
   mandate_recurrent: "Mandat recurrent"
   mandate_non_recurrent: "Mandat únic"
   field_end_date: "Fi de cobrament"
+  label_mandate: "Mandat"

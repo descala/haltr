@@ -461,3 +461,4 @@ es:
   mandate_recurrent: "Mandato recurrente"
   mandate_non_recurrent: "Mandato unico"
   field_end_date: "Fin de cobro"
+  label_mandate: "Mandato"
