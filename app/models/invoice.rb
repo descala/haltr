@@ -353,6 +353,7 @@ class Invoice < ActiveRecord::Base
 
   def global_code_for(tax_name)
     return "" if tax_per_line? tax_name
+    return company.default_tax_code_for(tax_name) if new_record?
     return "" if invoice_lines.first.nil?
     first_tax = invoice_lines.first.taxes.collect {|t| t if t.name == tax_name}.compact.first
     return "" if first_tax.nil?

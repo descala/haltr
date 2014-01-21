@@ -78,7 +78,7 @@
         <%= label_tag "#{name}_global", name%>
           <%= select_tag("#{name}_global",
                          options_for_select(tax_categories_array(@invoice,name),
-                         :selected => @invoice.new_record? ? @invoice.company.default_tax_code_for(name) : @invoice.global_code_for(name)),
+                         :selected => @invoice.global_code_for(name)),
                          :disabled => @invoice.tax_per_line?(name),
                          :style => "width: 90px;",
                          'class' => 'global_tax',
