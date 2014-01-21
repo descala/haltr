@@ -19,12 +19,14 @@
   </div>
 
   <div class="seccio grup">
-    <div class="col span-1-de-2">
+    <div class="col span-1-de-2" style="height:84px; padding-top:20px;">
       <label><%= f.radio_button :recurrent, true  %><%=l(:mandate_recurrent)%></label>
       <label><%= f.radio_button :recurrent, false %><%=l(:mandate_non_recurrent)%></label>
     </div>
     <div class="col span-1-de-2">
+      <div id="div_mandate_end_date" style="<%="display:none;" unless @mandate.recurrent %>">
       <%= f.text_field :end_date, :size => 10 %><%= calendar_for('mandate_end_date') %>
+      </div>
     </div>
   </div>
 

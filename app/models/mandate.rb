@@ -14,6 +14,10 @@ class Mandate < ActiveRecord::Base
     end
   end
 
+  after_initialize do
+    self.recurrent = true if self.recurrent.nil?
+  end
+
   def signed_doc=(s)
     if s and s.size > 0
       self.signed_doc_content_type = s.content_type
