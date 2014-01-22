@@ -92,13 +92,6 @@ table.payment_initiation {
   width: 99%;
   margin-left: 1%;
 }
-table.payment_initiation > tbody > tr > td, table.payment_initiation > tbody > tr > th {
-  border: 1px solid;
-}
-table.payment_initiation th {
-  text-align: center;
-  font-weight: bold;
-}
 table.payment_initiation td {
   font-size: 115%;
 }

@@ -5,12 +5,15 @@
     <% @invoices_to_pay_by_bank_info.each do |bank_info, invoices_by_due_date| -%>
       <h3><%=l :field_bank_account %> <%=bank_info.name%></h3>
 
-        <table class="payment_initiation">
+        <table class="list taula-1 payment_initiation">
+          <thead>
           <tr>
             <th><%=l(:field_due_date)%></th>
             <th>SEPA</th>
             <th>N19</th>
           </tr>
+          </thead>
+          <tbody>
           <% invoices_by_due_date.each do |due_date, invoices_by_payment_type| -%>
             <tr>
               <td width="10%"><%=due_date%></td>
@@ -44,6 +47,7 @@
               </td>
             </tr>
           <% end -%>
+          </tbody>
         </table>
 
     <% end -%>
