@@ -10,7 +10,7 @@
 <!--final menu rapid-->
 <% end -%>
 
-<%= render :partial => "mandate.#{I18n.locale}" rescue ActionView::MissingTemplate ; render :partial => "mandate.en" %>
+<%= begin ; render :partial => "mandate.#{I18n.locale}" ; rescue ActionView::MissingTemplate ; render :partial => "mandate.en" ; end %>
 
 <% content_for :sidebar do %>
   <%= render_menu :payments_menu, @project %>
