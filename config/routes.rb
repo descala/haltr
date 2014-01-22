@@ -33,6 +33,7 @@ resources :projects do
   match 'payments/import_aeb43' => 'payments#import_aeb43'
   match 'payments/payment_initiation'  => 'payments#payment_initiation',  :via => :get
   match 'payments/n19'  => 'payments#n19',  :via => :get
+  match 'payments/sepa' => 'payments#sepa', :via => :get
   resources :mandates
   match 'mandates/:id/signed_doc' => 'mandates#signed_doc', :via => :get, :as => 'mandate_signed_doc'
   match 'payments/payment_done' => 'payments#payment_done', :via => :post
