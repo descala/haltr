@@ -117,7 +117,11 @@ class PaymentsController < ApplicationController
     @fecha_cargo      = @due_date.to_formatted_s(:ddmmyy)
     @fecha_confeccion = Date.today.to_formatted_s(:ddmmyy)
     @bank_info        = BankInfo.find params[:bank_info]
-    render_404 && return if @bank_info.bank_account.blank?
+    if @bank_info.bank_account.blank?
+      flash[:error] = l(:n19_requires_bank_account)
+      redirect_to project_my_company_path(@project)
+      return
+    end
     @clients          = @bank_info.invoices.find(params[:invoices]).group_by(&:client)
     @total            = Money.new 0, Money::Currency.new(Setting.plugin_haltr['default_currency'])
     @clients.values.flatten.each do |invoice|

@@ -445,3 +445,4 @@ en:
   label_mandate: "Mandate"
   field_delete_signed_doc: "Delete signed document"
   label_mandates: "Mandates"
+  n19_requires_bank_account: "To generate n19 you must fill your bank account"

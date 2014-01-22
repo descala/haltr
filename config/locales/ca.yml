@@ -461,3 +461,4 @@ ca:
   label_mandate: "Mandat"
   field_delete_signed_doc: "Eliminar document signat"
   label_mandates: "Mandats"
+  n19_requires_bank_account: "Per generar n19 cal omplir el teu compte bancari"

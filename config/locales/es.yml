@@ -464,3 +464,4 @@ es:
   label_mandate: "Mandato"
   field_delete_signed_doc: "Eliminar documento firmado"
   label_mandates: "Mandatos"
+  n19_requires_bank_account: "Para generar n19 debes rellenar tu cuenta bancaria"
