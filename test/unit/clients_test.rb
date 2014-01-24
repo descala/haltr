@@ -22,6 +22,30 @@ class ClientTest < ActiveSupport::TestCase
     assert c.valid?
   end
 
+  test 'bank_invoices_ methods' do
+    due_date = Date.new(2014,02,01)
+    c = clients(:client1)
+    assert_equal 4, c.invoices.size
+    c.issued_invoices.each do |i|
+      i.due_date       = due_date
+      i.payment_method = Invoice::PAYMENT_DEBIT
+      i.bank_info      = bank_infos(:bi1)
+      i.terms          = 'custom'
+      i.state          = 'sent'
+      assert i.save
+    end
+    assert_equal 2, c.bank_invoices(due_date,bank_infos(:bi1).id).size
+    total = c.issued_invoices.collect {|i| i.import }.sum
+    assert_equal total, c.bank_invoices_total(due_date, bank_infos(:bi1).id)
+    i = c.issued_invoices.last
+    i.bank_info = bank_infos(:bi4)
+    i.save
+    assert_equal 1, c.bank_invoices(due_date,bank_infos(:bi1).id).size
+    assert_equal c.issued_invoices.first.total, c.bank_invoices_total(due_date, bank_infos(:bi1))
+    assert_equal 1, c.bank_invoices(due_date,bank_infos(:bi4).id).size
+    assert_equal c.issued_invoices.first.total, c.bank_invoices_total(due_date, bank_infos(:bi1))
+  end
+
   test 'client without iban or bank_account' do
     c = clients(:clients_001)
     assert c.valid?

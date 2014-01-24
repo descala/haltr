@@ -278,7 +278,6 @@ ca:
   button_generate_invoices: Noves factures des de plantilla
   button_send_invoices: Enviar noves
   label_automator_info: "descarregar els PDFs, script de l'Automator per enviar emails i marcar-les com a enviades"
-  label_charge_n19: Girar rebuts mitjançant fitxers N19 
   button_mark_done: Marcar com a cobrat
   label_invoice_report: Informe de facturació
   label_import_aeb43: Importar moviments en format AEB43
@@ -298,6 +297,8 @@ ca:
   received_paid_notification_to: "Notificar recepció de pagament a %{mail}"
   save_and_mail: "Desar i enviar mail"
   save_without_mail: "Desar sense enviar mail"
+  field_sepa_type: "Tipus de pagaments SEPA"
+  label_payment_initiation: "Iniciació de pagaments"
 
   # Settings
   field_taxcode: "NIF"
@@ -348,7 +349,7 @@ ca:
   notice_invoice_sent: "La factura s'ha enviat"
   error_invoice_not_sent: "La factura %{num} no s'ha pogut enviar"
   notice_empty_n19: "No hi ha dades per generar un N19"
-  notice_n19_done: "S'ha tancat el N19 de data %{value}"
+  notice_payment_done: "S'ha tancat el %{payment_type} de data %{value}"
   notice_uploaded_file_not_found: "No s'ha trobat el fitxer"
 
   hide_full_form: "Mostrar menys camps"
@@ -450,4 +451,14 @@ ca:
   taxcodes_does_not_belong_to_self: "Els NIF de la factura (%{tcs}) no son de la teva empresa (%{tc})"
   label_import: "Importar"
   overriding_original_warn: "Si deses aquesta factura, a partir d'ara es farà servir la modificada en comptes del fitxer original, n'estàs segur?"
+  label_mandate_new: "Nou mandat"
+  field_signature_date: "Data de signatura"
+  field_signed_doc: "Document signat"
+  current_signed_doc: "Document signat actual"
+  mandate_recurrent: "Mandat recurrent"
+  mandate_non_recurrent: "Mandat únic"
+  field_end_date: "Fi de cobrament"
+  label_mandate: "Mandat"
+  field_delete_signed_doc: "Eliminar document signat"
+  label_mandates: "Mandats"
   n19_requires_bank_account: "Per generar n19 cal omplir el teu compte bancari"

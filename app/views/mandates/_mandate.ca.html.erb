@@ -1,0 +1,65 @@
+<div id="mandate_wrapper">
+  <div id="workspace1" class="haltrmandate">
+
+    <div id="vendor">
+      <div id="logo">
+        <% if @company.attachments.any? -%>
+          <%if !@is_pdf or params[:debug].present? %>
+            <%= tag 'img', :src => "/invoices/logo/#{@company.attachments.first.id}/#{@company.attachments.first.filename}", :alt => "#{@company.name} Logo" -%>
+          <% else %>
+            <%= tag 'img', :src => @company.attachments.first.diskfile -%>
+          <% end -%>
+        <% end -%>
+      </div>
+      <h3><%=h @company.name %></h3>
+      <address class="adr">
+        <div class="street-address"><%=h @company.address %></div>
+        <span class="postal-code"><%=h @company.postalcode %></span> <span class="locality"><%=h @company.city %></span>
+        <div class="region"><%=h @company.province %></div>
+        <div class="country-name"></div>
+      </address>
+      <div><strong><%=h l(:field_taxcode) %></strong><span class="tax-id"> <%=h @company.taxcode %></span></div>
+      <div style="height:10px;"></div>
+      <div><%= @company.website %></div>
+      <div><%= @company.email %></div>
+    </div>
+
+    <div id="mandate_body">
+      <h1 class="center">Ordre de domiciliació de càrrec directe SEPA <%=@mandate.sepa_type%></h1>
+      <h2 class="center">Identificador del creditor: <%=@company.sepa_creditor_identifier%></h2>
+
+      <p>Mitjançant la signatura d'aquesta ordre de domiciliació, el deutor autoritza (A) al creditor a enviar instruccions a l'entitat del deutor per carregar el seu compte i (B) a l'entitat a efectuar els càrrecs al seu compte seguint les instruccions del creditor. Aquesta ordre de domiciliació està prevista per operacions exclusivament entre empreses i/o autònoms. El deutor no té dret a que la seva entitat li reembossi un cop s'hagi fet el càrrec al compte, però pot sol·licitar a la seva entitat que no efectui el càrrec al compte fins la data deguda.</p>
+
+      <table>
+        <tbody>
+          <tr>
+            <td>Nom del deutor:</td><td><%=@client.name%></td>
+          </tr>
+          <tr>
+            <td>Adreça del deutor:</td><td><%=@client.address%></td>
+          </tr>
+          <tr>
+            <td>Número de compte IBAN:</td><td></td>
+          </tr>
+          <tr>
+            <td colspan="2" class="iban"><%= iban_for_mandate.html_safe %></td>
+          </tr>
+          <tr>
+            <td>Tipus de pagament:</td><td><%=@mandate.recurrent ? "Recurrent<br/>Aquest mandat es pot utilitzar per càrrecs recurrents".html_safe : "Únic" %></td>
+          </tr>
+        </tbody>
+      </table>
+
+      <p>Confirma el sota-signant que té poders suficients per la signatura d'aquesta autorització.</p>
+      <p>Data: El ............... de .................................................... de <%=Date.today.year%>.</p>
+      <p>Signatura de la persona i segell de l'empresa.</p>
+      <div id="blank_space">
+      </div>
+
+      <p>Una vegada signada aquesta ordre de domiciliació ha de ser enviada al creditor per tal que la custodïi. L'entitat del deutor requereix la seva autorització prèvia al càrrec en compte dels Càrrecs Directes B2B. El deutor podrà gestionar aquesta autorització amb els mitjans que la seva entitat posi a la seva disposició.</p>
+
+    </div>
+
+  </div>
+</div>
+

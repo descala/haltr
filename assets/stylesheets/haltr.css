@@ -88,3 +88,13 @@ select.tax {
 table#invoice_lines {
   min-width: 50%;
 }
+table.payment_initiation {
+  width: 99%;
+  margin-left: 1%;
+}
+table.payment_initiation td {
+  font-size: 115%;
+}
+table.payment_initiation td table td {
+  border: none;
+}

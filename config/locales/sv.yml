@@ -265,7 +265,6 @@ sv:
   button_generate_invoices: Ny faktura från mall
   button_send_invoices: Skicka fakturor
   label_automator_info: ladda ner PDFer, emaila och markera som skickad
-  label_charge_n19: Charge bank accounts with N19 format 
   button_mark_done: Markering utförd
   label_invoice_report: Fkaturarapport
   label_import_aeb43: Importera AEB43
@@ -285,6 +284,8 @@ sv:
   received_paid_notification_to: "Notifiera mottagaren om betalning %{mail}"
   save_and_mail: "Spara och skicka mail"
   save_without_mail: "Spara utan att skicka mail"
+  field_sepa_type: "SEPA payments type"
+  label_payment_initiation: "Payment initiation"
 
   # Settings
   field_taxcode: Momsregistreringsnummer
@@ -334,7 +335,7 @@ sv:
   notice_invoice_sent: "Faktura skickad"
   error_invoice_not_sent: "Kunde inte skicka faktura %{num}"
   notice_empty_n19: "Ingen data finns för att skapa N19"
-  notice_n19_done:  "Nº19 för betaldatum %{value} markerad som utförd"
+  notice_payment_done: "%{payment_type} för betaldatum %{value} markerad som utförd"
   notice_uploaded_file_not_found: "Filen hittades inte"
 
   hide_full_form: "Visa färre fält"
@@ -439,4 +440,14 @@ sv:
   taxcodes_does_not_belong_to_self: "Invoice taxcodes (%{tcs}) does not belong to self (%{tc})"
   label_import: "Import"
   overriding_original_warn: "If you save this invoice, modified version will be used instead of the original file, are you sure?"
+  label_mandate_new: "New mandate"
+  field_signature_date: "Signature date"
+  field_signed_doc: "Signed document"
+  current_signed_doc: "Current signed document"
+  mandate_recurrent: "Recurrent mandate"
+  mandate_non_recurrent: "Unique mandate"
+  field_end_date: "End of charging"
+  label_mandate: "Mandate"
+  field_delete_signed_doc: "Delete signed document"
+  label_mandates: "Mandates"
   n19_requires_bank_account: "To generate n19 you must fill your bank account"

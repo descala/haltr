@@ -1,0 +1,66 @@
+<div id="mandate_wrapper">
+  <div id="workspace1" class="haltrmandate">
+
+    <div id="vendor">
+      <div id="logo">
+        <% if @company.attachments.any? -%>
+          <%if !@is_pdf or params[:debug].present? %>
+            <%= tag 'img', :src => "/invoices/logo/#{@company.attachments.first.id}/#{@company.attachments.first.filename}", :alt => "#{@company.name} Logo" -%>
+          <% else %>
+            <%= tag 'img', :src => @company.attachments.first.diskfile -%>
+          <% end -%>
+        <% end -%>
+      </div>
+      <h3><%=h @company.name %></h3>
+      <address class="adr">
+        <div class="street-address"><%=h @company.address %></div>
+        <span class="postal-code"><%=h @company.postalcode %></span> <span class="locality"><%=h @company.city %></span>
+        <div class="region"><%=h @company.province %></div>
+        <div class="country-name"></div>
+      </address>
+      <div><strong><%=h l(:field_taxcode) %></strong><span class="tax-id"> <%=h @company.taxcode %></span></div>
+      <div style="height:10px;"></div>
+      <div><%= @company.website %></div>
+      <div><%= @company.email %></div>
+    </div>
+
+    <div id="mandate_body">
+      <h1 class="center">SEPA Direct Debit Mandate<%=@mandate.sepa_type%></h1>
+      <h2 class="center">Creditor Id: <%=@company.sepa_creditor_identifier%></h2>
+
+      <p>By signing this Mandate, the debtor authorizes (A) the creditor to send instructions to the debtor financial entity to debit his account and (B) the financial entity to make debits to his account as instructed by the creditor. This Mandate is provided exclusively for transactions between businesses and / or self-employed. The debtor is not entitled to be reimbursed once you the debit has been made, but he can ask his entity does not charge the debt on the account until the due date.</p>
+      
+
+      <table>
+        <tbody>
+          <tr>
+            <td>Debtor name:</td><td><%=@client.name%></td>
+          </tr>
+          <tr>
+            <td>Debtor address:</td><td><%=@client.address%></td>
+          </tr>
+          <tr>
+            <td>IBAN:</td><td></td>
+          </tr>
+          <tr>
+            <td colspan="2" class="iban"><%= iban_for_mandate.html_safe %></td>
+          </tr>
+          <tr>
+            <td>Payment:</td><td><%=@mandate.recurrent ? "Recurring<br/>This mandate can be used for recurring direct debits".html_safe : "One-off" %></td>
+          </tr>
+        </tbody>
+      </table>
+
+      <p>Confirm that the signer has sufficient powers to sign this authorization.</p>
+      <p>Date: ................................................................... <%=Date.today.year%>.</p>
+      <p>Signature of person and company stamp.</p>
+      <div id="blank_space">
+      </div>
+
+      <p>Once signed, this Mandate should be sent to the creditor for safekeeping. The debtor financial institution requires prior authorization to debit using SEPA B2B Direct Debit. The debtor can manage such authorization using any means that the financial institutuion makes available.</p>
+
+    </div>
+
+  </div>
+</div>
+

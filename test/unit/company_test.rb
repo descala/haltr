@@ -22,4 +22,13 @@ class CompanyTest < ActiveSupport::TestCase
     c.taxcode = "B776655"
     assert c.valid?
   end
+
+  #TODO: test cifs with dashes, spaces...
+  test 'sepa_creditor_identifier generated correctly' do
+    assert_equal "ES73000B63354724", companies(:company3).sepa_creditor_identifier
+    assert_equal "ES77000B85626240", companies(:company4).sepa_creditor_identifier
+    assert_equal "ES6100077310058H", companies(:company1).sepa_creditor_identifier
+    assert_equal "ES80000S2802214E", companies(:company2).sepa_creditor_identifier
+    assert_equal "ES0200077310058C", companies(:company5).sepa_creditor_identifier
+  end
 end

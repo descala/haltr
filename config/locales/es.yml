@@ -281,7 +281,6 @@ es:
   button_generate_invoices: Nuevas facturas desde plantilla
   button_send_invoices: Enviar facturas
   label_automator_info: "descargar PDFs, script de Automator para enviar emails y marcar como enviadas"
-  label_charge_n19: Generar recibos mediante ficheros N19
   button_mark_done: Marcar como cobrado
   label_invoice_report: Informe de facturación
   label_import_aeb43: Importar movimientos en formato AEB43
@@ -301,6 +300,8 @@ es:
   received_paid_notification_to: "Notificar recepción del pago a %{mail}"
   save_and_mail: "Guardar y enviar mail"
   save_without_mail: "Guardar sin enviar mail"
+  field_sepa_type: "tipo de pagos SEPA"
+  label_payment_initiation: "Iniciar pagos"
 
   # Settings
   field_taxcode: "NIF"
@@ -350,7 +351,7 @@ es:
   notice_invoice_sent: "La factura se ha enviado"
   error_invoice_not_sent: "La factura %{num} no se ha podido enviar"
   notice_empty_n19: "No hay datos para generar un N19"
-  notice_n19_done:  "Se ha cerrado el N19 de fecha %{value}"
+  notice_payment_done: "Se ha cerrado el %{payment_type} de fecha %{value}"
   notice_uploaded_file_not_found: "No s'ha encontrado el fichero"
 
   hide_full_form: "Mostrar menos campos"
@@ -453,4 +454,14 @@ es:
   taxcodes_does_not_belong_to_self: "Los NIF de la factura (%{tcs}) no son de tu empresa (%{tc})"
   label_import: "Importar"
   overriding_original_warn: "Si guardas esta factura, a partir de ahora se usara la version modificada en lugar del fichero original, estas seguro?"
+  label_mandate_new: "Nuevo mandato"
+  field_signature_date: "Fuecha de firma"
+  field_signed_doc: "Documento firmado"
+  current_signed_doc: "Documento firmado actual"
+  mandate_recurrent: "Mandato recurrente"
+  mandate_non_recurrent: "Mandato unico"
+  field_end_date: "Fin de cobro"
+  label_mandate: "Mandato"
+  field_delete_signed_doc: "Eliminar documento firmado"
+  label_mandates: "Mandatos"
   n19_requires_bank_account: "Para generar n19 debes rellenar tu cuenta bancaria"

@@ -1,0 +1,54 @@
+#vendor {
+  border-bottom: 2px solid #DDDDDD;
+  margin: 0 0 20px;
+  overflow: hidden;
+  padding: 0 0 10px;
+  text-align: right;
+  font-size: 12px;
+  line-height: 1.5em;
+  margin: 0 0 30px;
+}
+
+#logo {
+  float: left;
+}
+
+#mandate_wrapper h1 {
+  font-size: 25px;
+}
+
+#mandate_wrapper h2 {
+  font-size: 20px;
+}
+
+#mandate_body {
+  margin: 20px;
+}
+
+.center {
+  text-align: center;
+}
+
+#mandate_body table, #mandate_body h1, #mandate_body h2, #mandate_body p {
+  margin-top: 20px;
+}
+
+#mandate_body table {
+  width: 100%;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+#mandate_body td {
+  width: 50%;
+  padding-bottom: 20px;
+}
+
+#mandate_body td.iban {
+  text-align: center;
+  font-size: 25px;
+}
+
+#blank_space {
+  height: 225px;
+}

@@ -268,7 +268,6 @@ en:
   button_generate_invoices: New invoices from template
   button_send_invoices: Send invoices
   label_automator_info: download PDFs, e-mail automator script and mark as sent
-  label_charge_n19: Charge bank accounts with N19 format 
   button_mark_done: Mark as done
   label_invoice_report: Invoices report
   label_import_aeb43: Import AEB43
@@ -288,6 +287,8 @@ en:
   received_paid_notification_to: "Notify receipt of payment to %{mail}"
   save_and_mail: "Save and send mail"
   save_without_mail: "Save without sending mail"
+  field_sepa_type: "SEPA payments type"
+  label_payment_initiation: "Payment initiation"
 
   # Settings
   field_taxcode: VAT Id Number
@@ -337,7 +338,7 @@ en:
   notice_invoice_sent: "Invoice sent"
   error_invoice_not_sent: "Could not send invoice %{num}"
   notice_empty_n19: "No data to create N19"
-  notice_n19_done:  "Nº19 for due date %{value} maked as done"
+  notice_payment_done: "%{payment_type} for due date %{value} maked as done"
   notice_uploaded_file_not_found: "File not found"
 
   hide_full_form: "Show less fields"
@@ -434,4 +435,14 @@ en:
   taxcodes_does_not_belong_to_self: "Invoice taxcodes (%{tcs}) does not belong to self (%{tc})"
   label_import: "Import"
   overriding_original_warn: "If you save this invoice, modified version will be used instead of the original file, are you sure?"
+  label_mandate_new: "New mandate"
+  field_signature_date: "Signature date"
+  field_signed_doc: "Signed document"
+  current_signed_doc: "Current signed document"
+  mandate_recurrent: "Recurrent mandate"
+  mandate_non_recurrent: "Unique mandate"
+  field_end_date: "End of charging"
+  label_mandate: "Mandate"
+  field_delete_signed_doc: "Delete signed document"
+  label_mandates: "Mandates"
   n19_requires_bank_account: "To generate n19 you must fill your bank account"

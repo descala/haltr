@@ -4,7 +4,6 @@ class BankInfoTest < ActiveSupport::TestCase
   fixtures :companies, :bank_infos
 
   test "user needs role to add more than one bank accounts" do
-    assert_equal(1,companies(:company1).bank_infos.size)
     #TODO
   end
 

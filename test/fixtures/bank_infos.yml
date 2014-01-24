@@ -4,6 +4,12 @@ bi1:
   bank_account: "12345678901234567890"
   company: company1
 
+bi4:
+  id: 4
+  name: "bank account 4"
+  bank_account: "99999999999234567890"
+  company: company1
+
 bi2:
   id: 2
   name: ""

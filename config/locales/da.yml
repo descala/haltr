@@ -266,7 +266,6 @@ da:
   button_generate_invoices: Nye fakturaer fra skablon
   button_send_invoices: Send fakturaer
   label_automator_info: download PDFs, e-mail automator script and mark as sent
-  label_charge_n19: Charge bank accounts with N19 format
   button_mark_done: Markér som udført
   label_invoice_report: faktura rapport
   label_import_aeb43: Importer AEB43
@@ -286,6 +285,8 @@ da:
   received_paid_notification_to: "Giv modtagelse af betaling til %{mail}"
   save_and_mail: "Gem og send e-mail"
   save_without_mail: "Gem uden at sende e-mail"
+  field_sepa_type: "SEPA payments type"
+  label_payment_initiation: "Payment initiation"
  
   # Settings
   field_taxcode: MOMS Nummer
@@ -335,7 +336,7 @@ da:
   notice_invoice_sent: "Faktura sendt"
   error_invoice_not_sent: "Kunne ikke sende faktura %{num}"
   notice_empty_n19: "Ingen data til at skabe N19"
-  notice_n19_done: "N19 for forfaldsdatoen %{value} maked som udført"
+  notice_payment_done: "%{payment_type} for forfaldsdatoen %{value} maked som udført"
   notice_uploaded_file_not_found: "Fil ikke fundet"
  
   hide_full_form: "Vis færre felter"
@@ -452,4 +453,14 @@ da:
   taxcodes_does_not_belong_to_self: "Invoice taxcodes (%{tcs}) does not belong to self (%{tc})"
   label_import: "Import"
   overriding_original_warn: "If you save this invoice, modified version will be used instead of the original file, are you sure?"
+  label_mandate_new: "New mandate"
+  field_signature_date: "Signature date"
+  field_signed_doc: "Signed document"
+  current_signed_doc: "Current signed document"
+  mandate_recurrent: "Recurrent mandate"
+  mandate_non_recurrent: "Unique mandate"
+  field_end_date: "End of charging"
+  label_mandate: "Mandate"
+  field_delete_signed_doc: "Delete signed document"
+  label_mandates: "Mandates"
   n19_requires_bank_account: "To generate n19 you must fill your bank account"

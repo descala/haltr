@@ -106,25 +106,34 @@
   <legend><%=l(:bank_info)%></legend>
   <div class="seccio grup">
     <p class="col span-1-de-3">
-      <%= f.text_field :bank_account, :size => 30 %>
+      <%= f.text_field :bank_account, :size => 30, :maxlength => 20 %>
     </p>
     <p class="col span-1-de-3">
-      <%= f.text_field :iban, :size => 30 %>
+      <%= f.text_field :iban, :size => 30, :maxlength => 24 %>
     </p>
     <p class="col span-1-de-3">
-      <%= f.text_field :bic, :size => 30 %>
+      <%= f.text_field :bic, :size => 30, :maxlength => 11 %>
     </p>
   </div>
 
-    <div class="seccio grup">
-      <p class="col span-1-de-2">
-        <%= f.select(:payment_method, Invoice.payment_methods(@project.company)) %><br/>
-        <%= f.text_area(:payment_method_text, :cols => 40, :rows => 2, :no_label => true, :id => 'payment_other', :style => (client.payment_method==Invoice::PAYMENT_SPECIAL) ? '' : 'display: none;') %>
-      </p>
-      <p class="col span-1-de-2">
-        <%= f.select(:terms, Terms.for_select, {}) %>
-      </p>
-    </div>
+  <div class="seccio grup">
+    <p class="col span-1-de-2">
+    <%= f.select(:payment_method, Invoice.payment_methods(@project.company)) %><br/>
+    <%= f.text_area(:payment_method_text, :cols => 40, :rows => 2, :no_label => true, :id => 'payment_other', :style => (client.payment_method==Invoice::PAYMENT_SPECIAL) ? '' : 'display: none;') %>
+    </p>
+    <p class="col span-1-de-2">
+    <%= f.select(:terms, Terms.for_select, {}) %>
+    </p>
+  </div>
+
+  <% if User.current.allowed_to?(:use_sepa,@project) -%>
+  <div class="seccio grup">
+    <p class="col span-1-de-4">
+      <%= f.select :sepa_type, ["CORE", "B2B"] %>
+    </p>
+  </div>
+  <% end -%>
+
 </fieldset>
 
 <% if User.current.admin? or User.current.allowed_to?(:send_peppol, @project) -%>

@@ -122,6 +122,20 @@ class Company < ActiveRecord::Base
     end
   end
 
+  # http://inza.wordpress.com/2013/10/25/como-preparar-los-mandatos-sepa-identificador-del-acreedor/
+  def sepa_creditor_identifier
+    num = "#{taxcode}#{country_alpha2}00".downcase.each_byte.collect do |c|
+      if c <= 57
+        c.chr
+      else
+        c - 87
+      end
+    end.join.to_i
+    # MOD97-10 from ISO 7064
+    control = (98 - ( num % 97 )).to_s.rjust(2,'0')
+    "#{country_alpha2}#{control}000#{taxcode}"
+  end
+
   def default_tax_code_for(name)
     taxes.collect {|t| t if t.name == name and t.default }.compact.first.code
   rescue

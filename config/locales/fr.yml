@@ -268,7 +268,6 @@ fr:
   button_generate_invoices: Nouvelles factures depuis le modèle
   button_send_invoices: Envoyer factures
   label_automator_info: "télécherger les PDFs, emailer script d'automation et marquer comme envoyé"
-  label_charge_n19: Imputer les comptes bancaires avec format N19
   button_mark_done: Marquer comme fait
   label_invoice_report: Rapport des factures
   label_import_aeb43: Importer AEB43
@@ -288,6 +287,8 @@ fr:
   received_paid_notification_to: "Notifier réception du paiement à %{mail}"
   save_and_mail: "Enregistrer et envoyer du email"
   save_without_mail: "Enregistrer sans l'envoi du email"
+  field_sepa_type: "SEPA payments type"
+  label_payment_initiation: "Payment initiation"
 
   # Settings
   field_taxcode: N° TVA
@@ -337,7 +338,7 @@ fr:
   notice_invoice_sent: "Facture envoyée"
   error_invoice_not_sent: "N'a pas pu envoyer la facture %{num}"
   notice_empty_n19: "Aucune donnée pour créer N19"
-  notice_n19_done:  "Nº19 pour date d'échéance %{value} marquée comme faite"
+  notice_payment_done: "%{payment_type} pour date d'échéance %{value} marquée comme faite"
   notice_uploaded_file_not_found: "Fichier non trouvé"
 
   hide_full_form: "Montrer moins de champs"
@@ -440,4 +441,14 @@ fr:
   taxcodes_does_not_belong_to_self: "Invoice taxcodes (%{tcs}) does not belong to self (%{tc})"
   label_import: "Import"
   overriding_original_warn: "If you save this invoice, modified version will be used instead of the original file, are you sure?"
+  label_mandate_new: "New mandate"
+  field_signature_date: "Signature date"
+  field_signed_doc: "Signed document"
+  current_signed_doc: "Current signed document"
+  mandate_recurrent: "Recurrent mandate"
+  mandate_non_recurrent: "Unique mandate"
+  field_end_date: "End of charging"
+  label_mandate: "Mandate"
+  field_delete_signed_doc: "Delete signed document"
+  label_mandates: "Mandates"
   n19_requires_bank_account: "To generate n19 you must fill your bank account"
