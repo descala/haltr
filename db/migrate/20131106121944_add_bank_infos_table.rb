@@ -8,6 +8,7 @@ class AddBankInfosTable < ActiveRecord::Migration
       t.integer :company_id
       t.timestamps
     end
+    add_column    :invoices,  :bank_info_id, :integer
     Company.all.each do |company|
       unless company.bank_account.blank? and company.iban.blank? and company.bic.blank?
         BankInfo.create!(:bank_account => company.bank_account,
@@ -25,7 +26,6 @@ class AddBankInfosTable < ActiveRecord::Migration
     remove_column :companies, :bank_account
     remove_column :companies, :iban
     remove_column :companies, :bic
-    add_column    :invoices,  :bank_info_id, :integer
   end
 
   def self.down
