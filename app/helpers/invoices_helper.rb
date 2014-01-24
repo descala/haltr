@@ -44,6 +44,8 @@ module InvoicesHelper
       "( #{link_to_function(l(:view_mail), "$('#event_#{e.id}').show();")} )"
     elsif e.name == "new" and e.invoice and e.invoice.client and e.invoice.visible_by_client?
       " (#{link_to_if_authorized(l(:public_link), :controller=>'invoices', :action=>'view', :client_hashid=>e.invoice.client.hashid, :invoice_id=>e.invoice.id)})"
+    elsif %w(uploaded email).include? e.name
+      " (#{link_to_if_authorized(l(:download_original), invoices_original_path(e.invoice))} / #{link_to_if_authorized(l(:view_original), {:action=>'show_original',:id=>e.invoice_id})})"
     else
       ""
     end.html_safe
@@ -108,13 +110,6 @@ module InvoicesHelper
     @project.issued_invoices.count(:conditions => ["state='new' and number is not null and date <= ?", Date.today])
   end
 
-  def transport_text(invoice)
-    if invoice.transport == "email"
-      l(:by_mail_from, :email => invoice.from)
-    #eslif invoice.transport == "upload" ...
-    end
-  end
-
   def tax_name(tax, options = {})
     return nil if tax.nil?
 
@@ -150,7 +145,7 @@ module InvoicesHelper
     if invoice == current
       invoice.number
     else
-      if User.current.logged? and User.current.project and User.current.project.company == invoice.company
+      if User.current.logged? and User.current.projects.include?(invoice.project)
         link_to(invoice.number, {:action=>'show', :id=>invoice})
       elsif invoice.visible_by_client?
         link_to(invoice.number, {:action=>'view', :client_hashid=>invoice.client.hashid, :invoice_id=>invoice.id}, :class=>'public')
@@ -195,7 +190,8 @@ module InvoicesHelper
   end
 
   def hide_if_not_exempt_tax(name)
-    if @invoice.taxes.collect {|t| t if t.name==name and t.exempt?}.compact.any?
+    if (@invoice.taxes.collect {|t| t if t.name==name and t.exempt?}.compact.any?) or
+       (@invoice.new_record? and @invoice.global_code_for(name).match(/_E$/))
       return ""
     else
       return "display: none"

@@ -229,6 +229,10 @@ es:
   view_mail: "Ver email"
   public_link: "Enlace público"
   mark_as_received: "Marcada como recibida"
+  uploaded: "Subida"
+  email: "Recibida"
+  download_original: "Descargar original"
+  view_original: "Ver original"
 
   # Invoice templates
   label_invoice_template_new: Nueva plantilla
@@ -398,6 +402,7 @@ es:
   permission_download_pdf: "B2BRouter - Descargar PDF"
   permission_send_by_mail: "B2BRouter - Enviar por email"
   permission_send_aoc: "B2BRouter - Enviar a través del AOC"
+  permission_send_seres: "B2BRouter - Enviar a través de SERES"
   permission_send_face: "B2BRouter - Enviar a través de FACE"
   permission_send_peppol: "B2BRouter - Enviar a PEPPOL"
   permission_use_local_signature: "B2BRouter - Firmar con certificado local"
@@ -445,3 +450,7 @@ es:
   applet_not_loaded: "Error cargando applet."
   sure_to_resend_invoice: "Seguro que quieres reenviar la factura %{num}?"
   sure_to_resend_invoices: "Seguro que quieres reenviar las facturas %{nums}?"
+  taxcodes_does_not_belong_to_self: "Los NIF de la factura (%{tcs}) no son de tu empresa (%{tc})"
+  label_import: "Importar"
+  overriding_original_warn: "Si guardas esta factura, a partir de ahora se usara la version modificada en lugar del fichero original, estas seguro?"
+  n19_requires_bank_account: "Para generar n19 debes rellenar tu cuenta bancaria"

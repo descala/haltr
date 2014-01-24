@@ -38,6 +38,7 @@ clients_001:
   province: ""
   allowed: 
   email: mail@client1.com
+  bank_account: "1233333333333333"
 
 linked_client:
   project_id: 2

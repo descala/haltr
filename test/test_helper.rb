@@ -20,7 +20,7 @@ module Haltr
 
       # Adds haltr permissions to role 'delveloper'
       dev = Role.find(2)
-      dev.permissions += [:general_use,:manage_payments,:use_templates]
+      dev.permissions += [:general_use,:manage_payments,:use_templates,:import_invoices]
       dev.save
 
       # user 2 (jsmith) is member of project 2 (onlinesotre) with role 2 (developer)

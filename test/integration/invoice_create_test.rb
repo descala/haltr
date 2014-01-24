@@ -71,7 +71,6 @@ class InvoiceCreaeteTest < ActionController::IntegrationTest
 
   def test_create_new_invoice_in_turkish_lira
     post "/login", :username => 'jsmith', :password => 'jsmith'
-    assert_redirected_to project_invoices_path(User.find_by_login('jsmith').project)
 
     get "/projects/onlinestore/invoices/new"
     assert_response :success

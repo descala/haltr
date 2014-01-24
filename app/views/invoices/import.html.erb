@@ -1,0 +1,20 @@
+<!--formulari-->
+<div class="seccio grup">
+  <div class="col span-2-de-2">
+
+    <%= form_tag({:action => 'import', :project_id => @project}, :class=>'formee', :multipart => true) do %>
+      <%= file_field_tag "file" %>
+      <%= submit_tag l(:label_import) %>
+    <% end %>
+
+  </div>
+</div>
+<!--final formulari-->
+
+<% html_title(l(:import_invoice)) -%>
+
+<% content_for :sidebar do %>
+  <%= render_menu :invoices_menu, @project %>
+<% end %>
+
+<%= context_menu invoices_context_menu_path %>

@@ -3,6 +3,7 @@ class InvoicesController < ApplicationController
   unloadable
   menu_item Haltr::MenuItem.new(:invoices,:invoices_level2)
   menu_item Haltr::MenuItem.new(:invoices,:reports), :only => :report
+  menu_item Haltr::MenuItem.new(:invoices,:import), :only => :import
   helper :haltr
   helper :context_menus
   layout 'haltr'
@@ -12,8 +13,8 @@ class InvoicesController < ApplicationController
 
   PUBLIC_METHODS = [:by_taxcode_and_num,:view,:download,:mail,:logo,:haltr_sign]
 
-  before_filter :find_project_by_project_id, :only => [:index,:new,:create,:send_new_invoices,:download_new_invoices,:update_payment_stuff,:new_invoices_from_template,:report,:create_invoices,:update_taxes]
-  before_filter :find_invoice, :only => [:edit,:update,:mark_sent,:mark_closed,:mark_not_sent,:mark_accepted_with_mail,:mark_accepted,:mark_refused_with_mail,:mark_refused,:duplicate_invoice,:base64doc,:show,:send_invoice,:legal,:amend_for_invoice,:original,:validate]
+  before_filter :find_project_by_project_id, :only => [:index,:new,:create,:send_new_invoices,:download_new_invoices,:update_payment_stuff,:new_invoices_from_template,:report,:create_invoices,:update_taxes,:import]
+  before_filter :find_invoice, :only => [:edit,:update,:mark_sent,:mark_closed,:mark_not_sent,:mark_accepted_with_mail,:mark_accepted,:mark_refused_with_mail,:mark_refused,:duplicate_invoice,:base64doc,:show,:send_invoice,:legal,:amend_for_invoice,:original,:validate,:show_original]
   before_filter :find_invoices, :only => [:context_menu,:bulk_download,:bulk_mark_as,:bulk_send,:destroy,:bulk_validate]
   before_filter :find_payment, :only => [:destroy_payment]
   before_filter :find_hashid, :only => [:view,:download]
@@ -339,6 +340,19 @@ class InvoicesController < ApplicationController
     end
   end
 
+  def show_original
+    @invoice.update_attribute(:has_been_read, true) if @invoice.is_a? ReceivedInvoice
+    if @invoice.invoice_format == "pdf"
+      render :template => 'received/show_pdf'
+    else
+      doc  = Nokogiri::XML(@invoice.original)
+      # TODO: received/facturae31.xsl.erb and received/facturae30.xsl.erb templates
+      xslt = Nokogiri::XSLT(render_to_string(:template=>'received/facturae32.xsl.erb',:layout=>false))
+      @out  = xslt.transform(doc)
+      render :template => 'received/show_with_xsl'
+    end
+  end
+
   def send_invoice
     create_and_queue_file
     flash[:notice] = "#{l(:notice_invoice_sent)}"
@@ -439,14 +453,15 @@ class InvoicesController < ApplicationController
     @invoices_not_sent = []
     @invoices_sent = IssuedInvoice.find(:all,:conditions => ["client_id = ? and state = 'sent'",@client.id]).sort
     @invoices_closed = IssuedInvoice.find(:all,:conditions => ["client_id = ? and state = 'closed'",@client.id]).sort
-    unless @invoice.has_been_read or User.current.project == @invoice.project or User.current.admin?
+    unless @invoice.has_been_read or User.current.projects.include?(@invoice.project) or User.current.admin?
       Event.create!(:name=>'read',:invoice=>@invoice,:user=>User.current)
       @invoice.update_attribute(:has_been_read,true)
     end
     render :layout=>"public"
   rescue ActionView::MissingTemplate
     nil
-  rescue
+  rescue Exception => e
+    logger.debug e
     render_404
   end
 
@@ -627,8 +642,14 @@ class InvoicesController < ApplicationController
 
   def create_xml_file(format)
     add_efffubl_base64_pdf if format == 'efffubl'
-    xml = render_to_string(:template => "invoices/#{format}",
-                           :formats => :xml, :layout => false)
+    # if it is an imported invoice, has not been modified and
+    # invoice format  matches client format, send original file
+    if @invoice.original and !@invoice.modified_since_created? and format == @invoice.invoice_format
+      xml = @invoice.original
+    else
+      xml = render_to_string(:template => "invoices/#{format}",
+                             :formats => :xml, :layout => false)
+    end
     xml_file = Tempfile.new("invoice_#{@invoice.id}.xml")
     xml_file.write(clean_xml(xml))
     logger.info "Created XML #{xml_file.path}"
@@ -831,6 +852,36 @@ XSL
   def add_efffubl_base64_pdf
     file = create_pdf_file
     @efffubl_base64_pdf = Base64::encode64(File.read(file.path))
+  end
+
+  def import
+    if request.post?
+      file = params[:file]
+      if file && file.size > 0
+        md5 = `md5sum #{file.path} | cut -d" " -f1`.chomp
+        invoice = Invoice.create_from_xml(file,@project.company,User.current.name,md5,'uploaded')
+        redirect_to invoice_path(invoice)
+      else
+        flash[:warning] = l(:notice_uploaded_file_not_found)
+        redirect_to :action => 'import', :project_id => @project
+      end
+    end
+  rescue
+    flash[:error] = $!.message
+    redirect_to :action => 'import', :project_id => @project
+  end
+
+  def original
+    if @invoice.invoice_format == 'pdf'
+      send_data @invoice.original,
+        :type => 'application/pdf',
+        :filename => @invoice.pdf_name,
+        :disposition => params[:disposition] == 'inline' ? 'inline' : 'attachment'
+    else
+      send_data @invoice.original,
+        :type => 'text/xml; charset=UTF-8;',
+        :disposition => "attachment; filename=#{@invoice.xml_name}"
+    end
   end
 
 end

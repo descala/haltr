@@ -101,7 +101,11 @@ class PaymentsController < ApplicationController
     @due_date = @invoice.due_date
     @fecha_cargo = @due_date.to_formatted_s :ddmmyy
     @bank_account = @invoice.bank_info.bank_account
-    render_404 && return if @bank_account.blank?
+    if @bank_info.bank_account.blank?
+      flash[:error] = l(:n19_requires_bank_account)
+      redirect_to project_my_company_path(@project)
+      return
+    end
     @clients = Client.find :all, :conditions => ["bank_account != '' and project_id = ?", @project.id], :order => 'taxcode'
     @fecha_confeccion = Date.today.to_formatted_s :ddmmyy
     @total = Money.new 0, Money::Currency.new(Setting.plugin_haltr['default_currency'])

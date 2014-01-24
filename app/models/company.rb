@@ -29,12 +29,12 @@ class Company < ActiveRecord::Base
 
   accepts_nested_attributes_for :taxes,
     :allow_destroy => true,
-    :reject_if => proc { |attributes| attributes.all? { |_, value| value.blank? } }
+    :reject_if => :all_blank
   validates_associated :taxes
 
   accepts_nested_attributes_for :bank_infos,
     :allow_destroy => true,
-    :reject_if => proc { |attributes| attributes.all? { |_, value| value.blank? } }
+    :reject_if => :all_blank
   validates_associated :bank_infos
 
   validate :uniqueness_of_taxes
@@ -122,6 +122,12 @@ class Company < ActiveRecord::Base
     end
   end
 
+  def default_tax_code_for(name)
+    taxes.collect {|t| t if t.name == name and t.default }.compact.first.code
+  rescue
+    ""
+  end
+
   private
 
   def update_linked_clients
@@ -132,6 +138,11 @@ class Company < ActiveRecord::Base
       end
       client.save
     end
+  end
+
+  # translations for accepts_nested_attributes_for
+  def self.human_attribute_name(attribute_key_name, *args)
+    super(attribute_key_name.to_s.gsub(/invoice_lines\./,''), *args)
   end
 
 end

@@ -192,7 +192,8 @@ i7:
   charge_amount_in_cents: 1000
   charge_reason: "This are payments we made in the name of the client"
   number: "i7"
-  payment_method: 1
+  payment_method: 4
+  bank_info_id: 1
   ponumber: "client order number 123"
   project_id: 2
   state: new

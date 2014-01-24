@@ -249,7 +249,7 @@ class IssuedInvoice < InvoiceDocument
 
   def payment_method_requirements
     if debit?
-      c = Client.find client_id
+      c = self.client
       if c.bank_account.blank? and !c.use_iban?
         add_export_error("#{l(:field_payment_method)} (#{l(:debit)}) #{l(:requires_client_bank_account)}")
       end
@@ -263,7 +263,11 @@ class IssuedInvoice < InvoiceDocument
   protected
 
   def create_event
-    Event.create(:name=>'new',:invoice=>self,:user=>User.current)
+    if self.transport.blank?
+      Event.create(:name=>'new',:invoice=>self,:user=>User.current)
+    else
+      Event.create(:name=>self.transport,:invoice=>self,:user=>User.current)
+    end
   end
 
   # errors to be raised on sending invoice

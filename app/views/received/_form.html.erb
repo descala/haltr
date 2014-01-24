@@ -4,34 +4,46 @@
   <legend><%=l(:invoice_data)%></legend>
 
   <div class="seccio grup">
-    <p class="col span-2-de-2" id="client_select">
-      <%= render :partial=>'clients', :locals=>{:selected=>@invoice.client_id} %>
-    </p>
-  </div>
-
-  <div class="seccio grup">
     <p class="col span-1-de-3">
-      <%= f.text_field :date, :size => 10 %><%= calendar_for('invoice_date') %>
+      <%= f.text_field :date, :size => 10, :required => true %><%= calendar_for('invoice_date') %>
     </p>
     <p class="col span-1-de-3">
-      <%= f.text_field :number, :size => 10 %> <span class="text"><%= "#{l(:label_last_invoice_number)}: #{IssuedInvoice.last_number(@project)}" if IssuedInvoice.all.any?%></span>
+      <%= f.text_field :number, :size => 10, :required => true %>
     </p>
     <p class="col span-1-de-3">
       <%= f.text_field :ponumber %>
     </p>
   </div>
 
+  <div id="payment_stuff">
+    <%= render :partial => 'invoices/payment_stuff' %>
+  </div>
+
   <div class="seccio grup">
-    <p class="col span-1-de-3" id="payment_stuff">
-      <%= render :partial=>'currency', :locals => {:selected=>@invoice.currency} %>
-    </p>
-    <p class="col span-1-de-3">
+    <p class="col span-1-de-2">
       <%= f.text_field :discount_text %>
     </p>
-    <p class="col span-1-de-3">
+    <p class="col span-1-de-2">
       <%= f.text_field :discount_percent %>
     </p>
   </div>
+
+
+  <div class="seccio grup">
+    <p class="col span-1-de-2">
+      <%= f.text_field :charge_amount, :value => (@invoice.charge_amount.cents > 0 ? @invoice.charge_amount : "") %>
+    </p>
+    <p class="col span-1-de-2">
+      <%= f.text_field :charge_reason %>
+    </p>
+  </div>
+
+  <div class="seccio grup">
+    <p class="col span-1-de-2">
+      <%= f.text_field :accounting_cost %>
+    </p>
+  </div>
+
 
   <div class="seccio grup">
     <p class="col span-2-de-2">
@@ -41,14 +53,50 @@
 
 </fieldset>
 
+
 <fieldset class="tabular box">
-  <legend><%=l(:concept)%></legend>
+  <legend><%=l(:label_tax_plural)%></legend>
+
+  <% if @invoice.taxes_hash.empty? -%>
+    <%= link_to_if_authorized l(:add_taxes_on_company), project_my_company_path(@project) -%>
+  <% end -%>
+
+  <% @invoice.taxes_hash.keys.sort.each do |name| -%>
+    <div class="seccio grup">
+      <p class="col span-1-de-5">
+        <%= label_tag "#{name}_global", name%>
+          <%= select_tag("#{name}_global",
+                         options_for_select(tax_categories_array(@invoice,name),
+                         :selected => @invoice.global_code_for(name)),
+                         :disabled => @invoice.tax_per_line?(name),
+                         :style => "width: 90px;",
+                         'class' => 'global_tax',
+                         'data-tax-name' => name ) %>
+      </p>
+      <p class="col span-1-de-5 check-box-alineat">
+          <%= check_box_tag("#{name}_multiple", 1, @invoice.tax_per_line?(name), :class => 'global_tax_check', 'data-tax-name' => name) %>
+        <span>
+          <%= l(:line_specific_tax) %>
+        </span>
+      </p>
+      <p id="<%=name%>_comment" style="<%= hide_if_not_exempt_tax(name) %>" class="col span-3-de-5">
+        <%= label_tag "#{name}_comment", l("field_comment") %>
+        <%= text_field_tag("#{name}_comment", @invoice.global_comment_for(name)) %>
+      </p>
+    </div>
+  <% end -%>
+</fieldset>
+
+
+<fieldset class="tabular box">
+  <legend><%=l(:field_invoice_lines)%></legend>
   <table class="formee" id="invoice_lines" data-tax-names="<%= @project.company.tax_names.join(' ') %>">
     <thead>
       <tr>
         <th><%=l(:field_quantity)%></th>
         <th></th>
         <th><%=l(:field_description)%></th>
+        <%= call_hook(:invoice_form_order_line_reference_header) %>
         <th><%=l(:field_price)%></th>
         <% @invoice.taxes_hash.keys.sort.each do |name| -%>
           <th id="<%=name%>_title" style="<%= 'display: none;' unless @invoice.tax_per_line?(name)%>">
@@ -70,11 +118,4 @@
       <span class='mes'><%= link_to_add_association l(:button_add_invoice_line), f, :invoice_lines, 'data-association-insertion-node' => '#invoice_lines', 'data-association-insertion-method' => 'append' %></span>
     </p>
   </div>
-
-  <div class="seccio grup">
-    <p class="col span-2-de-2">
-    <%= f.text_field :import, :value => f.object.import.to_s.gsub(/\.0+$/,'') %>
-    </p>
-  </div>
-
 </fieldset>

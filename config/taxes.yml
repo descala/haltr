@@ -1,0 +1,65 @@
+# Supported taxes by country
+#
+---
+es:
+- name: IVA
+  percent: 21.0
+  default: true
+  category: S
+  facturae_id: '01'
+- name: IVA
+  percent: 10.0
+  default: false
+  category: AA
+  facturae_id: '01'
+- name: IVA
+  percent: 4.0
+  default: false
+  category: AA
+  facturae_id: '01'
+- name: IVA
+  percent: 0.0
+  default: false
+  category: Z
+  facturae_id: '01'
+- name: IVA
+  percent: 0.0
+  default: false
+  category: E
+  facturae_id: '01'
+- name: IRPF
+  percent: -21.0
+  default: false
+  category: S
+  facturae_id: '04'
+fr:
+- name: TVA
+  percent: 19.6
+  default: true
+  category: S
+- name: TVA
+  percent: 5.5
+  default: false
+  category: AA
+- name: TVA
+  percent: 2.1
+  default: false
+  category: AAA
+se:
+- name: VAT
+  percent: 25.0
+  default: true
+  category: S
+- name: VAT
+  percent: 12.5
+  default: false
+  category: AA
+- name: VAT
+  percent: 6.0
+  default: false
+  category: AAA
+dk:
+- name: NUMS
+  percent: 25.0
+  default: true
+  category: S
