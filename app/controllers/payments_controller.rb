@@ -138,37 +138,42 @@ class PaymentsController < ApplicationController
     due_date = params[:due_date]
     bank_info = BankInfo.find params[:bank_info]
     render_404 && return if bank_info.blank?
-    clients = Client.find(:all,
+    clients_all = Client.find(:all,
                           :conditions => ["iban != '' and project_id = ?", @project.id],
-                          :order => 'taxcode').reject { |client|
-                            client.sepa_type != params[:sepa_type] ||
-                              client.bank_invoices_total(due_date, bank_info.id).zero?
-                          }
+                          :order => 'taxcode')
+    clients = clients_all.reject do |client|
+      client.sepa_type != params[:sepa_type] || client.bank_invoices_total(due_date, bank_info.id).zero?
+    end
 
-    sdd = SEPA::DirectDebit.new(
-      name:                @project.company.name,
-      iban:                bank_info.iban,
-      creditor_identifier: @project.company.sepa_creditor_identifier,
-    )
-
-    clients.each do |client|
-      money = client.bank_invoices_total(due_date, bank_info.id)
-      sdd.add_transaction(
-        name:                      client.taxcode,
-        iban:                      bank_info.iban,
-        amount:                    money.dollars,
-        mandate_id:                bank_info.id,
-        mandate_date_of_signature: Date.new(2009,10,31),
-        local_instrument:          client.sepa_type,
-        sequence_type:             'RCUR',
+    begin
+      sdd = SEPA::DirectDebit.new(
+        name:                @project.company.name,
+        iban:                bank_info.iban,
+        creditor_identifier: @project.company.sepa_creditor_identifier,
       )
+
+      clients.each do |client|
+        money = client.bank_invoices_total(due_date, bank_info.id)
+        sdd.add_transaction(
+          name:                      client.taxcode,
+          iban:                      bank_info.iban,
+          amount:                    money.dollars,
+          mandate_id:                bank_info.id,
+          mandate_date_of_signature: Date.new(2009,10,31),
+          local_instrument:          client.sepa_type,
+          sequence_type:             'RCUR',
+        )
       end
 
-    if clients.any?
-      I18n.locale = :es
-      send_data sdd.to_xml, :filename => filename_for_content_disposition("sepa-#{params[:sepa_type]}-#{due_date}.xml"), :type => 'text/xml'
-    else
-      flash[:warning] = l(:notice_empty_n19)
+      if clients.any?
+        I18n.locale = :es
+        send_data sdd.to_xml, :filename => filename_for_content_disposition("sepa-#{params[:sepa_type]}-#{due_date}.xml"), :type => 'text/xml'
+      else
+        flash[:warning] = l(:notice_empty_n19)
+        redirect_to :action => 'payment_initiation', :project_id => @project
+      end
+    rescue ArgumentError => e
+      flash[:warning] = e.to_s
       redirect_to :action => 'payment_initiation', :project_id => @project
     end
   end
