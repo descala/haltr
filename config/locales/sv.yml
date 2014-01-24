@@ -439,3 +439,4 @@ sv:
   taxcodes_does_not_belong_to_self: "Invoice taxcodes (%{tcs}) does not belong to self (%{tc})"
   label_import: "Import"
   overriding_original_warn: "If you save this invoice, modified version will be used instead of the original file, are you sure?"
+  n19_requires_bank_account: "To generate n19 you must fill your bank account"

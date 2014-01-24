@@ -450,3 +450,4 @@ ca:
   taxcodes_does_not_belong_to_self: "Els NIF de la factura (%{tcs}) no son de la teva empresa (%{tc})"
   label_import: "Importar"
   overriding_original_warn: "Si deses aquesta factura, a partir d'ara es farà servir la modificada en comptes del fitxer original, n'estàs segur?"
+  n19_requires_bank_account: "Per generar n19 cal omplir el teu compte bancari"

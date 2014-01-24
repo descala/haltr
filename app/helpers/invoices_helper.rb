@@ -190,7 +190,8 @@ module InvoicesHelper
   end
 
   def hide_if_not_exempt_tax(name)
-    if @invoice.taxes.collect {|t| t if t.name==name and t.exempt?}.compact.any?
+    if (@invoice.taxes.collect {|t| t if t.name==name and t.exempt?}.compact.any?) or
+       (@invoice.new_record? and @invoice.global_code_for(name).match(/_E$/))
       return ""
     else
       return "display: none"

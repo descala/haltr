@@ -453,3 +453,4 @@ es:
   taxcodes_does_not_belong_to_self: "Los NIF de la factura (%{tcs}) no son de tu empresa (%{tc})"
   label_import: "Importar"
   overriding_original_warn: "Si guardas esta factura, a partir de ahora se usara la version modificada en lugar del fichero original, estas seguro?"
+  n19_requires_bank_account: "Para generar n19 debes rellenar tu cuenta bancaria"
