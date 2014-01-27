@@ -34,22 +34,9 @@ class BankInfo < ActiveRecord::Base
     write_attribute(:bic, s.try(:gsub,/\p{^Alnum}/, ''))
   end
 
-  def self.bank_account_to_iban(bank_account, country)
-    if country.size == 3
-      country = SunDawg::CountryIsoTranslater.translate_standard(
-        country.to_s.upcase,'alpha3','alpha2'
-      )
-    end
-    num = "#{bank_account}#{country}00".downcase.each_byte.collect do |c|
-      if c <= 57
-        c.chr
-      else
-        c - 87
-      end
-    end.join.to_i
-    # MOD97-10 from ISO 7064
-    control = (98 - ( num % 97 )).to_s.rjust(2,'0')
-    "#{country.upcase}#{control}#{bank_account}"
+  # TODO only for spanish accounts
+  def self.local2iban(country,ccc)
+    IBANTools::Conversion.local2iban(country.to_s.upcase,:account_number=>ccc.to_i).code
   end
 
   def self.valid_spanish_ccc?(ccc)
