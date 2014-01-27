@@ -14,3 +14,7 @@
 <% content_for :sidebar do %>
   <%= render_menu :companies_menu, @project %>
 <% end %>
+
+<% content_for :header_tags do %>
+  <%= stylesheet_link_tag "graella", :plugin => "haltr"%>
+<% end %>

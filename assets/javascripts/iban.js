@@ -9,9 +9,6 @@ $(document).ready(function() {
       async: false
     }).done( function(html) {
       span_for_result.html(html);
-    }).fail( function(html) {
-      alert('Something went wrong loading the xslt resource...');
-      span_for_result.html(html);
     });
   });
 });

@@ -107,15 +107,15 @@
   <div class="seccio grup">
     <% unless @client.bank_account.blank? -%>
       <p class="col span-1-de-3">
-      <%= f.text_field :bank_account, :size => 30, :disabled => true %>
+      <%= f.text_field :bank_account, :size => 20, :disabled => true %>
       </p>
     <% end -%>
     <p class="col span-1-de-3">
-    <%= f.text_field :iban, :size => 30, :class => "iban", "data-url" => project_check_iban_path(@project), "data-span-for-result" => "iban" %>
+    <%= f.text_field :iban, :size => 24, :class => "iban", "data-url" => project_check_iban_path(@project), "data-span-for-result" => "iban" %>
     <span id="iban"></span>
     </p>
     <p class="col span-1-de-3">
-      <%= f.text_field :bic, :size => 30 %>
+      <%= f.text_field :bic, :size => 11 %>
     </p>
   </div>
 

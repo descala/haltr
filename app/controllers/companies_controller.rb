@@ -105,8 +105,12 @@ class CompaniesController < ApplicationController
   end
 
   def check_iban
-    #iban = params[:iban]
-    render :text => "TODO"
+    @iban_ok = true
+    iban = params[:iban]
+    unless iban.blank?
+      @iban_ok = IBANTools::IBAN.valid?(iban)
+    end
+    render :partial => 'iban_ok'
   end
 
   private

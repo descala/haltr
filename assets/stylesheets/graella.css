@@ -1,0 +1,107 @@
+/*Author: Eduard Gimenez*/
+
+.seccio {
+	clear: both;
+	padding: 0px;
+	margin: 0px;
+}
+.grup:before,
+.grup:after {
+    content:"";
+    display:table;
+}
+.grup:after {
+    clear:both;
+}
+.grup {
+    zoom:1;
+}
+.col {
+	display: block;
+	float:left;
+	position: relative;
+	margin: 1% 0 1% 1.6%;
+}
+.col:first-child { 
+	margin-left: 0; 
+}
+.col-centrat {
+	display: block;
+	margin: 1% auto;
+}
+.span-2-de-2, .span-3-de-3, .span-1-de-1, .span-4-de-4, .span-5-de-5, .span-6-de-6 {
+	width: 100%;
+}
+.span-1-de-2 {
+	width: 49.2%;
+}
+.span-1-de-3 {
+	width: 32.2%; 
+}
+.span-2-de-3 {
+	width: 66.1%; 
+}
+.span-1-de-4 {
+	width: 23.8%;
+}
+.span-2-de-4 {
+	width: 49.2%;
+}
+.span-3-de-4 {
+	width: 74.6%;
+}
+.span-1-de-5 {
+	width: 18.72%;
+}
+.span-2-de-5 {
+	width: 39.04%;
+}
+.span-3-de-5 {
+	width: 59.36%;
+}
+.span-4-de-5 {
+	width: 79.68%;
+}
+.span-1-de-6 {
+  	width: 15.33%;
+}
+.span-2-de-6 {
+  	width: 32.26%;
+}
+.span-3-de-6 {
+  	width: 49.2%;
+}
+.span-4-de-6 {
+  	width: 66.13%;
+}
+.span-5-de-6 {
+  	width: 83.06%;
+}
+/*
+@media only screen and (max-width: 480px) {
+	.col { 
+		margin: 1% 0 1% 0%;
+	}
+	.span-2-de-2,
+	.span-1-de-2,
+	.span-3-de-3,
+	.span-2-de-3,
+	.span-1-de-3,
+	.span-1-de-4,
+	.span-2-de-4,
+	.span-3-de-4,
+	.span-1-de-5,
+	.span-2-de-5,
+	.span-3-de-5,
+	.span-4-de-5,
+	.span-5-de-5,
+	.span-1-de-6,
+	.span-2-de-6,
+	.span-3-de-6,
+	.span-4-de-6,
+	.span-5-de-6,
+	.span-6-de-6 {
+		width: 100%;
+	}
+}
+*/
