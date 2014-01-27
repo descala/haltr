@@ -38,4 +38,11 @@ class BankInfoTest < ActiveSupport::TestCase
     assert_equal 'ES5500120345030000067899', iban
   end
 
+  test "spanish ccc" do
+    assert BankInfo.valid_spanish_ccc?("20810000883300121217")
+    assert !BankInfo.valid_spanish_ccc?("20810000883300121218")
+    assert !BankInfo.valid_spanish_ccc?("2081000121")
+    assert !BankInfo.valid_spanish_ccc?("208100asdf")
+  end
+
 end
