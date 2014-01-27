@@ -105,14 +105,17 @@
 <fieldset class="tabular box">
   <legend><%=l(:bank_info)%></legend>
   <div class="seccio grup">
+    <% unless @client.bank_account.blank? -%>
+      <p class="col span-1-de-3">
+      <%= f.text_field :bank_account, :size => 20, :disabled => true %>
+      </p>
+    <% end -%>
     <p class="col span-1-de-3">
-      <%= f.text_field :bank_account, :size => 30, :maxlength => 20 %>
+    <%= f.text_field :iban, :size => 24, :class => "iban", "data-url" => project_check_iban_path(@project), "data-span-for-result" => "iban" %>
+    <span id="iban"></span>
     </p>
     <p class="col span-1-de-3">
-      <%= f.text_field :iban, :size => 30, :maxlength => 24 %>
-    </p>
-    <p class="col span-1-de-3">
-      <%= f.text_field :bic, :size => 30, :maxlength => 11 %>
+      <%= f.text_field :bic, :size => 11 %>
     </p>
   </div>
 
@@ -149,3 +152,7 @@
   </fieldset>
 <% end -%>
 </div>
+
+<% content_for :header_tags do -%>
+  <%= javascript_include_tag('iban',:plugin=>'haltr')%>
+<% end -%>

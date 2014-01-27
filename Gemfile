@@ -9,6 +9,7 @@ gem 'csv-mapper'
 gem 'nokogiri'
 gem 'wicked_pdf'
 gem 'chronic' # needed for 'lib/estructura'
+gem 'iban-tools', :git => 'https://github.com/descala/iban-tools.git', :branch => 'master'
 
 group :test do
   gem 'guard-minitest', :github => 'guard/guard-minitest'

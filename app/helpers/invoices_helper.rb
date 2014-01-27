@@ -219,15 +219,17 @@ module InvoicesHelper
     if i.debit? and i.client.use_iban?
       iban = i.client.iban || ""
       bic  = i.client.bic || ""
-      "#{l(:debit_str)}<br />" +
-        "BIC #{bic}<br />" +
-        "IBAN #{iban[0..3]} #{iban[4..7]} #{iban[8..11]} **** **** #{iban[20..23]}<br />"
+      s="#{l(:debit_str)}<br />"
+      s+="IBAN #{iban[0..3]} #{iban[4..7]} #{iban[8..11]} **** **** #{iban[20..23]}<br />"
+      s+="BIC #{bic}<br />" unless bic.blank?
+      s
     elsif i.transfer? and i.bank_info and i.bank_info.use_iban?
       iban = i.bank_info.iban || ""
       bic  = i.bank_info.bic || ""
-      "#{l(:transfer_str)}<br />" +
-        "BIC #{bic}<br />" +
-        "IBAN #{iban[0..3]} #{iban[4..7]} #{iban[8..11]} #{iban[12..15]} #{iban[16..19]} #{iban[20..23]}<br />"
+      s="#{l(:transfer_str)}<br />"
+      s+="IBAN #{iban[0..3]} #{iban[4..7]} #{iban[8..11]} #{iban[12..15]} #{iban[16..19]} #{iban[20..23]}<br />"
+      s+="BIC #{bic}<br />" unless bic.blank?
+      s
     elsif i.debit?
       ba = i.client.bank_account || ""
       "#{l(:debit_str)}<br />" +

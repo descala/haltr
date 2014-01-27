@@ -39,6 +39,7 @@ resources :projects do
   match 'payments/payment_done' => 'payments#payment_done', :via => :post
   match 'payments/invoices' => 'payments#invoices', :via => :get
   match 'invoices', :controller => 'invoices', :action => 'destroy', :via => :delete
+  match 'check_iban' => 'companies#check_iban', :via => :get, :as => :check_iban
 end
 resources :clients do
   resources :people, :only => [:index, :new, :create]

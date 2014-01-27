@@ -22,6 +22,18 @@ ca:
         significant: false
         tax_name: "IVA"
 
+  activerecord:
+    errors:
+      models:
+        bank_info: &id001
+          attributes:
+            iban:
+              bad_check_digits: no té els digits de control correctes
+              bad_format: no té un format correcte
+              bad_length: no té la mida correcte
+              unknown_country_code: té un codi de país desconegut
+              bad_chars: té caracters no permesos
+        client: *id001
 
   # community
   label_company: Empresa
@@ -462,3 +474,6 @@ ca:
   field_delete_signed_doc: "Eliminar document signat"
   label_mandates: "Mandats"
   n19_requires_bank_account: "Per generar n19 cal omplir el teu compte bancari"
+
+  field_bank_infos: "Dades bancàries"
+  error_bad_check_digits: sdf

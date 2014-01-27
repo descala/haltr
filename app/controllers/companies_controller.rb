@@ -10,7 +10,7 @@ class CompaniesController < ApplicationController
   include SortHelper
   include Haltr::TaxHelper
 
-  before_filter :find_project_by_project_id, :only => [:my_company,:linked_to_mine,:logo,:add_bank_info]
+  before_filter :find_project_by_project_id, :only => [:my_company,:linked_to_mine,:logo,:add_bank_info,:check_iban]
   before_filter :find_company, :only => [:update]
   before_filter :set_iso_countries_language
   before_filter :authorize, :except => [:logo,:logo_by_taxcode]
@@ -102,6 +102,15 @@ class CompaniesController < ApplicationController
   def add_bank_info
     #dummy action to allow check if user is authorized
     redirect_to project_my_company_path(@project)
+  end
+
+  def check_iban
+    @iban_ok = true
+    iban = params[:iban]
+    unless iban.blank?
+      @iban_ok = IBANTools::IBAN.valid?(iban)
+    end
+    render :partial => 'iban_ok'
   end
 
   private

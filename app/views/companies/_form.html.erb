@@ -83,7 +83,7 @@
   </div>
 </fieldset>
 
-<fieldset class="tabular box">
+<fieldset class="box">
   <legend><%=l(:bank_info)%></legend>
   <div class="seccio grup">
     <p class="col span-2-de-2">
@@ -94,11 +94,13 @@
     <div class="col span-1-de-4">
     <%= f.label_for_field :name %>
     </div>
+    <% if @company.bank_infos.reject {|bi| bi.bank_account.blank? }.present? -%>
+      <div class="col span-1-de-4">
+      <%= f.label_for_field :bank_account %>
+      </div>
+    <% end -%>
     <div class="col span-1-de-4">
-    <%= f.label_for_field :bank_account %>
-    </div>
-    <div class="col span-1-de-4">
-    <%= f.label_for_field :iban %>
+      <%= f.label_for_field :iban %>
     </div>
     <div class="col span-1-de-4">
     <%= f.label_for_field :bic %>
@@ -194,4 +196,8 @@
       </p>
     </div>
   </fieldset>
+<% end -%>
+
+<% content_for :header_tags do -%>
+  <%= javascript_include_tag('iban',:plugin=>'haltr')%>
 <% end -%>
