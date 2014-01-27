@@ -18,10 +18,8 @@ module Haltr::BankInfoValidator
         end
       end
 
-
-      # use iban and bic if they are present
       def use_iban?
-        !(iban.nil? or bic.nil? or iban.blank? or bic.blank?)
+        IBANTools::IBAN.valid?(iban)
       end
     }
   end
