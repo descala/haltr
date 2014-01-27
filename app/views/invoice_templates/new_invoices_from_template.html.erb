@@ -58,6 +58,7 @@
               <th><%= l(:field_due_date) %></th>
               <th><%= l(:field_company) %></th>
               <th><%= l(:label_total) %></th>
+              <th><%= l(:button_delete) %></th>
             </tr>
           </thead>
           <tbody>
@@ -69,6 +70,7 @@
                 <td align="center"<%='class="pastdue"' if draft.past_due?%>><%=h format_date draft.due_date %></td>
                 <td><%=h draft.client %></td>
                 <td align="right"><%= money draft.import %></td>
+                <td><%= link_to(l(:button_delete), invoice_path(draft, :back_url=>project_new_invoices_from_template_path(@project)), :method=>:delete, :confirm=>l(:text_are_you_sure), :class=>'icon icon-del eliminar') if User.current.allowed_to?(:general_use,@project) %></td>
               </tr>
               <% @number = IssuedInvoice.increment_right(@number) -%>
             <% end -%>

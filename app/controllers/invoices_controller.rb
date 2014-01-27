@@ -217,7 +217,7 @@ class InvoicesController < ApplicationController
         # nothing to do, invoice was already deleted (eg. by a parent)
       end
     end
-    redirect_back_or_default(:action => 'index', :project_id => @project)
+    redirect_back_or_default(:action => 'index', :project_id => @project, :back_url => params[:back_url])
   end
 
   def destroy_payment

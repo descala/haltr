@@ -54,14 +54,16 @@ class InvoiceTemplatesController < InvoicesController
     @number = IssuedInvoice.next_number(@project)
     days = params[:date] || 10
     @date = Date.today + days.to_i.day
-    templates = InvoiceTemplate.find :all, :include => [:client], :conditions => ["clients.project_id = ? and date <= ?", @project.id, @date], :order => "date ASC"
     @drafts = DraftInvoice.find :all, :include => [:client], :conditions => ["clients.project_id = ?", @project.id], :order => "date ASC"
-    templates.each do |t|
-      begin
-        @drafts << t.invoices_until(@date)
-      rescue ActiveRecord::RecordInvalid => e
-        flash.now[:warning] = l(:warning_can_not_generate_invoice,t.to_s)
-        flash.now[:error] = e.message
+    if request.post?
+      templates = InvoiceTemplate.find :all, :include => [:client], :conditions => ["clients.project_id = ? and date <= ?", @project.id, @date], :order => "date ASC"
+      templates.each do |t|
+        begin
+          @drafts << t.invoices_until(@date)
+        rescue ActiveRecord::RecordInvalid => e
+          flash.now[:warning] = l(:warning_can_not_generate_invoice,t.to_s)
+          flash.now[:error] = e.message
+        end
       end
     end
     @drafts.flatten!
