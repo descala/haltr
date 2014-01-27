@@ -101,7 +101,7 @@ class PaymentsController < ApplicationController
     @due_date = @invoice.due_date
     @fecha_cargo = @due_date.to_formatted_s :ddmmyy
     @bank_account = @invoice.bank_info.bank_account
-    if @bank_info.bank_account.blank?
+    if @bank_account.blank?
       flash[:error] = l(:n19_requires_bank_account)
       redirect_to project_my_company_path(@project)
       return
