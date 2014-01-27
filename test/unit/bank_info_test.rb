@@ -31,4 +31,11 @@ class BankInfoTest < ActiveSupport::TestCase
     assert bi3.valid?
   end
 
+  test "bank_account to IBAN conversion" do
+    iban = BankInfo.bank_account_to_iban('00120345030000067890',:esp)
+    assert_equal 'ES0700120345030000067890', iban
+    iban = BankInfo.bank_account_to_iban('00120345030000067899',:es)
+    assert_equal 'ES5500120345030000067899', iban
+  end
+
 end
