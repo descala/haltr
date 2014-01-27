@@ -98,7 +98,7 @@
     <%= f.label_for_field :bank_account %>
     </div>
     <div class="col span-1-de-4">
-    <%= f.label_for_field :iban %>
+      <%= f.label_for_field :iban %>
     </div>
     <div class="col span-1-de-4">
     <%= f.label_for_field :bic %>
@@ -194,4 +194,8 @@
       </p>
     </div>
   </fieldset>
+<% end -%>
+
+<% content_for :header_tags do -%>
+  <%= javascript_include_tag('iban',:plugin=>'haltr')%>
 <% end -%>

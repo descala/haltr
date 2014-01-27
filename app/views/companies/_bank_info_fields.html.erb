@@ -1,4 +1,4 @@
-<% bank_info_id = f.object_name.split("[").last.gsub(/\]/,'') -%>
+<% bank_info_id = f.object.new_record? ? Time.now.to_i : f.object.id -%>
 
 <div class="seccio grup nested-fields">
   <p class="col span-1-de-4">
@@ -8,7 +8,8 @@
   <%= f.text_field :bank_account, :maxlength => 20, :size => 30, :no_label => true, :maxlength => 20 %>
   </p>
   <p class="col span-1-de-4">
-  <%= f.text_field :iban, :size => 30, :no_label => true, :maxlength => 24 %>
+  <%= f.text_field :iban, :size => 30, :no_label => true, :maxlength => 24, :class => 'iban', "data-url" => project_check_iban_path(@project), "data-span-for-result" => "iban#{bank_info_id}" %>
+  <span id="iban<%=bank_info_id%>"></span>
   </p>
   <p class="col span-1-de-4">
   <%= f.text_field :bic, :style => "width: 80%;", :no_label => true, :maxlength => 11 %>

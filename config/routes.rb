@@ -33,6 +33,7 @@ resources :projects do
   match 'payments/import_aeb43' => 'payments#import_aeb43'
   match 'payments/n19_index' => 'payments#n19_index'
   match 'invoices', :controller => 'invoices', :action => 'destroy', :via => :delete
+  match 'check_iban' => 'companies#check_iban', :via => :get, :as => :check_iban
 end
 match 'payments/n19/:id' => 'payments#n19', :via => :get
 match 'payments/n19_done/:id' => 'payments#n19_done', :via => :post
