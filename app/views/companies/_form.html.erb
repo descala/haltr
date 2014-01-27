@@ -94,9 +94,11 @@
     <div class="col span-1-de-4">
     <%= f.label_for_field :name %>
     </div>
-    <div class="col span-1-de-4">
-    <%= f.label_for_field :bank_account %>
-    </div>
+    <% if @company.bank_infos.reject {|bi| bi.bank_account.blank? }.present? -%>
+      <div class="col span-1-de-4">
+      <%= f.label_for_field :bank_account %>
+      </div>
+    <% end -%>
     <div class="col span-1-de-4">
       <%= f.label_for_field :iban %>
     </div>

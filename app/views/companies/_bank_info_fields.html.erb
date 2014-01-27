@@ -4,9 +4,13 @@
   <p class="col span-1-de-4">
   <%= f.text_field :name, :no_label => true %>
   </p>
-  <p class="col span-1-de-4">
-  <%= f.text_field :bank_account, :maxlength => 20, :size => 30, :no_label => true, :maxlength => 20 %>
-  </p>
+  <% if @company.bank_infos.reject {|bi| bi.bank_account.blank? }.present? -%>
+    <p class="col span-1-de-4">
+    <% unless f.object.bank_account.empty? -%>
+      <%= f.text_field :bank_account, :maxlength => 20, :size => 30, :no_label => true, :maxlength => 20, :disabled => true %>
+    <% end -%>
+    </p>
+  <% end -%>
   <p class="col span-1-de-4">
   <%= f.text_field :iban, :size => 30, :no_label => true, :maxlength => 24, :class => 'iban', "data-url" => project_check_iban_path(@project), "data-span-for-result" => "iban#{bank_info_id}" %>
   <span id="iban<%=bank_info_id%>"></span>
