@@ -22,19 +22,6 @@ ca:
         significant: false
         tax_name: "IVA"
 
-  activerecord:
-    errors:
-      models:
-        bank_info: &id001
-          attributes:
-            iban:
-              bad_check_digits: no té els digits de control correctes
-              bad_format: no té un format correcte
-              bad_length: no té la mida correcte
-              unknown_country_code: té un codi de país desconegut
-              bad_chars: té caracters no permesos
-        client: *id001
-
   # community
   label_company: Empresa
   label_my_company: La meva empresa
@@ -129,6 +116,7 @@ ca:
   requires_company_bank_account: requereix compte bancari propi
   requires_client_iban_bic: requereix IBAN i BIC del client
   requires_company_iban_bic: requereix IBAN i BIC propis
+  iban_is_invalid: El IBAN no és vàlid
   cash_str: "Pagament en efectiu"
   debit_str: "Rebut domiciliat a"
   transfer_str: "Pagament per transferència al compte"
@@ -361,6 +349,8 @@ ca:
   notice_invoice_sent: "La factura s'ha enviat"
   error_invoice_not_sent: "La factura %{num} no s'ha pogut enviar"
   notice_empty_n19: "No hi ha dades per generar un N19"
+  notice_n19_done: "S'ha tancat el N19 de data %{value}"
+  notice_empty_sepa: "No hi ha dades per generar un fitxer SEPA"
   notice_payment_done: "S'ha tancat el %{payment_type} de data %{value}"
   notice_uploaded_file_not_found: "No s'ha trobat el fitxer"
 

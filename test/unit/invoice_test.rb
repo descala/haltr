@@ -280,7 +280,7 @@ class InvoiceTest < ActiveSupport::TestCase
     assert_equal "city", client.city
     assert_equal "EUR", client.currency
     assert_equal invoice.company.project, client.project
-    assert_equal "ibaaaaaaan", client.iban
+    assert_equal "ES8023100001180000012345", client.iban
     assert_equal "biiiiiiiiic", client.bic
     assert_equal "facturae_32", client.invoice_format
     # invoice
@@ -297,7 +297,7 @@ class InvoiceTest < ActiveSupport::TestCase
     assert_equal "uploaded", invoice.transport
     assert_equal "Anonymous", invoice.from
     assert_equal "1234", invoice.md5
-    assert_equal 7089, invoice.original.size
+    assert_equal 7103, invoice.original.size
     assert invoice.debit?, "invoice payment is debit"
     assert_equal "invoice_facturae32_issued.xml", invoice.file_name
     # invoice lines
