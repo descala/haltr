@@ -2,7 +2,7 @@ invoice1:
   type: IssuedInvoice
   number: 08/001
   date: 2008-11-24
-  due_date: 2008-12-01
+  due_date: <%= Date.tomorrow %>
   client: client1 
   terms: 1m1
   project_id: 2 
@@ -28,7 +28,7 @@ test_import:
   number: 08/194
   date: "2008-11-24"
   client: client1
-  due_date: "2008-12-01"
+  due_date: <%= Date.tomorrow %>
   terms: "30"
   project_id: 2
   payment_method: <%= Invoice::PAYMENT_DEBIT %>

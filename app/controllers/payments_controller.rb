@@ -153,6 +153,8 @@ class PaymentsController < ApplicationController
         creditor_identifier: @project.company.sepa_creditor_identifier,
       )
 
+      sdd.message_identification="#{Setting['host_name']}/#{@project.identifier}/#{Time.now.to_i}"
+
       clients.each do |client|
         money = client.bank_invoices_total(due_date, bank_info.id)
         invoice_numbers =  client.bank_invoices(due_date, bank_info.id).collect do |i|
@@ -167,11 +169,12 @@ class PaymentsController < ApplicationController
           local_instrument:          client.sepa_type,
           sequence_type:             'RCUR',
           reference:                 "#{l(:label_invoice)} #{invoice_numbers}",
+          requested_date:            due_date.to_date,
         )
       end
 
       if clients.any?
-        send_data sdd.to_xml, :filename => filename_for_content_disposition("sepa-#{params[:sepa_type]}-#{due_date}.xml"), :type => 'text/xml'
+        send_data sdd.to_xml(SEPA::PAIN_008_001_02), :filename => filename_for_content_disposition("sepa-#{params[:sepa_type]}-#{due_date}.xml"), :type => 'text/xml'
       else
         flash[:warning] = l(:notice_empty_sepa)
         redirect_to :action => 'payment_initiation', :project_id => @project
