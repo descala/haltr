@@ -106,7 +106,7 @@ class CompaniesController < ApplicationController
 
   def check_iban
     @iban_ok = true
-    iban = params[:iban]
+    iban = params[:iban].try(:gsub,/\p{^Alnum}/, '')
     unless iban.blank?
       @iban_ok = IBANTools::IBAN.valid?(iban)
     end

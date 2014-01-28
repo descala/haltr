@@ -22,18 +22,6 @@ class BankInfo < ActiveRecord::Base
     return read_attribute(:name)
   end
 
-  def bank_account=(s)
-    write_attribute(:bank_account, s.try(:gsub,/\p{^Alnum}/, ''))
-  end
-
-  def iban=(s)
-    write_attribute(:iban, s.try(:gsub,/\p{^Alnum}/, ''))
-  end
-
-  def bic=(s)
-    write_attribute(:bic, s.try(:gsub,/\p{^Alnum}/, ''))
-  end
-
   # TODO only for spanish accounts
   def self.local2iban(country,ccc)
     IBANTools::Conversion.local2iban(country.to_s.upcase,:account_number=>ccc.to_i).code

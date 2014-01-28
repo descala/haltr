@@ -10,9 +10,9 @@ class ClientsController < ApplicationController
   helper :sort
   include SortHelper
 
-  before_filter :find_project_by_project_id, :only => [:index,:new,:create]
+  before_filter :find_project_by_project_id, :only => [:index,:new,:create,:ccc2iban]
   before_filter :find_project,  :only => [:link_to_profile,:allow_link,:deny_link,:check_cif]
-  before_filter :find_client, :except => [:index,:new,:create,:link_to_profile,:allow_link,:deny_link,:check_cif]
+  before_filter :find_client, :except => [:index,:new,:create,:link_to_profile,:allow_link,:deny_link,:check_cif,:ccc2iban]
   before_filter :set_iso_countries_language
   before_filter :authorize
 
@@ -155,6 +155,15 @@ class ClientsController < ApplicationController
       client.save
     end
     redirect_to :action => 'index', :project_id => @project
+  end
+
+  def ccc2iban
+    ccc=params[:ccc].try(:gsub,/\p{^Alnum}/, '')
+    iban=""
+    if BankInfo.valid_spanish_ccc?(ccc)
+      iban=BankInfo.local2iban('ES',ccc)
+    end
+    render :text => iban
   end
 
   private

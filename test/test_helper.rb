@@ -18,9 +18,9 @@ module Haltr
       # Enables haltr module on project 'OnlineStore'
       Project.find(2).enabled_modules << EnabledModule.new(:name => 'haltr')
 
-      # Adds haltr permissions to role 'delveloper'
+      # Adds all haltr permissions to role 'delveloper'
       dev = Role.find(2)
-      dev.permissions += [:general_use,:manage_payments,:use_templates,:import_invoices]
+      dev.permissions += [:general_use,:manage_payments,:use_templates,:import_invoices, :use_sepa,:add_multiple_bank_infos,:bulk_operations]
       dev.save
 
       # user 2 (jsmith) is member of project 2 (onlinesotre) with role 2 (developer)
