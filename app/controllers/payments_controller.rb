@@ -170,7 +170,7 @@ class PaymentsController < ApplicationController
         I18n.locale = :es
         send_data sdd.to_xml, :filename => filename_for_content_disposition("sepa-#{params[:sepa_type]}-#{due_date}.xml"), :type => 'text/xml'
       else
-        flash[:warning] = l(:notice_empty_n19)
+        flash[:warning] = l(:notice_empty_sepa)
         redirect_to :action => 'payment_initiation', :project_id => @project
       end
     rescue ArgumentError => e

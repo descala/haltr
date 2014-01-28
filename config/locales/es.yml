@@ -119,6 +119,7 @@ es:
   requires_company_bank_account: requiere cuenta bancaria propia
   requires_client_iban_bic: requiere IBAN y BIC del cliente
   requires_company_iban_bic: requiere IBAN y BIC propios
+  iban_is_invalid: El IBAN no es válido
   cash_str: "Pago al contado"
   debit_str: "Recibo domiciliado a"
   transfer_str: "Pago por transferencia a la cuenta"

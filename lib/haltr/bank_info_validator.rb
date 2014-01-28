@@ -9,7 +9,9 @@ module Haltr::BankInfoValidator
       validate :check_iban_is_ok
 
       def check_iban_is_ok
-        errors.add(:base, :iban_is_invalid) if !iban.blank? and !IBANTools::IBAN.valid?(iban)
+        # Do not enforce valid IBAN in "My Company"
+        return true if self.is_a? BankInfo
+        errors[:base] <<  l(:iban_is_invalid) if !iban.blank? and !IBANTools::IBAN.valid?(iban)
       end
 
       def use_iban?

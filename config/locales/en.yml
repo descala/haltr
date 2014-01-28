@@ -106,6 +106,7 @@ en:
   requires_company_bank_account: requires a bank account in your company
   requires_client_iban_bic: requires client IBAN and BIC
   requires_company_iban_bic: requires self IBAN and BIC
+  iban_is_invalid: IBAN is not valid
   cash_str: "Cash payment"
   debit_str: "Debit payment to"
   transfer_str: "Bank transfer to"
