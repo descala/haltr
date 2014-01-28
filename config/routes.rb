@@ -24,7 +24,7 @@ resources :projects do
   resources :invoices, :only => [:index, :new, :create]
   resources :received, :only => [:index, :new, :create]
   resources :invoice_templates, :only => [:index, :new, :create]
-  match 'new_invoices_from_template' => 'invoice_templates#new_invoices_from_template', :via => :post
+  match 'new_invoices_from_template' => 'invoice_templates#new_invoices_from_template', :via => [:get, :post]
   match 'create_invoices' => 'invoice_templates#create_invoices', :via => :post
   match 'update_taxes' => 'invoice_templates#update_taxes'
   match 'report/issued_3m' => 'invoices#report', :via => :get
