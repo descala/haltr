@@ -1,7 +1,7 @@
 desc "For all Client and Company, calculate iban from bank_account"
 
 namespace :haltr do
-  task :ccc2iban do |task, args|
+  task :ccc2iban => :environment do |task, args|
     puts "Migratin CCC to IBAN ..."
     Client.all.each do |client|
       ccc = client.bank_account
