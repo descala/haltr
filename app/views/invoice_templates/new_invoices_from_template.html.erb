@@ -52,7 +52,7 @@
         <table class="taula-1 list invoices">
           <thead>
             <tr>
-              <th><%= l(:generate) %></th>
+              <th id="change_checks" title="check/uncheck all"><%= image_tag "true.png" %></th>
               <th><%= l(:field_number) %></th>
               <th><%= l(:field_date) %></th>
               <th><%= l(:field_due_date) %></th>
@@ -94,3 +94,6 @@
   <%= render_menu :invoices_menu, @project %>
 <% end %>
 
+<script type='text/javascript'>
+    $('#change_checks').on("click", function(){ $('input[type="checkbox"]').click(); });
+</script>
