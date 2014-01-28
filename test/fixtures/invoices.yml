@@ -10,6 +10,8 @@ invoice1:
   state: sent
   currency: EUR
   bank_info_id: 1
+  import_in_cents: 92568
+  total_in_cents: 92568
 
 template1:
   type: InvoiceTemplate
@@ -26,10 +28,15 @@ test_import:
   number: 08/194
   date: "2008-11-24"
   client: client1
-  due_date: "2008-12-24"
+  due_date: "2008-12-01"
   terms: "30"
   project_id: 2
+  payment_method: <%= Invoice::PAYMENT_DEBIT %>
+  state: sent
   currency: EUR
+  bank_info_id: 1
+  import_in_cents: 92568
+  total_in_cents: 92568
 
 draft:
   type: DraftInvoice

@@ -40,7 +40,14 @@ class PaymentsControllerTest < ActionController::TestCase
   end
 
   test "generates SEPA XML" do
-
+    @request.session[:user_id] = 2
+    get "sepa", :project_id => 2, :due_date => "2008-12-01", :bank_info => 1, :invoices => [invoices(:invoice1).id], :sepa_type => 'CORE'
+    assert_response :success
+    assert_equal 'text/xml', @response.content_type
+    xml=@response.body
+    assert xml.include?('Invoice 08/194 08/001')
+    assert xml.include?('ES8023100001180000012345</IBAN>')
+    assert xml.include?('1851.36</InstdAmt>')
   end
 
   def test_aeb43

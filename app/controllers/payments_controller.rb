@@ -155,19 +155,22 @@ class PaymentsController < ApplicationController
 
       clients.each do |client|
         money = client.bank_invoices_total(due_date, bank_info.id)
+        invoice_numbers =  client.bank_invoices(due_date, bank_info.id).collect do |i|
+          i.number
+        end.join(' ')
         sdd.add_transaction(
-          name:                      client.taxcode,
+          name:                      client.name,
           iban:                      bank_info.iban,
           amount:                    money.dollars,
-          mandate_id:                bank_info.id,
+          mandate_id:                client.taxcode,
           mandate_date_of_signature: Date.new(2009,10,31),
           local_instrument:          client.sepa_type,
           sequence_type:             'RCUR',
+          reference:                 "#{l(:label_invoice)} #{invoice_numbers}",
         )
       end
 
       if clients.any?
-        I18n.locale = :es
         send_data sdd.to_xml, :filename => filename_for_content_disposition("sepa-#{params[:sepa_type]}-#{due_date}.xml"), :type => 'text/xml'
       else
         flash[:warning] = l(:notice_empty_sepa)
