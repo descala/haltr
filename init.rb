@@ -59,7 +59,7 @@ Redmine::Plugin.register :haltr do
   project_module :haltr do
     permission :general_use,
       { :clients  => [:index, :new, :edit, :create, :update, :destroy, :check_cif, :link_to_profile, :unlink,
-                      :allow_link, :deny_link],
+                      :allow_link, :deny_link, :ccc2iban],
         :people   => [:index, :new, :show, :edit, :create, :update, :destroy],
         :invoices => [:index, :new, :edit, :create, :update, :destroy, :show, :mark_sent, :mark_closed, :mark_not_sent,
                       :destroy_payment, :facturae30, :facturae31, :facturae32, :peppolubl20, :send_invoice, :legal,
@@ -76,7 +76,7 @@ Redmine::Plugin.register :haltr do
                                  :new_invoices_from_template, :create_invoices, :update_taxes] }, :require => :member
 
     permission :use_all_readonly,
-      { :clients  => [:index, :edit, :check_cif],
+      { :clients  => [:index, :edit, :check_cif, :ccc2iban],
         :people   => [:index, :edit],
         :invoices => [:index, :show, :facturae30, :facturae31, :facturae32, :peppolubl20,
                       :legal, :download_new_invoices, :biiubl20, :svefaktura, :oioubl20, :efffubl, :report,
