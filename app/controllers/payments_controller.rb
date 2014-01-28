@@ -153,7 +153,7 @@ class PaymentsController < ApplicationController
         creditor_identifier: @project.company.sepa_creditor_identifier,
       )
 
-      sdd.message_identification="#{Setting['host_name']}/#{@project.identifier}/#{Time.now.to_i}"
+      sdd.message_identification="#{Setting['host_name']}/#{Time.now.to_i}"
 
       clients.each do |client|
         money = client.bank_invoices_total(due_date, bank_info.id)
