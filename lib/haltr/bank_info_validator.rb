@@ -7,15 +7,10 @@ module Haltr::BankInfoValidator
       validates_length_of :bic, :in => 8..11, :allow_nil => true, :allow_blank => true
       validates_length_of :iban, :maximum => 24, :allow_nil => true, :allow_blank => true
 
-      validate :iban_is_valid
+      validate :check_iban_is_ok
 
-      def iban_is_valid
-        unless iban.blank?
-          new_iban = IBANTools::IBAN.new(iban)
-          new_iban.validation_errors.each do |e|
-            errors.add(:iban, e)
-          end
-        end
+      def check_iban_is_ok
+        errors.add(:base, :iban_is_invalid) if !iban.blank? and !IBANTools::IBAN.valid?(iban)
       end
 
       def use_iban?

@@ -1,17 +1,18 @@
 require File.dirname(__FILE__) + '/../test_helper'
 
 class BankInfoTest < ActiveSupport::TestCase
-  fixtures :companies, :bank_infos
+  fixtures :companies,:bank_infos
 
   test "user needs role to add more than one bank accounts" do
     #TODO
   end
 
-  test "iban requires bic" do
-    bi3 = bank_infos(:bi3)
-    assert !bi3.valid?
-    bi3.bic = "12345678"
-    assert bi3.valid?
+  test "valid IBAN" do
+    assert BankInfo.new(:iban=>'ES0700120345030000067890').valid?
+  end
+
+  test "invalid IBAN" do
+    assert !BankInfo.new(:iban=>'ES9900120345030000067890').valid?
   end
 
   test "bic too long" do
