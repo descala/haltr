@@ -32,14 +32,15 @@ class Client < ActiveRecord::Base
   iso_country :country
   include CountryUtils
 
-  def initialize(attributes=nil)
-    super
-    self.currency ||= Setting.plugin_haltr['default_currency']
-    self.country  ||= Setting.plugin_haltr['default_country']
+  after_initialize :set_default_values
+
+  def set_default_values
+    self.currency       ||= Setting.plugin_haltr['default_currency']
+    self.country        ||= Setting.plugin_haltr['default_country']
     self.invoice_format ||= ExportChannels.default
-    self.language ||= User.current.language
-    self.language = "es" if self.language.blank?
-    self.sepa_type ||= "CORE"
+    self.language       ||= User.current.language
+    self.language         = "es" if self.language.blank?
+    self.sepa_type      ||= "CORE"
   end
 
   # Masks db value with default if db value is deprecated

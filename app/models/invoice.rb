@@ -62,13 +62,14 @@ class Invoice < ActiveRecord::Base
     :mapping => [%w(charge_amount_in_cents cents), %w(currency currency_as_string)],
     :constructor => Proc.new { |cents, currency| Money.new(cents || 0, currency || Money::Currency.new(Setting.plugin_haltr['default_currency'])) }
 
-  def initialize(attributes=nil)
-    super
+  after_initialize :set_default_values
+
+  def set_default_values
     self.discount_percent ||= 0
-    self.currency ||= self.client.currency rescue nil
-    self.currency ||= self.company.currency rescue nil
-    self.currency ||= Setting.plugin_haltr['default_currency']
-    self.payment_method ||= PAYMENT_CASH
+    self.currency         ||= self.client.currency rescue nil
+    self.currency         ||= self.company.currency rescue nil
+    self.currency         ||= Setting.plugin_haltr['default_currency']
+    self.payment_method   ||= PAYMENT_CASH
   end
 
   def currency=(v)

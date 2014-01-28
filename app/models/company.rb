@@ -39,8 +39,9 @@ class Company < ActiveRecord::Base
 
   validate :uniqueness_of_taxes
 
-  def initialize(attributes=nil)
-    super
+  after_initialize :set_default_values
+
+  def set_default_values
     #TODO: Add default country taxes
     self.currency ||= Setting.plugin_haltr['default_currency']
     self.country  ||= Setting.plugin_haltr['default_country']
