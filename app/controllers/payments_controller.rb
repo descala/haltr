@@ -149,6 +149,7 @@ class PaymentsController < ApplicationController
       sdd = SEPA::DirectDebit.new(
         name:                @project.company.name,
         iban:                bank_info.iban,
+        bic:                 bank_info.bic,
         creditor_identifier: @project.company.sepa_creditor_identifier,
       )
 

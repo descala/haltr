@@ -3,6 +3,7 @@ bi1:
   name: "bank account 1"
   bank_account: "12345678901234567890"
   iban: ES8023100001180000012345
+  bic: BSABESBB
   company: company1
 
 bi4:

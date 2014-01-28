@@ -6,12 +6,14 @@ client1:
   postalcode: 08013
   project_id: 2
   bank_account: 11491086512695322115
+  iban: ES8023100001180000012345
   hashid: "a0123456789"
   currency: EUR
   language: en
   country: es
   invoice_format: facturae_32
   payment_method: 1
+  sepa_type: CORE 
 
 clients_001: 
   id: 1
