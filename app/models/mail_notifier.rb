@@ -4,6 +4,7 @@ class MailNotifier < Mailer
   unloadable
 
   def received_invoice_accepted(invoice,reason)
+    I18n.locale = invoice.client.language
     @invoice = invoice
     @reason = reason
     mail :to => invoice.client.email,
@@ -14,6 +15,7 @@ class MailNotifier < Mailer
   end
 
   def received_invoice_refused(invoice,reason)
+    I18n.locale = invoice.client.language
     @invoice = invoice
     @reason = reason
     if invoice.fetch_from_backup
@@ -27,6 +29,7 @@ class MailNotifier < Mailer
   end
 
   def invoice_paid(invoice,reason)
+    I18n.locale = invoice.client.language
     @invoice = invoice
     @reason = reason
     if invoice.fetch_from_backup
