@@ -134,7 +134,7 @@ class IssuedInvoice < InvoiceDocument
   end
 
   def self.last_number(project)
-    numbers = project.issued_invoices.collect {|i| i.number }
+    numbers = project.issued_invoices.collect {|i| i.number }.compact
     numbers.sort_by do |num|
       if num =~ /\d+/
         [2, $&.to_i] # $& contains the complete matched text
