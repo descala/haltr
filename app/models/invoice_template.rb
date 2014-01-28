@@ -39,6 +39,9 @@ class InvoiceTemplate < Invoice
     end
     i.save!
     self.date = self.date.to_time.months_since(self.frequency).to_date
+    if self.terms == "custom"
+      self.due_date = self.due_date.to_time.months_since(self.frequency).to_date
+    end
     self.save!
     return i
   end
