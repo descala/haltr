@@ -7,6 +7,9 @@ rake redmine:load_default_data RAILS_ENV=test REDMINE_LANG=en
 
 rake db:fixtures:load redmine:plugins:migrate RAILS_ENV=test
 
+# configure channels.yaml
+cd plugins/haltr/config && ln -s channels.yml.example channels.yml; cd -
+
 # to run test with Zeus + Guard
 #
 # https://github.com/burke/zeus
