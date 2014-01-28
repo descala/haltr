@@ -20,7 +20,7 @@ namespace :haltr do
               if client.iban != iban
                 puts "[#{client.taxcode}] #{ccc} => #{iban}"
                 client.iban = iban
-                client.save!
+                client.save(:validate=>false)
               end
             end
           end
