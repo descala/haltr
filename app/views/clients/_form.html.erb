@@ -105,7 +105,7 @@
 <fieldset class="tabular box">
   <legend><%=l(:bank_info)%></legend>
   <div class="seccio grup">
-    <% if @client.bank_account.blank? -%>
+    <% if @client.read_attribute(:bank_account).blank? -%>
       <% if @client.country=='es' %>
         <p class="col span-1-de-3">
         <a id="ccc2iban" data-url="<%=project_ccc2iban_path(@project)%>" href="#">Convert spanish CCC to IBAN</a>

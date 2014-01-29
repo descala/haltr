@@ -24,7 +24,18 @@ class BankInfo < ActiveRecord::Base
 
   # TODO only for spanish accounts
   def self.local2iban(country,ccc)
-    IBANTools::Conversion.local2iban(country.to_s.upcase,:account_number=>ccc.to_i).code
+    if country and country.to_s.upcase == "ES" and ccc
+      return IBANTools::Conversion.local2iban(country.to_s.upcase,
+                                              :account_number=>ccc.to_i).code
+    end
+    return ""
+  end
+
+  def self.iban2local(country,iban)
+    if country and iban and country.to_s.upcase == "ES" and iban.size == 24
+      return iban[4..23] if BankInfo.valid_spanish_ccc?(iban[4..23])
+    end
+    return ""
   end
 
   def self.valid_spanish_ccc?(ccc)

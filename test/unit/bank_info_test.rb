@@ -38,6 +38,13 @@ class BankInfoTest < ActiveSupport::TestCase
     assert_equal 'ES5500120345030000067899', iban
   end
 
+  test "IBAN to bank_account conversion" do
+    ccc = BankInfo.iban2local('es','ES4020810000883300121217')
+    assert_equal '20810000883300121217', ccc
+    ccc = BankInfo.iban2local(:es,'ES5500120345030000067899')
+    assert_equal "", ccc, "00120345030000067899 is not a valid spanish ccc"
+  end
+
   test "spanish ccc" do
     assert BankInfo.valid_spanish_ccc?("20810000883300121217")
     assert !BankInfo.valid_spanish_ccc?("20810000883300121218")

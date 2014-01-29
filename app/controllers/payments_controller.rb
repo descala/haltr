@@ -98,11 +98,9 @@ class PaymentsController < ApplicationController
       ).group_by(&:due_date).each do |due_date, invoices|
         @invoices_to_pay_by_bank_info[bi][due_date]         = {}
         invoices.each do |invoice|
-          unless invoice.client.bank_account.blank?
+          unless invoice.client.bank_account.blank? and invoice.client.iban.blank?
             @invoices_to_pay_by_bank_info[bi][due_date]["n19"] ||= []
             @invoices_to_pay_by_bank_info[bi][due_date]["n19"] << invoice
-          end
-          unless invoice.client.iban.blank?
             @invoices_to_pay_by_bank_info[bi][due_date]["sepa_#{invoice.client.sepa_type}"] ||= []
             @invoices_to_pay_by_bank_info[bi][due_date]["sepa_#{invoice.client.sepa_type}"] << invoice
           end
@@ -117,7 +115,7 @@ class PaymentsController < ApplicationController
     @fecha_cargo      = @due_date.to_formatted_s(:ddmmyy)
     @fecha_confeccion = Date.today.to_formatted_s(:ddmmyy)
     @bank_info        = BankInfo.find params[:bank_info]
-    if @bank_info.bank_account.blank?
+    if @bank_info.bank_account.blank? and @bank_info.iban.blank?
       flash[:error] = l(:n19_requires_bank_account)
       redirect_to project_my_company_path(@project)
       return

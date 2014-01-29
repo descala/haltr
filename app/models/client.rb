@@ -143,10 +143,26 @@ class Client < ActiveRecord::Base
   end
 
   def set_if_blank(atr,val)
-    if send(atr).blank?
+    if send("read_attribute",atr).blank?
       send("#{atr}=",val)
     elsif send(atr) != val
       raise "client #{atr} does not match (#{send(atr)} != #{val})"
+    end
+  end
+
+  def bank_account
+    if read_attribute(:bank_account).blank? and !read_attribute(:iban).blank?
+      BankInfo.iban2local(country,read_attribute(:iban))
+    else
+      read_attribute(:bank_account)
+    end
+  end
+
+  def iban
+    if read_attribute(:iban).blank? and !read_attribute(:bank_account).blank?
+      BankInfo.local2iban(country,read_attribute(:bank_account))
+    else
+      read_attribute(:iban)
     end
   end
 
