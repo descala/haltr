@@ -143,6 +143,13 @@ class PaymentsController < ApplicationController
       client.sepa_type != params[:sepa_type] || client.bank_invoices_total(due_date, bank_info.id).zero?
     end
 
+    # Always use COR1
+    if params[:sepa_type] == 'CORE'
+      local_instrument = 'COR1'
+    else
+      local_instrument = 'B2B'
+    end
+
     begin
       sdd = SEPA::DirectDebit.new(
         name:                @project.company.name,
@@ -161,19 +168,21 @@ class PaymentsController < ApplicationController
         sdd.add_transaction(
           name:                      client.name,
           iban:                      client.iban,
-          bic:                       client.bic,
+          bic:                       client.bic.blank? ? nil : client.bic,
           amount:                    money.dollars,
           mandate_id:                client.taxcode,
           mandate_date_of_signature: Date.new(2009,10,31),
-          local_instrument:          client.sepa_type,
+          local_instrument:          local_instrument,
           sequence_type:             'RCUR',
-          reference:                 "#{l(:label_invoice)} #{invoice_numbers}",
+          reference:                 "#{invoice_numbers}",
+          remittance_information:    "#{l(:label_invoice)} #{invoice_numbers}",
           requested_date:            due_date.to_date,
         )
       end
 
       if clients.any?
-        send_data sdd.to_xml(SEPA::PAIN_008_001_02), :filename => filename_for_content_disposition("sepa-#{params[:sepa_type]}-#{due_date}.xml"), :type => 'text/xml'
+        file_date = due_date.to_date.to_formatted_s(:number)
+        send_data sdd.to_xml(SEPA::PAIN_008_001_02), :filename => filename_for_content_disposition("sepa-#{@project.identifier}-#{file_date}.xml"), :type => 'text/xml'
       else
         flash[:warning] = l(:notice_empty_sepa)
         redirect_to :action => 'payment_initiation', :project_id => @project
