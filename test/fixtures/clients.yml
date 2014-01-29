@@ -5,8 +5,8 @@ client1:
   taxcode: B00000000
   postalcode: 08013
   project_id: 2
-  bank_account: 11491086512695322115
-  iban: ES8023100001180000012345
+  bank_account: 20811234761234567890
+  iban: ES1420811234761234567890
   hashid: "a0123456789"
   currency: EUR
   language: en

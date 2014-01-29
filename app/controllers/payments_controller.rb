@@ -162,7 +162,8 @@ class PaymentsController < ApplicationController
         end.join(' ')
         sdd.add_transaction(
           name:                      client.name,
-          iban:                      bank_info.iban,
+          iban:                      client.iban,
+          bic:                       client.bic,
           amount:                    money.dollars,
           mandate_id:                client.taxcode,
           mandate_date_of_signature: Date.new(2009,10,31),
