@@ -96,15 +96,21 @@ class PaymentsController < ApplicationController
       bi.invoices.find(:all,
         :conditions => ["state = 'sent' AND payment_method = ?", Invoice::PAYMENT_DEBIT],
       ).group_by(&:due_date).each do |due_date, invoices|
-        @invoices_to_pay_by_bank_info[bi][due_date]         = {}
+        @invoices_to_pay_by_bank_info[bi][due_date] = {}
         invoices.each do |invoice|
           unless invoice.client.bank_account.blank? and invoice.client.iban.blank?
             @invoices_to_pay_by_bank_info[bi][due_date]["n19"] ||= []
-            @invoices_to_pay_by_bank_info[bi][due_date]["n19"] << invoice
             @invoices_to_pay_by_bank_info[bi][due_date]["sepa_#{invoice.client.sepa_type}"] ||= []
+            @invoices_to_pay_by_bank_info[bi][due_date]["n19"] << invoice
             @invoices_to_pay_by_bank_info[bi][due_date]["sepa_#{invoice.client.sepa_type}"] << invoice
           end
         end
+        if @invoices_to_pay_by_bank_info[bi][due_date].blank?
+          @invoices_to_pay_by_bank_info[bi].delete(due_date)
+        end
+      end
+      if @invoices_to_pay_by_bank_info[bi].blank?
+        @invoices_to_pay_by_bank_info.delete(bi)
       end
     end
   end
