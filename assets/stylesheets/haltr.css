@@ -88,3 +88,6 @@ select.tax {
 table#invoice_lines {
   min-width: 50%;
 }
+.unread {
+  font-weight: bold;
+}

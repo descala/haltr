@@ -79,7 +79,6 @@ class InvoicesController < ApplicationController
        :limit  =>  @invoice_pages.items_per_page,
        :offset =>  @invoice_pages.current.offset
 
-    @unread = invoices.where("type = ? AND has_been_read = ?", 'ReceivedInvoice', false).count
   end
 
   def new
