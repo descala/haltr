@@ -50,6 +50,7 @@
 </div>
 
 <!-- Client Info -->
+<% unless @client.new_record? -%>
 <div class="vcard client">
   <div class="client-info">
     <h3><%= client_name_with_link @client %></h3>
@@ -59,14 +60,15 @@
       <span class="postal-code"><%=h @client.postalcode %></span>
       <% if !@client.city.blank? or !@client.province.blank? -%>
         <span class="locality"><%=h @client.city.strip unless @client.city.blank? %></span>
-      <% unless @client.province.blank? -%>, <span class="region"><%=h @client.province %></span><% end -%>
+        <% unless @client.province.blank? -%>, <span class="region"><%=h @client.province %></span><% end -%>
       <% end -%>
       <div class="country-name"><%=h @client.country if @client.country and @client.country.downcase != @company.country.downcase %></div>
     </address>
-      <div><strong><%=h l(:field_taxcode) %>:</strong><span class="tax-id"> <%=h @client.taxcode.upcase %></span></div>
-      <%= call_hook(:invoice_view_client_info) %>
-    </div>
+    <div><strong><%=h l(:field_taxcode) %>:</strong><span class="tax-id"> <%=h @client.taxcode.upcase %></span></div>
+    <%= call_hook(:invoice_view_client_info) %>
+  </div>
 </div>
+<% end -%>
 
 <!-- Invoice Data -->
 <div class="invoice">
