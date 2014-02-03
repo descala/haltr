@@ -174,21 +174,6 @@ ublinvoice_20:
   allowed_permissions:
     :send_by_mail:
 
-biiublinvoice_20:
-  format: biiubl20
-  folder: free_ubl
-  validate:
-  - client_has_email
-  locales:
-    ca: "Factura CEN BII UBL 2.0 per email"
-    da: "CEN BII UBL 2.0 Invoice to email"
-    en: "CEN BII UBL 2.0 Invoice to email"
-    es: "Factura CEN BII UBL 2.0 por email"
-    fr: "CEN BII UBL 2.0 Facture par email"
-    sv: "CEN BII UBL 2.0 Faktura till email"
-  allowed_permissions:
-    :send_by_mail:
-
 aoc:
   format: facturae30
   folder: free_aoc
