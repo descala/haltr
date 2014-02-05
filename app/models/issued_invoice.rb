@@ -216,6 +216,7 @@ class IssuedInvoice < InvoiceDocument
                             :username=>company.imap_username,
                             :password=>company.imap_password,
                             :message=>message)
+    self.manual_send
   end
 
   # facturae 3.x needs taxes to be valid
