@@ -1,25 +1,28 @@
 class InvoiceMailer < ActionMailer::Base
 
+  unloadable
   include Redmine::I18n
 
   def issued_invoice_mail(invoice,options={})
 
+    @invoice = invoice
     pdf_file_path = options[:pdf_file_path]
+    recipients = invoice.recipient_emails.join(', ')
+    from = options[:from] || "#{invoice.company.name} <#{invoice.company.email}>"
+    bcc = options[:from] || invoice.company.email
+    subject = "#{l(:label_invoice)} #{invoice.number} (#{invoice.company.name})"
 
-    recipients invoice.recipient_emails.join(', ')
-    from options[:from] || "#{invoice.company.name} <#{invoice.company.email}>"
-    bcc options[:from] || invoice.company.email
-    subject "#{l(:label_invoice)} #{invoice.number} (#{invoice.company.name})"
-    sent_on Time.now
-    headers 'X-Haltr-Id' => invoice.id
+    headers['X-Haltr-Id'] = invoice.id
 
-    part "text/plain" do |p|
-      p.body = render_message("issued_invoice_mail.text.plain.erb", :invoice => invoice)
+    if pdf_file_path
+      attachments[invoice.pdf_name] = File.read(pdf_file_path)
     end
 
-    attachment :content_type => "application/pdf",
-      :filename => invoice.pdf_name,
-      :body => File.read(pdf_file_path)
+    mail :to => recipients,
+      :from => from,
+      :bcc => bcc,
+      :subject => subject
+
   end
 
 end

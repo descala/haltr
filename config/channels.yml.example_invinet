@@ -302,3 +302,18 @@ efffubl:
   allowed_permissions:
     :send_by_mail:
 
+imap_draft_pdf:
+  format: pdf
+  validate:
+  - client_has_email
+  - company_has_imap_config
+  call_invoice_method: store_imap_draft_pdf
+  locales:
+    ca: "Desa un email amb PDF adjunt en una carpeta IMAP"
+    da: "Store PDF into IMAP folder"
+    en: "Store PDF into IMAP folder"
+    es: "Crea un email con PDF adjunto en una carpeta IMAP"
+    fr: "Store PDF into IMAP folder"
+    sv: "Store PDF into IMAP folder"
+  allowed_permissions:
+    :use_imap_draft:
