@@ -22,7 +22,7 @@ class MandatesController < ApplicationController
       format.html
       format.pdf do
         @is_pdf = true
-        render :pdf => "mandate.pdf",
+        render :pdf => "mandate_#{@mandate.id}",
           :disposition => 'attachment',
           :layout => "mandate.html",
           :template=>"mandates/show",
@@ -73,7 +73,7 @@ class MandatesController < ApplicationController
     if @mandate.signed_doc
       send_data @mandate.signed_doc,
         :type => 'application/pdf',
-        :filename => "mandate_#{@mandate.identifier}.pdf",
+        :filename => "mandate_signed_#{@mandate.id}.pdf",
         :disposition => params[:disposition] == 'inline' ? 'inline' : 'attachment'
     else
       flash[:error] = "asd"
