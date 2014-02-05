@@ -208,7 +208,7 @@ class IssuedInvoice < InvoiceDocument
 
   # stores the email in the draft folder of an email account
   def store_imap_draft_pdf(pdf_file_path, channel_params)
-    message = InvoiceMailer.issued_invoice_mail(self, {:pdf_file_path=>pdf_file_path, :from => channel_params['imap_from']}).deliver
+    message = InvoiceMailer.issued_invoice_mail(self, {:pdf_file_path=>pdf_file_path, :from => channel_params['imap_from']})
     #TODO move imap parameters to Company
     Haltr::IMAP.store_draft(:host=>company.imap_host,
                             :imap_port=>company.imap_port,
