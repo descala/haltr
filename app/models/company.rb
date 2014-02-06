@@ -110,6 +110,12 @@ class Company < ActiveRecord::Base
     }.compact.uniq
   end
 
+  def ibans
+    self.bank_infos.collect {|bi|
+      bi.iban
+    }.compact.uniq
+  end
+
   # workaround rails bug that allows to save invalid taxes on company
   # see https://github.com/rails/rails/issues/4568
   def uniqueness_of_taxes
