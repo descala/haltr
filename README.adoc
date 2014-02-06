@@ -50,6 +50,24 @@ company logos).
 
 gem _zip_ is required to download multiple invoices
 
+== Generating PDFs
+
+Haltr uses wkhtmltopdf to generate PDF files.
+
+In order to run wkhtmltopdf in a headless server you can use xvfb.
+
+In Debian:
+
+  apt-get install wkhtmltopdf xvfb
+
+then, put this script in /usr/local/bin/wkhtmltopdf
+
+  #!/bin/sh
+  xvfb-run -a -s "-screen 0 640x480x16" /usr/bin/wkhtmltopdf $*
+
+do not forget to give it execution permisions
+
+  chmod +x /usr/local/bin/wkhtmltopdf
 
 == Sending invoices by email
 

@@ -125,7 +125,7 @@ class IssuedInvoice < InvoiceDocument
   def can_be_exported?
     # TODO Test if endpoint is correcty configured
     return @can_be_exported unless @can_be_exported.nil?
-    @can_be_exported = (self.valid? and !ExportChannels.folder(client.invoice_format).blank?)
+    @can_be_exported = (self.valid? and !ExportChannels.format(client.invoice_format).blank?)
     ExportChannels.validations(client.invoice_format).each do |v|
       self.send(v)
     end
@@ -208,7 +208,7 @@ class IssuedInvoice < InvoiceDocument
 
   # stores the email in the draft folder of an email account
   def store_imap_draft_pdf(pdf_file_path, channel_params)
-    message = InvoiceMailer.create_issued_invoice_mail(self, {:pdf_file_path=>pdf_file_path, :from => channel_params['imap_from']})
+    message = InvoiceMailer.issued_invoice_mail(self, {:pdf_file_path=>pdf_file_path, :from => channel_params['imap_from']})
     #TODO move imap parameters to Company
     Haltr::IMAP.store_draft(:host=>company.imap_host,
                             :imap_port=>company.imap_port,
@@ -216,6 +216,7 @@ class IssuedInvoice < InvoiceDocument
                             :username=>company.imap_username,
                             :password=>company.imap_password,
                             :message=>message)
+    self.manual_send
   end
 
   # facturae 3.x needs taxes to be valid
