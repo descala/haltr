@@ -91,18 +91,18 @@
     </p>
   </div>
   <div id="bank_infos">
-    <div class="col span-1-de-4">
+    <div class="col span-1-de-5">
     <%= f.label_for_field :name %>
     </div>
     <% if @company.bank_infos.reject {|bi| bi.bank_account.blank? }.present? -%>
-      <div class="col span-1-de-4">
+      <div class="col span-1-de-5">
       <%= f.label_for_field :bank_account %>
       </div>
     <% end -%>
-    <div class="col span-1-de-4">
+    <div class="col span-2-de-5">
       <%= f.label_for_field :iban %>
     </div>
-    <div class="col span-1-de-4">
+    <div class="col span-1-de-5">
     <%= f.label_for_field :bic %>
     </div>
 
