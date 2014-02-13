@@ -153,6 +153,9 @@ class InvoicesController < ApplicationController
       end
     else
       logger.info "Invoice errors #{@invoice.errors.full_messages}"
+      # Add a client in order to render the form with the errors
+      @client ||= Client.find(:all, :order => 'name', :conditions => ["project_id = ?", @project]).first
+      @client ||= Client.new
       render :action => "new"
     end
   end

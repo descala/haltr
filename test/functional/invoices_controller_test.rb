@@ -120,4 +120,12 @@ class InvoicesControllerTest < ActionController::TestCase
     assert invoice.original
   end
 
+  test 'create invoice without client when there are no clients' do
+    post :create, {
+      project_id: 'onlinestore',
+      invoice: {}
+    }
+    assert_response :success
+  end
+
 end
