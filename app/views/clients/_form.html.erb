@@ -118,7 +118,7 @@
     <% end -%>
     <p class="col span-1-de-3">
     <%= f.text_field :iban, :size => 24, :class => "iban", "data-url" => project_check_iban_path(@project), "data-span-for-result" => "iban" %>
-    <span id="iban"></span>
+    <span id="iban" class="ibanspan"></span>
     </p>
     <p class="col span-1-de-3">
     <%= f.text_field :bic, :size => 11 %>

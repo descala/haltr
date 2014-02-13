@@ -110,6 +110,7 @@ class CompaniesController < ApplicationController
     unless iban.blank?
       @iban_ok = IBANTools::IBAN.valid?(iban)
     end
+    response.headers["IbanOk"] = @iban_ok.to_s
     render :partial => 'iban_ok'
   end
 

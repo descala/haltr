@@ -110,7 +110,8 @@ module HaltrHelper
 
   def iban_for_mandate
     if @client.iban.blank?
-      iban = "#{@client.country_alpha2}______________________"
+      #iban = "#{@client.country_alpha2}______________________"
+      iban = "________________________"
     else
       iban = @client.iban
     end

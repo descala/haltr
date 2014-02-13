@@ -11,7 +11,7 @@ class MandatesController < ApplicationController
   before_filter :check_for_company
 
   def index
-    @mandates = Mandate.all
+    @mandates = Mandate.order("created_at desc")
   end
 
   def show
