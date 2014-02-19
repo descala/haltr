@@ -5,8 +5,22 @@ class Event < ActiveRecord::Base
   validates_presence_of :invoice_id
   belongs_to :user
   belongs_to :invoice
+  delegate :project, :to => :invoice, :allow_nil => true
 
   after_create :update_invoice, :unless => Proc.new {|event| event.invoice.nil?}
+
+  acts_as_event :title => Proc.new {|e| "#{I18n.t(e.invoice.type)} #{e.invoice.number}" },
+                :url => Proc.new {|e| {:controller=>'invoices', :action=>'show', :id=>e.invoice} },
+                :datetime => :created_at,
+                :author => :user_id,
+                :description => :to_s
+
+  acts_as_activity_provider :type => 'events',
+                            :author_key => :user_id,
+                            :permission => :general_use,
+                            :timestamp => "#{Event.table_name}.created_at",
+                            :find_options => {:include => [:user, {:invoice => :project}]}
+
 
   def to_s
     # TODO: log the origin of the REST event. i.e. "Sent by host4"

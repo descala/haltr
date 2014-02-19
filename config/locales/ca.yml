@@ -60,7 +60,7 @@ ca:
 
   # Invoices
   IssuedInvoice: Factura emesa
-  ReceivedInvoice: Rebudes
+  ReceivedInvoice: Factura rebuda
   DraftInvoice: Esborrany
   label_invoice_plural: Factures
   label_invoice: Factura
@@ -134,7 +134,7 @@ ca:
   state_discarded: "Descartada"
   state_validating_format: "Validant format"
   state_validating_signature: "Validant signatura"
-  state_received: "Factura rebuda"
+  state_received: "Rebuda"
   state_accepted: "Acceptada"
   state_refused: "Refusada"
   state_paid: "Pagada"
