@@ -18,7 +18,7 @@
       <% if controller.controller_name == "invoice_templates" -%>
         <%= f.select :frequency, frequencies_for_select, :required => true %>
       <% else -%>
-        <%= f.text_field :number, :size => 10, :required => true %> <span class="text"><%= "#{l(:label_last_invoice_number)}: #{IssuedInvoice.last_number(@project)}" if IssuedInvoice.all.any?%></span>
+        <%= f.text_field :number, :size => 10, :required => true %> <span class="text"><%= "#{l(:label_last_invoice_number)}: #{IssuedInvoice.last_number(@project)}" if IssuedInvoice.any?%></span>
       <% end -%>
     </p>
     <p class="col span-1-de-3">
