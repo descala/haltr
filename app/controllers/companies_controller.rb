@@ -77,6 +77,7 @@ class CompaniesController < ApplicationController
       flash[:notice] = l(:notice_successful_update) 
       redirect_to :action => 'my_company', :project_id => @project
     else
+      @company.bank_infos.build if @company.bank_infos.empty?
       render :action => 'edit'
     end
   end
