@@ -264,7 +264,7 @@ module InvoicesHelper
           "#{l(:debit_str)}<br />" +
             "#{ba[0..3]} #{ba[4..7]} #{ba[8..9]} #{ba[10..19]}"
         end
-      elsif i.transfer
+      elsif i.transfer?
         # ReceivedInvoice + transfer, show clients iban
         if i.client.use_iban?
           iban = i.client.iban || ""
