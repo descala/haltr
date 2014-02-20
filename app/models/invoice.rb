@@ -625,6 +625,9 @@ _INV
         self.bank_info = company.bank_infos.find_by_bank_account(bank_account)
       else
         self.bank_info = company.bank_infos.find_by_iban_and_bic(iban,bic)
+        unless self.bank_info
+          self.bank_info = company.bank_infos.find_by_iban(iban)
+        end
       end
       unless self.bank_info
         #TODO: check if user can add more bank infos to his company
