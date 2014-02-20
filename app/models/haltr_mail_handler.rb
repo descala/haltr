@@ -31,6 +31,7 @@ class HaltrMailHandler < MailHandler # < ActionMailer::Base
         company_found=false
         email['to'].to_s.scan(/[\w.]+@[\w.]+/).each do |to|
           company = Company.find_by_taxcode(to.split("@").first)
+          company = Company.find_by_email(to) unless company
           if company
             from = email['from'].to_s.scan(/[\w.]+@[\w.]+/).first
             company_found=true
@@ -59,7 +60,7 @@ class HaltrMailHandler < MailHandler # < ActionMailer::Base
           end
         end
         unless company_found
-          logger.info "Discarding email for #{email['to'].to_s} (Can't find company with taxcode #{email['to'].to_s.split("@").first})"
+          logger.info "Discarding email for #{email['to'].to_s} (Can't find any company)"
         end
       end
     else

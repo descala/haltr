@@ -2,7 +2,7 @@ require File.dirname(__FILE__) + '/../test_helper'
 
 class ClientTest < ActiveSupport::TestCase
 
-  fixtures :clients, :companies, :people, :bank_infos
+  fixtures :clients, :companies, :people, :bank_infos, :invoices
 
   test 'client payment_method' do
     c = clients(:client1)
