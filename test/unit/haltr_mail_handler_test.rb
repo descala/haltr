@@ -34,6 +34,11 @@ class HaltrMailHandlerTest < ActiveSupport::TestCase
     assert_invoices_created(invoices)
   end
 
+  test "takes in account all recipients" do
+    invoices = submit_email('invoice_facturae32_with_many_recipients.eml')
+    assert_invoices_created(invoices)
+  end
+
   # TODO test does not create invoice when 
   #      recipient email cif is not the same in the xml
 

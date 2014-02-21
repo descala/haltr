@@ -216,32 +216,74 @@ module InvoicesHelper
 
   def payment_method_info
     i = @invoice
-    if i.debit? and i.client.use_iban?
-      iban = i.client.iban || ""
-      bic  = i.client.bic || ""
-      s="#{l(:debit_str)}<br />"
-      s+="IBAN #{iban[0..3]} #{iban[4..7]} #{iban[8..11]} **** **** #{iban[20..23]}<br />"
-      s+="BIC #{bic}<br />" unless bic.blank?
-      s
-    elsif i.transfer? and i.bank_info and i.bank_info.use_iban?
-      iban = i.bank_info.iban || ""
-      bic  = i.bank_info.bic || ""
-      s="#{l(:transfer_str)}<br />"
-      s+="IBAN #{iban[0..3]} #{iban[4..7]} #{iban[8..11]} #{iban[12..15]} #{iban[16..19]} #{iban[20..23]}<br />"
-      s+="BIC #{bic}<br />" unless bic.blank?
-      s
-    elsif i.debit?
-      ba = i.client.bank_account || ""
-      "#{l(:debit_str)}<br />" +
-        "#{ba[0..3]} #{ba[4..7]} ** ******#{ba[16..19]}"
-    elsif i.transfer?
-      ba = i.bank_info.bank_account ||= "" rescue ""
-      "#{l(:transfer_str)}<br />" +
-        "#{ba[0..3]} #{ba[4..7]} #{ba[8..9]} #{ba[10..19]}"
-    elsif i.special?
-      i.payment_method_text
+    if i.is_a? IssuedInvoice
+      if i.debit?
+        # IssuedInvoice + debit, show clients iban
+        if i.client.use_iban?
+          iban = i.client.iban || ""
+          bic  = i.client.bic || ""
+          s="#{l(:debit_str)}<br />"
+          s+="IBAN #{iban[0..3]} #{iban[4..7]} #{iban[8..11]} **** **** #{iban[20..23]}<br />"
+          s+="BIC #{bic}<br />" unless bic.blank?
+          s
+        else
+          ba = i.client.bank_account || ""
+          "#{l(:debit_str)}<br />#{ba[0..3]} #{ba[4..7]} ** ******#{ba[16..19]}"
+        end
+      elsif i.transfer? and i.bank_info
+        # IssuedInvoice + transfer, show our iban
+        if i.bank_info.use_iban?
+          iban = i.bank_info.iban || ""
+          bic  = i.bank_info.bic || ""
+          s="#{l(:transfer_str)}<br />"
+          s+="IBAN #{iban[0..3]} #{iban[4..7]} #{iban[8..11]} #{iban[12..15]} #{iban[16..19]} #{iban[20..23]}<br />"
+          s+="BIC #{bic}<br />" unless bic.blank?
+          s
+        else
+          ba = i.bank_info.bank_account ||= "" rescue ""
+          "#{l(:transfer_str)}<br />" +
+            "#{ba[0..3]} #{ba[4..7]} #{ba[8..9]} #{ba[10..19]}"
+        end
+      elsif i.special?
+        i.payment_method_text
+      else
+        l(:cash_str)
+      end
+    elsif i.is_a? ReceivedInvoice
+      if i.debit? and i.bank_info
+        # ReceivedInvoice + debit, show our iban
+        if i.bank_info.use_iban?
+          iban = i.bank_info.iban || ""
+          bic  = i.bank_info.bic || ""
+          s="#{l(:debit_str)}<br />"
+          s+="IBAN #{iban[0..3]} #{iban[4..7]} #{iban[8..11]} #{iban[12..15]} #{iban[16..19]} #{iban[20..23]}<br />"
+          s+="BIC #{bic}<br />" unless bic.blank?
+          s
+        else
+          ba = i.bank_info.bank_account ||= "" rescue ""
+          "#{l(:debit_str)}<br />" +
+            "#{ba[0..3]} #{ba[4..7]} #{ba[8..9]} #{ba[10..19]}"
+        end
+      elsif i.transfer?
+        # ReceivedInvoice + transfer, show clients iban
+        if i.client.use_iban?
+          iban = i.client.iban || ""
+          bic  = i.client.bic || ""
+          s="#{l(:transfer_str)}<br />"
+          s+="IBAN #{iban[0..3]} #{iban[4..7]} #{iban[8..11]} #{iban[12..15]} #{iban[16..19]} #{iban[20..23]}<br />"
+          s+="BIC #{bic}<br />" unless bic.blank?
+          s
+        else
+          ba = i.client.bank_account || ""
+          "#{l(:transfer_str)}<br />#{ba[0..3]} #{ba[4..7]} #{ba[8..9]} #{ba[10..19]}"
+        end
+      elsif i.special?
+        i.payment_method_text
+      else
+        l(:cash_str)
+      end
     else
-      l(:cash_str)
+      ""
     end
   end
 
