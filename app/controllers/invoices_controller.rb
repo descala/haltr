@@ -666,10 +666,10 @@ class InvoicesController < ApplicationController
     @company = @project.company
     invoice_file = @format == 'pdf' ? create_pdf_file : create_xml_file(@format)
     if ExportChannels.folder(export_id).nil?
-      # call invoice method
-      method = ExportChannels.call_invoice_method(export_id)
-      if method and @invoice.respond_to?(method)
-        @invoice.send(method, invoice_file.path, ExportChannels[export_id])
+      # Use special class to send invoice
+      class_for_send = ExportChannels.class_for_send(export_id).constantize rescue nil
+      if class_for_send.respond_to?(:send_invoice)
+        class_for_send.send_invoice(@invoice, invoice_file.path)
       end
     else
       # store file in a folder (queue)

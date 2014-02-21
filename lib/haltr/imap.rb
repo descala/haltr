@@ -11,22 +11,30 @@ require 'net/imap'
 
 module Haltr
   module IMAP
-    class << self
-      def store_draft(imap_options={})
-        host = imap_options[:host] || '127.0.0.1'
-        port = imap_options[:port] || '143'
-        ssl = !imap_options[:ssl].nil?
-        folder = imap_options[:folder] || 'INBOX/Drafts'
-        imap = Net::IMAP.new(host, port, ssl)
-        imap.login(imap_options[:username], imap_options[:password]) unless imap_options[:username].nil?
-        imap.append(folder, imap_options[:message].to_s.gsub(/\n/, "\r\n"), [:Draft], Time.now)
+
+      unloadable
+
+      def self.send_invoice(invoice, path)
+        company = invoice.company
+        message = InvoiceMailer.issued_invoice_mail(invoice,
+                                                    {:pdf_file_path=>path,
+                                                     :from => company.imap_from})
+        host   = company.imap_host || '127.0.0.1'
+        port   = company.imap_port || '143'
+        ssl    = company.imap_ssl
+        folder = 'INBOX/Drafts' #TODO allow to change this
+        imap   = Net::IMAP.new(host, port, ssl)
+
+        imap.login(company.imap_username, company.imap_password) unless company.imap_username.nil?
+        imap.append(folder, message.to_s.gsub(/\n/, "\r\n"), [:Draft], Time.now)
+        invoice.manual_send
       end
 
       private
 
-      def logger
+      def self.logger
         Rails.logger
       end
-    end
+
   end
 end

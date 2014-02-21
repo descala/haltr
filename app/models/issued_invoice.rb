@@ -206,19 +206,6 @@ class IssuedInvoice < InvoiceDocument
     "#{format}<br/>#{errors}<br/>#{recipients}".html_safe
   end
 
-  # stores the email in the draft folder of an email account
-  def store_imap_draft_pdf(pdf_file_path, channel_params)
-    message = InvoiceMailer.issued_invoice_mail(self, {:pdf_file_path=>pdf_file_path, :from => channel_params['imap_from']})
-    #TODO move imap parameters to Company
-    Haltr::IMAP.store_draft(:host=>company.imap_host,
-                            :imap_port=>company.imap_port,
-                            :imap_ssl=>company.imap_ssl,
-                            :username=>company.imap_username,
-                            :password=>company.imap_password,
-                            :message=>message)
-    self.manual_send
-  end
-
   # facturae 3.x needs taxes to be valid
   def invoice_has_taxes
     self.invoice_lines.each do |line|

@@ -38,8 +38,8 @@ class ExportChannels
     available[id]["folder"] if available? id
   end
 
-  def self.call_invoice_method(id)
-    available[id]["call_invoice_method"] if available? id
+  def self.class_for_send(id)
+    available[id]["class_for_send"] if available? id
   end
 
   def self.validations(id)
