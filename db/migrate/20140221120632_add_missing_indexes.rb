@@ -15,6 +15,8 @@ class AddMissingIndexes < ActiveRecord::Migration
     add_index :clients, :project_id
     add_index :clients, :company_id
     add_index :clients, :bank_info_id
+    add_index :clients, :taxcode
+    add_index :clients, :hashid
   end
   
   def self.down
@@ -33,5 +35,7 @@ class AddMissingIndexes < ActiveRecord::Migration
     remove_index :clients, :project_id
     remove_index :clients, :company_id
     remove_index :clients, :bank_info_id
+    remove_index :clients, :taxcode
+    remove_index :clients, :hashid
   end
 end
