@@ -309,6 +309,8 @@ en:
   default_country: "Default country"
   default_currency: "Default currency"
   hide_unauthorized: "Hide unavailable features"
+  invoice_mail_subject: "Invoice mails subject"
+  invoice_mail_body: "Invoice mails body"
 
   # Terms
   "0": Immediately

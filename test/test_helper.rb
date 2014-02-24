@@ -13,7 +13,14 @@ module Haltr
     def self.haltr_setup
 
       # Plugin config
-      Setting.plugin_haltr = { "trace_url"=>"http://127.0.0.1", "b2brouter_ip"=>my_first_private_ipv4.ip_address, "export_channels_path"=>"#{ENV['HOME']}/git/b2brouter/spool/input", "default_country"=>"es", "default_currency"=>"EUR", "issues_controller_name"=>"issues" }
+      Setting.plugin_haltr = { "trace_url"              => "http://127.0.0.1",
+                               "b2brouter_ip"           => my_first_private_ipv4.ip_address,
+                               "export_channels_path"   => "#{ENV['HOME']}/git/b2brouter/spool/input",
+                               "default_country"        => "es",
+                               "default_currency"       => "EUR",
+                               "issues_controller_name" => "issues",
+                               "invoice_mail_subject"   => "email subject",
+                               "invoice_mail_body"      => "email body" }
 
       # Enables haltr module on project 'OnlineStore'
       Project.find(2).enabled_modules << EnabledModule.new(:name => 'haltr')

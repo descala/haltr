@@ -305,6 +305,8 @@ sv:
   default_country: "Förvald land"
   default_currency: "Förvald valuta"
   hide_unauthorized: "Göm tillgängliga funktioner"
+  invoice_mail_subject: "Invoice mails subject"
+  invoice_mail_body: "Invoice mails body"
 
   # Terms
   "0": Direkt

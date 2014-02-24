@@ -37,7 +37,7 @@ paper:
 
 signed_pdf:
   format: pdf
-  folder: free_pdf
+  class_for_send: Haltr::SendSignedPdfByMail
   validate: client_has_email
   locales:
     ca: "PDF signat, enviat per email"

@@ -23,7 +23,7 @@ class EventsController < ApplicationController
   #TODO: duplicated code
   def check_remote_ip
     allowed_ips = Setting.plugin_haltr['b2brouter_ip'].gsub(/ /,'').split(",") << "127.0.0.1"
-    unless allowed_ips.include?(request.remote_ip)
+    unless allowed_ips.include?(request.remote_ip) or %w(test development).include?(Rails.env)
       render :text => "Not allowed from your IP #{request.remote_ip}\n", :status => 403
       logger.error "Not allowed from IP #{request.remote_ip} (allowed IPs: #{allowed_ips.join(', ')})\n"
       return false

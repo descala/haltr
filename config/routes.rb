@@ -75,8 +75,8 @@ match 'received/show_original/:id' => 'received#show_original', :via => :get, :a
 resources :invoices
 
 # public access to an invoice using the client hash
-match 'invoice/download/:client_hashid/:invoice_id' => 'invoices#download', :client_hashid => /.*/, :invoice_id => /\d+/, :via => :get
-match 'invoice/:client_hashid/:invoice_id' => 'invoices#view', :client_hashid => /.*/, :invoice_id => /\d+/, :via => :get
+match 'invoice/download/:client_hashid/:invoice_id' => 'invoices#download', :client_hashid => /.*/, :invoice_id => /\d+/, :via => :get, :as => 'invoice_public_download'
+match 'invoice/:client_hashid/:invoice_id' => 'invoices#view', :client_hashid => /.*/, :invoice_id => /\d+/, :via => :get, :as => 'invoice_public_view'
 
 # public access to a company logo, knowing the id and the file name
 # TODO should be companies controller

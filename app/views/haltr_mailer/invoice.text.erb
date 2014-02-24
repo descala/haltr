@@ -1,0 +1,7 @@
+<%= Setting.plugin_haltr['invoice_mail_body'] %>
+
+----------------------------------------
+<%= render :partial => 'invoice', :formats => [:text],
+:locals => { :invoice => @invoice, :invoice_url => @invoice_url } %>
+
+<%= call_hook(:invoice_mail_footer,:invoice=>@invoice) %>

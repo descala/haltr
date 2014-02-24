@@ -308,6 +308,8 @@ fr:
   default_country: "Pays par défaut"
   default_currency: "Devise par défaut"
   hide_unauthorized: "Masquer les fonctionnalités non disponibles"
+  invoice_mail_subject: "Invoice mails subject"
+  invoice_mail_body: "Invoice mails body"
 
   # Terms
   "0": Immédiatement

@@ -1,13 +1,14 @@
-require 'net/imap'
-
-# Available IMAP options:
+# Stores an email with the invoice attached as draft on IMAP server.
+#
+# IMAP options configured on company:
 #  host      IMAP server host (default: 127.0.0.1)
 #  port      IMAP server port (default: 143)
 #  ssl       Use SSL? (default: false)
 #  username  IMAP account
 #  password  IMAP password
-#  folder    IMAP folder to read (default: INBOX)
-#  message   The email message
+#  folder    IMAP folder to read (default: INBOX) (TODO)
+
+require 'net/imap'
 
 module Haltr
   module IMAP

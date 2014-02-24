@@ -322,6 +322,8 @@ es:
   default_country: "País por defecto"
   default_currency: "Moneda por defecto"
   hide_unauthorized: "Ocultar funcionalidades no disponibles"
+  invoice_mail_subject: "Assunto de los correos de facturas"
+  invoice_mail_body: "Cuerpo de los correos de facturas"
 
   # Terms
   "0": Al contado

@@ -70,6 +70,8 @@ class HaltrMailHandler < MailHandler # < ActionMailer::Base
     return invoices
   end
 
+  private
+
   def process_pdf_file(raw_invoice,company,from="",md5,transport)
     @company = company
 
@@ -111,8 +113,6 @@ class HaltrMailHandler < MailHandler # < ActionMailer::Base
     ri.save!
     return ri
   end
-
-  private
 
   def attached_invoices(email)
     invoices = []

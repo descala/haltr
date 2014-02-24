@@ -5,3 +5,5 @@
 <p><label><%=l(:hide_unauthorized)%></label><%= check_box_tag 'settings[hide_unauthorized]', 1, @settings['hide_unauthorized'] %></p>
 <p><label><%=l(:default_country) %></label><%= select_tag('settings[default_country]', options_for_select(ISO::Countries::COUNTRIES.collect {|k,v| [v,k.to_s]}.sort,@settings['default_country'])) %></p>
 <p><label><%=l(:default_currency) %></label><%= select_tag('settings[default_currency]', options_for_select(HaltrHelper.currency_options_for_select, @settings['default_currency'])) %></p>
+<p><label><%=l(:invoice_mail_subject)%></label><%=text_field_tag 'settings[invoice_mail_subject]', @settings['invoice_mail_subject'] || '' %></p>
+<p><label><%=l(:invoice_mail_body)%></label><%=text_area_tag 'settings[invoice_mail_body]', @settings['invoice_mail_body'] || '' %></p>
