@@ -33,7 +33,7 @@
 <!-- Invoice Number and Info -->
 <h2 class="invoice-ID"><%=h @invoice.label %> <%=h @invoice.number %></h2>
 <div class="invoice-info">
-  <span class="date"><strong><%=h format_date @invoice.date %></strong></span><br/>
+  <span class="date"><%=h l(:field_date)%> <strong><%=h format_date @invoice.date %></strong></span><br/>
   <% if @invoice.amend_of -%>
     <span class="invoice-terms"><%=h l(:label_amended_invoice)%>: <%= link_to_if_authorized @invoice.amend_of.number,{:controller => 'invoices', :action => 'show', :id => @invoice.amend_of} %></span><br/>
   <% end -%>
