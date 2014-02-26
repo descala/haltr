@@ -26,6 +26,7 @@ $(document).ready(function() {
     }).done( function(iban) {
       for_result.val(iban);
     });
+    return false;
 
   });
 });
