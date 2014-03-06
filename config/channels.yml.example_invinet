@@ -300,7 +300,7 @@ efffubl:
     fr: "EFFF UBL facture par email"
     sv: "EFFF UBL faktura till email"
   allowed_permissions:
-    :send_by_mail:
+    :send_seres:
 
 imap_draft_pdf:
   format: pdf
