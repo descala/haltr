@@ -1,3 +1,4 @@
+# encoding: utf-8
 module Haltr::BankInfoValidator
 
   def self.included(base)
