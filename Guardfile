@@ -14,6 +14,7 @@ guard :minitest, :zeus => true, :all_on_start => false, :all_after_pass => false
   watch(%r{^#{H}/test/.+_test\.rb$})
   watch("#{H}/app/controllers/application_controller.rb") { ["#{H}/test/functional", "#{H}/test/integration"] }
   watch("#{H}/app/controllers/invoices_controller.rb")    { "#{H}/test/integration/invoice_edit_test.rb" }
+  watch("#{H}/app/controllers/clients_controller.rb")     { "#{H}/test/integration/client_create_test.rb" }
   watch("#{H}/test/test_helper.rb")                       { "#{H}/test" }
 end
 
