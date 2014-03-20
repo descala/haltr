@@ -133,3 +133,5 @@ Mime::Type.register "text/xml", :efffubl
 Redmine::Activity.map do |activity|
   activity.register :events
 end
+
+Delayed::Worker.max_attempts = 3

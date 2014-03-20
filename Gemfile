@@ -20,3 +20,4 @@ end
 
 gem 'iban-tools', :git => 'https://github.com/descala/iban-tools.git', :branch => 'master'
 gem 'sepa_king',  :git => 'https://github.com/descala/sepa_king.git', :branch => 'master'
+gem 'delayed_job_active_record'

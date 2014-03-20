@@ -35,12 +35,37 @@ class MailNotifier < Mailer
     if invoice.fetch_from_backup
       attachments[invoice.legal_filename] = invoice.legal_invoice
     end
-    subject = I18n.t (invoice.type == "ReceivedInvoice" ?
+    subject = I18n.t((invoice.type == "ReceivedInvoice" ?
                       :received_invoice_paid : :issued_invoice_paid),
-        :num => invoice.number, :company => invoice.company.name
+                      :num => invoice.number, :company => invoice.company.name)
     mail :to => invoice.client.email,
       :from => Setting.mail_from,
       :subject => subject
+  end
+
+  # delayed_job hooks
+
+  def self.failure(job)
+    Event.create!(:name=>"error_#{event_name(job)}",
+                  :invoice=>job.payload_object.args.first,
+                  :info=>job.payload_object.args.last)
+  end
+
+  def self.success(job)
+    Event.create!(:name=>"success_#{event_name(job)}",
+                  :invoice=>job.payload_object.args.first,
+                  :info=>job.payload_object.args.last)
+  end
+
+  def self.event_name(job)
+    case job.payload_object.method_name
+    when :received_invoice_accepted
+      'accept_notification'
+    when :received_invoice_refused
+      'refuse_notification'
+    else
+      raise "unknown delayed_job method_name: #{job.payload_object.method_name}"
+    end
   end
 
 end

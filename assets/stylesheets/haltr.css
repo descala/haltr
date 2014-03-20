@@ -54,6 +54,7 @@ th.money, td.money, .money{
   width: 650px;
   z-index: 1002;
   border: 4px solid #333333;
+  top: -5px;
 }
 
 #mail {

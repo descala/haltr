@@ -31,7 +31,8 @@ class Event < ActiveRecord::Base
       str += " #{l(:by)} #{user.name}"
     end
     if info
-      unless name == "accept" or name == "refuse" or name == "paid" # accept and refuse stores mail on info
+      unless name =~/_refuse_notification|_accept_notification/ or
+        name == "paid" # refuse/accept_notifications store mail on info
         str += " (#{info})"
       end
     end
