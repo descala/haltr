@@ -17,7 +17,7 @@ class HaltrMailerTest < ActiveSupport::TestCase
   def test_invoice_email
     invoice = invoices(:invoice1)
     invoice_file = Rails.root.join('plugins','haltr','test','fixtures','documents','invoice_pdf_signed.pdf').to_s
-    assert HaltrMailer.invoice(invoice,invoice_file).deliver
+    assert HaltrMailer.send_invoice(invoice,invoice_file).deliver
 
     mail = last_email
     assert_not_nil mail

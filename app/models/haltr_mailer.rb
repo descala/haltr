@@ -13,8 +13,8 @@ class HaltrMailer < ActionMailer::Base
   #
   # Example:
   #   invoice(invoice,filepath) => Mail::Message object
-  #   Mailer.invoice(invoice,filepath).deliver => sends an email to invoice recipients
-  def invoice(invoice, file)
+  #   HaltrMailer.send_invoice(invoice,filepath).deliver => sends an email to invoice recipients
+  def send_invoice(invoice, file)
     raise "File not found: #{file}" unless File.exist?(file)
     @invoice = invoice
     @invoice_url = invoice_public_view_url(:invoice_id=>invoice.id,
