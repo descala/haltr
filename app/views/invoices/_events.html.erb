@@ -7,7 +7,7 @@
         <ul>
           <% @invoice.events.each do |e| -%>
           <li><strong><%=format_time e.created_at%></strong> - <%=h e %> <%= download_link_for(e) %></li>
-          <% if (e.name =~ /_accept_notification|_refuse_notification/ || e.name == "paid") && !e.info.blank? -%>
+          <% if (e.name =~ /_accept_notification|_refuse_notification|_paid_notification/ || e.name == "paid") && !e.info.blank? -%>
             <div id="event_<%=e.id%>" style="display:none;">
               <div class="mail_box">
                 <div id="mail">
@@ -15,6 +15,7 @@
                   <% label = case e.name
                   when /_accept_notification/ then :received_invoice_accepted
                   when /_refuse_notification/ then :received_invoice_refused
+                  when /_paid_notification/   then :received_invoice_paid
                   when "paid" then (@invoice.type == "ReceivedInvoice" ? :received_invoice_paid : :issued_invoice_paid)
                   else ""
                   end -%>

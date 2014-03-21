@@ -60,7 +60,7 @@ class PaymentsController < ApplicationController
       flash[:notice] = l(:notice_successful_create)
       if @payment.invoice
         if params[:save_and_mail]
-          MailNotifier.invoice_paid(@payment.invoice,params[:reason]).deliver
+          MailNotifier.delay.invoice_paid(@payment.invoice,params[:reason])
         end
         if @payment.invoice.is_paid?
           # paid state change automatically creates an Event,

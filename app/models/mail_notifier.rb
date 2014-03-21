@@ -63,6 +63,8 @@ class MailNotifier < Mailer
       'accept_notification'
     when :received_invoice_refused
       'refuse_notification'
+    when :invoice_paid
+      'paid_notification'
     else
       raise "unknown delayed_job method_name: #{job.payload_object.method_name}"
     end

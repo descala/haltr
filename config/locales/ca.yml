@@ -470,3 +470,9 @@ ca:
 
   field_bank_infos: "Dades bancàries"
   error_bad_check_digits: sdf
+  success_accept_notification: "Notificació enviada"
+  error_accept_notification: "Error enviant la notificació"
+  success_refuse_notification: "Notificació enviada"
+  error_refuse_notification: "Error enviant la notificació"
+  success_paid_notification: "Notificació de pagament enviada"
+  error_paid_notidication: "Error enviant la notificació de pagament"
