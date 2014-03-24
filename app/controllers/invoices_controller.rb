@@ -631,12 +631,9 @@ class InvoicesController < ApplicationController
 
   def create_pdf_file
     @is_pdf = true
-    pdf = render_to_string :pdf => @invoice.pdf_name_without_extension,
-      :layout   => "invoice.html",
-      :template => 'invoices/show_pdf',
-      :formats  => :html
+    @debug  = params[:debug]
     pdf_file = Tempfile.new(@invoice.pdf_name,:encoding => 'ascii-8bit')
-    pdf_file.write pdf
+    pdf_file.write(Haltr::Pdf.generate(@invoice))
     logger.info "Created PDF #{pdf_file.path}"
     pdf_file.close
     return pdf_file

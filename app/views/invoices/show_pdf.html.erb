@@ -4,6 +4,7 @@
     @company ||= @invoice.company
     @client  ||= @invoice.client
     @project ||= @invoice.company.project
+    @is_pdf = true if @is_pdf.nil?
 -%>
 
 <% if @invoice.client.language -%>
