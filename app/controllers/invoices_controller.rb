@@ -664,7 +664,6 @@ class InvoicesController < ApplicationController
     export_id = @invoice.client.invoice_format
     @format = ExportChannels.format export_id
     @company = @project.company
-    invoice_file = @format == 'pdf' ? create_pdf_file : create_xml_file(@format)
     if ExportChannels.folder(export_id).nil?
       # Use special class to send invoice
       class_for_send = ExportChannels.class_for_send(export_id).constantize rescue nil
@@ -674,6 +673,7 @@ class InvoicesController < ApplicationController
         raise "Error in channels.yml: check configuration for #{export_id}"
       end
     else
+      invoice_file = @format=='pdf' ? create_pdf_file : create_xml_file(@format)
       # store file in a folder (queue)
       queue_file(invoice_file)
     end
