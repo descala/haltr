@@ -668,8 +668,10 @@ class InvoicesController < ApplicationController
     if ExportChannels.folder(export_id).nil?
       # Use special class to send invoice
       class_for_send = ExportChannels.class_for_send(export_id).constantize rescue nil
-      if class_for_send.respond_to?(:send_invoice)
-        class_for_send.send_invoice(@invoice, invoice_file.path)
+      if class_for_send.new.respond_to?(:perform)
+        Delayed::Job.enqueue class_for_send.new(@invoice)
+      else
+        raise "Error in channels.yml: check configuration for #{export_id}"
       end
     else
       # store file in a folder (queue)

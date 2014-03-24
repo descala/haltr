@@ -1,3 +1,11 @@
+<%
+    @invoice ||= invoice
+    @lines   ||= @invoice.invoice_lines
+    @company ||= @invoice.company
+    @client  ||= @invoice.client
+    @project ||= @invoice.company.project
+-%>
+
 <% if @invoice.client.language -%>
   <% before_locale = I18n.locale %>
   <% I18n.locale = @invoice.client.language rescue before_locale %>

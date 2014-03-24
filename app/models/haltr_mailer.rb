@@ -4,6 +4,7 @@ class HaltrMailer < ActionMailer::Base
 
   unloadable
   include Redmine::I18n
+  require "digest/md5"
 
   def self.default_url_options
     { :host => Setting.host_name, :protocol => Setting.protocol }
@@ -12,19 +13,20 @@ class HaltrMailer < ActionMailer::Base
   # Builds a Mail::Message object used to email recipients of the invoice.
   #
   # Example:
-  #   invoice(invoice,filepath) => Mail::Message object
-  #   HaltrMailer.send_invoice(invoice,filepath).deliver => sends an email to invoice recipients
-  def send_invoice(invoice, file)
-    raise "File not found: #{file}" unless File.exist?(file)
+  #   invoice(invoice,pdf) => Mail::Message object
+  #   HaltrMailer.send_invoice(invoice,pdf).deliver => sends an email to invoice recipients
+  def send_invoice(invoice, pdf)
     @invoice = invoice
     @invoice_url = invoice_public_view_url(:invoice_id=>invoice.id,
                                            :client_hashid=>invoice.client.hashid)
     set_language_if_valid invoice.client.language
+    filename = "#{I18n.t(:label_invoice)}_#{invoice.number.gsub(/[^\w]/,'_')}.pdf" rescue "Invoice.pdf"
     haltr_headers 'Id'       => invoice.id,
-                  'MD5'      => `md5sum #{file} | cut -d" " -f1`.chomp,
-                  'Filename' => file
+                  'MD5'      => Digest::MD5.hexdigest(pdf),
+                  'Filename' => filename
 
-    attachments[File.basename(file)] = File.read(file)
+    attachments[filename] = pdf
+
     mail :to      => invoice.client.email,
          :subject => Setting.plugin_haltr['invoice_mail_subject'],
          :from    => invoice.company.email
@@ -71,6 +73,18 @@ class HaltrMailer < ActionMailer::Base
     end
   end
 
+  # delayed_job hooks
+  def self.success(job)
+    Event.create!(:name    => 'success_sending',
+                  :invoice => job.payload_object.args.first,
+                  :info    => job.payload_object.args.last)
+  end
+
+  def self.failure(job)
+    Event.create!(:name    => 'discard_sending',
+                  :invoice => job.payload_object.args.first,
+                  :info    => job.payload_object.args.last)
+  end
 
   private
 

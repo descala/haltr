@@ -16,8 +16,8 @@ class HaltrMailerTest < ActiveSupport::TestCase
 
   def test_invoice_email
     invoice = invoices(:invoice1)
-    invoice_file = Rails.root.join('plugins','haltr','test','fixtures','documents','invoice_pdf_signed.pdf').to_s
-    assert HaltrMailer.send_invoice(invoice,invoice_file).deliver
+    pdf = File.read(Rails.root.join('plugins','haltr','test','fixtures','documents','invoice_pdf_signed.pdf'))
+    assert HaltrMailer.send_invoice(invoice,pdf).deliver
 
     mail = last_email
     assert_not_nil mail
@@ -25,7 +25,7 @@ class HaltrMailerTest < ActiveSupport::TestCase
     assert_equal invoice.company.email, mail.from_addrs.first
     assert_equal invoice.client.email,  mail.to_addrs.first
     assert_equal invoice.id.to_s,       mail.header['X-Haltr-Id'].to_s
-    assert_equal invoice_file,          mail.header['X-Haltr-Filename'].to_s
+    assert_equal 'Invoice_08_001.pdf',  mail.header['X-Haltr-Filename'].to_s
     assert_equal "722d813699ee44602f647997b055fa2a", mail.header['X-Haltr-MD5'].to_s
     assert_equal User.current.id.to_s,  mail.header['X-Haltr-Sender'].to_s
     assert_equal Setting.plugin_haltr['invoice_mail_subject'], mail.subject
@@ -39,9 +39,9 @@ class HaltrMailerTest < ActiveSupport::TestCase
     end
 
     assert mail.has_attachments?, "mail has no attached invoice!"
-    assert_equal 1,                        mail.attachments.size
-    assert_equal 'invoice_pdf_signed.pdf', mail.attachments[0].filename
-    assert_match(/^application\/pdf/,      mail.attachments[0].content_type)
+    assert_equal 1,                    mail.attachments.size
+    assert_equal 'Invoice_08_001.pdf', mail.attachments[0].filename
+    assert_match(/^application\/pdf/,  mail.attachments[0].content_type)
   end
 
   private
