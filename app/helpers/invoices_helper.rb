@@ -27,30 +27,6 @@ module InvoicesHelper
     number_with_precision(num,:precision=>precision,:significant => false)
   end
 
-  def download_link_for(e)
-    if (e.name == "success_sending"||e.name == "validating_format") and !e.md5.blank?
-      if e.invoice.type == "ReceivedInvoice"
-        "( #{link_to_if_authorized l(:button_download), :controller=>'invoices', :action=>'legal', :id=>e.invoice, :md5=>e.md5} )"
-      else
-        if e.invoice.client.invoice_format == "facturae_32_face"
-          "( #{link_to_if_authorized l(:download_legal), :controller=>'invoices', :action=>'legal', :id=>e.invoice, :md5=>e.md5},  #{link_to_if_authorized l(:download_proof), :controller=>'invoices', :action=>'legal', :id=>e.invoice, :md5=>e.md5, :backup_name=>'justificante'} )"
-        else
-          "( #{link_to_if_authorized l(:download_legal), :controller=>'invoices', :action=>'legal', :id=>e.invoice, :md5=>e.md5} )"
-        end
-      end
-    elsif e.name =~ /_notification$/ and !e.md5.blank?
-      "( #{link_to_if_authorized l(:download_notification), :controller=>'invoices', :action=>'legal', :id=>e.invoice, :md5=>e.md5} )"
-    elsif ( e.name =~ /_accept_notification|_refuse_notification|_paid_notification/ || e.name == "paid" ) && !e.info.blank?
-      "( #{link_to_function(l(:view_mail), "$('#event_#{e.id}').show();")} )"
-    elsif e.name == "new" and e.invoice and e.invoice.client and e.invoice.visible_by_client?
-      " (#{link_to_if_authorized(l(:public_link), :controller=>'invoices', :action=>'view', :client_hashid=>e.invoice.client.hashid, :invoice_id=>e.invoice.id)})"
-    elsif %w(uploaded email).include? e.name
-      " (#{link_to_if_authorized(l(:download_original), invoices_original_path(e.invoice))} / #{link_to_if_authorized(l(:view_original), {:action=>'show_original',:id=>e.invoice_id})})"
-    else
-      ""
-    end.html_safe
-  end
-
   def send_link_for_invoice
     confirm = @invoice.sent? ? j(l(:sure_to_resend_invoice, :num=>@invoice.number).html_safe) : nil
     if @invoice.can_be_exported?

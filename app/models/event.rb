@@ -21,21 +21,12 @@ class Event < ActiveRecord::Base
                             :timestamp => "#{Event.table_name}.created_at",
                             :find_options => {:include => [:user, {:invoice => :project}]}
 
+  serialize :info
+
 
   def to_s
-    # TODO: log the origin of the REST event. i.e. "Sent by host4"
     str = l(name)
-    if name == "email" and invoice.transport == "email"
-      str += " #{l(:by_mail_from, :email=>invoice.from)} "
-    elsif user
-      str += " #{l(:by)} #{user.name}"
-    end
-    if info
-      unless name =~/_refuse_notification|_accept_notification|_paid_notification/ or
-        name == "paid" # refuse/accept_notifications store mail on info
-        str += " (#{info})"
-      end
-    end
+    str += " #{l(:by)} #{user.name}" if user
     str
   end
 
@@ -43,6 +34,7 @@ class Event < ActiveRecord::Base
     self.created_at <=> oth.created_at
   end
 
+  # automatic events can change invoice status (after_create :update_invoice)
   def automatic?
     Event.automatic.include? name
   end
@@ -50,6 +42,7 @@ class Event < ActiveRecord::Base
   def self.automatic
     events  = %w(bounced sent_notification delivered_notification registered_notification)
     events += %w(refuse_notification accept_notification paid_notification accept refuse)
+
     actions = %w(sending receiving validating_format validating_signature)
     actions.each do |a|
       events << "success_#{a}"
@@ -57,6 +50,20 @@ class Event < ActiveRecord::Base
       events << "discard_#{a}"
     end
     events
+  end
+
+  %w(notes md5 final_md5).each do |c|
+    src = <<-END_SRC
+      def #{c}
+        info[:#{c}] rescue nil
+      end
+
+      def #{c}=(v)
+        self.info ||= {}
+        self.info[:#{c}] = v
+      end
+    END_SRC
+    class_eval src, __FILE__, __LINE__
   end
 
   private

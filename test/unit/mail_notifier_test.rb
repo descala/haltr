@@ -39,7 +39,7 @@ class MailNotifierTest < ActiveSupport::TestCase
     invoice = Invoice.first
     assert_equal invoice.type, "IssuedInvoice"
     reason = "reason"
-    assert MailNotifier.invoice_paid(invoice,reason).deliver
+    assert MailNotifier.issued_invoice_paid(invoice,reason).deliver
     assert_select_email do
       assert_select 'p', :text => 'Company1 has received payment for invoice number invoices_001'
       assert_select 'p', :text => 'reason'

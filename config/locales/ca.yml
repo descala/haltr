@@ -467,12 +467,6 @@ ca:
   field_delete_signed_doc: "Eliminar document signat"
   label_mandates: "Mandats"
   n19_requires_bank_account: "Per generar n19 cal omplir el teu compte bancari"
-
   field_bank_infos: "Dades bancàries"
-  error_bad_check_digits: sdf
-  success_accept_notification: "Notificació enviada"
-  error_accept_notification: "Error enviant la notificació"
-  success_refuse_notification: "Notificació enviada"
-  error_refuse_notification: "Error enviant la notificació"
-  success_paid_notification: "Notificació de pagament enviada"
-  error_paid_notidication: "Error enviant la notificació de pagament"
+  success_sending_notification_by_mail: "Notificació enviada"
+  error_sending_notification_by_mail: "Error enviant la notificació"

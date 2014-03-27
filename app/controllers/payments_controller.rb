@@ -60,13 +60,11 @@ class PaymentsController < ApplicationController
       flash[:notice] = l(:notice_successful_create)
       if @payment.invoice
         if params[:save_and_mail]
-          MailNotifier.delay.invoice_paid(@payment.invoice,params[:reason])
-        end
-        if @payment.invoice.is_paid?
-          # paid state change automatically creates an Event,
-          # delete it and create new one with email info (params[:reason])
-          @payment.invoice.events.last.destroy rescue nil
-          Event.create(:name=>'paid',:invoice=>@payment.invoice,:user=>User.current,:info=>params[:reason])
+          if @invoice.is_a? ReceivedInvoice
+            MailNotifier.delay.received_invoice_paid(@payment.invoice,params[:reason])
+          else
+            MailNotifier.delay.issued_invoice_paid(@payment.invoice,params[:reason])
+          end
         end
       end
       redirect_to project_payments_path(@project)

@@ -1,0 +1,1 @@
+<li><strong><%=format_time e.created_at%></strong> - <%=h e %> ( <%= h link_to_if_authorized(l(:download_proof),legal_path(:id=>e.invoice.id,:md5=>e.md5)) %> )</li>

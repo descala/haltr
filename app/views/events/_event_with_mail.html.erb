@@ -1,0 +1,21 @@
+<li><strong><%=format_time e.created_at%></strong> - <%=h e %><%= " - ( #{link_to_function(l(:view_mail), "$('#event_#{e.id}').show();") } )".html_safe unless e.notes.blank? %></li>
+<% unless e.notes.blank? -%>
+  <div id="event_<%=e.id%>" style="display:none;">
+    <div class="mail_box">
+      <div id="mail">
+        <%= t(:field_subject) %>:
+        <% label = case e.name
+                   when /_received_invoice_accepted_mail/ then :received_invoice_accepted
+                   when /_received_invoice_refused_mail/ then :received_invoice_refused
+                   when /_received_invoice_paid_mail/   then :received_invoice_paid
+                   when /_issued_invoice_paid_mail/   then :issued_invoice_paid
+                   else e.name
+                   end -%>
+        <%= t(label, :num => @invoice.number, :company => @invoice.company.name)%><br /><br />
+        <%= simple_format e.notes %><br />
+        <%= link_to_function(l(:back), "$('#event_#{e.id}').hide();") %>
+      </div>
+    </div>
+    <div class="overlay"></div>
+  </div>
+<% end -%>

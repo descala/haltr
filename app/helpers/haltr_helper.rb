@@ -93,10 +93,11 @@ module HaltrHelper
   # overwrite redmine helper to allow url passed as string
   # (to allow use with new _path helpers)
   def link_to_if_authorized(name, options = {}, html_options = {}, *parameters_for_method_reference)
+    parsed_options = options
     if options.is_a?(String)
-      options = Rails.application.routes.recognize_path(options, html_options)
+      parsed_options = Rails.application.routes.recognize_path(options, html_options)
     end
-    link_to(name, options, html_options, *parameters_for_method_reference) if authorize_for(options[:controller] || params[:controller], options[:action])
+    link_to(name, options, html_options, *parameters_for_method_reference) if authorize_for(parsed_options[:controller] || params[:controller], parsed_options[:action])
   rescue ActionController::RoutingError
   end
 

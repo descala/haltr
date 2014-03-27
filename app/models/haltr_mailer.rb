@@ -77,13 +77,13 @@ class HaltrMailer < ActionMailer::Base
   def self.success(job)
     Event.create!(:name    => 'success_sending',
                   :invoice => job.payload_object.args.first,
-                  :info    => job.payload_object.args.last)
+                  :notes   => job.payload_object.args.last)
   end
 
   def self.failure(job)
     Event.create!(:name    => 'discard_sending',
                   :invoice => job.payload_object.args.first,
-                  :info    => job.payload_object.args.last)
+                  :notes   => job.payload_object.args.last)
   end
 
   private

@@ -19,14 +19,14 @@ module Haltr
       Event.create!(:name    => "error_sending",
                     :invoice => invoice,
                     :user    => user,
-                    :info    => invoice.client.email)
+                    :notes   => invoice.client.email)
     end
 
     def success(job)
       Event.create!(:name    => "success_sending",
                     :invoice => invoice,
                     :user    => user,
-                    :info    => invoice.client.email)
+                    :notes   => invoice.client.email)
     end
 
   end
