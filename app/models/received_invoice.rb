@@ -65,7 +65,7 @@ class ReceivedInvoice < InvoiceDocument
   protected
 
   def create_event
-    Event.create(:name=>self.transport,:invoice=>self,:user=>User.current)
+    ReceivedInvoiceEvent.create(:name=>self.transport,:invoice=>self,:user=>User.current)
   end
 
 end

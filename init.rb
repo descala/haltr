@@ -60,17 +60,18 @@ Redmine::Plugin.register :haltr do
 
   project_module :haltr do
     permission :general_use,
-      { :clients  => [:index, :new, :edit, :create, :update, :destroy, :check_cif, :link_to_profile, :unlink,
-                      :allow_link, :deny_link, :ccc2iban],
-        :people   => [:index, :new, :show, :edit, :create, :update, :destroy],
-        :invoices => [:index, :new, :edit, :create, :update, :destroy, :show, :mark_sent, :mark_closed, :mark_not_sent,
-                      :destroy_payment, :facturae30, :facturae31, :facturae32, :peppolubl20, :send_invoice, :legal,
-                      :update_payment_stuff, :amend_for_invoice, :download_new_invoices, :send_new_invoices, :duplicate_invoice,
-                      :biiubl20, :svefaktura, :oioubl20, :efffubl, :report, :context_menu, :bulk_mark_as, :original, :show_original],
-        :received => [:index, :new, :edit, :create, :update, :destroy, :show, :show_original,
-                      :mark_accepted, :mark_accepted_with_mail, :mark_refused,
-                      :mark_refused_with_mail, :legal, :context_menu, :original, :validate, :bulk_mark_as],
-        :companies => [:my_company,:update,:linked_to_mine,:check_iban]},
+      { :clients   => [:index, :new, :edit, :create, :update, :destroy, :check_cif, :link_to_profile, :unlink,
+                       :allow_link, :deny_link, :ccc2iban],
+        :people    => [:index, :new, :show, :edit, :create, :update, :destroy],
+        :invoices  => [:index, :new, :edit, :create, :update, :destroy, :show, :mark_sent, :mark_closed, :mark_not_sent,
+                       :destroy_payment, :facturae30, :facturae31, :facturae32, :peppolubl20, :send_invoice, :legal,
+                       :update_payment_stuff, :amend_for_invoice, :download_new_invoices, :send_new_invoices, :duplicate_invoice,
+                       :biiubl20, :svefaktura, :oioubl20, :efffubl, :report, :context_menu, :bulk_mark_as, :original, :show_original],
+        :received  => [:index, :new, :edit, :create, :update, :destroy, :show, :show_original,
+                       :mark_accepted, :mark_accepted_with_mail, :mark_refused,
+                       :mark_refused_with_mail, :legal, :context_menu, :original, :validate, :bulk_mark_as],
+        :companies => [:my_company,:update,:linked_to_mine,:check_iban],
+        :events    => [:file]},
       :require => :member
 
     permission :manage_payments, { :payments => [:index, :new, :edit, :create, :update, :destroy, :payment_initiation, :n19, :payment_done, :import_aeb43_index, :import_aeb43, :invoices] }, :require => :member
@@ -78,15 +79,16 @@ Redmine::Plugin.register :haltr do
                                  :new_invoices_from_template, :create_invoices, :update_taxes] }, :require => :member
 
     permission :use_all_readonly,
-      { :clients  => [:index, :edit, :check_cif, :ccc2iban],
-        :people   => [:index, :edit],
-        :invoices => [:index, :show, :facturae30, :facturae31, :facturae32, :peppolubl20,
-                      :legal, :download_new_invoices, :biiubl20, :svefaktura, :oioubl20, :efffubl, :report,
-                      :context_menu, :show_original],
-        :received => [:index, :show, :show_original, :legal, :context_menu],
+      { :clients   => [:index, :edit, :check_cif, :ccc2iban],
+        :people    => [:index, :edit],
+        :invoices  => [:index, :show, :facturae30, :facturae31, :facturae32, :peppolubl20,
+                       :legal, :download_new_invoices, :biiubl20, :svefaktura, :oioubl20, :efffubl, :report,
+                       :context_menu, :show_original],
+        :received  => [:index, :show, :show_original, :legal, :context_menu],
         :companies => [:my_company, :update, :linked_to_mine, :check_iban],
-        :payments => [:index, :n19],
-        :invoice_templates => [:index, :show] }, :require => :member
+        :payments  => [:index, :n19],
+        :invoice_templates => [:index, :show] }, :require => :member,
+        :events    => [:file]
 
     permission :bulk_operations,
       { :invoices => [:bulk_download,:bulk_send],

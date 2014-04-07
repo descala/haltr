@@ -52,6 +52,16 @@ class Event < ActiveRecord::Base
     events
   end
 
+  def file
+    Haltr::Utils.decompress(read_attribute(:file))
+  end
+
+  def file=(s)
+    if s and s.size > 0
+      write_attribute(:file, Haltr::Utils.compress(s))
+    end
+  end
+
   %w(notes md5 final_md5).each do |c|
     src = <<-END_SRC
       def #{c}

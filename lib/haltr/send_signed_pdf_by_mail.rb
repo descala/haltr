@@ -3,9 +3,11 @@
 module Haltr
   class SendSignedPdfByMail < Struct.new(:invoice, :user)
 
+    attr_accessor :pdf
+
     def perform
       # create PDF
-      pdf = Haltr::Pdf.generate(invoice)
+      self.pdf = Haltr::Pdf.generate(invoice)
       # sign PDF
       # TODO
       # send it by email
@@ -16,17 +18,24 @@ module Haltr
     # delayed_job hooks
 
     def failure(job)
-      Event.create!(:name    => "error_sending",
-                    :invoice => invoice,
-                    :user    => user,
-                    :notes   => invoice.client.email)
+      create_event("error_sending")
     end
 
     def success(job)
-      Event.create!(:name    => "success_sending",
-                    :invoice => invoice,
-                    :user    => user,
-                    :notes   => invoice.client.email)
+      create_event("success_sending")
+    end
+
+    private
+
+    def create_event(name)
+      filename = "#{I18n.t(:label_invoice)}_#{invoice.number.gsub(/[^\w]/,'_')}.pdf" rescue "Invoice.pdf"
+      EventWithFile.create!(:name         => name,
+                            :invoice      => invoice,
+                            :user         => user,
+                            :notes        => invoice.client.email,
+                            :file         => pdf,
+                            :filename     => filename,
+                            :content_type => 'application/pdf')
     end
 
   end

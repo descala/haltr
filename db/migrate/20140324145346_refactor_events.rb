@@ -2,6 +2,7 @@ class RefactorEvents < ActiveRecord::Migration
   def self.up
     add_column :events, :type, :string, :default => 'Event'
     add_column :events, :file, :text, :limit => 16777215
+    add_column :events, :content_type, :string
 
     execute 'UPDATE events SET type="ReceivedInvoiceEvent" WHERE name="email";'
     execute 'UPDATE events SET type="EventWithUrl" WHERE md5 is not NULL;'
