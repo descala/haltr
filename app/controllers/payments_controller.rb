@@ -160,7 +160,7 @@ class PaymentsController < ApplicationController
       sdd = SEPA::DirectDebit.new(
         name:                @project.company.name,
         iban:                bank_info.iban,
-        bic:                 bank_info.bic,
+        bic:                 bank_info.bic.blank? ? nil : bank_info.bic,
         creditor_identifier: @project.company.sepa_creditor_identifier,
       )
 
