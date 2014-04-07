@@ -1,12 +1,15 @@
+# TODO is this the same as HaltrMailer?
+
 class InvoiceMailer < ActionMailer::Base
 
   unloadable
   include Redmine::I18n
 
+
   def issued_invoice_mail(invoice,options={})
 
     @invoice = invoice
-    pdf_file_path = options[:pdf_file_path]
+    pdf = options[:pdf]
     recipients = invoice.recipient_emails.join(', ')
     from = options[:from] || "#{invoice.company.name.gsub(',','')} <#{invoice.company.email}>"
     bcc = options[:from] || invoice.company.email
@@ -14,9 +17,7 @@ class InvoiceMailer < ActionMailer::Base
 
     headers['X-Haltr-Id'] = invoice.id
 
-    if pdf_file_path
-      attachments[invoice.pdf_name] = File.read(pdf_file_path)
-    end
+    attachments[invoice.pdf_name] = pdf if pdf
 
     mail :to => recipients,
       :from => from,

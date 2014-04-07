@@ -1,7 +1,7 @@
 # Signs a PDF invoice and sends it by email
 
 module Haltr
-  class SendSignedPdfByMail < Struct.new(:invoice, :user)
+  class SendSignedPdfByMail <  GenericSender
 
     attr_accessor :pdf
 
@@ -14,18 +14,6 @@ module Haltr
       HaltrMailer.send_invoice(invoice,pdf).deliver
       #TODO: save sent pdf and allow to download it from Event link
     end
-
-    # delayed_job hooks
-
-    def failure(job)
-      create_event("error_sending")
-    end
-
-    def success(job)
-      create_event("success_sending")
-    end
-
-    private
 
     def create_event(name)
       filename = "#{I18n.t(:label_invoice)}_#{invoice.number.gsub(/[^\w]/,'_')}.pdf" rescue "Invoice.pdf"

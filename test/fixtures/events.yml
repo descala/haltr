@@ -1,15 +1,12 @@
-# Read about fixtures at http://ar.rubyonrails.org/classes/Fixtures.html
 one:
   id: 1
   name: MyString
   info: MyText
   user_id: 1
-  md5: MyString
   filename: MyString
 two:
   id: 2
   name: MyString
   info: MyText
   user_id: 1
-  md5: MyString
   filename: MyString
