@@ -1,3 +1,5 @@
+# TODO is this the same as InvoiceMailer?
+
 class HaltrMailer < ActionMailer::Base
   layout 'mailer'
   helper :application
@@ -27,9 +29,12 @@ class HaltrMailer < ActionMailer::Base
 
     attachments[filename] = pdf
 
-    mail :to      => invoice.client.email,
+    recipients = invoice.recipient_emails.join(', ')
+    from = "#{invoice.company.name.gsub(',','')} <#{invoice.company.email}>"
+
+    mail :to      => recipients,
          :subject => Setting.plugin_haltr['invoice_mail_subject'],
-         :from    => invoice.company.email
+         :from    => from
   end
 
   def mail(headers={})

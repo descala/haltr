@@ -15,10 +15,10 @@ module Haltr
 
       unloadable
 
-      def self.send_invoice(invoice, path)
+      def self.send_invoice(invoice, pdf)
         company = invoice.company
         message = InvoiceMailer.issued_invoice_mail(invoice,
-                                                    {:pdf_file_path=>path,
+                                                    {:pdf=>pdf,
                                                      :from => company.imap_from})
         host   = company.imap_host || '127.0.0.1'
         port   = company.imap_port || '143'
