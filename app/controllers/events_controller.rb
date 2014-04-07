@@ -17,7 +17,7 @@ class EventsController < ApplicationController
 
     #TODO: should remove this when all events come with type
     if @event.type == 'Event'
-      @event.type = 'ReceivedInvoiceEvent' if name == 'email'
+      @event.type = 'ReceivedInvoiceEvent' if @event.name == 'email'
       if @event.md5.blank?
         @event.type = 'EventWithMail' if @event.name =~ /paid_notification$/
       else
