@@ -2,4 +2,4 @@
 <% unless e.notes.blank? -%>
   ( <%= h e.notes %> )
 <% end -%>
-<%= h link_to_if_authorized(l(e.name =~ /_notification/ ? :download_notification : :download_legal), event_file_path(e)) %>
+<%= h link_to_if_authorized(l(e.name =~ /_notification/ ? :download_notification : :download_legal), project_event_file_path(e, :project_id=>@project)) %>

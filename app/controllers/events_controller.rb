@@ -4,6 +4,8 @@ class EventsController < ApplicationController
 
   skip_before_filter :check_if_login_required, :only => [ :create ]
   before_filter :check_remote_ip, :except => [:file]
+  before_filter :find_project_by_project_id, :only => [:file]
+  before_filter :authorize, :only => [:file]
 
   def create
     t = params[:event][:type]

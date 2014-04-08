@@ -4,7 +4,6 @@
 #        %w(xml json).include? params[:format]
 
 resources :events
-match 'events/file/:id' => 'events#file', :via => :get, :as => :event_file
 
 match '/clients/check_cif/:id' => 'clients#check_cif', :via => :get
 match '/clients/link_to_profile/:id' => 'clients#link_to_profile', :via => :get
@@ -42,6 +41,7 @@ resources :projects do
   match 'invoices', :controller => 'invoices', :action => 'destroy', :via => :delete
   match 'check_iban' => 'companies#check_iban', :via => :get, :as => :check_iban
   match 'ccc2iban' => 'clients#ccc2iban', :via => :get, :as => :ccc2iban
+  match 'events/file/:id' => 'events#file', :via => :get, :as => :event_file
 end
 resources :clients do
   resources :people, :only => [:index, :new, :create]
