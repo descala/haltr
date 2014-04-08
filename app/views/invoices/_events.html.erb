@@ -5,7 +5,7 @@
       <div class="formee-msg-info invoice-events">
         <h3><%=h l(:events)%></h3>
         <ul>
-          <% @invoice.events.each do |e| -%>
+          <% @invoice.events.reverse.each do |e| -%>
             <% begin -%>
               <%= render :partial => "events/#{e.type.underscore}", :locals => {:e=>e} %>
             <% rescue ActionView::MissingTemplate -%>
