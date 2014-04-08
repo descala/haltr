@@ -8,11 +8,13 @@
 <div class="vcard vendor">
   <div class="invoicelogo">
     <% if @company.attachments.any? -%>
-    <% if !@is_pdf or @debug %>
-      <%= tag 'img', :src => "/invoices/logo/#{@company.attachments.first.id}/#{@company.attachments.first.filename}", :alt => "#{@company.name} Logo" -%>
-    <% else %>
-      <%= tag 'img', :src => @company.attachments.first.diskfile -%>
-    <% end -%>
+      <% if @is_pdf %>
+        <% if @debug %>
+          <%= tag 'img', :src => "/invoices/logo/#{@company.attachments.first.id}/#{@company.attachments.first.filename}", :alt => "#{@company.name} Logo" -%>
+        <% else %>
+          <%= tag 'img', :src => @company.attachments.first.diskfile -%>
+        <% end -%>
+      <% end -%>
   <% end -%>
   </div>
   <div class="vendor-info">
