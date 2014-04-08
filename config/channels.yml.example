@@ -6,7 +6,7 @@
 #   folder:     [folder to leave the resulting document in] ex. /tmp
 #   validate:   [method name in IssuedInvoice,
 #                checks the conditions the invoice has to have to use this channel] ex. client_has_email
-#   class_for_send: [class used to send invoice, it must define send_invoice method, see haltr::imap] ex.'Haltr::IMAP'
+#   class_for_send: [class used to send invoice, it must define perform method] ex.'Haltr::SendSignedPdfByMail'
 #   locales:
 #     en: "text ..."      [list of translations]
 #   allowed_permissions:
@@ -37,7 +37,7 @@ paper:
 
 signed_pdf:
   format: pdf
-  folder: free_pdf
+  class_for_send: Haltr::SendSignedPdfByMail
   validate: client_has_email
   locales:
     ca: "PDF signat, enviat per email"
@@ -124,7 +124,7 @@ imap_draft_pdf:
   validate:
   - client_has_email
   - company_has_imap_config
-  class_for_send: 'Haltr::IMAP'
+  class_for_send: Haltr::SendSignedPdfByImap
   locales:
     ca: "Desa un email amb PDF adjunt en una carpeta IMAP"
     da: "Store PDF into IMAP folder"

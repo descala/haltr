@@ -4,8 +4,6 @@ class SendTest < ActiveSupport::TestCase
 
   fixtures :taxes, :companies, :invoices, :invoice_lines, :clients
 
-  include Haltr::IMAP
-
   test "just call empty perform" do
     assert_equal nil, Haltr::GenericSender.new.perform
   end

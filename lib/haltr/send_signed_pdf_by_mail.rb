@@ -12,7 +12,6 @@ module Haltr
       # TODO
       # send it by email
       HaltrMailer.send_invoice(invoice,pdf).deliver
-      #TODO: save sent pdf and allow to download it from Event link
     end
 
     def create_event(name)
