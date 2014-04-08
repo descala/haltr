@@ -20,6 +20,13 @@ class RefactorEvents < ActiveRecord::Migration
   end
 
   def self.down
-    raise ActiveRecord::IrreversibleMigration
+    remove_column :events, :type
+    remove_column :events, :file
+    remove_column :events, :content_type
+    add_column :events, :md5, :string
+    add_column :events, :final_md5, :string
+    # Do not raise exception to allow plugin removal
+    # TODO but ... it is irreversible!
+    # raise ActiveRecord::IrreversibleMigration
   end
 end
