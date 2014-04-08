@@ -25,7 +25,7 @@ class Invoice < ActiveRecord::Base
   attr_protected :created_at, :updated_at
 
   has_many :invoice_lines, :dependent => :destroy
-  has_many :events, :dependent => :destroy, :order => 'updated_at'
+  has_many :events, :dependent => :destroy, :order => 'created_at'
   #has_many :taxes, :through => :invoice_lines
   belongs_to :project, :counter_cache => true
   belongs_to :client
