@@ -187,7 +187,7 @@ en:
   manual_send: "Manually marked as sent"
   queue: "Delivery order given"
   requeue: "Re-delivery order given"
-  success_sending: "Correctly sent to recipient"
+  success_sending: "Correctly sent"
   mark_unsent: "Manually marked as not sent"
   error_sending: "Error sending"
   close: "Closed"
@@ -458,3 +458,4 @@ en:
   field_bank_infos: "Bank details"
   success_sending_notification_by_mail: "Notification sent"
   error_sending_notification_by_mail: "Error sending notification"
+  send_signed_pdf_by_mail: "Signed PDF mailed to %{emails}"

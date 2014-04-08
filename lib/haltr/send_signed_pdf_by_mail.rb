@@ -19,7 +19,7 @@ module Haltr
       filename = "#{I18n.t(:label_invoice)}_#{invoice.number.gsub(/[^\w]/,'_')}.pdf" rescue "Invoice.pdf"
       EventWithFile.create!(:name         => name,
                             :invoice      => invoice,
-                            :notes        => invoice.client.email,
+                            :notes        => invoice.recipient_emails.join(', '),
                             :file         => pdf,
                             :filename     => filename,
                             :content_type => 'application/pdf')

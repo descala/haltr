@@ -183,7 +183,7 @@ sv:
   manual_send: "Markera som sänt"
   queue: "Delivery order given"
   requeue: "Re-delivery order given"
-  success_sending: "Skickat korrekt till mottagaren"
+  success_sending: "Skickat korrekt"
   mark_unsent: "Manuellt markerad som ej skickad"
   error_sending: "Fel vid sändning"
   close: "Avslutad"
@@ -457,3 +457,4 @@ sv:
   field_bank_infos: "Bank details"
   success_sending_notification_by_mail: "Notification sent"
   error_sending_notification_by_mail: "Error sending notification"
+  send_signed_pdf_by_mail: "Signerad PDF till email %{emails}"

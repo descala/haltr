@@ -184,7 +184,7 @@ da:
   manual_send: "Manuel markeret som sendt"
   queue: "Delivery order given"
   requeue: "Re-delivery order given"
-  success_sending: "Korrekt sendt til modtager"
+  success_sending: "Korrekt sendt"
   mark_unsent: "Manuel markeret som ikke sendt"
   error_sending: "Fejl ved afsendelse"
   close: "Lukket"
@@ -470,3 +470,4 @@ da:
   field_bank_infos: "Bank details"
   success_sending_notification_by_mail: "Notification sent"
   error_sending_notification_by_mail: "Error sending notification"
+  send_signed_pdf_by_mail: "Signed PDF til email an %{emails}"

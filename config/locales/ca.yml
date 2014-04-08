@@ -196,7 +196,7 @@ ca:
   manual_send: "Marcada manualment com a enviada"
   queue: "Ordre d'enviament donada"
   requeue: "Ordre de reenviament donada"
-  success_sending: "Enviada correctament al destinatari"
+  success_sending: "Enviada correctament"
   mark_unsent: "Marcada manualment com a no enviada"
   error_sending: "Error a l'enviar"
   close: "Tancada"
@@ -470,3 +470,4 @@ ca:
   field_bank_infos: "Dades bancàries"
   success_sending_notification_by_mail: "Notificació enviada"
   error_sending_notification_by_mail: "Error enviant la notificació"
+  send_signed_pdf_by_mail: "PDF signat, enviat per email a %{emails}"
