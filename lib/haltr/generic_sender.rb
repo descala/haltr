@@ -18,7 +18,6 @@ module Haltr
     def create_event(name)
       Event.create!(:name    => name,
                     :invoice => invoice,
-                    :user    => user,
                     :notes   => invoice.client.email)
     end
 

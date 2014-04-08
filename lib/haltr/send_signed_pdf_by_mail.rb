@@ -1,7 +1,7 @@
 # Signs a PDF invoice and sends it by email
 
 module Haltr
-  class SendSignedPdfByMail <  GenericSender
+  class SendSignedPdfByMail < GenericSender
 
     attr_accessor :pdf
 
@@ -19,7 +19,6 @@ module Haltr
       filename = "#{I18n.t(:label_invoice)}_#{invoice.number.gsub(/[^\w]/,'_')}.pdf" rescue "Invoice.pdf"
       EventWithFile.create!(:name         => name,
                             :invoice      => invoice,
-                            :user         => user,
                             :notes        => invoice.client.email,
                             :file         => pdf,
                             :filename     => filename,
