@@ -484,28 +484,34 @@ class InvoicesController < ApplicationController
     download
   end
 
-  # downloads an invoice without login using its hash_id and its md5 as credentials
+  # downloads an invoice without login using client hash_id as credentials
   def download
-    if (Rails.env.development? or Rails.env.test?) and !Setting['plugin_haltr']['b2brouter_ip']
-      logger.debug "This is a test XML invoice"
-      send_file Rails.root.join("plugins/haltr/test/fixtures/xml/test_invoice_facturae32.xml")
+    event = @invoice.events.where("type='EventWithFile'").last
+    if event
+      send_data event.file, :filename => event.filename, :type => event.content_type
     else
-      #TODO: several B2bRouters
-      if @invoice.fetch_from_backup(params[:md5],params[:backup_name])
-        respond_to do |format|
-          format.html do
-            send_data @invoice.legal_invoice,
+      # old way, external invoice storage
+      if (Rails.env.development? or Rails.env.test?) and !Setting['plugin_haltr']['b2brouter_ip']
+        logger.debug "This is a test XML invoice"
+        send_file Rails.root.join("plugins/haltr/test/fixtures/xml/test_invoice_facturae32.xml")
+      else
+        #TODO: several B2bRouters
+        if @invoice.fetch_from_backup(params[:md5],params[:backup_name])
+          respond_to do |format|
+            format.html do
+              send_data @invoice.legal_invoice,
                 :type => @invoice.legal_content_type,
                 :filename => @invoice.legal_filename,
                 :disposition => params[:disposition] == 'inline' ? 'inline' : 'attachment'
+            end
+            format.xml do
+              render :xml => @invoice.legal_invoice
+            end
           end
-          format.xml do
-            render :xml => @invoice.legal_invoice
-          end
+        else
+          flash[:warning]=l(:cant_connect_trace, "")
+          render_404
         end
-      else
-        flash[:warning]=l(:cant_connect_trace, "")
-        render_404
       end
     end
   rescue Errno::ECONNREFUSED, Errno::EHOSTUNREACH => e
