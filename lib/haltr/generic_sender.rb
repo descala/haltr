@@ -16,9 +16,10 @@ module Haltr
     end
 
     def create_event(name)
-      Event.create!(:name    => name,
-                    :invoice => invoice,
-                    :notes   => invoice.client.email)
+      Event.create!(:name           => name,
+                    :invoice        => invoice,
+                    :notes          => invoice.client.email,
+                    :class_for_send => self.class.to_s.split('::').last.underscore)
     end
 
   end

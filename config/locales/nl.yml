@@ -186,7 +186,7 @@ en:
   manual_send: "Manually marked as sent"
   queue: "Delivery order given"
   requeue: "Re-delivery order given"
-  success_sending: "Correctly sent to recipient"
+  success_sending: "Correctly sent"
   mark_unsent: "Manually marked as not sent"
   error_sending: "Error sending"
   close: "Closed"
