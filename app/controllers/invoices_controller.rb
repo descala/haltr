@@ -666,6 +666,7 @@ class InvoicesController < ApplicationController
       class_for_send = ExportChannels.class_for_send(export_id).constantize rescue nil
       if class_for_send.new.respond_to?(:perform)
         Delayed::Job.enqueue class_for_send.new(@invoice,User.current)
+        @invoice.queue || @invoice.requeue
       else
         raise "Error in channels.yml: check configuration for #{export_id}"
       end
