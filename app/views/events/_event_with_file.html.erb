@@ -1,0 +1,5 @@
+<li><strong><%=format_time e.created_at%></strong> - <%=h e %>
+<% unless e.notes.blank? -%>
+  ( <%= h e.notes %> )
+<% end -%>
+<%= h link_to_if_authorized(l(e.name =~ /_notification/ ? :download_notification : :download_legal), event_file_path(e)) %>
