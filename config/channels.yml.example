@@ -124,7 +124,7 @@ imap_draft_pdf:
   validate:
   - client_has_email
   - company_has_imap_config
-  class_for_send: Haltr::SendSignedPdfByImap
+  class_for_send: Haltr::SendSignedPdfByIMAP
   locales:
     ca: "Desa un email amb PDF adjunt en una carpeta IMAP"
     da: "Store PDF into IMAP folder"
