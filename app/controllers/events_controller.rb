@@ -3,7 +3,7 @@ class EventsController < ApplicationController
   helper :haltr
 
   skip_before_filter :check_if_login_required, :only => [ :create ]
-  before_filter :check_remote_ip
+  before_filter :check_remote_ip, :except => [:file]
 
   def create
     t = params[:event][:type]
