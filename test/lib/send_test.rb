@@ -14,11 +14,14 @@ class SendTest < ActiveSupport::TestCase
     assert Haltr::SendSignedPdfByMail.new(invoices(:invoices_001),User.find(2)).perform
     mail = last_email
     assert mail.to.include?('person1@example.com')
+    assert mail.to.include?('mail@client1.com')
   end
 
   test "just call SendSignedPdfByIMAP" do
-    # TODO do not connect to IMAP in testing
-    assert Haltr::SendSignedPdfByIMAP.new(invoices(:invoices_001),User.find(2)).perform
+    # does not send the email, just stores it in an IMAP folder
+    mail = Haltr::SendSignedPdfByIMAP.new(invoices(:invoices_001),User.find(2)).perform
+    assert mail.to.include?('person1@example.com')
+    assert mail.to.include?('mail@client1.com')
   end
 
   private

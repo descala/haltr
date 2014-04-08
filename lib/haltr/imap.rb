@@ -20,15 +20,18 @@ module Haltr
         message = InvoiceMailer.issued_invoice_mail(invoice,
                                                     {:pdf=>pdf,
                                                      :from => company.imap_from})
-        host   = company.imap_host || '127.0.0.1'
-        port   = company.imap_port || '143'
-        ssl    = company.imap_ssl
-        folder = 'INBOX/Drafts' #TODO allow to change this
-        imap   = Net::IMAP.new(host, port, ssl)
+        if Rails.env != 'test'
+          host   = company.imap_host || '127.0.0.1'
+          port   = company.imap_port || '143'
+          ssl    = company.imap_ssl
+          folder = 'INBOX/Drafts' #TODO allow to change this
+          imap   = Net::IMAP.new(host, port, ssl)
 
-        imap.login(company.imap_username, company.imap_password) unless company.imap_username.nil?
-        imap.append(folder, message.to_s.gsub(/\n/, "\r\n"), [:Draft], Time.now)
+          imap.login(company.imap_username, company.imap_password) unless company.imap_username.nil?
+          imap.append(folder, message.to_s.gsub(/\n/, "\r\n"), [:Draft], Time.now)
+        end
         invoice.manual_send
+        return message
       end
 
       private
