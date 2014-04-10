@@ -1,4 +1,4 @@
 <% if User.current.admin? -%>
-  <li><strong><%=format_time e.created_at%></strong> - <%=h e.error %> - <%= link_to "backtrace", "#", :onclick => "$('#backtrace#{e.id}').toggle(); return false;" %></li>
+  <li style="color:#B40404;"><strong><%=format_time e.created_at%></strong> - <%=h e.error %> - <%= link_to "backtrace", "#", :onclick => "$('#backtrace#{e.id}').toggle(); return false;" %></li>
   <li id="backtrace<%= e.id %>" style="display: none;"><%=simple_format e.backtrace.join("\n") %></li>
 <% end -%>
