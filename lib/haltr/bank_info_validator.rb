@@ -3,7 +3,7 @@ module Haltr::BankInfoValidator
 
   def self.included(base)
     base.class_eval do
-      validates_length_of :bic, :in => 8..11, :allow_nil => true, :allow_blank => true
+      validates_length_of :bic, :in => 8..11, :allow_nil => true, :allow_blank => false
 
       validate :check_iban_is_ok
 
@@ -27,6 +27,7 @@ module Haltr::BankInfoValidator
       end
 
       def bic=(s)
+        s = nil if s == ''
         write_attribute(:bic, s.try(:gsub,/\p{^Alnum}/, ''))
       end
 
