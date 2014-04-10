@@ -18,8 +18,11 @@ module Haltr
     end
 
     # called whenever job raises an error (once per retry)
-    def error(job,error)
-      #TODO: create hidden event to store the error?
+    def error(job, error)
+      HiddenEvent.create(:name      => "error",
+                         :invoice   => invoice,
+                         :error     => error.message,
+                         :backtrace => error.backtrace)
     end
 
     def create_event(name)
