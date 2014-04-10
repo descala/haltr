@@ -32,7 +32,7 @@ clients_001:
   payment_method: 1
   language: en
   postalcode: 08080
-  bic: ""
+  bic:
   company_id: 
   website: 
   iban: ""
