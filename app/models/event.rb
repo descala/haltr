@@ -20,7 +20,6 @@ class Event < ActiveRecord::Base
                             :permission => :general_use,
                             :timestamp => "#{Event.table_name}.created_at",
                             :find_options => {:include => [:user, {:invoice => :project}]}
-
   serialize :info
 
 

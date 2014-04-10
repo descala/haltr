@@ -18,10 +18,11 @@ module Haltr
                             :notes        => invoice.recipient_emails.join(', '),
                             :file         => pdf,
                             :filename     => filename,
-                            :content_type => 'application/pdf')
+                            :content_type => 'application/pdf',
+                            :class_for_send => 'send_signed_pdf_by_imap')
     end
 
-    # IMAP options configured on company:
+    # IMAP options configured on company
     #  host      IMAP server host (default: 127.0.0.1)
     #  port      IMAP server port (default: 143)
     #  ssl       Use SSL? (default: false)
@@ -30,8 +31,7 @@ module Haltr
     #  folder    IMAP folder to read (default: INBOX) (TODO)
     def create_imap_draft
       company = invoice.company
-      message = InvoiceMailer.issued_invoice_mail(invoice, { :pdf=>pdf,
-                                                             :from => company.imap_from })
+      message = HaltrMailer.send_invoice(invoice, {:pdf=>pdf, :from => company.imap_from})
       if Rails.env != 'test'
         host   = company.imap_host || '127.0.0.1'
         port   = company.imap_port || '143'

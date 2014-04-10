@@ -1,8 +1,7 @@
-# TODO is this the same as InvoiceMailer?
-
 class HaltrMailer < ActionMailer::Base
   layout 'mailer'
   helper :application
+  helper :haltr
 
   unloadable
   include Redmine::I18n
@@ -15,9 +14,11 @@ class HaltrMailer < ActionMailer::Base
   # Builds a Mail::Message object used to email recipients of the invoice.
   #
   # Example:
-  #   invoice(invoice,pdf) => Mail::Message object
-  #   HaltrMailer.send_invoice(invoice,pdf).deliver => sends an email to invoice recipients
-  def send_invoice(invoice, pdf)
+  #   send_invoice(invoice,options) => Mail::Message object
+  #   HaltrMailer.send_invoice(invoice,{:pdf=>pdf}).deliver => sends an email to invoice recipients
+  def send_invoice(invoice, options={})
+    pdf  = options[:pdf]
+    from = options[:from] || "#{invoice.company.name.gsub(',','')} <#{invoice.company.email}>"
     @invoice = invoice
     @invoice_url = invoice_public_view_url(:invoice_id=>invoice.id,
                                            :client_hashid=>invoice.client.hashid)
@@ -30,11 +31,18 @@ class HaltrMailer < ActionMailer::Base
     attachments[filename] = pdf
 
     recipients = invoice.recipient_emails.join(', ')
-    from = "#{invoice.company.name.gsub(',','')} <#{invoice.company.email}>"
+    bcc  = invoice.company.email
+    #TODO: define allowed methods here for safety
+    subj = Setting.plugin_haltr['invoice_mail_subject'].gsub(/@invoice\.([^ ]*)/) {|s|
+      @invoice.send($1) rescue s
+    }.gsub(/@client\.([^ ]*)/) {|s|
+      @invoice.client.send($1) rescue s
+    }
 
-    mail :to      => recipients,
-         :subject => Setting.plugin_haltr['invoice_mail_subject'],
-         :from    => from
+    mail :to   => recipients,
+      :subject => subj,
+      :from    => from,
+      :bcc     => bcc
   end
 
   def mail(headers={})
@@ -76,19 +84,6 @@ class HaltrMailer < ActionMailer::Base
     else
       super
     end
-  end
-
-  # delayed_job hooks
-  def self.success(job)
-    Event.create!(:name    => 'success_sending',
-                  :invoice => job.payload_object.args.first,
-                  :notes   => job.payload_object.args.last)
-  end
-
-  def self.failure(job)
-    Event.create!(:name    => 'discard_sending',
-                  :invoice => job.payload_object.args.first,
-                  :notes   => job.payload_object.args.last)
   end
 
   private
