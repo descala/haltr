@@ -7,12 +7,19 @@ module Haltr
       # implement!
     end
 
+    # called if job has successfully run
+    def success(job)
+      create_event("success_sending")
+    end
+
+    # called if job has reached max retries, so cancelled
     def failure(job)
       create_event("error_sending")
     end
 
-    def success(job)
-      create_event("success_sending")
+    # called whenever job raises an error (once per retry)
+    def error(job,error)
+      #TODO: create hidden event to store the error?
     end
 
     def create_event(name)
