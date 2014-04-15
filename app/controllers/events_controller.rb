@@ -44,7 +44,11 @@ class EventsController < ApplicationController
 
   def file
     event = Event.find params[:id]
-    send_data event.file, :filename => event.filename, :type => event.content_type
+    if event.file
+      send_data event.file, :filename => event.filename, :type => event.content_type
+    else
+      render_404
+    end
   end
 
 
