@@ -1,13 +1,13 @@
 # Stores an email with the invoice attached as draft on IMAP server.
+
 module Haltr
-  class SendSignedPdfByIMAP < GenericSender
+  class SendPdfByIMAP < GenericSender
 
     attr_accessor :pdf
     require 'net/imap'
 
     def perform
       self.pdf = Haltr::Pdf.generate(invoice)
-      #TODO: sign PDF
       create_imap_draft
     end
 

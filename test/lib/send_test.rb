@@ -8,16 +8,16 @@ class SendTest < ActiveSupport::TestCase
     assert_equal nil, Haltr::GenericSender.new.perform
   end
 
-  test "just call SendSignedPdfByMail" do
-    assert Haltr::SendSignedPdfByMail.new(invoices(:invoices_001),User.find(2)).perform
+  test "just call SendPdfByMail" do
+    assert Haltr::SendPdfByMail.new(invoices(:invoices_001),User.find(2)).perform
     mail = last_email
     assert mail.to.include?('person1@example.com')
     assert mail.to.include?('mail@client1.com')
   end
 
-  test "just call SendSignedPdfByIMAP" do
+  test "just call SendPdfByIMAP" do
     # does not send the email, just stores it in an IMAP folder
-    mail = Haltr::SendSignedPdfByIMAP.new(invoices(:invoices_001),User.find(2)).perform
+    mail = Haltr::SendPdfByIMAP.new(invoices(:invoices_001),User.find(2)).perform
     assert mail.to.include?('person1@example.com')
     assert mail.to.include?('mail@client1.com')
   end

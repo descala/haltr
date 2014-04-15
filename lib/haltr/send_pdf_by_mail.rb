@@ -1,12 +1,12 @@
 # Signs a PDF invoice and sends it by email
+
 module Haltr
-  class SendSignedPdfByMail < GenericSender
+  class SendPdfByMail < GenericSender
 
     attr_accessor :pdf
 
     def perform
       self.pdf = Haltr::Pdf.generate(invoice)
-      #TODO: sign PDF
       HaltrMailer.send_invoice(invoice,{:pdf=>pdf}).deliver
     end
 
