@@ -101,6 +101,7 @@ table#invoice_lines {
 }
 
 .ribbon {
+  z-index: -1;
   background-color: #555555;
   overflow: hidden;
   white-space: nowrap;
@@ -129,4 +130,18 @@ table#invoice_lines {
   /* shadow */
   text-shadow: 0 0 5px #444;
   width: 120px;
+}
+
+.ribbon-new, .ribbon-received {
+  background-color: yellow;
+}
+.ribbon-new span, .ribbon-received span {
+  color: black;
+  text-shadow: 0 0 5px #fff;
+}
+.ribbon-sent, .ribbon-accepted, .ribbon-closed, .ribbon-paid {
+  background-color: green;
+}
+.ribbon-error, .ribbon-discarded {
+  background-color: red;
 }

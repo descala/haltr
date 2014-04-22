@@ -12,7 +12,7 @@
 <!--final menu rapid-->
 
 <div id="invoice_wrapper">
-  <div class="ribbon">
+  <div class="ribbon ribbon-<%= @invoice.state %>">
     <% if @invoice.is_a? InvoiceTemplate %>
       <span><%=h l("label_invoice_template") %></span>
     <% else %>
