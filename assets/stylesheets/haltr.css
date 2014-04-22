@@ -142,6 +142,6 @@ table#invoice_lines {
 .ribbon-sent, .ribbon-accepted, .ribbon-closed, .ribbon-paid {
   background-color: green;
 }
-.ribbon-error, .ribbon-discarded {
+.ribbon-error, .ribbon-discarded, .ribbon-refused {
   background-color: red;
 }

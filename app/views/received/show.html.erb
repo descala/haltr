@@ -19,7 +19,7 @@
 
 
 <div id="invoice_wrapper">
-  <div class="ribbon">
+  <div class="ribbon ribbon-<%= @invoice.state %>">
     <span><%=h l("state_#{@invoice.state}").capitalize %></span>
   </div>
   <div id="workspace1" class="haltrinvoice">
