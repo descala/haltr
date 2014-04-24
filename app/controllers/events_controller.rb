@@ -43,9 +43,33 @@ class EventsController < ApplicationController
   end
 
   def file
-    event = Event.find params[:id]
-    if event.file
-      send_data event.file, :filename => event.filename, :type => event.content_type
+    event              = Event.find params[:id]
+    file_field         = params[:file]         || 'file'
+    filename_field     = params[:filename]     || 'filename'
+    content_type_field = params[:content_type] || 'content_type'
+    data               = event.try(file_field)         rescue nil
+    filename           = event.try(filename_field)     rescue nil
+    content_type       = event.try(content_type_field) rescue nil
+    if data
+      unless content_type # try to guess content_type
+        begin
+          tf = Tempfile.new('')
+          tf.binmode
+          tf.write(data)
+          content_type = IO.popen(['file', '--brief', '--mime-type', tf.path],
+                                  :in => :close, :err => :close) {|io| io.read.chomp }
+          tf.close
+          tf.unlink
+        rescue
+          content_type = ""
+        end
+      end
+      unless filename # try to guess filename
+        require "mime/types"
+        ext = MIME::Types[content_type].first.extensions.first rescue nil
+        filename = "#{event.id}.#{ext}" if ext
+      end
+      send_data data, :filename => filename, :content_type => content_type
     else
       render_404
     end
