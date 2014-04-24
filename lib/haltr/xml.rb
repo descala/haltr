@@ -1,8 +1,20 @@
+require 'render_anywhere'
+
 module Haltr
-  module Xml
+  class Xml
+
+    include RenderAnywhere
+
+    def initialize
+      set_render_anywhere_helpers(ApplicationHelper,HaltrHelper,InvoicesHelper)
+    end
 
     def self.generate(invoice, format)
-      xml = RenderXmlController.new.render_to_string(
+      new.generate(invoice,format)
+    end
+
+    def generate(invoice,format)
+      xml = render(
         :template => "invoices/#{format}",
         :locals   => { :@invoice => invoice,
                        :@company => invoice.company,
@@ -10,11 +22,15 @@ module Haltr
         :formats  => :xml,
         :layout   => false
       )
-      self.clean_xml(xml)
+      Haltr::Xml.clean_xml(xml)
     end
 
     def self.efffubl(invoice, pdf)
-      xml = RenderXmlController.new.render_to_string(
+      new.efffubl(invoice,pdf)
+    end
+
+    def efffubl(invoice, pdf)
+      xml = render(
         :template => "invoices/efffubl",
         :locals   => { :@invoice => invoice,
                        :@company => invoice.company,
@@ -23,7 +39,7 @@ module Haltr
         :formats  => :xml,
         :layout   => false
       )
-      self.clean_xml(xml)
+      Haltr::Xml.clean_xml(xml)
     end
 
     def self.clean_xml(xml)
@@ -42,34 +58,6 @@ XSL
       out.to_xml
     end
 
-  end
-
-  class RenderXmlController < AbstractController::Base
-    include AbstractController::Rendering
-    include AbstractController::Layouts
-    include AbstractController::Helpers
-    include AbstractController::Translation
-    include AbstractController::AssetPaths
-
-    # Uncomment if you want to use helpers
-    # defined in ApplicationHelper in your views
-    helper ApplicationHelper
-    helper HaltrHelper
-    helper InvoicesHelper
-
-    # Make sure your controller can find views
-    self.view_paths = ApplicationController.view_paths
-
-    # You can define custom helper methods to be used in views here
-    # helper_method :current_admin
-    # def current_admin; nil; end
-
-    def set_localization
-    end
-
-    def render_to_string(options)
-      render options
-    end
   end
 
 end

@@ -1,5 +1,5 @@
 module Haltr
-  module Pdf
+  class Pdf
 
     def self.generate(invoice)
       # https://github.com/mileszs/wicked_pdf/wiki/Background-PDF-creation-via-delayed_job-gem
