@@ -147,7 +147,7 @@ facturae_32:
 
 facturae_32_face:
   format: facturae32
-  folder: free_face
+  class_for_send: Haltr::SendSignedXmlByFace
   validate:
   locales:
     ca: "Facturae 3.2 a FACe"
