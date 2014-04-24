@@ -321,25 +321,37 @@ class InvoicesController < ApplicationController
           :show_as_html => params[:debug]
       end
       if params[:debug]
-        format.facturae30  { render_clean_xml :formats => :xml, :template => 'invoices/facturae30',  :layout => false }
-        format.facturae31  { render_clean_xml :formats => :xml, :template => 'invoices/facturae31',  :layout => false }
-        format.facturae32  { render_clean_xml :formats => :xml, :template => 'invoices/facturae32',  :layout => false }
-        format.peppolubl20 { render_clean_xml :formats => :xml, :template => 'invoices/peppolubl20', :layout => false }
-        format.biiubl20    { render_clean_xml :formats => :xml, :template => 'invoices/biiubl20',    :layout => false }
-        format.svefaktura  { render_clean_xml :formats => :xml, :template => 'invoices/svefaktura',  :layout => false }
-        format.oioubl20    { render_clean_xml :formats => :xml, :template => 'invoices/oioubl20',    :layout => false }
-        format.efffubl     { add_efffubl_base64_pdf; render_clean_xml :formats => :xml, :template => 'invoices/efffubl',    :layout => false }
+        format.facturae30  { render_xml Haltr::Xml.generate(@invoice, 'facturae30') }
+        format.facturae31  { render_xml Haltr::Xml.generate(@invoice, 'facturae31') }
+        format.facturae32  { render_xml Haltr::Xml.generate(@invoice, 'facturae32') }
+        format.peppolubl20 { render_xml Haltr::Xml.generate(@invoice, 'peppolubl20') }
+        format.biiubl20    { render_xml Haltr::Xml.generate(@invoice, 'biiubl20') }
+        format.svefaktura  { render_xml Haltr::Xml.generate(@invoice, 'svefaktura') }
+        format.oioubl20    { render_xml Haltr::Xml.generate(@invoice, 'oioubl20') }
+        format.efffubl     { add_efffubl_base64_pdf ;
+                             render_xml Haltr::Xml.efffubl(@invoice, @efffubl_base64_pdf) }
       else
-        format.facturae30  { download_clean_xml :formats => :xml, :template => 'invoices/facturae30',  :layout => false }
-        format.facturae31  { download_clean_xml :formats => :xml, :template => 'invoices/facturae31',  :layout => false }
-        format.facturae32  { download_clean_xml :formats => :xml, :template => 'invoices/facturae32',  :layout => false }
-        format.peppolubl20 { download_clean_xml :formats => :xml, :template => 'invoices/peppolubl20', :layout => false }
-        format.biiubl20    { download_clean_xml :formats => :xml, :template => 'invoices/biiubl20',    :layout => false }
-        format.svefaktura  { download_clean_xml :formats => :xml, :template => 'invoices/svefaktura',  :layout => false }
-        format.oioubl20    { download_clean_xml :formats => :xml, :template => 'invoices/oioubl20',    :layout => false }
-        format.efffubl     { add_efffubl_base64_pdf; download_clean_xml :formats => :xml, :template => 'invoices/efffubl',    :layout => false }
+        format.facturae30  { download_xml Haltr::Xml.generate(@invoice, 'facturae30') }
+        format.facturae31  { download_xml Haltr::Xml.generate(@invoice, 'facturae31') }
+        format.facturae32  { download_xml Haltr::Xml.generate(@invoice, 'facturae32') }
+        format.peppolubl20 { download_xml Haltr::Xml.generate(@invoice, 'peppolubl20') }
+        format.biiubl20    { download_xml Haltr::Xml.generate(@invoice, 'biiubl20') }
+        format.svefaktura  { download_xml Haltr::Xml.generate(@invoice, 'svefaktura') }
+        format.oioubl20    { download_xml Haltr::Xml.generate(@invoice, 'oioubl20') }
+        format.efffubl     { add_efffubl_base64_pdf ;
+                             download_xml Haltr::Xml.efffubl(@invoice, @efffubl_base64_pdf) }
       end
     end
+  end
+
+  def render_xml(xml)
+    render :text => xml
+  end
+
+  def download_xml(xml)
+    send_data xml,
+      :type => 'text/xml; charset=UTF-8;',
+      :disposition => "attachment; filename=#{@invoice.pdf_name_without_extension}.xml"
   end
 
   def show_original
@@ -656,7 +668,7 @@ class InvoicesController < ApplicationController
                              :formats => :xml, :layout => false)
     end
     xml_file = Tempfile.new("invoice_#{@invoice.id}.xml")
-    xml_file.write(clean_xml(xml))
+    xml_file.write(Haltr::Xml.clean_xml(xml))
     logger.info "Created XML #{xml_file.path}"
     xml_file.close
     return xml_file
@@ -701,34 +713,6 @@ class InvoicesController < ApplicationController
     FileUtils.mv(invoice_file.path,destination)
     #TODO state restrictions
     @invoice.queue || @invoice.requeue
-  end
-
-  def render_clean_xml(options)
-    xml = render_to_string(options)
-    render :text => clean_xml(xml)
-  end
-
-  def download_clean_xml(options)
-    xml = render_to_string(options)
-    send_data clean_xml(xml),
-    :type => 'text/xml; charset=UTF-8;',
-    :disposition => "attachment; filename=#{@invoice.pdf_name_without_extension}.xml"
-  end
-
-  def clean_xml(xml)
-    xsl =<<XSL
-<xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
-  <xsl:output method="xml" encoding="UTF-8" indent="yes"/>
-  <xsl:strip-space elements="*"/>
-  <xsl:template match="/">
-    <xsl:copy-of select="."/>
-  </xsl:template>
-</xsl:stylesheet>
-XSL
-    doc  = Nokogiri::XML(xml)
-    xslt = Nokogiri::XSLT(xsl)
-    out  = xslt.transform(doc)
-    out.to_xml
   end
 
   def redirect_to_correct_controller

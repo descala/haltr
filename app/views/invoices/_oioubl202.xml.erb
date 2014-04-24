@@ -30,7 +30,7 @@
           <cbc:Name><%=h @company.name%></cbc:Name>
         </cac:PartyName>
         <cac:PostalAddress>
-          <%= render :partial => "oio_address.xml", :locals => {:entity => @company} %>
+          <%= render :partial => "invoices/oio_address.xml", :locals => {:entity => @company} %>
         </cac:PostalAddress>
         <cac:PartyTaxScheme>
           <cbc:CompanyID><%=h @company.taxcode%></cbc:CompanyID>
@@ -38,7 +38,7 @@
             <cbc:ID>VAT</cbc:ID>
           </cac:TaxScheme>
         </cac:PartyTaxScheme>
-        <%= render :partial => "oio_party_legal_entity.xml", :locals => {:entity => @company} %>
+        <%= render :partial => "invoices/oio_party_legal_entity.xml", :locals => {:entity => @company} %>
         <% if @company.email and !@company.email.blank? -%>
           <cac:Contact>
             <cbc:ElectronicMail><%=h @company.email%></cbc:ElectronicMail>
@@ -53,7 +53,7 @@
           <cbc:Name><%=h @client.name%></cbc:Name>
         </cac:PartyName>
         <cac:PostalAddress>
-          <%= render :partial => "oio_address.xml", :locals => {:entity => @client} %>
+          <%= render :partial => "invoices/oio_address.xml", :locals => {:entity => @client} %>
         </cac:PostalAddress>
         <cac:PartyTaxScheme>
           <cbc:CompanyID><%=h @client.taxcode%></cbc:CompanyID>
@@ -61,7 +61,7 @@
             <cbc:ID>VAT</cbc:ID>
           </cac:TaxScheme>
         </cac:PartyTaxScheme>
-        <%= render :partial => "oio_party_legal_entity.xml", :locals => {:entity => @client} %>
+        <%= render :partial => "invoices/oio_party_legal_entity.xml", :locals => {:entity => @client} %>
         <% if @client.email and !@client.email.blank? -%>
           <cac:Contact>
             <cbc:ElectronicMail><%=h @client.email%></cbc:ElectronicMail>

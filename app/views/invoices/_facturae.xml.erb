@@ -45,7 +45,7 @@
 
          <LegalEntity>
             <CorporateName><%=h @company.name%></CorporateName>
-            <%= render :partial => "address.facturae.xml", :locals => {:entity => @company} %>
+            <%= render :partial => "invoices/address.facturae.xml", :locals => {:entity => @company} %>
             <ContactDetails>
                <WebAddress><%=h @company.website%></WebAddress>
                <ElectronicMail><%=h @company.email%></ElectronicMail>
@@ -56,7 +56,7 @@
          <Individual>
             <Name><%=h @company.first_name%></Name>
             <FirstSurname><%=h @company.last_name%></FirstSurname>
-            <%= render :partial => "address.facturae.xml", :locals => {:entity => @company} %>
+            <%= render :partial => "invoices/address.facturae.xml", :locals => {:entity => @company} %>
             <ContactDetails>
                <WebAddress><%=h @company.website%></WebAddress>
                <ElectronicMail><%=h @company.email%></ElectronicMail>
@@ -73,7 +73,7 @@
          <%= call_hook(:facturae_administrative_centres) %>
          <LegalEntity>
             <CorporateName><%=h @client.name%></CorporateName>
-            <%= render :partial => "address.facturae.xml", :locals => {:entity => @client}%>
+            <%= render :partial => "invoices/address.facturae.xml", :locals => {:entity => @client}%>
             <ContactDetails>
               <ElectronicMail><%= @invoice.recipient_emails.join(',') %></ElectronicMail>
               <ContactPersons><%= @invoice.accounting_cost %></ContactPersons>

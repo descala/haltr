@@ -34,7 +34,7 @@
            <cbc:Name><%=h @client.name%></cbc:Name>
          </cac0:PartyName>
          <cac0:Address>
-            <%= render :partial => "svefaktura_address.xml", :locals => {:entity => @client} %>
+            <%= render :partial => "invoices/svefaktura_address.xml", :locals => {:entity => @client} %>
          </cac0:Address>
          <cac0:PartyTaxScheme>
            <cac0:CompanyID><%=h @client.taxcode%></cac0:CompanyID>
@@ -61,7 +61,7 @@
            <cbc:Name><%=h @company.name%></cbc:Name>
          </cac0:PartyName>
          <cac0:Address>
-            <%= render :partial => "svefaktura_address.xml", :locals => {:entity => @company} %>
+            <%= render :partial => "invoices/svefaktura_address.xml", :locals => {:entity => @company} %>
          </cac0:Address>
          <cac0:PartyTaxScheme>
            <cac0:CompanyID><%=h @company.company_identifier%></cac0:CompanyID>

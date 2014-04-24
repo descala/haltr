@@ -51,7 +51,6 @@ class EventsController < ApplicationController
     end
   end
 
-
   private
 
   #TODO: duplicated code
