@@ -11,9 +11,9 @@ module Haltr
       create_imap_draft
     end
 
-    def create_event(name)
+    def success(job)
       filename = "#{I18n.t(:label_invoice)}_#{invoice.number.gsub(/[^\w]/,'_')}.pdf" rescue "Invoice.pdf"
-      EventWithFile.create!(:name         => name,
+      EventWithFile.create!(:name         => "success_sending",
                             :invoice      => invoice,
                             :notes        => invoice.recipient_emails.join(', '),
                             :file         => pdf,
