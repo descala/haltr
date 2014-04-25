@@ -14,7 +14,7 @@ module Haltr
 
     # called if job has reached max retries, so cancelled
     def failure(job)
-      create_event("error_sending")
+      create_event("discard_sending")
     end
 
     # called whenever job raises an error (once per retry)
