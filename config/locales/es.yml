@@ -352,7 +352,7 @@ es:
   cant_connect_trace: "No se puede conectar con la plataforma b2brouter"
   halt_configure_before_use: "Por favor, primero configura los datos de la empresa"
   warning_can_not_generate_invoice: "No se ha podido generar la factura de la plantilla %{value}"
-  notice_invoice_sent: "La factura se ha enviado"
+  notice_invoice_sent: "La factura se esta enviando"
   error_invoice_not_sent: "La factura %{num} no se ha podido enviar"
   notice_empty_n19: "No hay datos para generar un N19"
   notice_payment_done: "Se ha cerrado el %{payment_type} de fecha %{value}"

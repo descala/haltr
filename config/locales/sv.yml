@@ -335,7 +335,7 @@ sv:
   cant_connect_trace: "Kan inte få kontakt med  b2brouter plattformen. %{value}"
   halt_configure_before_use: Var god och registera företag först
   warning_can_not_generate_invoice: "Kan inte skapa fkatura från mall %{value}"
-  notice_invoice_sent: "Faktura skickad"
+  notice_invoice_sent: "Faktura kommer att skickas"
   error_invoice_not_sent: "Kunde inte skicka faktura %{num}"
   notice_empty_n19: "Ingen data finns för att skapa N19"
   notice_payment_done: "%{payment_type} för betaldatum %{value} markerad som utförd"

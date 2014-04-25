@@ -349,7 +349,7 @@ ca:
   cant_connect_trace: "No es pot connectar a la plataforma b2brouter"
   halt_configure_before_use: "Si us plau, primer de tot configura les dades de l'empresa"
   warning_can_not_generate_invoice: "No s'ha pogut generar la factura de la plantilla %{value}"
-  notice_invoice_sent: "La factura s'ha enviat"
+  notice_invoice_sent: "La factura s'està enviant"
   error_invoice_not_sent: "La factura %{num} no s'ha pogut enviar"
   notice_empty_n19: "No hi ha dades per generar un N19"
   notice_n19_done: "S'ha tancat el N19 de data %{value}"

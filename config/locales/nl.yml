@@ -338,7 +338,7 @@ en:
   cant_connect_trace: "Can't connect to b2brouter platform. %{value}"
   halt_configure_before_use: Please first configure company settings
   warning_can_not_generate_invoice: "Can not generate invoice form template %{value}"
-  notice_invoice_sent: "Invoice sent"
+  notice_invoice_sent: "Invoice will be sent"
   error_invoice_not_sent: "Could not send invoice %{num}"
   notice_empty_n19: "No data to create N19"
   notice_payment_done: "%{payment_type} for due date %{value} maked as done"

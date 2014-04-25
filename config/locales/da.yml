@@ -336,7 +336,7 @@ da:
   cant_connect_trace: "Kan ikke forbinde til b2brouter platform. %{value}"
   halt_configure_before_use: Please first configure company settings
   warning_can_not_generate_invoice: "Kan ikke generere faktura formularskabelon %{value}"
-  notice_invoice_sent: "Faktura sendt"
+  notice_invoice_sent: "Faktura vil blive sendt"
   error_invoice_not_sent: "Kunne ikke sende faktura %{num}"
   notice_empty_n19: "Ingen data til at skabe N19"
   notice_payment_done: "%{payment_type} for forfaldsdatoen %{value} maked som udført"

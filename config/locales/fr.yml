@@ -338,7 +338,7 @@ fr:
   cant_connect_trace: "Ne peut se connecter à la plate-forme b2brouter. %{value}"
   halt_configure_before_use: "Veuillez d abord configurer votre compagnie"
   warning_can_not_generate_invoice: "Ne peut générer la facture depuis le modèle %{value}"
-  notice_invoice_sent: "Facture envoyée"
+  notice_invoice_sent: "Facture est en cours d'envoi"
   error_invoice_not_sent: "N'a pas pu envoyer la facture %{num}"
   notice_empty_n19: "Aucune donnée pour créer N19"
   notice_payment_done: "%{payment_type} pour date d'échéance %{value} marquée comme faite"
