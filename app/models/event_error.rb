@@ -1,5 +1,7 @@
 class EventError < Event
   def to_s
-    "#{l(name)} #{notes}"
+    str = l(name)
+    str += ": #{notes}" unless notes.blank?
+    str
   end
 end
