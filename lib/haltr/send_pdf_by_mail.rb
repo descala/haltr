@@ -7,7 +7,15 @@ module Haltr
 
     def perform
       self.pdf = Haltr::Pdf.generate(invoice)
-      HaltrMailer.send_invoice(invoice,{:pdf=>pdf}).deliver
+      HaltrMailer.send_invoice(invoice,{:pdf=>pdf}).deliver!
+    rescue Net::SMTPFatalError => e
+        EventError.create(
+          :name    => "error_sending",
+          :invoice => invoice,
+          :notes   => e.message,
+          :class_for_send => self.class.to_s.split('::').last.underscore
+        )
+      raise e
     end
 
     def success(job)
