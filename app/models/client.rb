@@ -106,7 +106,11 @@ class Client < ActiveRecord::Base
 
   def language
     if self.linked?
-      company.project.users.collect {|u| u unless u.admin?}.compact.first.language rescue read_attribute(:language)
+      begin
+        company.project.users.reject {|u| u.admin? }.first.language
+      rescue
+        company.project.users.first.language rescue User.current.language
+      end
     else
       read_attribute(:language)
     end
