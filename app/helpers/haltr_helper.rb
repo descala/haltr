@@ -121,7 +121,7 @@ module HaltrHelper
 
   def invoice_mail_body
     #TODO: define allowed methods here for safety
-    Setting.plugin_haltr['invoice_mail_body'].gsub(/@invoice\.(\w+)/) {|s|
+    (Setting.plugin_haltr['invoice_mail_body'] || "").gsub(/@invoice\.(\w+)/) {|s|
       @invoice.send($1) rescue s
     }.gsub(/@client\.(\w+)/) {|s|
       @invoice.client.send($1) rescue s
