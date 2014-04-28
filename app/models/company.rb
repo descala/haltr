@@ -150,27 +150,31 @@ class Company < ActiveRecord::Base
     ""
   end
 
-  def mail_subject(invoice)
+  def mail_subject(invoice=nil)
     subj = read_attribute :mail_subject
     subj = Setting.plugin_haltr['invoice_mail_subject'] if subj.blank?
-    #TODO: define allowed methods here for safety
-    subj = subj.gsub(/@invoice\.(\w+)/) {|s|
-      invoice.send($1) rescue s
-    }.gsub(/@client\.(\w+)/) {|s|
-      invoice.client.send($1) rescue s
-    }
+    if invoice
+      #TODO: define allowed methods here for safety
+      subj = subj.gsub(/@invoice\.(\w+)/) {|s|
+        invoice.send($1) rescue s
+      }.gsub(/@client\.(\w+)/) {|s|
+        invoice.client.send($1) rescue s
+      }
+    end
     subj
   end
 
-  def mail_body(invoice)
+  def mail_body(invoice=nil)
     body = read_attribute :mail_body
     body = Setting.plugin_haltr['invoice_mail_body'] if body.blank?
-    #TODO: define allowed methods here for safety
-    body = body.gsub(/@invoice\.(\w+)/) {|s|
-      invoice.send($1) rescue s
-    }.gsub(/@client\.(\w+)/) {|s|
-      invoice.client.send($1) rescue s
-    }
+    if invoice
+      #TODO: define allowed methods here for safety
+      body = body.gsub(/@invoice\.(\w+)/) {|s|
+        invoice.send($1) rescue s
+      }.gsub(/@client\.(\w+)/) {|s|
+        invoice.client.send($1) rescue s
+      }
+    end
     body
   end
 
