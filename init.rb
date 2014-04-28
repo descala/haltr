@@ -104,6 +104,8 @@ Redmine::Plugin.register :haltr do
     permission :import_invoices,
       { :invoices => [:import] }, :require => :member
 
+    permission :email_customization, {}, :require => :member
+
     # Loads permisons from config/channels.yml
     ExportChannels.permissions.each do |permission,actions|
       permission permission, actions, :require => :member

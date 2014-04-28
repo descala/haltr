@@ -459,3 +459,6 @@ sv:
   error_sending_notification_by_mail: "Error sending notification"
   send_signed_pdf_by_mail: "Signerad PDF till email %{emails}"
   send_signed_pdf_by_imap: "Signed PDF, mail for %{emails} stored on IMAP folder"
+  email_customization: "Email customization"
+  field_mail_subject: "Subject"
+  field_mail_body: "Body"

@@ -119,13 +119,4 @@ module HaltrHelper
     iban.gsub(/(.)/,'\1 ').gsub(/(. . . .)/,'\1 ').gsub(/ /,'&nbsp;')
   end
 
-  def invoice_mail_body
-    #TODO: define allowed methods here for safety
-    (Setting.plugin_haltr['invoice_mail_body'] || "").gsub(/@invoice\.(\w+)/) {|s|
-      @invoice.send($1) rescue s
-    }.gsub(/@client\.(\w+)/) {|s|
-      @invoice.client.send($1) rescue s
-    }
-  end
-
 end

@@ -198,6 +198,22 @@
   </fieldset>
 <% end -%>
 
+<% if User.current.admin? or User.current.allowed_to?(:email_customization, @project) -%>
+  <fieldset class="tabular box">
+    <legend><%= l(:email_customization) %></legend>
+    <div class="seccio grup">
+      <p class="col span-6-de-6">
+        <%=f.text_field :mail_subject%>
+      </p>
+    </div>
+    <div class="seccio grup">
+      <p class="col span-6-de-6">
+        <%=f.text_area :mail_body%>
+      </p>
+    </div>
+  </fieldset>
+<% end -%>
+
 <% content_for :header_tags do -%>
   <%= javascript_include_tag('iban',:plugin=>'haltr')%>
 <% end -%>

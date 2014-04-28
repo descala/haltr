@@ -472,3 +472,6 @@ ca:
   error_sending_notification_by_mail: "Error enviant la notificació"
   send_signed_pdf_by_mail: "PDF signat, enviat per email a %{emails}"
   send_signed_pdf_by_imap: "PDF signat, email per %{emails} en carpeta IMAP"
+  email_customization: "Personalització dels correus"
+  field_mail_subject: "Assumpte"
+  field_mail_body: "Cos"

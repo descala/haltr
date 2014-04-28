@@ -1,4 +1,4 @@
-<%= invoice_mail_body %>
+<%= @invoice.company.mail_body(@invoice) %>
 
 ----------------------------------------
 <%= render :partial => 'invoice', :formats => [:text],

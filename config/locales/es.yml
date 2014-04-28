@@ -474,3 +474,6 @@ es:
   error_sending_notification_by_mail: "Error enviando la notificación"
   send_signed_pdf_by_mail: "PDF firmado, enviado por email a %{emails}"
   send_signed_pdf_by_imap: "PDF firmado, email para %{emails} en carpeta IMAP"
+  email_customization: "Personalizacion de Email"
+  field_mail_subject: "Asunto"
+  field_mail_body: "Cuerpo"

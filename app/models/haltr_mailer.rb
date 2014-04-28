@@ -32,16 +32,9 @@ class HaltrMailer < ActionMailer::Base
 
     recipients = invoice.recipient_emails.join(', ')
     bcc  = invoice.company.email
-    #TODO: define allowed methods here for safety
-    subj = Setting.plugin_haltr['invoice_mail_subject'] || ""
-    subj = subj.gsub(/@invoice\.(\w+)/) {|s|
-      @invoice.send($1) rescue s
-    }.gsub(/@client\.(\w+)/) {|s|
-      @invoice.client.send($1) rescue s
-    }
 
     mail :to   => recipients,
-      :subject => subj,
+      :subject => @invoice.company.mail_subject(@invoice),
       :from    => from,
       :bcc     => bcc
   end
