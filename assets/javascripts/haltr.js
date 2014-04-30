@@ -36,6 +36,9 @@ $(document).ready(function() {
     terms();
   })
 
+  /* on load, simulate a client change to call above function */
+  $('select#invoice_client_id').change();
+
   $(document).on('change', '#invoice_terms', function(e) {
     terms();
   });
