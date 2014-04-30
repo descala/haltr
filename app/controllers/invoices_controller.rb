@@ -697,20 +697,38 @@ class InvoicesController < ApplicationController
 
   def queue_file(invoice_file)
     export_id = @invoice.client.invoice_format
-    path = ExportChannels.path export_id
-    format = ExportChannels.format export_id
-    file_ext = format == "pdf" ? "pdf" : "xml"
-    i=2
-    destination="#{path}/" + "#{@invoice.client.hashid}_#{@invoice.id}.#{file_ext}".gsub(/\//,'')
-    while File.exists? destination
-      destination="#{path}/" + "#{@invoice.client.hashid}_#{i}_#{@invoice.id}.#{file_ext}".gsub(/\//,'')
-      i+=1
+    if ExportChannels.folder(export_id).nil?
+      # Use special class to send invoice
+      class_for_send = ExportChannels.class_for_send(export_id).constantize rescue nil
+      if class_for_send.new.respond_to?(:perform)
+        sender = class_for_send.new(@invoice,User.current)
+        if ExportChannels.format(export_id) == 'pdf'
+          sender.pdf = File.read(invoice_file.path)
+          #TODO: sender.class_for_send = 'send_signed_pdf_by_mail'
+        else
+          sender.xml = File.read(invoice_file.path)
+          #TODO: sender.class_for_send = 'send_signed_xml_by_mail'
+        end
+        Delayed::Job.enqueue(sender)
+      else
+        raise "Error in channels.yml: check configuration for #{export_id}"
+      end
+    else
+      path = ExportChannels.path export_id
+      format = ExportChannels.format export_id
+      file_ext = format == "pdf" ? "pdf" : "xml"
+      i=2
+      destination="#{path}/" + "#{@invoice.client.hashid}_#{@invoice.id}.#{file_ext}".gsub(/\//,'')
+      while File.exists? destination
+        destination="#{path}/" + "#{@invoice.client.hashid}_#{i}_#{@invoice.id}.#{file_ext}".gsub(/\//,'')
+        i+=1
+      end
+      logger.info "Sending #{format} to '#{destination}' for invoice id #{@invoice.id}."
+      if Rails.env == "development"
+        FileUtils.cp(invoice_file.path,'./queued_file.data')
+      end
+      FileUtils.mv(invoice_file.path,destination)
     end
-    logger.info "Sending #{format} to '#{destination}' for invoice id #{@invoice.id}."
-    if Rails.env == "development"
-      FileUtils.cp(invoice_file.path,'./queued_file.data')
-    end
-    FileUtils.mv(invoice_file.path,destination)
     #TODO state restrictions
     @invoice.queue || @invoice.requeue
   end

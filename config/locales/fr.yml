@@ -463,3 +463,5 @@ fr:
   email_customization: "Email customization"
   field_mail_subject: "Subject"
   field_mail_body: "Body"
+  send_pdf_by_mail: "PDF par email a %{emails}"
+  send_xml_by_mail: "XML par email a %{emails}"

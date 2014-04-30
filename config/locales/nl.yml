@@ -457,3 +457,5 @@ en:
   email_customization: "Email customization"
   field_mail_subject: "Subject"
   field_mail_body: "Body"
+  send_pdf_by_mail: "PDF mailed to %{emails}"
+  send_xml_by_mail: "XML mailed to %{emails}"

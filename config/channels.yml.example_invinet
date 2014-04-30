@@ -51,7 +51,7 @@ signed_pdf:
 
 signed_pdf_local_cert:
   format: pdf
-  folder: free_pdf_without_signature
+  class_for_send: Haltr::SendPdfByMail
   validate: client_has_email
   javascript: "doSign('/invoices/base64doc/:id/pdf','Adobe PDF')"
   locales:
@@ -68,7 +68,7 @@ signed_pdf_local_cert:
 
 signed_facturae32_local_cert:
   format: facturae32
-  folder: free_pdf_without_signature
+  class_for_send: Haltr::SendXmlByMail
   validate: client_has_email
   javascript: "doSign('/invoices/base64doc/:id/facturae32','FacturaE')"
   locales:
@@ -85,7 +85,7 @@ signed_facturae32_local_cert:
 
 signed_facturae31_local_cert:
   format: facturae31
-  folder: free_pdf_without_signature
+  class_for_send: Haltr::SendXmlByMail
   validate: client_has_email
   javascript: "doSign('/invoices/base64doc/:id/facturae31','FacturaE')"
   locales:

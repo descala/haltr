@@ -475,3 +475,5 @@ ca:
   email_customization: "Personalització dels correus"
   field_mail_subject: "Assumpte"
   field_mail_body: "Cos"
+  send_pdf_by_mail: "PDF enviat per correu a %{emails}"
+  send_xml_by_mail: "XML enviat per correu a %{emails}"

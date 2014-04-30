@@ -18,17 +18,27 @@ class HaltrMailer < ActionMailer::Base
   #   HaltrMailer.send_invoice(invoice,{:pdf=>pdf}).deliver => sends an email to invoice recipients
   def send_invoice(invoice, options={})
     pdf  = options[:pdf]
+    xml  = options[:xml]
     from = options[:from] || "#{invoice.company.name.gsub(',','')} <#{invoice.company.email}>"
     @invoice = invoice
     @invoice_url = invoice_public_view_url(:invoice_id=>invoice.id,
                                            :client_hashid=>invoice.client.hashid)
     set_language_if_valid invoice.client.language
-    filename = "#{I18n.t(:label_invoice)}_#{invoice.number.gsub(/[^\w]/,'_')}.pdf" rescue "Invoice.pdf"
-    haltr_headers 'Id'       => invoice.id,
-                  'MD5'      => Digest::MD5.hexdigest(pdf),
-                  'Filename' => filename
+    haltr_headers 'Id'  => invoice.id
 
-    attachments[filename] = pdf
+    if pdf
+      pdf_filename = "#{I18n.t(:label_invoice)}_#{invoice.number.gsub(/[^\w]/,'_')}.pdf" rescue "Invoice.pdf"
+      haltr_headers 'PDF-Filename' => pdf_filename if pdf
+      attachments[pdf_filename] = pdf
+      haltr_headers 'PDF-MD5' => Digest::MD5.hexdigest(pdf)
+    end
+
+    if xml
+      xml_filename = "#{I18n.t(:label_invoice)}_#{invoice.number.gsub(/[^\w]/,'_')}.xml" rescue "Invoice.xml"
+      haltr_headers 'XML-Filename' => xml_filename if xml
+      attachments[xml_filename] = xml
+      haltr_headers 'XML-MD5' => Digest::MD5.hexdigest(xml)
+    end
 
     recipients = invoice.recipient_emails.join(', ')
     bcc  = invoice.company.email
