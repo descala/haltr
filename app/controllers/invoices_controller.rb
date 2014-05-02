@@ -435,7 +435,7 @@ class InvoicesController < ApplicationController
   # Renders a partial to update curreny, payment_method, and invoice_terms
   # into an invoice form (ajax)
   def update_payment_stuff
-    @client = Client.find(params[:invoice][:client_id]) unless params[:invoice][:client_id].blank?
+    @client = Client.find(params[:invoice][:client_id]) unless !params[:invoice] or params[:invoice][:client_id].blank?
     selected = @client.nil? ? params[:curr_sel] : @client.currency
     if params[:required] == "false"
       render :partial => "received/currency", :locals => {:selected=>selected}
