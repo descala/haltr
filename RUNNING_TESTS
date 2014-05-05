@@ -28,12 +28,15 @@ guard -G plugins/haltr/Guardfile
 
 rm -rf test/fixtures/configuration/
 
-# running all tests on guard crashes due to this bug: https://github.com/burke/zeus/issues/352
-# hopefully fixed in next zeus release, but you can still run all tests with:
-zeus test plugins/haltr/test
-
 # changing some models fully reloads zeus, making it so slow: https://github.com/burke/zeus/issues/433#issuecomment-31518132
 
 # https://github.com/guard/guard-minitest/pull/98
 # tests run twice after saving file on vim. To avoid this, use last guard-minitest from github (included in bundle):
 bundle exec guard -G plugins/haltr/Guardfile
+
+
+# with Zeus < 0.15.1
+#
+# running all tests on guard crashes due to this bug: https://github.com/burke/zeus/issues/352
+# fixed in zeus 0.15.1, but you can still run all tests in older versions with:
+zeus test plugins/haltr/test
