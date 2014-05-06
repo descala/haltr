@@ -156,7 +156,9 @@ class Company < ActiveRecord::Base
     subj = mail_customization["subject"][lang] rescue nil
     if subj.blank?
       subj = I18n.t(:invoice_mail_subject)
-      subj += Redmine::Hook.call_hook(:add_to_invoice_mail_subject).join
+      unless Redmine::Hook.call_hook(:replace_invoice_mail_subject).join.blank?
+        subj = Redmine::Hook.call_hook(:replace_invoice_mail_subject).join
+      end
     end
     if invoice
       #TODO: define allowed methods here for safety
@@ -179,7 +181,9 @@ class Company < ActiveRecord::Base
     body = mail_customization["body"][lang] rescue nil
     if body.blank?
       body = I18n.t(:invoice_mail_body)
-      body += Redmine::Hook.call_hook(:add_to_invoice_mail_body).join
+      unless Redmine::Hook.call_hook(:replace_invoice_mail_body).join.blank?
+        body = Redmine::Hook.call_hook(:replace_invoice_mail_body).join
+      end
     end
     if invoice
       #TODO: define allowed methods here for safety
