@@ -157,7 +157,7 @@ class Company < ActiveRecord::Base
     if subj.blank?
       subj = I18n.t(:invoice_mail_subject)
       unless Redmine::Hook.call_hook(:replace_invoice_mail_subject).join.blank?
-        subj = Redmine::Hook.call_hook(:replace_invoice_mail_subject).join
+        subj = Redmine::Hook.call_hook(:replace_invoice_mail_subject,:lang=>lang).join
       end
     end
     if invoice
@@ -182,7 +182,7 @@ class Company < ActiveRecord::Base
     if body.blank?
       body = I18n.t(:invoice_mail_body)
       unless Redmine::Hook.call_hook(:replace_invoice_mail_body).join.blank?
-        body = Redmine::Hook.call_hook(:replace_invoice_mail_body).join
+        body = Redmine::Hook.call_hook(:replace_invoice_mail_body,:lang=>lang).join
       end
     end
     if invoice

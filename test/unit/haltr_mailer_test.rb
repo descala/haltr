@@ -29,7 +29,9 @@ class HaltrMailerTest < ActiveSupport::TestCase
     assert_equal "722d813699ee44602f647997b055fa2a", mail.header['X-Haltr-PDF-MD5'].to_s
     assert_equal User.current.id.to_s,  mail.header['X-Haltr-Sender'].to_s
     assert_equal invoice.company.mail_subject(invoice.client.language,invoice), mail.subject
-    assert_mail_body_match invoice.company.mail_body(invoice.client.language,invoice), mail
+    invoice.company.mail_body(invoice.client.language,invoice).gsub(/@invoice_url/,'').split.each do |line|
+      assert_mail_body_match line, mail
+    end
 
     assert_select_email do
       # public link to invoice

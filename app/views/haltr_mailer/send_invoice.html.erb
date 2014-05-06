@@ -1,7 +1,11 @@
-<%= simple_format(@invoice.company.mail_body(@invoice.client.language,@invoice)) %>
-
-<hr />
-<%= render :partial => 'invoice', :formats => [:html],
-:locals => { :invoice => @invoice, :invoice_url => @invoice_url } %>
+<%=
+  simple_format(@invoice.company.mail_body(
+    @invoice.client.language,@invoice
+  ).gsub(/@invoice_url/) {|s|
+    link = invoice_public_view_url(:invoice_id=>@invoice.id,
+                                   :client_hashid=>@invoice.client.hashid)
+    link_to link, link
+  })
+%>
 
 <%= call_hook(:invoice_mail_footer) %>
