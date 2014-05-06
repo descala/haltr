@@ -4,7 +4,7 @@ class Company < ActiveRecord::Base
 
   belongs_to :project
 
-  # these are the linked clients: where this company apears in other 
+  # these are the linked clients: where this company apears in other
   # companies' client list
   has_many :clients, :dependent => :nullify
   has_many :taxes, :class_name => "Tax", :dependent => :destroy, :order => "name,percent DESC"
@@ -40,12 +40,14 @@ class Company < ActiveRecord::Base
   validate :uniqueness_of_taxes
 
   after_initialize :set_default_values
+  serialize :mail_customization
 
   def set_default_values
     #TODO: Add default country taxes
     self.currency ||= Setting.plugin_haltr['default_currency']
     self.country  ||= Setting.plugin_haltr['default_country']
     self.attachments ||= []
+    self.mail_customization ||= {}
   end
 
   def <=>(oth)
@@ -150,9 +152,12 @@ class Company < ActiveRecord::Base
     ""
   end
 
-  def mail_subject(invoice=nil)
-    subj = read_attribute :mail_subject
-    subj = Setting.plugin_haltr['invoice_mail_subject'] if subj.blank?
+  def mail_subject(lang,invoice=nil)
+    subj = mail_customization["subject"][lang] rescue nil
+    if subj.blank?
+      subj = I18n.t(:invoice_mail_subject)
+      subj += Redmine::Hook.call_hook(:add_to_invoice_mail_subject).join
+    end
     if invoice
       #TODO: define allowed methods here for safety
       subj = subj.gsub(/@invoice\.(\w+)/) {|s|
@@ -164,9 +169,18 @@ class Company < ActiveRecord::Base
     subj
   end
 
-  def mail_body(invoice=nil)
-    body = read_attribute :mail_body
-    body = Setting.plugin_haltr['invoice_mail_body'] if body.blank?
+  def mail_subject=(lang,value)
+    self.mail_customization = {} unless mail_customization
+    self.mail_customization["subject"] = {} unless mail_customization["subject"]
+    self.mail_customization["subject"][lang] = value
+  end
+
+  def mail_body(lang,invoice=nil)
+    body = mail_customization["body"][lang] rescue nil
+    if body.blank?
+      body = I18n.t(:invoice_mail_body)
+      body += Redmine::Hook.call_hook(:add_to_invoice_mail_body).join
+    end
     if invoice
       #TODO: define allowed methods here for safety
       body = body.gsub(/@invoice\.(\w+)/) {|s|
@@ -176,6 +190,16 @@ class Company < ActiveRecord::Base
       }
     end
     body
+  end
+
+  def mail_body=(lang,value)
+    self.mail_customization = {} unless mail_customization
+    self.mail_customization["body"] = {} unless mail_customization["body"]
+    self.mail_customization["body"][lang] = value
+  end
+
+  def respond_to?(method, include_private = false)
+    super || method =~ /^(mail_subject|mail_body)_[a-z][a-z]=?$/
   end
 
   private
@@ -193,6 +217,18 @@ class Company < ActiveRecord::Base
   # translations for accepts_nested_attributes_for
   def self.human_attribute_name(attribute_key_name, *args)
     super(attribute_key_name.to_s.gsub(/bank_infos\./,''), *args)
+  end
+
+  def method_missing(m, *args)
+    if /^(?<method>mail_subject|mail_body)_(?<lang>[a-z][a-z])$/ =~ m.to_s and (0..1).include? args.size
+      # mail_<subject|body>_<lang>([invoice])
+      self.public_send(method,lang,args[0])
+    elsif /^(?<method>mail_subject|mail_body)_(?<lang>[a-z][a-z])=$/ =~ m.to_s and args.size == 1
+      # mail_<subject|body>_<lang>=(<value>)
+      self.public_send("#{method}=",lang,args[0])
+    else
+      super
+    end
   end
 
 end

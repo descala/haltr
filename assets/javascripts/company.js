@@ -24,3 +24,15 @@ $(document).on('change', 'select.tax_category', function(e) {
     span_comment.hide();
   }
 });
+
+$(document).on('change', 'select#mail_customization_lang', function(e) {
+  var lang = $(this).val();
+  $('div.mail_customization').each(function(i,obj) {
+    $(obj).hide();
+  });
+  $('div#mail_customization_'+lang).show();
+});
+
+$(document).ready(function() {
+  $('div#mail_customization_'+$('select#mail_customization_lang').val()).show();
+});

@@ -1,4 +1,4 @@
-<%= simple_format(@invoice.company.mail_body(@invoice)) %>
+<%= simple_format(@invoice.company.mail_body(@invoice.client.language,@invoice)) %>
 
 <hr />
 <%= render :partial => 'invoice', :formats => [:html],

@@ -318,8 +318,8 @@ ca:
   default_country: "País per defecte"
   default_currency: "Moneda per defecte"
   hide_unauthorized: "Amagar funcionalitats no disponibles"
-  invoice_mail_subject: "Assumpte dels correus de factures"
-  invoice_mail_body: "Cos dels correus de factures"
+  invoice_mail_subject: "Factura num @invoice.number"
+  invoice_mail_body: "Li fem arribar la factura num @invoice.number amb data @invoice.date"
 
 
   # Terms

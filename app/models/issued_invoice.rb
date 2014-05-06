@@ -200,7 +200,7 @@ class IssuedInvoice < InvoiceDocument
     errors +=  export_errors.collect {|e| e}.join(", ") if export_errors and export_errors.size > 0
     errors += self.errors.full_messages.join(", ")
     recipients = nil
-    if %w(ublinvoice_20 facturae_30 facturae_31 facturae_32 signed_pdf svefaktura peppolbii peppol oioubl20 efffubl).include?(client.invoice_format)
+    if channel["validate"].to_a.include? "client_has_email"
       recipients = "\n#{self.recipient_emails.join("\n")}"
     end
     "#{format}<br/>#{errors}<br/>#{recipients}".html_safe

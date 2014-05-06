@@ -306,8 +306,8 @@ da:
   default_country: "Default land"
   default_currency: "Default valuta"
   hide_unauthorized: "Ausblenden verfügbare Features"
-  invoice_mail_subject: "Invoice mails subject"
-  invoice_mail_body: "Invoice mails body"
+  invoice_mail_subject: "Invoice num @invoice.number"
+  invoice_mail_body: "We send you invoice number @invoice.number dated @invoice.date"
  
   # Terms
   "0": Omgående betaling

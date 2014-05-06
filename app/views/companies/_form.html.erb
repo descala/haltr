@@ -201,16 +201,22 @@
 <% if User.current.admin? or User.current.allowed_to?(:email_customization, @project) -%>
   <fieldset class="tabular box">
     <legend><%= l(:email_customization) %></legend>
-    <div class="seccio grup">
-      <p class="col span-6-de-6">
-        <%=f.text_field :mail_subject%>
-      </p>
-    </div>
-    <div class="seccio grup">
-      <p class="col span-6-de-6">
-        <%=f.text_area :mail_body%>
-      </p>
-    </div>
+    <%= select_tag :mail_customization_lang,
+      options_for_select(valid_languages.collect {|l| [I18n.t(:general_lang_name, :locale=>l),l]}) %>
+    <% valid_languages.each do |lang| -%>
+      <div id="mail_customization_<%=lang%>" class="mail_customization" style="display: none;">
+        <div class="seccio grup">
+          <p class="col span-6-de-6">
+          <%=f.text_field "mail_subject_#{lang}", :label => :field_mail_subject%>
+          </p>
+        </div>
+        <div class="seccio grup">
+          <p class="col span-6-de-6">
+          <%=f.text_area "mail_body_#{lang}", :label => :field_mail_body%>
+          </p>
+        </div>
+      </div>
+    <% end -%>
   </fieldset>
 <% end -%>
 

@@ -18,9 +18,7 @@ module Haltr
                                "export_channels_path"   => "#{ENV['HOME']}/git/b2brouter/spool/input",
                                "default_country"        => "es",
                                "default_currency"       => "EUR",
-                               "issues_controller_name" => "issues",
-                               "invoice_mail_subject"   => "email subject",
-                               "invoice_mail_body"      => "email body" }
+                               "issues_controller_name" => "issues" }
 
       # Enables haltr module on project 'OnlineStore'
       Project.find(2).enabled_modules << EnabledModule.new(:name => 'haltr')

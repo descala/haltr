@@ -44,7 +44,7 @@ class HaltrMailer < ActionMailer::Base
     bcc  = invoice.company.email
 
     mail :to   => recipients,
-      :subject => @invoice.company.mail_subject(@invoice),
+      :subject => @invoice.company.mail_subject(@invoice.client.language,@invoice),
       :from    => from,
       :bcc     => bcc
   end

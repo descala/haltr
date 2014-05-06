@@ -52,9 +52,7 @@ Redmine::Plugin.register :haltr do
     'issues_controller_name' => 'issues',
     'default_country' => 'es',
     'default_currency' => 'EUR',
-    'hide_unauthorized' => '1',
-    'invoice_mail_subject' => '',
-    'invoice_mail_body' => ''
+    'hide_unauthorized' => '1'
   },
   :partial => '/common/settings'
 
