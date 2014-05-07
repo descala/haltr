@@ -35,7 +35,7 @@ class EventsController < ApplicationController
     respond_to do |format|
       if @event.save
         flash[:notice] = 'Event was successfully created.'
-        format.xml  { render :xml => @event, :status => :created, :location => @event }
+        format.xml  { render :xml => @event, :status => :created }
       else
         format.xml  { render :xml => @event.errors, :status => :unprocessable_entity }
       end
