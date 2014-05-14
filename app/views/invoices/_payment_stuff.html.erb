@@ -1,5 +1,12 @@
 <%
-  if @invoice and @invoice.new_record? and @client
+  invoice_params = params["invoice"] || {}
+  if (invoice_params.keys & %w(currency payment_method payment_method_text terms)).size ==  4
+    # params contains previously selected values
+    currency = invoice_params["currency"]
+    payment_method = invoice_params["payment_method"]
+    payment_method_text = invoice_params["payment_method_text"]
+    terms = invoice_params["terms"]
+  elsif @invoice and @invoice.new_record? and @client
     # new invoice, default client
     currency = @client.currency
     payment_method = @client.payment_method
