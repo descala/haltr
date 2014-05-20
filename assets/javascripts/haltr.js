@@ -37,7 +37,10 @@ $(document).ready(function() {
   })
 
   /* on load, simulate a client change to call above function */
-  $('select#invoice_client_id').change();
+  /* but only when creating new invoice, to avoid undesired changes */
+  if (window.location.href.indexOf("invoices/new") > -1) {
+    $('select#invoice_client_id').change();
+  }
 
   $(document).on('change', '#invoice_terms', function(e) {
     terms();
