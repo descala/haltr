@@ -352,7 +352,6 @@ en:
   info_default_taxes: "Your country taxes will be created by default"
   label_invoices_min: "Minimum number of invoices"
   label_stastics: "Stastics"
-  label_received_with_num: "Received invoices (%{num} new)"
   help_invoice_format: "Preferred invoice transport and format"
   logo_not_image: "Logo not saved, it wasn't an image"
   invoices_not_sent: "%{num} invoices failed to send:"

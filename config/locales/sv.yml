@@ -347,7 +347,6 @@ sv:
   info_default_taxes: "Skatter som används i ditt land skapas automatiskt"
   label_invoices_min: "Minimum antal fakturor"
   label_stastics: "Statistik"
-  label_received_with_num: "Mottagna fakturor (%{num} nya)"
   help_invoice_format: "Förvalt fakturaformat och transportteknik"
   logo_not_image: "Logga sparades inte, det var inte en bild"
   invoices_not_sent: "%{num} fakturor gick inte att skicka"

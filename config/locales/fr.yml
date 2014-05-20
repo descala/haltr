@@ -351,7 +351,6 @@ fr:
   info_default_taxes: "Par défaut, il va créer des taxes dans votre pays"
   label_invoices_min: "nombre minimum de factures"
   label_stastics: "Statistiques"
-  label_received_with_num: "Factures reçues (%{num} nouveaux)"
   help_invoice_format: "Format de transport préféré et la réception des factures"
   logo_not_image: "Le logo n'a pas été sauvé parce qu'il y avait une image"
   invoices_not_sent: "%{num} pas réussi à envoyer les factures:"
