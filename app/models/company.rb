@@ -224,10 +224,10 @@ class Company < ActiveRecord::Base
   end
 
   def method_missing(m, *args)
-    if /^(?<method>mail_subject|mail_body)_(?<lang>[a-z][a-z])$/ =~ m.to_s and (0..1).include? args.size
+    if /^(?<method>mail_subject|mail_body)_(?<lang>[a-z][a-z][\-a-z]{0,3})$/ =~ m.to_s and (0..1).include? args.size
       # mail_<subject|body>_<lang>([invoice])
       self.public_send(method,lang,args[0])
-    elsif /^(?<method>mail_subject|mail_body)_(?<lang>[a-z][a-z])=$/ =~ m.to_s and args.size == 1
+    elsif /^(?<method>mail_subject|mail_body)_(?<lang>[a-z][a-z][\-a-z]{0,3})=$/ =~ m.to_s and args.size == 1
       # mail_<subject|body>_<lang>=(<value>)
       self.public_send("#{method}=",lang,args[0])
     else
