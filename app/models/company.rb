@@ -203,7 +203,7 @@ class Company < ActiveRecord::Base
   end
 
   def respond_to?(method, include_private = false)
-    super || method =~ /^(mail_subject|mail_body)_[a-z][a-z]=?$/
+    super || method =~ /^(mail_subject|mail_body)_[a-z][a-z][\-A-Z]{0,3}=?$/
   end
 
   private
