@@ -40,7 +40,7 @@ class InvoicesController < ApplicationController
     sort_init 'invoices.created_at', 'desc'
     sort_update %w(invoices.created_at state number date due_date clients.name import_in_cents)
 
-    invoices = @project.invoices.scoped.where("type = ?","IssuedInvoice")
+    invoices = @project.issued_invoices
 
     unless params["state_all"] == "1"
       statelist=[]

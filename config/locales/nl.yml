@@ -458,3 +458,4 @@ en:
   field_mail_body: "Body"
   send_pdf_by_mail: "PDF mailed to %{emails}"
   send_xml_by_mail: "XML mailed to %{emails}"
+  label_quotes: "Quotes"

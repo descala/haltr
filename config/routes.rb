@@ -42,6 +42,7 @@ resources :projects do
   match 'check_iban' => 'companies#check_iban', :via => :get, :as => :check_iban
   match 'ccc2iban' => 'clients#ccc2iban', :via => :get, :as => :ccc2iban
   match 'events/file/:id' => 'events#file', :via => :get, :as => :event_file
+  resources :quotes, :only => [:index, :new, :create]
 end
 resources :clients do
   resources :people, :only => [:index, :new, :create]
@@ -74,6 +75,8 @@ match 'received/original/:id' => 'received#original', :via => :get, :as => :rece
 match 'invoices/show_original/:id' => 'invoices#show_original', :via => :get, :as => :invoices_show_original
 match 'received/show_original/:id' => 'received#show_original', :via => :get, :as => :received_show_original
 resources :invoices
+resources :quotes, :only => [:show, :edit, :update, :destroy]
+match 'quotes/send/:id' => 'quotes#send_quote', :via => :get, :as => :send_quote
 
 # public access to an invoice using the client hash
 match 'invoice/download/:client_hashid/:invoice_id' => 'invoices#download', :client_hashid => /.*/, :invoice_id => /\d+/, :via => :get, :as => 'invoice_public_download'

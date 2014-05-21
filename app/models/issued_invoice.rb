@@ -4,6 +4,8 @@ class IssuedInvoice < InvoiceDocument
 
   unloadable
 
+  include Haltr::ExportableDocument
+
   belongs_to :invoice_template
   validates_presence_of :number, :unless => Proc.new {|invoice| invoice.type == "DraftInvoice"}
   validates_presence_of :due_date
@@ -15,12 +17,6 @@ class IssuedInvoice < InvoiceDocument
   after_create :create_event
   after_destroy :release_amended
   before_save :update_status, :unless => Proc.new {|invoicedoc| invoicedoc.state_changed? }
-
-  attr_accessor :export_errors
-
-  after_initialize do |user|
-    user.export_errors ||= []
-  end
 
   # new sending sent error discarded closed
   state_machine :state, :initial => :new do
@@ -122,17 +118,6 @@ class IssuedInvoice < InvoiceDocument
     IssuedInvoice.sum :total_in_cents, :conditions => ["state <> 'closed' and due_date < ? and project_id = ?", Date.today, project.id]
   end
 
-  def can_be_exported?
-    # TODO Test if endpoint is correcty configured
-    return @can_be_exported unless @can_be_exported.nil?
-    @can_be_exported = (self.valid? and !ExportChannels.format(client.invoice_format).blank?)
-    ExportChannels.validations(client.invoice_format).each do |v|
-      self.send(v)
-    end
-    @can_be_exported &&= (export_errors.size == 0)
-    @can_be_exported
-  end
-
   def self.last_number(project)
     numbers = project.issued_invoices.collect {|i| i.number }.compact
     numbers.sort_by do |num|
@@ -191,21 +176,6 @@ class IssuedInvoice < InvoiceDocument
     !self.amend_id.nil?
   end
 
-  def sending_info
-    format = nil
-    if channel = ExportChannels.available[self.client.invoice_format]
-      format = channel["locales"][I18n.locale.to_s]
-    end
-    errors = ""
-    errors +=  export_errors.collect {|e| e}.join(", ") if export_errors and export_errors.size > 0
-    errors += self.errors.full_messages.join(", ")
-    recipients = nil
-    if channel["validate"].to_a.include? "client_has_email"
-      recipients = "\n#{self.recipient_emails.join("\n")}"
-    end
-    "#{format}<br/>#{errors}<br/>#{recipients}".html_safe
-  end
-
   # facturae 3.x needs taxes to be valid
   def invoice_has_taxes
     self.invoice_lines.each do |line|
@@ -256,12 +226,6 @@ class IssuedInvoice < InvoiceDocument
     else
       Event.create(:name=>self.transport,:invoice=>self,:user=>User.current)
     end
-  end
-
-  # errors to be raised on sending invoice
-  def add_export_error(err)
-    @export_errors ||= []
-    @export_errors << err
   end
 
   def client_has_email

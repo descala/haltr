@@ -3,11 +3,9 @@
   <div class="col span-2-de-2">
 
     <%= labelled_form_for :invoice, @invoice, :url => { :action => 'create', :project_id => @project }, :html => {:class=>'formee'} do |f| %>
-      <%= render :partial => 'invoices/form', :locals => { :f => f } %>
+      <%= render :partial => 'quotes/form', :locals => { :f => f } %>
       <%= f.submit l(:button_create), :name => 'create' %>
-      <% unless @invoice.is_a? InvoiceTemplate or @invoice.is_a? DraftInvoice -%>
-        <%= f.submit l(:button_create_and_send), :name => 'create_and_send' %>
-      <% end -%>
+      <%= f.submit l(:button_create_and_send), :name => 'create_and_send' %>
     <% end %>
 
   </div>
@@ -18,7 +16,7 @@
   <%= render :partial => 'invoices/new_client', :locals => {:context => "new_invoice"} %>
 </div>
 
-<% html_title(l(:label_invoice_new)) -%>
+<% html_title(l(:label_quote_new)) -%>
 
 <% content_for :sidebar do %>
   <%= render_menu :invoices_menu, @project %>

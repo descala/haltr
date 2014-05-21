@@ -478,3 +478,4 @@ es:
   field_mail_body: "Cuerpo"
   send_pdf_by_mail: "PDF enviado por email a %{emails}"
   send_xml_by_mail: "XML enviado por email a %{emails}"
+  label_quotes: "Presupuestos"

@@ -32,6 +32,7 @@ class Invoice < ActiveRecord::Base
   belongs_to :amend, :class_name => "Invoice", :foreign_key => 'amend_id'
   belongs_to :bank_info
   has_one :amend_of, :class_name => "Invoice", :foreign_key => 'amend_id'
+  has_one :quote
   validates_presence_of :client, :date, :currency, :project_id, :unless => Proc.new {|i| i.type == "ReceivedInvoice" }
   validates_inclusion_of :currency, :in  => Money::Currency.table.collect {|k,v| v[:iso_code] }, :unless => Proc.new {|i| i.type == "ReceivedInvoice" }
   validates_numericality_of :charge_amount_in_cents, :allow_nil => true
@@ -119,7 +120,7 @@ class Invoice < ActiveRecord::Base
   end
 
   def pdf_name_without_extension
-    "factura-#{number.gsub('/','')}" rescue "factura-___"
+    "#{l(:label_invoice)}-#{number.gsub('/','')}" rescue "factura-___"
   end
 
   def recipient_people
