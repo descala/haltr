@@ -8,7 +8,7 @@ class Quote < Invoice
   before_save :update_imports
 
   after_create do
-    Event.create(:name=>"new",:invoice=>self,:user=>User.current)
+    Event.create(:name=>"quote_new",:invoice=>self,:user=>User.current)
   end
 
   state_machine :state, :initial => :quote_new do
