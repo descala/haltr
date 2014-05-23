@@ -201,22 +201,44 @@
 <% if User.current.admin? or User.current.allowed_to?(:email_customization, @project) -%>
   <fieldset class="tabular box">
     <legend><%= l(:email_customization) %></legend>
-    <%= select_tag :mail_customization_lang,
-      options_for_select(valid_languages.reject {|l| !(l =~ /^[a-z][a-z][\-A-Z]{0,3}$/)}.collect {|l| [I18n.t(:general_lang_name, :locale=>l),l]}) %>
-    <% valid_languages.reject {|l| !(l =~ /^[a-z][a-z][\-A-Z]{0,3}$/)}.each do |lang| -%>
-      <div id="mail_customization_<%=lang%>" class="mail_customization" style="display: none;">
-        <div class="seccio grup">
-          <p class="col span-6-de-6">
-          <%=f.text_field "mail_subject_#{lang}", :label => :field_mail_subject%>
-          </p>
+    <fieldset style="border: none;">
+      <legend><%= l(:label_invoice_plural) %></legend>
+      <%= select_tag :invoice_mail_customization_lang,
+        options_for_select(valid_languages.reject {|l| !(l =~ /^[a-z][a-z][\-A-Z]{0,3}$/)}.collect {|l| [I18n.t(:general_lang_name, :locale=>l),l]}) %>
+      <% valid_languages.reject {|l| !(l =~ /^[a-z][a-z][\-A-Z]{0,3}$/)}.each do |lang| -%>
+        <div id="invoice_mail_customization_<%=lang%>" class="invoice_mail_customization" style="display: none;">
+          <div class="seccio grup">
+            <p class="col span-6-de-6">
+            <%=f.text_field "invoice_mail_subject_#{lang}", :label => :field_mail_subject%>
+            </p>
+          </div>
+          <div class="seccio grup">
+            <p class="col span-6-de-6">
+            <%=f.text_area "invoice_mail_body_#{lang}", :label => :field_mail_body%>
+            </p>
+          </div>
         </div>
-        <div class="seccio grup">
-          <p class="col span-6-de-6">
-          <%=f.text_area "mail_body_#{lang}", :label => :field_mail_body%>
-          </p>
+      <% end -%>
+    </fieldset>
+    <fieldset style="border: none;">
+      <legend><%= l(:label_quote_plural) %></legend>
+      <%= select_tag :quote_mail_customization_lang,
+        options_for_select(valid_languages.reject {|l| !(l =~ /^[a-z][a-z][\-A-Z]{0,3}$/)}.collect {|l| [I18n.t(:general_lang_name, :locale=>l),l]}) %>
+      <% valid_languages.reject {|l| !(l =~ /^[a-z][a-z][\-A-Z]{0,3}$/)}.each do |lang| -%>
+        <div id="quote_mail_customization_<%=lang%>" class="quote_mail_customization" style="display: none;">
+          <div class="seccio grup">
+            <p class="col span-6-de-6">
+            <%=f.text_field "quote_mail_subject_#{lang}", :label => :field_mail_subject%>
+            </p>
+          </div>
+          <div class="seccio grup">
+            <p class="col span-6-de-6">
+            <%=f.text_area "quote_mail_body_#{lang}", :label => :field_mail_body%>
+            </p>
+          </div>
         </div>
-      </div>
-    <% end -%>
+      <% end -%>
+    </fieldset>
   </fieldset>
 <% end -%>
 

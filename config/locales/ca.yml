@@ -196,7 +196,7 @@ ca:
   manual_send: "Marcada manualment com a enviada"
   queue: "Ordre d'enviament donada"
   requeue: "Ordre de reenviament donada"
-  success_sending: "Enviada correctament"
+  success_sending: "Enviament correcte"
   mark_unsent: "Marcada manualment com a no enviada"
   error_sending: "Error a l'enviar"
   close: "Tancada"
@@ -320,6 +320,8 @@ ca:
   hide_unauthorized: "Amagar funcionalitats no disponibles"
   invoice_mail_subject: "Factura num @invoice.number"
   invoice_mail_body: "Li fem arribar la factura num @invoice.number amb data @invoice.date"
+  quote_mail_subject: "Pressupost num @quote.number"
+  quote_mail_body: "Li fem arribar el pressupost num @quote.number amb data @quote.date"
 
 
   # Terms
@@ -476,7 +478,7 @@ ca:
   field_mail_body: "Cos"
   send_pdf_by_mail: "PDF enviat per correu a %{emails}"
   send_xml_by_mail: "XML enviat per correu a %{emails}"
-  label_quotes: "Pressupostos"
+  label_quote_plural: "Pressupostos"
   label_quote: "Pressupost"
   label_quote_new: "Nou pressupost"
   valid_until: "Vàlid fins"
@@ -484,6 +486,7 @@ ca:
   state_quote_accepted: "Acceptat"
   state_quote_refused: "Refusat"
   state_quote_closed: "Tancat"
+  state_quote_sending: "Enviant-se"
   state_quote_sent: "Enviat"
   quote_new: "Creat"
   quote_send: "Ordre d'enviament donada"

@@ -28,8 +28,8 @@ class HaltrMailerTest < ActiveSupport::TestCase
     assert_equal 'Invoice_08_001.pdf',  mail.header['X-Haltr-PDF-Filename'].to_s
     assert_equal "722d813699ee44602f647997b055fa2a", mail.header['X-Haltr-PDF-MD5'].to_s
     assert_equal User.current.id.to_s,  mail.header['X-Haltr-Sender'].to_s
-    assert_equal invoice.company.mail_subject(invoice.client.language,invoice), mail.subject
-    invoice.company.mail_body(invoice.client.language,invoice).gsub(/@invoice_url/,'').split.each do |line|
+    assert_equal invoice.company.invoice_mail_subject(invoice.client.language,invoice), mail.subject
+    invoice.company.invoice_mail_body(invoice.client.language,invoice).gsub(/@invoice_url/,'').split.each do |line|
       assert_mail_body_match line, mail
     end
 

@@ -51,8 +51,10 @@ class CompaniesController < ApplicationController
     end
     # check if user trying to customize emails without role
     unless User.current.admin? or User.current.allowed_to?(:email_customization, @project)
-      params[:company].delete :mail_subject
-      params[:company].delete :mail_body
+      params[:company].delete :invoice_mail_subject
+      params[:company].delete :invoice_mail_body
+      params[:company].delete :quote_mail_subject
+      params[:company].delete :quote_mail_body
     end
     if @company.update_attributes(params[:company])
       unless @company.taxes.collect {|t| t unless t.marked_for_destruction? }.compact.any?

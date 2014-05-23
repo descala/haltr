@@ -41,10 +41,19 @@ class HaltrMailer < ActionMailer::Base
     end
 
     recipients = invoice.recipient_emails.join(', ')
-    bcc  = invoice.company.email
+    bcc        = invoice.company.email
+    subj       = ""
+    @body      = ""
+    if @invoice.is_a?(Quote)
+      subj  = @invoice.company.quote_mail_subject(@invoice.client.language,@invoice)
+      @body = @invoice.company.quote_mail_body(@invoice.client.language,@invoice)
+    else
+      subj  = @invoice.company.invoice_mail_subject(@invoice.client.language,@invoice)
+      @body = @invoice.company.invoice_mail_body(@invoice.client.language,@invoice)
+    end
 
     mail :to   => recipients,
-      :subject => @invoice.company.mail_subject(@invoice.client.language,@invoice),
+      :subject => subj,
       :from    => from,
       :bcc     => bcc
   end
