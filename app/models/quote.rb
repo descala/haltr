@@ -10,10 +10,20 @@ class Quote < Invoice
   after_create do
     Event.create(:name=>"quote_new",:invoice=>self,:user=>User.current)
   end
+  after_initialize do |obj|
+    if !obj.quote_expired? and obj.due_date and Date.today > obj.due_date
+      obj.expired
+    end
+  end
+  before_save do
+    if quote_expired? and due_date_changed? and Date.today < due_date
+      write_attribute(:state, :quote_new)
+    end
+  end
 
   state_machine :state, :initial => :quote_new do
     before_transition do |invoice, transition|
-      unless transition.event.to_s == "success_sending"
+      unless %w(success_sending expired).include? transition.event.to_s
         Event.create(:name=>transition.event.to_s,:invoice=>invoice,:user=>User.current)
       end
     end
@@ -34,6 +44,9 @@ class Quote < Invoice
     end
     event :success_sending do
       transition all => :quote_sent
+    end
+    event :expired do
+      transition [:quote_new,:quote_send,:quote_sent] => :quote_expired
     end
   end
 

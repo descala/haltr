@@ -488,6 +488,7 @@ ca:
   state_quote_closed: "Tancat"
   state_quote_sending: "Enviant-se"
   state_quote_sent: "Enviat"
+  state_quote_expired: "Expirat"
   quote_new: "Creat"
   quote_send: "Ordre d'enviament donada"
   quote_set_new: "Marcat com a nou"

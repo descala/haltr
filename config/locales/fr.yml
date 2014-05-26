@@ -476,6 +476,7 @@ fr:
   state_quote_closed: "Closed"
   state_quote_sending: "Sending"
   state_quote_sent: "Sent"
+  state_quote_expired: "Expired"
   quote_new: "Created"
   quote_send: "Delivery order given"
   quote_set_new: "Marked as new"

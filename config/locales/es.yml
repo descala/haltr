@@ -490,6 +490,7 @@ es:
   state_quote_closed: "Cerrado"
   state_quote_sending: "Enviándose"
   state_quote_sent: "Enviado"
+  state_quote_expired: "Expirado"
   quote_new: "Creado"
   quote_send: "Orden de reenvío dada"
   quote_set_new: "Marcado como nuevo"
