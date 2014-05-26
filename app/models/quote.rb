@@ -63,6 +63,11 @@ class Quote < Invoice
     ""
   end
 
+  def self.next_number(project)
+    number = self.last_number(project)
+    IssuedInvoice.increment_right(number)
+  end
+
   def label
     l :label_quote
   end

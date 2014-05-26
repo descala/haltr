@@ -66,7 +66,7 @@ class QuotesController < ApplicationController
     @client = Client.find(params[:client]) if params[:client]
     @client ||= Client.find(:all, :order => 'name', :conditions => ["project_id = ?", @project]).first
     @client ||= Client.new
-    @invoice = Quote.new(:project=>@project,:date=>Date.today)
+    @invoice = Quote.new(:project=>@project,:date=>Date.today,:number=>Quote.next_number(@project))
     il = InvoiceLine.new
     @project.company.taxes.each do |tax|
       il.taxes << Tax.new(:name=>tax.name, :percent=>tax.percent) if tax.default
