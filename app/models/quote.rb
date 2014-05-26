@@ -16,8 +16,10 @@ class Quote < Invoice
     end
   end
   before_save do
-    if quote_expired? and due_date_changed? and Date.today < due_date
-      write_attribute(:state, :quote_new)
+    if quote_expired?
+      if !due_date or (due_date_changed? and due_date >= Date.today)
+        write_attribute(:state, :quote_new)
+      end
     end
   end
 
