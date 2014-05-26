@@ -792,17 +792,10 @@ class InvoicesController < ApplicationController
         @lines = @invoice.invoice_lines
         @client = @invoice.client
         file_name = @invoice.pdf_name_without_extension
-        case params[:in]
-        when "pdf"
-          file = create_pdf_file
-          file_name += ".pdf"
-        else
-          file = create_xml_file(params[:in])
-          file_name += ".xml"
-        end
+        file_name += (params[:in] == "pdf" ? ".pdf" : ".xml")
         zos.put_next_entry(file_name)
-        zos.print IO.read(file.path)
-        logger.info "Added #{file_name} from #{file.path}"
+        zos.print Haltr::Pdf.generate(@invoice)
+        logger.info "Added #{file_name}"
       end
     end
     zip_file.close
