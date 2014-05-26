@@ -27,14 +27,14 @@ class HaltrMailer < ActionMailer::Base
     haltr_headers 'Id'  => invoice.id
 
     if pdf
-      pdf_filename = "#{I18n.t(:label_invoice)}_#{invoice.number.gsub(/[^\w]/,'_')}.pdf" rescue "Invoice.pdf"
+      pdf_filename = "#{I18n.t(:label_invoice)}-#{invoice.number.gsub(/[^\w]/,'')}.pdf" rescue "Invoice.pdf"
       haltr_headers 'PDF-Filename' => pdf_filename if pdf
       attachments[pdf_filename] = pdf
       haltr_headers 'PDF-MD5' => Digest::MD5.hexdigest(pdf)
     end
 
     if xml
-      xml_filename = "#{I18n.t(:label_invoice)}_#{invoice.number.gsub(/[^\w]/,'_')}.xml" rescue "Invoice.xml"
+      xml_filename = "#{I18n.t(:label_invoice)}-#{invoice.number.gsub(/[^\w]/,'')}.xml" rescue "Invoice.xml"
       haltr_headers 'XML-Filename' => xml_filename if xml
       attachments[xml_filename] = xml
       haltr_headers 'XML-MD5' => Digest::MD5.hexdigest(xml)
