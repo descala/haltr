@@ -2,7 +2,9 @@
 <div class="seccio grup">
   <div class="col span-2-de-2">
 
-    <%= labelled_form_for :invoice, @invoice, :url => { :action => 'create', :project_id => @project }, :html => {:class=>'formee'} do |f| %>
+    <% url_hash = { :action => 'create', :project_id => @project } -%>
+    <% url_hash[:controller] = @dest_controller unless @dest_controller.blank? -%>
+    <%= labelled_form_for :invoice, @invoice, :url => url_hash, :html => {:class=>'formee'} do |f| %>
       <%= render :partial => 'invoices/form', :locals => { :f => f } %>
       <%= f.submit l(:button_create), :name => 'create' %>
       <% unless @invoice.is_a? InvoiceTemplate or @invoice.is_a? DraftInvoice -%>

@@ -4,7 +4,7 @@ class Quote < Invoice
 
   include Haltr::ExportableDocument
 
-  belongs_to :invoice
+  has_one :invoice
   before_save :update_imports
 
   after_create do

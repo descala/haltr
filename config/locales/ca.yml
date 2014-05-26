@@ -498,3 +498,6 @@ ca:
   notice_quote_sent: "El pressupost s'està enviant"
   error_quote_not_sent: "El pressupost %{num} no s'ha pogut enviar"
   errors_prevented_quote_sent: "No s'ha enviat el pressupost perquè conté errors"
+  field_quote_lines: "Línies"
+  accept_quote: "Facturar"
+  refuse_quote: "Desestimar"

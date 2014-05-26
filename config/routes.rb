@@ -77,6 +77,8 @@ match 'received/show_original/:id' => 'received#show_original', :via => :get, :a
 resources :invoices
 resources :quotes, :only => [:show, :edit, :update, :destroy]
 match 'quotes/send/:id' => 'quotes#send_quote', :via => :get, :as => :send_quote
+match 'quotes/accept/:id' => 'quotes#accept', :via => :get, :as => :accept_quote
+match 'quotes/refuse/:id' => 'quotes#refuse', :via => :get, :as => :refuse_quote
 
 # public access to an invoice using the client hash
 match 'invoice/download/:client_hashid/:invoice_id' => 'invoices#download', :client_hashid => /.*/, :invoice_id => /\d+/, :via => :get, :as => 'invoice_public_download'

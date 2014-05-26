@@ -4,8 +4,8 @@ class QuotesController < ApplicationController
   helper :haltr
   helper :invoices
   layout 'haltr'
-  before_filter :find_project_by_project_id, :except => [:show,:edit,:update,:destroy,:send_quote]
-  before_filter :find_invoice, :only => [:show,:edit,:update,:destroy,:send_quote]
+  before_filter :find_project_by_project_id, :except => [:show,:edit,:update,:destroy,:send_quote,:accept,:refuse]
+  before_filter :find_invoice, :only => [:show,:edit,:update,:destroy,:send_quote,:accept,:refuse]
   before_filter :authorize
 
   helper :sort
@@ -183,6 +183,29 @@ class QuotesController < ApplicationController
     #raise e if Rails.env == "development"
   ensure
     redirect_back_or_default(:action => 'show', :id => @invoice)
+  end
+
+  def accept
+    @quote = @invoice
+    @quote.quote_accept
+    @client = @quote.client
+    @invoice = IssuedInvoice.new
+    @invoice.attributes = @quote.attributes
+    @invoice.number=IssuedInvoice.next_number(@project)
+    @quote.invoice_lines.each do |line|
+      il = line.dup
+      il.taxes = line.taxes.collect {|tax| tax.dup}
+      @invoice.invoice_lines << il
+    end
+    @invoice.quote_id = @quote.id
+    @dest_controller = 'invoices'
+
+    render 'invoices/new'
+  end
+
+  def refuse
+    @invoice.quote_refuse
+    redirect_to :action => 'index', :project_id => @project
   end
 
   private

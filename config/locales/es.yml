@@ -500,3 +500,6 @@ es:
   notice_quote_sent: "Se enviará el presupuesto"
   error_quote_not_sent: "No se puede enviar el presupuesto %{num}"
   errors_prevented_quote_sent: "El presupuesto no se enviará porque contiene errores"
+  field_quote_lines: "Líneas"
+  accept_quote: "Facturar"
+  refuse_quote: "Desestimar"
