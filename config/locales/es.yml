@@ -506,3 +506,4 @@ es:
   field_quote_lines: "Líneas"
   accept_quote: "Facturar"
   refuse_quote: "Desestimar"
+  import_invoice: "Importar factura"

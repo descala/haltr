@@ -502,3 +502,4 @@ ca:
   field_quote_lines: "Línies"
   accept_quote: "Facturar"
   refuse_quote: "Desestimar"
+  import_invoice: "Importar factura"

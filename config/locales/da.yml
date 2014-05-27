@@ -494,3 +494,4 @@ da:
   field_quote_lines: "Lines"
   accept_quote: "Create invoice"
   refuse_quote: "Refuse quote"
+  import_invoice: "Import invoice"
