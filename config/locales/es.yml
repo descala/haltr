@@ -357,6 +357,8 @@ es:
   notice_invoice_sent: "La factura se esta enviando"
   error_invoice_not_sent: "La factura %{num} no se ha podido enviar"
   notice_empty_n19: "No hay datos para generar un N19"
+  notice_n19_done: "Se ha cerrado el N19 con fecha %{value}"
+  notice_empty_sepa: "No hay datos para generar un fichero SEPA"
   notice_payment_done: "Se ha cerrado el %{payment_type} de fecha %{value}"
   notice_uploaded_file_not_found: "No s'ha encontrado el fichero"
 

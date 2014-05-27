@@ -344,6 +344,8 @@ en:
   notice_invoice_sent: "Invoice will be sent"
   error_invoice_not_sent: "Could not send invoice %{num}"
   notice_empty_n19: "No data to create N19"
+  notice_n19_done: "N19 for %{value} has been closed"
+  notice_empty_sepa: "No data to generate a SEPA file"
   notice_payment_done: "%{payment_type} for due date %{value} maked as done"
   notice_uploaded_file_not_found: "File not found"
 

@@ -106,6 +106,7 @@ fr:
   requires_company_bank_account: exige le propre compte bancaire
   requires_client_iban_bic: exige le IBAN et le BIC du client
   requires_company_iban_bic: exige IBAN et BIC propre
+  iban_is_invalid: IBAN is not valid
   cash_str: "Paiement liquide"
   debit_str: "Débite paiement à"
   transfer_str: "Transfert bancaire à"
@@ -343,6 +344,8 @@ fr:
   notice_invoice_sent: "Facture est en cours d'envoi"
   error_invoice_not_sent: "N'a pas pu envoyer la facture %{num}"
   notice_empty_n19: "Aucune donnée pour créer N19"
+  notice_n19_done: "N19 for %{value} has been closed"
+  notice_empty_sepa: "No data to generate a SEPA file"
   notice_payment_done: "%{payment_type} pour date d'échéance %{value} marquée comme faite"
   notice_uploaded_file_not_found: "Fichier non trouvé"
 

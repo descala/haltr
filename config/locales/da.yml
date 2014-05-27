@@ -104,6 +104,7 @@ da:
   requires_company_bank_account: kræver self-service bank konto
   requires_client_iban_bic: kræver kunde IBAN og BIC
   requires_company_iban_bic: kræver egen IBAN og BIC
+  iban_is_invalid: IBAN is not valid
   cash_str: "Kontant betaling"
   debit_str: "Debit betaling til"
   transfer_str: "Bank overførsel til"
@@ -341,6 +342,8 @@ da:
   notice_invoice_sent: "Faktura vil blive sendt"
   error_invoice_not_sent: "Kunne ikke sende faktura %{num}"
   notice_empty_n19: "Ingen data til at skabe N19"
+  notice_n19_done: "N19 for %{value} has been closed"
+  notice_empty_sepa: "No data to generate a SEPA file"
   notice_payment_done: "%{payment_type} for forfaldsdatoen %{value} maked som udført"
   notice_uploaded_file_not_found: "Fil ikke fundet"
  
@@ -429,6 +432,8 @@ da:
   all_invoices_sent: "Invoices have been sent"
   button_add_bank_info: "Add bank account"
   page_redirecting_will_lose_unsaved_data: "La pàgina es redirigirà i perdreu les dades no desades, voleu continuar?"
+  label_format: "Format"
+  button_validate: "Validar"
   downloading_doc: 'Downloading document...'
   calling_signature: 'Calling signature...'
   sending_signed_doc: 'Sending signed document to server...'
