@@ -104,6 +104,7 @@ sv:
   requires_company_bank_account: Bankkonto måste registreras
   requires_client_iban_bic: kräver kundens IBAN och BIC
   requires_company_iban_bic: kräver IBAN och BIC
+  iban_is_invalid: IBAN is not valid
   cash_str: "Kontant betalning"
   debit_str: "Debit betalning till"
   transfer_str: "Banköverföring till"
@@ -338,6 +339,8 @@ sv:
   notice_invoice_sent: "Faktura kommer att skickas"
   error_invoice_not_sent: "Kunde inte skicka faktura %{num}"
   notice_empty_n19: "Ingen data finns för att skapa N19"
+  notice_n19_done: "N19 for %{value} has been closed"
+  notice_empty_sepa: "No data to generate a SEPA file"
   notice_payment_done: "%{payment_type} för betaldatum %{value} markerad som utförd"
   notice_uploaded_file_not_found: "Filen hittades inte"
 
