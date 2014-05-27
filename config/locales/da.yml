@@ -468,3 +468,4 @@ da:
   field_mail_body: "Body"
   send_pdf_by_mail: "PDF til email an %{emails}"
   send_xml_by_mail: "XML til email an %{emails}"
+  import_invoice: "Import invoice"

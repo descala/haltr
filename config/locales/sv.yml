@@ -466,3 +466,4 @@ sv:
   field_mail_body: "Body"
   send_pdf_by_mail: "PDF till email %{emails}"
   send_xml_by_mail: "XML till email %{emails}"
+  import_invoice: "Import invoice"
