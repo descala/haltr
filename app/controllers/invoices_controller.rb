@@ -35,6 +35,7 @@ class InvoicesController < ApplicationController
   before_filter :check_for_company, :except => PUBLIC_METHODS
 
   skip_before_filter :verify_authenticity_token, :only => [:base64doc]
+  accept_api_auth :import
 
   def index
     sort_init 'invoices.created_at', 'desc'
@@ -869,18 +870,37 @@ class InvoicesController < ApplicationController
   def import
     if request.post?
       file = params[:file]
+      invoice = nil
       if file && file.size > 0
         md5 = `md5sum #{file.path} | cut -d" " -f1`.chomp
         invoice = Invoice.create_from_xml(file,@project.company,User.current.name,md5,'uploaded')
-        redirect_to invoice_path(invoice)
-      else
-        flash[:warning] = l(:notice_uploaded_file_not_found)
-        redirect_to :action => 'import', :project_id => @project
+      end
+      respond_to do |format|
+        format.html {
+          if invoice
+            redirect_to invoice_path(invoice)
+          else
+            flash[:warning] = l(:notice_uploaded_file_not_found)
+            redirect_to :action => 'import', :project_id => @project
+          end
+        }
+        format.api {
+          render_api_ok
+        }
       end
     end
   rescue
-    flash[:error] = $!.message
-    redirect_to :action => 'import', :project_id => @project
+    respond_to do |format|
+      format.html {
+        flash[:error] = $!.message
+        redirect_to :action => 'import', :project_id => @project
+      }
+      format.api {
+        render :status => :unprocessable_entity,
+        :text => Nokogiri::XML::Builder.new {|xml| xml.error $!.message}.to_xml,
+        :layout => nil
+      }
+    end
   end
 
   def original
