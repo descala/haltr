@@ -875,7 +875,7 @@ class InvoicesController < ApplicationController
         md5 = `md5sum #{file.path} | cut -d" " -f1`.chomp
         @invoice = Invoice.create_from_xml(file,@project.company,User.current.name,md5,'uploaded')
       end
-      if params[:send] and @invoice
+      if @invoice and params[:send_after_import] == "true"
         begin
           @invoice.queue if @invoice.state?(:new)
           create_and_queue_file
