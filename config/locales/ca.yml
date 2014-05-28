@@ -503,3 +503,4 @@ ca:
   accept_quote: "Facturar"
   refuse_quote: "Desestimar"
   import_invoice: "Importar factura"
+  send_after_import: "Enviar després d'importar"

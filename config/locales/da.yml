@@ -495,3 +495,4 @@ da:
   accept_quote: "Create invoice"
   refuse_quote: "Refuse quote"
   import_invoice: "Import invoice"
+  send_after_import: "Send after import"
