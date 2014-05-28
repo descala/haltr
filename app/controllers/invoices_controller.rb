@@ -685,7 +685,15 @@ class InvoicesController < ApplicationController
   end
 
   def create_and_queue_file
-    raise @invoice.export_errors.join(", ") unless @invoice.can_be_exported?
+    unless @invoice.can_be_exported?
+      @invoice.export_errors.each do |export_error|
+        EventError.create(
+          :name    => export_error,
+          :invoice => @invoice
+        )
+      end
+      raise @invoice.parsed_errors
+    end
     export_id = @invoice.client.invoice_format
     @format = ExportChannels.format export_id
     @company = @project.company
@@ -875,16 +883,11 @@ class InvoicesController < ApplicationController
         md5 = `md5sum #{file.path} | cut -d" " -f1`.chomp
         @invoice = Invoice.create_from_xml(file,@project.company,User.current.name,md5,'uploaded')
       end
-      if @invoice and params[:send_after_import] == "true"
+      if @invoice and ["true","1"].include?(params[:send_after_import])
         begin
           @invoice.queue if @invoice.state?(:new)
           create_and_queue_file
-        rescue Exception => e
-          EventError.create(
-            :name    => "error_sending",
-            :invoice => @invoice,
-            :notes   => e.message
-          )
+        rescue
         end
       end
       respond_to do |format|

@@ -27,11 +27,6 @@ module Haltr::ExportableDocument
         channel_name ||= self.client.invoice_format rescue nil
         channel = ExportChannels.available[channel_name.to_s]
         format = nil
-        errors = ""
-        errors +=  export_errors.collect {|e|
-          e.is_a?(Array) ? e.collect {|e2| l(e2) }.join(" ") : l(e)
-        }.join(", ") if export_errors and export_errors.size > 0
-        errors += self.errors.full_messages.join(", ")
         recipients = nil
         if channel
           format = channel["locales"][I18n.locale.to_s]
@@ -41,7 +36,16 @@ module Haltr::ExportableDocument
         else
           format = "Can't find channel #{channel_name}, please check channels.yml"
         end
-        "#{format}<br/>#{errors}<br/>#{recipients}".html_safe
+        "#{format}<br/>#{parsed_errors}<br/>#{recipients}".html_safe
+      end
+
+      def parsed_errors
+        errors = ""
+        errors += export_errors.collect {|e|
+          e.is_a?(Array) ? e.collect {|e2| l(e2) }.join(" ") : l(e)
+        }.join(", ") if export_errors and export_errors.size > 0
+        errors += self.errors.full_messages.join(", ")
+        errors
       end
 
       protected
