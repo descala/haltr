@@ -879,8 +879,12 @@ class InvoicesController < ApplicationController
         begin
           @invoice.queue if @invoice.state?(:new)
           create_and_queue_file
-        rescue
-          @invoice.error_sending
+        rescue Exception => e
+          EventError.create(
+            :name    => "error_sending",
+            :invoice => @invoice,
+            :notes   => e.message
+          )
         end
       end
       respond_to do |format|
