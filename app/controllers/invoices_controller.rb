@@ -685,7 +685,7 @@ class InvoicesController < ApplicationController
   end
 
   def create_and_queue_file
-    raise @invoice.export_errors.collect {|e| l(e)}.join(", ") unless @invoice.can_be_exported?
+    raise @invoice.export_errors.join(", ") unless @invoice.can_be_exported?
     export_id = @invoice.client.invoice_format
     @format = ExportChannels.format export_id
     @company = @project.company
@@ -870,15 +870,27 @@ class InvoicesController < ApplicationController
   def import
     if request.post?
       file = params[:file]
-      invoice = nil
+      @invoice = nil
       if file && file.size > 0
         md5 = `md5sum #{file.path} | cut -d" " -f1`.chomp
-        invoice = Invoice.create_from_xml(file,@project.company,User.current.name,md5,'uploaded')
+        @invoice = Invoice.create_from_xml(file,@project.company,User.current.name,md5,'uploaded')
+      end
+      if @invoice and params[:send_after_import] == "true"
+        begin
+          @invoice.queue if @invoice.state?(:new)
+          create_and_queue_file
+        rescue Exception => e
+          EventError.create(
+            :name    => "error_sending",
+            :invoice => @invoice,
+            :notes   => e.message
+          )
+        end
       end
       respond_to do |format|
         format.html {
-          if invoice
-            redirect_to invoice_path(invoice)
+          if @invoice
+            redirect_to invoice_path(@invoice)
           else
             flash[:warning] = l(:notice_uploaded_file_not_found)
             redirect_to :action => 'import', :project_id => @project
