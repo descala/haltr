@@ -28,7 +28,9 @@ module Haltr::ExportableDocument
         channel = ExportChannels.available[channel_name.to_s]
         format = nil
         errors = ""
-        errors +=  export_errors.collect {|e| e}.join(", ") if export_errors and export_errors.size > 0
+        errors +=  export_errors.collect {|e|
+          e.is_a?(Array) ? e.collect {|e2| l(e2) }.join(" ") : l(e)
+        }.join(", ") if export_errors and export_errors.size > 0
         errors += self.errors.full_messages.join(", ")
         recipients = nil
         if channel

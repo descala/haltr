@@ -180,7 +180,7 @@ class IssuedInvoice < InvoiceDocument
   def invoice_has_taxes
     self.invoice_lines.each do |line|
       unless line.taxes_outputs.any?
-        add_export_error(l(:invoice_has_no_taxes))
+        add_export_error(:invoice_has_no_taxes)
       end
     end
   end
@@ -188,20 +188,20 @@ class IssuedInvoice < InvoiceDocument
   # facturae needs taxcode
   def company_has_taxcode
     if self.company.taxcode.blank?
-      add_export_error(l(:company_taxcode_needed))
+      add_export_error(:company_taxcode_needed)
     end
   end
 
   # facturae needs taxcode
   def client_has_taxcode
     if self.client.taxcode.blank?
-      add_export_error(l(:client_taxcode_needed))
+      add_export_error(:client_taxcode_needed)
     end
   end
 
   def client_has_postalcode
     if self.client.postalcode.blank?
-      add_export_error(l(:client_postalcode_needed))
+      add_export_error(:client_postalcode_needed)
     end
   end
 
@@ -209,11 +209,11 @@ class IssuedInvoice < InvoiceDocument
     if debit?
       c = self.client
       if c.bank_account.blank? and !c.use_iban?
-        add_export_error("#{l(:field_payment_method)} (#{l(:debit)}) #{l(:requires_client_bank_account)}")
+        add_export_error([:field_payment_method, :requires_client_bank_account])
       end
     elsif transfer?
       if !bank_info or (bank_info.bank_account.blank? and !bank_info.use_iban?)
-        add_export_error("#{l(:field_payment_method)} (#{l(:transfer)}) #{l(:requires_company_bank_account)}")
+        add_export_error([:field_payment_method, :requires_company_bank_account])
       end
     end
   end
@@ -230,7 +230,7 @@ class IssuedInvoice < InvoiceDocument
 
   def client_has_email
     unless self.recipient_emails.any?
-      add_export_error(l(:client_has_no_email))
+      add_export_error(:client_has_no_email)
     end
   end
 
@@ -244,25 +244,25 @@ class IssuedInvoice < InvoiceDocument
 
   def ubl_invoice_has_no_taxes_withheld
     if self.taxes_withheld.any?
-      add_export_error(l(:ubl_invoice_has_taxes_withheld))
+      add_export_error(:ubl_invoice_has_taxes_withheld)
     end
   end
 
   def peppol_fields
     if self.client.schemeid.blank? or self.client.endpointid.blank?
-      add_export_error(l(:missing_client_peppol_fields))
+      add_export_error(:missing_client_peppol_fields)
     elsif self.company.schemeid.blank? or self.company.endpointid.blank?
-      add_export_error(l(:missing_company_peppol_fields))
+      add_export_error(:missing_company_peppol_fields)
     end
   end
 
   def svefaktura_fields
     if self.respond_to?(:accounting_cost) and self.accounting_cost.blank?
-      add_export_error(l(:missing_svefaktura_account))
+      add_export_error(:missing_svefaktura_account)
     elsif self.company.company_identifier.blank?
-      add_export_error(l(:missing_svefaktura_organization))
+      add_export_error(:missing_svefaktura_organization)
     elsif self.debit?
-      add_export_error(l(:missing_svefaktura_debit))
+      add_export_error(:missing_svefaktura_debit)
     end
   end
 

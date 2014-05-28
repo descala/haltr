@@ -88,7 +88,7 @@ class Quote < Invoice
 
   def client_has_email
     unless self.recipient_emails.any?
-      add_export_error(l(:client_has_no_email))
+      add_export_error(:client_has_no_email)
     end
   end
 
