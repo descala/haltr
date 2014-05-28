@@ -685,7 +685,7 @@ class InvoicesController < ApplicationController
   end
 
   def create_and_queue_file
-    raise @invoice.export_errors.collect {|e| l(e)}.join(", ") unless @invoice.can_be_exported?
+    raise @invoice.export_errors.join(", ") unless @invoice.can_be_exported?
     export_id = @invoice.client.invoice_format
     @format = ExportChannels.format export_id
     @company = @project.company
