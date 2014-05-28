@@ -688,7 +688,7 @@ class InvoicesController < ApplicationController
     unless @invoice.can_be_exported?
       @invoice.export_errors.each do |export_error|
         EventError.create(
-          :name    => :error_sending,
+          :name    => 'error_sending',
           :notes   => export_error,
           :invoice => @invoice
         )
