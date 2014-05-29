@@ -69,7 +69,7 @@
         <%= f.text_field :country, :value => ISO::Countries.get_country(client.country), :readonly => client.linked?, :required => true %>
       <% else -%>
         <%= f.label_for_field :country, :required => true %>
-        <%= f.iso_country_select :country, valid_languages %>
+        <%= f.iso_country_select :country, [:es] %>
       <% end -%>
       </p>
     </div>
