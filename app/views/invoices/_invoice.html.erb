@@ -18,7 +18,7 @@
   <% end -%>
   </div>
   <div class="vendor-info">
-    <% if @invoice.is_a?(Quote) and @invoice.description.blank? -%>
+    <% if @invoice.is_a?(Quote) and !@invoice.description.blank? -%>
       <h2><%=@invoice.description%></h2>
     <% end -%>
     <h3><%=h @company.name %></h3>
