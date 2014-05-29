@@ -4,6 +4,12 @@
   <legend><%=l(:label_quote)%></legend>
 
   <div class="seccio grup">
+    <p class="col span-2-de-2">
+    <%= f.text_area :description, :rows=>1, :style=> "height: unset;" %>
+    </p>
+  </div>
+
+  <div class="seccio grup">
     <p class="col span-2-de-2" id="client_select">
     <%= render :partial=>'invoices/clients',
       :locals => { :selected => @created_client || @invoice.client_id } %>
