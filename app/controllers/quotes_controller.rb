@@ -46,8 +46,7 @@ class QuotesController < ApplicationController
         format.biiubl20    { render_xml Haltr::Xml.generate(@invoice, 'biiubl20') }
         format.svefaktura  { render_xml Haltr::Xml.generate(@invoice, 'svefaktura') }
         format.oioubl20    { render_xml Haltr::Xml.generate(@invoice, 'oioubl20') }
-        format.efffubl     { add_efffubl_base64_pdf ;
-                             render_xml Haltr::Xml.efffubl(@invoice, @efffubl_base64_pdf) }
+        format.efffubl     { render_xml Haltr::Xml.generate(@invoice, 'efffubl') }
       else
         format.facturae30  { download_xml Haltr::Xml.generate(@invoice, 'facturae30') }
         format.facturae31  { download_xml Haltr::Xml.generate(@invoice, 'facturae31') }
@@ -56,8 +55,7 @@ class QuotesController < ApplicationController
         format.biiubl20    { download_xml Haltr::Xml.generate(@invoice, 'biiubl20') }
         format.svefaktura  { download_xml Haltr::Xml.generate(@invoice, 'svefaktura') }
         format.oioubl20    { download_xml Haltr::Xml.generate(@invoice, 'oioubl20') }
-        format.efffubl     { add_efffubl_base64_pdf ;
-                             download_xml Haltr::Xml.efffubl(@invoice, @efffubl_base64_pdf) }
+        format.efffubl     { download_xml Haltr::Xml.generate(@invoice, 'efffubl') }
       end
     end
   end

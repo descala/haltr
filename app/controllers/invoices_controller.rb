@@ -329,8 +329,7 @@ class InvoicesController < ApplicationController
         format.biiubl20    { render_xml Haltr::Xml.generate(@invoice, 'biiubl20') }
         format.svefaktura  { render_xml Haltr::Xml.generate(@invoice, 'svefaktura') }
         format.oioubl20    { render_xml Haltr::Xml.generate(@invoice, 'oioubl20') }
-        format.efffubl     { add_efffubl_base64_pdf ;
-                             render_xml Haltr::Xml.efffubl(@invoice, @efffubl_base64_pdf) }
+        format.efffubl     { render_xml Haltr::Xml.generate(@invoice, 'efffubl') }
       else
         format.facturae30  { download_xml Haltr::Xml.generate(@invoice, 'facturae30') }
         format.facturae31  { download_xml Haltr::Xml.generate(@invoice, 'facturae31') }
@@ -339,8 +338,7 @@ class InvoicesController < ApplicationController
         format.biiubl20    { download_xml Haltr::Xml.generate(@invoice, 'biiubl20') }
         format.svefaktura  { download_xml Haltr::Xml.generate(@invoice, 'svefaktura') }
         format.oioubl20    { download_xml Haltr::Xml.generate(@invoice, 'oioubl20') }
-        format.efffubl     { add_efffubl_base64_pdf ;
-                             download_xml Haltr::Xml.efffubl(@invoice, @efffubl_base64_pdf) }
+        format.efffubl     { download_xml Haltr::Xml.generate(@invoice, 'efffubl') }
       end
     end
   end
@@ -668,15 +666,7 @@ class InvoicesController < ApplicationController
   end
 
   def create_xml_file(format)
-    add_efffubl_base64_pdf if format == 'efffubl'
-    # if it is an imported invoice, has not been modified and
-    # invoice format  matches client format, send original file
-    if @invoice.original and !@invoice.modified_since_created? and format == @invoice.invoice_format
-      xml = @invoice.original
-    else
-      xml = render_to_string(:template => "invoices/#{format}",
-                             :formats => :xml, :layout => false)
-    end
+    xml = Haltr::Xml.generate(@invoice,format)
     xml_file = Tempfile.new("invoice_#{@invoice.id}.xml")
     xml_file.write(Haltr::Xml.clean_xml(xml))
     logger.info "Created XML #{xml_file.path}"
@@ -869,11 +859,6 @@ class InvoicesController < ApplicationController
     respond_to do |format|
       format.js  { render :action => 'haltr_sign' }
     end
-  end
-
-  def add_efffubl_base64_pdf
-    file = create_pdf_file
-    @efffubl_base64_pdf = Base64::encode64(File.read(file.path))
   end
 
   def import
