@@ -237,7 +237,7 @@ fr:
   # Invoice lines
   field_price: Prix
   field_quantity: Quantité
-  field_invoice_lines: Lignes de facture
+  field_invoice_lines: Lignes
   field_unit: Unité
   units: Unités
   hours: Heures
@@ -490,7 +490,6 @@ fr:
   notice_quote_sent: "Quote will be sent"
   error_quote_not_sent: "Could not send quote %{num}"
   errors_prevented_quote_sent: "Quote not sent since it contains errors"
-  field_quote_lines: "Lines"
   accept_quote: "Create invoice"
   refuse_quote: "Refuse quote"
   import_invoice: "Import invoice"

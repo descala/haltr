@@ -246,7 +246,7 @@ ca:
   # Invoice lines
   field_price: Preu
   field_quantity: Quantitat
-  field_invoice_lines: Línies de factura
+  field_invoice_lines: Línies
   field_unit: Unitat
   units: Unitats
   hours: Hores
@@ -499,7 +499,6 @@ ca:
   notice_quote_sent: "El pressupost s'està enviant"
   error_quote_not_sent: "El pressupost %{num} no s'ha pogut enviar"
   errors_prevented_quote_sent: "No s'ha enviat el pressupost perquè conté errors"
-  field_quote_lines: "Línies"
   accept_quote: "Facturar"
   refuse_quote: "Desestimar"
   import_invoice: "Importar factura"
