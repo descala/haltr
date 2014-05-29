@@ -176,10 +176,12 @@ class IssuedInvoice < InvoiceDocument
     new_attributes['state']='new'
     ai = IssuedInvoice.new(new_attributes)
     ai.number = "#{number}-R"
-    ai.save(:validate=>false)
     self.invoice_lines.each do |line|
-      ai.invoice_lines << InvoiceLine.new(line.attributes)
+      il = line.dup
+      il.taxes = line.taxes.collect {|tax| tax.dup }
+      ai.invoice_lines << il
     end
+    ai.save(:validate=>false)
     self.amend_id = ai.id
     self.save(:validate=>false)
     self.amend_and_close # change state
