@@ -1,7 +1,14 @@
 # Generic sender for delayed job
 
 module Haltr
-  class GenericSender < Struct.new(:invoice, :user)
+  class GenericSender
+
+    attr_accessor :invoice, :user
+
+    def initialize(invoice=nil, user=nil)
+      self.invoice = invoice
+      self.user    = user
+    end
 
     def perform
       # implement!
