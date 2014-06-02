@@ -36,9 +36,16 @@ module Haltr
         host   = company.imap_host || '127.0.0.1'
         port   = company.imap_port || '143'
         ssl    = company.imap_ssl
-        folder = 'INBOX/Drafts' #TODO allow to change this
         imap   = Net::IMAP.new(host, port, ssl)
         imap.login(company.imap_username, company.imap_password) unless company.imap_username.nil?
+        if imap.list('','INBOX/Drafts')
+          folder = 'INBOX/Drafts'
+        elsif imap.list('','Drafts')
+          folder = 'Drafts'
+        else
+          folder = 'Drafts'
+          imap.create(folder)
+        end
         imap.append(folder, message.to_s.gsub(/\n/, "\r\n"), [:Draft], Time.now)
       end
       invoice.manual_send
