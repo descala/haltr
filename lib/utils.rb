@@ -7,7 +7,7 @@ module Utils
       months.each do |m|
         text.gsub!(/#{m}/i, months[date.month]) unless m.nil? or months[date.month].nil?
       end
-      text.gsub!(/20[0-5][0-9]/, date.year.to_s)
+      text.gsub!(/ 20[0-5][0-9]/, " #{date.year.to_s}")
       text
     end
     
