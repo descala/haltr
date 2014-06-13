@@ -214,8 +214,11 @@ class IssuedInvoice < InvoiceDocument
         add_export_error([:field_payment_method, :requires_client_bank_account])
       end
     elsif transfer?
-      if !bank_info or (bank_info.bank_account.blank? and !bank_info.use_iban?)
+      if !bank_info or (bank_info.bank_account.blank? and bank_info.iban.blank?)
         add_export_error([:field_payment_method, :requires_company_bank_account])
+      elsif (bank_info.bank_account.blank? and !bank_info.use_iban?)
+        add_export_error([:field_payment_method, :requires_company_bank_account])
+        add_export_error([:bank_info, 'activerecord.errors.messages.invalid'])
       end
     end
   end
