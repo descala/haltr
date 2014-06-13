@@ -159,6 +159,20 @@ facturae_32_face:
   allowed_permissions:
     :send_face:
 
+facturae_31_gva:
+  format: facturae31
+  class_for_send: Haltr::SendSignedXmlByGva
+  validate:
+  locales:
+    ca: "Facturae 3.1 a GVA"
+    da: "Facturae 3.1 til GVA"
+    en: "Facturae 3.1 to GVA"
+    es: "Facturae 3.1 por GVA"
+    fr: "Facturae 3.1 par GVA"
+    sv: "Spanskt format Facturae 3.1 till GVA"
+  allowed_permissions:
+    :send_gva:
+
 ublinvoice_20:
   format: peppolubl20
   folder: free_ubl
