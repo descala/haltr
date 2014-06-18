@@ -11,7 +11,8 @@ class Quote < Invoice
     Event.create(:name=>"quote_new",:invoice=>self,:user=>User.current)
   end
   after_initialize do |obj|
-    if !obj.quote_expired? and obj.due_date and Date.today > obj.due_date
+    if !obj.quote_expired? and obj.due_date and Date.today > obj.due_date and
+      (quote_new? or quote_send? or quote_sent?)
       obj.expired
     end
   end
