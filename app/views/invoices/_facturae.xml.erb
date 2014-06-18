@@ -20,7 +20,7 @@
       </ThirdParty>
       <% end -%>
       <Batch>
-         <BatchIdentifier><%=h  @invoice.id %></BatchIdentifier>
+         <BatchIdentifier><%=h @company.taxcode%><%=h  @invoice.number %></BatchIdentifier>
          <InvoicesCount>1</InvoicesCount>
          <TotalInvoicesAmount>
             <TotalAmount><%=h precision @invoice.total.dollars %></TotalAmount>
