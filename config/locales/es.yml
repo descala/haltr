@@ -481,3 +481,4 @@ es:
   send_pdf_by_mail: "PDF enviado por email a %{emails}"
   send_xml_by_mail: "XML enviado por email a %{emails}"
   import_invoice: "Importar factura"
+  template_too_old: "La plantilla para %{client} es demasiado antigua (demasiadas facturas a generar)"

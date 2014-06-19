@@ -468,3 +468,4 @@ fr:
   send_pdf_by_mail: "PDF par email a %{emails}"
   send_xml_by_mail: "XML par email a %{emails}"
   import_invoice: "Import invoice"
+  template_too_old: "Template for %{client} too old (too much invoices to generate)"

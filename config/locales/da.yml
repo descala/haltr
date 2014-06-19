@@ -469,3 +469,4 @@ da:
   send_pdf_by_mail: "PDF til email an %{emails}"
   send_xml_by_mail: "XML til email an %{emails}"
   import_invoice: "Import invoice"
+  template_too_old: "Template for %{client} too old (too much invoices to generate)"

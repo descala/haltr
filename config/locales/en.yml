@@ -467,3 +467,4 @@ en:
   send_pdf_by_mail: "PDF mailed to %{emails}"
   send_xml_by_mail: "XML mailed to %{emails}"
   import_invoice: "Import invoice"
+  template_too_old: "Template for %{client} too old (too much invoices to generate)"

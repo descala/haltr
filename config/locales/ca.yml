@@ -477,3 +477,4 @@ ca:
   send_pdf_by_mail: "PDF enviat per correu a %{emails}"
   send_xml_by_mail: "XML enviat per correu a %{emails}"
   import_invoice: "Importar factura"
+  template_too_old: "La plantilla de %{client} és massa antiga (massa factures a generar)"
