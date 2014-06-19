@@ -507,3 +507,4 @@ es:
   refuse_quote: "Desestimar"
   import_invoice: "Importar factura"
   send_after_import: "Enviar después de importar"
+  template_too_old: "La plantilla para %{client} es demasiado antigua (demasiadas facturas a generar)"
