@@ -220,6 +220,8 @@
   </fieldset>
 <% end -%>
 
+<%= call_hook(:company_form_end) %>
+
 <% content_for :header_tags do -%>
   <%= javascript_include_tag('iban',:plugin=>'haltr')%>
 <% end -%>
