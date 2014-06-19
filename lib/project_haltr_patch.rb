@@ -16,6 +16,7 @@ module ProjectHaltrPatch
       has_many :quotes
       has_many :received_invoices
       has_many :payments
+      has_many :draft_invoices
     end
  
   end
