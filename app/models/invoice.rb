@@ -646,10 +646,12 @@ _INV
   protected
 
   def increment_counter
+    Project.increment_counter "invoices_count", project_id
     Project.increment_counter "#{type.to_s.pluralize.underscore}_count", project_id
   end
 
   def decrement_counter
+    Project.decrement_counter "invoices_count", project_id
     Project.decrement_counter "#{type.to_s.pluralize.underscore}_count", project_id
   end
 
