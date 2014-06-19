@@ -58,6 +58,15 @@ class InvoiceTemplatesController < InvoicesController
     if request.post?
       templates = InvoiceTemplate.find :all, :include => [:client], :conditions => ["clients.project_id = ? and date <= ?", @project.id, @date], :order => "date ASC"
       templates.each do |t|
+        if t.frequency < 6 and t.date < 1.year.ago.to_date
+          # limit to 1 year invoices with frequency < 6 months
+          flash.now[:error] = l(:template_too_old, :client => t.client.name)
+          next
+        elsif t.date < 2.year.ago.to_date
+          # limit to 2 years invoices with frequency >= 6 months
+          flash.now[:error] = l(:template_too_old, :client => t.client.name)
+          next
+        end
         begin
           @drafts << t.invoices_until(@date)
         rescue ActiveRecord::RecordInvalid => e
