@@ -48,7 +48,6 @@ module Haltr
         end
         imap.append(folder, message.to_s.gsub(/\n/, "\r\n"), [:Draft], Time.now)
       end
-      invoice.manual_send
       return message
     end
 
