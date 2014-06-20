@@ -56,7 +56,7 @@ th.money, td.money, .money{
 }
 
 .invoice-navigator {
-  float: right;
+  float: right !important;
 }
 
 .invoice-channel-links h3, .invoice-events h3 {
