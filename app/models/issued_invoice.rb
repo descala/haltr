@@ -133,14 +133,16 @@ class IssuedInvoice < InvoiceDocument
     @can_be_exported
   end
 
+  # TODO take into account only last x invoices
+  #      not all the invoices. there may be a lot of old invoices
   def self.last_number(project)
     numbers = project.issued_invoices.collect {|i| i.number }.compact
     numbers.sort_by do |num|
-      if num =~ /\d+/
-        [2, $&.to_i] # $& contains the complete matched text
-      else
-        [1, num]
-      end
+      # invoices_001 -> [1,   "invoices_001"]
+      # i7           -> [7,   "i7"]
+      # 2014/i8      -> [2014, 8, "2014/i8"]
+      # 08/001       -> [8,    1, "08/001"]
+      num.scan(/\d+/).collect{|i|i.to_i} + [num]
     end.last
   rescue
     ""

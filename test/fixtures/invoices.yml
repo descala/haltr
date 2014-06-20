@@ -220,7 +220,7 @@ i8:
   extra_info: "This is an invoice. 100 EUR with 10% VAT tax, 10% TaxesWithheld. And 10 EUR charges."
   charge_amount_in_cents: 1000
   charge_reason: "This are payments we made in the name of the client"
-  number: "i8"
+  number: "2014/i8"
   payment_method: 1
   ponumber: "client order number 123"
   project_id: 2
@@ -237,7 +237,7 @@ i9:
   date: 2013-04-04
   due_date: 2013-04-04
   extra_info: "Payment method DEBIT and client does not have a bank account"
-  number: "i9"
+  number: "2014/i9"
   payment_method: 2
   ponumber: "client order number 123"
   project_id: 2
