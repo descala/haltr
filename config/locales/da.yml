@@ -496,3 +496,4 @@ da:
   import_invoice: "Import invoice"
   send_after_import: "Send after import"
   template_too_old: "Template for %{client} too old (too much invoices to generate)"
+  quote_acceptance: "Acceptance of quote"

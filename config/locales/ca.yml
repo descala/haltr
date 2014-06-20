@@ -504,3 +504,4 @@ ca:
   import_invoice: "Importar factura"
   send_after_import: "Enviar després d'importar"
   template_too_old: "La plantilla de %{client} és massa antiga (massa factures a generar)"
+  quote_acceptance: "Acceptació del pressupost"

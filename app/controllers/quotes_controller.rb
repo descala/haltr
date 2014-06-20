@@ -31,10 +31,11 @@ class QuotesController < ApplicationController
       format.html
       format.pdf do
         @is_pdf = true
+        @debug = params[:debug]
         render :pdf => @invoice.pdf_name_without_extension,
           :disposition => 'attachment',
           :layout => "invoice.html",
-          :template=>"invoices/show_pdf",
+          :template=>"quotes/show_pdf",
           :formats => :html,
           :show_as_html => params[:debug]
       end

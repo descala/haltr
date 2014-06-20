@@ -14,6 +14,8 @@
         <% else %>
           <%= tag 'img', :src => @company.attachments.first.diskfile -%>
         <% end -%>
+      <% else %>
+          <%= tag 'img', :src => "/invoices/logo/#{@company.attachments.first.id}/#{@company.attachments.first.filename}", :alt => "#{@company.name} Logo" -%>
       <% end -%>
   <% end -%>
   </div>

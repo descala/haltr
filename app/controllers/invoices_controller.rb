@@ -314,6 +314,7 @@ class InvoicesController < ApplicationController
       format.html
       format.pdf do
         @is_pdf = true
+        @debug = params[:debug]
         render :pdf => @invoice.pdf_name_without_extension,
           :disposition => 'attachment',
           :layout => "invoice.html",
