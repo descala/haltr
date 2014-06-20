@@ -643,6 +643,14 @@ _INV
     false
   end
 
+  def next
+    project.invoices.first(:conditions=>["id > ? and type = ?", self.id, self.type])
+  end
+
+  def previous
+    project.invoices.last(:conditions=>["id < ? and type = ?", self.id, self.type])
+  end
+
   protected
 
   def increment_counter

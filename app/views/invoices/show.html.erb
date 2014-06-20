@@ -6,6 +6,12 @@
       <li><%= link_to_if_authorized l(:button_edit), { :action => 'edit', :id => @invoice }, :class => 'icon icon-edit' %></li>
       <li><%= link_to_if_authorized l(:button_delete), { :action => 'destroy', :id => @invoice}, :confirm=>l(:text_are_you_sure), :method=>:delete, :class=>'icon icon-del' %></li>
       <%= render :partial => "#{@invoice.class.to_s.underscore}_menu" %>
+      <% if @invoice.next%>
+        <li class="invoice-navigator"><%=h link_to_if_authorized l(:label_next), :action => 'show', :id => @invoice.next %></li>
+      <% end %>
+       <% if @invoice.previous %>
+        <li class="invoice-navigator"><%=h link_to_if_authorized l(:label_previous), :action => 'show', :id => @invoice.previous %></li>
+      <% end %>
     </ul>
   </div>
 </div>

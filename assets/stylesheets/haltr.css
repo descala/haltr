@@ -18,6 +18,47 @@ th.money, td.money, .money{
   margin-left: 20px;
 }
 
+.menu-rapid ul {
+    width: 250px;
+    background: white;
+    border-radius: 4px 4px 4px 4px;
+    box-shadow: 0 0 3px 1px #999999;
+    padding: 10px 0;
+    position: absolute;
+    left: -9999em;
+    top: auto;
+    z-index: 1000;
+    opacity: 0;
+    transition: all 250ms ease-in-out 0s;
+}
+.menu-rapid li:hover ul {
+    left: auto;
+    opacity: 1;
+}
+.menu-rapid ul li {
+    float: none;
+    border-bottom: dashed 1px #FFF;
+    padding: 0;
+    margin: 0 10px !important;
+    display: block;
+    font-size: 12px;
+}
+.menu-rapid ul li a {
+    display: block;
+    background: none;
+    border-radius: none;
+    box-shadow: none;
+    padding: 5px 0px;
+    margin: 0;
+    text-shadow: 0 1px 0 #FFFFFF;
+    font-size: 14px;
+    font-weight: 500;
+}
+
+.invoice-navigator {
+  float: right;
+}
+
 .invoice-channel-links h3, .invoice-events h3 {
   border-bottom: 1px dotted #bbb;
 }

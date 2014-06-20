@@ -10,6 +10,14 @@ class InvoiceTest < ActiveSupport::TestCase
     Haltr::TestHelper.fix_invoice_totals
   end
 
+  test "next and previous invoice in project context" do
+    i = invoices(:i5)
+    assert_equal 'i6', i.next.number
+    assert_equal 'i4', i.previous.number
+    i = invoices(:invoices_001) # id = 1
+    assert_equal nil, i.previous
+  end
+
   test "due dates" do
     date = Date.new(2000,12,1)
     i = IssuedInvoice.new(:client=>clients(:client1),:project=>Project.find(2),:date=>date,:number=>111)
