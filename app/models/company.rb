@@ -40,14 +40,16 @@ class Company < ActiveRecord::Base
   validate :uniqueness_of_taxes
 
   after_initialize :set_default_values
-  serialize :mail_customization
+  serialize :invoice_mail_customization
+  serialize :quote_mail_customization
 
   def set_default_values
     #TODO: Add default country taxes
     self.currency ||= Setting.plugin_haltr['default_currency']
     self.country  ||= Setting.plugin_haltr['default_country']
     self.attachments ||= []
-    self.mail_customization ||= {}
+    self.invoice_mail_customization ||= {}
+    self.quote_mail_customization ||= {}
   end
 
   def <=>(oth)
@@ -152,10 +154,11 @@ class Company < ActiveRecord::Base
     ""
   end
 
-  def mail_subject(lang,invoice=nil)
-    subj = mail_customization["subject"][lang] rescue nil
+  ################## methods for mail customization ##################
+  def invoice_mail_subject(lang,invoice=nil)
+    subj = invoice_mail_customization["subject"][lang] rescue nil
     if subj.blank?
-      subj = I18n.t(:invoice_mail_subject)
+      subj = I18n.t(:invoice_mail_subject,:locale=>lang)
       unless Redmine::Hook.call_hook(:replace_invoice_mail_subject).join.blank?
         subj = Redmine::Hook.call_hook(:replace_invoice_mail_subject,:lang=>lang).join
       end
@@ -171,16 +174,16 @@ class Company < ActiveRecord::Base
     subj
   end
 
-  def mail_subject=(lang,value)
-    self.mail_customization = {} unless mail_customization
-    self.mail_customization["subject"] = {} unless mail_customization["subject"]
-    self.mail_customization["subject"][lang] = value
+  def invoice_mail_subject=(lang,value)
+    self.invoice_mail_customization = {} unless invoice_mail_customization
+    self.invoice_mail_customization["subject"] = {} unless invoice_mail_customization["subject"]
+    self.invoice_mail_customization["subject"][lang] = value
   end
 
-  def mail_body(lang,invoice=nil)
-    body = mail_customization["body"][lang] rescue nil
+  def invoice_mail_body(lang,invoice=nil)
+    body = invoice_mail_customization["body"][lang] rescue nil
     if body.blank?
-      body = I18n.t(:invoice_mail_body)
+      body = I18n.t(:invoice_mail_body,:locale=>lang)
       unless Redmine::Hook.call_hook(:replace_invoice_mail_body).join.blank?
         body = Redmine::Hook.call_hook(:replace_invoice_mail_body,:lang=>lang).join
       end
@@ -196,14 +199,65 @@ class Company < ActiveRecord::Base
     body
   end
 
-  def mail_body=(lang,value)
-    self.mail_customization = {} unless mail_customization
-    self.mail_customization["body"] = {} unless mail_customization["body"]
-    self.mail_customization["body"][lang] = value
+  def invoice_mail_body=(lang,value)
+    self.invoice_mail_customization = {} unless invoice_mail_customization
+    self.invoice_mail_customization["body"] = {} unless invoice_mail_customization["body"]
+    self.invoice_mail_customization["body"][lang] = value
   end
 
+  def quote_mail_subject(lang,quote=nil)
+    subj = quote_mail_customization["subject"][lang] rescue nil
+    if subj.blank?
+      subj = I18n.t(:quote_mail_subject,:locale=>lang)
+      unless Redmine::Hook.call_hook(:replace_quote_mail_subject).join.blank?
+        subj = Redmine::Hook.call_hook(:replace_quote_mail_subject,:lang=>lang).join
+      end
+    end
+    if quote
+      #TODO: define allowed methods here for safety
+      subj = subj.gsub(/@quote\.(\w+)/) {|s|
+        quote.send($1) rescue s
+      }.gsub(/@client\.(\w+)/) {|s|
+        quote.client.send($1) rescue s
+      }
+    end
+    subj
+  end
+
+  def quote_mail_subject=(lang,value)
+    self.quote_mail_customization = {} unless quote_mail_customization
+    self.quote_mail_customization["subject"] = {} unless quote_mail_customization["subject"]
+    self.quote_mail_customization["subject"][lang] = value
+  end
+
+  def quote_mail_body(lang,quote=nil)
+    body = quote_mail_customization["body"][lang] rescue nil
+    if body.blank?
+      body = I18n.t(:quote_mail_body,:locale=>lang)
+      unless Redmine::Hook.call_hook(:replace_quote_mail_body).join.blank?
+        body = Redmine::Hook.call_hook(:replace_quote_mail_body,:lang=>lang).join
+      end
+    end
+    if quote
+      #TODO: define allowed methods here for safety
+      body = body.gsub(/@quote\.(\w+)/) {|s|
+        quote.send($1) rescue s
+      }.gsub(/@client\.(\w+)/) {|s|
+        quote.client.send($1) rescue s
+      }
+    end
+    body
+  end
+
+  def quote_mail_body=(lang,value)
+    self.quote_mail_customization = {} unless quote_mail_customization
+    self.quote_mail_customization["body"] = {} unless quote_mail_customization["body"]
+    self.quote_mail_customization["body"][lang] = value
+  end
+  ####################################################################
+
   def respond_to?(method, include_private = false)
-    super || method =~ /^(mail_subject|mail_body)_[a-z][a-z][\-A-Z]{0,3}=?$/
+    super || method =~ /^(invoice|quote)_mail_(subject|body)_[a-z][a-z][\-A-Z]{0,3}=?$/
   end
 
   private
@@ -224,10 +278,10 @@ class Company < ActiveRecord::Base
   end
 
   def method_missing(m, *args)
-    if /^(?<method>mail_subject|mail_body)_(?<lang>[a-z][a-z][\-A-Z]{0,3})$/ =~ m.to_s and (0..1).include? args.size
+    if /^(?<method>invoice_mail_subject|invoice_mail_body|quote_mail_subject|quote_mail_body)_(?<lang>[a-z][a-z][\-A-Z]{0,3})$/ =~ m.to_s and (0..1).include? args.size
       # mail_<subject|body>_<lang>([invoice])
       self.public_send(method,lang,args[0])
-    elsif /^(?<method>mail_subject|mail_body)_(?<lang>[a-z][a-z][\-A-Z]{0,3})=$/ =~ m.to_s and args.size == 1
+    elsif /^(?<method>invoice_mail_subject|invoice_mail_body|quote_mail_subject|quote_mail_body)_(?<lang>[a-z][a-z][\-A-Z]{0,3})=$/ =~ m.to_s and args.size == 1
       # mail_<subject|body>_<lang>=(<value>)
       self.public_send("#{method}=",lang,args[0])
     else

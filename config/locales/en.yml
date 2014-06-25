@@ -237,7 +237,7 @@ en:
   # Invoice lines
   field_price: Price
   field_quantity: Quantity
-  field_invoice_lines: Invoice lines
+  field_invoice_lines: Lines
   field_unit: Unit
   units: Units
   hours: Hours
@@ -311,6 +311,8 @@ en:
   hide_unauthorized: "Hide unavailable features"
   invoice_mail_subject: "Invoice num @invoice.number"
   invoice_mail_body: "We send you invoice number @invoice.number dated @invoice.date"
+  quote_mail_subject: "Quote num @quote.number"
+  quote_mail_body: "We send you quote number @quote.number dated @quote.date"
 
   # Terms
   "0": Immediately
@@ -466,5 +468,30 @@ en:
   field_mail_body: "Body"
   send_pdf_by_mail: "PDF mailed to %{emails}"
   send_xml_by_mail: "XML mailed to %{emails}"
+  label_quote_plural: "Quotes"
+  label_quote: "Quote"
+  label_quote_new: "New quote"
+  valid_until: "Valid until"
+  state_quote_new: "New"
+  state_quote_accepted: "Accepted"
+  state_quote_refused: "Refused"
+  state_quote_closed: "Closed"
+  state_quote_sending: "Sending"
+  state_quote_sent: "Sent"
+  state_quote_expired: "Expired"
+  quote_new: "Created"
+  quote_send: "Delivery order given"
+  quote_set_new: "Marked as new"
+  quote_accept: "Accepted"
+  quote_refuse: "Refused"
+  quote_close: "Closed"
+  sure_to_resend_quote: "Are you sure to re-send quote %{num}?"
+  notice_quote_sent: "Quote will be sent"
+  error_quote_not_sent: "Could not send quote %{num}"
+  errors_prevented_quote_sent: "Quote not sent since it contains errors"
+  accept_quote: "Create invoice"
+  refuse_quote: "Refuse quote"
   import_invoice: "Import invoice"
+  send_after_import: "Send after import"
   template_too_old: "Template for %{client} too old (too much invoices to generate)"
+  quote_acceptance: "Acceptance of quote"

@@ -1,0 +1,65 @@
+<!--menu rapid-->
+<div class="seccio grup">
+  <div class="col span-2-de-2">
+    <ul class="menu-rapid">
+      <li><%= link_to_if_authorized(l("label_quote_new"), new_project_quote_path(@project), :class => 'icon icon-add') %></li>
+    </ul>
+  </div>
+</div>
+<!--final menu rapid-->
+
+<!--taula factures-->
+<%= form_tag({}) do -%>
+  <%= hidden_field_tag 'back_url', url_for(params), :id => nil %>
+  <div class="seccio grup">
+    <div class="col span-2-de-2">
+      <table class="taula-1 list invoices">
+        <thead>
+          <tr>
+            <%= sort_header_tag('number', :caption => l(:field_number)) %>
+            <%= sort_header_tag('date', :caption => l(:field_date)) %>
+            <%= sort_header_tag('clients.name', :caption => l(:field_company)) %>
+            <%= sort_header_tag('import_in_cents', :caption => l(:label_subtotal)) %>
+            <%= sort_header_tag('import_in_cents', :caption => l(:label_total)) %>
+            <%= sort_header_tag('due_date', :caption => l(:valid_until)) %>
+            <%= sort_header_tag('invoice', :caption => l(:field_invoice)) %>
+            <%= sort_header_tag('state', :caption => l(:field_state)) %>
+          </tr>
+        </thead>
+        <tbody>
+          <% for invoice in @invoices -%>
+            <tr id="invoice-<%=invoice.id%>" class="<%= cycle("odd", "even") %>">
+              <td style="cursor:pointer;" onclick="javascript: document.location = '<%=url_for(:action=>'show', :id=>invoice)%>'"><%=h link_to_if_authorized invoice.number, :action => 'show', :id => invoice %></td>
+              <td><%=h format_date invoice.date %></td>
+              <td><%=h invoice.client %></td>
+              <td class="money"><%= money(invoice.subtotal) %></td>
+              <td class="money"><%= money(invoice.total) %></td>
+              <td <%='class="pastdue"'.html_safe if invoice.past_due?%>><%=h format_date invoice.due_date %></td>
+              <td><%= link_to invoice.invoice.number, invoice_path(invoice.invoice) if invoice.invoice %></td>
+              <td><%=h l("state_#{invoice.state}").capitalize %></td>
+            </tr>
+          <% end -%>
+        </tbody>
+        <tfoot>
+          <tr>
+            <td colspan="8">&nbsp;</td>
+          </tr>
+        </tfoot>
+      </table>
+    </div>
+  </div>
+<% end -%>
+<!--final taula factures-->
+
+<!--paginacio-->
+<div class="seccio grup paginacio pagination">
+  <%= pagination_links_full @invoice_pages, @invoice_count, {:per_page_links=>false} %>
+</div>
+<!--final paginacio-->
+
+
+<% html_title(l(:label_quote_plural)) -%>
+
+<% content_for :sidebar do %>
+  <%= render_menu :invoices_menu, @project %>
+<% end %>

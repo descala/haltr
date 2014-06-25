@@ -1,8 +1,18 @@
 <%= error_messages_for 'invoice' %>
-<%= f.hidden_field :quote_id %>
 
 <fieldset class="tabular box">
-  <legend><%=l(:invoice_data)%></legend>
+  <legend><%=l(:label_quote)%></legend>
+
+  <div class="seccio grup">
+    <p class="col span-2-de-2">
+    <%= f.text_field :title %>
+    </p>
+  </div>
+  <div class="seccio grup">
+    <p class="col span-2-de-2">
+    <%= f.text_area :description, :rows=>1, :style=> "height: unset;" %>
+    </p>
+  </div>
 
   <div class="seccio grup">
     <p class="col span-2-de-2" id="client_select">
@@ -16,14 +26,11 @@
       <%= f.text_field :date, :size => 10, :required => true %><%= calendar_for('invoice_date') %>
     </p>
     <p class="col span-1-de-3">
-      <% if controller.controller_name == "invoice_templates" -%>
-        <%= f.select :frequency, frequencies_for_select, :required => true %>
-      <% else -%>
-        <%= f.text_field :number, :size => 10, :required => true %> <span class="text"><%= "#{l(:label_last_invoice_number)}: #{IssuedInvoice.last_number(@project)}" if @project.issued_invoices.any?%></span>
-      <% end -%>
+      <input type="hidden" value="custom" id="invoice_terms" />
+      <%= f.text_field :due_date, :size => 10, :label=>l("valid_until") %><%= calendar_for('invoice_due_date') %>
     </p>
     <p class="col span-1-de-3">
-      <%= f.text_field :ponumber %>
+      <%= f.text_field :number, :size => 10, :required => true %> <span class="text"><%= "#{l(:label_last_invoice_number)}: #{Quote.last_number(@project)}" if @project.quotes.any?%></span>
     </p>
   </div>
 
@@ -37,16 +44,6 @@
     </p>
     <p class="col span-1-de-2">
       <%= f.text_field :discount_percent %>
-    </p>
-  </div>
-
-
-  <div class="seccio grup">
-    <p class="col span-1-de-2">
-      <%= f.text_field :charge_amount, :value => (@invoice.charge_amount.cents > 0 ? @invoice.charge_amount : "") %>
-    </p>
-    <p class="col span-1-de-2">
-      <%= f.text_field :charge_reason %>
     </p>
   </div>
 

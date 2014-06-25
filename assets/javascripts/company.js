@@ -25,14 +25,26 @@ $(document).on('change', 'select.tax_category', function(e) {
   }
 });
 
-$(document).on('change', 'select#mail_customization_lang', function(e) {
+$(document).on('change', 'select#invoice_mail_customization_lang', function(e) {
   var lang = $(this).val();
-  $('div.mail_customization').each(function(i,obj) {
+  $('div.invoice_mail_customization').each(function(i,obj) {
     $(obj).hide();
   });
-  $('div#mail_customization_'+lang).show();
+  $('div#invoice_mail_customization_'+lang).show();
 });
 
 $(document).ready(function() {
-  $('div#mail_customization_'+$('select#mail_customization_lang').val()).show();
+  $('div#invoice_mail_customization_'+$('select#invoice_mail_customization_lang').val()).show();
+});
+
+$(document).on('change', 'select#quote_mail_customization_lang', function(e) {
+  var lang = $(this).val();
+  $('div.quote_mail_customization').each(function(i,obj) {
+    $(obj).hide();
+  });
+  $('div#quote_mail_customization_'+lang).show();
+});
+
+$(document).ready(function() {
+  $('div#quote_mail_customization_'+$('select#quote_mail_customization_lang').val()).show();
 });

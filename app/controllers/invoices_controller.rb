@@ -41,7 +41,7 @@ class InvoicesController < ApplicationController
     sort_init 'invoices.created_at', 'desc'
     sort_update %w(invoices.created_at state number date due_date clients.name import_in_cents)
 
-    invoices = @project.invoices.scoped.where("type = ?","IssuedInvoice")
+    invoices = @project.issued_invoices
 
     unless params["state_all"] == "1"
       statelist=[]
@@ -314,6 +314,7 @@ class InvoicesController < ApplicationController
       format.html
       format.pdf do
         @is_pdf = true
+        @debug = params[:debug]
         render :pdf => @invoice.pdf_name_without_extension,
           :disposition => 'attachment',
           :layout => "invoice.html",
@@ -329,8 +330,7 @@ class InvoicesController < ApplicationController
         format.biiubl20    { render_xml Haltr::Xml.generate(@invoice, 'biiubl20') }
         format.svefaktura  { render_xml Haltr::Xml.generate(@invoice, 'svefaktura') }
         format.oioubl20    { render_xml Haltr::Xml.generate(@invoice, 'oioubl20') }
-        format.efffubl     { add_efffubl_base64_pdf ;
-                             render_xml Haltr::Xml.efffubl(@invoice, @efffubl_base64_pdf) }
+        format.efffubl     { render_xml Haltr::Xml.generate(@invoice, 'efffubl') }
       else
         format.facturae30  { download_xml Haltr::Xml.generate(@invoice, 'facturae30') }
         format.facturae31  { download_xml Haltr::Xml.generate(@invoice, 'facturae31') }
@@ -339,8 +339,7 @@ class InvoicesController < ApplicationController
         format.biiubl20    { download_xml Haltr::Xml.generate(@invoice, 'biiubl20') }
         format.svefaktura  { download_xml Haltr::Xml.generate(@invoice, 'svefaktura') }
         format.oioubl20    { download_xml Haltr::Xml.generate(@invoice, 'oioubl20') }
-        format.efffubl     { add_efffubl_base64_pdf ;
-                             download_xml Haltr::Xml.efffubl(@invoice, @efffubl_base64_pdf) }
+        format.efffubl     { download_xml Haltr::Xml.generate(@invoice, 'efffubl') }
       end
     end
   end
@@ -668,15 +667,7 @@ class InvoicesController < ApplicationController
   end
 
   def create_xml_file(format)
-    add_efffubl_base64_pdf if format == 'efffubl'
-    # if it is an imported invoice, has not been modified and
-    # invoice format  matches client format, send original file
-    if @invoice.original and !@invoice.modified_since_created? and format == @invoice.invoice_format
-      xml = @invoice.original
-    else
-      xml = render_to_string(:template => "invoices/#{format}",
-                             :formats => :xml, :layout => false)
-    end
+    xml = Haltr::Xml.generate(@invoice,format)
     xml_file = Tempfile.new("invoice_#{@invoice.id}.xml")
     xml_file.write(Haltr::Xml.clean_xml(xml))
     logger.info "Created XML #{xml_file.path}"
@@ -685,7 +676,16 @@ class InvoicesController < ApplicationController
   end
 
   def create_and_queue_file
-    raise @invoice.export_errors.join(", ") unless @invoice.can_be_exported?
+    unless @invoice.can_be_exported?
+      @invoice.export_errors.each do |export_error|
+        EventError.create(
+          :name    => 'error_sending',
+          :notes   => export_error,
+          :invoice => @invoice
+        )
+      end
+      raise @invoice.parsed_errors
+    end
     export_id = @invoice.client.invoice_format
     @format = ExportChannels.format export_id
     @company = @project.company
@@ -862,11 +862,6 @@ class InvoicesController < ApplicationController
     end
   end
 
-  def add_efffubl_base64_pdf
-    file = create_pdf_file
-    @efffubl_base64_pdf = Base64::encode64(File.read(file.path))
-  end
-
   def import
     if request.post?
       file = params[:file]
@@ -875,16 +870,11 @@ class InvoicesController < ApplicationController
         md5 = `md5sum #{file.path} | cut -d" " -f1`.chomp
         @invoice = Invoice.create_from_xml(file,@project.company,User.current.name,md5,'uploaded')
       end
-      if @invoice and params[:send_after_import] == "true"
+      if @invoice and ["true","1"].include?(params[:send_after_import])
         begin
           @invoice.queue if @invoice.state?(:new)
           create_and_queue_file
-        rescue Exception => e
-          EventError.create(
-            :name    => "error_sending",
-            :invoice => @invoice,
-            :notes   => e.message
-          )
+        rescue
         end
       end
       respond_to do |format|

@@ -14,31 +14,26 @@ module Haltr
     end
 
     def generate(invoice,format)
-      xml = render(
-        :template => "invoices/#{format}",
-        :locals   => { :@invoice => invoice,
-                       :@company => invoice.company,
-                       :@client  => invoice.client },
-        :formats  => :xml,
-        :layout   => false
-      )
-      Haltr::Xml.clean_xml(xml)
-    end
-
-    def self.efffubl(invoice, pdf)
-      new.efffubl(invoice,pdf)
-    end
-
-    def efffubl(invoice, pdf)
-      xml = render(
-        :template => "invoices/efffubl",
-        :locals   => { :@invoice => invoice,
-                       :@company => invoice.company,
-                       :@client  => invoice.client,
-                       :@efffubl_base64_pdf => pdf },
-        :formats  => :xml,
-        :layout   => false
-      )
+      # if it is an imported invoice, has not been modified and
+      # invoice format  matches client format, send original file
+      if invoice.original and !invoice.modified_since_created? and format == invoice.invoice_format
+        xml = invoice.original
+      else
+        if format == 'efffubl'
+          pdf = Base64::encode64(Haltr::Pdf.generate(invoice))
+        else
+          pdf = nil
+        end
+        xml = render(
+          :template => "invoices/#{format}",
+          :locals   => { :@invoice => invoice,
+                         :@company => invoice.company,
+                         :@client  => invoice.client,
+                         :@efffubl_base64_pdf => pdf },
+          :formats  => :xml,
+          :layout   => false
+        )
+      end
       Haltr::Xml.clean_xml(xml)
     end
 

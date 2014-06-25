@@ -25,11 +25,11 @@ class HaltrMailerTest < ActiveSupport::TestCase
     assert_equal invoice.company.email, mail.from_addrs.first
     assert_equal invoice.client.email,  mail.to_addrs.first
     assert_equal invoice.id.to_s,       mail.header['X-Haltr-Id'].to_s
-    assert_equal 'Invoice-08001.pdf',  mail.header['X-Haltr-PDF-Filename'].to_s
+    assert_equal 'Invoice-08001.pdf',   mail.header['X-Haltr-PDF-Filename'].to_s
     assert_equal "722d813699ee44602f647997b055fa2a", mail.header['X-Haltr-PDF-MD5'].to_s
     assert_equal User.current.id.to_s,  mail.header['X-Haltr-Sender'].to_s
-    assert_equal invoice.company.mail_subject(invoice.client.language,invoice), mail.subject
-    invoice.company.mail_body(invoice.client.language,invoice).gsub(/@invoice_url/,'').split.each do |line|
+    assert_equal invoice.company.invoice_mail_subject(invoice.client.language,invoice), mail.subject
+    invoice.company.invoice_mail_body(invoice.client.language,invoice).gsub(/@invoice_url/,'').split.each do |line|
       assert_mail_body_match line, mail
     end
 
@@ -42,7 +42,7 @@ class HaltrMailerTest < ActiveSupport::TestCase
 
     assert mail.has_attachments?, "mail has no attached invoice!"
     assert_equal 1,                    mail.attachments.size
-    assert_equal 'Invoice-08001.pdf', mail.attachments[0].filename
+    assert_equal 'Invoice-08001.pdf',  mail.attachments[0].filename
     assert_match(/^application\/pdf/,  mail.attachments[0].content_type)
   end
 

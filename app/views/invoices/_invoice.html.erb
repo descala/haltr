@@ -14,10 +14,15 @@
         <% else %>
           <%= tag 'img', :src => @company.attachments.first.diskfile -%>
         <% end -%>
+      <% else %>
+          <%= tag 'img', :src => "/invoices/logo/#{@company.attachments.first.id}/#{@company.attachments.first.filename}", :alt => "#{@company.name} Logo" -%>
       <% end -%>
   <% end -%>
   </div>
   <div class="vendor-info">
+    <% if @invoice.is_a?(Quote) and !@invoice.description.blank? -%>
+      <h2><%=@invoice.description%></h2>
+    <% end -%>
     <h3><%=h @company.name %></h3>
     <address class="adr">
       <div class="street-address"><%=h @company.address %></div>
@@ -40,7 +45,11 @@
     <span class="invoice-terms"><%=h l(:label_amended_invoice)%>: <%= link_to_if_authorized @invoice.amend_of.number,{:controller => 'invoices', :action => 'show', :id => @invoice.amend_of} %></span><br/>
   <% end -%>
   <% unless @invoice.due_date.blank? -%>
-    <span class="invoice-terms<%=h " pastdue" if @invoice.past_due?%>"><%=h l(:field_due_date)%> <%=h format_date @invoice.due_date %> <%= "(#{@invoice.terms_description})" unless @invoice.custom_due? %></span><br/>
+    <% if @invoice.is_a?(Quote) -%>
+      <span class="invoice-terms<%=h " pastdue" if @invoice.past_due?%>"><%=h l(:valid_until)%> <%=h format_date @invoice.due_date %></span><br/>
+    <% else -%>
+      <span class="invoice-terms<%=h " pastdue" if @invoice.past_due?%>"><%=h l(:field_due_date)%> <%=h format_date @invoice.due_date %> <%= "(#{@invoice.terms_description})" unless @invoice.custom_due? %></span><br/>
+    <% end -%>
   <% end -%>
   <% unless payment_method_info.blank? -%>
     <span class="invoice-terms"><%=h payment_method_info.html_safe %></span><br/>

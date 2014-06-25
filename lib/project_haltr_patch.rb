@@ -13,6 +13,7 @@ module ProjectHaltrPatch
       has_many :invoices
       has_many :invoice_templates
       has_many :issued_invoices
+      has_many :quotes
       has_many :received_invoices
       has_many :payments
       has_many :draft_invoices

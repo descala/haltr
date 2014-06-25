@@ -143,7 +143,7 @@ ca:
   state_refused_plural: "Refusades"
   state_paid_plural: "Pagades"
   sending_log: "Log d'enviament"
-  download_legal: "Descarregar factura legal"
+  download_legal: "Descarregar document"
   download_notification: "Descarregar notificació"
   label_all_invoices: "Totes"
   label_issued: "Factures emeses"
@@ -196,7 +196,7 @@ ca:
   manual_send: "Marcada manualment com a enviada"
   queue: "Ordre d'enviament donada"
   requeue: "Ordre de reenviament donada"
-  success_sending: "Enviada correctament"
+  success_sending: "Enviament correcte"
   mark_unsent: "Marcada manualment com a no enviada"
   error_sending: "Error a l'enviar"
   close: "Tancada"
@@ -246,7 +246,7 @@ ca:
   # Invoice lines
   field_price: Preu
   field_quantity: Quantitat
-  field_invoice_lines: Línies de factura
+  field_invoice_lines: Línies
   field_unit: Unitat
   units: Unitats
   hours: Hores
@@ -320,6 +320,8 @@ ca:
   hide_unauthorized: "Amagar funcionalitats no disponibles"
   invoice_mail_subject: "Factura num @invoice.number"
   invoice_mail_body: "Li fem arribar la factura num @invoice.number amb data @invoice.date"
+  quote_mail_subject: "Pressupost num @quote.number"
+  quote_mail_body: "Li fem arribar el pressupost num @quote.number amb data @quote.date"
 
 
   # Terms
@@ -476,5 +478,30 @@ ca:
   field_mail_body: "Cos"
   send_pdf_by_mail: "PDF enviat per correu a %{emails}"
   send_xml_by_mail: "XML enviat per correu a %{emails}"
+  label_quote_plural: "Pressupostos"
+  label_quote: "Pressupost"
+  label_quote_new: "Nou pressupost"
+  valid_until: "Vàlid fins"
+  state_quote_new: "Nou"
+  state_quote_accepted: "Acceptat"
+  state_quote_refused: "Refusat"
+  state_quote_closed: "Tancat"
+  state_quote_sending: "Enviant-se"
+  state_quote_sent: "Enviat"
+  state_quote_expired: "Expirat"
+  quote_new: "Creat"
+  quote_send: "Ordre d'enviament donada"
+  quote_set_new: "Marcat com a nou"
+  quote_accept: "Acceptat"
+  quote_refuse: "Refusat"
+  quote_close: "Tancat"
+  sure_to_resend_quote: "Segur que voleu reenviar el pressupost %{num}?"
+  notice_quote_sent: "El pressupost s'està enviant"
+  error_quote_not_sent: "El pressupost %{num} no s'ha pogut enviar"
+  errors_prevented_quote_sent: "No s'ha enviat el pressupost perquè conté errors"
+  accept_quote: "Facturar"
+  refuse_quote: "Desestimar"
   import_invoice: "Importar factura"
+  send_after_import: "Enviar després d'importar"
   template_too_old: "La plantilla de %{client} és massa antiga (massa factures a generar)"
+  quote_acceptance: "Acceptació del pressupost"

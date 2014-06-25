@@ -1,7 +1,5 @@
 <%=
-  @invoice.company.mail_body(
-    @invoice.client.language,@invoice
-  ).gsub(/@invoice_url/) {|s|
+  @body.gsub(/@invoice_url/) {|s|
     invoice_public_view_url(:invoice_id=>@invoice.id,
                             :client_hashid=>@invoice.client.hashid)
   }

@@ -1,0 +1,19 @@
+<%
+    @invoice ||= invoice
+    @lines   ||= @invoice.invoice_lines
+    @company ||= @invoice.company
+    @client  ||= @invoice.client
+    @project ||= @invoice.company.project
+    @is_pdf = true if @is_pdf.nil?
+-%>
+
+<% if @invoice.client.language -%>
+  <% before_locale = I18n.locale %>
+  <% I18n.locale = @invoice.client.language rescue before_locale %>
+<% end -%>
+
+<%= render :partial=>'quote' %>
+
+<% if defined?(before_locale) -%>
+  <% I18n.locale = before_locale %>
+<% end -%>

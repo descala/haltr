@@ -25,26 +25,36 @@ class HaltrMailer < ActionMailer::Base
                                            :client_hashid=>invoice.client.hashid)
     set_language_if_valid invoice.client.language
     haltr_headers 'Id'  => invoice.id
+    label = I18n.t(invoice.is_a?(Quote) ? :label_quote : :label_invoice)
 
     if pdf
-      pdf_filename = "#{I18n.t(:label_invoice)}-#{invoice.number.gsub(/[^\w]/,'')}.pdf" rescue "Invoice.pdf"
+      pdf_filename = "#{label}-#{invoice.number.gsub(/[^\w]/,'')}.pdf" rescue "#{label}.pdf"
       haltr_headers 'PDF-Filename' => pdf_filename if pdf
       attachments[pdf_filename] = pdf
       haltr_headers 'PDF-MD5' => Digest::MD5.hexdigest(pdf)
     end
 
     if xml
-      xml_filename = "#{I18n.t(:label_invoice)}-#{invoice.number.gsub(/[^\w]/,'')}.xml" rescue "Invoice.xml"
+      xml_filename = "#{label}-#{invoice.number.gsub(/[^\w]/,'')}.xml" rescue "#{label}.xml"
       haltr_headers 'XML-Filename' => xml_filename if xml
       attachments[xml_filename] = xml
       haltr_headers 'XML-MD5' => Digest::MD5.hexdigest(xml)
     end
 
     recipients = invoice.recipient_emails.join(', ')
-    bcc  = invoice.company.email
+    bcc        = invoice.company.email
+    subj       = ""
+    @body      = ""
+    if @invoice.is_a?(Quote)
+      subj  = @invoice.company.quote_mail_subject(@invoice.client.language,@invoice)
+      @body = @invoice.company.quote_mail_body(@invoice.client.language,@invoice)
+    else
+      subj  = @invoice.company.invoice_mail_subject(@invoice.client.language,@invoice)
+      @body = @invoice.company.invoice_mail_body(@invoice.client.language,@invoice)
+    end
 
     mail :to   => recipients,
-      :subject => @invoice.company.mail_subject(@invoice.client.language,@invoice),
+      :subject => subj,
       :from    => from,
       :bcc     => bcc
   end
