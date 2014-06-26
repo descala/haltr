@@ -1,0 +1,9 @@
+<% content_for :header_tags do -%>
+  <%= javascript_include_tag "//www.google.com/jsapi" %>
+  <%= javascript_include_tag "chartkick", :plugin=>'haltr' %>
+<% end -%>
+
+<% haltr_projects.each do |project| %>
+  <h3><%=l('chart_invoice_status')%> (<%= project.company.name %>)</h4>
+<%= column_chart invoice_status_chart_path(project), library: {isStacked: true, vAxis: {title: "#{l(:invoice_total)} (€)" }} %>
+<% end %>

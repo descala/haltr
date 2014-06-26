@@ -3,5 +3,5 @@
   <%= javascript_include_tag "chartkick", :plugin=>'haltr' %>
 <% end -%>
 
-<h3><%=l('chart_invoice_totals')%></h3>
-<%= column_chart invoice_totals_chart_path %>
+<h3><%=l('chart_invoice_total')%></h3>
+<%= column_chart invoice_total_chart_path, library: {isStacked: true, vAxis: {title: "#{l(:invoice_total)} (€)" }} %>
