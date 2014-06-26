@@ -22,3 +22,6 @@ gem 'iban-tools', :git => 'https://github.com/descala/iban-tools.git', :branch =
 gem 'sepa_king',  :git => 'https://github.com/descala/sepa_king.git', :branch => 'master'
 gem 'delayed_job_active_record'
 gem 'render_anywhere', :require => false, :github => 'yappbox/render_anywhere', :branch => 'master'
+
+gem 'groupdate'
+gem 'chartkick'

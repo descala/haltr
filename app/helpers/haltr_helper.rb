@@ -119,4 +119,13 @@ module HaltrHelper
     iban.gsub(/(.)/,'\1 ').gsub(/(. . . .)/,'\1 ').gsub(/ /,'&nbsp;')
   end
 
+  def invoice_totals
+    user = User.current
+    projects = user.projects.collect do |project|
+      project if project.module_enabled? :haltr
+    end.compact
+    column_chart IssuedInvoice.group_by_month(:date ).sum('total_in_cents/100'),
+      library: {vAxis: {title: "#{l(:invoice_total)} (€) asdf" }}
+  end
+
 end

@@ -1,0 +1,7 @@
+<% content_for :header_tags do -%>
+  <%= javascript_include_tag "//www.google.com/jsapi" %>
+  <%= javascript_include_tag "chartkick", :plugin=>'haltr' %>
+<% end -%>
+
+<h3><%=l('chart_invoice_totals')%></h3>
+<%= column_chart invoice_totals_chart_path %>

@@ -105,3 +105,6 @@ resources :payments
 match '/companies/logo/:project_id' => 'companies#logo', :via => :get
 match '/companies/logo_by_taxcode/:taxcode' => 'companies#logo_by_taxcode', :via => :get
 resources :companies, :only => [:update]
+
+
+match '/charts/invoice_totals(/:project_id)' => 'charts#invoice_totals', :via => :get, :as => :invoice_totals_chart
