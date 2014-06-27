@@ -1,7 +1,4 @@
-<% content_for :header_tags do -%>
-  <%= javascript_include_tag "//www.google.com/jsapi" %>
-  <%= javascript_include_tag "chartkick", :plugin=>'haltr' %>
-<% end -%>
+<%= render :partial => 'common/chart_headers' %>
 
 <% haltr_projects.each do |project| %>
   <h3><%=l('chart_invoice_status')%> (<%= project.company.name %>)</h4>

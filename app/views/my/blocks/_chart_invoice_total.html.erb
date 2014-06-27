@@ -1,7 +1,4 @@
-<% content_for :header_tags do -%>
-  <%= javascript_include_tag "//www.google.com/jsapi" %>
-  <%= javascript_include_tag "chartkick", :plugin=>'haltr' %>
-<% end -%>
+<%= render :partial => 'common/chart_headers' %>
 
 <h3><%=l('chart_invoice_total')%></h3>
 <%= column_chart invoice_total_chart_path, library: {isStacked: true, vAxis: {title: "#{l(:invoice_total)} (€)" }} %>

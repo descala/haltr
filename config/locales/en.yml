@@ -498,3 +498,4 @@ en:
 
   chart_invoice_total: "Invoiced Amount"
   chart_invoice_status: "Invoiced Amount Status"
+  chart_top_clients: "Top invoiced clients"

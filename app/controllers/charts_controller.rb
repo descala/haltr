@@ -1,8 +1,8 @@
 class ChartsController < ApplicationController
   unloadable
 
-  before_filter :find_project_by_project_id, :only => [:invoice_status]
-  before_filter :authorize, :only => [:invoice_status]
+  before_filter :find_project_by_project_id, :only => [:invoice_status,:top_clients]
+  before_filter :authorize, :only => [:invoice_status,:top_clients]
   include ChartsHelper
 
   def invoice_total
@@ -27,6 +27,11 @@ class ChartsController < ApplicationController
     # chart_data.each do |state_hash|
     #   .... l("state_#{state_hash['name']}")
     # end
+    render json: chart_data.chart_json
+  end
+
+  def top_clients
+    chart_data = @project.issued_invoices.where(["date > ?", 5.years.ago]).group(:state).group_by_month(:date, format: "%Y/%m").sum('total_in_cents/100')
     render json: chart_data.chart_json
   end
 
