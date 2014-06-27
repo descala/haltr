@@ -2,9 +2,17 @@ module ChartsHelper
 
   def haltr_projects
     user = User.current
-    user.projects.collect do |project|
-      project if project.module_enabled? :haltr and user.allowed_to?(:general_use, project)
-    end.compact
+    projs = []
+    user.projects.each do |project|
+      if project.module_enabled? :haltr and user.allowed_to?(:general_use, project) and project.company
+        if projs.size >= 5
+          flash.now[:error] = "Too many projects to display (showing 5)"
+          break
+        end
+        projs << project
+      end
+    end
+    projs
   end
 
 end
