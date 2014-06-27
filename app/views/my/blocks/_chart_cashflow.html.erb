@@ -1,0 +1,28 @@
+<% haltr_projects.each do |project| -%>
+  <%
+      due_invoices = invoices_past_due(project)
+      due_invoices_sum = Money.new(due_invoices.sum('total_in_cents'),project.company.currency)
+      invoices = invoices_on_schedule(project)
+      invoices_sum = Money.new(invoices.sum('total_in_cents'),project.company.currency)
+  -%>
+  <fieldset>
+    <legend><h3><%= project.company.name %> - <%= l(:chart_cashflow) %></h3></legend>
+    <table class="cashflow">
+      <tr>
+        <th><%= l(:past_due) %>:</th>
+        <td class="past_due"><%=h money(due_invoices_sum) %></td>
+        <td>(<%= link_to("#{due_invoices.size} #{l(:label_invoice_plural)}", project_invoices_path(:project_id=>project, :invoices => due_invoices.collect {|i| i.id }))-%>)</td>
+      </tr>
+      <tr>
+        <th><%= l(:on_schedule) %>:</th>
+        <td class="on_schedule"><%=h money(invoices_sum) %></td>
+        <td>(<%= link_to("#{invoices.size} #{l(:label_invoice_plural)}", project_invoices_path(:project_id=>project, :invoices => invoices.collect {|i| i.id }))-%>)</td>
+      </tr>
+      <tr>
+        <th></th>
+        <td class="total"><%=h money(due_invoices_sum+invoices_sum)%></td>
+        <td></td>
+      </tr>
+    </table>
+  </fieldset>
+<% end -%>

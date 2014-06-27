@@ -15,4 +15,12 @@ module ChartsHelper
     projs
   end
 
+  def invoices_past_due(project)
+    project.issued_invoices.where(["state != 'closed' and due_date < ?", Date.today])
+  end
+
+  def invoices_on_schedule(project)
+    project.issued_invoices.where(["state != 'closed' and due_date >= ?", Date.today])
+  end
+
 end

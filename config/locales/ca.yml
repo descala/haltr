@@ -505,3 +505,6 @@ ca:
   send_after_import: "Enviar després d'importar"
   template_too_old: "La plantilla de %{client} és massa antiga (massa factures a generar)"
   quote_acceptance: "Acceptació del pressupost"
+  chart_cashflow: "Moviments de caixa"
+  past_due: "Passant data de venciment"
+  on_schedule: "Dintre de termini"

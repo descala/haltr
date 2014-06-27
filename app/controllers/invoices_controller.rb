@@ -43,6 +43,10 @@ class InvoicesController < ApplicationController
 
     invoices = @project.issued_invoices
 
+    if params[:invoices]
+      invoices = invoices.where(["id in (?)",params[:invoices]])
+    end
+
     unless params["state_all"] == "1"
       statelist=[]
       %w(new sending sent error closed discarded).each do |state|
