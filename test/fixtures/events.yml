@@ -1,12 +1,70 @@
-one:
-  id: 1
-  name: MyString
-  info: MyText
-  user_id: 1
-  filename: MyString
-two:
-  id: 2
-  name: MyString
-  info: MyText
-  user_id: 1
-  filename: MyString
+invoices_001_edited:
+  name: edited
+  user_id: 2
+  filename: nil
+  invoice_id: 1
+invoices_001_queue:
+  name: queue
+  user_id: 2
+  invoice_id: 1
+invoices_001_manual_send:
+  name: manual_send
+  user_id: 2
+  invoice_id: 1
+error:
+  name: error
+  user_id: 2
+  invoice_id: 1
+  type: HiddenEvent
+  info: |
+    ---
+    :backtrace:
+      - This is a backtrace ...
+      - Auch
+error_sending:
+  name: error_sending
+  user_id: 2
+  invoice_id: 1
+  type: EventError
+with_url:
+  name: success_sending
+  user_id: 2
+  invoice_id: 1
+  type: EventWithUrl
+  info: |
+    ---
+    :notes: These are the notes added to the event
+with_url_face:
+  name: success_sending
+  user_id: 2
+  invoice_id: 1
+  type: EventWithUrlFace
+  info: |
+    ---
+    :notes: These are the notes added to the event
+with_mail:
+  name: success_sending
+  user_id: 2
+  invoice_id: 1
+  type: EventWithMail
+  info: |
+    ---
+    :notes: These are the notes added to the event. The text of the email
+with_file:
+  name: success_sending
+  user_id: 2
+  invoice_id: 1
+  type: EventWithFile
+  info: |
+    ---
+    :notes: Name Of Recipient
+    :class_for_send: send_pdf_by_mail
+  filename: readme.txt
+  file: This is the file content
+  content_type: plain/text
+accept_notification:
+  name: accept_notification
+  user_id: nil
+  invoice_id: 1
+  type: Event
+

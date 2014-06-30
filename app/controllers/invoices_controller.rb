@@ -377,6 +377,8 @@ class InvoicesController < ApplicationController
   rescue Exception => e
     # e.backtrace does not fit in session leading to
     #   ActionController::Session::CookieStore::CookieOverflow
+    logger.debug e
+    logger.debug e.backtrace
     flash[:error] = "#{l(:error_invoice_not_sent, :num=>@invoice.number)}: #{e.message}"
     #raise e if Rails.env == "development"
   ensure

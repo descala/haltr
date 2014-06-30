@@ -185,3 +185,9 @@ table#invoice_lines {
 .ribbon-error, .ribbon-discarded, .ribbon-refused {
   background-color: red;
 }
+.haltr_event_error {
+  color: darkred;
+}
+.haltr_hidden_event {
+  color:#B40404;
+}

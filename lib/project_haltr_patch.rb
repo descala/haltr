@@ -17,6 +17,7 @@ module ProjectHaltrPatch
       has_many :received_invoices
       has_many :payments
       has_many :draft_invoices
+      has_many :events, :through => :invoices
     end
  
   end

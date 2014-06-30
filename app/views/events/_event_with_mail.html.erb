@@ -1,4 +1,4 @@
-<li><strong><%=format_time e.created_at%></strong> - <%=h e %><%= " - ( #{link_to_function(l(:view_mail), "$('#event_#{e.id}').show();") } )".html_safe unless e.notes.blank? %></li>
+<%=h e %> <%= "( #{link_to_function(l(:view_mail), "$('#event_#{e.id}').show();") } )".html_safe unless e.notes.blank? %>
 <% unless e.notes.blank? -%>
   <div id="event_<%=e.id%>" style="display:none;">
     <div class="mail_box">
@@ -11,7 +11,7 @@
                    when /_issued_invoice_paid_mail/   then :issued_invoice_paid
                    else e.name
                    end -%>
-        <%= t(label, :num => @invoice.number, :company => @invoice.company.name)%><br /><br />
+        <%= t(label, :num => e.invoice.number, :company => e.invoice.company.name)%><br /><br />
         <%= simple_format e.notes %><br />
         <%= link_to_function(l(:back), "$('#event_#{e.id}').hide();") %>
       </div>

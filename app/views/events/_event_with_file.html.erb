@@ -1,4 +1,4 @@
-<li><strong><%=format_time e.created_at%></strong> - <%=h e %>
+<%=h e %>
 <% unless e.notes.blank? -%>
   ( <%= h l(e.class_for_send, :emails => e.notes) %> )
 <% end -%>

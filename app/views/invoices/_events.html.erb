@@ -1,16 +1,18 @@
-<% if @invoice.events.any? -%>
+<% if @invoice.visible_events.any? -%>
   <!--missatge info-->
   <div class="seccio grup">
     <div class="col span-2-de-2">
       <div class="formee-msg-info invoice-events">
-        <h3><%=h l(:events)%></h3>
+        <h3 id="haltr_events"><%=h l(:events)%></h3>
         <ul>
-          <% @invoice.events.reverse.each do |e| -%>
+          <% @invoice.visible_events.reverse.each do |e| -%>
+            <li class="haltr_<%= e.type.underscore %>"><strong><%=format_time e.created_at%></strong> -
             <% begin -%>
               <%= render :partial => "events/#{e.type.underscore}", :locals => {:e=>e} %>
             <% rescue ActionView::MissingTemplate -%>
               <%= render :partial => "events/event", :locals => {:e=>e} %>
             <% end -%>
+            </li>
           <% end -%>
         </ul>
       </div>

@@ -1,0 +1,28 @@
+<% haltr_projects.each do |project| -%>
+  <%
+    events = project.events.last(10)
+    @project = project
+  -%>
+  <fieldset>
+    <legend><h3><%= l(:chart_events) %><%= " (#{project.company.name})" if haltr_projects.size > 1 %></h3></legend>
+    <% if events.any? %>
+      <ul>
+        <% events.each do |e| %>
+          <li>
+          <%=format_time e.created_at%> -
+          <%= link_to( "#{l(:label_invoice)} #{e.invoice.number}", {:controller=>'invoices',:action=>'show',:id=>e.invoice,:anchor=>'haltr_events'}) -%>
+          <% begin -%>
+            <%= render :partial => "events/#{e.type.underscore}", :locals => {:e=>e} %>
+          <% rescue ActionView::MissingTemplate -%>
+            <%= render :partial => "events/event", :locals => {:e=>e} %>
+          <% end -%>
+          </li>
+        <% end -%>
+      </ul>
+    <% else -%>
+      <p></p>
+    <% end -%>
+  </fieldset>
+<% end -%>
+<% @project = nil %>
+

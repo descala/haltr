@@ -652,6 +652,14 @@ _INV
     project.invoices.last(:conditions=>["id < ? and type = ?", self.id, self.type])
   end
 
+  def visible_events
+    if User.current.admin? or Rails.env == "development"
+      events
+    else
+      events.where("type!='HiddenEvent'")
+    end
+  end
+
   protected
 
   def increment_counter
