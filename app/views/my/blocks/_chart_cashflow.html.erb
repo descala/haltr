@@ -6,7 +6,7 @@
       invoices_sum = Money.new(invoices.sum('total_in_cents'),project.company.currency)
   -%>
   <fieldset>
-    <legend><h3><%= project.company.name %> - <%= l(:chart_cashflow) %></h3></legend>
+    <legend><h3><%= l(:chart_cashflow) %><%= " (#{project.company.name})" if haltr_projects.size > 1 %></h3></legend>
     <table class="cashflow">
       <tr>
         <th><%= l(:past_due) %>:</th>
