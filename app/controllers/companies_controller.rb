@@ -42,7 +42,7 @@ class CompaniesController < ApplicationController
   end
 
   def bank_info
-    flash[:info] = l(:private_fields_info)
+    flash.now[:info] = l(:private_fields_info)
     @company.bank_infos.build if @company.bank_infos.empty?
     @partial='bank_info'
     render :action => 'edit'
