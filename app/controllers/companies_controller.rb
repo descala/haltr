@@ -1,8 +1,11 @@
 class CompaniesController < ApplicationController
 
   unloadable
-  menu_item Haltr::MenuItem.new(:companies,:my_company)
   menu_item Haltr::MenuItem.new(:companies,:linked_to_mine), :only => [:linked_to_mine]
+  menu_item Haltr::MenuItem.new(:my_company,:my_company_level2), :only => [:my_company]
+  menu_item Haltr::MenuItem.new(:my_company,:bank_info), :only => [:bank_info]
+  menu_item Haltr::MenuItem.new(:my_company,:connections), :only => [:connections]
+  menu_item Haltr::MenuItem.new(:my_company,:customization), :only => [:customization]
   layout 'haltr'
   helper :haltr
 
@@ -10,13 +13,17 @@ class CompaniesController < ApplicationController
   include SortHelper
   include Haltr::TaxHelper
 
-  before_filter :find_project_by_project_id, :only => [:my_company,:linked_to_mine,:logo,:add_bank_info,:check_iban]
+  before_filter :find_project_by_project_id,
+    :only => [:my_company,:bank_info,:connections,:customization,
+              :linked_to_mine,:logo,:add_bank_info,:check_iban]
   before_filter :find_company, :only => [:update]
   before_filter :set_iso_countries_language
   before_filter :authorize, :except => [:logo,:logo_by_taxcode]
   skip_before_filter :check_if_login_required, :only => [:logo,:logo_by_taxcode]
+  before_filter :check_for_company,
+    :only => [:my_company,:bank_info,:connections,:customization]
 
-  def my_company
+  def check_for_company
     if @project.company.nil?
       user_mail = User.find_by_project_id(@project.id).mail rescue ""
       # company should be already created by lib/company_filter
@@ -27,7 +34,30 @@ class CompaniesController < ApplicationController
     else
       @company = @project.company
     end
+  end
+
+  def my_company
+    @partial='form'
+    render :action => 'edit'
+  end
+
+  def bank_info
+    flash[:info] = l(:private_fields_info)
     @company.bank_infos.build if @company.bank_infos.empty?
+    @partial='bank_info'
+    render :action => 'edit'
+  end
+
+  def connections
+    @partial='connections'
+    render :action => 'edit'
+  end
+
+  def customization
+    unless User.current.admin? or User.current.allowed_to?(:email_customization, @project)
+      flash.now[:warning] = l(:notice_not_authorized)
+    end
+    @partial='customization'
     render :action => 'edit'
   end
 
@@ -41,6 +71,7 @@ class CompaniesController < ApplicationController
   end
 
   def update
+    @partial = params[:partial] || 'form'
     # check if user trying to add multiple bank_infos without role
     unless User.current.allowed_to?(:add_multiple_bank_infos,@project)
       if params[:company][:bank_infos_attributes] and 
@@ -51,10 +82,11 @@ class CompaniesController < ApplicationController
     end
     # check if user trying to customize emails without role
     unless User.current.admin? or User.current.allowed_to?(:email_customization, @project)
-      params[:company].delete :invoice_mail_subject
-      params[:company].delete :invoice_mail_body
-      params[:company].delete :quote_mail_subject
-      params[:company].delete :quote_mail_body
+      # keys come with lang (_ca,_en..) so remove last 3 chars
+      if (params[:company].keys.collect {|k| k[0...-3]} & %w(invoice_mail_body quote_mail_subject quote_mail_body)).any?
+        render_403
+        return
+      end
     end
     if @company.update_attributes(params[:company])
       unless @company.taxes.collect {|t| t unless t.marked_for_destruction? }.compact.any?
@@ -82,7 +114,8 @@ class CompaniesController < ApplicationController
         render_attachment_warning_if_needed(@company)
       end
       flash[:notice] = l(:notice_successful_update) 
-      redirect_to :action => 'my_company', :project_id => @project
+      redirect_to :action => @partial, :project_id => @project
+
     else
       @company.bank_infos.build if @company.bank_infos.empty?
       render :action => 'edit'

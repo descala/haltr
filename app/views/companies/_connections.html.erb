@@ -1,0 +1,43 @@
+<% if User.current.admin? or User.current.allowed_to?(:use_imap_draft, @project) -%>
+  <fieldset class="tabular box">
+    <legend>IMAP</legend>
+    <div class="seccio grup">
+      <p class="col span-2-de-6">
+      <%=f.text_field :imap_host%>
+      </p>
+      <p class="col span-2-de-6">
+      <%=f.text_field :imap_port%>
+      </p>
+      <p class="col span-2-de-6">
+      <%=f.check_box :imap_ssl%>&nbsp;
+      </p>
+    </div>
+    <div class="seccio grup">
+      <p class="col span-2-de-6">
+      <%=f.text_field :imap_from%>
+      </p>
+      <p class="col span-2-de-6">
+      <%=f.text_field :imap_username%>
+      </p>
+      <p class="col span-2-de-6">
+      <%=f.text_field :imap_password%>
+      </p>
+    </div>
+  </fieldset>
+<% end -%>
+
+<% if User.current.admin? or User.current.allowed_to?(:send_peppol, @project) -%>
+  <fieldset class="tabular box">
+    <legend>PEPPOL</legend>
+    <div class="seccio grup">
+      <p class="col span-1-de-2">
+      <%= f.select :schemeid, Peppol::SCHEMEIDS %>
+      </p>
+      <p class="col span-1-de-2">
+      <%= f.text_field :endpointid %>
+      </p>
+    </div>
+  </fieldset>
+<% end -%>
+
+<%= call_hook(:company_connections_form_end) %>
