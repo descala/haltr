@@ -1,6 +1,6 @@
 <%= render :partial => 'common/chart_headers' %>
 
 <% haltr_projects.each do |project| %>
-  <h3><%=l('chart_top_clients')%> (<%= project.company.name %>)</h4>
+  <h3><%=l('chart_top_clients')%><%= " (#{project.company.name})" if haltr_projects.size > 1 %></h3>
 <%= column_chart top_clients_chart_path(project), library: {isStacked: true, vAxis: {title: "#{l(:invoice_total)} (€)" }} %>
 <% end %>
