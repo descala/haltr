@@ -1,10 +1,19 @@
+<%= error_messages_for 'company' %>
+<%= javascript_include_tag 'company', :plugin => 'haltr' %>
+
 <!--formulari-->
 <div class="seccio grup">
   <div class="col span-2-de-2">
     <%= labelled_form_for :company, @company,
       :url => { :action => 'update', :id => @company },
       :html => {:method => :put, :multipart => true, :class => 'formee' } do |f| %>
-      <%= render :partial => 'form', :locals => { :f => f } %>
+      <%= begin
+            render(:partial=>@partial, :locals=>{ :f=>f })
+          rescue ActionView::MissingTemplate
+            render(:partial=>'form', :locals=>{ :f=>f })
+          end
+        %>
+      <%= hidden_field_tag :partial, @partial %>
       <%= submit_tag l(:button_save) %>
     <% end %>
   </div>
@@ -12,7 +21,7 @@
 <!--final formulari-->
 
 <% content_for :sidebar do %>
-  <%= render_menu :companies_menu, @project %>
+  <%= render_menu :my_company_menu, @project %>
 <% end %>
 
 <% content_for :header_tags do %>

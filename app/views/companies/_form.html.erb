@@ -1,249 +1,116 @@
-<%= error_messages_for 'company' %>
-<%= javascript_include_tag 'company', :plugin => 'haltr' %>
+<div class="tabular box">
 
-<fieldset class="tabular box">
-  <legend><%=l(:label_my_company)%></legend>
   <div class="seccio grup">
     <p class="col span-1-de-2">
     <%= f.text_field :taxcode, :required => true %>
     <%= call_hook(:company_form_taxcode) %>
     </p>
     <p class="col span-1-de-2">
-      <%= f.text_field :company_identifier %>
+    <%= f.text_field :company_identifier %>
     </p>
   </div>
   <div class="seccio grup">
     <p class="col span-1-de-2">
-      <%= f.text_field :name, :required => true %>
+    <%= f.text_field :name, :required => true %>
     </p>
     <p class="col span-1-de-2">
-      <%= f.text_field :email, :required => true %>
+    <%= f.text_field :email, :required => true %>
     </p>
   </div>
-  <div class="seccio grup">
-    <p class="col span-2-de-2">
-      <%= f.text_field :address %>
-    </p>
-  </div>
-  <div class="seccio grup">
-    <p class="col span-1-de-2">
-      <%= f.text_field :city %>
-    </p>
-    <p class="col span-1-de-2">
-      <%= f.text_field :postalcode, :required => true %>
-    </p>
-  </div>
-  <div class="seccio grup">
-    <p class="col span-1-de-2">
-      <%= f.text_field :province %>
-    </p>
-    <p class="col span-1-de-2">
-      <%= f.label_for_field :country, :required => true %><%= f.iso_country_select :country, [:es] %>
-    </p>
-  </div>
-  <div class="seccio grup">
-    <p class="col span-1-de-2">
-      <%= f.text_field :website %>
-    </p>
-    <p class="col span-1-de-2">
-      <% if @company.invoice_format.nil? or ExportChannels.for_select(@project).collect {|v| v.last }.include? @company.invoice_format -%>
-        <%= f.select :invoice_format, ExportChannels.for_select(@project) %><%= help :help_invoice_format %>
-      <% else -%>
-        <%= f.select :invoice_format, ExportChannels.for_select(@project) %> <%= I18n.t(@company.invoice_format)%><%= help :help_invoice_format %>
-      <% end -%>
-    </p>
-  </div>
-  <div class="seccio grup">
-    <p class="col span-1-de-2">
-      <%= f.select :currency, currency_options_for_select, :required => true %>
-    </p>
-    <p class="col span-1-de-2">
-      <%=label_tag('attachments[1][file]', l(:logo))%><%= file_field_tag 'attachments[1][file]', :size => 30, :id => nil, :accept => 'image/png,image/gif,image/jpeg' -%>
-      <% if @company.attachments.size > 0 -%>
-        <br />
-        <br />
-        <%= image_tag "/attachments/#{@company.attachments.first.id}/#{@company.attachments.first.filename}" -%>
-      <% end -%>
-    </p>
-  </div>
-</fieldset>
-
-<fieldset class="tabular box">
-  <legend><%=l(:field_company_public)%></legend>
-  <div class="seccio grup">
-    <p class="col span-1-de-3">
-      <label><%= f.radio_button :public, :public %><%=l(:public)%></label>
-    </p>
-    <p class="col span-1-de-3">
-      <label><%= f.radio_button :public, :semipublic %><%=l(:semipublic)%></label>
-    </p>
-    <p class="col span-1-de-3">
-      <label><%= f.radio_button :public, :private %><%=l(:private)%></label>
-    </p>
-  </div>
-</fieldset>
-
-<fieldset class="box">
-  <legend><%=l(:bank_info)%></legend>
   <div class="seccio grup">
     <p class="col span-2-de-2">
-      <p><%= I18n.t :private_fields_info %></p>
+    <%= f.text_field :address %>
     </p>
   </div>
-  <div id="bank_infos">
-    <div class="col span-1-de-5">
-    <%= f.label_for_field :name %>
-    </div>
-    <% if @company.bank_infos.reject {|bi| bi.bank_account.blank? }.present? -%>
-      <div class="col span-1-de-5">
-      <%= f.label_for_field :bank_account %>
+  <div class="seccio grup">
+    <p class="col span-1-de-2">
+    <%= f.text_field :city %>
+    </p>
+    <p class="col span-1-de-2">
+    <%= f.text_field :postalcode, :required => true %>
+    </p>
+  </div>
+  <div class="seccio grup">
+    <p class="col span-1-de-2">
+    <%= f.text_field :province %>
+    </p>
+    <p class="col span-1-de-2">
+    <%= f.label_for_field :country, :required => true %><%= f.iso_country_select :country, [:es] %>
+    </p>
+  </div>
+  <div class="seccio grup">
+    <p class="col span-1-de-2">
+    <%= f.text_field :website %>
+    </p>
+    <p class="col span-1-de-2">
+    <% if @company.invoice_format.nil? or ExportChannels.for_select(@project).collect {|v| v.last }.include? @company.invoice_format -%>
+      <%= f.select :invoice_format, ExportChannels.for_select(@project) %><%= help :help_invoice_format %>
+    <% else -%>
+      <%= f.select :invoice_format, ExportChannels.for_select(@project) %> <%= I18n.t(@company.invoice_format)%><%= help :help_invoice_format %>
+    <% end -%>
+    </p>
+  </div>
+  <div class="seccio grup">
+    <p class="col span-1-de-2">
+    <%= f.select :currency, currency_options_for_select, :required => true %>
+    </p>
+    <p class="col span-1-de-2">
+    <%=label_tag('attachments[1][file]', l(:logo))%><%= file_field_tag 'attachments[1][file]', :size => 30, :id => nil, :accept => 'image/png,image/gif,image/jpeg' -%>
+    <% if @company.attachments.size > 0 -%>
+      <br />
+      <br />
+      <%= image_tag "/attachments/#{@company.attachments.first.id}/#{@company.attachments.first.filename}" -%>
+    <% end -%>
+    </p>
+  </div>
+
+  <fieldset class="tabular box">
+    <legend><%=l(:label_tax_plural)%></legend>
+    <div class="seccio grup">
+      <div class="col span-2-de-2">
+        <p><%= l(:info_default_taxes) %></p>
       </div>
-    <% end -%>
-    <div class="col span-2-de-5">
-      <%= f.label_for_field :iban %>
     </div>
-    <div class="col span-1-de-5">
-    <%= f.label_for_field :bic %>
+    <div class="seccio grup">
+      <table id="taxes">
+        <tr>
+          <th class="tax_name"><%= l(:field_name) %></th>
+          <th class="tax_percent">%</th>
+          <th class="tax_default"><%= l(:default) %></th>
+          <th class="tax_category"><%= l(:field_category) %></th>
+          <th class="tax_remove"></th>
+          <th class="tax_exempt"><%= l(:field_comment) %></th>
+        </tr>
+        <%= f.fields_for :taxes do |tax_form| %>
+          <%= render :partial => 'companies/tax_fields', :locals => { :f => tax_form } %>
+        <% end %>
+      </table>
     </div>
-
-    <%= f.fields_for :bank_infos do |bank_info_form| %>
-      <%=render :partial => 'companies/bank_info_fields', :locals => {:f => bank_info_form}%>
-    <% end -%>
-  </div>
-  <div class="seccio grup">
-    <p class="col span-2-de-2">
-      <!-- cocoon -->
-      <span class="mes">
-        <% if User.current.allowed_to?(:add_multiple_bank_infos,@project) -%>
-          <%= link_to_add_association l(:button_add_bank_info), f, :bank_infos, 'data-association-insertion-node' => '#bank_infos', 'data-association-insertion-method' => 'append' %>
-        <% else -%>
-          <%= link_to l(:button_add_bank_info), project_add_bank_info_path(:project_id=>@project), :confirm=>l(:page_redirecting_will_lose_unsaved_data) %>
-        <% end -%>
-      </span>
-    </p>
-  </div>
-</fieldset>
-
-<fieldset class="tabular box">
-  <legend><%=l(:label_tax_plural)%></legend>
-  <div class="seccio grup">
-    <div class="col span-2-de-2">
-      <p><%= l(:info_default_taxes) %></p>
-    </div>
-  </div>
-  <div class="seccio grup">
-    <table id="taxes">
-      <tr>
-        <th class="tax_name"><%= l(:field_name) %></th>
-        <th class="tax_percent">%</th>
-        <th class="tax_default"><%= l(:default) %></th>
-        <th class="tax_category"><%= l(:field_category) %></th>
-        <th class="tax_remove"></th>
-        <th class="tax_exempt"><%= l(:field_comment) %></th>
-      </tr>
-      <%= f.fields_for :taxes do |tax_form| %>
-        <%= render :partial => 'companies/tax_fields', :locals => { :f => tax_form } %>
-      <% end %>
-    </table>
-  </div>
-  <div class="seccio grup">
-    <p class="col span-2-de-2">
+    <div class="seccio grup">
+      <p class="col span-2-de-2">
       <!-- cocoon -->
       <span class="mes">
         <%= link_to_add_association l(:button_add_tax), f, :taxes, 'data-association-insertion-node' => '#taxes', 'data-association-insertion-method' => 'append' %>
       </span>
-    </p>
-  </div>
-</fieldset>
-
-<% if User.current.admin? or User.current.allowed_to?(:send_peppol, @project) -%>
-  <fieldset class="tabular box">
-    <legend>PEPPOL</legend>
-    <div class="seccio grup">
-      <p class="col span-1-de-2">
-        <%= f.select :schemeid, Peppol::SCHEMEIDS %>
-      </p>
-      <p class="col span-1-de-2">
-        <%= f.text_field :endpointid %>
       </p>
     </div>
   </fieldset>
-<% end -%>
 
-<% if User.current.admin? or User.current.allowed_to?(:use_imap_draft, @project) -%>
-  <fieldset class="tabular box">
-    <legend>IMAP</legend>
+  <fieldset>
+    <legend><%=l(:field_company_public)%></legend>
     <div class="seccio grup">
-      <p class="col span-2-de-6">
-        <%=f.text_field :imap_host%>
+      <p class="col span-1-de-3">
+      <label><%= f.radio_button :public, :public %><%=l(:public)%></label>
       </p>
-      <p class="col span-2-de-6">
-        <%=f.text_field :imap_port%>
+      <p class="col span-1-de-3">
+      <label><%= f.radio_button :public, :semipublic %><%=l(:semipublic)%></label>
       </p>
-      <p class="col span-2-de-6">
-        <%=f.check_box :imap_ssl%>&nbsp;
-      </p>
-    </div>
-    <div class="seccio grup">
-      <p class="col span-2-de-6">
-        <%=f.text_field :imap_from%>
-      </p>
-      <p class="col span-2-de-6">
-        <%=f.text_field :imap_username%>
-      </p>
-      <p class="col span-2-de-6">
-        <%=f.text_field :imap_password%>
+      <p class="col span-1-de-3">
+      <label><%= f.radio_button :public, :private %><%=l(:private)%></label>
       </p>
     </div>
   </fieldset>
-<% end -%>
 
-<% if User.current.admin? or User.current.allowed_to?(:email_customization, @project) -%>
-  <fieldset class="tabular box">
-    <legend><%= l(:email_customization) %></legend>
-    <fieldset style="border: none;">
-      <legend><%= l(:label_invoice_plural) %></legend>
-      <%= select_tag :invoice_mail_customization_lang,
-        options_for_select(valid_languages.reject {|l| !(l =~ /^[a-z][a-z][\-A-Z]{0,3}$/)}.collect {|l| [I18n.t(:general_lang_name, :locale=>l),l]}) %>
-      <% valid_languages.reject {|l| !(l =~ /^[a-z][a-z][\-A-Z]{0,3}$/)}.each do |lang| -%>
-        <div id="invoice_mail_customization_<%=lang%>" class="invoice_mail_customization" style="display: none;">
-          <div class="seccio grup">
-            <p class="col span-6-de-6">
-            <%=f.text_field "invoice_mail_subject_#{lang}", :label => :field_mail_subject%>
-            </p>
-          </div>
-          <div class="seccio grup">
-            <p class="col span-6-de-6">
-            <%=f.text_area "invoice_mail_body_#{lang}", :label => :field_mail_body%>
-            </p>
-          </div>
-        </div>
-      <% end -%>
-    </fieldset>
-    <fieldset style="border: none;">
-      <legend><%= l(:label_quote_plural) %></legend>
-      <%= select_tag :quote_mail_customization_lang,
-        options_for_select(valid_languages.reject {|l| !(l =~ /^[a-z][a-z][\-A-Z]{0,3}$/)}.collect {|l| [I18n.t(:general_lang_name, :locale=>l),l]}) %>
-      <% valid_languages.reject {|l| !(l =~ /^[a-z][a-z][\-A-Z]{0,3}$/)}.each do |lang| -%>
-        <div id="quote_mail_customization_<%=lang%>" class="quote_mail_customization" style="display: none;">
-          <div class="seccio grup">
-            <p class="col span-6-de-6">
-            <%=f.text_field "quote_mail_subject_#{lang}", :label => :field_mail_subject%>
-            </p>
-          </div>
-          <div class="seccio grup">
-            <p class="col span-6-de-6">
-            <%=f.text_area "quote_mail_body_#{lang}", :label => :field_mail_body%>
-            </p>
-          </div>
-        </div>
-      <% end -%>
-    </fieldset>
-  </fieldset>
-<% end -%>
+  <%= call_hook(:company_form_end) %>
 
-<%= call_hook(:company_form_end) %>
-
-<% content_for :header_tags do -%>
-  <%= javascript_include_tag('iban',:plugin=>'haltr')%>
-<% end -%>
+</div>
