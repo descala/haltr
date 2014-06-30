@@ -91,6 +91,7 @@ ca:
   receive_payment: Pagament
   make_payment: Efectuar pagament
   label_paid: Pagat
+  label_not_paid: No pagat
   label_tax: Impost
   label_tax_plural: Impostos
   button_add_tax: Afegir un nou impost
@@ -505,7 +506,11 @@ ca:
   send_after_import: "Enviar després d'importar"
   template_too_old: "La plantilla de %{client} és massa antiga (massa factures a generar)"
   quote_acceptance: "Acceptació del pressupost"
+  chart_invoice_total: "Total facturat"
+  chart_invoice_status: "Total facturat segons l'estat"
+  chart_top_clients: "Clients més facturats"
   chart_cashflow: "Moviments de caixa"
+  chart_events: "Últims events"
   past_due: "Passant data de venciment"
   on_schedule: "Dintre de termini"
   label_fiscal_data: "Dades fiscals"

@@ -1,3 +1,4 @@
+<%= render :partial => 'common/chart_headers' %>
 <% haltr_projects.each do |project| -%>
   <%
       due_invoices = invoices_past_due(project)
@@ -19,9 +20,13 @@
         <td><%= link_to("#{invoices.size} #{l(:label_invoice_plural)}", project_invoices_path(:project_id=>project, :invoices => invoices.collect {|i| i.id })) if invoices.size > 0 -%></td>
       </tr>
       <tr>
-        <th></th>
+        <th/>
+        <td colspan="3"><hr/></td>
+      </tr>
+      <tr>
+        <th><%= l(:label_total) %>:</th>
         <td class="total"><%=h money(due_invoices_sum+invoices_sum)%></td>
-        <td></td>
+        <td><%= l(:label_not_paid) %></td>
       </tr>
     </table>
   </fieldset>

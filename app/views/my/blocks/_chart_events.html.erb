@@ -1,3 +1,4 @@
+<%= render :partial => 'common/chart_headers' %>
 <% haltr_projects.each do |project| -%>
   <%
     events = project.events.last(10)
