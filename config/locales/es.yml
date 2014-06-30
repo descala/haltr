@@ -509,3 +509,14 @@ es:
   send_after_import: "Enviar después de importar"
   template_too_old: "La plantilla para %{client} es demasiado antigua (demasiadas facturas a generar)"
   quote_acceptance: "Aceptación del presupuesto"
+  chart_invoice_total: Total facturado
+  chart_invoice_status: Total facturado según estado de la factura
+  chart_top_clients: Clientes mas facturados
+  chart_cashflow: Flujo de caja
+  chart_events: Ultimos eventos
+  past_due: Vencidas
+  on_schedule: Dentro de plazo
+  label_fiscal_data: Datos fiscales
+  label_connections: Conexiones
+  label_customization: Personalización
+  label_not_paid: No pagado

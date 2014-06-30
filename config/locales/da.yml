@@ -497,3 +497,14 @@ da:
   send_after_import: "Send after import"
   template_too_old: "Template for %{client} too old (too much invoices to generate)"
   quote_acceptance: "Acceptance of quote"
+  chart_invoice_total: Invoiced Amount
+  chart_invoice_status: Invoiced Amount Status
+  chart_top_clients: Top invoiced clients
+  chart_cashflow: Cash flow
+  chart_events: Latest events
+  past_due: Passant data de venciment
+  on_schedule: Dintre de termini
+  label_fiscal_data: Dades fiscals
+  label_connections: Connexions
+  label_customization: Personalització
+  label_not_paid: Not paid

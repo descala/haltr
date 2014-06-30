@@ -3,16 +3,19 @@
 
 require "yaml"
 
-ca = YAML.load(File.read "config/locales/ca.yml")["ca"]
-es = YAML.load(File.read "config/locales/es.yml")["es"]
-en = YAML.load(File.read "config/locales/en.yml")["en"]
-da = YAML.load(File.read "config/locales/da.yml")["da"]
-fr = YAML.load(File.read "config/locales/fr.yml")["fr"]
-sv = YAML.load(File.read "config/locales/sv.yml")["sv"]
+langs = %w(ca da en es fr nl sv)
 
-%w(es en da fr sv).each do |lang|
-  puts "comprovant #{lang}"
-  ca.keys.each do |k|
-    puts "falta traduccio de #{k} a #{lang}" unless eval(lang).keys.include? k
+base = ARGV[0] || 'ca'
+puts "base is #{base}"
+base_translation = YAML.load(File.read "config/locales/#{base}.yml")[base]
+
+langs.each do |lang|
+  next if lang == base
+  translation = YAML.load(File.read "config/locales/#{lang}.yml")[lang]
+  puts "#"
+  puts "cat >> config/locales/#{lang}.yml <<EOF"
+  base_translation.each do |k,v|
+    puts "  #{k}: #{v}" unless translation.keys.include? k
   end
+  puts "EOF"
 end

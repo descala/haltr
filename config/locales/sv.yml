@@ -495,3 +495,14 @@ sv:
   send_after_import: "Send after import"
   template_too_old: "Template for %{client} too old (too much invoices to generate)"
   quote_acceptance: "Acceptance of quote"
+  chart_invoice_total: Invoiced Amount
+  chart_invoice_status: Invoiced Amount Status
+  chart_top_clients: Top invoiced clients
+  chart_cashflow: Cash flow
+  chart_events: Latest events
+  past_due: Past due
+  on_schedule: On schedule
+  label_fiscal_data: Discal data
+  label_connections: Connections
+  label_customization: Customization
+  label_not_paid: Not paid

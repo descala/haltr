@@ -1,4 +1,4 @@
-en:
+nl:
 
   number:
     # Used in number_to_tax_percent()
@@ -487,3 +487,21 @@ en:
   send_after_import: "Send after import"
   template_too_old: "Template for %{client} too old (too much invoices to generate)"
   quote_acceptance: "Acceptance of quote"
+  iban_is_invalid: IBAN is not valid
+  notice_n19_done: N19 for %{value} has been closed
+  notice_empty_sepa: No data to generate a SEPA file
+  button_save_and_send: Save and send
+  button_create_and_send: Create and send
+  invoice_total: Invoice total
+  total_executable: Total to pay
+  chart_invoice_total: Invoiced Amount
+  chart_invoice_status: Invoiced Amount Status
+  chart_top_clients: Top invoiced clients
+  chart_cashflow: Cash flow
+  chart_events: Latest events
+  past_due: Past due
+  on_schedule: On schedule
+  label_fiscal_data: Fiscal data
+  label_connections: Connections
+  label_customization: Customization
+  label_not_paid: Not paid
