@@ -14,7 +14,10 @@ resources :projects do
   resources :clients, :only => [:index, :new, :create]
   match :people, :controller => 'people', :action => 'index', :via => :get
   match 'companies/linked_to_mine', :controller => 'companies', :action => 'linked_to_mine', :via => :get
-  match 'my_company', :controller => 'companies', :action => 'my_company', :via => :get
+  match 'my_company',    :controller => 'companies', :action => 'my_company',    :via => :get
+  match 'bank_info',     :controller => 'companies', :action => 'bank_info',     :via => :get
+  match 'connections',   :controller => 'companies', :action => 'connections',   :via => :get
+  match 'customization', :controller => 'companies', :action => 'customization', :via => :get
   match 'add_bank_info', :controller => 'companies', :action => 'add_bank_info', :via => :get
   match 'invoices/import' => 'invoices#import', :via => [:get,:post]
   match 'invoices/send_new' => 'invoices#send_new_invoices', :via => :get

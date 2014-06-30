@@ -70,7 +70,7 @@ Redmine::Plugin.register :haltr do
         :received  => [:index, :new, :edit, :create, :update, :destroy, :show, :show_original,
                        :mark_accepted, :mark_accepted_with_mail, :mark_refused,
                        :mark_refused_with_mail, :legal, :context_menu, :original, :validate, :bulk_mark_as],
-        :companies => [:my_company,:update,:linked_to_mine,:check_iban],
+        :companies => [:my_company,:bank_info,:connections,:customization,:update,:linked_to_mine,:check_iban],
         :charts    => [:invoice_total, :invoice_status, :top_clients],
         :events    => [:file]},
       :require => :member
@@ -86,7 +86,7 @@ Redmine::Plugin.register :haltr do
                        :legal, :download_new_invoices, :biiubl20, :svefaktura, :oioubl20, :efffubl, :report,
                        :context_menu, :show_original],
         :received  => [:index, :show, :show_original, :legal, :context_menu],
-        :companies => [:my_company, :update, :linked_to_mine, :check_iban],
+        :companies => [:my_company,:bank_info,:connections,:customization, :linked_to_mine, :check_iban],
         :payments  => [:index, :n19],
         :invoice_templates => [:index, :show] }, :require => :member,
         :events    => [:file]
@@ -118,9 +118,10 @@ Redmine::Plugin.register :haltr do
 
   end
 
-  menu :project_menu, :companies,  { :controller => 'clients',  :action => 'index' }, :param => :project_id, :caption => :label_companies
-  menu :project_menu, :invoices,   { :controller => 'invoices', :action => 'index' }, :param => :project_id, :caption => :label_invoice_plural
-  menu :project_menu, :payments,   { :controller => 'payments', :action => 'index' }, :param => :project_id, :caption => :label_payment_plural
+  menu :project_menu, :my_company, {:controller=>'companies', :action=>'my_company'}, :param=>:project_id, :caption=>:label_my_company
+  menu :project_menu, :companies,  {:controller=>'clients',   :action=>'index'     }, :param=>:project_id, :caption=>:label_companies
+  menu :project_menu, :invoices,   {:controller=>'invoices',  :action=>'index'     }, :param=>:project_id, :caption=>:label_invoice_plural
+  menu :project_menu, :payments,   {:controller=>'payments',  :action=>'index'     }, :param=>:project_id, :caption=>:label_payment_plural
   # submenus defined at lib/haltr.rb
 
 end
