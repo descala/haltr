@@ -11,12 +11,12 @@
       <tr>
         <th><%= l(:past_due) %>:</th>
         <td class="past_due"><%=h money(due_invoices_sum) %></td>
-        <td>(<%= link_to("#{due_invoices.size} #{l(:label_invoice_plural)}", project_invoices_path(:project_id=>project, :invoices => due_invoices.collect {|i| i.id }))-%>)</td>
+        <td><%= link_to("#{due_invoices.size} #{l(:label_invoice_plural)}", project_invoices_path(:project_id=>project, :invoices => due_invoices.collect {|i| i.id })) if due_invoices.size > 0 -%></td>
       </tr>
       <tr>
         <th><%= l(:on_schedule) %>:</th>
         <td class="on_schedule"><%=h money(invoices_sum) %></td>
-        <td>(<%= link_to("#{invoices.size} #{l(:label_invoice_plural)}", project_invoices_path(:project_id=>project, :invoices => invoices.collect {|i| i.id }))-%>)</td>
+        <td><%= link_to("#{invoices.size} #{l(:label_invoice_plural)}", project_invoices_path(:project_id=>project, :invoices => invoices.collect {|i| i.id })) if invoices.size > 0 -%></td>
       </tr>
       <tr>
         <th></th>
