@@ -4,4 +4,4 @@
 xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.facturae.es/Facturae/2007/v3.1/Facturae http://www.facturae.es/NR/rdonlyres/56F4132E-2AF9-41DD-AADC-CB412AE3F79C/0/1Facturaev31.xsd">
    <FileHeader>
       <SchemaVersion>3.1</SchemaVersion>
-<%= render :partial => "invoices/facturae.xml", :locals=>{:format => 'facturae31'} %>
+<%= render :partial => "invoices/facturae", :format => :xml, :locals=>{:format => 'facturae31'} %>
