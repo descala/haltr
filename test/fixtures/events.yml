@@ -3,14 +3,17 @@ invoices_001_edited:
   user_id: 2
   filename: nil
   invoice_id: 1
+  created_at: <%=t=Time.now%>
 invoices_001_queue:
   name: queue
   user_id: 2
   invoice_id: 1
+  created_at: <%=t+=1.minute%>
 invoices_001_manual_send:
   name: manual_send
   user_id: 2
   invoice_id: 1
+  created_at: <%=t+=1.minute%>
 error:
   name: error
   user_id: 2
@@ -21,6 +24,7 @@ error:
     :backtrace:
       - This is a backtrace ...
       - Auch
+  created_at: <%=t+=1.minute%>
 error_sending:
   name: error_sending
   user_id: 2
@@ -34,6 +38,7 @@ with_url:
   info: |
     ---
     :notes: These are the notes added to the event
+  created_at: <%=t+=1.minute%>
 with_url_face:
   name: success_sending
   user_id: 2
@@ -42,6 +47,7 @@ with_url_face:
   info: |
     ---
     :notes: These are the notes added to the event
+  created_at: <%=t+=1.minute%>
 with_mail:
   name: success_sending
   user_id: 2
@@ -50,6 +56,7 @@ with_mail:
   info: |
     ---
     :notes: These are the notes added to the event. The text of the email
+  created_at: <%=t+=1.minute%>
 with_file:
   name: success_sending
   user_id: 2
@@ -62,9 +69,11 @@ with_file:
   filename: readme.txt
   file: This is the file content
   content_type: plain/text
+  created_at: <%=t+=1.minute%>
 accept_notification:
   name: accept_notification
   user_id: nil
   invoice_id: 1
   type: Event
+  created_at: <%=t+=1.minute%>
 
