@@ -9,6 +9,7 @@
         <%= form_tag({:id=>@project}, :method => :get, :class => 'formee') do %>
           <fieldset>
             <legend><%= l(:label_search) %></legend>
+
             <div id="query_form_content" class="hide-when-print seccio grup">
               <div class="col span-2-de-2">
                 <label class="inline"><%= check_box_tag("state_all", "1", params["state_all"]) %> <%=l("label_all_invoices")%></label>
@@ -17,22 +18,55 @@
                 <% end -%>
               </div>
             </div>
+
             <div class="seccio grup">
               <div class="col span-1-de-3">
-                <label for="date_from"><%=l(:label_from)%></label>
+                <label for="date_from"><%=l(:field_date)%></label>
                 <%= text_field_tag :date_from, (params[:date_from].nil? ? Date.new(Date.today.year) : params[:date_from]), :size => 10, :style => "width: 90%;" %><%= calendar_for('date_from') %>
               </div>
               <div class="col span-1-de-3">
                 <label for="date_to"><%=l(:label_to)%></label>
                 <%= text_field_tag :date_to, (params[:date_to].nil? ? Date.today : params[:date_to]), :size => 10, :style => "width: 90%;" %><%= calendar_for('date_to') %>
               </div>
+              <div class="col span-1-de-3">
+              </div>
             </div>
+
+            <div class="seccio grup">
+              <div class="col span-1-de-3">
+                <label for="due_date_from"><%=l(:field_due_date)%></label>
+                <%= text_field_tag :due_date_from, params[:due_date_from], :size => 10, :style => "width: 90%;" %><%= calendar_for('due_date_from') %>
+              </div>
+              <div class="col span-1-de-3">
+                <label for="due_date_to"><%=l(:label_to)%></label>
+                <%= text_field_tag :due_date_to, params[:due_date_to], :size => 10, :style => "width: 90%;" %><%= calendar_for('due_date_to') %>
+              </div>
+              <div class="col span-1-de-3">
+              </div>
+            </div>
+
+            <div class="seccio grup">
+              <div class="col span-1-de-3">
+                <label for="taxcode"><%= l(:field_taxcode) %></label>
+                <%= text_field_tag :taxcode, params[:taxcode] %>
+              </div>
+              <div class="col span-1-de-3">
+                <label for="name"><%= l(:field_name) %></label>
+                <%= text_field_tag :name, params[:name] %>
+              </div>
+              <div class="col span-1-de-3">
+                <label for="number"><%= l(:field_number) %></label>
+                <%= text_field_tag :number, params[:number] %>
+              </div>
+            </div>
+
             <div class="seccio grup">
               <div class="col span-2-de-3">
                 <label for="_client_id"><%= l(:label_company) %></label>
                 <%= collection_select(nil, :client_id, Client.find(:all, :order => 'name', :conditions => ["project_id = ?", @project]), :id, :name, {:include_blank => true, :selected => @client_id}) %>
               </div>
             </div>
+
             <div class="seccio grup">
               <div class="col span-2-de-2">
                 <%= submit_tag l(:button_apply), :class => "small", :name => nil %>

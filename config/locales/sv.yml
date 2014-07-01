@@ -502,7 +502,7 @@ sv:
   chart_events: Latest events
   past_due: Past due
   on_schedule: On schedule
-  label_fiscal_data: Discal data
-  label_connections: Connections
-  label_customization: Customization
   label_not_paid: Not paid
+  label_fiscal_data: "Fiscal data"
+  label_connections: "Connections"
+  label_customization: "Customization"

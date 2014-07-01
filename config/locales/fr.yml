@@ -503,7 +503,7 @@ fr:
   chart_events: Latest events
   past_due: Passant data de venciment
   on_schedule: Dintre de termini
-  label_fiscal_data: Dades fiscals
-  label_connections: Connexions
-  label_customization: Personalització
   label_not_paid: Not paid
+  label_fiscal_data: "Fiscal data"
+  label_connections: "Connections"
+  label_customization: "Customization"

@@ -516,7 +516,7 @@ es:
   chart_events: Ultimos eventos
   past_due: Vencidas
   on_schedule: Dentro de plazo
-  label_fiscal_data: Datos fiscales
-  label_connections: Conexiones
-  label_customization: Personalización
   label_not_paid: No pagado
+  label_fiscal_data: "Datos fiscales"
+  label_connections: "Conexiones"
+  label_customization: "Personalización"
