@@ -1,3 +1,8 @@
+oldest:
+  name: success_sending
+  user_id: 2
+  invoice_id: 1
+  created_at: <%=Time.now-1.hour%>
 invoices_001_edited:
   name: edited
   user_id: 2
