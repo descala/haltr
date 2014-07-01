@@ -41,7 +41,7 @@ class InvoicesController < ApplicationController
     sort_init 'invoices.created_at', 'desc'
     sort_update %w(invoices.created_at state number date due_date clients.name import_in_cents)
 
-    invoices = @project.issued_invoices
+    invoices = @project.issued_invoices.includes(:client)
 
     unless params["state_all"] == "1"
       statelist=[]
@@ -68,6 +68,24 @@ class InvoicesController < ApplicationController
     end
     unless params["date_to"].blank?
       invoices = invoices.where("date <= ?",params[:date_to])
+    end
+
+    # due_date filter
+    unless params[:due_date_from].blank?
+      invoices = invoices.where("due_date >= ?",params[:due_date_from])
+    end
+    unless params[:due_date_to].blank?
+      invoices = invoices.where("due_date <= ?",params[:due_date_to])
+    end
+
+    unless params[:taxcode].blank?
+      invoices = invoices.where("clients.taxcode like ?","%#{params[:taxcode]}%")
+    end
+    unless params[:name].blank?
+      invoices = invoices.where("clients.name like ?","%#{params[:name]}%")
+    end
+    unless params[:number].blank?
+      invoices = invoices.where("number like ?","%#{params[:number]}%")
     end
 
     @invoice_count = invoices.count
