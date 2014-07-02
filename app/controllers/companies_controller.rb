@@ -37,7 +37,7 @@ class CompaniesController < ApplicationController
   end
 
   def my_company
-    @partial='form'
+    @partial='my_company'
     render :action => 'edit'
   end
 
@@ -68,7 +68,7 @@ class CompaniesController < ApplicationController
   end
 
   def update
-    @partial = params[:partial] || 'form'
+    @partial = params[:partial] || 'my_company'
     # check if user trying to add multiple bank_infos without role
     unless User.current.allowed_to?(:add_multiple_bank_infos,@project)
       if params[:company][:bank_infos_attributes] and 
