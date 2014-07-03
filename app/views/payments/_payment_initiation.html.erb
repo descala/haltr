@@ -5,12 +5,14 @@
   </td>
   <td>
     <%= link_to l(:button_download),
-      :action     => payment_type.split("_").first, # n19 / sepa
-      :project_id => @project,
-      :due_date   => due_date,
-      :bank_info  => bank_info,
-      :sepa_type  => payment_type.split("_").last,
-      :invoices   => invoices.collect {|i| i.id } %> /
+      { :action     => payment_type.split("_").first, # n19 / sepa
+        :project_id => @project,
+        :due_date   => due_date,
+        :bank_info  => bank_info,
+        :sepa_type  => payment_type.split("_").last,
+        :invoices   => invoices.collect {|i| i.id } },
+      :style => (due_date < Date.today ? "color: red;" : "")
+    %> /
     <%= link_to l(:button_mark_done),
       { :action       => "payment_done",
         :project_id   => @project,
