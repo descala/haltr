@@ -15,7 +15,7 @@
           </tr>
           </thead>
           <tbody>
-          <% invoices_by_due_date.each do |due_date, invoices_by_payment_type| -%>
+          <% invoices_by_due_date.sort.each do |due_date, invoices_by_payment_type| -%>
             <tr class="<%= cycle("odd", "even") %>">
               <td width="10%"><%=due_date%></td>
               <td width="45%">
