@@ -113,3 +113,4 @@ resources :companies, :only => [:update]
 match '/charts/invoice_total' => 'charts#invoice_total', :via => :get, :as => :invoice_total_chart
 match '/charts/invoice_status/:project_id' => 'charts#invoice_status', :via => :get, :as => :invoice_status_chart
 match '/charts/top_clients/:project_id' => 'charts#top_clients', :via => :get, :as => :top_clients_chart
+match '/charts/update_chart_preference' => 'charts#update_chart_preference', :via => :get, :as => :update_chart_preference

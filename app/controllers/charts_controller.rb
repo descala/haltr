@@ -46,4 +46,14 @@ class ChartsController < ApplicationController
     render json: final_json 
   end
 
+  def update_chart_preference
+    name=params[:name]
+    value=params[:value]
+    if name and value and name =~ /^chart/
+      preference=User.current.preference
+      preference.others[name.to_sym]=value
+      preference.save
+    end
+    render_api_ok
+  end
 end

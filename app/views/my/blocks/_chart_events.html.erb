@@ -1,5 +1,11 @@
 <%= render :partial => 'common/chart_headers' %>
 <% old_project = @project %>
+<label for="chart_events_period"><%= l(:field_client) %></label>
+<%= select_tag "chart_events_period", options_for_select({ "VISA"=>1, "MasterCard"=>2 }, 1),
+  :data => { :remote => true,
+    :url => url_for(update_chart_preference_path) }
+%>
+
 <% haltr_projects.each do |project| -%>
   <%
     events = project.events.order('created_at DESC').first(10)
