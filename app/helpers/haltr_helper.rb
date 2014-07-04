@@ -128,7 +128,7 @@ module HaltrHelper
     else
       'invoices'
     end
-    link_to( "#{l("label_#{invoice.type.underscore}")} #{invoice.number}", {:controller=>controller,:action=>'show',:id=>invoice,:anchor=>'haltr_events'}, :title=>invoice.company.name)
+    link_to( "#{l("label_#{invoice.type.underscore}")} #{invoice.number}", {:controller=>controller,:action=>'show',:id=>invoice,:anchor=>'haltr_events'}, :title=>invoice.client.name)
   end
 
 end
