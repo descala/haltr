@@ -1,8 +1,8 @@
 <%= render :partial => 'common/chart_headers' %>
+<% old_project = @project %>
 <% haltr_projects.each do |project| -%>
   <%
     events = project.events.order('created_at DESC').first(10)
-    old_project = @project
     @project = project
   -%>
   <fieldset>
