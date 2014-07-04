@@ -54,9 +54,6 @@ class CompaniesController < ApplicationController
   end
 
   def customization
-    unless User.current.admin? or User.current.allowed_to?(:email_customization, @project)
-      flash.now[:warning] = l(:notice_not_authorized)
-    end
     @partial='customization'
     render :action => 'edit'
   end
