@@ -516,3 +516,6 @@ ca:
   label_fiscal_data: "Dades fiscals"
   label_connections: "Connexions"
   label_customization: "Personalització"
+  label_issued_invoice: Factura emesa
+  label_received_invoice: Factura rebuda
+  label_draft_invoice: Borrador

@@ -507,3 +507,6 @@ fr:
   label_connections: Connexions
   label_customization: Personalització
   label_not_paid: Not paid
+  label_issued_invoice: Facture émise
+  label_received_invoice: Facture reçue
+  label_draft_invoice: Draft invoice

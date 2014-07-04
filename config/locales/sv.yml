@@ -506,3 +506,6 @@ sv:
   label_connections: Connections
   label_customization: Customization
   label_not_paid: Not paid
+  label_issued_invoice: Issued invoice
+  label_received_invoice: Received invoice
+  label_draft_invoice: Draft invoice

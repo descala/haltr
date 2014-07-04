@@ -11,7 +11,7 @@
         <% events.each do |e| %>
           <li>
           <%=format_time e.created_at%> -
-          <%= link_to( "#{l(:label_invoice)} #{e.invoice.number}", {:controller=>'invoices',:action=>'show',:id=>e.invoice,:anchor=>'haltr_events'}) -%>
+          <%= link_to_invoice_with_label(e.invoice) -%>
           <% begin -%>
             <%= render :partial => "events/#{e.type.underscore}", :locals => {:e=>e} %>
           <% rescue ActionView::MissingTemplate -%>

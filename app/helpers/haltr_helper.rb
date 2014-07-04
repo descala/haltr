@@ -119,4 +119,16 @@ module HaltrHelper
     iban.gsub(/(.)/,'\1 ').gsub(/(. . . .)/,'\1 ').gsub(/ /,'&nbsp;')
   end
 
+  def link_to_invoice_with_label(invoice)
+    controller = case invoice.type
+    when 'InvoiceTemplate'
+      'invoice_templates'
+    when 'ReceivedInvoice'
+      'received'
+    else
+      'invoices'
+    end
+    link_to( "#{l("label_#{invoice.type.underscore}")} #{invoice.number}", {:controller=>controller,:action=>'show',:id=>invoice,:anchor=>'haltr_events'}, :title=>invoice.company.name)
+  end
+
 end

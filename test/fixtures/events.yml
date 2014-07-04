@@ -81,4 +81,16 @@ accept_notification:
   invoice_id: 1
   type: Event
   created_at: <%=t+=1.minute%>
+template_event:
+  name: edited
+  user_id: 2
+  invoice: template1
+  type: Event
+  created_at: <%=t+=1.minute%>
+received_event:
+  name: accept
+  user_id: 2
+  invoice_id: 10
+  type: Event
+  created_at: <%=t+=1.minute%>
 
