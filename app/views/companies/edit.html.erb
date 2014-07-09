@@ -10,7 +10,7 @@
       <%= begin
             render(:partial=>@partial, :locals=>{ :f=>f })
           rescue ActionView::MissingTemplate
-            render(:partial=>'form', :locals=>{ :f=>f })
+            render(:partial=>'my_company', :locals=>{ :f=>f })
           end
         %>
       <%= hidden_field_tag :partial, @partial %>

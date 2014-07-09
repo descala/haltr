@@ -36,7 +36,7 @@
           <cbc:Name><%=h @company.name%></cbc:Name>
         </cac:PartyName>
         <cac:PostalAddress>
-          <%= render :partial => "invoices/efff_address.xml", :locals => {:entity => @company} %>
+          <%= render :partial => "invoices/efff_address", :format => :xml, :locals => {:entity => @company} %>
         </cac:PostalAddress>
         <cac:PartyTaxScheme>
           <cbc:CompanyID><%=h @company.taxcode%></cbc:CompanyID>
@@ -55,7 +55,7 @@
           <cbc:Name><%=h @client.name%></cbc:Name>
         </cac:PartyName>
         <cac:PostalAddress>
-          <%= render :partial => "invoices/efff_address.xml", :locals => {:entity => @client} %>
+          <%= render :partial => "invoices/efff_address", :format => :xml, :locals => {:entity => @client} %>
         </cac:PostalAddress>
         <cac:PartyTaxScheme>
           <cbc:CompanyID><%=h @client.taxcode%></cbc:CompanyID>

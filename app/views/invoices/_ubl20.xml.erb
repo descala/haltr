@@ -34,7 +34,7 @@
           <cbc:Name><%=h @company.name%></cbc:Name>
         </cac:PartyName>
         <cac:PostalAddress>
-          <%= render :partial => "invoices/ubl_address.xml", :locals => {:entity => @company} %>
+          <%= render :partial => "invoices/ubl_address", :format => :xml, :locals => {:entity => @company} %>
         </cac:PostalAddress>
 <% if @company.taxcode.blank? -%>
         <cac:PartyTaxScheme>
@@ -44,7 +44,7 @@
           </cac:TaxScheme>
         </cac:PartyTaxScheme>
 <% end -%>
-        <%= render :partial => "invoices/ubl_party_legal_entity.xml", :locals => {:entity => @company} %>
+        <%= render :partial => "invoices/ubl_party_legal_entity", :format => :xml, :locals => {:entity => @company} %>
         <% if @company.email and !@company.email.blank? -%>
           <cac:Contact>
             <cbc:ElectronicMail><%=h @company.email%></cbc:ElectronicMail>
@@ -61,7 +61,7 @@
           <cbc:Name><%=h @client.name%></cbc:Name>
         </cac:PartyName>
         <cac:PostalAddress>
-          <%= render :partial => "invoices/ubl_address.xml", :locals => {:entity => @client} %>
+          <%= render :partial => "invoices/ubl_address", :format => :xml, :locals => {:entity => @client} %>
         </cac:PostalAddress>
 <% if @client.taxcode.blank? -%>
         <cac:PartyTaxScheme>
@@ -71,7 +71,7 @@
           </cac:TaxScheme>
         </cac:PartyTaxScheme>
 <% end -%>
-        <%= render :partial => "invoices/ubl_party_legal_entity.xml", :locals => {:entity => @client} %>
+        <%= render :partial => "invoices/ubl_party_legal_entity", :format => :xml, :locals => {:entity => @client} %>
         <% if @client.email and !@client.email.blank? -%>
           <cac:Contact>
             <cbc:ElectronicMail><%=h @client.email%></cbc:ElectronicMail>
