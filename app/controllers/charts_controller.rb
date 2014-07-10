@@ -2,7 +2,7 @@ class ChartsController < ApplicationController
   unloadable
 
   before_filter :find_project_by_project_id, :only => [:invoice_status,:top_clients]
-  before_filter :authorize, :only => [:invoice_status,:top_clients]
+  before_filter :authorize, :except => [:invoice_total, :update_chart_preference]
   include ChartsHelper
 
   def invoice_total
@@ -54,6 +54,7 @@ class ChartsController < ApplicationController
       preference.others[name.to_sym]=value
       preference.save
     end
+    #TODO: update current page chart
     render_api_ok
   end
 end
