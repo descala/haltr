@@ -4,6 +4,7 @@ class ChartsController < ApplicationController
   before_filter :find_project_by_project_id, :only => [:invoice_status,:top_clients]
   before_filter :authorize, :except => [:invoice_total, :update_chart_preference]
   include ChartsHelper
+  helper :haltr
 
   def invoice_total
     projects = haltr_projects
@@ -54,7 +55,9 @@ class ChartsController < ApplicationController
       preference.others[name.to_sym]=value
       preference.save
     end
-    #TODO: update current page chart
-    render_api_ok
+    @partial="my/blocks/#{name}"
+    respond_to do |format|
+      format.js
+    end
   end
 end

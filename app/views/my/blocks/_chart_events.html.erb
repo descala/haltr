@@ -1,10 +1,12 @@
+<div id="chart_events_div">
 <%= render :partial => 'common/chart_headers' %>
 <% old_project = @project %>
 <label for="value"><%= l(:field_client) %></label>
 <%= select_tag "value", options_for_select({ l(:label_last_changes, :count=>10)=>10,
                                              l(:label_last_changes, :count=>20)=>20 },
                                            User.current.pref.others[:chart_events].to_i),
-  :data => { :remote => true, :url => url_for(update_chart_preference_path(:name=>'chart_events')) }
+  :data => { :url => url_for(update_chart_preference_path) },
+  :id => 'chart_events'
 %>
 
 <% haltr_projects.each do |project| -%>
@@ -37,3 +39,4 @@
 <% end -%>
 
 <% @project = old_project %>
+</div>
