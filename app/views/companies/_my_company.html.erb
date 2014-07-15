@@ -6,12 +6,12 @@
     <%= call_hook(:company_form_taxcode) %>
     </p>
     <p class="col span-1-de-2">
-    <%= f.text_field :company_identifier %>
     </p>
   </div>
   <div class="seccio grup">
     <p class="col span-1-de-2">
-    <%= f.text_field :name, :required => true %>
+    <%= f.label_for_field :name, :label => l('name_or_company') %>
+    <%= f.text_field :name, :required => true, :no_label => true %>
     </p>
     <p class="col span-1-de-2">
     <%= f.text_field :email, :required => true %>
@@ -100,14 +100,15 @@
     <legend><%=l(:field_company_public)%></legend>
     <div class="seccio grup">
       <p class="col span-1-de-3">
-      <label><%= f.radio_button :public, :public %><%=l(:public)%></label>
+      <label><%= f.radio_button :public, :public %> <%= help :help_public_profile %> <%=l(:public)%></label>
       </p>
       <p class="col span-1-de-3">
-      <label><%= f.radio_button :public, :semipublic %><%=l(:semipublic)%></label>
+      <label><%= f.radio_button :public, :semipublic %> <%= help :help_semipublic_profile %> <%=l(:semipublic)%></label>
       </p>
       <p class="col span-1-de-3">
-      <label><%= f.radio_button :public, :private %><%=l(:private)%></label>
+      <label><%= f.radio_button :public, :private %> <%= help :help_private_profile %> <%=l(:private)%></label>
       </p>
+      <p><%= l(:profile_recomended) %></p>
     </div>
   </fieldset>
 
