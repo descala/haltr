@@ -516,3 +516,7 @@ da:
   help_semipublic_profile: "Companies using B2BRouter.net can retrieve basic master data from your company upon authorization."
   help_private_profile: "It is not allowed for other companies to get access to your basic master data."
   profile_recomended: "B2BRouter.net recommends using the public or semi public profiles to ease the invoicing process to your customers."
+  all_by_year: "All, by year"
+  all_by_month: "All, by month"
+  last_year_by_month: "Last year"
+  last_month_by_week: "Last month"

@@ -513,3 +513,7 @@ nl:
   help_semipublic_profile: "Les empreses que usen B2BRouter.net poden recuperar les dades mestres bàsiques de la vostra empresa prèvia autorització."
   help_private_profile: "No es permet a les empreses que tinguin accés a les dades mestres bàsiques de la vostra empresa."
   profile_recomended: "Des de B2BRouter.net recomanem usar l'opció públic o requerir autorització per facilitar el procés de facturació als vostres clients."
+  all_by_year: "All, by year"
+  all_by_month: "All, by month"
+  last_year_by_month: "Last year"
+  last_month_by_week: "Last month"

@@ -1,7 +1,9 @@
-$('#chart_events_div').html("<%= escape_javascript(render(partial: @partial)).html_safe %>")
-$("#chart_events").change(function() {
+$('div.<%=@chart_name%>').html("<%= escape_javascript(render(partial: "my/blocks/#{@chart_name}")).html_safe %>")
+
+//TODO duplicated code in charts.js
+$("select.chart_prefs").change(function() {
   var id = $(this).children(":selected").val();
-  var params = 'name=chart_events&value='+id;
+  var params = 'name='+$(this)[0].id+'&value='+id;
   $.ajax({
     url: $(this).data('url'),
     data: params

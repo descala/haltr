@@ -11,9 +11,23 @@ class ChartsController < ApplicationController
     if projects.any?
       chart_data = []
       projects.each do |project|
+        case User.current.pref.others[:chart_invoice_total]
+        when "all_by_year"
+          projdata = project.issued_invoices.where(["date > ?", 7.years.ago]).
+            group_by_year(:date, format: "%Y/%m").sum('total_in_cents/100')
+        when "last_year_by_month"
+          projdata = project.issued_invoices.where(["date > ?", 1.years.ago]).
+            group_by_month(:date, format: "%Y/%m").sum('total_in_cents/100')
+        when "last_month_by_week"
+          projdata = project.issued_invoices.where(["date > ?", 1.month.ago]).
+            group_by_week(:date, format: "%Y/%m").sum('total_in_cents/100')
+        else # all_by_month
+          projdata = project.issued_invoices.where(["date > ?", 7.years.ago]).
+            group_by_month(:date, format: "%Y/%m").sum('total_in_cents/100')
+        end
         chart_data << {
           name: project.company.name,
-          data: project.issued_invoices.where(["date > ?", 5.years.ago]).group_by_month(:date, format: "%Y/%m").sum('total_in_cents/100') 
+          data: projdata
         }
       end
       render json: chart_data.chart_json
@@ -29,7 +43,7 @@ class ChartsController < ApplicationController
       state_key = h['name']
       h['name'] = l("state_#{state_key}")
     end
-    render json: final_json 
+    render json: final_json
   end
 
   def top_clients
@@ -44,7 +58,7 @@ class ChartsController < ApplicationController
       client = Client.find client_id
       h['name'] = client.name if client
     end
-    render json: final_json 
+    render json: final_json
   end
 
   def update_chart_preference
@@ -55,7 +69,7 @@ class ChartsController < ApplicationController
       preference.others[name.to_sym]=value
       preference.save
     end
-    @partial="my/blocks/#{name}"
+    @chart_name=name
     respond_to do |format|
       format.js
     end

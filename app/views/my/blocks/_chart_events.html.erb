@@ -1,11 +1,13 @@
-<div id="chart_events_div">
+<div class="chart_events">
   <%= render :partial => 'common/chart_headers' %>
   <% old_project = @project %>
-  <%= select_tag "value", options_for_select({ l(:label_last_changes, :count=>10)=>10,
-                                               l(:label_last_changes, :count=>20)=>20 },
+  <h3><%= l(:chart_events) %></h3>
+  <%= select_tag "value", options_for_select({ t(:label_last_changes, :count=>10)=>1,
+                                               t(:label_last_changes, :count=>20)=>20 },
                                              User.current.pref.others[:chart_events].to_i),
-    :data => { :url => url_for(update_chart_preference_path) },
-    :id => 'chart_events'
+    :data  => { :url => url_for(update_chart_preference_path) },
+    :id    => 'chart_events',
+    :class => 'chart_prefs'
   %>
 
   <% haltr_projects.each do |project| -%>
@@ -16,7 +18,7 @@
       @project = project
     -%>
     <fieldset>
-      <legend><h3><%= l(:chart_events) %><%= " (#{project.company.name})" if haltr_projects.size > 1 %></h3></legend>
+      <legend><%= project.company.name if haltr_projects.size > 1 %></legend>
       <% if events.any? %>
         <ul>
           <% events.each do |e| %>
@@ -35,6 +37,7 @@
         <p><%= l(:label_no_data) %></p>
       <% end -%>
     </fieldset>
+    <br />
   <% end -%>
 
   <% @project = old_project %>
