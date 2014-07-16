@@ -1,42 +1,41 @@
 <div id="chart_events_div">
-<%= render :partial => 'common/chart_headers' %>
-<% old_project = @project %>
-<label for="value"><%= l(:field_client) %></label>
-<%= select_tag "value", options_for_select({ l(:label_last_changes, :count=>10)=>10,
-                                             l(:label_last_changes, :count=>20)=>20 },
-                                           User.current.pref.others[:chart_events].to_i),
-  :data => { :url => url_for(update_chart_preference_path) },
-  :id => 'chart_events'
-%>
+  <%= render :partial => 'common/chart_headers' %>
+  <% old_project = @project %>
+  <%= select_tag "value", options_for_select({ l(:label_last_changes, :count=>10)=>10,
+                                               l(:label_last_changes, :count=>20)=>20 },
+                                             User.current.pref.others[:chart_events].to_i),
+    :data => { :url => url_for(update_chart_preference_path) },
+    :id => 'chart_events'
+  %>
 
-<% haltr_projects.each do |project| -%>
-  <%
-    num = User.current.pref.others[:chart_events].to_i
-    num = 10 unless num > 0
-    events = project.events.order('created_at DESC').first(num)
-    @project = project
-  -%>
-  <fieldset>
-    <legend><h3><%= l(:chart_events) %><%= " (#{project.company.name})" if haltr_projects.size > 1 %></h3></legend>
-    <% if events.any? %>
-      <ul>
-        <% events.each do |e| %>
-          <li>
-          <%=format_time e.created_at%> -
-          <%= link_to_invoice_with_label(e.invoice) -%>
-          <% begin -%>
-            <%= render :partial => "events/#{e.type.underscore}", :locals => {:e=>e} %>
-          <% rescue ActionView::MissingTemplate -%>
-            <%= render :partial => "events/event", :locals => {:e=>e} %>
+  <% haltr_projects.each do |project| -%>
+    <%
+      num = User.current.pref.others[:chart_events].to_i
+      num = 10 unless num > 0
+      events = project.events.order('created_at DESC').first(num)
+      @project = project
+    -%>
+    <fieldset>
+      <legend><h3><%= l(:chart_events) %><%= " (#{project.company.name})" if haltr_projects.size > 1 %></h3></legend>
+      <% if events.any? %>
+        <ul>
+          <% events.each do |e| %>
+            <li>
+            <%=format_time e.created_at%> -
+            <%= link_to_invoice_with_label(e.invoice) -%>
+            <% begin -%>
+              <%= render :partial => "events/#{e.type.underscore}", :locals => {:e=>e} %>
+            <% rescue ActionView::MissingTemplate -%>
+              <%= render :partial => "events/event", :locals => {:e=>e} %>
+            <% end -%>
+            </li>
           <% end -%>
-          </li>
-        <% end -%>
-      </ul>
-    <% else -%>
-      <p><%= l(:label_no_data) %></p>
-    <% end -%>
-  </fieldset>
-<% end -%>
+        </ul>
+      <% else -%>
+        <p><%= l(:label_no_data) %></p>
+      <% end -%>
+    </fieldset>
+  <% end -%>
 
-<% @project = old_project %>
+  <% @project = old_project %>
 </div>
