@@ -11,5 +11,5 @@
                  :class => 'chart_prefs'
   %>
 
-  <%= column_chart invoice_total_chart_path, library: {isStacked: true, vAxis: {title: "#{l(:invoice_total)} (€)" }} %>
+  <%= column_chart invoice_total_chart_path, id: "chart_invoice_total_chart", library: {isStacked: true, vAxis: {title: "#{l(:invoice_total)} (€)" }} %>
 </div>

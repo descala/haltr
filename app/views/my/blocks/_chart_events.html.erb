@@ -2,7 +2,7 @@
   <%= render :partial => 'common/chart_headers' %>
   <% old_project = @project %>
   <h3><%= l(:chart_events) %></h3>
-  <%= select_tag "value", options_for_select({ t(:label_last_changes, :count=>10)=>1,
+  <%= select_tag "value", options_for_select({ t(:label_last_changes, :count=>10)=>10,
                                                t(:label_last_changes, :count=>20)=>20 },
                                              User.current.pref.others[:chart_events].to_i),
     :data  => { :url => url_for(update_chart_preference_path) },

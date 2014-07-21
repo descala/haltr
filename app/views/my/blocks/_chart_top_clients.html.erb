@@ -2,5 +2,5 @@
 
 <% haltr_projects.each do |project| %>
   <h3><%=l('chart_top_clients')%><%= " (#{project.company.name})" if haltr_projects.size > 1 %></h3>
-<%= column_chart top_clients_chart_path(project), library: {isStacked: true, vAxis: {title: "#{l(:invoice_total)} (€)" }} %>
+<%= column_chart top_clients_chart_path(project), id: "chart_top_clients_#{project.identifier}", library: {isStacked: true, vAxis: {title: "#{l(:invoice_total)} (€)" }} %>
 <% end %>
