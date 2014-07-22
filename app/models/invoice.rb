@@ -70,7 +70,6 @@ class Invoice < ActiveRecord::Base
     self.currency         ||= self.client.currency rescue nil
     self.currency         ||= self.company.currency rescue nil
     self.currency         ||= Setting.plugin_haltr['default_currency']
-    self.payment_method   ||= PAYMENT_CASH
   end
 
   def currency=(v)
@@ -148,7 +147,7 @@ class Invoice < ActiveRecord::Base
   # or one generic entry if there are no bank_infos on company:
   # ["transfer", PAYMENT_TRANSFER]
   def self.payment_methods(company)
-    pm = [[l("cash"), PAYMENT_CASH]]
+    pm = [['---',''],[l("cash"), PAYMENT_CASH]]
     if company.bank_infos.any?
       tr = []
       db = []

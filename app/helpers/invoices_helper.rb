@@ -222,7 +222,7 @@ module InvoicesHelper
         end
       elsif i.special?
         i.payment_method_text
-      else
+      elsif i.cash?
         l(:cash_str)
       end
     elsif i.is_a? ReceivedInvoice

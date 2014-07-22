@@ -8,7 +8,6 @@ class IssuedInvoice < InvoiceDocument
 
   belongs_to :invoice_template
   validates_presence_of :number, :unless => Proc.new {|invoice| invoice.type == "DraftInvoice"}
-  validates_presence_of :due_date
   validates_uniqueness_of :number, :scope => [:project_id,:type], :if => Proc.new {|i| i.type == "IssuedInvoice" }
   validate :invoice_must_have_lines
 
@@ -221,6 +220,7 @@ class IssuedInvoice < InvoiceDocument
   end
 
   def payment_method_requirements
+    #TODO: check if due_date is necessary on some payment_method (facturae)
     if debit?
       c = self.client
       if c.bank_account.blank? and !c.use_iban?
