@@ -27,6 +27,10 @@ class InvoiceLine < ActiveRecord::Base
     :allow_destroy => true
   validates_associated :taxes
 
+  after_initialize {
+    self.unit ||= 1
+  }
+
   # remove colons "1,23" => "1.23"
   def price=(v)
     write_attribute :price, (v.is_a?(String) ? v.gsub(',','.') : v)
