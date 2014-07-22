@@ -528,3 +528,6 @@ ca:
   all_by_month: "Tot, per mes"
   last_year_by_month: "Últim any"
   last_month_by_week: "Últim mes"
+  all: "Tot"
+  last_year: "Últim any"
+  last_3_months: "Últims tres mesos"

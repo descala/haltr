@@ -520,3 +520,6 @@ da:
   all_by_month: "All, by month"
   last_year_by_month: "Last year"
   last_month_by_week: "Last month"
+  all: "All"
+  last_year: "Last year"
+  last_3_months: "Last three months"

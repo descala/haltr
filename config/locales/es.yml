@@ -532,3 +532,6 @@ es:
   all_by_month: "Todo, por mes"
   last_year_by_month: "Último año"
   last_month_by_week: "Último mes"
+  all: "Todo"
+  last_year: "Último año"
+  last_3_months: "Ultimos tres meses"
