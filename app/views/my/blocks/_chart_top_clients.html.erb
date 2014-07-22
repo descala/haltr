@@ -1,6 +1,19 @@
-<%= render :partial => 'common/chart_headers' %>
+<div class="chart_top_clients">
+  <%= render :partial => 'common/chart_headers' %>
 
-<% haltr_projects.each do |project| %>
-  <h3><%=l('chart_top_clients')%><%= " (#{project.company.name})" if haltr_projects.size > 1 %></h3>
-<%= column_chart top_clients_chart_path(project), id: "chart_top_clients_#{project.identifier}", library: {isStacked: true, vAxis: {title: "#{l(:invoice_total)} (€)" }} %>
-<% end %>
+  <h3><%=l('chart_top_clients')%></h3>
+  <%= select_tag "value", options_for_select({t(:all_by_year)=>"all_by_year",
+                                              t(:all_by_month)=>"all_by_month",
+                                              t(:last_year_by_month)=>"last_year_by_month",
+                                              t(:last_month_by_week)=>"last_month_by_week"},
+                                             User.current.pref.others[:chart_top_clients]),
+                 :data  => { :url => url_for(update_chart_preference_path) },
+                 :id    => 'chart_top_clients',
+                 :class => 'chart_prefs'
+  %>
+
+  <% haltr_projects.each do |project| %>
+    <h3><%= project.company.name if haltr_projects.size > 1 %></h3>
+    <%= column_chart top_clients_chart_path(project), id: "chart_top_clients_#{project.identifier}", library: {isStacked: true, vAxis: {title: "#{l(:invoice_total)} (€)" }} %>
+  <% end %>
+</div>
