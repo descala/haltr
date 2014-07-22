@@ -28,7 +28,7 @@ class Terms
   end
 
   def self.for_select
-    KEYS.collect {|k| [I18n.t(k), k] } + [[I18n.t("custom"), "custom"]]
+    [['---','---']] + KEYS.collect {|k| [I18n.t(k), k] } + [[I18n.t("custom"), "custom"]]
   end
     
 end
