@@ -596,6 +596,8 @@ _INV
       invoice.invoice_lines << il
     end
 
+    Redmine::Hook.call_hook(:model_invoice_import_before_save, :invoice=>invoice)
+
     invoice.save!
     logger.info "created new invoice with id #{invoice.id} for company #{company.name}"
     return invoice
