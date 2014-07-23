@@ -65,7 +65,11 @@ class ChartsController < ApplicationController
     client_ids = top_clients.collect do |client,count|
       client.id
     end
-    chart_data = @project.issued_invoices.where(["client_id IN (#{client_ids.join(',')}) and date > ?", 5.years.ago]).group(:client_id).group_by_month(:date, format: "%Y/%m").sum('total_in_cents/100')
+    if client_ids.any?
+      chart_data = @project.issued_invoices.where(["client_id IN (#{client_ids.join(',')}) and date > ?", 5.years.ago]).group(:client_id).group_by_month(:date, format: "%Y/%m").sum('total_in_cents/100')
+    else
+      chart_data = @project.issued_invoices.where(["date > ?", 5.years.ago]).group(:client_id).group_by_month(:date, format: "%Y/%m").sum('total_in_cents/100')
+    end
     final_json = JSON.parse(chart_data.chart_json)
     final_json.each do |h|
       client_id = h['name']
