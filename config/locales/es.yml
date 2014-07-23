@@ -517,3 +517,4 @@ es:
   help_semipublic_profile: "Las empresas que usan B2BRouter.net pueden recuperar los datos maestros básicos de su empresa previa autorización."
   help_private_profile: "No se permite a las empresas que tengan acceso a los datos maestros básicos de su empresa."
   profile_recomended: "Desde B2BRouter.net recomendamos usar la opción pública o requerir autorización para facilitar el proceso de facturación a sus clientes."
+  article_code: "Código"

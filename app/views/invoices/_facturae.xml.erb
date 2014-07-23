@@ -135,6 +135,9 @@
            </Tax>
 <% end -%>
          </TaxesOutputs>
+<% unless invoice_line.notes.blank? -%>
+          <AdditionalLineItemInformation><%=invoice_line.notes%></AdditionalLineItemInformation>
+<% end -%>
 
 <% if @invoice.persontypecode == "F" and @invoice.taxes_withheld.any?-%>
          <TaxesWithheld>
@@ -224,6 +227,9 @@
                  </Tax>
 <% end -%>
               </TaxesOutputs>
+<% end -%>
+<% unless invoice_line.article_code.blank? -%>
+              <ArticleCode><%=invoice_line.article_code%></ArticleCode>
 <% end -%>
             </InvoiceLine>
 <% end -%>

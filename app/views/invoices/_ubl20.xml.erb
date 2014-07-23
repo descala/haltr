@@ -187,10 +187,16 @@
 <% @invoice.invoice_lines.each_with_index do |invoice_line,index| -%>
         <cac:<%= @invoice.amend_of ? "CreditNoteLine" : "InvoiceLine" %>>
           <cbc:ID><%=h index + 1%></cbc:ID>
+<% unless invoice_line.notes.blank? -%>
+          <cbc:Note><%=invoice_line.notes%></cbc:Note>
+<% end -%>
           <cbc:InvoicedQuantity unitCode="<%=h invoice_line.unit_code(:ubl) %>"><%=h invoice_line.quantity%></cbc:InvoicedQuantity>
           <cbc:LineExtensionAmount currencyID="<%=h @client.currency%>"><%=h precision(invoice_line.price*invoice_line.quantity,2)%></cbc:LineExtensionAmount>
           <cac:Item>
             <cbc:Name><%=h invoice_line.description%></cbc:Name>
+<% unless invoice_line.article_code.blank? -%>
+            <cbc:SellersItemIdentification><%=invoice_line.article_code%></cbc:SellersItemIdentification>
+<% end -%>
             <% invoice_line.taxes.each do |tax_line| -%>
             <cac:ClassifiedTaxCategory>
               <cbc:ID schemeID="UN/ECE 5305" schemeAgencyID="6"><%=h tax_line.category%></cbc:ID>

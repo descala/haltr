@@ -504,3 +504,4 @@ fr:
   help_semipublic_profile: "Companies using B2BRouter.net can retrieve basic master data from your company upon authorization."
   help_private_profile: "It is not allowed for other companies to get access to your basic master data."
   profile_recomended: "B2BRouter.net recommends using the public or semi public profiles to ease the invoicing process to your customers."
+  article_code: "Code"
