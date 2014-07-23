@@ -220,7 +220,6 @@ class IssuedInvoice < InvoiceDocument
   end
 
   def payment_method_requirements
-    #TODO: check if due_date is necessary on some payment_method (facturae)
     if debit?
       c = self.client
       if c.bank_account.blank? and !c.use_iban?
@@ -233,6 +232,9 @@ class IssuedInvoice < InvoiceDocument
         add_export_error([:field_payment_method, :requires_company_bank_account])
         add_export_error([:bank_info, 'activerecord.errors.messages.invalid'])
       end
+    end
+    unless payment_method.blank?
+      add_export_error([:field_due_date, 'activerecord.errors.messages.blank']) if due_date.blank?
     end
   end
 

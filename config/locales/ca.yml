@@ -531,3 +531,4 @@ ca:
   all: "Tot"
   last_year: "Últim any"
   last_3_months: "Últims tres mesos"
+  article_code: "Codi"

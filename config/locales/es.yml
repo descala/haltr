@@ -535,3 +535,4 @@ es:
   all: "Todo"
   last_year: "Último año"
   last_3_months: "Ultimos tres meses"
+  article_code: "Código"

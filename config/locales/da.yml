@@ -523,3 +523,4 @@ da:
   all: "All"
   last_year: "Last year"
   last_3_months: "Last three months"
+  article_code: "Code"

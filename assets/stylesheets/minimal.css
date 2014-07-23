@@ -234,6 +234,9 @@
 	line-height: 18px;
 	border-bottom: 1px solid #ddd;
 	}
+.line-items tr.nobottomline td {
+	border-bottom: none !important;
+}
 .line-items td.first { padding-left:12px; }
 .line-items td.last { padding-right:12px; }
 .line-items .item-delete { width: 14px; }

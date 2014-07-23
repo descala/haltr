@@ -3,6 +3,9 @@
 <tr class="nested-fields">
   <td><%= f.text_field :quantity, :value => f.object.quantity.to_s.gsub(/\.0+$/,''), :style => "width: 78px;", :no_label => true %></td>
   <td><%=f.select :unit, InvoiceLine.units, {:no_label => true}, {:style => "width: 100px;"}%></td>
+  <% if @invoice.invoice_lines.collect {|l| l.article_code.blank? }.include?(false) -%>
+  <td><%=f.text_field :article_code, :style => "width: 78px;", :no_label => true%></td>
+  <% end -%>
   <td><%=f.text_field :description, :style => "width: 288px;", :no_label => true%></td>
   <%= call_hook(:invoice_form_order_line_reference) %>
   <td><%=f.text_field :price, :value => f.object.price.to_s.gsub(/\.0+$/,''), :style => "width: 78px;", :no_label => true%></td>
@@ -27,3 +30,9 @@
     <%= link_to_remove_association image_tag('false.png'), f, :class=>'eliminar' %>
   </td>
 </tr>
+<% if @invoice.invoice_lines.collect {|l| l.notes.blank? }.include?(false) -%>
+<tr>
+  <td><p><%= l(:field_extra_info) %></p></td>
+  <td colspan="4"><%= f.text_field :notes, :no_label => true %></td>
+</tr>
+<% end -%>
