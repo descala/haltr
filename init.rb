@@ -109,6 +109,8 @@ Redmine::Plugin.register :haltr do
       { :quotes => [:index, :new, :create, :show, :edit, :update, :send_quote,
                     :destroy, :accept, :refuse] }, :require => :member
 
+    permission :view_invoice_extra_fields, {}
+
     # Loads permisons from config/channels.yml
     ExportChannels.permissions.each do |permission,actions|
       permission permission, actions, :require => :member

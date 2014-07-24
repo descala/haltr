@@ -107,7 +107,7 @@
       <tr>
         <th><%=l(:field_quantity)%></th>
         <th></th>
-        <% if @invoice.invoice_lines.collect {|l| l.article_code.blank? }.include?(false) -%>
+        <% if @invoice.invoice_lines.collect {|l| l.article_code.blank? }.include?(false) or User.current.allowed_to?(:view_invoice_extra_fields, @project) -%>
         <th><%=l(:article_code)%></th>
         <% end -%>
         <th><%=l(:field_description)%></th>
