@@ -135,7 +135,7 @@
            </Tax>
 <% end -%>
          </TaxesOutputs>
-<% unless invoice.invoice_lines.collect {|il| il.notes }.join.blank? -%>
+<% unless @invoice.invoice_lines.collect {|il| il.notes }.join.blank? -%>
           <AdditionalLineItemInformation><%=invoice.invoice_lines.collect {|il| il.notes }.join(' ')%></AdditionalLineItemInformation>
 <% end -%>
 
