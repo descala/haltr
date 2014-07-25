@@ -187,6 +187,20 @@ facturae_31_gva:
   allowed_permissions:
     :send_gva:
 
+facturae_32_rioja:
+  format: facturae32
+  folder: la_rioja
+  validate:
+  locales:
+    ca: "Facturae 3.2 a La Rioja"
+    da: "Facturae 3.2 til La Rioja"
+    en: "Facturae 3.2 to La Rioja"
+    es: "Facturae 3.2 por La Rioja"
+    fr: "Facturae 3.2 par La Rioja"
+    sv: "Spanskt format Facturae 3.2 till La Rioja"
+  allowed_permissions:
+    :send_rioja:
+
 ublinvoice_20:
   format: peppolubl20
   folder: free_ubl
