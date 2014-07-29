@@ -136,7 +136,7 @@
 <% end -%>
          </TaxesOutputs>
 <% unless @invoice.invoice_lines.collect {|il| il.notes }.join.blank? -%>
-          <AdditionalLineItemInformation><%=@tinvoice.invoice_lines.collect {|il| il.notes }.join(' ')%></AdditionalLineItemInformation>
+          <AdditionalLineItemInformation><%=@invoice.invoice_lines.collect {|il| il.notes }.join(' ')%></AdditionalLineItemInformation>
 <% end -%>
 
 <% if @invoice.persontypecode == "F" and @invoice.taxes_withheld.any?-%>
