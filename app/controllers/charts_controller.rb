@@ -14,13 +14,13 @@ class ChartsController < ApplicationController
         case User.current.pref.others[:chart_invoice_total]
         when "all_by_year"
           projdata = project.issued_invoices.where(["date > ?", 7.years.ago]).
-            group_by_year(:date, format: "%Y/%m").sum('total_in_cents/100')
+            group_by_year(:date, format: "%Y").sum('total_in_cents/100')
         when "last_year_by_month"
           projdata = project.issued_invoices.where(["date > ?", 1.years.ago]).
             group_by_month(:date, format: "%Y/%m").sum('total_in_cents/100')
         when "last_month_by_week"
           projdata = project.issued_invoices.where(["date > ?", 1.month.ago]).
-            group_by_week(:date, format: "%Y/%m").sum('total_in_cents/100')
+            group_by_week(:date, format: "%Y/%W").sum('total_in_cents/100')
         else # all_by_month
           projdata = project.issued_invoices.where(["date > ?", 7.years.ago]).
             group_by_month(:date, format: "%Y/%m").sum('total_in_cents/100')
@@ -40,13 +40,13 @@ class ChartsController < ApplicationController
     case User.current.pref.others[:chart_invoice_status]
     when "all_by_year"
       projdata = @project.issued_invoices.where(["date > ?", 7.years.ago]).
-        group(:state).group_by_year(:date, format: "%Y/%m").sum('total_in_cents/100')
+        group(:state).group_by_year(:date, format: "%Y").sum('total_in_cents/100')
     when "last_year_by_month"
       projdata = @project.issued_invoices.where(["date > ?", 1.years.ago]).
         group(:state).group_by_month(:date, format: "%Y/%m").sum('total_in_cents/100')
     when "last_month_by_week"
       projdata = @project.issued_invoices.where(["date > ?", 1.month.ago]).
-        group(:state).group_by_week(:date, format: "%Y/%m").sum('total_in_cents/100')
+        group(:state).group_by_week(:date, format: "%Y/%W").sum('total_in_cents/100')
     else # all_by_month
       projdata = @project.issued_invoices.where(["date > ?", 7.years.ago]).
         group(:state).group_by_month(:date, format: "%Y/%m").sum('total_in_cents/100')
@@ -65,10 +65,24 @@ class ChartsController < ApplicationController
     client_ids = top_clients.collect do |client,count|
       client.id
     end
-    if client_ids.any?
-      chart_data = @project.issued_invoices.where(["client_id IN (#{client_ids.join(',')}) and date > ?", 5.years.ago]).group(:client_id).group_by_month(:date, format: "%Y/%m").sum('total_in_cents/100')
-    else
-      chart_data = @project.issued_invoices.where(["date > ?", 5.years.ago]).group(:client_id).group_by_month(:date, format: "%Y/%m").sum('total_in_cents/100')
+    where = client_ids.any? ?  "client_id IN (#{client_ids.join(',')}) and date > ?" : "date > ?"
+    case User.current.pref.others[:chart_top_clients]
+    when "all_by_year"
+      chart_data = @project.issued_invoices.where([where, 7.years.ago]).
+        group(:client_id).group_by_year(:date, format: "%Y").
+        sum('total_in_cents/100')
+    when "last_year_by_month"
+      chart_data = @project.issued_invoices.where([where, 1.year.ago]).
+        group(:client_id).group_by_month(:date, format: "%Y/%m").
+        sum('total_in_cents/100')
+    when "last_month_by_week"
+      chart_data = @project.issued_invoices.where([where, 1.month.ago]).
+        group(:client_id).group_by_week(:date, format: "%Y/%m/%d").
+        sum('total_in_cents/100')
+    else # all_by_month
+      chart_data = @project.issued_invoices.where([where, 7.years.ago]).
+        group(:client_id).group_by_month(:date, format: "%Y/%m").
+        sum('total_in_cents/100')
     end
     final_json = JSON.parse(chart_data.chart_json)
     final_json.each do |h|
