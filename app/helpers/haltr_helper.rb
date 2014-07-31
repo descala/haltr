@@ -120,15 +120,22 @@ module HaltrHelper
   end
 
   def link_to_invoice_with_label(invoice)
-    controller = case invoice.type
+    case invoice.type
     when 'InvoiceTemplate'
-      'invoice_templates'
+      controller = 'invoice_templates'
+      label = "#{l('label_invoice_template')} ##{invoice.id}"
     when 'ReceivedInvoice'
-      'received'
+      controller = 'received'
+      label = l('label_invoice')
     else
-      'invoices'
+      controller = 'invoices'
+      label = l('label_invoice')
     end
-    link_to( "#{l("label_#{invoice.type.underscore}")} #{invoice.number}", {:controller=>controller,:action=>'show',:id=>invoice,:anchor=>'haltr_events'}, :title=>invoice.client.name)
+    link_to("#{label} #{invoice.number}",
+            { :controller=>controller,
+              :action=>'show',
+              :id=>invoice,:anchor=>'haltr_events' },
+            :title=>invoice.client.name)
   end
 
 end
