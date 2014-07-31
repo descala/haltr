@@ -1,9 +1,9 @@
 <div class="chart_cashflow">
   <%= render :partial => 'common/chart_headers' %>
   <h3><%= l(:chart_cashflow) %></h3>
-  <%= select_tag "value", options_for_select({ t(:all)           => :all,
+  <%= select_tag "value", options_for_select({ t(:last_3_months) => :last_3_months,
                                                t(:last_year)     => :last_year,
-                                               t(:last_3_months) => :last_3_months },
+                                               t(:all)           => :all },
                                              User.current.pref.others[:chart_cashflow]),
     :data  => { :url => url_for(update_chart_preference_path) },
     :id    => 'chart_cashflow',

@@ -2,10 +2,10 @@
   <%= render :partial => 'common/chart_headers' %>
 
     <h3><%=l('chart_invoice_status')%></h3>
-    <%= select_tag "value", options_for_select({t(:all_by_year)=>"all_by_year",
-                                                t(:all_by_month)=>"all_by_month",
-                                                t(:last_year_by_month)=>"last_year_by_month",
-                                                t(:last_month_by_week)=>"last_month_by_week"},
+    <%= select_tag "value", options_for_select({t(:last_year_by_month)=>"last_year_by_month",
+                                                t(:last_month_by_week)=>"last_month_by_week",
+                                                t(:all_by_year)=>"all_by_year",
+                                                t(:all_by_month)=>"all_by_month"},
                                                User.current.pref.others[:chart_invoice_status]),
                    :data  => { :url => url_for(update_chart_preference_path) },
                    :id    => 'chart_invoice_status',
