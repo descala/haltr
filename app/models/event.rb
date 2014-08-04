@@ -47,6 +47,10 @@ class Event < ActiveRecord::Base
     str = ""
     if class_for_send
       str << l(class_for_send)
+    else
+      str << 'client channel: '
+      #TODO: this slows down this page...
+      str << ExportChannels.l(self.invoice.client.invoice_format) rescue ''
     end
     str << " - " unless str.blank?
     str << l(name)
