@@ -12,7 +12,7 @@ class Event < ActiveRecord::Base
   ### redmine activity ###
   acts_as_event :type => 'info_event',
     :title => Proc.new {|e| "#{I18n.t(e.invoice.type)} #{e.invoice.number} (#{I18n.t('state_'+e.invoice.state)})" },
-    :url => Proc.new {|e| {:controller=>'invoices', :action=>'show', :id=>e.invoice} },
+    :url => Proc.new {|e| {:controller=>'invoices', :action=>'show', :id=>e.invoice_id} },
     :datetime => :created_at,
     :author => :user_id
   acts_as_activity_provider :type => 'info_events',
@@ -24,7 +24,7 @@ class Event < ActiveRecord::Base
 
   acts_as_event :type => 'error_event',
     :title => Proc.new {|e| "#{I18n.t(e.invoice.type)} #{e.invoice.number} (#{I18n.t('state_'+e.invoice.state)})" },
-    :url => Proc.new {|e| {:controller=>'invoices', :action=>'show', :id=>e.invoice} },
+    :url => Proc.new {|e| {:controller=>'invoices', :action=>'show', :id=>e.invoice_id} },
     :datetime => :created_at,
     :author => :user_id
   acts_as_activity_provider :type => 'error_events',
@@ -39,17 +39,17 @@ class Event < ActiveRecord::Base
 
   def to_s
     str = l(name)
-    str += " #{l(:by)} #{user.name}" if user
+    str << " #{l(:by)} #{user.name}" if user
     str
   end
 
   def description
     str = ""
     if class_for_send
-      str += l(class_for_send)
+      str << l(class_for_send)
     end
-    str += " - " unless str.blank?
-    str += l(name)
+    str << " - " unless str.blank?
+    str << l(name)
     str
   end
 
@@ -64,7 +64,7 @@ class Event < ActiveRecord::Base
 
   def self.automatic
     events  = %w(bounced sent_notification delivered_notification registered_notification)
-    events += %w(refuse_notification accept_notification paid_notification accept refuse)
+    events << %w(refuse_notification accept_notification paid_notification accept refuse)
 
     actions = %w(sending receiving validating_format validating_signature)
     actions.each do |a|
