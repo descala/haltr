@@ -536,3 +536,5 @@ es:
   last_year: "Último año"
   last_3_months: "Ultimos tres meses"
   article_code: "Código"
+  label_error_event_plural: "Eventos de envios fallados"
+  label_info_event_plural: "Eventos de envios con éxito"

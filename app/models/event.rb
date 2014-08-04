@@ -9,23 +9,47 @@ class Event < ActiveRecord::Base
 
   after_create :update_invoice, :unless => Proc.new {|event| event.invoice.nil?}
 
-  acts_as_event :title => Proc.new {|e| "#{I18n.t(e.invoice.type)} #{e.invoice.number}" },
-                :url => Proc.new {|e| {:controller=>'invoices', :action=>'show', :id=>e.invoice} },
-                :datetime => :created_at,
-                :author => :user_id,
-                :description => :to_s
+  ### redmine activity ###
+  acts_as_event :type => 'info_event',
+    :title => Proc.new {|e| "#{I18n.t(e.invoice.type)} #{e.invoice.number}" },
+    :url => Proc.new {|e| {:controller=>'invoices', :action=>'show', :id=>e.invoice} },
+    :datetime => :created_at,
+    :author => :user_id
+  acts_as_activity_provider :type => 'info_events',
+    :author_key => :user_id,
+    :permission => :general_use,
+    :timestamp => "#{Event.table_name}.created_at",
+    :find_options => {:include => [:user, {:invoice => :project}],
+                      :conditions => "events.name in ('success_sending')"}
 
-  acts_as_activity_provider :type => 'events',
-                            :author_key => :user_id,
-                            :permission => :general_use,
-                            :timestamp => "#{Event.table_name}.created_at",
-                            :find_options => {:include => [:user, {:invoice => :project}]}
+  acts_as_event :type => 'error_event',
+    :title => Proc.new {|e| "#{I18n.t(e.invoice.type)} #{e.invoice.number}" },
+    :url => Proc.new {|e| {:controller=>'invoices', :action=>'show', :id=>e.invoice} },
+    :datetime => :created_at,
+    :author => :user_id
+  acts_as_activity_provider :type => 'error_events',
+    :author_key => :user_id,
+    :permission => :general_use,
+    :timestamp => "#{Event.table_name}.created_at",
+    :find_options => {:include => [:user, {:invoice => :project}],
+                      :conditions => "events.name in ('error_sending','discard_sending')"}
+  ########################
+
   serialize :info
-
 
   def to_s
     str = l(name)
     str += " #{l(:by)} #{user.name}" if user
+    str
+  end
+
+  def description
+    str = ""
+    if class_for_send
+      str += l(class_for_send)
+    end
+    str += " - " unless str.blank?
+    str += l(name)
     str
   end
 

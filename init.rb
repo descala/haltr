@@ -144,7 +144,8 @@ Mime::Type.register "text/xml", :oioubl20
 Mime::Type.register "text/xml", :efffubl
 
 Redmine::Activity.map do |activity|
-  activity.register :events
+  activity.register :info_events, :class_name => 'Event'
+  activity.register :error_events, :class_name => 'Event'
 end
 
 Delayed::Worker.max_attempts = 3

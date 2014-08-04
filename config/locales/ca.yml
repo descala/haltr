@@ -532,3 +532,5 @@ ca:
   last_year: "Últim any"
   last_3_months: "Últims tres mesos"
   article_code: "Codi"
+  label_error_event_plural: "Events d'enviaments fallats"
+  label_info_event_plural: "Events d'enviaments exitosos"
