@@ -83,6 +83,14 @@ $(document).ready(function() {
 
   if ( $('#client_taxcode')[0] ) { client_taxcode_changed() };
 
+  $(document).on('click', 'a.icon-haltr-send.disabled', function(e) {
+    //alert($(this).attr('tiptitle'));
+    $('div.flash.error').remove();
+    $(this).parents('div').first().append(
+      $("<div></div>").addClass('flash').addClass('error').html($(this).attr('tiptitle'))
+    );
+  });
+
 });
 
 
