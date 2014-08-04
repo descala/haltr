@@ -11,7 +11,7 @@ class Event < ActiveRecord::Base
 
   ### redmine activity ###
   acts_as_event :type => 'info_event',
-    :title => Proc.new {|e| "#{I18n.t(e.invoice.type)} #{e.invoice.number}" },
+    :title => Proc.new {|e| "#{I18n.t(e.invoice.type)} #{e.invoice.number} (#{I18n.t('state_'+e.invoice.state)})" },
     :url => Proc.new {|e| {:controller=>'invoices', :action=>'show', :id=>e.invoice} },
     :datetime => :created_at,
     :author => :user_id
@@ -23,7 +23,7 @@ class Event < ActiveRecord::Base
                       :conditions => "events.name in ('success_sending')"}
 
   acts_as_event :type => 'error_event',
-    :title => Proc.new {|e| "#{I18n.t(e.invoice.type)} #{e.invoice.number}" },
+    :title => Proc.new {|e| "#{I18n.t(e.invoice.type)} #{e.invoice.number} (#{I18n.t('state_'+e.invoice.state)})" },
     :url => Proc.new {|e| {:controller=>'invoices', :action=>'show', :id=>e.invoice} },
     :datetime => :created_at,
     :author => :user_id
