@@ -5,6 +5,7 @@ require File.dirname(__FILE__) + '/../test_helper'
 class HaltrMailHandlerTest < ActiveSupport::TestCase
 
   FIXTURES_PATH = File.dirname(__FILE__) + '/../fixtures/mail_handler'
+  fixtures :invoices
 
   def setup
     ActionMailer::Base.deliveries.clear
@@ -37,6 +38,15 @@ class HaltrMailHandlerTest < ActiveSupport::TestCase
   test "takes in account all recipients" do
     invoices = submit_email('invoice_facturae32_with_many_recipients.eml')
     assert_invoices_created(invoices)
+  end
+
+  test 'processes bounce and updates invoice' do
+    assert Invoice.find(2).state == 'sent', "Invoice initial state is sent (#{Invoice.find(2).state})"
+    invoices = submit_email('invoice_bounce.eml')
+    assert invoices.size == 1, "it finds 1 invoice (#{invoices.size})"
+    invoice = invoices.first
+    assert invoice.events.last.name == 'bounced', "it creates an event for the bounce (last event: #{invoice.events.last.name})"
+    assert invoice.state == 'discarded', "Invoice dinal state is discarded (#{invoice.state})"
   end
 
   # TODO test does not create invoice when 

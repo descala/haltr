@@ -99,7 +99,7 @@ invoices_002:
   frequency: 
   transport: 
   terms: "0"
-  state: new
+  state: sent
 
 invoices_003: 
   id: 3

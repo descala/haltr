@@ -19,12 +19,9 @@ class HaltrMailHandler < MailHandler # < ActionMailer::Base
 
       if email.to and email.to.include? Setting.plugin_haltr['return_path']
         # bounced invoice
-        if raw_invoices.size == 1 # we send only 1 invoice on each mail
-          logger.info "Bounced invoice mail received (#{raw_invoices.first.filename})"
-          process_bounced_file(raw_invoices.first)
-        else
-          logger.info "Discarding bounce mail with != 1 (#{raw_invoices.size}) invoices attached (#{raw_invoices.collect {|i| i.filename}.join(',')})"
-        end
+        logger.info "Bounced invoice mail received"
+        invoices << process_bounce(email)
+        Event.create(:name=>'bounced',:invoice=>invoices.first)
       else
         # incoming invoices (PDF/XML)
         logger.info "Incoming invoice mail with #{raw_invoices.size} attached invoices"
@@ -112,6 +109,17 @@ class HaltrMailHandler < MailHandler # < ActionMailer::Base
     ri.file_name = raw_invoice.filename
     ri.save!
     return ri
+  end
+
+  def process_bounce(email)
+    haltr_headers = Hash[*email.to_s.scan(/^X-Haltr.*$/).collect {|m|
+      m.chomp.gsub(/: /,' ').split(" ")
+    }.flatten] rescue {}
+    # haltr sets invoice id on header
+    id = haltr_headers["X-Haltr-Id"]
+    # b2brouter sets invoice id on filename
+    id ||= haltr_headers["X-Haltr-Filename"].split("_").last.split(".").first
+    Invoice.find(id.to_i)
   end
 
   def attached_invoices(email)
