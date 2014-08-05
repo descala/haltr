@@ -53,6 +53,10 @@ class HaltrMailer < ActionMailer::Base
       @body = @invoice.company.invoice_mail_body(@invoice.client.language,@invoice)
     end
 
+    unless Setting.plugin_haltr['return_path'].blank?
+      headers['Return-Path'] = Setting.plugin_haltr['return_path']
+    end
+
     mail :to   => recipients,
       :subject => subj,
       :from    => from,

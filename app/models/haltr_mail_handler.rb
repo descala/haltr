@@ -17,7 +17,7 @@ class HaltrMailHandler < MailHandler # < ActionMailer::Base
     if email.multipart?
       raw_invoices = attached_invoices(email)
 
-      if email.to and email.to.include? "noreply@b2brouter.net"
+      if email.to and email.to.include? Setting.plugin_haltr['return_path']
         # bounced invoice
         if raw_invoices.size == 1 # we send only 1 invoice on each mail
           logger.info "Bounced invoice mail received (#{raw_invoices.first.filename})"

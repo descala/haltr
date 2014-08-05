@@ -323,6 +323,7 @@ ca:
   invoice_mail_body: "Li fem arribar la factura num @invoice.number amb data @invoice.date"
   quote_mail_subject: "Pressupost num @quote.number"
   quote_mail_body: "Li fem arribar el pressupost num @quote.number amb data @quote.date"
+  return_path: "Return-Path (pels bounces)"
 
 
   # Terms

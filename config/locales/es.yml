@@ -326,6 +326,7 @@ es:
   invoice_mail_body: "Le enviamos la factura numero @invoice.number con fecha @invoice.date"
   quote_mail_subject: "Presupuesto num @quote.number"
   quote_mail_body: "Le enviamos el presupuesto numero @quote.number con fecha @quote.date"
+  return_path: "Return-Path (para los bounces)"
 
   # Terms
   "0": Al contado

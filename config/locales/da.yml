@@ -311,6 +311,7 @@ da:
   invoice_mail_body: "We send you invoice number @invoice.number dated @invoice.date"
   quote_mail_subject: "Quote num @quote.number"
   quote_mail_body: "We send you quote number @quote.number dated @quote.date"
+  return_path: "Return-Path (for bounces)"
  
   # Terms
   "0": Omgående betaling
