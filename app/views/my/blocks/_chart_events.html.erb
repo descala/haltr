@@ -23,7 +23,7 @@
         <ul>
           <% events.each do |e| %>
             <li>
-            <%=e.created_at.strftime("%d/%m %H:%M")%> -
+            <%= format_time e.created_at %> -
             <%= link_to_invoice_with_label(e.invoice) -%>
               <%= render :partial => "events/event_short", :locals => {:e=>e} %>
             </li>
