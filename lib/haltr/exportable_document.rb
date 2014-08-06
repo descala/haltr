@@ -36,7 +36,10 @@ module Haltr::ExportableDocument
         else
           format = "Can't find channel #{channel_name}, please check channels.yml"
         end
-        "#{format}<br/>#{parsed_errors}<br/>#{recipients}".html_safe
+        if channel["format"] == "pdf" and self.client and self.client.language != User.current.language
+          lang=" (#{l(:general_lang_name, :locale=>self.client.language)})"
+        end
+        "#{format}#{lang}<br/>#{parsed_errors}<br/>#{recipients}".html_safe
       end
 
       def parsed_errors
