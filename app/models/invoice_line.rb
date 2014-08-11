@@ -1,6 +1,7 @@
 class InvoiceLine < ActiveRecord::Base
 
   unloadable
+  audited :associated_with => :invoice, :except => [:id, :invoice_id]
 
   UNITS     = 1
   HOURS     = 2

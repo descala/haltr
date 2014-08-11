@@ -84,11 +84,33 @@ $(document).ready(function() {
   if ( $('#client_taxcode')[0] ) { client_taxcode_changed() };
 
   $(document).on('click', 'a.icon-haltr-send.disabled', function(e) {
-    //alert($(this).attr('tiptitle'));
     $('div.flash.error').remove();
     $(this).parents('div').first().append(
       $("<div></div>").addClass('flash').addClass('error').html($(this).attr('tiptitle'))
     );
+  });
+
+  $(document).on('click', 'a.show-audits', function(e) {
+    $('div#audited_'+$(this).data('id')).toggle();
+    return false;
+  });
+
+  $(document).on('mousemove', 'div.audited li', function(e) {
+    $('div.audited-changes').css({
+      "left":  e.pageX + 20,
+      "top":   e.pageY
+    });
+  });
+
+  $(document).on('mouseenter', 'div.audited li', function(e) {
+    // move element to <body> so absolute positioning works
+    var elem = $('div#audited_changes_'+$(this).data('id')).detach();
+    $('body').append(elem);
+    elem.show();
+  });
+
+  $(document).on('mouseleave', 'div.audited li', function(e) {
+    $('div#audited_changes_'+$(this).data('id')).hide();
   });
 
 });

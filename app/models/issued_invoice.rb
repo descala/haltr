@@ -240,6 +240,7 @@ class IssuedInvoice < InvoiceDocument
 
   protected
 
+  # called after_create (only NEW invoices)
   def create_event
     if self.transport.blank?
       Event.create(:name=>'new',:invoice=>self,:user=>User.current)

@@ -12,7 +12,19 @@
             <% rescue ActionView::MissingTemplate -%>
               <%= render :partial => "events/event", :locals => {:e=>e} %>
             <% end -%>
+            <% if e.audits.size > 0 -%>
+            (<%= link_to "#{e.audits.size} #{l(:label_change_plural)}", '#', :class=>'show-audits', :'data-id'=>e.id %>)
+            <% else -%>
+            (<%= "0 #{l(:label_change_plural)}" %>)
+            <% end -%>
             </li>
+
+            <div id="audited_<%=e.id%>" class="audited">
+              <% e.audits.each do |a| -%>
+                <%= render partial: "audits/audit", locals: { a: a } %>
+              <% end -%>
+            </div>
+
           <% end -%>
         </ul>
       </div>

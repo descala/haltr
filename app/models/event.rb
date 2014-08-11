@@ -5,6 +5,7 @@ class Event < ActiveRecord::Base
   validates_presence_of :invoice_id
   belongs_to :user
   belongs_to :invoice
+  has_many :audits, :class_name=>'Audited::Adapters::ActiveRecord::Audit'
   delegate :project, :to => :invoice, :allow_nil => true
 
   after_create :update_invoice, :unless => Proc.new {|event| event.invoice.nil?}

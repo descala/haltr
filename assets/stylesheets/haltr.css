@@ -194,3 +194,21 @@ table#invoice_lines {
 .cashflow {
   text-align: right;
 }
+div.audited {
+  display: none;
+}
+div.audited-changes {
+  display: none;
+  border: 1px solid black;
+  position: absolute;
+  float: left;
+}
+div.audited-changes table td {
+  padding: 7px;
+}
+div.audited-changes table tr.new-values {
+  background-color: #dfd;
+}
+div.audited-changes table tr.old-values {
+  background-color: #fdd;
+}

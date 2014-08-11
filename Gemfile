@@ -25,3 +25,4 @@ gem 'render_anywhere', :require => false, :github => 'yappbox/render_anywhere', 
 
 gem 'groupdate'
 gem 'chartkick'
+gem 'audited-activerecord', '~> 3.0'

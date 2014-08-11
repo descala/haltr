@@ -3,6 +3,9 @@ class Invoice < ActiveRecord::Base
   include HaltrHelper
 
   unloadable
+  audited except: [:import_in_cents, :total_in_cents,
+                   :state, :has_been_read, :id]
+  has_associated_audits
 
   # 1 - cash (al comptat)
   # 2 - debit (rebut domiciliat)

@@ -1,5 +1,4 @@
 ca:
-
   number:
     # Used in number_to_currency()
     currency:
@@ -532,6 +531,11 @@ ca:
   all: "Tot"
   last_year: "Últim any"
   last_3_months: "Últims tres mesos"
-  article_code: "Codi"
+  field_article_code: "Codi"
   label_error_event_plural: "Events d'enviaments fallats"
   label_info_event_plural: "Events d'enviaments exitosos"
+  audited_create: "%{model} creat/creada"
+  audited_update: "%{model} actualitzat/actualitzada"
+  audited_destroy: "%{model} esborrat/esborrada"
+  invoice_line: "línia de factura"
+  invoice: "Factura"

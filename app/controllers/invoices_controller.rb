@@ -207,7 +207,12 @@ class InvoicesController < ApplicationController
     end
 
     if @invoice.update_attributes(parsed_params)
-      Event.create(:name=>'edited',:invoice=>@invoice,:user=>User.current)
+      event = Event.new(:name=>'edited',:invoice=>@invoice,:user=>User.current)
+      # associate last created audits to this event
+      audits = (@invoice.audits + @invoice.associated_audits).group_by(&:created_at)
+      last = audits.keys.sort.last
+      event.audits = audits[last]
+      event.save
       flash[:notice] = l(:notice_successful_update)
       if params[:save_and_send]
         if @invoice.can_be_exported?

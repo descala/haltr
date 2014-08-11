@@ -90,7 +90,7 @@
       <tr>
         <th class="item-quantity first"><abbr title="Quantitat">Q</abbr></th>
         <% if @invoice.invoice_lines.collect {|l| l.article_code.blank? }.include?(false) -%>
-          <th class="item-article_code"><%=h l(:article_code)%></th>
+          <th class="item-article_code"><%=h l(:field_article_code)%></th>
         <% end -%>
         <th class="item-description"><%=h l(:field_description)%></th>
         <th class="item-price"><%=h l(:field_amount) %></th>
