@@ -21,17 +21,15 @@
     %>
     </p>
     <p class="col span-1-de-2">
-      <%= f.text_field :company_identifier, :readonly => client.linked? %>
+    <%= f.label_for_field :name, :label => l('name_or_company') %>
+    <%= f.text_field :name, :required => true, :readonly => client.linked?, :no_label => true %>
     </p>
   </div>
   <div class="seccio grup">
-    <p class="col span-1-de-3">
-      <%= f.text_field :name, :required => true, :readonly => client.linked? %>
-    </p>
-    <p class="col span-1-de-3">
+    <p class="col span-1-de-2">
       <%= f.text_field :email, :readonly => client.linked? %>
     </p>
-    <p class="col span-1-de-3">
+    <p class="col span-1-de-2">
       <%= f.text_field :website, :readonly => client.linked? %>
     </p>
   </div>
@@ -143,6 +141,11 @@
   </div>
   <% end -%>
 
+</fieldset>
+
+<fieldset>
+  <legend>UBL</legend>
+    <%= f.text_field :company_identifier %>
 </fieldset>
 
 <% if User.current.admin? or User.current.allowed_to?(:send_peppol, @project) -%>
