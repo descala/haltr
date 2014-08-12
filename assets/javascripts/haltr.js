@@ -97,8 +97,8 @@ $(document).ready(function() {
 
   $(document).on('mousemove', 'div.audited li', function(e) {
     $('div.audited-changes').css({
-      "left":  e.pageX + 20,
-      "top":   e.pageY
+      "left":  e.pageX + 15,
+      "top":   e.pageY - $('div#audited_changes_'+$(this).data('id')).height()
     });
   });
 

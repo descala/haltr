@@ -197,6 +197,10 @@ table#invoice_lines {
 div.audited {
   display: none;
 }
+div.audited li:hover {
+  cursor: alias;
+  background-color: #FFFFCC;
+}
 div.audited-changes {
   display: none;
   border: 1px solid black;
