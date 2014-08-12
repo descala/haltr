@@ -579,10 +579,12 @@ _INV
     # invoice lines
     doc.xpath(xpaths[:invoice_lines]).each do |line|
       il = InvoiceLine.new(
-             :quantity    => Haltr::Utils.get_xpath(line,xpaths[:line_quantity]),
-             :description => Haltr::Utils.get_xpath(line,xpaths[:line_description]),
-             :price       => Haltr::Utils.get_xpath(line,xpaths[:line_price]),
-             :unit        => Haltr::Utils.get_xpath(line,xpaths[:line_unit])
+             :quantity     => Haltr::Utils.get_xpath(line,xpaths[:line_quantity]),
+             :description  => Haltr::Utils.get_xpath(line,xpaths[:line_description]),
+             :price        => Haltr::Utils.get_xpath(line,xpaths[:line_price]),
+             :unit         => Haltr::Utils.get_xpath(line,xpaths[:line_unit]),
+             :article_code => Haltr::Utils.get_xpath(line,xpaths[:line_code]),
+             :notes        => Haltr::Utils.get_xpath(line,xpaths[:line_notes])
            )
       # invoice taxes. Known taxes are described at config/taxes.yml
       line.xpath(*xpaths[:line_taxes]).each do |line_tax|
