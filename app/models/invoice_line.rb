@@ -2,6 +2,8 @@ class InvoiceLine < ActiveRecord::Base
 
   unloadable
   audited :associated_with => :invoice, :except => [:id, :invoice_id]
+  has_associated_audits
+
 
   UNITS     = 1
   HOURS     = 2
@@ -17,6 +19,7 @@ class InvoiceLine < ActiveRecord::Base
     DAYS      => {:name => 'days',      :facturae => '05', :ubl => 'DAY'},
   }
 
+  # do not remove, with audit we need to make the other attributes accessible
   attr_protected :created_at, :updated_at
 
   belongs_to :invoice

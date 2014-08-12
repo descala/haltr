@@ -528,3 +528,5 @@ fr:
   audited_destroy: "%{model} deleted"
   invoice_line: "invoice line"
   invoice: "Invoice"
+  tax: "Tax"
+  field_percent: "%"

@@ -209,9 +209,13 @@ class InvoicesController < ApplicationController
     if @invoice.update_attributes(parsed_params)
       event = Event.new(:name=>'edited',:invoice=>@invoice,:user=>User.current)
       # associate last created audits to this event
-      audits = (@invoice.audits + @invoice.associated_audits).group_by(&:created_at)
+      audits = (@invoice.audits.where('event_id is NULL') +
+                @invoice.associated_audits.where('event_id is NULL') +
+                @invoice.invoice_lines.collect {|l|
+                  l.associated_audits.where('event_id is NULL')
+                }.flatten).group_by(&:created_at)
       last = audits.keys.sort.last
-      event.audits = audits[last]
+      event.audits = audits[last] || []
       event.save
       flash[:notice] = l(:notice_successful_update)
       if params[:save_and_send]

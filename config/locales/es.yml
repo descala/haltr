@@ -544,3 +544,5 @@ es:
   audited_destroy: "%{model} borrado/a"
   invoice_line: "línea de factura"
   invoice: "Factura"
+  tax: "Impuesto"
+  field_percent: "%"

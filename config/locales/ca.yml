@@ -539,3 +539,5 @@ ca:
   audited_destroy: "%{model} esborrat/esborrada"
   invoice_line: "línia de factura"
   invoice: "Factura"
+  tax: "Impost"
+  field_percent: "%"
