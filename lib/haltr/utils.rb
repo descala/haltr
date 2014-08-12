@@ -85,6 +85,8 @@ module Haltr
           xpaths[:line_price]         = "UnitPriceWithoutTax"
           xpaths[:line_unit]          = "UnitOfMeasure"
           xpaths[:line_taxes]         = ["TaxesOutputs/Tax","TaxesWithheld/Tax"]
+          xpaths[:line_notes]         = "AdditionalLineItemInformation"
+          xpaths[:line_code]          = "ArticleCode"
           # relative to invoice_lines/taxes
           xpaths[:tax_id]             = "TaxTypeCode"
           xpaths[:tax_percent]        = "TaxRate"
