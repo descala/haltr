@@ -530,3 +530,4 @@ fr:
   invoice: "Invoice"
   tax: "Tax"
   field_percent: "%"
+  field_bank_info: "Bank account"

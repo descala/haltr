@@ -546,3 +546,4 @@ es:
   invoice: "Factura"
   tax: "Impuesto"
   field_percent: "%"
+  field_bank_info: "Cuenta bancaria"

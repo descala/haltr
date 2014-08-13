@@ -1,34 +1,34 @@
 <li data-id="<%= a.id %>">
-  <span style="color: transparent;"><%= format_time a.created_at %> - </span>
-  <strong><%=l("audited_#{a.action}", :model=>l(a.auditable_type.underscore))%></strong>
+<span style="color: transparent;"><%= format_time a.created_at %> - </span>
+<strong><%=l("audited_#{a.action}", :model=>l(a.auditable_type.underscore))%></strong>
 </li>
 
 <div id="audited_changes_<%=a.id%>" class="audited-changes">
   <table>
     <% a.audited_changes.each do |field,values| -%>
-        <% next if values.blank? -%>
+      <% next if values.blank? -%>
       <% if values.is_a?(Array) -%>
         <tr class="new-values">
-          <td><%= l("field_#{field}") %></td>
+          <td><%= label_for_audit(field) %></td>
           <td>&nbsp;</td>
-          <td><strong><%= values[1] %></strong></td>
+          <td><strong><%= value_for_audit(field,values[1]) %></strong></td>
         </tr>
         <tr class="old-values">
-          <td><%= l("field_#{field}") %></td>
+          <td><%= label_for_audit(field) %></td>
           <td>&nbsp;</td>
-          <td><strong><%= values[0] %></strong></td>
+          <td><strong><%= value_for_audit(field,values[0]) %></strong></td>
         </tr>
       <% elsif a.action=='destroy' -%>
         <tr class="old-values">
-          <td><%= l("field_#{field}") %></td>
+          <td><%= label_for_audit(field) %></td>
           <td>&nbsp;</td>
-          <td><strong><%= values %></strong></td>
+          <td><strong><%= value_for_audit(field,values) %></strong></td>
         </tr>
       <% else -%>
         <tr class="new-values">
-          <td><%= l("field_#{field}") %></td>
+          <td><%= label_for_audit(field) %></td>
           <td>&nbsp;</td>
-          <td><strong><%= values %></strong></td>
+          <td><strong><%= value_for_audit(field,values) %></strong></td>
         </tr>
       <% end -%>
     <% end -%>

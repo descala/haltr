@@ -541,3 +541,4 @@ ca:
   invoice: "Factura"
   tax: "Impost"
   field_percent: "%"
+  field_bank_info: "Compte bancari"

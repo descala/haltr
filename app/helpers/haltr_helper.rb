@@ -138,4 +138,35 @@ module HaltrHelper
             :title=>invoice.client.name)
   end
 
+  def label_for_audit(name)
+    l("field_#{name.gsub(/_id$/,'')}")
+  end
+
+  def value_for_audit(name,value)
+    if name =~ /_id$/
+      related = name.gsub(/_id$/,'').camelize.constantize.find(value.to_i) rescue nil
+      if related and related.respond_to? :name
+        related.name
+        #TODO elsif ...
+      else
+        value
+      end
+    elsif name == "payment_method"
+      case value
+      when Invoice::PAYMENT_CASH
+        l(:cash)
+      when Invoice::PAYMENT_DEBIT
+        l(:debit)
+      when Invoice::PAYMENT_TRANSFER
+        l(:transfer)
+      when Invoice::PAYMENT_SPECIAL
+        l(:other)
+      else
+        value
+      end
+    else
+      value
+    end
+  end
+
 end
