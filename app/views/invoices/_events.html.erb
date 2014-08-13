@@ -13,9 +13,7 @@
               <%= render :partial => "events/event", :locals => {:e=>e} %>
             <% end -%>
             <% if e.audits.size > 0 -%>
-            (<%= link_to "#{e.audits.size} #{l(:label_change_plural)}", '#', :class=>'show-audits', :'data-id'=>e.id %>)
-            <% else -%>
-            (<%= "0 #{l(:label_change_plural)}" %>)
+            <%= link_to image_tag('zoom_in.png'), '#', :class=>'show-audits', :'data-id'=>e.id %>
             <% end -%>
             </li>
 
