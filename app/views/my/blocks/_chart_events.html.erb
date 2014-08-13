@@ -27,6 +27,13 @@
             <%= link_to_invoice_with_label(e.invoice) -%>
               <%= render :partial => "events/event_short", :locals => {:e=>e} %>
             </li>
+
+            <div id="audited_<%=e.id%>" class="audited">
+              <% e.audits.each do |a| -%>
+                <%= render partial: "audits/audit", locals: { a: a } %>
+              <% end -%>
+            </div>
+
           <% end -%>
         </ul>
       <% else -%>
