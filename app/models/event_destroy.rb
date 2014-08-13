@@ -1,13 +1,13 @@
-class EventError < Event
+class EventDestroy < Event
   def to_s
-    str = l(name)
+    str = ""
     unless notes.blank?
-      str << ": "
       if notes.is_a?(Array)
         str << I18n.t(notes, :default => notes).join(" ")
       else
         str << I18n.t(notes, :default => notes)
       end
+      str << " - "
     end
     str
   end

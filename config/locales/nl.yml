@@ -532,3 +532,8 @@ nl:
   tax: "Tax"
   field_percent: "%"
   field_bank_info: "Bank account"
+  deleted_issued_invoice: "Issued invoice deleted"
+  deleted_received_invoice: "Received invoice deleted"
+  deleted_invoice_template: "Invoice template deleted"
+  deleted_client: "Client deleted"
+  client: "Client"

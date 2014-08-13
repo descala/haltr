@@ -67,6 +67,10 @@ class ClientsController < ApplicationController
 
   def update
     if @client.update_attributes(params[:client])
+      event = Event.new(:name=>'edited',:client=>@client,:user=>User.current)
+      # associate last created audits to this event
+      event.audits = @client.last_audits_without_event
+      event.save!
       flash[:notice] = l(:notice_successful_update)
       redirect_to :action => 'index', :project_id => @project
     else
@@ -76,6 +80,11 @@ class ClientsController < ApplicationController
 
   def destroy
     @client.destroy
+    event = EventDestroy.new(:name    => "deleted_client",
+                             :notes   => @client.name,
+                             :project => @client.project)
+    event.audits = @client.last_audits_without_event
+    event.save!
     redirect_to :action => 'index', :project_id => @project
   end
 

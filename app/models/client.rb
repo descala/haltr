@@ -1,11 +1,15 @@
 class Client < ActiveRecord::Base
 
   unloadable
+  audited except: [:hashid, :project]
+  # do not remove, with audit we need to make the other attributes accessible
+  attr_protected :created_at, :updated_at
 
   include Haltr::BankInfoValidator
   has_many :invoices, :dependent => :destroy
   has_many :people,   :dependent => :destroy
   has_many :mandates, :dependent => :destroy
+  has_many :events,   :dependent => :destroy, :order => :created_at
 
   belongs_to :project # client of
   belongs_to :company # linked to
@@ -29,6 +33,7 @@ class Client < ActiveRecord::Base
 
   before_validation :set_hashid_value
   before_validation :copy_linked_profile
+  after_create  :create_event
   iso_country :country
   include CountryUtils
 
@@ -168,6 +173,21 @@ class Client < ActiveRecord::Base
     else
       read_attribute(:iban)
     end
+  end
+
+  def last_audits_without_event
+    audts = (self.audits.where('event_id is NULL')).group_by(&:created_at)
+    last = audts.keys.sort.last
+    audts[last] || []
+  end
+
+  protected
+
+  # called after_create (only NEW clients)
+  def create_event
+    event = Event.new(:name=>'new',:client=>self,:user=>User.current)
+    event.audits = self.last_audits_without_event
+    event.save!
   end
 
   private

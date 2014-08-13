@@ -6,6 +6,8 @@ class Invoice < ActiveRecord::Base
   audited except: [:import_in_cents, :total_in_cents,
                    :state, :has_been_read, :id]
   has_associated_audits
+  # do not remove, with audit we need to make the other attributes accessible
+  attr_protected :created_at, :updated_at
 
   # 1 - cash (al comptat)
   # 2 - debit (rebut domiciliat)
@@ -24,9 +26,6 @@ class Invoice < ActiveRecord::Base
 
   # remove non-utf8 characters from those fields:
   TO_UTF_FIELDS = %w(extra_info)
-
-  # do not remove, with audit we need to make the other attributes accessible
-  attr_protected :created_at, :updated_at
 
   has_many :invoice_lines, :dependent => :destroy
   has_many :events, :dependent => :destroy, :order => 'created_at'
@@ -665,6 +664,16 @@ _INV
     else
       events.where("type!='HiddenEvent'")
     end
+  end
+
+  def last_audits_without_event
+    audts = (self.audits.where('event_id is NULL') +
+              self.associated_audits.where('event_id is NULL') +
+              self.invoice_lines.collect {|l|
+                l.associated_audits.where('event_id is NULL')
+              }.flatten).group_by(&:created_at)
+    last = audts.keys.sort.last
+    audts[last] || []
   end
 
   protected

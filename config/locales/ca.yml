@@ -542,3 +542,8 @@ ca:
   tax: "Impost"
   field_percent: "%"
   field_bank_info: "Compte bancari"
+  deleted_issued_invoice: "Factura emesa esborrada"
+  deleted_received_invoice: "Factura rebuda esborrada"
+  deleted_invoice_template: "Plantilla esborrada"
+  deleted_client: "Client esborrat"
+  client: "Client"

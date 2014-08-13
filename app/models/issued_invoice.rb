@@ -243,10 +243,12 @@ class IssuedInvoice < InvoiceDocument
   # called after_create (only NEW invoices)
   def create_event
     if self.transport.blank?
-      Event.create(:name=>'new',:invoice=>self,:user=>User.current)
+      event = Event.new(:name=>'new',:invoice=>self,:user=>User.current)
     else
-      Event.create(:name=>self.transport,:invoice=>self,:user=>User.current)
+      event = Event.new(:name=>self.transport,:invoice=>self,:user=>User.current)
     end
+    event.audits = self.last_audits_without_event
+    event.save!
   end
 
   def client_has_email

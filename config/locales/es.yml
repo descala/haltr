@@ -547,3 +547,8 @@ es:
   tax: "Impuesto"
   field_percent: "%"
   field_bank_info: "Cuenta bancaria"
+  deleted_issued_invoice: "Factura emitida borrada"
+  deleted_received_invoice: "Factura recibida borrada"
+  deleted_invoice_template: "Plantilla borrada"
+  deleted_client: "Cliente borrado"
+  client: "Cliente"

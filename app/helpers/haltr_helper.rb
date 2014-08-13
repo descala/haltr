@@ -139,7 +139,7 @@ module HaltrHelper
   end
 
   def label_for_audit(name)
-    l("field_#{name.gsub(/_id$/,'')}")
+    l("field_#{name.gsub(/_id$/,'').gsub(/_in_cents$/,'')}")
   end
 
   def value_for_audit(name,value)

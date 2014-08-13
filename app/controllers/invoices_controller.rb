@@ -209,13 +209,7 @@ class InvoicesController < ApplicationController
     if @invoice.update_attributes(parsed_params)
       event = Event.new(:name=>'edited',:invoice=>@invoice,:user=>User.current)
       # associate last created audits to this event
-      audits = (@invoice.audits.where('event_id is NULL') +
-                @invoice.associated_audits.where('event_id is NULL') +
-                @invoice.invoice_lines.collect {|l|
-                  l.associated_audits.where('event_id is NULL')
-                }.flatten).group_by(&:created_at)
-      last = audits.keys.sort.last
-      event.audits = audits[last] || []
+      event.audits = @invoice.last_audits_without_event
       event.save
       flash[:notice] = l(:notice_successful_update)
       if params[:save_and_send]
@@ -247,6 +241,11 @@ class InvoicesController < ApplicationController
     @invoices.each do |invoice|
       begin
         invoice.reload.destroy
+        event = EventDestroy.new(:name    => "deleted_#{invoice.type.underscore}",
+                                 :notes   => invoice.number,
+                                 :project => invoice.project)
+        event.audits = invoice.last_audits_without_event
+        event.save!
       rescue ::ActiveRecord::RecordNotFound # raised by #reload if invoice no longer exists
         # nothing to do, invoice was already deleted (eg. by a parent)
       end

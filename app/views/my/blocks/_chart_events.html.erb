@@ -24,8 +24,14 @@
           <% events.each do |e| %>
             <li>
             <%= format_time e.created_at %> -
-            <%= link_to_invoice_with_label(e.invoice) -%>
-              <%= render :partial => "events/event_short", :locals => {:e=>e} %>
+            <% if e.invoice -%>
+              <%= link_to_invoice_with_label(e.invoice) -%>
+            <% elsif e.client -%>
+              <%= link_to "#{l(:field_client)} #{e.client.name}", edit_client_path(e.client) -%>
+            <% else -%>
+              <%= e.to_s %>
+            <% end -%>
+            <%= render :partial => "events/event_short", :locals => {:e=>e} %>
             </li>
 
             <div id="audited_<%=e.id%>" class="audited">

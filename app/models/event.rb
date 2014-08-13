@@ -2,12 +2,14 @@ class Event < ActiveRecord::Base
   unloadable
 
   validates_presence_of :name
-  validates_presence_of :invoice_id
+  validates_presence_of :project_id
+  belongs_to :project
   belongs_to :user
   belongs_to :invoice
+  belongs_to :client
   has_many :audits, :class_name=>'Audited::Adapters::ActiveRecord::Audit'
-  delegate :project, :to => :invoice, :allow_nil => true
 
+  before_validation :set_project_if_nil
   after_create :update_invoice, :unless => Proc.new {|event| event.invoice.nil?}
 
   ### redmine activity ###
@@ -102,6 +104,13 @@ class Event < ActiveRecord::Base
       end
     END_SRC
     class_eval src, __FILE__, __LINE__
+  end
+
+  def set_project_if_nil
+    if project.nil?
+      self.project = invoice.project if invoice
+      self.project = client.project  if client
+    end
   end
 
   private
