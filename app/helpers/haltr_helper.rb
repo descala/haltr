@@ -166,17 +166,17 @@ module HaltrHelper
         value
       end
     elsif name == "terms"
-      l(value)
+      l(value, :default=>value)
     elsif name == "unit"
-      l(InvoiceLine::UNIT_CODES[value][:name])
+      l(InvoiceLine::UNIT_CODES[value][:name], :default=>value)
     elsif name == "country"
       ISO::Countries.get_country(value)
     elsif name == "language"
-      l(:general_lang_name,:locale => value)
+      l(:general_lang_name,:locale=>value, :default=>value)
     elsif name == "invoice_format"
       ExportChannels.l(value)
     elsif name == "category"
-      l("tax_#{value}")
+      l("tax_#{value}", :default=>value)
     else
       value
     end
