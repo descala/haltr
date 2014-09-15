@@ -139,7 +139,8 @@ module HaltrHelper
   end
 
   def label_for_audit(name)
-    l("field_#{name.gsub(/_id$/,'').gsub(/_in_cents$/,'')}")
+    parsed_name = name.gsub(/_id$/,'').gsub(/_in_cents$/,'')
+    l("field_#{parsed_name}", :default=>parsed_name.gsub(/_/,' ').capitalize)
   end
 
   def value_for_audit(name,value)
@@ -168,6 +169,12 @@ module HaltrHelper
       l(value)
     elsif name == "unit"
       l(InvoiceLine::UNIT_CODES[value][:name])
+    elsif name == "country"
+      ISO::Countries.get_country(value)
+    elsif name == "language"
+      l(:general_lang_name,:locale => value)
+    elsif name == "invoice_format"
+      ExportChannels.l(value)
     else
       value
     end
