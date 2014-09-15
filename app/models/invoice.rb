@@ -672,8 +672,17 @@ _INV
               self.invoice_lines.collect {|l|
                 l.associated_audits.where('event_id is NULL')
               }.flatten).group_by(&:created_at)
-    last = audts.keys.sort.last
-    audts[last] || []
+    last = []
+    audts.keys.sort.reverse.each_with_index do |k,i|
+      if i == 0
+        last << audts[k]
+      elsif (audts.keys.sort.reverse[i-1] - k) <= 2 # allow 2s between creation times
+        last << audts[k]
+      else
+        break
+      end
+    end
+    last.flatten
   end
 
   protected
