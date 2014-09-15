@@ -68,6 +68,8 @@ class Tax < ActiveRecord::Base
   # sets percent and category from a code string
   def code=(v)
     p, c = v.split("_")
+    # workaround for https://github.com/rails/rails/issues/9034
+    p='0' if p == '0.0'
     self.percent=p
     self.category=c
   end
