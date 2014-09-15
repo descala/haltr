@@ -166,6 +166,8 @@ module HaltrHelper
       end
     elsif name == "terms"
       l(value)
+    elsif name == "unit"
+      l(InvoiceLine::UNIT_CODES[value][:name])
     else
       value
     end
