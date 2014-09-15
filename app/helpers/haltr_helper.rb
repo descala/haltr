@@ -164,6 +164,8 @@ module HaltrHelper
       else
         value
       end
+    elsif name == "terms"
+      l(value)
     else
       value
     end
