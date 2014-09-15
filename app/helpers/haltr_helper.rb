@@ -175,6 +175,8 @@ module HaltrHelper
       l(:general_lang_name,:locale => value)
     elsif name == "invoice_format"
       ExportChannels.l(value)
+    elsif name == "category"
+      l("tax_#{value}")
     else
       value
     end
