@@ -5,10 +5,17 @@ class BankInfo < ActiveRecord::Base
   has_many :invoices, :dependent => :nullify
   has_many :clients, :dependent => :nullify
   validate :has_one_account
+  validate :iban_is_correct
 
   def has_one_account
     if [bank_account, iban, bic].compact.reject(&:blank?).empty?
       errors.add(:base, "empty values for bank_account, iban and bic")
+    end
+  end
+
+  def iban_is_correct
+    if !iban.blank? and !IBANTools::IBAN.valid?(iban)
+      errors.add(:iban, "incorrect")
     end
   end
 
