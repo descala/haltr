@@ -195,7 +195,7 @@
           <cac:Item>
             <cbc:Name><%=h invoice_line.description%></cbc:Name>
 <% unless invoice_line.article_code.blank? -%>
-            <cbc:SellersItemIdentification><%=invoice_line.article_code%></cbc:SellersItemIdentification>
+              <cac:SellersItemIdentification><cbc:ID><%=invoice_line.article_code%></cbc:ID></cac:SellersItemIdentification>
 <% end -%>
             <% invoice_line.taxes.each do |tax_line| -%>
             <cac:ClassifiedTaxCategory>

@@ -189,7 +189,7 @@ facturae_31_gva:
 
 facturae_32_rioja:
   format: facturae32
-  folder: la_rioja
+  class_for_send: Haltr::SendSignedXmlByEurobits
   validate:
   locales:
     ca: "Facturae 3.2 a La Rioja"
