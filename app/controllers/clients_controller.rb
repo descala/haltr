@@ -80,11 +80,13 @@ class ClientsController < ApplicationController
   end
 
   def check_cif
-    taxcode = params[:value].gsub(/\W/,'') if params[:value]
+    taxcode = params[:value].gsub(/\W/,'').downcase if params[:value]
     # the client we are editing (or nil if creating new one)
     client = Client.find(params[:client]) unless params[:client].blank?
     # search for an existing client with the specified taxcode
-    existing_client = @project.clients.collect {|c| c if c.taxcode == taxcode }.compact.first
+    existing_client = @project.clients.collect {|c|
+      c if c.taxcode.to_s.downcase == taxcode
+    }.compact.first
     # check if we are editing or creating a client and entered a taxcode that
     # already exists on another of our clients
     if existing_client and (( client and client.id != existing_client.id ) or !client )

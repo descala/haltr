@@ -194,3 +194,6 @@ table#invoice_lines {
 .cashflow {
   text-align: right;
 }
+#link_requests {
+  margin-bottom: 20px;
+}
