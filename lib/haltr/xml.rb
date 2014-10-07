@@ -29,7 +29,8 @@ module Haltr
           :locals   => { :@invoice => invoice,
                          :@company => invoice.company,
                          :@client  => invoice.client,
-                         :@efffubl_base64_pdf => pdf },
+                         :@efffubl_base64_pdf => pdf,
+                         :@format  => format },
           :formats  => :xml,
           :layout   => false
         )

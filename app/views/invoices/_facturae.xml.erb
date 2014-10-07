@@ -163,7 +163,7 @@
                <Discount>
                  <DiscountReason><%=h @invoice.discount_text.blank? ? "." : @invoice.discount_text %></DiscountReason>
                  <DiscountRate><%=h precision(@invoice.discount_percent, 4) %></DiscountRate>
-                 <DiscountAmount><%=h precision(@invoice.discount.dollars,(@format == "facturae32" ? 6 : 2))%></DiscountAmount>
+                 <DiscountAmount><%=h precision(@invoice.discount.dollars,(@format =~ /facturae/ ? 6 : 2))%></DiscountAmount>
                </Discount>
             </GeneralDiscounts>
 <% end -%>
@@ -171,7 +171,7 @@
            <GeneralSurcharges>
              <Charge>
                <ChargeReason><%=h @invoice.charge_reason%></ChargeReason>
-               <ChargeAmount><%=h precision(@invoice.charge_amount.dollars,(@format == "facturae32" ? 6 : 2))%></ChargeAmount>
+               <ChargeAmount><%=h precision(@invoice.charge_amount.dollars,(@format =~ /facturae/ ? 6 : 2))%></ChargeAmount>
              </Charge>
            </GeneralSurcharges>
 <% end -%>
@@ -247,7 +247,7 @@
                </AccountToBeDebited>
 <% elsif @invoice.debit? and !@client.bank_account.blank?-%>
                  <AccountToBeDebited>
-                   <% if (@format == "facturae32") -%>
+                   <% if (@format =~ /facturae/) -%>
                      <AccountNumber><%=h @client.bank_account%></AccountNumnber>
                    <% else -%>
                      <IBAN><%=h @client.bank_account%></IBAN>
@@ -260,7 +260,7 @@
                </AccountToBeCredited>
 <% elsif @invoice.transfer? and @invoice.bank_info and !@invoice.bank_info.bank_account.blank? -%>
                <AccountToBeCredited>
-                 <% if (@format == "facturae32") -%>
+                 <% if (@format =~ /facturae/) -%>
                    <AccountNumber><%=h @invoice.bank_info.bank_account%></AccountNumnber>
                  <% else -%>
                    <IBAN><%=h @invoice.bank_info.bank_account%></IBAN>
