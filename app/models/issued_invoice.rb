@@ -8,7 +8,6 @@ class IssuedInvoice < InvoiceDocument
 
   belongs_to :invoice_template
   validates_presence_of :number, :unless => Proc.new {|invoice| invoice.type == "DraftInvoice"}
-  validates_presence_of :due_date
   validates_uniqueness_of :number, :scope => [:project_id,:type], :if => Proc.new {|i| i.type == "IssuedInvoice" }
   validate :invoice_must_have_lines
 
@@ -233,6 +232,9 @@ class IssuedInvoice < InvoiceDocument
         add_export_error([:field_payment_method, :requires_company_bank_account])
         add_export_error([:bank_info, 'activerecord.errors.messages.invalid'])
       end
+    end
+    unless payment_method.blank?
+      add_export_error([:field_due_date, 'activerecord.errors.messages.blank']) if due_date.blank?
     end
   end
 
