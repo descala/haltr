@@ -28,6 +28,8 @@ require_dependency 'utils'
 require_dependency 'iso_countries'
 require_dependency File.expand_path(File.join(File.dirname(__FILE__), 'app/models/export_channels'))
 
+require_dependency 'haltr/hooks'
+
 if (Redmine::VERSION::MAJOR == 1 and Redmine::VERSION::MINOR >= 4) or Redmine::VERSION::MAJOR == 2
   require_dependency 'country_iso_translater'
 else

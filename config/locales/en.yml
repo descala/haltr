@@ -525,3 +525,4 @@ en:
   article_code: "Code"
   label_error_event_plural: "Failed shipments events"
   label_info_event_plural: "Successful shipments events"
+  pending_auth_requests: "There are pending authorization requests: %{num} companies want to link your profile"
