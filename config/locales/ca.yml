@@ -537,3 +537,4 @@ ca:
   label_info_event_plural: "Events d'enviaments exitosos"
   pending_auth_requests: "Hi ha peticions pendents d'autorització: %{num} empreses es volen vincular al teu perfil"
   denied_requests: "Peticions denegades"
+  self_employed: "Sóc treballador autònom"

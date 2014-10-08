@@ -37,11 +37,11 @@
    <Parties>
       <SellerParty>
          <TaxIdentification>
-            <PersonTypeCode><%=h @invoice.persontypecode %></PersonTypeCode>
+            <PersonTypeCode><%=h @company.persontype %></PersonTypeCode>
             <ResidenceTypeCode>R</ResidenceTypeCode>
             <TaxIdentificationNumber><%=h @company.taxcode%></TaxIdentificationNumber>
          </TaxIdentification>
-<% if @invoice.persontypecode == "J" -%>
+<% if @company.persontype == "J" -%>
 
          <LegalEntity>
             <CorporateName><%=h @company.name%></CorporateName>
@@ -139,7 +139,7 @@
           <AdditionalLineItemInformation><%=@invoice.invoice_lines.collect {|il| il.notes }.join(' ')%></AdditionalLineItemInformation>
 <% end -%>
 
-<% if @invoice.persontypecode == "F" and @invoice.taxes_withheld.any?-%>
+<% if @company.persontype == "F" and @invoice.taxes_withheld.any?-%>
          <TaxesWithheld>
 <% @invoice.taxes_withheld.each do |tax| -%>
             <Tax>

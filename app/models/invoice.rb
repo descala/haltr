@@ -94,14 +94,6 @@ class Invoice < ActiveRecord::Base
     subtotal_without_discount(tax_type) - discount(tax_type)
   end
 
-  def persontypecode
-    if taxes_withheld.any?
-      "F" # Fisica
-    else
-      "J" # Juridica
-    end
-  end
-
   def discount(tax_type=nil)
     if discount_percent
       (subtotal_without_discount(tax_type) - charge_amount) * (discount_percent / 100.0)
