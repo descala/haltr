@@ -6,6 +6,7 @@ module Haltr
         context[:controller].flash[:notice] ||= ""
         context[:controller].flash[:notice] << l(:pending_auth_requests, num: pending_auth)
       end
+    rescue
     end
   end
 end
