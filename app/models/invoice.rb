@@ -559,6 +559,8 @@ _INV
       invoice.payment_method=PAYMENT_DEBIT
     elsif Haltr::Utils.get_xpath(doc,xpaths[:to_be_credited])
       invoice.payment_method=PAYMENT_TRANSFER
+    else
+      invoice.payment_method=PAYMENT_CASH
     end
 
     # bank info

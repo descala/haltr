@@ -11,8 +11,8 @@ class BankInfoTest < ActiveSupport::TestCase
     assert BankInfo.new(:iban=>'ES0700120345030000067890').valid?
   end
 
-  test "invalid IBAN is still valid (relax restriction on My Company)" do
-    assert BankInfo.new(:iban=>'ES9900120345030000067890').valid?
+  test "invalid IBAN" do
+    assert !BankInfo.new(:iban=>'ES9900120345030000067890').valid?
   end
 
   test "bic too long" do

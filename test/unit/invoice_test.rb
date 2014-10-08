@@ -403,7 +403,7 @@ class InvoiceTest < ActiveSupport::TestCase
     assert_equal "1234", invoice.md5
     assert_equal 6535, invoice.original.size
     assert_equal "invoice_facturae32_issued3.xml", invoice.file_name
-    assert invoice.cash?, "invoice payment is cash"
+    assert invoice.cash?, "invoice payment should be cash and is #{invoice.payment_method}"
     assert_equal "1233333333333333", invoice.client.bank_account
     assert_nil invoice.bank_info
     assert_equal 100.00, invoice.charge_amount.dollars
