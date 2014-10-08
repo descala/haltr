@@ -9,11 +9,11 @@ module Haltr
       set_render_anywhere_helpers(ApplicationHelper,HaltrHelper,InvoicesHelper)
     end
 
-    def self.generate(invoice, format)
-      new.generate(invoice,format)
+    def self.generate(invoice, format, local_certificate=false)
+      new.generate(invoice,format,local_certificate)
     end
 
-    def generate(invoice,format)
+    def generate(invoice,format,local_certificate=false)
       # if it is an imported invoice, has not been modified and
       # invoice format  matches client format, send original file
       if invoice.original and !invoice.modified_since_created? and format == invoice.invoice_format
@@ -30,7 +30,8 @@ module Haltr
                          :@company => invoice.company,
                          :@client  => invoice.client,
                          :@efffubl_base64_pdf => pdf,
-                         :@format  => format },
+                         :@format  => format,
+                         :@local_certificate  => local_certificate },
           :formats  => :xml,
           :layout   => false
         )
