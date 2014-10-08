@@ -91,6 +91,10 @@ $(document).ready(function() {
     );
   });
 
+  $('#denied_show_hide').on('click', function(e) {
+    $('#denied_requests').toggle();
+  });
+
 });
 
 

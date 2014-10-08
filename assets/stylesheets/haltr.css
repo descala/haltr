@@ -197,3 +197,9 @@ table#invoice_lines {
 #link_requests {
   margin-bottom: 20px;
 }
+div.action-linked_to_mine #companies {
+  margin-bottom: 20px;
+}
+#denied_requests {
+  display: none;
+}

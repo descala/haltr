@@ -63,6 +63,7 @@ class CompaniesController < ApplicationController
     sort_init 'name', 'asc'
     sort_update %w(taxcode name)
     @companies_link_req = @project.company.companies_with_link_requests
+    @companies_denied   = @project.company.companies_with_denied_link
     @companies = (Client.all(:conditions => ['company_id = ?', @project.company]).collect do |client|
       client.project.company
     end - @companies_link_req)

@@ -540,3 +540,4 @@ es:
   label_error_event_plural: "Eventos de envios fallados"
   label_info_event_plural: "Eventos de envios con éxito"
   pending_auth_requests: "Hay peticiones pendientes de autorización: %{num} empresas se quieren vincular al tu perfil"
+  denied_requests: "Peticiones denegadas"
