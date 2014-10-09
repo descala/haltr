@@ -71,6 +71,10 @@ class CompaniesController < ApplicationController
 
   def update
     @partial = params[:partial] || 'my_company'
+    if @partial == 'bank_info'
+      # prevent crash when deleted all bank_infos
+      params[:company] ||= { :bank_infos_attributes => [] }
+    end
     # check if user trying to add multiple bank_infos without role
     unless User.current.allowed_to?(:add_multiple_bank_infos,@project)
       if params[:company][:bank_infos_attributes] and 
