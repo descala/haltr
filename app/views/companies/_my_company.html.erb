@@ -55,7 +55,8 @@
     <%= f.select :currency, currency_options_for_select, :required => true %>
     </p>
     <p class="col span-1-de-2">
-    <%=label_tag('attachments[1][file]', l(:logo))%><%= file_field_tag 'attachments[1][file]', :size => 30, :id => nil, :accept => 'image/png,image/gif,image/jpeg' -%>
+    <%=label_tag('attachments[1][file]', l(:logo))%>
+    <%= file_field_tag 'attachments[1][file]', :size=>30, :id=>'logo', :accept=>'image/png,image/gif,image/jpeg' -%>
     <% if @company.attachments.size > 0 -%>
       <br />
       <br />

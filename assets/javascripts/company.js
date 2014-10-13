@@ -48,3 +48,10 @@ $(document).on('change', 'select#quote_mail_customization_lang', function(e) {
 $(document).ready(function() {
   $('div#quote_mail_customization_'+$('select#quote_mail_customization_lang').val()).show();
 });
+
+$(document).on('change','input#logo', function(e) {
+  if ($(this).val().match(/%/)) {
+    alert('filename contains invalid characters: %');
+    $(this).val('');
+  }
+});
