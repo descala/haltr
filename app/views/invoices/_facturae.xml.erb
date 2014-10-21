@@ -228,7 +228,7 @@
 <% unless invoice_line.notes.blank? -%>
               <AdditionalLineItemInformation><%=invoice_line.notes%></AdditionalLineItemInformation>
 <% end -%>
-<% unless invoice_line.article_code.blank? -%>
+<% unless invoice_line.article_code.blank? or format != "facturae32" -%>
               <ArticleCode><%=invoice_line.article_code%></ArticleCode>
 <% end -%>
             </InvoiceLine>
