@@ -208,6 +208,11 @@
                    <TaxableBase>
                       <TotalAmount><%=h precision invoice_line.taxable_base %></TotalAmount>
                    </TaxableBase>
+<% if format == "facturae31" -%>
+                   <TaxAmount>
+                      <TotalAmount><%=h precision(invoice_line.tax_amount(tax)*-1)%></TotalAmount>
+                   </TaxAmount>
+<% end -%>
                 </Tax>
 <% end -%>
               </TaxesWithheld>
@@ -221,6 +226,11 @@
                     <TaxableBase>
                       <TotalAmount><%=h precision(invoice_line.taxable_base)%></TotalAmount>
                     </TaxableBase>
+<% if format == "facturae31" -%>
+                   <TaxAmount>
+                      <TotalAmount><%=h precision(invoice_line.tax_amount(tax))%></TotalAmount>
+                   </TaxAmount>
+<% end -%>
                  </Tax>
 <% end -%>
               </TaxesOutputs>
