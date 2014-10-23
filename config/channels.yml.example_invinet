@@ -173,17 +173,17 @@ facturae_32_face:
   allowed_permissions:
     :send_face:
 
-facturae_31_gva:
-  format: facturae31
+facturae_32_gva:
+  format: facturae32
   class_for_send: Haltr::SendSignedXmlByGva
   validate:
   locales:
-    ca: "Facturae 3.1 a GVA"
-    da: "Facturae 3.1 til GVA"
-    en: "Facturae 3.1 to GVA"
-    es: "Facturae 3.1 por GVA"
-    fr: "Facturae 3.1 par GVA"
-    sv: "Spanskt format Facturae 3.1 till GVA"
+    ca: "Facturae 3.2 a GVA"
+    da: "Facturae 3.2 til GVA"
+    en: "Facturae 3.2 to GVA"
+    es: "Facturae 3.2 por GVA"
+    fr: "Facturae 3.2 par GVA"
+    sv: "Spanskt format Facturae 3.2 till GVA"
   allowed_permissions:
     :send_gva:
 
