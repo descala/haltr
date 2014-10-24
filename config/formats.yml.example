@@ -48,11 +48,6 @@ biiubl20:
   validate: ubl_invoice_has_no_taxes_withheld
   content-type: "text-xml"
 
-biiubl21:
-  name: "BII UBL 2.1"
-  validate: ubl_invoice_has_no_taxes_withheld
-  content-type: "text-xml"
-
 svefaktura:
   name: "Svefaktura"
   validate:
