@@ -434,7 +434,7 @@ _INV
       invoice_format  = "facturae#{facturae_version.text.gsub(/[^\d]/,'')}"
       logger.info "Creating invoice from xml - format is FacturaE #{facturae_version.text}"
     elsif ubl_version
-      #TODO: biiubl20 efffubl oioubl20 pdf peppolubl20 svefaktura
+      #TODO: biiubl20 efffubl oioubl20 pdf peppolubl20 peppolubl21 svefaktura
       invoice_format  = "ubl#{ubl_version.text}"
       logger.info "Creating invoice from xml - format is UBL #{ubl_version.text}"
     else

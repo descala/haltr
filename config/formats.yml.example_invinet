@@ -48,6 +48,13 @@ peppolubl20:
   peppol-docid: "urn:oasis:names:specification:ubl:schema:xsd:Invoice-2::Invoice##urn:www.cenbii.eu:transaction:biicoretrdm010:ver1.0:#urn:www.peppol.eu:bis:peppol4a:ver1.0::2.0"
   peppol-procid: "urn:www.cenbii.eu:profile:bii04:ver1.0"
 
+peppolubl21:
+  name: "PEPPOL BIS 2"
+  validate: ubl_invoice_has_no_taxes_withheld
+  content-type: "text-xml"
+  peppol-docid: "urn:oasis:names:specification:ubl:schema:xsd:Invoice-2::Invoice##urn:www.cenbii.eu:transaction:biitrns010:ver2.0:extended:urn:www.peppol.eu:bis:peppol4a:ver2.0::2.1"
+  peppol-procid: "urn:www.cenbii.eu:profile:bii04:ver2.0"
+
 biiubl20:
   name: "BII UBL"
   validate: ubl_invoice_has_no_taxes_withheld

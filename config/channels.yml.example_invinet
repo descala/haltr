@@ -278,12 +278,27 @@ peppol:
   validate:
   - peppol_fields
   locales:
-    ca: "Factura PEPPOL BIS UBL 2.0 per PEPPOL"
-    da: "PEPPOL BIS UBL 2.0 Invoice through PEPPOL"
-    en: "PEPPOL BIS UBL 2.0 Invoice through PEPPOL"
-    es: "Factura PEPPOL BIS UBL 2.0 por PEPPOL"
-    fr: "PEPPOL BIS UBL 2.0 par PEPPOL"
-    sv: "PEPPOL BIS UBL 2.0 Faktura till PEPPOL"
+    ca: "factura peppol bis ubl 2.0 per peppol"
+    da: "peppol bis ubl 2.0 invoice through peppol"
+    en: "peppol bis ubl 2.0 invoice through peppol"
+    es: "factura peppol bis ubl 2.0 por peppol"
+    fr: "peppol bis ubl 2.0 par peppol"
+    sv: "peppol bis ubl 2.0 faktura till peppol"
+  allowed_permissions:
+    :send_peppol:
+
+peppolbis21:
+  format: peppolubl21
+  folder: free_peppol
+  validate:
+  - peppol_fields
+  locales:
+    ca: "factura peppol bis ubl 2.1 per peppol"
+    da: "peppol bis ubl 2.1 invoice through peppol"
+    en: "peppol bis ubl 2.1 invoice through peppol"
+    es: "factura peppol bis ubl 2.1 por peppol"
+    fr: "peppol bis ubl 2.1 par peppol"
+    sv: "peppol bis ubl 2.1 faktura till peppol"
   allowed_permissions:
     :send_peppol:
 
