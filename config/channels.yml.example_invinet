@@ -302,6 +302,21 @@ peppolbii:
   allowed_permissions:
     :send_peppol:
 
+peppolbii21:
+  format: biiubl21
+  folder: free_peppol
+  validate:
+  - peppol_fields
+  locales:
+    ca: "Factura PEPPOL BIIUBL 2.1 per PEPPOL"
+    da: "PEPPOL BIIUBL 2.1 Invoice through PEPPOL"
+    en: "PEPPOL BIIUBL 2.1 Invoice through PEPPOL"
+    es: "Factura PEPPOL BIIUBL 2.1 por PEPPOL"
+    fr: "PEPPOL BIIUBL 2.1 par PEPPOL"
+    sv: "PEPPOL BIIUBL 2.1 Faktura till PEPPOL"
+  allowed_permissions:
+    :send_peppol:
+
 svefaktura:
   format: svefaktura
   folder: free_svefaktura
