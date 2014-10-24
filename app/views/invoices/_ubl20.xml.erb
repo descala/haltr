@@ -36,7 +36,7 @@
         <cac:PostalAddress>
           <%= render :partial => "invoices/ubl_address", :format => :xml, :locals => {:entity => @company} %>
         </cac:PostalAddress>
-<% if @company.taxcode.blank? -%>
+<% unless @company.taxcode.blank? -%>
         <cac:PartyTaxScheme>
           <cbc:CompanyID><%=h @company.taxcode%></cbc:CompanyID>
           <cac:TaxScheme>
