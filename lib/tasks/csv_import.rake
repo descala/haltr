@@ -53,3 +53,32 @@ namespace :haltr do
     end
   end
 end
+
+desc "Delete current Dir3 data and import new from csv. Usage: rake haltr:import:dir3['entities.csv','relations.csv']"
+
+namespace :haltr do
+  namespace :import do
+
+    task :dir3, [:entities, :relations] => :environment do |task, args|
+
+      args.with_defaults(:entities=>'entities.csv', :relations=>'relations.csv')
+
+      begin
+        puts "Entities to import:  #{args[:entities]}"
+        puts "Relations to import: #{args[:relations]}"
+        puts "===================================="
+        STDOUT.flush
+
+        include CsvImporter
+
+        process_dir3entities(:entities  => args[:entities],
+                             :relations => args[:relations])
+
+      rescue => error
+        puts "Error: #{error}"
+        raise error
+      end
+    end
+
+  end
+end
