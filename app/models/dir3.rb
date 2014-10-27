@@ -13,4 +13,5 @@ class Dir3 < ActiveRecord::Base
     :class_name  => 'Dir3Entity',
     :foreign_key => :oficina_contable_id,
     :primary_key => :code
+  has_many :invoices
 end

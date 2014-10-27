@@ -542,3 +542,6 @@ es:
   pending_auth_requests: "Hay peticiones pendientes de autorización: %{num} empresas se quieren vincular al tu perfil"
   denied_requests: "Peticiones denegadas"
   self_employed: "Soy trabajador autónomo"
+  organ_gestor: "Organo gestor"
+  oficina_contable: "Oficina contable"
+  unitat_tramitadora: "Unidad tramitadora"
