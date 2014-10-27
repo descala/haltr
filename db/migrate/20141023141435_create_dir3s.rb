@@ -17,7 +17,7 @@ class CreateDir3s < ActiveRecord::Migration
       t.string :country
       t.string :tipus
     end
-    add_column :invoices, :dir3_id, :integer
+    add_column :invoices, :dir3_id, :string
   end
 
   def down
