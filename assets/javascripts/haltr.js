@@ -36,6 +36,16 @@ $(document).ready(function() {
     terms();
   })
 
+  $('select#unused_oc').val($('select#invoice_dir3_id').find(':selected').data('oc'));
+  $('select#unused_ut').val($('select#invoice_dir3_id').find(':selected').data('ut'));
+
+  $(document).on('change', 'select#invoice_dir3_id', function(e) {
+    var selected = $('select#invoice_dir3_id').find(':selected');
+    $('select#unused_oc').val(selected.data('oc'));
+    $('select#unused_ut').val(selected.data('ut'));
+    console.log("set selected ut to val " + selected.data('ut'));
+  });
+
   /* on load, simulate a client change to call above function */
   /* but only when creating new invoice, to avoid undesired changes */
   if (window.location.href.indexOf("/new") > -1) {
@@ -111,6 +121,10 @@ $(document).ready(function() {
 
   $(document).on('mouseleave', 'div.audited li', function(e) {
     $('div#audited_changes_'+$(this).data('id')).hide();
+  });
+
+  $('#denied_show_hide').on('click', function(e) {
+    $('#denied_requests').toggle();
   });
 
 });

@@ -67,7 +67,6 @@ class InvoiceTest < ActiveSupport::TestCase
     assert_equal 100, invoices(:invoices_003).subtotal.dollars
     assert_equal 0, invoices(:invoices_003).discount.dollars
     assert_equal 118, invoices(:invoices_003).total.dollars
-    assert_equal "J", invoices(:invoices_003).persontypecode
 
     assert_equal 100, invoices(:invoices_002).subtotal_without_discount.dollars
     assert_equal 85, invoices(:invoices_002).taxable_base.dollars
@@ -76,7 +75,6 @@ class InvoiceTest < ActiveSupport::TestCase
     assert_equal 85, invoices(:invoices_002).subtotal.dollars
     assert_equal 15, invoices(:invoices_002).discount.dollars
     assert_equal 100.30, invoices(:invoices_002).total.dollars
-    assert_equal "J", invoices(:invoices_002).persontypecode
 
     assert_equal 250, invoices(:invoices_001).subtotal_without_discount.dollars
     assert_equal 225, invoices(:invoices_001).taxable_base.dollars
@@ -89,7 +87,6 @@ class InvoiceTest < ActiveSupport::TestCase
     assert_equal 225, invoices(:invoices_001).subtotal.dollars
     assert_equal 25, invoices(:invoices_001).discount.dollars
     assert_equal 227.7, invoices(:invoices_001).total.dollars
-    assert_equal "F", invoices(:invoices_001).persontypecode
   end
 
   test "currency to upcase" do
@@ -406,7 +403,7 @@ class InvoiceTest < ActiveSupport::TestCase
     assert_equal "1234", invoice.md5
     assert_equal 6535, invoice.original.size
     assert_equal "invoice_facturae32_issued3.xml", invoice.file_name
-    assert invoice.cash?, "invoice payment is cash"
+    assert invoice.cash?, "invoice payment should be cash and is #{invoice.payment_method}"
     assert_equal "1233333333333333", invoice.client.bank_account
     assert_nil invoice.bank_info
     assert_equal 100.00, invoice.charge_amount.dollars

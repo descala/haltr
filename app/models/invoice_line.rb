@@ -57,6 +57,10 @@ class InvoiceLine < ActiveRecord::Base
     end
   end
 
+  def tax_amount(tax)
+    taxable_base * (tax.percent / 100.0)
+  end
+
   def to_label
     description
   end

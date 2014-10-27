@@ -90,6 +90,13 @@ class Company < ActiveRecord::Base
     end.compact
   end
 
+  def companies_with_denied_link
+    self.clients.collect do |client|
+      next unless client.project and client.project.company
+      client.project.company if client.allowed? == false
+    end.compact
+  end
+
   def taxcode=(tc)
     # taxcode is used to retrieve logo on xhtml when transforming to PDF,
     # some chars will make logo retrieval fail (i.e. spaces)

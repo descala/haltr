@@ -37,11 +37,11 @@
    <Parties>
       <SellerParty>
          <TaxIdentification>
-            <PersonTypeCode><%=h @invoice.persontypecode %></PersonTypeCode>
+            <PersonTypeCode><%=h @company.persontype %></PersonTypeCode>
             <ResidenceTypeCode>R</ResidenceTypeCode>
             <TaxIdentificationNumber><%=h @company.taxcode%></TaxIdentificationNumber>
          </TaxIdentification>
-<% if @invoice.persontypecode == "J" -%>
+<% if @company.persontype == "J" -%>
 
          <LegalEntity>
             <CorporateName><%=h @company.name%></CorporateName>
@@ -135,11 +135,8 @@
            </Tax>
 <% end -%>
          </TaxesOutputs>
-<% unless @invoice.invoice_lines.collect {|il| il.notes }.join.blank? -%>
-          <AdditionalLineItemInformation><%=@invoice.invoice_lines.collect {|il| il.notes }.join(' ')%></AdditionalLineItemInformation>
-<% end -%>
 
-<% if @invoice.persontypecode == "F" and @invoice.taxes_withheld.any?-%>
+<% if @company.persontype == "F" and @invoice.taxes_withheld.any?-%>
          <TaxesWithheld>
 <% @invoice.taxes_withheld.each do |tax| -%>
             <Tax>
@@ -163,7 +160,7 @@
                <Discount>
                  <DiscountReason><%=h @invoice.discount_text.blank? ? "." : @invoice.discount_text %></DiscountReason>
                  <DiscountRate><%=h precision(@invoice.discount_percent, 4) %></DiscountRate>
-                 <DiscountAmount><%=h precision(@invoice.discount.dollars,(@format == "facturae32" ? 6 : 2))%></DiscountAmount>
+                 <DiscountAmount><%=h precision(@invoice.discount.dollars,(@format =~ /facturae/ ? 6 : 2))%></DiscountAmount>
                </Discount>
             </GeneralDiscounts>
 <% end -%>
@@ -171,7 +168,7 @@
            <GeneralSurcharges>
              <Charge>
                <ChargeReason><%=h @invoice.charge_reason%></ChargeReason>
-               <ChargeAmount><%=h precision(@invoice.charge_amount.dollars,(@format == "facturae32" ? 6 : 2))%></ChargeAmount>
+               <ChargeAmount><%=h precision(@invoice.charge_amount.dollars,(@format =~ /facturae/ ? 6 : 2))%></ChargeAmount>
              </Charge>
            </GeneralSurcharges>
 <% end -%>
@@ -211,6 +208,9 @@
                    <TaxableBase>
                       <TotalAmount><%=h precision invoice_line.taxable_base %></TotalAmount>
                    </TaxableBase>
+                   <TaxAmount>
+                     <TotalAmount><%=h precision(invoice_line.tax_amount(tax)*-1)%></TotalAmount>
+                   </TaxAmount>
                 </Tax>
 <% end -%>
               </TaxesWithheld>
@@ -224,11 +224,17 @@
                     <TaxableBase>
                       <TotalAmount><%=h precision(invoice_line.taxable_base)%></TotalAmount>
                     </TaxableBase>
+                    <TaxAmount>
+                      <TotalAmount><%=h precision(invoice_line.tax_amount(tax))%></TotalAmount>
+                    </TaxAmount>
                  </Tax>
 <% end -%>
               </TaxesOutputs>
 <% end -%>
-<% unless invoice_line.article_code.blank? -%>
+<% unless invoice_line.notes.blank? -%>
+              <AdditionalLineItemInformation><%=invoice_line.notes%></AdditionalLineItemInformation>
+<% end -%>
+<% unless invoice_line.article_code.blank? or format != "facturae32" -%>
               <ArticleCode><%=invoice_line.article_code%></ArticleCode>
 <% end -%>
             </InvoiceLine>
@@ -247,7 +253,7 @@
                </AccountToBeDebited>
 <% elsif @invoice.debit? and !@client.bank_account.blank?-%>
                  <AccountToBeDebited>
-                   <% if (@format == "facturae32") -%>
+                   <% if (@format =~ /facturae/) -%>
                      <AccountNumber><%=h @client.bank_account%></AccountNumnber>
                    <% else -%>
                      <IBAN><%=h @client.bank_account%></IBAN>
@@ -260,7 +266,7 @@
                </AccountToBeCredited>
 <% elsif @invoice.transfer? and @invoice.bank_info and !@invoice.bank_info.bank_account.blank? -%>
                <AccountToBeCredited>
-                 <% if (@format == "facturae32") -%>
+                 <% if (@format =~ /facturae/) -%>
                    <AccountNumber><%=h @invoice.bank_info.bank_account%></AccountNumnber>
                  <% else -%>
                    <IBAN><%=h @invoice.bank_info.bank_account%></IBAN>

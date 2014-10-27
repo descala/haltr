@@ -28,6 +28,8 @@ require_dependency 'utils'
 require_dependency 'iso_countries'
 require_dependency File.expand_path(File.join(File.dirname(__FILE__), 'app/models/export_channels'))
 
+require_dependency 'haltr/hooks'
+
 if (Redmine::VERSION::MAJOR == 1 and Redmine::VERSION::MINOR >= 4) or Redmine::VERSION::MAJOR == 2
   require_dependency 'country_iso_translater'
 else
@@ -65,9 +67,8 @@ Redmine::Plugin.register :haltr do
                        :allow_link, :deny_link, :ccc2iban],
         :people    => [:index, :new, :show, :edit, :create, :update, :destroy],
         :invoices  => [:index, :new, :edit, :create, :update, :destroy, :show, :mark_sent, :mark_closed, :mark_not_sent,
-                       :destroy_payment, :facturae30, :facturae31, :facturae32, :peppolubl20, :send_invoice, :legal,
-                       :update_payment_stuff, :amend_for_invoice, :download_new_invoices, :send_new_invoices, :duplicate_invoice,
-                       :biiubl20, :svefaktura, :oioubl20, :efffubl, :report, :context_menu, :bulk_mark_as, :original, :show_original],
+                       :destroy_payment, :send_invoice, :legal, :update_payment_stuff, :amend_for_invoice, :download_new_invoices,
+                       :send_new_invoices, :duplicate_invoice, :report, :context_menu, :bulk_mark_as, :original, :show_original],
         :received  => [:index, :new, :edit, :create, :update, :destroy, :show, :show_original,
                        :mark_accepted, :mark_accepted_with_mail, :mark_refused,
                        :mark_refused_with_mail, :legal, :context_menu, :original, :validate, :bulk_mark_as],
@@ -83,8 +84,7 @@ Redmine::Plugin.register :haltr do
     permission :use_all_readonly,
       { :clients   => [:index, :edit, :check_cif, :ccc2iban],
         :people    => [:index, :edit],
-        :invoices  => [:index, :show, :facturae30, :facturae31, :facturae32, :peppolubl20,
-                       :legal, :download_new_invoices, :biiubl20, :svefaktura, :oioubl20, :efffubl, :report,
+        :invoices  => [:index, :show, :legal, :download_new_invoices, :report,
                        :context_menu, :show_original],
         :received  => [:index, :show, :show_original, :legal, :context_menu],
         :companies => [:my_company,:bank_info, :linked_to_mine, :check_iban],
@@ -139,6 +139,7 @@ Mime::Type.register "text/xml", :facturae30
 Mime::Type.register "text/xml", :facturae31
 Mime::Type.register "text/xml", :facturae32
 Mime::Type.register "text/xml", :peppolubl20
+Mime::Type.register "text/xml", :peppolubl21
 Mime::Type.register "text/xml", :biiubl20
 Mime::Type.register "text/xml", :svefaktura
 Mime::Type.register "text/xml", :oioubl20

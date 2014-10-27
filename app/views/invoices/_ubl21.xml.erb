@@ -3,7 +3,7 @@
 <% if @invoice.extra_info? -%>	
         <cbc:Note><%=h @invoice.extra_info%></cbc:Note>
 <% end -%>
-    <cbc:DocumentCurrencyCode listID="ISO 4217 Alpha" listAgencyID="6"><%=h @client.currency%></cbc:DocumentCurrencyCode>
+    <cbc:DocumentCurrencyCode listID="ISO4217" listAgencyID="6"><%=h @client.currency%></cbc:DocumentCurrencyCode>
     <% if @invoice.respond_to?(:accounting_cost) and !@invoice.accounting_cost.blank? %>
       <cbc:AccountingCost><%=@invoice.accounting_cost%></cbc:AccountingCost>
     <% end %>
@@ -81,7 +81,7 @@
     </cac:AccountingCustomerParty>
 <% unless @invoice.amend_of -%>
       <cac:PaymentMeans>
-        <cbc:PaymentMeansCode><%=h @invoice.payment_method_code(:ubl) %></cbc:PaymentMeansCode>
+        <cbc:PaymentMeansCode listID="UNCL4461"><%=h @invoice.payment_method_code(:ubl) %></cbc:PaymentMeansCode>
         <cbc:PaymentDueDate><%=h @invoice.due_date%></cbc:PaymentDueDate>
 <% if @invoice.debit? and @client.iban and @client.bic and !@client.iban.blank? and !@client.bic.blank? -%>
             <cbc:PaymentChannelCode>IBAN</cbc:PaymentChannelCode>
@@ -141,13 +141,13 @@
               <cbc:TaxableAmount currencyID="<%=h @client.currency%>"><%=h precision(@invoice.taxable_base(tax).dollars)%></cbc:TaxableAmount>
               <cbc:TaxAmount currencyID="<%=h @client.currency%>"><%=h precision(@invoice.tax_amount(tax).dollars) %></cbc:TaxAmount>
               <cac:TaxCategory>
-                <cbc:ID schemeID="UN/ECE 5305" schemeAgencyID="6"><%=category%></cbc:ID>
+                <cbc:ID schemeID="UNCL5305" schemeAgencyID="6"><%=category%></cbc:ID>
                 <cbc:Percent><%=h precision(tax.percent)%></cbc:Percento>
                 <% if tax.comment and tax.comment.size > 0 %>
                   <cbc:TaxExemptionReason><%=h tax.comment%></cbc:TaxExemptionReason>
                 <% end %>
                 <cac:TaxScheme>
-                  <cbc:ID schemeID="UN/ECE 5153" schemeAgencyID="6"><%=Haltr::TaxHelper.ubl(tax.name)%></cbc:ID>
+                  <cbc:ID schemeID="UNCL5153" schemeAgencyID="6"><%=Haltr::TaxHelper.ubl(tax.name)%></cbc:ID>
                 </cac:TaxScheme>
               </cac:TaxCategory>
             </cac:TaxSubtotal>
@@ -159,10 +159,10 @@
             <cbc:TaxableAmount currencyID="<%=h @client.currency%>"><%=@invoice.charge_amount.dollars%></cbc:TaxableAmount>
             <cbc:TaxAmount currencyID="<%=h @client.currency%>">0.00</cbc:TaxAmount>
             <cac:TaxCategory>
-              <cbc:ID schemeID="UN/ECE 5305" schemeAgencyID="6">Z</cbc:ID>
+              <cbc:ID schemeID="UNCL5305" schemeAgencyID="6">Z</cbc:ID>
               <cbc:Percent>0.00</cbc:Percent>
               <cac:TaxScheme>
-                <cbc:ID schemeID="UN/ECE 5153" schemeAgencyID="6">VAT</cbc:ID>
+                <cbc:ID schemeID="UNCL5153" schemeAgencyID="6">VAT</cbc:ID>
               </cac:TaxScheme>
             </cac:TaxCategory>
           </cac:TaxSubtotal>
@@ -190,7 +190,7 @@
 <% unless invoice_line.notes.blank? -%>
           <cbc:Note><%=invoice_line.notes%></cbc:Note>
 <% end -%>
-          <cbc:InvoicedQuantity unitCode="<%=h invoice_line.unit_code(:ubl) %>"><%=h invoice_line.quantity%></cbc:InvoicedQuantity>
+          <cbc:InvoicedQuantity unitCode="<%=h invoice_line.unit_code(:ubl) %>" unitCodeListID="UNECERec20"><%=h invoice_line.quantity%></cbc:InvoicedQuantity>
           <cbc:LineExtensionAmount currencyID="<%=h @client.currency%>"><%=h precision(invoice_line.price*invoice_line.quantity,2)%></cbc:LineExtensionAmount>
           <cac:Item>
             <cbc:Name><%=h invoice_line.description%></cbc:Name>

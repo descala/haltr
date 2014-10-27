@@ -62,13 +62,19 @@ class CompaniesController < ApplicationController
     # TODO sort and paginate
     sort_init 'name', 'asc'
     sort_update %w(taxcode name)
-    @companies = Client.all(:conditions => ['company_id = ?', @project.company]).collect do |client|
+    @companies_link_req = @project.company.companies_with_link_requests
+    @companies_denied   = @project.company.companies_with_denied_link
+    @companies = (Client.all(:conditions => ['company_id = ?', @project.company]).collect do |client|
       client.project.company
-    end
+    end - @companies_link_req)
   end
 
   def update
     @partial = params[:partial] || 'my_company'
+    if @partial == 'bank_info'
+      # prevent crash when deleted all bank_infos
+      params[:company] ||= { :bank_infos_attributes => [] }
+    end
     # check if user trying to add multiple bank_infos without role
     unless User.current.allowed_to?(:add_multiple_bank_infos,@project)
       if params[:company][:bank_infos_attributes] and 

@@ -216,3 +216,12 @@ div.audited-changes table tr.new-values {
 div.audited-changes table tr.old-values {
   background-color: #fdd;
 }
+#link_requests {
+  margin-bottom: 20px;
+}
+div.action-linked_to_mine #companies {
+  margin-bottom: 20px;
+}
+#denied_requests {
+  display: none;
+}

@@ -36,6 +36,7 @@ class Invoice < ActiveRecord::Base
   belongs_to :bank_info
   has_one :amend_of, :class_name => "Invoice", :foreign_key => 'amend_id'
   belongs_to :quote
+  belongs_to :dir3
   validates_presence_of :client, :date, :currency, :project_id, :unless => Proc.new {|i| i.type == "ReceivedInvoice" }
   validates_inclusion_of :currency, :in  => Money::Currency.table.collect {|k,v| v[:iso_code] }, :unless => Proc.new {|i| i.type == "ReceivedInvoice" }
   validates_numericality_of :charge_amount_in_cents, :allow_nil => true
@@ -95,14 +96,6 @@ class Invoice < ActiveRecord::Base
 
   def subtotal(tax_type=nil)
     subtotal_without_discount(tax_type) - discount(tax_type)
-  end
-
-  def persontypecode
-    if taxes_withheld.any?
-      "F" # Fisica
-    else
-      "J" # Juridica
-    end
   end
 
   def discount(tax_type=nil)
@@ -445,7 +438,7 @@ _INV
       invoice_format  = "facturae#{facturae_version.text.gsub(/[^\d]/,'')}"
       logger.info "Creating invoice from xml - format is FacturaE #{facturae_version.text}"
     elsif ubl_version
-      #TODO: biiubl20 efffubl oioubl20 pdf peppolubl20 svefaktura
+      #TODO: biiubl20 efffubl oioubl20 pdf peppolubl20 peppolubl21 svefaktura
       invoice_format  = "ubl#{ubl_version.text}"
       logger.info "Creating invoice from xml - format is UBL #{ubl_version.text}"
     else
@@ -570,6 +563,8 @@ _INV
       invoice.payment_method=PAYMENT_DEBIT
     elsif Haltr::Utils.get_xpath(doc,xpaths[:to_be_credited])
       invoice.payment_method=PAYMENT_TRANSFER
+    else
+      invoice.payment_method=PAYMENT_CASH
     end
 
     # bank info

@@ -15,6 +15,7 @@ class Client < ActiveRecord::Base
   belongs_to :company # linked to
   belongs_to :bank_info # refers to company's bank_info
                         # default one when creating new invoices
+  has_many :dir3s, :foreign_key => :taxcode, :primary_key => :taxcode
 
   validates_presence_of :taxcode, :unless => Proc.new { |client|
     Company::COUNTRIES_WITHOUT_TAXCODE.include? client.country

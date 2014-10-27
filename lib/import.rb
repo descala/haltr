@@ -18,7 +18,7 @@ module Import
       @text.each_line do |line|
         case line[0..1]
         when '11'
-          account = line[2..22].strip
+          account = line[2..22].to_s.strip
         when '22'
           moviments << Moviment.new(line, account)
         when '23' 
@@ -82,7 +82,7 @@ module Import
       Money.new(line[pos..pos+len].to_i, Money::Currency.new(Setting.plugin_haltr['default_currency']))
     end
     def string(pos,len)
-      line[pos..pos+len].strip
+      line[pos..pos+len].to_s.strip
     end
     def signe(pos)
       signe = true  # haver

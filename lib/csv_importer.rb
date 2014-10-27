@@ -126,4 +126,28 @@ module CsvImporter
     end
   end
 
+  def process_dir3entities(options={})
+
+    entities = CsvMapper::import(options[:entities]) do
+      read_attributes_from_file
+    end
+
+    Dir3Entity.delete_all
+    entities.each do |l|
+      Dir3Entity.create(l.to_h)
+    end
+    puts "Entities imported: #{Dir3Entity.count}"
+
+    relations = CsvMapper::import(options[:relations]) do
+      read_attributes_from_file
+    end
+
+    Dir3.delete_all
+    relations.each do |l|
+      Dir3.create(l.to_h)
+    end
+    puts "Relations imported: #{Dir3.count}"
+
+  end
+
 end

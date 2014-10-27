@@ -1,21 +1,80 @@
-<table class="taula-1 list" id=" companies">
-  <thead>
-    <tr class="parell">
-      <th style="width: 3%;"></th>
-      <%= sort_header_tag('taxcode', :caption => l(:field_taxcode)) %>
-      <%= sort_header_tag('name', :caption => l(:field_name)) %>
-    </tr>
-  </thead>
-  <tbody>
-<% for c in @companies -%>
-  <tr class="user <%= cycle("imparell", "parell") %>">
-    <td style="width: 3%;"><%=image_tag("link.png")%></td>
-    <td><%=h c.taxcode %></td>
-    <td><%=h c.name %></td>
-  </tr>
+<% if @companies_link_req.any? -%>
+  <h3><%= l(:link_requests) %></h3>
+
+  <table class="taula-1 list" id="link_requests">
+    <thead>
+      <tr class="parell">
+        <th style="width: 3%;"></th>
+        <%= sort_header_tag('taxcode', :caption => l(:field_taxcode)) %>
+        <%= sort_header_tag('name', :caption => l(:field_name)) %>
+        <th></th>
+      </tr>
+    </thead>
+    <tbody>
+      <% for req in @companies_link_req -%>
+        <tr class="user <%= cycle("imparell", "parell") %>">
+          <td style="width: 3%;"><%=image_tag("link.png")%></td>
+          <td><%=h req.taxcode %></td>
+          <td><%=h req.name %></td>
+          <td>
+            <%=link_to_if_authorized l(:allow_link), {:controller=>'clients',:action=>'allow_link',:id=>@project,:req=>req}%> / 
+            <%=link_to_if_authorized l(:deny_link), {:controller=>'clients',:action=>'deny_link',:id=>@project,:req=>req} %>
+          </td>
+        </tr>
+      <% end -%>
+    </tbody>
+  </table>
 <% end -%>
-  </tbody>
-</table>
+
+<% if @companies.any? -%>
+  <h3><%= l(:label_linked_to_mine) %></h3>
+
+  <table class="taula-1 list" id="companies">
+    <thead>
+      <tr class="parell">
+        <th style="width: 3%;"></th>
+        <%= sort_header_tag('taxcode', :caption => l(:field_taxcode)) %>
+        <%= sort_header_tag('name', :caption => l(:field_name)) %>
+      </tr>
+    </thead>
+    <tbody>
+      <% for c in @companies -%>
+        <tr class="user <%= cycle("imparell", "parell") %>">
+          <td style="width: 3%;"><%=image_tag("link.png")%></td>
+          <td><%=h c.taxcode %></td>
+          <td><%=h c.name %></td>
+        </tr>
+      <% end -%>
+    </tbody>
+  </table>
+<% end -%>
+
+<% if @companies_denied.any? -%>
+  <h3><%= l(:denied_requests) %>&nbsp;<span id="denied_show_hide" class="icon icon-add"></span></h3>
+
+  <table class="taula-1 list" id="denied_requests">
+    <thead>
+      <tr class="parell">
+        <th style="width: 3%;"></th>
+        <%= sort_header_tag('taxcode', :caption => l(:field_taxcode)) %>
+        <%= sort_header_tag('name', :caption => l(:field_name)) %>
+        <th></th>
+      </tr>
+    </thead>
+    <tbody>
+      <% for req in @companies_denied -%>
+        <tr class="user <%= cycle("imparell", "parell") %>">
+          <td style="width: 3%;"><%=image_tag("link.png")%></td>
+          <td><%=h req.taxcode %></td>
+          <td><%=h req.name %></td>
+          <td>
+            <%=link_to_if_authorized l(:allow_link), {:controller=>'clients',:action=>'allow_link',:id=>@project,:req=>req}%>
+          </td>
+        </tr>
+      <% end -%>
+    </tbody>
+  </table>
+<% end -%>
 
 
 <% html_title(l(:label_companies)) -%>
