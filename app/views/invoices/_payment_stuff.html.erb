@@ -38,8 +38,8 @@
     <p class="col span-1-de-3">
     <label for="invoice_dir3_id"><%= l(:organ_gestor) %></label>
     <%= select(:invoice, :dir3_id, @client.dir3s.collect {|d|
-      ["#{d.organ_gestor.code} - #{d.organ_gestor.name}", d.id, {:'data-oc' => d.oficina_contable.id.to_s,
-                                                                 :'data-ut' => d.unitat_tramitadora.id.to_s}]
+      ["#{d.organ_gestor.code} - #{d.organ_gestor.name}", d.organ_gestor.code, {:'data-oc' => d.oficina_contable.id.to_s,
+                                                                                :'data-ut' => d.unitat_tramitadora.id.to_s}]
     }) %>
     </p>
     <p class="col span-1-de-3">
