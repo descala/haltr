@@ -46,7 +46,6 @@ class ClientsController < ApplicationController
   end
 
   def edit
-    @company = Company.find(:all, :conditions => ["taxcode = ? and (public='public' or public='semipublic')", @client.taxcode]).first
   end
 
   def create
