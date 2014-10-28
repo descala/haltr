@@ -7,8 +7,9 @@ class Client < ActiveRecord::Base
   has_many :people,   :dependent => :destroy
   has_many :mandates, :dependent => :destroy
 
-  belongs_to :project # client of
-  belongs_to :company # linked to
+  belongs_to :project   # client of
+  belongs_to :company,  # linked to
+    :polymorphic => true
   belongs_to :bank_info # refers to company's bank_info
                         # default one when creating new invoices
   has_many :dir3s, :foreign_key => :taxcode, :primary_key => :taxcode
@@ -106,7 +107,7 @@ class Client < ActiveRecord::Base
   end
 
   def language
-    if self.linked?
+    if self.linked? and company.project
       begin
         company.project.users.reject {|u| u.admin? }.first.language
       rescue
