@@ -109,6 +109,7 @@ match '/companies/logo/:project_id' => 'companies#logo', :via => :get
 match '/companies/logo_by_taxcode/:taxcode' => 'companies#logo_by_taxcode', :via => :get
 resources :companies, :only => [:update]
 
+resources :external_companies
 
 match '/charts/invoice_total' => 'charts#invoice_total', :via => :get, :as => :invoice_total_chart
 match '/charts/invoice_status/:project_id' => 'charts#invoice_status', :via => :get, :as => :invoice_status_chart

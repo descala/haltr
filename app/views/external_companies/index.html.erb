@@ -1,0 +1,14 @@
+<h2><%= l(:external_companies) %></h2>
+
+<table class="taula-1 list clients">
+  <% @ecompanies.each do |ec| -%>
+    <tr class="<%= cycle('odd senar','even parell') %>">
+      <td><%= ec.name %></td>
+      <td><%= link_to l(:button_edit), edit_external_company_path(ec) %></td>
+      <td><%= link_to l(:button_delete), external_company_path(ec),
+        :confirm=>l(:text_are_you_sure), :method=>:delete %></td>
+    </tr>
+  <% end -%>
+</table>
+
+<%= link_to l(:label_new), new_external_company_path %>

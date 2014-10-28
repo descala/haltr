@@ -103,7 +103,8 @@ class ClientsController < ApplicationController
     else
       # we are creating/editing a new client
       # search a company with specified taxcode and (semi)public profile
-      company = Company.find(:all,
+      company = ExternalCompany.find_by_taxcode(taxcode)
+      company ||= Company.find(:all,
                   :conditions => ["taxcode = ? and (public='public' or public='semipublic')", taxcode]).first
       render :partial => "cif_info", :locals => { :client => client,
                                                   :company => company,
@@ -113,9 +114,10 @@ class ClientsController < ApplicationController
   end
 
   def link_to_profile
-    @company = Company.find(params[:company])
-    @client = Client.find(params[:client]) unless params[:client].blank?
-    @client ||= Client.new(:project=>@project)
+    @company   = ExternalCompany.find(params[:company])
+    @company ||= Company.find(params[:company])
+    @client    = Client.find(params[:client]) unless params[:client].blank?
+    @client  ||= Client.new(:project=>@project)
     @client.company = @company
     @client.taxcode = @company.taxcode
     if @client.save
