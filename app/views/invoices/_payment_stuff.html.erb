@@ -60,7 +60,7 @@
 <% if @client and @client.invoice_format == 'aoc32' -%>
   <div class="seccio grup">
     <p class="col">
-    <label for="invoice_file_reference"><%= l(:field_file_reference) %></label>
+    <label for="invoice_file_reference"><%= l(:field_file_reference) %><span class="required"> *</span></label>
     <%= text_field :invoice, :file_reference %>
     </p>
   </div>
