@@ -263,6 +263,9 @@
 <% unless invoice_line.article_code.blank? or format != "facturae32" -%>
               <ArticleCode><%=invoice_line.article_code%></ArticleCode>
 <% end -%>
+<% if format == "facturae32" and !@invoice.file_reference.blank? -%>
+              <FileReference><%=@invoice.file_reference%></FileReference>
+<% end -%>
             </InvoiceLine>
 <% end -%>
          </Items>
