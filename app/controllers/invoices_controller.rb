@@ -92,15 +92,28 @@ class InvoicesController < ApplicationController
       invoices = invoices.where("number like ?","%#{params[:number]}%")
     end
 
-    @invoice_count = invoices.count
-    @invoice_pages = Paginator.new self, @invoice_count,
-		per_page_option,
-		params['page']
-    @invoices =  invoices.find :all,
-       :order => sort_clause,
-       :include => [:client],
-       :limit  =>  @invoice_pages.items_per_page,
-       :offset =>  @invoice_pages.current.offset
+    if params[:format] == 'csv' and !User.current.allowed_to?(:export_invoices, @project)
+      @status= l(:contact_support)
+      @message=l(:notice_not_authorized)
+      render :template => 'common/error', :layout => 'base', :status => 403, :formats => [:html]
+      return
+    end
+    respond_to do |format|
+      format.html do
+        @invoice_count = invoices.count
+        @invoice_pages = Paginator.new self, @invoice_count,
+          per_page_option,
+          params['page']
+        @invoices =  invoices.find :all,
+          :order => sort_clause,
+          :include => [:client],
+          :limit  =>  @invoice_pages.items_per_page,
+          :offset =>  @invoice_pages.current.offset
+      end
+      format.csv do
+        @invoices = invoices.order(sort_clause)
+      end
+    end
 
   end
 
