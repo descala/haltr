@@ -42,6 +42,10 @@ class ExportChannels
     available[id]["class_for_send"] if available? id
   end
 
+  def self.options(id)
+    available[id]["options"] if available? id
+  end
+
   def self.validations(id)
     return [] if available[id].nil?
     if available[id]["validate"].nil?
