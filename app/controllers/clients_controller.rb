@@ -105,8 +105,8 @@ class ClientsController < ApplicationController
   end
 
   def link_to_profile
-    @company   = ExternalCompany.find(params[:company])
-    @company ||= Company.find(params[:company])
+    @company   = ExternalCompany.find_by_taxcode(params[:company])
+    @company ||= Company.find_by_taxcode(params[:company])
     @client    = Client.find(params[:client]) unless params[:client].blank?
     @client  ||= Client.new(:project=>@project)
     @client.company = @company

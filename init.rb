@@ -115,6 +115,8 @@ Redmine::Plugin.register :haltr do
 
     permission :view_invoice_extra_fields, {}
 
+    permission :export_invoices, {:invoices => [:index]}
+
     # Loads permisons from config/channels.yml
     ExportChannels.permissions.each do |permission,actions|
       permission permission, actions, :require => :member
