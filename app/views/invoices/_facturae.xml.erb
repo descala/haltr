@@ -216,8 +216,6 @@
             <InvoiceLine>
               <%= call_hook(:facturae_receiver_contract_reference) %>
               <ReceiverTransactionReference><%=h(@invoice.ponumber)[0..19]%></ReceiverTransactionReference>
-              <%= call_hook(:facturae_file_reference) %>
-              <%= call_hook(:facturae_sequence_number) %>
               <%= call_hook(:facturae_delivery_notes_number) %>
               <ItemDescription><%=h invoice_line.description%></ItemDescription>
               <Quantity><%=h invoice_line.quantity%></Quantity>
@@ -265,7 +263,10 @@
 <% end -%>
 <% if format == "facturae32" and !@invoice.file_reference.blank? -%>
               <FileReference><%=@invoice.file_reference%></FileReference>
+<% else -%>
+              <%= call_hook(:facturae_file_reference) %>
 <% end -%>
+              <%= call_hook(:facturae_sequence_number) %>
             </InvoiceLine>
 <% end -%>
          </Items>
