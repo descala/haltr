@@ -135,7 +135,7 @@ module HaltrHelper
             { :controller=>controller,
               :action=>'show',
               :id=>invoice,:anchor=>'haltr_events' },
-            :title=>invoice.client.name)
+            :title=>invoice.client ? invoice.client.name : '')
   end
 
 end
