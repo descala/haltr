@@ -68,7 +68,7 @@ class Event < ActiveRecord::Base
 
   def self.automatic
     events  = %w(bounced sent_notification delivered_notification registered_notification)
-    events << %w(refuse_notification accept_notification paid_notification accept refuse)
+    events += %w(refuse_notification accept_notification paid_notification accept refuse)
 
     actions = %w(sending receiving validating_format validating_signature)
     actions.each do |a|
