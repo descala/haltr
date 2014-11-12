@@ -3,6 +3,7 @@
 <table class="taula-1 list clients">
   <% @ecompanies.each do |ec| -%>
     <tr class="<%= cycle('odd senar','even parell') %>">
+      <td><%= ec.taxcode %></td>
       <td><%= ec.name %></td>
       <td><%= link_to l(:button_edit), edit_external_company_path(ec) %></td>
       <td><%= link_to l(:button_delete), external_company_path(ec),
