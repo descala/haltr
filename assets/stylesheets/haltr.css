@@ -203,3 +203,6 @@ div.action-linked_to_mine #companies {
 #denied_requests {
   display: none;
 }
+.companyid {
+  font-size: 10px;
+}

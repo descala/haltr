@@ -388,7 +388,7 @@ ca:
   missing_svefaktura_debit: "No es poden crear factures domiciliades"
 
   label_update_taxes: "Actualitzar els impostos de les plantilles"
-  field_company_identifier: "ID d'empresa"
+  field_company_identifier: "Registre mercantil"
 
   label_linked_to_mine: "Empreses vinculades"
 
