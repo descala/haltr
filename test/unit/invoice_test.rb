@@ -439,4 +439,10 @@ class InvoiceTest < ActiveSupport::TestCase
     assert invoice.modified_since_created?, "modified since created"
   end
 
+  test 'invoice with discount TotalAmount is same as TotalGrossAmountBeforeTaxes' do
+    Invoice.all.each do |invoice|
+      assert_equal (invoice.taxable_base.dollars + invoice.charge_amount.dollars), invoice.subtotal.dollars, "invoice #{invoice.id}"
+    end
+  end
+
 end

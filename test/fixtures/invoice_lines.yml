@@ -125,3 +125,17 @@ i9_line1:
   unit: 1
   price: 100.0
   description: "Line 1 of invoice i9"
+
+i12_line1:
+  invoice_id: 12
+  quantity: 1.0
+  unit: 1
+  price: 123.81
+  description: "Line 1 of invoice i12"
+
+i12_line2:
+  invoice_id: 12
+  quantity: 1.0
+  unit: 1
+  price: 123.50
+  description: "Line 2 of invoice i12"

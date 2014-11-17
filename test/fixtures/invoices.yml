@@ -275,3 +275,17 @@ received_2:
   original: <%= Haltr::Utils.compress(File.read(Rails.root.join('plugins/haltr/test/fixtures/documents/invoice_facturae32_signed.xml'))).gsub("\n","") %>
   from: fixtures@haltr.io
 
+i12:
+  id: 12
+  type: IssuedInvoice
+  client_id: 1
+  currency: EUR
+  date: 2013-04-04
+  due_date: 2013-04-04
+  number: "2014/i12"
+  payment_method: 2
+  ponumber: "client order number 123"
+  project_id: 2
+  state: new
+  discount_percent: 5
+
