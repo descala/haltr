@@ -230,7 +230,7 @@
                    <TaxTypeCode>04</TaxTypeCode>
                    <TaxRate><%=h precision tax.percent * -1 %></TaxRate>
                    <TaxableBase>
-                      <TotalAmount><%=h precision invoice_line.taxable_base %></TotalAmount>
+                      <TotalAmount><%=h precision invoice_line.total %></TotalAmount>
                    </TaxableBase>
                    <TaxAmount>
                      <TotalAmount><%=h precision(invoice_line.tax_amount(tax)*-1)%></TotalAmount>
@@ -246,7 +246,7 @@
                     <TaxTypeCode>01</TaxTypeCode>
                     <TaxRate><%=h precision tax.percent%></TaxRate>
                     <TaxableBase>
-                      <TotalAmount><%=h precision(invoice_line.taxable_base)%></TotalAmount>
+                      <TotalAmount><%=h precision(invoice_line.total)%></TotalAmount>
                     </TaxableBase>
                     <TaxAmount>
                       <TotalAmount><%=h precision(invoice_line.tax_amount(tax))%></TotalAmount>

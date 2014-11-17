@@ -243,9 +243,9 @@ class Invoice < ActiveRecord::Base
     t = Money.new(0,currency)
     invoice_lines.each do |il|
       next if il.marked_for_destruction?
-      t += il.taxable_base if tax_type.nil? or il.has_tax?(tax_type)
+      t += il.total if tax_type.nil? or il.has_tax?(tax_type)
     end
-    t
+    t - discount(tax_type)
   end
 
   def tax_applies_to_all_lines?(tax)
