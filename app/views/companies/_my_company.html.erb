@@ -6,7 +6,6 @@
     <%= call_hook(:company_form_taxcode) %>
     </p>
     <p class="col span-1-de-2">
-    <%= f.text_field :company_identifier %>
     </p>
   </div>
   <div class="seccio grup">
@@ -58,9 +57,15 @@
     <p class="col span-1-de-2">
     <%=label_tag('attachments[1][file]', l(:logo))%>
     <%= file_field_tag 'attachments[1][file]', :size=>30, :id=>'logo', :accept=>'image/png,image/gif,image/jpeg' -%>
+    </p>
+  </div>
+
+  <div class="seccio grup">
+    <p class="col span-1-de-2">
+    <%= f.text_field :company_identifier %>
+    </p>
+    <p class="col span-1-de-2" style="text-align: center;">
     <% if @company.attachments.size > 0 -%>
-      <br />
-      <br />
       <%= image_tag "/attachments/#{@company.attachments.first.id}/#{@company.attachments.first.filename}" -%>
     <% end -%>
     </p>
