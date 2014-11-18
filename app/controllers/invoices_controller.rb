@@ -350,12 +350,15 @@ class InvoicesController < ApplicationController
       format.pdf do
         @is_pdf = true
         @debug = params[:debug]
-        render :pdf => @invoice.pdf_name_without_extension,
-          :disposition => 'attachment',
-          :layout => "invoice.html",
-          :template=>"invoices/show_pdf",
-          :formats => :html,
-          :show_as_html => params[:debug]
+        if @debug
+          render :pdf => @invoice.pdf_name_without_extension,
+            :layout => "invoice.html",
+            :template=>"invoices/show_pdf",
+            :formats => :html,
+            :show_as_html => true
+        else
+          send_data Haltr::Pdf.generate(@invoice,@debug)
+        end
       end
       if params[:debug]
         format.facturae30  { render_xml Haltr::Xml.generate(@invoice, 'facturae30') }
