@@ -357,7 +357,7 @@ class InvoicesController < ApplicationController
             :formats => :html,
             :show_as_html => true
         else
-          send_data Haltr::Pdf.generate(@invoice)
+          send_data Haltr::Pdf.generate(@invoice,@debug)
         end
       end
       if params[:debug]
