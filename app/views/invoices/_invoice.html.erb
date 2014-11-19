@@ -214,6 +214,4 @@
   </div>
 <% end -%>
 
-<% if !@is_pdf and !@invoice.company.company_identifier.blank? %>
-  <p class="companyid"><%= l(:field_company_identifier) %>: <%=@invoice.company.company_identifier%></p>
-<% end -%>
+<p class="companyid"><%= l(:field_company_identifier) %>: <%=@invoice.company.company_identifier%></p>
