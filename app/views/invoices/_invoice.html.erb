@@ -200,9 +200,9 @@
 
 </div>
 
+<div class="notes">
 <% if !@invoice.extra_info.blank? or
      @invoice.taxes.collect {|t| t if t.exempt? and !t.comment.blank? }.compact.any? -%>
-  <div class="notes">
     <h3><%=h l(:field_extra_info)%></h3>
     <% unless @invoice.extra_info.blank? -%>
       <span class="invoice-terms"><%= simple_format(h @invoice.extra_info) %></span>
@@ -211,7 +211,9 @@
       <% next unless t.exempt? and !t.comment.blank? -%>
       <span class="invoice-terms"><%= simple_format(h "#{tax_name(t)}: #{t.comment}") %></span>
     <% end -%><br/>
-  </div>
 <% end -%>
+</div>
 
-<p class="companyid"><%= l(:field_company_identifier) %>: <%=@invoice.company.company_identifier%></p>
+<% unless @invoice.company.company_identifier.blank? %>
+  <p class="companyid"><%= l(:field_company_identifier) %>: <%=@invoice.company.company_identifier%></p>
+<% end -%>
