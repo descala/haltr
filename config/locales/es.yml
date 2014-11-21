@@ -390,7 +390,7 @@ es:
   missing_svefaktura_debit: "No se pueden crear facturas domiciliadas"
 
   label_update_taxes: "Actualiza los impuestos de las plantillas"
-  field_company_identifier: "ID de empresa"
+  field_company_identifier: "Registro mercantil"
 
   label_linked_to_mine: "Empresas vinculadas"
 

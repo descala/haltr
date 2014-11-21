@@ -387,7 +387,7 @@ ca:
   missing_svefaktura_debit: "No es poden crear factures domiciliades"
 
   label_update_taxes: "Actualitzar els impostos de les plantilles"
-  field_company_identifier: "ID d'empresa"
+  field_company_identifier: "Registre mercantil"
 
   label_linked_to_mine: "Empreses vinculades"
 
@@ -551,7 +551,7 @@ ca:
   denied_requests: "Peticions denegades"
   self_employed: "Sóc treballador autònom"
   organ_gestor: "Òrgan gestor"
-  oficina_contable: "Oficina contable"
+  oficina_contable: "Oficina comptable"
   unitat_tramitadora: "Unitat tramitadora"
   external_companies: "Empreses externes"
   external_company: "Empresa externa"

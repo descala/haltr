@@ -36,8 +36,10 @@ class EventsController < ApplicationController
       if @event.save
         flash[:notice] = 'Event was successfully created.'
         format.xml  { render :xml => @event, :status => :created }
+        format.json  { render :json => @event, :status => :created }
       else
         format.xml  { render :xml => @event.errors, :status => :unprocessable_entity }
+        format.json { render :json => @event.errors, :status => :unprocessable_entity }
       end
     end
   end

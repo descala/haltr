@@ -102,3 +102,14 @@ tax_withheld_10_i8_line1:
   percent: -10
   category: S
 
+tax_vat_21_i12_line1:
+  invoice_line: i12_line1
+  name: VAT
+  percent: 21
+  category: S
+
+tax_vat_21_i12_line2:
+  invoice_line: i12_line2
+  name: VAT
+  percent: 21
+  category: S

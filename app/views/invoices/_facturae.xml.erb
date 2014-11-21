@@ -45,6 +45,14 @@
 
          <LegalEntity>
             <CorporateName><%=h @company.name%></CorporateName>
+            <% unless @company.company_identifier.blank? -%>
+            <RegistrationData>
+              <RegisterOfCompaniesLocation><%=@company.company_identifier[0..19]%></RegisterOfCompaniesLocation>
+              <% if @company.company_identifier.size > 20 -%>
+                <AdditionalRegistrationData><%=@company.company_identifier[20..39]%></AdditionalRegistrationData>
+              <% end -%>
+            </RegistrationData>
+            <% end -%>
             <%= render :partial => "invoices/address.facturae", :format => :xml, :locals => {:entity => @company} %>
             <ContactDetails>
                <WebAddress><%=h @company.website%></WebAddress>
@@ -216,8 +224,6 @@
             <InvoiceLine>
               <%= call_hook(:facturae_receiver_contract_reference) %>
               <ReceiverTransactionReference><%=h(@invoice.ponumber)[0..19]%></ReceiverTransactionReference>
-              <%= call_hook(:facturae_file_reference) %>
-              <%= call_hook(:facturae_sequence_number) %>
               <%= call_hook(:facturae_delivery_notes_number) %>
               <ItemDescription><%=h invoice_line.description%></ItemDescription>
               <Quantity><%=h invoice_line.quantity%></Quantity>
@@ -232,7 +238,7 @@
                    <TaxTypeCode>04</TaxTypeCode>
                    <TaxRate><%=h precision tax.percent * -1 %></TaxRate>
                    <TaxableBase>
-                      <TotalAmount><%=h precision invoice_line.taxable_base %></TotalAmount>
+                      <TotalAmount><%=h precision invoice_line.total %></TotalAmount>
                    </TaxableBase>
                    <TaxAmount>
                      <TotalAmount><%=h precision(invoice_line.tax_amount(tax)*-1)%></TotalAmount>
@@ -248,7 +254,7 @@
                     <TaxTypeCode>01</TaxTypeCode>
                     <TaxRate><%=h precision tax.percent%></TaxRate>
                     <TaxableBase>
-                      <TotalAmount><%=h precision(invoice_line.taxable_base)%></TotalAmount>
+                      <TotalAmount><%=h precision(invoice_line.total)%></TotalAmount>
                     </TaxableBase>
                     <TaxAmount>
                       <TotalAmount><%=h precision(invoice_line.tax_amount(tax))%></TotalAmount>
@@ -265,7 +271,10 @@
 <% end -%>
 <% if format == "facturae32" and !@invoice.file_reference.blank? -%>
               <FileReference><%=@invoice.file_reference%></FileReference>
+<% else -%>
+              <%= call_hook(:facturae_file_reference) %>
 <% end -%>
+              <%= call_hook(:facturae_sequence_number) %>
             </InvoiceLine>
 <% end -%>
          </Items>
