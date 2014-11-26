@@ -6,7 +6,7 @@
 <div id="audited_changes_<%=a.id%>" class="audited-changes">
   <table>
     <% a.audited_changes.each do |field,values| -%>
-      <% next if values.blank? -%>
+      <% next if values.blank? or field == 'original' -%>
       <% if values.is_a?(Array) -%>
         <tr class="new-values">
           <td><%= label_for_audit(field) %></td>
