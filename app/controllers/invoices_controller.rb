@@ -746,8 +746,8 @@ class InvoicesController < ApplicationController
       if sender.respond_to?(:immediate_perform)
         sender.immediate_perform
       elsif sender.new.respond_to?(:perform)
-        Delayed::Job.enqueue sender
         @invoice.queue || @invoice.requeue
+        Delayed::Job.enqueue sender
       else
         raise "Error in channels.yml: check configuration for #{export_id}"
       end

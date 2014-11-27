@@ -35,7 +35,7 @@ class IssuedInvoice < InvoiceDocument
       transition all - :new => :sending
     end
     event :success_sending do
-      transition [:sending,:error] => :sent
+      transition [:new,:sending,:error] => :sent
     end
     event :mark_unsent do
       transition [:sent,:closed,:error,:discarded] => :new
