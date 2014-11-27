@@ -3,7 +3,6 @@ class InvoicesController < ApplicationController
   unloadable
   menu_item Haltr::MenuItem.new(:invoices,:invoices_level2)
   menu_item Haltr::MenuItem.new(:invoices,:reports), :only => :report
-  menu_item Haltr::MenuItem.new(:invoices,:import), :only => :import
   helper :haltr
   helper :context_menus
   layout 'haltr'
@@ -921,6 +920,7 @@ class InvoicesController < ApplicationController
   end
 
   def import
+    params[:issued] ||= 1
     if request.post?
       file = params[:file]
       @invoice = nil

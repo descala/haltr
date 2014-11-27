@@ -104,7 +104,7 @@ Redmine::Plugin.register :haltr do
         :mandates => [:index,:new,:show,:create,:edit,:update,:destroy,:signed_doc] }, :require => :member
 
     permission :import_invoices,
-      { :invoices => [:import] }, :require => :member
+      { :invoices => [:import], :received => [:import] }, :require => :member
 
     permission :email_customization,   {:companies=>'customization'}, :require => :member
     permission :configure_connections, {:companies=>'connections'}, :require => :member

@@ -162,6 +162,11 @@ class ReceivedController < InvoicesController
   def bulk_validate
   end
 
+  def import
+    params[:issued] = 0
+    super
+  end
+
   private
 
   def invoice_class

@@ -37,7 +37,6 @@ Redmine::MenuManager.map :invoices_menu do |menu|
   }
   menu.push :quotes, {:controller=>'quotes', :action=>'index' }, :param => :project_id, :caption => :label_quote_plural
   menu.push :reports, {:controller=>'invoices', :action => 'report' }, :param => :project_id
-  menu.push :import, {:controller=>'invoices', :action => 'import' }, :param => :project_id
 end
 
 Redmine::MenuManager.map :payments_menu do |menu|

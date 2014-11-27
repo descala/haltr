@@ -1,3 +1,17 @@
+<!--menu rapid-->
+<div class="seccio grup">
+  <div class="col span-2-de-2">
+    <ul class="menu-rapid">
+      <% if User.current.allowed_to?(:import_invoices, @project) -%>
+        <li>
+        <%= link_to l(:label_import), project_received_import_path(@project) -%>
+        </li>
+      <% end -%>
+    </ul>
+  </div>
+</div>
+<!--final menu rapid-->
+
 <!--filtres-->
 <div class="seccio grup">
   <div class="col span-2-de-2">

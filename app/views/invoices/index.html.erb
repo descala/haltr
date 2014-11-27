@@ -15,7 +15,12 @@
       <% end -%>
       <% if User.current.allowed_to?(:export_invoices, @project) -%>
         <li>
-        <%= link_to 'CSV', project_invoices_path(@project, params.merge({:format=>:csv})) -%>
+        <%= link_to 'CSV', project_invoices_path(@project) -%>
+        </li>
+      <% end -%>
+      <% if User.current.allowed_to?(:import_invoices, @project) -%>
+        <li>
+        <%= link_to l(:label_import), project_invoices_import_path(@project, params.merge({issued: 1})) -%>
         </li>
       <% end -%>
     </ul>
