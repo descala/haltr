@@ -426,7 +426,7 @@ _INV
     updated_at > created_at
   end
 
-  def self.create_from_xml(raw_invoice,company,from,md5,transport)
+  def self.create_from_xml(raw_invoice,company,from,md5,transport,issued=nil)
     raw_xml           = raw_invoice.read
     doc               = Nokogiri::XML(raw_xml)
     doc_no_namespaces = doc.dup.remove_namespaces!
@@ -465,6 +465,14 @@ _INV
       raise I18n.t :taxcodes_does_not_belong_to_self,
         :tcs => "#{buyer_taxcode} - #{seller_taxcode}",
         :tc  => company.taxcode
+    end
+    # if passed issued param, check if it should be an IssuedInvoice or a ReceivedInvoice
+    unless issued.nil?
+      if !issued and invoice.is_a? IssuedInvoice
+        raise l(:import_issued_from_received)
+      elsif issued and invoice.is_a? ReceivedInvoice
+        raise l(:import_received_from_issued)
+      end
     end
 
     # create client if not exists

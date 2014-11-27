@@ -920,13 +920,13 @@ class InvoicesController < ApplicationController
   end
 
   def import
-    params[:issued] ||= 1
+    params[:issued] ||= '1'
     if request.post?
       file = params[:file]
       @invoice = nil
       if file && file.size > 0
         md5 = `md5sum #{file.path} | cut -d" " -f1`.chomp
-        @invoice = Invoice.create_from_xml(file,@project.company,User.current.name,md5,'uploaded')
+        @invoice = Invoice.create_from_xml(file,@project.company,User.current.name,md5,'uploaded',params[:issued]=='1')
       end
       if @invoice and ["true","1"].include?(params[:send_after_import])
         begin
