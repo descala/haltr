@@ -36,7 +36,7 @@ module Haltr
     def self.fix_invoice_totals
       # ensure totals are ok for invoice fixtures
       Invoice.all.each do |i|
-        i.save!
+        i.save! if i.valid?
       end
     end
 

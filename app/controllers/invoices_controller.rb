@@ -353,7 +353,13 @@ class InvoicesController < ApplicationController
     @autocall_args = params[:autocall_args]
     @format = params["format"]
     respond_to do |format|
-      format.html
+      format.html do
+        if @invoice.invoice_img
+          render :show_img
+        else
+          render :show
+        end
+      end
       format.pdf do
         @is_pdf = true
         @debug = params[:debug]

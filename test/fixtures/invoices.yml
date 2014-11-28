@@ -289,3 +289,8 @@ i12:
   state: new
   discount_percent: 5
 
+i13:
+  id: 13
+  type: IssuedInvoice
+  project_id: 2
+  state: "processing_pdf"
