@@ -154,7 +154,7 @@ class InvoicesControllerTest < ActionController::TestCase
     assert_response :found
     assert invoice = IssuedInvoice.last
     assert !invoice.valid?
-    assert_equal invoice.state, "processing_pdf"
+    assert_equal "processing_pdf", invoice.state
     assert !invoice.modified_since_created?
     assert invoice.original
   end
