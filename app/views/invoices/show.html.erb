@@ -17,24 +17,44 @@
 </div>
 <!--final menu rapid-->
 
-<div id="invoice_wrapper">
-  <div class="ribbon ribbon-<%= @invoice.state %>">
-    <% if @invoice.is_a? InvoiceTemplate %>
-      <span><%=h l("label_invoice_template") %></span>
-    <% else %>
-      <span><%=h l("state_#{@invoice.state}").capitalize %></span>
-    <% end %>
-  </div>
-  <div id="workspace1" class="haltrinvoice">
-    <div id="workspace2">
-      <div id="col1">
+<% if @invoice.invoice_img -%>
 
-      <%= render :partial=>'invoices/invoice' %>
+<div id="invoice_img" class="container1">
+  <div class="container2">
 
-      </div>
+    <div class="colu1">
+      <%=  image_tag(project_invoice_img_path(@invoice.invoice_img, project_id: @project), width: '100%') %>
     </div>
+
+    <div class="colu2">
+
+<% end -%>
+
+      <div id="invoice_wrapper">
+        <div class="ribbon ribbon-<%= @invoice.state %>">
+          <% if @invoice.is_a? InvoiceTemplate %>
+            <span><%=h l("label_invoice_template") %></span>
+          <% else %>
+            <span><%=h l("state_#{@invoice.state}").capitalize %></span>
+          <% end %>
+        </div>
+        <div id="workspace1" class="haltrinvoice">
+          <div id="workspace2">
+            <div id="col1">
+
+              <%= render :partial=>'invoices/invoice' %>
+
+            </div>
+          </div>
+        </div>
+      </div>
+
+<% if @invoice.invoice_img -%>
+    </div>
+
   </div>
 </div>
+<% end -%>
 
 <%= render :partial => 'invoices/events'%>
 <%= render :partial => 'invoices/issued_invoice_list_other' if @invoice.is_a? IssuedInvoice %>

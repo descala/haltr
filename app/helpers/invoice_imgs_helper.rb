@@ -1,0 +1,2 @@
+module InvoiceImgsHelper
+end

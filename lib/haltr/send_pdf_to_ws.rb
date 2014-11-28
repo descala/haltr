@@ -12,6 +12,7 @@ module Haltr
       req['payload']          = Haltr::Utils.compress(pdf)
       req['nif']              = invoice.company.taxcode
       req['is_issued']        = invoice.is_a? IssuedInvoice
+      #TODO add api_key de l'usuari
       case Rails.env
       when 'production'
         req['haltr_url'] = 'https://www.b2brouter.net'

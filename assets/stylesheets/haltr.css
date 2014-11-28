@@ -228,3 +228,29 @@ div.action-linked_to_mine #companies {
 .companyid {
   font-size: 10px;
 }
+#invoice_img {
+  clear: left;
+  float: left;
+  overflow: hidden;
+  width: 100%;
+}
+#invoice_img .container2 {
+  float: left;
+  position: relative;
+  right: 50%;
+  width: 100%;
+}
+#invoice_img .colu1 {
+  float:left;
+  left: 52%;
+  overflow: hidden;
+  position: relative;
+  width: 46%;
+}
+#invoice_img .colu2 {
+  float:left;
+  left: 56%;
+  overflow: hidden;
+  position: relative;
+  width: 46%;
+}

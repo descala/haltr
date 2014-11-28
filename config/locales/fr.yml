@@ -549,3 +549,4 @@ fr:
   import_received_from_issued: "File to import is a received invoice"
   processing_pdf: "Processing PDF"
   state_processing_pdf: "Processing PDF"
+  processed_pdf: "PDF processed"

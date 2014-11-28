@@ -565,3 +565,4 @@ es:
   import_received_from_issued: "El fichero a importar corresponde a una factura recibida"
   processing_pdf: "Procesando PDF"
   state_processing_pdf: "Procesando PDF"
+  processed_pdf: "PDF procesado"

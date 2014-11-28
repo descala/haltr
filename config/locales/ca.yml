@@ -560,3 +560,4 @@ ca:
   import_received_from_issued: "El fitxer a importar correspon a una factura rebuda"
   processing_pdf: "Processant PDF"
   state_processing_pdf: "Processant PDF"
+  processed_pdf: "PDF processat"
