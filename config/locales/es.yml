@@ -231,7 +231,7 @@ es:
   view_mail: "Ver email"
   public_link: "Enlace público"
   mark_as_received: "Marcada como recibida"
-  uploaded: "Subida por %{by}"
+  uploaded: "Subida"
   email: "Recibida"
   download_original: "Descargar original"
   view_original: "Ver original"

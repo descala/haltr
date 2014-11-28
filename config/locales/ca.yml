@@ -227,7 +227,7 @@ ca:
   view_mail: "Veure email"
   public_link: "Enllaç públic"
   mark_as_received: "Marcada com a rebuda"
-  uploaded: "Pujada per %{by}"
+  uploaded: "Pujada"
   email: "Rebuda"
   download_original: "Descarregar original"
   view_original: "Veure original"
