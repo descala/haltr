@@ -745,7 +745,7 @@ class InvoicesController < ApplicationController
       sender = class_for_send.new(@invoice,User.current)
       if sender.respond_to?(:immediate_perform)
         sender.immediate_perform
-      elsif sender.new.respond_to?(:perform)
+      elsif sender.respond_to?(:perform)
         @invoice.queue || @invoice.requeue
         Delayed::Job.enqueue sender
       else
