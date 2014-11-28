@@ -1,5 +1,5 @@
 require File.dirname(__FILE__) + '../../test/test_helper'
-
+require 'webmock/test_unit'
 
 module Haltr
   module TestHelper

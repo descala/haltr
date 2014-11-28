@@ -25,6 +25,12 @@ class ReceivedInvoice < InvoiceDocument
     event :unpaid do
       transition :paid => :accepted
     end
+    event :processing_pdf do
+      transition [:received] => :processing_pdf
+    end
+    event :processed_pdf do
+      transition [:processing_pdf] => :received
+    end
   end
 
   def to_label
@@ -65,7 +71,7 @@ class ReceivedInvoice < InvoiceDocument
   protected
 
   def create_event
-    ReceivedInvoiceEvent.create(:name=>self.transport,:invoice=>self,:user=>User.current)
+    ReceivedInvoiceEvent.create!(:name=>self.transport,:invoice=>self,:user=>User.current)
   end
 
 end

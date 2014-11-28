@@ -79,6 +79,12 @@ class IssuedInvoice < InvoiceDocument
     event :amend_and_close do
       transition all=> :closed
     end
+    event :processing_pdf do
+      transition [:new] => :processing_pdf
+    end
+    event :processed_pdf do
+      transition [:processing_pdf] => :new
+    end
   end
 
   def sent?
@@ -127,6 +133,9 @@ class IssuedInvoice < InvoiceDocument
     end
     @can_be_exported &&= (export_errors.size == 0)
     @can_be_exported
+  rescue StandardError => e
+    export_errors << e.message
+    false
   end
 
   # TODO take into account only last x invoices

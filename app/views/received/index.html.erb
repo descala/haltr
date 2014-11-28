@@ -116,7 +116,7 @@
             <tr id="invoice-<%=invoice.id%>" class="hascontextmenu <%= cycle("odd", "even") %>">
               <td><%= check_box_tag("ids[]", invoice.id, false, :id => nil) %></td>
               <td><%=h format_date invoice.created_at.to_date %></td>
-              <td><%=h link_to_if_authorized invoice.number, {:action => 'show', :id => invoice}, {:class=> invoice.has_been_read ?  nil : 'unread'} %></td>
+              <td><%=h link_to_if_authorized (invoice.number || "???"), {:action => 'show', :id => invoice}, {:class=> invoice.has_been_read ?  nil : 'unread'} %></td>
               <td><%=h format_date invoice.date %></td>
               <td><%=h invoice.client %></td>
               <td class='money'><%= money invoice.total %></td>

@@ -25,14 +25,17 @@ class HaltrMailHandlerTest < ActiveSupport::TestCase
     assert_invoices_created(invoices)
   end
 
-  test "creates invoice from pdf" do
+  test "creates invoice from mail with attached pdf" do
     # create, it may exist (same md5)
     invoices = submit_email('invoice_pdf_signed.eml')
     assert_invoices_created(invoices)
+    assert(invoices.first.is_a?(ReceivedInvoice))
     # delete and create again
     assert invoices.first.destroy
     invoices = submit_email('invoice_pdf_signed.eml')
     assert_invoices_created(invoices)
+    assert(invoices.first.is_a?(ReceivedInvoice))
+    assert(invoices.first.original)
   end
 
   test "takes in account all recipients" do

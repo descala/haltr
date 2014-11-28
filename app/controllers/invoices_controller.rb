@@ -921,18 +921,33 @@ class InvoicesController < ApplicationController
 
   def import
     params[:issued] ||= '1'
+    transport=:uploaded
     if request.post?
       file = params[:file]
       @invoice = nil
       if file && file.size > 0
         md5 = `md5sum #{file.path} | cut -d" " -f1`.chomp
-        @invoice = Invoice.create_from_xml(file,@project.company,User.current.name,md5,'uploaded',params[:issued]=='1')
-      end
-      if @invoice and ["true","1"].include?(params[:send_after_import])
-        begin
-          @invoice.queue if @invoice.state?(:new)
-          create_and_queue_file
-        rescue
+        case file.content_type
+        when /xml/
+          @invoice = Invoice.create_from_xml(file,@project.company,
+                                             User.current.name,md5,
+                                             transport,params[:issued]=='1')
+          if @invoice and ["true","1"].include?(params[:send_after_import])
+            begin
+              @invoice.queue if @invoice.state?(:new)
+              create_and_queue_file
+            rescue
+            end
+          end
+        when /pdf/
+          @invoice = params[:issued] == '1' ? IssuedInvoice.new : ReceivedInvoice.new
+          @invoice.project   = @project
+          @invoice.state     = :processing_pdf
+          @invoice.transport = transport
+          @invoice.original  = Haltr::Utils.compress(file.read)
+          @invoice.save!(validate: false)
+          Event.create(:name=>'processing_pdf',:invoice=>@invoice)
+          Haltr::SendPdfToWs.send(@invoice,file.read)
         end
       end
       respond_to do |format|
