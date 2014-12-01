@@ -150,4 +150,28 @@ module CsvImporter
 
   end
 
+  def process_external_companies(options={})
+    external_companies = CsvMapper::import(options[:external_companies]) do
+      read_attributes_from_file
+    end
+    existing = []
+    new      = []
+    external_companies.each do |ec|
+      ec_hash = ec.members.inject({}) {|h,m|
+        h[m] = ec[m]; h.reverse_merge(
+          {country: 'es', currency: 'EUR'}
+        )
+      }
+      current = ExternalCompany.find_by_taxcode(ec.taxcode)
+      if current
+        existing << ec
+        current.update_attributes!(ec_hash)
+      else
+        new << ExternalCompany.create!(ec_hash)
+      end
+    end
+    puts "ExternalCompanies updated: #{existing.size}"
+    puts "ExternalCompanies created: #{new.size}"
+  end
+
 end

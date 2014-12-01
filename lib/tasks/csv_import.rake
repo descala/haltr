@@ -82,3 +82,31 @@ namespace :haltr do
 
   end
 end
+
+desc "Import ExternalCompanies from csv. Usage: rake haltr:import:external_companies['external_companies.csv']"
+
+namespace :haltr do
+  namespace :import do
+
+    task :external_companies, [:external_companies] => :environment do |task, args|
+
+      args.with_defaults(:external_companies=>'external_companies.csv')
+
+      begin
+        puts "External Companies file: #{args[:external_companies]}"
+        puts "===================================="
+        STDOUT.flush
+
+        include CsvImporter
+
+        process_external_companies(:external_companies => args[:external_companies])
+
+      rescue => error
+        puts "Error: #{error}"
+        raise error
+      end
+    end
+
+  end
+end
+
