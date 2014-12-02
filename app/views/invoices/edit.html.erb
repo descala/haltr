@@ -1,3 +1,16 @@
+<% if @invoice.invoice_img -%>
+
+<div id="invoice_img" class="container1">
+  <div class="container2">
+
+    <div class="colu1">
+        <%=  image_tag(project_invoice_img_path(@invoice.invoice_img, project_id: @project)) %>
+    </div>
+
+    <div class="colu2">
+
+<% end -%>
+
 <!--formulari-->
 <div class="seccio grup">
   <div class="col span-2-de-2">
@@ -25,6 +38,16 @@
   </div>
 </div>
 <!--final formulari-->
+
+<% if @invoice.invoice_img -%>
+    </div>
+
+  </div>
+</div>
+<% end -%>
+
+
+
 
 <div id="new_client_wrapper" style="display:none;">
   <%= render :partial => 'invoices/new_client', :locals => {:context => "edit_invoice"} %>
