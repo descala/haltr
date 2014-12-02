@@ -11,17 +11,9 @@ module Haltr
       req['payload']    = invoice.read_attribute(:original) # already compressed
       req['vat_id']     = invoice.company.taxcode
       req['is_issued']  = invoice.is_a? IssuedInvoice
+      req['haltr_url']  = Redmine::Configuration['haltr_url']
       #TODO add api_key de l'usuari
-      case Rails.env
-      when 'production'
-        req['haltr_url'] = 'https://www.b2brouter.net'
-        ws_url           = 'https://ws.b2brouter.com/api/v1/transactions'
-      when 'development', 'test'
-        req['haltr_url'] = 'http://localhost:3001'
-        ws_url           = 'http://localhost:3000/api/v1/transactions'
-        #ws_url           = 'https://ws.b2brouter.com/api/v1/transactions'
-      end
-
+      ws_url            = Redmine::Configuration['ws_url']
       RestClient.post(
         ws_url,
         { 'transaction' => req, 'token' => Redmine::Configuration['ws_token'] },
