@@ -8,7 +8,7 @@ module Haltr
       req['id']         = invoice.md5
       req['process']    = "Estructura::Invoice"
       req['invoice_id'] = invoice.id
-      req['payload']    = invoice.original # already compressed
+      req['payload']    = invoice.read_attribute(:original) # already compressed
       req['vat_id']     = invoice.company.taxcode
       req['is_issued']  = invoice.is_a? IssuedInvoice
       #TODO add api_key de l'usuari

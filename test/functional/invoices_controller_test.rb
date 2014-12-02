@@ -125,20 +125,14 @@ class InvoicesControllerTest < ActionController::TestCase
 
     stub_request(:post, "http://localhost:3000/api/v1/transactions").
       with(
-        :body => /transaction.id.=d41d8cd98f00b204e9800998ecf8427e
+        :body => /transaction.id.=722d813699ee44602f647997b055fa2a
                   &transaction.process.=Estructura%3A%3AInvoice
-                  &transaction.haltr_invoice_id.=\d+
+                  &transaction.invoice_id.=\d+
                   &transaction.payload.=.*
-                  &transaction.nif.=77310058H
+                  &transaction.vat_id.=77310058H
                   &transaction.is_issued.=true
                   &transaction.haltr_url.=http%3A%2F%2Flocalhost%3A3001
                   &token=f1c9296ec8cb35b02eeea064c720c168/x,
-      :headers => {'Accept'=>'*/*; q=0.5, application/xml',
-                   'Accept-Encoding'=>'gzip, deflate',
-                   'Content-Length'=>'332',
-                   'Content-Type'=>'application/x-www-form-urlencoded',
-                   'User-Agent'=>'Ruby'
-    }
     ).to_return(:status => 200,
                 :body => "",
                 :headers => {})

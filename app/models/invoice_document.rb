@@ -63,6 +63,14 @@ class InvoiceDocument < Invoice
     Money.new(paid_amount,currency)
   end
 
+  def original=(s)
+    write_attribute(:original, Haltr::Utils.compress(s))
+  end
+
+  def original
+    Haltr::Utils.decompress(read_attribute(:original))
+  end
+
   # https://rails.lighthouseapp.com/projects/8994/tickets/2389-sti-changes-behavior-depending-on-environment
   # must be at the bottom of class
   %w(received_invoice issued_invoice).each do |r| 

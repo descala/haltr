@@ -945,7 +945,8 @@ class InvoicesController < ApplicationController
           @invoice.state     = :processing_pdf
           @invoice.transport = transport
           @invoice.md5       = md5
-          @invoice.original  = Haltr::Utils.compress(file.read)
+          @invoice.original  = file.read
+          @invoice.invoice_format = 'pdf'
           @invoice.save!(validate: false)
           Event.create(:name=>'processing_pdf',:invoice=>@invoice)
           Haltr::SendPdfToWs.send(@invoice)
