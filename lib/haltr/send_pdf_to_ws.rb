@@ -1,17 +1,16 @@
 # encoding: utf-8
-require 'digest'
 
 module Haltr
   class SendPdfToWs
 
-    def self.send(invoice, pdf)
-      req                     = {}
-      req['id']               = Digest::MD5.hexdigest(pdf)
-      req['process']          = "Estructura::Invoice"
-      req['haltr_invoice_id'] = invoice.id
-      req['payload']          = Haltr::Utils.compress(pdf)
-      req['nif']              = invoice.company.taxcode
-      req['is_issued']        = invoice.is_a? IssuedInvoice
+    def self.send(invoice)
+      req               = {}
+      req['id']         = invoice.md5
+      req['process']    = "Estructura::Invoice"
+      req['invoice_id'] = invoice.id
+      req['payload']    = invoice.original # already compressed
+      req['vat_id']     = invoice.company.taxcode
+      req['is_issued']  = invoice.is_a? IssuedInvoice
       #TODO add api_key de l'usuari
       case Rails.env
       when 'production'

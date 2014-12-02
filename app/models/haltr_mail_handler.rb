@@ -75,10 +75,11 @@ class HaltrMailHandler < MailHandler # < ActionMailer::Base
     @invoice.project   = company.project
     @invoice.state     = :processing_pdf
     @invoice.transport = :email
+    @invoice.md5       = md5
     @invoice.original  = Haltr::Utils.compress(raw_invoice.read)
     @invoice.save!(validate: false)
     Event.create(:name=>'processing_pdf',:invoice=>@invoice)
-    Haltr::SendPdfToWs.send(@invoice,raw_invoice.read)
+    Haltr::SendPdfToWs.send(@invoice)
     @invoice
   end
 
