@@ -725,6 +725,15 @@ class InvoicesController < ApplicationController
     return xml_file
   end
 
+  # search invoice.client.invoice_format in channels.yml in order to choose a
+  # method for sending the invoice. There are 3 options:
+  #   1) Leave invoice in a folder
+  #   2) Use a class to send the invoice (immediate_perform)
+  #   3) Queue a delayed::job (perform)
+  # for 1) this method creates a file and calls "queue_file"
+  # for 2) and 3) it queues or sends the invoice
+  #
+  # TODO: duplicated code with queue_file
   def create_and_queue_file
     unless @invoice.can_be_exported?
       @invoice.export_errors.each do |export_error|
@@ -744,6 +753,7 @@ class InvoicesController < ApplicationController
       class_for_send = ExportChannels.class_for_send(export_id).constantize rescue nil
       sender = class_for_send.new(@invoice,User.current)
       if sender.respond_to?(:immediate_perform)
+        @invoice.queue || @invoice.requeue
         sender.immediate_perform
       elsif sender.respond_to?(:perform)
         @invoice.queue || @invoice.requeue
@@ -758,13 +768,20 @@ class InvoicesController < ApplicationController
     end
   end
 
+  # same as create_and_queue_file but it receives the file to be sent.
+  #
+  # TODO: duplicated code with create_and_queue_file
   def queue_file(invoice_file)
     export_id = @invoice.client.invoice_format
     if ExportChannels.folder(export_id).nil?
       # Use special class to send invoice
       class_for_send = ExportChannels.class_for_send(export_id).constantize rescue nil
-      if class_for_send.new.respond_to?(:perform)
-        sender = class_for_send.new(@invoice,User.current)
+      sender = class_for_send.new(@invoice,User.current)
+      if sender.respond_to?(:immediate_perform)
+        @invoice.queue || @invoice.requeue
+        sender.immediate_perform
+      elsif sender.respond_to?(:perform)
+        @invoice.queue || @invoice.requeue
         if ExportChannels.format(export_id) == 'pdf'
           sender.pdf = File.read(invoice_file.path)
           #TODO: sender.class_for_send = 'send_signed_pdf_by_mail'
