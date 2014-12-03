@@ -87,23 +87,26 @@
              <AdministrativeCentre>
                <CentreCode><%= @invoice.dir3.oficina_contable.code %></CentreCode>
                <RoleTypeCode>01</RoleTypeCode>
-               <Name><%= @invoice.dir3.oficina_contable.name %></Name>
                <%= render :partial => "invoices/address.facturae.xml", :locals => {:entity => @invoice.dir3.oficina_contable}%>
-               <CentreDescription><%=l(:oficina_contable)%></CentreDescription>
+               <% unless @invoice.dir3.oficina_contable.name.blank? -%>
+               <CentreDescription><%= @invoice.dir3.oficina_contable.name %></CentreDescription>
+               <% end -%>
              </AdministrativeCentre>
              <AdministrativeCentre>
                <CentreCode><%= @invoice.dir3.organ_gestor.code %></CentreCode>
                <RoleTypeCode>02</RoleTypeCode>
-               <Name><%= @invoice.dir3.organ_gestor.name %></Name>
                <%= render :partial => "invoices/address.facturae.xml", :locals => {:entity => @invoice.dir3.organ_gestor}%>
-               <CentreDescription><%=l(:organ_gestor)%></CentreDescription>
+               <% unless @invoice.dir3.organ_gestor.name.blank? -%>
+               <CentreDescription><%= @invoice.dir3.organ_gestor.name %></CentreDescription>
+               <% end -%>
              </AdministrativeCentre>
              <AdministrativeCentre>
                <CentreCode><%= @invoice.dir3.unitat_tramitadora.code %></CentreCode>
                <RoleTypeCode>03</RoleTypeCode>
-               <Name><%= @invoice.dir3.unitat_tramitadora.name %></Name>
                <%= render :partial => "invoices/address.facturae.xml", :locals => {:entity => @invoice.dir3.unitat_tramitadora}%>
-               <CentreDescription><%=l(:unitat_tramitadora)%></CentreDescription>
+               <% unless @invoice.dir3.unitat_tramitadora.name.blank? -%>
+               <CentreDescription><%= @invoice.dir3.unitat_tramitadora.name %></CentreDescription>
+               <% end -%>
              </AdministrativeCentre>
            </AdministrativeCentres>
          <% else -%>
