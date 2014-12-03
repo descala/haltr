@@ -56,7 +56,9 @@
             <%= render :partial => "invoices/address.facturae", :format => :xml, :locals => {:entity => @company} %>
             <ContactDetails>
                <WebAddress><%=h @company.website%></WebAddress>
+               <% unless @company.email.blank? -%>
                <ElectronicMail><%=h @company.email%></ElectronicMail>
+               <% end -%>
             </ContactDetails>
          </LegalEntity>
 <% else -%>
@@ -67,7 +69,9 @@
             <%= render :partial => "invoices/address.facturae", :format => :xml, :locals => {:entity => @company} %>
             <ContactDetails>
                <WebAddress><%=h @company.website%></WebAddress>
+               <% unless @company.email.blank? -%>
                <ElectronicMail><%=h @company.email%></ElectronicMail>
+               <% end -%>
             </ContactDetails>
          </Individual>
 <% end -%>

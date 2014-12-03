@@ -6,7 +6,7 @@ class ExternalCompany < ActiveRecord::Base
     :as        => :company,
     :dependent => :nullify
 
-  validates_presence_of :name, :email, :postalcode, :country
+  validates_presence_of :name, :postalcode, :country
   validates_presence_of :taxcode, :unless => Proc.new {|ec|
     Company::COUNTRIES_WITHOUT_TAXCODE.include? ec.country
   }
