@@ -10,7 +10,7 @@ class IssuedInvoice < InvoiceDocument
   validates_presence_of :number, :unless => Proc.new {|invoice| invoice.type == "DraftInvoice"}
   validates_uniqueness_of :number, :scope => [:project_id,:type], :if => Proc.new {|i| i.type == "IssuedInvoice" }
   validate :invoice_must_have_lines
-  validates_presence_of :file_reference, :if => Proc.new {|i| i.client and i.client.invoice_format == "aoc32" }
+  validates_presence_of :file_reference, :if => Proc.new {|i| i.client and i.client.requires_file_reference? }
 
   before_validation :set_due_date
   before_save :update_imports

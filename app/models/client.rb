@@ -183,6 +183,12 @@ class Client < ActiveRecord::Base
     audts[last] || []
   end
 
+  def requires_file_reference?
+    Redmine::Configuration['taxcodes_that_need_file_reference'].include?(taxcode)
+  rescue
+    false
+  end
+
   protected
 
   # called after_create (only NEW clients)
