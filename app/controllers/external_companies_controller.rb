@@ -7,7 +7,7 @@ class ExternalCompaniesController < ApplicationController
   helper :haltr
 
   def index
-    @ecompanies = ExternalCompany.all
+    @ecompanies = ExternalCompany.all(order: :name)
   end
 
   def new
