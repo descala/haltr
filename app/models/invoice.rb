@@ -617,7 +617,7 @@ _INV
     bank_account = Haltr::Utils.get_xpath(doc,xpaths[:bank_account])
     iban         = Haltr::Utils.get_xpath(doc,xpaths[:iban])
     bic          = Haltr::Utils.get_xpath(doc,xpaths[:bic])
-    return unless bank_account or ( iban and bic )
+    return unless bank_account or iban
     if (is_a? IssuedInvoice and debit?) or (is_a? ReceivedInvoice and transfer?)
       # account is client account, where we should charge
       # or         client account, where we should transfer
