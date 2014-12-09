@@ -439,6 +439,12 @@ class InvoiceTest < ActiveSupport::TestCase
     assert invoice.modified_since_created?, "modified since created"
   end
 
+  test 'create invoice from facturae32 without saving original' do
+    file    = File.new(File.join(File.dirname(__FILE__),'..','fixtures','documents','invoice_facturae32_issued3.xml'))
+    invoice = Invoice.create_from_xml(file,companies(:company1),User.current.name,"1234",'uploaded',nil,false)
+    assert_nil invoice.original
+  end
+
   test 'invoice with discount TotalAmount is same as TotalGrossAmountBeforeTaxes' do
     Invoice.all.each do |invoice|
       assert_equal (invoice.taxable_base.dollars + invoice.charge_amount.dollars), invoice.subtotal.dollars, "invoice #{invoice.id}"

@@ -943,7 +943,10 @@ class InvoicesController < ApplicationController
       @invoice = nil
       if file && file.size > 0
         md5 = `md5sum #{file.path} | cut -d" " -f1`.chomp
-        @invoice = Invoice.create_from_xml(file,@project.company,User.current.name,md5,'uploaded',params[:issued]=='1')
+        @invoice = Invoice.create_from_xml(
+          file, @project.company, User.current.name, md5,'uploaded',
+          params[:issued]=='1', params['keep_original'] != 'false'
+        )
       end
       if @invoice and ["true","1"].include?(params[:send_after_import])
         begin

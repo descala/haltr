@@ -426,7 +426,7 @@ _INV
     updated_at > created_at
   end
 
-  def self.create_from_xml(raw_invoice,company,from,md5,transport,issued=nil)
+  def self.create_from_xml(raw_invoice,company,from,md5,transport,issued=nil,keep_original=true)
     raw_xml           = raw_invoice.read
     doc               = Nokogiri::XML(raw_xml)
     doc_no_namespaces = doc.dup.remove_namespaces!
@@ -548,7 +548,7 @@ _INV
       :transport        => transport,      # email, uploaded
       :from             => from,           # u@mail.com, User Name...
       :md5              => md5,
-      :original         => raw_xml,
+      :original         => keep_original ? raw_xml : nil,
       :discount_percent => discount_percent.to_f,
       :discount_text    => discount_text,
       :extra_info       => extra_info,
@@ -606,7 +606,11 @@ _INV
 
     Redmine::Hook.call_hook(:model_invoice_import_before_save, :invoice=>invoice)
 
-    invoice.save!
+    if keep_original
+      invoice.save!
+    else
+      invoice.save(:validate=>false)
+    end
     logger.info "created new invoice with id #{invoice.id} for company #{company.name}"
     return invoice
   end
