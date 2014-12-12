@@ -18,10 +18,8 @@ class InvoiceCreaeteTest < ActionController::IntegrationTest
       "controller"=>"invoices",
       "invoice"=>
       {
-        "discount_percent"=>"0",
         "number"=>"invoice_created_test_1",
         "ponumber"=>"",
-        "discount_text"=>"",
         "accounting_cost"=>"",
         "payment_method"=>"1",
         "charge_amount"=>"",
@@ -83,10 +81,8 @@ class InvoiceCreaeteTest < ActionController::IntegrationTest
       "controller"=>"invoices",
       "invoice"=>
       {
-        "discount_percent"=>"0",
         "number"=>"invoice_created_test_2",
         "ponumber"=>"",
-        "discount_text"=>"",
         "accounting_cost"=>"",
         "payment_method"=>"1",
         "charge_amount"=>"",

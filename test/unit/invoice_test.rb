@@ -353,9 +353,7 @@ class InvoiceTest < ActiveSupport::TestCase
     assert_equal "1234", invoice.md5
     assert_equal 6415, invoice.original.size
     assert_equal "invoice_facturae32_issued2.xml", invoice.file_name
-    assert_equal 15, invoice.discount_percent
     assert_equal 18.00, invoice.discount.to_f
-    assert_equal "promo", invoice.discount_text
     assert_equal "invoice notes", invoice.extra_info
     assert invoice.debit?, "invoice payment is debit"
     assert_equal "1233333333333333", invoice.client.bank_account
@@ -365,6 +363,8 @@ class InvoiceTest < ActiveSupport::TestCase
     il = invoice.invoice_lines.first
     assert_equal 0.8,    il.price
     assert_equal 150,    il.quantity
+    assert_equal 15,     il.discounts.first.percent
+    assert_equal "promo", il.discounts.first.text
     # taxes
     assert_equal 2,      il.taxes.size
     assert_equal 'IVA',  il.taxes[0].name
