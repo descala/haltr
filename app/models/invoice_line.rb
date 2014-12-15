@@ -24,7 +24,6 @@ class InvoiceLine < ActiveRecord::Base
 
   belongs_to :invoice
   has_many :taxes, :class_name => "Tax", :order => "percent", :dependent => :destroy
-  has_many :discounts, :dependent => :destroy
   validates_presence_of :description, :unit
   validates_numericality_of :quantity, :price
 
@@ -51,11 +50,7 @@ class InvoiceLine < ActiveRecord::Base
   end
 
   def taxable_base
-    taxablebase = total
-    discounts.each do |disc|
-      taxablebase *= (1 - disc.percent / 100.0)
-    end
-    taxablebase
+    total * (1 - discount_percent / 100.0)
   end
 
   def tax_amount(tax)
@@ -63,11 +58,7 @@ class InvoiceLine < ActiveRecord::Base
   end
 
   def discount_amount(tax=nil)
-    discount = Money.new(0,invoice.currency)
-    discounts.each do |disc|
-      discount += (total * (disc.percent / 100.0))
-    end
-    discount
+    total * (discount_percent / 100.0)
   end
 
   def to_label

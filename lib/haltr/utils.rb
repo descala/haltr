@@ -35,8 +35,8 @@ module Haltr
           xpaths[:invoice_date]       = "//Invoices/Invoice/InvoiceIssueData/IssueDate"
           xpaths[:invoice_total]      = "//Invoices/Invoice/InvoiceTotals/InvoiceTotal"
           xpaths[:invoice_import]     = "//Invoices/Invoice/InvoiceTotals/TotalGrossAmountBeforeTaxes"
-          xpaths[:general_discount]   = "//Invoices/Invoice/InvoiceTotals/GeneralDiscounts/Discount/DiscountRate"
-          xpaths[:general_disc_txt]    = "//Invoices/Invoice/InvoiceTotals/GeneralDiscounts/Discount/DiscountReason"
+          xpaths[:discount_percent]   = "//Invoices/Invoice/InvoiceTotals/GeneralDiscounts/Discount/DiscountRate"
+          xpaths[:discount_text]      = "//Invoices/Invoice/InvoiceTotals/GeneralDiscounts/Discount/DiscountReason"
           xpaths[:invoice_due_date]   = "//Invoices/Invoice/PaymentDetails/Installment/InstallmentDueDate"
           xpaths[:seller_taxcode]     = "//Parties/SellerParty/TaxIdentification/TaxIdentificationNumber"
           xpaths[:seller_name]        = "//Parties/SellerParty/LegalEntity/CorporateName"
@@ -87,6 +87,10 @@ module Haltr
           xpaths[:line_taxes]         = ["TaxesOutputs/Tax","TaxesWithheld/Tax"]
           xpaths[:line_notes]         = "AdditionalLineItemInformation"
           xpaths[:line_code]          = "ArticleCode"
+          xpaths[:line_discounts]     = "DiscountsAndRebates/*"
+          # relative to invoice_lines/discounts
+          xpaths[:line_discount_percent] = "DiscountRate"
+          xpaths[:line_discount_text]    = "DiscountReason"
           # relative to invoice_lines/taxes
           xpaths[:tax_id]             = "TaxTypeCode"
           xpaths[:tax_percent]        = "TaxRate"

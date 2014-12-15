@@ -21,10 +21,12 @@ class InvoiceEditTest < ActionController::IntegrationTest
       "invoice"=>
       {
         "date"=>"2011-09-13",
+        "discount_percent"=>"0",
         "payment_method"=>"1",
         "charge_reason"=>"",
         "extra_info"=>"This is a simple invoice. 100 EUR with a 10% VAT tax",
         "number"=>"i4",
+        "discount_text"=>"",
         "accounting_cost"=>"",
         "ponumber"=>"client order number 123",
         "terms"=>"0",

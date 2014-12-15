@@ -88,8 +88,7 @@ class Invoice < ActiveRecord::Base
   end
 
   def gross_subtotal(tax_type=nil)
-    return Money.new(0,currency) if lines_with_tax(tax_type).empty?
-    lines_with_tax(tax_type).sum(&:total)
+    lines_with_tax(tax_type).sum(&:total).to_money(currency)
   end
 
   def subtotal_without_discount(tax_type=nil)
@@ -101,8 +100,9 @@ class Invoice < ActiveRecord::Base
   end
 
   def discount(tax_type=nil)
-    return Money.new(0,currency) if lines_with_tax(tax_type).empty?
-    lines_with_tax(tax_type).sum(&:discount_amount)
+    disc = ((subtotal_without_discount(tax_type) - charge_amount) *
+            (discount_percent / 100.0)).to_money(currency)
+    disc + lines_with_tax(tax_type).sum(&:discount_amount).to_money(currency)
   end
 
   def pdf_name
@@ -526,8 +526,8 @@ _INV
     invoice_total    = Haltr::Utils.get_xpath(doc,xpaths[:invoice_total])
     invoice_import   = Haltr::Utils.get_xpath(doc,xpaths[:invoice_import])
     invoice_due_date = Haltr::Utils.get_xpath(doc,xpaths[:invoice_due_date])
-    general_discount = Haltr::Utils.get_xpath(doc,xpaths[:general_discount])
-    general_disc_txt = Haltr::Utils.get_xpath(doc,xpaths[:general_disc_txt])
+    discount_percent = Haltr::Utils.get_xpath(doc,xpaths[:discount_percent])
+    discount_text    = Haltr::Utils.get_xpath(doc,xpaths[:discount_text])
     extra_info       = Haltr::Utils.get_xpath(doc,xpaths[:extra_info])
     charge           = Haltr::Utils.get_xpath(doc,xpaths[:charge])
     charge_reason    = Haltr::Utils.get_xpath(doc,xpaths[:charge_reason])
@@ -548,6 +548,8 @@ _INV
       :from             => from,           # u@mail.com, User Name...
       :md5              => md5,
       :original         => keep_original ? raw_xml : nil,
+      :discount_percent => discount_percent.to_f,
+      :discount_text    => discount_text,
       :extra_info       => extra_info,
       :charge_amount    => charge,
       :charge_reason    => charge_reason,
@@ -587,7 +589,7 @@ _INV
              :price        => Haltr::Utils.get_xpath(line,xpaths[:line_price]),
              :unit         => Haltr::Utils.get_xpath(line,xpaths[:line_unit]),
              :article_code => Haltr::Utils.get_xpath(line,xpaths[:line_code]),
-             :notes        => Haltr::Utils.get_xpath(line,xpaths[:line_notes])
+             :notes        => Haltr::Utils.get_xpath(line,xpaths[:line_notes]),
            )
       # invoice taxes. Known taxes are described at config/taxes.yml
       line.xpath(*xpaths[:line_taxes]).each do |line_tax|
@@ -598,14 +600,14 @@ _INV
         )
         il.taxes << tax
       end
-      # general discounts
-      disc = Discount.new(
-        :percent => general_discount.to_f,
-        :text    => general_disc_txt
-      )
-      il.discounts << disc
-      # line discounts TODO
-
+      # line discounts
+      line_discounts = line.xpath(xpaths[:line_discounts])
+      if line_discounts.size > 1
+        raise "too much discounts per line! (#{line_discounts.size})"
+      elsif line_discounts.size == 1
+        il.discount_percent = Haltr::Utils.get_xpath(line_discounts.first,xpaths[:line_discount_percent])
+        il.discount_text = Haltr::Utils.get_xpath(line_discounts.first,xpaths[:line_discount_text])
+      end
       invoice.invoice_lines << il
     end
 
