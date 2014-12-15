@@ -127,6 +127,10 @@ $(document).ready(function() {
     $('#denied_requests').toggle();
   });
 
+  $('table#invoice_lines').on("cocoon:before-remove", function(e, tr) {
+    tr.next().remove();
+  });
+
 });
 
 
