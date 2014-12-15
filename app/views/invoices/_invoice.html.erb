@@ -105,6 +105,9 @@
         <% end -%>
         <th class="item-description"><%=h l(:field_description)%></th>
         <th class="item-price"><%=h l(:field_amount) %></th>
+        <% if @lines.collect {|l| l.discount_percent > 0 }.include?(true) -%>
+          <th class="item-price"><%=h l(:field_discount) %></th>
+        <% end -%>
         <th class="line-total last"><%=h l(:label_total)%></th>
       </tr>
 
@@ -116,7 +119,12 @@
           <% end -%>
           <td class="item-description"><%=h line.description %></td>
           <td class="item-price"><%=h line_price(line) %></td>
-          <td class="line-total last"><%=h money(line.total) %></td>
+          <% if line.discount_percent > 0 -%>
+            <td class="item-price"><%=h line.discount_percent%> %</td>
+          <% elsif @lines.collect {|l| l.discount_percent > 0 }.include?(true) -%>
+            <td></td>
+          <% end -%>
+          <td class="line-total last"><%=h money(line.taxable_base) %></td>
         </tr>
         <% unless line.notes.blank? -%>
           <tr>

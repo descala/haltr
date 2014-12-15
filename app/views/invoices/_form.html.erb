@@ -114,6 +114,10 @@
         <th><%=l(:field_description)%></th>
         <%= call_hook(:invoice_form_order_line_reference_header) %>
         <th><%=l(:field_price)%></th>
+        <% if @invoice.invoice_lines.collect {|l| l.discount_percent > 0 }.include?(true) or User.current.allowed_to?(:view_invoice_extra_fields, @project) -%>
+          <th><%= l(:field_discount_percent) %></th>
+          <th><%= l(:field_discount_text) %></th>
+        <% end -%>
         <% @invoice.taxes_hash.keys.sort.each do |name| -%>
           <th id="<%=name%>_title" style="<%= 'display: none;' unless @invoice.tax_per_line?(name)%>">
             <%= name %>
