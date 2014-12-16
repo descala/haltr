@@ -71,7 +71,7 @@
         <td class="item-quantity first"><%=h quantity(line.quantity) %> <%=h line.unit_short%></td>
         <td class="item-description"><%=h line.description %></td>
         <td class="item-price"><%=h line_price(line) %></td>
-        <td class="line-total last"><%=h money(line.total) %></td>
+        <td class="line-total last"><%=h money(line.total_cost.to_money(@invoice.currency)) %></td>
       </tr>
     <% end -%>
 
@@ -80,7 +80,7 @@
         <td class="item-quantity first"></td>
         <td class="item-description"><%=h @invoice.discount_text %></td>
         <td class="item-price"><%=h number_to_percentage(@invoice.discount_percent, :precision=>0) %></td>
-        <td class="line-total last">- <%=h money(@invoice.discount) %></td>
+        <td class="line-total last">- <%=h money(@invoice.discount_amount) %></td>
       </tr>
     <% end -%>
 

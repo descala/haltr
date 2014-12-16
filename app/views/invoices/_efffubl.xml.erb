@@ -84,7 +84,7 @@
 <% if @invoice.discount_percent > 0 -%>
         <cac:AllowanceCharge>
           <cbc:ChargeIndicator>false</cbc:ChargeIndicator>
-          <cbc:Amount currencyID="<%=h @client.currency%>"><%=h precision(@invoice.discount.dollars,2)%></cbc:Amount>
+          <cbc:Amount currencyID="<%=h @client.currency%>"><%=h precision(@invoice.discount_amount.dollars,2)%></cbc:Amount>
         </cac:AllowanceCharge>
 <% end -%>
 <% @invoice.taxes_by_category.each do |tax_name,categories| -%>

@@ -65,7 +65,7 @@ class InvoiceTest < ActiveSupport::TestCase
     assert_equal 18, invoices(:invoices_003).tax_amount.dollars
     assert_equal 1, invoices(:invoices_003).taxes_uniq.size
     assert_equal 100, invoices(:invoices_003).subtotal.dollars
-    assert_equal 0, invoices(:invoices_003).discount.dollars
+    assert_equal 0, invoices(:invoices_003).discount_amount.dollars
     assert_equal 118, invoices(:invoices_003).total.dollars
 
     assert_equal 100, invoices(:invoices_002).subtotal_without_discount.dollars
@@ -73,7 +73,7 @@ class InvoiceTest < ActiveSupport::TestCase
     assert_equal 15.30, invoices(:invoices_002).tax_amount.dollars
     assert_equal 1, invoices(:invoices_002).taxes_uniq.size
     assert_equal 85, invoices(:invoices_002).subtotal.dollars
-    assert_equal 15, invoices(:invoices_002).discount.dollars
+    assert_equal 15, invoices(:invoices_002).discount_amount.dollars
     assert_equal 100.30, invoices(:invoices_002).total.dollars
 
     assert_equal 250, invoices(:invoices_001).subtotal_without_discount.dollars
@@ -85,7 +85,7 @@ class InvoiceTest < ActiveSupport::TestCase
     assert_equal(-7.2, invoices(:invoices_001).tax_amount(taxes(:taxes_008)).dollars)
     assert_equal 4, invoices(:invoices_001).taxes_uniq.size
     assert_equal 225, invoices(:invoices_001).subtotal.dollars
-    assert_equal 25, invoices(:invoices_001).discount.dollars
+    assert_equal 25, invoices(:invoices_001).discount_amount.dollars
     assert_equal 227.7, invoices(:invoices_001).total.dollars
   end
 
@@ -130,8 +130,8 @@ class InvoiceTest < ActiveSupport::TestCase
     i.save
     assert_equal 1, i.invoice_lines[0].taxes.size
     assert_equal 1, i.invoice_lines[1].taxes.size
-    assert_equal i.invoice_lines[0].total, i.taxable_base(Tax.new(:code=>"0.0_E",:name=>"VAT"))
-    assert_equal i.invoice_lines[1].total,  i.taxable_base(Tax.new(:code=>"0.0_Z",:name=>"VAT"))
+    assert_equal i.invoice_lines[0].total_cost, i.taxable_base(Tax.new(:code=>"0.0_E",:name=>"VAT")).dollars
+    assert_equal i.invoice_lines[1].total_cost,  i.taxable_base(Tax.new(:code=>"0.0_Z",:name=>"VAT")).dollars
   end
 
   test "invoice check tax_per_line? method" do
@@ -354,7 +354,7 @@ class InvoiceTest < ActiveSupport::TestCase
     assert_equal 6415, invoice.original.size
     assert_equal "invoice_facturae32_issued2.xml", invoice.file_name
     assert_equal 15, invoice.discount_percent
-    assert_equal 18.00, invoice.discount.to_f
+    assert_equal 18.00, invoice.discount_amount.to_f
     assert_equal "promo", invoice.discount_text
     assert_equal "invoice notes", invoice.extra_info
     assert invoice.debit?, "invoice payment is debit"
@@ -465,6 +465,36 @@ class InvoiceTest < ActiveSupport::TestCase
     Invoice.all.each do |invoice|
       assert_equal (invoice.taxable_base.dollars + invoice.charge_amount.dollars), invoice.subtotal.dollars, "invoice #{invoice.id}"
     end
+  end
+
+  test 'invoice discounts are correctly calculated' do
+    invoice = invoices(:i13)
+    # line discounts
+    line = invoice.invoice_lines.first
+    assert_equal  10, line.discount_percent
+    assert_equal 100, line.total_cost
+    assert_equal  10, line.discount_amount
+    assert_equal  90, line.taxable_base
+    assert_equal   1, line.taxes.size
+    assert_equal  10, line.taxes.first.percent
+    assert_equal   9, line.tax_amount(line.taxes.first)
+    line = invoice.invoice_lines.last
+    assert_equal   0, line.discount_percent
+    assert_equal 100, line.total_cost
+    assert_equal   0, line.discount_amount
+    assert_equal 100, line.taxable_base
+    assert_equal   1, line.taxes.size
+    assert_equal  10, line.taxes.first.percent
+    assert_equal  10, line.tax_amount(line.taxes.first)
+    # invoice discounts
+    assert_equal    10, invoice.discount_percent
+    assert_equal    19, invoice.discount_amount.dollars
+    assert_equal   171, invoice.taxable_base.dollars
+    assert_equal   100, invoice.charge_amount.dollars
+    assert_equal   271, invoice.subtotal.dollars
+    assert_equal  17.1, invoice.tax_amount.dollars
+    assert_equal 288.1, invoice.total.dollars
+    assert_equal   190, invoice.gross_subtotal.dollars
   end
 
 end

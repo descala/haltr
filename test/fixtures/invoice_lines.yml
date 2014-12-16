@@ -139,3 +139,19 @@ i12_line2:
   unit: 1
   price: 123.50
   description: "Line 2 of invoice i12"
+
+i13_line1:
+  invoice_id: 13
+  quantity: 1.0
+  unit: 1
+  price: 100
+  description: "line 1 of invoice i13"
+  discount_percent: 10
+  discount_text: "discount per line"
+
+i13_line2:
+  invoice_id: 13
+  quantity: 1.0
+  unit: 1
+  price: 100
+  description: "line 2 of invoice i13"

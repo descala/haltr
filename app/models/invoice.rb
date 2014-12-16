@@ -87,8 +87,10 @@ class Invoice < ActiveRecord::Base
     }.compact
   end
 
+  # Importe bruto.
+  # Suma total de importes brutos de los detalles de la factura
   def gross_subtotal(tax_type=nil)
-    lines_with_tax(tax_type).sum(&:total).to_money(currency)
+    (lines_with_tax(tax_type).sum(&:gross_amount)).to_money(currency)
   end
 
   def subtotal_without_discount(tax_type=nil)
@@ -96,13 +98,7 @@ class Invoice < ActiveRecord::Base
   end
 
   def subtotal(tax_type=nil)
-    subtotal_without_discount(tax_type) - discount(tax_type)
-  end
-
-  def discount(tax_type=nil)
-    disc = ((subtotal_without_discount(tax_type) - charge_amount) *
-            (discount_percent / 100.0)).to_money(currency)
-    disc + lines_with_tax(tax_type).sum(&:discount_amount).to_money(currency)
+    taxable_base(tax_type) + charge_amount
   end
 
   def pdf_name
@@ -241,13 +237,14 @@ class Invoice < ActiveRecord::Base
     t
   end
 
+  # Base imponible a precio de mercado
+  # Total Importe Bruto + Recargos - Descuentos Globales
   def taxable_base(tax_type=nil)
-    t = Money.new(0,currency)
-    invoice_lines.each do |il|
-      next if il.marked_for_destruction?
-      t += il.total if tax_type.nil? or il.has_tax?(tax_type)
-    end
-    t - discount(tax_type)
+    (lines_with_tax(tax_type).sum(&:taxable_base)).to_money(currency) - discount_amount(tax_type)
+  end
+
+  def discount_amount(tax_type=nil)
+    (lines_with_tax(tax_type).sum(&:taxable_base) * (discount_percent / 100.0)).to_money(currency)
   end
 
   def tax_applies_to_all_lines?(tax)
@@ -730,7 +727,7 @@ _INV
   end
 
   def update_imports
-    #TODO: new invoice_line can't use invoice.discount without this
+    #TODO: new invoice_line can't use invoice.discount_amount without this
     # and while updating, lines have old invoice instance
     self.invoice_lines.each do |il|
       il.invoice = self

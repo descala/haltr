@@ -45,20 +45,29 @@ class InvoiceLine < ActiveRecord::Base
     write_attribute :quantity, (v.is_a?(String) ? v.gsub(',','.') : v)
   end
 
-  def total
-    Money.new((price * quantity * Money::Currency.new(invoice.currency).subunit_to_unit).round.to_i, invoice.currency)
+  # Importe bruto.
+  # TotalCost - DiscountAmount + ChargeAmount
+  def gross_amount
+    taxable_base #TODO + charge_amount
+  end
+
+  # Coste Total.
+  # Quantity x UnitPriceWithoutTax
+  def total_cost
+    quantity * price
   end
 
   def taxable_base
-    total * (1 - discount_percent / 100.0)
+    total_cost - discount_amount
   end
 
+  # warn! this tax_amount does not include global discounts.
   def tax_amount(tax)
     taxable_base * (tax.percent / 100.0)
   end
 
-  def discount_amount(tax=nil)
-    total * (discount_percent / 100.0)
+  def discount_amount
+    total_cost * (discount_percent / 100.0)
   end
 
   def to_label
