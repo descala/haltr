@@ -137,7 +137,10 @@
       <% if @invoice.discount_percent and @invoice.discount_percent > 0 -%>
         <tr>
           <td class="item-quantity first"></td>
-          <td class="item-description"><%=h @invoice.discount_text %></td>
+          <% if @invoice.invoice_lines.collect {|l| l.article_code.blank? }.include?(false) -%>
+            <td class="item-article_code"></td>
+          <% end -%>
+          <td class="item-description" <%= 'colspan=2' if @lines.collect {|l| l.discount_percent > 0 }.include?(true)%>><%=h @invoice.discount_text %></td>
           <td class="item-price"><%=h number_to_percentage(@invoice.discount_percent, :precision=>0) %></td>
           <td class="line-total last">- <%=h money(@invoice.discount_amount) %></td>
         </tr>
