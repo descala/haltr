@@ -672,6 +672,10 @@ class InvoicesController < ApplicationController
     @client = @invoice.client || Client.new(:name=>"unknown",:project=>@invoice.project)
     @project = @invoice.project
     @company = @project.company
+    @has_article_codes = @lines.collect {|l| l.article_code }.join.size > 0
+    @has_line_discounts = @lines.sum(&:discount_percent) > 0
+    @has_line_charges = @lines.sum(&:charge) > 0
+    @has_line_charge_reason = @lines.collect {|l| l.charge_reason }.join.size > 0
   rescue ActiveRecord::RecordNotFound
     render_404
   end

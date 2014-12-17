@@ -25,7 +25,7 @@ class InvoiceLine < ActiveRecord::Base
   belongs_to :invoice
   has_many :taxes, :class_name => "Tax", :order => "percent", :dependent => :destroy
   validates_presence_of :description, :unit
-  validates_numericality_of :quantity, :price
+  validates_numericality_of :quantity, :price, :charge
 
   accepts_nested_attributes_for :taxes,
     :allow_destroy => true
@@ -43,6 +43,10 @@ class InvoiceLine < ActiveRecord::Base
   # remove colons "1,23" => "1.23"
   def quanity=(v)
     write_attribute :quantity, (v.is_a?(String) ? v.gsub(',','.') : v)
+  end
+
+  def charge=(v)
+    write_attribute :charge, (v.is_a?(String) ? v.gsub(',','.') : v)
   end
 
   # Importe bruto.

@@ -22,15 +22,15 @@ module HaltrHelper
     end
   end
 
-  def line_price(line)
-    precision = line.price.to_s.split(".").last.size
+  def line_price(line, price='price')
+    precision = line.send(price).to_s.split(".").last.size
     precision = 2 if precision == 1
     currency = Money::Currency.new(line.invoice.currency)
     currency_symbol = currency.symbol || ""
     if currency.subunit_to_unit == 1 and precision == 2
       precision = 0
     end
-    number_to_currency(line.price, :unit => currency_symbol, :precision => precision)
+    number_to_currency(line.send(price), :unit => currency_symbol, :precision => precision)
   end
 
   def quantity(q)
@@ -180,6 +180,13 @@ module HaltrHelper
     else
       value
     end
+  end
+
+  def colspan_for_invoice
+    colspan  = 0
+    colspan += 2 if @has_line_discounts
+    colspan += 2 if @has_line_charges
+    return "colspan=#{colspan}" if colspan > 0
   end
 
 end

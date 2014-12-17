@@ -251,6 +251,14 @@
                 </Discount>
               </DiscountsAndRebates>
 <% end -%>
+<% if invoice_line.charge > 0 -%>
+              <Charges>
+                <Charge>
+                  <ChargeReason><%=h invoice_line.charge_reason.blank? ? "." : invoice_line.charge_reason %></ChargeReason>
+                  <ChargeAmount><%=h precision(invoice_line.charge,(@format =~ /facturae/ ? 6 : 2))%></ChargeAmount>
+                </Charge>
+              </Charges>
+<% end -%>
               <GrossAmount><%=h precision(invoice_line.gross_amount,(format == "facturae32" ? 6 : 2))%></GrossAmount>
 <% if invoice_line.taxes_withheld.any? -%>
               <TaxesWithheld>

@@ -3,15 +3,19 @@
 <tr class="nested-fields">
   <td><%= f.text_field :quantity, :value => f.object.quantity.to_s.gsub(/\.0+$/,''), :style => "width: 78px;", :no_label => true %></td>
   <td><%=f.select :unit, InvoiceLine.units, {:no_label => true}, {:style => "width: 100px;"}%></td>
-  <% if @invoice.invoice_lines.collect {|l| l.article_code.blank? }.include?(false) or User.current.allowed_to?(:view_invoice_extra_fields, @project) -%>
+  <% if @invoice.invoice_lines.collect {|l| l.article_code }.join.size > 0 or User.current.allowed_to?(:view_invoice_extra_fields, @project) -%>
   <td><%=f.text_field :article_code, :style => "width: 78px;", :no_label => true%></td>
   <% end -%>
   <td><%=f.text_field :description, :style => "width: 288px;", :no_label => true%></td>
   <%= call_hook(:invoice_form_order_line_reference) %>
   <td><%=f.text_field :price, :value => f.object.price.to_s.gsub(/\.0+$/,''), :style => "width: 78px;", :no_label => true%></td>
-  <% if @invoice.invoice_lines.collect {|l| l.discount_percent > 0 }.include?(true) or User.current.allowed_to?(:view_invoice_extra_fields, @project) -%>
+  <% if @invoice.invoice_lines.sum(&:discount_percent) > 0 or User.current.allowed_to?(:view_invoice_extra_fields, @project) -%>
     <td><%= f.text_field(:discount_percent, :style=>'width: 78px;', :no_label => true) %></td>
     <td><%= f.text_field(:discount_text, :no_label => true) %></td>
+  <% end -%>
+  <% if @invoice.invoice_lines.sum(&:charge) > 0 or User.current.allowed_to?(:view_invoice_extra_fields, @project) -%>
+    <td><%= f.text_field(:charge_reason, :no_label => true) %></td>
+    <td><%= f.text_field(:charge, :no_label => true) %></td>
   <% end -%>
 
 <% i=0 -%>
