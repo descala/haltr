@@ -474,10 +474,12 @@ class InvoiceTest < ActiveSupport::TestCase
     assert_equal  10, line.discount_percent
     assert_equal 100, line.total_cost
     assert_equal  10, line.discount_amount
-    assert_equal  90, line.taxable_base
+    assert_equal 100, line.taxable_base
+    assert_equal  10, line.charge
+    assert_equal 100, line.gross_amount
     assert_equal   1, line.taxes.size
     assert_equal  10, line.taxes.first.percent
-    assert_equal   9, line.tax_amount(line.taxes.first)
+    assert_equal  10, line.tax_amount(line.taxes.first)
     line = invoice.invoice_lines.last
     assert_equal   0, line.discount_percent
     assert_equal 100, line.total_cost
@@ -488,13 +490,13 @@ class InvoiceTest < ActiveSupport::TestCase
     assert_equal  10, line.tax_amount(line.taxes.first)
     # invoice discounts
     assert_equal    10, invoice.discount_percent
-    assert_equal    19, invoice.discount_amount.dollars
-    assert_equal   171, invoice.taxable_base.dollars
+    assert_equal    20, invoice.discount_amount.dollars
+    assert_equal   180, invoice.taxable_base.dollars
     assert_equal   100, invoice.charge_amount.dollars
-    assert_equal   271, invoice.subtotal.dollars
-    assert_equal  17.1, invoice.tax_amount.dollars
-    assert_equal 288.1, invoice.total.dollars
-    assert_equal   190, invoice.gross_subtotal.dollars
+    assert_equal   280, invoice.subtotal.dollars
+    assert_equal  18.0, invoice.tax_amount.dollars
+    assert_equal 298.0, invoice.total.dollars
+    assert_equal   200, invoice.gross_subtotal.dollars
   end
 
 end

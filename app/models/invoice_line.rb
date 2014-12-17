@@ -49,20 +49,20 @@ class InvoiceLine < ActiveRecord::Base
     write_attribute :charge, (v.is_a?(String) ? v.gsub(',','.') : v)
   end
 
-  # Importe bruto.
-  # TotalCost - DiscountAmount + ChargeAmount
-  def gross_amount
-    taxable_base #TODO + charge_amount
-  end
-
   # Coste Total.
   # Quantity x UnitPriceWithoutTax
   def total_cost
     quantity * price
   end
 
+  # Importe bruto.
+  # TotalCost - DiscountAmount + ChargeAmount
+  def gross_amount
+    taxable_base
+  end
+
   def taxable_base
-    total_cost - discount_amount
+    total_cost - discount_amount + charge
   end
 
   # warn! this tax_amount does not include global discounts.

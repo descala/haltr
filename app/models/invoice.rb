@@ -93,12 +93,16 @@ class Invoice < ActiveRecord::Base
     (lines_with_tax(tax_type).sum(&:gross_amount)).to_money(currency)
   end
 
+  # only used in svefaktura: LineExtensionTotalAmount
   def subtotal_without_discount(tax_type=nil)
     gross_subtotal(tax_type) + charge_amount
   end
 
+  # TotalGrossAmountBeforeTaxes
+  # Total importe bruto antes de impuestos.
+  # TotalGrossAmount - TotalGeneralDiscounts + TotalGeneralSurcharges
   def subtotal(tax_type=nil)
-    taxable_base(tax_type) + charge_amount
+    gross_subtotal(tax_type) - discount_amount(tax_type) + charge_amount
   end
 
   def pdf_name
@@ -244,7 +248,7 @@ class Invoice < ActiveRecord::Base
   end
 
   def discount_amount(tax_type=nil)
-    (lines_with_tax(tax_type).sum(&:taxable_base) * (discount_percent / 100.0)).to_money(currency)
+    gross_subtotal * (discount_percent / 100.0)
   end
 
   def tax_applies_to_all_lines?(tax)
