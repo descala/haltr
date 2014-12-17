@@ -149,7 +149,10 @@
       <% if @invoice.charge_amount.cents > 0 -%>
         <tr>
           <td class="item-quantity first"></td>
-          <td class="item-description"><%=h @invoice.charge_reason %></td>
+          <% if @invoice.invoice_lines.collect {|l| l.article_code.blank? }.include?(false) -%>
+            <td class="item-article_code"></td>
+          <% end -%>
+          <td class="item-description" <%= 'colspan=2' if @lines.collect {|l| l.discount_percent > 0 }.include?(true)%>><%=h @invoice.charge_reason %></td>
           <td class="item-price"></td>
           <td class="line-total last"><%=h money(@invoice.charge_amount) %></td>
         </tr>
