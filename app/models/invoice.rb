@@ -244,7 +244,7 @@ class Invoice < ActiveRecord::Base
   # Base imponible a precio de mercado
   # Total Importe Bruto + Recargos - Descuentos Globales
   def taxable_base(tax_type=nil)
-    (lines_with_tax(tax_type).sum(&:taxable_base)).to_money(currency) - discount_amount(tax_type)
+    (lines_with_tax(tax_type).sum(&:gross_amount)).to_money(currency) - discount_amount(tax_type)
   end
 
   def discount_amount(tax_type=nil)
@@ -604,10 +604,18 @@ _INV
       # line discounts
       line_discounts = line.xpath(xpaths[:line_discounts])
       if line_discounts.size > 1
-        raise "too much discounts per line! (#{line_discounts.size})"
+        raise "too many discounts per line! (#{line_discounts.size})"
       elsif line_discounts.size == 1
         il.discount_percent = Haltr::Utils.get_xpath(line_discounts.first,xpaths[:line_discount_percent])
         il.discount_text = Haltr::Utils.get_xpath(line_discounts.first,xpaths[:line_discount_text])
+      end
+      # line_charges
+      line_charges = line.xpath(xpaths[:line_charges])
+      if line_charges.size > 1
+        raise "too many charges per line! (#{line_charges.size})"
+      elsif line_charges.size == 1
+        il.charge = Haltr::Utils.get_xpath(line_charges.first,xpaths[:line_charge])
+        il.charge_reason = Haltr::Utils.get_xpath(line_charges.first,xpaths[:line_charge_reason])
       end
       invoice.invoice_lines << il
     end

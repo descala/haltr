@@ -126,7 +126,7 @@
           <td class="item-description"><%=h line.description %></td>
           <td class="item-price"><%=h line_price(line) %></td>
           <% if line.discount_percent > 0 -%>
-            <td class="item-price"><%=h line.discount_percent%> %</td>
+            <td class="item-price"><%= h line.discount_text %> <%=h line.discount_percent%> %</td>
           <% elsif @has_line_discounts -%>
             <td></td>
           <% end -%>
