@@ -43,10 +43,10 @@
 
   <div class="seccio grup">
     <p class="col span-1-de-2">
-      <%= f.text_field :charge_amount, :value => (@invoice.charge_amount.cents > 0 ? @invoice.charge_amount : "") %>
+      <%= f.text_field :charge_reason %>
     </p>
     <p class="col span-1-de-2">
-      <%= f.text_field :charge_reason %>
+      <%= f.text_field :charge_amount, :value => (@invoice.charge_amount.cents > 0 ? @invoice.charge_amount : "") %>
     </p>
   </div>
 
