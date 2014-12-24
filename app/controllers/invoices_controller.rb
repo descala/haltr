@@ -557,32 +557,38 @@ class InvoicesController < ApplicationController
 
   # downloads an invoice without login using client hash_id as credentials
   def download
-    event = @invoice.events.where("type='EventWithFile'").last
+    # search last invoice evet, for when downloading file from invoice client view
+    event = @invoice.events.where("type='EventWithFile' or type='EventWithUrl'").last
+    md5=params[:md5]
     if event
-      send_data event.file, :filename => event.filename, :type => event.content_type
-    else
-      # old way, external invoice storage
-      if (Rails.env.development? or Rails.env.test?) and !Setting['plugin_haltr']['b2brouter_ip']
-        logger.debug "This is a test XML invoice"
-        send_file Rails.root.join("plugins/haltr/test/fixtures/xml/test_invoice_facturae32.xml")
+      if event.is_a? EventWithFile
+        send_data event.file, :filename => event.filename, :type => event.content_type
+        return
       else
-        #TODO: several B2bRouters
-        if @invoice.fetch_from_backup(params[:md5],params[:backup_name])
-          respond_to do |format|
-            format.html do
-              send_data @invoice.legal_invoice,
-                :type => @invoice.legal_content_type,
-                :filename => @invoice.legal_filename,
-                :disposition => params[:disposition] == 'inline' ? 'inline' : 'attachment'
-            end
-            format.xml do
-              render :xml => @invoice.legal_invoice
-            end
+        md5 = event.md5
+      end
+    end
+    # old way, external invoice storage
+    if (Rails.env.development? or Rails.env.test?) and !Setting['plugin_haltr']['b2brouter_ip']
+      logger.debug "This is a test XML invoice"
+      send_file Rails.root.join("plugins/haltr/test/fixtures/xml/test_invoice_facturae32.xml")
+    else
+      #TODO: several B2bRouters
+      if @invoice.fetch_from_backup(md5,params[:backup_name])
+        respond_to do |format|
+          format.html do
+            send_data @invoice.legal_invoice,
+              :type => @invoice.legal_content_type,
+              :filename => @invoice.legal_filename,
+              :disposition => params[:disposition] == 'inline' ? 'inline' : 'attachment'
           end
-        else
-          flash[:warning]=l(:cant_connect_trace, "")
-          render_404
+          format.xml do
+            render :xml => @invoice.legal_invoice
+          end
         end
+      else
+        flash[:warning]=l(:cant_connect_trace, "")
+        render_404
       end
     end
   rescue Errno::ECONNREFUSED, Errno::EHOSTUNREACH => e
