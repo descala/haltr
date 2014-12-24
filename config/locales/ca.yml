@@ -412,6 +412,7 @@ ca:
   permission_send_face: "B2BRouter - Enviar a través de FACE"
   permission_send_peppol: "B2BRouter - Enviar a PEPPOL"
   permission_use_local_signature: "B2BRouter - Signar amb certificat local"
+  permission_send_jccm: "B2BRouter - Enviar a través de JCCM"
   tax_E: "Exempt"
   tax_Z: "Zero Rated"
   tax_S: "Standard"
