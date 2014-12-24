@@ -44,9 +44,9 @@
           when :state
             l("state_#{invoice.state}")
           when :organ_gestor
-            invoice.dir3.unitat_tramitadora_id rescue ""
+            invoice.unitat_tramitadora rescue ""
           when :oficina_contable
-            invoice.dir3.oficina_contable_id rescue ""
+            invoice.oficina_comptable rescue ""
           when :taxes
             invoice.taxes.collect {|t|
               "#{t.name} #{t.percent}"

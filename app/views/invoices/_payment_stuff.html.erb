@@ -33,26 +33,28 @@
 
 <%= call_hook(:invoice_form_payment_extra_fields) unless @invoice.is_a?(Quote) or params[:quote] == "true" %>
 
-<% if @client and @client.dir3s.any? -%>
+<% if call_hook(:invoice_form_administrative_centres).present? -%>
+  <%= call_hook(:invoice_form_administrative_centres) %>
+<% elsif @client and @client.dir3s.any? -%>
   <div class="seccio grup">
     <p class="col span-1-de-3">
-    <label for="invoice_dir3_id"><%= l(:organ_gestor) %></label>
-    <%= select(:invoice, :dir3_id, @client.dir3s.collect {|d|
-      ["#{d.organ_gestor.code} - #{d.organ_gestor.name}", d.organ_gestor.code, {:'data-oc' => d.oficina_contable.id.to_s,
-                                                                                :'data-ut' => d.unitat_tramitadora.id.to_s}]
+    <label for="invoice_organ_gestor"><%= l(:organ_gestor) %></label>
+    <%= select(:invoice, :organ_gestor, @client.dir3s.collect {|d|
+      ["#{d.organ_gestor.code} - #{d.organ_gestor.name}", d.organ_gestor.code, {:'data-oc' => d.oficina_contable.code,
+                                                                                :'data-ut' => d.unitat_tramitadora.code}]
     }) %>
     </p>
     <p class="col span-1-de-3">
-    <label for="unused_oc"><%= l(:oficina_contable) %></label>
-    <%= select_tag(:unused_oc, options_for_select(@client.dir3s.collect {|d|
-      ["#{d.oficina_contable.code} - #{d.oficina_contable.name}", d.oficina_contable.id]
-    }), :disabled=>true) %>
+    <label for="invoice_oficina_comptable"><%= l(:oficina_contable) %></label>
+    <%= select(:invoice, :oficina_comptable, @client.dir3s.collect {|d|
+      ["#{d.oficina_contable.code} - #{d.oficina_contable.name}", d.oficina_contable.code]
+    }.uniq) %>
     </p>
     <p class="col span-1-de-3">
-    <label for="unitat_tramitadora"><%= l(:unitat_tramitadora) %></label>
-    <%= select_tag(:unused_ut, options_for_select(@client.dir3s.collect {|d|
-      ["#{d.unitat_tramitadora.code} - #{d.unitat_tramitadora.name}", d.unitat_tramitadora.id]
-    }), :disabled=>true) %>
+    <label for="invoice_unitat_tramitadora"><%= l(:unitat_tramitadora) %></label>
+    <%= select(:invoice, :unitat_tramitadora, @client.dir3s.collect {|d|
+      ["#{d.unitat_tramitadora.code} - #{d.unitat_tramitadora.name}", d.unitat_tramitadora.code]
+    }.uniq) %>
     </p>
   </div>
 <% end -%>

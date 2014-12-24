@@ -76,18 +76,30 @@
       <div class="country-name"><%=h @client.country_name if @client.country and @client.country.downcase != @company.country.downcase %></div>
     </address>
     <div><strong><%=h l(:field_taxcode) %>:</strong><span class="tax-id"> <%=h @client.taxcode.upcase %></span></div>
-    <% if @invoice.dir3 -%>
+    <% if call_hook(:invoice_view_client_info).present? -%>
+      <%= call_hook(:invoice_view_client_info) %>
+    <% elsif @invoice.has_dir3_info? -%>
+      <% if @invoice.organ_gestor.present? -%>
       <div>
-        <%= @invoice.dir3.organ_gestor.code %> - <%= @invoice.dir3.organ_gestor.name %>
+        <%=h l(:organ_gestor) %>: <%= @invoice.organ_gestor %>
       </div>
+      <% end -%>
+      <% if @invoice.oficina_comptable.present? -%>
       <div>
-        <%= @invoice.dir3.oficina_contable.code %> - <%= @invoice.dir3.oficina_contable.name %>
+        <%=h l(:oficina_contable) %>: <%= @invoice.oficina_comptable %>
       </div>
+      <% end -%>
+      <% if @invoice.unitat_tramitadora.present? -%>
       <div>
-        <%= @invoice.dir3.unitat_tramitadora.code %> - <%= @invoice.dir3.unitat_tramitadora.name %>
+        <%=h l(:unitat_tramitadora) %>: <%= @invoice.unitat_tramitadora %>
       </div>
+      <% end -%>
+      <% if @invoice.organ_proponent.present? -%>
+        <div>
+          <%= h l(:organ_proponent) %>: <%= @invoice.organ_proponent %>
+        </div>
+      <% end -%>
     <% end -%>
-    <%= call_hook(:invoice_view_client_info) %>
   </div>
 </div>
 <% end -%>

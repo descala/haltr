@@ -534,6 +534,21 @@ _INV
     charge_reason    = Haltr::Utils.get_xpath(doc,xpaths[:charge_reason])
     accounting_cost  = Haltr::Utils.get_xpath(doc,xpaths[:accounting_cost])
 
+    doc.xpath(xpaths[:dir3s]).each do |line|
+      case Haltr::Utils.get_xpath(line, xpaths[:dir3_role])
+      when '01'
+        invoice.oficina_comptable  = Haltr::Utils.get_xpath(line, xpaths[:dir3_code])
+      when '02'
+        invoice.organ_gestor       = Haltr::Utils.get_xpath(line, xpaths[:dir3_code])
+      when '03'
+        invoice.unitat_tramitadora = Haltr::Utils.get_xpath(line, xpaths[:dir3_code])
+      when '04'
+        invoice.organ_proponent    = Haltr::Utils.get_xpath(line, xpaths[:dir3_code])
+      else
+        # unknown role
+      end
+    end
+
     invoice.assign_attributes(
       :number           => invoice_number,
       :client           => client,
@@ -690,6 +705,13 @@ _INV
       end
     end
     last.flatten
+  end
+
+  def has_dir3_info?
+    oficina_comptable.present? or
+      organ_gestor.present? or
+      unitat_tramitadora.present? or
+      organ_proponent.present?
   end
 
   protected

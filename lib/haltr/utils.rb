@@ -90,6 +90,12 @@ module Haltr
           # relative to invoice_lines/taxes
           xpaths[:tax_id]             = "TaxTypeCode"
           xpaths[:tax_percent]        = "TaxRate"
+
+          xpaths[:dir3s]              = "//Parties/BuyerParty/AdministrativeCentres/AdministrativeCentre"
+          # relative to AdministrativeCentres
+          xpaths[:dir3_code]          = "CentreCode"
+          xpaths[:dir3_role]          = "RoleTypeCode"
+          xpaths[:dir3_name]          = "CentreDescription"
         elsif format =~ /ubl/
           xpaths[:invoice_number]     = "/Invoice/cbc:ID"
           xpaths[:invoice_date]       = "/Invoice/cbc:IssueDate"

@@ -82,35 +82,51 @@
             <ResidenceTypeCode>R</ResidenceTypeCode>
             <TaxIdentificationNumber><%=h @client.taxcode%></TaxIdentificationNumber>
          </TaxIdentification>
-         <% if @invoice.dir3 -%>
-           <AdministrativeCentres>
-             <AdministrativeCentre>
-               <CentreCode><%= @invoice.dir3.oficina_contable.code %></CentreCode>
-               <RoleTypeCode>01</RoleTypeCode>
-               <%= render :partial => "invoices/address.facturae.xml", :locals => {:entity => @invoice.dir3.oficina_contable}%>
-               <% unless @invoice.dir3.oficina_contable.name.blank? -%>
-               <CentreDescription><%= @invoice.dir3.oficina_contable.name %></CentreDescription>
-               <% end -%>
-             </AdministrativeCentre>
-             <AdministrativeCentre>
-               <CentreCode><%= @invoice.dir3.organ_gestor.code %></CentreCode>
-               <RoleTypeCode>02</RoleTypeCode>
-               <%= render :partial => "invoices/address.facturae.xml", :locals => {:entity => @invoice.dir3.organ_gestor}%>
-               <% unless @invoice.dir3.organ_gestor.name.blank? -%>
-               <CentreDescription><%= @invoice.dir3.organ_gestor.name %></CentreDescription>
-               <% end -%>
-             </AdministrativeCentre>
-             <AdministrativeCentre>
-               <CentreCode><%= @invoice.dir3.unitat_tramitadora.code %></CentreCode>
-               <RoleTypeCode>03</RoleTypeCode>
-               <%= render :partial => "invoices/address.facturae.xml", :locals => {:entity => @invoice.dir3.unitat_tramitadora}%>
-               <% unless @invoice.dir3.unitat_tramitadora.name.blank? -%>
-               <CentreDescription><%= @invoice.dir3.unitat_tramitadora.name %></CentreDescription>
-               <% end -%>
-             </AdministrativeCentre>
-           </AdministrativeCentres>
-         <% else -%>
+         <% if call_hook(:facturae_administrative_centres).present? -%>
            <%= call_hook(:facturae_administrative_centres) %>
+         <% elsif @invoice.has_dir3_info? -%>
+           <AdministrativeCentres>
+             <% unless @invoice.oficina_comptable.blank? -%>
+             <AdministrativeCentre>
+               <CentreCode><%= @invoice.oficina_comptable %></CentreCode>
+               <RoleTypeCode>01</RoleTypeCode>
+               <%= render :partial => "invoices/address.facturae.xml", :locals => {:entity => oc = Dir3Entity.find_by_code(@invoice.oficina_comptable) ? oc : @invoice.client }%>
+               <% if oc -%>
+               <CentreDescription><%= oc.name %></CentreDescription>
+               <% end -%>
+             </AdministrativeCentre>
+             <% end -%>
+             <% unless @invoice.organ_gestor.blank? -%>
+             <AdministrativeCentre>
+               <CentreCode><%= @invoice.organ_gestor %></CentreCode>
+               <RoleTypeCode>02</RoleTypeCode>
+               <%= render :partial => "invoices/address.facturae.xml", :locals => {:entity => og = Dir3Entity.find_by_code(@invoice.organ_gestor) ? og : @invoice.client }%>
+               <% if og -%>
+               <CentreDescription><%= og.name %></CentreDescription>
+               <% end -%>
+             </AdministrativeCentre>
+             <% end -%>
+             <% unless @invoice.unitat_tramitadora.blank? -%>
+             <AdministrativeCentre>
+               <CentreCode><%= @invoice.unitat_tramitadora %></CentreCode>
+               <RoleTypeCode>03</RoleTypeCode>
+               <%= render :partial => "invoices/address.facturae.xml", :locals => {:entity => ut = Dir3Entity.find_by_code(@invoice.unitat_tramitadora) ? ut : @invoice.client }%>
+               <% if ut -%>
+               <CentreDescription><%= ut.name %></CentreDescription>
+               <% end -%>
+             </AdministrativeCentre>
+             <% end -%>
+             <% unless @invoice.organ_proponent.blank? -%>
+             <AdministrativeCentre>
+               <CentreCode><%= @invoice.organ_proponent %></CentreCode>
+               <RoleTypeCode>04</RoleTypeCode>
+               <%= render :partial => "invoices/address.facturae.xml", :locals => {:entity => op = Dir3Entity.find_by_code(@invoice.organ_proponent) ? op : @invoice.client }%>
+               <% if op -%>
+               <CentreDescription><%= op.name %></CentreDescription>
+               <% end -%>
+             </AdministrativeCentre>
+             <% end -%>
+           </AdministrativeCentres>
          <% end -%>
          <LegalEntity>
             <CorporateName><%=h @client.name%></CorporateName>

@@ -451,4 +451,13 @@ class InvoiceTest < ActiveSupport::TestCase
     end
   end
 
+  test 'imports dir3 data' do
+    Dir3.all.collect {|d| d.destroy }
+    file    = File.new(File.join(File.dirname(__FILE__),'..','fixtures','documents','invoice_facturae32_issued4.xml'))
+    invoice = Invoice.create_from_xml(file,companies(:company1),User.current.name,"1234",'uploaded',nil,false)
+    assert_equal('P00000010',invoice.organ_gestor)
+    assert_equal('P00000010',invoice.unitat_tramitadora)
+    assert_equal('P00000010',invoice.oficina_comptable)
+  end
+
 end

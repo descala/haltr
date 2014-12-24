@@ -36,14 +36,15 @@ $(document).ready(function() {
     terms();
   })
 
-  $('select#unused_oc').val($('select#invoice_dir3_id').find(':selected').data('oc'));
-  $('select#unused_ut').val($('select#invoice_dir3_id').find(':selected').data('ut'));
+  $('select#unused_oc').val($('select#invoice_organ_gestor').find(':selected').data('oc'));
+  $('select#unused_ut').val($('select#invoice_organ_gestor').find(':selected').data('ut'));
 
-  $(document).on('change', 'select#invoice_dir3_id', function(e) {
-    var selected = $('select#invoice_dir3_id').find(':selected');
-    $('select#unused_oc').val(selected.data('oc'));
-    $('select#unused_ut').val(selected.data('ut'));
-    console.log("set selected ut to val " + selected.data('ut'));
+  $(document).on('change', 'select#invoice_organ_gestor', function(e) {
+    var selected = $('select#invoice_organ_gestor').find(':selected');
+    $('select#invoice_oficina_comptable').val(selected.data('oc'));
+    //console.log("set selected oc to val " + selected.data('oc'));
+    $('select#invoice_unitat_tramitadora').val(selected.data('ut'));
+    //console.log("set selected ut to val " + selected.data('ut'));
   });
 
   /* on load, simulate a client change to call above function */
