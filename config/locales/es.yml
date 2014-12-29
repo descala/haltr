@@ -415,6 +415,7 @@ es:
   permission_send_face: "B2BRouter - Enviar a través de FACE"
   permission_send_peppol: "B2BRouter - Enviar a PEPPOL"
   permission_use_local_signature: "B2BRouter - Firmar con certificado local"
+  permission_send_jccm: "B2BRouter - Enviar a través de JCCM"
   tax_E: "Exento"
   tax_Z: "Tasa cero"
   tax_S: "Estándar"
