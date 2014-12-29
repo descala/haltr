@@ -40,14 +40,14 @@
     <p class="col span-1-de-3">
     <label for="invoice_organ_gestor"><%= l(:organ_gestor) %></label>
     <%= select(:invoice, :organ_gestor, @client.dir3s.collect {|d|
-      ["#{d.organ_gestor.code} - #{d.organ_gestor.name}", d.organ_gestor.code, {:'data-oc' => d.oficina_contable.code,
+      ["#{d.organ_gestor.code} - #{d.organ_gestor.name}", d.organ_gestor.code, {:'data-oc' => d.oficina_comptable.code,
                                                                                 :'data-ut' => d.unitat_tramitadora.code}]
     }) %>
     </p>
     <p class="col span-1-de-3">
-    <label for="invoice_oficina_comptable"><%= l(:oficina_contable) %></label>
+    <label for="invoice_oficina_comptable"><%= l(:oficina_comptable) %></label>
     <%= select(:invoice, :oficina_comptable, @client.dir3s.collect {|d|
-      ["#{d.oficina_contable.code} - #{d.oficina_contable.name}", d.oficina_contable.code]
+      ["#{d.oficina_comptable.code} - #{d.oficina_comptable.name}", d.oficina_comptable.code]
     }.uniq) %>
     </p>
     <p class="col span-1-de-3">

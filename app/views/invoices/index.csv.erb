@@ -25,7 +25,7 @@
     [ :invoice,  l(:field_charge_reason),    :charge_reason],
     [ :invoice,  l(:unitat_tramitadora),     :codi_unitat_tramitadora],
     [ :invoice,  l(:organ_gestor),           :organ_gestor],
-    [ :invoice,  l(:oficina_contable),       :oficina_contable],
+    [ :invoice,  l(:oficina_comptable),      :oficina_comptable],
     [ :invoice,  l(:field_file_reference),   :file_reference],
   ]
 
@@ -45,7 +45,7 @@
             l("state_#{invoice.state}")
           when :organ_gestor
             invoice.unitat_tramitadora rescue ""
-          when :oficina_contable
+          when :oficina_comptable
             invoice.oficina_comptable rescue ""
           when :taxes
             invoice.taxes.collect {|t|

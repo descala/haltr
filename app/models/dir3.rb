@@ -9,9 +9,9 @@ class Dir3 < ActiveRecord::Base
     :class_name  => 'Dir3Entity',
     :foreign_key => :unitat_tramitadora_id,
     :primary_key => :code
-  belongs_to :oficina_contable,
+  belongs_to :oficina_comptable,
     :class_name  => 'Dir3Entity',
-    :foreign_key => :oficina_contable_id,
+    :foreign_key => :oficina_comptable_id,
     :primary_key => :code
   has_many :invoices
 end
