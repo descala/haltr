@@ -8,9 +8,9 @@ class RefactorDir3s < ActiveRecord::Migration
 
     Invoice.reset_column_information
     Invoice.where('dir3_id is not null').each do |invoice|
-      invoice.update_attribute(:oficina_comptable,  invoice.dir3.oficina_contable.code)
-      invoice.update_attribute(:organ_gestor,       invoice.dir3.organ_gestor.code)
-      invoice.update_attribute(:unitat_tramitadora, invoice.dir3.unitat_tramitadora.code)
+      invoice.update_attribute(:oficina_comptable,  invoice.dir3.oficina_contable_id)
+      invoice.update_attribute(:organ_gestor,       invoice.dir3.organ_gestor_id)
+      invoice.update_attribute(:unitat_tramitadora, invoice.dir3.unitat_tramitadora_id)
     end
 
     #TODO: remove_column :invoices, :dir3_id
