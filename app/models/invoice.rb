@@ -194,7 +194,9 @@ class Invoice < ActiveRecord::Base
   end
 
   def payment_method_code(format)
-    PAYMENT_CODES[read_attribute(:payment_method)][format]
+    if PAYMENT_CODES[read_attribute(:payment_method)]
+      PAYMENT_CODES[read_attribute(:payment_method)][format]
+    end
   end
 
   def <=>(oth)

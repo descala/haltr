@@ -288,4 +288,7 @@ i12:
   project_id: 2
   state: new
   discount_percent: 5
+  organ_gestor: 'A09006077'
+  unitat_tramitadora: 'A09006151'
+  oficina_comptable: 'A09006061'
 
