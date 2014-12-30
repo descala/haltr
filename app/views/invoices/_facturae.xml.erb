@@ -252,6 +252,7 @@
 <% else -%>
               <%= call_hook(:facturae_file_reference) %>
 <% end -%>
+              <%= call_hook(:facturae_sequence_number) %>
               <%= call_hook(:facturae_delivery_notes_number) %>
               <ItemDescription><%=h invoice_line.description%></ItemDescription>
               <Quantity><%=h invoice_line.quantity%></Quantity>
@@ -297,7 +298,6 @@
 <% unless invoice_line.article_code.blank? or format != "facturae32" -%>
               <ArticleCode><%=invoice_line.article_code%></ArticleCode>
 <% end -%>
-              <%= call_hook(:facturae_sequence_number) %>
             </InvoiceLine>
 <% end -%>
          </Items>
