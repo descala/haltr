@@ -68,17 +68,52 @@
         <ResidenceTypeCode>R</ResidenceTypeCode>
         <TaxIdentificationNumber>B123456</TaxIdentificationNumber>
       </TaxIdentification>
+      <AdministrativeCentres>
+        <AdministrativeCentre>
+          <CentreCode>P00000010</CentreCode>
+          <RoleTypeCode>01</RoleTypeCode>
+          <AddressInSpain>
+            <Address>c. one two three, 34</Address>
+            <PostCode>08080</PostCode>
+            <Town>Barcelona</Town>
+            <Province>Barcelona</Province>
+            <CountryCode>ESP</CountryCode>
+          </AddressInSpain>
+        </AdministrativeCentre>
+        <AdministrativeCentre>
+          <CentreCode>P00000010</CentreCode>
+          <RoleTypeCode>02</RoleTypeCode>
+          <AddressInSpain>
+            <Address>c. one two three, 34</Address>
+            <PostCode>08080</PostCode>
+            <Town>Barcelona</Town>
+            <Province>Barcelona</Province>
+            <CountryCode>ESP</CountryCode>
+          </AddressInSpain>
+        </AdministrativeCentre>
+        <AdministrativeCentre>
+          <CentreCode>P00000010</CentreCode>
+          <RoleTypeCode>03</RoleTypeCode>
+          <AddressInSpain>
+            <Address>c. one two three, 34</Address>
+            <PostCode>08080</PostCode>
+            <Town>Barcelona</Town>
+            <Province>Barcelona</Province>
+            <CountryCode>ESP</CountryCode>
+          </AddressInSpain>
+        </AdministrativeCentre>
+      </AdministrativeCentres>
       <LegalEntity>
-        <CorporateName>nom o rao</CorporateName>
+        <CorporateName>a_company</CorporateName>
         <AddressInSpain>
-          <Address>c. un dos tres, 34</Address>
+          <Address>c. one two three, 34</Address>
           <PostCode>08080</PostCode>
           <Town>Barcelona</Town>
           <Province>Barcelona</Province>
           <CountryCode>ESP</CountryCode>
         </AddressInSpain>
         <ContactDetails>
-          <ElectronicMail>lluis9999@invinert.org</ElectronicMail>
+          <ElectronicMail>test@mail.org</ElectronicMail>
           <ContactPersons/>
         </ContactDetails>
       </LegalEntity>
