@@ -128,10 +128,6 @@ $(document).ready(function() {
     $('#denied_requests').toggle();
   });
 
-  $('table#invoice_lines').on("cocoon:before-remove", function(e, tr) {
-    tr.next().remove();
-  });
-
 });
 
 
@@ -165,11 +161,11 @@ function global_tax_changed(tax_name, tax_code) {
 function global_tax_check_changed(tax_name) {
   $('#'+tax_name+'_global').prop('disabled', $('#'+tax_name+'_multiple').prop('checked'));
   if ($('#'+tax_name+'_multiple').prop('checked')) {
-    $('#'+tax_name+'_title').show();
+    $('.'+tax_name+'_title').show();
     $('td.tax_'+tax_name).show();
   } else {
     global_tax_changed(tax_name,$('#'+tax_name+'_global').val());
-    $('#'+tax_name+'_title').hide();
+    $('.'+tax_name+'_title').hide();
     $('td.tax_'+tax_name).hide();
   }
 }

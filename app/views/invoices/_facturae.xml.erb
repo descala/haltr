@@ -217,7 +217,7 @@
                <Discount>
                  <DiscountReason><%=h @invoice.discount_text.blank? ? "." : @invoice.discount_text %></DiscountReason>
                  <DiscountRate><%=h precision(@invoice.discount_percent, 4) %></DiscountRate>
-                 <DiscountAmount><%=h precision(@invoice.discount.dollars,(@format =~ /facturae/ ? 6 : 2))%></DiscountAmount>
+                 <DiscountAmount><%=h precision(@invoice.discount_amount.dollars,(@format =~ /facturae/ ? 6 : 2))%></DiscountAmount>
                </Discount>
             </GeneralDiscounts>
 <% end -%>
@@ -230,7 +230,7 @@
            </GeneralSurcharges>
 <% end -%>
 <% if @invoice.discount_percent and @invoice.discount_percent > 0 -%>
-            <TotalGeneralDiscounts><%=h precision(@invoice.discount.dollars,2)%></TotalGeneralDiscounts>
+            <TotalGeneralDiscounts><%=h precision(@invoice.discount_amount.dollars,2)%></TotalGeneralDiscounts>
 <% end -%>
 <% if @invoice.charge_amount.cents > 0 -%>
            <TotalGeneralSurcharges><%=h precision(@invoice.charge_amount.dollars,2)%></TotalGeneralSurcharges>
@@ -258,8 +258,25 @@
               <Quantity><%=h invoice_line.quantity%></Quantity>
               <UnitOfMeasure><%=h invoice_line.unit_code(:facturae)%></UnitOfMeasure>
               <UnitPriceWithoutTax><%=h precision(invoice_line.price,6)%></UnitPriceWithoutTax>
-              <TotalCost><%=h precision(invoice_line.price*invoice_line.quantity,(format == "facturae32" ? 6 : 2))%></TotalCost>
-              <GrossAmount><%=h precision(invoice_line.price*invoice_line.quantity,(format == "facturae32" ? 6 : 2))%></GrossAmount>
+              <TotalCost><%=h precision(invoice_line.total_cost,(format == "facturae32" ? 6 : 2))%></TotalCost>
+<% if invoice_line.discount_percent > 0 -%>
+              <DiscountsAndRebates>
+                <Discount>
+                  <DiscountReason><%=h invoice_line.discount_text.blank? ? "." : invoice_line.discount_text %></DiscountReason>
+                  <DiscountRate><%=h precision(invoice_line.discount_percent, 4)%></DiscountRate>
+                  <DiscountAmount><%=h precision(invoice_line.discount_amount,(@format =~ /facturae/ ? 6 : 2))%></DiscountAmount>
+                </Discount>
+              </DiscountsAndRebates>
+<% end -%>
+<% if invoice_line.charge > 0 -%>
+              <Charges>
+                <Charge>
+                  <ChargeReason><%=h invoice_line.charge_reason.blank? ? "." : invoice_line.charge_reason %></ChargeReason>
+                  <ChargeAmount><%=h precision(invoice_line.charge,(@format =~ /facturae/ ? 6 : 2))%></ChargeAmount>
+                </Charge>
+              </Charges>
+<% end -%>
+              <GrossAmount><%=h precision(invoice_line.gross_amount,(format == "facturae32" ? 6 : 2))%></GrossAmount>
 <% if invoice_line.taxes_withheld.any? -%>
               <TaxesWithheld>
 <% invoice_line.taxes_withheld.each do |tax| -%>
@@ -267,7 +284,7 @@
                    <TaxTypeCode>04</TaxTypeCode>
                    <TaxRate><%=h precision tax.percent * -1 %></TaxRate>
                    <TaxableBase>
-                      <TotalAmount><%=h precision invoice_line.total %></TotalAmount>
+                      <TotalAmount><%=h precision invoice_line.taxable_base.to_money(@invoice.currency) %></TotalAmount>
                    </TaxableBase>
                    <TaxAmount>
                      <TotalAmount><%=h precision(invoice_line.tax_amount(tax)*-1)%></TotalAmount>
@@ -283,7 +300,7 @@
                     <TaxTypeCode>01</TaxTypeCode>
                     <TaxRate><%=h precision tax.percent%></TaxRate>
                     <TaxableBase>
-                      <TotalAmount><%=h precision(invoice_line.total)%></TotalAmount>
+                      <TotalAmount><%=h precision(invoice_line.total_cost.to_money(@invoice.currency))%></TotalAmount>
                     </TaxableBase>
                     <TaxAmount>
                       <TotalAmount><%=h precision(invoice_line.tax_amount(tax))%></TotalAmount>

@@ -87,6 +87,14 @@ module Haltr
           xpaths[:line_taxes]         = ["TaxesOutputs/Tax","TaxesWithheld/Tax"]
           xpaths[:line_notes]         = "AdditionalLineItemInformation"
           xpaths[:line_code]          = "ArticleCode"
+          xpaths[:line_discounts]     = "DiscountsAndRebates/*"
+          xpaths[:line_charges]       = "Charges/*"
+          # relative to invoice_lines/discounts
+          xpaths[:line_discount_percent] = "DiscountRate"
+          xpaths[:line_discount_text]    = "DiscountReason"
+          # relative to invoice_lines/charges
+          xpaths[:line_charge]        = "ChargeAmount"
+          xpaths[:line_charge_reason] = "ChargeReason"
           # relative to invoice_lines/taxes
           xpaths[:tax_id]             = "TaxTypeCode"
           xpaths[:tax_percent]        = "TaxRate"

@@ -68,52 +68,17 @@
         <ResidenceTypeCode>R</ResidenceTypeCode>
         <TaxIdentificationNumber>B123456</TaxIdentificationNumber>
       </TaxIdentification>
-      <AdministrativeCentres>
-        <AdministrativeCentre>
-          <CentreCode>P00000010</CentreCode>
-          <RoleTypeCode>01</RoleTypeCode>
-          <AddressInSpain>
-            <Address>c. one two three, 34</Address>
-            <PostCode>08080</PostCode>
-            <Town>Barcelona</Town>
-            <Province>Barcelona</Province>
-            <CountryCode>ESP</CountryCode>
-          </AddressInSpain>
-        </AdministrativeCentre>
-        <AdministrativeCentre>
-          <CentreCode>P00000010</CentreCode>
-          <RoleTypeCode>02</RoleTypeCode>
-          <AddressInSpain>
-            <Address>c. one two three, 34</Address>
-            <PostCode>08080</PostCode>
-            <Town>Barcelona</Town>
-            <Province>Barcelona</Province>
-            <CountryCode>ESP</CountryCode>
-          </AddressInSpain>
-        </AdministrativeCentre>
-        <AdministrativeCentre>
-          <CentreCode>P00000010</CentreCode>
-          <RoleTypeCode>03</RoleTypeCode>
-          <AddressInSpain>
-            <Address>c. one two three, 34</Address>
-            <PostCode>08080</PostCode>
-            <Town>Barcelona</Town>
-            <Province>Barcelona</Province>
-            <CountryCode>ESP</CountryCode>
-          </AddressInSpain>
-        </AdministrativeCentre>
-      </AdministrativeCentres>
       <LegalEntity>
-        <CorporateName>a_company</CorporateName>
+        <CorporateName>nom o rao</CorporateName>
         <AddressInSpain>
-          <Address>c. one two three, 34</Address>
+          <Address>c. un dos tres, 34</Address>
           <PostCode>08080</PostCode>
           <Town>Barcelona</Town>
           <Province>Barcelona</Province>
           <CountryCode>ESP</CountryCode>
         </AddressInSpain>
         <ContactDetails>
-          <ElectronicMail>test@mail.org</ElectronicMail>
+          <ElectronicMail>lluis9999@invinert.org</ElectronicMail>
           <ContactPersons/>
         </ContactDetails>
       </LegalEntity>
@@ -170,6 +135,19 @@
           <UnitOfMeasure>01</UnitOfMeasure>
           <UnitPriceWithoutTax>100.000000</UnitPriceWithoutTax>
           <TotalCost>100.000000</TotalCost>
+          <DiscountsAndRebates>
+            <Discount>
+              <DiscountReason>desc1</DiscountReason>
+              <DiscountRate>10.0000</DiscountRate>
+              <DiscountAmount>10.000000</DiscountAmount>
+            </Discount>
+          </DiscountsAndRebates>
+          <Charges>
+            <Charge>
+              <ChargeReason>carrec linia1</ChargeReason>
+              <ChargeAmount>10.000000</ChargeAmount>
+            </Charge>
+          </Charges>
           <GrossAmount>100.000000</GrossAmount>
           <TaxesOutputs>
             <Tax>
@@ -179,7 +157,7 @@
                 <TotalAmount>100.00</TotalAmount>
               </TaxableBase>
               <TaxAmount>
-                <TotalAmount>0.00</TotalAmount>
+                <TotalAmount>10.00</TotalAmount>
               </TaxAmount>
             </Tax>
           </TaxesOutputs>
@@ -201,7 +179,7 @@
                 <TotalAmount>100.00</TotalAmount>
               </TaxableBase>
               <TaxAmount>
-                <TotalAmount>0.00</TotalAmount>
+                <TotalAmount>10.00</TotalAmount>
               </TaxAmount>
             </Tax>
           </TaxesOutputs>

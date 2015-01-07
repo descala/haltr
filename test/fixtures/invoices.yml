@@ -292,3 +292,17 @@ i12:
   unitat_tramitadora: 'A09006151'
   oficina_comptable: 'A09006061'
 
+i13:
+  id: 13
+  type: IssuedInvoice
+  client_id: 1
+  currency: EUR
+  date: 2014-12-16
+  due_date: 2015-01-16
+  number: "2014/i13"
+  payment_method: 2
+  project_id: 2
+  state: new
+  discount_percent: 10
+  charge_amount_in_cents: 10000
+  charge_reason: "This are payments we made in the name of the client"

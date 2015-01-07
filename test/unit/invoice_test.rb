@@ -65,7 +65,7 @@ class InvoiceTest < ActiveSupport::TestCase
     assert_equal 18, invoices(:invoices_003).tax_amount.dollars
     assert_equal 1, invoices(:invoices_003).taxes_uniq.size
     assert_equal 100, invoices(:invoices_003).subtotal.dollars
-    assert_equal 0, invoices(:invoices_003).discount.dollars
+    assert_equal 0, invoices(:invoices_003).discount_amount.dollars
     assert_equal 118, invoices(:invoices_003).total.dollars
 
     assert_equal 100, invoices(:invoices_002).subtotal_without_discount.dollars
@@ -73,20 +73,20 @@ class InvoiceTest < ActiveSupport::TestCase
     assert_equal 15.30, invoices(:invoices_002).tax_amount.dollars
     assert_equal 1, invoices(:invoices_002).taxes_uniq.size
     assert_equal 85, invoices(:invoices_002).subtotal.dollars
-    assert_equal 15, invoices(:invoices_002).discount.dollars
+    assert_equal 15, invoices(:invoices_002).discount_amount.dollars
     assert_equal 100.30, invoices(:invoices_002).total.dollars
 
     assert_equal 250, invoices(:invoices_001).subtotal_without_discount.dollars
     assert_equal 225, invoices(:invoices_001).taxable_base.dollars
-    assert_equal 2.7, invoices(:invoices_001).tax_amount.dollars
-    assert_equal(-13.5, invoices(:invoices_001).tax_amount(taxes(:taxes_006)).dollars)
-    assert_equal 16.2, invoices(:invoices_001).tax_amount(taxes(:taxes_005)).dollars
-    assert_equal 7.2, invoices(:invoices_001).tax_amount(taxes(:taxes_007)).dollars
-    assert_equal(-7.2, invoices(:invoices_001).tax_amount(taxes(:taxes_008)).dollars)
+    assert_equal 2.25, invoices(:invoices_001).tax_amount.dollars
+    assert_equal(-11.25, invoices(:invoices_001).tax_amount(taxes(:taxes_006)).dollars)
+    assert_equal 13.5, invoices(:invoices_001).tax_amount(taxes(:taxes_005)).dollars
+    assert_equal 6.0, invoices(:invoices_001).tax_amount(taxes(:taxes_007)).dollars
+    assert_equal(-6.0, invoices(:invoices_001).tax_amount(taxes(:taxes_008)).dollars)
     assert_equal 4, invoices(:invoices_001).taxes_uniq.size
     assert_equal 225, invoices(:invoices_001).subtotal.dollars
-    assert_equal 25, invoices(:invoices_001).discount.dollars
-    assert_equal 227.7, invoices(:invoices_001).total.dollars
+    assert_equal 25, invoices(:invoices_001).discount_amount.dollars
+    assert_equal 227.25, invoices(:invoices_001).total.dollars
   end
 
   test "currency to upcase" do
@@ -130,8 +130,8 @@ class InvoiceTest < ActiveSupport::TestCase
     i.save
     assert_equal 1, i.invoice_lines[0].taxes.size
     assert_equal 1, i.invoice_lines[1].taxes.size
-    assert_equal i.invoice_lines[0].total, i.taxable_base(Tax.new(:code=>"0.0_E",:name=>"VAT"))
-    assert_equal i.invoice_lines[1].total,  i.taxable_base(Tax.new(:code=>"0.0_Z",:name=>"VAT"))
+    assert_equal i.invoice_lines[0].total_cost, i.taxable_base(Tax.new(:code=>"0.0_E",:name=>"VAT")).dollars
+    assert_equal i.invoice_lines[1].total_cost,  i.taxable_base(Tax.new(:code=>"0.0_Z",:name=>"VAT")).dollars
   end
 
   test "invoice check tax_per_line? method" do
@@ -354,7 +354,7 @@ class InvoiceTest < ActiveSupport::TestCase
     assert_equal 6415, invoice.original.size
     assert_equal "invoice_facturae32_issued2.xml", invoice.file_name
     assert_equal 15, invoice.discount_percent
-    assert_equal 18.00, invoice.discount.to_f
+    assert_equal 18.00, invoice.discount_amount.to_f
     assert_equal "promo", invoice.discount_text
     assert_equal "invoice notes", invoice.extra_info
     assert invoice.debit?, "invoice payment is debit"
@@ -439,10 +439,36 @@ class InvoiceTest < ActiveSupport::TestCase
     assert invoice.modified_since_created?, "modified since created"
   end
 
+  test 'import facturae32 with discount on first line' do
+    file = File.new(File.join(File.dirname(__FILE__),'..','fixtures','documents','invoice_gob_es.xml'))
+    invoice = Invoice.create_from_xml(file,companies(:company6),User.current.name,'1234','uploaded',nil,false)
+    assert_equal 2, invoice.invoice_lines.size
+    assert_equal 5, invoice.invoice_lines[0].discount_percent
+    assert_equal 0, invoice.invoice_lines[1].discount_percent
+    assert_equal 'Descuento', invoice.invoice_lines[0].discount_text
+  end
+
+  test 'raise on importing invoice with >1 discount on same line' do
+    file = File.new(File.join(File.dirname(__FILE__),'..','fixtures','documents','invoice_gob_es2.xml'))
+    assert_raise RuntimeError do
+      Invoice.create_from_xml(file,companies(:company6),User.current.name,'1234','uploaded',nil,false)
+    end
+  end
+
   test 'create invoice from facturae32 without saving original' do
     file    = File.new(File.join(File.dirname(__FILE__),'..','fixtures','documents','invoice_facturae32_issued3.xml'))
     invoice = Invoice.create_from_xml(file,companies(:company1),User.current.name,"1234",'uploaded',nil,false)
     assert_nil invoice.original
+  end
+
+  test 'create invoice from facturae32 with line discounts and line charges' do
+    file    = File.new(File.join(File.dirname(__FILE__),'..','fixtures','documents','invoice_facturae32_issued4.xml'))
+    invoice = Invoice.create_from_xml(file,companies(:company1),User.current.name,"1234",'uploaded',nil,false)
+    assert_equal  0, invoice.total.dollars
+    assert_equal 10, invoice.invoice_lines.first.charge
+    assert_equal 10, invoice.invoice_lines.first.discount_percent
+    assert_equal 'carrec linia1', invoice.invoice_lines.first.charge_reason
+    assert_equal 'desc1', invoice.invoice_lines.first.discount_text
   end
 
   test 'invoice with discount TotalAmount is same as TotalGrossAmountBeforeTaxes' do
@@ -458,6 +484,38 @@ class InvoiceTest < ActiveSupport::TestCase
     assert_equal('P00000010',invoice.organ_gestor)
     assert_equal('P00000010',invoice.unitat_tramitadora)
     assert_equal('P00000010',invoice.oficina_comptable)
+  end
+
+  test 'invoice discounts are correctly calculated' do
+    invoice = invoices(:i13)
+    # line discounts
+    line = invoice.invoice_lines.first
+    assert_equal  10, line.discount_percent
+    assert_equal 100, line.total_cost
+    assert_equal  10, line.discount_amount
+    assert_equal 100, line.taxable_base
+    assert_equal  10, line.charge
+    assert_equal 100, line.gross_amount
+    assert_equal   1, line.taxes.size
+    assert_equal  10, line.taxes.first.percent
+    assert_equal  10, line.tax_amount(line.taxes.first)
+    line = invoice.invoice_lines.last
+    assert_equal   0, line.discount_percent
+    assert_equal 100, line.total_cost
+    assert_equal   0, line.discount_amount
+    assert_equal 100, line.taxable_base
+    assert_equal   1, line.taxes.size
+    assert_equal  10, line.taxes.first.percent
+    assert_equal  10, line.tax_amount(line.taxes.first)
+    # invoice discounts
+    assert_equal    10, invoice.discount_percent
+    assert_equal    20, invoice.discount_amount.dollars
+    assert_equal   180, invoice.taxable_base.dollars
+    assert_equal   100, invoice.charge_amount.dollars
+    assert_equal   280, invoice.subtotal.dollars
+    assert_equal  18.0, invoice.tax_amount.dollars
+    assert_equal 298.0, invoice.total.dollars
+    assert_equal   200, invoice.gross_subtotal.dollars
   end
 
 end

@@ -70,7 +70,6 @@ class Invoice < ActiveRecord::Base
   after_initialize :set_default_values
 
   def set_default_values
-    self.discount_percent ||= 0
     self.currency         ||= self.client.currency rescue nil
     self.currency         ||= self.company.currency rescue nil
     self.currency         ||= Setting.plugin_haltr['default_currency']
@@ -81,29 +80,29 @@ class Invoice < ActiveRecord::Base
     write_attribute(:currency,v.upcase)
   end
 
-  def gross_subtotal(tax_type=nil)
-    amount = Money.new(0,currency)
-    invoice_lines.each do |line|
+  def lines_with_tax(tax_type)
+    invoice_lines.collect {|line|
       next if line.destroyed? or line.marked_for_destruction?
-      amount += line.total if tax_type.nil? or line.has_tax?(tax_type)
-    end
-    amount
+      line if tax_type.nil? or line.has_tax?(tax_type)
+    }.compact
   end
 
+  # Importe bruto.
+  # Suma total de importes brutos de los detalles de la factura
+  def gross_subtotal(tax_type=nil)
+    (lines_with_tax(tax_type).sum(&:gross_amount)).to_money(currency)
+  end
+
+  # only used in svefaktura: LineExtensionTotalAmount
   def subtotal_without_discount(tax_type=nil)
     gross_subtotal(tax_type) + charge_amount
   end
 
+  # TotalGrossAmountBeforeTaxes
+  # Total importe bruto antes de impuestos.
+  # TotalGrossAmount - TotalGeneralDiscounts + TotalGeneralSurcharges
   def subtotal(tax_type=nil)
-    subtotal_without_discount(tax_type) - discount(tax_type)
-  end
-
-  def discount(tax_type=nil)
-    if discount_percent
-      (subtotal_without_discount(tax_type) - charge_amount) * (discount_percent / 100.0)
-    else
-      Money.new(0,currency)
-    end
+    gross_subtotal(tax_type) - discount_amount(tax_type) + charge_amount
   end
 
   def pdf_name
@@ -244,13 +243,14 @@ class Invoice < ActiveRecord::Base
     t
   end
 
+  # Base imponible a precio de mercado
+  # Total Importe Bruto + Recargos - Descuentos Globales
   def taxable_base(tax_type=nil)
-    t = Money.new(0,currency)
-    invoice_lines.each do |il|
-      next if il.marked_for_destruction?
-      t += il.total if tax_type.nil? or il.has_tax?(tax_type)
-    end
-    t - discount(tax_type)
+    (lines_with_tax(tax_type).sum(&:gross_amount)).to_money(currency) - discount_amount(tax_type)
+  end
+
+  def discount_amount(tax_type=nil)
+    gross_subtotal * (discount_percent / 100.0)
   end
 
   def tax_applies_to_all_lines?(tax)
@@ -607,7 +607,7 @@ _INV
              :price        => Haltr::Utils.get_xpath(line,xpaths[:line_price]),
              :unit         => Haltr::Utils.get_xpath(line,xpaths[:line_unit]),
              :article_code => Haltr::Utils.get_xpath(line,xpaths[:line_code]),
-             :notes        => Haltr::Utils.get_xpath(line,xpaths[:line_notes])
+             :notes        => Haltr::Utils.get_xpath(line,xpaths[:line_notes]),
            )
       # invoice taxes. Known taxes are described at config/taxes.yml
       line.xpath(*xpaths[:line_taxes]).each do |line_tax|
@@ -617,6 +617,22 @@ _INV
           :percent => Haltr::Utils.get_xpath(line_tax,xpaths[:tax_percent])
         )
         il.taxes << tax
+      end
+      # line discounts
+      line_discounts = line.xpath(xpaths[:line_discounts])
+      if line_discounts.size > 1
+        raise "too many discounts per line! (#{line_discounts.size})"
+      elsif line_discounts.size == 1
+        il.discount_percent = Haltr::Utils.get_xpath(line_discounts.first,xpaths[:line_discount_percent])
+        il.discount_text = Haltr::Utils.get_xpath(line_discounts.first,xpaths[:line_discount_text])
+      end
+      # line_charges
+      line_charges = line.xpath(xpaths[:line_charges])
+      if line_charges.size > 1
+        raise "too many charges per line! (#{line_charges.size})"
+      elsif line_charges.size == 1
+        il.charge = Haltr::Utils.get_xpath(line_charges.first,xpaths[:line_charge])
+        il.charge_reason = Haltr::Utils.get_xpath(line_charges.first,xpaths[:line_charge_reason])
       end
       invoice.invoice_lines << il
     end
@@ -747,7 +763,7 @@ _INV
   end
 
   def update_imports
-    #TODO: new invoice_line can't use invoice.discount without this
+    #TODO: new invoice_line can't use invoice.discount_amount without this
     # and while updating, lines have old invoice instance
     self.invoice_lines.each do |il|
       il.invoice = self

@@ -26,6 +26,7 @@ class InvoiceLine < ActiveRecord::Base
   has_many :taxes, :class_name => "Tax", :order => "percent", :dependent => :destroy
   validates_presence_of :description, :unit
   validates_numericality_of :quantity, :price
+  validates_numericality_of :charge, :discount_percent, :allow_nil => true
 
   accepts_nested_attributes_for :taxes,
     :allow_destroy => true
@@ -45,20 +46,41 @@ class InvoiceLine < ActiveRecord::Base
     write_attribute :quantity, (v.is_a?(String) ? v.gsub(',','.') : v)
   end
 
-  def total
-    Money.new((price * quantity * Money::Currency.new(invoice.currency).subunit_to_unit).round.to_i, invoice.currency)
+  def discount_percent
+    read_attribute(:discount_percent).to_i
+  end
+
+  def charge
+    read_attribute(:charge).to_i
+  end
+
+  def charge=(v)
+    write_attribute :charge, (v.is_a?(String) ? v.gsub(',','.') : v)
+  end
+
+  # Coste Total.
+  # Quantity x UnitPriceWithoutTax
+  def total_cost
+    quantity * price
+  end
+
+  # Importe bruto.
+  # TotalCost - DiscountAmount + ChargeAmount
+  def gross_amount
+    taxable_base
   end
 
   def taxable_base
-    if invoice.discount_percent
-      total * ( 1 - invoice.discount_percent / 100.0)
-    else
-      total
-    end
+    total_cost - discount_amount + charge
   end
 
+  # warn! this tax_amount does not include global discounts.
   def tax_amount(tax)
     taxable_base * (tax.percent / 100.0)
+  end
+
+  def discount_amount
+    total_cost * (discount_percent / 100.0)
   end
 
   def to_label

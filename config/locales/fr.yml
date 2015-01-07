@@ -548,3 +548,5 @@ fr:
   field_file_reference: "File number"
   import_issued_from_received: "File to import is an issued invoice"
   import_received_from_issued: "File to import is a received invoice"
+  field_discount: "Discount"
+  field_charge: "Charge"

@@ -565,3 +565,5 @@ es:
   field_file_reference: "Num expediente"
   import_issued_from_received: "El fichero a importar corresponde a una factura emitida"
   import_received_from_issued: "El fichero a importar corresponde a una factura recibida"
+  field_discount: "Descuento"
+  field_charge: "Cargo"

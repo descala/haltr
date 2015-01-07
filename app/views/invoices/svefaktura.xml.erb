@@ -100,7 +100,7 @@
       <% if @invoice.discount_text and !@invoice.discount_text.blank? -%>
         <cac0:ReasonCode name="<%=h @invoice.discount_text%>">ZZZ</cac0:ReasonCode>
       <% end -%>
-      <cbc:Amount amountCurrencyID="<%=h @client.currency%>"><%=h precision(@invoice.discount.dollars,2)%></cbc:Amount>
+      <cbc:Amount amountCurrencyID="<%=h @client.currency%>"><%=h precision(@invoice.discount_amount.dollars,2)%></cbc:Amount>
       <cac0:TaxCategory>
         <cac0:ID>S</cac0:ID>
         <cbc:Percent>25</cbc:Percent>
