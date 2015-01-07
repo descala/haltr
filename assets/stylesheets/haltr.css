@@ -127,8 +127,8 @@ select.tax {
   text-decoration: none !important;
   color: #A3A3A3 !important;
 }
-table#invoice_lines {
-  min-width: 50%;
+table.invoice_lines {
+  min-width: 70%;
 }
 .unread {
   font-weight: bold;
