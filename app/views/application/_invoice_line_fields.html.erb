@@ -67,7 +67,10 @@
     </thead>
     <tbody>
       <tr>
-        <td><%= f.text_field(:discount_percent, :style=>'width: 78px;', :no_label => true) %></td>
+        <td>
+          <%= f.text_field(:discount_percent, :style=>'width: 78px;', :no_label => true) %>
+          <span style="font-size:15px; margin-left: -20px; margin-right: 4px;">%</span>
+        </td>
         <td colspan="2"><%= f.text_field(:discount_text, :no_label => true) %></td>
         <td><%= f.text_field(:charge, :style=>'width: 78px;', :no_label => true) %></td>
         <td colspan="2"><%= f.text_field(:charge_reason, :no_label => true) %></td>
