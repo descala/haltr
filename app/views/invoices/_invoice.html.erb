@@ -108,11 +108,8 @@
         <% if @has_line_discounts -%>
           <th class="item-price"><%=h l(:field_discount) %></th>
         <% end -%>
-        <% if @has_line_charge_reason -%>
-          <th></th>
-        <% end -%>
         <% if @has_line_charges -%>
-          <th class="item-description"><%= h l(:field_charge) %></th>
+          <th class="item-price"><%= h l(:field_charge) %></th>
         <% end -%>
         <th class="line-total last"><%=h l(:label_total)%></th>
       </tr>
@@ -123,15 +120,20 @@
           <% if @has_article_codes -%>
             <td class="item-article_code"><%=h line.article_code %></td>
           <% end -%>
-          <td class="item-description"><%=h line.description %></td>
+          <td class="item-description">
+            <%=h line.description %>
+            <% if line.charge_reason.present? -%>
+              <br /><%= l(:field_charge) %>: <%= line.charge_reason %>
+            <% end -%>
+            <% if line.discount_text.present? -%>
+              <br /><%= l(:field_discount) %>: <%= line.discount_text %>
+            <% end -%>
+          </td>
           <td class="item-price"><%=h line_price(line) %></td>
           <% if line.discount_percent > 0 -%>
-            <td class="item-price"><%= h line.discount_text %> <%=h line.discount_percent%> %</td>
+            <td class="item-price"><%=h line.discount_percent%> %</td>
           <% elsif @has_line_discounts -%>
             <td></td>
-          <% end -%>
-          <% if @has_line_charge_reason -%>
-            <td class="item-charge-reason"><%= h line.charge_reason %></td>
           <% end -%>
           <% if @has_line_charges -%>
             <td class="item-price"><%= h line_price(line, 'charge') %></td>
@@ -152,8 +154,11 @@
           <% if @has_article_codes -%>
             <td class="item-article_code"></td>
           <% end -%>
-          <td class="item-description" <%= colspan_for_invoice %>><%=h @invoice.discount_text %></td>
+          <td class="item-description" <%= 'colspan="2"'.html_safe if @has_line_discounts%>><%=h @invoice.discount_text %></td>
           <td class="item-price"><%=h number_to_percentage(@invoice.discount_percent, :precision=>0) %></td>
+          <% if @has_line_charges -%>
+            <td></td>
+          <% end -%>
           <td class="line-total last">- <%=h money(@invoice.discount_amount) %></td>
         </tr>
       <% end -%>
