@@ -67,7 +67,7 @@ class ExportChannels
         next unless allowed
       end
       [ v["locales"][I18n.locale.to_s], k ]
-    }.compact.sort {|a,b| a[0] <=> b[0] }
+    }.compact.sort {|a,b| a[0].downcase <=> b[0].downcase }
   end
 
   def self.path(id)
