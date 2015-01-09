@@ -245,6 +245,10 @@ class IssuedInvoice < InvoiceDocument
   def create_event
     if self.transport.blank?
       event = Event.new(:name=>'new',:invoice=>self,:user=>User.current)
+    elsif self.transport == 'uploaded'
+      event = EventWithFile.new(:name=>self.transport,:invoice=>self,
+                                :user=>User.current,:file=>self.original,
+                                :filename=>self.file_name)
     else
       event = Event.new(:name=>self.transport,:invoice=>self,:user=>User.current)
     end
