@@ -91,7 +91,7 @@
                <CentreCode><%= @invoice.oficina_comptable %></CentreCode>
                <RoleTypeCode>01</RoleTypeCode>
                <%= render :partial => "invoices/address.facturae.xml", :locals => {:entity => (oc = Dir3Entity.find_by_code(@invoice.oficina_comptable)) ? oc : @invoice.client }%>
-               <% if oc -%>
+               <% if oc and format == "facturae32" -%>
                <CentreDescription><%= oc.name %></CentreDescription>
                <% end -%>
              </AdministrativeCentre>
@@ -101,7 +101,7 @@
                <CentreCode><%= @invoice.organ_gestor %></CentreCode>
                <RoleTypeCode>02</RoleTypeCode>
                <%= render :partial => "invoices/address.facturae.xml", :locals => {:entity => (og = Dir3Entity.find_by_code(@invoice.organ_gestor)) ? og : @invoice.client }%>
-               <% if og -%>
+               <% if og and format == "facturae32" -%>
                <CentreDescription><%= og.name %></CentreDescription>
                <% end -%>
              </AdministrativeCentre>
@@ -111,7 +111,7 @@
                <CentreCode><%= @invoice.unitat_tramitadora %></CentreCode>
                <RoleTypeCode>03</RoleTypeCode>
                <%= render :partial => "invoices/address.facturae.xml", :locals => {:entity => (ut = Dir3Entity.find_by_code(@invoice.unitat_tramitadora)) ? ut : @invoice.client }%>
-               <% if ut -%>
+               <% if ut and format == "facturae32" -%>
                <CentreDescription><%= ut.name %></CentreDescription>
                <% end -%>
              </AdministrativeCentre>
@@ -121,7 +121,7 @@
                <CentreCode><%= @invoice.organ_proponent %></CentreCode>
                <RoleTypeCode>04</RoleTypeCode>
                <%= render :partial => "invoices/address.facturae.xml", :locals => {:entity => (op = Dir3Entity.find_by_code(@invoice.organ_proponent)) ? op : @invoice.client }%>
-               <% if op -%>
+               <% if op and format == "facturae32" -%>
                <CentreDescription><%= op.name %></CentreDescription>
                <% end -%>
              </AdministrativeCentre>
