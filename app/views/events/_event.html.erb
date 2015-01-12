@@ -1,1 +1,4 @@
 <%=h e %>
+<% unless e.notes.blank? -%>
+  ( <%= h e.notes %> )
+<% end -%>
