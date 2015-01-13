@@ -726,6 +726,17 @@ _INV
     last.flatten
   end
 
+  def last_success_sending_event
+    self.events.reverse.each do |event|
+      if event.name == 'success_sending' and
+          %w(EventWithFile, EventWithUrl, EventWithUrlFace).include?(event.type)
+        return event
+      end
+    end
+    return events.last
+    return nil
+  end
+
   def has_dir3_info?
     oficina_comptable.present? or
       organ_gestor.present? or
