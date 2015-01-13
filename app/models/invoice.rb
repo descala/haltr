@@ -729,7 +729,7 @@ _INV
   def last_success_sending_event
     self.events.reverse.each do |event|
       if event.name == 'success_sending' and
-          %w(EventWithFile, EventWithUrl, EventWithUrlFace).include?(event.type)
+          %w(EventWithFile EventWithUrl EventWithUrlFace).include?(event.type)
         return event
       end
     end
