@@ -733,7 +733,6 @@ _INV
         return event
       end
     end
-    return events.last
     return nil
   end
 
