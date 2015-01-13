@@ -6,10 +6,6 @@ class InvoiceDocument < Invoice
 
   attr_accessor :legal_filename, :legal_content_type, :legal_invoice
 
-  def final_md5
-    self.events.collect {|e| e unless e.final_md5.blank? }.compact.sort.last.final_md5 rescue nil
-  end
-
   def initial_md5
     self.events.collect {|e| e unless e.md5.blank? }.compact.sort.last.md5 rescue nil
   end

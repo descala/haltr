@@ -92,7 +92,7 @@ class Event < ActiveRecord::Base
     end
   end
 
-  %w(notes class_for_send md5 final_md5 error backtrace).each do |c|
+  %w(notes class_for_send md5 error backtrace).each do |c|
     src = <<-END_SRC
       def #{c}
         info[:#{c}] rescue nil
