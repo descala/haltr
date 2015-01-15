@@ -15,7 +15,8 @@ class ExternalCompany < ActiveRecord::Base
   validates_inclusion_of :currency, :in => Money::Currency.table.collect {|k,v| v[:iso_code] }
   validates_format_of :email,
     :with => /\A[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]+(,[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]+)*\z/,
-    :allow_nil => true
+    :allow_nil => true,
+    :allow_blank => true
   after_save :update_linked_clients
   iso_country :country
   include CountryUtils
