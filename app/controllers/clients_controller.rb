@@ -114,7 +114,9 @@ class ClientsController < ApplicationController
   end
 
   def link_to_profile
-    @company   = Company.find_by_taxcode(params[:company])
+    @company   = Company.find(
+      :all,
+      :conditions => ["taxcode = ? and (public='public' or public='semipublic')", params[:company]]).first
     @company ||= ExternalCompany.find_by_taxcode(params[:company])
     @client    = Client.find(params[:client]) unless params[:client].blank?
     @client  ||= Client.new(:project=>@project)
