@@ -171,7 +171,7 @@ module CsvImporter
           new << ExternalCompany.create!(ec_hash)
         end
       rescue ActiveRecord::RecordInvalid => e
-        puts "Invalid ExternalCompany: #{ec_hash['taxcode']} (#{e})"
+        puts "Invalid ExternalCompany: #{ec_hash[:taxcode]} (#{e})"
       end
     end
     puts "ExternalCompanies updated: #{existing.size}"
