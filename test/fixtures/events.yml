@@ -35,6 +35,9 @@ error_sending:
   user_id: 2
   invoice_id: 1
   type: EventError
+  info: |
+    ---
+    :notes: Error foo in bar
 with_url:
   name: success_sending
   user_id: 2

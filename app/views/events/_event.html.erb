@@ -1,4 +1,11 @@
 <%=h e %>
 <% unless e.notes.blank? -%>
-  ( <%= h e.notes %> )
+  :
+  <%=
+    if e.notes.is_a?(Array)
+      I18n.t(e.notes, :default => e.notes).join(" ")
+    else
+      I18n.t(e.notes, :default => e.notes)
+    end
+  %>
 <% end -%>
