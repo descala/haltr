@@ -163,11 +163,15 @@ module CsvImporter
         )
       }
       current = ExternalCompany.find_by_taxcode(ec.taxcode)
-      if current
-        existing << ec
-        current.update_attributes!(ec_hash)
-      else
-        new << ExternalCompany.create!(ec_hash)
+      begin
+        if current
+          existing << ec
+          current.update_attributes!(ec_hash)
+        else
+          new << ExternalCompany.create!(ec_hash)
+        end
+      rescue ActiveRecord::RecordInvalid => e
+        puts "Invalid ExternalCompany: #{ec_hash[:taxcode]} (#{e})"
       end
     end
     puts "ExternalCompanies updated: #{existing.size}"

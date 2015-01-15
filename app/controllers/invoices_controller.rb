@@ -522,6 +522,7 @@ class InvoicesController < ApplicationController
 
   # public view of invoice, without a session, using :find_hashid
   def view
+    @last_success_sending_event = @invoice.last_success_sending_event
     @lines = @invoice.invoice_lines
     @invoices_not_sent = []
     @invoices_sent = IssuedInvoice.find(:all,:conditions => ["client_id = ? and state = 'sent'",@client.id]).sort
@@ -550,16 +551,20 @@ class InvoicesController < ApplicationController
     end
   end
 
-  # this is the same as download, but without the befor filter :find_hashid
+  # this is the same as download, but without the before filter :find_hashid
   def legal
     download
   end
 
   # downloads an invoice without login using client hash_id as credentials
   def download
-    # search last invoice evet, for when downloading file from invoice client view
-    event = @invoice.events.where("type='EventWithFile' or type='EventWithUrl'").last
-    md5=params[:md5]
+    md5   = params[:md5]
+    event = nil
+    if params[:event]
+      # event is @invoice.last_success_sending_event
+      # used when downloading file from invoice client view
+      event = @invoice.events.find(params[:event]) rescue nil
+    end
     if event
       if event.is_a? EventWithFile
         send_data event.file, :filename => event.filename, :type => event.content_type
@@ -573,7 +578,6 @@ class InvoicesController < ApplicationController
       logger.debug "This is a test XML invoice"
       send_file Rails.root.join("plugins/haltr/test/fixtures/xml/test_invoice_facturae32.xml")
     else
-      #TODO: several B2bRouters
       if @invoice.fetch_from_backup(md5,params[:backup_name])
         respond_to do |format|
           format.html do

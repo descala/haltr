@@ -22,13 +22,6 @@ class EventsController < ApplicationController
       @event.type = 'ReceivedInvoiceEvent' if @event.name == 'email'
       if @event.md5.blank?
         @event.type = 'EventWithMail' if @event.name =~ /paid_notification$/
-      else
-        invoice_format = @event.invoice.client.invoice_format rescue ""
-        if ( invoice_format == "facturae_32_face" )
-          @event.type = 'EventWithUrlFace'
-        else
-          @event.type = 'EventWithUrl'
-        end
       end
     end
 
