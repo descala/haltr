@@ -57,6 +57,21 @@
     }.uniq) %>
     </p>
   </div>
+<% elsif @client.invoice_format =~ /^aoc/ -%>
+  <div class="seccio grup">
+    <p class="col span-1-de-3">
+    <label for="invoice_organ_gestor"><%= l(:organ_gestor) %></label>
+    <%= text_field :invoice, :organ_gestor %>
+    </p>
+    <p class="col span-1-de-3">
+    <label for="invoice_oficina_comptable"><%= l(:oficina_comptable) %></label>
+    <%= text_field :invoice, :oficina_comptable %>
+    </p>
+    <p class="col span-1-de-3">
+    <label for="invoice_unitat_tramitadora"><%= l(:unitat_tramitadora) %></label>
+    <%= text_field :invoice, :unitat_tramitadora %>
+    </p>
+  </div>
 <% end -%>
 
 <% if @client and @client.requires_file_reference? -%>
