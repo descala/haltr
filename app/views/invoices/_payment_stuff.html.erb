@@ -57,7 +57,7 @@
     }.uniq) %>
     </p>
   </div>
-<% elsif @client.invoice_format =~ /^aoc/ -%>
+<% elsif @client and @client.invoice_format =~ /^aoc/ -%>
   <div class="seccio grup">
     <p class="col span-1-de-3">
     <label for="invoice_organ_gestor"><%= l(:organ_gestor) %></label>
