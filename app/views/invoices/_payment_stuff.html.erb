@@ -40,9 +40,10 @@
     <p class="col span-1-de-3">
     <label for="invoice_organ_gestor"><%= l(:organ_gestor) %></label>
     <%= select(:invoice, :organ_gestor, @client.dir3s.collect {|d|
+      next unless d.organ_gestor and d.oficina_comptable and d.unitat_tramitadora
       ["#{d.organ_gestor.code} - #{d.organ_gestor.name}", d.organ_gestor.code, {:'data-oc' => d.oficina_comptable.code,
                                                                                 :'data-ut' => d.unitat_tramitadora.code}]
-    }) %>
+    }.compact) %>
     </p>
     <p class="col span-1-de-3">
     <label for="invoice_oficina_comptable"><%= l(:oficina_comptable) %></label>
@@ -53,8 +54,9 @@
     <p class="col span-1-de-3">
     <label for="invoice_unitat_tramitadora"><%= l(:unitat_tramitadora) %></label>
     <%= select(:invoice, :unitat_tramitadora, @client.dir3s.collect {|d|
+      next unless d.organ_gestor and d.oficina_comptable and d.unitat_tramitadora
       ["#{d.unitat_tramitadora.code} - #{d.unitat_tramitadora.name}", d.unitat_tramitadora.code]
-    }.uniq) %>
+    }.compact.uniq) %>
     </p>
   </div>
 <% elsif @client and @client.invoice_format =~ /^aoc/ -%>
