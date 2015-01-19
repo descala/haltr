@@ -58,7 +58,17 @@ class ExportChannels
   end
 
   def self.for_select(current_project)
-    available.collect {|k,v|
+    available.sort { |a,b|
+      if a[1]['order'].blank? and b[1]['order'].blank?
+        a[0].downcase <=> b[0].downcase
+      elsif a[1]['order'].blank?
+        1
+      elsif b[1]['order'].blank?
+        -1
+      else
+        a[1]['order'].to_i <=> b[1]['order'].to_i
+      end
+    }.collect {|k,v|
       unless User.current.admin?
         allowed = false
         v["allowed_permissions"].each_key do |perm|
@@ -67,7 +77,7 @@ class ExportChannels
         next unless allowed
       end
       [ v["locales"][I18n.locale.to_s], k ]
-    }.compact.sort {|a,b| a[0].downcase <=> b[0].downcase }
+    }.compact
   end
 
   def self.path(id)
