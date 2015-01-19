@@ -134,7 +134,7 @@ module CsvImporter
 
     Dir3Entity.delete_all
     entities.each do |l|
-      Dir3Entity.create(l.members.inject({}) {|h,m| h[m] = l[m]; h})
+      Dir3Entity.create!(l.members.inject({}) {|h,m| h[m] = l[m]; h})
     end
     puts "Entities imported: #{Dir3Entity.count}"
 
