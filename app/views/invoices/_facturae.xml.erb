@@ -246,9 +246,9 @@
 <% @invoice.invoice_lines.each do |invoice_line| -%>
             <InvoiceLine>
               <%= call_hook(:facturae_receiver_contract_reference) %>
-              <ReceiverTransactionReference><%=h(@invoice.ponumber)[0..19]%></ReceiverTransactionReference>
+              <%if @invoice.ponumber%><ReceiverTransactionReference><%=h(@invoice.ponumber)[0..19]%></ReceiverTransactionReference><%end-%>
 <% if format == "facturae32" and !@invoice.file_reference.blank? -%>
-              <FileReference><%=@invoice.file_reference%></FileReference>
+              <%if @invoice.file_reference%><FileReference><%=@invoice.file_reference%></FileReference><%end-%>
 <% else -%>
               <%= call_hook(:facturae_file_reference) %>
 <% end -%>

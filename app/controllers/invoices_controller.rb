@@ -729,7 +729,7 @@ class InvoicesController < ApplicationController
   def create_xml_file(format)
     xml = Haltr::Xml.generate(@invoice,format,@local_certificate)
     xml_file = Tempfile.new("invoice_#{@invoice.id}.xml")
-    xml_file.write(Haltr::Xml.clean_xml(xml))
+    xml_file.write(xml)
     logger.info "Created XML #{xml_file.path}"
     xml_file.close
     return xml_file
