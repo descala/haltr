@@ -743,6 +743,18 @@ _INV
       organ_proponent.present?
   end
 
+  def has_article_codes?
+    invoice_lines.collect {|l| l.article_code }.join.size > 0
+  end
+
+  def has_line_discounts?
+    invoice_lines.sum(&:discount_percent) > 0
+  end
+
+  def has_line_charges?
+    invoice_lines.sum(&:charge) > 0
+  end
+
   protected
 
   def increment_counter

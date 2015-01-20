@@ -182,10 +182,10 @@ module HaltrHelper
     end
   end
 
-  def colspan_for_invoice
+  def colspan_for(invoice)
     colspan  = 1
-    colspan += 1 if @has_line_discounts
-    colspan += 1 if @has_line_charges
+    colspan += 1 if invoice.has_line_discounts?
+    colspan += 1 if invoice.has_line_charges?
     return "colspan=#{colspan}" if colspan > 0
   end
 

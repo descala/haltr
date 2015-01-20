@@ -112,15 +112,15 @@
     <tbody>
       <tr>
         <th class="item-quantity first"><abbr title="Quantitat">Q</abbr></th>
-        <% if @has_article_codes -%>
+        <% if @invoice.has_article_codes? -%>
           <th class="item-article_code"><%=h l(:field_article_code)%></th>
         <% end -%>
         <th class="item-description"><%=h l(:field_description)%></th>
         <th class="item-price"><%=h l(:field_amount) %></th>
-        <% if @has_line_discounts -%>
+        <% if @invoice.has_line_discounts? -%>
           <th class="item-price"><%=h l(:field_discount) %></th>
         <% end -%>
-        <% if @has_line_charges -%>
+        <% if @invoice.has_line_charges? -%>
           <th class="item-price"><%= h l(:field_charge) %></th>
         <% end -%>
         <th class="line-total last"><%=h l(:label_total)%></th>
@@ -129,7 +129,7 @@
       <% @lines.each do |line| -%>
         <tr <%= 'class="nobottomline"'.html_safe unless line.notes.blank? %>>
           <td class="item-quantity first"><%=h quantity(line.quantity) %> <%=h line.unit_short%></td>
-          <% if @has_article_codes -%>
+          <% if @invoice.has_article_codes? -%>
             <td class="item-article_code"><%=h line.article_code %></td>
           <% end -%>
           <td class="item-description">
@@ -144,10 +144,10 @@
           <td class="item-price"><%=h line_price(line) %></td>
           <% if line.discount_percent > 0 -%>
             <td class="item-price"><%=h line.discount_percent%> %</td>
-          <% elsif @has_line_discounts -%>
+          <% elsif @invoice.has_line_discounts? -%>
             <td></td>
           <% end -%>
-          <% if @has_line_charges -%>
+          <% if @invoice.has_line_charges? -%>
             <td class="item-price"><%= h line_price(line, 'charge') %></td>
           <% end -%>
           <td class="line-total last"><%=h money(line.taxable_base.to_money(@invoice.currency)) %></td>
@@ -163,12 +163,12 @@
       <% if @invoice.discount_percent and @invoice.discount_percent > 0 -%>
         <tr>
           <td class="item-quantity first"></td>
-          <% if @has_article_codes -%>
+          <% if @invoice.has_article_codes? -%>
             <td class="item-article_code"></td>
           <% end -%>
-          <td class="item-description" <%= 'colspan="2"'.html_safe if @has_line_discounts%>><%=h @invoice.discount_text %></td>
+          <td class="item-description" <%= 'colspan="2"'.html_safe if @invoice.has_line_discounts? %>><%=h @invoice.discount_text %></td>
           <td class="item-price"><%=h number_to_percentage(@invoice.discount_percent, :precision=>0) %></td>
-          <% if @has_line_charges -%>
+          <% if @invoice.has_line_charges? -%>
             <td></td>
           <% end -%>
           <td class="line-total last">- <%=h money(@invoice.discount_amount) %></td>
@@ -178,10 +178,10 @@
       <% if @invoice.charge_amount.cents > 0 -%>
         <tr>
           <td class="item-quantity first"></td>
-          <% if @has_article_codes -%>
+          <% if @invoice.has_article_codes? -%>
             <td class="item-article_code"></td>
           <% end -%>
-          <td class="item-description" <%= colspan_for_invoice %>><%=h @invoice.charge_reason %></td>
+          <td class="item-description" <%= colspan_for(@invoice) %>><%=h @invoice.charge_reason %></td>
           <td class="item-price"></td>
           <td class="line-total last"><%=h money(@invoice.charge_amount) %></td>
         </tr>
