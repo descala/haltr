@@ -562,3 +562,4 @@ ca:
   import_received_from_issued: "El fitxer a importar correspon a una factura rebuda"
   field_discount: "Descompte"
   field_charge: "Càrrec"
+  field_require_file_reference: "Requerir número d'expedient"

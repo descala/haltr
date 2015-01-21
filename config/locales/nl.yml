@@ -551,3 +551,4 @@ nl:
   import_received_from_issued: "File to import is a received invoice"
   field_discount: "Discount"
   field_charge: "Charge"
+  field_require_file_reference: "Require file number"
