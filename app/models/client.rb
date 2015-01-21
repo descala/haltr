@@ -203,10 +203,9 @@ class Client < ActiveRecord::Base
 
   def copy_linked_profile
     if self.company and self.allowed?
-      %w(taxcode company_identifier name email currency postalcode country province city address website invoice_format).each do |attr|
+      %w(taxcode company_identifier name email currency postalcode country province city address website invoice_format language).each do |attr|
         self.send("#{attr}=",company.send(attr))
       end
-      self.language = company.project.users.collect {|u| u unless u.admin?}.compact.first.language rescue I18n.default_locale.to_s
     elsif !self.company
       self.allowed = nil
     end

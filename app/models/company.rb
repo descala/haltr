@@ -273,6 +273,12 @@ class Company < ActiveRecord::Base
     false
   end
 
+  def language
+    self.project.users.collect {|u| u unless u.admin?}.compact.first.language
+  rescue
+    I18n.default_locale.to_s
+  end
+
   private
 
   def update_linked_clients
