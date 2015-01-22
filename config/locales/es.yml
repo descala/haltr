@@ -145,6 +145,7 @@ es:
   state_accepted_plural: "Aceptadas"
   state_refused_plural: "Rechazadas"
   state_paid_plural: "Pagadas"
+  state_registered: "Registrada"
   sending_log: "Log d'enviament"
   sending_log: "Log de envio"
   download_legal: "Descargar factura legal"

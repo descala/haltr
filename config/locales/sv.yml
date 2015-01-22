@@ -130,6 +130,7 @@ sv:
   state_accepted_plural: "Accepterad"
   state_refused_plural: "Avvisad"
   state_paid_plural: "Betald"
+  state_registered: "Registered"
   sending_log: "Skickar log"
   download_legal: "Ladda ner fakturafilen"
   download_notification: "Ladda ner notifieringar"

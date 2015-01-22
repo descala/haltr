@@ -142,6 +142,7 @@ ca:
   state_accepted_plural: "Acceptades"
   state_refused_plural: "Refusades"
   state_paid_plural: "Pagades"
+  state_registered: "Registrada"
   sending_log: "Log d'enviament"
   download_legal: "Descarregar document"
   download_notification: "Descarregar notificació"

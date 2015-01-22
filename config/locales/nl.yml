@@ -131,6 +131,7 @@ nl:
   state_accepted_plural: "Accepted"
   state_refused_plural: "Refused"
   state_paid_plural: "Paid"
+  state_registered: "Registered"
   sending_log: "Log d'enviament"
   sending_log: "Sending log"
   download_legal: "Download legal invoice"
