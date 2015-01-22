@@ -555,3 +555,4 @@ da:
   field_discount: "Discount"
   field_charge: "Charge"
   field_require_file_reference: "Require file number"
+  download_as_pdf: "Download PDF copy"

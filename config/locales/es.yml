@@ -568,3 +568,4 @@ es:
   field_discount: "Descuento"
   field_charge: "Cargo"
   field_require_file_reference: "Requerir número de expediente"
+  download_as_pdf: "Descargar copia en PDF"

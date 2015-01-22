@@ -563,3 +563,4 @@ ca:
   field_discount: "Descompte"
   field_charge: "Càrrec"
   field_require_file_reference: "Requerir número d'expedient"
+  download_as_pdf: "Descarregar còpia en PDF"

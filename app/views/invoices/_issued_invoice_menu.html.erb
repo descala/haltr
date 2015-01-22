@@ -1,11 +1,10 @@
-<li><%= link_to_if_authorized "PDF", {:action=>'show', :id=>@invoice, :format => 'pdf'}, :class=>'icon-haltr-save' %></li>
-
 <li><%= send_link_for_invoice %></li>
 
 <li>
 <a href="#"><%= l(:more_options) %></a>
 <ul>
   <li><%= change_state_link(@invoice) %></li>
+  <li><%= link_to_if_authorized l(:download_as_pdf), {:action=>'show', :id=>@invoice, :format => 'pdf'}, :class=>'icon-haltr-save' %></li>
 
   <% unless hide_to_user(:manage_payments) -%>
     <% if @invoice.state?(:sent) or @invoice.state?(:allegedly_paid) -%>
