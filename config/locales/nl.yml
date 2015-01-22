@@ -115,6 +115,8 @@ nl:
   state_error_plural: "Error"
   state_closed_plural: "Closed"
   state_discarded_plural: "Discarded"
+  state_registered_plural: "Registered"
+  state_allegedly_paid_plural: "Reported as paid"
   state_new: "New"
   state_sending: "Sending"
   state_sent: "Sent"

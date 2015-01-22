@@ -126,6 +126,8 @@ ca:
   state_error_plural: "Error"
   state_closed_plural: "Tancades"
   state_discarded_plural: "Descartades"
+  state_registered_plural: "Registrades"
+  state_allegedly_paid_plural: "Informades com a pagades"
   state_new: "Nova"
   state_sending: "Enviant-se"
   state_sent: "Enviada"

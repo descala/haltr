@@ -129,6 +129,8 @@ es:
   state_error_plural: "Error"
   state_closed_plural: "Cerradas"
   state_discarded_plural: "Descartadas"
+  state_registered_plural: "Registradas"
+  state_allegedly_paid_plural: "Informadas como pagadas"
   state_new: "Nueva"
   state_sending: "Enviandose"
   state_sent: "Enviada"

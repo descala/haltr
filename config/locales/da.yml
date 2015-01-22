@@ -114,6 +114,8 @@ da:
   state_error_plural: "Ikke signeret"
   state_closed_plural: "Lukket"
   state_discarded_plural: "Kasseret"
+  state_registered_plural: "Registered"
+  state_allegedly_paid_plural: "Reported as paid"
   state_new: "Ny"
   state_sending: "Sender"
   state_sent: "Sendt"

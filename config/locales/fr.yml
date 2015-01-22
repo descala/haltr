@@ -116,6 +116,8 @@ fr:
   state_error_plural: "Error"
   state_closed_plural: "Closes"
   state_discarded_plural: "Annulées"
+  state_registered_plural: "Registered"
+  state_allegedly_paid_plural: "Reported as paid"
   state_new: "Nouveau"
   state_sending: "Emission"
   state_sent: "Envoyé"
