@@ -10,7 +10,7 @@ class IssuedInvoice < InvoiceDocument
   validates_presence_of :number, :unless => Proc.new {|invoice| invoice.type == "DraftInvoice"}
   validates_uniqueness_of :number, :scope => [:project_id,:type], :if => Proc.new {|i| i.type == "IssuedInvoice" }
   validate :invoice_must_have_lines
-  validates_presence_of :file_reference, :if => Proc.new {|i| i.client and i.client.requires_file_reference? }
+  validates_presence_of :file_reference, :if => Proc.new {|i| i.client and i.client.require_file_reference? }
 
   before_validation :set_due_date
   before_save :update_imports
@@ -59,10 +59,10 @@ class IssuedInvoice < InvoiceDocument
       transition :sent => :discarded
     end
     event :accept_notification do
-      transition [:sent,:refused] => :accepted
+      transition [:sent,:refused,:registered] => :accepted
     end
     event :refuse_notification do
-      transition :sent => :refused
+      transition [:sent,:registered] => :refused
     end
     event :paid_notification do
       transition [:sent,:accepted] => :allegedly_paid
@@ -74,7 +74,7 @@ class IssuedInvoice < InvoiceDocument
       transition :sent => :sent
     end
     event :registered_notification do
-      transition :sent => :sent
+      transition [:sent,:refused,:accepted] => :registered
     end
     event :amend_and_close do
       transition all=> :closed

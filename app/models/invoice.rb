@@ -641,7 +641,11 @@ _INV
     Redmine::Hook.call_hook(:model_invoice_import_before_save, :invoice=>invoice)
 
     if keep_original
-      invoice.save!
+      begin
+        invoice.save!
+      rescue ActiveRecord::RecordInvalid
+        raise invoice.errors.full_messages.join(". ")
+      end
     else
       invoice.save(:validate=>false)
     end

@@ -48,7 +48,7 @@ class InvoicesController < ApplicationController
 
     unless params["state_all"] == "1"
       statelist=[]
-      %w(new sending sent error closed discarded).each do |state|
+      %w(new sending sent error closed discarded registered refused accepted allegedly_paid).each do |state|
         if params[state] == "1"
           statelist << "'#{state}'"
         end
@@ -729,7 +729,7 @@ class InvoicesController < ApplicationController
   def create_xml_file(format)
     xml = Haltr::Xml.generate(@invoice,format,@local_certificate)
     xml_file = Tempfile.new("invoice_#{@invoice.id}.xml")
-    xml_file.write(Haltr::Xml.clean_xml(xml))
+    xml_file.write(xml)
     logger.info "Created XML #{xml_file.path}"
     xml_file.close
     return xml_file

@@ -42,9 +42,11 @@ $(document).ready(function() {
   $(document).on('change', 'select#invoice_organ_gestor', function(e) {
     var selected = $('select#invoice_organ_gestor').find(':selected');
     $('select#invoice_oficina_comptable').val(selected.data('oc'));
-    //console.log("set selected oc to val " + selected.data('oc'));
+    $('select#invoice_oficina_comptable option:selected').attr('disabled',false);
+    $('select#invoice_oficina_comptable option:not(:selected)').attr('disabled',true);
     $('select#invoice_unitat_tramitadora').val(selected.data('ut'));
-    //console.log("set selected ut to val " + selected.data('ut'));
+    $('select#invoice_unitat_tramitadora option:selected').attr('disabled',false);
+    $('select#invoice_unitat_tramitadora option:not(:selected)').attr('disabled',true);
   });
 
   /* on load, simulate a client change to call above function */
