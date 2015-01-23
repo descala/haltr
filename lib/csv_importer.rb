@@ -144,7 +144,7 @@ module CsvImporter
 
     Dir3.delete_all
     relations.each do |l|
-      Dir3.create(l.members.inject({}) {|h,m| h[m] = l[m]; h})
+      Dir3.create!(l.members.inject({}) {|h,m| h[m] = l[m]; h})
     end
     puts "Relations imported: #{Dir3.count}"
 
