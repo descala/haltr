@@ -228,6 +228,7 @@ es:
   refuse_notification: "Notificación: Factura rechazada"
   paid_notification: "Notificación: Factura pagada"
   tram_notification: "Notificación: Factura en trámite"
+  unknown_notification: "Notificació"
   by_mail_from: "por email desde %{email}"
   in_format: "en formato %{f}"
   back: "Volver"

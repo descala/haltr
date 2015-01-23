@@ -99,6 +99,11 @@
           <%= h l(:organ_proponent) %>: <%= @invoice.organ_proponent %>
         </div>
       <% end -%>
+      <% if @invoice.file_reference.present? -%>
+        <div>
+          <%= h l(:field_file_reference) %>: <%= @invoice.file_reference %>
+        </div>
+      <% end -%>
     <% end -%>
   </div>
 </div>
