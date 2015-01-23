@@ -221,6 +221,7 @@ ca:
   refuse_notification: "Notificació: Factura refusada"
   paid_notification: "Notificació: Factura pagada"
   tram_notification: "Notificació: Factura en tràmit"
+  unknown_notification: "Notificació"
   by_mail_from: "per correu des de %{email}"
   in_format: "en format %{f}"
   back: "Tornar"
