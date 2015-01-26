@@ -111,6 +111,7 @@ match '/companies/logo_by_taxcode/:taxcode' => 'companies#logo_by_taxcode', :via
 resources :companies, :only => [:update]
 
 resources :external_companies
+resources :dir3_entities
 
 match '/charts/invoice_total' => 'charts#invoice_total', :via => :get, :as => :invoice_total_chart
 match '/charts/invoice_status/:project_id' => 'charts#invoice_status', :via => :get, :as => :invoice_status_chart
