@@ -367,7 +367,7 @@ ca:
   hide_full_form: "Mostrar menys camps"
   show_full_form: "Mostrar mes camps"
   field_created_at: "Creada el"
-  field_received_at: "Rebuda el"
+  field_received_at: "Data recepció"
   info_default_taxes: "Per defecte es crearan els impostos del teu país"
   label_invoices_min: "Mínim de factures"
   label_stastics: "Estadístiques"
@@ -568,3 +568,4 @@ ca:
   field_charge: "Càrrec"
   field_require_file_reference: "Requerir número d'expedient"
   download_as_pdf: "Descarregar còpia en PDF"
+  label_reports: Informes
