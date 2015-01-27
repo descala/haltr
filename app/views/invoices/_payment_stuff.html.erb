@@ -66,14 +66,16 @@
     </div>
   <% end -%>
   <% if (@external_company and @external_company.visible_organ_proponent) -%>
-    <p class="col span-1-de-3">
-    <label for="invoice_organ_proponent"><%= l(:field_organ_proponent) %><%= required_field_span('organ_proponent') %><%= select_to_edit(:organ_proponent) %></label>
-    <% if @external_company and @external_company.dir3_organs_proponents.any? -%>
-      <%= select(:invoice, :organ_proponent, dir3_for_select(@external_company.dir3_organs_proponents)) %>
-    <% else -%>
-      <%= text_field :invoice, :organ_proponent %>
-    <% end -%>
-    </p>
+    <div class="seccio grup">
+      <p class="col span-1-de-3">
+      <label for="invoice_organ_proponent"><%= l(:field_organ_proponent) %><%= required_field_span('organ_proponent') %><%= select_to_edit(:organ_proponent) %></label>
+      <% if @external_company and @external_company.dir3_organs_proponents.any? -%>
+        <%= select(:invoice, :organ_proponent, dir3_for_select(@external_company.dir3_organs_proponents)) %>
+      <% else -%>
+        <%= text_field :invoice, :organ_proponent %>
+      <% end -%>
+      </p>
+    </div>
   <% end -%>
 <% end -%>
 
