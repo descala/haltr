@@ -127,27 +127,27 @@ module CsvImporter
   end
 
   def process_dir3entities(options={})
-
     entities = CsvMapper::import(options[:entities]) do
       read_attributes_from_file
     end
-
-    Dir3Entity.delete_all
+    existing=[]
+    new=[]
     entities.each do |l|
-      Dir3Entity.create!(l.members.inject({}) {|h,m| h[m] = l[m]; h})
+      current = Dir3Entity.find_by_code(l.code)
+      l_hash = l.members.inject({}) {|h,m| h[m] = l[m]; h}
+      begin
+        if current
+          existing << l
+          current.update_attributes!(l_hash)
+        else
+          new << Dir3Entity.create!(l_hash)
+        end
+      rescue ActiveRecord::RecordInvalid => e
+        puts "Invalid Dir3Entity: #{l_hash[:code]} (#{e})"
+      end
     end
-    puts "Entities imported: #{Dir3Entity.count}"
-
-    relations = CsvMapper::import(options[:relations]) do
-      read_attributes_from_file
-    end
-
-    Dir3.delete_all
-    relations.each do |l|
-      Dir3.create!(l.members.inject({}) {|h,m| h[m] = l[m]; h})
-    end
-    puts "Relations imported: #{Dir3.count}"
-
+    puts "Entities updated: #{existing.size}"
+    puts "Entities created: #{new.size}"
   end
 
   def process_external_companies(options={})
