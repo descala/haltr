@@ -36,7 +36,6 @@ class Invoice < ActiveRecord::Base
   belongs_to :bank_info
   has_one :amend_of, :class_name => "Invoice", :foreign_key => 'amend_id'
   belongs_to :quote
-  belongs_to :dir3, :primary_key => :organ_gestor_id
   validates_presence_of :client, :date, :currency, :project_id, :unless => Proc.new {|i| i.type == "ReceivedInvoice" }
   validates_inclusion_of :currency, :in  => Money::Currency.table.collect {|k,v| v[:iso_code] }, :unless => Proc.new {|i| i.type == "ReceivedInvoice" }
   validates_numericality_of :charge_amount_in_cents, :allow_nil => true
@@ -51,6 +50,7 @@ class Invoice < ActiveRecord::Base
   validates_associated :invoice_lines
 
   validate :bank_info_belongs_to_self
+  validate :has_all_fields_required_by_external_company
 
   composed_of :import,
     :class_name => "Money",
@@ -808,6 +808,21 @@ _INV
   def bank_info_belongs_to_self
     if bank_info and client and bank_info.company != client.project.company
       errors.add(:base, "Bank info is from other company!")
+    end
+  end
+
+  def has_all_fields_required_by_external_company
+    ext_comp = ExternalCompany.find_by_taxcode(client.taxcode) if client
+    if ext_comp
+      ext_comp.required_fields.each do |field|
+        if field == "dir3"
+          errors.add(:organ_gestor, :blank) if organ_gestor.blank?
+          errors.add(:unitat_tramitadora, :blank) if unitat_tramitadora.blank?
+          errors.add(:oficina_comptable, :blank) if oficina_comptable.blank?
+        else
+          errors.add(field, :blank) if self.send(field).blank?
+        end
+      end
     end
   end
 

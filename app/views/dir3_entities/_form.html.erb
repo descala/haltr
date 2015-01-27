@@ -5,9 +5,9 @@
     <p><%= f.text_field :code, :required => true %></p>
     <p><%= f.text_field :address %></p>
     <p><%= f.text_field :city %></p>
-    <p><%= f.text_field :postalcode, :required => true %></p>
+    <p><%= f.text_field :postalcode %></p>
     <p><%= f.text_field :province %></p>
-    <p><%= f.label_for_field :country, :required => true %><%= f.iso_country_select :country, [:es] %></p>
+    <p><%= f.label_for_field :country %><%= f.iso_country_select :country, [:es] %></p>
   </div>
 </fieldset>
 

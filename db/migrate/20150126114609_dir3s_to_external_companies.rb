@@ -5,6 +5,7 @@ class Dir3sToExternalCompanies < ActiveRecord::Migration
     add_column :external_companies, :unitats_tramitadores, :text
     add_column :external_companies, :oficines_comptables,  :text
     add_column :external_companies, :organs_proponents,    :text
+    add_column :external_companies, :fields_config,        :text
 
     ExternalCompany.reset_column_information
 
@@ -28,6 +29,13 @@ class Dir3sToExternalCompanies < ActiveRecord::Migration
 
       extcomp.save(:validate => false)
     end
+    drop_table :dir3s
+
+    if column_exists? :invoices, :num_albara
+      rename_column :invoices, :num_albara, :delivery_note_number
+    else
+      add_column :invoices, :delivery_note_number, :string
+    end
   end
 
   def down
@@ -35,6 +43,14 @@ class Dir3sToExternalCompanies < ActiveRecord::Migration
     remove_column :external_companies, :unitats_tramitadores
     remove_column :external_companies, :oficines_comptables
     remove_column :external_companies, :organs_proponents
+    remove_column :external_companies, :fields_config
+    create_table :dir3s do |t|
+      t.string :taxcode
+      t.string :organ_gestor_id
+      t.string :unitat_tramitadora_id
+      t.string :oficina_comptable_id
+    end
+    rename_column :invoices, :delivery_note_number, :num_albara
   end
 
 end

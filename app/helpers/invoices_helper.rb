@@ -263,4 +263,20 @@ module InvoicesHelper
     end
   end
 
+  def dir3_for_select(entities)
+    entities.collect {|entity|
+      if entity.code == entity.name
+        [entity.name, entity.code]
+      else
+        ["#{entity.name} - #{entity.code}", entity.code]
+      end
+    }
+  end
+
+  def required_field_span(field)
+    if @external_company and @external_company.required_fields.include?(field)
+      content_tag(:span, ' *', class: 'required')
+    end
+  end
+
 end

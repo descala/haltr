@@ -14,12 +14,16 @@
     <p><%= f.select :invoice_format, ExportChannels.for_select(@project) %></p>
     <p><%= f.select :language, options_for_select(valid_languages.reject {|l| !(l =~ /^[a-z][a-z][\-A-Z]{0,3}$/)}.collect {|l| [I18n.t(:general_lang_name, :locale=>l),l]}) %></p>
     <p>
-    <label><%= l :requirements %></label>
-    <%= f.check_box :require_file_reference, :no_label=>true %><%=l :field_file_reference %>
-    <%= f.check_box :require_dir3, :no_label=>true %> Dir3
-    <%= f.check_box :require_organ_proponent, :no_label=>true %><%=l :organ_proponent %>
-    <%= f.check_box :require_ponumber, :no_label=>true %><%=l :field_ponumber %>
-    <%= f.check_box :require_despatch_advice, :no_label=>true %><%=l :field_despatch_advice %>
+    <label><%= l :visible_fields %></label>
+    <% ExternalCompany::AVAILABLE_FIELDS.each do |field| -%>
+      <%= f.check_box "visible_#{field}", :no_label=>true %><%= l "field_#{field}", default: field %>
+    <% end -%>
+    </p>
+    <p>
+    <label><%= l :required_fields %></label>
+    <% ExternalCompany::AVAILABLE_FIELDS.each do |field| -%>
+      <%= f.check_box "required_#{field}", :no_label=>true %><%= l "field_#{field}", default: field %>
+    <% end -%>
     </p>
     <p><%= f.text_area :organs_gestors, :rows=>8, :cols=>100 %></p>
     <p><%= f.text_area :unitats_tramitadores, :rows=>8, :cols=>100 %></p>

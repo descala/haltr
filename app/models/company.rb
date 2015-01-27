@@ -268,11 +268,6 @@ class Company < ActiveRecord::Base
     super || method =~ /^(invoice|quote)_mail_(subject|body)_[a-z][a-z][\-A-Z]{0,3}=?$/
   end
 
-  # https://www.ingent.net/issues/4888
-  def require_file_reference?
-    false
-  end
-
   def language
     self.project.users.collect {|u| u unless u.admin?}.compact.first.language
   rescue

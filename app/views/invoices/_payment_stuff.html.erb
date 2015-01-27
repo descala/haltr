@@ -29,76 +29,63 @@
     payment_method_text = @client.payment_method_text
     terms = @client.terms
   end
+  @external_company=ExternalCompany.find_by_taxcode(@client.taxcode) if @client
 -%>
 
 <%= call_hook(:invoice_form_payment_extra_fields) unless @invoice.is_a?(Quote) or params[:quote] == "true" %>
 
 <% if call_hook(:invoice_form_administrative_centres).present? -%>
   <%= call_hook(:invoice_form_administrative_centres) %>
-<% elsif @client and @client.dir3s.any? -%>
+<% elsif (@external_company and @external_company.visible_dir3) or (@client and @client.invoice_format =~ /^aoc|face/) or (@invoice and (@invoice.organ_gestor.present? or @invoice.oficina_comptable.present? or @invoice.unitat_tramitadora.present?)) -%>
   <div class="seccio grup">
     <p class="col span-1-de-3">
-    <label for="invoice_organ_gestor"><%= l(:organ_gestor) %></label>
-    <%= select(:invoice, :organ_gestor, @client.dir3s.collect {|d|
-      next unless d.organ_gestor_id and d.oficina_comptable_id and d.unitat_tramitadora_id
-      if d.organ_gestor
-        ["#{d.organ_gestor_id} - #{d.organ_gestor.name}", d.organ_gestor_id, {:'data-oc' => d.oficina_comptable_id,
-                                                                              :'data-ut' => d.unitat_tramitadora_id}]
-      else
-        [d.organ_gestor_id, d.organ_gestor_id, {:'data-oc' => d.oficina_comptable_id,
-                                                :'data-ut' => d.unitat_tramitadora_id}]
-      end
-    }.compact) %>
+    <label for="invoice_organ_gestor"><%= l(:organ_gestor) %><%= required_field_span('dir3') %></label>
+    <% if @external_company and @external_company.dir3_organs_gestors.any? -%>
+      <%= select(:invoice, :organ_gestor, dir3_for_select(@external_company.dir3_organs_gestors)) %>
+    <% else -%>
+      <%= text_field :invoice, :organ_gestor %>
+    <% end -%>
     </p>
     <p class="col span-1-de-3">
-    <label for="invoice_oficina_comptable"><%= l(:oficina_comptable) %></label>
-    <%= select(:invoice, :oficina_comptable, @client.dir3s.collect {|d|
-      next unless d.oficina_comptable_id
-      if d.oficina_comptable
-        ["#{d.oficina_comptable_id} - #{d.oficina_comptable.name}", d.oficina_comptable_id]
-      else
-        [d.oficina_comptable_id, d.oficina_comptable_id]
-      end
-    }.compact.uniq) %>
+    <label for="invoice_oficina_comptable"><%= l(:oficina_comptable) %><%= required_field_span('dir3') %></label>
+    <% if @external_company and @external_company.dir3_oficines_comptables.any? -%>
+      <%= select(:invoice, :oficina_comptable, dir3_for_select(@external_company.dir3_oficines_comptables)) %>
+    <% else -%>
+      <%= text_field :invoice, :oficina_comptable %>
+    <% end -%>
     </p>
     <p class="col span-1-de-3">
-    <label for="invoice_unitat_tramitadora"><%= l(:unitat_tramitadora) %></label>
-    <%= select(:invoice, :unitat_tramitadora, @client.dir3s.collect {|d|
-      next unless d.unitat_tramitadora_id
-      if d.unitat_tramitadora
-        ["#{d.unitat_tramitadora_id} - #{d.unitat_tramitadora.name}", d.unitat_tramitadora_id]
-      else
-        [d.unitat_tramitadora_id, d.unitat_tramitadora_id]
-      end
-    }.compact.uniq) %>
-    </p>
-  </div>
-<% elsif @client and @client.invoice_format =~ /^aoc/ -%>
-  <div class="seccio grup">
-    <p class="col span-1-de-3">
-    <label for="invoice_organ_gestor"><%= l(:organ_gestor) %></label>
-    <%= text_field :invoice, :organ_gestor %>
+    <label for="invoice_unitat_tramitadora"><%= l(:unitat_tramitadora) %><%= required_field_span('dir3') %></label>
+    <% if @external_company and @external_company.dir3_unitats_tramitadores.any? -%>
+      <%= select(:invoice, :unitat_tramitadora, dir3_for_select(@external_company.dir3_unitats_tramitadores)) %>
+    <% else -%>
+      <%= text_field :invoice, :unitat_tramitadora %>
+    <% end -%>
     </p>
     <p class="col span-1-de-3">
-    <label for="invoice_oficina_comptable"><%= l(:oficina_comptable) %></label>
-    <%= text_field :invoice, :oficina_comptable %>
-    </p>
-    <p class="col span-1-de-3">
-    <label for="invoice_unitat_tramitadora"><%= l(:unitat_tramitadora) %></label>
-    <%= text_field :invoice, :unitat_tramitadora %>
+    <label for="invoice_organ_proponent"><%= l(:field_organ_proponent) %><%= required_field_span('organ_proponent') %></label>
+    <% if @external_company and @external_company.dir3_organs_proponents.any? -%>
+      <%= select(:invoice, :organ_proponent, dir3_for_select(@external_company.dir3_organs_proponents)) %>
+    <% else -%>
+      <%= text_field :invoice, :organ_proponent %>
+    <% end -%>
     </p>
   </div>
 <% end -%>
 
-<% if @client and @client.require_file_reference? -%>
-  <div class="seccio grup">
-    <p class="col">
-    <label for="invoice_file_reference"><%= l(:field_file_reference) %><span class="required"> *</span></label>
-    <%= text_field :invoice, :file_reference %>
-    </p>
-  </div>
+<% if @external_company -%>
+  <% if @external_company.visible_fields.any? -%>
+    <div class="seccio grup">
+    <% @external_company.visible_fields.each do |field| -%>
+      <% next if %w(dir3 organ_proponent).include?(field) -%>
+      <p class="col span-1-de-3">
+      <label for="invoice_<%=field%>"><%= l("field_#{field}") %><%= required_field_span(field)%></label>
+      <%= text_field :invoice, field %>
+      </p>
+    <% end -%>
+    </div>
+  <% end -%>
 <% end -%>
-
 
 <div class="seccio grup">
   <p class="col span-1-de-3">

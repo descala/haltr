@@ -36,19 +36,6 @@ $(document).ready(function() {
     terms();
   })
 
-  $('select#unused_oc').val($('select#invoice_organ_gestor').find(':selected').data('oc'));
-  $('select#unused_ut').val($('select#invoice_organ_gestor').find(':selected').data('ut'));
-
-  $(document).on('change', 'select#invoice_organ_gestor', function(e) {
-    var selected = $('select#invoice_organ_gestor').find(':selected');
-    $('select#invoice_oficina_comptable').val(selected.data('oc'));
-    $('select#invoice_oficina_comptable option:selected').attr('disabled',false);
-    $('select#invoice_oficina_comptable option:not(:selected)').attr('disabled',true);
-    $('select#invoice_unitat_tramitadora').val(selected.data('ut'));
-    $('select#invoice_unitat_tramitadora option:selected').attr('disabled',false);
-    $('select#invoice_unitat_tramitadora option:not(:selected)').attr('disabled',true);
-  });
-
   /* on load, simulate a client change to call above function */
   /* but only when creating new invoice, to avoid undesired changes */
   if (window.location.href.indexOf("/new") > -1) {

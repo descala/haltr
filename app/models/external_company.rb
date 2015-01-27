@@ -18,14 +18,53 @@ class ExternalCompany < ActiveRecord::Base
     :allow_nil => true,
     :allow_blank => true
   validates_format_of [:organs_gestors,:unitats_tramitadores,:oficines_comptables,:organs_proponents],
-    :with => /^[0-9, ]$/,
+    :with => /^[A-Z0-9, ]*$/i,
     :allow_nil => true,
     :allow_blank => true
+
   after_save :update_linked_clients
   iso_country :country
   include CountryUtils
 
-  attr_accessor :require_dir3, :require_organ_proponent, :require_ponumber, :require_despatch_advice
+  serialize :fields_config
+  after_initialize {
+    self.fields_config ||= {"visible" => {}, "required" => {}}
+  }
+  AVAILABLE_FIELDS=%w(dir3 organ_proponent ponumber delivery_note_number file_reference)
+  AVAILABLE_FIELDS.each do |field|
+    src = <<-END_SRC
+      def visible_#{field}
+        fields_config["visible"]["#{field}"] rescue false
+      end
+
+      def visible_#{field}=(v)
+        fields_config["visible"] ||= {}
+        fields_config["visible"]["#{field}"] = v
+      end
+
+      def required_#{field}
+        fields_config["required"]["#{field}"] rescue false
+      end
+
+      def required_#{field}=(v)
+        fields_config["required"] ||= {}
+        fields_config["required"]["#{field}"] = v
+      end
+    END_SRC
+    class_eval src, __FILE__, __LINE__
+  end
+
+  def required_fields
+    AVAILABLE_FIELDS.collect {|field|
+      field if self.send("required_#{field}") == "1"
+    }.compact
+  end
+
+  def visible_fields
+    AVAILABLE_FIELDS.collect {|field|
+      field if self.send("visible_#{field}") == "1"
+    }.compact
+  end
 
   def project
     nil
@@ -50,19 +89,31 @@ class ExternalCompany < ActiveRecord::Base
   end
 
   def dir3_organs_gestors
-    Dir3Entity.where(:id => organs_gestors.to_s.split(/[,\n]/))
+    og = Dir3Entity.where(:code => organs_gestors.to_s.split(/[,\n]/))
+    organs_gestors.to_s.split(/[,\n]/).uniq.collect {|code|
+      og.find_by_code(code) || Dir3Entity.new(name: code, code: code)
+    }
   end
 
   def dir3_unitats_tramitadores
-    Dir3Entity.where(:id => unitats_tramitadores.to_s.split(/[,\n]/))
+    ut = Dir3Entity.where(:code => unitats_tramitadores.to_s.split(/[,\n]/))
+    unitats_tramitadores.to_s.split(/[,\n]/).uniq.collect {|code|
+      ut.find_by_code(code) || Dir3Entity.new(name: code, code: code)
+    }
   end
 
   def dir3_oficines_comptables
-    Dir3Entity.where(:id => oficines_comptables.to_s.split(/[,\n]/))
+    oc = Dir3Entity.where(:code => oficines_comptables.to_s.split(/[,\n]/))
+    oficines_comptables.to_s.split(/[,\n]/).uniq.collect {|code|
+      oc.find_by_code(code) || Dir3Entity.new(name: code, code: code)
+    }
   end
 
   def dir3_organs_proponents
-    Dir3Entity.where(:id => organs_proponents.to_s.split(/[,\n]/))
+    op = Dir3Entity.where(:code => organs_proponents.to_s.split(/[,\n]/))
+    organs_proponents.to_s.split(/[,\n]/).uniq.collect {|code|
+      op.find_by_code(code) || Dir3Entity.new(name: code, code: code)
+    }
   end
 
 end
