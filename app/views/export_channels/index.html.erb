@@ -20,7 +20,7 @@
         </td>
         <td>
           <span style="color: red"><%= v['folder'] %></span>
-          <% if v['class_for_send']=='Haltr::SendToWs' %>
+          <% if v['class_for_send'] and v['class_for_send'].constantize <= Haltr::SendToWs %>
             <span style="color: green"><%= v['class_for_send'] %></span><br/>
             <span style="color: green"><%= v['options']['process'] rescue nil %></span>
           <% else %>
