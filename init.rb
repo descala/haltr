@@ -130,6 +130,7 @@ Redmine::Plugin.register :haltr do
   menu :project_menu, :payments,   {:controller=>'payments',  :action=>'index'     }, :param=>:project_id, :caption=>:label_payment_plural
   menu :admin_menu, :external_companies, {:controller=>'external_companies', :action=>'index'}, :caption=>:external_companies
   menu :admin_menu, :dir3_entities, {:controller=>'dir3_entities', :action=>'index'}, :caption=>:dir3_entities
+  menu :admin_menu, :export_channels, {:controller=>'export_channels', :action=>'index'}, :caption=>:export_channels
   # submenus defined at lib/haltr.rb
 
 end
