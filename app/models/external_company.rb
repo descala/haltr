@@ -34,7 +34,7 @@ class ExternalCompany < ActiveRecord::Base
   AVAILABLE_FIELDS.each do |field|
     src = <<-END_SRC
       def visible_#{field}
-        fields_config["visible"]["#{field}"] rescue false
+        fields_config["visible"]["#{field}"] == "1" rescue false
       end
 
       def visible_#{field}=(v)
@@ -43,7 +43,7 @@ class ExternalCompany < ActiveRecord::Base
       end
 
       def required_#{field}
-        fields_config["required"]["#{field}"] rescue false
+        fields_config["required"]["#{field}"] == "1" rescue false
       end
 
       def required_#{field}=(v)

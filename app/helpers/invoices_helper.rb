@@ -279,4 +279,10 @@ module InvoicesHelper
     end
   end
 
+  def select_to_edit(field)
+    if @external_company and @external_company.send("dir3_#{field.to_s.pluralize}").any?
+      content_tag(:span, image_tag('edit.png'), data: {field: field}, class: 'select_to_edit required')
+    end
+  end
+
 end

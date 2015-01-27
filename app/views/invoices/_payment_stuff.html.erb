@@ -36,42 +36,47 @@
 
 <% if call_hook(:invoice_form_administrative_centres).present? -%>
   <%= call_hook(:invoice_form_administrative_centres) %>
-<% elsif (@external_company and @external_company.visible_dir3) or (@client and @client.invoice_format =~ /^aoc|face/) or (@invoice and @invoice.has_dir3_info?) -%>
-  <div class="seccio grup">
+<% else -%>
+  <% if (@external_company and @external_company.visible_dir3) or (@client and @client.invoice_format =~ /^aoc|face/) or (@invoice and @invoice.has_dir3_info?) -%>
+    <div class="seccio grup">
+      <p class="col span-1-de-3">
+      <label for="invoice_organ_gestor"><%= l(:organ_gestor) %><%= required_field_span('dir3') %><%= select_to_edit(:organ_gestor) %></label>
+      <% if @external_company and @external_company.dir3_organs_gestors.any? -%>
+        <%= select(:invoice, :organ_gestor, dir3_for_select(@external_company.dir3_organs_gestors)) %>
+      <% else -%>
+        <%= text_field :invoice, :organ_gestor %>
+      <% end -%>
+      </p>
+      <p class="col span-1-de-3">
+      <label for="invoice_oficina_comptable"><%= l(:oficina_comptable) %><%= required_field_span('dir3') %><%= select_to_edit(:oficina_comptable) %></label>
+      <% if @external_company and @external_company.dir3_oficines_comptables.any? -%>
+        <%= select(:invoice, :oficina_comptable, dir3_for_select(@external_company.dir3_oficines_comptables)) %>
+      <% else -%>
+        <%= text_field :invoice, :oficina_comptable %>
+      <% end -%>
+      </p>
+      <p class="col span-1-de-3">
+      <label for="invoice_unitat_tramitadora"><%= l(:unitat_tramitadora) %><%= required_field_span('dir3') %><%= select_to_edit(:unitat_tramitadora) %></label>
+      <% if @external_company and @external_company.dir3_unitats_tramitadores.any? -%>
+        <%= select(:invoice, :unitat_tramitadora, dir3_for_select(@external_company.dir3_unitats_tramitadores)) %>
+      <% else -%>
+        <%= text_field :invoice, :unitat_tramitadora %>
+      <% end -%>
+      </p>
+    </div>
+  <% end -%>
+  <% if (@external_company and @external_company.visible_organ_proponent) -%>
     <p class="col span-1-de-3">
-    <label for="invoice_organ_gestor"><%= l(:organ_gestor) %><%= required_field_span('dir3') %></label>
-    <% if @external_company and @external_company.dir3_organs_gestors.any? -%>
-      <%= select(:invoice, :organ_gestor, dir3_for_select(@external_company.dir3_organs_gestors)) %>
-    <% else -%>
-      <%= text_field :invoice, :organ_gestor %>
-    <% end -%>
-    </p>
-    <p class="col span-1-de-3">
-    <label for="invoice_oficina_comptable"><%= l(:oficina_comptable) %><%= required_field_span('dir3') %></label>
-    <% if @external_company and @external_company.dir3_oficines_comptables.any? -%>
-      <%= select(:invoice, :oficina_comptable, dir3_for_select(@external_company.dir3_oficines_comptables)) %>
-    <% else -%>
-      <%= text_field :invoice, :oficina_comptable %>
-    <% end -%>
-    </p>
-    <p class="col span-1-de-3">
-    <label for="invoice_unitat_tramitadora"><%= l(:unitat_tramitadora) %><%= required_field_span('dir3') %></label>
-    <% if @external_company and @external_company.dir3_unitats_tramitadores.any? -%>
-      <%= select(:invoice, :unitat_tramitadora, dir3_for_select(@external_company.dir3_unitats_tramitadores)) %>
-    <% else -%>
-      <%= text_field :invoice, :unitat_tramitadora %>
-    <% end -%>
-    </p>
-    <p class="col span-1-de-3">
-    <label for="invoice_organ_proponent"><%= l(:field_organ_proponent) %><%= required_field_span('organ_proponent') %></label>
+    <label for="invoice_organ_proponent"><%= l(:field_organ_proponent) %><%= required_field_span('organ_proponent') %><%= select_to_edit(:organ_proponent) %></label>
     <% if @external_company and @external_company.dir3_organs_proponents.any? -%>
       <%= select(:invoice, :organ_proponent, dir3_for_select(@external_company.dir3_organs_proponents)) %>
     <% else -%>
       <%= text_field :invoice, :organ_proponent %>
     <% end -%>
     </p>
-  </div>
+  <% end -%>
 <% end -%>
+
 
 <% if @external_company -%>
   <% if @external_company.visible_fields.any? -%>
