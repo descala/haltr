@@ -40,23 +40,36 @@
     <p class="col span-1-de-3">
     <label for="invoice_organ_gestor"><%= l(:organ_gestor) %></label>
     <%= select(:invoice, :organ_gestor, @client.dir3s.collect {|d|
-      next unless d.organ_gestor and d.oficina_comptable and d.unitat_tramitadora
-      ["#{d.organ_gestor.code} - #{d.organ_gestor.name}", d.organ_gestor.code, {:'data-oc' => d.oficina_comptable.code,
-                                                                                :'data-ut' => d.unitat_tramitadora.code}]
+      next unless d.organ_gestor_id and d.oficina_comptable_id and d.unitat_tramitadora_id
+      if d.organ_gestor
+        ["#{d.organ_gestor_id} - #{d.organ_gestor.name}", d.organ_gestor_id, {:'data-oc' => d.oficina_comptable_id,
+                                                                              :'data-ut' => d.unitat_tramitadora_id}]
+      else
+        [d.organ_gestor_id, d.organ_gestor_id, {:'data-oc' => d.oficina_comptable_id,
+                                                :'data-ut' => d.unitat_tramitadora_id}]
+      end
     }.compact) %>
     </p>
     <p class="col span-1-de-3">
     <label for="invoice_oficina_comptable"><%= l(:oficina_comptable) %></label>
     <%= select(:invoice, :oficina_comptable, @client.dir3s.collect {|d|
-      next unless d.oficina_comptable
-      ["#{d.oficina_comptable.code} - #{d.oficina_comptable.name}", d.oficina_comptable.code]
+      next unless d.oficina_comptable_id
+      if d.oficina_comptable
+        ["#{d.oficina_comptable_id} - #{d.oficina_comptable.name}", d.oficina_comptable_id]
+      else
+        [d.oficina_comptable_id, d.oficina_comptable_id]
+      end
     }.compact.uniq) %>
     </p>
     <p class="col span-1-de-3">
     <label for="invoice_unitat_tramitadora"><%= l(:unitat_tramitadora) %></label>
     <%= select(:invoice, :unitat_tramitadora, @client.dir3s.collect {|d|
-      next unless d.unitat_tramitadora
-      ["#{d.unitat_tramitadora.code} - #{d.unitat_tramitadora.name}", d.unitat_tramitadora.code]
+      next unless d.unitat_tramitadora_id
+      if d.unitat_tramitadora
+        ["#{d.unitat_tramitadora_id} - #{d.unitat_tramitadora.name}", d.unitat_tramitadora_id]
+      else
+        [d.unitat_tramitadora_id, d.unitat_tramitadora_id]
+      end
     }.compact.uniq) %>
     </p>
   </div>
