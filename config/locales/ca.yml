@@ -561,6 +561,8 @@ ca:
   organ_proponent: "Òrgan proponent"
   external_companies: "Empreses externes"
   external_company: "Empresa externa"
+  export_channels: "Canals"
+  export_channel: "Canal"
   field_file_reference: "Num expedient"
   import_issued_from_received: "El fitxer a importar correspon a una factura emesa"
   import_received_from_issued: "El fitxer a importar correspon a una factura rebuda"
