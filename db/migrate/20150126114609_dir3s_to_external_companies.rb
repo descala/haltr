@@ -42,6 +42,7 @@ class Dir3sToExternalCompanies < ActiveRecord::Migration
       extcomp.organs_gestors       = organs_gestors.compact.join(',')
       extcomp.unitats_tramitadores = unitats_tramitadores.compact.join(',')
       extcomp.oficines_comptables  = oficines_comptables.compact.join(',')
+      extcomp.required_file_reference = (Redmine::Configuration['taxcodes_that_need_file_reference'].include?(extcomp.taxcode) ? '1' : '0')
 
       extcomp.save(:validate => false)
     end
