@@ -377,7 +377,7 @@ da:
 
   #TODO
   label_received_invoice_new: New received invoice
-  field_received_at: "Received at"
+  field_received_at: "Reception date"
   duplicate_invoice: Duplicate invoce
   field_endpointid: "Peppol Endpoint ID"
   field_schemeid: "Peppol Scheme ID"
@@ -561,3 +561,4 @@ da:
   field_charge: "Charge"
   field_require_file_reference: "Require file number"
   download_as_pdf: "Download PDF copy"
+  label_reports: Reports

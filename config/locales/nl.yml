@@ -353,7 +353,7 @@ nl:
   hide_full_form: "Show less fields"
   show_full_form: "Show more fields"
   field_created_at: "Created at"
-  field_received_at: "Received at"
+  field_received_at: "Reception date"
   info_default_taxes: "Your country taxes will be created by default"
   label_invoices_min: "Minimum number of invoices"
   label_stastics: "Stastics"
@@ -558,3 +558,4 @@ nl:
   field_charge: "Charge"
   field_require_file_reference: "Require file number"
   download_as_pdf: "Download PDF copy"
+  label_reports: Reports

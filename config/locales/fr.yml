@@ -356,7 +356,7 @@ fr:
   hide_full_form: "Montrer moins de champs"
   show_full_form: "Montrer plus de champs"
   field_created_at: "Créé à"
-  field_received_at: "Reçu à"
+  field_received_at: "Réception"
   info_default_taxes: "Par défaut, il va créer des taxes dans votre pays"
   label_invoices_min: "nombre minimum de factures"
   label_stastics: "Statistiques"
@@ -557,3 +557,4 @@ fr:
   field_charge: "Charge"
   field_require_file_reference: "Require file number"
   download_as_pdf: "Download PDF copy"
+  label_reports: Reports

@@ -195,7 +195,7 @@ es:
   button_download_new_invoices: "Descargar zip de facturas nuevas"
   label_download_new_invoices_info: "Genera un zip con todas las facturas nuevas en formato PDF"
   field_exempt: "Exempto"
-  field_comment: "Razón de exempción"
+  field_comment: "Razón de exención"
 
   # Events
   events: "Log de eventos"
@@ -297,7 +297,7 @@ es:
   label_payment_new: Nuevo pago
   field_amount: Importe
   field_amount_in_cents: Importe
-  field_payment_method: Metodo de pago
+  field_payment_method: Método de pago
   field_reference: Referencia
   field_total_paid: Total pagado
   received_invoice_paid: "%{company} ha pagado la factura número %{num}"
@@ -319,7 +319,7 @@ es:
   b2brouter_ip: "IP del b2brouter"
   b2b_subtitle: "Tu portal de factura electrónica"
   field_public: "Perfil público"
-  private_fields_info: "Los siguientes campos son privados y no se mostrarán aunque escoja hacer público su perfil"
+  private_fields_info: "Los siguientes campos son privados y no se mostrarán aunque tu perfil sea público"
   issues_controller_name: "Nombre del controlador de peticiones"
   field_iban: IBAN
   field_bic: BIC
@@ -328,8 +328,8 @@ es:
   hide_unauthorized: "Ocultar funcionalidades no disponibles"
   invoice_mail_subject: "Factura num @invoice.number"
   invoice_mail_body: "Le enviamos la factura numero @invoice.number con fecha @invoice.date"
-  quote_mail_subject: "Presupuesto num @quote.number"
-  quote_mail_body: "Le enviamos el presupuesto numero @quote.number con fecha @quote.date"
+  quote_mail_subject: "Presupuesto número @quote.number"
+  quote_mail_body: "Le enviamos el presupuesto número @quote.number con fecha @quote.date"
   return_path: "Return-Path (para los bounces)"
 
   # Terms
@@ -370,8 +370,8 @@ es:
   hide_full_form: "Mostrar menos campos"
   show_full_form: "Mostrar mas campos"
   field_created_at: "Creada el"
-  field_received_at: "Recibida el"
-  info_default_taxes: "Por defecto se crearan los impuestos de tu país"
+  field_received_at: "Fecha recepción"
+  info_default_taxes: "Por defecto se crearán los impuestos de tu país"
   label_invoices_min: "Mínimo de facturas"
   label_stastics: "Estadísticas"
   help_invoice_format: "Formato y transporte preferido de recepción de facturas"
@@ -450,7 +450,7 @@ es:
   all_invoices_sent: "Se han enviado las facturas"
   button_add_bank_info: "Añadir cuenta bancaria"
   page_redirecting_will_lose_unsaved_data: "La pàgina es redirigirà i perdreu les dades no desades, voleu continuar?"
-  label_format: "Format"
+  label_format: "Formato"
   button_validate: "Validar"
   downloading_doc: 'Descargando el documento...'
   calling_signature: 'Llamando al proceso de firma...'
@@ -468,11 +468,11 @@ es:
   label_import: "Importar"
   overriding_original_warn: "Si guardas esta factura, a partir de ahora se usara la version modificada en lugar del fichero original, estas seguro?"
   label_mandate_new: "Nuevo mandato"
-  field_signature_date: "Fuecha de firma"
+  field_signature_date: "Fecha de firma"
   field_signed_doc: "Documento firmado"
   current_signed_doc: "Documento firmado actual"
   mandate_recurrent: "Mandato recurrente"
-  mandate_non_recurrent: "Mandato unico"
+  mandate_non_recurrent: "Mandato único"
   field_end_date: "Fin de cobro"
   label_mandate: "Mandato"
   field_delete_signed_doc: "Eliminar documento firmado"
@@ -483,7 +483,7 @@ es:
   error_sending_notification_by_mail: "Error enviando la notificación"
   send_signed_pdf_by_mail: "PDF firmado, enviado por email a %{emails}"
   send_signed_pdf_by_imap: "PDF firmado, email para %{emails} en carpeta IMAP"
-  email_customization: "Personalizacion de Email"
+  email_customization: "Personalización de Email"
   field_mail_subject: "Asunto"
   field_mail_body: "Cuerpo"
   send_pdf_by_mail: "PDF enviado por email a %{emails}"
@@ -517,9 +517,9 @@ es:
   quote_acceptance: "Aceptación del presupuesto"
   chart_invoice_total: Total facturado
   chart_invoice_status: Total facturado según estado de la factura
-  chart_top_clients: Clientes mas facturados
+  chart_top_clients: Clientes más facturados
   chart_cashflow: Flujo de caja
-  chart_events: Ultimos eventos
+  chart_events: Últimos eventos
   past_due: Vencidas
   on_schedule: Dentro de plazo
   label_not_paid: No pagado
@@ -533,14 +533,14 @@ es:
   help_public_profile: "Las empresas que usan B2BRouter.net pueden recuperar los datos maestros básicos de su empresa."
   help_semipublic_profile: "Las empresas que usan B2BRouter.net pueden recuperar los datos maestros básicos de su empresa previa autorización."
   help_private_profile: "No se permite a las empresas que tengan acceso a los datos maestros básicos de su empresa."
-  profile_recomended: "Desde B2BRouter.net recomendamos usar la opción pública o requerir autorización para facilitar el proceso de facturación a sus clientes."
+  profile_recomended: "Desde B2BRouter.net recomendamos usar la opción pública o requerir autorización para facilitar el proceso de facturación a tus clientes."
   all_by_year: "Todo, por año"
   all_by_month: "Todo, por mes"
   last_year_by_month: "Último año"
   last_month_by_week: "Último mes"
   all: "Todo"
   last_year: "Último año"
-  last_3_months: "Ultimos tres meses"
+  last_3_months: "Últimos tres meses"
   field_article_code: "Código"
   label_error_event_plural: "Eventos de envios fallados"
   label_info_event_plural: "Eventos de envios con éxito"
@@ -575,3 +575,4 @@ es:
   field_charge: "Cargo"
   field_require_file_reference: "Requerir número de expediente"
   download_as_pdf: "Descargar copia en PDF"
+  label_reports: Informes
