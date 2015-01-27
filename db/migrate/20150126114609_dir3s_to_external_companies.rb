@@ -1,5 +1,21 @@
 class Dir3sToExternalCompanies < ActiveRecord::Migration
 
+  class Dir3 < ActiveRecord::Base
+    belongs_to :organ_gestor,
+      :class_name  => 'Dir3Entity',
+      :foreign_key => :organ_gestor_id,
+      :primary_key => :code
+    belongs_to :unitat_tramitadora,
+      :class_name  => 'Dir3Entity',
+      :foreign_key => :unitat_tramitadora_id,
+      :primary_key => :code
+    belongs_to :oficina_comptable,
+      :class_name  => 'Dir3Entity',
+      :foreign_key => :oficina_comptable_id,
+      :primary_key => :code
+    has_many :invoices
+  end
+
   def up
     add_column :external_companies, :organs_gestors,       :text
     add_column :external_companies, :unitats_tramitadores, :text
