@@ -138,6 +138,10 @@ end
 # avoid taxis error
 ActiveSupport::Inflector.inflections do |inflect|
   inflect.singular 'taxes', 'tax'
+  inflect.irregular 'unitat_tramitadora', 'unitats_tramitadores'
+  inflect.irregular 'organ_gestor', 'organs_gestors'
+  inflect.irregular 'oficina_comptable', 'oficines_comptables'
+  inflect.irregular 'organ_proponent', 'organs_proponents'
 end
 
 Mime::Type.register "text/xml", :facturae30

@@ -42,6 +42,11 @@ $(document).ready(function() {
     $('select#invoice_client_id').change();
   }
 
+  $(document).on('click', 'span.select_to_edit', function(e) {
+    var field=$(this).data('field');
+    $("select#invoice_"+field).replaceWith("<input id='invoice_"+field+"' type='text' size='30' name='invoice["+field+"]'>");
+  });
+
   $(document).on('change', '#invoice_terms', function(e) {
     terms();
   });
