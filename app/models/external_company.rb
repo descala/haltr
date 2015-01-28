@@ -30,6 +30,14 @@ class ExternalCompany < ActiveRecord::Base
   after_initialize {
     self.fields_config ||= {"visible" => {}, "required" => {}}
   }
+  before_save {
+    # make required fields always visible
+    AVAILABLE_FIELDS.each do |field|
+      if self.send("required_#{field}")
+        self.send("visible_#{field}=","1")
+      end
+    end
+  }
   AVAILABLE_FIELDS=%w(dir3 organ_proponent ponumber delivery_note_number file_reference)
   AVAILABLE_FIELDS.each do |field|
     src = <<-END_SRC

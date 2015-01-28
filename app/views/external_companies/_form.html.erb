@@ -16,13 +16,13 @@
     <p>
     <label><%= l :visible_fields %></label>
     <% ExternalCompany::AVAILABLE_FIELDS.each do |field| -%>
-      <%= f.check_box "visible_#{field}", :no_label=>true %><%= l "field_#{field}", default: field %>
+      <%= f.check_box "visible_#{field}", :no_label=>true, :class=>"visible_field" %><%= l "field_#{field}", default: field %>
     <% end -%>
     </p>
     <p>
     <label><%= l :required_fields %></label>
     <% ExternalCompany::AVAILABLE_FIELDS.each do |field| -%>
-      <%= f.check_box "required_#{field}", :no_label=>true %><%= l "field_#{field}", default: field %>
+      <%= f.check_box "required_#{field}", :no_label=>true, :class=>"required_field" %><%= l "field_#{field}", default: field %>
     <% end -%>
     </p>
     <p><%= f.text_area :organs_gestors, :rows=>8, :cols=>100 %></p>
@@ -32,3 +32,6 @@
   </div>
 </fieldset>
 
+<% content_for :header_tags do -%>
+  <%= javascript_include_tag('haltr',:plugin=>'haltr')%>
+<% end -%>

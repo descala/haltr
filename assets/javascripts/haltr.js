@@ -42,6 +42,18 @@ $(document).ready(function() {
     $('select#invoice_client_id').change();
   }
 
+  // external company form
+  $(document).on('click', 'input.visible_field', function(e) {
+    if (!this.checked) {
+      $('#'+$(this).attr('id').replace('visible','required')).prop('checked', false);
+    }
+  });
+  $(document).on('click', 'input.required_field', function(e) {
+    if (this.checked) {
+      $('#'+$(this).attr('id').replace('required','visible')).prop('checked', true);
+    }
+  });
+
   $(document).on('click', 'span.select_to_edit', function(e) {
     var field=$(this).data('field');
     $("select#invoice_"+field).replaceWith("<input id='invoice_"+field+"' type='text' size='30' name='invoice["+field+"]'>");
