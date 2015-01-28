@@ -27,9 +27,6 @@ class ExternalCompany < ActiveRecord::Base
   include CountryUtils
 
   serialize :fields_config
-  after_initialize {
-    self.fields_config ||= {"visible" => {}, "required" => {}}
-  }
   before_save {
     # make required fields always visible
     AVAILABLE_FIELDS.each do |field|
@@ -42,26 +39,34 @@ class ExternalCompany < ActiveRecord::Base
   AVAILABLE_FIELDS.each do |field|
     src = <<-END_SRC
       def visible_#{field}
+        initalize_fields_config
         fields_config["visible"]["#{field}"] == "1" rescue false
       end
 
       def visible_#{field}=(v)
+        initalize_fields_config
         fields_config["visible"] ||= {}
         v = '1' if v == true or v == 'true'
         fields_config["visible"]["#{field}"] = v
       end
 
       def required_#{field}
+        initalize_fields_config
         fields_config["required"]["#{field}"] == "1" rescue false
       end
 
       def required_#{field}=(v)
+        initalize_fields_config
         fields_config["required"] ||= {}
         v = '1' if v == true or v == 'true'
         fields_config["required"]["#{field}"] = v
       end
     END_SRC
     class_eval src, __FILE__, __LINE__
+  end
+
+  def initalize_fields_config
+    self.fields_config ||= {"visible" => {}, "required" => {}}
   end
 
   def required_fields

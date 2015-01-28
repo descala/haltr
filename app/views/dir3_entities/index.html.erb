@@ -8,6 +8,8 @@
 
 <h2><%= l(:dir3_entities) %></h2>
 
+<%= link_to l(:label_new), new_dir3_entity_path %>
+
 <table class="taula-1 list clients" style="margin-top: 30px;">
   <% @dir3_entities.each do |dir3_entity| -%>
     <tr class="<%= cycle('odd senar','even parell') %>">
@@ -21,4 +23,3 @@
 </table>
 
 <%= link_to l(:label_new), new_dir3_entity_path %>
-

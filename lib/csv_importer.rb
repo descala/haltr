@@ -160,11 +160,10 @@ module CsvImporter
     new      = []
     error    = []
     external_companies.each do |ec|
-      ec_hash = ec.members.inject({}) {|h,m|
-        h[m] = ec[m]; h.reverse_merge(
-          {country: 'es', currency: 'EUR', invoice_format: 'aoc32'}
-        )
-      }
+      ec_hash = ec.members.inject({}) {|h,m| h[m] = ec[m]; h}
+      ec_hash[:country] ||= 'es'
+      ec_hash[:currency] ||= 'EUR'
+      ec_hash[:invoice_format] ||= 'aoc32'
       current = ExternalCompany.find_by_taxcode(ec.taxcode)
       begin
         if current

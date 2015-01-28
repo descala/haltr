@@ -50,7 +50,7 @@ class Dir3EntitiesController < ApplicationController
     file = params[:csv_file]
     if file and file.size > 0
       existing, new, error = process_dir3entities(entities: file.path)
-      flash[:notice] = "Dir3Entities updated: #{existing}, created: #{new}, errors: #{error.size}"
+      flash[:notice] = "Dir3Entities updated: #{existing}, created: #{new}, errors: #{error}"
     else
       flash[:error] = "Select a CSV file to import"
     end

@@ -12,7 +12,7 @@
     <p><%= f.label_for_field :country, :required => true %><%= f.iso_country_select :country, [:es] %></p>
     <p><%= f.select :currency, currency_options_for_select, :required => true %></p>
     <p><%= f.select :invoice_format, ExportChannels.for_select(@project) %></p>
-    <p><%= f.select :language, options_for_select(valid_languages.reject {|l| !(l =~ /^[a-z][a-z][\-A-Z]{0,3}$/)}.collect {|l| [I18n.t(:general_lang_name, :locale=>l),l]}) %></p>
+    <p><%= f.select :language, lang_options_for_select %></p>
     <p>
     <label><%= l :visible_fields %></label>
     <% ExternalCompany::AVAILABLE_FIELDS.each do |field| -%>

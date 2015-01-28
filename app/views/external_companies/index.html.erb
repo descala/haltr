@@ -8,6 +8,8 @@
 
 <h2><%= l(:external_companies) %></h2>
 
+<%= link_to l(:label_new), new_external_company_path %>
+
 <table class="taula-1 list clients" style="margin-top: 30px;">
   <% @ecompanies.each do |ec| -%>
     <tr class="<%= cycle('odd senar','even parell') %>">
