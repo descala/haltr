@@ -64,13 +64,13 @@ class ExternalCompany < ActiveRecord::Base
 
   def required_fields
     AVAILABLE_FIELDS.collect {|field|
-      field if self.send("required_#{field}") == "1"
+      field if self.send("required_#{field}")
     }.compact
   end
 
   def visible_fields
     AVAILABLE_FIELDS.collect {|field|
-      field if self.send("visible_#{field}") == "1"
+      field if self.send("visible_#{field}")
     }.compact
   end
 
