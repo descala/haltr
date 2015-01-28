@@ -1,5 +1,8 @@
 <%=
   cols = Dir3Entity.column_names
+  cols.delete "id"
+  cols.delete "created_at"
+  cols.delete "updated_at"
 
   CSV.generate(
     :headers       => cols,

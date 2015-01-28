@@ -49,8 +49,8 @@ class ExternalCompaniesController < ApplicationController
   def csv_import
     file = params[:csv_file]
     if file and file.size > 0
-      existing, new = process_external_companies(external_companies: file.path)
-      flash[:notice] = "External Companies updated: #{existing}, created: #{new}"
+      existing, new, error = process_external_companies(external_companies: file.path)
+      flash[:notice] = "External Companies updated: #{existing}, created: #{new}, errors: #{error.size}"
     else
       flash[:error] = "Select a CSV file to import"
     end

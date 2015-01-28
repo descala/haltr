@@ -1,6 +1,9 @@
 <%=
   cols = ExternalCompany.column_names
   cols.delete "fields_config"
+  cols.delete "id"
+  cols.delete "created_at"
+  cols.delete "updated_at"
   ExternalCompany::AVAILABLE_FIELDS.each do |field|
     cols << "visible_#{field}"
     cols << "required_#{field}"

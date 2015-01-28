@@ -129,8 +129,9 @@ module CsvImporter
     entities = CsvMapper::import(options[:entities]) do
       read_attributes_from_file
     end
-    existing=[]
-    new=[]
+    existing = []
+    new      = []
+    error    = []
     entities.each do |l|
       current = Dir3Entity.find_by_code(l.code)
       l_hash = l.members.inject({}) {|h,m| h[m] = l[m]; h}
@@ -142,12 +143,13 @@ module CsvImporter
           new << Dir3Entity.create!(l_hash)
         end
       rescue ActiveRecord::RecordInvalid => e
+        error << l_hash
         puts "Invalid Dir3Entity: #{l_hash[:code]} (#{e})"
       end
     end
     puts "Entities updated: #{existing.size}"
     puts "Entities created: #{new.size}"
-    return [existing.size, new.size]
+    return [existing.size, new.size, error.size]
   end
 
   def process_external_companies(options={})
@@ -156,6 +158,7 @@ module CsvImporter
     end
     existing = []
     new      = []
+    error    = []
     external_companies.each do |ec|
       ec_hash = ec.members.inject({}) {|h,m|
         h[m] = ec[m]; h.reverse_merge(
@@ -171,12 +174,13 @@ module CsvImporter
           new << ExternalCompany.create!(ec_hash)
         end
       rescue ActiveRecord::RecordInvalid => e
+        error << ec_hash
         puts "Invalid ExternalCompany: #{ec_hash[:taxcode]} (#{e})"
       end
     end
     puts "ExternalCompanies updated: #{existing.size}"
     puts "ExternalCompanies created: #{new.size}"
-    return [existing.size, new.size]
+    return [existing.size, new.size, error.size]
   end
 
 end
