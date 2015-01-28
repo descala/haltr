@@ -111,7 +111,9 @@ match '/companies/logo_by_taxcode/:taxcode' => 'companies#logo_by_taxcode', :via
 resources :companies, :only => [:update]
 
 resources :external_companies
+match 'external_companies/csv_import' => 'external_companies#csv_import', :via => :post
 resources :dir3_entities
+match 'dir3_entities/csv_import' => 'dir3_entities#csv_import', :via => :post
 resources :export_channels
 
 match '/charts/invoice_total' => 'charts#invoice_total', :via => :get, :as => :invoice_total_chart

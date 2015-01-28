@@ -6,6 +6,8 @@ class ExternalCompaniesController < ApplicationController
   before_filter :require_admin
   helper :haltr
 
+  include CsvImporter
+
   def index
     @ecompanies = ExternalCompany.all(order: :name)
   end
@@ -43,4 +45,16 @@ class ExternalCompaniesController < ApplicationController
     @ecompany.destroy
     redirect_to :action => 'index'
   end
+
+  def csv_import
+    file = params[:csv_file]
+    if file and file.size > 0
+      existing, new = process_external_companies(external_companies: file.path)
+      flash[:notice] = "External Companies updated: #{existing}, created: #{new}"
+    else
+      flash[:error] = "Select a CSV file to import"
+    end
+    redirect_to action: 'index'
+  end
+
 end

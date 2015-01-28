@@ -1,0 +1,14 @@
+<%=
+  cols = Dir3Entity.column_names
+
+  CSV.generate(
+    :headers       => cols,
+    :write_headers => true
+  ) do |csv|
+    Dir3Entity.all.each do |d3e|
+      csv << cols.collect {|c|
+        d3e.send(c)
+      }
+    end
+  end.html_safe
+%>

@@ -60,7 +60,6 @@ module CsvImporter
         puts "Error importing #{result_line}"
         raise error
       end
-
     end
   end
 
@@ -148,6 +147,7 @@ module CsvImporter
     end
     puts "Entities updated: #{existing.size}"
     puts "Entities created: #{new.size}"
+    return [existing.size, new.size]
   end
 
   def process_external_companies(options={})
@@ -176,6 +176,7 @@ module CsvImporter
     end
     puts "ExternalCompanies updated: #{existing.size}"
     puts "ExternalCompanies created: #{new.size}"
+    return [existing.size, new.size]
   end
 
 end

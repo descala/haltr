@@ -6,6 +6,8 @@ class Dir3EntitiesController < ApplicationController
   before_filter :require_admin
   helper :haltr
 
+  include CsvImporter
+
   def index
     @dir3_entities = Dir3Entity.all(order: :name)
   end
@@ -43,4 +45,16 @@ class Dir3EntitiesController < ApplicationController
     @dir3_entity.destroy
     redirect_to :action => 'index'
   end
+
+  def csv_import
+    file = params[:csv_file]
+    if file and file.size > 0
+      existing, new = process_dir3entities(entities: file.path)
+      flash[:notice] = "Dir3Entities updated: #{existing}, created: #{new}"
+    else
+      flash[:error] = "Select a CSV file to import"
+    end
+    redirect_to action: 'index'
+  end
+
 end

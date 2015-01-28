@@ -1,0 +1,19 @@
+<%=
+  cols = ExternalCompany.column_names
+  cols.delete "fields_config"
+  ExternalCompany::AVAILABLE_FIELDS.each do |field|
+    cols << "visible_#{field}"
+    cols << "required_#{field}"
+  end
+
+  CSV.generate(
+    :headers       => cols,
+    :write_headers => true
+  ) do |csv|
+    ExternalCompany.all.each do |d3e|
+      csv << cols.collect {|c|
+        d3e.send(c)
+      }
+    end
+  end.html_safe
+%>

@@ -1,3 +1,10 @@
+<div class="contextual">
+  <%= form_tag({action: 'csv_import'}, {multipart: true}) do -%>
+    <%= submit_tag "#{l(:label_import)} CSV" %>
+    <%= file_field_tag :csv_file %>
+  <% end -%>
+</div>
+
 <h2><%= l(:dir3_entities) %></h2>
 
 <table class="taula-1 list clients">

@@ -47,6 +47,7 @@ class ExternalCompany < ActiveRecord::Base
 
       def visible_#{field}=(v)
         fields_config["visible"] ||= {}
+        v = '1' if v == true or v == 'true'
         fields_config["visible"]["#{field}"] = v
       end
 
@@ -56,6 +57,7 @@ class ExternalCompany < ActiveRecord::Base
 
       def required_#{field}=(v)
         fields_config["required"] ||= {}
+        v = '1' if v == true or v == 'true'
         fields_config["required"]["#{field}"] = v
       end
     END_SRC
