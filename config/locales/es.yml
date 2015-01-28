@@ -564,6 +564,7 @@ es:
   oficina_comptable: "Oficina contable"
   unitat_tramitadora: "Unidad tramitadora"
   field_organ_proponent: "Órgano proponente"
+  organ_proponent: "Órgano proponente"
   external_companies: "Empresas externas"
   external_company: "Empresa externa"
   export_channels: "Canales"

@@ -56,7 +56,10 @@ $(document).ready(function() {
 
   $(document).on('click', 'span.select_to_edit', function(e) {
     var field=$(this).data('field');
-    $("select#invoice_"+field).replaceWith("<input id='invoice_"+field+"' type='text' size='30' name='invoice["+field+"]'>");
+    $("select#invoice_"+field).toggle();
+    $("select#invoice_"+field).prop('disabled', !$("select#invoice_"+field).prop('disabled'));
+    $("input#invoice_"+field).toggle();
+    $("input#invoice_"+field).prop('disabled', !$("input#invoice_"+field).prop('disabled'));
   });
 
   $(document).on('change', '#invoice_terms', function(e) {

@@ -550,6 +550,7 @@ da:
   oficina_comptable: "Oficina comptable"
   unitat_tramitadora: "Unitat tramitadora"
   field_organ_proponent: "Òrgan proponent"
+  organ_proponent: "Òrgan proponent"
   external_companies: "External companies"
   external_company: "External company"
   export_channels: "Channels"
