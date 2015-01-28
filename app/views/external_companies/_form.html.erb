@@ -16,14 +16,18 @@
     <p>
     <label><%= l :visible_fields %></label>
     <% ExternalCompany::AVAILABLE_FIELDS.each do |field| -%>
+      <% next if field == 'ponumber' -%>
       <%= f.check_box "visible_#{field}", :no_label=>true, :class=>"visible_field" %><%= l "field_#{field}", default: field %>
     <% end -%>
+    <%= f.check_box "visible_ponumber", :no_label=>true, :checked=>true, :disabled=>true %><%= l "field_ponumber", default: 'ponumber' %>
     </p>
     <p>
     <label><%= l :required_fields %></label>
     <% ExternalCompany::AVAILABLE_FIELDS.each do |field| -%>
+      <% next if field == 'ponumber' -%>
       <%= f.check_box "required_#{field}", :no_label=>true, :class=>"required_field" %><%= l "field_#{field}", default: field %>
     <% end -%>
+    <%= f.check_box "required_ponumber", :no_label=>true %><%= l "field_ponumber", default: 'ponumber' %>
     </p>
     <p><%= f.text_area :organs_gestors, :rows=>8, :cols=>100 %></p>
     <p style="font-size: 0.6em"><%= render :partial => 'link_to_dir3s', locals: {dir3s: f.object.dir3_organs_gestors } %></p>
