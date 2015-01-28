@@ -26,9 +26,13 @@
     <% end -%>
     </p>
     <p><%= f.text_area :organs_gestors, :rows=>8, :cols=>100 %></p>
+    <p style="font-size: 0.6em"><%= render :partial => 'link_to_dir3s', locals: {dir3s: f.object.dir3_organs_gestors } %></p>
     <p><%= f.text_area :unitats_tramitadores, :rows=>8, :cols=>100 %></p>
+    <p style="font-size: 0.6em"><%= render :partial => 'link_to_dir3s', locals: {dir3s: f.object.dir3_unitats_tramitadores } %></p>
     <p><%= f.text_area :oficines_comptables, :rows=>8, :cols=>100 %></p>
+    <p style="font-size: 0.6em"><%= render :partial => 'link_to_dir3s', locals: {dir3s: f.object.dir3_oficines_comptables } %></p>
     <p><%= f.text_area :organs_proponents, :rows=>8, :cols=>100 %></p>
+    <p style="font-size: 0.6em"><%= render :partial => 'link_to_dir3s', locals: {dir3s: f.object.dir3_organs_proponents } %></p>
   </div>
 </fieldset>
 
