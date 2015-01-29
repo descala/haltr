@@ -32,7 +32,7 @@
   @external_company=ExternalCompany.find_by_taxcode(@client.taxcode) if @client
 -%>
 
-<%= call_hook(:invoice_form_payment_extra_fields) unless @invoice.is_a?(Quote) or params[:quote] == "true" %>
+<%= call_hook(:invoice_form_payment_extra_fields) unless @invoice.is_a?(Quote) %>
 
 <% if call_hook(:invoice_form_administrative_centres).present? -%>
   <%= call_hook(:invoice_form_administrative_centres) %>
@@ -85,7 +85,7 @@
     <%= text_area(:invoice, :payment_method_text, :cols => 40, :rows => 2, :value => payment_method_text, :id => 'payment_other', :style => (payment_method==Invoice::PAYMENT_SPECIAL) ? '' : 'display: none;') %>
   </p>
   <p class="col span-1-de-3">
-  <% unless @invoice.is_a?(Quote) or params[:quote] == "true" -%>
+  <% unless @invoice.is_a?(Quote) -%>
     <label for="invoice_terms"><%= l(:field_terms) %></label>
     <%= select(:invoice, :terms, Terms.for_select, {:selected=>terms} ) %>
     <span id="due_date_cal" style="display: <%= terms == "custom" ? "" : "none" %>">
