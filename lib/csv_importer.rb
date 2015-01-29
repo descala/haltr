@@ -135,6 +135,7 @@ module CsvImporter
     entities.each do |l|
       current = Dir3Entity.find_by_code(l.code)
       l_hash = l.members.inject({}) {|h,m| h[m] = l[m]; h}
+      l_hash[:postalcode] = l_hash[:postalcode].strip.rjust(5, "0") rescue nil
       begin
         if current
           existing << l
@@ -164,6 +165,8 @@ module CsvImporter
       ec_hash[:country] ||= 'es'
       ec_hash[:currency] ||= 'EUR'
       ec_hash[:invoice_format] ||= 'aoc32'
+      ec_hash[:postalcode] = ec_hash[:postalcode].strip.rjust(5, "0") rescue nil
+      ec_hash[:visible_dir3] = true if ec_hash[:oficines_comptables] or ec_hash[:unitats_tramitadores] or ec_hash[:organs_gestors]
       current = ExternalCompany.find_by_taxcode(ec.taxcode)
       begin
         if current
