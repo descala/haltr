@@ -486,6 +486,7 @@ class InvoicesController < ApplicationController
   # into an invoice form (ajax)
   def update_payment_stuff
     @client = Client.find(params[:invoice][:client_id]) unless !params[:invoice] or params[:invoice][:client_id].blank?
+    @invoice = Invoice.find(params[:invoice_id]) rescue nil
     selected = @client.nil? ? params[:curr_sel] : @client.currency
     if params[:required] == "false"
       render :partial => "received/currency", :locals => {:selected=>selected}
