@@ -39,7 +39,7 @@ class Invoice < ActiveRecord::Base
   validates_presence_of :client, :date, :currency, :project_id, :unless => Proc.new {|i| i.type == "ReceivedInvoice" }
   validates_inclusion_of :currency, :in  => Money::Currency.table.collect {|k,v| v[:iso_code] }, :unless => Proc.new {|i| i.type == "ReceivedInvoice" }
   validates_numericality_of :charge_amount_in_cents, :allow_nil => true
-  validates_numericality_of :payments_on_account_in_cents
+  validates_numericality_of :payments_on_account_in_cents, :allow_nil => true
 
   before_save :fields_to_utf8
   after_create :increment_counter

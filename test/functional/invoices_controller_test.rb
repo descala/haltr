@@ -115,7 +115,7 @@ class InvoicesControllerTest < ActionController::TestCase
     assert User.current.allowed_to?(:import_invoices,p), "user #{User.current.login} has not import_invoices permission in project #{p.name}"
     assert_response :found
     invoice = IssuedInvoice.find_by_number '767'
-    assert invoice.valid?
+    assert invoice.valid?, invoice.errors.messages.to_s
     assert !invoice.modified_since_created?
     assert invoice.original
   end
