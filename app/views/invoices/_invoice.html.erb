@@ -211,6 +211,16 @@
         <th><%=h l(:label_total)%>:</th>
         <td><%=h money(@invoice.total) %></td>
       </tr>
+      <% if @invoice.payments_on_account_in_cents > 0 -%>
+        <tr>
+          <th><%=h l(:field_payments_on_account) %></th>
+          <td><%=h money(@invoice.payments_on_account) %></td>
+        </tr>
+        <tr class="invoice-total">
+          <th><%=h l(:total_executable) %></th>
+          <td><%=h money(@invoice.total - @invoice.payments_on_account) %></td>
+        </tr>
+      <% end -%>
   </tbody></table>
 
   <% if @invoice.is_a?(IssuedInvoice) and @invoice.payments.any? -%>

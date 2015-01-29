@@ -26,10 +26,10 @@
             <TotalAmount><%=h precision @invoice.total.dollars %></TotalAmount>
          </TotalInvoicesAmount>
          <TotalOutstandingAmount>
-            <TotalAmount><%=h precision @invoice.total.dollars %></TotalAmount>
+            <TotalAmount><%=h precision (@invoice.total - @invoice.payments_on_account).dollars %></TotalAmount>
          </TotalOutstandingAmount>
          <TotalExecutableAmount>
-            <TotalAmount><%=h precision @invoice.total.dollars %></TotalAmount>
+            <TotalAmount><%=h precision (@invoice.total - @invoice.payments_on_account).dollars %></TotalAmount>
          </TotalExecutableAmount>
          <InvoiceCurrencyCode><%=h  @invoice.currency %></InvoiceCurrencyCode>
       </Batch>
@@ -243,8 +243,19 @@
             <TotalTaxOutputs><%=h precision @invoice.total_tax_outputs.dollars%></TotalTaxOutputs>
             <TotalTaxesWithheld><%=h precision @invoice.total_taxes_withheld.dollars%></TotalTaxesWithheld>
             <InvoiceTotal><%=h precision @invoice.total.dollars%></InvoiceTotal>
-            <TotalOutstandingAmount><%=h precision @invoice.total.dollars%></TotalOutstandingAmount>
-            <TotalExecutableAmount><%=h precision @invoice.total.dollars%></TotalExecutableAmount>
+            <% if @invoice.payments_on_account_in_cents > 0 -%>
+              <PaymentsOnAccount>
+                <PaymentOnAccount>
+                  <PaymentOnAccountDate><%=h @invoice.date%></PaymentOnAccountDate>
+                  <PaymentOnAccountAmount><%=h precision @invoice.payments_on_account.dollars %></PaymentOnAccountAmount>
+                </PaymentOnAccount>
+              </PaymentsOnAccount>
+            <% end -%>
+            <TotalOutstandingAmount><%=h precision (@invoice.total - @invoice.payments_on_account).dollars%></TotalOutstandingAmount>
+            <% if @invoice.payments_on_account_in_cents > 0 -%>
+              <TotalPaymentsOnAccount><%=h precision @invoice.payments_on_account.dollars %></TotalPaymentsOnAccount>
+            <% end -%>
+            <TotalExecutableAmount><%=h precision (@invoice.total - @invoice.payments_on_account).dollars%></TotalExecutableAmount>
          </InvoiceTotals>
          <Items>
 <% @invoice.invoice_lines.each do |invoice_line| -%>

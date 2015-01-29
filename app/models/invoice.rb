@@ -39,6 +39,7 @@ class Invoice < ActiveRecord::Base
   validates_presence_of :client, :date, :currency, :project_id, :unless => Proc.new {|i| i.type == "ReceivedInvoice" }
   validates_inclusion_of :currency, :in  => Money::Currency.table.collect {|k,v| v[:iso_code] }, :unless => Proc.new {|i| i.type == "ReceivedInvoice" }
   validates_numericality_of :charge_amount_in_cents, :allow_nil => true
+  validates_numericality_of :payments_on_account_in_cents
 
   before_save :fields_to_utf8
   after_create :increment_counter
@@ -67,12 +68,17 @@ class Invoice < ActiveRecord::Base
     :mapping => [%w(charge_amount_in_cents cents), %w(currency currency_as_string)],
     :constructor => Proc.new { |cents, currency| Money.new(cents || 0, currency || Money::Currency.new(Setting.plugin_haltr['default_currency'])) }
 
+  composed_of :payments_on_account,
+    :class_name => "Money",
+    :mapping => [%w(payments_on_account_in_cents cents), %w(currency currency_as_string)],
+    :constructor => Proc.new { |cents, currency| Money.new(cents || 0, currency || Money::Currency.new(Setting.plugin_haltr['default_currency'])) }
+
   after_initialize :set_default_values
 
   def set_default_values
-    self.currency         ||= self.client.currency rescue nil
-    self.currency         ||= self.company.currency rescue nil
-    self.currency         ||= Setting.plugin_haltr['default_currency']
+    self.currency ||= self.client.currency rescue nil
+    self.currency ||= self.company.currency rescue nil
+    self.currency ||= Setting.plugin_haltr['default_currency']
   end
 
   def currency=(v)
@@ -342,6 +348,16 @@ class Invoice < ActiveRecord::Base
     end
   end
 
+  def payments_on_account=(value)
+    if value =~ /^[0-9,.']*$/
+      value = Money.parse(value)
+      write_attribute :payments_on_account_in_cents, value.cents
+    else
+      # this + validates_numericality_of will raise an error if not a number
+      write_attribute :payments_on_account_in_cents, value
+    end
+  end
+
   def tax_per_line?(tax_name)
     return false if invoice_lines.first.nil?
     first_tax = invoice_lines.first.taxes.collect {|t| t if t.name == tax_name}.compact.first
@@ -536,6 +552,7 @@ _INV
     charge           = Haltr::Utils.get_xpath(doc,xpaths[:charge])
     charge_reason    = Haltr::Utils.get_xpath(doc,xpaths[:charge_reason])
     accounting_cost  = Haltr::Utils.get_xpath(doc,xpaths[:accounting_cost])
+    payments_on_account = Haltr::Utils.get_xpath(doc,xpaths[:payments_on_account]) || 0
 
     doc.xpath(xpaths[:dir3s]).each do |line|
       case Haltr::Utils.get_xpath(line, xpaths[:dir3_role])
@@ -573,6 +590,7 @@ _INV
       :charge_amount    => charge,
       :charge_reason    => charge_reason,
       :accounting_cost  => accounting_cost,
+      :payments_on_account => payments_on_account.to_money(currency)
     )
 
     if raw_invoice.respond_to? :filename             # Mail::Part

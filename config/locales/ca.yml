@@ -581,3 +581,4 @@ ca:
   dir3_entities: "Entitats dir3"
   field_code: "Codi"
   field_dir3: "DIR3"
+  field_payments_on_account: "Bestreta"
