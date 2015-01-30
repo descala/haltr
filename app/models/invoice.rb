@@ -841,6 +841,10 @@ _INV
           errors.add(field, :blank) if self.send(field).blank?
         end
       end
+    elsif client and client.invoice_format =~ /face/
+      errors.add(:organ_gestor, :blank) if organ_gestor.blank?
+      errors.add(:unitat_tramitadora, :blank) if unitat_tramitadora.blank?
+      errors.add(:oficina_comptable, :blank) if oficina_comptable.blank?
     end
   end
 
