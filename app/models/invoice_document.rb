@@ -47,7 +47,7 @@ class InvoiceDocument < Invoice
   end
 
   def is_paid?
-    unpaid_amount.cents <= 0
+    unpaid_amount.cents == 0
   end
 
   def total_paid
