@@ -5,6 +5,7 @@ module Haltr
       File.join(File.dirname(__FILE__),"..","..","config","taxes.yml")
     )).with_indifferent_access
 
+    # Only used in Invoice.create_from_xml
     def self.new_tax(attributes={})
       case attributes[:format]
       when /facturae/
@@ -22,7 +23,6 @@ module Haltr
             category: 'S'
           )
         end
-
 
       when /ubl/
         #TODO
@@ -73,7 +73,7 @@ module Haltr
         taxes << Tax.new(:name=>'IVA',:percent=>4.0, :default=>false,:category=>'AA')
         taxes << Tax.new(:name=>'IVA',:percent=>0.0, :default=>false,:category=>'Z')
         taxes << Tax.new(:name=>'IVA',:percent=>0.0, :default=>false,:category=>'E')
-        taxes << Tax.new(:name=>'IRPF',:percent=>-21.0, :default=>false,:category=>'S')
+        taxes << Tax.new(:name=>'IRPF',:percent=>-19.0, :default=>false,:category=>'S')
       when 'fr'
         taxes << Tax.new(:name=>'TVA',:percent=>19.6,:default=>true,:category=>'S')
         taxes << Tax.new(:name=>'TVA',:percent=>5.5, :default=>false,:category=>'AA')
