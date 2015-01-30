@@ -77,7 +77,7 @@ class Client < ActiveRecord::Base
   end
 
   def to_label
-    name
+    name.nil? ? taxcode : name
   end
 
   alias :to_s :to_label
