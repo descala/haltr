@@ -40,7 +40,7 @@ class InvoicesController < ApplicationController
     sort_init 'invoices.created_at', 'desc'
     sort_update %w(invoices.created_at state number date due_date clients.name import_in_cents)
 
-    invoices = @project.issued_invoices.includes(:client)
+    invoices = @project.issued_invoices.includes(:client).where("type != 'DraftInvoice'")
 
     if params[:invoices]
       invoices = invoices.where(["id in (?)",params[:invoices]])
