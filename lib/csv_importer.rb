@@ -72,11 +72,7 @@ module CsvImporter
         end
       end
 
-      begin
-        client.bank_info = @project.company.bank_infos.first
-      rescue
-        binding.pry
-      end
+      client.bank_info = @project.company.bank_infos.first
 
       begin
         client.save!
@@ -174,7 +170,7 @@ module CsvImporter
     error    = []
     entities.each do |l|
       current = Dir3Entity.find_by_code(l.code)
-      l_hash = l.members.inject({}) {|h,m| h[m] = l[m]; h}
+      l_hash = l.members.inject({}) {|h,m| h[m] = l[m] unless l[m].blank? ; h}
       l_hash[:postalcode] = l_hash[:postalcode].strip.rjust(5, "0") rescue nil
       begin
         if current
@@ -201,11 +197,12 @@ module CsvImporter
     new      = []
     error    = []
     external_companies.each do |ec|
-      ec_hash = ec.members.inject({}) {|h,m| h[m] = ec[m]; h}
+      ec_hash = ec.members.inject({}) {|h,m| h[m] = ec[m] unless ec[m].blank? ; h}
       ec_hash[:country] ||= 'es'
       ec_hash[:currency] ||= 'EUR'
       ec_hash[:invoice_format] ||= 'aoc32'
       ec_hash[:postalcode] = ec_hash[:postalcode].strip.rjust(5, "0") rescue nil
+      ec_hash.delete(:postalcode) if ec_hash[:postalcode].blank?
       ec_hash[:visible_dir3] = true if ec_hash[:oficines_comptables] or ec_hash[:unitats_tramitadores] or ec_hash[:organs_gestors]
       current = ExternalCompany.find_by_taxcode(ec.taxcode)
       begin
