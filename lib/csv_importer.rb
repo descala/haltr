@@ -18,7 +18,10 @@ module CsvImporter
       "e_mail"     => "email",
       "paginaweb"  => "website",
       "docpag"     => "payment_method",
-      "codcli"     => "company_identifier"
+      "codcli"     => "company_identifier",
+      "language"   => "language",
+      "invoice_format" => "invoice_format",
+      "country" => "country"
     }
 
     result = CsvMapper::import(@file_name) do
@@ -27,35 +30,61 @@ module CsvImporter
 
     result.each do |result_line|
 
-      next if result_line['nifcli'].nil?
+      taxcode = result_line['nifcli'] rescue result_line['taxcode']
+      payment_method = result_line['docpag'] rescue result_line['payment_method']
+
+      next if taxcode.nil?
 
       # check existing taxcodes in the project
-      client = result_line['nifcli'].blank? ? nil : @project.clients.find_by_taxcode(result_line['nifcli'])
+      client = taxcode.blank? ? nil : @project.clients.find_by_taxcode(taxcode)
 
       # if not found then it is a new taxcode
       client = Client.new(:project=> @project,
                           :invoice_format => 'signed_pdf',
-                          :taxcode => result_line['nifcli'],
+                          :taxcode => taxcode,
                           :terms => '0',
                           :currency => 'EUR' ) if client.nil?
 
       map_clients.each do |csv_field,client_field|
-        puts "#{client_field} = #{csv_field} = #{result_line[csv_field]}" if @debug
-        client[client_field] = result_line[csv_field].strip unless result_line[csv_field].nil?
+        begin
+          client.send("#{client_field}=", result_line[csv_field].strip)
+          puts "#{client_field} = #{csv_field} = #{result_line[csv_field]}" if @debug
+        rescue NameError
+          client.send("#{client_field}=", result_line[client_field].strip) if result_line[client_field]
+        end
       end
 
-      if result_line['docpag'].upcase == 'R'
+      if payment_method == 'R'
         client.payment_method = Invoice::PAYMENT_DEBIT
       else
         client.payment_method = Invoice::PAYMENT_TRANSFER
       end
 
-      # deltete invalid email addresses
-      client.email = '' unless client.email =~ /\A([\w\.\-\+]+)@((?:[-a-z0-9]+\.)+[a-z]{2,})\z/i
+      unless client.email =~ /\A([\w\.\-\+]+)@((?:[-a-z0-9]+\.)+[a-z]{2,})\z/i
+        emails = client.email.gsub(' ','').split(/[,;]/)
+        client.email = emails.shift
+        if emails.size > 0
+          emails.each do |email|
+            next if Person.find_by_email(email)
+            person = Person.new(first_name: email, last_name: email, email: email, client: client)
+            client.people << person
+          end
+        end
+      end
+
+      begin
+        client.bank_info = @project.company.bank_infos.first
+      rescue
+        binding.pry
+      end
 
       begin
         client.save!
         puts "====================================" if @debug
+      rescue ActiveRecord::RecordInvalid
+        puts client.attributes
+        puts client.errors.messages
+        exit
       rescue Exception => error
         puts "Error importing #{result_line}"
         raise error

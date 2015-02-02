@@ -7,6 +7,7 @@ namespace :haltr do
       args.with_defaults(:file => 'clients.csv')
 
       begin
+        puts "project_id = #{args[:project_id]}"
         project = Project.find args[:project_id]
         clients_file = args[:file]
         puts "Project = #{project}"
@@ -19,7 +20,7 @@ namespace :haltr do
         process_clients(:project => project, :file_name => clients_file)
 
       rescue => error
-        puts "Error: " + error
+        puts "Error: #{error}"
         raise error
       end
     end
