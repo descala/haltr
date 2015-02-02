@@ -92,63 +92,74 @@ module CsvImporter
     end
   end
 
-  def process_invoices(options={})
-    @debug = options[:debug]
-    @project = options[:project]
-    @file_name = options[:file_name]
+  def process_invoice_templates(options={})
+    @debug         = options[:debug]
+    templates      = {}
+    template_lines = {}
 
-    map_invoices = {
-      "idfacv"        => "number",
-      "observaciones" => "extra_info",
-      "base"          => "import_in_cents",
-      "docpag"        => "payment_method",
-      "totapagar"     => "total_in_cents",
-      "centrocoste"   => "accounting_cost"
-    }
-
-
-    result = CsvMapper::import(@file_name) do
+    result_templates = CsvMapper::import(options[:templates_file]) do
       read_attributes_from_file
     end
 
-    result.each do |result_line|
+    result_lines = CsvMapper::import(options[:template_lines_file]) do
+      read_attributes_from_file
+    end
 
-      next if result_line['idfacv'].nil?
+    result_templates.each do |template|
 
-      if invoice = @project.issued_invoices.find_by_number(result_line['idfacv'])
-        invoice.destroy
-      end
+      template_h = template.to_h
 
-      invoice = IssuedInvoice.new(:project => @project,
-                                  :currency => 'EUR' 
-                                 )
+      num = template_h.delete(:number)
+      date = template_h.delete(:date)
 
-      map_invoices.each do |csv_field,field|
-        puts "#{field} = #{csv_field} = #{result_line[csv_field]}" if @debug
-        invoice[field] = result_line[csv_field].strip unless result_line[csv_field].nil?
-      end
-
-      client_taxcode = result_line['nifcli'].gsub(" ","") unless result_line['nifcli'].nil?
-      invoice.client = client_taxcode.blank? ? nil : @project.clients.find_by_taxcode(client_taxcode)
-      if invoice.client.nil?
-        puts "Invoice #{invoice.number}: client #{client_taxcode} not found"
+      # client
+      client_taxcode = template_h.delete(:client_taxcode).gsub(" ","") unless template.client_taxcode.blank?
+      if client_taxcode
+        client = Client.where("taxcode = ? AND project_id = ?", client_taxcode, template.project_id).first
+        if client.nil?
+          puts "no client with taxcode '#{client_taxcode}'"
+          next
+        end
+      else
+        puts "no client taxcode provided: #{template.values.join(',')}"
         next
       end
 
-      invoice.due_date = Date.strptime( result_line['fechacontable'],'%d/%m/%Y') unless result_line['fechacontable'].nil?
-      invoice.date = Date.strptime( result_line['fechacontable'],'%d/%m/%Y') unless result_line['fechacontable'].nil?
-      invoice.created_at = Date.strptime( result_line['fecha'],'%d/%m/%Y') unless result_line['fecha'].nil?
-      invoice.date = Date.today if invoice.date.nil?
-      invoice.invoice_lines << InvoiceLine.new(:quantity=>1, :description=>'Auxiliar', :price=>invoice.import_in_cents)
-      invoice.state = 'closed'
+      default_values = {
+        currency: 'EUR',
+        date: date.blank? ? Date.today : Date.strptime(date,'%d/%m/%Y'),
+        client_id: client.id
+      }
+
+      template_h.reverse_merge!(default_values)
+      templates[num] = InvoiceTemplate.new(template_h)
+    end
+
+    result_lines.each do |line|
+
+      line_h = line.to_h
+      num = line_h.delete(:invoice_number)
+
+      unless templates.has_key? num
+        puts "template line has incorrect invoice_number #{line.values.join(',')}"
+        next
+      end
+
+      template_lines[num] ||= []
+      template_lines[num] << InvoiceLine.new(line_h)
+    end
+
+    templates.each do |num, template|
+
+      template.invoice_lines = template_lines[num] if template_lines.has_key? num
 
       begin
-        invoice.save!
+        template.save!
         puts "====================================" if @debug
-      rescue Exception => error
-        puts "Error importing #{result_line}"
-        puts "Invoice #{invoice.inspect}"
-        raise error
+      rescue ActiveRecord::RecordInvalid
+        puts "Error importing template #{num}"
+        puts "Invoice #{template.inspect}"
+        puts template.errors.full_messages
       end
 
     end
