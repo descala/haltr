@@ -34,6 +34,8 @@ class Client < ActiveRecord::Base
 
   before_validation :set_hashid_value
   before_validation :copy_linked_profile
+  before_save :set_hashid_value
+  before_save :copy_linked_profile
   after_create  :create_event
   iso_country :country
   include CountryUtils
