@@ -163,6 +163,7 @@
       </InvoiceTotals>
       <Items>
         <InvoiceLine>
+          <FileReference>filereference</FileReference>
           <ReceiverContractReference/>
           <ReceiverTransactionReference>1234</ReceiverTransactionReference>
           <ItemDescription>linia 1</ItemDescription>

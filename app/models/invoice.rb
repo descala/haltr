@@ -618,6 +618,7 @@ _INV
       invoice.parse_xml_bank_info(doc.xpath(xpaths[:to_be_credited]).to_s)
     end
 
+    line_file_reference = nil
     # invoice lines
     doc.xpath(xpaths[:invoice_lines]).each do |line|
       il = InvoiceLine.new(
@@ -653,8 +654,12 @@ _INV
         il.charge = Haltr::Utils.get_xpath(line_charges.first,xpaths[:line_charge])
         il.charge_reason = Haltr::Utils.get_xpath(line_charges.first,xpaths[:line_charge_reason])
       end
+      line_file_reference ||= Haltr::Utils.get_xpath(line,xpaths[:file_reference])
       invoice.invoice_lines << il
     end
+
+    # Assume just one file_reference per Invoice
+    invoice.file_reference = line_file_reference
 
     Redmine::Hook.call_hook(:model_invoice_import_before_save, :invoice=>invoice)
 

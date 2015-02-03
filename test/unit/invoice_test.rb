@@ -469,6 +469,7 @@ class InvoiceTest < ActiveSupport::TestCase
     assert_equal 10, invoice.invoice_lines.first.discount_percent
     assert_equal 'carrec linia1', invoice.invoice_lines.first.charge_reason
     assert_equal 'desc1', invoice.invoice_lines.first.discount_text
+    assert_equal 'filereference', invoice.file_reference
   end
 
   test 'invoice with discount TotalAmount is same as TotalGrossAmountBeforeTaxes' do

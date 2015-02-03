@@ -91,6 +91,7 @@ module Haltr
           xpaths[:line_code]          = "ArticleCode"
           xpaths[:line_discounts]     = "DiscountsAndRebates/*"
           xpaths[:line_charges]       = "Charges/*"
+          xpaths[:file_reference]     = "FileReference"
           # relative to invoice_lines/discounts
           xpaths[:line_discount_percent] = "DiscountRate"
           xpaths[:line_discount_text]    = "DiscountReason"
