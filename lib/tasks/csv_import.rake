@@ -27,36 +27,35 @@ namespace :haltr do
   end
 end
 
-desc "Import invoice templates CSV data. Usage: rake haltr:import:invoices['templates.csv','template_lines.csv']"
+desc "Import invoices CSV data. Usage: rake haltr:import:invoices['project_name','invoices.csv']"
 
 namespace :haltr do
   namespace :import do
-    task :invoice_templates, [:templates_file, :template_lines_file] => :environment do |task, args|
+    task :invoices, [:project_id, :file] => :environment do |task, args|
 
-      args.with_defaults(
-        templates_file: 'templates.csv',
-        template_lines_file: 'template_lines.csv'
-      )
+      args.with_defaults(:file => 'invoices.csv')
 
       begin
-        templates_file = args[:templates_file]
-        template_lines_file = args[:template_lines_file]
-        puts "Templates file = #{templates_file}"
-        puts "Template lines file = #{template_lines_file}"
+        puts "project_id = #{args[:project_id]}"
+        project = Project.find args[:project_id]
+        invoices_file = args[:file]
+        puts "Project = #{project}"
+        puts "invoices file = #{invoices_file}"
         puts "===================================="
         STDOUT.flush
 
         include CsvImporter
 
-        process_invoice_templates(templates_file: templates_file, template_lines_file: template_lines_file)
+        process_invoices(:project => project, :file_name => invoices_file)
 
       rescue => error
-        puts "Error: " + error
+        puts "Error: #{error}"
         raise error
       end
     end
   end
 end
+
 
 desc "Import Dir3Entities from csv. Usage: rake haltr:import:dir3['dir3_entities.csv']"
 

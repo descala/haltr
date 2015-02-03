@@ -88,74 +88,55 @@ module CsvImporter
     end
   end
 
-  def process_invoice_templates(options={})
-    @debug         = options[:debug]
-    templates      = {}
-    template_lines = {}
+  def process_invoices(options={})
+    project = options[:project]
 
-    result_templates = CsvMapper::import(options[:templates_file]) do
+    result_invoices = CsvMapper::import(options[:file_name]) do
       read_attributes_from_file
     end
 
-    result_lines = CsvMapper::import(options[:template_lines_file]) do
-      read_attributes_from_file
-    end
+    result_invoices.each do |invoice_os|
 
-    result_templates.each do |template|
-
-      template_h = template.to_h
-
-      num = template_h.delete(:number)
-      date = template_h.delete(:date)
-
-      # client
-      client_taxcode = template_h.delete(:client_taxcode).gsub(" ","") unless template.client_taxcode.blank?
+      client_taxcode = invoice_os.taxcode
       if client_taxcode
-        client = Client.where("taxcode = ? AND project_id = ?", client_taxcode, template.project_id).first
+
+        client = Client.where("taxcode = ?", client_taxcode).first
         if client.nil?
           puts "no client with taxcode '#{client_taxcode}'"
           next
         end
       else
-        puts "no client taxcode provided: #{template.values.join(',')}"
+        puts "no client taxcode provided: #{invoice_os.values.join(',')}"
         next
       end
 
-      default_values = {
+      invoice = IssuedInvoice.new(
+        project: project,
         currency: 'EUR',
-        date: date.blank? ? Date.today : Date.strptime(date,'%d/%m/%Y'),
-        client_id: client.id
-      }
+        date: Date.strptime(invoice_os.date,'%d/%m/%Y'),
+        client: client,
+        number: invoice_os.number,
+        extra_info: invoice_os.extra_info
+      )
 
-      template_h.reverse_merge!(default_values)
-      templates[num] = InvoiceTemplate.new(template_h)
-    end
+      invoice_line = InvoiceLine.new(
+        invoice: invoice,
+        price: invoice_os.price,
+        quantity: 1,
+        unit: 1,
+        description: invoice_os.description
+      )
 
-    result_lines.each do |line|
+      invoice.invoice_lines << invoice_line
 
-      line_h = line.to_h
-      num = line_h.delete(:invoice_number)
-
-      unless templates.has_key? num
-        puts "template line has incorrect invoice_number #{line.values.join(',')}"
-        next
-      end
-
-      template_lines[num] ||= []
-      template_lines[num] << InvoiceLine.new(line_h)
-    end
-
-    templates.each do |num, template|
-
-      template.invoice_lines = template_lines[num] if template_lines.has_key? num
+      Tax.create!(invoice_line: invoice_line, name: "IVA", percent: 0, default: nil, category: "E", comment: "")
 
       begin
-        template.save!
-        puts "====================================" if @debug
+        invoice.save!
       rescue ActiveRecord::RecordInvalid
-        puts "Error importing template #{num}"
-        puts "Invoice #{template.inspect}"
-        puts template.errors.full_messages
+        puts "Error importing invoice"
+        puts "Invoice #{invoice.inspect}"
+        puts invoice.errors.full_messages
       end
 
     end
