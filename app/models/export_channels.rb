@@ -92,5 +92,11 @@ class ExportChannels
     available[id]
   end
 
+  def self.punts_generals
+    available.collect {|k,v|
+      k if v["locales"]["ca"] =~ /punt general/i
+    }.compact
+  end
+
 end
 
