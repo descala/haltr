@@ -43,7 +43,7 @@ class InvoicesController < ApplicationController
     invoices = @project.issued_invoices.includes(:client).where("type != 'DraftInvoice'")
 
     if params[:invoices]
-      invoices = invoices.where(["id in (?)",params[:invoices]])
+      invoices = invoices.where(["invoices.id in (?)",params[:invoices]])
     end
 
     unless params["state_all"] == "1"
