@@ -88,7 +88,11 @@ class ClientsController < ApplicationController
   end
 
   def check_cif
-    taxcode = params[:value].gsub(/\W/,'').downcase if params[:value]
+    if params[:value]
+      taxcode = params[:value].encode(
+        'UTF-8', 'binary', invalid: :replace, undef: :replace, replace: ''
+      ).gsub(/\W/,'').downcase
+    end
     # the client we are editing (or nil if creating new one)
     client = Client.find(params[:client]) unless params[:client].blank?
     # search for an existing client with the specified taxcode
