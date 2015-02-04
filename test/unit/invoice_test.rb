@@ -518,4 +518,11 @@ class InvoiceTest < ActiveSupport::TestCase
     assert_equal   200, invoice.gross_subtotal.dollars
   end
 
+  # import invoice_facturae32_issued5.xml
+  test 'create issued_invoice from facturae32 without PaymentMeans' do
+    file    = File.new(File.join(File.dirname(__FILE__),'..','fixtures','documents','invoice_facturae32_issued5.xml'))
+    invoice = Invoice.create_from_xml(file,companies(:company1),User.current.name,"1234",'uploaded')
+    assert_nil invoice.payment_method, "invoice payment should be nil and is #{invoice.payment_method}"
+  end
+
 end

@@ -75,6 +75,7 @@ module Haltr
 
           xpaths[:to_be_debited]      = "//Invoices/Invoice/PaymentDetails/Installment/AccountToBeDebited"
           xpaths[:to_be_credited]     = "//Invoices/Invoice/PaymentDetails/Installment/AccountToBeCredited"
+          xpaths[:payment_method]     = "//Invoices/Invoice/PaymentDetails/Installment/PaymentMeans"
           # relative to AccountToBe*
           xpaths[:bank_account]       = "*/AccountNumber"
           xpaths[:iban]               = "*/IBAN"

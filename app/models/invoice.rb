@@ -603,12 +603,19 @@ _INV
       invoice.file_name = "can't get filename from #{raw_invoice.class}"
     end
 
-    if Haltr::Utils.get_xpath(doc,xpaths[:to_be_debited])
-      invoice.payment_method=PAYMENT_DEBIT
-    elsif Haltr::Utils.get_xpath(doc,xpaths[:to_be_credited])
-      invoice.payment_method=PAYMENT_TRANSFER
+    if invoice_format =~ /facturae/
+      facturae_payment_codes = {}
+      PAYMENT_CODES.each do |haltr_code, codes|
+        facturae_payment_codes[codes[:facturae]] = haltr_code
+      end
+      xml_payment_method = Haltr::Utils.get_xpath(doc,xpaths[:payment_method])
+      if facturae_payment_codes.has_key?(xml_payment_method)
+        invoice.payment_method = facturae_payment_codes[xml_payment_method]
+      else
+        invoice.payment_method = nil
+      end
     else
-      invoice.payment_method=PAYMENT_CASH
+      #TODO ubl
     end
 
     # bank info
