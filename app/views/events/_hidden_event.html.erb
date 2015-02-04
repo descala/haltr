@@ -1,4 +1,9 @@
-<%= link_to "backtrace", "#", :onclick => "$('#backtrace#{e.id}').toggle(); return false;" %>
-<ul>
-  <li id="backtrace<%= e.id %>" style="display: none;"><%=simple_format e.backtrace.join("\n") %></li>
-</ul>
+<% if e.backtrace -%>
+  <%= link_to "backtrace", "#", :onclick => "$('#backtrace#{e.id}').toggle(); return false;" %>
+  <ul>
+    <li id="backtrace<%= e.id %>" style="display: none;"><%=simple_format e.backtrace.join("\n") %></li>
+  </ul>
+<% end %>
+<% if e.url -%>
+  <%= link_to h(e), e.url %>
+<% end %>
