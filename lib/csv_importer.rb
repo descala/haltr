@@ -100,7 +100,7 @@ module CsvImporter
       client_taxcode = invoice_os.taxcode
       if client_taxcode
 
-        client = Client.where("taxcode = ?", client_taxcode).first
+        client = project.clients.find_by_taxcode(client_taxcode)
         if client.nil?
           puts "no client with taxcode '#{client_taxcode}'"
           next
