@@ -12,3 +12,13 @@
 
   </div>
 </div>
+
+<hr />
+
+<h3><%= l(:label_linked_to_mine) %></h3>
+
+<% if @ecompany.clients.any? -%>
+  <div class="clients">
+    <%= @ecompany.clients.collect { |client| link_to client.project.company.name, edit_client_path(client) }.join(" - ").html_safe %>
+  </div>
+<% end -%>
