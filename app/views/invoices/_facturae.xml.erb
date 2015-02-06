@@ -127,6 +127,8 @@
                <%= render :partial => "invoices/address.facturae.xml", :locals => {:entity => ( op and op.full_address? ) ? op : @invoice.client }%>
                <% if op and op.name.present? and format == "facturae32" -%>
                <CentreDescription><%= op.name %></CentreDescription>
+               <% else -%>
+               <CentreDescription><%= @invoice.organ_proponent %></CentreDescription>
                <% end -%>
              </AdministrativeCentre>
              <% end -%>
