@@ -1,30 +1,44 @@
-<%= render :partial => 'common/chart_headers' %>
+<%= render partial: 'common/chart_headers' %>
 
 <table class="list">
   <thead>
     <tr>
-      <%= sort_header_tag('created_at', :caption=>l(:field_date)) %>
-      <%= sort_header_tag('type', :caption=>l(:field_type)) %>
+      <% unless @project -%>
+        <th><%= l(:field_project) %></th>
+      <% end -%>
+      <%= sort_header_tag('created_at', caption: l(:field_date)) %>
+      <%= sort_header_tag('type', caption: l(:field_type)) %>
       <th><%= l(:invoice) %></th>
       <th></th>
     </tr>
   </thead>
   <tbody>
-    <% @events.each do |event| -%>
+    <% @events.each do |e| -%>
       <tr>
-        <td><%= event.created_at %></td>
-        <td><%= event.type %></td>
-        <td><%= link_to(event.invoice.number,invoice_path(event.invoice)) if event.invoice %></td>
-        <td><%= render :partial => "events/event_short", :locals => {:e=>event} %></td>
+        <% unless @project -%>
+          <td><%= link_to(e.project.name, events_path(project_id: e.project)) %></td>
+        <% end -%>
+        <td width="130"><%= format_time e.created_at %></td>
+        <td><%= e.type %></td>
+        <td>
+          <% if e.invoice -%>
+            <%= link_to_invoice_with_label(e.invoice) -%>
+          <% elsif e.client -%>
+            <%= link_to "#{l(:field_client)} #{e.client.name}", edit_client_path(e.client) -%>
+          <% else -%>
+            <%= e.to_s %>
+          <% end -%>
+        </td>
+        <td><%= render partial: "events/event_short", locals: {e: e} %></td>
       </tr>
 
       <tr>
         <td></td>
         <td></td>
         <td colspan="2">
-          <div id="audited_<%=event.id%>" class="audited">
+          <div id="audited_<%=e.id%>" class="audited">
             <ul>
-              <% event.audits.each do |a| -%>
+              <% e.audits.each do |a| -%>
                 <%= render partial: "audits/audit", locals: { a: a } %>
               <% end -%>
             </ul>
