@@ -3,7 +3,7 @@ class EventsController < ApplicationController
   helper :haltr
 
   skip_before_filter :check_if_login_required, :only => [ :create ]
-  before_filter :check_remote_ip, :except => [:file]
+  before_filter :check_remote_ip, :except => [:file, :index]
   before_filter :find_project_by_project_id, :only => [:file]
   before_filter :authorize, :only => [:file]
   before_filter :require_admin, :only => [:index]
