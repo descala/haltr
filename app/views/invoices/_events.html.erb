@@ -3,6 +3,9 @@
   <div class="seccio grup">
     <div class="col span-2-de-2">
       <div class="formee-msg-info invoice-events">
+        <% if User.current.admin? -%>
+          <p class="contextual"><%= link_to l(:label_any), events_path(:project_id=>@project) %></p>
+        <% end -%>
         <h3 id="haltr_events"><%=h l(:events)%></h3>
         <ul>
           <% @invoice.visible_events.reverse.each do |e| -%>

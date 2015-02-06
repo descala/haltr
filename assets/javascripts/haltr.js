@@ -111,7 +111,7 @@ $(document).ready(function() {
   });
 
   $(document).on('click', 'a.show-audits', function(e) {
-    $('div#audited_'+$(this).data('id')).toggle();
+    $('#audited_'+$(this).data('id')).toggle();
     return false;
   });
 

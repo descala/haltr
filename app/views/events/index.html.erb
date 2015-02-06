@@ -1,0 +1,43 @@
+<%= render :partial => 'common/chart_headers' %>
+
+<table class="list">
+  <thead>
+    <tr>
+      <%= sort_header_tag('created_at', :caption=>l(:field_date)) %>
+      <%= sort_header_tag('type', :caption=>l(:field_type)) %>
+      <th><%= l(:invoice) %></th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+    <% @events.each do |event| -%>
+      <tr>
+        <td><%= event.created_at %></td>
+        <td><%= event.type %></td>
+        <td><%= link_to(event.invoice.number,invoice_path(event.invoice)) if event.invoice %></td>
+        <td><%= render :partial => "events/event_short", :locals => {:e=>event} %></td>
+      </tr>
+
+      <tr>
+        <td></td>
+        <td></td>
+        <td colspan="2">
+          <div id="audited_<%=event.id%>" class="audited">
+          <% event.audits.each do |a| -%>
+            <%= render partial: "audits/audit", locals: { a: a } %>
+          <% end -%>
+          </div>
+        </td>
+      </tr>
+
+    <% end -%>
+  </tbody>
+</table>
+
+<!--paginacio-->
+<div class="seccio grup paginacio pagination">
+  <%= pagination_links_full @event_pages, @event_count %>
+</div>
+<!--final paginacio-->
+
+
