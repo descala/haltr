@@ -23,9 +23,11 @@
         <td></td>
         <td colspan="2">
           <div id="audited_<%=event.id%>" class="audited">
-          <% event.audits.each do |a| -%>
-            <%= render partial: "audits/audit", locals: { a: a } %>
-          <% end -%>
+            <ul>
+              <% event.audits.each do |a| -%>
+                <%= render partial: "audits/audit", locals: { a: a } %>
+              <% end -%>
+            </ul>
           </div>
         </td>
       </tr>
