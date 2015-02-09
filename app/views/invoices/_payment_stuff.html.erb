@@ -65,26 +65,34 @@
 <% if @external_company -%>
   <% if @external_company.visible_fields.any? -%>
     <div class="seccio grup">
-    <% @external_company.visible_fields.each do |field| -%>
-      <% next if %w(dir3 organ_proponent ponumber).include?(field) -%>
+      <% @external_company.visible_fields.each do |field| -%>
+        <% next if %w(dir3 organ_proponent ponumber payments_on_account).include?(field) -%>
+        <p class="col span-1-de-3">
+        <label for="invoice_<%=field%>"><%= l("field_#{field}") %><%= required_field_span(field)%></label>
+        <%= text_field :invoice, field %>
+        </p>
+      <% end -%>
+    </div>
+  <% end -%>
+  <% if @external_company.visible_fields.include?('payments_on_account') -%>
+    <div class="seccio grup">
       <p class="col span-1-de-3">
-      <label for="invoice_<%=field%>"><%= l("field_#{field}") %><%= required_field_span(field)%></label>
-      <%= text_field :invoice, field %>
+      <label for="invoice_payments_on_account"><%= l("field_payments_on_account") %><%= required_field_span('payments_on_account')%></label>
+      <%= text_field :invoice, 'payments_on_account' %>
       </p>
-    <% end -%>
     </div>
   <% end -%>
 <% end -%>
 
 <div class="seccio grup">
   <p class="col span-1-de-3">
-    <label for="invoice_currency"><%= l(:field_currency) %><span class="required"> *</span></label>
-    <%= select :invoice, :currency, currency_options_for_select, {:selected=>currency}, :required => true%>
+  <label for="invoice_currency"><%= l(:field_currency) %><span class="required"> *</span></label>
+  <%= select :invoice, :currency, currency_options_for_select, {:selected=>currency}, :required => true%>
   </p>
   <p class="col span-1-de-3">
-    <label for="invoice_payment_method"><%= l(:field_payment_method) %></label>
-    <%= select(:invoice, :payment_method, Invoice.payment_methods(@project.company), {:selected=>payment_method}, :style => 'vertical-align: top;') %>
-    <%= text_area(:invoice, :payment_method_text, :cols => 40, :rows => 2, :value => payment_method_text, :id => 'payment_other', :style => (payment_method==Invoice::PAYMENT_SPECIAL) ? '' : 'display: none;') %>
+  <label for="invoice_payment_method"><%= l(:field_payment_method) %></label>
+  <%= select(:invoice, :payment_method, Invoice.payment_methods(@project.company), {:selected=>payment_method}, :style => 'vertical-align: top;') %>
+  <%= text_area(:invoice, :payment_method_text, :cols => 40, :rows => 2, :value => payment_method_text, :id => 'payment_other', :style => (payment_method==Invoice::PAYMENT_SPECIAL) ? '' : 'display: none;') %>
   </p>
   <p class="col span-1-de-3">
   <% unless @invoice.is_a?(Quote) -%>
