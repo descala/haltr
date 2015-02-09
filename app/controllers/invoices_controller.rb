@@ -626,7 +626,7 @@ class InvoicesController < ApplicationController
     @taxes    = {}
     @tax_names = {}
     IssuedInvoice.all(:include => [:client],
-                      :conditions => ["clients.project_id = ? and date >= ? and amend_id is null", @project.id, @date],
+                      :conditions => ["type != 'DraftInvoice' and clients.project_id = ? and date >= ? and amend_id is null", @project.id, @date],
                       :order => :number
     ).each do |i|
       @invoices[i.currency] ||= []
