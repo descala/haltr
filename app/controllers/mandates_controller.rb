@@ -11,7 +11,7 @@ class MandatesController < ApplicationController
   before_filter :check_for_company
 
   def index
-    @mandates = Mandate.order("created_at desc")
+    @mandates = @project.mandates.order("created_at desc")
   end
 
   def show
@@ -84,6 +84,10 @@ class MandatesController < ApplicationController
 
   def find_mandate
     @mandate = Mandate.find params[:id]
+    @client = @mandate.client
+    @project = @client.project
+  rescue ActiveRecord::RecordNotFound
+    render_404
   end
 
 end
