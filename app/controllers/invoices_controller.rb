@@ -789,8 +789,8 @@ class InvoicesController < ApplicationController
       class_for_send = ExportChannels.class_for_send(export_id).constantize rescue nil
       sender = class_for_send.new(@invoice,User.current)
       if sender.respond_to?(:immediate_perform)
-        @invoice.queue || @invoice.requeue
         sender.immediate_perform
+        @invoice.queue || @invoice.requeue
       elsif sender.respond_to?(:perform)
         @invoice.queue || @invoice.requeue
         if ExportChannels.format(export_id) == 'pdf'
