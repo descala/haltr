@@ -270,7 +270,13 @@
               <%= call_hook(:facturae_file_reference) %>
 <% end -%>
               <%= call_hook(:facturae_sequence_number) %>
-              <%= call_hook(:facturae_delivery_notes_number) %>
+              <% unless @invoice.delivery_note_number.blank? -%>
+                <DeliveryNotesReferences>
+                  <DeliveryNote>
+                    <DeliveryNoteNumber><%= @invoice.delivery_note_number %></DeliveryNoteNumber>
+                  </DeliveryNote>
+                </DeliveryNotesReferences>
+              <% end -%>
               <ItemDescription><%=h invoice_line.description%></ItemDescription>
               <Quantity><%=h invoice_line.quantity%></Quantity>
               <UnitOfMeasure><%=h invoice_line.unit_code(:facturae)%></UnitOfMeasure>

@@ -57,6 +57,9 @@
   <% unless @invoice.ponumber.blank? -%>
     <span class="invoice-terms"><%=h "#{t(:field_ponumber)} #{@invoice.ponumber}" %></span><br/>
   <% end -%>
+  <% unless @invoice.delivery_note_number.blank? -%>
+    <span class="invoice-terms"><%=h "#{t(:field_delivery_note_number)} #{@invoice.delivery_note_number}" %></span>
+  <% end -%>
   <%= call_hook(:invoice_view_invoice_info) %>
 </div>
 

@@ -66,7 +66,7 @@
   <% if @external_company.visible_fields.any? -%>
     <div class="seccio grup">
       <% @external_company.visible_fields.each do |field| -%>
-        <% next if %w(dir3 organ_proponent ponumber payments_on_account).include?(field) -%>
+        <% next if %w(dir3 organ_proponent ponumber delivery_note_number payments_on_account).include?(field) -%>
         <p class="col span-1-de-3">
         <label for="invoice_<%=field%>"><%= l("field_#{field}") %><%= required_field_span(field)%></label>
         <%= text_field :invoice, field %>
