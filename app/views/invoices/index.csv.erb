@@ -52,7 +52,7 @@
               "#{t.name} #{t.percent}"
             }.join(", ") rescue ""
           else
-            invoice.send(m)
+            invoice.send(m) rescue nil
           end
         when 'client'
           invoice.client.send(m)

@@ -15,7 +15,7 @@
       <% end -%>
       <% if User.current.allowed_to?(:export_invoices, @project) -%>
         <li>
-        <%= link_to 'CSV', project_invoices_path(@project) -%>
+        <%= link_to 'CSV', project_invoices_path(@project, format: 'csv') -%>
         </li>
       <% end -%>
       <% if User.current.allowed_to?(:import_invoices, @project) -%>
