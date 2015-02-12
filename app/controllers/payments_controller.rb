@@ -191,7 +191,7 @@ class PaymentsController < ApplicationController
         flash[:warning] = l(:notice_empty_sepa)
         redirect_to :action => 'payment_initiation', :project_id => @project
       end
-    rescue ArgumentError => e
+    rescue ArgumentError, RuntimeError => e
       flash[:warning] = e.to_s
       redirect_to :action => 'payment_initiation', :project_id => @project
     end
