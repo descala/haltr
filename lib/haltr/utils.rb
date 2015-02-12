@@ -30,8 +30,9 @@ module Haltr
       def xpaths_for(format)
         xpaths = {}.with_indifferent_access
         if format =~ /facturae/
-          xpaths[:invoice_number]     = [ "//Invoices/Invoice/InvoiceHeader/InvoiceNumber",
-                                          "//Invoices/Invoice/InvoiceHeader/InvoiceSeriesCode" ]
+#          xpaths[:invoice_number]     = [ "//Invoices/Invoice/InvoiceHeader/InvoiceNumber",
+#                                          "//Invoices/Invoice/InvoiceHeader/InvoiceSeriesCode" ]
+          xpaths[:invoice_number]     = "//Invoices/Invoice/InvoiceHeader/InvoiceNumber"
           xpaths[:invoice_date]       = "//Invoices/Invoice/InvoiceIssueData/IssueDate"
           xpaths[:invoice_total]      = "//Invoices/Invoice/InvoiceTotals/InvoiceTotal"
           xpaths[:invoice_import]     = "//Invoices/Invoice/InvoiceTotals/TotalGrossAmountBeforeTaxes"
