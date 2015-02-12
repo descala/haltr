@@ -309,7 +309,7 @@ class InvoicesController < ApplicationController
   def base64doc
     doc_format=params[:doc_format]
     if request.get?
-      # send a base64 encoded pdf document
+      # send a base64 encoded document
       # this is used to sign invoices with a local certificate
       @local_certificate = true
       file = doc_format == "pdf" ? create_pdf_file : create_xml_file(doc_format)
@@ -326,7 +326,7 @@ class InvoicesController < ApplicationController
         render :text => "Error in #{doc_format} creation"
       end
     else
-      # queue a signed pdf document
+      # queue a signed document
       if file_contents = params['document']
         logger.info "Invoice #{@invoice.id} #{file_contents[0..16]}(...) received"
         file = Tempfile.new "invoice_signed_#{@invoice.id}.#{doc_format == "pdf" ? "pdf" : "xml"}", "tmp"
@@ -789,7 +789,7 @@ class InvoicesController < ApplicationController
       class_for_send = ExportChannels.class_for_send(export_id).constantize rescue nil
       sender = class_for_send.new(@invoice,User.current)
       if sender.respond_to?(:immediate_perform)
-        sender.immediate_perform
+        sender.immediate_perform(File.read(invoice_file.path))
         @invoice.queue || @invoice.requeue
       elsif sender.respond_to?(:perform)
         @invoice.queue || @invoice.requeue
