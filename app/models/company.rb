@@ -142,8 +142,11 @@ class Company < ActiveRecord::Base
 
   # http://inza.wordpress.com/2013/10/25/como-preparar-los-mandatos-sepa-identificador-del-acreedor/
   def sepa_creditor_identifier
-    taxcode_clean = taxcode.gsub(/^es/i,'') if country == "es"
-    num = "#{taxcode_clean}#{country_alpha2}00".downcase.each_byte.collect do |c|
+    # remove country code from taxcode
+    creditor_business_code = taxcode.gsub(/^#{country}/i,'') rescue ''
+    # if there is no taxcode try with company_identifier
+    creditor_business_code = company_identifier if creditor_business_code==''
+    num = "#{creditor_business_code}#{country_alpha2}00".downcase.each_byte.collect do |c|
       if c <= 57
         c.chr
       else
@@ -153,7 +156,7 @@ class Company < ActiveRecord::Base
     # MOD97-10 from ISO 7064
     control = (98 - ( num % 97 )).to_s.rjust(2,'0')
     # This "000" is the "sufix" in Spanish AEB
-    "#{country_alpha2}#{control}000#{taxcode_clean}"
+    "#{country_alpha2}#{control}000#{creditor_business_code}"
   end
 
   def default_tax_code_for(name)
