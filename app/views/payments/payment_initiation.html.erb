@@ -17,7 +17,7 @@
           <tbody>
           <% invoices_by_due_date.sort.each do |due_date, invoices_by_payment_type| -%>
             <tr class="<%= cycle("odd", "even") %>">
-              <td width="10%" style="<%= "color: red;" if due_date < Date.today %>"><%=due_date%></td>
+              <td width="10%" style="<%= "color: red;" if due_date < Date.today %>"><%=format_date due_date%></td>
               <td width="45%">
                 <table width="100%">
                 <% invoices_by_payment_type.each do |payment_type, invoices| -%>
