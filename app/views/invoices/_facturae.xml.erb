@@ -44,7 +44,7 @@
 <% if @company.persontype == "J" -%>
 
          <LegalEntity>
-            <CorporateName><%=h @company.name%></CorporateName>
+            <CorporateName><%=h @company.name[0..79]%></CorporateName>
             <% unless @company.company_identifier.blank? -%>
             <RegistrationData>
               <RegisterOfCompaniesLocation><%=@company.company_identifier[0..19]%></RegisterOfCompaniesLocation>
@@ -135,7 +135,7 @@
            </AdministrativeCentres>
          <% end -%>
          <LegalEntity>
-            <CorporateName><%=h @client.name%></CorporateName>
+            <CorporateName><%=h @client.name[0..79]%></CorporateName>
             <%= render :partial => "invoices/address.facturae", :format => :xml, :locals => {:entity => @client}%>
             <ContactDetails>
               <ElectronicMail><%= @invoice.recipient_emails.join(',') %></ElectronicMail>
