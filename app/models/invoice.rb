@@ -445,7 +445,9 @@ _INV
     updated_at > created_at
   end
 
-  def self.create_from_xml(raw_invoice,company,from,md5,transport,issued=nil,keep_original=true)
+
+  def self.create_from_xml(raw_invoice,user_or_company,md5,transport,from=nil,issued=nil,keep_original=true)
+
     raw_xml           = raw_invoice.read
     doc               = Nokogiri::XML(raw_xml)
     doc_no_namespaces = doc.dup.remove_namespaces!
@@ -469,7 +471,23 @@ _INV
     seller_taxcode = Haltr::Utils.get_xpath(doc,xpaths[:seller_taxcode])
     buyer_taxcode  = Haltr::Utils.get_xpath(doc,xpaths[:buyer_taxcode])
     currency       = Haltr::Utils.get_xpath(doc,xpaths[:currency])
-    invoice, client, client_role = nil
+
+    invoice, client, client_role, company,  user = nil
+
+    if user_or_company.is_a? Company
+      company = user_or_company
+    else
+      user = user_or_company
+      from = user.name
+      company = user.companies.where(taxcode: seller_taxcode).first
+      company ||= user.companies.where(taxcode: buyer_taxcode).first
+    end
+
+    if company.nil?
+      raise I18n.t :taxcodes_does_not_belong_to_self,
+        :tcs => "#{buyer_taxcode} - #{seller_taxcode}",
+        :tc  => user.companies.collect{|c|c.taxcode}.join(',')
+    end
 
     # check if it is a received_invoice or an issued_invoice.
     if company.taxcode == buyer_taxcode
@@ -485,6 +503,7 @@ _INV
         :tcs => "#{buyer_taxcode} - #{seller_taxcode}",
         :tc  => company.taxcode
     end
+
     # if passed issued param, check if it should be an IssuedInvoice or a ReceivedInvoice
     unless issued.nil?
       if !issued and invoice.is_a? IssuedInvoice

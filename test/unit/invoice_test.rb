@@ -214,7 +214,7 @@ class InvoiceTest < ActiveSupport::TestCase
     # client does not exist
     assert_nil Client.find_by_taxcode "ESP6611142C"
     file    = File.new(File.join(File.dirname(__FILE__),'..','fixtures','documents','invoice_facturae32_signed.xml'))
-    invoice = Invoice.create_from_xml(file,companies(:company1),User.current.name,"1234",'uploaded')
+    invoice = Invoice.create_from_xml(file,companies(:company1),"1234",'uploaded',User.current.name)
     client  = Client.find_by_taxcode "ESP6611142C"
     assert_not_nil client
     # client
@@ -270,7 +270,7 @@ class InvoiceTest < ActiveSupport::TestCase
     # client does not exist
     assert_nil Client.find_by_taxcode "ESP6611142C"
     file    = File.new(File.join(File.dirname(__FILE__),'..','fixtures','documents','invoice_facturae32_issued.xml'))
-    invoice = Invoice.create_from_xml(file,companies(:company1),User.current.name,"1234",'uploaded')
+    invoice = Invoice.create_from_xml(file,companies(:company1),"1234",'uploaded',User.current.name)
     client  = Client.find_by_taxcode "ESP6611142C"
     assert_not_nil client
     # client
@@ -334,7 +334,7 @@ class InvoiceTest < ActiveSupport::TestCase
     assert_equal "1233333333333333", client.bank_account
     client_last_changed = client.updated_at
     file    = File.new(File.join(File.dirname(__FILE__),'..','fixtures','documents','invoice_facturae32_issued2.xml'))
-    invoice = Invoice.create_from_xml(file,companies(:company1),User.current.name,"1234",'uploaded')
+    invoice = Invoice.create_from_xml(file,companies(:company1),"1234",'uploaded',User.current.name)
     assert_equal client_last_changed, client.updated_at
     assert_equal client_count, Client.count
     # invoice
@@ -384,7 +384,7 @@ class InvoiceTest < ActiveSupport::TestCase
     assert_equal "1233333333333333", client.bank_account
     client_last_changed = client.updated_at
     file    = File.new(File.join(File.dirname(__FILE__),'..','fixtures','documents','invoice_facturae32_issued3.xml'))
-    invoice = Invoice.create_from_xml(file,companies(:company1),User.current.name,"1234",'uploaded')
+    invoice = Invoice.create_from_xml(file,companies(:company1),"1234",'uploaded',User.current.name)
     assert_equal client_last_changed, client.updated_at
     assert_equal client_count, Client.count
     # invoice
@@ -441,7 +441,7 @@ class InvoiceTest < ActiveSupport::TestCase
 
   test 'import facturae32 with discount on first line' do
     file = File.new(File.join(File.dirname(__FILE__),'..','fixtures','documents','invoice_gob_es.xml'))
-    invoice = Invoice.create_from_xml(file,companies(:company6),User.current.name,'1234','uploaded',nil,false)
+    invoice = Invoice.create_from_xml(file,companies(:company6),"1234",'uploaded',User.current.name,nil,false)
     assert_equal 2, invoice.invoice_lines.size
     assert_equal 5, invoice.invoice_lines[0].discount_percent
     assert_equal 0, invoice.invoice_lines[1].discount_percent
@@ -451,19 +451,19 @@ class InvoiceTest < ActiveSupport::TestCase
   test 'raise on importing invoice with >1 discount on same line' do
     file = File.new(File.join(File.dirname(__FILE__),'..','fixtures','documents','invoice_gob_es2.xml'))
     assert_raise RuntimeError do
-      Invoice.create_from_xml(file,companies(:company6),User.current.name,'1234','uploaded',nil,false)
+      Invoice.create_from_xml(file,companies(:company6),"1234",'uploaded',User.current.name,nil,false)
     end
   end
 
   test 'create invoice from facturae32 without saving original' do
     file    = File.new(File.join(File.dirname(__FILE__),'..','fixtures','documents','invoice_facturae32_issued3.xml'))
-    invoice = Invoice.create_from_xml(file,companies(:company1),User.current.name,"1234",'uploaded',nil,false)
+    invoice = Invoice.create_from_xml(file,companies(:company1),"1234",'uploaded',User.current.name,nil,false)
     assert_nil invoice.original
   end
 
   test 'create invoice from facturae32 with line discounts and line charges' do
     file    = File.new(File.join(File.dirname(__FILE__),'..','fixtures','documents','invoice_facturae32_issued4.xml'))
-    invoice = Invoice.create_from_xml(file,companies(:company1),User.current.name,"1234",'uploaded',nil,false)
+    invoice = Invoice.create_from_xml(file,companies(:company1),"1234",'uploaded',User.current.name,nil,false)
     assert_equal  0, invoice.total.dollars
     assert_equal 10, invoice.invoice_lines.first.charge
     assert_equal 10, invoice.invoice_lines.first.discount_percent
@@ -480,7 +480,7 @@ class InvoiceTest < ActiveSupport::TestCase
 
   test 'imports dir3 data' do
     file    = File.new(File.join(File.dirname(__FILE__),'..','fixtures','documents','invoice_facturae32_issued4.xml'))
-    invoice = Invoice.create_from_xml(file,companies(:company1),User.current.name,"1234",'uploaded',nil,false)
+    invoice = Invoice.create_from_xml(file,companies(:company1),"1234",'uploaded',User.current.name,nil,false)
     assert_equal('P00000010',invoice.organ_gestor)
     assert_equal('P00000010',invoice.unitat_tramitadora)
     assert_equal('P00000010',invoice.oficina_comptable)
@@ -521,7 +521,7 @@ class InvoiceTest < ActiveSupport::TestCase
   # import invoice_facturae32_issued5.xml
   test 'create issued_invoice from facturae32 without PaymentMeans' do
     file    = File.new(File.join(File.dirname(__FILE__),'..','fixtures','documents','invoice_facturae32_issued5.xml'))
-    invoice = Invoice.create_from_xml(file,companies(:company1),User.current.name,"1234",'uploaded')
+    invoice = Invoice.create_from_xml(file,companies(:company1),"1234",'uploaded',User.current.name)
     assert_nil invoice.payment_method, "invoice payment should be nil and is #{invoice.payment_method}"
   end
 
