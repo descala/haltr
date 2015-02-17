@@ -110,7 +110,7 @@ class InvoiceLine < ActiveRecord::Base
   end
 
   def unit_short
-    l("s_#{UNIT_CODES[unit][:name]}")
+    l("s_#{UNIT_CODES[unit][:name]}") rescue unit
   end
 
   def taxes_withheld
