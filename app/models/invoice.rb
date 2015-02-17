@@ -654,6 +654,7 @@ _INV
              :unit         => Haltr::Utils.get_xpath(line,xpaths[:line_unit]),
              :article_code => Haltr::Utils.get_xpath(line,xpaths[:line_code]),
              :notes        => Haltr::Utils.get_xpath(line,xpaths[:line_notes]),
+             :issuer_transaction_reference => Haltr::Utils.get_xpath(line,xpaths[:i_transaction_ref]),
            )
       # invoice taxes. Known taxes are described at config/taxes.yml
       line.xpath(*xpaths[:line_taxes]).each do |line_tax|
