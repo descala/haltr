@@ -88,7 +88,7 @@ class Event < ActiveRecord::Base
 
   def file=(s)
     if s and s.size > 0
-      write_attribute(:file, Haltr::Utils.compress(s))
+      write_attribute(:file, Haltr::Utils.compress(Haltr::Utils.decompress(s)))
     end
   end
 
