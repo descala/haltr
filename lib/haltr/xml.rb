@@ -35,8 +35,8 @@ module Haltr
           :formats  => :xml,
           :layout   => false
         )
+        Haltr::Xml.clean_xml(xml)
       end
-      Haltr::Xml.clean_xml(xml)
     end
 
     def self.clean_xml(xml)

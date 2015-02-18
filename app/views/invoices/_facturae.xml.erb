@@ -262,6 +262,9 @@
          <Items>
 <% @invoice.invoice_lines.each do |invoice_line| -%>
             <InvoiceLine>
+              <% unless invoice_line.issuer_transaction_reference.blank? -%>
+                <IssuerTransactionReference><%=invoice_line.issuer_transaction_reference%></IssuerTransactionReference>
+              <% end -%>
               <%= call_hook(:facturae_receiver_contract_reference) %>
               <%if @invoice.ponumber%><ReceiverTransactionReference><%=h(@invoice.ponumber)[0..19]%></ReceiverTransactionReference><%end-%>
 <% if format == "facturae32" and !@invoice.file_reference.blank? -%>
