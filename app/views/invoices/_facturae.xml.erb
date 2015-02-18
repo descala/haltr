@@ -353,7 +353,9 @@
 <% if @invoice.debit? and @client.use_iban? -%>
                <AccountToBeDebited>
                  <IBAN><%=h @client.iban%></IBAN>
+<% unless @client.bic.blank? -%>
                  <BIC><%=h @client.bic%></BIC>
+<% end -%>
                </AccountToBeDebited>
 <% elsif @invoice.debit? and !@client.bank_account.blank?-%>
                  <AccountToBeDebited>
@@ -366,7 +368,9 @@
 <% elsif @invoice.transfer? and @invoice.bank_info and @invoice.bank_info.use_iban? -%>
                <AccountToBeCredited>
                  <IBAN><%=h @invoice.bank_info.iban%></IBAN>
+<% unless @invoice.bank_info.bic.blank? -%>
                  <BIC><%=h @invoice.bank_info.bic%></BIC>
+<% end -%>
                </AccountToBeCredited>
 <% elsif @invoice.transfer? and @invoice.bank_info and !@invoice.bank_info.bank_account.blank? -%>
                <AccountToBeCredited>
