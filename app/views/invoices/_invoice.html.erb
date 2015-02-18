@@ -60,7 +60,11 @@
   <% unless @invoice.delivery_note_number.blank? -%>
     <span class="invoice-terms"><%=h "#{t(:field_delivery_note_number)} #{@invoice.delivery_note_number}" %></span>
   <% end -%>
+  <% if !@invoice.sequence_number.blank? -%>
+    <span class="invoice-terms"><%=h "#{t(:sequence_number)} #{@invoice.sequence_number}" %></span><br/>
+  <% end -%>
   <%= call_hook(:invoice_view_invoice_info) %>
+
 </div>
 
 <!-- Client Info -->
