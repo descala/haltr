@@ -185,7 +185,7 @@
           <PaymentMeans>02</PaymentMeans>
           <AccountToBeDebited>
             <IBAN>ES8023100001180000012345</IBAN>
-            <BankCode>biiiiiiiiic</BankCode>
+            <BIC>biiiiiiiiic</BIC>
           </AccountToBeDebited>
         </Installment>
       </PaymentDetails>

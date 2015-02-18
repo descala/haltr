@@ -80,7 +80,7 @@ module Haltr
           # relative to AccountToBe*
           xpaths[:bank_account]       = "*/AccountNumber"
           xpaths[:iban]               = "*/IBAN"
-          xpaths[:bic]                = "*/BankCode"
+          xpaths[:bic]                = "*/BIC"
 
           xpaths[:invoice_lines]      = "//Invoices/Invoice/Items/InvoiceLine"
           # relative to invoice_lines

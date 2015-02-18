@@ -302,7 +302,7 @@ class InvoiceTest < ActiveSupport::TestCase
     assert_equal "uploaded", invoice.transport
     assert_equal "Anonymous", invoice.from
     assert_equal "1234", invoice.md5
-    assert_equal 7103, invoice.original.size
+    assert_equal 7093, invoice.original.size
     assert invoice.debit?, "invoice payment is debit"
     assert_equal "invoice_facturae32_issued.xml", invoice.file_name
     # invoice lines
