@@ -1,6 +1,6 @@
 <%=h e %>
 <% unless e.notes.blank? -%>
-  ( <%= h l(e.class_for_send, :emails => e.notes) %> )
+  ( <%= h l(e.class_for_send, :emails => e.notes, :default => e.notes) %> )
 <% end -%>
 <% unless e.codi_registre.blank? -%>
   ( reg. <%= e.codi_registre %> )

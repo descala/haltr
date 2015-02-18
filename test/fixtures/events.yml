@@ -104,4 +104,16 @@ received_event:
   invoice_id: 10
   type: Event
   created_at: <%=t+=1.minute%>
+with_file_notes:
+  name: success_sending
+  user_id: 2
+  invoice_id: 1
+  type: EventWithFile
+  info: |
+    ---
+    :notes: this is a literal
+  filename: readme.txt
+  file: This is the file content
+  content_type: plain/text
+  created_at: <%=t+=1.minute%>
 
