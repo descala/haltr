@@ -272,7 +272,11 @@
 <% else -%>
               <%= call_hook(:facturae_file_reference) %>
 <% end -%>
-              <%= call_hook(:facturae_sequence_number) %>
+              <% if call_hook(:facturae_administrative_centres).present? -%>
+                <%= call_hook(:facturae_sequence_number) %>
+              <% elsif !invoice_line.sequence_number.blank? -%>
+                <SequenceNumber><%=invoice_line.sequence_number%></SequenceNumber>
+              <% end -%>
               <% unless @invoice.delivery_note_number.blank? -%>
                 <DeliveryNotesReferences>
                   <DeliveryNote>

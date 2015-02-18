@@ -6,7 +6,7 @@
       <tr>
         <th><%=l(:field_quantity)%></th>
         <th></th>
-        <% if @invoice.invoice_lines.collect {|l| l.article_code}.join.size > 0 or User.current.allowed_to?(:view_invoice_extra_fields, @project) -%>
+        <% if @invoice.invoice_lines.any? {|l| !l.article_code.blank? } or User.current.allowed_to?(:view_invoice_extra_fields, @project) -%>
           <th><%=l(:field_article_code)%></th>
         <% end -%>
         <th><%=l(:field_description)%></th>
@@ -25,7 +25,7 @@
       <tr>
         <td><%= f.text_field :quantity, :value => f.object.quantity.to_s.gsub(/\.0+$/,''), :style => "width: 78px;", :no_label => true %></td>
         <td><%=f.select :unit, InvoiceLine.units, {:no_label => true}, {:style => "width: 100px;"}%></td>
-        <% if @invoice.invoice_lines.collect {|l| l.article_code }.join.size > 0 or User.current.allowed_to?(:view_invoice_extra_fields, @project) -%>
+        <% if @invoice.invoice_lines.any? {|l| !l.article_code.blank? } or User.current.allowed_to?(:view_invoice_extra_fields, @project) -%>
           <td><%=f.text_field :article_code, :style => "width: 78px;", :no_label => true%></td>
         <% end -%>
         <td><%=f.text_field :description, :style => "width: 288px;", :no_label => true%></td>
@@ -79,7 +79,7 @@
   </table>
   <% end -%>
 
-  <% if @invoice.invoice_lines.collect {|l| l.notes.blank? }.include?(false) or User.current.allowed_to?(:view_invoice_extra_fields, @project) -%>
+  <% if @invoice.invoice_lines.any? {|l| !l.notes.blank? } or User.current.allowed_to?(:view_invoice_extra_fields, @project) -%>
   <table class="formee invoice_lines">
     <thead>
       <tr>
@@ -89,6 +89,21 @@
     <tbody>
       <tr>
         <td><%= f.text_field :notes, :no_label => true %></td>
+      </tr>
+    </tbody>
+  </table>
+  <% end -%>
+
+  <% if @invoice.invoice_lines.any? {|l| !l.sequence_number.blank? } or User.current.allowed_to?(:view_sequence_number, @project) -%>
+  <table class="formee invoice_lines">
+    <thead>
+      <tr>
+        <th><%= l(:sequence_number) %></th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><%= f.text_field :sequence_number, :no_label => true %></td>
       </tr>
     </tbody>
   </table>

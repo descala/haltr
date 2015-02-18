@@ -570,3 +570,4 @@ en:
   dir3_entities: "Dir3 entities"
   field_code: "Code"
   field_payments_on_account: "Payments on account"
+  sequence_number: 'Sequence number'

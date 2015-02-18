@@ -586,3 +586,4 @@ es:
   dir3_entities: "Entidades dir3"
   field_code: "Código"
   field_payments_on_account: "Aportación Usuarios"
+  sequence_number: 'Posición del pedido'
