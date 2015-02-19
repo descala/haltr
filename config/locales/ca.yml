@@ -583,3 +583,4 @@ ca:
   field_dir3: "DIR3"
   field_payments_on_account: "Aportació usuaris"
   sequence_number: 'Posició de la comanda'
+  mark_as_accepted: 'Marcar com a acceptada'

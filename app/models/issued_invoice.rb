@@ -78,6 +78,9 @@ class IssuedInvoice < InvoiceDocument
     event :amend_and_close do
       transition all=> :closed
     end
+    event :mark_as_accepted do
+      transition [:refused,:registered,:sent] => :accepted
+    end
   end
 
   def sent?

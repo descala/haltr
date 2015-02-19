@@ -587,3 +587,4 @@ es:
   field_code: "Código"
   field_payments_on_account: "Aportación Usuarios"
   sequence_number: 'Posición del pedido'
+  mark_as_accepted: 'Marcar como aceptada'
