@@ -44,6 +44,7 @@ module Haltr
 end
 
 Haltr::TestHelper.haltr_setup
+I18n.locale = :en
 
 class ActiveSupport::TestCase
   self.fixture_path = File.dirname(__FILE__) + '/fixtures'
