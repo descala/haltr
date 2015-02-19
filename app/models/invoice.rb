@@ -471,6 +471,20 @@ _INV
     seller_taxcode = Haltr::Utils.get_xpath(doc,xpaths[:seller_taxcode])
     buyer_taxcode  = Haltr::Utils.get_xpath(doc,xpaths[:buyer_taxcode])
     currency       = Haltr::Utils.get_xpath(doc,xpaths[:currency])
+    # invoice data
+    invoice_number   = Haltr::Utils.get_xpath(doc,xpaths[:invoice_number])
+    invoice_date     = Haltr::Utils.get_xpath(doc,xpaths[:invoice_date])
+    invoice_total    = Haltr::Utils.get_xpath(doc,xpaths[:invoice_total])
+    invoice_import   = Haltr::Utils.get_xpath(doc,xpaths[:invoice_import])
+    invoice_due_date = Haltr::Utils.get_xpath(doc,xpaths[:invoice_due_date])
+    discount_percent = Haltr::Utils.get_xpath(doc,xpaths[:discount_percent])
+    discount_text    = Haltr::Utils.get_xpath(doc,xpaths[:discount_text])
+    extra_info       = Haltr::Utils.get_xpath(doc,xpaths[:extra_info])
+    charge           = Haltr::Utils.get_xpath(doc,xpaths[:charge])
+    charge_reason    = Haltr::Utils.get_xpath(doc,xpaths[:charge_reason])
+    accounting_cost  = Haltr::Utils.get_xpath(doc,xpaths[:accounting_cost])
+    payments_on_account = Haltr::Utils.get_xpath(doc,xpaths[:payments_on_account]) || 0
+    amend_of         = Haltr::Utils.get_xpath(doc,xpaths[:amend_of])
 
     invoice, client, client_role, company,  user = nil
 
@@ -503,6 +517,14 @@ _INV
         :tcs => "#{buyer_taxcode} - #{seller_taxcode}",
         :tc  => company.taxcode
     end
+
+    # amend invoices
+    if amend_of
+      raise "Cannot amend received invoices" if invoice.is_a? ReceivedInvoice
+      amended = company.project.issued_invoices.find_by_number!(amend_of)
+      invoice.amend_of = amended
+    end
+
 
     # if passed issued param, check if it should be an IssuedInvoice or a ReceivedInvoice
     unless issued.nil?
@@ -558,20 +580,6 @@ _INV
       client.save!(:validate=>false)
       logger.info "created new client \"#{client_name}\" with cif #{client_taxcode} for company #{company.name}"
     end
-
-    # invoice data
-    invoice_number   = Haltr::Utils.get_xpath(doc,xpaths[:invoice_number])
-    invoice_date     = Haltr::Utils.get_xpath(doc,xpaths[:invoice_date])
-    invoice_total    = Haltr::Utils.get_xpath(doc,xpaths[:invoice_total])
-    invoice_import   = Haltr::Utils.get_xpath(doc,xpaths[:invoice_import])
-    invoice_due_date = Haltr::Utils.get_xpath(doc,xpaths[:invoice_due_date])
-    discount_percent = Haltr::Utils.get_xpath(doc,xpaths[:discount_percent])
-    discount_text    = Haltr::Utils.get_xpath(doc,xpaths[:discount_text])
-    extra_info       = Haltr::Utils.get_xpath(doc,xpaths[:extra_info])
-    charge           = Haltr::Utils.get_xpath(doc,xpaths[:charge])
-    charge_reason    = Haltr::Utils.get_xpath(doc,xpaths[:charge_reason])
-    accounting_cost  = Haltr::Utils.get_xpath(doc,xpaths[:accounting_cost])
-    payments_on_account = Haltr::Utils.get_xpath(doc,xpaths[:payments_on_account]) || 0
 
     doc.xpath(xpaths[:dir3s]).each do |line|
       case Haltr::Utils.get_xpath(line, xpaths[:dir3_role])
