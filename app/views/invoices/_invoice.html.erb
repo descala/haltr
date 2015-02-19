@@ -124,6 +124,9 @@
           <th class="item-article_code"><%=h l(:field_article_code)%></th>
         <% end -%>
         <th class="item-description"><%=h l(:field_description)%></th>
+        <% if @invoice.invoice_lines.any? {|l| !l.sequence_number.blank? } -%>
+          <th class="item-sequence-number"><%= l(:sequence_number) %></th>
+        <% end -%>
         <th class="item-price"><%=h l(:field_amount) %></th>
         <% if @invoice.has_line_discounts? -%>
           <th class="item-price"><%=h l(:field_discount) %></th>
@@ -149,6 +152,9 @@
               <br /><%= l(:field_discount) %>: <%= line.discount_text %>
             <% end -%>
           </td>
+          <% if @invoice.invoice_lines.any? {|l| !l.sequence_number.blank? } -%>
+            <td><%= line.sequence_number %></td>
+          <% end -%>
           <td class="item-price"><%=h line_price(line) %></td>
           <% if line.discount_percent > 0 -%>
             <td class="item-price"><%=h line.discount_percent%> %</td>
