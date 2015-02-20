@@ -406,6 +406,7 @@ en:
   permission_send_peppol: "B2BRouter - Send through PEPPOL"
   permission_use_local_signature: "B2BRouter - Sign with local certificate"
   tax_E: "Exempt"
+  tax_NS: "Not subject"
   tax_Z: "Zero Rated"
   tax_S: "Standard"
   tax_H: "High Rated"

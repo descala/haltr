@@ -91,7 +91,7 @@ module InvoicesHelper
   def tax_name(tax, options = {})
     return nil if tax.nil?
 
-    return "#{tax.name} #{l(:tax_E)}" if tax.exempt?
+    return "#{tax.name} #{l("tax_#{tax.category}")}" if tax.exempt?
 
     options.symbolize_keys!
     default_format = I18n.translate(:'number.format',
@@ -156,7 +156,7 @@ module InvoicesHelper
   def tax_label(tax_code,show_category=false)
     # tax_code = '21.0_S'
     percent, category = tax_code.split('_')
-    if category == 'E'
+    if category == 'E' or category == 'NS'
       [l("tax_#{category}"), tax_code]
     else
       if show_category

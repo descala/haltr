@@ -342,6 +342,12 @@
 <% unless invoice_line.notes.blank? -%>
               <AdditionalLineItemInformation><%=invoice_line.notes%></AdditionalLineItemInformation>
 <% end -%>
+<% if invoice_line.exempt_taxes.any? %>
+              <SpecialTaxableEvent>
+                <SpecialTaxableEventCode><%=invoice_line.exempt_taxes.first.category == 'E' ? '01' : '02'%></SpecialTaxableEventCode>
+                <SpecialTaxableEventReason><%=invoice_line.exempt_taxes.first.comment%></SpecialTaxableEventReason>
+              </SpecialTaxableEvent>
+<% end -%>
 <% unless invoice_line.article_code.blank? or format != "facturae32" -%>
               <ArticleCode><%=invoice_line.article_code%></ArticleCode>
 <% end -%>

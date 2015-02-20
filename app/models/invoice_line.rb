@@ -122,6 +122,12 @@ class InvoiceLine < ActiveRecord::Base
     taxes.find(:all, :conditions => "percent >= 0")
   end
 
+  def exempt_taxes
+    taxes.select do |t|
+      t.exempt?
+    end
+  end
+
   def to_s
     taxes_string = taxes.collect do |tax|
       tax.to_s

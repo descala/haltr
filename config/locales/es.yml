@@ -421,6 +421,7 @@ es:
   permission_use_local_signature: "B2BRouter - Firmar con certificado local"
   permission_send_jccm: "B2BRouter - Enviar a través de JCCM"
   tax_E: "Exento"
+  tax_NS: "No sujeto"
   tax_Z: "Tasa cero"
   tax_S: "Estándar"
   tax_H: "Tasa alta"

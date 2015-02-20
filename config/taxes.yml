@@ -27,6 +27,11 @@ es:
   default: false
   category: E
   facturae_id: '01'
+- name: IVA
+  percent: 0.0
+  default: false
+  category: NS
+  facturae_id: '01'
 - name: IRPF
   percent: -19.0
   default: false

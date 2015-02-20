@@ -10,7 +10,7 @@ class Tax < ActiveRecord::Base
   belongs_to :invoice_line
   validates_presence_of :name
   validates_numericality_of :percent,
-    :unless => Proc.new { |tax| tax.category == "E" }
+    :unless => Proc.new { |tax| tax.exempt? }
   validates_format_of :name, :with => /^[a-zA-Z]+$/
   # only one name-percent combination per invoice_line:
   #TODO: see rails bug https://github.com/rails/rails/issues/4568 on
@@ -23,7 +23,7 @@ class Tax < ActiveRecord::Base
   #validates_uniqueness_of :percent, :scope => [:company_id,:name,:category],
   #  :unless => Proc.new { |tax| tax.company_id.nil? }
   validates_numericality_of :percent, :equal_to => 0,
-    :if => Proc.new { |tax| ["Z","E"].include? tax.category }
+    :if => Proc.new { |tax| ["Z","E","NS"].include? tax.category }
 
   def ==(oth)
     return false if oth.nil?
@@ -54,7 +54,7 @@ class Tax < ActiveRecord::Base
   end
 
   def exempt?
-    category == "E"
+    category == "E" or category == "NS"
   end
 
   def zero?
@@ -74,9 +74,9 @@ class Tax < ActiveRecord::Base
     self.category=c
   end
 
-  # E=Exempt, Z=ZeroRated, S=Standard, H=High Rate, AA=Low Rate
+  # E=Exempt, NS=NotSubject, Z=ZeroRated, S=Standard, H=High Rate, AA=Low Rate
   def self.categories
-    ['E','Z','S','H','AA']
+    ['E','NS','Z','S','H','AA']
   end
 
   def to_s

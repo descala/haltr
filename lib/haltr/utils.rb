@@ -97,6 +97,8 @@ module Haltr
           xpaths[:line_charges]       = "Charges/*"
           xpaths[:file_reference]     = "FileReference"
           xpaths[:sequence_number]    = "SequenceNumber"
+          xpaths[:tax_event_code]     = "SpecialTaxableEvent/SpecialTaxableEventCode"
+          xpaths[:tax_event_reason]   = "SpecialTaxableEvent/SpecialTaxableEventReason"
           # relative to invoice_lines/discounts
           xpaths[:line_discount_percent] = "DiscountRate"
           xpaths[:line_discount_text]    = "DiscountReason"

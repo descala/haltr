@@ -407,6 +407,7 @@ fr:
   permission_use_local_signature: "B2BRouter - Signé avec un certificat local"
 
   tax_E: "Exempt"
+  tax_NS: "Not subject"
   tax_Z: "Détaxés"
   tax_S: "Standard"
   tax_H: "Haute impôt"

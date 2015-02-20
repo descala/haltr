@@ -418,6 +418,7 @@ ca:
   permission_use_local_signature: "B2BRouter - Signar amb certificat local"
   permission_send_jccm: "B2BRouter - Enviar a través de JCCM"
   tax_E: "Exempt"
+  tax_NS: "No subjecte"
   tax_Z: "Zero Rated"
   tax_S: "Standard"
   tax_H: "High Rated"

@@ -670,7 +670,9 @@ _INV
         tax = Haltr::TaxHelper.new_tax(
           :format  => invoice_format,
           :id      => Haltr::Utils.get_xpath(line_tax,xpaths[:tax_id]),
-          :percent => Haltr::Utils.get_xpath(line_tax,xpaths[:tax_percent])
+          :percent => Haltr::Utils.get_xpath(line_tax,xpaths[:tax_percent]),
+          :event_code => Haltr::Utils.get_xpath(line,xpaths[:tax_event_code]),
+          :event_reason => Haltr::Utils.get_xpath(line,xpaths[:tax_event_reason])
         )
         il.taxes << tax
       end

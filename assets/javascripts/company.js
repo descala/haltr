@@ -8,7 +8,7 @@ $(document).on('change', 'select.tax_category', function(e) {
   var span_percent = $this.parent().parent().find(".span_percent");
   var span_comment = $this.parent().parent().find(".span_comment");
   var field_percent = span_percent.children();
-  if ( sel == "E" ) { // Exempt
+  if ( sel == "E" || sel == "NS" ) { // Exempt
     span_percent.hide();
     span_comment.show();
     // important to avoid sending non-zero value on exempt tax

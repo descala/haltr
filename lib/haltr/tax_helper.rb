@@ -11,8 +11,18 @@ module Haltr
       when /facturae/
         taxes = TAX_LIST[:es].select {|t| t[:facturae_id] == attributes[:id]}
         taxes.each do |t|
-          if t[:percent] == attributes[:percent].to_f
-            return Tax.new(t.dup.keep_if {|k,v| %w(name percent category).include?(k)})
+          if attributes[:event_code]
+            # Is E(01) or NS(02)
+            category = attributes[:event_code] == '01' ? 'E' : 'NS'
+            if t[:percent] == attributes[:percent].to_f and category == t[:category]
+              new_tax = Tax.new(t.dup.keep_if {|k,v| %w(name percent category).include?(k)})
+              new_tax.comment = attributes[:event_reason]
+              return new_tax
+            end
+          else
+            if t[:percent] == attributes[:percent].to_f
+              return Tax.new(t.dup.keep_if {|k,v| %w(name percent category).include?(k)})
+            end
           end
         end
         # there's no tax matching name and percent, check only for name now
