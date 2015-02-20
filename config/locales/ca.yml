@@ -584,3 +584,4 @@ ca:
   field_payments_on_account: "Aportació usuaris"
   sequence_number: 'Posició de la comanda'
   mark_as_accepted: 'Marcar com a acceptada'
+  field_receiver_contract_reference: "Codi d'assignació"

@@ -570,3 +570,4 @@ fr:
   field_payments_on_account: "Payments on account"
   sequence_number: 'Sequence number'
   mark_as_accepted: 'Mark as accepted'
+  field_receiver_contract_reference: "Assignment code"
