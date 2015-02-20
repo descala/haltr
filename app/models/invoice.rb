@@ -419,11 +419,7 @@ class Invoice < ActiveRecord::Base
     tax_comments = self.taxes.collect do |tax|
       tax.comment unless tax.comment.blank?
     end.compact.join(". ")
-    if tax_comments.blank?
-      extra_info
-    else
-      "#{extra_info}. #{tax_comments}".strip
-    end
+    ([extra_info,tax_comments]-['']).compact.join('. ')
   end
 
   def to_s

@@ -196,12 +196,12 @@ function copy_last_line_tax(tax_name) {
  * or hide it if there are no exempt selects for this tax.
  */
 function tax_changed(tax_name, tax_code) {
-  if (tax_code.match(/_E$/)) {
+  if (tax_code.match(/(_E|_NS)$/)) {
     $('#'+tax_name+'_comment').show();
   } else {
     var hide_comment = true;
     $('select.tax_'+tax_name).each(function(index) {
-      if ($('select.tax_'+tax_name).eq(index).val().match(/_E$/)) {
+      if ($('select.tax_'+tax_name).eq(index).val().match(/(_E|_NS)$/)) {
         hide_comment = false;
       }
     });

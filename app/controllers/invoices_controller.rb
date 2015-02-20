@@ -209,7 +209,7 @@ class InvoicesController < ApplicationController
       if invoice_line["taxes_attributes"]
         invoice_line["taxes_attributes"].each do |j, tax|
           tax['_destroy'] = 1 if tax["code"].blank?
-          if tax["code"] =~ /_E$/
+          if tax["code"] =~ /(_E|_NS)$/
             tax['comment'] = params["#{tax["name"]}_comment"]
           else
             tax['comment'] = ''
