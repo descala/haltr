@@ -131,10 +131,11 @@ class IssuedInvoice < InvoiceDocument
     @can_be_exported
   end
 
-  # TODO take into account only last x invoices
-  #      not all the invoices. there may be a lot of old invoices
   def self.last_number(project)
-    numbers = project.issued_invoices.collect {|i| i.number }.compact
+    # assume invoices with > date will have > number
+    numbers = project.issued_invoices.order(:date, :created_at).last(10).collect {|i|
+      i.number
+    }.compact
     numbers.sort_by do |num|
       # invoices_001 -> [1,   "invoices_001"]
       # i7           -> [7,   "i7"]
