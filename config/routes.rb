@@ -47,6 +47,7 @@ resources :projects do
   match 'ccc2iban' => 'clients#ccc2iban', :via => :get, :as => :ccc2iban
   match 'events/file/:id' => 'events#file', :via => :get, :as => :event_file
   resources :quotes, :only => [:index, :new, :create]
+  match 'invoices/add_attachment' => 'invoices#add_attachment', :via => :post
 end
 resources :clients do
   resources :people, :only => [:index, :new, :create]

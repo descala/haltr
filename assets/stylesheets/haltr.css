@@ -228,3 +228,23 @@ div.action-linked_to_mine #companies {
 .companyid {
   font-size: 10px;
 }
+div.attachments span.size {
+  font-size: 1em;
+}
+div.attachments span.author {
+  color: #888;
+  font-size: 0.9em;
+}
+span.add_attachment {
+  font-size: 1em;
+}
+span#attachments_fields {
+  font-size: 1em;
+}
+span#attachments_fields input.filename {
+  width: 29%;
+}
+span#attachments_fields input.description {
+  margin-left: 1%;
+  width: 69%;
+}

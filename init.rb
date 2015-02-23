@@ -120,6 +120,8 @@ Redmine::Plugin.register :haltr do
 
     permission :export_invoices, {:invoices => [:index]}
 
+    permission :use_invoice_attachments, { :attachments => :upload}
+
     # Loads permisons from config/channels.yml
     ExportChannels.permissions.each do |permission,actions|
       permission permission, actions, :require => :member

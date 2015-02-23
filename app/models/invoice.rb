@@ -75,6 +75,8 @@ class Invoice < ActiveRecord::Base
 
   after_initialize :set_default_values
 
+  acts_as_attachable :view_permission => :use_invoice_attachments, :delete_permission => :use_invoice_attachments
+
   def set_default_values
     self.currency ||= self.client.currency rescue nil
     self.currency ||= self.company.currency rescue nil

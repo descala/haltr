@@ -28,9 +28,8 @@
   <div id="workspace1" class="haltrinvoice">
     <div id="workspace2">
       <div id="col1">
-
       <%= render :partial=>'invoices/invoice' %>
-
+      <%= link_to_attachments @invoice, thumbnails: false, author: false %>
       </div>
     </div>
   </div>

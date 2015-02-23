@@ -398,11 +398,26 @@
             </Installment>
           </PaymentDetails>
 <% end -%>
-          <% if @invoice.extra_info_plus_tax_comments and @invoice.extra_info_plus_tax_comments.size > 0 %>
-            <AdditionalData>
-              <InvoiceAdditionalInformation><%=h @invoice.extra_info_plus_tax_comments%></InvoiceAdditionalInformation>
-            </AdditionalData>
-          <% end %>
+<% if (@invoice.extra_info_plus_tax_comments and @invoice.extra_info_plus_tax_comments.size > 0) or @invoice.attachments.any? %>
+          <AdditionalData>
+<% if @invoice.attachments.any? %>
+            <RelatedDocuments>
+<% @invoice.attachments.each do |attachment| %>
+              <Attachment>
+                <AttachmentCompressionAlgorithm>NONE</AttachmentCompressionAlgorithm>
+                <AttachmentFormat><%= facturae_attachment_format(attachment) %></AttachmentFormat>
+                <AttachmentEncoding>BASE64</AttachmentEncoding>
+                <AttachmentDescription><%= attachment.description.blank? ? attachment.filename : attachment.description %></AttachmentDescription>
+                <AttachmentData><%= Base64::encode64(File.read(attachment.diskfile)).chomp %></AttachmentData>
+              </Attachment>
+<% end %>
+            </RelatedDocuments>
+<% end %>
+<% if (@invoice.extra_info_plus_tax_comments and @invoice.extra_info_plus_tax_comments.size > 0) %>
+            <InvoiceAdditionalInformation><%=h @invoice.extra_info_plus_tax_comments%></InvoiceAdditionalInformation>
+<% end %>
+          </AdditionalData>
+<% end %>
       </Invoice>
    </Invoices>
  </facturae:Facturae>

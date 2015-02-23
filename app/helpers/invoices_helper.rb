@@ -288,4 +288,13 @@ module InvoicesHelper
     end
   end
 
+  def facturae_attachment_format(attachment)
+    valid_formats = %W(xml doc gif rtf pdf xls jpg bmp tiff)
+    extension = attachment.filename.split('.').last.downcase
+    if valid_formats.include?(extension)
+      extension
+    else
+      'doc'
+    end
+  end
 end

@@ -574,3 +574,5 @@ en:
   sequence_number: 'Sequence number'
   mark_as_accepted: 'Mark as accepted'
   field_receiver_contract_reference: "Assignment code"
+  invoice_attachments_description: "You can add attachments to the invoce. These documents will be sent along with the invoice."
+  invoice_attachments_permission: "Not allowed"

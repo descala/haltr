@@ -9,6 +9,8 @@ class InvoicesController < ApplicationController
 
   helper :sort
   include SortHelper
+  helper :attachments
+  include AttachmentsHelper
 
   PUBLIC_METHODS = [:by_taxcode_and_num,:view,:download,:mail,:logo,:haltr_sign]
 
@@ -155,6 +157,7 @@ class InvoicesController < ApplicationController
     end
 
     @invoice = invoice_class.new(parsed_params)
+    @invoice.save_attachments(params[:attachments] || (params[:invoice] && params[:invoice][:uploads]))
     if @invoice.invoice_lines.empty?
       il = InvoiceLine.new
       @project.company.taxes.each do |tax|
@@ -196,6 +199,8 @@ class InvoicesController < ApplicationController
   end
 
   def update
+    @invoice.save_attachments(params[:attachments] || (params[:invoice] && params[:invoice][:uploads]))
+
     #TODO: need to access invoice taxes before update_attributes, if not
     # updated taxes are not saved.
     # maybe related to https://rails.lighthouseapp.com/projects/8994/tickets/4642

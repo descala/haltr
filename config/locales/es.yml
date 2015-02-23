@@ -590,3 +590,5 @@ es:
   sequence_number: 'Posición del pedido'
   mark_as_accepted: 'Marcar como aceptada'
   field_receiver_contract_reference: "Código de asignación"
+  invoice_attachments_description: "Permite subir un ficheros relacionados con la factura. Estos documentos se adjuntarán a la factura electrónica."
+  invoice_attachments_permission: "No tienes permisos para subir ficheros"

@@ -121,3 +121,14 @@
     </p>
   </div>
 </fieldset>
+
+<fieldset class="tabular box">
+  <legend><%=l(:label_file_plural)%></legend>
+  <p><%=l(:invoice_attachments_description)%></p>
+  <% if User.current.allowed_to?(:use_invoice_attachments, @project) -%>
+    <%= link_to_attachments @invoice, thumbnails: false, author: false %>
+    <%= render :partial => 'attachments/form', :locals => {:container => @invoice} %>
+  <% else %>
+    <p class="warning"><%= l(:invoice_attachments_permission) %></p>
+  <%- end %>
+</fieldset>
