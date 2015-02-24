@@ -592,3 +592,4 @@ es:
   field_receiver_contract_reference: "Código de asignación"
   invoice_attachments_description: "Permite subir un ficheros relacionados con la factura. Estos documentos se adjuntarán a la factura electrónica."
   invoice_attachments_permission: "No tienes permisos para subir ficheros"
+  label_will_send_original: "Esta factura tiene original y no se ha modificado. Así pués se enviará el documento original."

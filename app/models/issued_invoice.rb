@@ -190,8 +190,7 @@ class IssuedInvoice < InvoiceDocument
   end
 
   def amended?
-    #!amend.nil?
-    !self.amend_id.nil?
+    (!self.amend_id.nil? and self.amend_id != self.id )
   end
 
   # facturae 3.x needs taxes to be valid

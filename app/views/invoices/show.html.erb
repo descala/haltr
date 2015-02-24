@@ -35,6 +35,10 @@
   </div>
 </div>
 
+<% if @invoice.send_original? %>
+  <p>* <%= l(:label_will_send_original) -%></p>
+<% end -%>
+
 <%= render :partial => 'invoices/events'%>
 <%= render :partial => 'invoices/issued_invoice_list_other' if @invoice.is_a? IssuedInvoice %>
 <%= render :partial => 'invoices/channel_links' if (Rails.env == "development" or User.current.admin?) and @invoice.is_a? IssuedInvoice %>

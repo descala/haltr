@@ -588,3 +588,4 @@ ca:
   field_receiver_contract_reference: "Codi d'assignació"
   invoice_attachments_description: "Permet pujar fitxers relacionats amb la factura. Aquests documents s'adjuntaran a la factura electrònica."
   invoice_attachments_permission: "No tens permisos per pujar fitxers"
+  label_will_send_original: "Aquesta factura té original i no s'ha modificat. Així doncs s'enviarà el document original."

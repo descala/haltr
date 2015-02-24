@@ -519,8 +519,12 @@ _INV
     # amend invoices
     if amend_of
       raise "Cannot amend received invoices" if invoice.is_a? ReceivedInvoice
-      amended = company.project.issued_invoices.find_by_number!(amend_of)
-      invoice.amend_of = amended
+      amended = company.project.issued_invoices.find_by_number(amend_of)
+      if amended
+        invoice.amend_of = amended
+      else
+        invoice.amend_of = invoice
+      end
     end
 
 
@@ -710,6 +714,10 @@ _INV
     end
     logger.info "created new invoice with id #{invoice.id} for company #{company.name}"
     return invoice
+  end
+
+  def send_original?
+    original and !modified_since_created? and invoice_format != 'pdf'
   end
 
   def parse_xml_bank_info(xml)
