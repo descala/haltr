@@ -124,7 +124,7 @@
 
 <fieldset class="tabular box">
   <legend><%=l(:label_file_plural)%></legend>
-  <p><%=l(:invoice_attachments_description)%></p>
+  <p><%=l(:invoice_attachments_description, mb: (Setting.attachment_max_size.to_i / 1024))%></p>
   <% if User.current.allowed_to?(:use_invoice_attachments, @project) -%>
     <%= link_to_attachments @invoice, thumbnails: false, author: false %>
     <%= render :partial => 'attachments/form', :locals => {:container => @invoice} %>
