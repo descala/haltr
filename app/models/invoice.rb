@@ -523,6 +523,8 @@ _INV
       if amended
         invoice.amend_of = amended
       else
+        # importing amend invoice for an unexisting invoice, assign self id as
+        # amended_invoice as a dirty hack
         invoice.amend_of = invoice
       end
     end
