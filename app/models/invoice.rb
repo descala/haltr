@@ -512,15 +512,13 @@ _INV
     # check if it is a received_invoice or an issued_invoice.
     if company.taxcode.include?(buyer_taxcode) or buyer_taxcode.include?(company.taxcode)
       invoice = ReceivedInvoice.new
-      client = seller_taxcode.blank? ? nil : company.project.clients.find_by_taxcode(seller_taxcode)
       client   = company.project.clients.where('taxcode like ?', "%#{seller_taxcode}").first
       client ||= company.project.clients.where('? like concat("%", taxcode)', seller_taxcode).first
-      client ||= company.project.clients.where('taxcode like ?', "%#{buyer_taxcode}").first
-      client ||= company.project.clients.where('? like concat("%", taxcode)', buyer_taxcode).first
       client_role= "seller"
     elsif company.taxcode.include?(seller_taxcode) or seller_taxcode.include?(company.taxcode)
       invoice = IssuedInvoice.new
-      client = buyer_taxcode.blank? ? nil : company.project.clients.find_by_taxcode(buyer_taxcode)
+      client   = company.project.clients.where('taxcode like ?', "%#{buyer_taxcode}").first
+      client ||= company.project.clients.where('? like concat("%", taxcode)', buyer_taxcode).first
       client_role = "buyer"
     else
       raise I18n.t :taxcodes_does_not_belong_to_self,
