@@ -29,7 +29,7 @@
     payment_method_text = @client.payment_method_text
     terms = @client.terms
   end
-  if @client
+  if @client and @client.taxcode.present?
     taxcode = @client.taxcode
     if taxcode[0...2].downcase == @client.country
       taxcode2 = taxcode[2..-1]
