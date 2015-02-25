@@ -20,7 +20,7 @@
       </ThirdParty>
       <% end -%>
       <Batch>
-         <BatchIdentifier><%=h @company.taxcode%><%=h  @invoice.number %></BatchIdentifier>
+         <BatchIdentifier><%=h @company.taxcode.strip%><%=h  @invoice.number %></BatchIdentifier>
          <InvoicesCount>1</InvoicesCount>
          <TotalInvoicesAmount>
             <TotalAmount><%=h precision @invoice.total.dollars %></TotalAmount>
@@ -39,7 +39,7 @@
          <TaxIdentification>
             <PersonTypeCode><%=h @company.persontype %></PersonTypeCode>
             <ResidenceTypeCode>R</ResidenceTypeCode>
-            <TaxIdentificationNumber><%=h @company.taxcode%></TaxIdentificationNumber>
+            <TaxIdentificationNumber><%=h @company.taxcode.strip%></TaxIdentificationNumber>
          </TaxIdentification>
 <% if @company.persontype == "J" -%>
 
@@ -80,7 +80,7 @@
          <TaxIdentification>
             <PersonTypeCode>J</PersonTypeCode>
             <ResidenceTypeCode>R</ResidenceTypeCode>
-            <TaxIdentificationNumber><%=h @client.taxcode%></TaxIdentificationNumber>
+            <TaxIdentificationNumber><%=h @client.taxcode.strip%></TaxIdentificationNumber>
          </TaxIdentification>
          <% if call_hook(:facturae_administrative_centres).present? -%>
            <%= call_hook(:facturae_administrative_centres) %>
