@@ -484,15 +484,19 @@ _INV
     payments_on_account = Haltr::Utils.get_xpath(doc,xpaths[:payments_on_account]) || 0
     amend_of         = Haltr::Utils.get_xpath(doc,xpaths[:amend_of])
 
-    invoice, client, client_role, company,  user = nil
+    invoice, client, client_role, company, user = nil
 
     if user_or_company.is_a? Company
+      # used in haltr_mail_handler
       company = user_or_company
     else
+      # used invoices#import
       user = user_or_company
       from = user.name
-      company = user.companies.where(taxcode: seller_taxcode).first
-      company ||= user.companies.where(taxcode: buyer_taxcode).first
+      company   = user.companies.where('taxcode like ?', "%#{seller_taxcode}").first
+      company ||= user.companies.where('? like concat("%", taxcode)', seller_taxcode).first
+      company ||= user.companies.where('taxcode like ?', "%#{buyer_taxcode}").first
+      company ||= user.companies.where('? like concat("%", taxcode)', buyer_taxcode).first
     end
 
     if company.nil?
@@ -502,11 +506,11 @@ _INV
     end
 
     # check if it is a received_invoice or an issued_invoice.
-    if company.taxcode == buyer_taxcode
+    if company.taxcode.include?(buyer_taxcode) or buyer_taxcode.include?(company.taxcode)
       invoice = ReceivedInvoice.new
       client = seller_taxcode.blank? ? nil : company.project.clients.find_by_taxcode(seller_taxcode)
       client_role= "seller"
-    elsif company.taxcode == seller_taxcode
+    elsif company.taxcode.include?(seller_taxcode) or seller_taxcode.include?(company.taxcode)
       invoice = IssuedInvoice.new
       client = buyer_taxcode.blank? ? nil : company.project.clients.find_by_taxcode(buyer_taxcode)
       client_role = "buyer"
