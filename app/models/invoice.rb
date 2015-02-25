@@ -486,6 +486,10 @@ _INV
 
     invoice, client, client_role, company, user = nil
 
+    # prevent nil/blank taxcodes, since it will match all on 'like' conditions
+    seller_taxcode = 'empty_seller_taxcode' if seller_taxcode.blank?
+    buyer_taxcode  = 'empty_buyer_taxcode'  if buyer_taxcode.blank?
+
     if user_or_company.is_a? Company
       # used in haltr_mail_handler
       company = user_or_company
@@ -509,6 +513,10 @@ _INV
     if company.taxcode.include?(buyer_taxcode) or buyer_taxcode.include?(company.taxcode)
       invoice = ReceivedInvoice.new
       client = seller_taxcode.blank? ? nil : company.project.clients.find_by_taxcode(seller_taxcode)
+      client   = company.project.clients.where('taxcode like ?', "%#{seller_taxcode}").first
+      client ||= company.project.clients.where('? like concat("%", taxcode)', seller_taxcode).first
+      client ||= company.project.clients.where('taxcode like ?', "%#{buyer_taxcode}").first
+      client ||= company.project.clients.where('? like concat("%", taxcode)', buyer_taxcode).first
       client_role= "seller"
     elsif company.taxcode.include?(seller_taxcode) or seller_taxcode.include?(company.taxcode)
       invoice = IssuedInvoice.new

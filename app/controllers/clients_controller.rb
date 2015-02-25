@@ -92,6 +92,11 @@ class ClientsController < ApplicationController
       taxcode = params[:value].encode(
         'UTF-8', 'binary', invalid: :replace, undef: :replace, replace: ''
       ).gsub(/\W/,'').downcase
+      if taxcode[0...2].downcase == @project.company.country
+        taxcode2 = taxcode[2..-1]
+      else
+        taxcode2 = "#{@project.company.country}#{taxcode}"
+      end
     end
     # the client we are editing (or nil if creating new one)
     client = Client.find(params[:client]) unless params[:client].blank?
@@ -107,9 +112,10 @@ class ClientsController < ApplicationController
     else
       # we are creating/editing a new client
       # search a company with specified taxcode and (semi)public profile
-      company   = Company.find(:all,
-                  :conditions => ["taxcode = ? and (public='public' or public='semipublic')", taxcode]).first
-      company ||= ExternalCompany.find_by_taxcode(taxcode)
+      company = Company.where(
+        "taxcode in (?, ?) and (public='public' or public='semipublic')", taxcode, taxcode2
+      ).first
+      company ||= ExternalCompany.where("taxcode in (?, ?)", taxcode, taxcode2).first
       render :partial => "cif_info", :locals => { :client => client,
                                                   :company => company,
                                                   :context => params[:context],
@@ -118,10 +124,16 @@ class ClientsController < ApplicationController
   end
 
   def link_to_profile
-    @company   = Company.find(
-      :all,
-      :conditions => ["taxcode = ? and (public='public' or public='semipublic')", params[:company]]).first
-    @company ||= ExternalCompany.find_by_taxcode(params[:company])
+    taxcode = params[:company]
+    if taxcode[0...2].downcase == @project.company.country
+      taxcode2 = taxcode[2..-1]
+    else
+      taxcode2 = "#{@project.company.country}#{taxcode}"
+    end
+    @company = Company.where(
+      "taxcode in (?, ?) and (public='public' or public='semipublic')", taxcode, taxcode2
+    ).first
+    @company ||= ExternalCompany.where("taxcode in (?, ?)", taxcode, taxcode2).first
     @client    = Client.find(params[:client]) unless params[:client].blank?
     @client  ||= Client.new(:project=>@project)
     @client.company = @company
@@ -156,9 +168,8 @@ class ClientsController < ApplicationController
   end
 
   def allow_link
-    unless @project.company.taxcode.blank?
-      req = Company.find params[:req]
-      client = req.project.clients.find_by_taxcode(@project.company.taxcode)
+    req = Company.find params[:req]
+    req.project.clients.where("company_id=?", @project.company.id).each do |client|
       client.allowed = true
       client.save
     end
@@ -166,9 +177,8 @@ class ClientsController < ApplicationController
   end
 
   def deny_link
-    unless @project.company.taxcode.blank?
-      req = Company.find params[:req]
-      client = req.project.clients.find_by_taxcode(@project.company.taxcode)
+    req = Company.find params[:req]
+    req.project.clients.where("company_id=?", @project.company.id).each do |client|
       client.allowed = false
       client.save
     end
