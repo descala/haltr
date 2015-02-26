@@ -48,8 +48,8 @@ resources :projects do
   match 'events/file/:id' => 'events#file', :via => :get, :as => :event_file
   resources :quotes, :only => [:index, :new, :create]
   match 'invoices/add_attachment' => 'invoices#add_attachment', :via => :post
-  resources :import_errors, :only => [:index, :show]
-  match 'import_errors' => 'import_errors#destroy', :via => :delete
+  resources :import_errors, :only => [:index, :show, :destroy]
+  match 'import_errors' => 'import_errors#destroy', :via => :delete, :as => 'project_import_errors'
 end
 resources :clients do
   resources :people, :only => [:index, :new, :create]
