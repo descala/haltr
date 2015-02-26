@@ -719,6 +719,12 @@ _INV
       begin
         invoice.save!
       rescue ActiveRecord::RecordInvalid
+        ImportError.create(
+          filename:      invoice.file_name,
+          import_errors: invoice.errors.full_messages.join('. '),
+          original:      raw_xml,
+          project:       company.project,
+        )
         raise invoice.errors.full_messages.join(". ")
       end
     else

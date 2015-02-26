@@ -1,0 +1,27 @@
+<h1><%= l :import_errors %></h1>
+
+<table class="list line-items">
+  <th><%= l(:field_date) %></th>
+  <th><%= l(:field_filename) %></th>
+  <th><%= l(:import_errors) %></th>
+  <th></th>
+
+<% @import_errors.each do |import_error| -%>
+  <tr class="<%= cycle 'odd', 'even' %>">
+    <td><%= format_time import_error.created_at %></td>
+    <td><%= link_to import_error.filename, project_import_error_path(import_error, project_id: @project) %></td>
+    <td><%= import_error.import_errors %></td>
+    <td align="center">
+      <%= link_to "", project_import_error_path(import_error, project_id: @project),
+        method: :delete, class: 'icon icon-del' %>
+    </td>
+  </tr>
+<% end -%>
+
+</table>
+
+<% html_title(l(:import_errors)) -%>
+
+<% content_for :sidebar do %>
+  <%= render_menu :invoices_menu, @project %>
+<% end %>

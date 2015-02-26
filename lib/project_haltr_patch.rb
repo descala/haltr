@@ -19,6 +19,7 @@ module ProjectHaltrPatch
       has_many :payments
       has_many :draft_invoices
       has_many :events
+      has_many :import_errors
     end
  
   end

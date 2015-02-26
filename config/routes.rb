@@ -48,6 +48,7 @@ resources :projects do
   match 'events/file/:id' => 'events#file', :via => :get, :as => :event_file
   resources :quotes, :only => [:index, :new, :create]
   match 'invoices/add_attachment' => 'invoices#add_attachment', :via => :post
+  resources :import_errors, :only => [:index, :destroy, :show]
 end
 resources :clients do
   resources :people, :only => [:index, :new, :create]

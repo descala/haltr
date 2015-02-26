@@ -576,3 +576,4 @@ en:
   field_receiver_contract_reference: "Assignment code"
   invoice_attachments_description: "You can add attachments to the invoce (max %{mb}MB). These documents will be sent along with the invoice."
   invoice_attachments_permission: "Not allowed"
+  import_errors: "Import errors"
