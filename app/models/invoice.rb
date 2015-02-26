@@ -4,7 +4,7 @@ class Invoice < ActiveRecord::Base
 
   unloadable
   audited except: [:import_in_cents, :total_in_cents,
-                   :state, :has_been_read, :id]
+                   :state, :has_been_read, :id, :original]
   has_associated_audits
   # do not remove, with audit we need to make the other attributes accessible
   attr_protected :created_at, :updated_at
