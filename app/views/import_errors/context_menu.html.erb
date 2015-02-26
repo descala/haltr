@@ -1,0 +1,11 @@
+<ul>
+  <%= call_hook(:view_import_errors_context_menu_start, {:import_errors=>@import_errors, :can=>@can, :back=>@back }) %>
+
+  <li>
+  <%= context_menu_link l(:button_delete), project_import_errors_path(:ids=>@import_error_ids, :project_id=>@project, :back_url=>@back),
+    :method=>:delete, :data=>{:confirm=>l(:text_import_errors_destroy_confirmation)}, :class=>'icon-del', :disabled=>!@can[:edit] %>
+  </li>
+
+  <%= call_hook(:view_import_errors_context_menu_end, {:import_errors=>@import_errors, :can=>@can, :back=>@back }) %>
+
+</ul>

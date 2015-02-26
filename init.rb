@@ -107,7 +107,7 @@ Redmine::Plugin.register :haltr do
     permission :import_invoices,
       { :invoices => [:import],
         :received => [:import],
-        :import_errors => [:index, :show, :destroy] },
+        :import_errors => [:index, :show, :destroy, :context_menu] },
       :require => :member
 
     permission :email_customization,   {:companies=>'customization'}, :require => :member

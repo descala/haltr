@@ -575,3 +575,4 @@ fr:
   invoice_attachments_description: "You can add attachments to the invoce (max %{mb}MB). These documents will be sent along with the invoice."
   invoice_attachments_permission: "Not allowed"
   import_errors: "Import errors"
+  text_import_errors_destroy_confirmation: "Are you sure you want to delete the selected import error(s)?"

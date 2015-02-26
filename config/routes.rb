@@ -48,7 +48,8 @@ resources :projects do
   match 'events/file/:id' => 'events#file', :via => :get, :as => :event_file
   resources :quotes, :only => [:index, :new, :create]
   match 'invoices/add_attachment' => 'invoices#add_attachment', :via => :post
-  resources :import_errors, :only => [:index, :destroy, :show]
+  resources :import_errors, :only => [:index, :show]
+  match 'import_errors' => 'import_errors#destroy', :via => :delete
 end
 resources :clients do
   resources :people, :only => [:index, :new, :create]
@@ -57,6 +58,7 @@ end
 resources :people
 match 'invoices/context_menu', :to => 'invoices#context_menu', :as => 'invoices_context_menu', :via => [:get, :post]
 match 'received/context_menu', :to => 'received#context_menu', :as => 'received_context_menu', :via => [:get, :post]
+match 'import_errors/context_menu', :to => 'import_errors#context_menu', :as => 'import_errors_context_menu', :via => [:get, :post]
 match 'invoices/bulk_download' => 'invoices#bulk_download'
 match 'received/bulk_download' => 'received#bulk_download'
 match 'invoices/bulk_mark_as' => 'invoices#bulk_mark_as'
