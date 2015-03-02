@@ -130,10 +130,11 @@ class ClientsController < ApplicationController
     else
       taxcode2 = "#{@project.company.country}#{taxcode}"
     end
-    @company = Company.where(
+    # ExternalCompany has priority over Company
+    @company = ExternalCompany.where("taxcode in (?, ?)", taxcode, taxcode2).first
+    @company ||= Company.where(
       "taxcode in (?, ?) and (public='public' or public='semipublic')", taxcode, taxcode2
     ).first
-    @company ||= ExternalCompany.where("taxcode in (?, ?)", taxcode, taxcode2).first
     @client    = Client.find(params[:client]) unless params[:client].blank?
     @client  ||= Client.new(:project=>@project)
     @client.company = @company
