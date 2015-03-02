@@ -459,6 +459,9 @@ es:
   document_sent: 'Documento enviado al servidor.'
   error_sending_signed_doc: 'Error enviando el documento firmado.'
   error_downloading_doc: 'Error Descargando el documento firmado.'
+  error_signing: 'Error al firmar'
+  error_no_certs: 'No existe ningún certificado en el navegador'
+  error_enable_java: 'Se debe permitir la ejecución de Java en esta página'
   loading_applet: 'Cargando applet...'
   applet_already_loaded: "Applet ya cargado."
   applet_loaded: "Applet cargado."

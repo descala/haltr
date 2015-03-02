@@ -455,6 +455,9 @@ ca:
   document_sent: 'Document enviat al servidor.'
   error_sending_signed_doc: "Error a l'enviar el document signat."
   error_downloading_doc: 'Error al descarregar el document.'
+  error_signing: 'Error al signar'
+  error_no_certs: 'No hi ha cap certificat al navegador'
+  error_enable_java: 'Heu de permetre el Java en aquesta pàgina. Un cop permès, torneu-ho a provar'
   loading_applet: 'Carregant applet...'
   applet_already_loaded: "Applet ja carregat."
   applet_loaded: "Applet carregat correctament."
