@@ -88,6 +88,14 @@ class Invoice < ActiveRecord::Base
     write_attribute(:currency,v.upcase)
   end
 
+  def original=(s)
+    write_attribute(:original, Haltr::Utils.compress(s))
+  end
+
+  def original
+    Haltr::Utils.decompress(read_attribute(:original))
+  end
+
   def lines_with_tax(tax_type)
     invoice_lines.collect {|line|
       next if line.destroyed? or line.marked_for_destruction?
