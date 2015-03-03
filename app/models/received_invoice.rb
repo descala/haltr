@@ -54,14 +54,6 @@ class ReceivedInvoice < InvoiceDocument
     write_attribute :import_in_cents, i.cents
   end
 
-  def original=(s)
-    write_attribute(:original, Haltr::Utils.compress(s))
-  end
-
-  def original
-    Haltr::Utils.decompress(read_attribute(:original))
-  end
-
   protected
 
   def create_event
