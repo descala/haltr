@@ -69,7 +69,7 @@
 <%=
   unless @js.blank?
     content_for :header_tags do
-      javascript_include_tag('/invoices/haltr_sign.js') +
+      javascript_include_tag("/invoices/haltr_sign.js#{'?debug=true' if params[:debug]=='true'}") +
       javascript_include_tag('deployjava.js', :plugin => 'haltr')
     end
   end

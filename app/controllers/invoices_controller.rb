@@ -954,6 +954,7 @@ class InvoicesController < ApplicationController
   end
 
   def haltr_sign
+    @debug = true if params[:debug]=='true'
     respond_to do |format|
       format.js  { render :action => 'haltr_sign' }
     end
