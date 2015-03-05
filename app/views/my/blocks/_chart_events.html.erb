@@ -18,7 +18,7 @@
       @project = project
     -%>
     <fieldset>
-      <legend><%= project.company.name if haltr_projects.size > 1 %></legend>
+      <legend><h3><%= project.company.name if haltr_projects.size > 1 %></h3></legend>
       <% if events.any? %>
         <ul>
           <% events.each do |e| %>
