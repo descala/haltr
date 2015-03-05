@@ -1,7 +1,6 @@
 <% I18n.locale = :en -%>
 <?xml version="1.0" encoding="UTF-8"?>
-<facturae:Facturae xmlns:ds="http://www.w3.org/2000/09/xmldsig#" xmlns:facturae="http://www.facturae.es/Facturae/2007/v3.1/Facturae" 
-xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.facturae.es/Facturae/2007/v3.1/Facturae http://www.facturae.es/NR/rdonlyres/56F4132E-2AF9-41DD-AADC-CB412AE3F79C/0/1Facturaev31.xsd">
+<facturae:Facturae xmlns:facturae="http://www.facturae.es/Facturae/2007/v3.1/Facturae">
    <FileHeader>
       <SchemaVersion>3.1</SchemaVersion>
 <%= render :partial => "invoices/facturae", :format => :xml, :locals=>{:format => 'facturae31'} %>
