@@ -90,8 +90,10 @@ Redmine::Plugin.register :haltr do
         :received  => [:index, :show, :show_original, :legal, :context_menu],
         :companies => [:my_company,:bank_info, :linked_to_mine, :check_iban],
         :payments  => [:index, :n19],
-        :invoice_templates => [:index, :show] }, :require => :member,
-        :events    => [:file]
+        :invoice_templates => [:index, :show],
+        :charts    => [:invoice_total, :invoice_status, :top_clients],
+        :events    => [:file] },
+      :require => :member
 
     permission :bulk_operations,
       { :invoices => [:bulk_download,:bulk_send],
