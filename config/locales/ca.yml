@@ -406,7 +406,7 @@ ca:
   permission_manage_payments: "Gestionar pagaments"
   permission_use_templates: "Plantilles de factures"
   permission_batch_processes: "Processos amb scripts"
-  permission_use_all_readonly: "Us complet només lectura"
+  permission_restricted_use: "Us restringit"
 
   # this depends on permissions defined in channels.yml
   permission_download_pdf: "B2BRouter - Descarregar PDF"
