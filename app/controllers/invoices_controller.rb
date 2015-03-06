@@ -21,6 +21,7 @@ class InvoicesController < ApplicationController
   before_filter :find_hashid, :only => [:view,:download]
   before_filter :find_attachment, :only => [:logo]
   before_filter :set_iso_countries_language
+  before_filter :find_invoice_by_number, only: [:number_to_id]
   before_filter :authorize, :except => PUBLIC_METHODS
   skip_before_filter :check_if_login_required, :only => PUBLIC_METHODS
   # on development skip auth so we can use curl to debug
@@ -36,7 +37,7 @@ class InvoicesController < ApplicationController
   before_filter :check_for_company, :except => PUBLIC_METHODS
 
   skip_before_filter :verify_authenticity_token, :only => [:base64doc]
-  accept_api_auth :import
+  accept_api_auth :import, :number_to_id, :update
 
   def index
     sort_init 'invoices.created_at', 'desc'
@@ -229,28 +230,36 @@ class InvoicesController < ApplicationController
       event.audits = @invoice.last_audits_without_event
       event.save
       flash[:notice] = l(:notice_successful_update)
-      if params[:save_and_send]
-        if @invoice.can_be_exported?
-          if ExportChannels[@invoice.client.invoice_format]['javascript']
-            # channel sends via javascript, set autocall and autocall_args
-            # 'show' action will set a div to tell javascript to automatically
-            # call this function
-            js = ExportChannels[@invoice.client.invoice_format]['javascript'].
-              gsub(':id',@invoice.id.to_s).gsub(/'/,"").split(/\(|\)/)
-            redirect_to :action => 'show', :id => @invoice,
-              :autocall => js[0].html_safe, :autocall_args => js[1]
+      respond_to do |format|
+        format.html {
+          if params[:save_and_send]
+            if @invoice.can_be_exported?
+              if ExportChannels[@invoice.client.invoice_format]['javascript']
+                # channel sends via javascript, set autocall and autocall_args
+                # 'show' action will set a div to tell javascript to automatically
+                # call this function
+                js = ExportChannels[@invoice.client.invoice_format]['javascript'].
+                  gsub(':id',@invoice.id.to_s).gsub(/'/,"").split(/\(|\)/)
+                redirect_to :action => 'show', :id => @invoice,
+                  :autocall => js[0].html_safe, :autocall_args => js[1]
+              else
+                redirect_to :action => 'send_invoice', :id => @invoice
+              end
+            else
+              flash[:error] = l(:errors_prevented_invoice_sent)
+              redirect_to :action => 'show', :id => @invoice
+            end
           else
-            redirect_to :action => 'send_invoice', :id => @invoice
+            redirect_to :action => 'show', :id => @invoice
           end
-        else
-          flash[:error] = l(:errors_prevented_invoice_sent)
-          redirect_to :action => 'show', :id => @invoice
-        end
-      else
-        redirect_to :action => 'show', :id => @invoice
+        }
+        format.api { render_api_ok }
       end
     else
-      render :action => "edit"
+      respond_to do |format|
+        format.html { render :action => "edit" }
+        format.api { render_validation_errors(@invoice) }
+      end
     end
   end
 
@@ -1017,6 +1026,26 @@ class InvoicesController < ApplicationController
       send_data @invoice.original,
         :type => 'text/xml; charset=UTF-8;',
         :disposition => "attachment; filename=#{@invoice.xml_name}"
+    end
+  end
+
+  def number_to_id
+    respond_to do |format|
+      format.html {
+        render text: @invoice.id
+      }
+      format.api {
+        render text: @invoice.id
+      }
+    end
+  end
+
+  def find_invoice_by_number
+    @project = User.current.project
+    @invoice = @project.invoices.find_by_number(params[:number])
+    if @invoice.nil?
+      render_404
+      return
     end
   end
 

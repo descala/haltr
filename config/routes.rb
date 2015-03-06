@@ -83,6 +83,7 @@ match 'invoices/original/:id' => 'invoices#original', :via => :get, :as => :invo
 match 'received/original/:id' => 'received#original', :via => :get, :as => :received_original
 match 'invoices/show_original/:id' => 'invoices#show_original', :via => :get, :as => :invoices_show_original
 match 'received/show_original/:id' => 'received#show_original', :via => :get, :as => :received_show_original
+match 'invoices/number_to_id/:number' => 'invoices#number_to_id', :via => :get, :as => :invoices_number_to_id
 resources :invoices
 resources :quotes, :only => [:show, :edit, :update, :destroy]
 match 'quotes/send/:id' => 'quotes#send_quote', :via => :get, :as => :send_quote
