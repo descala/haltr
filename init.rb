@@ -82,14 +82,14 @@ Redmine::Plugin.register :haltr do
     permission :use_templates, { :invoice_templates => [:index, :new, :edit, :create, :update, :destroy, :show, :new_from_invoice,
                                  :new_invoices_from_template, :create_invoices, :update_taxes] }, :require => :member
 
-    permission :restricted_use,
+    permission :use_all_readonly,
       { :clients   => [:index, :edit, :check_cif, :ccc2iban],
         :people    => [:index, :edit],
         :invoices  => [:index, :show, :legal, :download_new_invoices, :report,
                        :context_menu, :show_original, :send_invoice,
                        :send_new_invoices, :number_to_id],
         :received  => [:index, :show, :show_original, :legal, :context_menu],
-        :companies => [:my_company,:bank_info, :linked_to_mine, :check_iban, :update],
+        :companies => [:my_company,:bank_info, :linked_to_mine, :check_iban],
         :payments  => [:index, :n19],
         :invoice_templates => [:index, :show],
         :charts    => [:invoice_total, :invoice_status, :top_clients],

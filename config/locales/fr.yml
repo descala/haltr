@@ -395,7 +395,7 @@ fr:
   permission_manage_payments: "Gére les paiements"
   permission_use_templates: "Modèles de factures"
   permission_batch_processes: "Processus avec scripts"
-  permission_restricted_use: "Restricted use"
+  permission_use_all_readonly: "Full use readonly"
 
   # this depends on permissions defined in channels.yml
   permission_download_pdf: "B2BRouter - Télécharger PDF"

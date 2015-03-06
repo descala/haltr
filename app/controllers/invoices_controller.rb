@@ -865,7 +865,7 @@ class InvoicesController < ApplicationController
 
     @can = { :edit => User.current.allowed_to?(:general_use, @project),
              :read => (User.current.allowed_to?(:general_use, @project) ||
-                      User.current.allowed_to?(:restricted_use, @project)),
+                      User.current.allowed_to?(:use_all_readonly, @project)),
              :bulk_download => User.current.allowed_to?(:bulk_download, @project)
            }
     @back = back_url
