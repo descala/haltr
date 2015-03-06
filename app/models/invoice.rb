@@ -106,7 +106,9 @@ class Invoice < ActiveRecord::Base
   # Importe bruto.
   # Suma total de importes brutos de los detalles de la factura
   def gross_subtotal(tax_type=nil)
-    (lines_with_tax(tax_type).sum(&:gross_amount)).to_money(currency)
+    (lines_with_tax(tax_type).collect { |line|
+      line.gross_amount.to_money(currency)
+    }.sum).to_money(currency)
   end
 
   # only used in svefaktura: LineExtensionTotalAmount
@@ -262,7 +264,9 @@ class Invoice < ActiveRecord::Base
   # Base imponible a precio de mercado
   # Total Importe Bruto + Recargos - Descuentos Globales
   def taxable_base(tax_type=nil)
-    (lines_with_tax(tax_type).sum(&:gross_amount)).to_money(currency) - discount_amount(tax_type)
+    (lines_with_tax(tax_type).collect {|line|
+      line.gross_amount.to_money(currency)
+    }.sum).to_money(currency) - discount_amount(tax_type)
   end
 
   def discount_amount(tax_type=nil)

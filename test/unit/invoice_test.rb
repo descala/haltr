@@ -539,4 +539,8 @@ class InvoiceTest < ActiveSupport::TestCase
     assert_equal 'ES77310058C', invoice.company.taxcode # invoice taxcode: 77310058C
   end
 
+  test 'it rounds every line total before adding them' do
+    assert_equal 119.22, invoices(:i14).total.dollars
+  end
+
 end

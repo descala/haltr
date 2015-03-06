@@ -157,3 +157,17 @@ i13_line2:
   unit: 1
   price: 100
   description: "line 2 of invoice i13"
+
+i14_line1:
+  invoice_id: 14
+  quantity: 338
+  unit: 1
+  price: 0.093
+  description: "line 1 of invoice i14"
+
+i14_line2:
+  invoice_id: 14
+  quantity: 944
+  unit: 1
+  price: 0.093
+  description: "line 2 of invoice i14"
