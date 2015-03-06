@@ -26,7 +26,7 @@
           <tr class="user <%= cycle("odd", "even") %>" onclick="javascript: document.location = '<%=url_for(:action=>'show', :id=>invoice)%>'">
             <td><%=h format_date invoice.date %></td>
             <td><%= l("mf#{invoice.frequency}") %></td>
-            <td><%=link_to_if_authorized h(invoice.client), {:controller => 'clients', :action => 'edit', :id => invoice.client} %></td>
+            <td><%=h invoice.client %></td>
             <td class="money"><%= money(invoice.total) %></td>
           </tr>
         <% end -%>
