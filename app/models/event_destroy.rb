@@ -7,7 +7,6 @@ class EventDestroy < Event
       else
         str << I18n.t(notes, :default => notes)
       end
-      str << " - "
     end
     str
   end
