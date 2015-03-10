@@ -979,7 +979,9 @@ class InvoicesController < ApplicationController
         md5 = `md5sum #{file.path} | cut -d" " -f1`.chomp
         @invoice = Invoice.create_from_xml(
           file, User.current, md5,'uploaded',nil,
-          params[:issued]=='1', params['keep_original'] != 'false'
+          params[:issued] == '1',
+          params['keep_original'] != 'false',
+          params['validate'] != 'false'
         )
       end
       if @invoice and ["true","1"].include?(params[:send_after_import])
@@ -999,6 +1001,8 @@ class InvoicesController < ApplicationController
           end
         }
         format.api {
+          #TODO render :action => 'show', :status => :created, :location => invoice_path(@category)
+          # need show.api.rsb ? see issue_categories#create
           render_api_ok
         }
       end

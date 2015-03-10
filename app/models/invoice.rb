@@ -456,7 +456,7 @@ _INV
   end
 
 
-  def self.create_from_xml(raw_invoice,user_or_company,md5,transport,from=nil,issued=nil,keep_original=true)
+  def self.create_from_xml(raw_invoice,user_or_company,md5,transport,from=nil,issued=nil,keep_original=true,validate=true)
 
     raw_xml           = raw_invoice.read
     doc               = Nokogiri::XML(raw_xml)
@@ -729,7 +729,11 @@ _INV
 
     if keep_original
       begin
-        invoice.save!
+        if validate
+          invoice.save!
+        else
+          invoice.save(validate: false)
+        end
       rescue ActiveRecord::RecordInvalid
         ImportError.create(
           filename:      invoice.file_name,
