@@ -6,6 +6,7 @@ class Client < ActiveRecord::Base
   attr_protected :created_at, :updated_at
 
   include Haltr::BankInfoValidator
+  include Haltr::TaxcodeValidator
   has_many :invoices, :dependent => :destroy
   has_many :people,   :dependent => :destroy
   has_many :mandates, :dependent => :destroy
@@ -17,9 +18,6 @@ class Client < ActiveRecord::Base
   belongs_to :bank_info # refers to company's bank_info
                         # default one when creating new invoices
 
-  validates_presence_of :taxcode, :unless => Proc.new { |client|
-    Company::COUNTRIES_WITHOUT_TAXCODE.include? client.country
-  }
   validates_presence_of :hashid
   validates_uniqueness_of :taxcode, :scope => :project_id, :allow_blank => true
   validates_uniqueness_of :hashid
