@@ -43,13 +43,13 @@ class IssuedInvoice < InvoiceDocument
       transition :sending => :error
     end
     event :close do
-      transition [:new,:sent] => :closed
+      transition [:new,:sent,:registered] => :closed
     end
     event :discard_sending do
       transition [:error,:sending] => :discarded
     end
     event :paid do
-      transition [:sent,:accepted,:allegedly_paid] => :closed
+      transition [:sent,:accepted,:allegedly_paid,:registered] => :closed
     end
     event :unpaid do
       transition :closed => :sent
@@ -64,7 +64,7 @@ class IssuedInvoice < InvoiceDocument
       transition [:sent,:registered] => :refused
     end
     event :paid_notification do
-      transition [:sent,:accepted] => :allegedly_paid
+      transition [:sent,:accepted,:registered] => :allegedly_paid
     end
     event :sent_notification do
       transition :sent => :sent
