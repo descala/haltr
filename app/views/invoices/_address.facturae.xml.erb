@@ -3,14 +3,14 @@
                <Address><%=h entity.address%></Address>
                <PostCode><%=h entity.postalcode%></PostCode>
                <Town><%=h entity.city%></Town>
-               <Province><%=h entity.province%></Province>
+               <Province><%=h entity.province.to_s[0...20]%></Province>
                <CountryCode><%=h entity.country_alpha3%></CountryCode>
             </AddressInSpain>
 <% else -%>
             <OverseasAddress>
                <Address><%=h entity.address%></Address>
                <PostCodeAndTown><%=h entity.postalcode%> <%=h entity.city%></PostCodeAndTown>
-               <Province><%=h entity.province%></Province>
+               <Province><%=h entity.province.to_s[0...20]%></Province>
                <CountryCode><%=h entity.country_alpha3%></CountryCode>
             </OverseasAddress>
 <% end -%>
