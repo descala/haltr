@@ -1003,9 +1003,7 @@ class InvoicesController < ApplicationController
           end
         }
         format.api {
-          #TODO render :action => 'show', :status => :created, :location => invoice_path(@category)
-          # need show.api.rsb ? see issue_categories#create
-          render_api_ok
+          render action: 'show', status: :created, location: invoice_path(@invoice)
         }
       end
     end
@@ -1016,9 +1014,8 @@ class InvoicesController < ApplicationController
         redirect_to :action => 'import', :project_id => @project
       }
       format.api {
-        render :status => :unprocessable_entity,
-        :text => Nokogiri::XML::Builder.new {|xml| xml.error $!.message}.to_xml,
-        :layout => nil
+        @error_messages = [$!.message]
+        render :template => 'common/error_messages.api', :status => :unprocessable_entity, :layout => nil
       }
     end
   end
@@ -1042,7 +1039,7 @@ class InvoicesController < ApplicationController
         render text: @invoice.id
       }
       format.api {
-        render text: @invoice.id
+        render action: 'show', status: 200, location: invoice_path(@invoice)
       }
     end
   end

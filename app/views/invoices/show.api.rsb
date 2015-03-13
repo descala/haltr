@@ -1,0 +1,3 @@
+api.invoice do
+  api.id @invoice.id
+end

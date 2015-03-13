@@ -467,13 +467,13 @@ _INV
     if facturae_version
       # facturae30 facturae31 facturae32
       invoice_format  = "facturae#{facturae_version.text.gsub(/[^\d]/,'')}"
-      logger.info "Creating invoice from xml - format is FacturaE #{facturae_version.text}"
+      logger.info "Creating invoice from xml - format is FacturaE #{facturae_version.text}. time=#{Time.now}"
     elsif ubl_version
       #TODO: biiubl20 efffubl oioubl20 pdf peppolubl20 peppolubl21 svefaktura
       invoice_format  = "ubl#{ubl_version.text}"
-      logger.info "Creating invoice from xml - format is UBL #{ubl_version.text}"
+      logger.info "Creating invoice from xml - format is UBL #{ubl_version.text}. time=#{Time.now}"
     else
-      logger.info "Creating invoice from xml - unknown format"
+      logger.info "Creating invoice from xml - unknown format. time=#{Time.now}"
       raise "Unknown format"
     end
 
@@ -611,7 +611,7 @@ _INV
       )
 
       client.save!(:validate=>false)
-      logger.info "created new client \"#{client_name}\" with cif #{client_taxcode} for company #{company.name}"
+      logger.info "created new client \"#{client_name}\" with cif #{client_taxcode} for company #{company.name}. time=#{Time.now}"
     end
 
     doc.xpath(xpaths[:dir3s]).each do |line|
@@ -753,7 +753,7 @@ _INV
     else
       invoice.save(:validate=>false)
     end
-    logger.info "created new invoice with id #{invoice.id} for company #{company.name}"
+    logger.info "created new invoice with id #{invoice.id} for company #{company.name}. time=#{Time.now}"
     return invoice
   end
 
