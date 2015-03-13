@@ -301,7 +301,6 @@ class InvoiceTest < ActiveSupport::TestCase
     assert_equal "uploaded", invoice.transport
     assert_equal "Anonymous", invoice.from
     assert_equal "1234", invoice.md5
-    assert_equal 7093, invoice.original.size
     assert invoice.debit?, "invoice payment is debit"
     assert_equal "invoice_facturae32_issued.xml", invoice.file_name
     # invoice lines
@@ -350,7 +349,6 @@ class InvoiceTest < ActiveSupport::TestCase
     assert_equal "uploaded", invoice.transport
     assert_equal "Anonymous", invoice.from
     assert_equal "1234", invoice.md5
-    assert_equal 6415, invoice.original.size
     assert_equal "invoice_facturae32_issued2.xml", invoice.file_name
     assert_equal 15, invoice.discount_percent
     assert_equal 18.00, invoice.discount_amount.to_f
@@ -400,7 +398,6 @@ class InvoiceTest < ActiveSupport::TestCase
     assert_equal "uploaded", invoice.transport
     assert_equal "Anonymous", invoice.from
     assert_equal "1234", invoice.md5
-    assert_equal 6535, invoice.original.size
     assert_equal "invoice_facturae32_issued3.xml", invoice.file_name
     assert invoice.cash?, "invoice payment should be cash and is #{invoice.payment_method}"
     assert_equal "1233333333333333", invoice.client.bank_account
