@@ -212,13 +212,13 @@ class InvoiceTest < ActiveSupport::TestCase
   # import invoice_facturae32_signed.xml
   test 'create received_invoice from facturae32' do
     # client does not exist
-    assert_nil Client.find_by_taxcode "ESP6611142C"
+    assert_nil Client.find_by_taxcode "ESP1700000A"
     file    = File.new(File.join(File.dirname(__FILE__),'..','fixtures','documents','invoice_facturae32_signed.xml'))
     invoice = Invoice.create_from_xml(file,companies(:company1),"1234",'uploaded',User.current.name)
-    client  = Client.find_by_taxcode "ESP6611142C"
+    client  = Client.find_by_taxcode "ESP1700000A"
     assert_not_nil client
     # client
-    assert_equal "ESP6611142C", client.taxcode
+    assert_equal "ESP1700000A", client.taxcode
     assert_equal "Ingent-lluís", client.name
     assert_equal "Melió 113", client.address
     assert_equal "Barcelona", client.province
@@ -243,7 +243,6 @@ class InvoiceTest < ActiveSupport::TestCase
     assert_equal "uploaded", invoice.transport
     assert_equal "Anonymous", invoice.from
     assert_equal "1234", invoice.md5
-    assert_equal 12501, invoice.original.size
     assert_equal "invoice_facturae32_signed.xml", invoice.file_name
     # invoice lines
     assert_equal 3, invoice.invoice_lines.size
@@ -268,13 +267,13 @@ class InvoiceTest < ActiveSupport::TestCase
   # import invoice_facturae32_issued.xml
   test 'create issued_invoice from facturae32' do
     # client does not exist
-    assert_nil Client.find_by_taxcode "ESP6611142C"
+    assert_nil Client.find_by_taxcode "ESP1700000A"
     file    = File.new(File.join(File.dirname(__FILE__),'..','fixtures','documents','invoice_facturae32_issued.xml'))
     invoice = Invoice.create_from_xml(file,companies(:company1),"1234",'uploaded',User.current.name)
-    client  = Client.find_by_taxcode "ESP6611142C"
+    client  = Client.find_by_taxcode "ESP1700000A"
     assert_not_nil client
     # client
-    assert_equal "ESP6611142C", client.taxcode
+    assert_equal "ESP1700000A", client.taxcode
     assert_equal "David Copperfield", client.name
     assert_equal "Address1", client.address
     assert_equal "state", client.province
@@ -327,7 +326,7 @@ class InvoiceTest < ActiveSupport::TestCase
 
   # import invoice_facturae32_issued2.xml
   test 'create issued_invoice from facturae32 with irpf, discount, bank_account and existing client' do
-    client = Client.find_by_taxcode "B12345678"
+    client = Client.find_by_taxcode "A13585625"
     client_count = Client.count
     # client exists
     assert_not_nil client
@@ -377,7 +376,7 @@ class InvoiceTest < ActiveSupport::TestCase
 
   # import invoice_facturae32_issued3.xml
   test 'create issued_invoice from facturae32 with charge, different taxes per line and accounting_cost' do
-    client = Client.find_by_taxcode "B12345678"
+    client = Client.find_by_taxcode "A13585625"
     client_count = Client.count
     # client exists
     assert_not_nil client
@@ -529,14 +528,14 @@ class InvoiceTest < ActiveSupport::TestCase
   test 'create issued_invoice from facturae32 when invoice taxcode includes country' do
     file    = File.new(File.join(File.dirname(__FILE__),'..','fixtures','documents','invoice_facturae32_issued6.xml'))
     invoice = Invoice.create_from_xml(file,User.find_by_login('jsmith'),"1234",'uploaded',User.current.name)
-    assert_equal '77310058H', invoice.company.taxcode # invoice taxcode: ES77310058H
+    assert_equal '77310058C', invoice.company.taxcode # invoice taxcode: ES77310058C
   end
 
   # import invoice_facturae32_issued7.xml
   test 'create issued_invoice from facturae32 when company taxcode includes country' do
     file    = File.new(File.join(File.dirname(__FILE__),'..','fixtures','documents','invoice_facturae32_issued7.xml'))
     invoice = Invoice.create_from_xml(file,User.find_by_login('jsmith'),"1234",'uploaded',User.current.name)
-    assert_equal 'ES77310058C', invoice.company.taxcode # invoice taxcode: 77310058C
+    assert_equal '77310058C', invoice.company.taxcode # invoice taxcode: 77310058C
   end
 
   test 'it rounds every line total before adding them' do

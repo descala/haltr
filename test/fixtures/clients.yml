@@ -2,7 +2,7 @@ client1:
   city: Barcelona
   address: Ribes, 00
   name: Some non'ascii chars ñª long name that may be truncated, Inc
-  taxcode: B00000000
+  taxcode: B10317980
   postalcode: 08013
   project_id: 2
   bank_account: 20811234761234567890
@@ -21,7 +21,7 @@ clients_001:
   city: Barcelona
   address: ""
   name: Client1
-  taxcode: B12345678
+  taxcode: A13585625
   created_at: 2011-09-13 13:50:02 +02:00
   address2: ""
   hashid: 40091a34ba
@@ -46,7 +46,7 @@ clients_001:
 linked_client:
   project_id: 2
   name: Company 2 is public
-  taxcode: S2802214E
+  taxcode: A28022143
   postalcode: 08720
   currency: EUR
   email: test2@example.com
