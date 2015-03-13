@@ -591,18 +591,25 @@ _INV
         client_invoice_format = "#TODO"
       end
 
-      client = Client.new(:taxcode        => client_taxcode,
-                          :name           => client_name,
-                          :address        => client_address,
-                          :province       => client_province,
-                          :country        => client_countrycode,
-                          :website        => client_website,
-                          :email          => client_email,
-                          :postalcode     => client_postalcode,
-                          :city           => client_city,
-                          :currency       => currency,
-                          :project        => company.project,
-                          :invoice_format => client_invoice_format)
+      client_language = User.current.language
+      client_language = 'es' if client_language.blank?
+
+      client = Client.new(
+        :taxcode        => client_taxcode,
+        :name           => client_name,
+        :address        => client_address,
+        :province       => client_province,
+        :country        => client_countrycode,
+        :website        => client_website,
+        :email          => client_email,
+        :postalcode     => client_postalcode,
+        :city           => client_city,
+        :currency       => currency,
+        :project        => company.project,
+        :invoice_format => client_invoice_format,
+        :language       => client_language
+      )
+
       client.save!(:validate=>false)
       logger.info "created new client \"#{client_name}\" with cif #{client_taxcode} for company #{company.name}"
     end

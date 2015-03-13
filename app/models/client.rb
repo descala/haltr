@@ -44,8 +44,6 @@ class Client < ActiveRecord::Base
     self.currency       ||= Setting.plugin_haltr['default_currency']
     self.country        ||= Setting.plugin_haltr['default_country']
     self.invoice_format ||= ExportChannels.default
-    self.language       ||= User.current.language
-    self.language         = "es" if self.language.blank?
     self.sepa_type      ||= "CORE"
   end
 
