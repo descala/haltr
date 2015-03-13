@@ -1039,7 +1039,7 @@ class InvoicesController < ApplicationController
         render text: @invoice.id
       }
       format.api {
-        render text: @invoice.id
+        render action: 'show', status: 200, location: invoice_path(@invoice)
       }
     end
   end
