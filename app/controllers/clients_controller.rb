@@ -42,7 +42,8 @@ class ClientsController < ApplicationController
 
   def new
     @client = Client.new(:country=>@project.company.country,
-                         :currency=>@project.company.currency)
+                         :currency=>@project.company.currency,
+                         :language=>User.current.language)
   end
 
   def edit

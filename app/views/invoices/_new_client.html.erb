@@ -1,7 +1,9 @@
 <div class="new_client_box">
   <div id="new_client">
     <h2><%= l(:label_company_new) %></h2>
-    <%= labelled_form_for(:client, Client.new(),
+    <%= labelled_form_for(:client, Client.new(:country=>@project.company.country,
+                           :currency=>@project.company.currency,
+                           :language=>User.current.language),
          :url     => {:controller=>'clients', :action=>'create', :project_id=>@project},
          :html    => {:class => 'formee'},
          :remote  => true,

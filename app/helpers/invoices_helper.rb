@@ -20,7 +20,7 @@ module InvoicesHelper
   def clients_for_select
     clients = Client.find(:all, :order => 'name', :conditions => ["project_id = ?", @project])
     # check if client.valid?: if you request to link profile, and then unlink it, client is invalid
-    clients.collect {|c| [c.name, c.id] if c.valid? }.compact
+    clients.collect {|c| [c.name, c.id] unless c.name.blank?}.compact
   end
 
   def precision(num,precision=2)
