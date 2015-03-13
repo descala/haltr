@@ -18,7 +18,7 @@ module Haltr::TaxcodeValidator
 
     def normalize_taxcode
       tc = Valvat::Utils.normalize(taxcode)
-      if tc and eu? and !Valvat::Checksum.validate(tc)
+      if tc and eu? and !Valvat::Checksum.validate(tc) and !(tc[0..1]==country.upcase)
         tc = "#{country.upcase}#{tc}"
       end
       self.taxcode = tc
