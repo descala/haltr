@@ -483,6 +483,7 @@ _INV
     currency       = Haltr::Utils.get_xpath(doc,xpaths[:currency])
     # invoice data
     invoice_number   = Haltr::Utils.get_xpath(doc,xpaths[:invoice_number])
+    invoice_series   = Haltr::Utils.get_xpath(doc,xpaths[:invoice_series])
     invoice_date     = Haltr::Utils.get_xpath(doc,xpaths[:invoice_date])
     invoice_total    = Haltr::Utils.get_xpath(doc,xpaths[:invoice_total])
     invoice_import   = Haltr::Utils.get_xpath(doc,xpaths[:invoice_import])
@@ -631,6 +632,7 @@ _INV
 
     invoice.assign_attributes(
       :number           => invoice_number,
+      :series_code      => invoice_series,
       :client           => client,
       :date             => invoice_date,
       :total            => invoice_total.to_money(currency),

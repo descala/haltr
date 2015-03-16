@@ -39,6 +39,9 @@
 
 <!-- Invoice Number and Info -->
 <h2 class="invoice-ID"><%=h @invoice.label %> <%=h @invoice.number %></h2>
+<% unless @invoice.series_code.blank? -%>
+  <h3><%= l(:field_series_code) %>: <%= @invoice.series_code %></h3>
+<% end -%>
 <div class="invoice-info">
   <span class="date"><%=h l(:field_date)%> <strong><%=h format_date @invoice.date %></strong></span><br/>
   <% if @invoice.amend_of -%>

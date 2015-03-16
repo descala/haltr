@@ -148,6 +148,9 @@
       <Invoice>
          <InvoiceHeader>
             <InvoiceNumber><%=h @invoice.number%></InvoiceNumber>
+<% unless @invoice.series_code.blank? -%>
+            <InvoiceSeriesCode><%=h @invoice.series_code%></InvoiceSeriesCode>
+<% end -%>
             <InvoiceDocumentType>FC</InvoiceDocumentType>
             <InvoiceClass><%= @invoice.amend_of ? "OR" : "OO" %></InvoiceClass>
 <% if @invoice.amend_of -%>

@@ -577,3 +577,4 @@ nl:
   invoice_attachments_permission: "Not allowed"
   import_errors: "Import errors"
   text_import_errors_destroy_confirmation: "Are you sure you want to delete the selected import error(s)?"
+  field_series_code: "Serie"

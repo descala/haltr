@@ -596,3 +596,4 @@ es:
   label_will_send_original: "Esta factura tiene original y no se ha modificado. Así pués se enviará el documento original."
   import_errors: "Errores de importación"
   text_import_errors_destroy_confirmation: "Seguro que quieres borrar los errores de importación seleccionados?"
+  field_series_code: "Serie"

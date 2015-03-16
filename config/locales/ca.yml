@@ -592,3 +592,4 @@ ca:
   label_will_send_original: "Aquesta factura té original i no s'ha modificat. Així doncs s'enviarà el document original."
   import_errors: "Errors d'importació"
   text_import_errors_destroy_confirmation: "Segur que vols esborrar els errors d'importació seleccionats?"
+  field_series_code: "Serie"
