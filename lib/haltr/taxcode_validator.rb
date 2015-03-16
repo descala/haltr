@@ -18,8 +18,10 @@ module Haltr::TaxcodeValidator
 
     def normalize_taxcode
       tc = Valvat::Utils.normalize(taxcode)
-      if tc and eu? and !Valvat::Checksum.validate(tc) and !(tc[0..1]==country.upcase)
-        tc = "#{country.upcase}#{tc}"
+      if tc and eu? and !Valvat::Checksum.validate(tc)
+        # taxcode is not valid. try with country code prepended
+        tc_with_contry_code = "#{country.upcase}#{tc}"
+        tc = tc_with_contry_code if Valvat::Checksum.validate(tc_with_contry_code)
       end
       self.taxcode = tc
     end
