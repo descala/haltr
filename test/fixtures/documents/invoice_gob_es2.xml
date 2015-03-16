@@ -5,7 +5,7 @@
     <Modality>I</Modality>
     <InvoiceIssuerType>EM</InvoiceIssuerType>
     <Batch>
-      <BatchIdentifier>0000000000B18</BatchIdentifier>
+      <BatchIdentifier>B1031798018</BatchIdentifier>
       <InvoicesCount>1</InvoicesCount>
       <TotalInvoicesAmount>
         <TotalAmount>63.13</TotalAmount>
@@ -61,7 +61,7 @@
       <TaxIdentification>
         <PersonTypeCode>F</PersonTypeCode>
         <ResidenceTypeCode>E</ResidenceTypeCode>
-        <TaxIdentificationNumber>0000000000B</TaxIdentificationNumber>
+        <TaxIdentificationNumber>B10317980</TaxIdentificationNumber>
       </TaxIdentification>
       <AdministrativeCentres>
         <AdministrativeCentre>

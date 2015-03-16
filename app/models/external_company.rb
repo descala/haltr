@@ -7,9 +7,6 @@ class ExternalCompany < ActiveRecord::Base
     :dependent => :nullify
 
   validates_presence_of :name, :postalcode, :country
-  validates_presence_of :taxcode, :unless => Proc.new {|ec|
-    Company::COUNTRIES_WITHOUT_TAXCODE.include? ec.country
-  }
   validates_length_of :taxcode, :maximum => 20
   validates_uniqueness_of :taxcode, :allow_blank => true
   validates_inclusion_of :currency, :in => Money::Currency.table.collect {|k,v| v[:iso_code] }
@@ -25,6 +22,7 @@ class ExternalCompany < ActiveRecord::Base
   after_save :update_linked_clients
   iso_country :country
   include CountryUtils
+  include Haltr::TaxcodeValidator
 
   serialize :fields_config
   before_save {

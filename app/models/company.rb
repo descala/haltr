@@ -9,12 +9,7 @@ class Company < ActiveRecord::Base
   has_many :clients, :as => :company, :dependent => :nullify
   has_many :taxes, :class_name => "Tax", :dependent => :destroy, :order => "name,percent DESC"
   has_many :bank_infos, :dependent => :destroy, :order => "name,bank_account,iban,bic DESC"
-  COUNTRIES_WITHOUT_TAXCODE = ["is","no"]
   validates_presence_of :name, :project_id, :email, :postalcode, :country
-  validates_presence_of :taxcode, :unless => Proc.new {|company|
-    COUNTRIES_WITHOUT_TAXCODE.include? company.country
-  }
-  validates_length_of :taxcode, :maximum => 20
   validates_uniqueness_of :taxcode, :allow_blank => true
   validates_inclusion_of :currency, :in  => Money::Currency.table.collect {|k,v| v[:iso_code] }
   validates_format_of :email,
@@ -26,6 +21,7 @@ class Company < ActiveRecord::Base
   after_save :update_linked_clients
   iso_country :country
   include CountryUtils
+  include Haltr::TaxcodeValidator
 
   accepts_nested_attributes_for :taxes,
     :allow_destroy => true,
@@ -95,12 +91,6 @@ class Company < ActiveRecord::Base
       next unless client.project and client.project.company
       client.project.company if client.allowed? == false
     end.compact
-  end
-
-  def taxcode=(tc)
-    # taxcode is used to retrieve logo on xhtml when transforming to PDF,
-    # some chars will make logo retrieval fail (i.e. spaces)
-    write_attribute(:taxcode,tc.to_s.gsub(/\W/,''))
   end
 
   def only_one_default_tax_per_name
