@@ -116,7 +116,18 @@ class Event < ActiveRecord::Base
   private
 
   def update_invoice
-    self.invoice.send(name) if automatic?
+    # this won't update invoice status if invoice is not valid
+    #self.invoice.send(name) if automatic?
+    if automatic?
+      begin
+        new_state = invoice.state_transitions.select {|t|
+          t.event == name
+        }.first.to
+        invoice.update_attribute(:state, new_state)
+      rescue
+        invoice.send("#{name}!") # raise an exception to notify admin
+      end
+    end
   end
 
 end
