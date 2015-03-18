@@ -45,7 +45,7 @@ module Haltr::ExportableDocument
       def parsed_errors
         errors = ""
         errors += export_errors.collect {|e|
-          e.is_a?(Array) ? e.collect {|e2| l(e2) }.join(" ") : l(e)
+          e.is_a?(Array) ? e.collect {|e2| l(e2, default: e2) }.join(" ") : l(e, default: e)
         }.join(", ") if export_errors and export_errors.size > 0
         errors += self.errors.full_messages.join(", ")
         errors

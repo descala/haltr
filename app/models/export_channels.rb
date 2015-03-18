@@ -47,11 +47,10 @@ class ExportChannels
   end
 
   def self.validations(id)
-    return [] if available[id].nil?
-    if available[id]["validate"].nil?
-      validations = []
-    else
-      validations = available[id]["validate"].is_a?(Array) ? available[id]["validate"] : [available[id]["validate"]]
+    validations = [:allowed_to_send_this_state]
+    return validations if available[id].nil?
+    unless available[id]["validate"].nil?
+      validations += available[id]["validate"].is_a?(Array) ? available[id]["validate"] : [available[id]["validate"]]
     end
     validations += ExportFormats.validations(available[id]["format"]) if available[id]["format"]
     validations.compact.uniq

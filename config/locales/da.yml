@@ -581,3 +581,4 @@ da:
   import_errors: "Import errors"
   text_import_errors_destroy_confirmation: "Are you sure you want to delete the selected import error(s)?"
   field_series_code: "Serie"
+  state_not_allowed_for_sending: "Cannot re-send invoices in state %{state}"

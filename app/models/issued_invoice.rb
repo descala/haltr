@@ -302,6 +302,13 @@ class IssuedInvoice < InvoiceDocument
   def efffubl_fields
   end
 
+  def allowed_to_send_this_state
+    # used to validate if invoice can be sent
+    unless %w(new error discarded refused).include?(state)
+      add_export_error(l(:state_not_allowed_for_sending, state: l("state_#{state}")))
+    end
+  end
+
   def release_amended
     if self.amend_of
       self.amend_of.amend_id = nil
