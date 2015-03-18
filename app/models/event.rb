@@ -125,7 +125,7 @@ class Event < ActiveRecord::Base
         }.first.to
         invoice.update_attribute(:state, new_state)
       rescue
-        invoice.send("#{name}!") # raise an exception to notify admin
+        invoice.send(name)
       end
     end
   end

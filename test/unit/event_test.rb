@@ -18,14 +18,5 @@ class EventTest < ActiveSupport::TestCase
     )
     invoice.reload
     assert_equal 'refused', invoice.state
-    # to allow this modify "event :bounced" on IssuedInvoice
-    assert_raise StateMachine::InvalidTransition do
-      Event.create(
-        name: 'bounced',
-        invoice: invoice,
-      )
-    end
-    invoice.reload
-    assert_equal 'refused', invoice.state
   end
 end
