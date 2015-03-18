@@ -98,6 +98,12 @@ module Haltr
           xpaths[:sequence_number]    = "SequenceNumber"
           xpaths[:tax_event_code]     = "SpecialTaxableEvent/SpecialTaxableEventCode"
           xpaths[:tax_event_reason]   = "SpecialTaxableEvent/SpecialTaxableEventReason"
+
+          xpaths[:delivery_notes]     = "DeliveryNotesReferences/DeliveryNote"
+          # relative to invoice_lines/delivery_notes_references/delivery_note
+          xpaths[:delivery_note_num]  = "DeliveryNoteNumber"
+
+          xpaths[:ponumber]           = "ReceiverTransactionReference"
           # relative to invoice_lines/discounts
           xpaths[:line_discount_percent] = "DiscountRate"
           xpaths[:line_discount_text]    = "DiscountReason"

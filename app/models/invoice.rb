@@ -688,6 +688,8 @@ _INV
     end
 
     line_file_reference = nil
+    line_delivery_note_number = nil
+    line_ponumber = nil
     # invoice lines
     doc.xpath(xpaths[:invoice_lines]).each do |line|
       il = InvoiceLine.new(
@@ -728,11 +730,18 @@ _INV
         il.charge_reason = Haltr::Utils.get_xpath(line_charges.first,xpaths[:line_charge_reason])
       end
       line_file_reference ||= Haltr::Utils.get_xpath(line,xpaths[:file_reference])
+      line_ponumber       ||= Haltr::Utils.get_xpath(line,xpaths[:ponumber])
+      # delivery_notes
+      line.xpath(xpaths[:delivery_notes]).each do |dn|
+        line_delivery_note_number ||= Haltr::Utils.get_xpath(dn,xpaths[:delivery_note_num])
+      end
       invoice.invoice_lines << il
     end
 
-    # Assume just one file_reference per Invoice
+    # Assume just one file_reference, delivery_note_number and ponumber per Invoice
     invoice.file_reference = line_file_reference
+    invoice.delivery_note_number = line_delivery_note_number
+    invoice.ponumber = line_ponumber
 
     Redmine::Hook.call_hook(:model_invoice_import_before_save, :invoice=>invoice)
 
