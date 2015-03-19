@@ -1048,7 +1048,14 @@ class InvoicesController < ApplicationController
     @project = User.current.project
     @invoice = @project.invoices.find_by_number(params[:number])
     if @invoice.nil?
-      render_404
+      respond_to do |format|
+        format.html {
+          render_404
+        }
+        format.api {
+          render_api_head 404
+        }
+      end
       return
     end
   end
