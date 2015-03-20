@@ -16,7 +16,7 @@ module Haltr::ExportableDocument
         # TODO Test if endpoint is correcty configured
         return @can_be_exported unless @can_be_exported.nil?
         @can_be_exported = (self.valid? and !ExportChannels.format(channel).blank?)
-        ExportChannels.validations(channel).each do |v|
+        ExportChannels.validators(channel).each do |v|
           self.send(v)
         end
         @can_be_exported &&= (export_errors.size == 0)
@@ -30,7 +30,7 @@ module Haltr::ExportableDocument
         recipients = nil
         if channel
           format = channel["locales"][I18n.locale.to_s]
-          if channel.has_key?("validate") and channel["validate"].to_a.include? "client_has_email"
+          if channel.has_key?("validators") and channel["validators"].to_a.include? "Haltr::Validator::Mail"
             recipients = "\n#{self.recipient_emails.join("\n")}"
           end
         else
@@ -50,8 +50,6 @@ module Haltr::ExportableDocument
         errors += self.errors.full_messages.join(", ")
         errors
       end
-
-      protected
 
       # errors to be raised on sending invoice
       def add_export_error(err)

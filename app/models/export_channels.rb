@@ -46,14 +46,28 @@ class ExportChannels
     available[id]["options"] if available? id
   end
 
-  def self.validations(id)
-    validations = [:allowed_to_send_this_state]
-    return validations if available[id].nil?
-    unless available[id]["validate"].nil?
-      validations += available[id]["validate"].is_a?(Array) ? available[id]["validate"] : [available[id]["validate"]]
+  def self.validators(id)
+    validators = [ 'Haltr::Validator::Invoice' ]
+    unless available[id].nil?
+      unless available[id]['validators'].nil?
+        if available[id]['validators'].is_a?(Array)
+          validators += available[id]['validators']
+        else
+          validators << available[id]['validators']
+        end
+      end
+      if available[id]['format']
+        validators += ExportFormats.validators(available[id]['format'])
+      end
     end
-    validations += ExportFormats.validations(available[id]["format"]) if available[id]["format"]
-    validations.compact.uniq
+    validators.collect do |validator|
+      begin
+        validator.constantize
+      rescue NameError => e
+        Rails.logger.error "error loading #{validator}: #{e}"
+        nil
+      end
+    end.compact.uniq
   end
 
   def self.for_select(current_project)

@@ -124,8 +124,8 @@ class IssuedInvoice < InvoiceDocument
     # TODO Test if endpoint is correcty configured
     return @can_be_exported unless @can_be_exported.nil?
     @can_be_exported = (self.valid? and !ExportChannels.format(client.invoice_format).blank?)
-    ExportChannels.validations(client.invoice_format).each do |v|
-      self.send(v)
+    ExportChannels.validators(client.invoice_format).each do |v|
+      v.send('validate', self)
     end
     @can_be_exported &&= (export_errors.size == 0)
     @can_be_exported
@@ -193,54 +193,6 @@ class IssuedInvoice < InvoiceDocument
     (!self.amend_id.nil? and self.amend_id != self.id )
   end
 
-  # facturae 3.x needs taxes to be valid
-  def invoice_has_taxes
-    self.invoice_lines.each do |line|
-      unless line.taxes_outputs.any?
-        add_export_error(:invoice_has_no_taxes)
-      end
-    end
-  end
-
-  # facturae needs taxcode
-  def company_has_taxcode
-    if self.company.taxcode.blank?
-      add_export_error(:company_taxcode_needed)
-    end
-  end
-
-  # facturae needs taxcode
-  def client_has_taxcode
-    if self.client.taxcode.blank?
-      add_export_error(:client_taxcode_needed)
-    end
-  end
-
-  def client_has_postalcode
-    if self.client.postalcode.blank?
-      add_export_error(:client_postalcode_needed)
-    end
-  end
-
-  def payment_method_requirements
-    if debit?
-      c = self.client
-      if c.bank_account.blank? and !c.use_iban?
-        add_export_error([:field_payment_method, :requires_client_bank_account])
-      end
-    elsif transfer?
-      if !bank_info or (bank_info.bank_account.blank? and bank_info.iban.blank?)
-        add_export_error([:field_payment_method, :requires_company_bank_account])
-      elsif (bank_info.bank_account.blank? and !bank_info.use_iban?)
-        add_export_error([:field_payment_method, :requires_company_bank_account])
-        add_export_error([:bank_info, 'activerecord.errors.messages.invalid'])
-      end
-    end
-    unless payment_method.blank?
-      add_export_error([:field_due_date, 'activerecord.errors.messages.blank']) if due_date.blank?
-    end
-  end
-
   protected
 
   # called after_create (only NEW invoices)
@@ -256,57 +208,6 @@ class IssuedInvoice < InvoiceDocument
     end
     event.audits = self.last_audits_without_event
     event.save!
-  end
-
-  def client_has_email
-    unless self.recipient_emails.any?
-      add_export_error(:client_has_no_email)
-    end
-  end
-
-  def company_has_imap_config
-    company and
-      !company.imap_host.blank? and
-      !company.imap_username.blank? and
-      !company.imap_password.blank? and
-      !company.imap_port.nil?
-  end
-
-  def ubl_invoice_has_no_taxes_withheld
-    if self.taxes_withheld.any?
-      add_export_error(:ubl_invoice_has_taxes_withheld)
-    end
-  end
-
-  def peppol_fields
-    if self.client.schemeid.blank? or self.client.endpointid.blank?
-      add_export_error(:missing_client_peppol_fields)
-    elsif self.company.schemeid.blank? or self.company.endpointid.blank?
-      add_export_error(:missing_company_peppol_fields)
-    end
-  end
-
-  def svefaktura_fields
-    if self.respond_to?(:accounting_cost) and self.accounting_cost.blank?
-      add_export_error(:missing_svefaktura_account)
-    elsif self.company.company_identifier.blank?
-      add_export_error(:missing_svefaktura_organization)
-    elsif self.debit?
-      add_export_error(:missing_svefaktura_debit)
-    end
-  end
-
-  def oioubl20_fields
-  end
-
-  def efffubl_fields
-  end
-
-  def allowed_to_send_this_state
-    # used to validate if invoice can be sent
-    unless %w(new error discarded refused).include?(state)
-      add_export_error(l(:state_not_allowed_for_sending, state: l("state_#{state}")))
-    end
   end
 
   def release_amended
