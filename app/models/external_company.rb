@@ -102,30 +102,30 @@ class ExternalCompany < ActiveRecord::Base
   end
 
   def dir3_organs_gestors
-    og = Dir3Entity.where(:code => organs_gestors.to_s.split(/[,\n]/))
+    og = Hash[Dir3Entity.where(code: organs_gestors.to_s.split(/[,\n]/)).map { |c| [c.code, c] }]
     organs_gestors.to_s.split(/[,\n]/).uniq.collect {|code|
-      og.find_by_code(code) || Dir3Entity.new(name: code, code: code)
+      og[code] || Dir3Entity.new(name: code, code: code)
     }
   end
 
   def dir3_unitats_tramitadores
-    ut = Dir3Entity.where(:code => unitats_tramitadores.to_s.split(/[,\n]/))
+    ut = Hash[Dir3Entity.where(code: unitats_tramitadores.to_s.split(/[,\n]/)).map {|c| [c.code, c] }]
     unitats_tramitadores.to_s.split(/[,\n]/).uniq.collect {|code|
-      ut.find_by_code(code) || Dir3Entity.new(name: code, code: code)
+      ut[code] || Dir3Entity.new(name: code, code: code)
     }
   end
 
   def dir3_oficines_comptables
-    oc = Dir3Entity.where(:code => oficines_comptables.to_s.split(/[,\n]/))
+    oc = Hash[Dir3Entity.where(code: oficines_comptables.to_s.split(/[,\n]/)).map {|c| [c.code, c] }]
     oficines_comptables.to_s.split(/[,\n]/).uniq.collect {|code|
-      oc.find_by_code(code) || Dir3Entity.new(name: code, code: code)
+      oc[code] || Dir3Entity.new(name: code, code: code)
     }
   end
 
   def dir3_organs_proponents
-    op = Dir3Entity.where(:code => organs_proponents.to_s.split(/[,\n]/))
+    op = Hash[Dir3Entity.where(code: organs_proponents.to_s.split(/[,\n]/)).map {|c| [c.code, c] }]
     organs_proponents.to_s.split(/[,\n]/).uniq.collect {|code|
-      op.find_by_code(code) || Dir3Entity.new(name: code, code: code)
+      op[code] || Dir3Entity.new(name: code, code: code)
     }
   end
 
