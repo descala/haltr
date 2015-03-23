@@ -160,32 +160,32 @@ class InvoiceTest < ActiveSupport::TestCase
   test 'payment_method_requirements' do
     # invoice with payment cash (no requirements)
     i = invoices(:i8)
-    i.payment_method_requirements
-    assert_equal(0,i.export_errors.size)
+    Haltr::Validator::Facturae.validate(i)
+    assert(!i.export_errors.flatten.include?(:field_payment_method))
     # invoice with payment debit (client has bank_account)
     i = invoices(:i9)
-    i.payment_method_requirements
-    assert_equal(0,i.export_errors.size)
+    Haltr::Validator::Facturae.validate(i)
+    assert(!i.export_errors.flatten.include?(:field_payment_method))
     # remove client bank_account
     i.client.bank_account = ""
-    i.payment_method_requirements
-    assert_equal(1,i.export_errors.size)
+    Haltr::Validator::Facturae.validate(i)
+    assert(i.export_errors.flatten.include?(:field_payment_method))
     # invoice with payment transfer (invoice has bank_info)
     i = invoices(:i7)
     assert_not_nil i.bank_info
-    i.payment_method_requirements
-    assert_equal(0,i.export_errors.size)
+    Haltr::Validator::Facturae.validate(i)
+    assert(!i.export_errors.flatten.include?(:field_payment_method))
     i.bank_info = nil
-    i.payment_method_requirements
-    assert_equal(1,i.export_errors.size)
+    Haltr::Validator::Facturae.validate(i)
+    assert(i.export_errors.flatten.include?(:field_payment_method))
   end
 
   test 'invoice_has_taxes' do
     i = invoices(:i8)
-    i.invoice_has_taxes
+    Haltr::Validator::Facturae.validate(i)
     assert_equal(0, i.export_errors.size)
     i = invoices(:i9)
-    i.invoice_has_taxes
+    Haltr::Validator::Facturae.validate(i)
     assert_equal(1, i.export_errors.size)
   end
 
