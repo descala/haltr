@@ -1,7 +1,7 @@
 module Haltr
   class SendPdfByMail < GenericSender
 
-    attr_accessor :pdf, :class_for_send
+    attr_accessor :class_for_send
 
     def perform
       self.pdf ||= Haltr::Pdf.generate(invoice)

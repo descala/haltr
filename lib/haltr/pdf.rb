@@ -9,15 +9,15 @@ module Haltr
       set_render_anywhere_helpers(ApplicationHelper,HaltrHelper,InvoicesHelper)
     end
 
-    def self.generate(invoice)
-      new.generate(invoice)
+    def self.generate(invoice, as_file=false)
+      new.generate(invoice, as_file)
     end
 
-    def generate(invoice)
+    def generate(invoice, as_file=false)
       pdf_html = render(
         :template => "invoices/show_pdf.html.erb",
         :layout => "layouts/invoice.html",
-        :locals => { :invoice => invoice }
+        :locals => { :invoice => invoice, :@is_pdf => true }
       )
       # use wicked_pdf gem to create PDF from the doc HTML
       options =  {
@@ -30,7 +30,15 @@ module Haltr
           :right  => 20
         }
       }
-      WickedPdf.new.pdf_from_string(pdf_html, options)
+      pdf = WickedPdf.new.pdf_from_string(pdf_html, options)
+      if as_file
+        pdf_file = Tempfile.new(invoice.pdf_name,:encoding => 'ascii-8bit')
+        pdf_file.write(pdf)
+        pdf_file.close
+        pdf_file
+      else
+        pdf
+      end
     end
 
   end
