@@ -85,6 +85,7 @@ module Haltr
           xpaths[:invoice_lines]      = "//Invoices/Invoice/Items/InvoiceLine"
           # relative to invoice_lines
           xpaths[:i_transaction_ref]  = "IssuerTransactionReference"
+          xpaths[:r_contract_reference] = "ReceiverContractReference"
           xpaths[:line_quantity]      = "Quantity"
           xpaths[:line_description]   = "ItemDescription"
           xpaths[:line_price]         = "UnitPriceWithoutTax"
