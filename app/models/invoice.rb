@@ -686,6 +686,7 @@ _INV
     elsif invoice.transfer?
       invoice.parse_xml_bank_info(doc.xpath(xpaths[:to_be_credited]).to_s)
     end
+    invoice.payment_method_text = Haltr::Utils.get_xpath(doc,xpaths[:payment_method_text])
 
     line_file_reference = nil
     line_delivery_note_number = nil

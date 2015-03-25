@@ -398,6 +398,11 @@
                  <% end -%>
                </AccountToBeCredited>
 <% end -%>
+<% unless @invoice.payment_method_text.blank? -%>
+               <CollectionAdditionalInformation>
+                 <%= @invoice.payment_method_text[0...2500] %>
+               </CollectionAdditionalInformation>
+<% end -%>
             </Installment>
           </PaymentDetails>
 <% end -%>
