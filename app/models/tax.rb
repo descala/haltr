@@ -25,6 +25,25 @@ class Tax < ActiveRecord::Base
   validates_numericality_of :percent, :equal_to => 0,
     :if => Proc.new { |tax| ["Z","E","NS"].include? tax.category }
 
+  SPAIN_TAXCODES = {
+    'IVA'      => '01', # Impuesto sobre el valor añadido
+    'IPSI'     => '02', # Impuesto sobre la producción, los servicios y la importación
+    'IGIC'     => '03', # Impuesto general indirecto de Canarias
+    'IRPF'     => '04', # Impuesto sobre la Renta de las personas físicas
+    'OTRO'     => '05', # Otros
+    'ITPAJD'   => '06', # Impuesto sobre transmisiones patrimoniales y actos jurídicos documentados
+    'IE'       => '07', # Impuestos especiales
+    'RA'       => '08', # Renta aduanas
+    'IGTECM'   => '09', # Impuesto general sobre el tráfico de empresas que se aplica en Ceuta y Melilla
+    'IECDPCAC' => '10', # Impuesto especial sobre los combustibles derivados del petróleo en la Comunidad Autonoma Canaria
+    'IIIMAB'   => '11', # Impuesto sobre las instalaciones que inciden sobre el medio ambiente en la Baleares
+    'ICIO'     => '12', # Impuesto sobre las construcciones, instalaciones y obras
+    'IMVDN'    => '13', # Impuesto municipal sobre las viviendas desocupadas en Navarra
+    'IMSN'     => '14', # Impuesto municipal sobre solares en Navarra
+    'IMGSN'    => '15', # Impuesto municipal sobre gastos suntuarios en Navarra
+    'IMPN'     => '16', # Impuesto municipal sobre publicidad en Navarra
+  }
+
   def ==(oth)
     return false if oth.nil?
     self.name == oth.name and

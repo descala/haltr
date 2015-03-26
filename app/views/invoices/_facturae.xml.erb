@@ -190,7 +190,7 @@
 <% if @invoice.taxes_outputs.any? -%>
 <% @invoice.taxes_outputs.each do |tax| -%>
            <Tax>
-             <TaxTypeCode>01</TaxTypeCode>
+             <TaxTypeCode><%= Tax::SPAIN_TAXCODES[tax.name.upcase] || '05'%></TaxTypeCode>
              <TaxRate><%=h precision tax.percent%></TaxRate>
              <TaxableBase>
                <TotalAmount><%=h precision(@invoice.taxable_base(tax).dollars)%></TotalAmount>
