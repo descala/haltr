@@ -1,8 +1,11 @@
 class Invoice < ActiveRecord::Base
 
-  include HaltrHelper
-
   unloadable
+
+  include HaltrHelper
+  include Haltr::FloatParser
+  float_parse :discount_percent
+
   audited except: [:import_in_cents, :total_in_cents,
                    :state, :has_been_read, :id, :original]
   has_associated_audits
@@ -646,7 +649,7 @@ _INV
       :from             => from,           # u@mail.com, User Name...
       :md5              => md5,
       :original         => keep_original ? raw_xml : nil,
-      :discount_percent => discount_percent.to_f,
+      :discount_percent => discount_percent,
       :discount_text    => discount_text,
       :extra_info       => extra_info,
       :charge_amount    => charge,

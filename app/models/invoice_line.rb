@@ -1,6 +1,10 @@
 class InvoiceLine < ActiveRecord::Base
 
   unloadable
+
+  include Haltr::FloatParser
+  float_parse :discount_percent, :price, :quantity
+
   audited :associated_with => :invoice, :except => [:id, :invoice_id]
   has_associated_audits
 
@@ -45,10 +49,6 @@ class InvoiceLine < ActiveRecord::Base
   # remove colons "1,23" => "1.23"
   def quanity=(v)
     write_attribute :quantity, (v.is_a?(String) ? v.gsub(',','.') : v)
-  end
-
-  def discount_percent
-    read_attribute(:discount_percent).to_i
   end
 
   def charge
