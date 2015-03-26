@@ -38,7 +38,13 @@
       <SellerParty>
          <TaxIdentification>
             <PersonTypeCode><%=h @company.persontype %></PersonTypeCode>
+<% if @company.country == 'es' -%>
             <ResidenceTypeCode>R</ResidenceTypeCode>
+<% elsif @company.eu? -%>
+            <ResidenceTypeCode>U</ResidenceTypeCode>
+<% else -%>
+            <ResidenceTypeCode>E</ResidenceTypeCode>
+<% end -%>
             <TaxIdentificationNumber><%=h @company.taxcode.strip%></TaxIdentificationNumber>
          </TaxIdentification>
 <% if @company.persontype == "J" -%>
@@ -79,7 +85,13 @@
       <BuyerParty>
          <TaxIdentification>
             <PersonTypeCode>J</PersonTypeCode>
+<% if @client.country == 'es' -%>
             <ResidenceTypeCode>R</ResidenceTypeCode>
+<% elsif @client.eu? -%>
+            <ResidenceTypeCode>U</ResidenceTypeCode>
+<% else -%>
+            <ResidenceTypeCode>E</ResidenceTypeCode>
+<% end -%>
             <TaxIdentificationNumber><%=h @client.taxcode.strip%></TaxIdentificationNumber>
          </TaxIdentification>
          <% if call_hook(:facturae_administrative_centres).present? -%>
