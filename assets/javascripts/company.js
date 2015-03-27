@@ -47,6 +47,7 @@ $(document).on('change', 'select#quote_mail_customization_lang', function(e) {
 
 $(document).ready(function() {
   $('div#quote_mail_customization_'+$('select#quote_mail_customization_lang').val()).show();
+  $('input.tax_name').autocomplete({source: $('table#taxes').data('taxes')});
 });
 
 $(document).on('change','input#logo', function(e) {
