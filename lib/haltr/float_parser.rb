@@ -8,7 +8,8 @@ module Haltr
       def float_parse(*fields)
         fields.each do |field|
           define_method("#{field}=") do |value|
-            val = case value.to_s
+            value = value.to_s.strip
+            val = case value
             when /^[0-9]+$/
               value
             when /^[0-9]+\.[0-9]+$/
