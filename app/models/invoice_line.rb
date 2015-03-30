@@ -81,7 +81,7 @@ class InvoiceLine < ActiveRecord::Base
   end
 
   def discount_amount
-    total_cost * (discount_percent / 100.0)
+    total_cost * (discount_percent.to_f / 100.0)
   end
 
   def to_label
