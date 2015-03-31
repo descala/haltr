@@ -23,7 +23,9 @@ module HaltrHelper
   end
 
   def line_price(line, price='price')
-    precision = line.send(price).to_s.split(".").last.size
+    decimals = line.send(price).to_s.split(".").last
+    precision = decimals.size
+    precision = 0 if decimals =~ /^0+$/
     precision = 2 if precision == 1
     currency = Money::Currency.new(line.invoice.currency)
     currency_symbol = currency.symbol || ""

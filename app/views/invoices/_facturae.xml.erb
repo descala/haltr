@@ -1,6 +1,6 @@
       <Modality>I</Modality>
-      <InvoiceIssuerType><%= @local_certificate ? 'EM' : 'TE' %></InvoiceIssuerType>
-      <% unless @local_certificate -%>
+      <InvoiceIssuerType><%= (@local_certificate or @company.taxcode.strip == 'ESB63276174') ? 'EM' : 'TE' %></InvoiceIssuerType>
+      <% unless @local_certificate or @company.taxcode.strip == 'ESB63276174' -%>
       <ThirdParty>
          <TaxIdentification>
             <PersonTypeCode>J</PersonTypeCode>
@@ -38,7 +38,13 @@
       <SellerParty>
          <TaxIdentification>
             <PersonTypeCode><%=h @company.persontype %></PersonTypeCode>
+<% if @company.country == 'es' -%>
             <ResidenceTypeCode>R</ResidenceTypeCode>
+<% elsif @company.eu? -%>
+            <ResidenceTypeCode>U</ResidenceTypeCode>
+<% else -%>
+            <ResidenceTypeCode>E</ResidenceTypeCode>
+<% end -%>
             <TaxIdentificationNumber><%=h @company.taxcode.strip%></TaxIdentificationNumber>
          </TaxIdentification>
 <% if @company.persontype == "J" -%>
@@ -79,7 +85,13 @@
       <BuyerParty>
          <TaxIdentification>
             <PersonTypeCode>J</PersonTypeCode>
+<% if @client.country == 'es' -%>
             <ResidenceTypeCode>R</ResidenceTypeCode>
+<% elsif @client.eu? -%>
+            <ResidenceTypeCode>U</ResidenceTypeCode>
+<% else -%>
+            <ResidenceTypeCode>E</ResidenceTypeCode>
+<% end -%>
             <TaxIdentificationNumber><%=h @client.taxcode.strip%></TaxIdentificationNumber>
          </TaxIdentification>
          <% if call_hook(:facturae_administrative_centres).present? -%>
@@ -178,7 +190,7 @@
 <% if @invoice.taxes_outputs.any? -%>
 <% @invoice.taxes_outputs.each do |tax| -%>
            <Tax>
-             <TaxTypeCode>01</TaxTypeCode>
+             <TaxTypeCode><%= Tax::SPAIN_TAXCODES[tax.name.upcase] || '05'%></TaxTypeCode>
              <TaxRate><%=h precision tax.percent%></TaxRate>
              <TaxableBase>
                <TotalAmount><%=h precision(@invoice.taxable_base(tax).dollars)%></TotalAmount>
@@ -397,6 +409,11 @@
                    <IBAN><%=h @invoice.bank_info.bank_account%></IBAN>
                  <% end -%>
                </AccountToBeCredited>
+<% end -%>
+<% unless @invoice.payment_method_text.blank? -%>
+               <CollectionAdditionalInformation>
+                 <%= @invoice.payment_method_text[0...2500] %>
+               </CollectionAdditionalInformation>
 <% end -%>
             </Installment>
           </PaymentDetails>

@@ -167,7 +167,7 @@
           <% end -%>
           <td class="item-price"><%=h line_price(line) %></td>
           <% if line.discount_percent > 0 -%>
-            <td class="item-price"><%=h line.discount_percent%> %</td>
+            <td class="item-price"><%=h number_to_percentage(line.discount_percent, precision: 2, strip_insignificant_zeros: true) %></td>
           <% elsif @invoice.has_line_discounts? -%>
             <td></td>
           <% end -%>
@@ -191,7 +191,7 @@
             <td class="item-article_code"></td>
           <% end -%>
           <td class="item-description" <%= 'colspan="2"'.html_safe if @invoice.has_line_discounts? %>><%=h @invoice.discount_text %></td>
-          <td class="item-price"><%=h number_to_percentage(@invoice.discount_percent, :precision=>0) %></td>
+          <td class="item-price"><%=h number_to_percentage(@invoice.discount_percent, precision: 0, strip_insignificant_zeros: true) %></td>
           <% if @invoice.has_line_charges? -%>
             <td></td>
           <% end -%>

@@ -3,89 +3,49 @@ module CsvImporter
   include CsvMapper
 
   def process_clients(options={})
-    @debug = options[:debug]
     @project = options[:project]
     @file_name = options[:file_name]
-
-    map_clients = {
-      "nomfiscal"  => "name",
-      "dirfiscal"  => "address",
-      "dircli2"    => "address2",
-      "pobfiscal"  => "city",
-      "provifiscal"=> "province",
-      "dtofiscal"  => "postalcode",
-      "fecalta"    => "created_at",
-      "e_mail"     => "email",
-      "paginaweb"  => "website",
-      "docpag"     => "payment_method",
-      "codcli"     => "company_identifier",
-      "language"   => "language",
-      "invoice_format" => "invoice_format",
-      "country" => "country"
-    }
+    lang = @project.users.reject {|u| u.admin? }.first.language
 
     result = CsvMapper::import(@file_name) do
       read_attributes_from_file
     end
 
+    valid_clients=[]
+    invalid_clients=[]
+
     result.each do |result_line|
 
-      taxcode = result_line['nifcli'] rescue result_line['taxcode']
-      payment_method = result_line['docpag'] rescue result_line['payment_method']
-
-      next if taxcode.nil?
-
-      # check existing taxcodes in the project
-      client = taxcode.blank? ? nil : @project.clients.find_by_taxcode(taxcode)
-
-      # if not found then it is a new taxcode
-      client = Client.new(:project=> @project,
-                          :invoice_format => 'signed_pdf',
-                          :taxcode => taxcode,
-                          :terms => '0',
-                          :currency => 'EUR' ) if client.nil?
-
-      map_clients.each do |csv_field,client_field|
-        begin
-          client.send("#{client_field}=", result_line[csv_field].strip)
-          puts "#{client_field} = #{csv_field} = #{result_line[csv_field]}" if @debug
-        rescue NameError
-          client.send("#{client_field}=", result_line[client_field].strip) if result_line[client_field]
-        end
-      end
-
-      if payment_method == 'R'
-        client.payment_method = Invoice::PAYMENT_DEBIT
+      taxcode = result_line['taxcode'].downcase
+      if taxcode[0...2].downcase == @project.company.country
+        taxcode2 = taxcode[2..-1]
       else
-        client.payment_method = Invoice::PAYMENT_TRANSFER
+        taxcode2 = "#{@project.company.country}#{taxcode}"
       end
-
-      unless client.email =~ /\A([\w\.\-\+]+)@((?:[-a-z0-9]+\.)+[a-z]{2,})\z/i
-        emails = client.email.gsub(' ','').split(/[,;]/)
-        client.email = emails.shift
-        if emails.size > 0
-          emails.each do |email|
-            next if Person.find_by_email(email)
-            person = Person.new(first_name: email, last_name: email, email: email, client: client)
-            client.people << person
-          end
-        end
+      company = Company.where(
+        "taxcode in (?, ?) and (public='public')", taxcode, taxcode2
+      ).first
+      company ||= ExternalCompany.where("taxcode in (?, ?)", taxcode, taxcode2).first
+      if company
+        client = Client.new(company: company)
+      else
+        client = Client.new(result_line.to_h)
       end
+      client.language ||= lang
+      client.project = @project
+      client.taxcode = taxcode
 
-      client.bank_info = @project.company.bank_infos.first
-
-      begin
+      unless client.valid?
+        invalid_clients << client.taxcode
+        puts "client #{client.taxcode}: #{client.errors.full_messages.join(', ')}"
+      else
+        valid_clients << client.taxcode
+        puts "client #{client.taxcode}: OK#{" (linked)" if client.company}"
         client.save!
-        puts "====================================" if @debug
-      rescue ActiveRecord::RecordInvalid
-        puts client.attributes
-        puts client.errors.messages
-        exit
-      rescue Exception => error
-        puts "Error importing #{result_line}"
-        raise error
       end
     end
+    puts "------------"
+    puts "created: #{valid_clients.size} clients. Ignored: #{invalid_clients.size} (#{invalid_clients.join(', ')})"
   end
 
   def process_invoices(options={})

@@ -6,7 +6,6 @@ class Client < ActiveRecord::Base
   attr_protected :created_at, :updated_at
 
   include Haltr::BankInfoValidator
-  include Haltr::TaxcodeValidator
   has_many :invoices, :dependent => :destroy
   has_many :people,   :dependent => :destroy
   has_many :mandates, :dependent => :destroy
@@ -37,6 +36,7 @@ class Client < ActiveRecord::Base
   after_create  :create_event
   iso_country :country
   include CountryUtils
+  include Haltr::TaxcodeValidator
 
   after_initialize :set_default_values
 
