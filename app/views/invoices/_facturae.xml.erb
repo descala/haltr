@@ -1,6 +1,6 @@
       <Modality>I</Modality>
-      <InvoiceIssuerType><%= @local_certificate ? 'EM' : 'TE' %></InvoiceIssuerType>
-      <% unless @local_certificate -%>
+      <InvoiceIssuerType><%= (@local_certificate or @company.taxcode.strip == 'ESB63276174') ? 'EM' : 'TE' %></InvoiceIssuerType>
+      <% unless @local_certificate or @company.taxcode.strip == 'ESB63276174' -%>
       <ThirdParty>
          <TaxIdentification>
             <PersonTypeCode>J</PersonTypeCode>
