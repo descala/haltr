@@ -9,7 +9,12 @@
 
   <% if client.allowed? -%>
     <span class="profilelink">
-      <%= l(:linked_to_profile, :company => client.company.name).html_safe %> (<%=link_to_if_authorized(l(:unlink),{:controller=>'clients',:action=>'unlink',:id=>client})%>)
+      <% if client.company.is_a?(ExternalCompany) and User.current.admin? -%>
+        <%= link_to l(:linked_to_profile, :company => client.company.name).html_safe, edit_external_company_path(client.company) %>
+        (<%=link_to_if_authorized(l(:unlink),{:controller=>'clients',:action=>'unlink',:id=>client})%>)
+      <% else -%>
+        <%= l(:linked_to_profile, :company => client.company.name).html_safe %> (<%=link_to_if_authorized(l(:unlink),{:controller=>'clients',:action=>'unlink',:id=>client})%>)
+      <% end -%>
   <% elsif client.denied? -%>
     <span class="profilelinkred">
       <%= l(:denied_authorization, :company => client.company.name).html_safe %> (<%=link_to_if_authorized(l(:unlink),{:controller=>'clients',:action=>'unlink',:id=>client})%>)
