@@ -70,7 +70,7 @@
 <% else -%>
 
          <Individual>
-            <Name><%=h @company.first_name%></Name>
+            <Name><%=h @company.first_name[0...40]%></Name>
             <FirstSurname><%=h @company.last_name%></FirstSurname>
             <%= render :partial => "invoices/address.facturae", :format => :xml, :locals => {:entity => @company} %>
             <ContactDetails>
@@ -434,7 +434,7 @@
             </RelatedDocuments>
 <% end %>
 <% if (@invoice.extra_info_plus_tax_comments and @invoice.extra_info_plus_tax_comments.size > 0) %>
-            <InvoiceAdditionalInformation><%=h @invoice.extra_info_plus_tax_comments%></InvoiceAdditionalInformation>
+            <InvoiceAdditionalInformation><%=h @invoice.extra_info_plus_tax_comments[0...2500]%></InvoiceAdditionalInformation>
 <% end %>
           </AdditionalData>
 <% end %>
