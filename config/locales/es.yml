@@ -598,3 +598,4 @@ es:
   text_import_errors_destroy_confirmation: "Seguro que quieres borrar los errores de importación seleccionados?"
   field_series_code: "Serie"
   state_not_allowed_for_sending: "No se pueden reenviar facturas en estado %{state}"
+  amendment: "Rectificativa"

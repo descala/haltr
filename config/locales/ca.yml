@@ -594,3 +594,4 @@ ca:
   text_import_errors_destroy_confirmation: "Segur que vols esborrar els errors d'importació seleccionats?"
   field_series_code: "Serie"
   state_not_allowed_for_sending: "No es poden reenviar les factures en estat %{state}"
+  amendment: "Rectificativa"
