@@ -32,12 +32,12 @@ module Haltr
 
         # accounting_cost max 40 chars
         if invoice.accounting_cost.to_s.size > 40
-          invoice.add_export_error([:field_accounting_cost], ['activerecord.errors.messages.too_long', count: 40])
+          invoice.add_export_error([:field_accounting_cost, ['activerecord.errors.messages.too_long', count: 40]])
         end
 
         # delivery_note_number max 30 chars
         if invoice.delivery_note_number.to_s.size > 40
-          invoice.add_export_error([:field_delivery_note_number], ['activerecord.errors.messages.too_long', count: 30])
+          invoice.add_export_error([:field_delivery_note_number, ['activerecord.errors.messages.too_long', count: 30]])
         end
 
         # facturae payment method requirements
