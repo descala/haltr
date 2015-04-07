@@ -120,17 +120,6 @@ class IssuedInvoice < InvoiceDocument
     IssuedInvoice.sum :total_in_cents, :conditions => ["state <> 'closed' and due_date < ? and project_id = ?", Date.today, project.id]
   end
 
-  def can_be_exported?
-    # TODO Test if endpoint is correcty configured
-    return @can_be_exported unless @can_be_exported.nil?
-    @can_be_exported = (self.valid? and !ExportChannels.format(client.invoice_format).blank?)
-    ExportChannels.validators(client.invoice_format).each do |v|
-      v.send('validate', self)
-    end
-    @can_be_exported &&= (export_errors.size == 0)
-    @can_be_exported
-  end
-
   def self.last_number(project)
     # assume invoices with > date will have > number
     numbers = project.issued_invoices.order(:date, :created_at).last(10).collect {|i|

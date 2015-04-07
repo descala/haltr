@@ -173,7 +173,7 @@ class InvoicesController < ApplicationController
     if @invoice.save
       flash[:notice] = l(:notice_successful_create)
       if params[:create_and_send]
-        if @invoice.can_be_exported?
+        if @invoice.valid?
           if ExportChannels[@invoice.client.invoice_format]['javascript']
             # channel sends via javascript, set autocall and autocall_args
             # 'show' action will set a div to tell javascript to automatically
@@ -235,7 +235,7 @@ class InvoicesController < ApplicationController
       respond_to do |format|
         format.html {
           if params[:save_and_send]
-            if @invoice.can_be_exported?
+            if @invoice.valid?
               if ExportChannels[@invoice.client.invoice_format]['javascript']
                 # channel sends via javascript, set autocall and autocall_args
                 # 'show' action will set a div to tell javascript to automatically
@@ -769,15 +769,13 @@ class InvoicesController < ApplicationController
   #
   # TODO: duplicated code with queue_file
   def create_and_queue_file
-    unless @invoice.can_be_exported?
-      @invoice.export_errors.each do |export_error|
-        EventError.create(
-          :name    => 'error_sending',
-          :notes   => export_error,
-          :invoice => @invoice
-        )
-      end
-      raise @invoice.parsed_errors
+    unless @invoice.valid?
+      EventError.create(
+        :name    => 'error_sending',
+        :notes   => @invoice.errors.full_messages.join(', '),
+        :invoice => @invoice
+      )
+      raise @invoice.errors.full_messages.join(', ')
     end
     export_id = @invoice.client.invoice_format
     @format = ExportChannels.format export_id

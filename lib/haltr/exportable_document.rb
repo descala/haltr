@@ -4,23 +4,14 @@ module Haltr::ExportableDocument
   def self.included(base)
     base.class_eval do
 
-      attr_accessor :export_errors
-
-      after_initialize do |obj|
-        obj.export_errors ||= []
-      end
-
-      def can_be_exported?(channel=nil)
-        channel ||= self.client.invoice_format rescue nil
-        channel = channel.to_s
-        # TODO Test if endpoint is correcty configured
-        return @can_be_exported unless @can_be_exported.nil?
-        @can_be_exported = (self.valid? and !ExportChannels.format(channel).blank?)
-        ExportChannels.validators(channel).each do |v|
-          self.send(v)
+      before_validation do
+        ExportChannels.validators(client.invoice_format).each do |validator|
+          # prevent duplicate errors when including same module several times
+          unless self.class.ancestors.include? validator
+            # include validators from channel
+            self.class.send(:include, validator)
+          end
         end
-        @can_be_exported &&= (export_errors.size == 0)
-        @can_be_exported
       end
 
       def sending_info(channel_name=nil)
@@ -39,28 +30,7 @@ module Haltr::ExportableDocument
         if channel["format"] == "pdf" and self.client and self.client.language != User.current.language
           lang=" (#{l(:general_lang_name, :locale=>self.client.language)})"
         end
-        "#{format}#{lang}<br/>#{parsed_errors}<br/>#{recipients}".html_safe
-      end
-
-      def parsed_errors
-        errors = ""
-        errors += export_errors.collect {|e|
-          e.is_a?(Array) ? e.collect {|e2|
-            if e2.is_a?(Array)
-              l(*e2)
-            else
-              l(e2, default: e2)
-            end
-          }.join(" ") : l(e, default: e)
-        }.join(", ") if export_errors and export_errors.size > 0
-        errors += self.errors.full_messages.join(", ")
-        errors
-      end
-
-      # errors to be raised on sending invoice
-      def add_export_error(err)
-        @export_errors ||= []
-        @export_errors << err
+        "#{format}#{lang}<br/>#{errors.full_messages.join(', ')}<br/>#{recipients}".html_safe
       end
 
     end

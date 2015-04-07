@@ -175,7 +175,9 @@ class QuotesController < ApplicationController
   end
 
   def send_quote
-    raise @invoice.export_errors.collect {|e| l(e)}.join(", ") unless @invoice.can_be_exported?(:pdf_by_mail)
+    unless @invoice.class.include?(Haltr::Validator::Mail) and @invoice.valid? #TODO aixo no funciona...
+      raise @invoice.errors.full_messages.join(", ") # unless @invoice.valid?(:pdf_by_mail)
+    end
     Delayed::Job.enqueue Haltr::SendPdfByMail.new(@invoice,User.current)
     @invoice.quote_send
     flash[:notice] = "#{l(:notice_quote_sent)}"
