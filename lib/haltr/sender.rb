@@ -10,15 +10,13 @@ module Haltr
     # for 2) and 3) it queues or sends the invoice
     #
     def self.send_invoice(invoice, user, local_certificate=false, invoice_file=nil)
-      unless invoice.can_be_exported?
-        invoice.export_errors.each do |export_error|
-          EventError.create(
-            :name    => 'error_sending',
-            :notes   => export_error,
-            :invoice => invoice
-          )
-        end
-        raise invoice.parsed_errors
+      unless invoice.valid?
+        EventError.create(
+          :name    => 'error_sending',
+          :notes   => invoice.errors.full_messages.join(', '),
+          :invoice => invoice
+        )
+        raise invoice.errors.full_messages.join(', ')
       end
       export_id = invoice.client.invoice_format
       format = ExportChannels.format export_id

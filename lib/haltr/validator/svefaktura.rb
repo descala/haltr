@@ -10,7 +10,6 @@ module Haltr
       end
 
       def svefaktura_validations
-        Ubl.validate(invoice)
         # svefaktura fields
         if respond_to?(:accounting_cost) and accounting_cost.blank?
           errors.add(:base, I18n.t(:missing_svefaktura_account))

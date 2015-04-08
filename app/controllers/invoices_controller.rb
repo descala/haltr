@@ -369,6 +369,9 @@ class InvoicesController < ApplicationController
         render :text => "Missing document"
       end
     end
+  rescue StateMachine::InvalidTransition
+    logger.info "Invoice #{@invoice.id}: #{l(:state_not_allowed_for_sending, state: l("state_#{@invoice.state}"))}"
+    render text: l(:state_not_allowed_for_sending, state: l("state_#{@invoice.state}"))
   end
 
   def show
@@ -822,7 +825,7 @@ class InvoicesController < ApplicationController
     @errors=[]
     num_invoices = @invoices.size
     @invoices.collect! do |invoice|
-      if invoice.can_be_exported?
+      if invoice.valid? and invoice.can_queue?
         if ExportChannels[invoice.client.invoice_format]['javascript']
           @errors << "#{l(:error_invoice_not_sent, :num=>invoice.number)}: Must be processed individually (channel with javascript)"
           nil
@@ -830,7 +833,11 @@ class InvoicesController < ApplicationController
           invoice
         end
       else
-        @errors << "#{l(:error_invoice_not_sent, :num=>invoice.number)}: #{invoice.parsed_errors}"
+        if @invoice.can_queue?
+          @errors << "#{l(:error_invoice_not_sent, :num=>invoice.number)}: #{invoice.errors.full_messages.join(', ')}"
+        else
+          @errors << "#{l(:error_invoice_not_sent, :num=>invoice.number)}: #{l(:state_not_allowed_for_sending, state: l("state_#{invoice.state}"))}"
+        end
         nil
       end
     end.compact!

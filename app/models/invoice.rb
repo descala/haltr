@@ -818,10 +818,6 @@ _INV
     end
   end
 
-  def can_be_exported?
-    false
-  end
-
   def next
     project.invoices.first(:conditions=>["id > ? and type = ?", self.id, self.type])
   end

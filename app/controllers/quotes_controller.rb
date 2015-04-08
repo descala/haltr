@@ -107,7 +107,7 @@ class QuotesController < ApplicationController
     if @invoice.save
       flash[:notice] = l(:notice_successful_create)
       if params[:create_and_send]
-        if @invoice.can_be_exported?(:pdf_by_mail)
+        if @invoice.valid?
           redirect_to :action => 'send_quote', :id => @invoice
         else
           flash[:error] = l(:errors_prevented_quote_sent)
@@ -155,7 +155,7 @@ class QuotesController < ApplicationController
       Event.create(:name=>'edited',:invoice=>@invoice,:user=>User.current)
       flash[:notice] = l(:notice_successful_update)
       if params[:save_and_send]
-        if @invoice.can_be_exported?(:pdf_by_mail)
+        if @invoice.valid?
           redirect_to :action => 'send_quote', :id => @invoice
         else
           flash[:error] = l(:errors_prevented_quote_sent)
