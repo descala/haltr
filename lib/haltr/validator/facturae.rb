@@ -2,62 +2,58 @@ module Haltr
   module Validator
     module Facturae
 
-      def self.validate(invoice)
+      def self.included(base)
+        condition = Haltr::Validator.condition_for(Haltr::Validator::Facturae)
+        base.class_eval do
+          validates_length_of :file_reference, maximum: 20, if: condition
+          validates_length_of :accounting_cost, maximum: 40, if: condition
+          validates_length_of :delivery_note_number, maximum: 30, if: condition
+          validate :facturae_validations, if: condition
+          validates_associated :client, if: condition
+        end
+      end
+
+      def facturae_validations
         # facturae 3.x needs taxes to be valid
-        invoice.invoice_lines.each do |line|
+        invoice_lines.each do |line|
           unless line.taxes_outputs.any?
-            invoice.add_export_error(:invoice_has_no_taxes)
+            errors.add(:base, I18n.t(:invoice_has_no_taxes))
           end
         end
 
         # facturae needs taxcodes
-        if invoice.company.taxcode.blank?
-          invoice.add_export_error(:company_taxcode_needed)
+        if company.taxcode.blank?
+          errors.add(:base, I18n.t(:company_taxcode_needed))
         end
-        if invoice.client.taxcode.blank?
-          invoice.add_export_error(:client_taxcode_needed)
+        if client.taxcode.blank?
+          client.errors.add(:taxcode, :blank)
         end
 
         # facturae needs postalcode, with size 5
-        if invoice.client.postalcode.blank?
-          invoice.add_export_error(:client_postalcode_needed)
-        elsif invoice.client.postalcode.size != 5
-          invoice.add_export_error([:field_postalcode, ['activerecord.errors.messages.wrong_length', count: 5]])
-        end
-
-        # file_reference max 20 chars
-        if invoice.file_reference.to_s.size > 20
-          invoice.add_export_error([:field_file_reference, ['activerecord.errors.messages.too_long', count: 20]])
-        end
-
-        # accounting_cost max 40 chars
-        if invoice.accounting_cost.to_s.size > 40
-          invoice.add_export_error([:field_accounting_cost, ['activerecord.errors.messages.too_long', count: 40]])
-        end
-
-        # delivery_note_number max 30 chars
-        if invoice.delivery_note_number.to_s.size > 40
-          invoice.add_export_error([:field_delivery_note_number, ['activerecord.errors.messages.too_long', count: 30]])
+        if client.postalcode.blank?
+          client.errors.add(:postalcode, :blank)
+        elsif client.postalcode.size != 5
+          client.errors.add(:postalcode, :blank)
         end
 
         # facturae payment method requirements
-        if invoice.debit?
-          c = invoice.client
+        if debit?
+          c = client
           if c.bank_account.blank? and !c.use_iban?
-            invoice.add_export_error([:field_payment_method, :requires_client_bank_account])
+            errors.add(:field_payment_method, I18n.t(:requires_client_bank_account))
           end
-        elsif invoice.transfer?
-          bank_info = invoice.bank_info
+        elsif transfer?
+          bank_info = self.bank_info
           if !bank_info or (bank_info.bank_account.blank? and bank_info.iban.blank?)
-            invoice.add_export_error([:field_payment_method, :requires_company_bank_account])
+            errors.add(:field_payment_method, I18n.t(:requires_company_bank_account))
           elsif (bank_info.bank_account.blank? and !bank_info.use_iban?)
-            invoice.add_export_error([:field_payment_method, :requires_company_bank_account])
-            invoice.add_export_error([:bank_info, 'activerecord.errors.messages.invalid'])
+            errors.add(:field_payment_method, I18n.t(:requires_company_bank_account))
+            bank_info.errors.add(:base, :invalid)
           end
         end
-        unless invoice.payment_method.blank?
-          if invoice.due_date.blank?
-            invoice.add_export_error([:field_due_date, 'activerecord.errors.messages.blank'])
+        unless payment_method.blank?
+          if due_date.blank?
+            errors.add(:field_due_date, :blank)
           end
         end
       end

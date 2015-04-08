@@ -34,9 +34,12 @@ module Haltr
     end
 
     def self.fix_invoice_totals
+      #Invoice.all.each do |i|
+      #  puts "invoice invalid: #{i} (#{i.errors.full_messages.join})" unless i.valid?
+      #end
       # ensure totals are ok for invoice fixtures
       Invoice.all.each do |i|
-        i.save!
+        i.save(validate: false)
       end
     end
 

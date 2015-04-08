@@ -173,7 +173,7 @@ class InvoicesController < ApplicationController
     if @invoice.save
       flash[:notice] = l(:notice_successful_create)
       if params[:create_and_send]
-        if @invoice.can_be_exported?
+        if @invoice.valid?
           if ExportChannels[@invoice.client.invoice_format]['javascript']
             # channel sends via javascript, set autocall and autocall_args
             # 'show' action will set a div to tell javascript to automatically
@@ -235,7 +235,7 @@ class InvoicesController < ApplicationController
       respond_to do |format|
         format.html {
           if params[:save_and_send]
-            if @invoice.can_be_exported?
+            if @invoice.valid?
               if ExportChannels[@invoice.client.invoice_format]['javascript']
                 # channel sends via javascript, set autocall and autocall_args
                 # 'show' action will set a div to tell javascript to automatically
@@ -361,8 +361,8 @@ class InvoicesController < ApplicationController
         # rails replaces '+' with ' '. we undo that.
         file.write Base64.decode64(file_contents.gsub(' ','+'))
         file.close
+        @invoice.queue!
         Haltr::Sender.send_invoice(@invoice, User.current, true, file)
-        @invoice.queue || @invoice.requeue
         logger.info "Invoice #{@invoice.id} #{file.path} queued"
         render :text => "Document sent. document = #{file}"
       else
@@ -443,9 +443,11 @@ class InvoicesController < ApplicationController
   end
 
   def send_invoice
+    @invoice.queue!
     Haltr::Sender.send_invoice(@invoice, User.current)
-    @invoice.queue || @invoice.requeue
     flash[:notice] = "#{l(:notice_invoice_sent)}"
+  rescue StateMachine::InvalidTransition => e
+    flash[:error] = l(:state_not_allowed_for_sending, state: l("state_#{@invoice.state}"))
   rescue Exception => e
     # e.backtrace does not fit in session leading to
     #   ActionController::Session::CookieStore::CookieOverflow
@@ -866,7 +868,7 @@ class InvoicesController < ApplicationController
       if @invoice and ["true","1"].include?(params[:send_after_import])
         begin
           Haltr::Sender.send_invoice(@invoice, User.current)
-          @invoice.queue || @invoice.requeue
+          @invoice.queue
         rescue
         end
       end
