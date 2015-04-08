@@ -596,3 +596,4 @@ ca:
   state_not_allowed_for_sending: "No es poden reenviar les factures en estat %{state}"
   amendment: "Rectificativa"
   missing_imap_config: "Falta la configuració IMAP a \"La meva empresa\""
+  transport: "Transport"
