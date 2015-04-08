@@ -583,3 +583,4 @@ da:
   field_series_code: "Serie"
   state_not_allowed_for_sending: "Cannot re-send invoices in state %{state}"
   amendment: "Amendment"
+  field_legal_literals: "Certification"

@@ -599,3 +599,4 @@ es:
   field_series_code: "Serie"
   state_not_allowed_for_sending: "No se pueden reenviar facturas en estado %{state}"
   amendment: "Rectificativa"
+  field_legal_literals: "Certificación"
