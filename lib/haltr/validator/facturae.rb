@@ -40,20 +40,20 @@ module Haltr
         if debit?
           c = client
           if c.bank_account.blank? and !c.use_iban?
-            errors.add(:field_payment_method, I18n.t(:requires_client_bank_account))
+            errors.add(:payment_method, I18n.t(:requires_client_bank_account))
           end
         elsif transfer?
           bank_info = self.bank_info
           if !bank_info or (bank_info.bank_account.blank? and bank_info.iban.blank?)
-            errors.add(:field_payment_method, I18n.t(:requires_company_bank_account))
+            errors.add(:payment_method, I18n.t(:requires_company_bank_account))
           elsif (bank_info.bank_account.blank? and !bank_info.use_iban?)
-            errors.add(:field_payment_method, I18n.t(:requires_company_bank_account))
+            errors.add(:payment_method, I18n.t(:requires_company_bank_account))
             bank_info.errors.add(:base, :invalid)
           end
         end
         unless payment_method.blank?
           if due_date.blank?
-            errors.add(:field_due_date, :blank)
+            errors.add(:due_date, :blank)
           end
         end
       end
