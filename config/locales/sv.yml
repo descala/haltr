@@ -583,3 +583,4 @@ sv:
   amendment: "Amendment"
   missing_imap_config: "Missing IMAP config on \"My company\""
   transport: "Transport"
+  field_legal_literals: "Certification"

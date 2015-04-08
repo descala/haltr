@@ -597,3 +597,4 @@ ca:
   amendment: "Rectificativa"
   missing_imap_config: "Falta la configuració IMAP a \"La meva empresa\""
   transport: "Transport"
+  field_legal_literals: "Certificació"

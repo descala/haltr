@@ -601,3 +601,4 @@ es:
   amendment: "Rectificativa"
   missing_imap_config: "Falta la configuracion IMAP en \"Mi empresa\""
   transport: "Transporte"
+  field_legal_literals: "Certificación"
