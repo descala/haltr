@@ -587,7 +587,7 @@ es:
   field_organs_proponents: "Órganos proponentes"
   dir3_entities: "Entidades dir3"
   field_code: "Código"
-  field_payments_on_account: "Aportación Usuarios"
+  field_payments_on_account: "Aportación Usuarios/Retención"
   sequence_number: 'Posición del pedido'
   mark_as_accepted: 'Marcar como aceptada'
   field_receiver_contract_reference: "Código de asignación"
@@ -598,3 +598,4 @@ es:
   text_import_errors_destroy_confirmation: "Seguro que quieres borrar los errores de importación seleccionados?"
   field_series_code: "Serie"
   state_not_allowed_for_sending: "No se pueden reenviar facturas en estado %{state}"
+  amendment: "Rectificativa"

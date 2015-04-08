@@ -177,6 +177,7 @@ class IssuedInvoice < InvoiceDocument
     new_attributes['state']='new'
     ai = IssuedInvoice.new(new_attributes)
     ai.number = "#{number}-R"
+    ai.series_code = I18n.t(:amendment)
     self.invoice_lines.each do |line|
       il = line.dup
       il.taxes = line.taxes.collect {|tax| tax.dup }

@@ -572,7 +572,7 @@ da:
   field_organs_proponents: "Òrgans proponents"
   dir3_entities: "Dir3 entities"
   field_code: "Code"
-  field_payments_on_account: "Payments on account"
+  field_payments_on_account: "Payments on account/Withholding"
   sequence_number: 'Sequence number'
   mark_as_accepted: 'Mark as accepted'
   field_receiver_contract_reference: "Assignment code"
@@ -582,3 +582,4 @@ da:
   text_import_errors_destroy_confirmation: "Are you sure you want to delete the selected import error(s)?"
   field_series_code: "Serie"
   state_not_allowed_for_sending: "Cannot re-send invoices in state %{state}"
+  amendment: "Amendment"

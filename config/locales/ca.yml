@@ -583,7 +583,7 @@ ca:
   dir3_entities: "Entitats dir3"
   field_code: "Codi"
   field_dir3: "DIR3"
-  field_payments_on_account: "Aportació usuaris"
+  field_payments_on_account: "Aportació usuaris/Retenció"
   sequence_number: 'Posició de la comanda'
   mark_as_accepted: 'Marcar com a acceptada'
   field_receiver_contract_reference: "Codi d'assignació"
@@ -594,3 +594,4 @@ ca:
   text_import_errors_destroy_confirmation: "Segur que vols esborrar els errors d'importació seleccionats?"
   field_series_code: "Serie"
   state_not_allowed_for_sending: "No es poden reenviar les factures en estat %{state}"
+  amendment: "Rectificativa"
