@@ -115,11 +115,11 @@ class InvoiceLine < ActiveRecord::Base
   end
 
   def taxes_withheld
-    taxes.find(:all, :conditions => "percent < 0")
+    taxes.select {|t| t.percent < 0 }
   end
 
   def taxes_outputs
-    taxes.find(:all, :conditions => "percent >= 0")
+    taxes.select {|t| t.percent >= 0 }
   end
 
   def exempt_taxes

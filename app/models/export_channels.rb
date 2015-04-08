@@ -46,18 +46,19 @@ class ExportChannels
     available[id]["options"] if available? id
   end
 
-  def self.validators(id)
-    validators = [ 'Haltr::Validator::Invoice' ]
-    unless available[id].nil?
-      unless available[id]['validators'].nil?
-        if available[id]['validators'].is_a?(Array)
-          validators += available[id]['validators']
-        else
-          validators << available[id]['validators']
-        end
+  def self.validators(id=nil)
+    validators = []
+    available.each do |name, channel|
+      next if id and id != name
+      if channel['validators'].is_a?(Array)
+        validators += channel['validators']
+      else
+        validators << channel['validators']
       end
-      if available[id]['format']
-        validators += ExportFormats.validators(available[id]['format'])
+      if id and channel['format']
+        validators += ExportFormats.validators(channel['format'])
+      else
+        validators += ExportFormats.validators
       end
     end
     validators.collect do |validator|

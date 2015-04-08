@@ -3,16 +3,17 @@ module Haltr
     module Facturae
 
       def self.included(base)
+        condition = Haltr::Validator.condition_for(Haltr::Validator::Facturae)
         base.class_eval do
-          validates_length_of :file_reference, maximum: 20
-          validates_length_of :accounting_cost, maximum: 40
-          validates_length_of :delivery_note_number, maximum: 30
-          validate :custom_validations
-          validates_associated :client
+          validates_length_of :file_reference, maximum: 20, if: condition
+          validates_length_of :accounting_cost, maximum: 40, if: condition
+          validates_length_of :delivery_note_number, maximum: 30, if: condition
+          validate :facturae_validations, if: condition
+          validates_associated :client, if: condition
         end
       end
 
-      def custom_validations
+      def facturae_validations
         # facturae 3.x needs taxes to be valid
         invoice_lines.each do |line|
           unless line.taxes_outputs.any?
@@ -42,7 +43,7 @@ module Haltr
             errors.add(:field_payment_method, I18n.t(:requires_client_bank_account))
           end
         elsif transfer?
-          bank_info = bank_info
+          bank_info = self.bank_info
           if !bank_info or (bank_info.bank_account.blank? and bank_info.iban.blank?)
             errors.add(:field_payment_method, I18n.t(:requires_company_bank_account))
           elsif (bank_info.bank_account.blank? and !bank_info.use_iban?)

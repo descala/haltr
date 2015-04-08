@@ -4,13 +4,11 @@ module Haltr::ExportableDocument
   def self.included(base)
     base.class_eval do
 
-      before_validation do
-        ExportChannels.validators(client.invoice_format).each do |validator|
-          # prevent duplicate errors when including same module several times
-          unless self.class.ancestors.include? validator
-            # include validators from channel
-            self.class.send(:include, validator)
-          end
+      ExportChannels.validators.each do |validator|
+        # prevent duplicate errors when including same module several times
+        unless base.ancestors.include? validator
+          # include validators from channel
+          base.send(:include, validator)
         end
       end
 

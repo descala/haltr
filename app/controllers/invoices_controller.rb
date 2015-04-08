@@ -441,6 +441,8 @@ class InvoicesController < ApplicationController
   def send_invoice
     create_and_queue_file
     flash[:notice] = "#{l(:notice_invoice_sent)}"
+  rescue StateMachine::InvalidTransition => e
+    flash[:error] = l(:state_not_allowed_for_sending, state: l("state_#{@invoice.state}"))
   rescue Exception => e
     # e.backtrace does not fit in session leading to
     #   ActionController::Session::CookieStore::CookieOverflow
@@ -785,10 +787,10 @@ class InvoicesController < ApplicationController
       class_for_send = ExportChannels.class_for_send(export_id).constantize rescue nil
       sender = class_for_send.new(@invoice,User.current)
       if sender.respond_to?(:immediate_perform)
+        @invoice.queue!
         sender.immediate_perform
-        @invoice.queue || @invoice.requeue
       elsif sender.respond_to?(:perform)
-        @invoice.queue || @invoice.requeue
+        @invoice.queue!
         Delayed::Job.enqueue sender
       else
         raise "Error in channels.yml: check configuration for #{export_id}"
@@ -810,10 +812,10 @@ class InvoicesController < ApplicationController
       class_for_send = ExportChannels.class_for_send(export_id).constantize rescue nil
       sender = class_for_send.new(@invoice,User.current)
       if sender.respond_to?(:immediate_perform)
+        @invoice.queue!
         sender.immediate_perform(File.read(invoice_file.path))
-        @invoice.queue || @invoice.requeue
       elsif sender.respond_to?(:perform)
-        @invoice.queue || @invoice.requeue
+        @invoice.queue!
         if ExportChannels.format(export_id) == 'pdf'
           sender.pdf = File.read(invoice_file.path)
           #TODO: sender.class_for_send = 'send_signed_pdf_by_mail'
@@ -826,6 +828,7 @@ class InvoicesController < ApplicationController
         raise "Error in channels.yml: check configuration for #{export_id}"
       end
     else
+      @invoice.queue!
       path = ExportChannels.path export_id
       format = ExportChannels.format export_id
       file_ext = format == "pdf" ? "pdf" : "xml"
@@ -841,8 +844,6 @@ class InvoicesController < ApplicationController
       end
       FileUtils.mv(invoice_file.path,destination)
     end
-    #TODO state restrictions
-    @invoice.queue || @invoice.requeue
   end
 
   def redirect_to_correct_controller

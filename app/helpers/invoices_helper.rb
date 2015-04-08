@@ -31,7 +31,7 @@ module InvoicesHelper
 
   def send_link_for_invoice
     confirm = @invoice.sent? ? j(l(:sure_to_resend_invoice, :num=>@invoice.number).html_safe) : nil
-    if @invoice.valid?
+    if @invoice.valid? and @invoice.can_queue?
       unless @js.blank?
         # channel uses javascript to send invoice
         if User.current.allowed_to?(:general_use, @project)
@@ -47,11 +47,14 @@ module InvoicesHelper
           :class=>'icon-haltr-send', :title => @invoice.sending_info.html_safe,
           :confirm => confirm
       end
-    else
+    elsif @invoice.can_queue?
       # invoice has export errors (related to the format or channel)
       # or a format without channel, like "paper"
       link_to l(:label_send), "#", :class=>'icon-haltr-send disabled',
         :title => @invoice.sending_info.html_safe
+    else
+      link_to l(:label_send), "#", :class=>'icon-haltr-send disabled',
+        :title => I18n.t(:state_not_allowed_for_sending, state: I18n.t("state_#{@invoice.state}"))
     end
   end
 

@@ -21,17 +21,18 @@ class IssuedInvoice < InvoiceDocument
   state_machine :state, :initial => :new do
     before_transition do |invoice,transition|
       unless Event.automatic.include?(transition.event.to_s)
-        Event.create(:name=>transition.event.to_s,:invoice=>invoice,:user=>User.current)
+        if transition.event.to_s == 'queue' and !invoice.state?(:new)
+          Event.create(:name=>'requeue',:invoice=>invoice,:user=>User.current)
+        else
+          Event.create(:name=>transition.event.to_s,:invoice=>invoice,:user=>User.current)
+        end
       end
     end
     event :manual_send do
       transition [:new,:sending,:error,:discarded] => :sent
     end
     event :queue do
-      transition :new => :sending
-    end
-    event :requeue do
-      transition all - :new => :sending
+      transition [:new, :error, :discarded, :refused] => :sending
     end
     event :success_sending do
       transition [:new,:sending,:error,:discarded] => :sent
