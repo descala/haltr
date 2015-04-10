@@ -444,6 +444,8 @@ class InvoiceTest < ActiveSupport::TestCase
     assert_equal 'Descuento', invoice.invoice_lines[0].discount_text
     assert_equal '132413842', invoice.delivery_note_number
     assert_equal 'BBBH-38272', invoice.ponumber
+    assert_equal Date.new(2010,3,9),  invoice.invoicing_period_start
+    assert_equal Date.new(2010,3,10), invoice.invoicing_period_end
   end
 
   test 'raise on importing invoice with >1 discount on same line' do

@@ -36,6 +36,15 @@
     <p class="col span-1-de-3">
       <%= f.text_field :delivery_note_number %>
     </p>
+
+    <% if @invoice.invoicing_period_start || @invoice.invoicing_period_end || User.current.allowed_to?(:view_invoice_extra_fields, @project) -%>
+      <p class="col span-1-de-3">
+      <%= f.text_field :invoicing_period_start, :size => 10 %><%= calendar_for('invoice_invoicing_period_start') %>
+      </p>
+      <p class="col span-1-de-3">
+      <%= f.text_field :invoicing_period_end, :size => 10 %><%= calendar_for('invoice_invoicing_period_end') %>
+      </p>
+    <% end -%>
   </div>
 
   <div id="payment_stuff">

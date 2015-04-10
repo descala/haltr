@@ -583,3 +583,6 @@ en:
   state_not_allowed_for_sending: "Cannot re-send invoices in state %{state}"
   amendment: "Amendment"
   field_legal_literals: "Certification"
+  field_invoicing_period_start: "Invoicing period start"
+  field_invoicing_period_end: "Invoicing period end"
+  field_invoicing_period: "Invoicing period"

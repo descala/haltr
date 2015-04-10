@@ -600,3 +600,6 @@ es:
   state_not_allowed_for_sending: "No se pueden reenviar facturas en estado %{state}"
   amendment: "Rectificativa"
   field_legal_literals: "Certificación"
+  field_invoicing_period_start: "Inicio periodo de facturación"
+  field_invoicing_period_end: "Fin periodo de facturación"
+  field_invoicing_period: "Periodo de facturación"

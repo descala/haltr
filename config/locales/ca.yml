@@ -596,3 +596,6 @@ ca:
   state_not_allowed_for_sending: "No es poden reenviar les factures en estat %{state}"
   amendment: "Rectificativa"
   field_legal_literals: "Certificació"
+  field_invoicing_period_start: "Inici període de facturació"
+  field_invoicing_period_end: "Fi període de facturació"
+  field_invoicing_period: "Període de facturació"
