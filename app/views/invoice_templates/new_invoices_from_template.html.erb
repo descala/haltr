@@ -62,17 +62,18 @@
             </tr>
           </thead>
           <tbody>
+            <% num = @number -%>
             <% for draft in @drafts do -%>
               <tr class="user <%= cycle("odd", "even") %>">
                 <td align="center"><%= check_box_tag "draft_ids[]", draft.id, true %></td>
-                <td align="center"><%= text_field_tag "draft_#{draft.id}", @number, :size => 5 %></td>
+                <td align="center"><%= text_field_tag "draft_#{draft.id}", num, :size => 5 %></td>
                 <td align="center"><%=h format_date draft.date %></td>
                 <td align="center"<%='class="pastdue"' if draft.past_due?%>><%=h format_date draft.due_date %></td>
                 <td><%=h draft.client %></td>
                 <td align="right"><%= money draft.import %></td>
                 <td><%= link_to(l(:button_delete), invoice_path(draft, :back_url=>project_new_invoices_from_template_path(@project)), :method=>:delete, :confirm=>l(:text_are_you_sure), :class=>'icon icon-del eliminar') if User.current.allowed_to?(:general_use,@project) %></td>
               </tr>
-              <% @number = IssuedInvoice.increment_right(@number) -%>
+              <% num = IssuedInvoice.increment_right(num) -%>
             <% end -%>
           </tbody>
         </table>
