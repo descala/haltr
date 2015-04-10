@@ -53,7 +53,7 @@
           <thead>
             <tr>
               <th id="change_checks" title="check/uncheck all"><%= image_tag "true.png" %></th>
-              <th><%= l(:field_number) %></th>
+              <th style="min-width: 108px;"><%= l(:field_number) %></th>
               <th><%= l(:field_date) %></th>
               <th><%= l(:field_due_date) %></th>
               <th><%= l(:field_company) %></th>
@@ -63,7 +63,7 @@
           </thead>
           <tbody>
             <% num = @number -%>
-            <% for draft in @drafts do -%>
+            <% @drafts.each do |draft| -%>
               <tr class="user <%= cycle("odd", "even") %>">
                 <td align="center"><%= check_box_tag "draft_ids[]", draft.id, true %></td>
                 <td align="center"><%= text_field_tag "draft_#{draft.id}", num, :size => 5 %></td>
