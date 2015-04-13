@@ -33,6 +33,52 @@
          </TotalExecutableAmount>
          <InvoiceCurrencyCode><%=h  @invoice.currency %></InvoiceCurrencyCode>
       </Batch>
+<% if @invoice.has_factoring_data? -%>
+      <FactoringAssignmentData>
+        <Assignee>
+          <TaxIdentification>
+            <PersonTypeCode><%=h @invoice.fa_person_type %></PersonTypeCode>
+            <ResidenceTypeCode><%=h @invoice.fa_residence_type %></ResidenceTypeCode>
+            <TaxIdentificationNumber><%=h @invoice.fa_taxcode %></TaxIdentificationNumber>
+          </TaxIdentification>
+          <LegalEntity>
+            <CorporateName><%=h @invoice.fa_name %></CorporateName>
+            <AddressInSpain>
+              <Address><%=h @invoice.fa_address %></Address>
+              <PostCode><%=h @invoice.fa_postcode %></PostCode>
+              <Town><%=h @invoice.fa_town %></Town>
+              <Province><%=h @invoice.fa_province %></Province>
+              <CountryCode><%=h @invoice.fa_country %></CountryCode>
+            </AddressInSpain>
+            <ContactDetails>
+              <AdditionalContactDetails><%=h @invoice.fa_info %></AdditionalContactDetails>
+            </ContactDetails>
+          </LegalEntity>
+        </Assignee>
+        <PaymentDetails>
+          <Installment>
+            <InstallmentDueDate><%=h @invoice.fa_duedate %></InstallmentDueDate>
+            <InstallmentAmount><%=h @invoice.fa_import %></InstallmentAmount>
+            <PaymentMeans><%=h @invoice.payment_method_code(:facturae, :fa_payment_method) %></PaymentMeans>
+<% if @invoice.fa_payment_method == 4 -%>
+            <AccountToBeCredited>
+              <IBAN><%=h @invoice.fa_iban %></IBAN>
+              <BankCode><%=h @invoice.fa_bank_code %></BankCode>
+            </AccountToBeCredited>
+<% else -%>
+            <AccountToBeDebited>
+              <IBAN><%=h @invoice.fa_iban %></IBAN>
+              <BankCode><%=h @invoice.fa_bank_code %></BankCode>
+            </AccountToBeDebited>
+<% end -%>
+            <CollectionAdditionalInformation><%=h @invoice.fa_clauses %></CollectionAdditionalInformation>
+          </Installment>
+        </PaymentDetails>
+<% if @invoice.fa_clauses -%>
+        <FactoringAssignmentClauses><%=h @invoice.fa_clauses %></FactoringAssignmentClauses>
+<% end -%>
+      </FactoringAssignmentData>
+<% end -%>
    </FileHeader>
    <Parties>
       <SellerParty>

@@ -4,7 +4,7 @@ class Invoice < ActiveRecord::Base
 
   include HaltrHelper
   include Haltr::FloatParser
-  float_parse :discount_percent
+  float_parse :discount_percent, :fa_import
 
   audited except: [:import_in_cents, :total_in_cents,
                    :state, :has_been_read, :id, :original]
@@ -213,9 +213,9 @@ class Invoice < ActiveRecord::Base
     read_attribute(:payment_method) == PAYMENT_SPECIAL
   end
 
-  def payment_method_code(format)
-    if PAYMENT_CODES[read_attribute(:payment_method)]
-      PAYMENT_CODES[read_attribute(:payment_method)][format]
+  def payment_method_code(format, attr=:payment_method)
+    if PAYMENT_CODES[self[attr]]
+      PAYMENT_CODES[self[attr]][format]
     end
   end
 
@@ -458,6 +458,14 @@ _INV
     updated_at > created_at
   end
 
+  # has factoring assignment data?
+  def has_factoring_data?
+    %w(
+    fa_person_type fa_residence_type fa_taxcode fa_name fa_address
+    fa_postcode fa_town fa_province fa_country fa_info fa_duedate fa_import
+    fa_iban fa_bank_code fa_clauses fa_payment_method
+    ).reject { |attr| self.send(attr).blank? or self.send(attr) == 0 }.any?
+  end
 
   def self.create_from_xml(raw_invoice,user_or_company,md5,transport,from=nil,issued=nil,keep_original=true,validate=true)
 
@@ -501,6 +509,25 @@ _INV
     accounting_cost  = Haltr::Utils.get_xpath(doc,xpaths[:accounting_cost])
     payments_on_account = Haltr::Utils.get_xpath(doc,xpaths[:payments_on_account]) || 0
     amend_of         = Haltr::Utils.get_xpath(doc,xpaths[:amend_of])
+
+    # factoring assignment data
+    fa_person_type    = Haltr::Utils.get_xpath(doc,xpaths[:fa_person_type])
+    fa_residence_type = Haltr::Utils.get_xpath(doc,xpaths[:fa_residence_type])
+    fa_taxcode        = Haltr::Utils.get_xpath(doc,xpaths[:fa_taxcode])
+    fa_name           = Haltr::Utils.get_xpath(doc,xpaths[:fa_name])
+    fa_address        = Haltr::Utils.get_xpath(doc,xpaths[:fa_address])
+    fa_postcode       = Haltr::Utils.get_xpath(doc,xpaths[:fa_postcode])
+    fa_town           = Haltr::Utils.get_xpath(doc,xpaths[:fa_town])
+    fa_province       = Haltr::Utils.get_xpath(doc,xpaths[:fa_province])
+    fa_country        = Haltr::Utils.get_xpath(doc,xpaths[:fa_country])
+    fa_info           = Haltr::Utils.get_xpath(doc,xpaths[:fa_info])
+    fa_duedate        = Haltr::Utils.get_xpath(doc,xpaths[:fa_duedate])
+    fa_import         = Haltr::Utils.get_xpath(doc,xpaths[:fa_import])
+    fa_iban           = Haltr::Utils.get_xpath(doc,xpaths[:fa_iban])
+    fa_bank_code      = Haltr::Utils.get_xpath(doc,xpaths[:fa_bank_code])
+    fa_clauses        = Haltr::Utils.get_xpath(doc,xpaths[:fa_clauses])
+    fa_payment_method = Haltr::Utils.get_xpath(doc,xpaths[:fa_payment_method])
+    fa_payment_method = Haltr::Utils.payment_method_from_facturae(fa_payment_method)
 
     invoice, client, client_role, company, user = nil
 
@@ -659,7 +686,23 @@ _INV
       :charge_amount    => charge,
       :charge_reason    => charge_reason,
       :accounting_cost  => accounting_cost,
-      :payments_on_account => payments_on_account.to_money(currency)
+      :payments_on_account => payments_on_account.to_money(currency),
+      :fa_person_type    => fa_person_type,
+      :fa_residence_type => fa_residence_type,
+      :fa_taxcode        => fa_taxcode,
+      :fa_name           => fa_name,
+      :fa_address        => fa_address,
+      :fa_postcode       => fa_postcode,
+      :fa_town           => fa_town,
+      :fa_province       => fa_province,
+      :fa_country        => fa_country,
+      :fa_info           => fa_info,
+      :fa_duedate        => fa_duedate,
+      :fa_import         => fa_import,
+      :fa_payment_method => fa_payment_method,
+      :fa_iban           => fa_iban,
+      :fa_bank_code      => fa_bank_code,
+      :fa_clauses        => fa_clauses
     )
 
     if raw_invoice.respond_to? :filename             # Mail::Part
@@ -673,16 +716,8 @@ _INV
     end
 
     if invoice_format =~ /facturae/
-      facturae_payment_codes = {}
-      PAYMENT_CODES.each do |haltr_code, codes|
-        facturae_payment_codes[codes[:facturae]] = haltr_code
-      end
       xml_payment_method = Haltr::Utils.get_xpath(doc,xpaths[:payment_method])
-      if facturae_payment_codes.has_key?(xml_payment_method)
-        invoice.payment_method = facturae_payment_codes[xml_payment_method]
-      else
-        invoice.payment_method = nil
-      end
+      invoice.payment_method = Haltr::Utils.payment_method_from_facturae(xml_payment_method)
     else
       #TODO ubl
     end

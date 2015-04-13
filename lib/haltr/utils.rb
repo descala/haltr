@@ -123,6 +123,24 @@ module Haltr
           xpaths[:dir3_code]          = "CentreCode"
           xpaths[:dir3_role]          = "RoleTypeCode"
           xpaths[:dir3_name]          = "CentreDescription"
+
+          xpaths[:fa_person_type]     = "//FileHeader/FactoringAssignmentData/Assignee/TaxIdentification/PersonTypeCode"
+          xpaths[:fa_residence_type]  = "//FileHeader/FactoringAssignmentData/Assignee/TaxIdentification/ResidenceTypeCode"
+          xpaths[:fa_taxcode]         = "//FileHeader/FactoringAssignmentData/Assignee/TaxIdentification/TaxIdentificationNumber"
+          xpaths[:fa_name]            = "//FileHeader/FactoringAssignmentData/Assignee/LegalEntity/CorporateName"
+          xpaths[:fa_address]         = "//FileHeader/FactoringAssignmentData/Assignee/LegalEntity/AddressInSpain/Address"
+          xpaths[:fa_postcode]        = "//FileHeader/FactoringAssignmentData/Assignee/LegalEntity/AddressInSpain/PostCode"
+          xpaths[:fa_town]            = "//FileHeader/FactoringAssignmentData/Assignee/LegalEntity/AddressInSpain/Town"
+          xpaths[:fa_province]        = "//FileHeader/FactoringAssignmentData/Assignee/LegalEntity/AddressInSpain/Province"
+          xpaths[:fa_country]         = "//FileHeader/FactoringAssignmentData/Assignee/LegalEntity/AddressInSpain/CountryCode"
+          xpaths[:fa_info]            = "//FileHeader/FactoringAssignmentData/Assignee/LegalEntity/ContactDetails/AdditionalContactDetails"
+          xpaths[:fa_duedate]         = "//FileHeader/FactoringAssignmentData/PaymentDetails/Installment/InstallmentDueDate"
+          xpaths[:fa_import]          = "//FileHeader/FactoringAssignmentData/PaymentDetails/Installment/InstallmentAmount"
+          xpaths[:fa_payment_method]  = "//FileHeader/FactoringAssignmentData/PaymentDetails/Installment/PaymentMeans"
+          xpaths[:fa_iban]            = "//FileHeader/FactoringAssignmentData/PaymentDetails/Installment/*/IBAN"
+          xpaths[:fa_bank_code]       = "//FileHeader/FactoringAssignmentData/PaymentDetails/Installment/*/BankCode"
+          xpaths[:fa_clauses]         = "//FileHeader/FactoringAssignmentData/FactoringAssignmentClauses"
+
         elsif format =~ /ubl/
           xpaths[:invoice_number]     = "/Invoice/cbc:ID"
           xpaths[:invoice_date]       = "/Invoice/cbc:IssueDate"
@@ -156,6 +174,14 @@ module Haltr
           xpaths[:currency]           = "/Invoice/cbc:DocumentCurrencyCode"
         end
         xpaths
+      end
+
+      def payment_method_from_facturae(code)
+        facturae_codes = {}
+        Invoice::PAYMENT_CODES.each do |haltr_code, codes|
+          facturae_codes[codes[:facturae]] = haltr_code
+        end
+        facturae_codes[code]
       end
 
     end

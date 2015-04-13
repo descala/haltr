@@ -584,3 +584,20 @@ fr:
   field_invoicing_period_start: "Invoicing period start"
   field_invoicing_period_end: "Invoicing period end"
   field_invoicing_period: "Invoicing period"
+  label_factoring_assignment_data: 'Factoring assignment'
+  field_fa_person_type: 'Entity type'
+  field_fa_residence_type: 'Residence type'
+  field_fa_taxcode: 'VAT ID number'
+  field_fa_name: 'Name'
+  field_fa_address: 'Address'
+  field_fa_postcode: 'Postcode'
+  field_fa_town: 'City'
+  field_fa_province: 'Province'
+  field_fa_country: 'Country'
+  field_fa_info: 'Information'
+  field_fa_duedate: 'Due date'
+  field_fa_import: 'Import'
+  field_fa_iban: 'IBAN'
+  field_fa_bank_code: 'Bank codce'
+  field_fa_clauses: 'Assignment clause'
+  field_fa_payment_method: 'Payment method'

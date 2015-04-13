@@ -543,4 +543,26 @@ class InvoiceTest < ActiveSupport::TestCase
     assert_equal 119.22, invoices(:i14).total.dollars
   end
 
+  # import invoice_facturae32_issued8.xml
+  test 'it imports FactoringAssignmentData from facturae32' do
+    file = File.new(File.join(File.dirname(__FILE__),'..','fixtures','documents','invoice_facturae32_issued8.xml'))
+    invoice = Invoice.create_from_xml(file,User.find_by_login('jsmith'),"1234",'uploaded',User.current.name)
+    assert_equal 'J',                        invoice.fa_person_type
+    assert_equal 'R',                        invoice.fa_residence_type
+    assert_equal 'ESA12345678',              invoice.fa_taxcode
+    assert_equal 'A BANC, S.A.',             invoice.fa_name
+    assert_equal 'Street, 1',                invoice.fa_address
+    assert_equal '08080',                    invoice.fa_postcode
+    assert_equal 'BARCELONA',                invoice.fa_town
+    assert_equal 'BARCELONA',                invoice.fa_province
+    assert_equal 'ESP',                      invoice.fa_country
+    assert_equal '20000000000000000000',     invoice.fa_info
+    assert_equal Date.new(2015,5,6),         invoice.fa_duedate
+    assert_equal 372.08,                     invoice.fa_import
+    assert_equal 4,                          invoice.fa_payment_method
+    assert_equal 'ES1234567890123456789012', invoice.fa_iban
+    assert_equal 'ABCABCAAXXX',              invoice.fa_bank_code
+    assert_equal 'Clauses',                  invoice.fa_clauses
+  end
+
 end

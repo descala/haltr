@@ -603,3 +603,20 @@ es:
   field_invoicing_period_start: "Inicio periodo de facturación"
   field_invoicing_period_end: "Fin periodo de facturación"
   field_invoicing_period: "Periodo de facturación"
+  label_factoring_assignment_data: 'Cesión de factoring'
+  field_fa_person_type: 'Tipo entidad'
+  field_fa_residence_type: 'Residencia'
+  field_fa_taxcode: 'NIF'
+  field_fa_name: 'Nombre'
+  field_fa_address: 'Dirección'
+  field_fa_postcode: 'Código postal'
+  field_fa_town: 'Ciudad'
+  field_fa_province: 'Provincia'
+  field_fa_country: 'País'
+  field_fa_info: 'Información'
+  field_fa_duedate: 'Fecha vencimiento'
+  field_fa_import: 'Importe'
+  field_fa_iban: 'IBAN'
+  field_fa_bank_code: 'Código bancario'
+  field_fa_clauses: 'Cláusula de cesión'
+  field_fa_payment_method: 'Método de pago'

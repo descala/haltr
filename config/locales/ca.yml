@@ -599,3 +599,20 @@ ca:
   field_invoicing_period_start: "Inici període de facturació"
   field_invoicing_period_end: "Fi període de facturació"
   field_invoicing_period: "Període de facturació"
+  label_factoring_assignment_data: 'Cessió de factoring'
+  field_fa_person_type: 'Tipus entitat'
+  field_fa_residence_type: 'Residència'
+  field_fa_taxcode: 'NIF'
+  field_fa_name: 'Nom'
+  field_fa_address: 'Adreça'
+  field_fa_postcode: 'Codi postal'
+  field_fa_town: 'Ciutat'
+  field_fa_province: 'Provincia'
+  field_fa_country: 'País'
+  field_fa_info: 'Informació'
+  field_fa_duedate: 'Data venciment'
+  field_fa_import: 'Import'
+  field_fa_iban: 'IBAN'
+  field_fa_bank_code: 'Codi bancari'
+  field_fa_clauses: 'Clàusula de cessió'
+  field_fa_payment_method: 'Mètode de pagament'
