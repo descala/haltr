@@ -77,7 +77,7 @@ class InvoiceLine < ActiveRecord::Base
 
   # warn! this tax_amount does not include global discounts.
   def tax_amount(tax)
-    taxable_base * (tax.percent / 100.0)
+    taxable_base * (tax.percent.to_f / 100.0)
   end
 
   def discount_amount
@@ -115,11 +115,11 @@ class InvoiceLine < ActiveRecord::Base
   end
 
   def taxes_withheld
-    taxes.select {|t| t.percent < 0 }
+    taxes.select {|t| t.percent.to_f < 0 }
   end
 
   def taxes_outputs
-    taxes.select {|t| t.percent >= 0 }
+    taxes.select {|t| t.percent.to_f >= 0 }
   end
 
   def exempt_taxes
