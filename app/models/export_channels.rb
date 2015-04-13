@@ -61,11 +61,11 @@ class ExportChannels
         validators += ExportFormats.validators
       end
     end
-    validators.collect do |validator|
+    validators.compact.collect do |validator|
       begin
         validator.constantize
       rescue NameError => e
-        Rails.logger.error "error loading #{validator}: #{e}"
+        Rails.logger.error "error loading validator #{validator}: #{e}"
         nil
       end
     end.compact.uniq
