@@ -833,7 +833,7 @@ class InvoicesController < ApplicationController
           invoice
         end
       else
-        if @invoice.can_queue?
+        if invoice.can_queue?
           @errors << "#{l(:error_invoice_not_sent, :num=>invoice.number)}: #{invoice.errors.full_messages.join(', ')}"
         else
           @errors << "#{l(:error_invoice_not_sent, :num=>invoice.number)}: #{l(:state_not_allowed_for_sending, state: l("state_#{invoice.state}"))}"
