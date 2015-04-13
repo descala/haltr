@@ -14,9 +14,17 @@ class ExportFormats
     available.include? id
   end
 
-  def self.validators(id)
-    return [] if available[id].nil? or available[id]["validators"].nil?
-    available[id]["validators"].is_a?(Array) ? available[id]["validators"] : [available[id]["validators"]]
+  def self.validators(id=nil)
+    validators = []
+    available.each do |name, format|
+      next if id and id != name
+      if format['validators'].is_a?(Array)
+        validators += format['validators']
+      else
+        validators << format['validators']
+      end
+    end
+    validators.compact.uniq
   end
 
   def self.[](id)

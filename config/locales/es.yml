@@ -599,6 +599,8 @@ es:
   field_series_code: "Serie"
   state_not_allowed_for_sending: "No se pueden reenviar facturas en estado %{state}"
   amendment: "Rectificativa"
+  missing_imap_config: "Falta la configuracion IMAP en \"Mi empresa\""
+  transport: "Transporte"
   field_legal_literals: "Certificación"
   field_invoicing_period_start: "Inicio periodo de facturación"
   field_invoicing_period_end: "Fin periodo de facturación"

@@ -22,14 +22,23 @@ class InvoiceTest < ActiveSupport::TestCase
     date = Date.new(2000,12,1)
     i = IssuedInvoice.new(:client=>clients(:client1),:project=>Project.find(2),:date=>date,:number=>111)
     i.invoice_lines << invoice_lines(:invoice1_l1).dup
+    i.invoice_lines.each do |line|
+      line.taxes = [Tax.new(name: 'VAT', percent: 0, category: 'E')]
+    end
     i.save!
     assert_equal date, i.due_date
     i = IssuedInvoice.new(:client=>clients(:client1),:project=>Project.find(2),:date=>date,:number=>222,:terms=>"1m15")
     i.invoice_lines << invoice_lines(:invoice1_l1).dup
+    i.invoice_lines.each do |line|
+      line.taxes = [Tax.new(name: 'VAT', percent: 0, category: 'E')]
+    end
     i.save!
     assert_equal Date.new(2001,1,15), i.due_date
     i = IssuedInvoice.new(:client=>clients(:client1),:project=>Project.find(2),:date=>date,:number=>333,:terms=>"3m15")
     i.invoice_lines << invoice_lines(:invoice1_l1).dup
+    i.invoice_lines.each do |line|
+      line.taxes = [Tax.new(name: 'VAT', percent: 0, category: 'E')]
+    end
     i.save!
     assert_equal Date.new(2001,3,15), i.due_date
   end
@@ -160,33 +169,30 @@ class InvoiceTest < ActiveSupport::TestCase
   test 'payment_method_requirements' do
     # invoice with payment cash (no requirements)
     i = invoices(:i8)
-    Haltr::Validator::Facturae.validate(i)
-    assert(!i.export_errors.flatten.include?(:field_payment_method))
+    assert(i.valid?)
     # invoice with payment debit (client has bank_account)
     i = invoices(:i9)
-    Haltr::Validator::Facturae.validate(i)
-    assert(!i.export_errors.flatten.include?(:field_payment_method))
+    assert(i.valid?)
     # remove client bank_account
     i.client.bank_account = ""
-    Haltr::Validator::Facturae.validate(i)
-    assert(i.export_errors.flatten.include?(:field_payment_method))
+    assert(!i.valid?)
+    assert(i.errors.messages.keys.include? :field_payment_method)
     # invoice with payment transfer (invoice has bank_info)
     i = invoices(:i7)
     assert_not_nil i.bank_info
-    Haltr::Validator::Facturae.validate(i)
-    assert(!i.export_errors.flatten.include?(:field_payment_method))
+    assert(i.valid?)
     i.bank_info = nil
-    Haltr::Validator::Facturae.validate(i)
-    assert(i.export_errors.flatten.include?(:field_payment_method))
+    assert(!i.valid?)
+    assert(i.errors.messages.keys.include?(:field_payment_method))
   end
 
   test 'invoice_has_taxes' do
     i = invoices(:i8)
-    Haltr::Validator::Facturae.validate(i)
-    assert_equal(0, i.export_errors.size)
-    i = invoices(:i9)
-    Haltr::Validator::Facturae.validate(i)
-    assert_equal(1, i.export_errors.size)
+    assert(i.valid?)
+    assert_equal(0, i.errors.size)
+    i.invoice_lines.first.taxes=[]
+    assert(!i.valid?)
+    assert_equal(1, i.errors.size)
   end
 
   test 'invoice payment_method' do
@@ -200,7 +206,7 @@ class InvoiceTest < ActiveSupport::TestCase
     i.payment_method = "#{Invoice::PAYMENT_TRANSFER}_2"
     assert !i.valid?, "bank_info is from other company"
     i.payment_method = Invoice::PAYMENT_TRANSFER
-    assert i.valid?
+    assert !i.valid?
     assert i.transfer?
     assert_nil i.bank_info
     i.payment_method = "#{Invoice::PAYMENT_DEBIT}_1"
@@ -429,9 +435,11 @@ class InvoiceTest < ActiveSupport::TestCase
     # modified since uploaded?
     assert !invoice.modified_since_created?, "not modified since created"
     assert invoice.queue
+    assert !invoice.queue
     assert !invoice.modified_since_created?, "state changes do not update timestamps"
     invoice.extra_info = "change something"
-    assert invoice.save
+    invoice.state = :new
+    assert invoice.save!
     assert invoice.modified_since_created?, "modified since created"
   end
 

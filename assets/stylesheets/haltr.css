@@ -248,3 +248,8 @@ span#attachments_fields input.description {
   margin-left: 1%;
   width: 69%;
 }
+span#send_info {
+  position: absolute;
+  top: -13px;
+  right: 0px;
+}

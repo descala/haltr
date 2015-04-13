@@ -21,23 +21,24 @@ class IssuedInvoice < InvoiceDocument
   state_machine :state, :initial => :new do
     before_transition do |invoice,transition|
       unless Event.automatic.include?(transition.event.to_s)
-        Event.create(:name=>transition.event.to_s,:invoice=>invoice,:user=>User.current)
+        if transition.event.to_s == 'queue' and !invoice.state?(:new)
+          Event.create(:name=>'requeue',:invoice=>invoice,:user=>User.current)
+        else
+          Event.create(:name=>transition.event.to_s,:invoice=>invoice,:user=>User.current)
+        end
       end
     end
     event :manual_send do
       transition [:new,:sending,:error,:discarded] => :sent
     end
     event :queue do
-      transition :new => :sending
-    end
-    event :requeue do
-      transition all - :new => :sending
+      transition [:new, :error, :discarded, :refused] => :sending
     end
     event :success_sending do
       transition [:new,:sending,:error,:discarded] => :sent
     end
     event :mark_unsent do
-      transition [:sent,:closed,:error,:discarded] => :new
+      transition [:sent,:sending,:closed,:error,:discarded] => :new
     end
     event :error_sending do
       transition :sending => :error
@@ -118,17 +119,6 @@ class IssuedInvoice < InvoiceDocument
 
   def self.past_due_total(project)
     IssuedInvoice.sum :total_in_cents, :conditions => ["state <> 'closed' and due_date < ? and project_id = ?", Date.today, project.id]
-  end
-
-  def can_be_exported?
-    # TODO Test if endpoint is correcty configured
-    return @can_be_exported unless @can_be_exported.nil?
-    @can_be_exported = (self.valid? and !ExportChannels.format(client.invoice_format).blank?)
-    ExportChannels.validators(client.invoice_format).each do |v|
-      v.send('validate', self)
-    end
-    @can_be_exported &&= (export_errors.size == 0)
-    @can_be_exported
   end
 
   def self.last_number(project)

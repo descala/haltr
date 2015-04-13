@@ -8,10 +8,6 @@ class DraftInvoice < IssuedInvoice
     l(:label_draft)
   end
 
-  def can_be_exported?
-    false
-  end
-
   protected
 
   # draft invoices always in "new" state

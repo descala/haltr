@@ -20,7 +20,7 @@ module InvoicesHelper
   def clients_for_select
     clients = Client.find(:all, :order => 'name', :conditions => ["project_id = ?", @project])
     # check if client.valid?: if you request to link profile, and then unlink it, client is invalid
-    clients.collect {|c| [c.name, c.id] unless c.name.blank?}.compact
+    clients.collect {|c| [c.name, c.id, {'data-invoice_format'=>ExportChannels.l(c.invoice_format)}] unless c.name.blank?}.compact
   end
 
   def precision(num,precision=2)
@@ -31,7 +31,8 @@ module InvoicesHelper
 
   def send_link_for_invoice
     confirm = @invoice.sent? ? j(l(:sure_to_resend_invoice, :num=>@invoice.number).html_safe) : nil
-    if @invoice.can_be_exported?
+    if @invoice.valid? and @invoice.can_queue? and
+        ExportChannels.format(@invoice.client.invoice_format) != 'none'
       unless @js.blank?
         # channel uses javascript to send invoice
         if User.current.allowed_to?(:general_use, @project)
@@ -47,11 +48,14 @@ module InvoicesHelper
           :class=>'icon-haltr-send', :title => @invoice.sending_info.html_safe,
           :confirm => confirm
       end
-    else
+    elsif @invoice.can_queue?
       # invoice has export errors (related to the format or channel)
       # or a format without channel, like "paper"
       link_to l(:label_send), "#", :class=>'icon-haltr-send disabled',
         :title => @invoice.sending_info.html_safe
+    else
+      link_to l(:label_send), "#", :class=>'icon-haltr-send disabled',
+        :title => I18n.t(:state_not_allowed_for_sending, state: I18n.t("state_#{@invoice.state}"))
     end
   end
 

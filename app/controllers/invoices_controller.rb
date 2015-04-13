@@ -173,7 +173,7 @@ class InvoicesController < ApplicationController
     if @invoice.save
       flash[:notice] = l(:notice_successful_create)
       if params[:create_and_send]
-        if @invoice.can_be_exported?
+        if @invoice.valid?
           if ExportChannels[@invoice.client.invoice_format]['javascript']
             # channel sends via javascript, set autocall and autocall_args
             # 'show' action will set a div to tell javascript to automatically
@@ -235,7 +235,7 @@ class InvoicesController < ApplicationController
       respond_to do |format|
         format.html {
           if params[:save_and_send]
-            if @invoice.can_be_exported?
+            if @invoice.valid?
               if ExportChannels[@invoice.client.invoice_format]['javascript']
                 # channel sends via javascript, set autocall and autocall_args
                 # 'show' action will set a div to tell javascript to automatically
@@ -334,11 +334,14 @@ class InvoicesController < ApplicationController
     if request.get?
       # send a base64 encoded document
       # this is used to sign invoices with a local certificate
-      @local_certificate = true
-      file = doc_format == "pdf" ? create_pdf_file : create_xml_file(doc_format)
+      if doc_format == 'pdf'
+        doc = Haltr::Pdf.generate(@invoice)
+      else
+        doc = Haltr::Xml.generate(@invoice, doc_format, true)
+      end
       base64_file=Tempfile.new("invoice_#{@invoice.id}.base64","tmp")
       File.open(base64_file.path, 'w') do |f|
-        f.write(Base64::encode64(File.read(file.path)))
+        f.write(Base64::encode64(doc))
       end
       if base64_file
         send_file(base64_file.path,
@@ -358,13 +361,17 @@ class InvoicesController < ApplicationController
         # rails replaces '+' with ' '. we undo that.
         file.write Base64.decode64(file_contents.gsub(' ','+'))
         file.close
-        queue_file file
+        @invoice.queue!
+        Haltr::Sender.send_invoice(@invoice, User.current, true, file)
         logger.info "Invoice #{@invoice.id} #{file.path} queued"
         render :text => "Document sent. document = #{file}"
       else
         render :text => "Missing document"
       end
     end
+  rescue StateMachine::InvalidTransition
+    logger.info "Invoice #{@invoice.id}: #{l(:state_not_allowed_for_sending, state: l("state_#{@invoice.state}"))}"
+    render text: l(:state_not_allowed_for_sending, state: l("state_#{@invoice.state}"))
   end
 
   def show
@@ -439,8 +446,11 @@ class InvoicesController < ApplicationController
   end
 
   def send_invoice
-    create_and_queue_file
+    @invoice.queue!
+    Haltr::Sender.send_invoice(@invoice, User.current)
     flash[:notice] = "#{l(:notice_invoice_sent)}"
+  rescue StateMachine::InvalidTransition => e
+    flash[:error] = l(:state_not_allowed_for_sending, state: l("state_#{@invoice.state}"))
   rescue Exception => e
     # e.backtrace does not fit in session leading to
     #   ActionController::Session::CookieStore::CookieOverflow
@@ -453,25 +463,9 @@ class InvoicesController < ApplicationController
   end
 
   def send_new_invoices
-    num = 0
-    @errors=[]
-    IssuedInvoice.find_can_be_sent(@project).each do |inv|
-      if num >= 10
-        flash[:error] = l(:invoice_limit_reached)
-        break
-      end
-      @invoice = inv
-      @lines = @invoice.invoice_lines
-      @client = @invoice.client || Client.new(:name=>"unknown",:project=>@invoice.project)
-      @company = @project.company
-      begin
-        create_and_queue_file
-        num = num + 1
-      rescue Exception => e
-        @errors << "#{l(:error_invoice_not_sent, :num=>@invoice.number)}: #{e.message}"
-      end
-    end
-    @num_sent = num
+    @invoices = IssuedInvoice.find_can_be_sent(@project)
+    bulk_send
+    render action: 'bulk_send'
   end
 
   def download_new_invoices
@@ -492,7 +486,7 @@ class InvoicesController < ApplicationController
         @invoice = invoice
         @lines = @invoice.invoice_lines
         @client = @invoice.client
-        pdf_file = create_pdf_file
+        pdf_file = Haltr::Pdf.generate(@invoice, true)
         zos.put_next_entry(@invoice.pdf_name)
         zos.print IO.read(pdf_file.path)
         logger.info "Added #{@invoice.pdf_name} from #{pdf_file.path}"
@@ -740,113 +734,6 @@ class InvoicesController < ApplicationController
     end
   end
 
-  def create_pdf_file
-    @is_pdf = true
-    @debug  = params[:debug]
-    pdf_file = Tempfile.new(@invoice.pdf_name,:encoding => 'ascii-8bit')
-    pdf_file.write(Haltr::Pdf.generate(@invoice))
-    logger.info "Created PDF #{pdf_file.path}"
-    pdf_file.close
-    return pdf_file
-  end
-
-  def create_xml_file(format)
-    xml = Haltr::Xml.generate(@invoice,format,@local_certificate)
-    xml_file = Tempfile.new("invoice_#{@invoice.id}.xml")
-    xml_file.write(xml)
-    logger.info "Created XML #{xml_file.path}"
-    xml_file.close
-    return xml_file
-  end
-
-  # search invoice.client.invoice_format in channels.yml in order to choose a
-  # method for sending the invoice. There are 3 options:
-  #   1) Leave invoice in a folder
-  #   2) Use a class to send the invoice (immediate_perform)
-  #   3) Queue a delayed::job (perform)
-  # for 1) this method creates a file and calls "queue_file"
-  # for 2) and 3) it queues or sends the invoice
-  #
-  # TODO: duplicated code with queue_file
-  def create_and_queue_file
-    unless @invoice.can_be_exported?
-      @invoice.export_errors.each do |export_error|
-        EventError.create(
-          :name    => 'error_sending',
-          :notes   => export_error,
-          :invoice => @invoice
-        )
-      end
-      raise @invoice.parsed_errors
-    end
-    export_id = @invoice.client.invoice_format
-    @format = ExportChannels.format export_id
-    @company = @project.company
-    if ExportChannels.folder(export_id).nil?
-      # Use special class to send invoice
-      class_for_send = ExportChannels.class_for_send(export_id).constantize rescue nil
-      sender = class_for_send.new(@invoice,User.current)
-      if sender.respond_to?(:immediate_perform)
-        sender.immediate_perform
-        @invoice.queue || @invoice.requeue
-      elsif sender.respond_to?(:perform)
-        @invoice.queue || @invoice.requeue
-        Delayed::Job.enqueue sender
-      else
-        raise "Error in channels.yml: check configuration for #{export_id}"
-      end
-    else
-      invoice_file = @format=='pdf' ? create_pdf_file : create_xml_file(@format)
-      # store file in a folder (queue)
-      queue_file(invoice_file)
-    end
-  end
-
-  # same as create_and_queue_file but it receives the file to be sent.
-  #
-  # TODO: duplicated code with create_and_queue_file
-  def queue_file(invoice_file)
-    export_id = @invoice.client.invoice_format
-    if ExportChannels.folder(export_id).nil?
-      # Use special class to send invoice
-      class_for_send = ExportChannels.class_for_send(export_id).constantize rescue nil
-      sender = class_for_send.new(@invoice,User.current)
-      if sender.respond_to?(:immediate_perform)
-        sender.immediate_perform(File.read(invoice_file.path))
-        @invoice.queue || @invoice.requeue
-      elsif sender.respond_to?(:perform)
-        @invoice.queue || @invoice.requeue
-        if ExportChannels.format(export_id) == 'pdf'
-          sender.pdf = File.read(invoice_file.path)
-          #TODO: sender.class_for_send = 'send_signed_pdf_by_mail'
-        else
-          sender.xml = File.read(invoice_file.path)
-          #TODO: sender.class_for_send = 'send_signed_xml_by_mail'
-        end
-        Delayed::Job.enqueue(sender)
-      else
-        raise "Error in channels.yml: check configuration for #{export_id}"
-      end
-    else
-      path = ExportChannels.path export_id
-      format = ExportChannels.format export_id
-      file_ext = format == "pdf" ? "pdf" : "xml"
-      i=2
-      destination="#{path}/" + "#{@invoice.client.hashid}_#{@invoice.id}.#{file_ext}".gsub(/\//,'')
-      while File.exists? destination
-        destination="#{path}/" + "#{@invoice.client.hashid}_#{i}_#{@invoice.id}.#{file_ext}".gsub(/\//,'')
-        i+=1
-      end
-      logger.info "Sending #{format} to '#{destination}' for invoice id #{@invoice.id}."
-      if Rails.env == "development"
-        FileUtils.cp(invoice_file.path,'./queued_file.data')
-      end
-      FileUtils.mv(invoice_file.path,destination)
-    end
-    #TODO state restrictions
-    @invoice.queue || @invoice.requeue
-  end
-
   def redirect_to_correct_controller
     if @invoice.is_a? IssuedInvoice and params[:controller] != "invoices"
       redirect_to(invoice_path(@invoice)) && return
@@ -921,11 +808,11 @@ class InvoicesController < ApplicationController
       next if i.state == params[:state]
       case params[:state]
       when "new"
-        all_changed &&= (i.mark_unsent)
+        all_changed = i.mark_unsent && all_changed
       when "sent"
-        all_changed &&= (i.manual_send || i.success_sending || i.unpaid)
+        all_changed = (i.manual_send || i.success_sending || i.unpaid) && all_changed
       when "closed"
-        all_changed &&= (i.close || i.paid)
+        all_changed = (i.close || i.paid) && all_changed
       else
         flash[:error] = "unknown state #{params[:state]}"
       end
@@ -935,34 +822,33 @@ class InvoicesController < ApplicationController
   end
 
   def bulk_send
-    sent = 0
-    errors = {}
-    @invoices.each do |invoice|
-      @invoice = invoice
-      @lines = @invoice.invoice_lines
-      @client = @invoice.client || Client.new(:name=>"unknown",:project=>@invoice.project)
-      @company = @project.company
-      begin
-        if ExportChannels[@invoice.client.invoice_format]['javascript']
-          raise Exception.new("Must be processed individually (channel with javascript)")
+    @errors=[]
+    num_invoices = @invoices.size
+    @invoices.collect! do |invoice|
+      if invoice.valid? and invoice.can_queue?
+        if ExportChannels[invoice.client.invoice_format]['javascript']
+          @errors << "#{l(:error_invoice_not_sent, :num=>invoice.number)}: Must be processed individually (channel with javascript)"
+          nil
+        else
+          invoice
         end
-        create_and_queue_file
-        sent += 1
-      rescue Exception => e
-        errors[@invoice.number] = e.message
-      end
-    end
-    if sent < @invoices.size
-      if Rails.env.development?
-        flash[:error] = l(:some_invoices_sent,:sent=>sent,:total=>@invoices.size) +
-          errors.collect {|num, err| "#{num}: #{err}" }.join(", ")
       else
-        flash[:error] = l(:some_invoices_sent,:sent=>sent,:total=>@invoices.size)
+        if @invoice.can_queue?
+          @errors << "#{l(:error_invoice_not_sent, :num=>invoice.number)}: #{invoice.errors.full_messages.join(', ')}"
+        else
+          @errors << "#{l(:error_invoice_not_sent, :num=>invoice.number)}: #{l(:state_not_allowed_for_sending, state: l("state_#{invoice.state}"))}"
+        end
+        nil
       end
+    end.compact!
+    Delayed::Job.enqueue(Haltr::BulkSender.new(@invoices,User.current))
+    @num_sent = @invoices.size
+
+    if @num_sent < num_invoices
+      flash[:error] = l(:some_invoices_sent,:sent=>@num_sent,:total=>num_invoices)
     else
       flash[:notice] = l(:all_invoices_sent)
     end
-    redirect_back_or_default(:action => 'index', :project_id => @project.id)
   end
 
   def haltr_sign
@@ -988,8 +874,8 @@ class InvoicesController < ApplicationController
       end
       if @invoice and ["true","1"].include?(params[:send_after_import])
         begin
-          @invoice.queue if @invoice.state?(:new)
-          create_and_queue_file
+          Haltr::Sender.send_invoice(@invoice, User.current)
+          @invoice.queue
         rescue
         end
       end
