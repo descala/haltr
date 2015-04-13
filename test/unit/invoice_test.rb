@@ -176,14 +176,14 @@ class InvoiceTest < ActiveSupport::TestCase
     # remove client bank_account
     i.client.bank_account = ""
     assert(!i.valid?)
-    assert(i.errors.messages.keys.include? :field_payment_method)
+    assert(i.errors.messages.keys.include?(:payment_method))
     # invoice with payment transfer (invoice has bank_info)
     i = invoices(:i7)
     assert_not_nil i.bank_info
     assert(i.valid?)
     i.bank_info = nil
     assert(!i.valid?)
-    assert(i.errors.messages.keys.include?(:field_payment_method))
+    assert(i.errors.messages.keys.include?(:payment_method))
   end
 
   test 'invoice_has_taxes' do
