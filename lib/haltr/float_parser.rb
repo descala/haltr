@@ -10,15 +10,15 @@ module Haltr
           define_method("#{field}=") do |value|
             value = value.to_s.strip
             val = case value
-            when /^[0-9]+$/
+            when /^-?[0-9]+$/
               value
-            when /^[0-9]+\.[0-9]+$/
+            when /^-?[0-9]+\.[0-9]+$/
               value
-            when /^[0-9]+,[0-9]+$/
+            when /^-?[0-9]+,[0-9]+$/
               value.gsub(/,/,'.')
-            when /^[0-9\.]+,[0-9]+$/
+            when /^-?[0-9\.]+,[0-9]+$/
               value.gsub(/\./,'').gsub(/,/,'.')
-            when /^[0-9,]+.[0-9]+$/
+            when /^-?[0-9,]+.[0-9]+$/
               value.gsub(/,/,'')
             else
               '0'
