@@ -31,7 +31,7 @@ class Invoice < ActiveRecord::Base
   TO_UTF_FIELDS = %w(extra_info)
 
   has_many :invoice_lines, :dependent => :destroy
-  has_many :events, :dependent => :destroy, :order => 'created_at'
+  has_many :events, :order => 'created_at'
   #has_many :taxes, :through => :invoice_lines
   belongs_to :project, :counter_cache => true
   belongs_to :client
