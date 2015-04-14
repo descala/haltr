@@ -446,6 +446,9 @@ class InvoicesController < ApplicationController
   end
 
   def send_invoice
+    unless @invoice.valid?
+      raise @invoice.errors.full_messages.join(', ')
+    end
     unless ExportChannels.can_send? @invoice.client.invoice_format
       raise "#{l(:export_channel)}: #{ExportChannels.l(@invoice.client.invoice_format)}"
     end
@@ -837,13 +840,15 @@ class InvoicesController < ApplicationController
           invoice
         end
       else
+        err = "#{l(:error_invoice_not_sent, :num=>invoice.number)}: "
         if !invoice.valid?
-          @errors << "#{l(:error_invoice_not_sent, :num=>invoice.number)}: #{invoice.errors.full_messages.join(', ')}"
+          err += invoice.errors.full_messages.join(', ')
         elsif !invoice.can_queue?
-          @errors << "#{l(:error_invoice_not_sent, :num=>invoice.number)}: #{l(:state_not_allowed_for_sending, state: l("state_#{invoice.state}"))}"
+          err += l(:state_not_allowed_for_sending, state: l("state_#{invoice.state}"))
         else
-          @errors << "#{l(:error_invoice_not_sent, :num=>invoice.number)}: #{l(:export_channel)}: #{ExportChannels.l(invoice.client.invoice_format)}"
+          err += "#{l(:export_channel)}: #{ExportChannels.l(invoice.client.invoice_format)}"
         end
+        @errors << err
         nil
       end
     end.compact!
