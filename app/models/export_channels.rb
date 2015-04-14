@@ -11,6 +11,13 @@ class ExportChannels
     {}
   end
 
+  # all channels that can send
+  def self.can_send
+    self.available.reject {|c,v|
+      v['folder'].nil? and v['class_for_send'].nil?
+    }
+  end
+
   def self.permissions
     channel_permissions = {}
     self.available.values.each do |channel|
