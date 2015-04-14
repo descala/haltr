@@ -460,11 +460,9 @@ _INV
 
   # has factoring assignment data?
   def has_factoring_data?
-    %w(
-    fa_person_type fa_residence_type fa_taxcode fa_name fa_address
-    fa_postcode fa_town fa_province fa_country fa_info fa_duedate fa_import
-    fa_iban fa_bank_code fa_clauses fa_payment_method
-    ).reject { |attr| self.send(attr).blank? or self.send(attr) == 0 }.any?
+    %w(fa_person_type fa_residence_type fa_taxcode).reject { |attr|
+      self.send(attr).blank? or self.send(attr) == 0
+    }.size == 3
   end
 
   def self.create_from_xml(raw_invoice,user_or_company,md5,transport,from=nil,issued=nil,keep_original=true,validate=true)
