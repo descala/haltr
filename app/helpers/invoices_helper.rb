@@ -55,7 +55,8 @@ module InvoicesHelper
         :title => @invoice.sending_info.html_safe
     else
       link_to l(:label_send), "#", :class=>'icon-haltr-send disabled',
-        :title => I18n.t(:state_not_allowed_for_sending, state: I18n.t("state_#{@invoice.state}"))
+        :title => ("#{@invoice.sending_info}<br/>" +
+        "#{I18n.t(:state_not_allowed_for_sending, state: I18n.t("state_#{@invoice.state}"))}").html_safe
     end
   end
 
