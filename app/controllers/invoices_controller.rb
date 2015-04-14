@@ -446,6 +446,9 @@ class InvoicesController < ApplicationController
   end
 
   def send_invoice
+    unless ExportChannels.can_send? @invoice.client.invoice_format
+      raise "#{l(:export_channel)}: #{ExportChannels.l(@invoice.client.invoice_format)}"
+    end
     @invoice.queue!
     Haltr::Sender.send_invoice(@invoice, User.current)
     flash[:notice] = "#{l(:notice_invoice_sent)}"
@@ -825,7 +828,8 @@ class InvoicesController < ApplicationController
     @errors=[]
     num_invoices = @invoices.size
     @invoices.collect! do |invoice|
-      if invoice.valid? and invoice.can_queue?
+      if invoice.valid? and invoice.can_queue? and
+          ExportChannels.can_send? invoice.client.invoice_format
         if ExportChannels[invoice.client.invoice_format]['javascript']
           @errors << "#{l(:error_invoice_not_sent, :num=>invoice.number)}: Must be processed individually (channel with javascript)"
           nil
@@ -833,10 +837,12 @@ class InvoicesController < ApplicationController
           invoice
         end
       else
-        if invoice.can_queue?
+        if !invoice.valid?
           @errors << "#{l(:error_invoice_not_sent, :num=>invoice.number)}: #{invoice.errors.full_messages.join(', ')}"
-        else
+        elsif !invoice.can_queue?
           @errors << "#{l(:error_invoice_not_sent, :num=>invoice.number)}: #{l(:state_not_allowed_for_sending, state: l("state_#{invoice.state}"))}"
+        else
+          @errors << "#{l(:error_invoice_not_sent, :num=>invoice.number)}: #{l(:export_channel)}: #{ExportChannels.l(invoice.client.invoice_format)}"
         end
         nil
       end

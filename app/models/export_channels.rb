@@ -18,6 +18,10 @@ class ExportChannels
     }
   end
 
+  def self.can_send?(id)
+    self.can_send.keys.include? id
+  end
+
   def self.permissions
     channel_permissions = {}
     self.available.values.each do |channel|

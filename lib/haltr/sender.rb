@@ -19,6 +19,14 @@ module Haltr
         raise invoice.errors.full_messages.join(', ')
       end
       export_id = invoice.client.invoice_format
+      unless ExportChannels.can_send?(export_id)
+        EventError.create(
+          :name    => 'error_sending',
+          :notes   => ExportChannels.l(export_id),
+          :invoice => invoice
+        )
+        raise ExportChannels.l(export_id)
+      end
       format = ExportChannels.format export_id
       if invoice_file
         doc = File.read(invoice_file)

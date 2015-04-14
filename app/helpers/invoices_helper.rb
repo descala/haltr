@@ -32,7 +32,7 @@ module InvoicesHelper
   def send_link_for_invoice
     confirm = @invoice.sent? ? j(l(:sure_to_resend_invoice, :num=>@invoice.number).html_safe) : nil
     if @invoice.valid? and @invoice.can_queue? and
-        ExportChannels.format(@invoice.client.invoice_format) != 'none'
+        ExportChannels.can_send?(@invoice.client.invoice_format)
       unless @js.blank?
         # channel uses javascript to send invoice
         if User.current.allowed_to?(:general_use, @project)
