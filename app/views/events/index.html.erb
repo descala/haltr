@@ -25,6 +25,10 @@
             <%= link_to_invoice_with_label(e.invoice) -%>
           <% elsif e.client -%>
             <%= link_to "#{l(:field_client)} #{e.client.name}", edit_client_path(e.client) -%>
+          <% elsif e.invoice_id -%>
+            <%= e.invoice_id %>
+          <% elsif e.client_id -%>
+            <%= e.client_id %>
           <% else -%>
             <%= e.to_s %>
           <% end -%>

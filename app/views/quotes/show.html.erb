@@ -29,7 +29,7 @@
   </div>
 </div>
 
-<%= render :partial => 'invoices/events'%>
+<%= render :partial => 'events/list', locals: {events: @invoice.visible_events} %>
 
 <% content_for :sidebar do %>
   <%= render_menu :invoices_menu, @project %>
