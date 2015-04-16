@@ -35,6 +35,10 @@ class FloatParserTest < ActiveSupport::TestCase
     f.discount_percent = '-12.3 ' ; assert_equal(-12.3, f.discount_percent)
     f.discount_percent = ' -12.3' ; assert_equal(-12.3, f.discount_percent)
     f.discount_percent = ' -1.3 ' ; assert_equal(-1.3,  f.discount_percent)
+    f.discount_percent = "1'3"    ; assert_equal(1.3,   f.discount_percent)
+    f.discount_percent = "-1'3"   ; assert_equal(-1.3,  f.discount_percent)
+    f.discount_percent = "1.001'3" ; assert_equal(1001.3, f.discount_percent)
+    f.discount_percent = "1,001'3" ; assert_equal(1001.3, f.discount_percent)
   end
 
 end

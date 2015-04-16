@@ -18,8 +18,12 @@ module Haltr
               value.gsub(/,/,'.')
             when /^-?[0-9\.]+,[0-9]+$/
               value.gsub(/\./,'').gsub(/,/,'.')
-            when /^-?[0-9,]+.[0-9]+$/
+            when /^-?[0-9,]+\.[0-9]+$/
               value.gsub(/,/,'')
+            when /^-?[0-9,]+'[0-9]+$/
+              value.gsub(/,/,'').gsub(/'/,'.')
+            when /^-?[0-9.]+'[0-9]+$/
+              value.gsub(/\./,'').gsub(/'/,'.')
             else
               '0'
             end

@@ -3,7 +3,7 @@ class InvoiceLine < ActiveRecord::Base
   unloadable
 
   include Haltr::FloatParser
-  float_parse :discount_percent, :price, :quantity
+  float_parse :discount_percent, :price, :quantity, :charge
 
   audited :associated_with => :invoice, :except => [:id, :invoice_id]
   has_associated_audits
@@ -40,24 +40,6 @@ class InvoiceLine < ActiveRecord::Base
   after_initialize {
     self.unit ||= 1
   }
-
-  # remove colons "1,23" => "1.23"
-  def price=(v)
-    write_attribute :price, (v.is_a?(String) ? v.gsub(',','.') : v)
-  end
-
-  # remove colons "1,23" => "1.23"
-  def quanity=(v)
-    write_attribute :quantity, (v.is_a?(String) ? v.gsub(',','.') : v)
-  end
-
-  def charge
-    read_attribute(:charge).to_i
-  end
-
-  def charge=(v)
-    write_attribute :charge, (v.is_a?(String) ? v.gsub(',','.') : v)
-  end
 
   # Coste Total.
   # Quantity x UnitPriceWithoutTax
