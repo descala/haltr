@@ -134,7 +134,7 @@ module InvoicesHelper
     if invoice == current
       invoice.number
     else
-      if User.current.admin? or User.current.logged? and User.current.projects.include?(invoice.project)
+      if User.current.admin? or (User.current.logged? and User.current.projects.include?(invoice.project))
         link_to(invoice.number, {:action=>'show', :id=>invoice})
       elsif invoice.visible_by_client?
         link_to(invoice.number, {:action=>'view', :client_hashid=>invoice.client.hashid, :invoice_id=>invoice.id}, :class=>'public')
