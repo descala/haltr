@@ -614,13 +614,6 @@ _INV
       if client_postalcode.blank?
         client_postalcode  = Haltr::Utils.get_xpath(doc,xpaths["#{client_role}_cp"])
       end
-      # set new client's channel to match invoice format, and sent by mail
-      case invoice_format
-      when /^facturae3/
-        client_invoice_format = invoice_format.gsub(/facturae3(\d)/,"facturae_3\\1")
-      else
-        client_invoice_format = "#TODO"
-      end
 
       client_language = User.current.language
       client_language = 'es' if client_language.blank?
@@ -637,7 +630,7 @@ _INV
         :city           => client_city,
         :currency       => currency,
         :project        => company.project,
-        :invoice_format => client_invoice_format,
+        :invoice_format => 'paper',
         :language       => client_language
       )
 
