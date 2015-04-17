@@ -16,11 +16,15 @@ module Haltr
           invoice.queue || invoice.requeue
           Rails.logger.info("[BulkSender] SENT   invoice  #{invoice.id}")
         rescue Exception => error
-          HiddenEvent.create(:name      => "error",
-                             :invoice   => invoice,
-                             :error     => error.message,
-                             :backtrace => error.backtrace)
-          Rails.logger.info("[BulkSender] ERROR  invoice  #{invoice.id} (#{error})")
+          begin
+            HiddenEvent.create(:name      => "error",
+                               :invoice   => invoice,
+                               :error     => error.message,
+                               :backtrace => error.backtrace)
+            Rails.logger.info("[BulkSender] ERROR  invoice  #{invoice.id} (#{error})")
+          rescue Exception => e
+            Rails.logger.error("[BulkSender] ERROR creating HiddenEvent: (#{e})")
+          end
         end
       end
     end
