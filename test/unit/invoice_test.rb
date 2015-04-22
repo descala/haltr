@@ -292,7 +292,7 @@ class InvoiceTest < ActiveSupport::TestCase
     assert_equal invoice.company.project, client.project
     assert_equal "ES8023100001180000012345", client.iban
     assert_equal "biiiiiiiiic", client.bic
-    assert_equal "facturae_32", client.invoice_format
+    assert_equal "paper", client.invoice_format
     # invoice
     assert       invoice.is_a?(IssuedInvoice)
     assert_equal client, invoice.client
