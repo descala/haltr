@@ -1,15 +1,15 @@
 module Haltr
   class BulkSender
 
-    attr_accessor :invoices, :user
+    attr_accessor :user, :invoice_ids
 
-    def initialize(invoices, user)
-      self.invoices = invoices
+    def initialize(invoice_ids, user)
+      self.invoice_ids = invoice_ids
       self.user = user
     end
 
     def perform
-      invoices.each do |invoice|
+      IssuedInvoice.find(invoice_ids).each do |invoice|
         Rails.logger.info("[BulkSender] TRYING invoice  #{invoice.id}")
         begin
           Haltr::Sender.send_invoice(invoice, user)
