@@ -48,7 +48,7 @@
               <PostCode><%=h @invoice.fa_postcode %></PostCode>
               <Town><%=h @invoice.fa_town %></Town>
               <Province><%=h @invoice.fa_province %></Province>
-              <CountryCode><%=h @invoice.fa_country %></CountryCode>
+              <CountryCode><%=h SunDawg::CountryIsoTranslater.translate_standard(@invoice.fa_country.upcase,"alpha2","alpha3") %></CountryCode>
             </AddressInSpain>
             <ContactDetails>
               <AdditionalContactDetails><%=h @invoice.fa_info %></AdditionalContactDetails>
@@ -60,7 +60,7 @@
             <InstallmentDueDate><%=h @invoice.fa_duedate %></InstallmentDueDate>
             <InstallmentAmount><%=h @invoice.fa_import %></InstallmentAmount>
             <PaymentMeans><%=h @invoice.payment_method_code(:facturae, :fa_payment_method) %></PaymentMeans>
-<% if @invoice.fa_payment_method == 4 -%>
+<% if @invoice.fa_payment_method.to_i == 4 -%>
             <AccountToBeCredited>
               <IBAN><%=h @invoice.fa_iban %></IBAN>
               <BankCode><%=h @invoice.fa_bank_code %></BankCode>
