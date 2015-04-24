@@ -235,6 +235,13 @@ ca:
   email: "Rebuda"
   download_original: "Descarregar original"
   view_original: "Veure original"
+  manual_mark_as: "Marcar com a %{state}"
+  done_mark_as_new: "Marcada manualment com a nova"
+  done_mark_as_sent: "Marcada manualment com a enviada"
+  done_mark_as_accepted: "Marcada manualment com a acceptada"
+  done_mark_as_registered: "Marcada manualment com a registrada"
+  done_mark_as_refused: "Marcada manualment com a refusada"
+  done_mark_as_closed: "Marcada manualment com a tancada"
 
   # Invoice templates
   label_invoice_template_new: Nova factura recurrent

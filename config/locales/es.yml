@@ -239,6 +239,13 @@ es:
   email: "Recibida"
   download_original: "Descargar original"
   view_original: "Ver original"
+  manual_mark_as: "Marcar como %{state}"
+  done_mark_as_new: "Marcada manualmente como nueva"
+  done_mark_as_sent: "Marcada manualmente como enviada"
+  done_mark_as_accepted: "Marcada manualmente como aceptada"
+  done_mark_as_registered: "Marcada manualmente como registrada"
+  done_mark_as_refused: "Marcada manualmente como rechazada"
+  done_mark_as_closed: "Marcada manualmente como cerrada"
 
   # Invoice templates
   label_invoice_template_new: Nueva plantilla

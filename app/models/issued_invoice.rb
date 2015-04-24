@@ -23,6 +23,8 @@ class IssuedInvoice < InvoiceDocument
       unless Event.automatic.include?(transition.event.to_s)
         if transition.event.to_s == 'queue' and !invoice.state?(:new)
           Event.create(:name=>'requeue',:invoice=>invoice,:user=>User.current)
+        elsif transition.event.to_s =~ /^mark_as_/
+          Event.create(name: "done_#{transition.event.to_s}", invoice: invoice, user: User.current)
         else
           Event.create(:name=>transition.event.to_s,:invoice=>invoice,:user=>User.current)
         end
@@ -79,8 +81,23 @@ class IssuedInvoice < InvoiceDocument
     event :amend_and_close do
       transition all=> :closed
     end
+    event :mark_as_new do
+      transition all => :new
+    end
+    event :mark_as_sent do
+      transition all => :sent
+    end
     event :mark_as_accepted do
-      transition [:refused,:registered,:sent] => :accepted
+      transition all => :accepted
+    end
+    event :mark_as_registered do
+      transition all => :registered
+    end
+    event :mark_as_refused do
+      transition all => :refused
+    end
+    event :mark_as_closed do
+      transition all => :closed
     end
   end
 

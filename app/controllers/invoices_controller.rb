@@ -15,7 +15,7 @@ class InvoicesController < ApplicationController
   PUBLIC_METHODS = [:by_taxcode_and_num,:view,:download,:mail,:logo,:haltr_sign]
 
   before_filter :find_project_by_project_id, :only => [:index,:new,:create,:send_new_invoices,:download_new_invoices,:update_payment_stuff,:new_invoices_from_template,:report,:create_invoices,:update_taxes,:import]
-  before_filter :find_invoice, :only => [:edit,:update,:mark_sent,:mark_closed,:mark_not_sent,:mark_accepted_with_mail,:mark_accepted,:mark_refused_with_mail,:mark_refused,:duplicate_invoice,:base64doc,:show,:send_invoice,:legal,:amend_for_invoice,:original,:validate,:show_original, :mark_as_accepted]
+  before_filter :find_invoice, :only => [:edit,:update,:mark_accepted_with_mail,:mark_accepted,:mark_refused_with_mail,:mark_refused,:duplicate_invoice,:base64doc,:show,:send_invoice,:legal,:amend_for_invoice,:original,:validate,:show_original, :mark_as_accepted, :mark_as]
   before_filter :find_invoices, :only => [:context_menu,:bulk_download,:bulk_mark_as,:bulk_send,:destroy,:bulk_validate]
   before_filter :find_payment, :only => [:destroy_payment]
   before_filter :find_hashid, :only => [:view,:download]
@@ -284,34 +284,6 @@ class InvoicesController < ApplicationController
   def destroy_payment
     @payment.destroy
     redirect_to :action => 'show', :id => @invoice
-  end
-
-  def mark_sent
-    @invoice.manual_send
-    redirect_to :back
-  rescue ActionController::RedirectBackError
-    render :text => "OK"
-  end
-
-  def mark_closed
-    @invoice.close
-    redirect_to :back
-  rescue ActionController::RedirectBackError
-    render :text => "OK"
-  end
-
-  def mark_not_sent
-    @invoice.mark_unsent
-    redirect_to :back
-  rescue ActionController::RedirectBackError
-    render :text => "OK"
-  end
-
-  def mark_as_accepted
-    @invoice.mark_as_accepted
-    redirect_to :back
-  rescue ActionController::RedirectBackError
-    render :text => "OK"
   end
 
   def duplicate_invoice
@@ -711,7 +683,7 @@ class InvoicesController < ApplicationController
   end
 
   def find_invoices
-    @invoices = Invoice.find_all_by_id(params[:id] || params[:ids])
+    @invoices = invoice_class.find_all_by_id(params[:id] || params[:ids])
     raise ActiveRecord::RecordNotFound if @invoices.empty?
     raise Unauthorized unless @invoices.collect {|i| i.project }.uniq.size == 1
     @project = @invoices.first.project
@@ -808,20 +780,26 @@ class InvoicesController < ApplicationController
     redirect_to :action => 'index', :project_id => @project
   end
 
+  def mark_as
+    if %w(new sent accepted registered refused closed).include? params[:state]
+      @invoice.send("mark_as_#{params[:state]}!")
+    else
+      flash[:error] = "unknown state #{params[:state]}"
+    end
+    redirect_to :back
+  rescue ActionController::RedirectBackError
+    render :text => "OK"
+  end
+
   def bulk_mark_as
     all_changed = true
-    @invoices.each do |i|
-      next if i.state == params[:state]
-      case params[:state]
-      when "new"
-        all_changed = i.mark_unsent && all_changed
-      when "sent"
-        all_changed = (i.manual_send || i.success_sending || i.unpaid) && all_changed
-      when "closed"
-        all_changed = (i.close || i.paid) && all_changed
-      else
-        flash[:error] = "unknown state #{params[:state]}"
+    if %w(new sent accepted registered refused closed).include? params[:state]
+      @invoices.each do |i|
+        next if i.state == params[:state]
+        all_changed = i.send("mark_as_#{params[:state]}") && all_changed
       end
+    else
+      flash[:error] = "unknown state #{params[:state]}"
     end
     flash[:warn] = l(:some_states_not_changed) unless all_changed
     redirect_back_or_default(:action=>'index',:project_id=>@project.id)

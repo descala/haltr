@@ -67,10 +67,7 @@ match 'received/bulk_validate' => 'received#bulk_validate'
 match 'invoices/bulk_send' => 'invoices#bulk_send'
 match 'invoices/by_taxcode_and_num' => 'invoices#by_taxcode_and_num', :via => :get
 match 'invoices', :controller => 'invoices', :action => 'destroy', :via => :delete
-match 'invoices/mark_sent/:id' => 'invoices#mark_sent', :via => :get, :as => :mark_sent
-match 'invoices/mark_not_sent/:id' => 'invoices#mark_not_sent', :via => :get, :as => :mark_not_sent
-match 'invoices/mark_closed/:id' => 'invoices#mark_closed', :via => :get, :as => :mark_closed
-match 'invoices/mark_as_accepted/:id' => 'invoices#mark_as_accepted', :via => :get, :as => :mark_as_accepted
+match 'invoices/:id/mark_as/:state' => 'invoices#mark_as', :via => :get, :as => :mark_as
 match 'invoices/send_invoice/:id' => 'invoices#send_invoice', :via => :get, :as => :send_invoice
 match 'invoices/legal/:id' => 'invoices#legal', :via => :get, :as => :legal
 match 'invoices/amend_for_invoice/:id' => 'invoices#amend_for_invoice', :via => :post, :as => :amend_for_invoice

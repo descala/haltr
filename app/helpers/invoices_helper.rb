@@ -2,21 +2,6 @@ module InvoicesHelper
 
   DEFAULT_TAX_PERCENT_VALUES = { :format => "%t %n%p", :negative_format => "%t -%n%p", :separator => ".", :delimiter => ",",
                                  :precision => 2, :significant => false, :strip_insignificant_zeros => false, :tax_name => "VAT" }
-
-  def change_state_link(invoice)
-    if invoice.state?(:closed)
-      link_to_if_authorized(I18n.t(:mark_not_sent), mark_not_sent_path(invoice), :class=>'icon-haltr-mark-not-sent')
-    elsif invoice.sent? and invoice.is_paid?
-      link_to_if_authorized(I18n.t(:mark_closed), mark_closed_path(invoice), :class=>'icon-haltr-mark-closed')
-    elsif invoice.sent?
-      link_to_if_authorized(I18n.t(:mark_not_sent), mark_not_sent_path(invoice), :class=>'icon-haltr-mark-not-sent')
-    elsif invoice.refused?
-      link_to_if_authorized(I18n.t(:mark_as_accepted), mark_as_accepted_path(invoice), :class=>'icon-haltr-mark-accepted')
-    else
-      link_to_if_authorized(I18n.t(:mark_sent), mark_sent_path(invoice), :class=>'icon-haltr-mark-sent')
-    end
-  end
-
   def clients_for_select
     clients = Client.find(:all, :order => 'name', :conditions => ["project_id = ?", @project])
     # check if client.valid?: if you request to link profile, and then unlink it, client is invalid
