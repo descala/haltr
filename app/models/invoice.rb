@@ -214,8 +214,8 @@ class Invoice < ActiveRecord::Base
   end
 
   def payment_method_code(format, attr=:payment_method)
-    if PAYMENT_CODES[self[attr]]
-      PAYMENT_CODES[self[attr]][format]
+    if PAYMENT_CODES[self[attr].to_i]
+      PAYMENT_CODES[self[attr].to_i][format]
     end
   end
 
@@ -686,7 +686,7 @@ _INV
       :fa_postcode       => fa_postcode,
       :fa_town           => fa_town,
       :fa_province       => fa_province,
-      :fa_country        => fa_country,
+      :fa_country        => (SunDawg::CountryIsoTranslater.translate_standard(fa_country,"alpha3","alpha2").downcase rescue nil),
       :fa_info           => fa_info,
       :fa_duedate        => fa_duedate,
       :fa_import         => fa_import,

@@ -292,7 +292,7 @@ class InvoiceTest < ActiveSupport::TestCase
     assert_equal invoice.company.project, client.project
     assert_equal "ES8023100001180000012345", client.iban
     assert_equal "biiiiiiiiic", client.bic
-    assert_equal "facturae_32", client.invoice_format
+    assert_equal "paper", client.invoice_format
     # invoice
     assert       invoice.is_a?(IssuedInvoice)
     assert_equal client, invoice.client
@@ -563,7 +563,7 @@ class InvoiceTest < ActiveSupport::TestCase
     assert_equal '08080',                    invoice.fa_postcode
     assert_equal 'BARCELONA',                invoice.fa_town
     assert_equal 'BARCELONA',                invoice.fa_province
-    assert_equal 'ESP',                      invoice.fa_country
+    assert_equal 'es',                       invoice.fa_country
     assert_equal '20000000000000000000',     invoice.fa_info
     assert_equal Date.new(2015,5,6),         invoice.fa_duedate
     assert_equal 372.08,                     invoice.fa_import
