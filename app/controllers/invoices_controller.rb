@@ -782,7 +782,17 @@ class InvoicesController < ApplicationController
 
   def mark_as
     if %w(new sent accepted registered refused closed).include? params[:state]
-      @invoice.send("mark_as_#{params[:state]}!")
+      begin
+        @invoice.send("mark_as_#{params[:state]}!")
+      rescue StateMachine::InvalidTransition
+        # mark_as_* raise this on invalid invoices
+        @invoice.update_attribute(:state, params[:state])
+        Event.create(
+          name: "done_mark_as_#{params[:state]}",
+          invoice: @invoice,
+          user: User.current
+        )
+      end
     else
       flash[:error] = "unknown state #{params[:state]}"
     end
