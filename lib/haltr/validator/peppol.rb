@@ -13,7 +13,8 @@ module Haltr
         # peppol required fields
         if client.schemeid.blank? or client.endpointid.blank?
           errors.add(:base, I18n.t(:missing_client_peppol_fields))
-        elsif company.schemeid.blank? or company.endpointid.blank?
+        end
+        if company.schemeid.blank? or company.endpointid.blank?
           errors.add(:base, I18n.t(:missing_company_peppol_fields))
         end
       end
