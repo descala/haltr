@@ -620,28 +620,31 @@ class InvoicesController < ApplicationController
   end
 
   def report
-    m = params[:months_ago] || 3
-    d = Date.today - m.to_i.months
-    @date = Date.new(d.year,d.month,1)
-    @invoices = {}
-    @total    = {}
-    @taxes    = {}
-    @tax_names = {}
-    IssuedInvoice.all(:include => [:client],
-                      :conditions => ["type != 'DraftInvoice' and clients.project_id = ? and date >= ? and amend_id is null", @project.id, @date],
-                      :order => :number
-    ).each do |i|
-      @invoices[i.currency] ||= []
-      @invoices[i.currency] << i
-      @total[i.currency]    ||= Money.new(0,i.currency)
-      @total[i.currency]     += i.subtotal
-      @tax_names[i.currency] ||= i.tax_names
-      @tax_names[i.currency] += i.tax_names
-      @tax_names[i.currency].uniq!
-      i.taxes_uniq.each do |tax|
-        @taxes[i.currency] ||= {}
-        @taxes[i.currency][tax.name]  ||= Money.new(0,i.currency)
-        @taxes[i.currency][tax.name]  += i.tax_amount(tax)
+    if request.post?
+      @from     = params[:date_from] || 3.months.ago
+      @to       = params[:date_to]   || Date.today
+      invoices = @project.issued_invoices.includes(:client).where(
+        ["date >= ? and date <= ? and amend_id is null", @from, @to]
+      ).order(:number)
+      invoices = invoices.where("date >= ?", @from).where("date <= ?", @to)
+
+      @invoices = {}
+      @total    = {}
+      @taxes    = {}
+      @tax_names = {}
+      invoices.each do |i|
+        @invoices[i.currency]  ||= []
+        @invoices[i.currency]   << i
+        @total[i.currency]     ||= Money.new(0,i.currency)
+        @total[i.currency]      += i.subtotal
+        @tax_names[i.currency] ||= i.tax_names
+        @tax_names[i.currency]  += i.tax_names
+        @tax_names[i.currency].uniq!
+        i.taxes_uniq.each do |tax|
+          @taxes[i.currency]           ||= {}
+          @taxes[i.currency][tax.name] ||= Money.new(0,i.currency)
+          @taxes[i.currency][tax.name]  += i.tax_amount(tax)
+        end
       end
     end
   end

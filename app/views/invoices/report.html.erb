@@ -1,57 +1,80 @@
-<div class="invoices_report">
-<h2><%= l(:label_invoice_report) %></h2>
-<p><%=l(:with_date) %> &gt;= <%= format_date @date %>.</p>
-</div>
+<%= form_tag project_invoices_report_path(@project) do %>
+  <div class="seccio grup">
+    <div class="col span-1-de-3">
+      <label for="date_from"><%=l(:field_date)%></label>
+      <%= text_field_tag :date_from, (params[:date_from].nil? ? Date.new(Date.today.year) : params[:date_from]), :size => 10, :style => "width: 90%;" %><%= calendar_for('date_from') %>
+    </div>
+    <div class="col span-1-de-3">
+      <label for="date_to"><%=l(:label_to)%></label>
+      <%= text_field_tag :date_to, (params[:date_to].nil? ? Date.today : params[:date_to]), :size => 10, :style => "width: 90%;" %><%= calendar_for('date_to') %>
+    </div>
+    <div class="col span-1-de-3">
+    </div>
+  </div>
+  <div class="seccio grup">
+    <div class="col span-2-de-2">
+      <%= submit_tag l(:button_apply), :class => "small", :name => nil %>
+    </div>
+  </div>
+<% end -%>
 
-<% if @invoices.keys.any? -%>
+<% if @invoices -%>
+  <div class="invoices_report">
+    <h2><%= l(:label_invoice_report) %></h2>
+    <p><%=l(:with_date) %> <%= format_date @from %> - <%= format_date @to %></p>
+  </div>
 
-  <% @invoices.keys.each do |currency| -%>
+  <% if @invoices.keys.any? -%>
 
-  <table class="taula-1 list" width="100%">
+    <% @invoices.keys.each do |currency| -%>
 
-    <tr class="imparell">
-      <th><%=l(:field_number)%></th>
-      <th><%=l(:field_date)%></th>
-      <th><%=l(:field_taxcode)%></th>
-      <th><%=l(:field_firstname)%></th>
-      <th><%=l(:field_amount)%></th>
-      <% @tax_names[currency].sort.each do |tax_name| %>
-        <th><%= tax_name %></th>
-      <% end %>
-      <th><%=l(:charge_bank_on_date)%></th>
-      <th><%=l(:label_payment_plural)%></th>
-    </tr>
+      <table class="taula-1 list" width="100%">
 
-    <% @invoices[currency].each do |i| -%>
-      <tr class="<%= cycle("odd imparell", "even parell") %>">
-        <td><%= i.number %></td>
-        <td><%= format_date i.date %></td>
-        <td><%= i.client.taxcode %></td>
-        <td><%= i.client.name %></td>
-        <td class="money"><%= money(i.subtotal) %></td>
-        <% @tax_names[currency].sort.each do |tax_name| %>
-          <td class="money"><%= i.tax_amount_for(tax_name).zero? ? '-' : money(i.tax_amount_for(tax_name)) %></td>
-        <% end %>
-        <td><%= i.due_date if i.debit? && i.client.bank_account %></td>
-        <td><%= i.payments.collect{|p|format_date p.date}.uniq.join('<br/>').html_safe %></td>
-      </tr>
+        <tr class="imparell">
+          <th><%=l(:field_number)%></th>
+          <th><%=l(:field_date)%></th>
+          <th><%=l(:field_taxcode)%></th>
+          <th><%=l(:field_firstname)%></th>
+          <th><%=l(:field_amount)%></th>
+          <% @tax_names[currency].sort.each do |tax_name| %>
+            <th><%= tax_name %></th>
+          <% end %>
+          <th><%=l(:charge_bank_on_date)%></th>
+          <th><%=l(:label_payment_plural)%></th>
+        </tr>
+
+        <% @invoices[currency].each do |i| -%>
+          <tr class="<%= cycle("odd imparell", "even parell") %>">
+            <td><%= i.number %></td>
+            <td><%= format_date i.date %></td>
+            <td><%= i.client.taxcode %></td>
+            <td><%= i.client.name %></td>
+            <td class="money"><%= money(i.subtotal) %></td>
+            <% @tax_names[currency].sort.each do |tax_name| %>
+              <td class="money"><%= i.tax_amount_for(tax_name).zero? ? '-' : money(i.tax_amount_for(tax_name)) %></td>
+            <% end %>
+            <td><%= i.due_date if i.debit? && i.client.bank_account %></td>
+            <td><%= i.payments.collect{|p|format_date p.date}.uniq.join('<br/>').html_safe %></td>
+          </tr>
+        <% end -%>
+
+        <tr>
+          <td colspan="4"><%= l(:label_total) %></td>
+          <th class="money"><%= money(@total[currency]) %></th>
+          <% @tax_names[currency].sort.each do |tax_name| %>
+            <th class="money"><%= money(@taxes[currency][tax_name]) %></th>
+          <% end %>
+        </td>
+        <td colspan="2"/>
+        </tr>
+      </table>
     <% end -%>
 
-    <tr>
-      <td colspan="4"><%= l(:label_total) %></td>
-        <th class="money"><%= money(@total[currency]) %></th>
-        <% @tax_names[currency].sort.each do |tax_name| %>
-          <th class="money"><%= money(@taxes[currency][tax_name]) %></th>
-        <% end %>
-      </td>
-      <td colspan="2"/>
-    </tr>
-  </table>
+  <% else -%>
+    <p class="nodata"><%= l(:nothing_to_report) %></p>
   <% end -%>
 
-<% else -%>
-  <p class="nodata"><%= l(:nothing_to_report) %></p>
-<% end -%>
+<% end %>
 
 <% content_for :sidebar do %>
   <%= render_menu :invoices_menu, @project %>
