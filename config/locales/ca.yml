@@ -625,3 +625,4 @@ ca:
   field_fa_bank_code: 'Codi bancari'
   field_fa_clauses: 'Clàusula de cessió'
   field_fa_payment_method: 'Mètode de pagament'
+  channel_requires_user_pass: "El canal necessita que configuris usuari i password a 'La meva empresa'"

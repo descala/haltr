@@ -613,3 +613,4 @@ da:
   field_fa_bank_code: 'Bank code'
   field_fa_clauses: 'Assignment clause'
   field_fa_payment_method: 'Payment method'
+  channel_requires_user_pass: "Channel requires to configure user and password at 'My company'"

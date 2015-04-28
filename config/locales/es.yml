@@ -629,3 +629,4 @@ es:
   field_fa_bank_code: 'Código bancario'
   field_fa_clauses: 'Cláusula de cesión'
   field_fa_payment_method: 'Método de pago'
+  channel_requires_user_pass: "El canal necesita que configures usuario y password en 'Mi empresa'"
