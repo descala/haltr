@@ -7,6 +7,15 @@
     <% next if @invoice.state == state -%>
     <li><%=link_to_if_authorized(t("manual_mark_as", state: t("state_#{state}")), mark_as_path(@invoice, state: state), class: "icon-haltr-mark-#{state}")%></li>
   <% end -%>
+
+  <hr />
+
+  <% if @invoice.last_sent_file_path -%>
+    <li>
+    <%= link_to_if_authorized(l(:download_legal_invoice), @invoice.last_sent_file_path) %>
+    </li>
+  <% end -%>
+
   <li><%= link_to_if_authorized l(:download_as_pdf), {:action=>'show', :id=>@invoice, :format => 'pdf'}, :class=>'icon-haltr-save' %></li>
 
   <% unless hide_to_user(:manage_payments) -%>

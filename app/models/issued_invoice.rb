@@ -207,6 +207,20 @@ class IssuedInvoice < InvoiceDocument
     (!self.amend_id.nil? and self.amend_id != self.id )
   end
 
+  def last_sent_file_path
+    last_event = events.order(:created_at).select {|e| e.name == 'success_sending' }.last
+    case last_event
+    when EventWithFile
+      Rails.application.routes.url_helpers.
+        project_event_file_path(last_event, :project_id=>project)
+    when Event
+      if last_event.md5
+        Rails.application.routes.url_helpers.
+          legal_path(:id=>id,:md5=>last_event.md5)
+      end
+    end
+  end
+
   protected
 
   # called after_create (only NEW invoices)
