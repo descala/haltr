@@ -627,3 +627,4 @@ ca:
   field_fa_payment_method: 'Mètode de pagament'
   channel_requires_user_pass: "El canal necessita que configuris usuari i password a 'La meva empresa'"
   download_legal_invoice: "Descarregar factura legal"
+  label_report_channel_state: "Factures per canal d'enviament i per estat"

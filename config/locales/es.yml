@@ -631,3 +631,4 @@ es:
   field_fa_payment_method: 'Método de pago'
   channel_requires_user_pass: "El canal necesita que configures usuario y password en 'Mi empresa'"
   download_legal_invoice: "Descargar factura legal"
+  label_report_channel_state: "Facturas por canal de envío y estado"

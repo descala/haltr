@@ -614,3 +614,4 @@ en:
   field_fa_payment_method: 'Payment method'
   channel_requires_user_pass: "Channel requires to configure user and password at 'My company'"
   download_legal_invoice: "Download legal invoice"
+  label_report_channel_state: "Invoices by Channel and State"

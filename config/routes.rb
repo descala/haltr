@@ -31,7 +31,9 @@ resources :projects do
   match 'new_invoices_from_template' => 'invoice_templates#new_invoices_from_template', :via => [:get, :post]
   match 'create_invoices' => 'invoice_templates#create_invoices', :via => :post
   match 'update_taxes' => 'invoice_templates#update_taxes'
-  match 'invoices/report' => 'invoices#report', :via => [:get,:post]
+  match 'invoices/reports' => 'invoices#reports', :via => [:get]
+  match 'invoices/report_invoice_list' => 'invoices#report_invoice_list', :via => [:post]
+  match 'invoices/report_channel_state' => 'invoices#report_channel_state', :via => [:get]
   resources :payments, :only => [:index, :new, :create]
   match 'payments/import_aeb43_index' => 'payments#import_aeb43_index'
   match 'payments/import_aeb43' => 'payments#import_aeb43'
