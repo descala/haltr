@@ -11,6 +11,10 @@ module Haltr
     def perform
       IssuedInvoice.find(invoice_ids).each do |invoice|
         Rails.logger.info("[BulkSender] TRYING invoice  #{invoice.id}")
+        unless invoice.new?
+          Rails.logger.info("[BulkSender] SKIPED invoice  #{invoice.id} (state: #{invoice.state})")
+          next
+        end
         begin
           Haltr::Sender.send_invoice(invoice, user)
           invoice.queue || invoice.requeue
