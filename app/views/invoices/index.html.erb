@@ -138,7 +138,7 @@
           </tr>
         </thead>
         <tbody>
-          <% for invoice in @invoices -%>
+          <% @invoices.each do |invoice| -%>
             <tr id="invoice-<%=invoice.id%>" class="hascontextmenu <%= 'amended ' if invoice.amended? %><%= cycle("odd", "even") %>">
               <td><%= check_box_tag("ids[]", invoice.id, false, :id => nil) %></td>
               <td><%=h link_to_if_authorized invoice.number, :action => 'show', :id => invoice %></td>

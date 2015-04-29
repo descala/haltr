@@ -1,0 +1,20 @@
+<ul>
+  <%= call_hook(:view_templates_context_menu_start, {:invoices=>@invoices, :can=>@can, :back=>@back }) %>
+
+  <% if @invoice -%>
+    <!-- actions for a single invoice_template -->
+    <li>
+    <%= context_menu_link l(:button_edit), edit_invoice_template_path(@invoice),
+      :class=>'icon-edit', :disabled=>!@can[:edit] %>
+    </li>
+  <% else -%>
+    <!-- actions for multiple invoices -->
+  <% end %>
+
+  <%= call_hook(:view_invoices_context_menu_end, {:invoices=>@invoices, :can=>@can, :back=>@back }) %>
+
+  <li>
+  <%= context_menu_link l(:button_delete), invoice_templates_path(:ids=>@invoice_ids, :back_url=>@back),
+    :method=>:delete, :data=>{:confirm=>l(:text_invoices_destroy_confirmation)}, :class=>'icon-del', :disabled=>!@can[:edit] %>
+  </li>
+</ul>

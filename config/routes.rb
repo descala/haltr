@@ -59,6 +59,7 @@ resources :people
 match 'invoices/context_menu', :to => 'invoices#context_menu', :as => 'invoices_context_menu', :via => [:get, :post]
 match 'received/context_menu', :to => 'received#context_menu', :as => 'received_context_menu', :via => [:get, :post]
 match 'import_errors/context_menu', :to => 'import_errors#context_menu', :as => 'import_errors_context_menu', :via => [:get, :post]
+match 'invoice_templates/context_menu', :to => 'invoice_templates#context_menu', :as => 'invoice_templates_context_menu', :via => [:get, :post]
 match 'invoices/bulk_download' => 'invoices#bulk_download'
 match 'received/bulk_download' => 'received#bulk_download'
 match 'invoices/bulk_mark_as' => 'invoices#bulk_mark_as'
@@ -67,6 +68,7 @@ match 'received/bulk_validate' => 'received#bulk_validate'
 match 'invoices/bulk_send' => 'invoices#bulk_send'
 match 'invoices/by_taxcode_and_num' => 'invoices#by_taxcode_and_num', :via => :get
 match 'invoices', :controller => 'invoices', :action => 'destroy', :via => :delete
+match 'invoice_templates', :controller => 'invoice_templates', :action => 'destroy', :via => :delete
 match 'invoices/:id/mark_as/:state' => 'invoices#mark_as', :via => :get, :as => :mark_as
 match 'invoices/send_invoice/:id' => 'invoices#send_invoice', :via => :get, :as => :send_invoice
 match 'invoices/legal/:id' => 'invoices#legal', :via => :get, :as => :legal
