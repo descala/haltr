@@ -249,10 +249,14 @@ class IssuedInvoice < InvoiceDocument
     update_imports
     if is_paid?
       if (state?(:sent) or state?(:accepted) or state?(:allegedly_paid))
-        paid
+        update_attribute(:state, :closed)
+        Event.create(name: 'paid', invoice: self, user: User.current)
       end
     else
-      unpaid if state?(:closed)
+      if state?(:closed)
+        update_attribute(:state, :sent)
+        Event.create(name: 'unpaid', invoice: self, user: User.current)
+      end
     end
     return true # always continue saving
   end
