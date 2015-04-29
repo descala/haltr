@@ -13,6 +13,8 @@ module Haltr
       result = query.group(['clients.invoice_format','state']).count
       result.each do |k,v|
         channel = k.first
+        # Do not count channels not in channels.yml
+        next unless ExportChannels.available?(channel)
         state = k.second
         state_totals[state] = state_totals[state].to_i + v
         channel_totals[channel] = channel_totals[channel].to_i + v
