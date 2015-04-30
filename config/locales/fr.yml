@@ -579,7 +579,7 @@ fr:
   field_payments_on_account: "Payments on account/Withholding"
   sequence_number: 'Sequence number'
   mark_as_accepted: 'Mark as accepted'
-  field_receiver_contract_reference: "Assignment code"
+  field_receiver_contract_reference: "Contract / Assignment code"
   invoice_attachments_description: "You can add attachments to the invoce (max %{mb}MB). These documents will be sent along with the invoice."
   invoice_attachments_permission: "Not allowed"
   import_errors: "Import errors"
