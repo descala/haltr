@@ -6,15 +6,16 @@
     <%= call_hook(:company_form_taxcode) %>
     </p>
     <p class="col span-1-de-2">
+    <%= f.label_for_field :name, :label => l('name_or_company') %>
+    <%= f.text_field :name, :required => true, :no_label => true %>
     </p>
   </div>
   <div class="seccio grup">
     <p class="col span-1-de-2">
-    <%= f.label_for_field :name, :label => l('name_or_company') %>
-    <%= f.text_field :name, :required => true, :no_label => true %>
+    <%= f.text_field :email, :required => true %>
     </p>
     <p class="col span-1-de-2">
-    <%= f.text_field :email, :required => true %>
+    <%= f.text_field :phone, label: l(:label_phone) %>
     </p>
   </div>
   <div class="seccio grup">

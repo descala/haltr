@@ -26,10 +26,13 @@
     </p>
   </div>
   <div class="seccio grup">
-    <p class="col span-1-de-2">
+    <p class="col span-1-de-3">
       <%= f.text_field :email, :readonly => client.linked? %>
     </p>
-    <p class="col span-1-de-2">
+    <p class="col span-1-de-3">
+    <%= f.text_field :phone, :label => l(:label_phone), :readonly => client.linked? %>
+    </p>
+    <p class="col span-1-de-3">
       <%= f.text_field :website, :readonly => client.linked? %>
     </p>
   </div>
