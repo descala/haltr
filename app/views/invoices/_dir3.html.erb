@@ -1,0 +1,20 @@
+<label for="invoice_<%=role%>">
+  <%= l(role) %><%= required_field_span('dir3') %><%= select_to_edit(role) %>
+</label>
+
+<% if @external_company and @external_company.send("dir3_#{role.pluralize}").any? -%>
+
+  <% if @invoice.nil? or (@external_company.send("dir3_#{role.pluralize}").collect {|d3e| d3e.code }.include?(@invoice.send(role)) or @invoice.send(role).blank?) -%>
+    <%= select(:invoice, role, dir3_for_select(@external_company.send("dir3_#{role.pluralize}"))) %>
+    <%= text_field :invoice, role, style: 'display: none;', disabled: true %>
+  <% else -%>
+    <%= select(:invoice, role, dir3_for_select(@external_company.send("dir3_#{role.pluralize}")), {}, { style: 'display: none;', disabled: true }) %>
+    <%= text_field :invoice, role %>
+  <% end-%>
+
+<% else -%>
+
+  <%= text_field :invoice, role %>
+
+<% end -%>
+

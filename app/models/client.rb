@@ -9,18 +9,14 @@ class Client < ActiveRecord::Base
   has_many :invoices, :dependent => :destroy
   has_many :people,   :dependent => :destroy
   has_many :mandates, :dependent => :destroy
-  has_many :events,   :dependent => :destroy, :order => :created_at
+  has_many :events, :order => :created_at
 
   belongs_to :project   # client of
   belongs_to :company,  # linked to
     :polymorphic => true
   belongs_to :bank_info # refers to company's bank_info
                         # default one when creating new invoices
-  has_many :dir3s, :foreign_key => :taxcode, :primary_key => :taxcode
 
-  validates_presence_of :taxcode, :unless => Proc.new { |client|
-    Company::COUNTRIES_WITHOUT_TAXCODE.include? client.country
-  }
   validates_presence_of :hashid
   validates_uniqueness_of :taxcode, :scope => :project_id, :allow_blank => true
   validates_uniqueness_of :hashid
@@ -35,9 +31,12 @@ class Client < ActiveRecord::Base
 
   before_validation :set_hashid_value
   before_validation :copy_linked_profile
+  before_save :set_hashid_value
+  before_save :copy_linked_profile
   after_create  :create_event
   iso_country :country
   include CountryUtils
+  include Haltr::TaxcodeValidator
 
   after_initialize :set_default_values
 
@@ -45,8 +44,6 @@ class Client < ActiveRecord::Base
     self.currency       ||= Setting.plugin_haltr['default_currency']
     self.country        ||= Setting.plugin_haltr['default_country']
     self.invoice_format ||= ExportChannels.default
-    self.language       ||= User.current.language
-    self.language         = "es" if self.language.blank?
     self.sepa_type      ||= "CORE"
   end
 
@@ -64,7 +61,7 @@ class Client < ActiveRecord::Base
   def bank_invoices(due_date,bank_info_id)
     IssuedInvoice.where(
       client_id:      self.id,
-      state:          'sent',
+      state:          ['sent','registered'],
       payment_method: Invoice::PAYMENT_DEBIT,
       due_date:       due_date,
       bank_info_id:   bank_info_id
@@ -78,7 +75,7 @@ class Client < ActiveRecord::Base
   end
 
   def to_label
-    name
+    name.nil? ? taxcode : name
   end
 
   alias :to_s :to_label
@@ -183,12 +180,6 @@ class Client < ActiveRecord::Base
     audts[last] || []
   end
 
-  def requires_file_reference?
-    Redmine::Configuration['taxcodes_that_need_file_reference'].include?(taxcode)
-  rescue
-    false
-  end
-
   protected
 
   # called after_create (only NEW clients)
@@ -202,10 +193,9 @@ class Client < ActiveRecord::Base
 
   def copy_linked_profile
     if self.company and self.allowed?
-      %w(taxcode company_identifier name email currency postalcode country province city address website invoice_format).each do |attr|
+      %w(taxcode company_identifier name email currency postalcode country province city address website invoice_format language).each do |attr|
         self.send("#{attr}=",company.send(attr))
       end
-      self.language = company.project.users.collect {|u| u unless u.admin?}.compact.first.language rescue I18n.default_locale.to_s
     elsif !self.company
       self.allowed = nil
     end

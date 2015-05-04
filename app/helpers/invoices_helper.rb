@@ -2,23 +2,10 @@ module InvoicesHelper
 
   DEFAULT_TAX_PERCENT_VALUES = { :format => "%t %n%p", :negative_format => "%t -%n%p", :separator => ".", :delimiter => ",",
                                  :precision => 2, :significant => false, :strip_insignificant_zeros => false, :tax_name => "VAT" }
-
-  def change_state_link(invoice)
-    if invoice.state?(:closed)
-      link_to_if_authorized(I18n.t(:mark_not_sent), mark_not_sent_path(invoice), :class=>'icon-haltr-mark-not-sent')
-    elsif invoice.sent? and invoice.is_paid?
-      link_to_if_authorized(I18n.t(:mark_closed), mark_closed_path(invoice), :class=>'icon-haltr-mark-closed')
-    elsif invoice.sent?
-      link_to_if_authorized(I18n.t(:mark_not_sent), mark_not_sent_path(invoice), :class=>'icon-haltr-mark-not-sent')
-    else
-      link_to_if_authorized(I18n.t(:mark_sent), mark_sent_path(invoice), :class=>'icon-haltr-mark-sent')
-    end
-  end
-
   def clients_for_select
     clients = Client.find(:all, :order => 'name', :conditions => ["project_id = ?", @project])
     # check if client.valid?: if you request to link profile, and then unlink it, client is invalid
-    clients.collect {|c| [c.name, c.id] if c.valid? }.compact
+    clients.collect {|c| [c.name, c.id, {'data-invoice_format'=>ExportChannels.l(c.invoice_format)}] unless c.name.blank?}.compact
   end
 
   def precision(num,precision=2)
@@ -29,7 +16,8 @@ module InvoicesHelper
 
   def send_link_for_invoice
     confirm = @invoice.sent? ? j(l(:sure_to_resend_invoice, :num=>@invoice.number).html_safe) : nil
-    if @invoice.can_be_exported?
+    if @invoice.valid? and @invoice.can_queue? and
+        ExportChannels.can_send?(@invoice.client.invoice_format)
       unless @js.blank?
         # channel uses javascript to send invoice
         if User.current.allowed_to?(:general_use, @project)
@@ -45,11 +33,15 @@ module InvoicesHelper
           :class=>'icon-haltr-send', :title => @invoice.sending_info.html_safe,
           :confirm => confirm
       end
-    else
+    elsif @invoice.can_queue?
       # invoice has export errors (related to the format or channel)
       # or a format without channel, like "paper"
       link_to l(:label_send), "#", :class=>'icon-haltr-send disabled',
         :title => @invoice.sending_info.html_safe
+    else
+      link_to l(:label_send), "#", :class=>'icon-haltr-send disabled',
+        :title => ("#{@invoice.sending_info}<br/>" +
+        "#{I18n.t(:state_not_allowed_for_sending, state: I18n.t("state_#{@invoice.state}"))}").html_safe
     end
   end
 
@@ -83,13 +75,19 @@ module InvoicesHelper
   end
 
   def num_can_be_sent
-    @project.issued_invoices.count(:conditions => ["state='new' and number is not null and date <= ?", Date.today])
+    @project.issued_invoices.includes(:client).count(
+      :conditions => [
+        "state='new' and number is not null and date <= ? and clients.invoice_format in (?)",
+        Date.today,
+        ExportChannels.can_send.keys
+      ]
+    )
   end
 
   def tax_name(tax, options = {})
     return nil if tax.nil?
 
-    return "#{tax.name} #{l(:tax_E)}" if tax.exempt?
+    return "#{tax.name} #{l("tax_#{tax.category}")}" if tax.exempt?
 
     options.symbolize_keys!
     default_format = I18n.translate(:'number.format',
@@ -121,7 +119,7 @@ module InvoicesHelper
     if invoice == current
       invoice.number
     else
-      if User.current.logged? and User.current.projects.include?(invoice.project)
+      if User.current.admin? or (User.current.logged? and User.current.projects.include?(invoice.project))
         link_to(invoice.number, {:action=>'show', :id=>invoice})
       elsif invoice.visible_by_client?
         link_to(invoice.number, {:action=>'view', :client_hashid=>invoice.client.hashid, :invoice_id=>invoice.id}, :class=>'public')
@@ -154,7 +152,7 @@ module InvoicesHelper
   def tax_label(tax_code,show_category=false)
     # tax_code = '21.0_S'
     percent, category = tax_code.split('_')
-    if category == 'E'
+    if category == 'E' or category == 'NS'
       [l("tax_#{category}"), tax_code]
     else
       if show_category
@@ -263,4 +261,36 @@ module InvoicesHelper
     end
   end
 
+  def dir3_for_select(entities)
+    entities.collect {|entity|
+      if entity.code == entity.name
+        [entity.name, entity.code]
+      else
+        ["#{entity.name} - #{entity.code}", entity.code]
+      end
+    }
+  end
+
+  def required_field_span(field)
+    if (@external_company and @external_company.required_fields.include?(field)) or
+        (@client and @client.invoice_format =~ /face/)
+      content_tag(:span, ' *', class: 'required')
+    end
+  end
+
+  def select_to_edit(field)
+    if @external_company and @external_company.send("dir3_#{field.to_s.pluralize}").any?
+      content_tag(:span, image_tag('edit.png'), data: {field: field}, class: 'select_to_edit required')
+    end
+  end
+
+  def facturae_attachment_format(attachment)
+    valid_formats = %W(xml doc gif rtf pdf xls jpg bmp tiff)
+    extension = attachment.filename.split('.').last.downcase
+    if valid_formats.include?(extension)
+      extension
+    else
+      'doc'
+    end
+  end
 end

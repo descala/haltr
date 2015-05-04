@@ -3,9 +3,39 @@ class EventsController < ApplicationController
   helper :haltr
 
   skip_before_filter :check_if_login_required, :only => [ :create ]
-  before_filter :check_remote_ip, :except => [:file]
+  before_filter :check_remote_ip, :except => [:file, :index]
   before_filter :find_project_by_project_id, :only => [:file]
   before_filter :authorize, :only => [:file]
+  before_filter :require_admin, :only => [:index]
+
+  helper :sort
+  include SortHelper
+
+  def index
+    sort_init   'created_at', 'desc'
+    sort_update %w(created_at type)
+
+    @project = Project.find(params[:project_id]) if params[:project_id]
+    if @project
+      events = Event.where(project_id: @project.id)
+    else
+      events = Event.scoped
+    end
+
+    respond_to do |format|
+      format.html do
+        @event_count = events.count
+        @event_pages = Paginator.new self, @event_count,
+          per_page_option,
+          params['page']
+        @events =  events.find :all,
+          :order   => sort_clause,
+          :include => [:invoice],
+          :limit   => @event_pages.items_per_page,
+          :offset  => @event_pages.current.offset
+      end
+    end
+  end
 
   def create
     t = params[:event][:type]
@@ -22,13 +52,6 @@ class EventsController < ApplicationController
       @event.type = 'ReceivedInvoiceEvent' if @event.name == 'email'
       if @event.md5.blank?
         @event.type = 'EventWithMail' if @event.name =~ /paid_notification$/
-      else
-        invoice_format = @event.invoice.client.invoice_format rescue ""
-        if ( invoice_format == "facturae_32_face" )
-          @event.type = 'EventWithUrlFace'
-        else
-          @event.type = 'EventWithUrl'
-        end
       end
     end
 

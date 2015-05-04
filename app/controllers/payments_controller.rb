@@ -92,7 +92,7 @@ class PaymentsController < ApplicationController
     @project.company.bank_infos.each do |bi|
       @invoices_to_pay_by_bank_info[bi] = {}
       bi.invoices.find(:all,
-        :conditions => ["state = 'sent' AND payment_method = ?", Invoice::PAYMENT_DEBIT],
+        :conditions => ["state IN ('sent','registered') AND payment_method = ?", Invoice::PAYMENT_DEBIT],
       ).group_by(&:due_date).each do |due_date, invoices|
         @invoices_to_pay_by_bank_info[bi][due_date] = {}
         invoices.each do |invoice|
@@ -191,7 +191,7 @@ class PaymentsController < ApplicationController
         flash[:warning] = l(:notice_empty_sepa)
         redirect_to :action => 'payment_initiation', :project_id => @project
       end
-    rescue ArgumentError => e
+    rescue ArgumentError, RuntimeError => e
       flash[:warning] = e.to_s
       redirect_to :action => 'payment_initiation', :project_id => @project
     end

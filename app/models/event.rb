@@ -88,11 +88,11 @@ class Event < ActiveRecord::Base
 
   def file=(s)
     if s and s.size > 0
-      write_attribute(:file, Haltr::Utils.compress(s))
+      write_attribute(:file, Haltr::Utils.compress(Haltr::Utils.decompress(s)))
     end
   end
 
-  %w(notes class_for_send md5 final_md5 error backtrace).each do |c|
+  %w(notes class_for_send md5 error backtrace codi_registre url).each do |c|
     src = <<-END_SRC
       def #{c}
         info[:#{c}] rescue nil
@@ -116,7 +116,18 @@ class Event < ActiveRecord::Base
   private
 
   def update_invoice
-    self.invoice.send(name) if automatic?
+    # this won't update invoice status if invoice is not valid
+    #self.invoice.send(name) if automatic?
+    if automatic?
+      begin
+        new_state = invoice.state_transitions.select {|t|
+          t.event == name
+        }.first.to
+        invoice.update_attribute(:state, new_state)
+      rescue
+        invoice.send(name)
+      end
+    end
   end
 
 end

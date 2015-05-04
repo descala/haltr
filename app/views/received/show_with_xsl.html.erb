@@ -25,7 +25,7 @@
   </div>
 
   <%= render :partial => "invoices/payments" -%>
-  <%= render :partial => "invoices/events" -%>
+  <%= render :partial => 'events/list', locals: {events: @invoice.visible_events} %>
 
 </div>
 

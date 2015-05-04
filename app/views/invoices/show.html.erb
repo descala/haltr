@@ -41,9 +41,8 @@
         <div id="workspace1" class="haltrinvoice">
           <div id="workspace2">
             <div id="col1">
-
               <%= render :partial=>'invoices/invoice' %>
-
+              <%= link_to_attachments @invoice, thumbnails: false, author: false %>
             </div>
           </div>
         </div>
@@ -56,11 +55,15 @@
 </div>
 <% end -%>
 
-<%= render :partial => 'invoices/events'%>
+<% if @invoice.send_original? %>
+  <p>* <%= l(:label_will_send_original) -%></p>
+<% end -%>
+
+<%= render :partial => 'events/list', locals: {events: @invoice.visible_events} %>
 <%= render :partial => 'invoices/issued_invoice_list_other' if @invoice.is_a? IssuedInvoice %>
 <%= render :partial => 'invoices/channel_links' if (Rails.env == "development" or User.current.admin?) and @invoice.is_a? IssuedInvoice %>
 
-<% if @invoice.is_a? InvoiceTemplate and @invoices_generated.any? -%>
+<% if @invoice.is_a? InvoiceTemplate and @invoices_generated and @invoices_generated.any? -%>
   <h3><%= l(:label_generated_invoices)%></h3>
   <p>
   <% @invoices_generated.each do |invoice| -%>
@@ -86,7 +89,7 @@
 <%=
   unless @js.blank?
     content_for :header_tags do
-      javascript_include_tag('/invoices/haltr_sign.js') +
+      javascript_include_tag("/invoices/haltr_sign.js#{'?debug=true' if params[:debug]=='true'}") +
       javascript_include_tag('deployjava.js', :plugin => 'haltr')
     end
   end

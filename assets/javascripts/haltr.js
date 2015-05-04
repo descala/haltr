@@ -34,23 +34,34 @@ $(document).ready(function() {
   $('select#invoice_client_id').bind('ajax:success', function(evt, data, status, xhr){
     $('#payment_stuff').html(xhr.responseText);
     terms();
+    $('span#invoice_format').html($('select#invoice_client_id option:selected').data('invoice_format'));
   })
-
-  $('select#unused_oc').val($('select#invoice_dir3_id').find(':selected').data('oc'));
-  $('select#unused_ut').val($('select#invoice_dir3_id').find(':selected').data('ut'));
-
-  $(document).on('change', 'select#invoice_dir3_id', function(e) {
-    var selected = $('select#invoice_dir3_id').find(':selected');
-    $('select#unused_oc').val(selected.data('oc'));
-    $('select#unused_ut').val(selected.data('ut'));
-    console.log("set selected ut to val " + selected.data('ut'));
-  });
 
   /* on load, simulate a client change to call above function */
   /* but only when creating new invoice, to avoid undesired changes */
   if (window.location.href.indexOf("/new") > -1) {
     $('select#invoice_client_id').change();
   }
+
+  // external company form
+  $(document).on('click', 'input.visible_field', function(e) {
+    if (!this.checked) {
+      $('#'+$(this).attr('id').replace('visible','required')).prop('checked', false);
+    }
+  });
+  $(document).on('click', 'input.required_field', function(e) {
+    if (this.checked) {
+      $('#'+$(this).attr('id').replace('required','visible')).prop('checked', true);
+    }
+  });
+
+  $(document).on('click', 'span.select_to_edit', function(e) {
+    var field=$(this).data('field');
+    $("select#invoice_"+field).toggle();
+    $("select#invoice_"+field).prop('disabled', !$("select#invoice_"+field).prop('disabled'));
+    $("input#invoice_"+field).toggle();
+    $("input#invoice_"+field).prop('disabled', !$("input#invoice_"+field).prop('disabled'));
+  });
 
   $(document).on('change', '#invoice_terms', function(e) {
     terms();
@@ -101,7 +112,7 @@ $(document).ready(function() {
   });
 
   $(document).on('click', 'a.show-audits', function(e) {
-    $('div#audited_'+$(this).data('id')).toggle();
+    $('#audited_'+$(this).data('id')).toggle();
     return false;
   });
 
@@ -160,11 +171,11 @@ function global_tax_changed(tax_name, tax_code) {
 function global_tax_check_changed(tax_name) {
   $('#'+tax_name+'_global').prop('disabled', $('#'+tax_name+'_multiple').prop('checked'));
   if ($('#'+tax_name+'_multiple').prop('checked')) {
-    $('#'+tax_name+'_title').show();
+    $('.'+tax_name+'_title').show();
     $('td.tax_'+tax_name).show();
   } else {
     global_tax_changed(tax_name,$('#'+tax_name+'_global').val());
-    $('#'+tax_name+'_title').hide();
+    $('.'+tax_name+'_title').hide();
     $('td.tax_'+tax_name).hide();
   }
 }
@@ -186,12 +197,12 @@ function copy_last_line_tax(tax_name) {
  * or hide it if there are no exempt selects for this tax.
  */
 function tax_changed(tax_name, tax_code) {
-  if (tax_code.match(/_E$/)) {
+  if (tax_code.match(/(_E|_NS)$/)) {
     $('#'+tax_name+'_comment').show();
   } else {
     var hide_comment = true;
     $('select.tax_'+tax_name).each(function(index) {
-      if ($('select.tax_'+tax_name).eq(index).val().match(/_E$/)) {
+      if ($('select.tax_'+tax_name).eq(index).val().match(/(_E|_NS)$/)) {
         hide_comment = false;
       }
     });

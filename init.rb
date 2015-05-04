@@ -68,29 +68,46 @@ Redmine::Plugin.register :haltr do
         :people    => [:index, :new, :show, :edit, :create, :update, :destroy],
         :invoices  => [:index, :new, :edit, :create, :update, :destroy, :show, :mark_sent, :mark_closed, :mark_not_sent,
                        :destroy_payment, :send_invoice, :legal, :update_payment_stuff, :amend_for_invoice, :download_new_invoices,
-                       :send_new_invoices, :duplicate_invoice, :report, :context_menu, :bulk_mark_as, :original, :show_original],
+                       :send_new_invoices, :duplicate_invoice, :reports, :report_channel_state, :report_invoice_list, :context_menu, :bulk_mark_as, :original, :show_original,
+                       :mark_as, :number_to_id],
         :received  => [:index, :new, :edit, :create, :update, :destroy, :show, :show_original,
                        :mark_accepted, :mark_accepted_with_mail, :mark_refused,
                        :mark_refused_with_mail, :legal, :context_menu, :original, :validate, :bulk_mark_as],
         :companies => [:my_company,:bank_info,:update,:linked_to_mine,:check_iban],
         :charts    => [:invoice_total, :invoice_status, :top_clients],
-        :events    => [:file]},
+        :events    => [:file] },
       :require => :member
 
     permission :manage_payments, { :payments => [:index, :new, :edit, :create, :update, :destroy, :payment_initiation, :n19, :payment_done, :import_aeb43_index, :import_aeb43, :invoices] }, :require => :member
     permission :use_templates, { :invoice_templates => [:index, :new, :edit, :create, :update, :destroy, :show, :new_from_invoice,
-                                 :new_invoices_from_template, :create_invoices, :update_taxes] }, :require => :member
+                                 :new_invoices_from_template, :create_invoices, :update_taxes, :context_menu] }, :require => :member
 
     permission :use_all_readonly,
       { :clients   => [:index, :edit, :check_cif, :ccc2iban],
         :people    => [:index, :edit],
-        :invoices  => [:index, :show, :legal, :download_new_invoices, :report,
-                       :context_menu, :show_original],
+        :invoices  => [:index, :show, :legal, :download_new_invoices, :reports, :report_channel_state, :report_invoice_list,
+                       :context_menu, :show_original, :number_to_id],
         :received  => [:index, :show, :show_original, :legal, :context_menu],
         :companies => [:my_company,:bank_info, :linked_to_mine, :check_iban],
         :payments  => [:index, :n19],
-        :invoice_templates => [:index, :show] }, :require => :member,
-        :events    => [:file]
+        :invoice_templates => [:index, :show, :context_menu],
+        :charts    => [:invoice_total, :invoice_status, :top_clients],
+        :events    => [:file] },
+      :require => :member
+
+    permission :restricted_use,
+      { :clients   => [:index, :edit, :check_cif, :ccc2iban, :update],
+        :people    => [:index, :edit],
+        :invoices  => [:index, :show, :legal, :download_new_invoices, :reports, :report_channel_state, :report_invoice_list,
+                       :context_menu, :show_original, :send_invoice,
+                       :send_new_invoices, :number_to_id],
+        :received  => [:index, :show, :show_original, :legal, :context_menu],
+        :companies => [:my_company,:bank_info, :linked_to_mine, :check_iban],
+        :payments  => [:index, :n19],
+        :invoice_templates => [:index, :show, :context_menu],
+        :charts    => [:invoice_total, :invoice_status, :top_clients],
+        :events    => [:file] },
+      :require => :member
 
     permission :bulk_operations,
       { :invoices => [:bulk_download,:bulk_send],
@@ -104,7 +121,10 @@ Redmine::Plugin.register :haltr do
         :mandates => [:index,:new,:show,:create,:edit,:update,:destroy,:signed_doc] }, :require => :member
 
     permission :import_invoices,
-      { :invoices => [:import], :received => [:import] }, :require => :member
+      { :invoices => [:import],
+        :received => [:import],
+        :import_errors => [:index, :show, :destroy, :context_menu] },
+      :require => :member
 
     permission :email_customization,   {:companies=>'customization'}, :require => :member
     permission :configure_connections, {:companies=>'connections'}, :require => :member
@@ -115,7 +135,11 @@ Redmine::Plugin.register :haltr do
 
     permission :view_invoice_extra_fields, {}
 
+    permission :view_sequence_number, {}
+
     permission :export_invoices, {:invoices => [:index]}
+
+    permission :use_invoice_attachments, { :attachments => :upload}
 
     # Loads permisons from config/channels.yml
     ExportChannels.permissions.each do |permission,actions|
@@ -129,6 +153,8 @@ Redmine::Plugin.register :haltr do
   menu :project_menu, :invoices,   {:controller=>'invoices',  :action=>'index'     }, :param=>:project_id, :caption=>:label_invoice_plural
   menu :project_menu, :payments,   {:controller=>'payments',  :action=>'index'     }, :param=>:project_id, :caption=>:label_payment_plural
   menu :admin_menu, :external_companies, {:controller=>'external_companies', :action=>'index'}, :caption=>:external_companies
+  menu :admin_menu, :dir3_entities, {:controller=>'dir3_entities', :action=>'index'}, :caption=>:dir3_entities
+  menu :admin_menu, :export_channels, {:controller=>'export_channels', :action=>'index'}, :caption=>:export_channels
   # submenus defined at lib/haltr.rb
 
 end
@@ -136,6 +162,10 @@ end
 # avoid taxis error
 ActiveSupport::Inflector.inflections do |inflect|
   inflect.singular 'taxes', 'tax'
+  inflect.irregular 'unitat_tramitadora', 'unitats_tramitadores'
+  inflect.irregular 'organ_gestor', 'organs_gestors'
+  inflect.irregular 'oficina_comptable', 'oficines_comptables'
+  inflect.irregular 'organ_proponent', 'organs_proponents'
 end
 
 Mime::Type.register "text/xml", :facturae30

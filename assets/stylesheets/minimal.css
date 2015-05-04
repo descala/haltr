@@ -32,9 +32,6 @@
 .haltrinvoice h4{
 	margin: 0;
 	}
-.haltrinvoice p {
-	margin: 0 0 .75em;
-	}
 .haltrinvoice input, .haltrinvoice select, .haltrinvoice textarea {
 	margin: 0;
 	}
@@ -251,6 +248,8 @@
 .line-items .item-tax input { margin-top: 2px; }
 .line-items .item-price { text-align: right; width: 75px; }
 .line-items .item-price input { text-align: right; width: 65px; height: 18px; }
+.line-items .item-article_code { width: 60px;}
+.line-items .item-charge-reason { text-align: right; }
 .line-items .line-total {
 	text-align: right;
 	width: 90px;

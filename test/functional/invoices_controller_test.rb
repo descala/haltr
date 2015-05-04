@@ -99,7 +99,7 @@ class InvoicesControllerTest < ActionController::TestCase
 
   test 'by_taxcode_and_num' do
     @request.session[:user_id] = nil
-    get :by_taxcode_and_num, :num => "08/001", "taxcode"=>"77310058H"
+    get :by_taxcode_and_num, :num => "08/001", "taxcode"=>"77310058C"
     assert_response :success
     assert_equal "855445292", @response.body
     @request.session[:user_id] = 2
@@ -116,7 +116,7 @@ class InvoicesControllerTest < ActionController::TestCase
     assert User.current.allowed_to?(:import_invoices,p), "user #{User.current.login} has not import_invoices permission in project #{p.name}"
     assert_response :found
     assert invoice = IssuedInvoice.find_by_number('767'), "should find imported invoice"
-    assert invoice.valid?
+    assert invoice.valid?, invoice.errors.messages.to_s
     assert !invoice.modified_since_created?
     assert invoice.original
   end

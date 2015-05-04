@@ -11,6 +11,17 @@ class ExportChannels
     {}
   end
 
+  # all channels that can send
+  def self.can_send
+    self.available.reject {|c,v|
+      v['folder'].nil? and v['class_for_send'].nil?
+    }
+  end
+
+  def self.can_send?(id)
+    self.can_send.keys.include? id
+  end
+
   def self.permissions
     channel_permissions = {}
     self.available.values.each do |channel|
@@ -46,19 +57,43 @@ class ExportChannels
     available[id]["options"] if available? id
   end
 
-  def self.validations(id)
-    return [] if available[id].nil?
-    if available[id]["validate"].nil?
-      validations = []
-    else
-      validations = available[id]["validate"].is_a?(Array) ? available[id]["validate"] : [available[id]["validate"]]
+  def self.validators(id=nil)
+    validators = []
+    available.each do |name, channel|
+      next if id and id != name
+      if channel['validators'].is_a?(Array)
+        validators += channel['validators']
+      else
+        validators << channel['validators']
+      end
+      if id and channel['format']
+        validators += ExportFormats.validators(channel['format'])
+      else
+        validators += ExportFormats.validators
+      end
     end
-    validations += ExportFormats.validations(available[id]["format"]) if available[id]["format"]
-    validations.compact.uniq
+    validators.compact.collect do |validator|
+      begin
+        validator.constantize
+      rescue NameError => e
+        Rails.logger.error "error loading validator #{validator}: #{e}"
+        nil
+      end
+    end.compact.uniq
   end
 
   def self.for_select(current_project)
-    available.collect {|k,v|
+    available.sort { |a,b|
+      if a[1]['order'].blank? and b[1]['order'].blank?
+        a[0].downcase <=> b[0].downcase
+      elsif a[1]['order'].blank?
+        1
+      elsif b[1]['order'].blank?
+        -1
+      else
+        a[1]['order'].to_i <=> b[1]['order'].to_i
+      end
+    }.collect {|k,v|
       unless User.current.admin?
         allowed = false
         v["allowed_permissions"].each_key do |perm|
@@ -67,7 +102,7 @@ class ExportChannels
         next unless allowed
       end
       [ v["locales"][I18n.locale.to_s], k ]
-    }.compact.sort {|a,b| a[1] <=> b[1] }
+    }.compact
   end
 
   def self.path(id)
@@ -80,6 +115,12 @@ class ExportChannels
 
   def self.[](id)
     available[id]
+  end
+
+  def self.punts_generals
+    available.collect {|k,v|
+      k if v["locales"]["ca"] =~ /punt general/i
+    }.compact
   end
 
 end

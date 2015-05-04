@@ -7,7 +7,7 @@
       <TaxIdentification>
         <PersonTypeCode>J</PersonTypeCode>
         <ResidenceTypeCode>R</ResidenceTypeCode>
-        <TaxIdentificationNumber>B63276174</TaxIdentificationNumber>
+        <TaxIdentificationNumber>ESB63276174</TaxIdentificationNumber>
       </TaxIdentification>
       <LegalEntity>
         <CorporateName>Invinet Sistemes 2003, S.L</CorporateName>
@@ -40,7 +40,7 @@
       <TaxIdentification>
         <PersonTypeCode>J</PersonTypeCode>
         <ResidenceTypeCode>R</ResidenceTypeCode>
-        <TaxIdentificationNumber>77310058H</TaxIdentificationNumber>
+        <TaxIdentificationNumber>77310058C</TaxIdentificationNumber>
       </TaxIdentification>
       <LegalEntity>
         <CorporateName>Ingent-lluís</CorporateName>
@@ -60,7 +60,7 @@
       <TaxIdentification>
         <PersonTypeCode>J</PersonTypeCode>
         <ResidenceTypeCode>R</ResidenceTypeCode>
-        <TaxIdentificationNumber>ESP6611142C</TaxIdentificationNumber>
+        <TaxIdentificationNumber>ESP1700000A</TaxIdentificationNumber>
       </TaxIdentification>
       <LegalEntity>
         <CorporateName>David Copperfield</CorporateName>
@@ -185,7 +185,7 @@
           <PaymentMeans>02</PaymentMeans>
           <AccountToBeDebited>
             <IBAN>ES8023100001180000012345</IBAN>
-            <BankCode>biiiiiiiiic</BankCode>
+            <BIC>biiiiiiiiic</BIC>
           </AccountToBeDebited>
         </Installment>
       </PaymentDetails>

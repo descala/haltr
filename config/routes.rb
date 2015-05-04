@@ -31,7 +31,9 @@ resources :projects do
   match 'new_invoices_from_template' => 'invoice_templates#new_invoices_from_template', :via => [:get, :post]
   match 'create_invoices' => 'invoice_templates#create_invoices', :via => :post
   match 'update_taxes' => 'invoice_templates#update_taxes'
-  match 'report/issued_3m' => 'invoices#report', :via => :get
+  match 'invoices/reports' => 'invoices#reports', :via => [:get]
+  match 'invoices/report_invoice_list' => 'invoices#report_invoice_list', :via => [:post]
+  match 'invoices/report_channel_state' => 'invoices#report_channel_state', :via => [:get]
   resources :payments, :only => [:index, :new, :create]
   match 'payments/import_aeb43_index' => 'payments#import_aeb43_index'
   match 'payments/import_aeb43' => 'payments#import_aeb43'
@@ -48,6 +50,9 @@ resources :projects do
   match 'events/file/:id' => 'events#file', :via => :get, :as => :event_file
   resources :quotes, :only => [:index, :new, :create]
   resources :invoice_imgs, :only => [:show]
+  match 'invoices/add_attachment' => 'invoices#add_attachment', :via => :post
+  resources :import_errors, :only => [:index, :show, :destroy]
+  match 'import_errors' => 'import_errors#destroy', :via => :delete, :as => 'project_import_errors'
 end
 resources :invoice_imgs, :only => [:create]
 
@@ -58,6 +63,8 @@ end
 resources :people
 match 'invoices/context_menu', :to => 'invoices#context_menu', :as => 'invoices_context_menu', :via => [:get, :post]
 match 'received/context_menu', :to => 'received#context_menu', :as => 'received_context_menu', :via => [:get, :post]
+match 'import_errors/context_menu', :to => 'import_errors#context_menu', :as => 'import_errors_context_menu', :via => [:get, :post]
+match 'invoice_templates/context_menu', :to => 'invoice_templates#context_menu', :as => 'invoice_templates_context_menu', :via => [:get, :post]
 match 'invoices/bulk_download' => 'invoices#bulk_download'
 match 'received/bulk_download' => 'received#bulk_download'
 match 'invoices/bulk_mark_as' => 'invoices#bulk_mark_as'
@@ -66,9 +73,8 @@ match 'received/bulk_validate' => 'received#bulk_validate'
 match 'invoices/bulk_send' => 'invoices#bulk_send'
 match 'invoices/by_taxcode_and_num' => 'invoices#by_taxcode_and_num', :via => :get
 match 'invoices', :controller => 'invoices', :action => 'destroy', :via => :delete
-match 'invoices/mark_sent/:id' => 'invoices#mark_sent', :via => :get, :as => :mark_sent
-match 'invoices/mark_not_sent/:id' => 'invoices#mark_not_sent', :via => :get, :as => :mark_not_sent
-match 'invoices/mark_closed/:id' => 'invoices#mark_closed', :via => :get, :as => :mark_closed
+match 'invoice_templates', :controller => 'invoice_templates', :action => 'destroy', :via => :delete
+match 'invoices/:id/mark_as/:state' => 'invoices#mark_as', :via => :get, :as => :mark_as
 match 'invoices/send_invoice/:id' => 'invoices#send_invoice', :via => :get, :as => :send_invoice
 match 'invoices/legal/:id' => 'invoices#legal', :via => :get, :as => :legal
 match 'invoices/amend_for_invoice/:id' => 'invoices#amend_for_invoice', :via => :post, :as => :amend_for_invoice
@@ -81,6 +87,7 @@ match 'invoices/original/:id' => 'invoices#original', :via => :get, :as => :invo
 match 'received/original/:id' => 'received#original', :via => :get, :as => :received_original
 match 'invoices/show_original/:id' => 'invoices#show_original', :via => :get, :as => :invoices_show_original
 match 'received/show_original/:id' => 'received#show_original', :via => :get, :as => :received_show_original
+match 'invoices/number_to_id/:number' => 'invoices#number_to_id', :via => :get, :as => :invoices_number_to_id, :constraints => { :number => /.+/ }
 resources :invoices
 resources :quotes, :only => [:show, :edit, :update, :destroy]
 match 'quotes/send/:id' => 'quotes#send_quote', :via => :get, :as => :send_quote
@@ -114,6 +121,10 @@ match '/companies/logo_by_taxcode/:taxcode' => 'companies#logo_by_taxcode', :via
 resources :companies, :only => [:update]
 
 resources :external_companies
+match 'external_companies/csv_import' => 'external_companies#csv_import', :via => :post
+resources :dir3_entities
+match 'dir3_entities/csv_import' => 'dir3_entities#csv_import', :via => :post
+resources :export_channels
 
 match '/charts/invoice_total' => 'charts#invoice_total', :via => :get, :as => :invoice_total_chart
 match '/charts/invoice_status/:project_id' => 'charts#invoice_status', :via => :get, :as => :invoice_status_chart

@@ -35,6 +35,9 @@ error_sending:
   user_id: 2
   invoice_id: 1
   type: EventError
+  info: |
+    ---
+    :notes: Error foo in bar
 with_url:
   name: success_sending
   user_id: 2
@@ -81,6 +84,14 @@ accept_notification:
   invoice_id: 1
   type: Event
   created_at: <%=t+=1.minute%>
+normal_event_but_with_md5:
+  name: success_sending
+  invoice_id: 1
+  type: Event
+  created_at: <%=t+=1.minute%>
+  info: |
+    ---
+    :md5: 6f0e80bdbb75d016ef525c7ba2982390
 template_event:
   name: edited
   user_id: 2
@@ -92,5 +103,17 @@ received_event:
   user_id: 2
   invoice_id: 10
   type: Event
+  created_at: <%=t+=1.minute%>
+with_file_notes:
+  name: success_sending
+  user_id: 2
+  invoice_id: 1
+  type: EventWithFile
+  info: |
+    ---
+    :notes: this is a literal
+  filename: readme.txt
+  file: This is the file content
+  content_type: plain/text
   created_at: <%=t+=1.minute%>
 

@@ -11,29 +11,94 @@
 </div>
 <!--final menu rapid-->
 
-<!--taula factures-->
+<!--filtres-->
 <div class="seccio grup">
   <div class="col span-2-de-2">
-    <table class="taula-1 list invoices" id="invoices">
-      <thead>
-        <%= sort_header_tag('date', :caption => l(:field_date)) %>
-        <th><%=l(:field_frequency)%></th>
-        <%= sort_header_tag('clients.name', :caption => l(:field_company)) %>
-        <th><%= l(:label_total) %></th>
-      </thead>
-      <tbody>
-        <% for invoice in @invoices -%>
-          <tr class="user <%= cycle("odd", "even") %>" onclick="javascript: document.location = '<%=url_for(:action=>'show', :id=>invoice)%>'">
-            <td><%=h format_date invoice.date %></td>
-            <td><%= l("mf#{invoice.frequency}") %></td>
-            <td><%=link_to_if_authorized h(invoice.client), {:controller => 'clients', :action => 'edit', :id => invoice.client} %></td>
-            <td class="money"><%= money(invoice.total) %></td>
-          </tr>
-        <% end -%>
-      </tbody>
-    </table>
+    <div class="filtres">
+      <div class="titularAcc">
+        <%= l(:label_filter_plural) %>
+      </div>
+      <div class="contingutAcc">
+        <%= form_tag({:id=>@project}, :method => :get, :class => 'formee') do %>
+          <fieldset>
+            <legend><%= l(:label_search) %></legend>
+
+            <div class="seccio grup">
+              <div class="col span-1-de-3">
+                <label for="date_from"><%=l(:field_date)%></label>
+                <%= text_field_tag :date_from, (params[:date_from].nil? ? Date.new(Date.today.year) : params[:date_from]), :size => 10, :style => "width: 90%;" %><%= calendar_for('date_from') %>
+              </div>
+              <div class="col span-1-de-3">
+                <label for="date_to"><%=l(:label_to)%></label>
+                <%= text_field_tag :date_to, (params[:date_to].nil? ? Date.today : params[:date_to]), :size => 10, :style => "width: 90%;" %><%= calendar_for('date_to') %>
+              </div>
+              <div class="col span-1-de-3">
+              </div>
+            </div>
+
+            <div class="seccio grup">
+              <div class="col span-1-de-3">
+                <label for="taxcode"><%= l(:field_taxcode) %></label>
+                <%= text_field_tag :taxcode, params[:taxcode] %>
+              </div>
+              <div class="col span-1-de-3">
+                <label for="name"><%= l(:field_name) %></label>
+                <%= text_field_tag :name, params[:name] %>
+              </div>
+              <div class="col span-1-de-3">
+              </div>
+            </div>
+
+            <div class="seccio grup">
+              <div class="col span-2-de-3">
+                <label for="_client_id"><%= l(:label_company) %></label>
+                <%= collection_select(nil, :client_id, Client.find(:all, :order => 'name', :conditions => ["project_id = ?", @project]), :id, :name, {:include_blank => true, :selected => @client_id}) %>
+              </div>
+            </div>
+
+            <div class="seccio grup">
+              <div class="col span-2-de-2">
+                <%= submit_tag l(:button_apply), :class => "small", :name => nil %>
+              </div>
+            </div>
+          </fieldset>
+        <% end %>
+      </div>
+    </div>
   </div>
 </div>
+<!--final filtres-->
+
+
+
+<!--taula factures-->
+<%= form_tag({}) do -%>
+  <%= hidden_field_tag 'back_url', url_for(params), :id => nil %>
+  <div class="seccio grup">
+    <div class="col span-2-de-2">
+      <table class="taula-1 list invoices" id="invoices">
+        <thead>
+          <th></th>
+          <%= sort_header_tag('date', :caption => l(:field_date)) %>
+          <%= sort_header_tag('frequency', :caption => l(:field_frequency)) %>
+          <%= sort_header_tag('clients.name', :caption => l(:field_company)) %>
+          <th><%= l(:label_total) %></th>
+        </thead>
+        <tbody>
+          <% @invoices.each do |invoice| -%>
+            <tr id="invoice-<%=invoice.id%>" class="<%= cycle("odd", "even") %> hascontextmenu">
+              <td><%= check_box_tag("ids[]", invoice.id, false, :id => nil) %></td>
+              <td><%=h link_to(format_date(invoice.date), edit_invoice_template_path(invoice)) %></td>
+              <td><%= l("mf#{invoice.frequency}") %></td>
+              <td><%=h invoice.client %></td>
+              <td class="money"><%= money(invoice.total) %></td>
+            </tr>
+          <% end -%>
+        </tbody>
+      </table>
+    </div>
+  </div>
+<% end -%>
 <!--final taula factures-->
 
 <!--paginacio-->
@@ -47,3 +112,5 @@
 <% content_for :sidebar do %>
   <%= render_menu :invoices_menu, @project %>
 <% end %>
+
+<%= context_menu invoice_templates_context_menu_path %>

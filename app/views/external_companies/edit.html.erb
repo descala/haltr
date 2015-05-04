@@ -12,3 +12,20 @@
 
   </div>
 </div>
+
+<hr />
+
+<h3><%= l(:label_linked_to_mine) %></h3>
+
+<% if @ecompany.clients.any? -%>
+  <div class="clients">
+    <%= @ecompany.clients.collect { |client|
+      if client.project
+        link_to "#{client.project.company.name} (#{client.invoices.count} #{l(:label_invoice_plural)})",
+          project_invoices_path(:project_id=>client.project,:client_id=>client)
+      else
+        "client #{client.id} (deleted project)"
+      end
+    }.join(" - ").html_safe %>
+  </div>
+<% end -%>

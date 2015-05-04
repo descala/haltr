@@ -3,7 +3,7 @@ module ChartsHelper
   def haltr_projects
     user = User.current
     projs = []
-    if user.admin? and @project
+    if @project and ( user.admin? or user.projects.include?(@project) )
       projs << @project
     else
       user.projects.each do |project|

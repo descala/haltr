@@ -1,1 +1,21 @@
-<%=h e %>
+<%=h e -%>
+<% unless e.notes.blank? -%>
+:
+  <%=
+    if e.notes.is_a?(Array)
+      I18n.t(e.notes, :default => e.notes).join(" ")
+    else
+      I18n.t(e.notes, :default => e.notes)
+    end
+  %>
+<% end -%>
+<% unless e.codi_registre.blank? -%>
+  ( reg. <%= e.codi_registre %> )
+<% end -%>
+<% if e.md5 -%>
+  <% if e.name =~ /_notification/ -%>
+    ( <%= h link_to_if_authorized(l(:download_notification),legal_path(:id=>e.invoice.id,:md5=>e.md5)) %> )
+  <% else -%>
+    ( <%= h link_to_if_authorized(l(:download_legal),legal_path(:id=>e.invoice.id,:md5=>e.md5)) %> )
+  <% end -%>
+<% end -%>

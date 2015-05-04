@@ -8,6 +8,6 @@ class IssuedInvoiceTest < ActiveSupport::TestCase
   test "last invoice number" do
     project = Project.find 'onlinestore'
     num = IssuedInvoice.last_number(project)
-    assert_equal '2014/i12', num
+    assert_equal '2014/i14', num
   end
 end

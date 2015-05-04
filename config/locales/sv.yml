@@ -114,6 +114,8 @@ sv:
   state_error_plural: "Ej signerade"
   state_closed_plural: "Avslutade"
   state_discarded_plural: "Avfärdade"
+  state_registered_plural: "Registered"
+  state_allegedly_paid_plural: "Reported as paid"
   state_new: "Ny"
   state_sending: "Skickar"
   state_sent: "Skickat"
@@ -130,6 +132,7 @@ sv:
   state_accepted_plural: "Accepterad"
   state_refused_plural: "Avvisad"
   state_paid_plural: "Betald"
+  state_registered: "Registered"
   sending_log: "Skickar log"
   download_legal: "Ladda ner fakturafilen"
   download_notification: "Ladda ner notifieringar"
@@ -219,6 +222,13 @@ sv:
   email: "Received"
   download_original: "Download original"
   view_original: "View original"
+  manual_mark_as: "Mark as %{state}"
+  done_mark_as_new: "Manually marked as new"
+  done_mark_as_sent: "Manually marked as sent"
+  done_mark_as_accepted: "Manually marked as accepted"
+  done_mark_as_registered: "Manually marked as registered"
+  done_mark_as_refused: "Manually marked as refused"
+  done_mark_as_closed: "Manually marked as closed"
 
   # Invoice templates
   label_invoice_template_new: Ny Mall
@@ -372,7 +382,7 @@ sv:
 
   #TODO
   label_received_invoice_new: New received invoice
-  field_received_at: "Received at"
+  field_received_at: "Reception date"
   duplicate_invoice: Duplicate invoce
   field_endpointid: "Peppol Endpoint ID"
   field_schemeid: "Peppol Scheme ID"
@@ -393,6 +403,7 @@ sv:
   permission_use_templates: "Invoice templates"
   permission_batch_processes: "Processes with scripts"
   permission_use_all_readonly: "Full use readonly"
+  permission_restricted_use: "Restricted use"
 
   # this depends on permissions defined in channels.yml
   permission_download_pdf: "B2BRouter - Download PDF"
@@ -542,13 +553,67 @@ sv:
   denied_requests: "Denied requests"
   self_employed: "I am self-employed"
   organ_gestor: "Òrgan gestor"
-  oficina_contable: "Oficina comptable"
+  oficina_comptable: "Oficina comptable"
   unitat_tramitadora: "Unitat tramitadora"
+  field_organ_proponent: "Órgano Promotor (Servicio del Ayuntamiento que hace el encargo)"
+  organ_proponent: "Órgano Promotor (Servicio del Ayuntamiento que hace el encargo)"
   external_companies: "External companies"
   external_company: "External company"
+  export_channels: "Channels"
+  export_channel: "Channel"
   field_file_reference: "File number"
   import_issued_from_received: "File to import is an issued invoice"
   import_received_from_issued: "File to import is a received invoice"
   processing_pdf: "Processing PDF"
   state_processing_pdf: "Processing PDF"
   processed_pdf: "PDF processed"
+  field_discount: "Discount"
+  field_charge: "Charge"
+  download_as_pdf: "Download PDF copy"
+  label_reports: Reports
+  visible_fields: "Visible fields"
+  required_fields: "Required fields"
+  field_delivery_note_number: "Leveransavisering nummer"
+  field_organs_gestors: "Òrgans gestors"
+  field_unitats_tramitadores: "Unitats tramitadores"
+  field_oficines_comptables: "Oficines comptables"
+  field_organs_proponents: "Òrgans proponents"
+  dir3_entities: "Dir3 entities"
+  field_code: "Code"
+  field_payments_on_account: "Payments on account/Withholding"
+  sequence_number: 'Sequence number'
+  mark_as_accepted: 'Mark as accepted'
+  field_receiver_contract_reference: "Assignment code"
+  invoice_attachments_description: "You can add attachments to the invoce (max %{mb}MB). These documents will be sent along with the invoice."
+  invoice_attachments_permission: "Not allowed"
+  import_errors: "Import errors"
+  text_import_errors_destroy_confirmation: "Are you sure you want to delete the selected import error(s)?"
+  field_series_code: "Serie"
+  state_not_allowed_for_sending: "Cannot re-send invoices in state %{state}"
+  amendment: "Amendment"
+  missing_imap_config: "Missing IMAP config on 'My company'"
+  transport: "Transport"
+  field_legal_literals: "Certification"
+  field_invoicing_period_start: "Invoicing period start"
+  field_invoicing_period_end: "Invoicing period end"
+  field_invoicing_period: "Invoicing period"
+  label_factoring_assignment_data: 'Factoring assignment'
+  field_fa_person_type: 'Entity type'
+  field_fa_residence_type: 'Residence type'
+  field_fa_taxcode: 'VAT ID number'
+  field_fa_name: 'Name'
+  field_fa_address: 'Address'
+  field_fa_postcode: 'Postcode'
+  field_fa_town: 'City'
+  field_fa_province: 'Province'
+  field_fa_country: 'Country'
+  field_fa_info: 'Information'
+  field_fa_duedate: 'Due date'
+  field_fa_import: 'Amount'
+  field_fa_iban: 'IBAN'
+  field_fa_bank_code: 'Bank code'
+  field_fa_clauses: 'Assignment clause'
+  field_fa_payment_method: 'Payment method'
+  channel_requires_user_pass: "Channel requires to configure user and password at 'My company'"
+  download_legal_invoice: "Download legal invoice"
+  label_report_channel_state: "Invoices by Channel and State"

@@ -7,11 +7,11 @@ class InvoiceImgTest < ActiveSupport::TestCase
   test "requires an invoice" do
     assert !InvoiceImg.new.save, "should not save without an invoice"
     assert !InvoiceImg.new(:invoice_id=>99999).save, "should not save without an invoice"
-    assert InvoiceImg.new(:invoice_id=>invoices(:i13).id).save
+    assert InvoiceImg.new(:invoice_id=>invoices(:i15).id).save
   end
 
   test "on create updates invoice status and creates an event" do
-    invoice = invoices(:i13)
+    invoice = invoices(:i15)
     assert_equal "processing_pdf", invoice.state
     num_events = invoice.events.size
     assert_equal num_events, invoice.events.size

@@ -1,10 +1,21 @@
+<div class="contextual">
+  <%= form_tag({action: 'csv_import'}, {multipart: true}) do -%>
+    <%= submit_tag "#{l(:label_import)} CSV" %>
+    <%= file_field_tag :csv_file %>
+  <% end -%>
+  <%= link_to button_tag("#{l(:button_download)} CSV"), {format: :csv} %>
+</div>
+
 <h2><%= l(:external_companies) %></h2>
 
-<table class="taula-1 list clients">
+<%= link_to l(:label_new), new_external_company_path %>
+
+<table class="taula-1 list clients" style="margin-top: 30px;">
   <% @ecompanies.each do |ec| -%>
     <tr class="<%= cycle('odd senar','even parell') %>">
       <td><%= ec.taxcode %></td>
       <td><%= ec.name %></td>
+      <td><%= ec.clients.count %> <%= image_tag('link.png') %></td>
       <td><%= link_to l(:button_edit), edit_external_company_path(ec) %></td>
       <td><%= link_to l(:button_delete), external_company_path(ec),
         :confirm=>l(:text_are_you_sure), :method=>:delete %></td>

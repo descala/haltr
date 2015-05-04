@@ -1,5 +1,8 @@
 <%=h e %>
 <% unless e.notes.blank? -%>
-  ( <%= h l(e.class_for_send, :emails => e.notes) %> )
+  ( <%= h l(e.class_for_send, :emails => e.notes, :default => e.notes) %> )
+<% end -%>
+<% unless e.codi_registre.blank? -%>
+  ( reg. <%= e.codi_registre %> )
 <% end -%>
 <%= h link_to_if_authorized(l(e.name =~ /_notification/ ? :download_notification : :download_legal), project_event_file_path(e, :project_id=>@project)) %>

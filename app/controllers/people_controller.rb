@@ -23,7 +23,7 @@ class PeopleController < ApplicationController
 
     unless params[:name].blank?
       name = "%#{params[:name].strip.downcase}%"
-      people = people.scoped :conditions => ["LOWER(first_name) LIKE ? OR LOWER(last_name) LIKE ? OR LOWER(email) LIKE ?", name, name, name]
+      people = people.scoped :conditions => ["LOWER(first_name) LIKE ? OR LOWER(last_name) LIKE ? OR LOWER(people.email) LIKE ?", name, name, name]
     end
 
     @person_count = people.count

@@ -1,11 +1,13 @@
 <div>
-  <% if @invoice.final_md5 or @invoice.events.where("type='EventWithFile'").any? -%>
+
+  <% if @last_success_sending_event -%>
     <ul class='menu'>
       <li>
-      <%= link_to l(:download_legal), :controller=>"invoices", :action=>"download", :client_hashid=>@client.hashid, :invoice_id=>@invoice.id %>
+      <%= link_to l(:download_legal), :controller=>"invoices", :action=>"download", :client_hashid=>@client.hashid, :invoice_id=>@invoice.id, :event=>@last_success_sending_event %>
       </li>
     </ul>
   <% end %>
+
   <div id="invoice_wrapper">
     <div id="workspace1" class="haltrinvoice">
       <div id="workspace2">

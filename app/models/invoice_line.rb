@@ -1,6 +1,10 @@
 class InvoiceLine < ActiveRecord::Base
 
   unloadable
+
+  include Haltr::FloatParser
+  float_parse :discount_percent, :price, :quantity, :charge
+
   audited :associated_with => :invoice, :except => [:id, :invoice_id]
   has_associated_audits
 
@@ -24,8 +28,10 @@ class InvoiceLine < ActiveRecord::Base
 
   belongs_to :invoice
   has_many :taxes, :class_name => "Tax", :order => "percent", :dependent => :destroy
-  validates_presence_of :description, :unit
+  validates_presence_of :unit
   validates_numericality_of :quantity, :price
+  validates_numericality_of :charge, :discount_percent, :allow_nil => true
+  validates_numericality_of :sequence_number, :allow_nil => true, :allow_blank => true
 
   accepts_nested_attributes_for :taxes,
     :allow_destroy => true
@@ -35,30 +41,29 @@ class InvoiceLine < ActiveRecord::Base
     self.unit ||= 1
   }
 
-  # remove colons "1,23" => "1.23"
-  def price=(v)
-    write_attribute :price, (v.is_a?(String) ? v.gsub(',','.') : v)
+  # Coste Total.
+  # Quantity x UnitPriceWithoutTax
+  def total_cost
+    quantity * price
   end
 
-  # remove colons "1,23" => "1.23"
-  def quanity=(v)
-    write_attribute :quantity, (v.is_a?(String) ? v.gsub(',','.') : v)
-  end
-
-  def total
-    Money.new((price * quantity * Money::Currency.new(invoice.currency).subunit_to_unit).round.to_i, invoice.currency)
+  # Importe bruto.
+  # TotalCost - DiscountAmount + ChargeAmount
+  def gross_amount
+    taxable_base
   end
 
   def taxable_base
-    if invoice.discount_percent
-      total * ( 1 - invoice.discount_percent / 100.0)
-    else
-      total
-    end
+    total_cost - discount_amount + charge
   end
 
+  # warn! this tax_amount does not include global discounts.
   def tax_amount(tax)
-    taxable_base * (tax.percent / 100.0)
+    taxable_base * (tax.percent.to_f / 100.0)
+  end
+
+  def discount_amount
+    total_cost * (discount_percent / 100.0)
   end
 
   def to_label
@@ -88,15 +93,21 @@ class InvoiceLine < ActiveRecord::Base
   end
 
   def unit_short
-    l("s_#{UNIT_CODES[unit][:name]}")
+    l("s_#{UNIT_CODES[unit][:name]}") rescue unit
   end
 
   def taxes_withheld
-    taxes.find(:all, :conditions => "percent < 0")
+    taxes.select {|t| t.percent.to_f < 0 }
   end
 
   def taxes_outputs
-    taxes.find(:all, :conditions => "percent >= 0")
+    taxes.select {|t| t.percent.to_f >= 0 }
+  end
+
+  def exempt_taxes
+    taxes.select do |t|
+      t.exempt?
+    end
   end
 
   def to_s

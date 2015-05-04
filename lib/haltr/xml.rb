@@ -9,14 +9,14 @@ module Haltr
       set_render_anywhere_helpers(ApplicationHelper,HaltrHelper,InvoicesHelper)
     end
 
-    def self.generate(invoice, format, local_certificate=false)
-      new.generate(invoice,format,local_certificate)
+    def self.generate(invoice, format, local_certificate=false, as_file=false)
+      new.generate(invoice,format,local_certificate, as_file)
     end
 
-    def generate(invoice,format,local_certificate=false)
+    def generate(invoice,format,local_certificate=false, as_file=false)
       # if it is an imported invoice, has not been modified and
       # invoice format  matches client format, send original file
-      if invoice.original and !invoice.modified_since_created? and format == invoice.invoice_format
+      if invoice.send_original?
         xml = invoice.original
       else
         if format == 'efffubl'
@@ -35,8 +35,16 @@ module Haltr
           :formats  => :xml,
           :layout   => false
         )
+        xml = Haltr::Xml.clean_xml(xml)
       end
-      Haltr::Xml.clean_xml(xml)
+      if as_file
+        xml_file = Tempfile.new("invoice_#{invoice.id}.xml")
+        xml_file.write(xml)
+        xml_file.close
+        xml_file
+      else
+        xml
+      end
     end
 
     def self.clean_xml(xml)

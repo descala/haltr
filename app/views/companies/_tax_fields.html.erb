@@ -1,9 +1,7 @@
-<% taxid = f.object_name.split("[").last.gsub(/\]/,'') -%>
-
 <tr class="nested-fields">
 
   <td class="tax_name">
-    <%= f.text_field :name, :no_label => true %>
+    <%= f.text_field :name, required: true, no_label: true, class: 'tax_name' %>
   </td>
 
   <td class="tax_percent">

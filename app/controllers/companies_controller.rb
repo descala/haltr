@@ -107,7 +107,8 @@ class CompaniesController < ApplicationController
               image = Magick::Image.read("#{attachment.diskfile}").first
               image.change_geometry!('350x130>') {|cols,rows,img| img.resize!(cols, rows)}
               image.write("#{attachment.diskfile}")
-            rescue LoadError
+            rescue LoadError, Magick::ImageMagickError
+              flash[:warning] = l(:logo_not_image)
             end
           else
             flash[:warning] = l(:logo_not_image)

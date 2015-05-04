@@ -30,20 +30,31 @@ function log(msg,level) {
   }).appendTo('#haltr_'+level+'_messages')
 }
 
+function debug(msg) {
+  <% if @debug -%>
+  log(msg, 'notice');
+  <% end -%>
+}
+
 function appletIsLoaded() {
   if (typeof clienteFirma === 'undefined') {
     // clienteFirma undefined so not loaded
+    debug('clienteFirma undefined so not loaded');
     return false;
   } else if ('getErrorMessage' in clienteFirma && (typeof(clienteFirma.getErrorMessage) == "function")) {
     // clienteFirma has getErrorMessage function, so loaded
+    debug('clienteFirma has getErrorMessage function, so loaded');
     return true;
   } else {
     // on IE previous check does not work (typeof(clienteFirma.getErrorMessage))
     // try to call function and catch the exception if not exist
+    debug('try to call function and catch the exception if not exist');
     try {
       clienteFirma.getErrorMessage();
+      debug('success (loaded)');
       return true;
     } catch(e) {
+      debug('error (not loaded): '+e.message);
       return false;
     }
   }
@@ -76,19 +87,24 @@ function cargarMiniApplet(base, keystore)
 	if (codeBase == undefined || codeBase == null) {
 		codeBase = '.';
 	}
+    debug('codeBase: '+codeBase);
 
 	var keystoreConfig = keystore;
 	if (keystoreConfig == undefined) {
 		keystoreConfig = null;
 	}
+    debug('keystoreConfig: '+keystoreConfig);
 
 	var jarArchive = codeBase + '/' + "miniapplet-full.jar";
+    debug('jarArchive: '+jarArchive);
 	
 	var attributes = {
 		id: 'miniApplet',
 	 	width: 1,
 		height: 1
 	};
+    debug('attributes: '+JSON.stringify(attributes));
+
 	var parameters = {
 		jnlp_href: codeBase + '/miniapplet-full.jnlp',
 		keystore: keystoreConfig,
@@ -99,10 +115,12 @@ function cargarMiniApplet(base, keystore)
 		java_arguments: '-Djnlp.packEnabled=false -Xms512M -Xmx512M',
 		separate_jvm: true
 	};
+    debug('parameters: '+JSON.stringify(parameters));
 
     docWriteWrapper(function () {
 	  deployJava.runApplet(attributes, parameters, '1.6');
     });
+    debug('called docWriteWrapper');
 
 	clienteFirma = document.getElementById("miniApplet");
 

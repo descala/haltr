@@ -1,0 +1,35 @@
+<h2><%= l(:export_channels) %></h2>
+
+<table class="taula-1 list clients">
+  <thead>
+    <tr>
+      <th>Key</th>
+      <th>Format</th>
+      <th>Destination</th>
+      <th>Permissions</th>
+      <th>Translations</th>
+    </tr>
+  </thead>
+  <tbody>
+    <% @channels.each do |k,v| -%>
+      <tr class="<%= cycle('odd senar','even parell') %>">
+        <td><%= k %></td>
+        <td>
+          <%= v['format'] %><br/>
+          <%= ExportFormats.available[v['format']]['name'] rescue nil %>
+        </td>
+        <td>
+          <span style="color: red"><%= v['folder'] %></span>
+          <% if v['class_for_send'] and v['class_for_send'].constantize <= Haltr::SendToWs -%>
+            <span style="color: green"><%= v['class_for_send'] %></span><br/>
+            <span style="color: green"><%= v['options']['process'] rescue nil %></span>
+          <% else %>
+            <span style="color: orange"><%= v['class_for_send'] %></span>
+          <% end %>
+        </td>
+        <td><%= v['allowed_permissions'].keys.join(', ') %></td>
+        <td><%= v['locales'].values.join("<br/>").html_safe %></td>
+      </tr>
+    <% end -%>
+  </tbody>
+</table>

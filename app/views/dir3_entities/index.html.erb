@@ -1,0 +1,25 @@
+<div class="contextual">
+  <%= form_tag({action: 'csv_import'}, {multipart: true}) do -%>
+    <%= submit_tag "#{l(:label_import)} CSV" %>
+    <%= file_field_tag :csv_file %>
+  <% end -%>
+  <%= link_to button_tag("#{l(:button_download)} CSV"), {format: :csv} %>
+</div>
+
+<h2><%= l(:dir3_entities) %></h2>
+
+<%= link_to l(:label_new), new_dir3_entity_path %>
+
+<table class="taula-1 list clients" style="margin-top: 30px;">
+  <% @dir3_entities.each do |dir3_entity| -%>
+    <tr class="<%= cycle('odd senar','even parell') %>">
+      <td><%= dir3_entity.code %></td>
+      <td><%= dir3_entity.name %></td>
+      <td><%= link_to l(:button_edit), edit_dir3_entity_path(dir3_entity) %></td>
+      <td><%= link_to l(:button_delete), dir3_entity_path(dir3_entity),
+        :confirm=>l(:text_are_you_sure), :method=>:delete %></td>
+    </tr>
+  <% end -%>
+</table>
+
+<%= link_to l(:label_new), new_dir3_entity_path %>

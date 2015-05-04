@@ -47,7 +47,7 @@ class HaltrMailHandler < MailHandler # < ActionMailer::Base
                   invoices << Invoice.create_from_xml(raw_invoice,company,from,md5,'email')
                   #TODO rescue and bounce?
                 elsif raw_invoice.content_type =~ /pdf/
-                  invoices << process_pdf_file(raw_invoice,company,from,md5,'email')
+                  invoices << process_pdf_file(raw_invoice,company,md5,'email',from)
                 else
                   Rails.logger.info "Discarding #{raw_invoice.filename} on incoming mail (#{raw_invoice.content_type})"
                 end

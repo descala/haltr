@@ -5,13 +5,24 @@ module Haltr
       File.join(File.dirname(__FILE__),"..","..","config","taxes.yml")
     )).with_indifferent_access
 
+    # Only used in Invoice.create_from_xml
     def self.new_tax(attributes={})
       case attributes[:format]
       when /facturae/
         taxes = TAX_LIST[:es].select {|t| t[:facturae_id] == attributes[:id]}
         taxes.each do |t|
-          if t[:percent] == attributes[:percent].to_f
-            return Tax.new(t.dup.keep_if {|k,v| %w(name percent category).include?(k)})
+          if attributes[:event_code]
+            # Is E(01) or NS(02)
+            category = attributes[:event_code] == '01' ? 'E' : 'NS'
+            if t[:percent] == attributes[:percent].to_f and category == t[:category]
+              new_tax = Tax.new(t.dup.keep_if {|k,v| %w(name percent category).include?(k)})
+              new_tax.comment = attributes[:event_reason]
+              return new_tax
+            end
+          else
+            if t[:percent] == attributes[:percent].to_f
+              return Tax.new(t.dup.keep_if {|k,v| %w(name percent category).include?(k)})
+            end
           end
         end
         # there's no tax matching name and percent, check only for name now
@@ -22,7 +33,6 @@ module Haltr
             category: 'S'
           )
         end
-
 
       when /ubl/
         #TODO
@@ -73,7 +83,7 @@ module Haltr
         taxes << Tax.new(:name=>'IVA',:percent=>4.0, :default=>false,:category=>'AA')
         taxes << Tax.new(:name=>'IVA',:percent=>0.0, :default=>false,:category=>'Z')
         taxes << Tax.new(:name=>'IVA',:percent=>0.0, :default=>false,:category=>'E')
-        taxes << Tax.new(:name=>'IRPF',:percent=>-21.0, :default=>false,:category=>'S')
+        taxes << Tax.new(:name=>'IRPF',:percent=>-19.0, :default=>false,:category=>'S')
       when 'fr'
         taxes << Tax.new(:name=>'TVA',:percent=>19.6,:default=>true,:category=>'S')
         taxes << Tax.new(:name=>'TVA',:percent=>5.5, :default=>false,:category=>'AA')

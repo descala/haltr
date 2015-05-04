@@ -1,0 +1,15 @@
+<%= error_messages_for 'dir3_entity' %>
+
+<div class="seccio grup">
+  <div class="col span-2-de-2">
+
+    <%= labelled_form_for :dir3_entity, @dir3_entity, :html => {:class=>'tabular'} do |f| %>
+      <%= render :partial => 'form', :locals => {:f=>f} %>
+
+      <%= f.submit %>
+
+    <% end -%>
+
+  </div>
+</div>
+

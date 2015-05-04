@@ -4,23 +4,12 @@ module Haltr::ExportableDocument
   def self.included(base)
     base.class_eval do
 
-      attr_accessor :export_errors
-
-      after_initialize do |obj|
-        obj.export_errors ||= []
-      end
-
-      def can_be_exported?(channel=nil)
-        channel ||= self.client.invoice_format rescue nil
-        channel = channel.to_s
-        # TODO Test if endpoint is correcty configured
-        return @can_be_exported unless @can_be_exported.nil?
-        @can_be_exported = (self.valid? and !ExportChannels.format(channel).blank?)
-        ExportChannels.validations(channel).each do |v|
-          self.send(v)
+      ExportChannels.validators.each do |validator|
+        # prevent duplicate errors when including same module several times
+        unless base.ancestors.include? validator
+          # include validators from channel
+          base.send(:include, validator)
         end
-        @can_be_exported &&= (export_errors.size == 0)
-        @can_be_exported
       end
 
       def sending_info(channel_name=nil)
@@ -34,7 +23,7 @@ module Haltr::ExportableDocument
         recipients = nil
         if channel
           format = channel["locales"][I18n.locale.to_s]
-          if channel.has_key?("validate") and channel["validate"].to_a.include? "client_has_email"
+          if channel.has_key?("validators") and channel["validators"].to_a.include? "Haltr::Validator::Mail"
             recipients = "\n#{self.recipient_emails.join("\n")}"
           end
           if channel["format"] == "pdf" and self.client and self.client.language != User.current.language
@@ -43,24 +32,10 @@ module Haltr::ExportableDocument
         else
           format = "Can't find channel #{channel_name}, please check channels.yml"
         end
-        "#{format}#{lang}<br/>#{parsed_errors}<br/>#{recipients}".html_safe
-      end
-
-      def parsed_errors
-        errors = ""
-        errors += export_errors.collect {|e|
-          e.is_a?(Array) ? e.collect {|e2| l(e2) }.join(" ") : l(e)
-        }.join(", ") if export_errors and export_errors.size > 0
-        errors += self.errors.full_messages.join(", ")
-        errors
-      end
-
-      protected
-
-      # errors to be raised on sending invoice
-      def add_export_error(err)
-        @export_errors ||= []
-        @export_errors << err
+        if channel["format"] == "pdf" and self.client and self.client.language != User.current.language
+          lang=" (#{l(:general_lang_name, :locale=>self.client.language)})"
+        end
+        "#{format}#{lang}<br/>#{errors.full_messages.join(', ')}<br/>#{recipients}".html_safe
       end
 
     end

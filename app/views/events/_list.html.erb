@@ -1,11 +1,14 @@
-<% if @invoice.visible_events.any? -%>
+<% if events.any? -%>
   <!--missatge info-->
   <div class="seccio grup">
     <div class="col span-2-de-2">
       <div class="formee-msg-info invoice-events">
+        <% if User.current.admin? -%>
+          <p class="contextual"><%= link_to l(:label_any), events_path(:project_id=>@project) %></p>
+        <% end -%>
         <h3 id="haltr_events"><%=h l(:events)%></h3>
         <ul>
-          <% @invoice.visible_events.reverse.each do |e| -%>
+          <% events.reverse.each do |e| -%>
             <li class="haltr_<%= e.type.underscore %>"><strong><%=format_time e.created_at%></strong> -
             <% begin -%>
               <%= render :partial => "events/#{e.type.underscore}", :locals => {:e=>e} %>
@@ -30,3 +33,4 @@
   </div>
   <!--final missatge info-->
 <% end -%>
+

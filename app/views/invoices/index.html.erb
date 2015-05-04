@@ -15,7 +15,7 @@
       <% end -%>
       <% if User.current.allowed_to?(:export_invoices, @project) -%>
         <li>
-        <%= link_to 'CSV', project_invoices_path(@project) -%>
+        <%= link_to 'CSV', project_invoices_path(@project, format: 'csv') -%>
         </li>
       <% end -%>
       <% if User.current.allowed_to?(:import_invoices, @project) -%>
@@ -42,10 +42,19 @@
 
             <div id="query_form_content" class="hide-when-print seccio grup">
               <div class="col span-2-de-2">
-                <label class="inline"><%= check_box_tag("state_all", "1", params["state_all"]) %> <%=l("label_all_invoices")%></label>
-                <% %w(new sending sent error closed discarded).each do |state| -%>
-                  <label class="inline"><%= check_box_tag(state, "1", params[state]) %> <%=l("state_#{state}_plural")%></label>
+                <table>
+                  <tr>
+                    <td><label class="inline"><%= check_box_tag("state_all", "1", params["state_all"]) %> <%=l("label_all_invoices")%></label></td>
+                  </tr>
+                  <tr>
+
+                <% %w(new sending sent error closed discarded registered refused accepted allegedly_paid).each do |state| -%>
+                  <%= "</tr><tr>".html_safe if state == "discarded" %>
+                  <td><label class="inline"><%= check_box_tag(state, "1", params[state]) %> <%=l("state_#{state}_plural")%></label></td>
                 <% end -%>
+
+                  </tr>
+                </table>
               </div>
             </div>
 
@@ -129,7 +138,7 @@
           </tr>
         </thead>
         <tbody>
-          <% for invoice in @invoices -%>
+          <% @invoices.each do |invoice| -%>
             <tr id="invoice-<%=invoice.id%>" class="hascontextmenu <%= 'amended ' if invoice.amended? %><%= cycle("odd", "even") %>">
               <td><%= check_box_tag("ids[]", invoice.id, false, :id => nil) %></td>
               <td><%=h link_to_if_authorized (invoice.number || "???"), :action => 'show', :id => invoice %></td>

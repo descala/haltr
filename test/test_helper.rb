@@ -26,7 +26,7 @@ module Haltr
 
       # Adds all haltr permissions to role 'delveloper'
       dev = Role.find(2)
-      dev.permissions += [:general_use,:manage_payments,:use_templates,:import_invoices, :use_sepa,:add_multiple_bank_infos,:bulk_operations,:use_imap_draft,:send_gva,:send_by_mail,:send_face]
+      dev.permissions += [:general_use,:manage_payments,:use_templates,:import_invoices, :use_sepa,:add_multiple_bank_infos,:bulk_operations,:use_imap_draft,:send_gva,:send_by_mail,:send_face,:manage_project_users, :use_local_signature, :use_invoice_attachments]
       dev.save
 
       # user 2 (jsmith) is member of project 2 (onlinesotre) with role 2 (developer)
@@ -34,9 +34,12 @@ module Haltr
     end
 
     def self.fix_invoice_totals
+      #Invoice.all.each do |i|
+      #  puts "invoice invalid: #{i} (#{i.errors.full_messages.join})" unless i.valid?
+      #end
       # ensure totals are ok for invoice fixtures
       Invoice.all.each do |i|
-        i.save! if i.valid?
+        i.save(validate: false)
       end
     end
 
@@ -44,6 +47,7 @@ module Haltr
 end
 
 Haltr::TestHelper.haltr_setup
+I18n.locale = :en
 
 class ActiveSupport::TestCase
   self.fixture_path = File.dirname(__FILE__) + '/fixtures'

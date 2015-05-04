@@ -79,7 +79,7 @@
       </div>
     </div>
     <div class="seccio grup">
-      <table id="taxes">
+      <table id="taxes" <%= @company.country == 'es' ? "data-taxes='#{Tax::SPAIN_TAXCODES.keys}'".html_safe : "data-taxes='[]'".html_safe %>>
         <tr>
           <th class="tax_name"><%= l(:field_name) %></th>
           <th class="tax_percent">%</th>

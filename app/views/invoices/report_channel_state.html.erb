@@ -1,0 +1,46 @@
+<div class="invoices_report">
+<h2><%= l(:label_report_channel_state) %></h2>
+</div>
+
+<% if @channel_state_count.any? -%>
+
+  <table class="taula-1 list" width="100%">
+
+    <tr class="imparell">
+      <th></th>
+      <% @state_totals.each_key do |state| %>
+        <th><%= l("state_#{state}_plural")%></th>
+      <% end -%>
+      <th><%= l(:label_total) %></th>
+    </tr>
+
+    <% @channel_totals.each do |channel,total| %>
+      <tr class="<%= cycle("odd imparell", "even parell") %>">
+        <th><%= ExportChannels.l(channel) %></th>
+        <% @state_totals.each_key do |state| %>
+         <td><%= @channel_state_count[channel][state] %></td>
+       <% end %>
+       <td><%= total %></td>
+      </tr>
+    <% end -%>
+
+    <tr class="imparell">
+      <th><%= l(:label_total) %></th>
+      <% @state_totals.each do |state,total| %>
+        <td><%=total%></td>
+      <% end -%>
+      <td><%=@total_count%></td>
+    </tr>
+
+  </table>
+
+<% else -%>
+  <p class="nodata"><%= l(:nothing_to_report) %></p>
+<% end -%>
+
+<% if @project %>
+  <p><%= link_to l('back'), project_invoices_reports_path %></p>
+  <% content_for :sidebar do %>
+    <%= render_menu :invoices_menu, @project %>
+  <% end %>
+<% end %>

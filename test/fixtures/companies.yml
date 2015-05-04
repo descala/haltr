@@ -2,7 +2,7 @@ company1:
   # OnlineStore
   project_id: 2
   name: Company1
-  taxcode: 77310058H
+  taxcode: 77310058C
   postalcode: 08720
   currency: EUR
   email: test@example.com
@@ -14,7 +14,7 @@ company2:
   # eCookbook 
   project_id: 1
   name: Company 2 is public
-  taxcode: S2802214E
+  taxcode: A28022143
   postalcode: 08720
   currency: EUR
   email: test2@example.com
@@ -38,7 +38,7 @@ company3:
 company4:
   project_id: 4
   name: EADTrust
-  taxcode: B85626240
+  taxcode: E54507058
   postalcode: 08720
   currency: EUR
   email: test4@example.com
@@ -47,14 +47,25 @@ company4:
   public: public
   invoice_format: facturae_32_face
 
-company5:
-  project_id: 5
-  name: Test5
-  taxcode: ES77310058C
-  postalcode: 08720
+#company5:
+#  project_id: 5
+#  name: Test5
+#  taxcode: ES77310058C
+#  postalcode: 08720
+#  currency: EUR
+#  email: test4@example.com
+#  country: es
+#  city: Barcelona
+#  public: public
+#  invoice_format: facturae_32_face
+
+company6:
+  project_id: 6
+  name: Test6
+  taxcode: B10317980
+  postalcode: 08080
   currency: EUR
-  email: test4@example.com
+  email: test6@example.com
   country: es
   city: Barcelona
   public: public
-  invoice_format: facturae_32_face

@@ -12,24 +12,44 @@ class InvoiceTemplatesController < InvoicesController
 
   def index
     sort_init 'date', 'asc'
-    sort_update %w(date number clients.name)
+    sort_update %w(date number clients.name frequency)
 
-    templates = @project.invoice_templates.scoped
+    templates = @project.invoice_templates.includes(:client)
 
     unless params[:name].blank?
-      name = "%#{params[:name].strip.downcase}%"
-      templates = templates.scoped :conditions => ["LOWER(name) LIKE ? OR LOWER(address) LIKE ? OR LOWER(address2) LIKE ?", name, name, name]
+      templates = templates.where("clients.name like ?","%#{params[:name]}%")
+    end
+
+    unless params[:date_from].blank?
+      templates = templates.where("date >= ?", params[:date_from])
+    end
+
+    unless params[:date_to].blank?
+      templates = templates.where("date <= ?", params[:date_to])
+    end
+
+    unless params[:taxcode].blank?
+      templates = templates.where("clients.taxcode like ?", "%#{params[:taxcode]}%")
+    end
+
+    unless params[:name].blank?
+      templates = templates.where("clients.name like ?","%#{params[:name]}%")
+    end
+
+    unless params[:client_id].blank?
+      templates = templates.where("client_id = ?", params[:client_id])
+      @client_id = params[:client_id].to_i rescue nil
     end
 
     @invoice_count = templates.count
     @invoice_pages = Paginator.new self, @invoice_count,
 		per_page_option,
 		params['page']
-    @invoices =  templates.find :all,
-       :order => sort_clause,
+    @invoices = templates.find :all,
+       :order   => sort_clause,
        :include => [:client],
-       :limit  =>  @invoice_pages.items_per_page,
-       :offset =>  @invoice_pages.current.offset
+       :limit   => @invoice_pages.items_per_page,
+       :offset  => @invoice_pages.current.offset
   end
 
   def new_from_invoice
@@ -135,6 +155,24 @@ class InvoiceTemplatesController < InvoicesController
       template.save if template_changed
     end
     flash.now[:notice] = "Updated #{num_changed} template lines" if from_name and from_percent
+  end
+
+  # see redmine's context_menu controller
+  def context_menu
+    (render_404; return) unless @invoices.present?
+    if (@invoices.size == 1)
+      @invoice = @invoices.first
+    end
+    @invoice_ids = @invoices.map(&:id).sort
+
+    @can = { :edit => User.current.allowed_to?(:general_use, @project),
+             :read => (User.current.allowed_to?(:general_use, @project) ||
+                      User.current.allowed_to?(:use_all_readonly, @project) ||
+                      User.current.allowed_to?(:restricted_use, @project)),
+           }
+    @back = back_url
+
+    render :layout => false
   end
 
   def invoice_class

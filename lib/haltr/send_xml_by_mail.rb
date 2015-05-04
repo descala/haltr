@@ -1,7 +1,7 @@
 module Haltr
   class SendXmlByMail < GenericSender
 
-    attr_accessor :xml, :format, :class_for_send
+    attr_accessor :format, :class_for_send
 
     def perform
       self.format ||= 'facturae32'
