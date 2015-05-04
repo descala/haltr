@@ -622,6 +622,18 @@ class InvoicesController < ApplicationController
   def report_invoice_list
     @from     = params[:date_from] || 3.months.ago
     @to       = params[:date_to]   || Date.today
+    begin
+      @from.to_date
+    rescue
+      flash[:error]="invalid date: #{@from}"
+      @from = 3.months.ago
+    end
+    begin
+      @to.to_date
+    rescue
+      flash[:error]="invalid date: #{@to}"
+      @to = Date.today
+    end
     invoices = @project.issued_invoices.includes(:client).where(
       ["date >= ? and date <= ? and amend_id is null", @from, @to]
     ).order(:number)
