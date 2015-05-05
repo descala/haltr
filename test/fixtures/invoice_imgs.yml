@@ -1,0 +1,32 @@
+image1:
+  id: 1
+  invoice_id: 15
+  img: '<%= File.read(Rails.root.join("plugins/haltr/test/fixtures/documents/invoice_pdf_signed_img.base64")) %>'
+  data: |
+    ---
+    :tags:
+      :subtotal: 66
+      :due: 29
+      :tax_percentage: 68
+    :tokens:
+      66:
+        :text: "€600.00"
+        :x0: 597
+        :y0: 412
+        :x1: 636
+        :y1: 424
+      29:
+        :text: 01-06-2012
+        :x0: 475
+        :y0: 219
+        :x1: 531
+        :y1: 230
+      68:
+        :text: 18,00%
+        :x0: 428
+        :y0: 430
+        :x1: 465
+        :y1: 441
+    :width: 707
+    :height: 1000
+    :name: 93915486220150505-23017-19yd1t8.pdf

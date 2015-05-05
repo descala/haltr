@@ -12,8 +12,7 @@ module Haltr
       req['vat_id']     = invoice.company.taxcode
       req['is_issued']  = invoice.is_a? IssuedInvoice
       req['haltr_url']  = Redmine::Configuration['haltr_url']
-      #TODO add api_key de l'usuari
-      ws_url            = Redmine::Configuration['ws_url']
+      ws_url            = "#{Redmine::Configuration['ws_url']}transactions"
       RestClient.post(
         ws_url,
         { 'transaction' => req, 'token' => Redmine::Configuration['ws_token'] },

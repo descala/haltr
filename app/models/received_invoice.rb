@@ -5,6 +5,7 @@ class ReceivedInvoice < InvoiceDocument
   unloadable
 
   after_create :create_event
+  before_save :update_imports
 
   state_machine :state, :initial => :received do
     before_transition do |invoice,transition|

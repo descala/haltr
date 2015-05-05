@@ -320,5 +320,7 @@ i14:
   state: accepted
 
 i15:
+  id: 15
+  type: ReceivedInvoice
   project_id: 2
   state: "processing_pdf"

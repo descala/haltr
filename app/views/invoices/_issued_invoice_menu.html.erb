@@ -1,4 +1,6 @@
+<% unless @invoice.client.nil? %>
 <li><%= send_link_for_invoice %></li>
+<% end -%>
 
 <li>
 <a href="#"><%= l(:more_options) %></a>
