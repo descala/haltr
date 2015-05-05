@@ -58,7 +58,7 @@
         <PaymentDetails>
           <Installment>
             <InstallmentDueDate><%=h @invoice.fa_duedate %></InstallmentDueDate>
-            <InstallmentAmount><%=h @invoice.fa_import %></InstallmentAmount>
+            <InstallmentAmount><%=h precision @invoice.fa_import %></InstallmentAmount>
             <PaymentMeans><%=h @invoice.payment_method_code(:facturae, :fa_payment_method) %></PaymentMeans>
 <% if @invoice.fa_payment_method.to_i == 4 -%>
             <AccountToBeCredited>
