@@ -8,7 +8,7 @@ class Payment < ActiveRecord::Base
 
   after_save do
     old_invoice = InvoiceDocument.find invoice_id_was rescue nil
-    invoice.reload # without this is_paid? returns false
+    invoice.reload if invoice # without this is_paid? returns false
     if old_invoice != invoice
       old_invoice.save(validate: false) if old_invoice.is_a? InvoiceDocument
     end

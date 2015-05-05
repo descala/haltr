@@ -58,7 +58,7 @@
         <PaymentDetails>
           <Installment>
             <InstallmentDueDate><%=h @invoice.fa_duedate %></InstallmentDueDate>
-            <InstallmentAmount><%=h @invoice.fa_import %></InstallmentAmount>
+            <InstallmentAmount><%=h precision @invoice.fa_import %></InstallmentAmount>
             <PaymentMeans><%=h @invoice.payment_method_code(:facturae, :fa_payment_method) %></PaymentMeans>
 <% if @invoice.fa_payment_method.to_i == 4 -%>
             <AccountToBeCredited>
@@ -342,10 +342,10 @@
               <% elsif !invoice_line.sequence_number.blank? -%>
                 <SequenceNumber><%=invoice_line.sequence_number%></SequenceNumber>
               <% end -%>
-              <% unless @invoice.delivery_note_number.blank? -%>
+              <% if @invoice.delivery_note_number.present? or invoice_line.delivery_note_number.present? -%>
                 <DeliveryNotesReferences>
                   <DeliveryNote>
-                    <DeliveryNoteNumber><%= @invoice.delivery_note_number %></DeliveryNoteNumber>
+                    <DeliveryNoteNumber><%= invoice_line.delivery_note_number.present? ? invoice_line.delivery_note_number : @invoice.delivery_note_number %></DeliveryNoteNumber>
                   </DeliveryNote>
                 </DeliveryNotesReferences>
               <% end -%>

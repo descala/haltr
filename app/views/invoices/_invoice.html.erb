@@ -132,7 +132,10 @@
   <table class="line-items" border="0" cellpadding="0" cellspacing="0">
     <tbody>
       <tr>
-        <th class="item-quantity first"><abbr title="Quantitat">Q</abbr></th>
+        <% if @invoice.has_delivery_note_numbers? -%>
+          <th class="item-delivery_note first"><%=h l(:field_delivery_note_number) %></th>
+        <% end -%>
+        <th class="item-quantity"><abbr title="Quantitat">Q</abbr></th>
         <% if @invoice.has_article_codes? -%>
           <th class="item-article_code"><%=h l(:field_article_code)%></th>
         <% end -%>
@@ -152,7 +155,10 @@
 
       <% @lines.each do |line| -%>
         <tr <%= 'class="nobottomline"'.html_safe unless line.notes.blank? %>>
-          <td class="item-quantity first"><%=h quantity(line.quantity) %> <%=h line.unit_short%></td>
+          <% if @invoice.has_delivery_note_numbers? -%>
+            <td class="item-delivery_note first"><%=h line.delivery_note_number %></td>
+          <% end -%>
+          <td class="item-quantity"><%=h quantity(line.quantity) %> <%=h line.unit_short%></td>
           <% if @invoice.has_article_codes? -%>
             <td class="item-article_code"><%=h line.article_code %></td>
           <% end -%>

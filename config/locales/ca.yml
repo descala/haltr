@@ -567,8 +567,8 @@ ca:
   organ_gestor: "Òrgan gestor"
   oficina_comptable: "Oficina comptable"
   unitat_tramitadora: "Unitat tramitadora"
-  field_organ_proponent: "Òrgan Promotor (Servei de l’Ajuntament que fa l’encàrrec)"
-  organ_proponent: "Òrgan Promotor (Servei de l’Ajuntament que fa l’encàrrec)"
+  field_organ_proponent: "Òrgan Promotor"
+  organ_proponent: "Òrgan Promotor"
   external_companies: "Empreses externes"
   external_company: "Empresa externa"
   export_channels: "Canals"
@@ -596,7 +596,7 @@ ca:
   field_payments_on_account: "Aportació usuaris/Retenció"
   sequence_number: 'Posició de la comanda'
   mark_as_accepted: 'Marcar com a acceptada'
-  field_receiver_contract_reference: "Codi d'assignació"
+  field_receiver_contract_reference: "Número de contracte / Codi d'assignació"
   invoice_attachments_description: "Permet pujar fitxers relacionats amb la factura (màxim %{mb}MB). Aquests documents s'adjuntaran a la factura electrònica."
   invoice_attachments_permission: "No tens permisos per pujar fitxers"
   label_will_send_original: "Aquesta factura té original i no s'ha modificat. Així doncs s'enviarà el document original."
