@@ -249,6 +249,7 @@
 .line-items .item-price { text-align: right; width: 75px; }
 .line-items .item-price input { text-align: right; width: 65px; height: 18px; }
 .line-items .item-article_code { width: 60px;}
+.line-items .item-delivery_note { width: 115px; }
 .line-items .item-charge-reason { text-align: right; }
 .line-items .line-total {
 	text-align: right;
