@@ -722,11 +722,18 @@ _INV
     invoice.payment_method_text = Haltr::Utils.get_xpath(doc,xpaths[:payment_method_text])
 
     line_file_reference = nil
-    line_delivery_note_number = nil
     line_ponumber = nil
     line_r_contract_reference = nil
+
     # invoice lines
     doc.xpath(xpaths[:invoice_lines]).each do |line|
+
+      line_delivery_note_number = nil
+      # delivery_notes
+      line.xpath(xpaths[:delivery_notes]).each do |dn|
+        line_delivery_note_number ||= Haltr::Utils.get_xpath(dn,xpaths[:delivery_note_num])
+      end
+
       il = InvoiceLine.new(
              :quantity     => Haltr::Utils.get_xpath(line,xpaths[:line_quantity]),
              :description  => Haltr::Utils.get_xpath(line,xpaths[:line_description]),
@@ -735,7 +742,8 @@ _INV
              :article_code => Haltr::Utils.get_xpath(line,xpaths[:line_code]),
              :notes        => Haltr::Utils.get_xpath(line,xpaths[:line_notes]),
              :issuer_transaction_reference => Haltr::Utils.get_xpath(line,xpaths[:i_transaction_ref]),
-             :sequence_number => Haltr::Utils.get_xpath(line,xpaths[:sequence_number]),
+             :sequence_number              => Haltr::Utils.get_xpath(line,xpaths[:sequence_number]),
+             :delivery_note_number         => line_delivery_note_number,
            )
       # invoice taxes. Known taxes are described at config/taxes.yml
       line.xpath(*xpaths[:line_taxes]).each do |line_tax|
@@ -766,18 +774,13 @@ _INV
       end
       line_file_reference ||= Haltr::Utils.get_xpath(line,xpaths[:file_reference])
       line_ponumber       ||= Haltr::Utils.get_xpath(line,xpaths[:ponumber])
-      # delivery_notes
-      line.xpath(xpaths[:delivery_notes]).each do |dn|
-        line_delivery_note_number ||= Haltr::Utils.get_xpath(dn,xpaths[:delivery_note_num])
-      end
       line_r_contract_reference ||= Haltr::Utils.get_xpath(line,xpaths[:r_contract_reference])
       invoice.invoice_lines << il
     end
 
-    # Assume just one file_reference, delivery_note_number, ponumber and
+    # Assume just one file_reference, ponumber and
     # receiver_contract_reference per Invoice
     invoice.file_reference = line_file_reference
-    invoice.delivery_note_number = line_delivery_note_number
     invoice.ponumber = line_ponumber
     invoice.receiver_contract_reference = line_r_contract_reference
 
@@ -901,7 +904,11 @@ _INV
   end
 
   def has_article_codes?
-    invoice_lines.collect {|l| l.article_code }.join.size > 0
+    invoice_lines.any? {|l| l.article_code.present? }
+  end
+
+  def has_delivery_note_numbers?
+    invoice_lines.any? {|l| l.delivery_note_number.present? }
   end
 
   def has_line_discounts?
