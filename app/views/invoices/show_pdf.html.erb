@@ -6,15 +6,22 @@
     margin: 0;
     padding: 0;
     background-color: #FAFAFA;
+    font-family: "DejaVu Sans";
+    font-size: 12px;
+    line-height: 90%;
+  }
+  th, td {
+    font-size: 11px !important;
   }
   * {
     box-sizing: border-box;
     -moz-box-sizing: border-box;
   }
   .page {
+    position: absolute;
     width: 210mm;
     min-height: 297mm;
-    padding: 20mm;
+    padding: 10 10 10 20mm;
     margin: 7mm 7mm;
     border: 1px #D3D3D3 solid;
     border-radius: 5px;
@@ -23,6 +30,8 @@
   }
   .subpage {
     height: 257mm;
+    padding-left: 11mm;
+    padding-right: 3mm;
   }
   .window {
     position: absolute;
@@ -32,6 +41,7 @@
     top: 47mm;
     left: 104mm;
     opacity: 0.2;
+    z-index: 1;
   }
 </style>
   <div class="window"></div>
