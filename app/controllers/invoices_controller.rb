@@ -707,7 +707,7 @@ class InvoicesController < ApplicationController
   end
 
   def find_invoices
-    @invoices = invoice_class.find_all_by_id(params[:id] || params[:ids])
+    @invoices = Invoice.find_all_by_id(params[:id] || params[:ids])
     raise ActiveRecord::RecordNotFound if @invoices.empty?
     raise Unauthorized unless @invoices.collect {|i| i.project }.uniq.size == 1
     @project = @invoices.first.project
