@@ -27,7 +27,7 @@ In your Redmine root path:
 
   git clone git://github.com/descala/haltr.git plugins/haltr
   bundle install
-  bundle exec rake redmine:plugins:migrate RAILS_ENV=production
+  bundle exec rake redmine:plugins:migrate
 
 === Older versions of Redmine
 
