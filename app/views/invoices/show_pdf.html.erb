@@ -1,3 +1,53 @@
+<% if @debug -%>
+<style type="text/css">
+  body {
+    width: 100%;
+    height: 100%;
+    margin: 0;
+    padding: 0;
+    background-color: #FAFAFA;
+    font-family: "DejaVu Sans";
+    font-size: 12px;
+    line-height: 90%;
+  }
+  th, td {
+    font-size: 11px !important;
+  }
+  * {
+    box-sizing: border-box;
+    -moz-box-sizing: border-box;
+  }
+  .page {
+    position: absolute;
+    width: 210mm;
+    min-height: 297mm;
+    padding: 10 10 10 20mm;
+    margin: 7mm 7mm;
+    border: 1px #D3D3D3 solid;
+    border-radius: 5px;
+    background: white;
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+  }
+  .subpage {
+    height: 257mm;
+    padding-left: 11mm;
+    padding-right: 3mm;
+  }
+  .window {
+    position: absolute;
+    background-color: yellow;
+    width: 100mm;
+    min-height: 45mm;
+    top: 47mm;
+    left: 104mm;
+    opacity: 0.2;
+    z-index: 1;
+  }
+</style>
+  <div class="window"></div>
+  <div class="page">
+    <div class="subpage">
+<% end -%>
 <%
     @invoice ||= invoice
     @lines   ||= @invoice.invoice_lines
@@ -12,8 +62,16 @@
   <% I18n.locale = @invoice.client.language rescue before_locale %>
 <% end -%>
 
-<%= render :partial=>'invoices/invoice' %>
+<% begin -%>
+  <%= render partial: "invoices/#{@project.company.pdf_template}" %>
+<% rescue -%>
+  <%= render partial: 'invoices/invoice' %>
+<% end -%>
 
 <% if defined?(before_locale) -%>
   <% I18n.locale = before_locale %>
+<% end -%>
+<% if @debug -%>
+</div>
+</div>
 <% end -%>
