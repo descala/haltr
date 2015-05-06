@@ -287,3 +287,40 @@ span#send_info {
   top: -13px;
   right: 0px;
 }
+
+.rectangle-txt {
+  position: absolute;
+  padding: 0;
+  background: rgba(234, 252, 23, .2);
+  z-index: 2;
+}
+.rectangle-txt:hover {
+  border: 1px solid;
+  text-align: center;
+}
+.rectangle-txt:hover:before {
+  content: attr(data-tag);
+  color: white;
+  display: block;
+  background: green;
+  position: absolute;
+  width: 100px;
+  top: 20px;
+  left: -7px;
+  right: -7px;
+  padding: 5px;
+  z-index: 2;
+}
+.rectangle-txt:hover:after{
+  content: "";
+  position: absolute;
+  display: block;
+  width: 0;
+  height: 0;
+  border: solid 12px transparent;
+  border-bottom-color: green;
+  top: 0;
+  left: 50%;
+  margin-left: -10px;
+  z-index: 2;
+}

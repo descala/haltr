@@ -49,6 +49,10 @@ class InvoiceImg < ActiveRecord::Base
     data[:tags]
   end
 
+  def tokens
+    data[:tokens]
+  end
+
   def text(token)
     data[:tokens][token][:text] rescue nil
   end
