@@ -5,7 +5,7 @@
     <title><%= l(:label_invoice) %> | <%= @project.company.name %></title>
     <% begin -%>
       <%= wicked_pdf_stylesheet_link_tag "../plugin_assets/haltr/stylesheets/#{@project.company.pdf_template}" %>
-    <% rescue Errno::ENOENT -%>
+    <% rescue Errno::ENOENT, ActionView::Template::Error -%>
       <%= wicked_pdf_stylesheet_link_tag "../plugin_assets/haltr/stylesheets/print" -%>
     <% end -%>
   </head>
