@@ -64,7 +64,7 @@
 
 <% begin -%>
   <%= render partial: "invoices/#{@project.company.pdf_template}" %>
-<% rescue ActionView::MissingTemplate, ActionView::Template::Error -%>
+<% rescue -%>
   <%= render partial: 'invoices/invoice' %>
 <% end -%>
 
