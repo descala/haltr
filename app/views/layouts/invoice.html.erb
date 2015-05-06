@@ -3,7 +3,11 @@
   <head>
     <meta http-equiv="content-type" content="text/html; charset=UTF-8"/>
     <title><%= l(:label_invoice) %> | <%= @project.company.name %></title>
-    <%= wicked_pdf_stylesheet_link_tag "../plugin_assets/haltr/stylesheets/print" -%>
+    <% begin -%>
+      <%= wicked_pdf_stylesheet_link_tag "../plugin_assets/haltr/stylesheets/#{@project.company.pdf_template}" %>
+    <% rescue Errno::ENOENT -%>
+      <%= wicked_pdf_stylesheet_link_tag "../plugin_assets/haltr/stylesheets/print" -%>
+    <% end -%>
   </head>
   <body class="client_view">
     <%= yield %>

@@ -628,3 +628,7 @@ ca:
   channel_requires_user_pass: "El canal necessita que configuris usuari i password a 'La meva empresa'"
   download_legal_invoice: "Descarregar factura legal"
   label_report_channel_state: "Factures per canal d'enviament i per estat"
+  pdf_customization: "Personalització de PDF"
+  field_pdf_template: "Plantilla PDF"
+  pdf_default: "Plantilla per defecte"
+  pdf_rigth_windowed_envelope: "Pantilla per a sobres amb finestreta"

@@ -615,3 +615,7 @@ en:
   channel_requires_user_pass: "Channel requires to configure user and password at 'My company'"
   download_legal_invoice: "Download legal invoice"
   label_report_channel_state: "Invoices by Channel and State"
+  pdf_customization: "PDF customization"
+  field_pdf_template: "PDF template"
+  pdf_default: "Default template"
+  pdf_rigth_windowed_envelope: "Right windowed envelope template"

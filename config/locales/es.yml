@@ -632,3 +632,7 @@ es:
   channel_requires_user_pass: "El canal necesita que configures usuario y password en 'Mi empresa'"
   download_legal_invoice: "Descargar factura legal"
   label_report_channel_state: "Facturas por canal de envío y estado"
+  pdf_customization: "Personalización de PDF"
+  field_pdf_template: "Plantilla PDF"
+  pdf_default: "Por defecto"
+  pdf_rigth_windowed_envelope: "Plantilla para sobres con ventanilla"
