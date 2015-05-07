@@ -314,7 +314,7 @@ es:
   save_and_mail: "Guardar y enviar mail"
   save_without_mail: "Guardar sin enviar mail"
   field_sepa_type: "tipo de pagos SEPA"
-  label_payment_initiation: "Iniciar pagos"
+  label_payment_initiation: "Introducir pagos"
 
   # Settings
   field_taxcode: "NIF"

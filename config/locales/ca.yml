@@ -310,7 +310,7 @@ ca:
   save_and_mail: "Desar i enviar mail"
   save_without_mail: "Desar sense enviar mail"
   field_sepa_type: "Tipus de pagaments SEPA"
-  label_payment_initiation: "Iniciació de pagaments"
+  label_payment_initiation: "Introduir pagaments"
 
   # Settings
   field_taxcode: "NIF"
