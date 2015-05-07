@@ -190,8 +190,8 @@ a:hover {
   margin-top: 10px;
 }
 .invoicelogo img {
-  max-height: 5cm;
-  max-width: 10cm;
+  max-height: 35mm;
+  max-width: 100mm;
 }
 .companyid {
   font-size: 10px;
@@ -227,4 +227,5 @@ div.client {
   left: 56%;
   position: relative;
   width: 46%;
+  margin-top: -20px;
 }
