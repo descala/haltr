@@ -91,7 +91,11 @@ class InvoicesController < ApplicationController
       invoices = invoices.where("clients.name like ?","%#{params[:name]}%")
     end
     unless params[:number].blank?
-      invoices = invoices.where("number like ?","%#{params[:number]}%")
+      if params[:number] =~ /,/
+        invoices = invoices.where("number in (?)",params[:number].split(',').collect {|n| n.strip})
+      else
+        invoices = invoices.where("number like ?","%#{params[:number]}%")
+      end
     end
 
     if params[:format] == 'csv' and !User.current.allowed_to?(:export_invoices, @project)
