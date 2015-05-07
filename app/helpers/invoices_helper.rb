@@ -210,7 +210,7 @@ module InvoicesHelper
           iban = i.bank_info.iban || ""
           bic  = i.bank_info.bic || ""
           s="#{l(:transfer_str)}<br />"
-          s+="IBAN #{iban[0..3]} #{iban[4..7]} #{iban[8..11]} #{iban[12..15]} #{iban[16..19]} #{iban[20..23]}<br />"
+          s+="IBAN #{iban.scan(/.{1,4}/).join(' ')}<br />"
           s+="BIC #{bic}<br />" unless bic.blank?
           s
         else
@@ -230,7 +230,7 @@ module InvoicesHelper
           iban = i.bank_info.iban || ""
           bic  = i.bank_info.bic || ""
           s="#{l(:debit_str)}<br />"
-          s+="IBAN #{iban[0..3]} #{iban[4..7]} #{iban[8..11]} #{iban[12..15]} #{iban[16..19]} #{iban[20..23]}<br />"
+          s+="IBAN #{iban.scan(/.{1,4}/).join(' ')}<br />"
           s+="BIC #{bic}<br />" unless bic.blank?
           s
         else
@@ -244,7 +244,7 @@ module InvoicesHelper
           iban = i.client.iban || ""
           bic  = i.client.bic || ""
           s="#{l(:transfer_str)}<br />"
-          s+="IBAN #{iban[0..3]} #{iban[4..7]} #{iban[8..11]} #{iban[12..15]} #{iban[16..19]} #{iban[20..23]}<br />"
+          s+="IBAN #{iban.scan(/.{1,4}/).join(' ')}<br />"
           s+="BIC #{bic}<br />" unless bic.blank?
           s
         else
