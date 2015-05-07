@@ -12,10 +12,17 @@ class InvoiceImg < ActiveRecord::Base
 
   after_create do
     update_invoice if data and tags
-    Event.create!(:name=>'processed_pdf',:invoice=>invoice)
+    if tags.any?
+      Event.create(name: 'processed_pdf', invoice: invoice)
+    else
+      EventError.create(name: 'processed_pdf', invoice: invoice, notes: 'OCR failed')
+    end
   end
 
   def update_invoice
+    if t=tags[:issue]
+      invoice.date = text(t)
+    end
     if t=tags[:due]
       invoice.due_date = text(t)
     end
@@ -46,11 +53,11 @@ class InvoiceImg < ActiveRecord::Base
   end
 
   def tags
-    data[:tags]
+    data[:tags] || {}
   end
 
   def tokens
-    data[:tokens]
+    data[:tokens] || {}
   end
 
   def text(token)
