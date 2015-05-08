@@ -974,7 +974,15 @@ _INV
   end
 
   def has_all_fields_required_by_external_company
-    ext_comp = ExternalCompany.find_by_taxcode(client.taxcode) if client
+    if client
+      taxcode = client.taxcode
+      if taxcode[0...2].downcase == project.company.country
+        taxcode2 = taxcode[2..-1]
+      else
+        taxcode2 = "#{project.company.country}#{taxcode}"
+      end
+      ext_comp = ExternalCompany.where("taxcode in (?, ?)", taxcode, taxcode2).first
+    end
     if ext_comp
       ext_comp.required_fields.each do |field|
         if field == "dir3"
