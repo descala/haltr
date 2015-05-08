@@ -632,3 +632,4 @@ ca:
   field_pdf_template: "Plantilla PDF"
   pdf_default: "Plantilla per defecte"
   pdf_rigth_windowed_envelope: "Pantilla per a sobres amb finestreta"
+  field_party_identification: "Codi unitat proveïdora"

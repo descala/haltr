@@ -34,6 +34,11 @@
     <div style="height:10px;"></div>
     <div><%= @company.website %></div>
     <div><%= @company.email %></div>
+    <% if @invoice.party_identification.present? -%>
+      <div>
+        <%= t(:field_party_identification) %>: <%= @invoice.party_identification %>
+      </div>
+    <% end -%>
   </div>
 </div>
 

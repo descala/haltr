@@ -619,3 +619,4 @@ en:
   field_pdf_template: "PDF template"
   pdf_default: "Default template"
   pdf_rigth_windowed_envelope: "Right windowed envelope template"
+  field_party_identification: "Party identification"
