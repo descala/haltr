@@ -916,6 +916,8 @@ class InvoicesController < ApplicationController
           @invoice.save!(validate: false)
           Event.create(:name=>'processing_pdf',:invoice=>@invoice)
           Haltr::SendPdfToWs.send(@invoice)
+        else
+          raise "unknown file type: '#{file.content_type}' for #{file.path}"
         end
       end
       respond_to do |format|
