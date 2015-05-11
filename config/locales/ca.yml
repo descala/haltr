@@ -310,7 +310,7 @@ ca:
   save_and_mail: "Desar i enviar mail"
   save_without_mail: "Desar sense enviar mail"
   field_sepa_type: "Tipus de pagaments SEPA"
-  label_payment_initiation: "Iniciació de pagaments"
+  label_payment_initiation: "Introduir pagaments"
 
   # Settings
   field_taxcode: "NIF"
@@ -635,3 +635,4 @@ ca:
   field_pdf_template: "Plantilla PDF"
   pdf_default: "Plantilla per defecte"
   pdf_rigth_windowed_envelope: "Pantilla per a sobres amb finestreta"
+  field_party_identification: "Codi unitat proveïdora"

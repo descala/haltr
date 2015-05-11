@@ -93,6 +93,9 @@
 <% end -%>
             <TaxIdentificationNumber><%=h @company.taxcode.strip%></TaxIdentificationNumber>
          </TaxIdentification>
+<% if @invoice.party_identification.present? -%>
+         <PartyIdentification><%=h @invoice.party_identification%></PartyIdentification>
+<% end -%>
 <% if @company.persontype == "J" -%>
 
          <LegalEntity>

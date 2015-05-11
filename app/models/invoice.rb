@@ -507,6 +507,7 @@ _INV
     accounting_cost  = Haltr::Utils.get_xpath(doc,xpaths[:accounting_cost])
     payments_on_account = Haltr::Utils.get_xpath(doc,xpaths[:payments_on_account]) || 0
     amend_of         = Haltr::Utils.get_xpath(doc,xpaths[:amend_of])
+    party_id         = Haltr::Utils.get_xpath(doc,xpaths[:party_id])
 
     # factoring assignment data
     fa_person_type    = Haltr::Utils.get_xpath(doc,xpaths[:fa_person_type])
@@ -693,7 +694,8 @@ _INV
       :fa_payment_method => fa_payment_method,
       :fa_iban           => fa_iban,
       :fa_bank_code      => fa_bank_code,
-      :fa_clauses        => fa_clauses
+      :fa_clauses        => fa_clauses,
+      :party_identification => party_id,
     )
 
     if raw_invoice.respond_to? :filename             # Mail::Part
@@ -794,12 +796,6 @@ _INV
           invoice.save(validate: false)
         end
       rescue ActiveRecord::RecordInvalid
-        ImportError.create(
-          filename:      invoice.file_name,
-          import_errors: invoice.errors.full_messages.join('. '),
-          original:      raw_xml,
-          project:       company.project,
-        )
         raise invoice.errors.full_messages.join(". ")
       end
     else
@@ -807,6 +803,16 @@ _INV
     end
     logger.info "created new invoice with id #{invoice.id} for company #{company.name}. time=#{Time.now}"
     return invoice
+  rescue
+    if company and company.project
+      ImportError.create(
+        filename:      (invoice.file_name rescue ""),
+        import_errors: $!.message,
+        original:      raw_xml,
+        project:       company.project,
+      )
+    end
+    raise $!.message
   end
 
   def send_original?
@@ -972,7 +978,15 @@ _INV
   end
 
   def has_all_fields_required_by_external_company
-    ext_comp = ExternalCompany.find_by_taxcode(client.taxcode) if client
+    if client
+      taxcode = client.taxcode
+      if taxcode[0...2].downcase == project.company.country
+        taxcode2 = taxcode[2..-1]
+      else
+        taxcode2 = "#{project.company.country}#{taxcode}"
+      end
+      ext_comp = ExternalCompany.where("taxcode in (?, ?)", taxcode, taxcode2).first
+    end
     if ext_comp
       ext_comp.required_fields.each do |field|
         if field == "dir3"

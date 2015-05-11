@@ -43,6 +43,7 @@ module Haltr
           xpaths[:payments_on_account]= "//Invoices/Invoice/InvoiceTotals/TotalPaymentsOnAccount"
           xpaths[:invoice_due_date]   = "//Invoices/Invoice/PaymentDetails/Installment/InstallmentDueDate"
           xpaths[:seller_taxcode]     = "//Parties/SellerParty/TaxIdentification/TaxIdentificationNumber"
+          xpaths[:party_id]           = "//Parties/SellerParty/PartyIdentification"
           xpaths[:seller_name]        = "//Parties/SellerParty/LegalEntity/CorporateName"
           xpaths[:seller_name2]       = [ "//Parties/SellerParty/Individual/Name",
                                           "//Parties/SellerParty/Individual/FirstSurname",

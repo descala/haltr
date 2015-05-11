@@ -314,7 +314,7 @@ es:
   save_and_mail: "Guardar y enviar mail"
   save_without_mail: "Guardar sin enviar mail"
   field_sepa_type: "tipo de pagos SEPA"
-  label_payment_initiation: "Iniciar pagos"
+  label_payment_initiation: "Introducir pagos"
 
   # Settings
   field_taxcode: "NIF"
@@ -639,3 +639,4 @@ es:
   field_pdf_template: "Plantilla PDF"
   pdf_default: "Por defecto"
   pdf_rigth_windowed_envelope: "Plantilla para sobres con ventanilla"
+  field_party_identification: "Código unidad proveedora"

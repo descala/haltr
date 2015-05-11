@@ -12,7 +12,7 @@
     </p>
   <% end -%>
   <p class="col span-2-de-5">
-  <%= f.text_field :iban, :size => 24, :no_label => true, :maxlength => 24, :class => 'iban', "data-url" => project_check_iban_path(@project), "data-span-for-result" => "iban#{bank_info_id}" %>
+  <%= f.text_field :iban, :size => 34, :no_label => true, :maxlength => 34, :class => 'iban', "data-url" => project_check_iban_path(@project), "data-span-for-result" => "iban#{bank_info_id}" %>
   <span id="iban<%=bank_info_id%>" class=ownibanspan></span>
   </p>
   <p class="col span-1-de-5">
