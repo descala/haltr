@@ -37,7 +37,7 @@ class InvoicesController < ApplicationController
   before_filter :check_for_company, :except => PUBLIC_METHODS
 
   skip_before_filter :verify_authenticity_token, :only => [:base64doc]
-  accept_api_auth :import, :number_to_id, :update
+  accept_api_auth :import, :number_to_id, :update, :show
 
   def index
     sort_init 'invoices.created_at', 'desc'
