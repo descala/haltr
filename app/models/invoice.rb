@@ -796,12 +796,6 @@ _INV
           invoice.save(validate: false)
         end
       rescue ActiveRecord::RecordInvalid
-        ImportError.create(
-          filename:      invoice.file_name,
-          import_errors: invoice.errors.full_messages.join('. '),
-          original:      raw_xml,
-          project:       company.project,
-        )
         raise invoice.errors.full_messages.join(". ")
       end
     else
@@ -809,6 +803,16 @@ _INV
     end
     logger.info "created new invoice with id #{invoice.id} for company #{company.name}. time=#{Time.now}"
     return invoice
+  rescue
+    if company and company.project
+      ImportError.create(
+        filename:      (invoice.file_name rescue ""),
+        import_errors: $!.message,
+        original:      raw_xml,
+        project:       company.project,
+      )
+    end
+    raise $!.message
   end
 
   def send_original?
