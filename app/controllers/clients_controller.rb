@@ -103,7 +103,7 @@ class ClientsController < ApplicationController
     client = Client.find(params[:client]) unless params[:client].blank?
     # search for an existing client with the specified taxcode
     existing_client = @project.clients.collect {|c|
-      c if c.taxcode.to_s.downcase == taxcode
+      c if [taxcode, taxcode2].include? c.taxcode.to_s.downcase
     }.compact.first
     # check if we are editing or creating a client and entered a taxcode that
     # already exists on another of our clients
