@@ -4,7 +4,7 @@
   # company is the company we found that matches the entered taxcode
   # we have a client and client is linked and (is already linked to the
   # company we found or we did not found any company)
-  if client and client.company and (client.company == company || company.nil?)
+  if client and client.company #and (client.company == company || company.nil?)
 -%>
 
   <% if client.allowed? -%>
