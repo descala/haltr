@@ -438,7 +438,7 @@
 <% elsif @invoice.debit? and !@client.bank_account.blank?-%>
                  <AccountToBeDebited>
                    <% if (@format =~ /facturae/) -%>
-                     <AccountNumber><%=h @client.bank_account%></AccountNumnber>
+                     <AccountNumber><%=h @client.bank_account%></AccountNumber>
                    <% else -%>
                      <IBAN><%=h @client.bank_account%></IBAN>
                    <% end -%>
@@ -453,7 +453,7 @@
 <% elsif @invoice.transfer? and @invoice.bank_info and !@invoice.bank_info.bank_account.blank? -%>
                <AccountToBeCredited>
                  <% if (@format =~ /facturae/) -%>
-                   <AccountNumber><%=h @invoice.bank_info.bank_account%></AccountNumnber>
+                   <AccountNumber><%=h @invoice.bank_info.bank_account%></AccountNumber>
                  <% else -%>
                    <IBAN><%=h @invoice.bank_info.bank_account%></IBAN>
                  <% end -%>
