@@ -10,6 +10,8 @@
 
   <hr />
 
+  <%= call_hook(:issued_invoice_menu_top) %>
+
   <% if @invoice.last_sent_file_path -%>
     <li>
     <%= link_to_if_authorized(l(:download_legal_invoice), @invoice.last_sent_file_path) %>
@@ -47,6 +49,9 @@
       :class => 'icon-haltr-report' %>
     </li>
   <% end -%>
+
+  <%= call_hook(:issued_invoice_menu_bottom) %>
+
 </ul>
 </li>
 
