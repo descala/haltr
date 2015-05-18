@@ -231,6 +231,12 @@
          </InvoiceHeader>
          <InvoiceIssueData>
             <IssueDate><%=h @invoice.date%></IssueDate>
+<% if @invoice.invoicing_period_start.present? and @invoice.invoicing_period_end.present? -%>
+            <InvoicingPeriod>
+              <StartDate><%=h @invoice.invoicing_period_start%></StartDate>
+              <EndDate><%=h @invoice.invoicing_period_end%></EndDate>
+            </InvoicingPeriod>
+<% end -%>
             <InvoiceCurrencyCode><%=h @client.currency%></InvoiceCurrencyCode>
             <TaxCurrencyCode><%=h @client.currency%></TaxCurrencyCode>
             <LanguageName><%=h @client.language_string%></LanguageName>
