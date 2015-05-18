@@ -12,9 +12,9 @@ if (document.all && !window.setTimeout.isPolyfill) {
 
 var MiniApplet = {
 
-		VERSION : "1.3",
+		VERSION : "1.2",
 		
-		JAR_NAME : 'miniapplet-full_1_3.jar',
+		JAR_NAME : 'miniapplet-full_1_2u1.jar',
 
 		JAVA_ARGUMENTS : '-Xms512M -Xmx512M',
 		

@@ -70,7 +70,6 @@
   unless @js.blank?
     content_for :header_tags do
       javascript_include_tag('/invoices/haltr_sign.js') +
-      javascript_include_tag('deployjava.js', :plugin => 'haltr') +
       javascript_include_tag('miniapplet.js', :plugin => 'haltr')
     end
   end
