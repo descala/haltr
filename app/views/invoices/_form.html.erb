@@ -29,13 +29,21 @@
       </p>
     <% end -%>
     <p class="col span-2-de-6">
-      <%= f.text_field :ponumber %>
+    <%= label_tag :invoice_ponumber do -%>
+      <%= l(:field_ponumber) %>
+      <%= required_field_span 'ponumber' %>
+    <% end -%>
+      <%= f.text_field :ponumber, no_label: true %>
     </p>
   </div>
 
   <div class="seccio grup">
     <p class="col span-1-de-3">
-      <%= f.text_field :delivery_note_number %>
+    <%= label_tag :invoice_delivery_note_number do -%>
+      <%= l(:field_delivery_note_number) %>
+      <%= required_field_span 'delivery_note_number' %>
+    <% end -%>
+      <%= f.text_field :delivery_note_number, no_label: true %>
     </p>
 
     <% if @invoice.invoicing_period_start || @invoice.invoicing_period_end || User.current.allowed_to?(:view_invoice_extra_fields, @project) -%>

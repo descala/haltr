@@ -706,6 +706,12 @@ class InvoicesController < ApplicationController
     @client = @invoice.client || Client.new(:name=>"unknown",:project=>@invoice.project)
     @project = @invoice.project
     @company = @project.company
+    if @client.taxcode[0...2].downcase == @client.country
+      taxcode2 = @client.taxcode[2..-1]
+    else
+      taxcode2 = "#{@client.country}#{@client.taxcode}"
+    end
+    @external_company = ExternalCompany.where('taxcode in (?, ?)', @client.taxcode, taxcode2).first
   rescue ActiveRecord::RecordNotFound
     render_404
   end

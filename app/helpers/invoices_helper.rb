@@ -273,7 +273,7 @@ module InvoicesHelper
 
   def required_field_span(field)
     if (@external_company and @external_company.required_fields.include?(field)) or
-        (@client and @client.invoice_format =~ /face/)
+        (field == 'dir3' and @client and @client.invoice_format =~ /face/)
       content_tag(:span, ' *', class: 'required')
     end
   end
