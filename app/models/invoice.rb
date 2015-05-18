@@ -1,8 +1,11 @@
 class Invoice < ActiveRecord::Base
 
-  include HaltrHelper
-
   unloadable
+
+  include HaltrHelper
+  include Haltr::FloatParser
+  float_parse :discount_percent, :fa_import
+
   audited except: [:import_in_cents, :total_in_cents,
                    :state, :has_been_read, :id, :original]
   has_associated_audits
@@ -28,7 +31,7 @@ class Invoice < ActiveRecord::Base
   TO_UTF_FIELDS = %w(extra_info)
 
   has_many :invoice_lines, :dependent => :destroy
-  has_many :events, :dependent => :destroy, :order => 'created_at'
+  has_many :events, :order => 'created_at'
   #has_many :taxes, :through => :invoice_lines
   belongs_to :project, :counter_cache => true
   belongs_to :client
@@ -88,6 +91,14 @@ class Invoice < ActiveRecord::Base
     write_attribute(:currency,v.upcase)
   end
 
+  def original=(s)
+    write_attribute(:original, Haltr::Utils.compress(s))
+  end
+
+  def original
+    Haltr::Utils.decompress(read_attribute(:original))
+  end
+
   def lines_with_tax(tax_type)
     invoice_lines.collect {|line|
       next if line.destroyed? or line.marked_for_destruction?
@@ -98,7 +109,9 @@ class Invoice < ActiveRecord::Base
   # Importe bruto.
   # Suma total de importes brutos de los detalles de la factura
   def gross_subtotal(tax_type=nil)
-    (lines_with_tax(tax_type).sum(&:gross_amount)).to_money(currency)
+    (lines_with_tax(tax_type).collect { |line|
+      line.gross_amount.to_money(currency)
+    }.sum).to_money(currency)
   end
 
   # only used in svefaktura: LineExtensionTotalAmount
@@ -200,9 +213,9 @@ class Invoice < ActiveRecord::Base
     read_attribute(:payment_method) == PAYMENT_SPECIAL
   end
 
-  def payment_method_code(format)
-    if PAYMENT_CODES[read_attribute(:payment_method)]
-      PAYMENT_CODES[read_attribute(:payment_method)][format]
+  def payment_method_code(format, attr=:payment_method)
+    if PAYMENT_CODES[self[attr].to_i]
+      PAYMENT_CODES[self[attr].to_i][format]
     end
   end
 
@@ -254,7 +267,9 @@ class Invoice < ActiveRecord::Base
   # Base imponible a precio de mercado
   # Total Importe Bruto + Recargos - Descuentos Globales
   def taxable_base(tax_type=nil)
-    (lines_with_tax(tax_type).sum(&:gross_amount)).to_money(currency) - discount_amount(tax_type)
+    (lines_with_tax(tax_type).collect {|line|
+      line.gross_amount.to_money(currency)
+    }.sum).to_money(currency) - discount_amount(tax_type)
   end
 
   def discount_amount(tax_type=nil)
@@ -420,7 +435,7 @@ class Invoice < ActiveRecord::Base
   def extra_info_plus_tax_comments
     tax_comments = self.taxes.collect do |tax|
       tax.comment unless tax.comment.blank?
-    end.compact.join(". ")
+    end.compact.uniq.join(". ")
     ([extra_info,tax_comments]-['']).compact.join('. ')
   end
 
@@ -443,8 +458,14 @@ _INV
     updated_at > created_at
   end
 
+  # has factoring assignment data?
+  def has_factoring_data?
+    %w(fa_person_type fa_residence_type fa_taxcode).reject { |attr|
+      self.send(attr).blank? or self.send(attr) == 0
+    }.size == 3
+  end
 
-  def self.create_from_xml(raw_invoice,user_or_company,md5,transport,from=nil,issued=nil,keep_original=true)
+  def self.create_from_xml(raw_invoice,user_or_company,md5,transport,from=nil,issued=nil,keep_original=true,validate=true)
 
     raw_xml           = raw_invoice.read
     doc               = Nokogiri::XML(raw_xml)
@@ -455,13 +476,13 @@ _INV
     if facturae_version
       # facturae30 facturae31 facturae32
       invoice_format  = "facturae#{facturae_version.text.gsub(/[^\d]/,'')}"
-      logger.info "Creating invoice from xml - format is FacturaE #{facturae_version.text}"
+      logger.info "Creating invoice from xml - format is FacturaE #{facturae_version.text}. time=#{Time.now}"
     elsif ubl_version
       #TODO: biiubl20 efffubl oioubl20 pdf peppolubl20 peppolubl21 svefaktura
       invoice_format  = "ubl#{ubl_version.text}"
-      logger.info "Creating invoice from xml - format is UBL #{ubl_version.text}"
+      logger.info "Creating invoice from xml - format is UBL #{ubl_version.text}. time=#{Time.now}"
     else
-      logger.info "Creating invoice from xml - unknown format"
+      logger.info "Creating invoice from xml - unknown format. time=#{Time.now}"
       raise "Unknown format"
     end
 
@@ -471,7 +492,10 @@ _INV
     currency       = Haltr::Utils.get_xpath(doc,xpaths[:currency])
     # invoice data
     invoice_number   = Haltr::Utils.get_xpath(doc,xpaths[:invoice_number])
+    invoice_series   = Haltr::Utils.get_xpath(doc,xpaths[:invoice_series])
     invoice_date     = Haltr::Utils.get_xpath(doc,xpaths[:invoice_date])
+    i_period_start   = Haltr::Utils.get_xpath(doc,xpaths[:invoicing_period_start])
+    i_period_end     = Haltr::Utils.get_xpath(doc,xpaths[:invoicing_period_end])
     invoice_total    = Haltr::Utils.get_xpath(doc,xpaths[:invoice_total])
     invoice_import   = Haltr::Utils.get_xpath(doc,xpaths[:invoice_import])
     invoice_due_date = Haltr::Utils.get_xpath(doc,xpaths[:invoice_due_date])
@@ -483,6 +507,26 @@ _INV
     accounting_cost  = Haltr::Utils.get_xpath(doc,xpaths[:accounting_cost])
     payments_on_account = Haltr::Utils.get_xpath(doc,xpaths[:payments_on_account]) || 0
     amend_of         = Haltr::Utils.get_xpath(doc,xpaths[:amend_of])
+    party_id         = Haltr::Utils.get_xpath(doc,xpaths[:party_id])
+
+    # factoring assignment data
+    fa_person_type    = Haltr::Utils.get_xpath(doc,xpaths[:fa_person_type])
+    fa_residence_type = Haltr::Utils.get_xpath(doc,xpaths[:fa_residence_type])
+    fa_taxcode        = Haltr::Utils.get_xpath(doc,xpaths[:fa_taxcode])
+    fa_name           = Haltr::Utils.get_xpath(doc,xpaths[:fa_name])
+    fa_address        = Haltr::Utils.get_xpath(doc,xpaths[:fa_address])
+    fa_postcode       = Haltr::Utils.get_xpath(doc,xpaths[:fa_postcode])
+    fa_town           = Haltr::Utils.get_xpath(doc,xpaths[:fa_town])
+    fa_province       = Haltr::Utils.get_xpath(doc,xpaths[:fa_province])
+    fa_country        = Haltr::Utils.get_xpath(doc,xpaths[:fa_country])
+    fa_info           = Haltr::Utils.get_xpath(doc,xpaths[:fa_info])
+    fa_duedate        = Haltr::Utils.get_xpath(doc,xpaths[:fa_duedate])
+    fa_import         = Haltr::Utils.get_xpath(doc,xpaths[:fa_import])
+    fa_iban           = Haltr::Utils.get_xpath(doc,xpaths[:fa_iban])
+    fa_bank_code      = Haltr::Utils.get_xpath(doc,xpaths[:fa_bank_code])
+    fa_clauses        = Haltr::Utils.get_xpath(doc,xpaths[:fa_clauses])
+    fa_payment_method = Haltr::Utils.get_xpath(doc,xpaths[:fa_payment_method])
+    fa_payment_method = Haltr::Utils.payment_method_from_facturae(fa_payment_method)
 
     invoice, client, client_role, company, user = nil
 
@@ -571,28 +615,28 @@ _INV
       if client_postalcode.blank?
         client_postalcode  = Haltr::Utils.get_xpath(doc,xpaths["#{client_role}_cp"])
       end
-      # set new client's channel to match invoice format, and sent by mail
-      case invoice_format
-      when /^facturae3/
-        client_invoice_format = invoice_format.gsub(/facturae3(\d)/,"facturae_3\\1")
-      else
-        client_invoice_format = "#TODO"
-      end
 
-      client = Client.new(:taxcode        => client_taxcode,
-                          :name           => client_name,
-                          :address        => client_address,
-                          :province       => client_province,
-                          :country        => client_countrycode,
-                          :website        => client_website,
-                          :email          => client_email,
-                          :postalcode     => client_postalcode,
-                          :city           => client_city,
-                          :currency       => currency,
-                          :project        => company.project,
-                          :invoice_format => client_invoice_format)
+      client_language = User.current.language
+      client_language = 'es' if client_language.blank?
+
+      client = Client.new(
+        :taxcode        => client_taxcode,
+        :name           => client_name,
+        :address        => client_address,
+        :province       => client_province,
+        :country        => client_countrycode,
+        :website        => client_website,
+        :email          => client_email,
+        :postalcode     => client_postalcode,
+        :city           => client_city,
+        :currency       => currency,
+        :project        => company.project,
+        :invoice_format => 'paper',
+        :language       => client_language
+      )
+
       client.save!(:validate=>false)
-      logger.info "created new client \"#{client_name}\" with cif #{client_taxcode} for company #{company.name}"
+      logger.info "created new client \"#{client_name}\" with cif #{client_taxcode} for company #{company.name}. time=#{Time.now}"
     end
 
     doc.xpath(xpaths[:dir3s]).each do |line|
@@ -612,8 +656,11 @@ _INV
 
     invoice.assign_attributes(
       :number           => invoice_number,
+      :series_code      => invoice_series,
       :client           => client,
       :date             => invoice_date,
+      :invoicing_period_start => i_period_start,
+      :invoicing_period_end   => i_period_end,
       :total            => invoice_total.to_money(currency),
       :currency         => currency,
       :import           => invoice_import.to_money(currency),
@@ -625,13 +672,30 @@ _INV
       :from             => from,           # u@mail.com, User Name...
       :md5              => md5,
       :original         => keep_original ? raw_xml : nil,
-      :discount_percent => discount_percent.to_f,
+      :discount_percent => discount_percent,
       :discount_text    => discount_text,
       :extra_info       => extra_info,
       :charge_amount    => charge,
       :charge_reason    => charge_reason,
       :accounting_cost  => accounting_cost,
-      :payments_on_account => payments_on_account.to_money(currency)
+      :payments_on_account => payments_on_account.to_money(currency),
+      :fa_person_type    => fa_person_type,
+      :fa_residence_type => fa_residence_type,
+      :fa_taxcode        => fa_taxcode,
+      :fa_name           => fa_name,
+      :fa_address        => fa_address,
+      :fa_postcode       => fa_postcode,
+      :fa_town           => fa_town,
+      :fa_province       => fa_province,
+      :fa_country        => (SunDawg::CountryIsoTranslater.translate_standard(fa_country,"alpha3","alpha2").downcase rescue nil),
+      :fa_info           => fa_info,
+      :fa_duedate        => fa_duedate,
+      :fa_import         => fa_import,
+      :fa_payment_method => fa_payment_method,
+      :fa_iban           => fa_iban,
+      :fa_bank_code      => fa_bank_code,
+      :fa_clauses        => fa_clauses,
+      :party_identification => party_id,
     )
 
     if raw_invoice.respond_to? :filename             # Mail::Part
@@ -645,16 +709,8 @@ _INV
     end
 
     if invoice_format =~ /facturae/
-      facturae_payment_codes = {}
-      PAYMENT_CODES.each do |haltr_code, codes|
-        facturae_payment_codes[codes[:facturae]] = haltr_code
-      end
       xml_payment_method = Haltr::Utils.get_xpath(doc,xpaths[:payment_method])
-      if facturae_payment_codes.has_key?(xml_payment_method)
-        invoice.payment_method = facturae_payment_codes[xml_payment_method]
-      else
-        invoice.payment_method = nil
-      end
+      invoice.payment_method = Haltr::Utils.payment_method_from_facturae(xml_payment_method)
     else
       #TODO ubl
     end
@@ -665,10 +721,21 @@ _INV
     elsif invoice.transfer?
       invoice.parse_xml_bank_info(doc.xpath(xpaths[:to_be_credited]).to_s)
     end
+    invoice.payment_method_text = Haltr::Utils.get_xpath(doc,xpaths[:payment_method_text])
 
     line_file_reference = nil
+    line_ponumber = nil
+    line_r_contract_reference = nil
+
     # invoice lines
     doc.xpath(xpaths[:invoice_lines]).each do |line|
+
+      line_delivery_note_number = nil
+      # delivery_notes
+      line.xpath(xpaths[:delivery_notes]).each do |dn|
+        line_delivery_note_number ||= Haltr::Utils.get_xpath(dn,xpaths[:delivery_note_num])
+      end
+
       il = InvoiceLine.new(
              :quantity     => Haltr::Utils.get_xpath(line,xpaths[:line_quantity]),
              :description  => Haltr::Utils.get_xpath(line,xpaths[:line_description]),
@@ -677,7 +744,8 @@ _INV
              :article_code => Haltr::Utils.get_xpath(line,xpaths[:line_code]),
              :notes        => Haltr::Utils.get_xpath(line,xpaths[:line_notes]),
              :issuer_transaction_reference => Haltr::Utils.get_xpath(line,xpaths[:i_transaction_ref]),
-             :sequence_number => Haltr::Utils.get_xpath(line,xpaths[:sequence_number]),
+             :sequence_number              => Haltr::Utils.get_xpath(line,xpaths[:sequence_number]),
+             :delivery_note_number         => line_delivery_note_number,
            )
       # invoice taxes. Known taxes are described at config/taxes.yml
       line.xpath(*xpaths[:line_taxes]).each do |line_tax|
@@ -707,31 +775,44 @@ _INV
         il.charge_reason = Haltr::Utils.get_xpath(line_charges.first,xpaths[:line_charge_reason])
       end
       line_file_reference ||= Haltr::Utils.get_xpath(line,xpaths[:file_reference])
+      line_ponumber       ||= Haltr::Utils.get_xpath(line,xpaths[:ponumber])
+      line_r_contract_reference ||= Haltr::Utils.get_xpath(line,xpaths[:r_contract_reference])
       invoice.invoice_lines << il
     end
 
-    # Assume just one file_reference per Invoice
+    # Assume just one file_reference, ponumber and
+    # receiver_contract_reference per Invoice
     invoice.file_reference = line_file_reference
+    invoice.ponumber = line_ponumber
+    invoice.receiver_contract_reference = line_r_contract_reference
 
     Redmine::Hook.call_hook(:model_invoice_import_before_save, :invoice=>invoice)
 
     if keep_original
       begin
-        invoice.save!
+        if validate
+          invoice.save!
+        else
+          invoice.save(validate: false)
+        end
       rescue ActiveRecord::RecordInvalid
-        ImportError.create(
-          filename:      invoice.file_name,
-          import_errors: invoice.errors.full_messages.join('. '),
-          original:      raw_xml,
-          project:       company.project,
-        )
         raise invoice.errors.full_messages.join(". ")
       end
     else
       invoice.save(:validate=>false)
     end
-    logger.info "created new invoice with id #{invoice.id} for company #{company.name}"
+    logger.info "created new invoice with id #{invoice.id} for company #{company.name}. time=#{Time.now}"
     return invoice
+  rescue
+    if company and company.project
+      ImportError.create(
+        filename:      (invoice.file_name rescue ""),
+        import_errors: $!.message,
+        original:      raw_xml,
+        project:       company.project,
+      )
+    end
+    raise $!.message
   end
 
   def send_original?
@@ -774,10 +855,6 @@ _INV
                                       :company_id   => company.id)
       end
     end
-  end
-
-  def can_be_exported?
-    false
   end
 
   def next
@@ -833,7 +910,11 @@ _INV
   end
 
   def has_article_codes?
-    invoice_lines.collect {|l| l.article_code }.join.size > 0
+    invoice_lines.any? {|l| l.article_code.present? }
+  end
+
+  def has_delivery_note_numbers?
+    invoice_lines.any? {|l| l.delivery_note_number.present? }
   end
 
   def has_line_discounts?
@@ -897,7 +978,15 @@ _INV
   end
 
   def has_all_fields_required_by_external_company
-    ext_comp = ExternalCompany.find_by_taxcode(client.taxcode) if client
+    if client
+      taxcode = client.taxcode
+      if taxcode[0...2].downcase == project.company.country
+        taxcode2 = taxcode[2..-1]
+      else
+        taxcode2 = "#{project.company.country}#{taxcode}"
+      end
+      ext_comp = ExternalCompany.where("taxcode in (?, ?)", taxcode, taxcode2).first
+    end
     if ext_comp
       ext_comp.required_fields.each do |field|
         if field == "dir3"

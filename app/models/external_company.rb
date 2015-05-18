@@ -7,9 +7,6 @@ class ExternalCompany < ActiveRecord::Base
     :dependent => :nullify
 
   validates_presence_of :name, :postalcode, :country
-  validates_presence_of :taxcode, :unless => Proc.new {|ec|
-    Company::COUNTRIES_WITHOUT_TAXCODE.include? ec.country
-  }
   validates_length_of :taxcode, :maximum => 20
   validates_uniqueness_of :taxcode, :allow_blank => true
   validates_inclusion_of :currency, :in => Money::Currency.table.collect {|k,v| v[:iso_code] }
@@ -25,6 +22,7 @@ class ExternalCompany < ActiveRecord::Base
   after_save :update_linked_clients
   iso_country :country
   include CountryUtils
+  include Haltr::TaxcodeValidator
 
   serialize :fields_config
   before_save {
@@ -35,7 +33,7 @@ class ExternalCompany < ActiveRecord::Base
       end
     end
   }
-  AVAILABLE_FIELDS=%w(dir3 organ_proponent ponumber delivery_note_number file_reference payments_on_account receiver_contract_reference)
+  AVAILABLE_FIELDS=%w(dir3 organ_proponent ponumber delivery_note_number file_reference payments_on_account receiver_contract_reference legal_literals party_identification)
   AVAILABLE_FIELDS.each do |field|
     src = <<-END_SRC
       def visible_#{field}
@@ -104,30 +102,30 @@ class ExternalCompany < ActiveRecord::Base
   end
 
   def dir3_organs_gestors
-    og = Dir3Entity.where(:code => organs_gestors.to_s.split(/[,\n]/))
+    og = Hash[Dir3Entity.where(code: organs_gestors.to_s.split(/[,\n]/)).map { |c| [c.code, c] }]
     organs_gestors.to_s.split(/[,\n]/).uniq.collect {|code|
-      og.find_by_code(code) || Dir3Entity.new(name: code, code: code)
+      og[code] || Dir3Entity.new(name: code, code: code)
     }
   end
 
   def dir3_unitats_tramitadores
-    ut = Dir3Entity.where(:code => unitats_tramitadores.to_s.split(/[,\n]/))
+    ut = Hash[Dir3Entity.where(code: unitats_tramitadores.to_s.split(/[,\n]/)).map {|c| [c.code, c] }]
     unitats_tramitadores.to_s.split(/[,\n]/).uniq.collect {|code|
-      ut.find_by_code(code) || Dir3Entity.new(name: code, code: code)
+      ut[code] || Dir3Entity.new(name: code, code: code)
     }
   end
 
   def dir3_oficines_comptables
-    oc = Dir3Entity.where(:code => oficines_comptables.to_s.split(/[,\n]/))
+    oc = Hash[Dir3Entity.where(code: oficines_comptables.to_s.split(/[,\n]/)).map {|c| [c.code, c] }]
     oficines_comptables.to_s.split(/[,\n]/).uniq.collect {|code|
-      oc.find_by_code(code) || Dir3Entity.new(name: code, code: code)
+      oc[code] || Dir3Entity.new(name: code, code: code)
     }
   end
 
   def dir3_organs_proponents
-    op = Dir3Entity.where(:code => organs_proponents.to_s.split(/[,\n]/))
+    op = Hash[Dir3Entity.where(code: organs_proponents.to_s.split(/[,\n]/)).map {|c| [c.code, c] }]
     organs_proponents.to_s.split(/[,\n]/).uniq.collect {|code|
-      op.find_by_code(code) || Dir3Entity.new(name: code, code: code)
+      op[code] || Dir3Entity.new(name: code, code: code)
     }
   end
 

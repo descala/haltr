@@ -1,11 +1,11 @@
       <Modality>I</Modality>
-      <InvoiceIssuerType><%= @local_certificate ? 'EM' : 'TE' %></InvoiceIssuerType>
-      <% unless @local_certificate -%>
+      <InvoiceIssuerType><%= (@local_certificate or @company.taxcode.strip == 'ESB63276174') ? 'EM' : 'TE' %></InvoiceIssuerType>
+      <% unless @local_certificate or @company.taxcode.strip == 'ESB63276174' -%>
       <ThirdParty>
          <TaxIdentification>
             <PersonTypeCode>J</PersonTypeCode>
             <ResidenceTypeCode>R</ResidenceTypeCode>
-            <TaxIdentificationNumber>B63276174</TaxIdentificationNumber>
+            <TaxIdentificationNumber>ESB63276174</TaxIdentificationNumber>
          </TaxIdentification>
          <LegalEntity>
             <CorporateName>Invinet Sistemes 2003, S.L</CorporateName>
@@ -33,14 +33,69 @@
          </TotalExecutableAmount>
          <InvoiceCurrencyCode><%=h  @invoice.currency %></InvoiceCurrencyCode>
       </Batch>
+<% if @invoice.has_factoring_data? -%>
+      <FactoringAssignmentData>
+        <Assignee>
+          <TaxIdentification>
+            <PersonTypeCode><%=h @invoice.fa_person_type %></PersonTypeCode>
+            <ResidenceTypeCode><%=h @invoice.fa_residence_type %></ResidenceTypeCode>
+            <TaxIdentificationNumber><%=h @invoice.fa_taxcode %></TaxIdentificationNumber>
+          </TaxIdentification>
+          <LegalEntity>
+            <CorporateName><%=h @invoice.fa_name %></CorporateName>
+            <AddressInSpain>
+              <Address><%=h @invoice.fa_address %></Address>
+              <PostCode><%=h @invoice.fa_postcode %></PostCode>
+              <Town><%=h @invoice.fa_town %></Town>
+              <Province><%=h @invoice.fa_province %></Province>
+              <CountryCode><%=h SunDawg::CountryIsoTranslater.translate_standard(@invoice.fa_country.upcase,"alpha2","alpha3") %></CountryCode>
+            </AddressInSpain>
+            <ContactDetails>
+              <AdditionalContactDetails><%=h @invoice.fa_info %></AdditionalContactDetails>
+            </ContactDetails>
+          </LegalEntity>
+        </Assignee>
+        <PaymentDetails>
+          <Installment>
+            <InstallmentDueDate><%=h @invoice.fa_duedate %></InstallmentDueDate>
+            <InstallmentAmount><%=h precision @invoice.fa_import %></InstallmentAmount>
+            <PaymentMeans><%=h @invoice.payment_method_code(:facturae, :fa_payment_method) %></PaymentMeans>
+<% if @invoice.fa_payment_method.to_i == 4 -%>
+            <AccountToBeCredited>
+              <IBAN><%=h @invoice.fa_iban %></IBAN>
+              <BankCode><%=h @invoice.fa_bank_code %></BankCode>
+            </AccountToBeCredited>
+<% else -%>
+            <AccountToBeDebited>
+              <IBAN><%=h @invoice.fa_iban %></IBAN>
+              <BankCode><%=h @invoice.fa_bank_code %></BankCode>
+            </AccountToBeDebited>
+<% end -%>
+            <CollectionAdditionalInformation><%=h @invoice.fa_clauses %></CollectionAdditionalInformation>
+          </Installment>
+        </PaymentDetails>
+<% if @invoice.fa_clauses -%>
+        <FactoringAssignmentClauses><%=h @invoice.fa_clauses %></FactoringAssignmentClauses>
+<% end -%>
+      </FactoringAssignmentData>
+<% end -%>
    </FileHeader>
    <Parties>
       <SellerParty>
          <TaxIdentification>
             <PersonTypeCode><%=h @company.persontype %></PersonTypeCode>
+<% if @company.country == 'es' -%>
             <ResidenceTypeCode>R</ResidenceTypeCode>
+<% elsif @company.eu? -%>
+            <ResidenceTypeCode>U</ResidenceTypeCode>
+<% else -%>
+            <ResidenceTypeCode>E</ResidenceTypeCode>
+<% end -%>
             <TaxIdentificationNumber><%=h @company.taxcode.strip%></TaxIdentificationNumber>
          </TaxIdentification>
+<% if @invoice.party_identification.present? -%>
+         <PartyIdentification><%=h @invoice.party_identification%></PartyIdentification>
+<% end -%>
 <% if @company.persontype == "J" -%>
 
          <LegalEntity>
@@ -64,7 +119,7 @@
 <% else -%>
 
          <Individual>
-            <Name><%=h @company.first_name%></Name>
+            <Name><%=h @company.first_name[0...40]%></Name>
             <FirstSurname><%=h @company.last_name%></FirstSurname>
             <%= render :partial => "invoices/address.facturae", :format => :xml, :locals => {:entity => @company} %>
             <ContactDetails>
@@ -79,7 +134,13 @@
       <BuyerParty>
          <TaxIdentification>
             <PersonTypeCode>J</PersonTypeCode>
+<% if @client.country == 'es' -%>
             <ResidenceTypeCode>R</ResidenceTypeCode>
+<% elsif @client.eu? -%>
+            <ResidenceTypeCode>U</ResidenceTypeCode>
+<% else -%>
+            <ResidenceTypeCode>E</ResidenceTypeCode>
+<% end -%>
             <TaxIdentificationNumber><%=h @client.taxcode.strip%></TaxIdentificationNumber>
          </TaxIdentification>
          <% if call_hook(:facturae_administrative_centres).present? -%>
@@ -148,6 +209,9 @@
       <Invoice>
          <InvoiceHeader>
             <InvoiceNumber><%=h @invoice.number%></InvoiceNumber>
+<% unless @invoice.series_code.blank? -%>
+            <InvoiceSeriesCode><%=h @invoice.series_code%></InvoiceSeriesCode>
+<% end -%>
             <InvoiceDocumentType>FC</InvoiceDocumentType>
             <InvoiceClass><%= @invoice.amend_of ? "OR" : "OO" %></InvoiceClass>
 <% if @invoice.amend_of -%>
@@ -167,6 +231,12 @@
          </InvoiceHeader>
          <InvoiceIssueData>
             <IssueDate><%=h @invoice.date%></IssueDate>
+<% if @invoice.invoicing_period_start.present? and @invoice.invoicing_period_end.present? -%>
+            <InvoicingPeriod>
+              <StartDate><%=h @invoice.invoicing_period_start%></StartDate>
+              <EndDate><%=h @invoice.invoicing_period_end%></EndDate>
+            </InvoicingPeriod>
+<% end -%>
             <InvoiceCurrencyCode><%=h @client.currency%></InvoiceCurrencyCode>
             <TaxCurrencyCode><%=h @client.currency%></TaxCurrencyCode>
             <LanguageName><%=h @client.language_string%></LanguageName>
@@ -175,7 +245,7 @@
 <% if @invoice.taxes_outputs.any? -%>
 <% @invoice.taxes_outputs.each do |tax| -%>
            <Tax>
-             <TaxTypeCode>01</TaxTypeCode>
+             <TaxTypeCode><%= Tax::SPAIN_TAXCODES[tax.name.upcase] || '05'%></TaxTypeCode>
              <TaxRate><%=h precision tax.percent%></TaxRate>
              <TaxableBase>
                <TotalAmount><%=h precision(@invoice.taxable_base(tax).dollars)%></TotalAmount>
@@ -199,7 +269,7 @@
 <% end -%>
          </TaxesOutputs>
 
-<% if @company.persontype == "F" and @invoice.taxes_withheld.any?-%>
+<% if @invoice.taxes_withheld.any?-%>
          <TaxesWithheld>
 <% @invoice.taxes_withheld.each do |tax| -%>
             <Tax>
@@ -270,7 +340,7 @@
               <% elsif @invoice.receiver_contract_reference.present? -%>
                 <ReceiverContractReference><%=@invoice.receiver_contract_reference%></ReceiverContractReference>
               <% end -%>
-              <%if @invoice.ponumber%><ReceiverTransactionReference><%=h(@invoice.ponumber)[0..19]%></ReceiverTransactionReference><%end-%>
+              <%unless @invoice.ponumber.blank?%><ReceiverTransactionReference><%=h(@invoice.ponumber)[0..19]%></ReceiverTransactionReference><%end-%>
 <% if format == "facturae32" and !@invoice.file_reference.blank? -%>
               <%if @invoice.file_reference%><FileReference><%=@invoice.file_reference%></FileReference><%end-%>
 <% else -%>
@@ -281,10 +351,10 @@
               <% elsif !invoice_line.sequence_number.blank? -%>
                 <SequenceNumber><%=invoice_line.sequence_number%></SequenceNumber>
               <% end -%>
-              <% unless @invoice.delivery_note_number.blank? -%>
+              <% if @invoice.delivery_note_number.present? or invoice_line.delivery_note_number.present? -%>
                 <DeliveryNotesReferences>
                   <DeliveryNote>
-                    <DeliveryNoteNumber><%= @invoice.delivery_note_number %></DeliveryNoteNumber>
+                    <DeliveryNoteNumber><%= invoice_line.delivery_note_number.present? ? invoice_line.delivery_note_number : @invoice.delivery_note_number %></DeliveryNoteNumber>
                   </DeliveryNote>
                 </DeliveryNotesReferences>
               <% end -%>
@@ -374,7 +444,7 @@
 <% elsif @invoice.debit? and !@client.bank_account.blank?-%>
                  <AccountToBeDebited>
                    <% if (@format =~ /facturae/) -%>
-                     <AccountNumber><%=h @client.bank_account%></AccountNumnber>
+                     <AccountNumber><%=h @client.bank_account%></AccountNumber>
                    <% else -%>
                      <IBAN><%=h @client.bank_account%></IBAN>
                    <% end -%>
@@ -389,14 +459,24 @@
 <% elsif @invoice.transfer? and @invoice.bank_info and !@invoice.bank_info.bank_account.blank? -%>
                <AccountToBeCredited>
                  <% if (@format =~ /facturae/) -%>
-                   <AccountNumber><%=h @invoice.bank_info.bank_account%></AccountNumnber>
+                   <AccountNumber><%=h @invoice.bank_info.bank_account%></AccountNumber>
                  <% else -%>
                    <IBAN><%=h @invoice.bank_info.bank_account%></IBAN>
                  <% end -%>
                </AccountToBeCredited>
 <% end -%>
+<% unless @invoice.payment_method_text.blank? -%>
+               <CollectionAdditionalInformation>
+                 <%= @invoice.payment_method_text[0...2500] %>
+               </CollectionAdditionalInformation>
+<% end -%>
             </Installment>
           </PaymentDetails>
+<% end -%>
+<% unless @invoice.legal_literals.blank? -%>
+          <LegalLiterals>
+            <LegalReference><%=@invoice.legal_literals%></LegalReference>
+          </LegalLiterals>
 <% end -%>
 <% if (@invoice.extra_info_plus_tax_comments and @invoice.extra_info_plus_tax_comments.size > 0) or @invoice.attachments.any? %>
           <AdditionalData>
@@ -414,7 +494,7 @@
             </RelatedDocuments>
 <% end %>
 <% if (@invoice.extra_info_plus_tax_comments and @invoice.extra_info_plus_tax_comments.size > 0) %>
-            <InvoiceAdditionalInformation><%=h @invoice.extra_info_plus_tax_comments%></InvoiceAdditionalInformation>
+            <InvoiceAdditionalInformation><%=h @invoice.extra_info_plus_tax_comments[0...2500]%></InvoiceAdditionalInformation>
 <% end %>
           </AdditionalData>
 <% end %>

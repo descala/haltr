@@ -34,11 +34,19 @@
     <div style="height:10px;"></div>
     <div><%= @company.website %></div>
     <div><%= @company.email %></div>
+    <% if @invoice.party_identification.present? -%>
+      <div>
+        <%= t(:field_party_identification) %>: <%= @invoice.party_identification %>
+      </div>
+    <% end -%>
   </div>
 </div>
 
 <!-- Invoice Number and Info -->
 <h2 class="invoice-ID"><%=h @invoice.label %> <%=h @invoice.number %></h2>
+<% unless @invoice.series_code.blank? -%>
+  <h3><%= l(:field_series_code) %>: <%= @invoice.series_code %></h3>
+<% end -%>
 <div class="invoice-info">
   <span class="date"><%=h l(:field_date)%> <strong><%=h format_date @invoice.date %></strong></span><br/>
   <% if @invoice.amend_of -%>
@@ -54,6 +62,9 @@
     <% else -%>
       <span class="invoice-terms<%=h " pastdue" if @invoice.past_due?%>"><%=h l(:field_due_date)%> <%=h format_date @invoice.due_date %> <%= "(#{@invoice.terms_description})" unless @invoice.custom_due? %></span><br/>
     <% end -%>
+  <% end -%>
+  <% if @invoice.invoicing_period_start.present? || @invoice.invoicing_period_end.present? -%>
+    <span class="invoice-terms"><%=h "#{t(:field_invoicing_period)} #{format_date @invoice.invoicing_period_start}  #{format_date @invoice.invoicing_period_end}" %></span><br/>
   <% end -%>
   <% unless payment_method_info.blank? -%>
     <span class="invoice-terms"><%=h payment_method_info.html_safe %></span><br/>
@@ -85,18 +96,18 @@
       <% end -%>
       <div class="country-name"><%=h @client.country_name if @client.country and @client.country.downcase != @company.country.downcase %></div>
     </address>
-    <div><strong><%=h l(:field_taxcode) %>:</strong><span class="tax-id"> <%=h @client.taxcode.upcase %></span></div>
+    <div><strong><%=h l(:field_taxcode) %>:</strong><span class="tax-id"> <%=h @client.taxcode.upcase if @client.taxcode %></span></div>
     <% if call_hook(:invoice_view_client_info).present? -%>
       <%= call_hook(:invoice_view_client_info) %>
     <% elsif @invoice.has_dir3_info? -%>
-      <% if @invoice.organ_gestor.present? -%>
-      <div>
-        <%=h l(:organ_gestor) %>: <%= @invoice.organ_gestor %>
-      </div>
-      <% end -%>
       <% if @invoice.oficina_comptable.present? -%>
       <div>
         <%=h l(:oficina_comptable) %>: <%= @invoice.oficina_comptable %>
+      </div>
+      <% end -%>
+      <% if @invoice.organ_gestor.present? -%>
+      <div>
+        <%=h l(:organ_gestor) %>: <%= @invoice.organ_gestor %>
       </div>
       <% end -%>
       <% if @invoice.unitat_tramitadora.present? -%>
@@ -109,11 +120,11 @@
           <%= h l(:field_organ_proponent) %>: <%= @invoice.organ_proponent %>
         </div>
       <% end -%>
-      <% if @invoice.file_reference.present? -%>
-        <div>
-          <%= h l(:field_file_reference) %>: <%= @invoice.file_reference %>
-        </div>
-      <% end -%>
+    <% end -%>
+    <% if @invoice.file_reference.present? -%>
+      <div>
+        <%= h l(:field_file_reference) %>: <%= @invoice.file_reference %>
+      </div>
     <% end -%>
   </div>
 </div>
@@ -126,7 +137,10 @@
   <table class="line-items" border="0" cellpadding="0" cellspacing="0">
     <tbody>
       <tr>
-        <th class="item-quantity first"><abbr title="Quantitat">Q</abbr></th>
+        <% if @invoice.has_delivery_note_numbers? -%>
+          <th class="item-delivery_note first"><%=h l(:field_delivery_note_number) %></th>
+        <% end -%>
+        <th class="item-quantity"><abbr title="Quantitat">Q</abbr></th>
         <% if @invoice.has_article_codes? -%>
           <th class="item-article_code"><%=h l(:field_article_code)%></th>
         <% end -%>
@@ -146,7 +160,10 @@
 
       <% @lines.each do |line| -%>
         <tr <%= 'class="nobottomline"'.html_safe unless line.notes.blank? %>>
-          <td class="item-quantity first"><%=h quantity(line.quantity) %> <%=h line.unit_short%></td>
+          <% if @invoice.has_delivery_note_numbers? -%>
+            <td class="item-delivery_note first"><%=h line.delivery_note_number %></td>
+          <% end -%>
+          <td class="item-quantity"><%=h quantity(line.quantity) %> <%=h line.unit_short%></td>
           <% if @invoice.has_article_codes? -%>
             <td class="item-article_code"><%=h line.article_code %></td>
           <% end -%>
@@ -164,7 +181,7 @@
           <% end -%>
           <td class="item-price"><%=h line_price(line) %></td>
           <% if line.discount_percent > 0 -%>
-            <td class="item-price"><%=h line.discount_percent%> %</td>
+            <td class="item-price"><%=h number_to_percentage(line.discount_percent, precision: 2, strip_insignificant_zeros: true) %></td>
           <% elsif @invoice.has_line_discounts? -%>
             <td></td>
           <% end -%>
@@ -188,7 +205,7 @@
             <td class="item-article_code"></td>
           <% end -%>
           <td class="item-description" <%= 'colspan="2"'.html_safe if @invoice.has_line_discounts? %>><%=h @invoice.discount_text %></td>
-          <td class="item-price"><%=h number_to_percentage(@invoice.discount_percent, :precision=>0) %></td>
+          <td class="item-price"><%=h number_to_percentage(@invoice.discount_percent, precision: 0, strip_insignificant_zeros: true) %></td>
           <% if @invoice.has_line_charges? -%>
             <td></td>
           <% end -%>

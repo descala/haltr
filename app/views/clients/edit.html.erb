@@ -31,3 +31,7 @@
 <% content_for :sidebar do %>
   <%= render_menu :companies_menu, @project %>
 <% end %>
+
+<% if User.current.admin? -%>
+  <%= render :partial => 'events/list', locals: {events: @client.events} %>
+<% end -%>

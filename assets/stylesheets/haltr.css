@@ -203,12 +203,16 @@ div.audited li:hover {
 }
 div.audited-changes {
   display: none;
-  border: 1px solid black;
   position: absolute;
   float: left;
 }
+div.audited-changes table table {
+  border: 1px solid black;
+}
+div.audited-changes table table td {
+  padding: 8px;
+}
 div.audited-changes table td {
-  padding: 7px;
 }
 div.audited-changes table tr.new-values {
   background-color: #dfd;
@@ -247,4 +251,9 @@ span#attachments_fields input.filename {
 span#attachments_fields input.description {
   margin-left: 1%;
   width: 69%;
+}
+span#send_info {
+  position: absolute;
+  top: -13px;
+  right: 0px;
 }

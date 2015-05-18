@@ -21,11 +21,14 @@ class PaymentsController < ApplicationController
     sort_init 'payments.date', 'desc'
     sort_update %w(payments.date amount_in_cents invoices.number)
 
-    payments = @project.payments.scoped
+    payments = @project.payments.includes('invoice')
 
-    unless params[:name].blank?
+    if params[:name].present?
       name = "%#{params[:name].strip.downcase}%"
-      payments = payments.scoped :conditions => ["LOWER(payments.payment_method) LIKE ? OR LOWER(reference) LIKE ?", name, name]
+      fields = %w(payments.payment_method reference
+      DATE_FORMAT(payments.date,'%d-%m-%Y') invoices.number amount_in_cents)
+      conditions = fields.collect {|f| "LOWER(#{f}) LIKE ?" }.join(' OR ')
+      payments = payments.scoped conditions: [conditions, *fields.collect {name}]
     end
 
     @payment_count = payments.count

@@ -30,11 +30,12 @@ module Haltr
       def xpaths_for(format)
         xpaths = {}.with_indifferent_access
         if format =~ /facturae/
-#          xpaths[:invoice_number]     = [ "//Invoices/Invoice/InvoiceHeader/InvoiceNumber",
-#                                          "//Invoices/Invoice/InvoiceHeader/InvoiceSeriesCode" ]
           xpaths[:invoice_number]     = "//Invoices/Invoice/InvoiceHeader/InvoiceNumber"
+          xpaths[:invoice_series]     = "//Invoices/Invoice/InvoiceHeader/InvoiceSeriesCode"
           xpaths[:amend_of]           = "//Invoices/Invoice/InvoiceHeader/Corrective/InvoiceNumber"
           xpaths[:invoice_date]       = "//Invoices/Invoice/InvoiceIssueData/IssueDate"
+          xpaths[:invoicing_period_start] = "//Invoices/Invoice/InvoiceIssueData/InvoicingPeriod/StartDate"
+          xpaths[:invoicing_period_end]   = "//Invoices/Invoice/InvoiceIssueData/InvoicingPeriod/EndDate"
           xpaths[:invoice_total]      = "//Invoices/Invoice/InvoiceTotals/InvoiceTotal"
           xpaths[:invoice_import]     = "//Invoices/Invoice/InvoiceTotals/TotalGrossAmountBeforeTaxes"
           xpaths[:discount_percent]   = "//Invoices/Invoice/InvoiceTotals/GeneralDiscounts/Discount/DiscountRate"
@@ -42,6 +43,7 @@ module Haltr
           xpaths[:payments_on_account]= "//Invoices/Invoice/InvoiceTotals/TotalPaymentsOnAccount"
           xpaths[:invoice_due_date]   = "//Invoices/Invoice/PaymentDetails/Installment/InstallmentDueDate"
           xpaths[:seller_taxcode]     = "//Parties/SellerParty/TaxIdentification/TaxIdentificationNumber"
+          xpaths[:party_id]           = "//Parties/SellerParty/PartyIdentification"
           xpaths[:seller_name]        = "//Parties/SellerParty/LegalEntity/CorporateName"
           xpaths[:seller_name2]       = [ "//Parties/SellerParty/Individual/Name",
                                           "//Parties/SellerParty/Individual/FirstSurname",
@@ -78,6 +80,7 @@ module Haltr
           xpaths[:to_be_debited]      = "//Invoices/Invoice/PaymentDetails/Installment/AccountToBeDebited"
           xpaths[:to_be_credited]     = "//Invoices/Invoice/PaymentDetails/Installment/AccountToBeCredited"
           xpaths[:payment_method]     = "//Invoices/Invoice/PaymentDetails/Installment/PaymentMeans"
+          xpaths[:payment_method_text] = "//Invoices/Invoice/PaymentDetails/Installment/CollectionAdditionalInformation"
           # relative to AccountToBe*
           xpaths[:bank_account]       = "*/AccountNumber"
           xpaths[:iban]               = "*/IBAN"
@@ -86,6 +89,7 @@ module Haltr
           xpaths[:invoice_lines]      = "//Invoices/Invoice/Items/InvoiceLine"
           # relative to invoice_lines
           xpaths[:i_transaction_ref]  = "IssuerTransactionReference"
+          xpaths[:r_contract_reference] = "ReceiverContractReference"
           xpaths[:line_quantity]      = "Quantity"
           xpaths[:line_description]   = "ItemDescription"
           xpaths[:line_price]         = "UnitPriceWithoutTax"
@@ -99,6 +103,12 @@ module Haltr
           xpaths[:sequence_number]    = "SequenceNumber"
           xpaths[:tax_event_code]     = "SpecialTaxableEvent/SpecialTaxableEventCode"
           xpaths[:tax_event_reason]   = "SpecialTaxableEvent/SpecialTaxableEventReason"
+
+          xpaths[:delivery_notes]     = "DeliveryNotesReferences/DeliveryNote"
+          # relative to invoice_lines/delivery_notes_references/delivery_note
+          xpaths[:delivery_note_num]  = "DeliveryNoteNumber"
+
+          xpaths[:ponumber]           = "ReceiverTransactionReference"
           # relative to invoice_lines/discounts
           xpaths[:line_discount_percent] = "DiscountRate"
           xpaths[:line_discount_text]    = "DiscountReason"
@@ -114,6 +124,24 @@ module Haltr
           xpaths[:dir3_code]          = "CentreCode"
           xpaths[:dir3_role]          = "RoleTypeCode"
           xpaths[:dir3_name]          = "CentreDescription"
+
+          xpaths[:fa_person_type]     = "//FileHeader/FactoringAssignmentData/Assignee/TaxIdentification/PersonTypeCode"
+          xpaths[:fa_residence_type]  = "//FileHeader/FactoringAssignmentData/Assignee/TaxIdentification/ResidenceTypeCode"
+          xpaths[:fa_taxcode]         = "//FileHeader/FactoringAssignmentData/Assignee/TaxIdentification/TaxIdentificationNumber"
+          xpaths[:fa_name]            = "//FileHeader/FactoringAssignmentData/Assignee/LegalEntity/CorporateName"
+          xpaths[:fa_address]         = "//FileHeader/FactoringAssignmentData/Assignee/LegalEntity/AddressInSpain/Address"
+          xpaths[:fa_postcode]        = "//FileHeader/FactoringAssignmentData/Assignee/LegalEntity/AddressInSpain/PostCode"
+          xpaths[:fa_town]            = "//FileHeader/FactoringAssignmentData/Assignee/LegalEntity/AddressInSpain/Town"
+          xpaths[:fa_province]        = "//FileHeader/FactoringAssignmentData/Assignee/LegalEntity/AddressInSpain/Province"
+          xpaths[:fa_country]         = "//FileHeader/FactoringAssignmentData/Assignee/LegalEntity/AddressInSpain/CountryCode"
+          xpaths[:fa_info]            = "//FileHeader/FactoringAssignmentData/Assignee/LegalEntity/ContactDetails/AdditionalContactDetails"
+          xpaths[:fa_duedate]         = "//FileHeader/FactoringAssignmentData/PaymentDetails/Installment/InstallmentDueDate"
+          xpaths[:fa_import]          = "//FileHeader/FactoringAssignmentData/PaymentDetails/Installment/InstallmentAmount"
+          xpaths[:fa_payment_method]  = "//FileHeader/FactoringAssignmentData/PaymentDetails/Installment/PaymentMeans"
+          xpaths[:fa_iban]            = "//FileHeader/FactoringAssignmentData/PaymentDetails/Installment/*/IBAN"
+          xpaths[:fa_bank_code]       = "//FileHeader/FactoringAssignmentData/PaymentDetails/Installment/*/BankCode"
+          xpaths[:fa_clauses]         = "//FileHeader/FactoringAssignmentData/FactoringAssignmentClauses"
+
         elsif format =~ /ubl/
           xpaths[:invoice_number]     = "/Invoice/cbc:ID"
           xpaths[:invoice_date]       = "/Invoice/cbc:IssueDate"
@@ -147,6 +175,14 @@ module Haltr
           xpaths[:currency]           = "/Invoice/cbc:DocumentCurrencyCode"
         end
         xpaths
+      end
+
+      def payment_method_from_facturae(code)
+        facturae_codes = {}
+        Invoice::PAYMENT_CODES.each do |haltr_code, codes|
+          facturae_codes[codes[:facturae]] = haltr_code
+        end
+        facturae_codes[code]
       end
 
     end

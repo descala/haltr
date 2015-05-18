@@ -68,8 +68,8 @@ Redmine::Plugin.register :haltr do
         :people    => [:index, :new, :show, :edit, :create, :update, :destroy],
         :invoices  => [:index, :new, :edit, :create, :update, :destroy, :show, :mark_sent, :mark_closed, :mark_not_sent,
                        :destroy_payment, :send_invoice, :legal, :update_payment_stuff, :amend_for_invoice, :download_new_invoices,
-                       :send_new_invoices, :duplicate_invoice, :report, :context_menu, :bulk_mark_as, :original, :show_original,
-                       :mark_as_accepted],
+                       :send_new_invoices, :duplicate_invoice, :reports, :report_channel_state, :report_invoice_list, :context_menu, :bulk_mark_as, :original, :show_original,
+                       :mark_as, :number_to_id],
         :received  => [:index, :new, :edit, :create, :update, :destroy, :show, :show_original,
                        :mark_accepted, :mark_accepted_with_mail, :mark_refused,
                        :mark_refused_with_mail, :legal, :context_menu, :original, :validate, :bulk_mark_as],
@@ -80,18 +80,34 @@ Redmine::Plugin.register :haltr do
 
     permission :manage_payments, { :payments => [:index, :new, :edit, :create, :update, :destroy, :payment_initiation, :n19, :payment_done, :import_aeb43_index, :import_aeb43, :invoices] }, :require => :member
     permission :use_templates, { :invoice_templates => [:index, :new, :edit, :create, :update, :destroy, :show, :new_from_invoice,
-                                 :new_invoices_from_template, :create_invoices, :update_taxes] }, :require => :member
+                                 :new_invoices_from_template, :create_invoices, :update_taxes, :context_menu] }, :require => :member
 
     permission :use_all_readonly,
       { :clients   => [:index, :edit, :check_cif, :ccc2iban],
         :people    => [:index, :edit],
-        :invoices  => [:index, :show, :legal, :download_new_invoices, :report,
-                       :context_menu, :show_original],
+        :invoices  => [:index, :show, :legal, :download_new_invoices, :reports, :report_channel_state, :report_invoice_list,
+                       :context_menu, :show_original, :number_to_id],
         :received  => [:index, :show, :show_original, :legal, :context_menu],
         :companies => [:my_company,:bank_info, :linked_to_mine, :check_iban],
         :payments  => [:index, :n19],
-        :invoice_templates => [:index, :show] }, :require => :member,
-        :events    => [:file]
+        :invoice_templates => [:index, :show, :context_menu],
+        :charts    => [:invoice_total, :invoice_status, :top_clients],
+        :events    => [:file] },
+      :require => :member
+
+    permission :restricted_use,
+      { :clients   => [:index, :edit, :check_cif, :ccc2iban, :update],
+        :people    => [:index, :edit],
+        :invoices  => [:index, :show, :legal, :download_new_invoices, :reports, :report_channel_state, :report_invoice_list,
+                       :context_menu, :show_original, :send_invoice,
+                       :send_new_invoices, :number_to_id],
+        :received  => [:index, :show, :show_original, :legal, :context_menu],
+        :companies => [:my_company,:bank_info, :linked_to_mine, :check_iban],
+        :payments  => [:index, :n19],
+        :invoice_templates => [:index, :show, :context_menu],
+        :charts    => [:invoice_total, :invoice_status, :top_clients],
+        :events    => [:file] },
+      :require => :member
 
     permission :bulk_operations,
       { :invoices => [:bulk_download,:bulk_send],

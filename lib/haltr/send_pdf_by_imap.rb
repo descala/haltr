@@ -3,11 +3,10 @@
 module Haltr
   class SendPdfByIMAP < GenericSender
 
-    attr_accessor :pdf
     require 'net/imap'
 
     def perform
-      self.pdf = Haltr::Pdf.generate(invoice)
+      self.pdf ||= Haltr::Pdf.generate(invoice)
       create_imap_draft
     end
 

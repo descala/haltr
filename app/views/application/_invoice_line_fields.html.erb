@@ -68,7 +68,7 @@
     <tbody>
       <tr>
         <td>
-          <%= f.text_field(:discount_percent, :style=>'width: 78px;', :no_label => true) %>
+          <%= f.text_field(:discount_percent, style: 'width: 78px;', no_label: true) %>
           <span style="font-size:15px; margin-left: -20px; margin-right: 4px;">%</span>
         </td>
         <td colspan="2"><%= f.text_field(:discount_text, :no_label => true) %></td>
@@ -94,16 +94,26 @@
   </table>
   <% end -%>
 
-  <% if @invoice.invoice_lines.any? {|l| !l.sequence_number.blank? } or User.current.allowed_to?(:view_sequence_number, @project) -%>
+  <% if @invoice.invoice_lines.any? {|l| l.sequence_number.present? or l.delivery_note_number.present? } or User.current.allowed_to?(:view_sequence_number, @project) or User.current.allowed_to?(:view_invoice_extra_fields, @project)-%>
   <table class="formee invoice_lines">
     <thead>
       <tr>
-        <th><%= l(:sequence_number) %></th>
+        <% if @invoice.invoice_lines.any? {|l| l.sequence_number.present? } or User.current.allowed_to?(:view_sequence_number, @project) -%>
+          <th><%= l(:sequence_number) %></th>
+        <% end -%>
+        <% if @invoice.invoice_lines.any? {|l| l.delivery_note_number.present? } or User.current.allowed_to?(:view_invoice_extra_fields, @project) -%>
+          <th><%= l(:field_delivery_note_number) %></th>
+        <% end -%>
       </tr>
     </thead>
     <tbody>
       <tr>
-        <td><%= f.text_field :sequence_number, :no_label => true %></td>
+        <% if @invoice.invoice_lines.any? {|l| l.sequence_number.present? } or User.current.allowed_to?(:view_sequence_number, @project) -%>
+          <td><%= f.text_field :sequence_number, :no_label => true %></td>
+        <% end -%>
+        <% if @invoice.invoice_lines.any? {|l| l.delivery_note_number.present? } or User.current.allowed_to?(:view_invoice_extra_fields, @project) -%>
+          <td><%= f.text_field :delivery_note_number, :no_label => true %></td>
+        <% end -%>
       </tr>
     </tbody>
   </table>

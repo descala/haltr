@@ -11,6 +11,17 @@ class ExportChannels
     {}
   end
 
+  # all channels that can send
+  def self.can_send
+    self.available.reject {|c,v|
+      v['folder'].nil? and v['class_for_send'].nil?
+    }
+  end
+
+  def self.can_send?(id)
+    self.can_send.keys.include? id
+  end
+
   def self.permissions
     channel_permissions = {}
     self.available.values.each do |channel|
@@ -46,15 +57,29 @@ class ExportChannels
     available[id]["options"] if available? id
   end
 
-  def self.validations(id)
-    return [] if available[id].nil?
-    if available[id]["validate"].nil?
-      validations = []
-    else
-      validations = available[id]["validate"].is_a?(Array) ? available[id]["validate"] : [available[id]["validate"]]
+  def self.validators(id=nil)
+    validators = []
+    available.each do |name, channel|
+      next if id and id != name
+      if channel['validators'].is_a?(Array)
+        validators += channel['validators']
+      else
+        validators << channel['validators']
+      end
+      if id and channel['format']
+        validators += ExportFormats.validators(channel['format'])
+      else
+        validators += ExportFormats.validators
+      end
     end
-    validations += ExportFormats.validations(available[id]["format"]) if available[id]["format"]
-    validations.compact.uniq
+    validators.compact.collect do |validator|
+      begin
+        validator.constantize
+      rescue NameError => e
+        Rails.logger.error "error loading validator #{validator}: #{e}"
+        nil
+      end
+    end.compact.uniq
   end
 
   def self.for_select(current_project)

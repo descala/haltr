@@ -8,13 +8,15 @@ class Payment < ActiveRecord::Base
 
   after_save do
     old_invoice = InvoiceDocument.find invoice_id_was rescue nil
+    invoice.reload if invoice # without this is_paid? returns false
     if old_invoice != invoice
-      old_invoice.save if old_invoice.is_a? InvoiceDocument
+      old_invoice.save(validate: false) if old_invoice.is_a? InvoiceDocument
     end
-    invoice.save if invoice.is_a? InvoiceDocument
+    invoice.save(validate: false) if invoice.is_a? InvoiceDocument
   end
+
   after_destroy do
-    invoice.save if invoice.is_a? InvoiceDocument
+    invoice.save(validate: false) if invoice.is_a? InvoiceDocument
   end
 
   before_save :guess_invoice, :unless => :invoice

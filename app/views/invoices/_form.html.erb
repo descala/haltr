@@ -1,4 +1,5 @@
 <%= error_messages_for 'invoice' %>
+<%= error_messages_for 'client' %>
 <%= f.hidden_field :quote_id %>
 
 <fieldset class="tabular box">
@@ -12,17 +13,22 @@
   </div>
 
   <div class="seccio grup">
-    <p class="col span-1-de-3">
+    <p class="col span-2-de-6">
       <%= f.text_field :date, :size => 10, :required => true %><%= calendar_for('invoice_date') %>
     </p>
-    <p class="col span-1-de-3">
+    <p class="col span-<%= (@invoice.amend_of || @invoice.series_code.present? || User.current.allowed_to?(:view_invoice_extra_fields, @project)) ? '1' : '2' %>-de-6">
       <% if controller.controller_name == "invoice_templates" -%>
         <%= f.select :frequency, frequencies_for_select, :required => true %>
       <% else -%>
         <%= f.text_field :number, :size => 10, :required => true %> <span class="text"><%= "#{l(:label_last_invoice_number)}: #{IssuedInvoice.last_number(@project)}" if @project.issued_invoices.any?%></span>
       <% end -%>
     </p>
-    <p class="col span-1-de-3">
+    <% if @invoice.amend_of || @invoice.series_code.present? || User.current.allowed_to?(:view_invoice_extra_fields, @project) -%>
+      <p class="col span-1-de-6">
+      <%= f.text_field :series_code %>
+      </p>
+    <% end -%>
+    <p class="col span-2-de-6">
       <%= f.text_field :ponumber %>
     </p>
   </div>
@@ -31,6 +37,15 @@
     <p class="col span-1-de-3">
       <%= f.text_field :delivery_note_number %>
     </p>
+
+    <% if @invoice.invoicing_period_start || @invoice.invoicing_period_end || User.current.allowed_to?(:view_invoice_extra_fields, @project) -%>
+      <p class="col span-1-de-3">
+      <%= f.text_field :invoicing_period_start, :size => 10 %><%= calendar_for('invoice_invoicing_period_start') %>
+      </p>
+      <p class="col span-1-de-3">
+      <%= f.text_field :invoicing_period_end, :size => 10 %><%= calendar_for('invoice_invoicing_period_end') %>
+      </p>
+    <% end -%>
   </div>
 
   <div id="payment_stuff">
@@ -70,6 +85,82 @@
   </div>
 
 </fieldset>
+
+<% if User.current.allowed_to?(:view_invoice_extra_fields, @project) or @invoice.has_factoring_data? -%>
+  <fieldset class="tabular box">
+    <legend><%= l(:label_factoring_assignment_data) %></legend>
+
+    <div class="seccio grup">
+      <p class="col span-1-de-4">
+      <%= f.text_field :fa_name %>
+      </p>
+      <p class="col span-1-de-4">
+      <%= f.text_field :fa_taxcode %>
+      </p>
+      <p class="col span-1-de-4">
+      <%= f.label_for_field :fa_person_type %>
+      <%= f.radio_button :fa_person_type, 'J' %> J
+      <%= f.radio_button :fa_person_type, 'F' %> F
+      </p>
+      <p class="col span-1-de-4">
+      <%= f.label_for_field :fa_residence_type %>
+      <%= f.radio_button :fa_residence_type, 'E' %> E
+      <%= f.radio_button :fa_residence_type, 'R' %> R
+      <%= f.radio_button :fa_residence_type, 'U' %> U
+      </p>
+    </div>
+
+    <div class="seccio grup">
+      <p class="col span-1-de-4">
+      <%= f.text_field :fa_address %>
+      </p>
+      <p class="col span-1-de-4">
+      <%= f.text_field :fa_postcode %>
+      </p>
+      <p class="col span-1-de-4">
+      <%= f.text_field :fa_town %>
+      </p>
+      <p class="col span-1-de-4">
+      <%= f.text_field :fa_province %>
+      </p>
+    </div>
+
+    <div class="seccio grup">
+      <p class="col span-1-de-4">
+      <%= f.label_for_field :fa_country %>
+      <%= f.iso_country_select :fa_country, [:es] %>
+      </p>
+      <p class="col span-1-de-4">
+      <%= f.text_field :fa_info %>
+      </p>
+      <p class="col span-1-de-4">
+      <%= f.text_field :fa_duedate, :size => 10 %><%= calendar_for('invoice_fa_duedate') %>
+      </p>
+      <p class="col span-1-de-4">
+      <%= f.text_field :fa_import %>
+      </p>
+    </div>
+
+    <div class="seccio grup">
+      <p class="col span-2-de-4">
+      <%= f.text_field :fa_iban %>
+      </p>
+      <p class="col span-1-de-4">
+      <%= f.text_field :fa_bank_code %>
+      </p>
+      <p class="col span-1-de-4">
+      <%= f.text_field :fa_payment_method %>
+      </p>
+    </div>
+
+    <div class="seccio grup">
+      <p class="col span-1-de-1">
+      <%= f.text_area :fa_clauses %>
+      </p>
+    </div>
+
+  </fieldset>
+<% end -%>
 
 <%= call_hook(:invoice_form_after_invoice_data) %>
 

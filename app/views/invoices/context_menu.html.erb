@@ -27,21 +27,14 @@
     <li class="folder">
     <a href="#" class="submenu"><%= l(:mark_as) %></a>
     <ul>
-      <li>
-      <%= context_menu_link l(:state_new),
-        invoices_bulk_mark_as_path(:ids=>@invoice_ids, :state=>'new', :back_url=>@back),
-        :disabled=>!@can[:edit] %>
-      </li>
-      <li>
-      <%= context_menu_link l(:state_sent),
-        invoices_bulk_mark_as_path(:ids=>@invoice_ids, :state=>'sent', :back_url=>@back),
-        :disabled=>!@can[:edit] %>
-      </li>
-      <li>
-      <%= context_menu_link l(:state_closed),
-        invoices_bulk_mark_as_path(:ids=>@invoice_ids, :state=>'closed', :back_url=>@back),
-        :disabled=>!@can[:edit] %>
-      </li>
+      <% %w(new sent accepted registered refused closed).each do |state| -%>
+        <% next if @invoice.state == state -%>
+        <li>
+        <%= context_menu_link l("state_#{state}"),
+          invoices_bulk_mark_as_path(ids: @invoice_ids, state: state, back_url: @back),
+          :disabled=>!@can[:edit] %>
+        </li>
+      <% end -%>
     </ul>
     </li>
   <% else -%>
@@ -65,21 +58,13 @@
     <li class="folder">
     <a href="#" class="submenu"><%= l(:mark_as) %></a>
     <ul>
-      <li>
-      <%= context_menu_link l(:state_new_plural),
-        invoices_bulk_mark_as_path(:ids=>@invoice_ids, :state=>'new', :back_url=>@back),
-        :disabled=>!@can[:edit] %>
-      </li>
-      <li>
-      <%= context_menu_link l(:state_sent_plural),
-        invoices_bulk_mark_as_path(:ids=>@invoice_ids, :state=>'sent', :back_url=>@back),
-        :disabled=>!@can[:edit] %>
-      </li>
-      <li>
-      <%= context_menu_link l(:state_closed_plural),
-        invoices_bulk_mark_as_path(:ids=>@invoice_ids, :state=>'closed', :back_url=>@back),
-        :disabled=>!@can[:edit] %>
-      </li>
+      <% %w(new sent accepted registered refused closed).each do |state| -%>
+        <li>
+        <%= context_menu_link l("state_#{state}_plural"),
+          invoices_bulk_mark_as_path(ids: @invoice_ids, state: state, back_url: @back),
+          :disabled=>!@can[:edit] %>
+        </li>
+      <% end -%>
     </ul>
     </li>
   <% end %>

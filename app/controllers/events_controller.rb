@@ -12,7 +12,7 @@ class EventsController < ApplicationController
   include SortHelper
 
   def index
-    sort_init   'created_at desc'
+    sort_init   'created_at', 'desc'
     sort_update %w(created_at type)
 
     @project = Project.find(params[:project_id]) if params[:project_id]

@@ -1,6 +1,6 @@
 Received: from localhost (localhost [127.0.0.1])
 	by bester.ingent.net (mailer) with ESMTP id 6EF7211C003
-	for <77310058h@b2brouter.net>; Mon, 11 Nov 2013 11:27:41 +0100 (CET)
+	for <77310058c@b2brouter.net>; Mon, 11 Nov 2013 11:27:41 +0100 (CET)
 Date: Mon, 11 Nov 2013 11:27:39 +0100
 From: "B2B Router.net" <noreply@b2brouter.net>
 To: Name <this_does_not_exist@nothingisadf.com>,
@@ -52,7 +52,7 @@ standingAmount>=0A      <TotalExecutableAmount>=0A        <TotalAmount>658.=
 ode>EUR</InvoiceCurrencyCode>=0A    </Batch>=0A  </FileHeader>=0A  <Parties=
 >=0A    <SellerParty>=0A      <TaxIdentification>=0A        <PersonTypeCode=
 >J</PersonTypeCode>=0A        <ResidenceTypeCode>R</ResidenceTypeCode>=0A  =
-      <TaxIdentificationNumber>ESP6611142C</TaxIdentificationNumber>=0A    =
+      <TaxIdentificationNumber>ESP1700000A</TaxIdentificationNumber>=0A    =
   </TaxIdentification>=0A      <LegalEntity>=0A        <CorporateName>Ingen=
 t-llu=C3=ADs</CorporateName>=0A        <OverseasAddress>=0A          <Addre=
 ss>Meli=C3=B3 113</Address>=0A          <PostCodeAndTown>08720 Vilafranca</=
@@ -62,7 +62,7 @@ Details>=0A          <WebAddress/>=0A          <ElectronicMail>ESP6611111C@=
 b2brouter.net</ElectronicMail>=0A        </ContactDetails>=0A      </LegalE=
 ntity>=0A    </SellerParty>=0A    <BuyerParty>=0A      <TaxIdentification>=
 =0A        <PersonTypeCode>J</PersonTypeCode>=0A        <ResidenceTypeCode>=
-R</ResidenceTypeCode>=0A        <TaxIdentificationNumber>77310058H</TaxIden=
+R</ResidenceTypeCode>=0A        <TaxIdentificationNumber>77310058C</TaxIden=
 tificationNumber>=0A      </TaxIdentification>=0A      <LegalEntity>=0A    =
     <CorporateName>David Copperfield</CorporateName>=0A        <AddressInSp=
 ain>=0A          <Address>Address1</Address>=0A          <PostCode>08720</P=

@@ -9,7 +9,7 @@ class Client < ActiveRecord::Base
   has_many :invoices, :dependent => :destroy
   has_many :people,   :dependent => :destroy
   has_many :mandates, :dependent => :destroy
-  has_many :events,   :dependent => :destroy, :order => :created_at
+  has_many :events, :order => :created_at
 
   belongs_to :project   # client of
   belongs_to :company,  # linked to
@@ -17,9 +17,6 @@ class Client < ActiveRecord::Base
   belongs_to :bank_info # refers to company's bank_info
                         # default one when creating new invoices
 
-  validates_presence_of :taxcode, :unless => Proc.new { |client|
-    Company::COUNTRIES_WITHOUT_TAXCODE.include? client.country
-  }
   validates_presence_of :hashid
   validates_uniqueness_of :taxcode, :scope => :project_id, :allow_blank => true
   validates_uniqueness_of :hashid
@@ -39,6 +36,7 @@ class Client < ActiveRecord::Base
   after_create  :create_event
   iso_country :country
   include CountryUtils
+  include Haltr::TaxcodeValidator
 
   after_initialize :set_default_values
 
@@ -46,8 +44,6 @@ class Client < ActiveRecord::Base
     self.currency       ||= Setting.plugin_haltr['default_currency']
     self.country        ||= Setting.plugin_haltr['default_country']
     self.invoice_format ||= ExportChannels.default
-    self.language       ||= User.current.language
-    self.language         = "es" if self.language.blank?
     self.sepa_type      ||= "CORE"
   end
 

@@ -235,6 +235,13 @@ ca:
   email: "Rebuda"
   download_original: "Descarregar original"
   view_original: "Veure original"
+  manual_mark_as: "Marcar com a %{state}"
+  done_mark_as_new: "Marcada manualment com a nova"
+  done_mark_as_sent: "Marcada manualment com a enviada"
+  done_mark_as_accepted: "Marcada manualment com a acceptada"
+  done_mark_as_registered: "Marcada manualment com a registrada"
+  done_mark_as_refused: "Marcada manualment com a refusada"
+  done_mark_as_closed: "Marcada manualment com a tancada"
 
   # Invoice templates
   label_invoice_template_new: Nova factura recurrent
@@ -303,7 +310,7 @@ ca:
   save_and_mail: "Desar i enviar mail"
   save_without_mail: "Desar sense enviar mail"
   field_sepa_type: "Tipus de pagaments SEPA"
-  label_payment_initiation: "Iniciació de pagaments"
+  label_payment_initiation: "Introduir pagaments"
 
   # Settings
   field_taxcode: "NIF"
@@ -354,7 +361,7 @@ ca:
 
   # Errors
   cant_connect_trace: "No es pot connectar a la plataforma b2brouter"
-  halt_configure_before_use: "Si us plau, primer de tot configura les dades de l'empresa"
+  halt_configure_before_use: "Si us plau, primer de tot configura les dades de la teva empresa"
   warning_can_not_generate_invoice: "No s'ha pogut generar la factura de la plantilla %{value}"
   notice_invoice_sent: "La factura s'està enviant"
   error_invoice_not_sent: "La factura %{num} no s'ha pogut enviar"
@@ -407,6 +414,7 @@ ca:
   permission_use_templates: "Plantilles de factures"
   permission_batch_processes: "Processos amb scripts"
   permission_use_all_readonly: "Us complet només lectura"
+  permission_restricted_use: "Us restringit"
 
   # this depends on permissions defined in channels.yml
   permission_download_pdf: "B2BRouter - Descarregar PDF"
@@ -562,8 +570,8 @@ ca:
   organ_gestor: "Òrgan gestor"
   oficina_comptable: "Oficina comptable"
   unitat_tramitadora: "Unitat tramitadora"
-  field_organ_proponent: "Òrgan Promotor (Servei de l’Ajuntament que fa l’encàrrec)"
-  organ_proponent: "Òrgan Promotor (Servei de l’Ajuntament que fa l’encàrrec)"
+  field_organ_proponent: "Òrgan Promotor"
+  organ_proponent: "Òrgan Promotor"
   external_companies: "Empreses externes"
   external_company: "Empresa externa"
   export_channels: "Canals"
@@ -585,12 +593,46 @@ ca:
   dir3_entities: "Entitats dir3"
   field_code: "Codi"
   field_dir3: "DIR3"
-  field_payments_on_account: "Aportació usuaris"
+  field_payments_on_account: "Aportació usuaris/Retenció"
   sequence_number: 'Posició de la comanda'
   mark_as_accepted: 'Marcar com a acceptada'
-  field_receiver_contract_reference: "Codi d'assignació"
+  field_receiver_contract_reference: "Número de contracte / Codi d'assignació"
   invoice_attachments_description: "Permet pujar fitxers relacionats amb la factura (màxim %{mb}MB). Aquests documents s'adjuntaran a la factura electrònica."
   invoice_attachments_permission: "No tens permisos per pujar fitxers"
   label_will_send_original: "Aquesta factura té original i no s'ha modificat. Així doncs s'enviarà el document original."
   import_errors: "Errors d'importació"
   text_import_errors_destroy_confirmation: "Segur que vols esborrar els errors d'importació seleccionats?"
+  field_series_code: "Serie"
+  state_not_allowed_for_sending: "No es poden reenviar les factures en estat %{state}"
+  amendment: "Rectificativa"
+  missing_imap_config: "Falta la configuració IMAP a 'La meva empresa'"
+  transport: "Transport"
+  field_legal_literals: "Certificació"
+  field_invoicing_period_start: "Inici període de facturació"
+  field_invoicing_period_end: "Fi període de facturació"
+  field_invoicing_period: "Període de facturació"
+  label_factoring_assignment_data: 'Cessió de factoring'
+  field_fa_person_type: 'Tipus entitat'
+  field_fa_residence_type: 'Residència'
+  field_fa_taxcode: 'NIF'
+  field_fa_name: 'Nom'
+  field_fa_address: 'Adreça'
+  field_fa_postcode: 'Codi postal'
+  field_fa_town: 'Ciutat'
+  field_fa_province: 'Provincia'
+  field_fa_country: 'País'
+  field_fa_info: 'Informació'
+  field_fa_duedate: 'Data venciment'
+  field_fa_import: 'Import'
+  field_fa_iban: 'IBAN'
+  field_fa_bank_code: 'Codi bancari'
+  field_fa_clauses: 'Clàusula de cessió'
+  field_fa_payment_method: 'Mètode de pagament'
+  channel_requires_user_pass: "El canal necessita que configuris usuari i password a 'La meva empresa'"
+  download_legal_invoice: "Descarregar factura legal"
+  label_report_channel_state: "Factures per canal d'enviament i per estat"
+  pdf_customization: "Personalització de PDF"
+  field_pdf_template: "Plantilla PDF"
+  pdf_default: "Plantilla per defecte"
+  pdf_rigth_windowed_envelope: "Pantilla per a sobres amb finestreta"
+  field_party_identification: "Codi unitat proveïdora"

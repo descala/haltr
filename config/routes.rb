@@ -31,7 +31,9 @@ resources :projects do
   match 'new_invoices_from_template' => 'invoice_templates#new_invoices_from_template', :via => [:get, :post]
   match 'create_invoices' => 'invoice_templates#create_invoices', :via => :post
   match 'update_taxes' => 'invoice_templates#update_taxes'
-  match 'report/issued_3m' => 'invoices#report', :via => :get
+  match 'invoices/reports' => 'invoices#reports', :via => [:get]
+  match 'invoices/report_invoice_list' => 'invoices#report_invoice_list', :via => [:post]
+  match 'invoices/report_channel_state' => 'invoices#report_channel_state', :via => [:get]
   resources :payments, :only => [:index, :new, :create]
   match 'payments/import_aeb43_index' => 'payments#import_aeb43_index'
   match 'payments/import_aeb43' => 'payments#import_aeb43'
@@ -59,6 +61,7 @@ resources :people
 match 'invoices/context_menu', :to => 'invoices#context_menu', :as => 'invoices_context_menu', :via => [:get, :post]
 match 'received/context_menu', :to => 'received#context_menu', :as => 'received_context_menu', :via => [:get, :post]
 match 'import_errors/context_menu', :to => 'import_errors#context_menu', :as => 'import_errors_context_menu', :via => [:get, :post]
+match 'invoice_templates/context_menu', :to => 'invoice_templates#context_menu', :as => 'invoice_templates_context_menu', :via => [:get, :post]
 match 'invoices/bulk_download' => 'invoices#bulk_download'
 match 'received/bulk_download' => 'received#bulk_download'
 match 'invoices/bulk_mark_as' => 'invoices#bulk_mark_as'
@@ -67,10 +70,8 @@ match 'received/bulk_validate' => 'received#bulk_validate'
 match 'invoices/bulk_send' => 'invoices#bulk_send'
 match 'invoices/by_taxcode_and_num' => 'invoices#by_taxcode_and_num', :via => :get
 match 'invoices', :controller => 'invoices', :action => 'destroy', :via => :delete
-match 'invoices/mark_sent/:id' => 'invoices#mark_sent', :via => :get, :as => :mark_sent
-match 'invoices/mark_not_sent/:id' => 'invoices#mark_not_sent', :via => :get, :as => :mark_not_sent
-match 'invoices/mark_closed/:id' => 'invoices#mark_closed', :via => :get, :as => :mark_closed
-match 'invoices/mark_as_accepted/:id' => 'invoices#mark_as_accepted', :via => :get, :as => :mark_as_accepted
+match 'invoice_templates', :controller => 'invoice_templates', :action => 'destroy', :via => :delete
+match 'invoices/:id/mark_as/:state' => 'invoices#mark_as', :via => :get, :as => :mark_as
 match 'invoices/send_invoice/:id' => 'invoices#send_invoice', :via => :get, :as => :send_invoice
 match 'invoices/legal/:id' => 'invoices#legal', :via => :get, :as => :legal
 match 'invoices/amend_for_invoice/:id' => 'invoices#amend_for_invoice', :via => :post, :as => :amend_for_invoice
@@ -83,6 +84,7 @@ match 'invoices/original/:id' => 'invoices#original', :via => :get, :as => :invo
 match 'received/original/:id' => 'received#original', :via => :get, :as => :received_original
 match 'invoices/show_original/:id' => 'invoices#show_original', :via => :get, :as => :invoices_show_original
 match 'received/show_original/:id' => 'received#show_original', :via => :get, :as => :received_show_original
+match 'invoices/number_to_id/:number' => 'invoices#number_to_id', :via => :get, :as => :invoices_number_to_id, :constraints => { :number => /.+/ }
 resources :invoices
 resources :quotes, :only => [:show, :edit, :update, :destroy]
 match 'quotes/send/:id' => 'quotes#send_quote', :via => :get, :as => :send_quote

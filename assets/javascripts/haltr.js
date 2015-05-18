@@ -34,6 +34,7 @@ $(document).ready(function() {
   $('select#invoice_client_id').bind('ajax:success', function(evt, data, status, xhr){
     $('#payment_stuff').html(xhr.responseText);
     terms();
+    $('span#invoice_format').html($('select#invoice_client_id option:selected').data('invoice_format'));
   })
 
   /* on load, simulate a client change to call above function */

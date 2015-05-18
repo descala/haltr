@@ -86,28 +86,39 @@
 
             <div class="seccio grup">
               <div class="col span-1-de-3">
-                <label for="taxcode"><%= l(:field_taxcode) %></label>
-                <%= text_field_tag :taxcode, params[:taxcode] %>
-              </div>
-              <div class="col span-1-de-3">
-                <label for="name"><%= l(:field_name) %></label>
-                <%= text_field_tag :name, params[:name] %>
-              </div>
-              <div class="col span-1-de-3">
                 <label for="number"><%= l(:field_number) %></label>
                 <%= text_field_tag :number, params[:number] %>
+              </div>
+              <div class="col span-1-de-3">
+              </div>
+              <div class="col span-1-de-3">
               </div>
             </div>
 
             <div class="seccio grup">
               <div class="col span-2-de-3">
-                <label for="_client_id"><%= l(:label_company) %></label>
-                <%= collection_select(nil, :client_id, Client.find(:all, :order => 'name', :conditions => ["project_id = ?", @project]), :id, :name, {:include_blank => true, :selected => @client_id}) %>
-              </div>
-            </div>
+                <fieldset style="margin: 0;">
+                  <legend>client</legend>
+                  <div class="seccio grup">
+                    <div class="col span-1-de-2">
+                      <label for="taxcode"><%= l(:field_taxcode) %></label>
+                      <%= text_field_tag :taxcode, params[:taxcode] %>
+                    </div>
+                    <div class="col span-1-de-2">
+                      <label for="name"><%= l(:field_name) %></label>
+                      <%= text_field_tag :name, params[:name] %>
+                    </div>
+                  </div>
 
-            <div class="seccio grup">
-              <div class="col span-2-de-2">
+                  <div class="seccio grup">
+                    <div class="col span-2-de-2">
+                      <label for="_client_id"><%= l(:label_company) %></label>
+                      <%= collection_select(nil, :client_id, Client.find(:all, :order => 'name', :conditions => ["project_id = ?", @project]), :id, :name, {:include_blank => true, :selected => @client_id}) %>
+                    </div>
+                  </div>
+                </fieldset>
+              </div>
+              <div class="col span-1-de-3" style="position: absolute; bottom: 15px; right: 15px; text-align: right;">
                 <%= submit_tag l(:button_apply), :class => "small", :name => nil %>
               </div>
             </div>
@@ -138,7 +149,7 @@
           </tr>
         </thead>
         <tbody>
-          <% for invoice in @invoices -%>
+          <% @invoices.each do |invoice| -%>
             <tr id="invoice-<%=invoice.id%>" class="hascontextmenu <%= 'amended ' if invoice.amended? %><%= cycle("odd", "even") %>">
               <td><%= check_box_tag("ids[]", invoice.id, false, :id => nil) %></td>
               <td><%=h link_to_if_authorized invoice.number, :action => 'show', :id => invoice %></td>

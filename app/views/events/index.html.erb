@@ -8,7 +8,7 @@
       <% end -%>
       <%= sort_header_tag('created_at', caption: l(:field_date)) %>
       <%= sort_header_tag('type', caption: l(:field_type)) %>
-      <th><%= l(:invoice) %></th>
+      <th></th>
       <th></th>
     </tr>
   </thead>
@@ -19,12 +19,16 @@
           <td><%= link_to(e.project.name, events_path(project_id: e.project)) %></td>
         <% end -%>
         <td width="130"><%= format_time e.created_at %></td>
-        <td><%= e.type %></td>
+        <td title="<%=e.id%>"><%= e.type %></td>
         <td>
           <% if e.invoice -%>
             <%= link_to_invoice_with_label(e.invoice) -%>
           <% elsif e.client -%>
             <%= link_to "#{l(:field_client)} #{e.client.name}", edit_client_path(e.client) -%>
+          <% elsif e.invoice_id -%>
+            <%= e.invoice_id %>
+          <% elsif e.client_id -%>
+            <%= e.client_id %>
           <% else -%>
             <%= e.to_s %>
           <% end -%>

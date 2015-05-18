@@ -1,6 +1,10 @@
 class InvoiceLine < ActiveRecord::Base
 
   unloadable
+
+  include Haltr::FloatParser
+  float_parse :discount_percent, :price, :quantity, :charge
+
   audited :associated_with => :invoice, :except => [:id, :invoice_id]
   has_associated_audits
 
@@ -37,28 +41,6 @@ class InvoiceLine < ActiveRecord::Base
     self.unit ||= 1
   }
 
-  # remove colons "1,23" => "1.23"
-  def price=(v)
-    write_attribute :price, (v.is_a?(String) ? v.gsub(',','.') : v)
-  end
-
-  # remove colons "1,23" => "1.23"
-  def quanity=(v)
-    write_attribute :quantity, (v.is_a?(String) ? v.gsub(',','.') : v)
-  end
-
-  def discount_percent
-    read_attribute(:discount_percent).to_i
-  end
-
-  def charge
-    read_attribute(:charge).to_i
-  end
-
-  def charge=(v)
-    write_attribute :charge, (v.is_a?(String) ? v.gsub(',','.') : v)
-  end
-
   # Coste Total.
   # Quantity x UnitPriceWithoutTax
   def total_cost
@@ -77,7 +59,7 @@ class InvoiceLine < ActiveRecord::Base
 
   # warn! this tax_amount does not include global discounts.
   def tax_amount(tax)
-    taxable_base * (tax.percent / 100.0)
+    taxable_base * (tax.percent.to_f / 100.0)
   end
 
   def discount_amount
@@ -115,11 +97,11 @@ class InvoiceLine < ActiveRecord::Base
   end
 
   def taxes_withheld
-    taxes.find(:all, :conditions => "percent < 0")
+    taxes.select {|t| t.percent.to_f < 0 }
   end
 
   def taxes_outputs
-    taxes.find(:all, :conditions => "percent >= 0")
+    taxes.select {|t| t.percent.to_f >= 0 }
   end
 
   def exempt_taxes

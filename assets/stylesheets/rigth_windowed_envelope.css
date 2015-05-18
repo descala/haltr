@@ -1,0 +1,231 @@
+html{
+  min-height:317mm;
+  position:relative;
+}
+body {
+  padding: 0;
+  font-family: "Helvetica Neue",Helvetica,Arial,sans-serif;
+  font-size: 14px;
+  line-height: 20px;
+  color: #000;
+  height: 100%;
+}
+h2 {
+  margin: 0 0 .75em;
+  font-size: 1.5em;
+}
+h3 {
+  margin: 0 0 .75em;
+  font-size: 1.5em;
+}
+h4 {
+  margin: 0;
+}
+p {
+  margin: 0 0 .75em;
+}
+.payments, #amends {
+  display: none;
+}
+a:link {
+  color: #000;
+  text-decoration: none;
+}
+a:visited {
+  color: #000;
+  text-decoration: none;
+}
+a:hover {
+  color: #000;
+  text-decoration: underline;
+}
+.vcard {
+  margin: 0 0 30px;
+  line-height: 1.5em;
+}
+.vcard h3 {
+  margin: 0;
+}
+.client h3 {
+  margin: -4px 0 .25em;
+  font-size: 1.4em;
+}
+.company h3 {
+  font-size: 1.3em;
+}
+.invoice {
+  margin: 0 0 20px;
+}
+.invoice h4 {
+  margin: 0 12px 4px;
+  font-size: 1.5em;
+}
+.invoice-info {
+  float:right;
+  margin: 0 0 40px;
+  text-align:right;
+}
+.invoice-info th {
+  margin: 0;
+  padding: 1px 0;
+  width: 114px;
+  text-align: left;
+  font-weight: normal;
+}
+.invoice-info th.date {
+  font-weight: bold;
+}
+.invoice-info td {
+  margin: 0;
+  padding: 1px 0;
+}
+.invoice-info input {
+  margin: 0;
+  padding: 0;
+}
+.line-items {
+  clear: both;
+  margin: 0 0 10px;
+  padding: 0;
+  width: 100%;
+}
+.line-items tr {
+  margin: 0;
+  padding: 0;
+  text-align: left;
+}
+.line-items th {
+  margin: 0;
+  padding: 0 4px;
+  line-height: 2em;
+  border-bottom: 2px solid #000;
+}
+.line-items th.first { padding-left:12px; }
+.line-items th.last { padding-right:12px; }
+
+.line-items td {
+  margin: 0;
+  padding: 0.5em;
+  vertical-align: top;
+  border-bottom: 1px solid #999;
+}
+.line-items td.first { padding-left:12px; }
+.line-items td.last { padding-right:12px; }
+.line-items .item-date { width: 75px; }
+.line-items .item-date input { width: 65px; height: 18px; }
+.line-items .item-quantity { width: 45px; }
+.line-items .item-quantity input { width: 35px; height: 18px; }
+.line-items .item-description textarea { width: 180px; height: 18px; }
+.line-items .item-tax { text-align: right; width: 20px; }
+.line-items .item-tax input { margin-top: 2px; }
+.line-items .item-price { text-align: right; width: 75px; }
+.line-items .item-price input { text-align: right; width: 65px; height: 18px; }
+.line-items .item-article_code { width: 60px;}
+.line-items .item-delivery_note { width: 115px; }
+.line-items .item-charge-reason { text-align: right; }
+.line-items .line-total {
+  text-align: right;
+  width: 90px;
+}
+.show .item-date { width: 70px; }
+.show .item-quantity { width: 60px; }
+.payments .item-date { width: 116px; }
+.invoice-calculations {
+  float: right;
+  margin: 0 0 .5in;
+  text-align: right;
+}
+.invoice-calculations th {
+  text-align: left;
+  line-height: 25px;
+}
+.invoice-calculations td {
+  text-align: right;
+  line-height: 25px;
+  padding-left: .75in;
+  padding-right: 12px;
+}
+.invoice-calculations .sales-tax th,
+.invoice-calculations .freight th,
+.invoice-calculations .paid th,
+.invoice-calculations .late-fee th {
+  font-weight: normal;
+}
+.invoice-calculations .invoice-total th,
+.invoice-calculations .invoice-total td {
+  font-size: 1.2em;
+}
+.invoice-calculations .invoice-total td {
+  font-weight: bold;
+}
+.invoice-notes {
+  clear: both;
+  margin: 0 0 10px;
+  padding: 7px 0;
+  background: #fff;
+  border-top: 1px solid #000;
+}
+.invoice-notes h3 {
+  margin: 0 0 .25em;
+  font-size: 0.9em;
+}
+.invoice-notes p {
+  margin: 0 0 .25em;
+  font-size: 0.9em;
+}
+.notes {
+  clear: both;
+}
+.firm {
+  margin: 0 0 .25in;
+  padding: 0 0 10px;
+  text-align: right;
+  border-bottom: 4px solid #000;
+}
+.firm .invoicelogo {
+  float: left;
+}
+.invoicelogo {
+  float: left;
+  margin-top: 10px;
+}
+.invoicelogo img {
+  max-height: 35mm;
+  max-width: 100mm;
+}
+.companyid {
+  font-size: 10px;
+  position: absolute;
+  bottom: 0;
+  left: 0;
+}
+
+div.invoice-header-container {
+  clear: left;
+  float: left;
+  width: 100%;
+  margin: 0 0 .25in 0;
+  padding: 0 2px 10px 0;
+  border-bottom: 4px solid #000;
+}
+div.invoice-header {
+  float: left;
+  position: relative;
+  right: 50%;
+  width: 100%;
+  margin-top: 20px;
+
+}
+div.company {
+  float: left;
+  left: 52%;
+  position: relative;
+  width: 46%;
+}
+div.client {
+  float: left;
+  left: 56%;
+  position: relative;
+  width: 46%;
+  margin-top: -20px;
+}

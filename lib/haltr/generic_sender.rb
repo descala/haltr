@@ -3,7 +3,7 @@
 module Haltr
   class GenericSender
 
-    attr_accessor :invoice, :user
+    attr_accessor :invoice, :user, :xml, :pdf
 
     def initialize(invoice=nil, user=nil)
       self.invoice = invoice

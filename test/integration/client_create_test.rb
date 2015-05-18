@@ -17,7 +17,7 @@ class ClientCreaeteTest < ActionController::IntegrationTest
       "id"=>"onlinestore",
       "controller"=>"invoices",
       "client"=>{
-        "taxcode"=>"62323236",
+        "taxcode"=>"S0811001G",
         "company_identifier"=>"comidentif",
         "name"=>"compname",
         "email"=>"email@example.com",
@@ -43,7 +43,7 @@ class ClientCreaeteTest < ActionController::IntegrationTest
     }
 
     assert_redirected_to :controller=>"clients", :action=>"index"
-    assert Client.find_by_taxcode '62323236'
+    assert Client.find_by_taxcode 'ESS0811001G'
   end
 
 end

@@ -306,3 +306,15 @@ i13:
   discount_percent: 10
   charge_amount_in_cents: 10000
   charge_reason: "This are payments we made in the name of the client"
+
+i14:
+  id: 14
+  type: IssuedInvoice
+  client_id: 1
+  currency: EUR
+  date: 2014-12-16
+  due_date: 2015-01-16
+  number: "2014/i14"
+  payment_method: 2
+  project_id: 2
+  state: accepted

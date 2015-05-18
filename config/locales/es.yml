@@ -239,6 +239,13 @@ es:
   email: "Recibida"
   download_original: "Descargar original"
   view_original: "Ver original"
+  manual_mark_as: "Marcar como %{state}"
+  done_mark_as_new: "Marcada manualmente como nueva"
+  done_mark_as_sent: "Marcada manualmente como enviada"
+  done_mark_as_accepted: "Marcada manualmente como aceptada"
+  done_mark_as_registered: "Marcada manualmente como registrada"
+  done_mark_as_refused: "Marcada manualmente como rechazada"
+  done_mark_as_closed: "Marcada manualmente como cerrada"
 
   # Invoice templates
   label_invoice_template_new: Nueva plantilla
@@ -307,7 +314,7 @@ es:
   save_and_mail: "Guardar y enviar mail"
   save_without_mail: "Guardar sin enviar mail"
   field_sepa_type: "tipo de pagos SEPA"
-  label_payment_initiation: "Iniciar pagos"
+  label_payment_initiation: "Introducir pagos"
 
   # Settings
   field_taxcode: "NIF"
@@ -357,7 +364,7 @@ es:
 
   # Errors
   cant_connect_trace: "No se puede conectar con la plataforma b2brouter"
-  halt_configure_before_use: "Por favor, primero configura los datos de la empresa"
+  halt_configure_before_use: "Por favor, primero configura los datos de tu empresa"
   warning_can_not_generate_invoice: "No se ha podido generar la factura de la plantilla %{value}"
   notice_invoice_sent: "La factura se esta enviando"
   error_invoice_not_sent: "La factura %{num} no se ha podido enviar"
@@ -410,6 +417,7 @@ es:
   permission_use_templates: "Plantillas de facturas"
   permission_batch_processes: "Procesos con scripts"
   permission_use_all_readonly: "Uso completo solo lectura"
+  permission_restricted_use: "Uso restringido"
 
   # this depends on permissions defined in channels.yml
   permission_download_pdf: "B2BRouter - Descargar PDF"
@@ -589,12 +597,46 @@ es:
   field_organs_proponents: "Órganos proponentes"
   dir3_entities: "Entidades dir3"
   field_code: "Código"
-  field_payments_on_account: "Aportación Usuarios"
+  field_payments_on_account: "Aportación Usuarios/Retención"
   sequence_number: 'Posición del pedido'
   mark_as_accepted: 'Marcar como aceptada'
-  field_receiver_contract_reference: "Código de asignación"
+  field_receiver_contract_reference: "Número de contrato / Código de asignación"
   invoice_attachments_description: "Permite subir un ficheros relacionados con la factura (máximo %{mb}MB). Estos documentos se adjuntarán a la factura electrónica."
   invoice_attachments_permission: "No tienes permisos para subir ficheros"
   label_will_send_original: "Esta factura tiene original y no se ha modificado. Así pués se enviará el documento original."
   import_errors: "Errores de importación"
   text_import_errors_destroy_confirmation: "Seguro que quieres borrar los errores de importación seleccionados?"
+  field_series_code: "Serie"
+  state_not_allowed_for_sending: "No se pueden reenviar facturas en estado %{state}"
+  amendment: "Rectificativa"
+  missing_imap_config: "Falta la configuracion IMAP en 'Mi empresa'"
+  transport: "Transporte"
+  field_legal_literals: "Certificación"
+  field_invoicing_period_start: "Inicio periodo de facturación"
+  field_invoicing_period_end: "Fin periodo de facturación"
+  field_invoicing_period: "Periodo de facturación"
+  label_factoring_assignment_data: 'Cesión de factoring'
+  field_fa_person_type: 'Tipo entidad'
+  field_fa_residence_type: 'Residencia'
+  field_fa_taxcode: 'NIF'
+  field_fa_name: 'Nombre'
+  field_fa_address: 'Dirección'
+  field_fa_postcode: 'Código postal'
+  field_fa_town: 'Ciudad'
+  field_fa_province: 'Provincia'
+  field_fa_country: 'País'
+  field_fa_info: 'Información'
+  field_fa_duedate: 'Fecha vencimiento'
+  field_fa_import: 'Importe'
+  field_fa_iban: 'IBAN'
+  field_fa_bank_code: 'Código bancario'
+  field_fa_clauses: 'Cláusula de cesión'
+  field_fa_payment_method: 'Método de pago'
+  channel_requires_user_pass: "El canal necesita que configures usuario y password en 'Mi empresa'"
+  download_legal_invoice: "Descargar factura legal"
+  label_report_channel_state: "Facturas por canal de envío y estado"
+  pdf_customization: "Personalización de PDF"
+  field_pdf_template: "Plantilla PDF"
+  pdf_default: "Por defecto"
+  pdf_rigth_windowed_envelope: "Plantilla para sobres con ventanilla"
+  field_party_identification: "Código unidad proveedora"

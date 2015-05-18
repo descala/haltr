@@ -22,14 +22,23 @@ class InvoiceTest < ActiveSupport::TestCase
     date = Date.new(2000,12,1)
     i = IssuedInvoice.new(:client=>clients(:client1),:project=>Project.find(2),:date=>date,:number=>111)
     i.invoice_lines << invoice_lines(:invoice1_l1).dup
+    i.invoice_lines.each do |line|
+      line.taxes = [Tax.new(name: 'VAT', percent: 0, category: 'E')]
+    end
     i.save!
     assert_equal date, i.due_date
     i = IssuedInvoice.new(:client=>clients(:client1),:project=>Project.find(2),:date=>date,:number=>222,:terms=>"1m15")
     i.invoice_lines << invoice_lines(:invoice1_l1).dup
+    i.invoice_lines.each do |line|
+      line.taxes = [Tax.new(name: 'VAT', percent: 0, category: 'E')]
+    end
     i.save!
     assert_equal Date.new(2001,1,15), i.due_date
     i = IssuedInvoice.new(:client=>clients(:client1),:project=>Project.find(2),:date=>date,:number=>333,:terms=>"3m15")
     i.invoice_lines << invoice_lines(:invoice1_l1).dup
+    i.invoice_lines.each do |line|
+      line.taxes = [Tax.new(name: 'VAT', percent: 0, category: 'E')]
+    end
     i.save!
     assert_equal Date.new(2001,3,15), i.due_date
   end
@@ -160,33 +169,30 @@ class InvoiceTest < ActiveSupport::TestCase
   test 'payment_method_requirements' do
     # invoice with payment cash (no requirements)
     i = invoices(:i8)
-    i.payment_method_requirements
-    assert_equal(0,i.export_errors.size)
+    assert(i.valid?)
     # invoice with payment debit (client has bank_account)
     i = invoices(:i9)
-    i.payment_method_requirements
-    assert_equal(0,i.export_errors.size)
+    assert(i.valid?)
     # remove client bank_account
     i.client.bank_account = ""
-    i.payment_method_requirements
-    assert_equal(1,i.export_errors.size)
+    assert(!i.valid?)
+    assert(i.errors.messages.keys.include?(:payment_method))
     # invoice with payment transfer (invoice has bank_info)
     i = invoices(:i7)
     assert_not_nil i.bank_info
-    i.payment_method_requirements
-    assert_equal(0,i.export_errors.size)
+    assert(i.valid?)
     i.bank_info = nil
-    i.payment_method_requirements
-    assert_equal(1,i.export_errors.size)
+    assert(!i.valid?)
+    assert(i.errors.messages.keys.include?(:payment_method))
   end
 
   test 'invoice_has_taxes' do
     i = invoices(:i8)
-    i.invoice_has_taxes
-    assert_equal(0, i.export_errors.size)
-    i = invoices(:i9)
-    i.invoice_has_taxes
-    assert_equal(1, i.export_errors.size)
+    assert(i.valid?)
+    assert_equal(0, i.errors.size)
+    i.invoice_lines.first.taxes=[]
+    assert(!i.valid?)
+    assert_equal(1, i.errors.size)
   end
 
   test 'invoice payment_method' do
@@ -200,7 +206,7 @@ class InvoiceTest < ActiveSupport::TestCase
     i.payment_method = "#{Invoice::PAYMENT_TRANSFER}_2"
     assert !i.valid?, "bank_info is from other company"
     i.payment_method = Invoice::PAYMENT_TRANSFER
-    assert i.valid?
+    assert !i.valid?
     assert i.transfer?
     assert_nil i.bank_info
     i.payment_method = "#{Invoice::PAYMENT_DEBIT}_1"
@@ -212,13 +218,13 @@ class InvoiceTest < ActiveSupport::TestCase
   # import invoice_facturae32_signed.xml
   test 'create received_invoice from facturae32' do
     # client does not exist
-    assert_nil Client.find_by_taxcode "ESP6611142C"
+    assert_nil Client.find_by_taxcode "ESP1700000A"
     file    = File.new(File.join(File.dirname(__FILE__),'..','fixtures','documents','invoice_facturae32_signed.xml'))
     invoice = Invoice.create_from_xml(file,companies(:company1),"1234",'uploaded',User.current.name)
-    client  = Client.find_by_taxcode "ESP6611142C"
+    client  = Client.find_by_taxcode "ESP1700000A"
     assert_not_nil client
     # client
-    assert_equal "ESP6611142C", client.taxcode
+    assert_equal "ESP1700000A", client.taxcode
     assert_equal "Ingent-lluís", client.name
     assert_equal "Melió 113", client.address
     assert_equal "Barcelona", client.province
@@ -243,7 +249,6 @@ class InvoiceTest < ActiveSupport::TestCase
     assert_equal "uploaded", invoice.transport
     assert_equal "Anonymous", invoice.from
     assert_equal "1234", invoice.md5
-    assert_equal 12501, invoice.original.size
     assert_equal "invoice_facturae32_signed.xml", invoice.file_name
     # invoice lines
     assert_equal 3, invoice.invoice_lines.size
@@ -268,13 +273,13 @@ class InvoiceTest < ActiveSupport::TestCase
   # import invoice_facturae32_issued.xml
   test 'create issued_invoice from facturae32' do
     # client does not exist
-    assert_nil Client.find_by_taxcode "ESP6611142C"
+    assert_nil Client.find_by_taxcode "ESP1700000A"
     file    = File.new(File.join(File.dirname(__FILE__),'..','fixtures','documents','invoice_facturae32_issued.xml'))
     invoice = Invoice.create_from_xml(file,companies(:company1),"1234",'uploaded',User.current.name)
-    client  = Client.find_by_taxcode "ESP6611142C"
+    client  = Client.find_by_taxcode "ESP1700000A"
     assert_not_nil client
     # client
-    assert_equal "ESP6611142C", client.taxcode
+    assert_equal "ESP1700000A", client.taxcode
     assert_equal "David Copperfield", client.name
     assert_equal "Address1", client.address
     assert_equal "state", client.province
@@ -287,7 +292,7 @@ class InvoiceTest < ActiveSupport::TestCase
     assert_equal invoice.company.project, client.project
     assert_equal "ES8023100001180000012345", client.iban
     assert_equal "biiiiiiiiic", client.bic
-    assert_equal "facturae_32", client.invoice_format
+    assert_equal "paper", client.invoice_format
     # invoice
     assert       invoice.is_a?(IssuedInvoice)
     assert_equal client, invoice.client
@@ -302,7 +307,6 @@ class InvoiceTest < ActiveSupport::TestCase
     assert_equal "uploaded", invoice.transport
     assert_equal "Anonymous", invoice.from
     assert_equal "1234", invoice.md5
-    assert_equal 7093, invoice.original.size
     assert invoice.debit?, "invoice payment is debit"
     assert_equal "invoice_facturae32_issued.xml", invoice.file_name
     # invoice lines
@@ -327,7 +331,7 @@ class InvoiceTest < ActiveSupport::TestCase
 
   # import invoice_facturae32_issued2.xml
   test 'create issued_invoice from facturae32 with irpf, discount, bank_account and existing client' do
-    client = Client.find_by_taxcode "B12345678"
+    client = Client.find_by_taxcode "A13585625"
     client_count = Client.count
     # client exists
     assert_not_nil client
@@ -351,7 +355,6 @@ class InvoiceTest < ActiveSupport::TestCase
     assert_equal "uploaded", invoice.transport
     assert_equal "Anonymous", invoice.from
     assert_equal "1234", invoice.md5
-    assert_equal 6415, invoice.original.size
     assert_equal "invoice_facturae32_issued2.xml", invoice.file_name
     assert_equal 15, invoice.discount_percent
     assert_equal 18.00, invoice.discount_amount.to_f
@@ -377,7 +380,7 @@ class InvoiceTest < ActiveSupport::TestCase
 
   # import invoice_facturae32_issued3.xml
   test 'create issued_invoice from facturae32 with charge, different taxes per line and accounting_cost' do
-    client = Client.find_by_taxcode "B12345678"
+    client = Client.find_by_taxcode "A13585625"
     client_count = Client.count
     # client exists
     assert_not_nil client
@@ -401,7 +404,6 @@ class InvoiceTest < ActiveSupport::TestCase
     assert_equal "uploaded", invoice.transport
     assert_equal "Anonymous", invoice.from
     assert_equal "1234", invoice.md5
-    assert_equal 6535, invoice.original.size
     assert_equal "invoice_facturae32_issued3.xml", invoice.file_name
     assert invoice.cash?, "invoice payment should be cash and is #{invoice.payment_method}"
     assert_equal "1233333333333333", invoice.client.bank_account
@@ -433,9 +435,11 @@ class InvoiceTest < ActiveSupport::TestCase
     # modified since uploaded?
     assert !invoice.modified_since_created?, "not modified since created"
     assert invoice.queue
+    assert !invoice.queue
     assert !invoice.modified_since_created?, "state changes do not update timestamps"
     invoice.extra_info = "change something"
-    assert invoice.save
+    invoice.state = :new
+    assert invoice.save!
     assert invoice.modified_since_created?, "modified since created"
   end
 
@@ -446,6 +450,10 @@ class InvoiceTest < ActiveSupport::TestCase
     assert_equal 5, invoice.invoice_lines[0].discount_percent
     assert_equal 0, invoice.invoice_lines[1].discount_percent
     assert_equal 'Descuento', invoice.invoice_lines[0].discount_text
+    assert_equal '132413842', invoice.invoice_lines[0].delivery_note_number
+    assert_equal 'BBBH-38272', invoice.ponumber
+    assert_equal Date.new(2010,3,9),  invoice.invoicing_period_start
+    assert_equal Date.new(2010,3,10), invoice.invoicing_period_end
   end
 
   test 'raise on importing invoice with >1 discount on same line' do
@@ -529,14 +537,40 @@ class InvoiceTest < ActiveSupport::TestCase
   test 'create issued_invoice from facturae32 when invoice taxcode includes country' do
     file    = File.new(File.join(File.dirname(__FILE__),'..','fixtures','documents','invoice_facturae32_issued6.xml'))
     invoice = Invoice.create_from_xml(file,User.find_by_login('jsmith'),"1234",'uploaded',User.current.name)
-    assert_equal '77310058H', invoice.company.taxcode # invoice taxcode: ES77310058H
+    assert_equal '77310058C', invoice.company.taxcode # invoice taxcode: ES77310058C
   end
 
   # import invoice_facturae32_issued7.xml
   test 'create issued_invoice from facturae32 when company taxcode includes country' do
     file    = File.new(File.join(File.dirname(__FILE__),'..','fixtures','documents','invoice_facturae32_issued7.xml'))
     invoice = Invoice.create_from_xml(file,User.find_by_login('jsmith'),"1234",'uploaded',User.current.name)
-    assert_equal 'ES77310058C', invoice.company.taxcode # invoice taxcode: 77310058C
+    assert_equal '77310058C', invoice.company.taxcode # invoice taxcode: 77310058C
+  end
+
+  test 'it rounds every line total before adding them' do
+    assert_equal 119.22, invoices(:i14).total.dollars
+  end
+
+  # import invoice_facturae32_issued8.xml
+  test 'it imports FactoringAssignmentData from facturae32' do
+    file = File.new(File.join(File.dirname(__FILE__),'..','fixtures','documents','invoice_facturae32_issued8.xml'))
+    invoice = Invoice.create_from_xml(file,User.find_by_login('jsmith'),"1234",'uploaded',User.current.name)
+    assert_equal 'J',                        invoice.fa_person_type
+    assert_equal 'R',                        invoice.fa_residence_type
+    assert_equal 'ESA12345678',              invoice.fa_taxcode
+    assert_equal 'A BANC, S.A.',             invoice.fa_name
+    assert_equal 'Street, 1',                invoice.fa_address
+    assert_equal '08080',                    invoice.fa_postcode
+    assert_equal 'BARCELONA',                invoice.fa_town
+    assert_equal 'BARCELONA',                invoice.fa_province
+    assert_equal 'es',                       invoice.fa_country
+    assert_equal '20000000000000000000',     invoice.fa_info
+    assert_equal Date.new(2015,5,6),         invoice.fa_duedate
+    assert_equal 372.08,                     invoice.fa_import
+    assert_equal 4,                          invoice.fa_payment_method
+    assert_equal 'ES1234567890123456789012', invoice.fa_iban
+    assert_equal 'ABCABCAAXXX',              invoice.fa_bank_code
+    assert_equal 'Clauses',                  invoice.fa_clauses
   end
 
 end

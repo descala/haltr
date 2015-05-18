@@ -17,7 +17,20 @@ Currently it is used in https://www.b2brouter.net/
 
 == Install
 
-TODO: update for Redmine 2.x
+=== Redmine 3.x
+
+Not compatible yet. Please contribute.
+
+=== Redmine 2.x
+
+In your Redmine root path:
+
+  # Use Ruby < 2.2 (since Rails 3.2 and thus Redmine 2.x is not compatible with later versions)
+  git clone git://github.com/descala/haltr.git plugins/haltr
+  bundle install
+  bundle exec rake redmine:plugins:migrate
+
+=== Older versions of Redmine
 
 Download Haltr plugin using git:
 

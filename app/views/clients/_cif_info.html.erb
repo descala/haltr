@@ -4,12 +4,17 @@
   # company is the company we found that matches the entered taxcode
   # we have a client and client is linked and (is already linked to the
   # company we found or we did not found any company)
-  if client and client.company and (client.company == company || company.nil?)
+  if client and client.company #and (client.company == company || company.nil?)
 -%>
 
   <% if client.allowed? -%>
     <span class="profilelink">
-      <%= l(:linked_to_profile, :company => client.company.name).html_safe %> (<%=link_to_if_authorized(l(:unlink),{:controller=>'clients',:action=>'unlink',:id=>client})%>)
+      <% if client.company.is_a?(ExternalCompany) and User.current.admin? -%>
+        <%= link_to l(:linked_to_profile, :company => client.company.name).html_safe, edit_external_company_path(client.company) %>
+        (<%=link_to_if_authorized(l(:unlink),{:controller=>'clients',:action=>'unlink',:id=>client})%>)
+      <% else -%>
+        <%= l(:linked_to_profile, :company => client.company.name).html_safe %> (<%=link_to_if_authorized(l(:unlink),{:controller=>'clients',:action=>'unlink',:id=>client})%>)
+      <% end -%>
   <% elsif client.denied? -%>
     <span class="profilelinkred">
       <%= l(:denied_authorization, :company => client.company.name).html_safe %> (<%=link_to_if_authorized(l(:unlink),{:controller=>'clients',:action=>'unlink',:id=>client})%>)
@@ -24,19 +29,22 @@
   elsif company
 -%>
 
-  <span class="profilelink">
-    <%= l(:cif_belongs_to_company,{:company=>company.name}).html_safe %>
-    <% if company.public? # public profile -%>
-      <%= l(:link_to_profile_suggest, :href=>link_to_if_authorized(l(:link_to_profile),{:controller=>'clients',:action=>'link_to_profile',:id=>@project,:company=>company.taxcode,:client=>client})).html_safe %>
-      <% if !client or client.new_record? %>
-        <script language="javascript">
-          alert("<%= l(:cif_belongs_to_company_text_only,{:company=>company.name}) %>");
-          self.location="<%=url_for(:action=>'link_to_profile',:controller=>'clients',:id=>@project,:company=>company.taxcode,:client=>client,:context=>context,:invoice_id=>invoice_id)%>";
-        </script>
-      <% end -%>
-    <% else # semipublic profile -%>
-      <%= l(:link_to_profile_suggest, :href=>link_to_if_authorized(l(:link_to_profile_ask),{:controller=>'clients',:action=>'link_to_profile',:id=>@project,:company=>company.taxcode,:client=>client})).html_safe %>
+    <% if !client or client.new_record? %>
+      <script language="javascript">
+        alert("<%= l(:cif_belongs_to_company_text_only,{:company=>company.name}) %>");
+        self.location="<%=url_for(:action=>'link_to_profile',:controller=>'clients',:id=>@project,:company=>company.taxcode,:client=>client,:context=>context,:invoice_id=>invoice_id)%>";
+      </script>
+    <% else -%>
+
+      <span class="profilelink">
+        <%= l(:cif_belongs_to_company,{:company=>company.name}).html_safe %>
+        <% if company.public? # public profile -%>
+          <%= l(:link_to_profile_suggest, :href=>link_to_if_authorized(l(:link_to_profile),{:controller=>'clients',:action=>'link_to_profile',:id=>@project,:company=>company.taxcode,:client=>client})).html_safe %>
+        <% else # semipublic profile -%>
+          <%= l(:link_to_profile_suggest, :href=>link_to_if_authorized(l(:link_to_profile_ask),{:controller=>'clients',:action=>'link_to_profile',:id=>@project,:company=>company.taxcode,:client=>client})).html_safe %>
+        <% end -%>
+        </span>
+
     <% end -%>
-    </span>
 
 <% end -%>
