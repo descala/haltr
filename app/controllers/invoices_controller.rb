@@ -478,7 +478,7 @@ class InvoicesController < ApplicationController
         @client = @invoice.client
         pdf_file = Haltr::Pdf.generate(@invoice, true)
         zos.put_next_entry(@invoice.pdf_name)
-        zos.print IO.read(pdf_file.path)
+        zos << IO.binread(pdf_file.path)
         logger.info "Added #{@invoice.pdf_name} from #{pdf_file.path}"
       end
     end
@@ -790,7 +790,7 @@ class InvoicesController < ApplicationController
       redirect_to :action=>'index', :project_id=>@project
       return
     end
-    zip_file = Tempfile.new "#{@project.identifier}_invoices.zip", 'tmp'
+    zip_file = Tempfile.new ["#{@project.identifier}_invoices", ".zip"], 'tmp'
     logger.info "Creating zip file '#{zip_file.path}' for invoice ids #{@invoices.collect{|i|i.id}.join(',')}."
     Zip::ZipOutputStream.open(zip_file.path) do |zos|
       @invoices.each do |invoice|

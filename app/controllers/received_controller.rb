@@ -104,16 +104,16 @@ class ReceivedController < InvoicesController
       return
     end
     zipped = []
-    zip_file = Tempfile.new "#{@project.identifier}_invoices.zip", 'tmp'
+    zip_file = Tempfile.new ["#{@project.identifier}_invoices", ".zip"], 'tmp'
     logger.info "Creating zip file '#{zip_file.path}' for invoice ids #{@invoices.collect{|i|i.id}.join(',')}."
     Zip::ZipOutputStream.open(zip_file.path) do |zos|
       @invoices.each do |invoice|
-        file = Tempfile.new(invoice.file_name)
+        filename = invoice.file_name || 'invoice'
+        file = Tempfile.new(filename)
         file.binmode
         file.write invoice.original
         logger.info "Created #{file.path}"
         file.close
-        filename = invoice.file_name
         i=2
         while zipped.include?(filename)
           extension = File.extname(filename)
@@ -123,7 +123,7 @@ class ReceivedController < InvoicesController
         end
         zipped << filename
         zos.put_next_entry(filename)
-        zos.print IO.read(file.path)
+        zos << IO.binread(file.path)
         logger.info "Added #{filename} from #{file.path}"
       end
     end
