@@ -10,7 +10,7 @@ $(document).ready(function() {
     $.getJSON(window.location.pathname, function(data) {
       state = data.issued_invoice.state;
     });
-    if ( state != 'sending' || i > 2 ) {
+    if ( state != 'sending' || i > 5 ) {
       clearInterval(interval);
       $('div.flash.notice img').remove();
       if ( state != 'sending' ) {
