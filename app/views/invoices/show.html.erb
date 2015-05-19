@@ -73,4 +73,10 @@
       javascript_include_tag('miniapplet.js', :plugin => 'haltr')
     end
   end
+
+  if @invoice.state? :sending
+    content_for :header_tags do
+      javascript_include_tag 'refresher.js', plugin: 'haltr'
+    end
+  end
 %>

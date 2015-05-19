@@ -360,6 +360,7 @@ class InvoicesController < ApplicationController
     @format = params["format"]
     respond_to do |format|
       format.html
+      format.json { render json: @invoice, status: :ok }
       format.pdf do
         @is_pdf = true
         @debug = params[:debug]
