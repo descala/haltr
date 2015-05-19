@@ -172,7 +172,7 @@
             <% if line.charge_reason.present? -%>
               <br /><%= l(:field_charge) %>: <%= line.charge_reason %>
             <% end -%>
-            <% if line.discount_text.present? -%>
+            <% if line.discount_text.present? and line.discount_text != '.' -%>
               <br /><%= l(:field_discount) %>: <%= line.discount_text %>
             <% end -%>
           </td>
