@@ -177,7 +177,7 @@ ca:
   client_has_no_email: "El client associat a la factura no té correu electrònic definit"
   invoice_has_no_taxes: "La factura té alguna línia sense impostos"
   invoice_no_taxes_and_discount: "Una factura no pot tenir a la vegada línies sense impostos i un descompte global"
-  field_import: "Import"
+  field_import: "Preu"
   pdf_not_legal: "PDF no legal"
   amended_invoice: "Rectificació de la %{link}"
   amended_by_invoice: "Rectificada per la %{link}"
