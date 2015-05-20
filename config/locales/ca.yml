@@ -298,7 +298,7 @@ ca:
   label_payment: Pagament
   label_payment_plural: Pagaments
   label_payment_new: Nou pagament
-  field_amount: Import
+  field_amount: Preu
   field_amount_in_cents: Import
   field_payment_method: Mètode de pagament
   field_reference: Referència
