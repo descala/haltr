@@ -303,7 +303,7 @@ es:
   label_payment_plural: Pagos
   label_payment_new: Nuevo pago
   field_amount: Precio
-  field_amount_in_cents: Importe
+  field_amount_in_cents: Precio
   field_payment_method: Método de pago
   field_reference: Referencia
   field_total_paid: Total pagado
@@ -627,7 +627,7 @@ es:
   field_fa_country: 'País'
   field_fa_info: 'Información'
   field_fa_duedate: 'Fecha vencimiento'
-  field_fa_import: 'Importe'
+  field_fa_import: 'Precio'
   field_fa_iban: 'IBAN'
   field_fa_bank_code: 'Código bancario'
   field_fa_clauses: 'Cláusula de cesión'

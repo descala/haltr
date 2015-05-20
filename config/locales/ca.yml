@@ -299,7 +299,7 @@ ca:
   label_payment_plural: Pagaments
   label_payment_new: Nou pagament
   field_amount: Preu
-  field_amount_in_cents: Import
+  field_amount_in_cents: Preu
   field_payment_method: Mètode de pagament
   field_reference: Referència
   field_total_paid: Total pagat
@@ -623,7 +623,7 @@ ca:
   field_fa_country: 'País'
   field_fa_info: 'Informació'
   field_fa_duedate: 'Data venciment'
-  field_fa_import: 'Import'
+  field_fa_import: 'Preu'
   field_fa_iban: 'IBAN'
   field_fa_bank_code: 'Codi bancari'
   field_fa_clauses: 'Clàusula de cessió'
