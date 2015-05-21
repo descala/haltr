@@ -109,25 +109,27 @@ module CsvImporter
     existing = []
     new      = []
     error    = []
+    error_messages = []
     entities.each do |l|
       current = Dir3Entity.find_by_code(l.code)
       l_hash = l.members.inject({}) {|h,m| h[m] = l[m] unless l[m].blank? ; h}
       l_hash[:postalcode] = l_hash[:postalcode].strip.rjust(5, "0") rescue nil
       begin
         if current
-          existing << l
           current.update_attributes!(l_hash)
+          existing << l
         else
           new << Dir3Entity.create!(l_hash)
         end
       rescue ActiveRecord::RecordInvalid => e
         error << l_hash
         puts "Invalid Dir3Entity: #{l_hash[:code]} (#{e})"
+        error_messages << "#{e}"
       end
     end
     puts "Entities updated: #{existing.size}"
     puts "Entities created: #{new.size}"
-    return [existing.size, new.size, error.size]
+    return [existing.size, new.size, error.size, error_messages.uniq]
   end
 
   def process_external_companies(options={})
@@ -137,6 +139,7 @@ module CsvImporter
     existing = []
     new      = []
     error    = []
+    error_messages = []
     external_companies.each do |ec|
       ec_hash = ec.members.inject({}) {|h,m| h[m] = ec[m] unless ec[m].blank? ; h}
       ec_hash[:country] ||= 'es'
@@ -148,19 +151,20 @@ module CsvImporter
       current = ExternalCompany.find_by_taxcode(ec.taxcode)
       begin
         if current
-          existing << ec
           current.update_attributes!(ec_hash)
+          existing << ec
         else
           new << ExternalCompany.create!(ec_hash)
         end
       rescue ActiveRecord::RecordInvalid => e
         error << ec_hash
         puts "Invalid ExternalCompany: #{ec_hash[:taxcode]} (#{e})"
+        error_messages << "#{e}"
       end
     end
     puts "ExternalCompanies updated: #{existing.size}"
     puts "ExternalCompanies created: #{new.size}"
-    return [existing.size, new.size, error.size]
+    return [existing.size, new.size, error.size, error_messages.uniq]
   end
 
 end
