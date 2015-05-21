@@ -111,6 +111,8 @@ module CsvImporter
     error    = []
     error_messages = []
     entities.each do |l|
+      next unless l.values.any? {|v| !v.nil? }
+      current = nil
       current = Dir3Entity.find_by_code(l.code)
       l_hash = l.members.inject({}) {|h,m| h[m] = l[m] unless l[m].blank? ; h}
       l_hash[:postalcode] = l_hash[:postalcode].strip.rjust(5, "0") rescue nil
@@ -119,12 +121,18 @@ module CsvImporter
           current.update_attributes!(l_hash)
           existing << l
         else
-          new << Dir3Entity.create!(l_hash)
+          current = Dir3Entity.create!(l_hash)
+          new << current
         end
       rescue ActiveRecord::RecordInvalid => e
         error << l_hash
-        puts "Invalid Dir3Entity: #{l_hash[:code]} (#{e})"
-        error_messages << "#{e}"
+        if current
+          puts "Invalid Dir3Entity: #{l_hash[:code]} (#{current.errors.full_messages.join(', ')})"
+          error_messages << "#{current.errors.full_messages.join(', ')}"
+        else
+          puts "Invalid Dir3Entity: #{l_hash[:code]} (#{e})"
+          error_messages << "#{e}"
+        end
       end
     end
     puts "Entities updated: #{existing.size}"
@@ -141,6 +149,7 @@ module CsvImporter
     error    = []
     error_messages = []
     external_companies.each do |ec|
+      next unless ec.values.any? {|v| !v.nil? }
       ec_hash = ec.members.inject({}) {|h,m| h[m] = ec[m] unless ec[m].blank? ; h}
       ec_hash[:country] ||= 'es'
       ec_hash[:currency] ||= 'EUR'
@@ -148,18 +157,25 @@ module CsvImporter
       ec_hash[:postalcode] = ec_hash[:postalcode].strip.rjust(5, "0") rescue nil
       ec_hash.delete(:postalcode) if ec_hash[:postalcode].blank?
       ec_hash[:visible_dir3] = true if ec_hash[:oficines_comptables] or ec_hash[:unitats_tramitadores] or ec_hash[:organs_gestors]
+      current = nil
       current = ExternalCompany.find_by_taxcode(ec.taxcode)
       begin
         if current
           current.update_attributes!(ec_hash)
           existing << ec
         else
-          new << ExternalCompany.create!(ec_hash)
+          current = ExternalCompany.create!(ec_hash)
+          new << current
         end
       rescue ActiveRecord::RecordInvalid => e
         error << ec_hash
-        puts "Invalid ExternalCompany: #{ec_hash[:taxcode]} (#{e})"
-        error_messages << "#{e}"
+        if current
+          puts "Invalid ExternalCompany: #{ec_hash[:code]} (#{current.errors.full_messages.join(', ')})"
+          error_messages << "#{current.errors.full_messages.join(', ')}"
+        else
+          puts "Invalid ExternalCompany: #{ec_hash[:code]} (#{e})"
+          error_messages << "#{e}"
+        end
       end
     end
     puts "ExternalCompanies updated: #{existing.size}"
