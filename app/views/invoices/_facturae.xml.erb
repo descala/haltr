@@ -360,7 +360,9 @@
               <% end -%>
               <ItemDescription><%=h invoice_line.description%></ItemDescription>
               <Quantity><%=h invoice_line.quantity%></Quantity>
-              <UnitOfMeasure><%=h invoice_line.unit_code(:facturae)%></UnitOfMeasure>
+              <% if invoice_line.unit_code(:facturae).present? -%>
+                <UnitOfMeasure><%=h invoice_line.unit_code(:facturae)%></UnitOfMeasure>
+              <% end -%>
               <UnitPriceWithoutTax><%=h precision(invoice_line.price,6)%></UnitPriceWithoutTax>
               <TotalCost><%=h precision(invoice_line.total_cost,(format == "facturae32" ? 6 : 2))%></TotalCost>
 <% if invoice_line.discount_percent > 0 -%>

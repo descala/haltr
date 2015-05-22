@@ -736,11 +736,20 @@ _INV
         line_delivery_note_number ||= Haltr::Utils.get_xpath(dn,xpaths[:delivery_note_num])
       end
 
+      unit = Haltr::Utils.get_xpath(line,xpaths[:line_unit])
+      InvoiceLine::UNIT_CODES.each do |haltr_id, units|
+        if units[:facturae] == unit
+          unit = haltr_id
+          break
+        end
+        unit = InvoiceLine::OTHER if unit.present?
+      end
+
       il = InvoiceLine.new(
              :quantity     => Haltr::Utils.get_xpath(line,xpaths[:line_quantity]),
              :description  => Haltr::Utils.get_xpath(line,xpaths[:line_description]),
              :price        => Haltr::Utils.get_xpath(line,xpaths[:line_price]),
-             :unit         => Haltr::Utils.get_xpath(line,xpaths[:line_unit]),
+             :unit         => unit,
              :article_code => Haltr::Utils.get_xpath(line,xpaths[:line_code]),
              :notes        => Haltr::Utils.get_xpath(line,xpaths[:line_notes]),
              :issuer_transaction_reference => Haltr::Utils.get_xpath(line,xpaths[:i_transaction_ref]),

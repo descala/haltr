@@ -21,8 +21,8 @@ class InvoiceLine < ActiveRecord::Base
     HOURS     => {:name => 'hours',     :facturae => '02', :ubl => 'HUR'},
     KILOGRAMS => {:name => 'kilograms', :facturae => '03', :ubl => 'KGM'},
     LITTERS   => {:name => 'litters',   :facturae => '04', :ubl => 'LTR'},
-    DAYS      => {:name => 'days',      :facturae => '05', :ubl => 'DAY'},
     OTHER     => {:name => 'other',     :facturae => '05', :ubl => 'ZZ'},
+    DAYS      => {:name => 'days',      :facturae => '05', :ubl => 'DAY'},
   }
 
   # do not remove, with audit we need to make the other attributes accessible
@@ -91,7 +91,7 @@ class InvoiceLine < ActiveRecord::Base
   end
 
   def unit_code(format)
-    UNIT_CODES[unit][format]
+    UNIT_CODES[unit][format] rescue nil
   end
 
   def unit_short
