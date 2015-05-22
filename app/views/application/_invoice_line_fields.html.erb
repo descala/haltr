@@ -24,7 +24,7 @@
     <tbody>
       <tr>
         <td><%= f.text_field :quantity, :value => f.object.quantity.to_s.gsub(/\.0+$/,''), :style => "width: 78px;", :no_label => true %></td>
-        <td><%=f.select :unit, InvoiceLine.units, {:no_label => true}, {:style => "width: 100px;"}%></td>
+        <td><%=f.select :unit, InvoiceLine.units, {:no_label => true, :include_blank => true}, {:style => "width: 100px;"}%></td>
         <% if @invoice.invoice_lines.any? {|l| !l.article_code.blank? } or User.current.allowed_to?(:view_invoice_extra_fields, @project) -%>
           <td><%=f.text_field :article_code, :style => "width: 78px;", :no_label => true%></td>
         <% end -%>
