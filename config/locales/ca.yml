@@ -269,6 +269,7 @@ ca:
   s_litters: l
   days: Dies
   s_days: d
+  s_other: ""
 
   # People
   label_person: Persona

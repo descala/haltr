@@ -259,6 +259,7 @@ fr:
   s_kilograms: kg
   s_litters: l
   s_days: j
+  s_other: ""
 
   # People
   label_person: Personne

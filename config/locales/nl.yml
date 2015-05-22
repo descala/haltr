@@ -258,6 +258,7 @@ nl:
   s_litters: l
   days: Days
   s_days: d
+  s_other: ""
 
   # People
   label_person: Person
