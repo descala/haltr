@@ -39,10 +39,6 @@ class InvoiceLine < ActiveRecord::Base
     :allow_destroy => true
   validates_associated :taxes
 
-  after_initialize {
-    self.unit ||= 1
-  }
-
   # Coste Total.
   # Quantity x UnitPriceWithoutTax
   def total_cost
