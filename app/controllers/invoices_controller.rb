@@ -875,7 +875,7 @@ class InvoicesController < ApplicationController
         nil
       end
     end.compact!
-    Delayed::Job.enqueue(Haltr::BulkSender.new(@invoices.collect { |i| i.id },User.current))
+    Delayed::Job.enqueue(Haltr::BulkSender.new(@invoices.collect { |i| i.id }, User.current))
     @num_sent = @invoices.size
 
     if @num_sent < num_invoices

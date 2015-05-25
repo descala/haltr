@@ -20,13 +20,14 @@ class IssuedInvoice < InvoiceDocument
   # new sending sent error discarded closed
   state_machine :state, :initial => :new do
     before_transition do |invoice,transition|
+      user = transition.args.first.is_a?(User) ? transition.args.first : User.current
       unless Event.automatic.include?(transition.event.to_s)
         if transition.event.to_s == 'queue' and !invoice.state?(:new)
-          Event.create(:name=>'requeue',:invoice=>invoice,:user=>User.current)
+          Event.create(:name=>'requeue',:invoice=>invoice,:user=>user)
         elsif transition.event.to_s =~ /^mark_as_/
-          Event.create(name: "done_#{transition.event.to_s}", invoice: invoice, user: User.current)
+          Event.create(name: "done_#{transition.event.to_s}", invoice: invoice, user: user)
         else
-          Event.create(:name=>transition.event.to_s,:invoice=>invoice,:user=>User.current)
+          Event.create(:name=>transition.event.to_s,:invoice=>invoice,:user=>user)
         end
       end
     end
