@@ -155,7 +155,7 @@
         <% if @invoice.has_line_charges? -%>
           <th class="item-price"><%= h l(:field_charge) %></th>
         <% end -%>
-        <th class="line-total last"><%=h l(:label_total)%></th>
+        <th class="line-total last"><%=h l(:label_invoice_total)%></th>
       </tr>
 
       <% @lines.each do |line| -%>
@@ -241,7 +241,7 @@
       </tr>
       <% end -%>
       <tr class="invoice-total">
-        <th><%=h l(:label_total)%>:</th>
+        <th><%=h l(:label_invoice_total)%>:</th>
         <td><%=h money(@invoice.total) %></td>
       </tr>
       <% if @invoice.payments_on_account_in_cents.to_i > 0 -%>

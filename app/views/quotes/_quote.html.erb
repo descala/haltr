@@ -63,7 +63,7 @@
       <th class="item-quantity first"><abbr title="Quantitat">Q</abbr></th>
       <th class="item-description"><%=h l(:field_description)%></th>
       <th class="item-price"><%=h l(:field_amount) %></th>
-      <th class="line-total last"><%=h l(:label_total)%></th>
+      <th class="line-total last"><%=h l(:label_invoice_total)%></th>
     </tr>
 
     <% @lines.each do |line| -%>
@@ -112,7 +112,7 @@
       </tr>
     <% end -%>
     <tr class="invoice-total">
-      <th><%=h l(:label_total)%>:</th>
+      <th><%=h l(:label_invoice_total)%>:</th>
       <td><%=h money(@invoice.total) %></td>
     </tr>
   </tbody>
