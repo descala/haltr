@@ -20,7 +20,7 @@
 ---
 paper:
   order: 10
-  format:
+  format: none
   folder:
   validators:
   locales:
