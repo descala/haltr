@@ -72,6 +72,14 @@ module Haltr
           xpaths[:buyer_cp_city2]     = "//Parties/BuyerParty/*/*/PostCodeAndTown"
           xpaths[:buyer_cp]           = "//Parties/BuyerParty/*/*/PostCode"
           xpaths[:currency]           = "//FileHeader/Batch/InvoiceCurrencyCode"
+          xpaths[:attachments]        = "//Invoices/Invoice/AdditionalData/RelatedDocuments/Attachment"
+          # relative to Attachment
+          xpaths[:attach_compression_algorithm] = "AttachmentCompressionAlgorithm"
+          xpaths[:attach_format]                = "AttachmentFormat"
+          xpaths[:attach_encoding]              = "AttachmentEncoding"
+          xpaths[:attach_description]           = "AttachmentDescription"
+          xpaths[:attach_data]                  = "AttachmentData"
+
           xpaths[:extra_info]         = "//Invoices/Invoice/AdditionalData/InvoiceAdditionalInformation"
           xpaths[:charge]             = "//Invoices/Invoice/InvoiceTotals/GeneralSurcharges/Charge/ChargeAmount"
           xpaths[:charge_reason]      = "//Invoices/Invoice/InvoiceTotals/GeneralSurcharges/Charge/ChargeReason"

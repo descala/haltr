@@ -795,6 +795,46 @@ _INV
     invoice.ponumber = line_ponumber
     invoice.receiver_contract_reference = line_r_contract_reference
 
+    # attachments
+    to_attach = []
+    doc.xpath(xpaths[:attachments]).each_with_index do |attach, index|
+      data             = Haltr::Utils.get_xpath(attach, xpaths[:attach_data])
+      data_compression = Haltr::Utils.get_xpath(attach, xpaths[:attach_compression_algorithm])
+      data_format      = Haltr::Utils.get_xpath(attach, xpaths[:attach_format])
+      data_encoding    = Haltr::Utils.get_xpath(attach, xpaths[:attach_encoding])
+      data = case data_encoding
+             when 'BASE64'
+               Base64.decode64(data)
+             when 'BER'
+               #TODO
+             when 'DER'
+               #TODO
+             else # NONE
+               data
+             end
+      data = case data_compression
+             when 'ZIP'
+               Zip::InputStream.open(StringIO.new(data)) do |io|
+                 _entry = io.get_next_entry
+                 io.read
+               end
+             when 'GZIP'
+               ActiveSupport::Gzip.decompress(StringIO.new(data))
+             else # NONE
+               data
+             end
+      data_content_type = MIME.check_magics(StringIO.new(data))
+      ext = MIME::Types[data_content_type].first.extensions.first rescue data_format
+
+      a = Attachment.new
+      a.file = StringIO.new data
+      a.author = User.current
+      a.description = Haltr::Utils.get_xpath(attach, xpaths[:attach_description])
+      a.filename = "attachment#{index+1}.#{ext}"
+      to_attach << a
+    end
+    invoice.attachments = to_attach
+
     Redmine::Hook.call_hook(:model_invoice_import_before_save, :invoice=>invoice)
 
     if keep_original
