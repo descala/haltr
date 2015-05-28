@@ -865,7 +865,8 @@ _INV
   end
 
   def send_original?
-    original and !modified_since_created? and invoice_format != 'pdf'
+    Redmine::Hook.call_hook(:model_invoice_send_original, :invoice=>self) and
+      original and !modified_since_created? and invoice_format != 'pdf'
   end
 
   def parse_xml_bank_info(xml)
