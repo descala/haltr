@@ -39,6 +39,19 @@
   <p>* <%= l(:label_will_send_original) -%></p>
 <% end -%>
 
+<% if @invoice.private_notes.present? -%>
+  <!--missatge info-->
+  <div class="seccio grup">
+    <div class="col span-2-de-2">
+      <div class="formee-msg-info invoice-private-notes">
+        <h3 id="invoice_private_notes"><%=h l(:label_private_notes)%></h3>
+        <%= simple_format @invoice.private_notes %>
+      </div>
+    </div>
+  </div>
+  <!--final missatge info-->
+<% end -%>
+
 <%= render :partial => 'events/list', locals: {events: @invoice.visible_events} %>
 <%= render :partial => 'invoices/issued_invoice_list_other' if @invoice.is_a? IssuedInvoice %>
 <%= render :partial => 'invoices/channel_links' if (Rails.env == "development" or User.current.admin?) and @invoice.is_a? IssuedInvoice %>

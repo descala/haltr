@@ -64,7 +64,7 @@ th.money, td.money, .money{
 }
 
 .invoice-channel-links, .invoice-events {
-  margin: 50px;
+  margin: 0 50px 20px 50px;
 }
 
 .overlay {
@@ -256,4 +256,10 @@ span#send_info {
   position: absolute;
   top: -13px;
   right: 0px;
+}
+.invoice-channel-links h3, .invoice-private-notes h3 {
+  border-bottom: 1px dotted #bbb;
+}
+.invoice-channel-links, .invoice-private-notes {
+  margin: 20px 50px 0 50px;
 }

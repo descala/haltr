@@ -625,3 +625,4 @@ en:
   pdf_rigth_windowed_envelope: "Right windowed envelope template"
   field_party_identification: "Party identification"
   label_invoice_total: "Total"
+  label_private_notes: "Private notes"
