@@ -39,6 +39,29 @@
   <p>* <%= l(:label_will_send_original) -%></p>
 <% end -%>
 
+<div class="seccio grup">
+  <div class="col span-2-de-2">
+    <div class="formee-msg-info invoice-comments">
+      <h3 id="haltr_comments">
+        <%=h l(:label_comment_plural)%>
+        <%= toggle_link image_tag('add.png'), "add_comment_form", :focus => "comment_comments" %>
+      </h3>
+      <%= form_tag({:controller => 'invoices', :action => 'add_comment', :id => @invoice, :project_id => @project}, :id => "add_comment_form", :style => "display:none;") do %>
+        <div class="box">
+          <%= text_area 'comment', 'comments', :cols => 80, :rows => 5, :class => 'wiki-edit' %>
+        </div>
+        <p><%= submit_tag l(:button_add) %></p>
+      <% end %>
+
+      <ul>
+        <% @invoice.comments.reverse.each do |comment| -%>
+          <li><strong><%= format_time comment.created_on %></strong> - <%= comment.author.name %>: <%= comment.comments %></li>
+        <% end -%>
+      </ul>
+    </div>
+  </div>
+</div>
+
 <%= render :partial => 'events/list', locals: {events: @invoice.visible_events} %>
 <%= render :partial => 'invoices/issued_invoice_list_other' if @invoice.is_a? IssuedInvoice %>
 <%= render :partial => 'invoices/channel_links' if (Rails.env == "development" or User.current.admin?) and @invoice.is_a? IssuedInvoice %>

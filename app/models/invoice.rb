@@ -39,6 +39,8 @@ class Invoice < ActiveRecord::Base
   belongs_to :bank_info
   has_one :amend_of, :class_name => "Invoice", :foreign_key => 'amend_id'
   belongs_to :quote
+  has_many :comments, :as => :commented, :dependent => :delete_all, :order => "created_on"
+
   validates_presence_of :client, :date, :currency, :project_id, :unless => Proc.new {|i| i.type == "ReceivedInvoice" }
   validates_inclusion_of :currency, :in  => Money::Currency.table.collect {|k,v| v[:iso_code] }, :unless => Proc.new {|i| i.type == "ReceivedInvoice" }
   validates_numericality_of :charge_amount_in_cents, :allow_nil => true

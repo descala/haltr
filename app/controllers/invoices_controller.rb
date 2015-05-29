@@ -15,7 +15,7 @@ class InvoicesController < ApplicationController
   PUBLIC_METHODS = [:by_taxcode_and_num,:view,:download,:mail,:logo,:haltr_sign]
 
   before_filter :find_project_by_project_id, :only => [:index,:new,:create,:send_new_invoices,:download_new_invoices,:update_payment_stuff,:new_invoices_from_template,:reports,:report_channel_state,:report_invoice_list,:create_invoices,:update_taxes,:import]
-  before_filter :find_invoice, :only => [:edit,:update,:mark_accepted_with_mail,:mark_accepted,:mark_refused_with_mail,:mark_refused,:duplicate_invoice,:base64doc,:show,:send_invoice,:legal,:amend_for_invoice,:original,:validate,:show_original, :mark_as_accepted, :mark_as]
+  before_filter :find_invoice, :only => [:edit,:update,:mark_accepted_with_mail,:mark_accepted,:mark_refused_with_mail,:mark_refused,:duplicate_invoice,:base64doc,:show,:send_invoice,:legal,:amend_for_invoice,:original,:validate,:show_original, :mark_as_accepted, :mark_as, :add_comment]
   before_filter :find_invoices, :only => [:context_menu,:bulk_download,:bulk_mark_as,:bulk_send,:destroy,:bulk_validate]
   before_filter :find_payment, :only => [:destroy_payment]
   before_filter :find_hashid, :only => [:view,:download]
@@ -979,6 +979,17 @@ class InvoicesController < ApplicationController
       end
       return
     end
+  end
+
+  def add_comment
+    @comment = Comment.new
+    @comment.safe_attributes = params[:comment]
+    @comment.author = User.current
+    if @invoice.comments << @comment
+      flash[:notice] = l(:label_comment_added)
+    end
+
+    redirect_to invoice_path(@invoice)
   end
 
 end

@@ -141,6 +141,8 @@ Redmine::Plugin.register :haltr do
 
     permission :use_invoice_attachments, { :attachments => :upload}
 
+    permission :add_invoice_notes, { :invoices => :add_comment }
+
     # Loads permisons from config/channels.yml
     ExportChannels.permissions.each do |permission,actions|
       permission permission, actions, :require => :member
