@@ -231,10 +231,3 @@
     <p class="warning"><%= l(:invoice_attachments_permission) %></p>
   <%- end %>
 </fieldset>
-
-<% if User.current.allowed_to?(:view_invoice_extra_fields, @project) -%>
-  <fieldset class="tabular box">
-    <legend><%=l(:label_private_notes)%></legend>
-    <%= f.text_area :private_notes, no_label: true -%>
-  </fieldset>
-<%- end %>
