@@ -257,9 +257,9 @@ span#send_info {
   top: -13px;
   right: 0px;
 }
-.invoice-private-notes h3 {
+.invoice-channel-links h3, .invoice-private-notes h3 {
   border-bottom: 1px dotted #bbb;
 }
-.invoice-private-notes {
+.invoice-channel-links, .invoice-private-notes {
   margin: 20px 50px 0 50px;
 }
