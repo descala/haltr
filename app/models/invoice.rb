@@ -645,6 +645,7 @@ _INV
       case Haltr::Utils.get_xpath(line, xpaths[:dir3_role])
       when '01'
         invoice.oficina_comptable  = Haltr::Utils.get_xpath(line, xpaths[:dir3_code])
+        invoice.oficina_comptable_name = Haltr::Utils.get_xpath(line, xpaths[:dir3_name])
       when '02'
         invoice.organ_gestor       = Haltr::Utils.get_xpath(line, xpaths[:dir3_code])
       when '03'

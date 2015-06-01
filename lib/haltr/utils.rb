@@ -131,7 +131,8 @@ module Haltr
           # relative to AdministrativeCentres
           xpaths[:dir3_code]          = "CentreCode"
           xpaths[:dir3_role]          = "RoleTypeCode"
-          xpaths[:dir3_name]          = "CentreDescription"
+          xpaths[:dir3_name]          = "Name"
+          xpaths[:dir3_desc]          = "CentreDescription"
 
           xpaths[:fa_person_type]     = "//FileHeader/FactoringAssignmentData/Assignee/TaxIdentification/PersonTypeCode"
           xpaths[:fa_residence_type]  = "//FileHeader/FactoringAssignmentData/Assignee/TaxIdentification/ResidenceTypeCode"

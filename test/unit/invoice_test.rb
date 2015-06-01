@@ -492,6 +492,7 @@ class InvoiceTest < ActiveSupport::TestCase
     assert_equal('P00000010',invoice.organ_gestor)
     assert_equal('P00000010',invoice.unitat_tramitadora)
     assert_equal('P00000010',invoice.oficina_comptable)
+    assert_equal('Oficina Comptable', invoice.oficina_comptable_name)
   end
 
   test 'invoice discounts are correctly calculated' do

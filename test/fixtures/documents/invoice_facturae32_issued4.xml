@@ -72,6 +72,7 @@
         <AdministrativeCentre>
           <CentreCode>P00000010</CentreCode>
           <RoleTypeCode>01</RoleTypeCode>
+          <Name>Oficina Comptable</Name>
           <AddressInSpain>
             <Address>c. one two three, 34</Address>
             <PostCode>08080</PostCode>
