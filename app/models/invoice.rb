@@ -11,6 +11,7 @@ class Invoice < ActiveRecord::Base
   has_associated_audits
   # do not remove, with audit we need to make the other attributes accessible
   attr_protected :created_at, :updated_at
+  attr_accessor :discount_helper
 
   # 1 - cash (al comptat)
   # 2 - debit (rebut domiciliat)
@@ -1017,6 +1018,12 @@ _INV
     end
     self.import_in_cents = subtotal.cents
     self.total_in_cents = subtotal.cents + tax_amount.cents
+
+    unless discount_percent and discount_percent > 0
+      if discount_helper.present?
+        self.discount_percent = (discount_helper.to_f * 100 / gross_subtotal.dollars)
+      end
+    end
   end
 
   def invoice_must_have_lines

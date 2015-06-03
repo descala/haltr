@@ -138,6 +138,14 @@ $(document).ready(function() {
     $('#denied_requests').toggle();
   });
 
+  $(document).on('change', ['#invoice_discount_helper','#invoice_discount_percent'], function(e) {
+    if (e.target.id == 'invoice_discount_helper') {
+      $('#invoice_discount_percent').val('');
+    } else {
+      $('#invoice_discount_helper').val('');
+    }
+  });
+
 });
 
 

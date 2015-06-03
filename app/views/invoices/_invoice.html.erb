@@ -210,7 +210,7 @@
             <td class="item-article_code"></td>
           <% end -%>
           <td class="item-description" <%= 'colspan="2"'.html_safe if @invoice.has_line_discounts? %>><%=h @invoice.discount_text %></td>
-          <td class="item-price"><%=h number_to_percentage(@invoice.discount_percent, precision: 0, strip_insignificant_zeros: true) %></td>
+          <td class="item-price"><%=h number_to_percentage(@invoice.discount_percent, precision: 2, strip_insignificant_zeros: true) %></td>
           <% if @invoice.has_line_charges? -%>
             <td></td>
           <% end -%>
