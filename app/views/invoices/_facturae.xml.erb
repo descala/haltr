@@ -196,6 +196,11 @@
                <% end -%>
              </AdministrativeCentre>
              <% end -%>
+             <% unless @invoice.unidad_contratacion.blank? -%>
+             <AdministrativeCentre>
+               <CentreCode><%= @invoice.unidad_contratacion[0..9] %></CentreCode>
+             </AdministrativeCentre>
+             <% end -%>
            </AdministrativeCentres>
          <% end -%>
          <LegalEntity>

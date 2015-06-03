@@ -120,6 +120,11 @@
           <%= h l(:field_organ_proponent) %>: <%= @invoice.organ_proponent %>
         </div>
       <% end -%>
+      <% if @invoice.unidad_contratacion.present? -%>
+        <div>
+          <%= h l(:field_unidad_contratacion) %>: <%= @invoice.unidad_contratacion%>
+        </div>
+      <% end -%>
     <% end -%>
     <% if @invoice.file_reference.present? -%>
       <div>

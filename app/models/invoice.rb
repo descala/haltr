@@ -959,7 +959,8 @@ _INV
     oficina_comptable.present? or
       organ_gestor.present? or
       unitat_tramitadora.present? or
-      organ_proponent.present?
+      organ_proponent.present? or
+      unidad_contratacion.present?
   end
 
   def has_article_codes?
