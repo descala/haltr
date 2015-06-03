@@ -868,7 +868,7 @@ _INV
   end
 
   def send_original?
-    Redmine::Hook.call_hook(:model_invoice_send_original, :invoice=>self) and
+    Redmine::Hook.call_hook(:model_invoice_send_original, :invoice=>self) != [false] and
       original and !modified_since_created? and invoice_format != 'pdf'
   end
 
