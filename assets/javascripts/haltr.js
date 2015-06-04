@@ -138,11 +138,19 @@ $(document).ready(function() {
     $('#denied_requests').toggle();
   });
 
-  $(document).on('change', ['#invoice_discount_helper','#invoice_discount_percent'], function(e) {
+  $(document).on('change', '#invoice_discount_helper, #invoice_discount_percent', function(e) {
     if (e.target.id == 'invoice_discount_helper') {
       $('#invoice_discount_percent').val('');
     } else {
       $('#invoice_discount_helper').val('');
+    }
+  });
+
+  $(document).on('change', '.discount_helper_line, .discount_percent_line', function(e) {
+    if (e.target.id.match(/discount_helper$/)) {
+      $('#'+e.target.id.replace(/helper$/,'percent')).val('');
+    } else {
+      $('#'+e.target.id.replace(/percent$/,'helper')).val('');
     }
   });
 

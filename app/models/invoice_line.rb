@@ -117,6 +117,17 @@ class InvoiceLine < ActiveRecord::Base
 _LINE
   end
 
+  def discount_helper=(v)
+    unless discount_percent and discount_percent > 0
+      if v and v.to_f > 0
+        self.discount_percent = (v.to_f * 100 / total_cost)
+      end
+    end
+  end
+
+  def discount_helper
+  end
+
   private
 
   def method_missing(m, *args)
