@@ -44,7 +44,7 @@ ca:
   link_to_profile: "vincular el seu perfil públic"
   link_to_profile_ask: "demanar autorització per vincular el seu perfil públic"
   pending_authorization: "Pendent d'autorització de l'empresa <span style='font-weight: bold;'>%{company}</span>"
-  denied_authorization: "L'empresa <span style='font-weight: bold;'>%{company}</span> ha denegat la autorització per vincular amb el seu perfil"
+  denied_authorization: "L'empresa <span style='font-weight: bold;'>%{company}</span> ha denegat l'autorització per vincular amb el seu perfil"
   linked_to_profile: "Vinculat a l'empresa <span style='font-weight: bold;'>%{company}</span>"
   link_requests: "Peticions per vincular amb el seu perfil"
   pending_requests: "%{i} peticions pendents"
@@ -86,7 +86,7 @@ ca:
   show_template: Veure la plantilla
   generate_template_from_invoice: Generar nova plantilla
   duplicate_invoice: Duplicar la factura
-  generated_from_template: Generada de la plantilla
+  generated_from_template: Generada des de la plantilla
   receive_payment: Pagament
   make_payment: Efectuar pagament
   label_paid: Pagat
@@ -103,7 +103,7 @@ ca:
   closed_invoices: Factures tancades
   label_subtotal: Subtotal
   over_taxable_base: sobre
-  must_have_lines: ha de tenir linies
+  must_have_lines: ha de tenir línies
   send_invoice: Enviar factura
   label_send: Enviar
   cash: En efectiu
@@ -172,17 +172,17 @@ ca:
   invoice_issue_subject: "Tinc un problema amb la factura amb id intern %{id}"
   invoice_issue_body: "-- escriu aquí la descripció del problema --"
   quick_pdf_view: "Vista ràpida del PDF"
-  pdf_invoice_expl: "Aquesta és una aproximació a la factura rebuda, siusplau, comproveu que les dades siguin correctes amb l'original"
+  pdf_invoice_expl: "Aquesta és una aproximació a la factura rebuda, si us plau, comproveu que les dades siguin correctes"
   no_pdf_support: "Sembla que no tens Adobe Reader o suport per a PDF en aquest navegador. <a href='%{pdf}'>Clica aquí per descarregar el PDF</a>"
   client_has_no_email: "El client associat a la factura no té correu electrònic definit"
   invoice_has_no_taxes: "La factura té alguna línia sense impostos"
   invoice_no_taxes_and_discount: "Una factura no pot tenir a la vegada línies sense impostos i un descompte global"
-  field_import: "Preu"
+  field_import: "Import"
   pdf_not_legal: "PDF no legal"
   amended_invoice: "Rectificació de la %{link}"
   amended_by_invoice: "Rectificada per la %{link}"
   create_amend_invoice: "Crear factura rectificativa"
-  label_amendment_invoice: "Factura Rectificativa"
+  label_amendment_invoice: "Factura rectificativa"
   label_amended_invoice: "Factura rectificada"
   line_specific_tax: "Impost per línia"
   default: "Per defecte"
@@ -299,8 +299,8 @@ ca:
   label_payment: Pagament
   label_payment_plural: Pagaments
   label_payment_new: Nou pagament
-  field_amount: Preu
-  field_amount_in_cents: Preu
+  field_amount: Import
+  field_amount_in_cents: Import
   field_payment_method: Mètode de pagament
   field_reference: Referència
   field_total_paid: Total pagat
@@ -333,8 +333,8 @@ ca:
   invoice_mail_subject: "Factura num @invoice.number"
   invoice_mail_body: "Li fem arribar la factura num @invoice.number amb data @invoice.date"
   quote_mail_subject: "Pressupost num @quote.number"
-  quote_mail_body: "Li fem arribar el pressupost num @quote.number amb data @quote.date"
-  return_path: "Return-Path (pels bounces)"
+  quote_mail_body: "Li fem arribar el pressupost número @quote.number amb data @quote.date"
+  return_path: "Return-Path (per als bounces)"
 
 
   # Terms
@@ -361,7 +361,7 @@ ca:
   mf1: Mensual
 
   # Errors
-  cant_connect_trace: "No es pot connectar a la plataforma b2brouter"
+  cant_connect_trace: "No es pot connectar a la plataforma B2BRouter"
   halt_configure_before_use: "Si us plau, primer de tot configura les dades de la teva empresa"
   warning_can_not_generate_invoice: "No s'ha pogut generar la factura de la plantilla %{value}"
   notice_invoice_sent: "La factura s'està enviant"
@@ -385,7 +385,7 @@ ca:
   invoices_sent: "%{num} factures enviades"
   invoice_limit_reached: "S'ha arribat al límit d'enviament simultani (10 factures).<br />Pots tornar a enviar per processar-ne 10 més."
   zip_gem_required: "Cal instal·lar la gem 'zip' per fer servir aquesta funcionalitat"
-  too_much_invoices: "Masses factures a descarregar (%{num} factures, màxim 100)"
+  too_much_invoices: "Massa factures a descarregar (%{num} factures, màxim 100)"
   field_send_invoices_by_mail: "Enviar factures a aquest email"
   state_allegedly_paid: "Informada com a pagada"
   ubl_invoice_has_taxes_withheld: "No es pot generar una factura UBL amb impostos retinguts"
@@ -414,8 +414,8 @@ ca:
   permission_manage_payments: "Gestionar pagaments"
   permission_use_templates: "Plantilles de factures"
   permission_batch_processes: "Processos amb scripts"
-  permission_use_all_readonly: "Us complet només lectura"
-  permission_restricted_use: "Us restringit"
+  permission_use_all_readonly: "Ús complet només lectura"
+  permission_restricted_use: "Ús restringit"
 
   # this depends on permissions defined in channels.yml
   permission_download_pdf: "B2BRouter - Descarregar PDF"
@@ -428,10 +428,10 @@ ca:
   permission_send_jccm: "B2BRouter - Enviar a través de JCCM"
   tax_E: "Exempt"
   tax_NS: "No subjecte"
-  tax_Z: "Zero Rated"
-  tax_S: "Standard"
-  tax_H: "High Rated"
-  tax_AA: "Low Rated"
+  tax_Z: "Tasa zero"
+  tax_S: "Estàndard"
+  tax_H: "Tasa alta"
+  tax_AA: "Tasa baixa"
   invoice_data: "Dades factura"
   bank_info: "Dades bancàries"
 
@@ -440,7 +440,7 @@ ca:
 
   button_save_and_send: Desar i enviar
   button_create_and_send: Crear i enviar
-  bank_account_empty: Cal especificar el numero de conta si el mètode de pagament és transferència
+  bank_account_empty: Cal especificar el numero de compte si el mètode de pagament és una transferència
   errors_prevented_invoice_sent: No s'ha enviat la factura perquè conté errors
   invoice_total: "Total factura"
   total_executable: "Total a pagar"
@@ -459,7 +459,7 @@ ca:
   label_format: "Format"
   button_validate: "Validar"
   downloading_doc: 'Descarregant document...'
-  calling_signature: 'Cridant a la signatura...'
+  calling_signature: 'Cridant la signatura...'
   sending_signed_doc: 'Enviant document signat al servidor...'
   document_sent: 'Document enviat al servidor.'
   error_sending_signed_doc: "Error a l'enviar el document signat."
@@ -475,7 +475,7 @@ ca:
   sure_to_resend_invoices: "Segur que voleu reenviar les factures %{nums}?"
   taxcodes_does_not_belong_to_self: "Els NIF de la factura (%{tcs}) no son de la teva empresa (%{tc})"
   label_import: "Importar"
-  overriding_original_warn: "Si deses aquesta factura, a partir d'ara es farà servir la modificada en comptes del fitxer original, n'estàs segur?"
+  overriding_original_warn: "Si deses aquesta factura, s’enviarà l’xml modificat en lloc de l’xml original. Això pot implicar l’omissió d’alduna dada present a l’original. N'estàs segur?"
   label_mandate_new: "Nou mandat"
   field_signature_date: "Data de signatura"
   field_signed_doc: "Document signat"
@@ -486,7 +486,7 @@ ca:
   label_mandate: "Mandat"
   field_delete_signed_doc: "Eliminar document signat"
   label_mandates: "Mandats"
-  n19_requires_bank_account: "Per generar n19 cal omplir el teu compte bancari"
+  n19_requires_bank_account: "Per generar N19 cal omplir el teu compte bancari"
   field_bank_infos: "Dades bancàries"
   success_sending_notification_by_mail: "Notificació enviada"
   error_sending_notification_by_mail: "Error enviant la notificació"
@@ -528,7 +528,7 @@ ca:
   chart_invoice_status: "Total facturat segons l'estat"
   chart_top_clients: "Clients més facturats"
   chart_cashflow: "Moviments de caixa"
-  chart_events: "Últims events"
+  chart_events: "Últims esdeveniments"
   past_due: "Vençudes"
   on_schedule: "Dins del termini"
   label_fiscal_data: "Dades fiscals"
@@ -550,8 +550,8 @@ ca:
   last_year: "Últim any"
   last_3_months: "Últims tres mesos"
   field_article_code: "Codi"
-  label_error_event_plural: "Events d'enviaments fallats"
-  label_info_event_plural: "Events d'enviaments exitosos"
+  label_error_event_plural: "Esdeveniments d'enviaments fallats"
+  label_info_event_plural: "Esdeveniments d'enviaments exitosos"
   audited_create: "Creat: %{model}"
   audited_update: "Actualitzat: %{model}"
   audited_destroy: "Esborrat: %{model}"
@@ -603,7 +603,7 @@ ca:
   label_will_send_original: "Aquesta factura té original i no s'ha modificat. Així doncs s'enviarà el document original."
   import_errors: "Errors d'importació"
   text_import_errors_destroy_confirmation: "Segur que vols esborrar els errors d'importació seleccionats?"
-  field_series_code: "Serie"
+  field_series_code: "Sèrie"
   state_not_allowed_for_sending: "No es poden reenviar les factures en estat %{state}"
   amendment: "Rectificativa"
   missing_imap_config: "Falta la configuració IMAP a 'La meva empresa'"
@@ -613,23 +613,23 @@ ca:
   field_invoicing_period_end: "Fi període de facturació"
   field_invoicing_period: "Període de facturació"
   label_factoring_assignment_data: 'Cessió de factoring'
-  field_fa_person_type: 'Tipus entitat'
+  field_fa_person_type: "Tipus d'entitat"
   field_fa_residence_type: 'Residència'
   field_fa_taxcode: 'NIF'
   field_fa_name: 'Nom'
   field_fa_address: 'Adreça'
   field_fa_postcode: 'Codi postal'
   field_fa_town: 'Ciutat'
-  field_fa_province: 'Provincia'
+  field_fa_province: 'Província'
   field_fa_country: 'País'
   field_fa_info: 'Informació'
   field_fa_duedate: 'Data venciment'
-  field_fa_import: 'Preu'
+  field_fa_import: 'Import'
   field_fa_iban: 'IBAN'
   field_fa_bank_code: 'Codi bancari'
   field_fa_clauses: 'Clàusula de cessió'
   field_fa_payment_method: 'Mètode de pagament'
-  channel_requires_user_pass: "El canal necessita que configuris usuari i password a 'La meva empresa'"
+  channel_requires_user_pass: "El canal necessita que configuris usuari i password a 'Connexions' a 'La meva empresa'"
   download_legal_invoice: "Descarregar factura legal"
   label_report_channel_state: "Factures per canal d'enviament i per estat"
   pdf_customization: "Personalització de PDF"
