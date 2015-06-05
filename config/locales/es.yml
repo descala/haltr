@@ -302,8 +302,8 @@ es:
   label_payment: Pago
   label_payment_plural: Pagos
   label_payment_new: Nuevo pago
-  field_amount: Importe
-  field_amount_in_cents: Importe
+  field_amount: Precio
+  field_amount_in_cents: Precio
   field_payment_method: Método de pago
   field_reference: Referencia
   field_total_paid: Total pagado
