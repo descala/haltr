@@ -60,10 +60,16 @@
     <%= render :partial => 'invoices/payment_stuff' %>
   </div>
 
+  <div class="seccio grup">
+    <p class="col span-3-de-3">
+    <%= f.text_area :extra_info, :rows=>3 %>
+    </p>
+  </div>
+
 </fieldset>
 
 <fieldset class="tabular box">
-  <legend class="titularAcc"><%= l(:other) %></legend>
+  <legend class="titularAcc"><%= l(:label_discounts_and_charges) %></legend>
   <div class="contingutAcc">
 
     <div class="seccio grup">
@@ -79,25 +85,17 @@
     </div>
 
     <div class="seccio grup">
-      <p class="col span-1-de-2">
+      <p class="col span-1-de-3">
       <%= f.text_field :charge_reason %>
       </p>
-      <p class="col span-1-de-2">
+      <p class="col span-1-de-3">
       <%= f.text_field :charge_amount, :value => (@invoice.charge_amount.cents > 0 ? @invoice.charge_amount : "") %>
       </p>
-    </div>
-
-    <div class="seccio grup">
-      <p class="col span-1-de-2">
+      <p class="col span-1-de-3">
       <%= f.text_field :accounting_cost %>
       </p>
     </div>
 
-    <div class="seccio grup">
-      <p class="col span-2-de-2">
-      <%= f.text_area :extra_info, :rows=>3 %>
-      </p>
-    </div>
   </div>
 </fieldset>
 
