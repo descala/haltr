@@ -60,6 +60,7 @@ sv:
   button_new_invoice: Ny faktura
   button_add_invoice_line: Lägg till fakturarad
   field_number: Nummer
+  field_invoice_number: Factura nummer
   label_last_invoice_number: "Senast använda"
   field_date: Datum
   field_client: Kund

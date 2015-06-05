@@ -73,7 +73,7 @@ es:
   label_received_invoice_new: Añadir factura recibida
   button_new_invoice: Nueva factura
   button_add_invoice_line: Añade una nueva línea a la factura
-  field_number: Número
+  field_invoice_number: Número de factura
   label_last_invoice_number: "Último usado"
   field_date: Fecha
   field_client: Cliente

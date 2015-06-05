@@ -60,6 +60,7 @@ da:
   button_new_invoice: Ny faktura
   button_add_invoice_line: Tilføj en ny faktura linje
   field_number: Nummer
+  field_invoice_number: Faktura nummer
   label_last_invoice_number: "Sidste brugt"
   field_date: Dato
   field_client: Kunde

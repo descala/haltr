@@ -61,6 +61,7 @@ en:
   button_new_invoice: New invoice
   button_add_invoice_line: Add a new invoice line
   field_number: Number
+  field_invoice_number: Invoice number
   label_last_invoice_number: "Last used"
   field_date: Date
   field_client: Client

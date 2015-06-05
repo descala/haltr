@@ -61,6 +61,7 @@ fr:
   button_new_invoice: Nouvelle facture
   button_add_invoice_line: Ajouter une nouvelle ligne
   field_number: Numéro
+  field_invoice_number: Numéro facture
   label_last_invoice_number: Dernier utilisé
   field_date: Date
   field_client: Client
