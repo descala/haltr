@@ -20,7 +20,7 @@
       <% if controller.controller_name == "invoice_templates" -%>
         <%= f.select :frequency, frequencies_for_select, :required => true %>
       <% else -%>
-        <%= f.text_field :number, :size => 10, :required => true %> <span class="text"><%= "#{l(:label_last_invoice_number)}: #{IssuedInvoice.last_number(@project)}" if @project.issued_invoices.any?%></span>
+        <%= f.text_field :number, :size => 10, :required => true, :label => l(:field_invoice_number) %> <span class="text"><%= "#{l(:label_last_invoice_number)}: #{IssuedInvoice.last_number(@project)}" if @project.issued_invoices.any?%></span>
       <% end -%>
     </p>
     <% if @invoice.amend_of || @invoice.series_code.present? || User.current.allowed_to?(:view_invoice_extra_fields, @project) -%>
@@ -61,151 +61,155 @@
   </div>
 
   <div class="seccio grup">
-    <p class="col span-1-de-3">
-      <%= f.text_field :discount_text %>
-    </p>
-    <p class="col span-1-de-3">
-      <%= f.text_field :discount_percent %>
-    </p>
-    <p class="col span-1-de-3">
-      <%= f.text_field :discount_helper %>
-    </p>
-  </div>
-
-
-  <div class="seccio grup">
-    <p class="col span-1-de-2">
-      <%= f.text_field :charge_reason %>
-    </p>
-    <p class="col span-1-de-2">
-      <%= f.text_field :charge_amount, :value => (@invoice.charge_amount.cents > 0 ? @invoice.charge_amount : "") %>
-    </p>
-  </div>
-
-  <div class="seccio grup">
-    <p class="col span-1-de-2">
-      <%= f.text_field :accounting_cost %>
-    </p>
-  </div>
-
-
-  <div class="seccio grup">
-    <p class="col span-2-de-2">
-      <%= f.text_area :extra_info, :rows=>3 %>
+    <p class="col span-3-de-3">
+    <%= f.text_area :extra_info, :rows=>3 %>
     </p>
   </div>
 
 </fieldset>
 
+<fieldset class="tabular box">
+  <legend class="titularAcc"><%= l(:label_discounts_and_charges) %></legend>
+  <div class="contingutAcc">
+
+    <div class="seccio grup">
+      <p class="col span-1-de-3">
+      <%= f.text_field :discount_text %>
+      </p>
+      <p class="col span-1-de-3">
+      <%= f.text_field :discount_percent %>
+      </p>
+      <p class="col span-1-de-3">
+      <%= f.text_field :discount_helper %>
+      </p>
+    </div>
+
+    <div class="seccio grup">
+      <p class="col span-1-de-3">
+      <%= f.text_field :charge_reason %>
+      </p>
+      <p class="col span-1-de-3">
+      <%= f.text_field :charge_amount, :value => (@invoice.charge_amount.cents > 0 ? @invoice.charge_amount : "") %>
+      </p>
+      <p class="col span-1-de-3">
+      <%= f.text_field :accounting_cost %>
+      </p>
+    </div>
+
+  </div>
+</fieldset>
+
 <% if User.current.allowed_to?(:view_invoice_extra_fields, @project) or @invoice.has_factoring_data? -%>
   <fieldset class="tabular box">
-    <legend><%= l(:label_factoring_assignment_data) %></legend>
+    <legend class="titularAcc"><%= l(:label_factoring_assignment_data) %></legend>
+    <div class="contingutAcc">
 
-    <div class="seccio grup">
-      <p class="col span-1-de-4">
-      <%= f.text_field :fa_name %>
-      </p>
-      <p class="col span-1-de-4">
-      <%= f.text_field :fa_taxcode %>
-      </p>
-      <p class="col span-1-de-4">
-      <%= f.label_for_field :fa_person_type %>
-      <%= f.radio_button :fa_person_type, 'J' %> J
-      <%= f.radio_button :fa_person_type, 'F' %> F
-      </p>
-      <p class="col span-1-de-4">
-      <%= f.label_for_field :fa_residence_type %>
-      <%= f.radio_button :fa_residence_type, 'E' %> E
-      <%= f.radio_button :fa_residence_type, 'R' %> R
-      <%= f.radio_button :fa_residence_type, 'U' %> U
-      </p>
+      <div class="seccio grup">
+        <p class="col span-1-de-4">
+        <%= f.text_field :fa_name %>
+        </p>
+        <p class="col span-1-de-4">
+        <%= f.text_field :fa_taxcode %>
+        </p>
+        <p class="col span-1-de-4">
+        <%= f.label_for_field :fa_person_type %>
+        <%= f.radio_button :fa_person_type, 'J' %> J
+        <%= f.radio_button :fa_person_type, 'F' %> F
+        </p>
+        <p class="col span-1-de-4">
+        <%= f.label_for_field :fa_residence_type %>
+        <%= f.radio_button :fa_residence_type, 'E' %> E
+        <%= f.radio_button :fa_residence_type, 'R' %> R
+        <%= f.radio_button :fa_residence_type, 'U' %> U
+        </p>
+      </div>
+
+      <div class="seccio grup">
+        <p class="col span-1-de-4">
+        <%= f.text_field :fa_address %>
+        </p>
+        <p class="col span-1-de-4">
+        <%= f.text_field :fa_postcode %>
+        </p>
+        <p class="col span-1-de-4">
+        <%= f.text_field :fa_town %>
+        </p>
+        <p class="col span-1-de-4">
+        <%= f.text_field :fa_province %>
+        </p>
+      </div>
+
+      <div class="seccio grup">
+        <p class="col span-1-de-4">
+        <%= f.label_for_field :fa_country %>
+        <%= f.iso_country_select :fa_country, [:es] %>
+        </p>
+        <p class="col span-1-de-4">
+        <%= f.text_field :fa_info %>
+        </p>
+        <p class="col span-1-de-4">
+        <%= f.text_field :fa_duedate, :size => 10 %><%= calendar_for('invoice_fa_duedate') %>
+        </p>
+        <p class="col span-1-de-4">
+        <%= f.text_field :fa_import %>
+        </p>
+      </div>
+
+      <div class="seccio grup">
+        <p class="col span-2-de-4">
+        <%= f.text_field :fa_iban %>
+        </p>
+        <p class="col span-1-de-4">
+        <%= f.text_field :fa_bank_code %>
+        </p>
+        <p class="col span-1-de-4">
+        <%= f.text_field :fa_payment_method %>
+        </p>
+      </div>
+
+      <div class="seccio grup">
+        <p class="col span-1-de-1">
+        <%= f.text_area :fa_clauses %>
+        </p>
+      </div>
     </div>
-
-    <div class="seccio grup">
-      <p class="col span-1-de-4">
-      <%= f.text_field :fa_address %>
-      </p>
-      <p class="col span-1-de-4">
-      <%= f.text_field :fa_postcode %>
-      </p>
-      <p class="col span-1-de-4">
-      <%= f.text_field :fa_town %>
-      </p>
-      <p class="col span-1-de-4">
-      <%= f.text_field :fa_province %>
-      </p>
-    </div>
-
-    <div class="seccio grup">
-      <p class="col span-1-de-4">
-      <%= f.label_for_field :fa_country %>
-      <%= f.iso_country_select :fa_country, [:es] %>
-      </p>
-      <p class="col span-1-de-4">
-      <%= f.text_field :fa_info %>
-      </p>
-      <p class="col span-1-de-4">
-      <%= f.text_field :fa_duedate, :size => 10 %><%= calendar_for('invoice_fa_duedate') %>
-      </p>
-      <p class="col span-1-de-4">
-      <%= f.text_field :fa_import %>
-      </p>
-    </div>
-
-    <div class="seccio grup">
-      <p class="col span-2-de-4">
-      <%= f.text_field :fa_iban %>
-      </p>
-      <p class="col span-1-de-4">
-      <%= f.text_field :fa_bank_code %>
-      </p>
-      <p class="col span-1-de-4">
-      <%= f.text_field :fa_payment_method %>
-      </p>
-    </div>
-
-    <div class="seccio grup">
-      <p class="col span-1-de-1">
-      <%= f.text_area :fa_clauses %>
-      </p>
-    </div>
-
   </fieldset>
 <% end -%>
 
-<%= call_hook(:invoice_form_after_invoice_data) %>
-
 <fieldset class="tabular box">
-  <legend><%=l(:label_tax_plural)%></legend>
+  <legend class="titularAcc"><%= l(:label_tax_plural) %></legend>
+  <div class="contingutAcc">
 
-  <% if @invoice.taxes_hash.empty? -%>
-    <%= link_to_if_authorized l(:add_taxes_on_company), project_my_company_path(@project) -%>
-  <% end -%>
+    <% if @invoice.taxes_hash.empty? -%>
+      <%= link_to_if_authorized l(:add_taxes_on_company), project_my_company_path(@project) -%>
+    <% end -%>
 
-  <% @invoice.taxes_hash.keys.sort.each do |name| -%>
-    <div class="seccio grup">
-      <p class="col span-1-de-5">
+    <% @invoice.taxes_hash.keys.sort.each do |name| -%>
+      <div class="seccio grup">
+        <p class="col span-1-de-5">
         <%= label_tag "#{name}_global", name%>
-          <%= select_tag("#{name}_global",
-                         options_for_select(tax_categories_array(@invoice,name),
-                         :selected => @invoice.global_code_for(name)),
-                         :disabled => @invoice.tax_per_line?(name),
-                         :style => "width: 90px;",
-                         'class' => 'global_tax',
-                         'data-tax-name' => name ) %>
+        <%= select_tag("#{name}_global",
+                       options_for_select(tax_categories_array(@invoice,name),
+                                          :selected => @invoice.global_code_for(name)),
+                       :disabled => @invoice.tax_per_line?(name),
+                       :style => "width: 90px;",
+                       'class' => 'global_tax',
+                       'data-tax-name' => name ) %>
       </p>
       <p class="col span-1-de-5 check-box-alineat">
-          <%= check_box_tag("#{name}_multiple", 1, @invoice.tax_per_line?(name), :class => 'global_tax_check', 'data-tax-name' => name) %>
-        <span>
-          <%= l(:line_specific_tax) %>
-        </span>
+      <%= check_box_tag("#{name}_multiple", 1, @invoice.tax_per_line?(name), :class => 'global_tax_check', 'data-tax-name' => name) %>
+      <span>
+        <%= l(:line_specific_tax) %>
+      </span>
       </p>
       <p id="<%=name%>_comment" style="<%= hide_if_not_exempt_tax(name) %>" class="col span-3-de-5">
-        <%= label_tag "#{name}_comment", l("field_comment") %>
-        <%= text_field_tag("#{name}_comment", @invoice.global_comment_for(name)) %>
+      <%= label_tag "#{name}_comment", l("field_comment") %>
+      <%= text_field_tag("#{name}_comment", @invoice.global_comment_for(name)) %>
       </p>
-    </div>
-  <% end -%>
+      </div>
+    <% end -%>
+
+  </div>
 </fieldset>
 
 
