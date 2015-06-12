@@ -965,19 +965,23 @@ _INV
   end
 
   def has_article_codes?
-    invoice_lines.any? {|l| l.article_code.present? }
+    return @has_article_codes unless @has_article_codes.nil?
+    @has_article_codes = invoice_lines.any? {|l| l.article_code.present? }
   end
 
   def has_delivery_note_numbers?
-    invoice_lines.any? {|l| l.delivery_note_number.present? }
+    return @has_delivery_note_numbers unless @has_delivery_note_numbers.nil?
+    @has_delivery_note_numbers = invoice_lines.any? {|l| l.delivery_note_number.present? }
   end
 
   def has_line_discounts?
-    invoice_lines.sum(&:discount_percent) > 0
+    return @has_line_discounts unless @has_line_discounts.nil?
+    @has_line_discounts = (invoice_lines.sum(&:discount_percent) > 0)
   end
 
   def has_line_charges?
-    invoice_lines.sum(&:charge) > 0
+    return @has_line_charges unless @has_line_charges.nil?
+    @has_line_charges = (invoice_lines.sum(&:charge) > 0)
   end
 
   protected

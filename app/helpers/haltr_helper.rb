@@ -22,12 +22,13 @@ module HaltrHelper
     end
   end
 
-  def line_price(line, price='price')
+  def line_price(line, price='price', invoice=nil)
     decimals = line.send(price).to_s.split(".").last
     precision = decimals.size
     precision = 0 if decimals =~ /^0+$/
     precision = 2 if precision == 1
-    currency = Money::Currency.new(line.invoice.currency)
+    invoice ||= line.invoice
+    currency = Money::Currency.new(invoice.currency)
     currency_symbol = currency.symbol || ""
     if currency.subunit_to_unit == 1 and precision == 2
       precision = 0
