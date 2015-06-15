@@ -64,7 +64,7 @@
 
 <%= render :partial => 'events/list', locals: {events: @invoice.visible_events} %>
 <%= render :partial => 'invoices/issued_invoice_list_other' if @invoice.is_a? IssuedInvoice %>
-<%= render :partial => 'invoices/channel_links' if (Rails.env == "development" or User.current.admin?) and @invoice.is_a? IssuedInvoice %>
+<%= render :partial => 'invoices/channel_links' if (Rails.env == "development" or User.current.allowed_to?(:use_all_readonly, @project)) and @invoice.is_a? IssuedInvoice %>
 
 <% if @invoice.is_a? InvoiceTemplate and @invoices_generated and @invoices_generated.any? -%>
   <h3><%= l(:label_generated_invoices)%></h3>
