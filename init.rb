@@ -86,7 +86,7 @@ Redmine::Plugin.register :haltr do
       { :clients   => [:index, :edit, :check_cif, :ccc2iban],
         :people    => [:index, :edit],
         :invoices  => [:index, :show, :legal, :download_new_invoices, :reports, :report_channel_state, :report_invoice_list,
-                       :context_menu, :show_original, :number_to_id],
+                       :context_menu, :show_original, :number_to_id, :edit],
         :received  => [:index, :show, :show_original, :legal, :context_menu],
         :companies => [:my_company,:bank_info, :linked_to_mine, :check_iban],
         :payments  => [:index, :n19],
