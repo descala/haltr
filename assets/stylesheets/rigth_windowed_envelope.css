@@ -229,3 +229,6 @@ div.client {
   width: 46%;
   margin-top: -20px;
 }
+.line-items tr.nobottomline td {
+	border-bottom: none !important;
+}
