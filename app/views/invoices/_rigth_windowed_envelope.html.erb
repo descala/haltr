@@ -140,22 +140,28 @@
   <table class="line-items" border="0" cellpadding="0" cellspacing="0">
     <tbody>
       <tr>
+        <% line_cells = 4 -%>
         <% if @invoice.has_delivery_note_numbers? -%>
+          <% line_cells += 1 -%>
           <th class="item-delivery_note first"><%=h l(:field_delivery_note_number) %></th>
         <% end -%>
         <th class="item-quantity"><abbr title="Quantitat">Q</abbr></th>
         <% if @invoice.has_article_codes? -%>
+          <% line_cells += 1 -%>
           <th class="item-article_code"><%=h l(:field_article_code)%></th>
         <% end -%>
         <th class="item-description"><%=h l(:field_description)%></th>
         <% if @invoice.invoice_lines.any? {|l| !l.sequence_number.blank? } -%>
+          <% line_cells += 1 -%>
           <th class="item-sequence-number"><%= l(:sequence_number) %></th>
         <% end -%>
         <th class="item-price"><%=h l(:field_amount) %></th>
         <% if @invoice.has_line_discounts? -%>
+          <% line_cells += 1 -%>
           <th class="item-price"><%=h l(:field_discount) %></th>
         <% end -%>
         <% if @invoice.has_line_charges? -%>
+          <% line_cells += 1 -%>
           <th class="item-price"><%= h l(:field_charge) %></th>
         <% end -%>
         <th class="line-total last"><%=h l(:label_invoice_total)%></th>
@@ -196,7 +202,7 @@
         <% unless line.notes.blank? -%>
           <tr>
             <td></td>
-            <td colspan="0"><%= l(:field_extra_info) %>: <%= line.notes %></td>
+            <td colspan="<%= line_cells - 1 %>"><%= l(:field_extra_info) %>: <%= line.notes %></td>
           </tr>
         <% end -%>
       <% end -%>
