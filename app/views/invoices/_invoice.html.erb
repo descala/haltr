@@ -191,7 +191,7 @@
             <td></td>
           <% end -%>
           <% if @invoice.has_line_charges? -%>
-            <td class="item-price"><%= h line_price(line, 'charge'), @invoice %></td>
+            <td class="item-price"><%= h line_price(line, 'charge', @invoice) %></td>
           <% end -%>
           <td class="line-total last"><%=h money(line.taxable_base.to_money(@invoice.currency)) %></td>
         </tr>
