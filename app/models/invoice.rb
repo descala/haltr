@@ -378,6 +378,12 @@ class Invoice < ActiveRecord::Base
     end
   end
 
+  def issuer_transaction_reference=(value)
+    invoice_lines.each do |line|
+      line.issuer_transaction_reference=value
+    end
+  end
+
   def tax_per_line?(tax_name)
     return false if invoice_lines.first.nil?
     first_tax = invoice_lines.first.taxes.collect {|t| t if t.name == tax_name}.compact.first
