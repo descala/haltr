@@ -72,27 +72,25 @@ class InvoiceTemplatesController < InvoicesController
   # creates new draft invoices from template
   def new_invoices_from_template
     @number = IssuedInvoice.next_number(@project)
-    days = params[:date] || 10
+    days = params[:days] || 10
     @date = Date.today + days.to_i.day
     @drafts = DraftInvoice.find :all, :include => [:client], :conditions => ["clients.project_id = ?", @project.id], :order => "date ASC"
-    if request.post?
-      templates = InvoiceTemplate.find :all, :include => [:client], :conditions => ["clients.project_id = ? and date <= ?", @project.id, @date], :order => "date ASC"
-      templates.each do |t|
-        if t.frequency < 6 and t.date < 1.year.ago.to_date
-          # limit to 1 year invoices with frequency < 6 months
-          flash.now[:error] = l(:template_too_old, :client => t.client.name)
-          next
-        elsif t.date < 2.year.ago.to_date
-          # limit to 2 years invoices with frequency >= 6 months
-          flash.now[:error] = l(:template_too_old, :client => t.client.name)
-          next
-        end
-        begin
-          @drafts << t.invoices_until(@date)
-        rescue ActiveRecord::RecordInvalid => e
-          flash.now[:warning] = l(:warning_can_not_generate_invoice,t.to_s)
-          flash.now[:error] = e.message
-        end
+    templates = InvoiceTemplate.find :all, :include => [:client], :conditions => ["clients.project_id = ? and date <= ?", @project.id, @date], :order => "date ASC"
+    templates.each do |t|
+      if t.frequency < 6 and t.date < 1.year.ago.to_date
+        # limit to 1 year invoices with frequency < 6 months
+        flash.now[:error] = l(:template_too_old, :client => t.client.name)
+        next
+      elsif t.date < 2.year.ago.to_date
+        # limit to 2 years invoices with frequency >= 6 months
+        flash.now[:error] = l(:template_too_old, :client => t.client.name)
+        next
+      end
+      begin
+        @drafts << t.invoices_until(@date)
+      rescue ActiveRecord::RecordInvalid => e
+        flash.now[:warning] = l(:warning_can_not_generate_invoice,t.to_s)
+        flash.now[:error] = e.message
       end
     end
     @drafts.flatten!
