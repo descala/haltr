@@ -141,20 +141,8 @@ class Invoice < ActiveRecord::Base
     "#{l(:label_invoice)}-#{number.gsub('/','')}" rescue "factura-___"
   end
 
-  def recipient_people
-    self.client.people.find(:all,:order=>'last_name ASC',:conditions=>['send_invoices_by_mail = true'])
-  end
-
   def recipient_emails
-    mails = self.recipient_people.collect do |person|
-      person.email if person.email and !person.email.blank?
-    end
-    mails << self.client.email if self.client and self.client.email and !self.client.email.blank?
-    # additional mails hook. it returns an array
-    mails = mails + Redmine::Hook.call_hook(:model_invoice_additional_recipient_emails, :invoice=>self)
-    replace_mails = Redmine::Hook.call_hook(:model_invoice_replace_recipient_emails, :invoice=>self)
-    mails = replace_mails if replace_mails.any?
-    mails.uniq.compact
+    client.recipient_emails
   end
 
   def terms_description

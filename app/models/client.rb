@@ -180,6 +180,22 @@ class Client < ActiveRecord::Base
     audts[last] || []
   end
 
+  def recipient_people
+    people.find(:all,:order=>'last_name ASC',:conditions=>['send_invoices_by_mail = true'])
+  end
+
+  def recipient_emails
+    mails = recipient_people.collect do |person|
+      person.email if person.email and !person.email.blank?
+    end
+    mails << email if email and !email.blank?
+    # additional mails hook. it returns an array
+    mails = mails + Redmine::Hook.call_hook(:model_invoice_additional_recipient_emails, :invoice=>self)
+    replace_mails = Redmine::Hook.call_hook(:model_invoice_replace_recipient_emails, :invoice=>self)
+    mails = replace_mails if replace_mails.any?
+    mails.uniq.compact
+  end
+
   protected
 
   # called after_create (only NEW clients)
