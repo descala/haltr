@@ -2,6 +2,7 @@
 <div class="seccio grup">
   <div class="col span-2-de-2">
     <ul class="menu-rapid">
+      <%=  call_hook(:invoices_index_menu_top) %>
       <li><%= link_to_if_authorized(l("label_invoice_new"), new_project_invoice_path(@project), :class => 'icon icon-add') %></li>
       <% if num_can_be_sent > 0 -%>
         <li>
@@ -23,6 +24,7 @@
         <%= link_to l(:label_import), project_invoices_import_path(@project, params.merge({issued: 1})) -%>
         </li>
       <% end -%>
+      <%=  call_hook(:invoices_index_menu_bottom) %>
     </ul>
   </div>
 </div>
