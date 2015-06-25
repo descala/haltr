@@ -410,6 +410,15 @@ class InvoicesController < ApplicationController
   end
 
   def show_original
+    case @invoice.original
+    when /<SchemaVersion>3\.2<\/SchemaVersion>/
+      template = 'invoices/visor_face_32.xsl.erb'
+    when /<SchemaVersion>3\.2\.1<\/SchemaVersion>/
+      template = 'invoices/visor_face_321.xsl.erb'
+    else
+      redirect_to action: 'show', id: @invoice
+      return
+    end
     @invoices_not_sent = InvoiceDocument.find(:all,:conditions => ["client_id = ? and state = 'new'",@client.id]).sort
     @invoices_sent = InvoiceDocument.find(:all,:conditions => ["client_id = ? and state = 'sent'",@client.id]).sort
     @invoices_closed = InvoiceDocument.find(:all,:conditions => ["client_id = ? and state = 'closed'",@client.id]).sort
@@ -418,7 +427,7 @@ class InvoicesController < ApplicationController
     @autocall_args = params[:autocall_args]
     @format = params["format"]
     doc   = Nokogiri::XML(@invoice.original)
-    xslt  = Nokogiri::XSLT(render_to_string(:template=>'invoices/visor_face_32.xsl.erb',:layout=>false))
+    xslt  = Nokogiri::XSLT(render_to_string(:template=>template,:layout=>false))
     @out  = xslt.transform(doc)
     respond_to do |format|
       format.html do
