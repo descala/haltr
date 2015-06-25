@@ -410,15 +410,34 @@ class InvoicesController < ApplicationController
   end
 
   def show_original
-    @invoice.update_attribute(:has_been_read, true) if @invoice.is_a? ReceivedInvoice
-    if @invoice.invoice_format == "pdf"
-      render :template => 'received/show_pdf'
-    else
-      doc  = Nokogiri::XML(@invoice.original)
-      # TODO: received/facturae31.xsl.erb and received/facturae30.xsl.erb templates
-      xslt = Nokogiri::XSLT(render_to_string(:template=>'received/facturae32.xsl.erb',:layout=>false))
-      @out  = xslt.transform(doc)
-      render :template => 'received/show_with_xsl'
+    @invoices_not_sent = InvoiceDocument.find(:all,:conditions => ["client_id = ? and state = 'new'",@client.id]).sort
+    @invoices_sent = InvoiceDocument.find(:all,:conditions => ["client_id = ? and state = 'sent'",@client.id]).sort
+    @invoices_closed = InvoiceDocument.find(:all,:conditions => ["client_id = ? and state = 'closed'",@client.id]).sort
+    @js = ExportChannels[@client.invoice_format]['javascript'] rescue nil
+    @autocall = params[:autocall]
+    @autocall_args = params[:autocall_args]
+    @format = params["format"]
+    doc   = Nokogiri::XML(@invoice.original)
+    xslt  = Nokogiri::XSLT(render_to_string(:template=>'invoices/visor_face_32.xsl.erb',:layout=>false))
+    @out  = xslt.transform(doc)
+    respond_to do |format|
+      format.html do
+        render :template => 'invoices/show_with_xsl'
+      end
+      format.pdf do
+        @is_pdf = true
+        @debug = params[:debug]
+        render :pdf => @invoice.pdf_name_without_extension,
+          :disposition => 'attachment',
+          :layout => "invoice.html",
+          :template=>"invoices/show_with_xsl",
+          :formats => :html,
+          :show_as_html => params[:debug],
+          :margin => {:top => 20,
+            :bottom => 20,
+            :left   => 30,
+            :right  => 20}
+      end
     end
   end
 
