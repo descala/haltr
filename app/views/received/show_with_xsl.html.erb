@@ -20,8 +20,20 @@
 
 <div id="invoice_wrapper">
 
-  <div id="InvoiceOutput">
-    <%=@out.to_html.html_safe%>
+  <div class="ribbon ribbon-<%= @invoice.state %>">
+    <% if @invoice.is_a? InvoiceTemplate %>
+      <span><%=h l("label_invoice_template") %></span>
+    <% else %>
+      <span><%=h l("state_#{@invoice.state}").capitalize %></span>
+    <% end %>
+  </div>
+
+  <div id="workspace1" class="haltrinvoice">
+    <div id="workspace2">
+      <div id="col1">
+        <%=@out.to_html.html_safe%>
+      </div>
+    </div>
   </div>
 
   <%= render :partial => "invoices/payments" -%>
