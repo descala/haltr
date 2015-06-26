@@ -632,7 +632,7 @@
 					<div id="principal">
 					<center>
 						<table border="0" width="90%" cellpadding="0" cellspacing="0">
-							<tr  id="lote" style="display:none">
+							<tr  id="lote" style="<%= @is_pdf ? '' : 'display:none' %>">
 								<td width="100%">
 									<table border="0" cellpadding="0" cellspacing="0" width="100%">
 										<tr>
@@ -722,14 +722,14 @@
 											</tr>
 											<tr>
 												<td align="right">
-													<a href="#" onclick="mostrarFactura('{$nFactura}')">DETALLE DEL LOTE</a>
+                                                  <a href="#" onclick="mostrarFactura('{$nFactura}')"><%= @is_pdf ? '' : 'DETALLE DEL LOTE' %></a>
 												</td>
 											</tr>
 										</table>
 									</td>
 								</tr>
 							</xsl:for-each>
-							<tr  id="importesLote" style="display:none">
+							<tr  id="importesLote" style="<%= @is_pdf ? '' : 'display:none' %>">
 								<td width="100%">
 									<table border="0" cellpadding="0" cellspacing="0" width="100%">
 										<tr>
@@ -910,7 +910,7 @@
 															</font>
 														</td>
 														<td align="right">
-															<a id="datosEmisorLink" href="javascript:mostrarCapa('datosEmisor')">Mostrar más datos</a>
+                                                          <a id="datosEmisorLink" href="javascript:mostrarCapa('datosEmisor')"><%= @is_pdf ? '' : 'Mostrar más datos' %></a>
 														</td>
 													</tr>
 													<tr>
@@ -957,7 +957,7 @@
 												</table>
 											</td>
 										</tr>
-										<tr id="datosEmisor" style="display:none">
+										<tr id="datosEmisor" style="<%= @is_pdf ? '' : 'display:none' %>">
 											<td width="100%">
 												<table border="0" cellpadding="0" cellspacing="0" width="100%">
 													<tr>
@@ -1400,7 +1400,7 @@
 															</font>
 														</td>
 														<td align="right">
-															<a id="datosReceptorLink" href="javascript:mostrarCapa('datosReceptor')">Mostrar más datos</a>
+                                                          <a id="datosReceptorLink" href="javascript:mostrarCapa('datosReceptor')"><%= @is_pdf ? '' : 'Mostrar más datos' %></a>
 														</td>
 													</tr>
 													<tr>
@@ -1447,7 +1447,7 @@
 												</table>
 											</td>
 										</tr>
-										<tr id="datosReceptor" style="display:none">
+										<tr id="datosReceptor" style="<%= @is_pdf ? '' : 'display:none' %>">
 											<td width="100%">
 												<table border="0" cellpadding="0" cellspacing="0" width="100%">
 													<tr>
@@ -1871,7 +1871,7 @@
 							</tr>
 							<xsl:apply-templates select="FileHeader/ThirdParty"/>
 							<xsl:apply-templates select="Invoices/Invoice"/>
-							<tr  id="listadoFacturas" style="display:none">
+							<tr  id="listadoFacturas" style="<%= @is_pdf ? '' : 'display:none' %>">
 								<td width="100%">
 									<table border="0" cellpadding="0" cellspacing="0" width="100%">
 										<tr>
@@ -1954,7 +1954,7 @@
 			</body>
 	</xsl:template>
 	<xsl:template match="//m:Facturae/FileHeader/ThirdParty">
-		<tr id="tercero" style="display:none">
+		<tr id="tercero" style="<%= @is_pdf ? '' : 'display:none' %>">
 			 <td width="100%">
 				<table border="0" cellpadding="0" cellspacing="0" width="100%">
 					<tr>
@@ -1975,7 +1975,7 @@
 										</font>
 									</td>
 									<td align="right">
-										<a id="datosTerceroLink" href="javascript:mostrarCapa('datosTercero')">Mostrar más datos</a>
+                                      <a id="datosTerceroLink" href="javascript:mostrarCapa('datosTercero')"><%= @is_pdf ? '' : 'Mostrar más datos' %></a>
 									</td>
 								</tr>
 								<tr>
@@ -2022,7 +2022,7 @@
 							</table>
 						</td>
 					</tr>
-					<tr id="datosTercero" style="display:none">
+					<tr id="datosTercero" style="<%= @is_pdf ? '' : 'display:none' %>">
 						<td width="100%">
 							<table border="0" cellpadding="0" cellspacing="0" width="100%">
 								<tr>
@@ -2282,7 +2282,7 @@
 										</font>
 									</td>
 									<td align="right">
-										<a id="datosCesionarioLink" href="javascript:mostrarCapa('datosCesionario')">Mostrar más datos</a>
+                                      <a id="datosCesionarioLink" href="javascript:mostrarCapa('datosCesionario')"><%= @is_pdf ? '' : 'Mostrar más datos' %></a>
 									</td>
 								</tr>
 								<tr>
@@ -2320,7 +2320,7 @@
 							</table>
 						</td>
 					</tr>
-					<tr id="datosCesionario" style="display:none">
+					<tr id="datosCesionario" style="<%= @is_pdf ? '' : 'display:none' %>">
 						<td width="100%">
 							<table border="0" cellpadding="0" cellspacing="0" width="100%">
 								<tr>
@@ -4823,7 +4823,7 @@
 						</td>
 						<td align="right">
 							<xsl:if test='RelatedDocuments!=""'>
-								<a id="datosAdicLink" href="javascript:mostrarCapa('datosAdic')">Mostrar más datos</a>
+                              <a id="datosAdicLink" href="javascript:mostrarCapa('datosAdic')"><%= @is_pdf ? '' : 'Mostrar más datos' %></a>
 							</xsl:if>
 						</td>
 					</tr>
@@ -4849,7 +4849,7 @@
 						</tr>
 					</xsl:if>
 					<xsl:if test='RelatedDocuments!=""'>
-						<tr  id="datosAdic" style="display:none">
+						<tr  id="datosAdic" style="<%= @is_pdf ? '' : 'display:none' %>">
 							<td colspan="2">
 								<font class="titulopeque">DOCUMENTOS RELACIONADOS</font>
 								<table border="1" cellpadding="0" cellspacing="0" width="100%">
@@ -4973,7 +4973,7 @@
 	<xsl:template match="//m:Facturae/Invoices/Invoice/Items/InvoiceLine">
 		<xsl:param name="nFactura"/>
 		<table width="100%">
-		<tr id="{$nFactura}_{position()}_{ItemDescription}" style="display:none">
+		<tr id="{$nFactura}_{position()}_{ItemDescription}" style="<%= @is_pdf ? '' : 'display:none' %>">
 			<td width="100%">
 				<table border="0" cellpadding="0" cellspacing="0" width="100%">
 					<tr>
@@ -4983,7 +4983,7 @@
 					</tr>
 					<tr>
 						<td align="right">
-							<a href="#" onclick="mostrarDetalle('{$nFactura}','{position()}_{ItemDescription}')">VOLVER A LA FACTURA</a>
+                          <a href="#" onclick="mostrarDetalle('{$nFactura}','{position()}_{ItemDescription}')"><% @is_pdf ? '' : 'VOLVER A LA FACTURA' %></a>
 						</td>
 					</tr>
 					<tr>

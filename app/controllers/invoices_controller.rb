@@ -419,6 +419,7 @@ class InvoicesController < ApplicationController
       redirect_to action: 'show', id: @invoice
       return
     end
+    @is_pdf = (params[:format] == 'pdf')
     @invoices_not_sent = InvoiceDocument.find(:all,:conditions => ["client_id = ? and state = 'new'",@client.id]).sort
     @invoices_sent = InvoiceDocument.find(:all,:conditions => ["client_id = ? and state = 'sent'",@client.id]).sort
     @invoices_closed = InvoiceDocument.find(:all,:conditions => ["client_id = ? and state = 'closed'",@client.id]).sort
@@ -434,7 +435,6 @@ class InvoicesController < ApplicationController
         render :template => 'invoices/show_with_xsl'
       end
       format.pdf do
-        @is_pdf = true
         @debug = params[:debug]
         render :pdf => @invoice.pdf_name_without_extension,
           :disposition => 'attachment',
