@@ -1,5 +1,4 @@
 gl:
-
   number:
     # Used in number_to_currency()
     currency:
@@ -73,7 +72,7 @@ gl:
   label_received_invoice_new: Engadir factura recibida
   button_new_invoice: Nova factura
   button_add_invoice_line: Engade unha nova liña á factura
-  field_number: Número
+  field_invoice_number: Número
   label_last_invoice_number: "Último usado"
   field_date: Data
   field_client: Cliente
@@ -227,7 +226,7 @@ gl:
   refuse_notification: "Notificación: Factura rexeitada"
   paid_notification: "Notificación: Factura pagada"
   tram_notification: "Notificación: Factura en trámite"
-  unknown_notification: "Notificación”
+  unknown_notification: "Notificación"
   by_mail_from: "por email dende %{email}"
   in_format: "en formato %{f}"
   back: "Volver"
@@ -272,6 +271,7 @@ gl:
   s_litters: l
   days: Días
   s_days: d
+  s_other: ""
 
   # People
   label_person: Persoa
@@ -466,6 +466,9 @@ gl:
   document_sent: 'Documento enviado ao servidor.'
   error_sending_signed_doc: 'Erro enviando o documento asinado.'
   error_downloading_doc: 'Erro descargando o documento asinado.'
+  error_signing: 'Error al firmar'
+  error_no_certs: 'No existe ningún certificado en el navegador'
+  error_enable_java: 'Se debe permitir la ejecución de Java en esta página'
   loading_applet: 'Cargando applet...'
   applet_already_loaded: "Applet xa cargado."
   applet_loaded: "Applet cargado."
@@ -508,7 +511,7 @@ gl:
   state_quote_sent: "Enviado"
   state_quote_expired: "Expirado"
   quote_new: "Creado"
-  quote_send: “Orde de reenvío dada"
+  quote_send: "Orde de reenvío dada"
   quote_set_new: "Marcado como novo"
   quote_accept: "Aceptado"
   quote_refuse: "Rexeitado"
@@ -567,7 +570,7 @@ gl:
   client: "Cliente"
   pending_auth_requests: "Hai peticións pendentes de autorización: %{num} empresas quérense vincular ao teu perfil"
   denied_requests: "Peticións denegadas"
-  self_employed: "Son traballador autónomo ou unha SCP”
+  self_employed: "Son traballador autónomo ou unha SCP"
   organ_gestor: "Órgano xestor"
   oficina_comptable: "Oficina contable"
   unitat_tramitadora: "Unidade tramitadora"
