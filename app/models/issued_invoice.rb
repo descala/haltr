@@ -222,6 +222,12 @@ class IssuedInvoice < InvoiceDocument
     end
   end
 
+  def self.states
+    state_machine.states.collect do |s|
+      s.name
+    end
+  end
+
   protected
 
   # called after_create (only NEW invoices)
