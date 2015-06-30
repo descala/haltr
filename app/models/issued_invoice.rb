@@ -232,14 +232,12 @@ class IssuedInvoice < InvoiceDocument
 
   # called after_create (only NEW invoices)
   def create_event
-    if self.transport.blank?
-      event = Event.new(:name=>'new',:invoice=>self,:user=>User.current)
-    elsif self.transport == 'uploaded' and self.original
+    if self.original
       event = EventWithFile.new(:name=>self.transport,:invoice=>self,
                                 :user=>User.current,:file=>self.original,
                                 :filename=>self.file_name)
     else
-      event = Event.new(:name=>self.transport,:invoice=>self,:user=>User.current)
+      event = Event.new(:name=>(self.transport||'new'),:invoice=>self,:user=>User.current)
     end
     event.audits = self.last_audits_without_event
     event.save!

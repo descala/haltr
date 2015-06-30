@@ -234,6 +234,7 @@ ca:
   mark_as_received: "Marcada com a rebuda"
   uploaded: "Pujada"
   email: "Rebuda"
+  api: "Creada via API"
   download_original: "Descarregar original"
   view_original: "Veure original"
   manual_mark_as: "Marcar com a %{state}"

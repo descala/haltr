@@ -236,6 +236,7 @@ es:
   mark_as_received: "Marcada como recibida"
   uploaded: "Subida"
   email: "Recibida"
+  api: "Creada via API"
   download_original: "Descargar original"
   view_original: "Ver original"
   manual_mark_as: "Marcar como %{state}"
