@@ -221,6 +221,7 @@ sv:
   mark_as_received: "Marked as received"
   uploaded: "Uploaded"
   email: "Received"
+  api: "Created via API"
   download_original: "Download original"
   view_original: "View original"
   manual_mark_as: "Mark as %{state}"

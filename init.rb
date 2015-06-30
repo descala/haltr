@@ -121,7 +121,7 @@ Redmine::Plugin.register :haltr do
         :mandates => [:index,:new,:show,:create,:edit,:update,:destroy,:signed_doc] }, :require => :member
 
     permission :import_invoices,
-      { :invoices => [:import],
+      { :invoices => [:import,:import_facturae],
         :received => [:import],
         :import_errors => [:index, :show, :destroy, :context_menu] },
       :require => :member
