@@ -112,9 +112,9 @@ class Invoice < ActiveRecord::Base
   # Importe bruto.
   # Suma total de importes brutos de los detalles de la factura
   def gross_subtotal(tax_type=nil)
-    (lines_with_tax(tax_type).collect { |line|
-      line.gross_amount.to_money(currency)
-    }.sum).to_money(currency)
+    Haltr::Utils.to_money(lines_with_tax(tax_type).collect { |line|
+      Haltr::Utils.to_money(line.gross_amount, currency)
+    }.sum, currency)
   end
 
   # only used in svefaktura: LineExtensionTotalAmount
@@ -258,9 +258,9 @@ class Invoice < ActiveRecord::Base
   # Base imponible a precio de mercado
   # Total Importe Bruto + Recargos - Descuentos Globales
   def taxable_base(tax_type=nil)
-    (lines_with_tax(tax_type).collect {|line|
-      line.gross_amount.to_money(currency)
-    }.sum).to_money(currency) - discount_amount(tax_type)
+    Haltr::Utils.to_money(lines_with_tax(tax_type).collect {|line|
+      Haltr::Utils.to_money(line.gross_amount, currency)
+    }.sum, currency) - discount_amount(tax_type)
   end
 
   def discount_amount(tax_type=nil)
@@ -452,6 +452,7 @@ _INV
   end
 
   def modified_since_created?
+    return false if new_record?
     updated_at > created_at
   end
 
@@ -659,9 +660,9 @@ _INV
       :date             => invoice_date,
       :invoicing_period_start => i_period_start,
       :invoicing_period_end   => i_period_end,
-      :total            => invoice_total.to_money(currency),
+      :total            => Haltr::Utils.to_money(invoice_total, currency),
       :currency         => currency,
-      :import           => invoice_import.to_money(currency),
+      :import           => Haltr::Utils.to_money(invoice_import, currency),
       :due_date         => invoice_due_date,
       :project          => company.project,
       :terms            => "custom",
@@ -676,7 +677,7 @@ _INV
       :charge_amount    => charge,
       :charge_reason    => charge_reason,
       :accounting_cost  => accounting_cost,
-      :payments_on_account => payments_on_account.to_money(currency),
+      :payments_on_account => Haltr::Utils.to_money(payments_on_account, currency),
       :fa_person_type    => fa_person_type,
       :fa_residence_type => fa_residence_type,
       :fa_taxcode        => fa_taxcode,

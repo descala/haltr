@@ -398,7 +398,7 @@
                    <TaxTypeCode>04</TaxTypeCode>
                    <TaxRate><%=h precision tax.percent * -1 %></TaxRate>
                    <TaxableBase>
-                      <TotalAmount><%=h precision invoice_line.taxable_base.to_money(@invoice.currency) %></TotalAmount>
+                      <TotalAmount><%=h precision Haltr::Utils.to_money(invoice_line.taxable_base, @invoice.currency) %></TotalAmount>
                    </TaxableBase>
                    <TaxAmount>
                      <TotalAmount><%=h precision(invoice_line.tax_amount(tax)*-1)%></TotalAmount>
@@ -414,7 +414,7 @@
                     <TaxTypeCode>01</TaxTypeCode>
                     <TaxRate><%=h precision tax.percent%></TaxRate>
                     <TaxableBase>
-                      <TotalAmount><%=h precision(invoice_line.total_cost.to_money(@invoice.currency))%></TotalAmount>
+                      <TotalAmount><%=h precision Haltr::Utils.to_money(invoice_line.total_cost, @invoice.currency) %></TotalAmount>
                     </TaxableBase>
                     <TaxAmount>
                       <TotalAmount><%=h precision(invoice_line.tax_amount(tax))%></TotalAmount>

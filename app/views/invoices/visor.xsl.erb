@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" version="1.0" xmlns:m="http://www.facturae.es/Facturae/2009/v3.2/Facturae" xmlns:ds="http://www.w3.org/2000/09/xmldsig#" xmlns:tns="http://schemas.xmlsoap.org/soap/envelope/">
+  <xsl:output method="html" indent="yes"/>
+  <xsl:decimal-format grouping-separator="." decimal-separator=","/>
+  <xsl:template match="/">
+    <xsl:apply-templates select="//m:Facturae"/>
+  </xsl:template>
+  <!-- Versión 3.2 -->
+  <xsl:template match="m:Facturae">
+    <!-- Vendor Info -->
+    <div class="vcard vendor">
+      <div class="invoicelogo">
+        <% if @company.attachments.any? -%>
+          <% if @is_pdf %>
+            <% if @debug %>
+              <%= tag 'img', :src => "/invoices/logo/#{@company.attachments.first.id}/#{@company.attachments.first.filename}", :alt => "#{@company.name} Logo" -%>
+            <% else %>
+              <%= tag 'img', :src => @company.attachments.first.diskfile -%>
+            <% end -%>
+          <% else %>
+              <%= tag 'img', :src => "/invoices/logo/#{@company.attachments.first.id}/#{@company.attachments.first.filename}", :alt => "#{@company.name} Logo" -%>
+          <% end -%>
+      <% end -%>
+      </div>
+      <div class="vendor-info">
+        <h3><xsl:value-of select="Parties/SellerParty/LegalEntity/CorporateName"/></h3>
+        <address class="adr">
+          <div class="street-address"><%=h @company.address %></div>
+          <span class="postal-code"><%=h @company.postalcode %></span> <span class="locality"><%=h @company.city %></span>
+          <div class="region"><%=h @company.province %></div>
+          <div class="country-name"></div>
+        </address>
+        <div><strong><%=h l(:field_taxcode) %></strong><span class="tax-id"> <%=h @company.taxcode %></span></div>
+        <div style="height:10px;"></div>
+        <div><%= @company.website %></div>
+        <div><%= @company.email %></div>
+        <% if @invoice.party_identification.present? -%>
+          <div>
+            <%= t(:field_party_identification) %>: <%= @invoice.party_identification %>
+          </div>
+        <% end -%>
+      </div>
+    </div>
+  </xsl:template>
+</xsl:stylesheet>

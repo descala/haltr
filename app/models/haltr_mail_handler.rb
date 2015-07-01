@@ -93,7 +93,7 @@ class HaltrMailHandler < MailHandler # < ActionMailer::Base
     ri = ReceivedInvoice.new(:number          => ds.invoice_number,
                             :client          => client,
                             :date            => ds.issue_date,
-                            :import          => ds.total_amount.to_money,
+                            :import          => Haltr::Utils.to_money(ds.total_amount),
 #                            :currency        => ds.currency,
 #                            :tax_percent     => ds.tax_rate,
 #                            :subtotal        => ds.invoice_subtotal.to_money,

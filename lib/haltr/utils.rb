@@ -194,6 +194,17 @@ module Haltr
         facturae_codes[code]
       end
 
+      def to_money(import, currency=nil)
+        currency ||= Setting.plugin_haltr['default_currency']
+        currency = Money::Currency.new(currency)
+        import = import * currency.subunit_to_unit
+        if import % 1 != 0
+          # apply banker's rounding
+          import = BigDecimal.new(import.to_s).round(0, BigDecimal::ROUND_HALF_EVEN)
+        end
+        Money.new(import.to_i, currency)
+      end
+
     end
   end
 end
