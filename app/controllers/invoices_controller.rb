@@ -370,7 +370,11 @@ class InvoicesController < ApplicationController
     @format = params["format"]
     respond_to do |format|
       format.html
-      format.api
+      format.api do
+        # Force "json" if format is emtpy
+        # Used in refresher.js to check invoice status
+        params[:format] ||= 'json'
+      end
       format.pdf do
         @is_pdf = true
         @debug = params[:debug]

@@ -7,7 +7,7 @@ $(document).ready(function() {
 
   var interval = setInterval(function() {
     i++;
-    $.getJSON(window.location.pathname+".json", function(data) {
+    $.getJSON(window.location.pathname, function(data) {
       state = data.invoice.state;
     });
     if ( state != 'sending' || i > 5 ) {

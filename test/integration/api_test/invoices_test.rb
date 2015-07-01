@@ -18,4 +18,13 @@ class Redmine::ApiTest::AttachmentsTest < Redmine::ApiTest::Base
     assert_tag 'errors', :child => {:tag => 'error', :content => "Number has already been taken"}
   end
 
+  test 'shows invoice' do
+    get '/invoices/6.json'
+    assert_response :success
+    assert_equal 'new', JSON(response.body)['invoice']['state']
+#    get '/invoices/6', nil, {"Accept" => "application/json", "X-Requested-With" => "XMLHttpRequest"}
+#    assert_response :success
+#    assert_equal 'adsf', response.body
+  end
+
 end
