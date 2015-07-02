@@ -465,7 +465,11 @@ _INV
 
   def self.create_from_xml(raw_invoice,user_or_company,md5,transport,from=nil,issued=nil,keep_original=true,validate=true)
 
-    raw_xml           = raw_invoice.read
+    if raw_invoice.is_a? String
+      raw_xml = raw_invoice
+    else
+      raw_xml = raw_invoice.read
+    end
     doc               = Nokogiri::XML(raw_xml)
     doc_no_namespaces = doc.dup.remove_namespaces!
     facturae_version  = doc.at_xpath("//FileHeader/SchemaVersion")
@@ -704,7 +708,7 @@ _INV
     elsif raw_invoice.respond_to? :path              # File (tests)
       invoice.file_name = File.basename(raw_invoice.path)
     else
-      invoice.file_name = "can't get filename from #{raw_invoice.class}"
+      invoice.file_name = "invoice.xml"
     end
 
     if invoice_format =~ /facturae/

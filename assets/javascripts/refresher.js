@@ -8,7 +8,7 @@ $(document).ready(function() {
   var interval = setInterval(function() {
     i++;
     $.getJSON(window.location.pathname, function(data) {
-      state = data.issued_invoice.state;
+      state = data.invoice.state;
     });
     if ( state != 'sending' || i > 5 ) {
       clearInterval(interval);

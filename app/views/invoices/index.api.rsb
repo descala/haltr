@@ -1,0 +1,25 @@
+# vi: ft=ruby
+
+api.array :invoices, api_meta(:total_count => @invoice_count, :offset => @offset, :limit => @limit) do
+  @invoices.each do |invoice|
+    api.invoice do
+      api.id invoice.id
+      api.number invoice.number
+      api.series_code(invoice.series_code) if invoice.series_code
+      api.date   invoice.date
+
+      api.project(:id => invoice.project_id, :name => invoice.project.name) unless invoice.project.nil?
+      api.client(:id => invoice.client_id,
+                 :name => invoice.client.name,
+                 :taxcode => invoice.client.taxcode) unless invoice.client.nil?
+
+      api.state  invoice.state
+      api.total  invoice.total.to_f
+      api.currency invoice.currency
+
+      api.created_at invoice.created_at
+      api.updated_at invoice.updated_at
+
+    end
+  end
+end

@@ -53,6 +53,7 @@ resources :projects do
   resources :import_errors, :only => [:index, :show, :destroy]
   match 'import_errors' => 'import_errors#destroy', :via => :delete, :as => 'project_import_errors'
   match 'invoices/add_comment' => 'invoices#add_comment', :via => :post
+  match 'invoices/facturae' => 'invoices#import_facturae', :via => :post
 end
 resources :clients do
   resources :people, :only => [:index, :new, :create]

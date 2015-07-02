@@ -1,3 +1,22 @@
+# vi: ft=ruby
+
 api.invoice do
   api.id @invoice.id
+  api.state @invoice.state
+  api.date @invoice.date
+  api.total @invoice.total.to_f
+  api.import @invoice.import.to_f
+  api.subttotal @invoice.subtotal.to_f
+  api.currency @invoice.currency
+  api.created_at @invoice.created_at
+  api.updated_at @invoice.updated_at
+  api.array :lines do
+    @invoice.invoice_lines.each do |line|
+      api.line do
+        api.quantity line.quantity
+        api.description line.description
+        api.price line.price
+      end
+    end
+  end if include_in_api_response?('lines')
 end
