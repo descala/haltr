@@ -645,3 +645,4 @@ es:
   field_unidad_contratacion: "Unidad de contratación / SEF"
   field_discount_helper: "Calcular % de descuento desde importe"
   label_discounts_and_charges: Descuentos y cargos
+  invoice_import_mismatch: "El importe de la factura original %{original} es diferente del calculado %{calculated}"

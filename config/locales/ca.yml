@@ -643,3 +643,4 @@ ca:
   field_unidad_contratacion: "Unitat de contractació / SEF"
   field_discount_helper: "Calcular % de descompte des d'import"
   label_discounts_and_charges: Descomptes i càrrecs
+  invoice_import_mismatch: "L'import de la factura original %{original} és diferent del calculat %{calculated}"
