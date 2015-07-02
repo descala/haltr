@@ -3,6 +3,10 @@ require File.dirname(__FILE__) + '/../../test_helper'
 class Redmine::ApiTest::AttachmentsTest < Redmine::ApiTest::Base
   fixtures :companies, :invoices, :invoice_lines, :taxes
 
+  def setup
+    Setting.rest_api_enabled = '1'
+  end
+
   test 'creates invoce from facturae' do
 
     assert_difference 'IssuedInvoice.count' do
