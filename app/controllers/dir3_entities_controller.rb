@@ -3,7 +3,7 @@ class Dir3EntitiesController < ApplicationController
 
   layout 'admin'
   menu_item :dir3_entities
-  before_filter :require_admin
+  before_filter :authorize_global
   helper :haltr
 
   include CsvImporter

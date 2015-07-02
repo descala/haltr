@@ -143,6 +143,11 @@ Redmine::Plugin.register :haltr do
 
     permission :add_invoice_notes, { :invoices => :add_comment }
 
+    permission :manage_external_companies, {
+      :external_companies => [:index, :new, :create, :edit, :update, :destroy, :csv_import],
+      :dir3_entities => [:index, :new, :create, :edit, :update, :destroy, :csv_import]
+    }
+
     # Loads permisons from config/channels.yml
     ExportChannels.permissions.each do |permission,actions|
       permission permission, actions, :require => :member
