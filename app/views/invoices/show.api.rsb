@@ -4,6 +4,7 @@ api.invoice do
   api.id @invoice.id
   api.state @invoice.state
   api.date @invoice.date
+  api.due_date @invoice.due_date
   api.total @invoice.total.to_f
   api.import @invoice.import.to_f
   api.subttotal @invoice.subtotal.to_f

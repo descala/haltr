@@ -1,6 +1,6 @@
 require File.dirname(__FILE__) + '/../../test_helper'
 
-class Redmine::ApiTest::AttachmentsTest < Redmine::ApiTest::Base
+class Redmine::ApiTest::InvoicesTest < Redmine::ApiTest::Base
   fixtures :companies, :invoices, :invoice_lines, :taxes
 
   def setup
@@ -23,12 +23,17 @@ class Redmine::ApiTest::AttachmentsTest < Redmine::ApiTest::Base
   end
 
   test 'shows invoice' do
-    get '/invoices/6.json'
+    get '/invoices/6.json', {}, credentials('jsmith')
     assert_response :success
     assert_equal 'new', JSON(response.body)['invoice']['state']
-#    get '/invoices/6', nil, {"Accept" => "application/json", "X-Requested-With" => "XMLHttpRequest"}
+#    get '/invoices/6', nil, {"Accept" => "application/json", "X-Requested-With" => "XMLHttpRequest"}.merge(credentials('jsmith'))
 #    assert_response :success
 #    assert_equal 'adsf', response.body
   end
 
+  test 'invoice index' do
+    get '/projects/onlinestore/invoices.json', {}, credentials('jsmith')
+    assert_response :success
+    assert_equal '2013-02-05', JSON(response.body)['invoices'].first['due_date']
+  end
 end
