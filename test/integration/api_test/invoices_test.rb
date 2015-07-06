@@ -31,6 +31,13 @@ class Redmine::ApiTest::InvoicesTest < Redmine::ApiTest::Base
 #    assert_equal 'adsf', response.body
   end
 
+  test 'shows download_legal_url' do
+    get '/invoices/1.json', {}, credentials('jsmith')
+    assert_response :success
+    assert_equal '/events/file/524484085', JSON(response.body)['invoice']['download_legal_url']
+    puts JSON.pretty_generate(JSON(response.body))
+  end
+
   test 'invoice index' do
     get '/projects/onlinestore/invoices.json', {}, credentials('jsmith')
     assert_response :success

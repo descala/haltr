@@ -9,6 +9,7 @@ api.invoice do
   api.import @invoice.import.to_f
   api.subttotal @invoice.subtotal.to_f
   api.currency @invoice.currency
+  api.download_legal_url @invoice.last_sent_file_path if @invoice.is_a? IssuedInvoice
   api.created_at @invoice.created_at
   api.updated_at @invoice.updated_at
   api.array :lines do

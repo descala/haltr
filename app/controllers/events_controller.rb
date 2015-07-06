@@ -8,6 +8,8 @@ class EventsController < ApplicationController
   before_filter :authorize, :only => [:file]
   before_filter :require_admin, :only => [:index]
 
+  accept_api_auth :file
+
   helper :sort
   include SortHelper
 

@@ -208,13 +208,17 @@ class IssuedInvoice < InvoiceDocument
     (!self.amend_id.nil? and self.amend_id != self.id )
   end
 
+  def last_sent_event
+    events.order(:created_at).select {|e| e.name == 'success_sending' }.last
+  end
+
   def last_sent_file_path
-    last_event = events.order(:created_at).select {|e| e.name == 'success_sending' }.last
-    case last_event
+    event = last_sent_event
+    case event
     when EventWithFile
-      Rails.application.routes.url_helpers.event_file_path(last_event)
+      Rails.application.routes.url_helpers.event_file_path(event)
     when Event
-      if last_event.md5
+      if event.md5
         Rails.application.routes.url_helpers.
           legal_path(:id=>id,:md5=>last_event.md5)
       end
