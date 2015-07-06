@@ -212,8 +212,7 @@ class IssuedInvoice < InvoiceDocument
     last_event = events.order(:created_at).select {|e| e.name == 'success_sending' }.last
     case last_event
     when EventWithFile
-      Rails.application.routes.url_helpers.
-        project_event_file_path(last_event, :project_id=>project)
+      Rails.application.routes.url_helpers.event_file_path(last_event)
     when Event
       if last_event.md5
         Rails.application.routes.url_helpers.

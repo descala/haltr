@@ -5,4 +5,4 @@
 <% unless e.codi_registre.blank? -%>
   ( reg. <%= e.codi_registre %> )
 <% end -%>
-<%= h link_to_if_authorized(l(e.name =~ /_notification/ ? :download_notification : :download_legal), project_event_file_path(e, :project_id=>@project)) %>
+<%= h link_to_if_authorized(l(e.name =~ /_notification/ ? :download_notification : :download_legal), event_file_path(e)) %>
