@@ -1041,7 +1041,7 @@ _INV
   end
 
   def has_all_fields_required_by_external_company
-    if client
+    if client and client.taxcode
       taxcode = client.taxcode
       if taxcode[0...2].downcase == project.company.country
         taxcode2 = taxcode[2..-1]
