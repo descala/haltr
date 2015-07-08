@@ -35,12 +35,21 @@ class Redmine::ApiTest::InvoicesTest < Redmine::ApiTest::Base
     get '/invoices/1.json', {}, credentials('jsmith')
     assert_response :success
     assert_equal '/events/file/524484085', JSON(response.body)['invoice']['download_legal_url']
-    puts JSON.pretty_generate(JSON(response.body))
+    #puts JSON.pretty_generate(JSON(response.body))
   end
 
   test 'invoice index' do
     get '/projects/onlinestore/invoices.json', {}, credentials('jsmith')
     assert_response :success
     assert_equal '2013-02-05', JSON(response.body)['invoices'].first['due_date']
+  end
+
+  test 'delete' do
+    assert_difference('IssuedInvoice.count', -1) do
+      delete '/invoices/6.json', {}, credentials('jsmith')
+      assert_response :success
+      assert_equal '', response.body
+    end
+    assert_nil Invoice.find_by_id(6)
   end
 end

@@ -63,7 +63,7 @@ Redmine::Plugin.register :haltr do
 
   project_module :haltr do
     permission :general_use,
-      { :clients   => [:index, :new, :edit, :create, :update, :destroy, :check_cif, :link_to_profile, :unlink,
+      { :clients   => [:index, :show, :new, :edit, :create, :update, :destroy, :check_cif, :link_to_profile, :unlink,
                        :allow_link, :deny_link, :ccc2iban],
         :people    => [:index, :new, :show, :edit, :create, :update, :destroy],
         :invoices  => [:index, :new, :edit, :create, :update, :destroy, :show, :mark_sent, :mark_closed, :mark_not_sent,

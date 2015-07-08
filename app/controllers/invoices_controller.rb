@@ -37,7 +37,7 @@ class InvoicesController < ApplicationController
   before_filter :check_for_company, :except => PUBLIC_METHODS
 
   skip_before_filter :verify_authenticity_token, :only => [:base64doc]
-  accept_api_auth :import, :import_facturae, :number_to_id, :update, :show, :index
+  accept_api_auth :import, :import_facturae, :number_to_id, :update, :show, :index, :destroy
 
   def index
     sort_init 'invoices.created_at', 'desc'
@@ -292,7 +292,10 @@ class InvoicesController < ApplicationController
         # nothing to do, invoice was already deleted (eg. by a parent)
       end
     end
-    redirect_back_or_default(:action => 'index', :project_id => @project, :back_url => params[:back_url])
+      respond_to do |format|
+        format.html { redirect_back_or_default(:action => 'index', :project_id => @project, :back_url => params[:back_url]) }
+        format.api  { render_api_ok }
+      end
   end
 
   def destroy_payment

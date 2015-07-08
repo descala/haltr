@@ -220,7 +220,7 @@ class IssuedInvoice < InvoiceDocument
     when Event
       if event.md5
         Rails.application.routes.url_helpers.
-          legal_path(:id=>id,:md5=>last_event.md5)
+          legal_path(:id=>id,:md5=>event.md5)
       end
     end
   end
