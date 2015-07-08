@@ -384,10 +384,14 @@ class InvoicesController < ApplicationController
           :template=>"invoices/show_pdf",
           :formats => :html,
           :show_as_html => params[:debug],
-          :margin => {:top => 20,
+          :margin => {
+            :top    => 20,
             :bottom => 20,
             :left   => 30,
-            :right  => 20}
+            :right  => 20
+          },
+          :default_header => true,
+          :header => { right: '[page] of [topage]' }
       end
       if params[:debug]
         format.facturae30  { render_xml Haltr::Xml.generate(@invoice, 'facturae30') }
@@ -749,7 +753,7 @@ class InvoicesController < ApplicationController
     @client = @invoice.client || Client.new(:name=>"unknown",:project=>@invoice.project)
     @project = @invoice.project
     @company = @project.company
-    if @invoice.client
+    if @client and @client.taxcode
       if @client.taxcode[0...2].downcase == @client.country
         taxcode2 = @client.taxcode[2..-1]
       else
