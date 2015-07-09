@@ -30,6 +30,7 @@ class Redmine::ApiTest::InvoicesTest < Redmine::ApiTest::Base
     assert_equal 'Company1', invoice['company']['name']
     assert_equal 'Client1', invoice['client']['name']
     assert_equal 1.0, invoice['lines'].first['quantity']
+    assert_equal 100.0, invoice['taxes'].first['amount']
 
     # TODO emulate call from javascript
 #    get '/invoices/6', nil, {"Accept" => "application/json", "X-Requested-With" => "XMLHttpRequest"}.merge(credentials('jsmith'))
