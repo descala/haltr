@@ -2,13 +2,42 @@
 
 api.invoice do
   api.id @invoice.id
+  api.project(
+    :id => @invoice.project_id,
+    :name => @invoice.project.name
+  ) unless @invoice.project.nil?
+  api.company(
+    :id => @invoice.project.company.id,
+    :name => @invoice.project.company.name,
+    :taxcode => @invoice.project.company.taxcode
+  ) unless @invoice.project.company.nil?
+  api.client(
+    :id => @invoice.client_id,
+    :name => @invoice.client.name,
+    :taxcode => @invoice.client.taxcode
+  ) unless @invoice.client.nil?
   api.state @invoice.state
   api.date @invoice.date
   api.due_date @invoice.due_date
-  api.total @invoice.total.to_f
-  api.import @invoice.import.to_f
+
+  # subtotal
   api.subttotal @invoice.subtotal.to_f
-  api.currency @invoice.currency
+
+  # taxes
+  api.array :taxes do
+    @invoice.taxes_uniq.each do |tax|
+      api.tax do
+        api.name tax_name(tax)
+        api.base @invoice.taxable_base(tax).to_f
+        api.amount @invoice.tax_amount(tax).to_f
+      end
+    end
+  end if @invoice.taxes_uniq.any?
+
+  # total = importe
+  api.total @invoice.total.to_f
+
+      api.currency @invoice.currency
   api.download_legal_url @invoice.last_sent_file_path if @invoice.is_a? IssuedInvoice
   api.created_at @invoice.created_at
   api.updated_at @invoice.updated_at

@@ -23,12 +23,24 @@ class Redmine::ApiTest::InvoicesTest < Redmine::ApiTest::Base
   end
 
   test 'shows invoice' do
-    get '/invoices/6.json', {}, credentials('jsmith')
+    get '/invoices/6.json?include=lines', {}, credentials('jsmith')
     assert_response :success
-    assert_equal 'new', JSON(response.body)['invoice']['state']
+    invoice = JSON(response.body)['invoice']
+    assert_equal 'new', invoice['state']
+    assert_equal 'Company1', invoice['company']['name']
+    assert_equal 'Client1', invoice['client']['name']
+    assert_equal 1.0, invoice['lines'].first['quantity']
+
+    # TODO emulate call from javascript
 #    get '/invoices/6', nil, {"Accept" => "application/json", "X-Requested-With" => "XMLHttpRequest"}.merge(credentials('jsmith'))
 #    assert_response :success
 #    assert_equal 'adsf', response.body
+  end
+
+  test 'shows invoice without taxes' do
+    get '/invoices/14.json?include=lines', {}, credentials('jsmith')
+    assert_response :success
+    assert_nil JSON(response.body)['invoice']['taxes']
   end
 
   test 'shows download_legal_url' do
