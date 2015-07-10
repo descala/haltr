@@ -97,7 +97,11 @@ class ExportChannels
       unless User.current.admin?
         allowed = false
         v["allowed_permissions"].each_key do |perm|
-          allowed = true if User.current.allowed_to?(perm, current_project)
+          if current_project.nil?
+            allowed = true if User.current.allowed_to?(perm, nil, {global: true})
+          else
+            allowed = true if User.current.allowed_to?(perm, current_project)
+          end
         end
         next unless allowed
       end
