@@ -649,6 +649,7 @@ _INV
         invoice.organ_gestor       = Haltr::Utils.get_xpath(line, xpaths[:dir3_code])
       when '03'
         invoice.unitat_tramitadora = Haltr::Utils.get_xpath(line, xpaths[:dir3_code])
+        invoice.unitat_tramitadora_name = Haltr::Utils.get_xpath(line, xpaths[:dir3_name])
       when '04'
         invoice.organ_proponent    = Haltr::Utils.get_xpath(line, xpaths[:dir3_code])
       else

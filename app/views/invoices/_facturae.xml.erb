@@ -176,6 +176,9 @@
              <AdministrativeCentre>
                <CentreCode><%= @invoice.unitat_tramitadora[0..9] %></CentreCode>
                <RoleTypeCode>03</RoleTypeCode>
+               <% if @invoice.unitat_tramitadora_name.present? -%>
+                 <Name><%= @invoice.unitat_tramitadora_name[0...40] %></Name>
+               <% end -%>
                <% ut = Dir3Entity.find_by_code(@invoice.unitat_tramitadora) -%>
                <%= render :partial => "invoices/address.facturae.xml", :locals => {:entity => ( ut and ut.full_address? ) ? ut : @invoice.client }%>
                <% if ut and ut.name.present? and format == "facturae32" -%>
