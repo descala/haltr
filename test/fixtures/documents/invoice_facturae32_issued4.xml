@@ -66,7 +66,7 @@
       <TaxIdentification>
         <PersonTypeCode>J</PersonTypeCode>
         <ResidenceTypeCode>R</ResidenceTypeCode>
-        <TaxIdentificationNumber>B123456</TaxIdentificationNumber>
+        <TaxIdentificationNumber>ESB17915224</TaxIdentificationNumber>
       </TaxIdentification>
       <AdministrativeCentres>
         <AdministrativeCentre>
@@ -84,6 +84,7 @@
         <AdministrativeCentre>
           <CentreCode>P00000010</CentreCode>
           <RoleTypeCode>02</RoleTypeCode>
+          <Name>Organ Gestor</Name>
           <AddressInSpain>
             <Address>c. one two three, 34</Address>
             <PostCode>08080</PostCode>
@@ -95,6 +96,7 @@
         <AdministrativeCentre>
           <CentreCode>P00000010</CentreCode>
           <RoleTypeCode>03</RoleTypeCode>
+          <Name>Unitat Tramitadora</Name>
           <AddressInSpain>
             <Address>c. one two three, 34</Address>
             <PostCode>08080</PostCode>

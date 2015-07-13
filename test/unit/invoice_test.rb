@@ -3,7 +3,7 @@ require File.dirname(__FILE__) + '/../test_helper'
 
 class InvoiceTest < ActiveSupport::TestCase
 
-  fixtures :clients, :invoices, :invoice_lines, :taxes, :companies, :people, :bank_infos, :dir3_entities
+  fixtures :clients, :invoices, :invoice_lines, :taxes, :companies, :people, :bank_infos, :dir3_entities, :external_companies
 
   def setup
     User.current=nil
@@ -488,6 +488,10 @@ class InvoiceTest < ActiveSupport::TestCase
 
   test 'imports dir3 data and stores it to db' do
     assert_nil Dir3Entity.find_by_code('P00000010')
+    extcomp = ExternalCompany.find_by_taxcode 'ESB17915224'
+    assert_not_match(/P00000010/, extcomp.organs_gestors)
+    assert_not_match(/P00000010/, extcomp.unitats_tramitadores)
+    assert_not_match(/P00000010/, extcomp.oficines_comptables)
     file    = File.new(File.join(File.dirname(__FILE__),'..','fixtures','documents','invoice_facturae32_issued4.xml'))
     invoice = Invoice.create_from_xml(file,companies(:company1),"1234",'uploaded',User.current.name,nil,false)
     assert_equal('P00000010',invoice.organ_gestor)
@@ -502,6 +506,10 @@ class InvoiceTest < ActiveSupport::TestCase
     assert_equal(dir3.city,'Barcelona')
     assert_equal(dir3.province,'Barcelona')
     assert_equal(dir3.country,'es')
+    extcomp = ExternalCompany.find_by_taxcode 'ESB17915224'
+    assert_equal('P00000010', extcomp.oficines_comptables)
+    assert_equal('P00000010', extcomp.organs_gestors)
+    assert_equal('P00000011,P00000010', extcomp.unitats_tramitadores)
   end
 
   test 'invoice discounts are correctly calculated' do

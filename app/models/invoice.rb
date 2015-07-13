@@ -640,28 +640,32 @@ _INV
       logger.info "created new client \"#{client_name}\" with cif #{client_taxcode} for company #{company.name}. time=#{Time.now}"
     end
 
+    dir3 = nil
     doc.xpath(xpaths[:dir3s]).each do |line|
-      case Haltr::Utils.get_xpath(line, xpaths[:dir3_role])
+      role = Haltr::Utils.get_xpath(line, xpaths[:dir3_role])
+      code = Haltr::Utils.get_xpath(line, xpaths[:dir3_code])
+      case role
       when '01'
-        invoice.oficina_comptable  = Haltr::Utils.get_xpath(line, xpaths[:dir3_code])
+        invoice.oficina_comptable  = code
         invoice.oficina_comptable_name = Haltr::Utils.get_xpath(line, xpaths[:dir3_name])
       when '02'
-        invoice.organ_gestor       = Haltr::Utils.get_xpath(line, xpaths[:dir3_code])
+        invoice.organ_gestor       = code
       when '03'
-        invoice.unitat_tramitadora = Haltr::Utils.get_xpath(line, xpaths[:dir3_code])
+        invoice.unitat_tramitadora = code
         invoice.unitat_tramitadora_name = Haltr::Utils.get_xpath(line, xpaths[:dir3_name])
       when '04'
-        invoice.organ_proponent    = Haltr::Utils.get_xpath(line, xpaths[:dir3_code])
+        invoice.organ_proponent    = code
       else
         # unknown role
       end
       # save unknown Dir3 entities
       begin
-        unless Dir3Entity.find_by_code(invoice.oficina_comptable)
+        # just created dir3 or unexisting one
+        if (dir3 and dir3.code == code) or Dir3Entity.find_by_code(code).nil?
           country = Haltr::Utils.get_xpath(line, xpaths[:dir3_country])
           country = SunDawg::CountryIsoTranslater.translate_standard(country,"alpha3","alpha2").downcase rescue country
           dir3 = Dir3Entity.create!(
-            code:       Haltr::Utils.get_xpath(line, xpaths[:dir3_code]),
+            code:       code,
             name:       Haltr::Utils.get_xpath(line, xpaths[:dir3_name]),
             address:    Haltr::Utils.get_xpath(line, xpaths[:dir3_address]),
             postalcode: Haltr::Utils.get_xpath(line, xpaths[:dir3_postcode]),
@@ -672,22 +676,38 @@ _INV
           # and add relation to ExternalCompany if exist
           ec = ExternalCompany.find_by_taxcode client.taxcode
           if dir3 and ec
-            case Haltr::Utils.get_xpath(line, xpaths[:dir3_role])
+            case role
             when '01'
-              unless ec.oficines_comptables =~ /#{dir3.code}/
-                ec.update_attribute :oficines_comptables, "#{ec.oficines_comptables},#{dir3.code}"
+              unless ec.oficines_comptables =~ /#{code}/
+                if ec.oficines_comptables.blank?
+                  ec.update_attribute :oficines_comptables, code
+                else
+                  ec.update_attribute :oficines_comptables, "#{ec.oficines_comptables},#{code}"
+                end
               end
             when '02'
-              unless ec.organs_gestors =~ /#{dir3.code}/
-                ec.update_attribute :organs_gestors, "#{ec.organs_gestors},#{dir3.code}"
+              unless ec.organs_gestors =~ /#{code}/
+                if ec.organs_gestors.blank?
+                  ec.update_attribute :organs_gestors, code
+                else
+                  ec.update_attribute :organs_gestors, "#{ec.organs_gestors},#{code}"
+                end
               end
             when '03'
-              unless ec.unitats_tramitadores =~ /#{dir3.code}/
-                ec.update_attribute :unitats_tramitadores, "#{ec.unitats_tramitadores},#{dir3.code}"
+              unless ec.unitats_tramitadores =~ /#{code}/
+                if ec.unitats_tramitadores.blank?
+                  ec.update_attribute :unitats_tramitadores, code
+                else
+                  ec.update_attribute :unitats_tramitadores, "#{ec.unitats_tramitadores},#{code}"
+                end
               end
             when '04'
-              unless ec.organs_proponents =~ /#{dir3.code}/
-                ec.update_attribute :organs_proponents, "#{ec.organs_proponents},#{dir3.code}"
+              unless ec.organs_proponents =~ /#{code}/
+                if ec.organs_proponents.blank?
+                  ec.update_attribute :organs_proponents, code
+                else
+                  ec.update_attribute :organs_proponents, "#{ec.organs_proponents},#{code}"
+                end
               end
             else
               # unknown role
