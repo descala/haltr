@@ -3,7 +3,7 @@ require File.dirname(__FILE__) + '/../test_helper'
 
 class InvoiceTest < ActiveSupport::TestCase
 
-  fixtures :clients, :invoices, :invoice_lines, :taxes, :companies, :people, :bank_infos
+  fixtures :clients, :invoices, :invoice_lines, :taxes, :companies, :people, :bank_infos, :dir3_entities
 
   def setup
     User.current=nil
@@ -486,13 +486,22 @@ class InvoiceTest < ActiveSupport::TestCase
     end
   end
 
-  test 'imports dir3 data' do
+  test 'imports dir3 data and stores it to db' do
+    assert_nil Dir3Entity.find_by_code('P00000010')
     file    = File.new(File.join(File.dirname(__FILE__),'..','fixtures','documents','invoice_facturae32_issued4.xml'))
     invoice = Invoice.create_from_xml(file,companies(:company1),"1234",'uploaded',User.current.name,nil,false)
     assert_equal('P00000010',invoice.organ_gestor)
     assert_equal('P00000010',invoice.unitat_tramitadora)
     assert_equal('P00000010',invoice.oficina_comptable)
     assert_equal('Oficina Comptable', invoice.oficina_comptable_name)
+    dir3 = Dir3Entity.find_by_code('P00000010')
+    assert_not_nil dir3
+    assert_equal(dir3.name,'Oficina Comptable')
+    assert_equal(dir3.address,'c. one two three, 34')
+    assert_equal(dir3.postalcode,'08080')
+    assert_equal(dir3.city,'Barcelona')
+    assert_equal(dir3.province,'Barcelona')
+    assert_equal(dir3.country,'es')
   end
 
   test 'invoice discounts are correctly calculated' do
