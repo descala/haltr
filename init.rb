@@ -184,6 +184,7 @@ Mime::Type.register "text/xml", :biiubl20
 Mime::Type.register "text/xml", :svefaktura
 Mime::Type.register "text/xml", :oioubl20
 Mime::Type.register "text/xml", :efffubl
+Mime::Type.register "text/xml", :original
 
 Redmine::Activity.map do |activity|
   activity.register :info_events, :class_name => 'Event'

@@ -393,25 +393,27 @@ class InvoicesController < ApplicationController
             :right  => 20}
       end
       if params[:debug]
-        format.facturae30  { render_xml Haltr::Xml.generate(@invoice, 'facturae30') }
-        format.facturae31  { render_xml Haltr::Xml.generate(@invoice, 'facturae31') }
-        format.facturae32  { render_xml Haltr::Xml.generate(@invoice, 'facturae32') }
-        format.peppolubl20 { render_xml Haltr::Xml.generate(@invoice, 'peppolubl20') }
-        format.peppolubl21 { render_xml Haltr::Xml.generate(@invoice, 'peppolubl21') }
-        format.biiubl20    { render_xml Haltr::Xml.generate(@invoice, 'biiubl20') }
-        format.svefaktura  { render_xml Haltr::Xml.generate(@invoice, 'svefaktura') }
-        format.oioubl20    { render_xml Haltr::Xml.generate(@invoice, 'oioubl20') }
-        format.efffubl     { render_xml Haltr::Xml.generate(@invoice, 'efffubl') }
+        format.facturae30  { render_xml Haltr::Xml.generate(@invoice, 'facturae30', false, false, true) }
+        format.facturae31  { render_xml Haltr::Xml.generate(@invoice, 'facturae31', false, false, true) }
+        format.facturae32  { render_xml Haltr::Xml.generate(@invoice, 'facturae32', false, false, true) }
+        format.peppolubl20 { render_xml Haltr::Xml.generate(@invoice, 'peppolubl20', false, false, true) }
+        format.peppolubl21 { render_xml Haltr::Xml.generate(@invoice, 'peppolubl21', false, false, true) }
+        format.biiubl20    { render_xml Haltr::Xml.generate(@invoice, 'biiubl20', false, false, true) }
+        format.svefaktura  { render_xml Haltr::Xml.generate(@invoice, 'svefaktura', false, false, true) }
+        format.oioubl20    { render_xml Haltr::Xml.generate(@invoice, 'oioubl20', false, false, true) }
+        format.efffubl     { render_xml Haltr::Xml.generate(@invoice, 'efffubl', false, false, true) }
+        format.original    { render_xml @invoice.original }
       else
-        format.facturae30  { download_xml Haltr::Xml.generate(@invoice, 'facturae30') }
-        format.facturae31  { download_xml Haltr::Xml.generate(@invoice, 'facturae31') }
-        format.facturae32  { download_xml Haltr::Xml.generate(@invoice, 'facturae32') }
-        format.peppolubl20 { download_xml Haltr::Xml.generate(@invoice, 'peppolubl20') }
-        format.peppolubl21 { download_xml Haltr::Xml.generate(@invoice, 'peppolubl21') }
-        format.biiubl20    { download_xml Haltr::Xml.generate(@invoice, 'biiubl20') }
-        format.svefaktura  { download_xml Haltr::Xml.generate(@invoice, 'svefaktura') }
-        format.oioubl20    { download_xml Haltr::Xml.generate(@invoice, 'oioubl20') }
-        format.efffubl     { download_xml Haltr::Xml.generate(@invoice, 'efffubl') }
+        format.facturae30  { download_xml Haltr::Xml.generate(@invoice, 'facturae30', false, false, true) }
+        format.facturae31  { download_xml Haltr::Xml.generate(@invoice, 'facturae31', false, false, true) }
+        format.facturae32  { download_xml Haltr::Xml.generate(@invoice, 'facturae32', false, false, true) }
+        format.peppolubl20 { download_xml Haltr::Xml.generate(@invoice, 'peppolubl20', false, false, true) }
+        format.peppolubl21 { download_xml Haltr::Xml.generate(@invoice, 'peppolubl21', false, false, true) }
+        format.biiubl20    { download_xml Haltr::Xml.generate(@invoice, 'biiubl20', false, false, true) }
+        format.svefaktura  { download_xml Haltr::Xml.generate(@invoice, 'svefaktura', false, false, true) }
+        format.oioubl20    { download_xml Haltr::Xml.generate(@invoice, 'oioubl20', false, false, true) }
+        format.efffubl     { download_xml Haltr::Xml.generate(@invoice, 'efffubl', false, false, true) }
+        format.original    { download_xml @invoice.original }
       end
     end
   end
