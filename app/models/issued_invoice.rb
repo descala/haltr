@@ -214,14 +214,14 @@ class IssuedInvoice < InvoiceDocument
 
   def last_sent_file_path
     event = last_sent_event
-    case event
-    when EventWithFile
-      Rails.application.routes.url_helpers.event_file_path(event)
-    when Event
-      if event.md5
-        Rails.application.routes.url_helpers.
-          legal_path(:id=>id,:md5=>event.md5)
+    begin
+      if event and event.md5
+        Rails.application.routes.url_helpers.legal_path(:id=>id,:md5=>event.md5)
+      else
+        Rails.application.routes.url_helpers.event_file_path(event)
       end
+    rescue
+      nil
     end
   end
 
