@@ -21,7 +21,7 @@ api.invoice do
   api.due_date @invoice.due_date
 
   # subtotal
-  api.subttotal @invoice.subtotal.to_f
+  api.subtotal @invoice.subtotal.to_f
 
   # taxes
   api.array :taxes do
