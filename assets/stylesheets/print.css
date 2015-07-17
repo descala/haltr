@@ -200,11 +200,20 @@ a:hover {
   max-width: 10cm;
 }
 .companyid {
+  clear: left;
+  float: left;
+  margin-top: 20px;
   font-size: 10px;
-  position: absolute;
-  bottom: 0;
-  left: 0;
 }
 .line-items tr.nobottomline td {
 	border-bottom: none !important;
 }
+div.page-break {
+  page-break-before: always;
+}
+/*div.page-num {
+/  clear: both;
+/  float: right;
+/  margin-top: 40px;
+/}
+*/

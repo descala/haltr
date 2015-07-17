@@ -1,3 +1,4 @@
+<div class="report_data">
 <% if @debug -%>
 <style type="text/css">
   body {
@@ -62,11 +63,13 @@
   <% I18n.locale = @invoice.client.language rescue before_locale %>
 <% end -%>
 
-<% begin -%>
-  <%= render partial: "invoices/#{@project.company.pdf_template}" %>
-<% rescue -%>
-  <%= render partial: 'invoices/invoice' %>
-<% end -%>
+<div class="invoice_data">
+  <% begin -%>
+    <%= render partial: "invoices/#{@project.company.pdf_template}" %>
+  <% rescue -%>
+    <%= render partial: 'invoices/invoice' %>
+  <% end -%>
+</div>
 
 <% if defined?(before_locale) -%>
   <% I18n.locale = before_locale %>
@@ -77,4 +80,18 @@
 <div style="position: fixed; top: 30px; left: 850px; border: 1px solid; padding: 20px;">
   <%= @project.company.pdf_template %>
 </div>
+<div style="position: fixed; top: 90px; left: 850px; border: 1px solid; padding: 20px;">
+  <%= link_to 'PDF', {:action=>'show', :id=>@invoice, :format => 'pdf'} %>
+</div>
+<% end -%>
+</div>
+
+<% if @is_pdf and @debug -%>
+  <%= javascript_heads %>
+  <%= javascript_include_tag "/wkhtmltopdf_tableSplitHack.js", :plugin=>'haltr' %>
+
+<% else -%>
+  <script src="/home/lluis/git/b2bnet/public/javascripts/jquery-1.8.3-ui-1.9.2-ujs-2.0.3.js?1382603463" type="text/javascript"></script>
+  <script src="/home/lluis/git/b2bnet/public/javascripts/application.js?1422437628" type="text/javascript"></script>
+  <script src="/home/lluis/git/b2bnet/public/plugin_assets/haltr/javascripts/wkhtmltopdf_tableSplitHack.js?1436182442" type="text/javascript"></script>
 <% end -%>
