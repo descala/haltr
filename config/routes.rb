@@ -11,6 +11,7 @@ match '/clients/link_to_profile/:id' => 'clients#link_to_profile', :via => :get
 match '/clients/unlink/:id' => 'clients#unlink', :via => :get
 match '/clients/allow_link/:id' => 'clients#allow_link', :via => :get
 match '/clients/deny_link/:id' => 'clients#deny_link', :via => :get
+match 'invoices/total_chart' => 'charts#invoice_total', :via => :get, :as => :invoice_total_chart
 resources :projects do
   resources :clients, :only => [:index, :new, :create]
   match :people, :controller => 'people', :action => 'index', :via => :get
@@ -54,6 +55,9 @@ resources :projects do
   match 'import_errors' => 'import_errors#destroy', :via => :delete, :as => 'project_import_errors'
   match 'invoices/add_comment' => 'invoices#add_comment', :via => :post
   match 'invoices/facturae' => 'invoices#import_facturae', :via => :post
+  match 'invoice_status_chart' => 'charts#invoice_status', :via => :get, :as => :invoice_status_chart
+  match 'top_clients_chart' => 'charts#top_clients', :via => :get, :as => :top_clients_chart
+  match 'cash_flow' => 'charts#cash_flow', :via => :get
 end
 resources :clients do
   resources :people, :only => [:index, :new, :create]
@@ -125,7 +129,4 @@ resources :dir3_entities
 match 'dir3_entities/csv_import' => 'dir3_entities#csv_import', :via => :post
 resources :export_channels
 
-match '/charts/invoice_total' => 'charts#invoice_total', :via => :get, :as => :invoice_total_chart
-match '/charts/invoice_status/:project_id' => 'charts#invoice_status', :via => :get, :as => :invoice_status_chart
-match '/charts/top_clients/:project_id' => 'charts#top_clients', :via => :get, :as => :top_clients_chart
 match '/charts/update_chart_preference' => 'charts#update_chart_preference', :via => :get, :as => :update_chart_preference

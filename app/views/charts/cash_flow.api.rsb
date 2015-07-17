@@ -1,0 +1,17 @@
+# vi: ft=ruby
+
+api.cash_flow do
+  api.due_invoices_sum @due_invoices_sum.to_f
+  api.array :due_invoices_id do
+    @due_invoices.each do |invoice|
+      api.invoice_id invoice.id
+    end
+  end if @due_invoices.any?
+  api.invoices_sum @invoices_sum.to_f
+  api.array :invoices_id do
+    @invoices.each do |invoice|
+      api.invoice_id invoice.id
+    end
+  end if @invoices.any?
+  api.currency @project.company.currency
+end
