@@ -13,7 +13,7 @@ var pdfPage = {
     top: 2/25.4,
     left: 2/25.4,
     right: 2/25.4,
-    bottom: 40/25.4
+    bottom: 2/25.4
   }
 };
 
@@ -41,7 +41,7 @@ $(window).load(function() {
   $body.css('margin-top', pdfPage.margins.top + 'in');
   $body.css('margin-bottom', pdfPage.margins.bottom + 'in');
 
-  var pageHeader = $('div.invoice-header').clone();
+  var pageHeader = $('div.invoice-header-container').clone();
   var tableToSplit = $('table.' + splitClassName);
   if (tableToSplit.length > 0) {
     tableToSplit.detach();
@@ -117,12 +117,9 @@ $(window).load(function() {
     var divNum = $('div.page-num:eq(' + i + ')');
     i += 1;
     if (divNum.length > 0) {
-
-      //divNum.css('position', 'fixed');
-      //divNum.css('top', (divNum.offset().top + 250 )+'px');
-      divNum.css('float', 'left');
-      divNum.css('clear', 'both');
-      divNum.css('margin-top', '250px');
+      divNum.css('position', 'fixed');
+      // manually adjusted for pdf margins
+      divNum.css('top', (((pdfPage.height+(37/25.4))*dpi*i) - 40)+'px');
       divNum.append('<p>Page '+i+' of '+pages+'</p>');
     }
   }
