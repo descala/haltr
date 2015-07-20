@@ -35,7 +35,7 @@ $(window).load(function() {
   // temporary set body's width and margin to match pdf's size
 
   var $body = $('body .invoice_data'); //a single div should wrap whole pdf content
-  //$body.css('width', pageWidth);
+  $body.css('width', pageWidth);
   $body.css('margin-left', pdfPage.margins.left + 'in');
   $body.css('margin-right', pdfPage.margins.right + 'in');
   $body.css('margin-top', pdfPage.margins.top + 'in');
@@ -83,15 +83,23 @@ $(window).load(function() {
       currentTable = templateTable.clone();
       $body.append(currentTable);
     }
-    // if there are only 5 lines remaining, check if all fit in current page,
-    // if it doesn't break it now to make last page prettier
-    if (index + 5 == total_rows) {
-      var last5rowsHeight = 0;
+    // at least one line on the last page
+    if (index + 1 == total_rows) {
+      var auxDiv = $('<div />');
       $('tbody tr:nth-last-child(-n+5)', tableToSplit).each(function(index) {
-        last5rowsHeight += $(this).outerHeight();
+         auxDiv.append($(this).clone());
       });
-      if ($body.outerHeight() + last5rowsHeight + totals.outerHeight() + notes.outerHeight() > nextBreakAt ) {
+      auxDiv.append(totals.clone());
+      auxDiv.append(notes.clone());
+      auxDiv.append(companyid.clone());
+      auxDiv.append(pageNum.clone());
+      $body.append(auxDiv);
+      var auxSize = $body.outerHeight();
+      auxDiv.remove();
+      if (auxSize > nextBreakAt) {
         break_page();
+        currentTable = templateTable.clone();
+        $body.append(currentTable);
       }
     }
     currentTable.append($(this));
@@ -113,14 +121,15 @@ $(window).load(function() {
       //divNum.css('position', 'fixed');
       //divNum.css('top', (divNum.offset().top + 250 )+'px');
       divNum.css('float', 'left');
+      divNum.css('clear', 'both');
       divNum.css('margin-top', '250px');
       divNum.append('<p>Page '+i+' of '+pages+'</p>');
     }
   }
 
   // restore body's margin
-  $body.css('margin-left', 0);
-  $body.css('margin-right', 0);
-  $body.css('margin-top', 0);
+  $body.css('margin-left',   0);
+  $body.css('margin-right',  0);
+  $body.css('margin-top',    0);
   $body.css('margin-bottom', 0);
 });
