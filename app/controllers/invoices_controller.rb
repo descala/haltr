@@ -392,9 +392,7 @@ class InvoicesController < ApplicationController
             :bottom => 20,
             :left   => 30,
             :right  => 20
-          },
-          :default_header => true,
-          :header => { right: '[page] of [topage]' }
+          }
       end
       if params[:debug]
         format.facturae30  { render_xml Haltr::Xml.generate(@invoice, 'facturae30', false, false, true) }
