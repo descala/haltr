@@ -355,6 +355,8 @@ gl:
   "custom": Personalizado
 
   # Frequency
+  mf36: Cada 3 anos
+  mf24: Cada 2 anos
   mf12: Anual
   mf6: Semestral
   mf3: Trimestral

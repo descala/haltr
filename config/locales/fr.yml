@@ -345,6 +345,8 @@ fr:
   "custom": Personnalisé
 
   # Frequency
+  mf36: Tous les 3 ans
+  mf24: Tous les 2 ans
   mf12: Annuel
   mf6: Semi-annuel
   mf3: Trimestriel

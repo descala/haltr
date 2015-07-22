@@ -343,6 +343,8 @@ da:
   "custom": Toll
  
   # Frequency
+  mf36: Every 3 years
+  mf24: Every 2 years
   mf12: Årligt
   mf6: Halvårligt
   mf3: kvartalsvis

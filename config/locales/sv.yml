@@ -342,6 +342,8 @@ sv:
   "custom": Annan
 
   # Frequency
+  mf36: Every 3 years
+  mf24: Every 2 years
   mf12: Årliga
   mf6: Halvt år
   mf3: Kvartal
