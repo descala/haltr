@@ -386,7 +386,7 @@ class InvoicesController < ApplicationController
         @is_pdf = true
         @debug = params[:debug]
         render :pdf => @invoice.pdf_name_without_extension,
-          :disposition => 'attachment',
+          :disposition => params[:view] ? 'inline' : 'attachment',
           :layout => "invoice.html",
           :template=>"invoices/show_pdf",
           :formats => :html,
