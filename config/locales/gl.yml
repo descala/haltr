@@ -86,6 +86,7 @@ gl:
   field_draft: Borrador
   label_invoice_state: Estado
   field_state: Estado
+  field_state_updated_at: Fecha de cambio de estado
   show_template: Ver plantilla
   generate_template_from_invoice: Xerar nova plantilla
   duplicate_invoice: Duplicar esta factura

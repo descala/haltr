@@ -75,6 +75,7 @@ fr:
   field_draft: Brouillon
   label_invoice_state: Statut
   field_state: Statut
+  field_state_updated_at: Statut date
   show_template: Montrer modèle
   generate_template_from_invoice: Générer nouveau modèle
   duplicate_invoice: Dup facture

@@ -16,6 +16,7 @@ class IssuedInvoice < InvoiceDocument
   after_create :create_event
   after_destroy :release_amended
   before_save :update_status, :unless => Proc.new {|invoicedoc| invoicedoc.state_changed? }
+  before_save :set_state_updated_at
 
   # new sending sent error discarded closed
   state_machine :state, :initial => :new do
@@ -267,6 +268,18 @@ class IssuedInvoice < InvoiceDocument
       end
     end
     return true # always continue saving
+  end
+
+  # if state changes, record state timestamp :state_updated_at
+  # an update to an Invoice sets timestamps as usual, except for:
+  #  :state
+  #  :has_been_read
+  #  :state_updated_at
+  # these attributes do not change updated_at
+  def set_state_updated_at
+    if state_changed?
+      write_attribute :state_updated_at, Time.now
+    end
   end
 
 end

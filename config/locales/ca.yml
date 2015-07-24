@@ -84,6 +84,7 @@ ca:
   field_draft: Esborrany
   label_invoice_state: Estat
   field_state: Estat
+  field_state_updated_at: Data de canvi d'estat
   show_template: Veure la plantilla
   generate_template_from_invoice: Generar nova plantilla
   duplicate_invoice: Duplicar la factura

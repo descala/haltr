@@ -57,6 +57,14 @@ class Redmine::ApiTest::InvoicesTest < Redmine::ApiTest::Base
     assert_equal '2013-02-05', JSON(response.body)['invoices'].first['due_date']
   end
 
+  test 'invoice index with state_updated_at filter' do
+    i=Invoice.find(4)
+    i.update_attribute(:state,:sent)
+    get "/projects/onlinestore/invoices.json?state_updated_at_from=#{Date.today}", {}, credentials('jsmith')
+    assert_response :success
+    assert_equal Date.today, JSON(response.body)['invoices'].first['state_updated_at'].to_date
+  end
+
   test 'delete' do
     assert_difference('IssuedInvoice.count', -1) do
       delete '/invoices/6.json', {}, credentials('jsmith')

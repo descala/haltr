@@ -20,6 +20,7 @@ api.array :invoices, api_meta(:total_count => @invoice_count, :offset => @offset
 
       api.created_at invoice.created_at
       api.updated_at invoice.updated_at
+      api.state_updated_at invoice.state_updated_at
 
     end
   end

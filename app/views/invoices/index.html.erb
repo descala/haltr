@@ -92,6 +92,8 @@
                 <%= text_field_tag :number, params[:number] %>
               </div>
               <div class="col span-1-de-3">
+                <label for="number"><%= l(:field_state_updated_at) %> <%= l(:label_greater_or_equal) %></label>
+                <%= text_field_tag :state_updated_at_from, params[:state_updated_at_from], :size => 10, :style => "width: 90%;" %><%= calendar_for('state_updated_at_from') %>
               </div>
               <div class="col span-1-de-3">
               </div>
@@ -147,7 +149,7 @@
             <%= sort_header_tag('import_in_cents', :caption => l(:label_subtotal)) %>
             <%= sort_header_tag('import_in_cents', :caption => l(:label_invoice_total)) %>
             <%= sort_header_tag('due_date', :caption => l(:field_due_date)) %>
-            <%= sort_header_tag('state', :caption => l(:field_state)) %>
+            <%= sort_header_tag('state_updated_at', :title => l(:label_sort_by, "\"#{l(:field_state_updated_at)}\""), :caption => l(:field_state)) %>
           </tr>
         </thead>
         <tbody>

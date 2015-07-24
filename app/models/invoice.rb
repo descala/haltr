@@ -1132,7 +1132,7 @@ _INV
 
   # we do not want to update timpestamps (updated_at) if it has not been really modified
   def should_record_timestamps?
-    (self.changes.keys.map(&:to_sym) - [:state,:has_been_read]).present? && super
+    (self.changes.keys.map(&:to_sym) - [:state,:has_been_read,:state_updated_at]).present? && super
   end
 
   # translations for accepts_nested_attributes_for

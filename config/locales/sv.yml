@@ -74,6 +74,7 @@ sv:
   field_draft: Utkast
   label_invoice_state: Status
   field_state: Status
+  field_state_updated_at: Status modification date
   show_template: Visa mall
   generate_template_from_invoice: Skapa ny mall
   generated_from_template: Skapad ny mall
