@@ -858,7 +858,7 @@ _INV
     invoice.file_reference = line_file_reference
     invoice.receiver_contract_reference = line_r_contract_reference
 
-    if !invoice.has_line_ponumber? and invoice.invoice_lines.first.ponumber.present?
+    if !invoice.has_line_ponumber? and invoice.invoice_lines.any? and invoice.invoice_lines.first.ponumber.present?
       invoice.ponumber = invoice.invoice_lines.first.ponumber
     end
 
