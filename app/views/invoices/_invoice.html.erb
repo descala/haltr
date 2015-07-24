@@ -71,7 +71,7 @@
   <% end -%>
   <% if @invoice.ponumber.present? -%>
     <span class="invoice-terms"><%=h "#{t(:field_ponumber)} #{@invoice.ponumber}" %></span><br/>
-  <% elsif !@invoice.has_line_ponumber? and @lines.any and @lines.first.ponumber.present? -%>
+  <% elsif !@invoice.has_line_ponumber? and @lines.any? and @lines.first.ponumber.present? -%>
     <span class="invoice-terms"><%=h "#{t(:field_ponumber)} #{@lines.first.ponumber}" %></span><br/>
   <% end -%>
   <% unless @invoice.delivery_note_number.blank? -%>
