@@ -69,8 +69,10 @@
   <% unless payment_method_info.blank? -%>
     <span class="invoice-terms"><%=h payment_method_info.html_safe %></span><br/>
   <% end -%>
-  <% unless @invoice.ponumber.blank? -%>
+  <% if @invoice.ponumber.present? -%>
     <span class="invoice-terms"><%=h "#{t(:field_ponumber)} #{@invoice.ponumber}" %></span><br/>
+  <% elsif !@invoice.has_line_ponumber? and @lines.first.ponumber.present? -%>
+    <span class="invoice-terms"><%=h "#{t(:field_ponumber)} #{@lines.first.ponumber}" %></span><br/>
   <% end -%>
   <% unless @invoice.delivery_note_number.blank? -%>
     <span class="invoice-terms"><%=h "#{t(:field_delivery_note_number)} #{@invoice.delivery_note_number}" %></span>
@@ -166,6 +168,9 @@
           <% line_cells += 1 -%>
           <th class="item-price"><%= h l(:field_charge) %></th>
         <% end -%>
+        <% if @invoice.has_line_ponumber? -%>
+          <th class="item-price"><%= h l(:field_ponumber) %></th>
+        <% end -%>
         <th class="line-total last"><%=h l(:label_invoice_total)%></th>
       </tr>
 
@@ -198,6 +203,9 @@
           <% end -%>
           <% if @invoice.has_line_charges? -%>
             <td class="item-price"><%= h line_price(line, 'charge', @invoice) %></td>
+          <% end -%>
+          <% if @invoice.has_line_ponumber? -%>
+            <td class="item-price"><%= h line.ponumber %></td>
           <% end -%>
           <td class="line-total last"><%=h money(line.taxable_base.to_money(@invoice.currency)) %></td>
         </tr>
