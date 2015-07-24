@@ -789,7 +789,6 @@ _INV
     invoice.payment_method_text = Haltr::Utils.get_xpath(doc,xpaths[:payment_method_text])
 
     line_file_reference = nil
-    line_ponumber = nil
     line_r_contract_reference = nil
 
     # invoice lines
@@ -820,6 +819,7 @@ _INV
              :issuer_transaction_reference => Haltr::Utils.get_xpath(line,xpaths[:i_transaction_ref]),
              :sequence_number              => Haltr::Utils.get_xpath(line,xpaths[:sequence_number]),
              :delivery_note_number         => line_delivery_note_number,
+             :ponumber     => Haltr::Utils.get_xpath(line,xpaths[:ponumber]),
            )
       # invoice taxes. Known taxes are described at config/taxes.yml
       line.xpath(*xpaths[:line_taxes]).each do |line_tax|
@@ -849,16 +849,18 @@ _INV
         il.charge_reason = Haltr::Utils.get_xpath(line_charges.first,xpaths[:line_charge_reason])
       end
       line_file_reference ||= Haltr::Utils.get_xpath(line,xpaths[:file_reference])
-      line_ponumber       ||= Haltr::Utils.get_xpath(line,xpaths[:ponumber])
       line_r_contract_reference ||= Haltr::Utils.get_xpath(line,xpaths[:r_contract_reference])
       invoice.invoice_lines << il
     end
 
-    # Assume just one file_reference, ponumber and
+    # Assume just one file_reference and
     # receiver_contract_reference per Invoice
     invoice.file_reference = line_file_reference
-    invoice.ponumber = line_ponumber
     invoice.receiver_contract_reference = line_r_contract_reference
+
+    if !invoice.has_line_ponumber? and invoice.lines.first.ponumber.present?
+      invoice.ponumber = invoice.lines.ponumber
+    end
 
     # attachments
     to_attach = []
@@ -1043,6 +1045,13 @@ _INV
   def has_line_charges?
     return @has_line_charges unless @has_line_charges.nil?
     @has_line_charges = (invoice_lines.sum(&:charge) > 0)
+  end
+
+  def has_line_ponumber?
+    return @has_line_ponumber unless @has_line_ponumber.nil?
+    @has_line_ponumber = (invoice_lines.collect {|l|
+      l.ponumber
+    }.uniq.size > 1)
   end
 
   protected
