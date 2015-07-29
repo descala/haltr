@@ -195,9 +195,9 @@ a:hover {
 }
 .companyid {
   font-size: 10px;
-  position: absolute;
-  bottom: 0;
-  left: 0;
+  clear: left;
+  float: left;
+  margin-top: 20px;
 }
 
 div.invoice-header-container {
@@ -231,4 +231,7 @@ div.client {
 }
 .line-items tr.nobottomline td {
 	border-bottom: none !important;
+}
+div.page-break {
+  page-break-before: always;
 }

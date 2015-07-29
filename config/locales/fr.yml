@@ -622,7 +622,7 @@ fr:
   pdf_customization: "PDF customization"
   field_pdf_template: "PDF template"
   pdf_default: "Default template"
-  pdf_rigth_windowed_envelope: "Right windowed envelope template"
+  pdf_right_windowed_envelope: "Right windowed envelope template"
   field_party_identification: "Party identification"
   label_invoice_total: "Total"
   field_unidad_contratacion: "Unidad de contratación / SEF"

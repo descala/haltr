@@ -642,7 +642,7 @@ es:
   pdf_customization: "Personalización de PDF"
   field_pdf_template: "Plantilla PDF"
   pdf_default: "Por defecto"
-  pdf_rigth_windowed_envelope: "Plantilla para sobres con ventanilla"
+  pdf_right_windowed_envelope: "Plantilla para sobres con ventanilla"
   field_party_identification: "Código unidad proveedora"
   label_invoice_total: "Importe"
   field_unidad_contratacion: "Unidad de contratación / SEF"

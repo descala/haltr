@@ -391,10 +391,12 @@ class InvoicesController < ApplicationController
           :template=>"invoices/show_pdf",
           :formats => :html,
           :show_as_html => params[:debug],
-          :margin => {:top => 20,
+          :margin => {
+            :top    => 20,
             :bottom => 20,
             :left   => 30,
-            :right  => 20}
+            :right  => 20
+          }
       end
       if params[:debug]
         format.facturae30  { render_xml Haltr::Xml.generate(@invoice, 'facturae30', false, false, true) }

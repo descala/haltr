@@ -2,10 +2,10 @@
 <% if @invoice.amend and @invoice.amend != @invoice -%>
   <h3><%=l(:amended_by_invoice, :link => link_to_if_authorized("#{l(:label_amendment_invoice)} #{@invoice.amend.number}",
                                                  :controller => 'invoices', :action=>'show', :id=>@invoice.amend)).html_safe %></h3>
-<% end -%>
-</div>
-<!-- Vendor Info -->
-<div class="vcard vendor">
+    <% end -%>
+  </div>
+  <!-- Vendor Info -->
+  <div class="vcard vendor">
   <div class="invoicelogo">
     <% if @company.attachments.any? -%>
       <% if @is_pdf %>
@@ -40,14 +40,14 @@
       </div>
     <% end -%>
   </div>
-</div>
+  </div>
 
-<!-- Invoice Number and Info -->
-<h2 class="invoice-ID"><%=h @invoice.label %> <%=h @invoice.number %></h2>
-<% unless @invoice.series_code.blank? -%>
+  <!-- Invoice Number and Info -->
+  <h2 class="invoice-ID"><%=h @invoice.label %> <%=h @invoice.number %></h2>
+  <% unless @invoice.series_code.blank? -%>
   <h3><%= l(:field_series_code) %>: <%= @invoice.series_code %></h3>
-<% end -%>
-<div class="invoice-info">
+  <% end -%>
+  <div class="invoice-info">
   <span class="date"><%=h l(:field_date)%> <strong><%=h format_date @invoice.date %></strong></span><br/>
   <% if @invoice.amend_of -%>
   <% if @invoice.amend_of == @invoice -%>
@@ -81,11 +81,11 @@
     <span class="invoice-terms"><%=h "#{t(:field_receiver_contract_reference)} #{@invoice.receiver_contract_reference}" %></span>
   <% end -%>
   <%= call_hook(:invoice_view_invoice_info) %>
-</div>
+ </div>
 
-<!-- Client Info -->
-<% unless @client.new_record? -%>
-<div class="vcard client">
+  <!-- Client Info -->
+  <% unless @client.new_record? -%>
+  <div class="vcard client">
   <div class="client-info">
     <h3><%= client_name_with_link @client %></h3>
     <address class="adr">
@@ -134,15 +134,15 @@
       </div>
     <% end -%>
   </div>
-</div>
-<% end -%>
+  </div>
+  <% end -%>
 
 <!-- Invoice Data -->
 <div class="invoice">
 
   <!-- Line Details -->
-  <table class="line-items" border="0" cellpadding="0" cellspacing="0">
-    <tbody>
+  <table class="line-items splitForPrint" border="0" cellpadding="0" cellspacing="0">
+    <thead>
       <tr>
         <% line_cells = 4 -%>
         <% if @invoice.has_delivery_note_numbers? -%>
@@ -173,7 +173,9 @@
         <% end -%>
         <th class="line-total last"><%=h l(:label_invoice_total)%></th>
       </tr>
+    </thead>
 
+    <tbody>
       <% @lines.each do |line| -%>
         <tr <%= 'class="nobottomline"'.html_safe unless line.notes.blank? %>>
           <% if @invoice.has_delivery_note_numbers? -%>
