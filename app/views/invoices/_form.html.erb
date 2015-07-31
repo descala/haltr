@@ -96,6 +96,14 @@
       </p>
     </div>
 
+    <% if User.current.allowed_to?(:view_invoice_extra_fields, @project) -%>
+      <div class="seccio grup">
+        <p class="col span-1-de-3">
+        <%= f.text_field :client_email_override %>
+        </p>
+      </div>
+    <% end -%>
+
   </div>
 </fieldset>
 
