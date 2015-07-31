@@ -1,3 +1,4 @@
+<div class="invoice-header-container">
 <div id="amends">
 <% if @invoice.amend and @invoice.amend != @invoice -%>
   <h3><%=l(:amended_by_invoice, :link => link_to_if_authorized("#{l(:label_amendment_invoice)} #{@invoice.amend.number}",
@@ -136,6 +137,7 @@
   </div>
   </div>
   <% end -%>
+ </div>
 
 <!-- Invoice Data -->
 <div class="invoice">

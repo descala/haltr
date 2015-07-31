@@ -1,4 +1,3 @@
-<div class="report_data">
 <% if @debug -%>
 <style type="text/css">
   body {
@@ -31,8 +30,10 @@
   }
   .subpage {
     height: 257mm;
-    padding-left: 11mm;
-    padding-right: 3mm;
+    padding-left: 30mm;
+    padding-right: 20mm;
+    padding-top: 20mm;
+    padding-bottom: 20mm;
   }
   .window {
     position: absolute;
@@ -43,6 +44,11 @@
     left: 104mm;
     opacity: 0.2;
     z-index: 1;
+  }
+  div.page-break {
+    margin-top: 20mm;
+    margin-bottom: 20mm;
+    border: solid 1px;
   }
 </style>
   <div class="window"></div>
@@ -84,7 +90,6 @@
   <%= link_to 'PDF', {:action=>'show', :id=>@invoice, :format => 'pdf'} %>
 </div>
 <% end -%>
-</div>
 
 <% if @is_pdf and @debug -%>
   <%= javascript_heads %>
