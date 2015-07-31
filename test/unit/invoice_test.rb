@@ -376,6 +376,8 @@ class InvoiceTest < ActiveSupport::TestCase
     assert_equal 'IRPF', il.taxes[1].name
     assert_equal 21.0,   il.taxes[1].percent
     assert_equal 'S',    il.taxes[1].category
+    # email override lluis@ingent.net, instead of client1@email.com
+    assert_equal 'lluis@ingent.net', invoice.client_email_override
   end
 
   # import invoice_facturae32_issued3.xml
@@ -441,6 +443,8 @@ class InvoiceTest < ActiveSupport::TestCase
     invoice.state = :new
     assert invoice.save!
     assert invoice.modified_since_created?, "modified since created"
+    # do not override email client1@email.com (is the same in XML)
+    assert_nil invoice.client_email_override
   end
 
   test 'import facturae32 with discount on first line' do

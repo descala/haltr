@@ -588,6 +588,16 @@ _INV
       end
     end
 
+    # if it is an issued invoice, and
+    #    the client allready exists, and
+    #    this client has different email than this invoice, then
+    # save the email address to the invoice (overrides client email) 
+    if client_role == "buyer" and client
+      client_email = Haltr::Utils.get_xpath(doc,xpaths["buyer_email"])
+      if client_email and client_email != client.email
+        invoice.client_email_override = client_email
+      end
+    end
 
     # if passed issued param, check if it should be an IssuedInvoice or a ReceivedInvoice
     unless issued.nil?
