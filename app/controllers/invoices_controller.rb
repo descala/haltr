@@ -37,7 +37,7 @@ class InvoicesController < ApplicationController
   before_filter :check_for_company, :except => PUBLIC_METHODS
 
   skip_before_filter :verify_authenticity_token, :only => [:base64doc]
-  accept_api_auth :import, :import_facturae, :number_to_id, :update, :show, :index, :destroy
+  accept_api_auth :import, :import_facturae, :number_to_id, :update, :show, :index, :destroy, :create
 
   def index
     sort_init 'invoices.created_at', 'desc'
@@ -161,21 +161,7 @@ class InvoicesController < ApplicationController
   def create
     # mark as "_destroy" all taxes with an empty tax code
     # and copy global "exempt comment" to all exempt taxes
-    parsed_params = params[:invoice]
-    if parsed_params["invoice_lines_attributes"]
-      parsed_params["invoice_lines_attributes"].each do |i, invoice_line|
-        if invoice_line["taxes_attributes"]
-          invoice_line["taxes_attributes"].each do |j, tax|
-            tax['_destroy'] = 1 if tax["code"].blank?
-            if tax["code"] =~ /_E$/
-              tax['comment'] = params["#{tax["name"]}_comment"]
-            else
-              tax['comment'] = ''
-            end
-          end
-        end
-      end
-    end
+    parsed_params = parse_invoice_params
 
     @invoice = invoice_class.new(parsed_params)
     @invoice.save_attachments(params[:attachments] || (params[:invoice] && params[:invoice][:uploads]))
@@ -189,33 +175,42 @@ class InvoicesController < ApplicationController
     @client = @invoice.client
     @invoice.project = @project
     if @invoice.save
-      flash[:notice] = l(:notice_successful_create)
-      if params[:create_and_send]
-        if @invoice.valid?
-          if ExportChannels[@invoice.client.invoice_format]['javascript']
-            # channel sends via javascript, set autocall and autocall_args
-            # 'show' action will set a div to tell javascript to automatically
-            # call this function
-            js = ExportChannels[@invoice.client.invoice_format]['javascript'].
-              gsub(':id',@invoice.id.to_s).gsub(/'/,"").split(/\(|\)/)
-            redirect_to :action => 'show', :id => @invoice,
-              :autocall => js[0].html_safe, :autocall_args => js[1]
+      respond_to do |format|
+        format.html {
+          flash[:notice] = l(:notice_successful_create)
+          if params[:create_and_send]
+            if @invoice.valid?
+              if ExportChannels[@invoice.client.invoice_format]['javascript']
+                # channel sends via javascript, set autocall and autocall_args
+                # 'show' action will set a div to tell javascript to automatically
+                # call this function
+                js = ExportChannels[@invoice.client.invoice_format]['javascript'].
+                  gsub(':id',@invoice.id.to_s).gsub(/'/,"").split(/\(|\)/)
+                redirect_to :action => 'show', :id => @invoice,
+                  :autocall => js[0].html_safe, :autocall_args => js[1]
+              else
+                redirect_to :action => 'send_invoice', :id => @invoice
+              end
+            else
+              flash[:error] = l(:errors_prevented_invoice_sent)
+              redirect_to :action => 'show', :id => @invoice
+            end
           else
-            redirect_to :action => 'send_invoice', :id => @invoice
+            redirect_to :action => 'show', :id => @invoice
           end
-        else
-          flash[:error] = l(:errors_prevented_invoice_sent)
-          redirect_to :action => 'show', :id => @invoice
-        end
-      else
-        redirect_to :action => 'show', :id => @invoice
+        }
+        format.api { render :action => 'show', :status => :created, :location => invoice_url(@invoice) }
       end
     else
       logger.info "Invoice errors #{@invoice.errors.full_messages}"
       # Add a client in order to render the form with the errors
       @client ||= Client.find(:all, :order => 'name', :conditions => ["project_id = ?", @project]).first
       @client ||= Client.new
-      render :action => "new"
+
+      respond_to do |format|
+        format.html { render :action => 'new' }
+        format.api { render_validation_errors(@invoice) }
+      end
     end
   end
 
@@ -229,20 +224,7 @@ class InvoicesController < ApplicationController
 
     # mark as "_destroy" all taxes with an empty tax code
     # and copy global "exempt comment" to all exempt taxes
-    parsed_params = params[:invoice]
-    parsed_params["invoice_lines_attributes"] ||= {}
-    parsed_params["invoice_lines_attributes"].each do |i, invoice_line|
-      if invoice_line["taxes_attributes"]
-        invoice_line["taxes_attributes"].each do |j, tax|
-          tax['_destroy'] = 1 if tax["code"].blank?
-          if tax["code"] =~ /(_E|_NS)$/
-            tax['comment'] = params["#{tax["name"]}_comment"]
-          else
-            tax['comment'] = ''
-          end
-        end
-      end
-    end
+    parsed_params = parse_invoice_params
 
     if @invoice.update_attributes(parsed_params)
       event = Event.new(:name=>'edited',:invoice=>@invoice,:user=>User.current)
@@ -1073,6 +1055,43 @@ class InvoicesController < ApplicationController
     end
 
     redirect_to invoice_path(@invoice)
+  end
+
+  private
+
+  def parse_invoice_params
+    parsed_params = params[:invoice]
+    parsed_params['invoice_lines_attributes'] ||= {}
+    # accept invoice_lines_attributes = { '0' => {}, ... }
+    # and    invoice_lines_attributes = [{}, ...]
+    if params[:invoice]['invoice_lines_attributes'].is_a? Array
+      parsed_params['invoice_lines_attributes'] = Hash[
+        params[:invoice]['invoice_lines_attributes'].map.with_index do |il, i|
+          [i, il]
+        end
+      ]
+    end
+    parsed_params['invoice_lines_attributes'].each do |i, invoice_line|
+      invoice_line['taxes_attributes'] ||= {}
+      # accept taxes_attributes = { '0' => {}, ... }
+      # and    taxes_attributes = [{}, ...]
+      if invoice_line['taxes_attributes'].is_a? Array
+        invoice_line['taxes_attributes'] = Hash[
+          invoice_line['taxes_attributes'].map.with_index do |tax, j|
+            [j, tax]
+          end
+        ]
+      end
+      invoice_line['taxes_attributes'].each do |j, tax|
+        tax['_destroy'] = 1 if tax['code'].blank?
+        if tax['code'] =~ /_E|_NS$/
+          tax['comment'] = params["#{tax['name']}_comment"]
+        else
+          tax['comment'] = ''
+        end
+      end
+    end
+    parsed_params
   end
 
 end
