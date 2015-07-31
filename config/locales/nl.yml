@@ -385,6 +385,7 @@ nl:
   missing_company_peppol_fields: "Missing Peppol fields on your company"
   missing_client_peppol_fields: "Missing Peppol fields on client"
   field_accounting_cost: "Accounting cost"
+  field_client_email_override: "Override the email of the client with this one"
   missing_svefaktura_account: "Missing Svefaktura account cost"
   missing_svefaktura_organization: "Missing Svefaktura organization identifier"
   missing_svefaktura_debit: "Direct debit not allowed"

@@ -142,7 +142,11 @@ class Invoice < ActiveRecord::Base
   end
 
   def recipient_emails
-    client.recipient_emails
+    if client_email_override
+      client_email_override.split(/[,; ]/)
+    else
+      client.recipient_emails
+    end
   end
 
   def terms_description

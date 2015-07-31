@@ -382,6 +382,7 @@ sv:
   missing_company_peppol_fields: "Manglende PEPPOL felter på din virksomhed"
   missing_client_peppol_fields: "Manglende PEPPOL felter på klient"
   field_accounting_cost: "konto cost"
+  field_client_email_override: "Override the email of the client with this one"
   missing_svefaktura_account: "Saknad Svefaktura konto kostnad"
   missing_svefaktura_organization: "Saknad Svefaktura organisation identifierare"
   missing_svefaktura_debit: "Autogiro tillåts inte"

@@ -388,6 +388,7 @@ fr:
   missing_company_peppol_fields: "champs manquants Peppol votre entreprise"
   missing_client_peppol_fields: "champs manquants Peppol client"
   field_accounting_cost: "comptabilisation des coûts"
+  field_client_email_override: "Override the email of the client with this one"
   missing_svefaktura_account: "Manque le centre de cost"
   missing_svefaktura_organization: "Manque l'identifier de l'enterprise"
   missing_svefaktura_debit: "On ne peut pas domicilier les factures"

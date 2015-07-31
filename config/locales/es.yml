@@ -400,6 +400,7 @@ es:
   missing_company_peppol_fields: "Faltan campos de Peppol de tu empresa"
   missing_client_peppol_fields: "Faltan campos de Peppol del cliente"
   field_accounting_cost: "Centro de coste"
+  field_client_email_override: "No utilizar el email de cliente, sino este"
   missing_svefaktura_account: "Falta el centro de coste"
   missing_svefaktura_organization: "Falta el identificador de empresa"
   missing_svefaktura_debit: "No se pueden crear facturas domiciliadas"

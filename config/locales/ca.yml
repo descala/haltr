@@ -399,6 +399,7 @@ ca:
   missing_company_peppol_fields: "Falten camps de Peppol de la teva empresa"
   missing_client_peppol_fields: "Falten camps de Peppol del client"
   field_accounting_cost: "Centre de cost"
+  field_client_email_override: "No utilitzar l'email de la fitxa de client, sinó aquest"
   missing_svefaktura_account: "Manca el centre de cost"
   missing_svefaktura_organization: "Manca l'identificador d'empresa"
   missing_svefaktura_debit: "No es poden crear factures domiciliades"

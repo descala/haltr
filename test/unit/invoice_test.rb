@@ -592,4 +592,13 @@ class InvoiceTest < ActiveSupport::TestCase
     assert_equal 'Clauses',                  invoice.fa_clauses
   end
 
+  test 'overrides client email with client_email_override' do
+    # Overrided:
+    assert_equal "override@example.com", invoices(:i14).client_email_override
+    assert_equal ["override@example.com"], invoices(:i14).recipient_emails
+    # Not overrided
+    assert_nil invoices(:i13).client_email_override
+    assert_equal ["person1@example.com", "mail@client1.com"], invoices(:i13).recipient_emails
+  end
+
 end
