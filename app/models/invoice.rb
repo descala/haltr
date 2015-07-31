@@ -142,7 +142,7 @@ class Invoice < ActiveRecord::Base
   end
 
   def recipient_emails
-    if client_email_override
+    unless client_email_override.blank?
       client_email_override.split(/[,; ]/)
     else
       client.recipient_emails
