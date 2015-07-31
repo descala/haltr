@@ -115,7 +115,7 @@ $(window).load(function() {
 
   // page numbers
   var i = 0;
-  while (i <= pages) {
+  while (i <= pages && pages > 1) {
     var divNum = $('div.page-num:eq(' + i + ')');
     i += 1;
     if (divNum.length > 0) {
