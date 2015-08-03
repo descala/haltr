@@ -25,11 +25,24 @@ class ClientsController < ApplicationController
     sort_init 'name', 'asc'
     sort_update %w(taxcode name)
 
-    clients = @project.clients.scoped
+    clients = @project.clients
 
     unless params[:name].blank?
       name = "%#{params[:name].strip.downcase}%"
-      clients = clients.scoped :conditions => ["LOWER(name) LIKE ? OR LOWER(address) LIKE ? OR LOWER(address2) LIKE ? OR LOWER(taxcode) LIKE ?", name, name, name, name]
+      clients = clients.where("LOWER(name) LIKE ? OR LOWER(address) LIKE ? OR LOWER(address2) LIKE ? OR LOWER(taxcode) LIKE ?", name, name, name, name)
+    end
+
+    unless params[:taxcode].blank?
+      taxcode = params[:taxcode].encode(
+        'UTF-8', 'binary', invalid: :replace, undef: :replace, replace: ''
+      ).gsub(/\W/,'').downcase
+      if taxcode[0...2].downcase == @project.company.country
+        taxcode2 = taxcode[2..-1]
+      else
+        taxcode2 = "#{@project.company.country}#{taxcode}"
+      end
+
+      clients = clients.where("taxcode in (?, ?)", taxcode, taxcode2)
     end
 
     case params[:format]
