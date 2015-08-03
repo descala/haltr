@@ -29,4 +29,16 @@ class CompanyTest < ActiveSupport::TestCase
     assert_equal "ES0200077310058C", companies(:company1).sepa_creditor_identifier
     assert_equal "ES42000A28022143", companies(:company2).sepa_creditor_identifier
   end
+
+  test 'works when xxx_mail_customization is not a Hash' do
+    c = companies('company1')
+    c.invoice_mail_customization = ''
+    c.invoice_mail_subject_es = 'Subject'
+    c.invoice_mail_customization = ''
+    c.invoice_mail_body_es = 'Body'
+    c.quote_mail_customization = ''
+    c.quote_mail_subject_es = 'Subject'
+    c.quote_mail_customization = ''
+    c.quote_mail_body_es = 'Body'
+  end
 end
