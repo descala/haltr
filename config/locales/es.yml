@@ -649,3 +649,4 @@ es:
   field_unidad_contratacion: "Unidad de contratación / SEF"
   field_discount_helper: "Calcular % de descuento desde importe"
   label_discounts_and_charges: Descuentos y cargos
+  invoice_has_no_original: La factura no tiene original (el transporte requiere un documento original)

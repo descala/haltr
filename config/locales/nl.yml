@@ -629,3 +629,4 @@ nl:
   field_unidad_contratacion: "Unidad de contratación / SEF"
   field_discount_helper: "Calculate discount % from import"
   label_discounts_and_charges: Discounts and charges
+  invoice_has_no_original: Invoice has no original (transport requires an original document)
