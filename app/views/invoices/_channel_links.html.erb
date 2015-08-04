@@ -1,7 +1,7 @@
 <div class="invoice-channel-links">
 <h3>Check generated documents</h3>
 <ul>
-  <% if @invoice.original.present? -%>
+  <% if (@invoice.original.present? rescue true) -%>
     <li><%= link_to_if_authorized 'original', {controller: 'invoices', action: 'show', id: @invoice, format: 'original', debug: true } %></li>
   <% end -%>
   <% ExportFormats.available.each do |format,conf| %>
