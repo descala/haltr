@@ -456,6 +456,7 @@ _INV
   end
 
   def modified_since_created?
+    return false if new_record?
     updated_at > created_at
   end
 
