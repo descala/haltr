@@ -100,7 +100,7 @@
       <% if @invoice.discount_text and !@invoice.discount_text.blank? -%>
         <cac0:ReasonCode name="<%=h @invoice.discount_text%>">ZZZ</cac0:ReasonCode>
       <% end -%>
-      <cbc:Amount amountCurrencyID="<%=h @client.currency%>"><%=h precision(@invoice.discount_amount.dollars,2)%></cbc:Amount>
+      <cbc:Amount amountCurrencyID="<%=h @client.currency%>"><%=h haltr_precision(@invoice.discount_amount.dollars,2)%></cbc:Amount>
       <cac0:TaxCategory>
         <cac0:ID>S</cac0:ID>
         <cbc:Percent>25</cbc:Percent>
@@ -112,16 +112,16 @@
   <% end -%>
   <% @invoice.taxes_by_category.each do |tax_name,categories| -%>
    <cac0:TaxTotal>
-     <cbc:TotalTaxAmount amountCurrencyID="<%=h @client.currency%>"><%=h precision @invoice.tax_amount_for(tax_name).dollars %></cbc:TotalTaxAmount>
+     <cbc:TotalTaxAmount amountCurrencyID="<%=h @client.currency%>"><%=h haltr_precision @invoice.tax_amount_for(tax_name).dollars %></cbc:TotalTaxAmount>
 
       <% categories.each do |category,taxes| -%>
       <% taxes.each do |tax| -%>
       <cac0:TaxSubTotal>
-        <cbc:TaxableAmount amountcurrencyID="<%=h @client.currency%>"><%=h precision(@invoice.taxable_base(tax).dollars)%></cbc:TaxableAmount>
-        <cbc:TaxAmount amountcurrencyID="<%=h @client.currency%>"><%=h precision(@invoice.tax_amount(tax).dollars) %></cbc:TaxAmount>
+        <cbc:TaxableAmount amountcurrencyID="<%=h @client.currency%>"><%=h haltr_precision(@invoice.taxable_base(tax).dollars)%></cbc:TaxableAmount>
+        <cbc:TaxAmount amountcurrencyID="<%=h @client.currency%>"><%=h haltr_precision(@invoice.tax_amount(tax).dollars) %></cbc:TaxAmount>
          <cac0:TaxCategory>
            <cac0:ID><%=category%></cac0:ID>
-           <cbc:Percent><%=h precision (tax.percent)%></cbc:Percent>
+           <cbc:Percent><%=h haltr_precision (tax.percent)%></cbc:Percent>
             <cac0:TaxScheme>
               <cac0:ID><%=Haltr::TaxHelper.ubl(tax.name)%></cac0:ID>
             </cac0:TaxScheme>
@@ -131,19 +131,19 @@
 <% end -%>
 <% end -%>
    <cac0:LegalTotal>
-        <cbc:LineExtensionTotalAmount amountCurrencyID="<%=h @client.currency%>"><%=h precision @invoice.subtotal_without_discount.dollars%></cbc:LineExtensionTotalAmount>
-        <cbc:TaxExclusiveTotalAmount amountCurrencyID="<%=h @client.currency%>"><%=h precision(@invoice.subtotal.dollars)%></cbc:TaxExclusiveTotalAmount>
-        <cbc:TaxInclusiveTotalAmount amountCurrencyID="<%=h @client.currency%>"><%=h precision @invoice.total.dollars%></cbc:TaxInclusiveTotalAmount>
+        <cbc:LineExtensionTotalAmount amountCurrencyID="<%=h @client.currency%>"><%=h haltr_precision @invoice.subtotal_without_discount.dollars%></cbc:LineExtensionTotalAmount>
+        <cbc:TaxExclusiveTotalAmount amountCurrencyID="<%=h @client.currency%>"><%=h haltr_precision(@invoice.subtotal.dollars)%></cbc:TaxExclusiveTotalAmount>
+        <cbc:TaxInclusiveTotalAmount amountCurrencyID="<%=h @client.currency%>"><%=h haltr_precision @invoice.total.dollars%></cbc:TaxInclusiveTotalAmount>
    </cac0:LegalTotal>
 <% @invoice.invoice_lines.each_with_index do |invoice_line, index| -%>
    <cac0:InvoiceLine>
      <cac0:ID><%=h index + 1%></cac0:ID>
      <cbc:InvoicedQuantity quantityUnitCode="<%=h invoice_line.unit_code(:ubl) %>"><%=h invoice_line.quantity%></cbc:InvoicedQuantity>
-     <cbc:LineExtensionAmount amountCurrencyID="<%=h @client.currency%>"><%=h precision(invoice_line.price*invoice_line.quantity,2)%></cbc:LineExtensionAmount>
+     <cbc:LineExtensionAmount amountCurrencyID="<%=h @client.currency%>"><%=h haltr_precision(invoice_line.price*invoice_line.quantity,2)%></cbc:LineExtensionAmount>
       <cac0:Item>
         <cbc:Description><%=h invoice_line.description%></cbc:Description>
          <cac0:BasePrice>
-           <cbc:PriceAmount amountCurrencyID="<%=h @client.currency%>"><%=h precision(invoice_line.price,2)%></cbc:PriceAmount>
+           <cbc:PriceAmount amountCurrencyID="<%=h @client.currency%>"><%=h haltr_precision(invoice_line.price,2)%></cbc:PriceAmount>
          </cac0:BasePrice>
       </cac0:Item>
    </cac0:InvoiceLine>
