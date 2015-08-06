@@ -480,8 +480,12 @@ class InvoicesController < ApplicationController
       name:    'error_sending',
       notes:   msg
     )
-    logger.debug e
-    logger.debug e.backtrace
+    HiddenEvent.create(:name      => "error",
+                       :invoice   => @invoice,
+                       :error     => e.message,
+                       :backtrace => e.backtrace)
+    logger.info e
+    logger.info e.backtrace
     #raise e if Rails.env == "development"
   ensure
     redirect_back_or_default(:action => 'show', :id => @invoice)
