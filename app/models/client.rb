@@ -180,6 +180,18 @@ class Client < ActiveRecord::Base
     audts[last] || []
   end
 
+  def recipient_people
+    people.find(:all,:order=>'last_name ASC',:conditions=>['send_invoices_by_mail = true'])
+  end
+
+  def recipient_emails
+    mails = recipient_people.collect do |person|
+      person.email if person.email.present?
+    end
+    mails << email if email.present?
+    mails.uniq.compact
+  end
+
   protected
 
   # called after_create (only NEW clients)

@@ -29,14 +29,14 @@ class HaltrMailHandlerTest < ActiveSupport::TestCase
 
     stub_request(:post, "http://localhost:3000/api/v1/transactions").
       with(
-        :body => /transaction.id.=1f2e767e4cf28f53e8239b506475add6
+        :body => /transaction.id.=.*
                   &transaction.process.=Estructura%3A%3AInvoice
                   &transaction.invoice_id.=\d+
                   &transaction.payload.=.*
-                  &transaction.vat_id.=77310058H
+                  &transaction.vat_id.=77310058C
                   &transaction.is_issued.=false
                   &transaction.haltr_url.=http%3A%2F%2Flocalhost%3A3001
-                  &token=f1c9296ec8cb35b02eeea064c720c168/x,
+                  &token=.*/x,
     ).to_return(:status => 200,
                 :body => "",
                 :headers => {})

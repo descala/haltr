@@ -24,7 +24,7 @@
     <tbody>
       <tr>
         <td><%= f.text_field :quantity, :value => f.object.quantity.to_s.gsub(/\.0+$/,''), :style => "width: 78px;", :no_label => true %></td>
-        <td><%=f.select :unit, InvoiceLine.units, {:no_label => true}, {:style => "width: 100px;"}%></td>
+        <td><%=f.select :unit, InvoiceLine.units, {:no_label => true, :include_blank => true}, {:style => "width: 100px;"}%></td>
         <% if @invoice.invoice_lines.any? {|l| !l.article_code.blank? } or User.current.allowed_to?(:view_invoice_extra_fields, @project) -%>
           <td><%=f.text_field :article_code, :style => "width: 78px;", :no_label => true%></td>
         <% end -%>
@@ -55,24 +55,41 @@
     </tbody>
   </table>
 
-  <% if User.current.allowed_to?(:view_invoice_extra_fields, @project) or @invoice.invoice_lines.sum(&:charge) > 0 or @invoice.invoice_lines.sum(&:discount_percent) > 0 -%>
+  <% if User.current.allowed_to?(:view_invoice_extra_fields, @project) or @invoice.invoice_lines.sum(&:discount_percent) > 0 -%>
   <table class="formee invoice_lines">
     <thead>
       <tr>
         <th><%= l(:field_discount) %></th>
+        <th><%= l(:field_discount_helper) %></th>
         <th colspan="2"><%= l(:field_discount_text) %></th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td style="width: 78px">
+          <%= f.text_field(:discount_percent, no_label: true, class: 'discount_percent_line') %>
+          <span style="font-size:15px; margin-left: -20px; margin-right: 4px;">%</span>
+        </td>
+        <td style="width: 255px">
+          <%= f.text_field(:discount_helper, no_label: true, class: 'discount_helper_line') %>
+        </td>
+        <td colspan="2"><%= f.text_field(:discount_text, :no_label => true) %></td>
+      </tr>
+    </tbody>
+  </table>
+  <% end -%>
+
+  <% if User.current.allowed_to?(:view_invoice_extra_fields, @project) or @invoice.invoice_lines.sum(&:charge) > 0 -%>
+  <table class="formee invoice_lines">
+    <thead>
+      <tr>
         <th><%= l(:field_charge) %></th>
         <th colspan="2"><%= l(:field_charge_reason) %></th>
       </tr>
     </thead>
     <tbody>
       <tr>
-        <td>
-          <%= f.text_field(:discount_percent, style: 'width: 78px;', no_label: true) %>
-          <span style="font-size:15px; margin-left: -20px; margin-right: 4px;">%</span>
-        </td>
-        <td colspan="2"><%= f.text_field(:discount_text, :no_label => true) %></td>
-        <td><%= f.text_field(:charge, :style=>'width: 78px;', :no_label => true) %></td>
+        <td style="width: 164px"><%= f.text_field(:charge, :no_label => true) %></td>
         <td colspan="2"><%= f.text_field(:charge_reason, :no_label => true) %></td>
       </tr>
     </tbody>

@@ -1,6 +1,6 @@
 <fieldset class="tabular box" style="padding-bottom: 40px;">
   <legend><%= l(:pdf_customization) %></legend>
-  <%= f.select :pdf_template, [[l(:pdf_default),'default'], [l(:pdf_rigth_windowed_envelope),'rigth_windowed_envelope']] -%>
+  <%= f.select :pdf_template, [[l(:pdf_default),'default'], [l(:pdf_right_windowed_envelope),'right_windowed_envelope']] -%>
   <%= call_hook(:company_customization_pdf_end) %>
 </fieldset>
 

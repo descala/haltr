@@ -12,6 +12,7 @@ guard :minitest, :zeus => true, :all_on_start => false, :all_after_pass => false
   watch(%r{^#{H}/app/helpers/(.+)\.rb$})                  { |m| "#{H}/test/unit/#{m[1]}_test.rb" }
   watch(%r{^#{H}/app/models/invoice_line.rb$})            { "#{H}/test/unit/invoice_test.rb" }
   watch(%r{^#{H}/app/controllers/(.+)\.rb$})              { |m| "#{H}/test/functional/#{m[1]}_test.rb" }
+  watch(%r{^#{H}/app/controllers/(.+)_controller\.rb$})              { |m| "#{H}/test/integration/api_test/#{m[1]}_test.rb" }
   watch(%r{^#{H}/app/views/.+\.erb$})                     { ["#{H}/test/functional", "#{H}/test/integration"] }
   watch(%r{^#{H}/test/.+_test\.rb$})
   watch("#{H}/app/controllers/application_controller.rb") { ["#{H}/test/functional", "#{H}/test/integration"] }

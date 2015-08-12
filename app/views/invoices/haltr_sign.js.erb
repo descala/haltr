@@ -1,9 +1,4 @@
-var clienteFirma;
-
-function isIE () {
-  var myNav = navigator.userAgent.toLowerCase();
-  return (myNav.indexOf('msie') != -1) ? parseInt(myNav.split('msie')[1]) : false;
-}
+var haltr_document_url;
 
 function clear_logs() {
   if ($('div.flash.notice').length) {
@@ -30,209 +25,68 @@ function log(msg,level) {
   }).appendTo('#haltr_'+level+'_messages')
 }
 
-function debug(msg) {
-  <% if @debug -%>
-  log(msg, 'notice');
-  <% end -%>
-}
-
-function appletIsLoaded() {
-  if (typeof clienteFirma === 'undefined') {
-    // clienteFirma undefined so not loaded
-    debug('clienteFirma undefined so not loaded');
-    return false;
-  } else if ('getErrorMessage' in clienteFirma && (typeof(clienteFirma.getErrorMessage) == "function")) {
-    // clienteFirma has getErrorMessage function, so loaded
-    debug('clienteFirma has getErrorMessage function, so loaded');
-    return true;
-  } else {
-    // on IE previous check does not work (typeof(clienteFirma.getErrorMessage))
-    // try to call function and catch the exception if not exist
-    debug('try to call function and catch the exception if not exist');
-    try {
-      clienteFirma.getErrorMessage();
-      debug('success (loaded)');
-      return true;
-    } catch(e) {
-      debug('error (not loaded): '+e.message);
-      return false;
-    }
-  }
-}
-
-function docWriteWrapper(func) {
-  var writeTo = document.createElement('del'),
-      oldwrite = document.write,
-      content = '';
-  writeTo.id = "me";
-  document.write = function(text) {
-    content += text;
-  }
-  func();
-  writeTo.innerHTML += content;
-  document.write = oldwrite;
-  document.body.appendChild(writeTo);
-}
-
-function cargarMiniApplet(base, keystore)
-{
-  clear_logs();
-  if ( !appletIsLoaded() ) {
-    // remove old applet
-    $('del#me').remove();
-    clienteFirma = null;
-
-    log('<%=j l(:loading_applet).html_safe %>', 'notice');
-	var codeBase = base;
-	if (codeBase == undefined || codeBase == null) {
-		codeBase = '.';
-	}
-    debug('codeBase: '+codeBase);
-
-	var keystoreConfig = keystore;
-	if (keystoreConfig == undefined) {
-		keystoreConfig = null;
-	}
-    debug('keystoreConfig: '+keystoreConfig);
-
-	var jarArchive = codeBase + '/' + "miniapplet-full.jar";
-    debug('jarArchive: '+jarArchive);
-	
-	var attributes = {
-		id: 'miniApplet',
-	 	width: 1,
-		height: 1
-	};
-    debug('attributes: '+JSON.stringify(attributes));
-
-	var parameters = {
-		jnlp_href: codeBase + '/miniapplet-full.jnlp',
-		keystore: keystoreConfig,
-		userAgent: window.navigator.userAgent,
-		code: 'es.gob.afirma.miniapplet.MiniAfirmaApplet.class',
-		archive: jarArchive,
-		codebase: codeBase,
-		java_arguments: '-Djnlp.packEnabled=false -Xms512M -Xmx512M',
-		separate_jvm: true
-	};
-    debug('parameters: '+JSON.stringify(parameters));
-
-    docWriteWrapper(function () {
-	  deployJava.runApplet(attributes, parameters, '1.6');
-    });
-    debug('called docWriteWrapper');
-
-	clienteFirma = document.getElementById("miniApplet");
-
-    if ( !appletIsLoaded() ) {
-      log('<%=j l(:applet_not_loaded).html_safe %>','error');
-      return false;
-    } else {
-      log('<%=j l(:applet_loaded).html_safe %>','notice');
-      return true;
-    }
-  } else {
-    log('<%=j l(:applet_already_loaded).html_safe %>', 'notice');
-    return true;
-  }
-}
-
-var KEYSTORE_WINDOWS = "WINDOWS";
-
-var KEYSTORE_APPLE = "APPLE";
-
-var KEYSTORE_PKCS12 = "PKCS12";
-
-var KEYSTORE_PKCS11 = "PKCS11";
-
-var KEYSTORE_FIREFOX = "MOZ_UNI";
-
-function sign(dataB64, algorithm, format, params) {
-	return clienteFirma.sign(dataB64, algorithm, format, params);
-}
-
-function coSign(signB64, dataB64, algorithm, format, params) {
-	return clienteFirma.coSign(signB64, dataB64, algorithm, format, params);
-}
-
-function counterSign(signB64, algorithm, format, params) {
-	return clienteFirma.counterSign(signB64, algorithm, format, params);
-}
-
-function getSignersStructure(signB64) {
-	return clienteFirma.getSignersStructure(signB64);
-}
-
-function getBase64FromText(plainText, charset) {
-	return clienteFirma.getBase64FromText(plainText, charset);
-}
-
-function getTextFromBase64(dataB64, charset) {
-	return clienteFirma.getTextFromBase64(dataB64, charset);
-}
-
-function saveDataToFile(dataB64, title, fileName, extension, description) {
-	return clienteFirma.saveDataToFile(dataB64, title, fileName, extension, description);
-}
-
-function getFileNameContentBase64(title, extensions, description) {
-	return clienteFirma.getFileNameContentBase64(title, extensions, description);
-}
-
-function getMultiFileNameContentBase64(title, extensions, description) {
-	return clienteFirma.getMultiFileNameContentBase64(title, extensions, description);
-}
-
-function getErrorMessage() {
-	return clienteFirma.getErrorMessage();
-}
-
-function doSign_init() {
-  $('#console').val("");
-  $('#console').show();
-  $('#ajax-indicator').css('display','inline');
-}
-
 function doSign_end() {
   $('#ajax-indicator').css('display','none');
 }
 
+function successCallback(signatureB64) {
+
+  log('<%=j l(:sending_signed_doc).html_safe %>','notice');
+  $.ajax({
+    type: "POST",
+    url: haltr_document_url,
+    data: "document=" + signatureB64,
+    success: function(result){
+      log('<%=j l(:document_sent).html_safe %>','notice');
+      // Reload page in 2 seconds
+      setTimeout(function() { location=location.pathname; }, 2000);
+    },
+    error: function(e){
+      log('<%=j l(:error_sending_signed_doc).html_safe %>','error');
+      doSign_end();
+    }
+  });
+}
+
+function errorCallback(errorType, errorMessage) {
+  msg='';
+  if (errorMessage != null) {
+    if (errorMessage.indexOf("AOCancelledOperationException")==-1) {
+      if (errorMessage.indexOf("El almacen no contenia entradas")!=-1) {
+        msg = '<%=j l(:error_no_certs).html_safe %>'
+      }
+      else if (errorMessage.indexOf("Please enable Java")!=-1) {
+        msg = '<%=j l(:error_enable_java).html_safe %>'
+      }
+      else {
+        msg = '<%=j l(:error_signing).html_safe %>: ' + errorMessage;
+      }
+    }
+  }
+  log(msg,'error');
+  doSign_end();
+}
+
+
 function doSign(document_url,signature_type) {
   try {
-    cargarMiniApplet('/plugin_assets/haltr/java/');
+    clear_logs();
+    haltr_document_url = document_url;
+    MiniApplet.cargarMiniApplet('/plugin_assets/haltr/java');
     var dataB64;
-    doSign_init();
+    $('#console').val("");
+    $('#console').show();
+    $('#ajax-indicator').css('display','inline');
     log('<%=j l(:downloading_doc).html_safe %>','notice');
     $.ajax({
       url : document_url,
       success : function(dataB64){
         try {
           log('<%=j l(:calling_signature).html_safe %>','notice');
-          // <option value="CAdES">CAdES</option>
-          // <option value="Adobe PDF">PAdES</option>
-          // <option value="XAdES">XAdES</option>
-          // <option value="ODF">ODF</option>
-          // signature_type for PDF: 'Adobe PDF'
-          // signature_type for Facturae: 'XAdES Enveloped'
-          var signed_document = sign(dataB64, 'SHA1withRSA', signature_type, null);
-          log('<%=j l(:sending_signed_doc).html_safe %>','notice');
-          $.ajax({
-            type: "POST",
-            url: document_url,
-            data: "document=" + signed_document,
-            success: function(result){
-              log('<%=j l(:document_sent).html_safe %>','notice');
-              // Reload page in 2 seconds
-              //setTimeout(function() { location.reload(); }, 2000);
-            },
-            error: function(e){
-              log('<%=j l(:error_sending_signed_doc).html_safe %>','error');
-              doSign_end();
-            }
-          });
+          MiniApplet.sign(dataB64, 'SHA1withRSA', signature_type, "mode=implicit", successCallback, errorCallback);
         } catch(e) {
           log(e.message, 'error');
-          log(getErrorMessage(),'error');
+          log(MiniApplet.getErrorMessage(),'error');
           doSign_end();
         }
       },
@@ -243,7 +97,7 @@ function doSign(document_url,signature_type) {
     });
   } catch(e) {
     log(e.message, 'error');
-    log(getErrorMessage(),'error');
+    log(MiniApplet.getErrorMessage(),'error');
     doSign_end();
   }
 }

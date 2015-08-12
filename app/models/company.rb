@@ -176,7 +176,7 @@ class Company < ActiveRecord::Base
   end
 
   def invoice_mail_subject=(lang,value)
-    self.invoice_mail_customization = {} unless invoice_mail_customization
+    self.invoice_mail_customization = {} unless invoice_mail_customization.is_a? Hash
     self.invoice_mail_customization["subject"] = {} unless invoice_mail_customization["subject"]
     self.invoice_mail_customization["subject"][lang] = value
   end
@@ -201,7 +201,7 @@ class Company < ActiveRecord::Base
   end
 
   def invoice_mail_body=(lang,value)
-    self.invoice_mail_customization = {} unless invoice_mail_customization
+    self.invoice_mail_customization = {} unless invoice_mail_customization.is_a? Hash
     self.invoice_mail_customization["body"] = {} unless invoice_mail_customization["body"]
     self.invoice_mail_customization["body"][lang] = value
   end
@@ -226,7 +226,7 @@ class Company < ActiveRecord::Base
   end
 
   def quote_mail_subject=(lang,value)
-    self.quote_mail_customization = {} unless quote_mail_customization
+    self.quote_mail_customization = {} unless quote_mail_customization.is_a? Hash
     self.quote_mail_customization["subject"] = {} unless quote_mail_customization["subject"]
     self.quote_mail_customization["subject"][lang] = value
   end
@@ -251,7 +251,7 @@ class Company < ActiveRecord::Base
   end
 
   def quote_mail_body=(lang,value)
-    self.quote_mail_customization = {} unless quote_mail_customization
+    self.quote_mail_customization = {} unless quote_mail_customization.is_a? Hash
     self.quote_mail_customization["body"] = {} unless quote_mail_customization["body"]
     self.quote_mail_customization["body"][lang] = value
   end

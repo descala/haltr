@@ -1,17 +1,20 @@
 class ChartsController < ApplicationController
   unloadable
 
-  before_filter :find_project_by_project_id, :only => [:invoice_status,:top_clients]
+  before_filter :find_project_by_project_id, :only => [:invoice_status,:top_clients,:cash_flow]
   before_filter :authorize, :except => [:invoice_total, :update_chart_preference]
   include ChartsHelper
   helper :haltr
+
+  accept_api_auth :invoice_total, :invoice_status, :top_clients, :cash_flow
 
   def invoice_total
     projects = haltr_projects
     if projects.any?
       chart_data = []
+      pref = params[:pref] || User.current.pref.others[:chart_invoice_total]
       projects.each do |project|
-        case User.current.pref.others[:chart_invoice_total]
+        case pref
         when "all_by_year"
           projdata = project.issued_invoices.where(["date > ?", 7.years.ago]).
             group_by_year(:date, format: "%Y").sum('total_in_cents/100')
@@ -30,14 +33,18 @@ class ChartsController < ApplicationController
           data: projdata
         }
       end
-      render json: chart_data.chart_json
+      respond_to do |format|
+        format.json { render json: chart_data.chart_json  }
+        format.xml  { render xml: JSON.parse(chart_data.chart_json) }
+      end
     else
       render_404
     end
   end
 
   def invoice_status
-    case User.current.pref.others[:chart_invoice_status]
+    pref = params[:pref] || User.current.pref.others[:chart_invoice_status]
+    case pref
     when "all_by_year"
       projdata = @project.issued_invoices.where(["date > ?", 7.years.ago]).
         group(:state).group_by_year(:date, format: "%Y").sum('total_in_cents/100')
@@ -57,7 +64,10 @@ class ChartsController < ApplicationController
       state_key = h['name']
       h['name'] = l("state_#{state_key}")
     end
-    render json: final_json
+    respond_to do |format|
+      format.json { render json: final_json }
+      format.xml  { render xml: final_json }
+    end
   end
 
   def top_clients
@@ -66,7 +76,8 @@ class ChartsController < ApplicationController
       client.id
     end
     where = client_ids.any? ?  "client_id IN (#{client_ids.join(',')}) and date > ?" : "date > ?"
-    case User.current.pref.others[:chart_top_clients]
+    pref = params[:pref] || User.current.pref.others[:chart_top_clients]
+    case pref
     when "all_by_year"
       chart_data = @project.issued_invoices.where([where, 7.years.ago]).
         group(:client_id).group_by_year(:date, format: "%Y").
@@ -90,7 +101,22 @@ class ChartsController < ApplicationController
       client = Client.find client_id
       h['name'] = client.name if client
     end
-    render json: final_json
+    respond_to do |format|
+      format.json { render json: final_json }
+      format.xml  { render xml: final_json }
+    end
+  end
+
+  def cash_flow
+    respond_to do |format|
+      format.api do
+        pref = params[:pref] || User.current.pref.others[:chart_cashflow]
+        @due_invoices = invoices_past_due(@project, pref)
+        @invoices     = invoices_on_schedule(@project, pref)
+        @due_invoices_sum = Money.new(@due_invoices.sum('total_in_cents'),@project.company.currency)
+        @invoices_sum     = Money.new(@invoices.sum('total_in_cents'),@project.company.currency)
+      end
+    end
   end
 
   def update_chart_preference

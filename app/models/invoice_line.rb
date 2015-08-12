@@ -14,12 +14,14 @@ class InvoiceLine < ActiveRecord::Base
   KILOGRAMS = 3
   LITTERS   = 4
   DAYS      = 5
+  OTHER     = 6
 
   UNIT_CODES = {
     UNITS     => {:name => 'units',     :facturae => '01', :ubl => 'C62'},
     HOURS     => {:name => 'hours',     :facturae => '02', :ubl => 'HUR'},
     KILOGRAMS => {:name => 'kilograms', :facturae => '03', :ubl => 'KGM'},
     LITTERS   => {:name => 'litters',   :facturae => '04', :ubl => 'LTR'},
+    OTHER     => {:name => 'other',     :facturae => '05', :ubl => 'ZZ'},
     DAYS      => {:name => 'days',      :facturae => '05', :ubl => 'DAY'},
   }
 
@@ -28,7 +30,6 @@ class InvoiceLine < ActiveRecord::Base
 
   belongs_to :invoice
   has_many :taxes, :class_name => "Tax", :order => "percent", :dependent => :destroy
-  validates_presence_of :unit
   validates_numericality_of :quantity, :price
   validates_numericality_of :charge, :discount_percent, :allow_nil => true
   validates_numericality_of :sequence_number, :allow_nil => true, :allow_blank => true
@@ -36,10 +37,6 @@ class InvoiceLine < ActiveRecord::Base
   accepts_nested_attributes_for :taxes,
     :allow_destroy => true
   validates_associated :taxes
-
-  after_initialize {
-    self.unit ||= 1
-  }
 
   # Coste Total.
   # Quantity x UnitPriceWithoutTax
@@ -89,7 +86,7 @@ class InvoiceLine < ActiveRecord::Base
   end
 
   def unit_code(format)
-    UNIT_CODES[unit][format]
+    UNIT_CODES[unit][format] rescue nil
   end
 
   def unit_short
@@ -118,6 +115,17 @@ class InvoiceLine < ActiveRecord::Base
   * #{quantity} x #{description} #{price}
 #{taxes_string}
 _LINE
+  end
+
+  def discount_helper=(v)
+    unless discount_percent and discount_percent > 0
+      if v and v.to_f > 0
+        self.discount_percent = (v.to_f * 100 / total_cost)
+      end
+    end
+  end
+
+  def discount_helper
   end
 
   private

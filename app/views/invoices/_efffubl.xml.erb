@@ -84,20 +84,20 @@
 <% if @invoice.discount_percent > 0 -%>
         <cac:AllowanceCharge>
           <cbc:ChargeIndicator>false</cbc:ChargeIndicator>
-          <cbc:Amount currencyID="<%=h @client.currency%>"><%=h precision(@invoice.discount_amount.dollars,2)%></cbc:Amount>
+          <cbc:Amount currencyID="<%=h @client.currency%>"><%=h haltr_precision(@invoice.discount_amount.dollars,2)%></cbc:Amount>
         </cac:AllowanceCharge>
 <% end -%>
 <% @invoice.taxes_by_category.each do |tax_name,categories| -%>
 
       <cac:TaxTotal>
-        <cbc:TaxAmount currencyID="<%=h @client.currency%>"><%=h precision @invoice.tax_amount_for(tax_name).dollars %></cbc:TaxAmount>
+        <cbc:TaxAmount currencyID="<%=h @client.currency%>"><%=h haltr_precision @invoice.tax_amount_for(tax_name).dollars %></cbc:TaxAmount>
 
         <% categories.each do |category,taxes| -%>
           <% taxes.each do |tax| -%>
             <cac:TaxSubtotal>
-              <cbc:TaxableAmount currencyID="<%=h @client.currency%>"><%=h precision(@invoice.taxable_base(tax).dollars)%></cbc:TaxableAmount>
-              <cbc:TaxAmount currencyID="<%=h @client.currency%>"><%=h precision(@invoice.tax_amount(tax).dollars) %></cbc:TaxAmount>
-              <cbc:Percent><%=h precision(tax.percent)%></cbc:Percento>
+              <cbc:TaxableAmount currencyID="<%=h @client.currency%>"><%=h haltr_precision(@invoice.taxable_base(tax).dollars)%></cbc:TaxableAmount>
+              <cbc:TaxAmount currencyID="<%=h @client.currency%>"><%=h haltr_precision(@invoice.tax_amount(tax).dollars) %></cbc:TaxAmount>
+              <cbc:Percent><%=h haltr_precision(tax.percent)%></cbc:Percento>
               <cac:TaxCategory>
                 <cbc:ID schemeID="UN/ECE 5305" schemeAgencyID="6"><%=category%></cbc:ID>
                 <cac:TaxScheme>
@@ -110,26 +110,26 @@
       </cac:TaxTotal>
 <% end -%>
     <cac:LegalMonetaryTotal>
-      <cbc:LineExtensionAmount currencyID="<%=h @client.currency%>"><%=h precision @invoice.gross_subtotal.dollars%></cbc:LineExtensionAmount>
-      <cbc:TaxExclusiveAmount currencyID="<%=h @client.currency%>"><%=h precision(@invoice.subtotal.dollars)%></cbc:TaxExclusiveAmount>
-      <cbc:TaxInclusiveAmount currencyID="<%=h @client.currency%>"><%=h precision @invoice.total.dollars%></cbc:TaxInclusiveAmount>
-        <cbc:PayableAmount currencyID="<%=h @client.currency%>"><%=h precision @invoice.total.dollars%></cbc:PayableAmount>
+      <cbc:LineExtensionAmount currencyID="<%=h @client.currency%>"><%=h haltr_precision @invoice.gross_subtotal.dollars%></cbc:LineExtensionAmount>
+      <cbc:TaxExclusiveAmount currencyID="<%=h @client.currency%>"><%=h haltr_precision(@invoice.subtotal.dollars)%></cbc:TaxExclusiveAmount>
+      <cbc:TaxInclusiveAmount currencyID="<%=h @client.currency%>"><%=h haltr_precision @invoice.total.dollars%></cbc:TaxInclusiveAmount>
+        <cbc:PayableAmount currencyID="<%=h @client.currency%>"><%=h haltr_precision @invoice.total.dollars%></cbc:PayableAmount>
       </cac:LegalMonetaryTotal>
 <% @invoice.invoice_lines.each_with_index do |invoice_line,index| -%>
         <cac:<%= @invoice.amend_of ? "InvoiceLine" : "InvoiceLine" %>>
           <cbc:ID><%=h index + 1%></cbc:ID>
           <cbc:InvoicedQuantity unitCode="<%=h invoice_line.unit_code(:ubl) %>"><%=h invoice_line.quantity%></cbc:InvoicedQuantity>
-          <cbc:LineExtensionAmount currencyID="<%=h @client.currency%>"><%=h precision(invoice_line.price*invoice_line.quantity,2)%></cbc:LineExtensionAmount>
+          <cbc:LineExtensionAmount currencyID="<%=h @client.currency%>"><%=h haltr_precision(invoice_line.price*invoice_line.quantity,2)%></cbc:LineExtensionAmount>
           <cac:TaxTotal>
             <% invoice_line.taxes.each do |tax_line| -%>
-              <cbc:TaxAmount currencyID="<%=h @client.currency%>"><%=h precision(invoice_line.price*invoice_line.quantity*tax_line.percent,2)%></cbc:TaxAmount>
+              <cbc:TaxAmount currencyID="<%=h @client.currency%>"><%=h haltr_precision(invoice_line.price*invoice_line.quantity*tax_line.percent,2)%></cbc:TaxAmount>
             <% end -%>
           </cac:TaxTotal>
           <cac:Item>
             <cbc:Description><%=h invoice_line.description%></cbc:Description>
           </cac:Item>
           <cac:Price>
-            <cbc:PriceAmount currencyID="<%=h @client.currency%>"><%=h precision(invoice_line.price,2)%></cbc:PriceAmount>
+            <cbc:PriceAmount currencyID="<%=h @client.currency%>"><%=h haltr_precision(invoice_line.price,2)%></cbc:PriceAmount>
           </cac:Price>
         </cac:<%= @invoice.amend_of ? "InvoiceLine" : "InvoiceLine" %>>
 <% end -%>	

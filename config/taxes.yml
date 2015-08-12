@@ -1,4 +1,5 @@
 # Supported taxes by country
+# E=Exempt, NS=NotSubject, Z=ZeroRated, S=Standard, H=High Rate, AA=Low Rate
 #
 ---
 es:
@@ -37,6 +38,51 @@ es:
   default: false
   category: S
   facturae_id: '04'
+- name: IGIC
+  percent: 0.0
+  default: false
+  category: Z
+  facturae_id: '03'
+- name: IGIC
+  percent: 3.0
+  default: false
+  category: AA
+  facturae_id: '03'
+- name: IGIC
+  percent: 7.0
+  default: false
+  category: S
+  facturae_id: '03'
+- name: IPSI
+  percent: 0.0
+  default: false
+  category: Z
+  facturae_id: '02'
+- name: IPSI
+  percent: 1.0
+  default: false
+  category: AA
+  facturae_id: '02'
+- name: IPSI
+  percent: 2.0
+  default: false
+  category: AA
+  facturae_id: '02'
+- name: IPSI
+  percent: 4.0
+  default: false
+  category: S
+  facturae_id: '02'
+- name: IPSI
+  percent: 9.0
+  default: false
+  category: H
+  facturae_id: '02'
+- name: IPSI
+  percent: 10.0
+  default: false
+  category: H
+  facturae_id: '02'
 fr:
 - name: TVA
   percent: 19.6

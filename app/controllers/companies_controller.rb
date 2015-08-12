@@ -27,9 +27,11 @@ class CompaniesController < ApplicationController
     if @project.company.nil?
       user_mail = User.find_by_project_id(@project.id).mail rescue ""
       # company should be already created by lib/company_filter
-      @company = Company.new(:project=>@project,
-                             :name=>@project.name,
-                             :email=>user_mail)
+      @company = Company.new(project:        @project,
+                             name:           @project.name,
+                             email:          user_mail,
+                             invoice_format: 'paper',
+                             public:         'public')
       @company.save(:validate=>false)
     else
       @company = @project.company
@@ -107,7 +109,9 @@ class CompaniesController < ApplicationController
               image = Magick::Image.read("#{attachment.diskfile}").first
               image.change_geometry!('350x130>') {|cols,rows,img| img.resize!(cols, rows)}
               image.write("#{attachment.diskfile}")
-            rescue LoadError, Magick::ImageMagickError
+            rescue LoadError
+              flash[:warning] = $!.message
+            rescue Magick::ImageMagickError
               flash[:warning] = l(:logo_not_image)
             end
           else

@@ -50,3 +50,8 @@ oioubl20:
   name: "OIO"
   validators: Haltr::Validator::Ubl
   content-type: "text-xml"
+
+original:
+  name: "Original"
+  validators: Haltr::Validator::Original
+  content-type: "text/plain"

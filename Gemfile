@@ -29,3 +29,4 @@ gem 'chartkick'
 gem 'audited-activerecord', '~> 3.0'
 
 gem 'valvat', :git => 'https://github.com/descala/valvat.git', :branch => 'master'
+gem 'shared-mime-info'

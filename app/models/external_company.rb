@@ -33,7 +33,9 @@ class ExternalCompany < ActiveRecord::Base
       end
     end
   }
-  AVAILABLE_FIELDS=%w(dir3 organ_proponent ponumber delivery_note_number file_reference payments_on_account receiver_contract_reference legal_literals party_identification)
+  AVAILABLE_FIELDS=%w(dir3 organ_proponent ponumber delivery_note_number
+  file_reference payments_on_account receiver_contract_reference legal_literals
+  party_identification unidad_contratacion)
   AVAILABLE_FIELDS.each do |field|
     src = <<-END_SRC
       def visible_#{field}

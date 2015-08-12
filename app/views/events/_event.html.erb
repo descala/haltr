@@ -1,12 +1,10 @@
 <%=h e -%>
 <% unless e.notes.blank? -%>
-:
-  <%=
-    if e.notes.is_a?(Array)
-      I18n.t(e.notes, :default => e.notes).join(" ")
-    else
-      I18n.t(e.notes, :default => e.notes)
-    end
+  :
+  <%=Redmine::CodesetUtil.replace_invalid_utf8(
+    e.notes.is_a?(Array) ?
+    I18n.t(e.notes, :default => e.notes).join(" ") :
+    I18n.t(e.notes, :default => e.notes))
   %>
 <% end -%>
 <% unless e.codi_registre.blank? -%>

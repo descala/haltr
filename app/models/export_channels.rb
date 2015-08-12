@@ -2,6 +2,10 @@ class ExportChannels
 
   unloadable
 
+  def self.use_file(file)
+    @@channels = File.read(File.join(File.dirname(__FILE__), "../../config/#{file}"))
+  end
+
   def self.available
     # See config/channels.yml.example
     @@channels ||= File.read(File.join(File.dirname(__FILE__), "../../config/channels.yml"))
@@ -97,7 +101,11 @@ class ExportChannels
       unless User.current.admin?
         allowed = false
         v["allowed_permissions"].each_key do |perm|
-          allowed = true if User.current.allowed_to?(perm, current_project)
+          if current_project.nil?
+            allowed = true if User.current.allowed_to?(perm, nil, {global: true})
+          else
+            allowed = true if User.current.allowed_to?(perm, current_project)
+          end
         end
         next unless allowed
       end

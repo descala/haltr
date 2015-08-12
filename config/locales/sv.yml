@@ -60,6 +60,7 @@ sv:
   button_new_invoice: Ny faktura
   button_add_invoice_line: Lägg till fakturarad
   field_number: Nummer
+  field_invoice_number: Factura nummer
   label_last_invoice_number: "Senast använda"
   field_date: Datum
   field_client: Kund
@@ -73,6 +74,7 @@ sv:
   field_draft: Utkast
   label_invoice_state: Status
   field_state: Status
+  field_state_updated_at: Status modification date
   show_template: Visa mall
   generate_template_from_invoice: Skapa ny mall
   generated_from_template: Skapad ny mall
@@ -220,6 +222,7 @@ sv:
   mark_as_received: "Marked as received"
   uploaded: "Uploaded"
   email: "Received"
+  api: "Created via API"
   download_original: "Download original"
   view_original: "View original"
   manual_mark_as: "Mark as %{state}"
@@ -256,6 +259,7 @@ sv:
   s_litters: l
   days: Dagar
   s_days: d
+  s_other: ""
 
   # People
   label_person: Person
@@ -339,6 +343,8 @@ sv:
   "custom": Annan
 
   # Frequency
+  mf36: Every 3 years
+  mf24: Every 2 years
   mf12: Årliga
   mf6: Halvt år
   mf3: Kvartal
@@ -376,6 +382,7 @@ sv:
   missing_company_peppol_fields: "Manglende PEPPOL felter på din virksomhed"
   missing_client_peppol_fields: "Manglende PEPPOL felter på klient"
   field_accounting_cost: "konto cost"
+  field_client_email_override: "Override the email of the client with this one"
   missing_svefaktura_account: "Saknad Svefaktura konto kostnad"
   missing_svefaktura_organization: "Saknad Svefaktura organisation identifierare"
   missing_svefaktura_debit: "Autogiro tillåts inte"
@@ -620,5 +627,10 @@ sv:
   pdf_customization: "PDF customization"
   field_pdf_template: "PDF template"
   pdf_default: "Default template"
-  pdf_rigth_windowed_envelope: "Right windowed envelope template"
+  pdf_right_windowed_envelope: "Right windowed envelope template"
   field_party_identification: "Party identification"
+  label_invoice_total: "Total"
+  field_unidad_contratacion: "Unidad de contratación / SEF"
+  field_discount_helper: "Calculate discount % from import"
+  label_discounts_and_charges: Discounts and charges
+  invoice_has_no_original: Invoice has no original (transport requires an original document)

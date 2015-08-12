@@ -14,8 +14,8 @@ class InvoicesController < ApplicationController
 
   PUBLIC_METHODS = [:by_taxcode_and_num,:view,:download,:mail,:logo,:haltr_sign]
 
-  before_filter :find_project_by_project_id, :only => [:index,:new,:create,:send_new_invoices,:download_new_invoices,:update_payment_stuff,:new_invoices_from_template,:reports,:report_channel_state,:report_invoice_list,:create_invoices,:update_taxes,:import]
-  before_filter :find_invoice, :only => [:edit,:update,:mark_accepted_with_mail,:mark_accepted,:mark_refused_with_mail,:mark_refused,:duplicate_invoice,:base64doc,:show,:send_invoice,:legal,:amend_for_invoice,:original,:validate,:show_original, :mark_as_accepted, :mark_as]
+  before_filter :find_project_by_project_id, :only => [:index,:new,:create,:send_new_invoices,:download_new_invoices,:update_payment_stuff,:new_invoices_from_template,:reports,:report_channel_state,:report_invoice_list,:create_invoices,:update_taxes,:import,:import_facturae]
+  before_filter :find_invoice, :only => [:edit,:update,:mark_accepted_with_mail,:mark_accepted,:mark_refused_with_mail,:mark_refused,:duplicate_invoice,:base64doc,:show,:send_invoice,:legal,:amend_for_invoice,:original,:validate,:show_original, :mark_as_accepted, :mark_as, :add_comment]
   before_filter :find_invoices, :only => [:context_menu,:bulk_download,:bulk_mark_as,:bulk_send,:destroy,:bulk_validate]
   before_filter :find_payment, :only => [:destroy_payment]
   before_filter :find_hashid, :only => [:view,:download]
@@ -37,11 +37,11 @@ class InvoicesController < ApplicationController
   before_filter :check_for_company, :except => PUBLIC_METHODS
 
   skip_before_filter :verify_authenticity_token, :only => [:base64doc]
-  accept_api_auth :import, :number_to_id, :update, :show
+  accept_api_auth :import, :import_facturae, :number_to_id, :update, :show, :index, :destroy, :create
 
   def index
     sort_init 'invoices.created_at', 'desc'
-    sort_update %w(invoices.created_at state number date due_date clients.name import_in_cents)
+    sort_update %w(invoices.created_at state_updated_at number date due_date clients.name import_in_cents)
 
     invoices = @project.issued_invoices.includes(:client)
 
@@ -98,24 +98,38 @@ class InvoicesController < ApplicationController
       end
     end
 
+    unless params[:state_updated_at_from].blank?
+      invoices = invoices.where("state_updated_at >= ?", params[:state_updated_at_from])
+    end
+
     if params[:format] == 'csv' and !User.current.allowed_to?(:export_invoices, @project)
       @status= l(:contact_support)
       @message=l(:notice_not_authorized)
       render :template => 'common/error', :layout => 'base', :status => 403, :formats => [:html]
       return
     end
+
+    case params[:format]
+    when 'csv', 'pdf'
+      @limit = Setting.issues_export_limit.to_i
+    when 'xml', 'json'
+      @offset, @limit = api_offset_and_limit
+    else
+      @limit = per_page_option
+    end
+
+    @invoice_count = invoices.count
+    @invoice_pages = Paginator.new self, @invoice_count, @limit, params['page']
+    @offset ||= @invoice_pages.offset
+    @invoices =  invoices.find(:all,
+                               :order => sort_clause,
+                               :include => [:client],
+                               :limit  =>  @limit,
+                               :offset =>  @offset)
+
     respond_to do |format|
-      format.html do
-        @invoice_count = invoices.count
-        @invoice_pages = Paginator.new self, @invoice_count,
-          per_page_option,
-          params['page']
-        @invoices =  invoices.find :all,
-          :order => sort_clause,
-          :include => [:client],
-          :limit  =>  @invoice_pages.items_per_page,
-          :offset =>  @invoice_pages.current.offset
-      end
+      format.html
+      format.api
       format.csv do
         @invoices = invoices.order(sort_clause)
       end
@@ -147,21 +161,7 @@ class InvoicesController < ApplicationController
   def create
     # mark as "_destroy" all taxes with an empty tax code
     # and copy global "exempt comment" to all exempt taxes
-    parsed_params = params[:invoice]
-    if parsed_params["invoice_lines_attributes"]
-      parsed_params["invoice_lines_attributes"].each do |i, invoice_line|
-        if invoice_line["taxes_attributes"]
-          invoice_line["taxes_attributes"].each do |j, tax|
-            tax['_destroy'] = 1 if tax["code"].blank?
-            if tax["code"] =~ /_E$/
-              tax['comment'] = params["#{tax["name"]}_comment"]
-            else
-              tax['comment'] = ''
-            end
-          end
-        end
-      end
-    end
+    parsed_params = parse_invoice_params
 
     @invoice = invoice_class.new(parsed_params)
     @invoice.save_attachments(params[:attachments] || (params[:invoice] && params[:invoice][:uploads]))
@@ -175,33 +175,42 @@ class InvoicesController < ApplicationController
     @client = @invoice.client
     @invoice.project = @project
     if @invoice.save
-      flash[:notice] = l(:notice_successful_create)
-      if params[:create_and_send]
-        if @invoice.valid?
-          if ExportChannels[@invoice.client.invoice_format]['javascript']
-            # channel sends via javascript, set autocall and autocall_args
-            # 'show' action will set a div to tell javascript to automatically
-            # call this function
-            js = ExportChannels[@invoice.client.invoice_format]['javascript'].
-              gsub(':id',@invoice.id.to_s).gsub(/'/,"").split(/\(|\)/)
-            redirect_to :action => 'show', :id => @invoice,
-              :autocall => js[0].html_safe, :autocall_args => js[1]
+      respond_to do |format|
+        format.html {
+          flash[:notice] = l(:notice_successful_create)
+          if params[:create_and_send]
+            if @invoice.valid?
+              if ExportChannels[@invoice.client.invoice_format]['javascript']
+                # channel sends via javascript, set autocall and autocall_args
+                # 'show' action will set a div to tell javascript to automatically
+                # call this function
+                js = ExportChannels[@invoice.client.invoice_format]['javascript'].
+                  gsub(':id',@invoice.id.to_s).gsub(/'/,"").split(/\(|\)/)
+                redirect_to :action => 'show', :id => @invoice,
+                  :autocall => js[0].html_safe, :autocall_args => js[1]
+              else
+                redirect_to :action => 'send_invoice', :id => @invoice
+              end
+            else
+              flash[:error] = l(:errors_prevented_invoice_sent)
+              redirect_to :action => 'show', :id => @invoice
+            end
           else
-            redirect_to :action => 'send_invoice', :id => @invoice
+            redirect_to :action => 'show', :id => @invoice
           end
-        else
-          flash[:error] = l(:errors_prevented_invoice_sent)
-          redirect_to :action => 'show', :id => @invoice
-        end
-      else
-        redirect_to :action => 'show', :id => @invoice
+        }
+        format.api { render :action => 'show', :status => :created, :location => invoice_url(@invoice) }
       end
     else
       logger.info "Invoice errors #{@invoice.errors.full_messages}"
       # Add a client in order to render the form with the errors
       @client ||= Client.find(:all, :order => 'name', :conditions => ["project_id = ?", @project]).first
       @client ||= Client.new
-      render :action => "new"
+
+      respond_to do |format|
+        format.html { render :action => 'new' }
+        format.api { render_validation_errors(@invoice) }
+      end
     end
   end
 
@@ -215,20 +224,7 @@ class InvoicesController < ApplicationController
 
     # mark as "_destroy" all taxes with an empty tax code
     # and copy global "exempt comment" to all exempt taxes
-    parsed_params = params[:invoice]
-    parsed_params["invoice_lines_attributes"] ||= {}
-    parsed_params["invoice_lines_attributes"].each do |i, invoice_line|
-      if invoice_line["taxes_attributes"]
-        invoice_line["taxes_attributes"].each do |j, tax|
-          tax['_destroy'] = 1 if tax["code"].blank?
-          if tax["code"] =~ /(_E|_NS)$/
-            tax['comment'] = params["#{tax["name"]}_comment"]
-          else
-            tax['comment'] = ''
-          end
-        end
-      end
-    end
+    parsed_params = parse_invoice_params
 
     if @invoice.update_attributes(parsed_params)
       event = Event.new(:name=>'edited',:invoice=>@invoice,:user=>User.current)
@@ -282,7 +278,10 @@ class InvoicesController < ApplicationController
         # nothing to do, invoice was already deleted (eg. by a parent)
       end
     end
-    redirect_back_or_default(:action => 'index', :project_id => @project, :back_url => params[:back_url])
+      respond_to do |format|
+        format.html { redirect_back_or_default(:action => 'index', :project_id => @project, :back_url => params[:back_url]) }
+        format.api  { render_api_ok }
+      end
   end
 
   def destroy_payment
@@ -360,40 +359,49 @@ class InvoicesController < ApplicationController
     @format = params["format"]
     respond_to do |format|
       format.html
+      format.api do
+        # Force "json" if format is emtpy
+        # Used in refresher.js to check invoice status
+        params[:format] ||= 'json'
+      end
       format.pdf do
         @is_pdf = true
         @debug = params[:debug]
         render :pdf => @invoice.pdf_name_without_extension,
-          :disposition => 'attachment',
+          :disposition => params[:view] ? 'inline' : 'attachment',
           :layout => "invoice.html",
           :template=>"invoices/show_pdf",
           :formats => :html,
           :show_as_html => params[:debug],
-          :margin => {:top => 20,
+          :margin => {
+            :top    => 20,
             :bottom => 20,
             :left   => 30,
-            :right  => 20}
+            :right  => 20
+          }
       end
       if params[:debug]
-        format.facturae30  { render_xml Haltr::Xml.generate(@invoice, 'facturae30') }
-        format.facturae31  { render_xml Haltr::Xml.generate(@invoice, 'facturae31') }
-        format.facturae32  { render_xml Haltr::Xml.generate(@invoice, 'facturae32') }
-        format.peppolubl20 { render_xml Haltr::Xml.generate(@invoice, 'peppolubl20') }
-        format.peppolubl21 { render_xml Haltr::Xml.generate(@invoice, 'peppolubl21') }
-        format.biiubl20    { render_xml Haltr::Xml.generate(@invoice, 'biiubl20') }
-        format.svefaktura  { render_xml Haltr::Xml.generate(@invoice, 'svefaktura') }
-        format.oioubl20    { render_xml Haltr::Xml.generate(@invoice, 'oioubl20') }
-        format.efffubl     { render_xml Haltr::Xml.generate(@invoice, 'efffubl') }
+        format.facturae30  { render_xml Haltr::Xml.generate(@invoice, 'facturae30', false, false, true) }
+        format.facturae31  { render_xml Haltr::Xml.generate(@invoice, 'facturae31', false, false, true) }
+        format.facturae32  { render_xml Haltr::Xml.generate(@invoice, 'facturae32', false, false, true) }
+        format.peppolubl20 { render_xml Haltr::Xml.generate(@invoice, 'peppolubl20', false, false, true) }
+        format.peppolubl21 { render_xml Haltr::Xml.generate(@invoice, 'peppolubl21', false, false, true) }
+        format.biiubl20    { render_xml Haltr::Xml.generate(@invoice, 'biiubl20', false, false, true) }
+        format.svefaktura  { render_xml Haltr::Xml.generate(@invoice, 'svefaktura', false, false, true) }
+        format.oioubl20    { render_xml Haltr::Xml.generate(@invoice, 'oioubl20', false, false, true) }
+        format.efffubl     { render_xml Haltr::Xml.generate(@invoice, 'efffubl', false, false, true) }
+        format.original    { render_xml @invoice.original }
       else
-        format.facturae30  { download_xml Haltr::Xml.generate(@invoice, 'facturae30') }
-        format.facturae31  { download_xml Haltr::Xml.generate(@invoice, 'facturae31') }
-        format.facturae32  { download_xml Haltr::Xml.generate(@invoice, 'facturae32') }
-        format.peppolubl20 { download_xml Haltr::Xml.generate(@invoice, 'peppolubl20') }
-        format.peppolubl21 { download_xml Haltr::Xml.generate(@invoice, 'peppolubl21') }
-        format.biiubl20    { download_xml Haltr::Xml.generate(@invoice, 'biiubl20') }
-        format.svefaktura  { download_xml Haltr::Xml.generate(@invoice, 'svefaktura') }
-        format.oioubl20    { download_xml Haltr::Xml.generate(@invoice, 'oioubl20') }
-        format.efffubl     { download_xml Haltr::Xml.generate(@invoice, 'efffubl') }
+        format.facturae30  { download_xml Haltr::Xml.generate(@invoice, 'facturae30', false, false, true) }
+        format.facturae31  { download_xml Haltr::Xml.generate(@invoice, 'facturae31', false, false, true) }
+        format.facturae32  { download_xml Haltr::Xml.generate(@invoice, 'facturae32', false, false, true) }
+        format.peppolubl20 { download_xml Haltr::Xml.generate(@invoice, 'peppolubl20', false, false, true) }
+        format.peppolubl21 { download_xml Haltr::Xml.generate(@invoice, 'peppolubl21', false, false, true) }
+        format.biiubl20    { download_xml Haltr::Xml.generate(@invoice, 'biiubl20', false, false, true) }
+        format.svefaktura  { download_xml Haltr::Xml.generate(@invoice, 'svefaktura', false, false, true) }
+        format.oioubl20    { download_xml Haltr::Xml.generate(@invoice, 'oioubl20', false, false, true) }
+        format.efffubl     { download_xml Haltr::Xml.generate(@invoice, 'efffubl', false, false, true) }
+        format.original    { download_xml @invoice.original }
       end
     end
   end
@@ -409,15 +417,43 @@ class InvoicesController < ApplicationController
   end
 
   def show_original
-    @invoice.update_attribute(:has_been_read, true) if @invoice.is_a? ReceivedInvoice
-    if @invoice.invoice_format == "pdf"
-      render :template => 'received/show_pdf'
+    case @invoice.original
+    when /<SchemaVersion>3\.2<\/SchemaVersion>/
+      template = 'invoices/visor_face_32.xsl.erb'
+    when /<SchemaVersion>3\.2\.1<\/SchemaVersion>/
+      template = 'invoices/visor_face_321.xsl.erb'
     else
-      doc  = Nokogiri::XML(@invoice.original)
-      # TODO: received/facturae31.xsl.erb and received/facturae30.xsl.erb templates
-      xslt = Nokogiri::XSLT(render_to_string(:template=>'received/facturae32.xsl.erb',:layout=>false))
-      @out  = xslt.transform(doc)
-      render :template => 'received/show_with_xsl'
+      redirect_to action: 'show', id: @invoice
+      return
+    end
+    @is_pdf = (params[:format] == 'pdf')
+    @invoices_not_sent = InvoiceDocument.find(:all,:conditions => ["client_id = ? and state = 'new'",@client.id]).sort
+    @invoices_sent = InvoiceDocument.find(:all,:conditions => ["client_id = ? and state = 'sent'",@client.id]).sort
+    @invoices_closed = InvoiceDocument.find(:all,:conditions => ["client_id = ? and state = 'closed'",@client.id]).sort
+    @js = ExportChannels[@client.invoice_format]['javascript'] rescue nil
+    @autocall = params[:autocall]
+    @autocall_args = params[:autocall_args]
+    @format = params["format"]
+    doc   = Nokogiri::XML(@invoice.original)
+    xslt  = Nokogiri::XSLT(render_to_string(:template=>template,:layout=>false))
+    @out  = xslt.transform(doc)
+    respond_to do |format|
+      format.html do
+        render :template => 'invoices/show_with_xsl'
+      end
+      format.pdf do
+        @debug = params[:debug]
+        render :pdf => @invoice.pdf_name_without_extension,
+          :disposition => 'attachment',
+          :layout => "invoice.html",
+          :template=>"invoices/show_with_xsl",
+          :formats => :html,
+          :show_as_html => params[:debug],
+          :margin => {:top => 20,
+            :bottom => 20,
+            :left   => 30,
+            :right  => 20}
+      end
     end
   end
 
@@ -444,8 +480,12 @@ class InvoicesController < ApplicationController
       name:    'error_sending',
       notes:   msg
     )
-    logger.debug e
-    logger.debug e.backtrace
+    HiddenEvent.create(:name      => "error",
+                       :invoice   => @invoice,
+                       :error     => e.message,
+                       :backtrace => e.backtrace)
+    logger.info e
+    logger.info e.backtrace
     #raise e if Rails.env == "development"
   ensure
     redirect_back_or_default(:action => 'show', :id => @invoice)
@@ -477,7 +517,7 @@ class InvoicesController < ApplicationController
         @client = @invoice.client
         pdf_file = Haltr::Pdf.generate(@invoice, true)
         zos.put_next_entry(@invoice.pdf_name)
-        zos.print IO.read(pdf_file.path)
+        zos << IO.binread(pdf_file.path)
         logger.info "Added #{@invoice.pdf_name} from #{pdf_file.path}"
       end
     end
@@ -706,6 +746,14 @@ class InvoicesController < ApplicationController
     @client = @invoice.client || Client.new(:name=>"unknown",:project=>@invoice.project)
     @project = @invoice.project
     @company = @project.company
+    if @invoice.client and @invoice.client.taxcode
+      if @client.taxcode[0...2].downcase == @client.country
+        taxcode2 = @client.taxcode[2..-1]
+      else
+        taxcode2 = "#{@client.country}#{@client.taxcode}"
+      end
+      @external_company = ExternalCompany.where('taxcode in (?, ?)', @client.taxcode, taxcode2).first
+    end
   rescue ActiveRecord::RecordNotFound
     render_404
   end
@@ -783,7 +831,7 @@ class InvoicesController < ApplicationController
       redirect_to :action=>'index', :project_id=>@project
       return
     end
-    zip_file = Tempfile.new "#{@project.identifier}_invoices.zip", 'tmp'
+    zip_file = Tempfile.new ["#{@project.identifier}_invoices", ".zip"], 'tmp'
     logger.info "Creating zip file '#{zip_file.path}' for invoice ids #{@invoices.collect{|i|i.id}.join(',')}."
     Zip::ZipOutputStream.open(zip_file.path) do |zos|
       @invoices.each do |invoice|
@@ -868,7 +916,7 @@ class InvoicesController < ApplicationController
         nil
       end
     end.compact!
-    Delayed::Job.enqueue(Haltr::BulkSender.new(@invoices.collect { |i| i.id },User.current))
+    Delayed::Job.enqueue(Haltr::BulkSender.new(@invoices.collect { |i| i.id }, User.current))
     @num_sent = @invoices.size
 
     if @num_sent < num_invoices
@@ -885,6 +933,34 @@ class InvoicesController < ApplicationController
     end
   end
 
+  # Used in API only - facturae in POST body
+  def import_facturae
+    # Make sure that API users get used to set this content type
+    # as it won't trigger Rails' automatic parsing of the request body for parameters
+    unless request.content_type == 'application/octet-stream'
+      render :nothing => true, :status => 406
+      return
+    end
+
+    begin
+      @invoice = Invoice.create_from_xml(
+        request.raw_post,
+        User.current,
+        Digest::MD5.hexdigest(request.raw_post),
+        'api'
+      )
+      respond_to do |format|
+        format.api {
+          render action: 'show', status: :created, location: invoice_path(@invoice)
+        }
+      end
+    rescue => e
+      @error_messages = [e.to_s]
+      render :template => 'common/error_messages.api', :status => :unprocessable_entity, :layout => nil
+    end
+  end
+
+  # Used in form POST - facturae in multipart POST 'file' field
   def import
     params[:issued] ||= '1'
     transport=:uploaded
@@ -989,6 +1065,54 @@ class InvoicesController < ApplicationController
       end
       return
     end
+  end
+
+  def add_comment
+    @comment = Comment.new
+    @comment.safe_attributes = params[:comment]
+    @comment.author = User.current
+    if @invoice.comments << @comment
+      flash[:notice] = l(:label_comment_added)
+    end
+
+    redirect_to invoice_path(@invoice)
+  end
+
+  private
+
+  def parse_invoice_params
+    parsed_params = params[:invoice]
+    parsed_params['invoice_lines_attributes'] ||= {}
+    # accept invoice_lines_attributes = { '0' => {}, ... }
+    # and    invoice_lines_attributes = [{}, ...]
+    if params[:invoice]['invoice_lines_attributes'].is_a? Array
+      parsed_params['invoice_lines_attributes'] = Hash[
+        params[:invoice]['invoice_lines_attributes'].map.with_index do |il, i|
+          [i, il]
+        end
+      ]
+    end
+    parsed_params['invoice_lines_attributes'].each do |i, invoice_line|
+      invoice_line['taxes_attributes'] ||= {}
+      # accept taxes_attributes = { '0' => {}, ... }
+      # and    taxes_attributes = [{}, ...]
+      if invoice_line['taxes_attributes'].is_a? Array
+        invoice_line['taxes_attributes'] = Hash[
+          invoice_line['taxes_attributes'].map.with_index do |tax, j|
+            [j, tax]
+          end
+        ]
+      end
+      invoice_line['taxes_attributes'].each do |j, tax|
+        tax['_destroy'] = 1 if tax['code'].blank?
+        if tax['code'] =~ /_E|_NS$/
+          tax['comment'] = params["#{tax['name']}_comment"]
+        else
+          tax['comment'] = ''
+        end
+      end
+    end
+    parsed_params
   end
 
 end

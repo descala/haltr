@@ -72,6 +72,14 @@ module Haltr
           xpaths[:buyer_cp_city2]     = "//Parties/BuyerParty/*/*/PostCodeAndTown"
           xpaths[:buyer_cp]           = "//Parties/BuyerParty/*/*/PostCode"
           xpaths[:currency]           = "//FileHeader/Batch/InvoiceCurrencyCode"
+          xpaths[:attachments]        = "//Invoices/Invoice/AdditionalData/RelatedDocuments/Attachment"
+          # relative to Attachment
+          xpaths[:attach_compression_algorithm] = "AttachmentCompressionAlgorithm"
+          xpaths[:attach_format]                = "AttachmentFormat"
+          xpaths[:attach_encoding]              = "AttachmentEncoding"
+          xpaths[:attach_description]           = "AttachmentDescription"
+          xpaths[:attach_data]                  = "AttachmentData"
+
           xpaths[:extra_info]         = "//Invoices/Invoice/AdditionalData/InvoiceAdditionalInformation"
           xpaths[:charge]             = "//Invoices/Invoice/InvoiceTotals/GeneralSurcharges/Charge/ChargeAmount"
           xpaths[:charge_reason]      = "//Invoices/Invoice/InvoiceTotals/GeneralSurcharges/Charge/ChargeReason"
@@ -120,10 +128,16 @@ module Haltr
           xpaths[:tax_percent]        = "TaxRate"
 
           xpaths[:dir3s]              = "//Parties/BuyerParty/AdministrativeCentres/AdministrativeCentre"
-          # relative to AdministrativeCentres
+          # relative to AdministrativeCentre
           xpaths[:dir3_code]          = "CentreCode"
           xpaths[:dir3_role]          = "RoleTypeCode"
-          xpaths[:dir3_name]          = "CentreDescription"
+          xpaths[:dir3_name]          = "Name"
+          xpaths[:dir3_desc]          = "CentreDescription"
+          xpaths[:dir3_address]       = "AddressInSpain/Address"
+          xpaths[:dir3_postcode]      = "AddressInSpain/PostCode"
+          xpaths[:dir3_town]          = "AddressInSpain/Town"
+          xpaths[:dir3_province]      = "AddressInSpain/Province"
+          xpaths[:dir3_country]       = "AddressInSpain/CountryCode"
 
           xpaths[:fa_person_type]     = "//FileHeader/FactoringAssignmentData/Assignee/TaxIdentification/PersonTypeCode"
           xpaths[:fa_residence_type]  = "//FileHeader/FactoringAssignmentData/Assignee/TaxIdentification/ResidenceTypeCode"

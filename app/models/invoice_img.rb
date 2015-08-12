@@ -53,10 +53,12 @@ class InvoiceImg < ActiveRecord::Base
   end
 
   def tags
+    return {} if data.nil?
     data[:tags] || {}
   end
 
   def tokens
+    return {} if data.nil?
     data[:tokens] || {}
   end
 

@@ -3,7 +3,7 @@ class ExternalCompaniesController < ApplicationController
 
   layout 'admin'
   menu_item :external_companies
-  before_filter :require_admin
+  before_filter :authorize_global
   helper :haltr
 
   include CsvImporter
@@ -49,8 +49,8 @@ class ExternalCompaniesController < ApplicationController
   def csv_import
     file = params[:csv_file]
     if file and file.size > 0
-      existing, new, error = process_external_companies(external_companies: file.path)
-      flash[:notice] = "External Companies updated: #{existing}, created: #{new}, errors: #{error}"
+      existing, new, error, error_messages = process_external_companies(external_companies: file.path)
+      flash[:notice] = "External Companies updated: #{existing}, created: #{new}, errors: #{error}. #{error_messages.join(', ')}"
     else
       flash[:error] = "Select a CSV file to import"
     end

@@ -16,6 +16,8 @@ class ClientsController < ApplicationController
   before_filter :set_iso_countries_language
   before_filter :authorize
 
+  accept_api_auth :create, :show, :index, :destroy
+
   include CompanyFilter
   before_filter :check_for_company
 
@@ -23,21 +25,47 @@ class ClientsController < ApplicationController
     sort_init 'name', 'asc'
     sort_update %w(taxcode name)
 
-    clients = @project.clients.scoped
+    clients = @project.clients
 
     unless params[:name].blank?
       name = "%#{params[:name].strip.downcase}%"
-      clients = clients.scoped :conditions => ["LOWER(name) LIKE ? OR LOWER(address) LIKE ? OR LOWER(address2) LIKE ?", name, name, name]
+      clients = clients.where("LOWER(name) LIKE ? OR LOWER(address) LIKE ? OR LOWER(address2) LIKE ? OR LOWER(taxcode) LIKE ?", name, name, name, name)
+    end
+
+    unless params[:taxcode].blank?
+      taxcode = params[:taxcode].encode(
+        'UTF-8', 'binary', invalid: :replace, undef: :replace, replace: ''
+      ).gsub(/\W/,'').downcase
+      if taxcode[0...2].downcase == @project.company.country
+        taxcode2 = taxcode[2..-1]
+      else
+        taxcode2 = "#{@project.company.country}#{taxcode}"
+      end
+
+      clients = clients.where("taxcode in (?, ?)", taxcode, taxcode2)
+    end
+
+    case params[:format]
+    when 'xml', 'json'
+      @offset, @limit = api_offset_and_limit
+    else
+      @limit = per_page_option
     end
 
     @client_count = clients.count
-    @client_pages = Paginator.new self, @client_count,
-		per_page_option,
-		params['page']
+    @client_pages = Paginator.new self, @client_count, @limit, params['page']
+    @offset ||= @client_pages.offset
     @clients =  clients.find :all,
        :order => sort_clause,
-       :limit  =>  @client_pages.items_per_page,
-       :offset =>  @client_pages.current.offset
+       :limit  =>  @limit,
+       :offset =>  @offset
+  end
+
+  # Only used in API
+  def show
+    respond_to do |format|
+      format.api
+    end
   end
 
   def new
@@ -58,9 +86,11 @@ class ClientsController < ApplicationController
           redirect_to :action=>'index', :project_id=>@project
         }
         format.js
+        format.api { render :action => 'show', :status => :created, :location => client_url(@client) }
       else
         format.html { render :action => 'new' }
-        format.js  { render :action => 'create_error' }
+        format.js   { render :action => 'create_error' }
+        format.api  { render_validation_errors(@client) }
       end
     end
   end
@@ -85,7 +115,10 @@ class ClientsController < ApplicationController
                              :project => @client.project)
     event.audits = @client.last_audits_without_event
     event.save!
-    redirect_to :action => 'index', :project_id => @project
+    respond_to do |format|
+      format.html { redirect_back_or_default project_clients_path(@project) }
+      format.api  { render_api_ok }
+    end
   end
 
   def check_cif

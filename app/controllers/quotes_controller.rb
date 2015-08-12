@@ -10,6 +10,8 @@ class QuotesController < ApplicationController
 
   helper :sort
   include SortHelper
+  helper :attachments
+  include AttachmentsHelper
 
   def index
     sort_init 'invoices.created_at', 'desc'

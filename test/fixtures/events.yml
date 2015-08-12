@@ -2,27 +2,32 @@ oldest:
   name: success_sending
   user_id: 2
   invoice_id: 1
+  project_id: 2
   created_at: <%=Time.now-1.hour%>
 invoices_001_edited:
   name: edited
   user_id: 2
   filename: nil
   invoice_id: 1
+  project_id: 2
   created_at: <%=t=Time.now%>
 invoices_001_queue:
   name: queue
   user_id: 2
   invoice_id: 1
+  project_id: 2
   created_at: <%=t+=1.minute%>
 invoices_001_manual_send:
   name: manual_send
   user_id: 2
   invoice_id: 1
+  project_id: 2
   created_at: <%=t+=1.minute%>
 error:
   name: error
   user_id: 2
   invoice_id: 1
+  project_id: 2
   type: HiddenEvent
   info: |
     ---
@@ -34,6 +39,7 @@ error_sending:
   name: error_sending
   user_id: 2
   invoice_id: 1
+  project_id: 2
   type: EventError
   info: |
     ---
@@ -42,6 +48,7 @@ with_url:
   name: success_sending
   user_id: 2
   invoice_id: 1
+  project_id: 2
   type: EventWithUrl
   info: |
     ---
@@ -51,6 +58,7 @@ with_url_face:
   name: success_sending
   user_id: 2
   invoice_id: 1
+  project_id: 2
   type: EventWithUrlFace
   info: |
     ---
@@ -60,6 +68,7 @@ with_mail:
   name: success_sending
   user_id: 2
   invoice_id: 1
+  project_id: 2
   type: EventWithMail
   info: |
     ---
@@ -69,6 +78,7 @@ with_file:
   name: success_sending
   user_id: 2
   invoice_id: 1
+  project_id: 2
   type: EventWithFile
   info: |
     ---
@@ -87,6 +97,7 @@ accept_notification:
 normal_event_but_with_md5:
   name: success_sending
   invoice_id: 1
+  project_id: 2
   type: Event
   created_at: <%=t+=1.minute%>
   info: |
@@ -108,6 +119,7 @@ with_file_notes:
   name: success_sending
   user_id: 2
   invoice_id: 1
+  project_id: 2
   type: EventWithFile
   info: |
     ---
@@ -116,4 +128,3 @@ with_file_notes:
   file: This is the file content
   content_type: plain/text
   created_at: <%=t+=1.minute%>
-

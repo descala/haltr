@@ -1,11 +1,12 @@
+<div class="invoice-header-container">
 <div id="amends">
 <% if @invoice.amend and @invoice.amend != @invoice -%>
   <h3><%=l(:amended_by_invoice, :link => link_to_if_authorized("#{l(:label_amendment_invoice)} #{@invoice.amend.number}",
                                                  :controller => 'invoices', :action=>'show', :id=>@invoice.amend)).html_safe %></h3>
-<% end -%>
-</div>
-<!-- Vendor Info -->
-<div class="vcard vendor">
+    <% end -%>
+  </div>
+  <!-- Vendor Info -->
+  <div class="vcard vendor">
   <div class="invoicelogo">
     <% if @company.attachments.any? -%>
       <% if @is_pdf %>
@@ -40,14 +41,14 @@
       </div>
     <% end -%>
   </div>
-</div>
+  </div>
 
-<!-- Invoice Number and Info -->
-<h2 class="invoice-ID"><%=h @invoice.label %> <%=h @invoice.number %></h2>
-<% unless @invoice.series_code.blank? -%>
+  <!-- Invoice Number and Info -->
+  <h2 class="invoice-ID"><%=h @invoice.label %> <%=h @invoice.number %></h2>
+  <% unless @invoice.series_code.blank? -%>
   <h3><%= l(:field_series_code) %>: <%= @invoice.series_code %></h3>
-<% end -%>
-<div class="invoice-info">
+  <% end -%>
+  <div class="invoice-info">
   <span class="date"><%=h l(:field_date)%> <strong><%=h format_date @invoice.date %></strong></span><br/>
   <% if @invoice.amend_of -%>
   <% if @invoice.amend_of == @invoice -%>
@@ -69,8 +70,10 @@
   <% unless payment_method_info.blank? -%>
     <span class="invoice-terms"><%=h payment_method_info.html_safe %></span><br/>
   <% end -%>
-  <% unless @invoice.ponumber.blank? -%>
+  <% if @invoice.ponumber.present? -%>
     <span class="invoice-terms"><%=h "#{t(:field_ponumber)} #{@invoice.ponumber}" %></span><br/>
+  <% elsif !@invoice.has_line_ponumber? and @lines.any? and @lines.first.ponumber.present? -%>
+    <span class="invoice-terms"><%=h "#{t(:field_ponumber)} #{@lines.first.ponumber}" %></span><br/>
   <% end -%>
   <% unless @invoice.delivery_note_number.blank? -%>
     <span class="invoice-terms"><%=h "#{t(:field_delivery_note_number)} #{@invoice.delivery_note_number}" %></span>
@@ -79,11 +82,11 @@
     <span class="invoice-terms"><%=h "#{t(:field_receiver_contract_reference)} #{@invoice.receiver_contract_reference}" %></span>
   <% end -%>
   <%= call_hook(:invoice_view_invoice_info) %>
-</div>
+ </div>
 
-<!-- Client Info -->
-<% unless @client.new_record? -%>
-<div class="vcard client">
+  <!-- Client Info -->
+  <% unless @client.new_record? -%>
+  <div class="vcard client">
   <div class="client-info">
     <h3><%= client_name_with_link @client %></h3>
     <address class="adr">
@@ -120,6 +123,11 @@
           <%= h l(:field_organ_proponent) %>: <%= @invoice.organ_proponent %>
         </div>
       <% end -%>
+      <% if @invoice.unidad_contratacion.present? -%>
+        <div>
+          <%= h l(:field_unidad_contratacion) %>: <%= @invoice.unidad_contratacion%>
+        </div>
+      <% end -%>
     <% end -%>
     <% if @invoice.file_reference.present? -%>
       <div>
@@ -127,37 +135,49 @@
       </div>
     <% end -%>
   </div>
-</div>
-<% end -%>
+  </div>
+  <% end -%>
+ </div>
 
 <!-- Invoice Data -->
 <div class="invoice">
 
   <!-- Line Details -->
-  <table class="line-items" border="0" cellpadding="0" cellspacing="0">
-    <tbody>
+  <table class="line-items splitForPrint" border="0" cellpadding="0" cellspacing="0">
+    <thead>
       <tr>
+        <% line_cells = 4 -%>
         <% if @invoice.has_delivery_note_numbers? -%>
+          <% line_cells += 1 -%>
           <th class="item-delivery_note first"><%=h l(:field_delivery_note_number) %></th>
         <% end -%>
         <th class="item-quantity"><abbr title="Quantitat">Q</abbr></th>
         <% if @invoice.has_article_codes? -%>
+          <% line_cells += 1 -%>
           <th class="item-article_code"><%=h l(:field_article_code)%></th>
         <% end -%>
         <th class="item-description"><%=h l(:field_description)%></th>
-        <% if @invoice.invoice_lines.any? {|l| !l.sequence_number.blank? } -%>
+        <% if @lines.any? {|l| !l.sequence_number.blank? } -%>
+          <% line_cells += 1 -%>
           <th class="item-sequence-number"><%= l(:sequence_number) %></th>
         <% end -%>
         <th class="item-price"><%=h l(:field_amount) %></th>
         <% if @invoice.has_line_discounts? -%>
+          <% line_cells += 1 -%>
           <th class="item-price"><%=h l(:field_discount) %></th>
         <% end -%>
         <% if @invoice.has_line_charges? -%>
+          <% line_cells += 1 -%>
           <th class="item-price"><%= h l(:field_charge) %></th>
         <% end -%>
-        <th class="line-total last"><%=h l(:label_total)%></th>
+        <% if @invoice.has_line_ponumber? -%>
+          <th class="item-price"><%= h l(:field_ponumber) %></th>
+        <% end -%>
+        <th class="line-total last"><%=h l(:label_invoice_total)%></th>
       </tr>
+    </thead>
 
+    <tbody>
       <% @lines.each do |line| -%>
         <tr <%= 'class="nobottomline"'.html_safe unless line.notes.blank? %>>
           <% if @invoice.has_delivery_note_numbers? -%>
@@ -172,28 +192,31 @@
             <% if line.charge_reason.present? -%>
               <br /><%= l(:field_charge) %>: <%= line.charge_reason %>
             <% end -%>
-            <% if line.discount_text.present? -%>
+            <% if line.discount_text.present? and line.discount_text != '.' -%>
               <br /><%= l(:field_discount) %>: <%= line.discount_text %>
             <% end -%>
           </td>
-          <% if @invoice.invoice_lines.any? {|l| !l.sequence_number.blank? } -%>
+          <% if @lines.any? {|l| !l.sequence_number.blank? } -%>
             <td><%= line.sequence_number %></td>
           <% end -%>
-          <td class="item-price"><%=h line_price(line) %></td>
+          <td class="item-price"><%=h line_price(line, 'price', @invoice) %></td>
           <% if line.discount_percent > 0 -%>
             <td class="item-price"><%=h number_to_percentage(line.discount_percent, precision: 2, strip_insignificant_zeros: true) %></td>
           <% elsif @invoice.has_line_discounts? -%>
             <td></td>
           <% end -%>
           <% if @invoice.has_line_charges? -%>
-            <td class="item-price"><%= h line_price(line, 'charge') %></td>
+            <td class="item-price"><%= h line_price(line, 'charge', @invoice) %></td>
+          <% end -%>
+          <% if @invoice.has_line_ponumber? -%>
+            <td class="item-price"><%= h line.ponumber %></td>
           <% end -%>
           <td class="line-total last"><%=h money(line.taxable_base.to_money(@invoice.currency)) %></td>
         </tr>
         <% unless line.notes.blank? -%>
           <tr>
             <td></td>
-            <td colspan="0"><%= l(:field_extra_info) %>: <%= line.notes %></td>
+            <td colspan="<%= line_cells - 1 %>"><%= l(:field_extra_info) %>: <%= line.notes %></td>
           </tr>
         <% end -%>
       <% end -%>
@@ -205,7 +228,7 @@
             <td class="item-article_code"></td>
           <% end -%>
           <td class="item-description" <%= 'colspan="2"'.html_safe if @invoice.has_line_discounts? %>><%=h @invoice.discount_text %></td>
-          <td class="item-price"><%=h number_to_percentage(@invoice.discount_percent, precision: 0, strip_insignificant_zeros: true) %></td>
+          <td class="item-price"><%=h number_to_percentage(@invoice.discount_percent, precision: 2, strip_insignificant_zeros: true) %></td>
           <% if @invoice.has_line_charges? -%>
             <td></td>
           <% end -%>
@@ -241,7 +264,7 @@
       </tr>
       <% end -%>
       <tr class="invoice-total">
-        <th><%=h l(:label_total)%>:</th>
+        <th><%=h l(:label_invoice_total)%>:</th>
         <td><%=h money(@invoice.total) %></td>
       </tr>
       <% if @invoice.payments_on_account_in_cents.to_i > 0 -%>

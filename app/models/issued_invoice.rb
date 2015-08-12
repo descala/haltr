@@ -16,17 +16,19 @@ class IssuedInvoice < InvoiceDocument
   after_create :create_event
   after_destroy :release_amended
   before_save :update_status, :unless => Proc.new {|invoicedoc| invoicedoc.state_changed? }
+  before_save :set_state_updated_at
 
   # new sending sent error discarded closed
   state_machine :state, :initial => :new do
     before_transition do |invoice,transition|
+      user = transition.args.first.is_a?(User) ? transition.args.first : User.current
       unless Event.automatic.include?(transition.event.to_s)
         if transition.event.to_s == 'queue' and !invoice.state?(:new)
-          Event.create(:name=>'requeue',:invoice=>invoice,:user=>User.current)
+          Event.create(:name=>'requeue',:invoice=>invoice,:user=>user)
         elsif transition.event.to_s =~ /^mark_as_/
-          Event.create(name: "done_#{transition.event.to_s}", invoice: invoice, user: User.current)
+          Event.create(name: "done_#{transition.event.to_s}", invoice: invoice, user: user)
         else
-          Event.create(:name=>transition.event.to_s,:invoice=>invoice,:user=>User.current)
+          Event.create(:name=>transition.event.to_s,:invoice=>invoice,:user=>user)
         end
       end
     end
@@ -213,17 +215,26 @@ class IssuedInvoice < InvoiceDocument
     (!self.amend_id.nil? and self.amend_id != self.id )
   end
 
+  def last_sent_event
+    events.order(:created_at).select {|e| e.name == 'success_sending' }.last
+  end
+
   def last_sent_file_path
-    last_event = events.order(:created_at).select {|e| e.name == 'success_sending' }.last
-    case last_event
-    when EventWithFile
-      Rails.application.routes.url_helpers.
-        project_event_file_path(last_event, :project_id=>project)
-    when Event
-      if last_event.md5
-        Rails.application.routes.url_helpers.
-          legal_path(:id=>id,:md5=>last_event.md5)
+    event = last_sent_event
+    begin
+      if event and event.md5
+        Rails.application.routes.url_helpers.legal_path(:id=>id,:md5=>event.md5)
+      else
+        Rails.application.routes.url_helpers.event_file_path(event)
       end
+    rescue
+      nil
+    end
+  end
+
+  def self.states
+    state_machine.states.collect do |s|
+      s.name
     end
   end
 
@@ -231,14 +242,12 @@ class IssuedInvoice < InvoiceDocument
 
   # called after_create (only NEW invoices)
   def create_event
-    if self.transport.blank?
-      event = Event.new(:name=>'new',:invoice=>self,:user=>User.current)
-    elsif self.transport == 'uploaded' and self.original
+    if self.original
       event = EventWithFile.new(:name=>self.transport,:invoice=>self,
                                 :user=>User.current,:file=>self.original,
                                 :filename=>self.file_name)
     else
-      event = Event.new(:name=>self.transport,:invoice=>self,:user=>User.current)
+      event = Event.new(:name=>(self.transport||'new'),:invoice=>self,:user=>User.current)
     end
     event.audits = self.last_audits_without_event
     event.save!
@@ -265,6 +274,18 @@ class IssuedInvoice < InvoiceDocument
       end
     end
     return true # always continue saving
+  end
+
+  # if state changes, record state timestamp :state_updated_at
+  # an update to an Invoice sets timestamps as usual, except for:
+  #  :state
+  #  :has_been_read
+  #  :state_updated_at
+  # these attributes do not change updated_at
+  def set_state_updated_at
+    if state_changed?
+      write_attribute :state_updated_at, Time.now
+    end
   end
 
 end

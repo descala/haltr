@@ -61,6 +61,7 @@ en:
   button_new_invoice: New invoice
   button_add_invoice_line: Add a new invoice line
   field_number: Number
+  field_invoice_number: Invoice number
   label_last_invoice_number: "Last used"
   field_date: Date
   field_client: Client
@@ -74,6 +75,7 @@ en:
   field_draft: Draft
   label_invoice_state: Status
   field_state: Status
+  field_state_updated_at: Status modification date
   show_template: Show template
   generate_template_from_invoice: Generate new template
   duplicate_invoice: Duplicate invoce
@@ -223,6 +225,7 @@ en:
   mark_as_received: "Marked as received"
   uploaded: "Uploaded"
   email: "Received"
+  api: "Created via API"
   download_original: "Download original"
   view_original: "View original"
   manual_mark_as: "Mark as %{state}"
@@ -259,6 +262,7 @@ en:
   s_litters: l
   days: Days
   s_days: d
+  s_other: ""
 
   # People
   label_person: Person
@@ -342,6 +346,8 @@ en:
   "custom": Custom
 
   # Frequency
+  mf36: Every 3 years
+  mf24: Every 2 years
   mf12: Yearly
   mf6: Half-yearly
   mf3: Quarterly
@@ -382,6 +388,7 @@ en:
   missing_company_peppol_fields: "Missing Peppol fields on your company"
   missing_client_peppol_fields: "Missing Peppol fields on client"
   field_accounting_cost: "Accounting cost"
+  field_client_email_override: "Override the email of the client with this one"
   missing_svefaktura_account: "Missing Svefaktura account cost"
   missing_svefaktura_organization: "Missing Svefaktura organization identifier"
   missing_svefaktura_debit: "Direct debit not allowed"
@@ -451,6 +458,9 @@ en:
   document_sent: 'Document sent to server.'
   error_sending_signed_doc: 'Error sending signed document.'
   error_downloading_doc: 'Error downloading document.'
+  error_signing: 'Error signing'
+  error_no_certs: 'The browser does not have any certificate'
+  error_enable_java: 'Java must be enabled before signing'
   loading_applet: 'Loading applet...'
   applet_already_loaded: "Applet already loaded."
   applet_loaded: "Applet loaded."
@@ -621,5 +631,10 @@ en:
   pdf_customization: "PDF customization"
   field_pdf_template: "PDF template"
   pdf_default: "Default template"
-  pdf_rigth_windowed_envelope: "Right windowed envelope template"
+  pdf_right_windowed_envelope: "Right windowed envelope template"
   field_party_identification: "Party identification"
+  label_invoice_total: "Total"
+  field_unidad_contratacion: "Unidad de contratación / SEF"
+  field_discount_helper: "Calculate discount % from import"
+  label_discounts_and_charges: Discounts and charges
+  invoice_has_no_original: Invoice has no original (transport requires an original document)

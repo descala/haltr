@@ -2,7 +2,7 @@ require File.dirname(__FILE__) + '/../test_helper'
 
 class SendTest < ActiveSupport::TestCase
 
-  fixtures :taxes, :companies, :invoices, :invoice_lines, :clients
+  fixtures :taxes, :companies, :invoices, :invoice_lines, :clients, :people
 
   test "just call empty perform" do
     assert_equal nil, Haltr::GenericSender.new.perform

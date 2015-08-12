@@ -39,7 +39,7 @@
         <% end -%>
 
         <tr>
-          <td colspan="4"><%= l(:label_total) %></td>
+          <td colspan="4"><%= l(:label_invoice_total) %></td>
           <th class="money"><%= money(@total[currency]) %></th>
           <% @tax_names[currency].sort.each do |tax_name| %>
             <th class="money"><%= money(@taxes[currency][tax_name]) %></th>

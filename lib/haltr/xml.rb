@@ -9,14 +9,14 @@ module Haltr
       set_render_anywhere_helpers(ApplicationHelper,HaltrHelper,InvoicesHelper)
     end
 
-    def self.generate(invoice, format, local_certificate=false, as_file=false)
-      new.generate(invoice,format,local_certificate, as_file)
+    def self.generate(invoice, format, local_certificate=false, as_file=false, force=false)
+      new.generate(invoice,format,local_certificate, as_file, force)
     end
 
-    def generate(invoice,format,local_certificate=false, as_file=false)
+    def generate(invoice,format,local_certificate=false, as_file=false, force=false)
       # if it is an imported invoice, has not been modified and
       # invoice format  matches client format, send original file
-      if invoice.send_original?
+      if invoice.send_original? and !force
         xml = invoice.original
       else
         if format == 'efffubl'

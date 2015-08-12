@@ -61,6 +61,7 @@ fr:
   button_new_invoice: Nouvelle facture
   button_add_invoice_line: Ajouter une nouvelle ligne
   field_number: Numéro
+  field_invoice_number: Numéro facture
   label_last_invoice_number: Dernier utilisé
   field_date: Date
   field_client: Client
@@ -74,6 +75,7 @@ fr:
   field_draft: Brouillon
   label_invoice_state: Statut
   field_state: Statut
+  field_state_updated_at: Statut date
   show_template: Montrer modèle
   generate_template_from_invoice: Générer nouveau modèle
   duplicate_invoice: Dup facture
@@ -223,6 +225,7 @@ fr:
   mark_as_received: "Marked as received"
   uploaded: "Uploaded"
   email: "Received"
+  api: "Created via API"
   download_original: "Download original"
   view_original: "View original"
   manual_mark_as: "Mark as %{state}"
@@ -259,6 +262,7 @@ fr:
   s_kilograms: kg
   s_litters: l
   s_days: j
+  s_other: ""
 
   # People
   label_person: Personne
@@ -342,6 +346,8 @@ fr:
   "custom": Personnalisé
 
   # Frequency
+  mf36: Tous les 3 ans
+  mf24: Tous les 2 ans
   mf12: Annuel
   mf6: Semi-annuel
   mf3: Trimestriel
@@ -382,6 +388,7 @@ fr:
   missing_company_peppol_fields: "champs manquants Peppol votre entreprise"
   missing_client_peppol_fields: "champs manquants Peppol client"
   field_accounting_cost: "comptabilisation des coûts"
+  field_client_email_override: "Override the email of the client with this one"
   missing_svefaktura_account: "Manque le centre de cost"
   missing_svefaktura_organization: "Manque l'identifier de l'enterprise"
   missing_svefaktura_debit: "On ne peut pas domicilier les factures"
@@ -619,5 +626,10 @@ fr:
   pdf_customization: "PDF customization"
   field_pdf_template: "PDF template"
   pdf_default: "Default template"
-  pdf_rigth_windowed_envelope: "Right windowed envelope template"
+  pdf_right_windowed_envelope: "Right windowed envelope template"
   field_party_identification: "Party identification"
+  label_invoice_total: "Total"
+  field_unidad_contratacion: "Unidad de contratación / SEF"
+  field_discount_helper: "Calculate discount % from import"
+  label_discounts_and_charges: Discounts and charges
+  invoice_has_no_original: Invoice has no original (transport requires an original document)

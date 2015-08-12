@@ -1,6 +1,6 @@
 <% if entity.country == "es" -%>
             <AddressInSpain>
-               <Address><%=h entity.address%></Address>
+               <Address><%=h entity.respond_to?('full_address') ? entity.full_address : entity.address %></Address>
                <PostCode><%=h entity.postalcode%></PostCode>
                <Town><%=h entity.city%></Town>
                <Province><%=h entity.province.to_s[0...20]%></Province>
@@ -8,7 +8,7 @@
             </AddressInSpain>
 <% else -%>
             <OverseasAddress>
-               <Address><%=h entity.address%></Address>
+               <Address><%=h entity.respond_to?('full_address') ? entity.full_address : entity.address %></Address>
                <PostCodeAndTown><%=h entity.postalcode%> <%=h entity.city%></PostCodeAndTown>
                <Province><%=h entity.province.to_s[0...20]%></Province>
                <CountryCode><%=h entity.country_alpha3%></CountryCode>

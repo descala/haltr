@@ -3,7 +3,7 @@ class Dir3EntitiesController < ApplicationController
 
   layout 'admin'
   menu_item :dir3_entities
-  before_filter :require_admin
+  before_filter :authorize_global
   helper :haltr
 
   include CsvImporter
@@ -49,8 +49,8 @@ class Dir3EntitiesController < ApplicationController
   def csv_import
     file = params[:csv_file]
     if file and file.size > 0
-      existing, new, error = process_dir3entities(entities: file.path)
-      flash[:notice] = "Dir3Entities updated: #{existing}, created: #{new}, errors: #{error}"
+      existing, new, error, error_messages = process_dir3entities(entities: file.path)
+      flash[:notice] = "Dir3Entities updated: #{existing}, created: #{new}, errors: #{error}. #{error_messages.join(', ')}"
     else
       flash[:error] = "Select a CSV file to import"
     end
