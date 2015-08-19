@@ -123,7 +123,7 @@ Redmine::Plugin.register :haltr do
     permission :import_invoices,
       { :invoices => [:import,:import_facturae],
         :received => [:import],
-        :import_errors => [:index, :show, :destroy, :context_menu] },
+        :import_errors => [:index, :create, :show, :destroy, :context_menu] },
       :require => :member
 
     permission :email_customization,   {:companies=>'customization'}, :require => :member

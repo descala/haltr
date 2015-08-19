@@ -51,7 +51,7 @@ resources :projects do
   match 'ccc2iban' => 'clients#ccc2iban', :via => :get, :as => :ccc2iban
   resources :quotes, :only => [:index, :new, :create]
   match 'invoices/add_attachment' => 'invoices#add_attachment', :via => :post
-  resources :import_errors, :only => [:index, :show, :destroy]
+  resources :import_errors, :only => [:index, :show, :destroy, :create]
   match 'import_errors' => 'import_errors#destroy', :via => :delete, :as => 'project_import_errors'
   match 'invoices/add_comment' => 'invoices#add_comment', :via => :post
   match 'invoices/facturae' => 'invoices#import_facturae', :via => :post
