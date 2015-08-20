@@ -96,6 +96,7 @@ class Company < ActiveRecord::Base
   def only_one_default_tax_per_name
     deftaxes = {}
     taxes.each do |tax|
+      next if tax.marked_for_destruction?
       errors.add(:base, l(:only_one_default_allowed_for, :tax_name=>tax.name)) if deftaxes[tax.name] and tax.default
       deftaxes[tax.name] = tax.default
     end
