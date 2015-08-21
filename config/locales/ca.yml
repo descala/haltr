@@ -648,3 +648,22 @@ ca:
   field_discount_helper: "Calcular % de descompte des d'import"
   label_discounts_and_charges: Descomptes i càrrecs
   invoice_has_no_original: La factura no té original (el transport requereix un document original)
+  fa_payment_method_01: 'Al comptat'
+  fa_payment_method_02: 'Rebut domiciliat'
+  fa_payment_method_03: 'Rebut'
+  fa_payment_method_04: 'Transferència'
+  fa_payment_method_05: 'Lletra acceptada'
+  fa_payment_method_06: 'Crèdit documentari'
+  fa_payment_method_07: 'Contracte adjudicació'
+  fa_payment_method_08: 'Lletra de canvi'
+  fa_payment_method_09: 'Pagaré a la ordre'
+  fa_payment_method_10: 'Pagaré no a la ordre'
+  fa_payment_method_11: 'Xec'
+  fa_payment_method_12: 'Reposició'
+  fa_payment_method_13: 'Especials'
+  fa_payment_method_14: 'Compensació'
+  fa_payment_method_15: 'Gir postal'
+  fa_payment_method_16: 'Xec conformat'
+  fa_payment_method_17: 'Xec bancari'
+  fa_payment_method_18: 'Pagament contra reemborsament'
+  fa_payment_method_19: 'Pagament mitjançant targeta'
