@@ -4,9 +4,11 @@ class EventsController < ApplicationController
 
   skip_before_filter :check_if_login_required, :only => [ :create ]
   before_filter :check_remote_ip, :except => [:file, :index]
-  before_filter :find_project_by_project_id, :only => [:file]
+  before_filter :find_event, :only => [:file]
   before_filter :authorize, :only => [:file]
   before_filter :require_admin, :only => [:index]
+
+  accept_api_auth :file
 
   helper :sort
   include SortHelper
@@ -68,13 +70,12 @@ class EventsController < ApplicationController
   end
 
   def file
-    event              = Event.find params[:id]
     file_field         = params[:file]         || 'file'
     filename_field     = params[:filename]     || 'filename'
     content_type_field = params[:content_type] || 'content_type'
-    data               = event.try(file_field)         rescue nil
-    filename           = event.try(filename_field)     rescue nil
-    content_type       = event.try(content_type_field) rescue nil
+    data               = @event.try(file_field)         rescue nil
+    filename           = @event.try(filename_field)     rescue nil
+    content_type       = @event.try(content_type_field) rescue nil
     if data
       unless content_type # try to guess content_type
         begin
@@ -92,7 +93,7 @@ class EventsController < ApplicationController
       unless filename # try to guess filename
         require "mime/types"
         ext = MIME::Types[content_type].first.extensions.first rescue nil
-        filename = "#{event.id}.#{ext}" if ext
+        filename = "#{@event.id}.#{ext}" if ext
       end
       send_data data, :filename => filename, :content_type => content_type
     else
@@ -101,6 +102,11 @@ class EventsController < ApplicationController
   end
 
   private
+
+  def find_event
+    @event = Event.find params[:id]
+    @project = @event.project
+  end
 
   #TODO: duplicated code
   def check_remote_ip

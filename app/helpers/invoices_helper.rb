@@ -8,7 +8,7 @@ module InvoicesHelper
     clients.collect {|c| [c.name, c.id, {'data-invoice_format'=>ExportChannels.l(c.invoice_format)}] unless c.name.blank?}.compact
   end
 
-  def precision(num,precision=2)
+  def haltr_precision(num,precision=2)
     num=0 if num.nil?
     # :significant - If true, precision will be the # of significant_digits. If false, the # of fractional digits
     number_with_precision(num,:precision=>precision,:significant => false)
@@ -59,7 +59,7 @@ module InvoicesHelper
   end
 
   def frequencies_for_select
-    [1,2,3,6,12].collect do |f|
+    [1,2,3,6,12,24,36].collect do |f|
       [I18n.t("mf#{f}"), f]
     end
   end

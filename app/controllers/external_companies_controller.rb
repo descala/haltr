@@ -3,7 +3,7 @@ class ExternalCompaniesController < ApplicationController
 
   layout 'admin'
   menu_item :external_companies
-  before_filter :require_admin
+  before_filter :authorize_global
   helper :haltr
 
   include CsvImporter

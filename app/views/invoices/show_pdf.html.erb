@@ -30,8 +30,10 @@
   }
   .subpage {
     height: 257mm;
-    padding-left: 11mm;
-    padding-right: 3mm;
+    padding-left: 30mm;
+    padding-right: 20mm;
+    padding-top: 20mm;
+    padding-bottom: 20mm;
   }
   .window {
     position: absolute;
@@ -42,6 +44,11 @@
     left: 104mm;
     opacity: 0.2;
     z-index: 1;
+  }
+  div.page-break {
+    margin-top: 20mm;
+    margin-bottom: 20mm;
+    border: solid 1px;
   }
 </style>
   <div class="window"></div>
@@ -62,11 +69,13 @@
   <% I18n.locale = @invoice.client.language rescue before_locale %>
 <% end -%>
 
-<% begin -%>
-  <%= render partial: "invoices/#{@project.company.pdf_template}" %>
-<% rescue -%>
-  <%= render partial: 'invoices/invoice' %>
-<% end -%>
+<div class="invoice_data">
+  <% begin -%>
+    <%= render partial: "invoices/#{@project.company.pdf_template}" %>
+  <% rescue -%>
+    <%= render partial: 'invoices/invoice' %>
+  <% end -%>
+</div>
 
 <% if defined?(before_locale) -%>
   <% I18n.locale = before_locale %>
@@ -77,4 +86,18 @@
 <div style="position: fixed; top: 30px; left: 850px; border: 1px solid; padding: 20px;">
   <%= @project.company.pdf_template %>
 </div>
+<div style="position: fixed; top: 90px; left: 850px; border: 1px solid; padding: 20px;">
+  <%= link_to 'PDF', {:action=>'show', :id=>@invoice, :format => 'pdf'} %>
+</div>
+<% end -%>
+
+<% if @is_pdf and @debug -%>
+  <%= javascript_heads %>
+  <%= javascript_include_tag "/wkhtmltopdf_tableSplitHack.js", :plugin=>'haltr' %>
+
+<% else -%>
+
+  <script src="<%=File.join(Rails.root, 'public','javascripts','jquery-1.8.3-ui-1.9.2-ujs-2.0.3.js') %>" type="text/javascript"></script>
+  <script src="<%=File.join(Rails.root, 'public','javascripts','application.js') %>" type="text/javascript"></script>
+  <script src="<%=File.join(Rails.root, 'public','plugin_assets','haltr','javascripts','wkhtmltopdf_tableSplitHack.js') %>" type="text/javascript"></script>
 <% end -%>

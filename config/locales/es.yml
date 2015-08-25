@@ -87,6 +87,7 @@ es:
   field_draft: Borrador
   label_invoice_state: Estado
   field_state: Estado
+  field_state_updated_at: Fecha de cambio de estado
   show_template: Ver plantilla
   generate_template_from_invoice: Generar nueva plantilla
   duplicate_invoice: Duplicar esta factura
@@ -357,6 +358,8 @@ es:
   "custom": Personalizado
 
   # Frequency
+  mf36: Cada 3 años
+  mf24: Cada 2 años
   mf12: Anual
   mf6: Semestral
   mf3: Trimestral
@@ -397,6 +400,7 @@ es:
   missing_company_peppol_fields: "Faltan campos de Peppol de tu empresa"
   missing_client_peppol_fields: "Faltan campos de Peppol del cliente"
   field_accounting_cost: "Centro de coste"
+  field_client_email_override: "No utilizar el email de cliente, sino este"
   missing_svefaktura_account: "Falta el centro de coste"
   missing_svefaktura_organization: "Falta el identificador de empresa"
   missing_svefaktura_debit: "No se pueden crear facturas domiciliadas"
@@ -639,10 +643,30 @@ es:
   pdf_customization: "Personalización de PDF"
   field_pdf_template: "Plantilla PDF"
   pdf_default: "Por defecto"
-  pdf_rigth_windowed_envelope: "Plantilla para sobres con ventanilla"
+  pdf_right_windowed_envelope: "Plantilla para sobres con ventanilla"
   field_party_identification: "Código unidad proveedora"
   label_invoice_total: "Importe"
   field_unidad_contratacion: "Unidad de contratación / SEF"
   field_discount_helper: "Calcular % de descuento desde importe"
   label_discounts_and_charges: Descuentos y cargos
   invoice_import_mismatch: "El importe de la factura original %{original} es diferente del calculado %{calculated}"
+  invoice_has_no_original: La factura no tiene original (el transporte requiere un documento original)
+  fa_payment_method_01: 'Al contado'
+  fa_payment_method_02: 'Recibo domiciliado'
+  fa_payment_method_03: 'Recibo'
+  fa_payment_method_04: 'Transferencia'
+  fa_payment_method_05: 'Letra aceptada'
+  fa_payment_method_06: 'Crédito documentario'
+  fa_payment_method_07: 'Contrato adjudicación'
+  fa_payment_method_08: 'Letra de cambio'
+  fa_payment_method_09: 'Pagaré a la orden'
+  fa_payment_method_10: 'Pagaré no a la orden'
+  fa_payment_method_11: 'Cheque'
+  fa_payment_method_12: 'Reposición'
+  fa_payment_method_13: 'Especiales'
+  fa_payment_method_14: 'Compensación'
+  fa_payment_method_15: 'Giro postal'
+  fa_payment_method_16: 'Cheque conformado'
+  fa_payment_method_17: 'Cheque bancario'
+  fa_payment_method_18: 'Pago contra reembolso'
+  fa_payment_method_19: 'Pago mediante tarjeta'

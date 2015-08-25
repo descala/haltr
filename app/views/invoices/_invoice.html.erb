@@ -1,11 +1,12 @@
+<div class="invoice-header-container">
 <div id="amends">
 <% if @invoice.amend and @invoice.amend != @invoice -%>
   <h3><%=l(:amended_by_invoice, :link => link_to_if_authorized("#{l(:label_amendment_invoice)} #{@invoice.amend.number}",
                                                  :controller => 'invoices', :action=>'show', :id=>@invoice.amend)).html_safe %></h3>
-<% end -%>
-</div>
-<!-- Vendor Info -->
-<div class="vcard vendor">
+    <% end -%>
+  </div>
+  <!-- Vendor Info -->
+  <div class="vcard vendor">
   <div class="invoicelogo">
     <% if @company.attachments.any? -%>
       <% if @is_pdf %>
@@ -40,14 +41,14 @@
       </div>
     <% end -%>
   </div>
-</div>
+  </div>
 
-<!-- Invoice Number and Info -->
-<h2 class="invoice-ID"><%=h @invoice.label %> <%=h @invoice.number %></h2>
-<% unless @invoice.series_code.blank? -%>
+  <!-- Invoice Number and Info -->
+  <h2 class="invoice-ID"><%=h @invoice.label %> <%=h @invoice.number %></h2>
+  <% unless @invoice.series_code.blank? -%>
   <h3><%= l(:field_series_code) %>: <%= @invoice.series_code %></h3>
-<% end -%>
-<div class="invoice-info">
+  <% end -%>
+  <div class="invoice-info">
   <span class="date"><%=h l(:field_date)%> <strong><%=h format_date @invoice.date %></strong></span><br/>
   <% if @invoice.amend_of -%>
   <% if @invoice.amend_of == @invoice -%>
@@ -69,8 +70,10 @@
   <% unless payment_method_info.blank? -%>
     <span class="invoice-terms"><%=h payment_method_info.html_safe %></span><br/>
   <% end -%>
-  <% unless @invoice.ponumber.blank? -%>
+  <% if @invoice.ponumber.present? -%>
     <span class="invoice-terms"><%=h "#{t(:field_ponumber)} #{@invoice.ponumber}" %></span><br/>
+  <% elsif !@invoice.has_line_ponumber? and @lines.any? and @lines.first.ponumber.present? -%>
+    <span class="invoice-terms"><%=h "#{t(:field_ponumber)} #{@lines.first.ponumber}" %></span><br/>
   <% end -%>
   <% unless @invoice.delivery_note_number.blank? -%>
     <span class="invoice-terms"><%=h "#{t(:field_delivery_note_number)} #{@invoice.delivery_note_number}" %></span>
@@ -79,11 +82,11 @@
     <span class="invoice-terms"><%=h "#{t(:field_receiver_contract_reference)} #{@invoice.receiver_contract_reference}" %></span>
   <% end -%>
   <%= call_hook(:invoice_view_invoice_info) %>
-</div>
+ </div>
 
-<!-- Client Info -->
-<% unless @client.new_record? -%>
-<div class="vcard client">
+  <!-- Client Info -->
+  <% unless @client.new_record? -%>
+  <div class="vcard client">
   <div class="client-info">
     <h3><%= client_name_with_link @client %></h3>
     <address class="adr">
@@ -132,15 +135,16 @@
       </div>
     <% end -%>
   </div>
-</div>
-<% end -%>
+  </div>
+  <% end -%>
+ </div>
 
 <!-- Invoice Data -->
 <div class="invoice">
 
   <!-- Line Details -->
-  <table class="line-items" border="0" cellpadding="0" cellspacing="0">
-    <tbody>
+  <table class="line-items splitForPrint" border="0" cellpadding="0" cellspacing="0">
+    <thead>
       <tr>
         <% line_cells = 4 -%>
         <% if @invoice.has_delivery_note_numbers? -%>
@@ -166,9 +170,14 @@
           <% line_cells += 1 -%>
           <th class="item-price"><%= h l(:field_charge) %></th>
         <% end -%>
+        <% if @invoice.has_line_ponumber? -%>
+          <th class="item-price"><%= h l(:field_ponumber) %></th>
+        <% end -%>
         <th class="line-total last"><%=h l(:label_invoice_total)%></th>
       </tr>
+    </thead>
 
+    <tbody>
       <% @lines.each do |line| -%>
         <tr <%= 'class="nobottomline"'.html_safe unless line.notes.blank? %>>
           <% if @invoice.has_delivery_note_numbers? -%>
@@ -198,6 +207,9 @@
           <% end -%>
           <% if @invoice.has_line_charges? -%>
             <td class="item-price"><%= h line_price(line, 'charge', @invoice) %></td>
+          <% end -%>
+          <% if @invoice.has_line_ponumber? -%>
+            <td class="item-price"><%= h line.ponumber %></td>
           <% end -%>
           <td class="line-total last"><%=h money(Haltr::Utils.to_money(line.taxable_base, @invoice.currency)) %></td>
         </tr>

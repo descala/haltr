@@ -74,6 +74,7 @@ sv:
   field_draft: Utkast
   label_invoice_state: Status
   field_state: Status
+  field_state_updated_at: Status modification date
   show_template: Visa mall
   generate_template_from_invoice: Skapa ny mall
   generated_from_template: Skapad ny mall
@@ -342,6 +343,8 @@ sv:
   "custom": Annan
 
   # Frequency
+  mf36: Every 3 years
+  mf24: Every 2 years
   mf12: Årliga
   mf6: Halvt år
   mf3: Kvartal
@@ -379,6 +382,7 @@ sv:
   missing_company_peppol_fields: "Manglende PEPPOL felter på din virksomhed"
   missing_client_peppol_fields: "Manglende PEPPOL felter på klient"
   field_accounting_cost: "konto cost"
+  field_client_email_override: "Override the email of the client with this one"
   missing_svefaktura_account: "Saknad Svefaktura konto kostnad"
   missing_svefaktura_organization: "Saknad Svefaktura organisation identifierare"
   missing_svefaktura_debit: "Autogiro tillåts inte"
@@ -620,10 +624,30 @@ sv:
   pdf_customization: "PDF customization"
   field_pdf_template: "PDF template"
   pdf_default: "Default template"
-  pdf_rigth_windowed_envelope: "Right windowed envelope template"
+  pdf_right_windowed_envelope: "Right windowed envelope template"
   field_party_identification: "Party identification"
   label_invoice_total: "Total"
   field_unidad_contratacion: "Unidad de contratación / SEF"
   field_discount_helper: "Calculate discount % from import"
   label_discounts_and_charges: Discounts and charges
   invoice_import_mismatch: "Original invoice import %{original} does not match calculated import %{calculated}"
+  invoice_has_no_original: Invoice has no original (transport requires an original document)
+  fa_payment_method_01: 'In cash'
+  fa_payment_method_02: 'Direct debit'
+  fa_payment_method_03: 'Receipt'
+  fa_payment_method_04: 'Credit transfer'
+  fa_payment_method_05: 'Accepted bill of exchange'
+  fa_payment_method_06: 'Documentary credit'
+  fa_payment_method_07: 'Awarded contract'
+  fa_payment_method_08: 'Bill of exchange'
+  fa_payment_method_09: 'Promissory note signed by the debtor'
+  fa_payment_method_10: 'Promissory note'
+  fa_payment_method_11: 'Cheque'
+  fa_payment_method_12: 'Reposition'
+  fa_payment_method_13: 'Specials'
+  fa_payment_method_14: 'Compensation'
+  fa_payment_method_15: 'Payment by postgiro'
+  fa_payment_method_16: 'Certified cheque'
+  fa_payment_method_17: 'Bank cheque'
+  fa_payment_method_18: 'Cash on delivery'
+  fa_payment_method_19: 'Bank card'

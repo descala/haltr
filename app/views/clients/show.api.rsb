@@ -1,0 +1,27 @@
+# vi: ft=ruby
+
+api.client do
+  api.id @client.id
+  api.taxcode @client.taxcode
+  api.name @client.name
+  api.email @client.email
+  api.website @client.website
+  api.address @client.address
+  api.address2 @client.address2
+  api.postalcode @client.postalcode
+  api.city @client.city
+  api.province @client.province
+  api.country @client.country
+  api.language @client.language
+  api.currency @client.currency
+  api.invoice_format @client.invoice_format
+  api.iban @client.iban
+  api.bic @client.bic
+  api.payment_method @client.payment_method
+  api.payment_method_text @client.payment_method_text
+  api.terms @client.terms
+  api.sepa_type @client.sepa_type
+  api.company_identifier @client.company_identifier
+  api.created_at @client.created_at
+  api.updated_at @client.updated_at
+end

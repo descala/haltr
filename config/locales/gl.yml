@@ -86,6 +86,7 @@ gl:
   field_draft: Borrador
   label_invoice_state: Estado
   field_state: Estado
+  field_state_updated_at: Fecha de cambio de estado
   show_template: Ver plantilla
   generate_template_from_invoice: Xerar nova plantilla
   duplicate_invoice: Duplicar esta factura
@@ -355,6 +356,8 @@ gl:
   "custom": Personalizado
 
   # Frequency
+  mf36: Cada 3 anos
+  mf24: Cada 2 anos
   mf12: Anual
   mf6: Semestral
   mf3: Trimestral
@@ -395,6 +398,7 @@ gl:
   missing_company_peppol_fields: "Faltan campos de Peppol da túa empresa"
   missing_client_peppol_fields: "Faltan campos de Peppol do cliente"
   field_accounting_cost: "Centro de custo"
+  field_client_email_override: "No utilizar el email de cliente, sino este"
   missing_svefaktura_account: "Falta o centro de custo"
   missing_svefaktura_organization: "Falta o identificador de empresa"
   missing_svefaktura_debit: "Non se poden crear facturas domiciliadas"
@@ -637,10 +641,30 @@ gl:
   pdf_customization: "Personalización de PDF"
   field_pdf_template: "Plantilla PDF"
   pdf_default: "Por defecto"
-  pdf_rigth_windowed_envelope: "Plantilla para sobres con xanela"
+  pdf_right_windowed_envelope: "Plantilla para sobres con xanela"
   field_party_identification: "Código unidade provedora"
   label_invoice_total: "Importe"
   field_unidad_contratacion: "Unidad de contratación / SEF"
   field_discount_helper: "Calcular % de descuento desde importe"
   label_discounts_and_charges: Descuentos y cargos
   invoice_import_mismatch: "El importe de la factura original %{original} es diferente del calculado %{calculated}"
+  invoice_has_no_original: La factura no tiene original (el transporte requiere un documento original)
+  fa_payment_method_01: 'In cash'
+  fa_payment_method_02: 'Direct debit'
+  fa_payment_method_03: 'Receipt'
+  fa_payment_method_04: 'Credit transfer'
+  fa_payment_method_05: 'Accepted bill of exchange'
+  fa_payment_method_06: 'Documentary credit'
+  fa_payment_method_07: 'Awarded contract'
+  fa_payment_method_08: 'Bill of exchange'
+  fa_payment_method_09: 'Promissory note signed by the debtor'
+  fa_payment_method_10: 'Promissory note'
+  fa_payment_method_11: 'Cheque'
+  fa_payment_method_12: 'Reposition'
+  fa_payment_method_13: 'Specials'
+  fa_payment_method_14: 'Compensation'
+  fa_payment_method_15: 'Payment by postgiro'
+  fa_payment_method_16: 'Certified cheque'
+  fa_payment_method_17: 'Bank cheque'
+  fa_payment_method_18: 'Cash on delivery'
+  fa_payment_method_19: 'Bank card'

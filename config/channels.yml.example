@@ -50,6 +50,21 @@ pdf_by_mail:
   allowed_permissions:
     :send_by_mail:
 
+signed_pdf:
+  order: 25
+  format: pdf
+  class_for_send: Haltr::SendPdfByMail
+  validators: Haltr::Validator::Mail
+  locales:
+    ca: "PDF signat, per email"
+    da: "Signed PDF til email"
+    en: "Signed PDF to email"
+    es: "PDF firmado, por email"
+    fr: "PDF signé par email"
+    sv: "Signerad PDF till email"
+  allowed_permissions:
+    :send_by_mail:
+
 facturae_30:
   order: 30
   format: facturae30

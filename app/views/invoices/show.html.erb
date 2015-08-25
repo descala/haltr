@@ -22,7 +22,7 @@
     <% if @invoice.is_a? InvoiceTemplate %>
       <span><%=h l("label_invoice_template") %></span>
     <% else %>
-      <span><%=h l("state_#{@invoice.state}").capitalize %></span>
+      <span title="<%= format_time @invoice.state_updated_at %>"><%=h l("state_#{@invoice.state}").capitalize %></span>
     <% end %>
   </div>
   <div id="workspace1" class="haltrinvoice">

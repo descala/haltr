@@ -96,6 +96,14 @@
       </p>
     </div>
 
+    <% if User.current.allowed_to?(:view_invoice_extra_fields, @project) -%>
+      <div class="seccio grup">
+        <p class="col span-1-de-3">
+        <%= f.text_field :client_email_override %>
+        </p>
+      </div>
+    <% end -%>
+
   </div>
 </fieldset>
 
@@ -163,7 +171,9 @@
         <%= f.text_field :fa_bank_code %>
         </p>
         <p class="col span-1-de-4">
-        <%= f.text_field :fa_payment_method %>
+        <%= f.select(:fa_payment_method,
+                     (1..19).collect {|i| [I18n.t("fa_payment_method_#{i.to_s.rjust(2,'0')}"), i.to_s.rjust(2,'0')] },
+                     include_blank: true) %>
         </p>
       </div>
 

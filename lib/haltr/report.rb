@@ -1,6 +1,6 @@
 module Haltr
   module Report
-    def self.channel_state(project=nil)
+    def self.channel_state(project=nil,country=nil)
       channel_state_count = {}
       state_totals = {}
       channel_totals = {}
@@ -9,6 +9,11 @@ module Haltr
       #  ["facturae_32", "new"]=>8,
       #  ["facturae_32", "sent"]=>4}
       query = IssuedInvoice.includes('client')
+      if country
+        project_ids = Project.includes(:company).
+          where("companies.country" => country).collect {|p| p.id }
+        query = query.where("invoices.project_id in (?)", project_ids)
+      end
       query = query.where("invoices.project_id=#{project.id}") if project
       result = query.group(['clients.invoice_format','state']).count
       result.each do |k,v|

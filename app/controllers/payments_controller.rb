@@ -173,7 +173,7 @@ class PaymentsController < ApplicationController
           i.number
         end.join(' ')
         sdd.add_transaction(
-          name:                      client.name,
+          name:                      client.name[0..69],
           iban:                      client.iban,
           bic:                       client.bic.blank? ? nil : client.bic,
           amount:                    money.dollars,

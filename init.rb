@@ -63,7 +63,7 @@ Redmine::Plugin.register :haltr do
 
   project_module :haltr do
     permission :general_use,
-      { :clients   => [:index, :new, :edit, :create, :update, :destroy, :check_cif, :link_to_profile, :unlink,
+      { :clients   => [:index, :show, :new, :edit, :create, :update, :destroy, :check_cif, :link_to_profile, :unlink,
                        :allow_link, :deny_link, :ccc2iban],
         :people    => [:index, :new, :show, :edit, :create, :update, :destroy],
         :invoices  => [:index, :new, :edit, :create, :update, :destroy, :show, :mark_sent, :mark_closed, :mark_not_sent,
@@ -74,7 +74,7 @@ Redmine::Plugin.register :haltr do
                        :mark_accepted, :mark_accepted_with_mail, :mark_refused,
                        :mark_refused_with_mail, :legal, :context_menu, :original, :validate, :bulk_mark_as],
         :companies => [:my_company,:bank_info,:update,:linked_to_mine,:check_iban],
-        :charts    => [:invoice_total, :invoice_status, :top_clients],
+        :charts    => [:invoice_total, :invoice_status, :top_clients, :cash_flow],
         :events    => [:file] },
       :require => :member
 
@@ -123,7 +123,7 @@ Redmine::Plugin.register :haltr do
     permission :import_invoices,
       { :invoices => [:import,:import_facturae],
         :received => [:import],
-        :import_errors => [:index, :show, :destroy, :context_menu] },
+        :import_errors => [:index, :create, :show, :destroy, :context_menu] },
       :require => :member
 
     permission :email_customization,   {:companies=>'customization'}, :require => :member
@@ -142,6 +142,11 @@ Redmine::Plugin.register :haltr do
     permission :use_invoice_attachments, { :attachments => :upload}
 
     permission :add_invoice_notes, { :invoices => :add_comment }
+
+    permission :manage_external_companies, {
+      :external_companies => [:index, :new, :create, :edit, :update, :destroy, :csv_import],
+      :dir3_entities => [:index, :new, :create, :edit, :update, :destroy, :csv_import]
+    }
 
     # Loads permisons from config/channels.yml
     ExportChannels.permissions.each do |permission,actions|
@@ -179,6 +184,7 @@ Mime::Type.register "text/xml", :biiubl20
 Mime::Type.register "text/xml", :svefaktura
 Mime::Type.register "text/xml", :oioubl20
 Mime::Type.register "text/xml", :efffubl
+Mime::Type.register "text/xml", :original
 
 Redmine::Activity.map do |activity|
   activity.register :info_events, :class_name => 'Event'

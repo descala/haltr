@@ -3,7 +3,7 @@ require File.dirname(__FILE__) + '/../test_helper'
 
 class InvoiceTest < ActiveSupport::TestCase
 
-  fixtures :clients, :invoices, :invoice_lines, :taxes, :companies, :people, :bank_infos
+  fixtures :clients, :invoices, :invoice_lines, :taxes, :companies, :people, :bank_infos, :dir3_entities, :external_companies
 
   def setup
     User.current=nil
@@ -376,6 +376,8 @@ class InvoiceTest < ActiveSupport::TestCase
     assert_equal 'IRPF', il.taxes[1].name
     assert_equal 21.0,   il.taxes[1].percent
     assert_equal 'S',    il.taxes[1].category
+    # email override lluis@ingent.net, instead of client1@email.com
+    assert_equal 'lluis@ingent.net', invoice.client_email_override
   end
 
   # import invoice_facturae32_issued3.xml
@@ -441,6 +443,8 @@ class InvoiceTest < ActiveSupport::TestCase
     invoice.state = :new
     assert invoice.save!
     assert invoice.modified_since_created?, "modified since created"
+    # do not override email client1@email.com (is the same in XML)
+    assert_nil invoice.client_email_override
   end
 
   test 'import facturae32 with discount on first line' do
@@ -451,7 +455,8 @@ class InvoiceTest < ActiveSupport::TestCase
     assert_equal 0, invoice.invoice_lines[1].discount_percent
     assert_equal 'Descuento', invoice.invoice_lines[0].discount_text
     assert_equal '132413842', invoice.invoice_lines[0].delivery_note_number
-    assert_equal 'BBBH-38272', invoice.ponumber
+    assert_nil invoice.ponumber
+    assert_equal 'BBBH-38272', invoice.invoice_lines.first.ponumber
     assert_equal Date.new(2010,3,9),  invoice.invoicing_period_start
     assert_equal Date.new(2010,3,10), invoice.invoicing_period_end
   end
@@ -486,13 +491,30 @@ class InvoiceTest < ActiveSupport::TestCase
     end
   end
 
-  test 'imports dir3 data' do
+  test 'imports dir3 data and stores it to db' do
+    assert_nil Dir3Entity.find_by_code('P00000010')
+    extcomp = ExternalCompany.find_by_taxcode 'ESB17915224'
+    assert_not_match(/P00000010/, extcomp.organs_gestors)
+    assert_not_match(/P00000010/, extcomp.unitats_tramitadores)
+    assert_not_match(/P00000010/, extcomp.oficines_comptables)
     file    = File.new(File.join(File.dirname(__FILE__),'..','fixtures','documents','invoice_facturae32_issued4.xml'))
     invoice = Invoice.create_from_xml(file,companies(:company1),"1234",'uploaded',User.current.name,nil,false)
     assert_equal('P00000010',invoice.organ_gestor)
     assert_equal('P00000010',invoice.unitat_tramitadora)
     assert_equal('P00000010',invoice.oficina_comptable)
     assert_equal('Oficina Comptable', invoice.oficina_comptable_name)
+    dir3 = Dir3Entity.find_by_code('P00000010')
+    assert_not_nil dir3
+    assert_equal(dir3.name,'Oficina Comptable')
+    assert_equal(dir3.address,'c. one two three, 34')
+    assert_equal(dir3.postalcode,'08080')
+    assert_equal(dir3.city,'Barcelona')
+    assert_equal(dir3.province,'Barcelona')
+    assert_equal(dir3.country,'es')
+    extcomp = ExternalCompany.find_by_taxcode 'ESB17915224'
+    assert_equal('P00000010', extcomp.oficines_comptables)
+    assert_equal('P00000010', extcomp.organs_gestors)
+    assert_equal('P00000011,P00000010', extcomp.unitats_tramitadores)
   end
 
   test 'invoice discounts are correctly calculated' do
@@ -572,6 +594,15 @@ class InvoiceTest < ActiveSupport::TestCase
     assert_equal 'ES1234567890123456789012', invoice.fa_iban
     assert_equal 'ABCABCAAXXX',              invoice.fa_bank_code
     assert_equal 'Clauses',                  invoice.fa_clauses
+  end
+
+  test 'overrides client email with client_email_override' do
+    # Overrided:
+    assert_equal "override@example.com", invoices(:i14).client_email_override
+    assert_equal ["override@example.com"], invoices(:i14).recipient_emails
+    # Not overrided
+    assert_nil invoices(:i13).client_email_override
+    assert_equal ["person1@example.com", "mail@client1.com"], invoices(:i13).recipient_emails
   end
 
 end

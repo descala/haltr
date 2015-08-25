@@ -1,5 +1,4 @@
-require File.dirname(__FILE__) + '../../test/test_helper'
-
+require File.expand_path(File.dirname(__FILE__) + "/../../../test/test_helper")
 
 module Haltr
   module TestHelper
@@ -26,7 +25,7 @@ module Haltr
 
       # Adds all haltr permissions to role 'delveloper'
       dev = Role.find(2)
-      dev.permissions += [:general_use,:manage_payments,:use_templates,:import_invoices, :use_sepa,:add_multiple_bank_infos,:bulk_operations,:use_imap_draft,:send_gva,:send_by_mail,:send_face,:manage_project_users, :use_local_signature, :use_invoice_attachments]
+      dev.permissions += [:general_use,:manage_payments,:use_templates,:import_invoices, :use_sepa,:add_multiple_bank_infos,:bulk_operations,:use_imap_draft,:send_gva,:send_by_mail,:send_face,:manage_project_users, :use_local_signature, :use_invoice_attachments, :view_invoice_extra_fields, :email_customization]
       dev.save
 
       # user 2 (jsmith) is member of project 2 (onlinesotre) with role 2 (developer)

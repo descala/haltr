@@ -16,6 +16,7 @@ class IssuedInvoice < InvoiceDocument
   after_create :create_event
   after_destroy :release_amended
   before_save :update_status, :unless => Proc.new {|invoicedoc| invoicedoc.state_changed? }
+  before_save :set_state_updated_at
 
   # new sending sent error discarded closed
   state_machine :state, :initial => :new do
@@ -208,17 +209,20 @@ class IssuedInvoice < InvoiceDocument
     (!self.amend_id.nil? and self.amend_id != self.id )
   end
 
+  def last_sent_event
+    events.order(:created_at).select {|e| e.name == 'success_sending' }.last
+  end
+
   def last_sent_file_path
-    last_event = events.order(:created_at).select {|e| e.name == 'success_sending' }.last
-    case last_event
-    when EventWithFile
-      Rails.application.routes.url_helpers.
-        project_event_file_path(last_event, :project_id=>project)
-    when Event
-      if last_event.md5
-        Rails.application.routes.url_helpers.
-          legal_path(:id=>id,:md5=>last_event.md5)
+    event = last_sent_event
+    begin
+      if event and event.md5
+        Rails.application.routes.url_helpers.legal_path(:id=>id,:md5=>event.md5)
+      else
+        Rails.application.routes.url_helpers.event_file_path(event)
       end
+    rescue
+      nil
     end
   end
 
@@ -264,6 +268,18 @@ class IssuedInvoice < InvoiceDocument
       end
     end
     return true # always continue saving
+  end
+
+  # if state changes, record state timestamp :state_updated_at
+  # an update to an Invoice sets timestamps as usual, except for:
+  #  :state
+  #  :has_been_read
+  #  :state_updated_at
+  # these attributes do not change updated_at
+  def set_state_updated_at
+    if state_changed?
+      write_attribute :state_updated_at, Time.now
+    end
   end
 
 end

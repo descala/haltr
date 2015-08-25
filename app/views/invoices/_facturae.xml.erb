@@ -23,13 +23,13 @@
          <BatchIdentifier><%=h @company.country == "es" ? @company.taxcode.strip : '' %><%=h  @invoice.number %></BatchIdentifier>
          <InvoicesCount>1</InvoicesCount>
          <TotalInvoicesAmount>
-            <TotalAmount><%=h precision @invoice.total.dollars %></TotalAmount>
+            <TotalAmount><%=h haltr_precision @invoice.total.dollars %></TotalAmount>
          </TotalInvoicesAmount>
          <TotalOutstandingAmount>
-            <TotalAmount><%=h precision (@invoice.total - @invoice.payments_on_account).dollars %></TotalAmount>
+            <TotalAmount><%=h haltr_precision (@invoice.total - @invoice.payments_on_account).dollars %></TotalAmount>
          </TotalOutstandingAmount>
          <TotalExecutableAmount>
-            <TotalAmount><%=h precision (@invoice.total - @invoice.payments_on_account).dollars %></TotalAmount>
+            <TotalAmount><%=h haltr_precision (@invoice.total - @invoice.payments_on_account).dollars %></TotalAmount>
          </TotalExecutableAmount>
          <InvoiceCurrencyCode><%=h  @invoice.currency %></InvoiceCurrencyCode>
       </Batch>
@@ -58,7 +58,7 @@
         <PaymentDetails>
           <Installment>
             <InstallmentDueDate><%=h @invoice.fa_duedate %></InstallmentDueDate>
-            <InstallmentAmount><%=h precision @invoice.fa_import %></InstallmentAmount>
+            <InstallmentAmount><%=h haltr_precision @invoice.fa_import %></InstallmentAmount>
             <PaymentMeans><%=h @invoice.payment_method_code(:facturae, :fa_payment_method) %></PaymentMeans>
 <% if @invoice.fa_payment_method.to_i == 4 -%>
             <AccountToBeCredited>
@@ -176,6 +176,9 @@
              <AdministrativeCentre>
                <CentreCode><%= @invoice.unitat_tramitadora[0..9] %></CentreCode>
                <RoleTypeCode>03</RoleTypeCode>
+               <% if @invoice.unitat_tramitadora_name.present? -%>
+                 <Name><%= @invoice.unitat_tramitadora_name[0...40] %></Name>
+               <% end -%>
                <% ut = Dir3Entity.find_by_code(@invoice.unitat_tramitadora) -%>
                <%= render :partial => "invoices/address.facturae.xml", :locals => {:entity => ( ut and ut.full_address? ) ? ut : @invoice.client }%>
                <% if ut and ut.name.present? and format == "facturae32" -%>
@@ -254,12 +257,12 @@
 <% @invoice.taxes_outputs.each do |tax| -%>
            <Tax>
              <TaxTypeCode><%= Tax::SPAIN_TAXCODES[tax.name.upcase] || '05'%></TaxTypeCode>
-             <TaxRate><%=h precision tax.percent%></TaxRate>
+             <TaxRate><%=h haltr_precision tax.percent%></TaxRate>
              <TaxableBase>
-               <TotalAmount><%=h precision(@invoice.taxable_base(tax).dollars)%></TotalAmount>
+               <TotalAmount><%=h haltr_precision(@invoice.taxable_base(tax).dollars)%></TotalAmount>
              </TaxableBase>
              <TaxAmount>
-               <TotalAmount><%=h precision @invoice.tax_amount(tax).dollars %></TotalAmount>
+               <TotalAmount><%=h haltr_precision @invoice.tax_amount(tax).dollars %></TotalAmount>
              </TaxAmount>
            </Tax>
 <% end -%>
@@ -268,7 +271,7 @@
              <TaxTypeCode>01</TaxTypeCode>
              <TaxRate>0.00</TaxRate>
              <TaxableBase>
-               <TotalAmount><%=h precision(@invoice.taxable_base.dollars)%></TotalAmount>
+               <TotalAmount><%=h haltr_precision(@invoice.taxable_base.dollars)%></TotalAmount>
              </TaxableBase>
              <TaxAmount>
                <TotalAmount>0.00</TotalAmount>
@@ -282,12 +285,12 @@
 <% @invoice.taxes_withheld.each do |tax| -%>
             <Tax>
                <TaxTypeCode>04</TaxTypeCode>
-               <TaxRate><%=h precision tax.percent * -1 %></TaxRate>
+               <TaxRate><%=h haltr_precision tax.percent * -1 %></TaxRate>
                <TaxableBase>
-                  <TotalAmount><%=h precision @invoice.taxable_base(tax).dollars%></TotalAmount>
+                  <TotalAmount><%=h haltr_precision @invoice.taxable_base(tax).dollars%></TotalAmount>
                </TaxableBase>
                <TaxAmount>
-                 <TotalAmount><%=h precision @invoice.tax_amount(tax).dollars * -1 %></TotalAmount>
+                 <TotalAmount><%=h haltr_precision @invoice.tax_amount(tax).dollars * -1 %></TotalAmount>
                </TaxAmount>
             </Tax>
 <% end -%>
@@ -295,13 +298,13 @@
 <% end -%>
 
          <InvoiceTotals>
-            <TotalGrossAmount><%=h precision @invoice.gross_subtotal.dollars%></TotalGrossAmount>
+            <TotalGrossAmount><%=h haltr_precision @invoice.gross_subtotal.dollars%></TotalGrossAmount>
 <% if @invoice.discount_percent and @invoice.discount_percent > 0 -%>
             <GeneralDiscounts>
                <Discount>
                  <DiscountReason><%=h @invoice.discount_text.blank? ? "." : @invoice.discount_text %></DiscountReason>
-                 <DiscountRate><%=h precision(@invoice.discount_percent, 4) %></DiscountRate>
-                 <DiscountAmount><%=h precision(@invoice.discount_amount.dollars,(@format =~ /facturae/ ? 6 : 2))%></DiscountAmount>
+                 <DiscountRate><%=h haltr_precision(@invoice.discount_percent, 4) %></DiscountRate>
+                 <DiscountAmount><%=h haltr_precision(@invoice.discount_amount.dollars,(@format =~ /facturae/ ? 6 : 2))%></DiscountAmount>
                </Discount>
             </GeneralDiscounts>
 <% end -%>
@@ -309,33 +312,33 @@
            <GeneralSurcharges>
              <Charge>
                <ChargeReason><%=h @invoice.charge_reason%></ChargeReason>
-               <ChargeAmount><%=h precision(@invoice.charge_amount.dollars,(@format =~ /facturae/ ? 6 : 2))%></ChargeAmount>
+               <ChargeAmount><%=h haltr_precision(@invoice.charge_amount.dollars,(@format =~ /facturae/ ? 6 : 2))%></ChargeAmount>
              </Charge>
            </GeneralSurcharges>
 <% end -%>
 <% if @invoice.discount_percent and @invoice.discount_percent > 0 -%>
-            <TotalGeneralDiscounts><%=h precision(@invoice.discount_amount.dollars,2)%></TotalGeneralDiscounts>
+            <TotalGeneralDiscounts><%=h haltr_precision(@invoice.discount_amount.dollars,2)%></TotalGeneralDiscounts>
 <% end -%>
 <% if @invoice.charge_amount.cents > 0 -%>
-           <TotalGeneralSurcharges><%=h precision(@invoice.charge_amount.dollars,2)%></TotalGeneralSurcharges>
+           <TotalGeneralSurcharges><%=h haltr_precision(@invoice.charge_amount.dollars,2)%></TotalGeneralSurcharges>
 <% end -%>
-            <TotalGrossAmountBeforeTaxes><%=h precision(@invoice.subtotal.dollars)%></TotalGrossAmountBeforeTaxes>
-            <TotalTaxOutputs><%=h precision @invoice.total_tax_outputs.dollars%></TotalTaxOutputs>
-            <TotalTaxesWithheld><%=h precision @invoice.total_taxes_withheld.dollars%></TotalTaxesWithheld>
-            <InvoiceTotal><%=h precision @invoice.total.dollars%></InvoiceTotal>
+            <TotalGrossAmountBeforeTaxes><%=h haltr_precision(@invoice.subtotal.dollars)%></TotalGrossAmountBeforeTaxes>
+            <TotalTaxOutputs><%=h haltr_precision @invoice.total_tax_outputs.dollars%></TotalTaxOutputs>
+            <TotalTaxesWithheld><%=h haltr_precision @invoice.total_taxes_withheld.dollars%></TotalTaxesWithheld>
+            <InvoiceTotal><%=h haltr_precision @invoice.total.dollars%></InvoiceTotal>
             <% if @invoice.payments_on_account_in_cents.to_i > 0 -%>
               <PaymentsOnAccount>
                 <PaymentOnAccount>
                   <PaymentOnAccountDate><%=h @invoice.date%></PaymentOnAccountDate>
-                  <PaymentOnAccountAmount><%=h precision @invoice.payments_on_account.dollars %></PaymentOnAccountAmount>
+                  <PaymentOnAccountAmount><%=h haltr_precision @invoice.payments_on_account.dollars %></PaymentOnAccountAmount>
                 </PaymentOnAccount>
               </PaymentsOnAccount>
             <% end -%>
-            <TotalOutstandingAmount><%=h precision (@invoice.total - @invoice.payments_on_account).dollars%></TotalOutstandingAmount>
+            <TotalOutstandingAmount><%=h haltr_precision (@invoice.total - @invoice.payments_on_account).dollars%></TotalOutstandingAmount>
             <% if @invoice.payments_on_account_in_cents.to_i > 0 -%>
-              <TotalPaymentsOnAccount><%=h precision @invoice.payments_on_account.dollars %></TotalPaymentsOnAccount>
+              <TotalPaymentsOnAccount><%=h haltr_precision @invoice.payments_on_account.dollars %></TotalPaymentsOnAccount>
             <% end -%>
-            <TotalExecutableAmount><%=h precision (@invoice.total - @invoice.payments_on_account).dollars%></TotalExecutableAmount>
+            <TotalExecutableAmount><%=h haltr_precision (@invoice.total - @invoice.payments_on_account).dollars%></TotalExecutableAmount>
          </InvoiceTotals>
          <Items>
 <% @invoice.invoice_lines.each do |invoice_line| -%>
@@ -348,7 +351,11 @@
               <% elsif @invoice.receiver_contract_reference.present? -%>
                 <ReceiverContractReference><%=@invoice.receiver_contract_reference%></ReceiverContractReference>
               <% end -%>
-              <%unless @invoice.ponumber.blank?%><ReceiverTransactionReference><%=h(@invoice.ponumber)[0..19]%></ReceiverTransactionReference><%end-%>
+              <% if invoice_line.ponumber.present? -%>
+                <ReceiverTransactionReference><%=h(invoice_line.ponumber)[0..19]%></ReceiverTransactionReference>
+              <% elsif @invoice.ponumber.present? -%>
+                <ReceiverTransactionReference><%=h(@invoice.ponumber)[0..19]%></ReceiverTransactionReference>
+              <% end -%>
 <% if format == "facturae32" and !@invoice.file_reference.blank? -%>
               <%if @invoice.file_reference%><FileReference><%=@invoice.file_reference%></FileReference><%end-%>
 <% else -%>
@@ -371,14 +378,14 @@
               <% if invoice_line.unit_code(:facturae).present? -%>
                 <UnitOfMeasure><%=h invoice_line.unit_code(:facturae)%></UnitOfMeasure>
               <% end -%>
-              <UnitPriceWithoutTax><%=h precision(invoice_line.price,6)%></UnitPriceWithoutTax>
-              <TotalCost><%=h precision(invoice_line.total_cost,(format == "facturae32" ? 6 : 2))%></TotalCost>
+              <UnitPriceWithoutTax><%=h haltr_precision(invoice_line.price,6)%></UnitPriceWithoutTax>
+              <TotalCost><%=h haltr_precision(invoice_line.total_cost,(format == "facturae32" ? 6 : 2))%></TotalCost>
 <% if invoice_line.discount_percent > 0 -%>
               <DiscountsAndRebates>
                 <Discount>
                   <DiscountReason><%=h invoice_line.discount_text.blank? ? "." : invoice_line.discount_text %></DiscountReason>
-                  <DiscountRate><%=h precision(invoice_line.discount_percent, 4)%></DiscountRate>
-                  <DiscountAmount><%=h precision(invoice_line.discount_amount,(@format =~ /facturae/ ? 6 : 2))%></DiscountAmount>
+                  <DiscountRate><%=h haltr_precision(invoice_line.discount_percent, 4)%></DiscountRate>
+                  <DiscountAmount><%=h haltr_precision(invoice_line.discount_amount,(@format =~ /facturae/ ? 6 : 2))%></DiscountAmount>
                 </Discount>
               </DiscountsAndRebates>
 <% end -%>
@@ -386,22 +393,22 @@
               <Charges>
                 <Charge>
                   <ChargeReason><%=h invoice_line.charge_reason.blank? ? "." : invoice_line.charge_reason %></ChargeReason>
-                  <ChargeAmount><%=h precision(invoice_line.charge,(@format =~ /facturae/ ? 6 : 2))%></ChargeAmount>
+                  <ChargeAmount><%=h haltr_precision(invoice_line.charge,(@format =~ /facturae/ ? 6 : 2))%></ChargeAmount>
                 </Charge>
               </Charges>
 <% end -%>
-              <GrossAmount><%=h precision(invoice_line.gross_amount,(format == "facturae32" ? 6 : 2))%></GrossAmount>
+              <GrossAmount><%=h haltr_precision(invoice_line.gross_amount,(format == "facturae32" ? 6 : 2))%></GrossAmount>
 <% if invoice_line.taxes_withheld.any? -%>
               <TaxesWithheld>
 <% invoice_line.taxes_withheld.each do |tax| -%>
                 <Tax>
                    <TaxTypeCode>04</TaxTypeCode>
-                   <TaxRate><%=h precision tax.percent * -1 %></TaxRate>
+                   <TaxRate><%=h haltr_precision tax.percent * -1 %></TaxRate>
                    <TaxableBase>
-                      <TotalAmount><%=h precision Haltr::Utils.to_money(invoice_line.taxable_base, @invoice.currency) %></TotalAmount>
+                      <TotalAmount><%=h haltr_precision Haltr::Utils.to_money(invoice_line.taxable_base, @invoice.currency) %></TotalAmount>
                    </TaxableBase>
                    <TaxAmount>
-                     <TotalAmount><%=h precision(invoice_line.tax_amount(tax)*-1)%></TotalAmount>
+                     <TotalAmount><%=h haltr_precision(invoice_line.tax_amount(tax)*-1)%></TotalAmount>
                    </TaxAmount>
                 </Tax>
 <% end -%>
@@ -412,12 +419,12 @@
 <% invoice_line.taxes_outputs.each do |tax| -%>
                  <Tax>
                     <TaxTypeCode>01</TaxTypeCode>
-                    <TaxRate><%=h precision tax.percent%></TaxRate>
+                    <TaxRate><%=h haltr_precision tax.percent%></TaxRate>
                     <TaxableBase>
-                      <TotalAmount><%=h precision Haltr::Utils.to_money(invoice_line.total_cost, @invoice.currency) %></TotalAmount>
+                      <TotalAmount><%=h haltr_precision Haltr::Utils.to_money(invoice_line.total_cost, @invoice.currency) %></TotalAmount>
                     </TaxableBase>
                     <TaxAmount>
-                      <TotalAmount><%=h precision(invoice_line.tax_amount(tax))%></TotalAmount>
+                      <TotalAmount><%=h haltr_precision(invoice_line.tax_amount(tax))%></TotalAmount>
                     </TaxAmount>
                  </Tax>
 <% end -%>
@@ -442,7 +449,7 @@
          <PaymentDetails>
             <Installment>
               <InstallmentDueDate><%=h @invoice.due_date%></InstallmentDueDate>
-               <InstallmentAmount><%=h precision @invoice.total.dollars%></InstallmentAmount>
+               <InstallmentAmount><%=h haltr_precision @invoice.total.dollars%></InstallmentAmount>
                <PaymentMeans><%=h @invoice.payment_method_code(:facturae) %></PaymentMeans>
 <% if @invoice.debit? and @client.use_iban? -%>
                <AccountToBeDebited>

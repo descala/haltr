@@ -4,9 +4,11 @@ class ImportErrorsController < ApplicationController
   menu_item Haltr::MenuItem.new(:invoices,:import_errors)
   helper :haltr
   layout 'haltr'
-  before_filter :find_project_by_project_id, only: [:index, :show]
+  before_filter :find_project_by_project_id, only: [:index, :show, :create]
   before_filter :find_import_errors, :only => [:context_menu, :destroy]
   before_filter :authorize
+
+  accept_api_auth :create, :index
 
   helper :context_menus
   helper :sort
@@ -33,6 +35,19 @@ class ImportErrorsController < ApplicationController
     send_data import_error.original,
       :type => 'text/xml; charset=UTF-8;',
       :disposition => "attachment; filename=#{import_error.filename}"
+  end
+
+  def create
+    @import_error = ImportError.new(params[:import_error])
+    if @import_error.save!
+      respond_to do |format|
+        format.api { render_api_ok }
+      end
+    else
+      respond_to do |format|
+        format.api { render_validation_errors(@import_error) }
+      end
+    end
   end
 
   def destroy
