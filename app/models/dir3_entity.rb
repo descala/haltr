@@ -4,6 +4,7 @@ class Dir3Entity < ActiveRecord::Base
   include CountryUtils
 
   validates_presence_of :code, :name
+  validates_uniqueness_of :code
 
   def full_address?
     address.present? and
