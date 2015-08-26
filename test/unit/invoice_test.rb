@@ -370,12 +370,12 @@ class InvoiceTest < ActiveSupport::TestCase
     assert_equal 150,    il.quantity
     # taxes
     assert_equal 2,      il.taxes.size
-    assert_equal 'IVA',  il.taxes[0].name
-    assert_equal 10.0,   il.taxes[0].percent
-    assert_equal 'AA',   il.taxes[0].category
-    assert_equal 'IRPF', il.taxes[1].name
-    assert_equal 21.0,   il.taxes[1].percent
-    assert_equal 'S',    il.taxes[1].category
+    assert_equal 'IVA',  il.taxes[1].name
+    assert_equal 10.0,   il.taxes[1].percent
+    assert_equal 'AA',   il.taxes[1].category
+    assert_equal 'IRPF', il.taxes[0].name
+    assert_equal(-21.0,  il.taxes[0].percent)
+    assert_equal 'S',    il.taxes[0].category
     # email override lluis@ingent.net, instead of client1@email.com
     assert_equal 'lluis@ingent.net', invoice.client_email_override
   end
@@ -590,7 +590,7 @@ class InvoiceTest < ActiveSupport::TestCase
     assert_equal '20000000000000000000',     invoice.fa_info
     assert_equal Date.new(2015,5,6),         invoice.fa_duedate
     assert_equal 372.08,                     invoice.fa_import
-    assert_equal 4,                          invoice.fa_payment_method
+    assert_equal '4',                        invoice.fa_payment_method
     assert_equal 'ES1234567890123456789012', invoice.fa_iban
     assert_equal 'ABCABCAAXXX',              invoice.fa_bank_code
     assert_equal 'Clauses',                  invoice.fa_clauses

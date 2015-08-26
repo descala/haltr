@@ -503,7 +503,7 @@ _INV
     i_period_start   = Haltr::Utils.get_xpath(doc,xpaths[:invoicing_period_start])
     i_period_end     = Haltr::Utils.get_xpath(doc,xpaths[:invoicing_period_end])
     invoice_total    = Haltr::Utils.get_xpath(doc,xpaths[:invoice_total])
-    invoice_total = Haltr::Utils.to_money(invoice_total, currency)
+    invoice_total    = Haltr::Utils.to_money(invoice_total, currency)
     invoice_import   = Haltr::Utils.get_xpath(doc,xpaths[:invoice_import])
     invoice_due_date = Haltr::Utils.get_xpath(doc,xpaths[:invoice_due_date])
     discount_percent = Haltr::Utils.get_xpath(doc,xpaths[:discount_percent])
@@ -840,10 +840,14 @@ _INV
            )
       # invoice taxes. Known taxes are described at config/taxes.yml
       line.xpath(*xpaths[:line_taxes]).each do |line_tax|
+        percent = Haltr::Utils.get_xpath(line_tax,xpaths[:tax_percent])
+        if line_tax.path =~ /\/TaxesWithheld\//
+          percent = "-#{percent}"
+        end
         tax = Haltr::TaxHelper.new_tax(
           :format  => invoice_format,
           :id      => Haltr::Utils.get_xpath(line_tax,xpaths[:tax_id]),
-          :percent => Haltr::Utils.get_xpath(line_tax,xpaths[:tax_percent]),
+          :percent => percent,
           :event_code => Haltr::Utils.get_xpath(line,xpaths[:tax_event_code]),
           :event_reason => Haltr::Utils.get_xpath(line,xpaths[:tax_event_reason])
         )
