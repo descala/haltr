@@ -199,7 +199,16 @@ class InvoicesController < ApplicationController
             redirect_to :action => 'show', :id => @invoice
           end
         }
-        format.api { render :action => 'show', :status => :created, :location => invoice_url(@invoice) }
+        format.api {
+          if @invoice and ["true","1"].include?(params[:send_after_import])
+            begin
+              Haltr::Sender.send_invoice(@invoice, User.current)
+              @invoice.queue
+            rescue
+            end
+          end
+          render :action => 'show', :status => :created, :location => invoice_url(@invoice)
+        }
       end
     else
       logger.info "Invoice errors #{@invoice.errors.full_messages}"
