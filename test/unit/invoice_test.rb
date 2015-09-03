@@ -308,6 +308,7 @@ class InvoiceTest < ActiveSupport::TestCase
     assert_equal "Anonymous", invoice.from
     assert_equal "1234", invoice.md5
     assert invoice.debit?, "invoice payment is debit"
+    assert_equal '2_4', invoice.payment_method
     assert_equal "invoice_facturae32_issued.xml", invoice.file_name
     # invoice lines
     assert_equal 3, invoice.invoice_lines.size
@@ -362,7 +363,7 @@ class InvoiceTest < ActiveSupport::TestCase
     assert_equal "invoice notes", invoice.extra_info
     assert invoice.debit?, "invoice payment is debit"
     assert_equal "1233333333333333", invoice.client.bank_account
-    assert_nil invoice.bank_info
+    assert_equal bank_infos(:bi4), invoice.bank_info
     # invoice lines
     assert_equal 1, invoice.invoice_lines.size
     il = invoice.invoice_lines.first
@@ -594,6 +595,8 @@ class InvoiceTest < ActiveSupport::TestCase
     assert_equal 'ES1234567890123456789012', invoice.fa_iban
     assert_equal 'ABCABCAAXXX',              invoice.fa_bank_code
     assert_equal 'Clauses',                  invoice.fa_clauses
+    assert invoice.transfer?, "invoice payment is transfer"
+    assert_match(/4_\d+/, invoice.payment_method)
   end
 
   test 'overrides client email with client_email_override' do
