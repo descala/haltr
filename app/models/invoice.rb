@@ -532,7 +532,6 @@ _INV
     fa_bank_code      = Haltr::Utils.get_xpath(doc,xpaths[:fa_bank_code])
     fa_clauses        = Haltr::Utils.get_xpath(doc,xpaths[:fa_clauses])
     fa_payment_method = Haltr::Utils.get_xpath(doc,xpaths[:fa_payment_method])
-    fa_payment_method = Haltr::Utils.payment_method_from_facturae(fa_payment_method)
 
     invoice, client, client_role, company, user = nil
 

@@ -591,7 +591,7 @@ class InvoiceTest < ActiveSupport::TestCase
     assert_equal '20000000000000000000',     invoice.fa_info
     assert_equal Date.new(2015,5,6),         invoice.fa_duedate
     assert_equal 372.08,                     invoice.fa_import
-    assert_equal 4,                          invoice.fa_payment_method
+    assert_equal '04',                       invoice.fa_payment_method
     assert_equal 'ES1234567890123456789012', invoice.fa_iban
     assert_equal 'ABCABCAAXXX',              invoice.fa_bank_code
     assert_equal 'Clauses',                  invoice.fa_clauses
