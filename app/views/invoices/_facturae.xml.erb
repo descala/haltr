@@ -147,62 +147,63 @@
            <%= call_hook(:facturae_administrative_centres) %>
          <% elsif @invoice.has_dir3_info? -%>
            <AdministrativeCentres>
-             <% unless @invoice.oficina_comptable.blank? -%>
-             <AdministrativeCentre>
-               <CentreCode><%= @invoice.oficina_comptable[0..9] %></CentreCode>
-               <RoleTypeCode>01</RoleTypeCode>
-               <% if @invoice.oficina_comptable_name.present? -%>
-                 <Name><%= @invoice.oficina_comptable_name[0...40] %></Name>
+             <% if @invoice.unidad_contratacion.blank? -%>
+               <% unless @invoice.oficina_comptable.blank? -%>
+               <AdministrativeCentre>
+                 <CentreCode><%= @invoice.oficina_comptable[0..9] %></CentreCode>
+                 <RoleTypeCode>01</RoleTypeCode>
+                 <% if @invoice.oficina_comptable_name.present? -%>
+                   <Name><%= @invoice.oficina_comptable_name[0...40] %></Name>
+                 <% end -%>
+                 <% oc = Dir3Entity.find_by_code(@invoice.oficina_comptable) -%>
+                 <%= render :partial => "invoices/address.facturae.xml", :locals => {:entity => ( oc and oc.full_address? ) ? oc : @invoice.client }%>
+                 <% if oc and oc.name.present? and format == "facturae32" -%>
+                 <CentreDescription><%= oc.name %></CentreDescription>
+                 <% end -%>
+               </AdministrativeCentre>
                <% end -%>
-               <% oc = Dir3Entity.find_by_code(@invoice.oficina_comptable) -%>
-               <%= render :partial => "invoices/address.facturae.xml", :locals => {:entity => ( oc and oc.full_address? ) ? oc : @invoice.client }%>
-               <% if oc and oc.name.present? and format == "facturae32" -%>
-               <CentreDescription><%= oc.name %></CentreDescription>
+               <% unless @invoice.organ_gestor.blank? -%>
+               <AdministrativeCentre>
+                 <CentreCode><%= @invoice.organ_gestor[0..9] %></CentreCode>
+                 <RoleTypeCode>02</RoleTypeCode>
+                 <% og = Dir3Entity.find_by_code(@invoice.organ_gestor) -%>
+                 <%= render :partial => "invoices/address.facturae.xml", :locals => {:entity => ( og and og.full_address? ) ? og : @invoice.client }%>
+                 <% if og and og.name.present? and format == "facturae32" -%>
+                 <CentreDescription><%= og.name %></CentreDescription>
+                 <% end -%>
+               </AdministrativeCentre>
                <% end -%>
-             </AdministrativeCentre>
-             <% end -%>
-             <% unless @invoice.organ_gestor.blank? -%>
-             <AdministrativeCentre>
-               <CentreCode><%= @invoice.organ_gestor[0..9] %></CentreCode>
-               <RoleTypeCode>02</RoleTypeCode>
-               <% og = Dir3Entity.find_by_code(@invoice.organ_gestor) -%>
-               <%= render :partial => "invoices/address.facturae.xml", :locals => {:entity => ( og and og.full_address? ) ? og : @invoice.client }%>
-               <% if og and og.name.present? and format == "facturae32" -%>
-               <CentreDescription><%= og.name %></CentreDescription>
+               <% unless @invoice.unitat_tramitadora.blank? -%>
+               <AdministrativeCentre>
+                 <CentreCode><%= @invoice.unitat_tramitadora[0..9] %></CentreCode>
+                 <RoleTypeCode>03</RoleTypeCode>
+                 <% if @invoice.unitat_tramitadora_name.present? -%>
+                   <Name><%= @invoice.unitat_tramitadora_name[0...40] %></Name>
+                 <% end -%>
+                 <% ut = Dir3Entity.find_by_code(@invoice.unitat_tramitadora) -%>
+                 <%= render :partial => "invoices/address.facturae.xml", :locals => {:entity => ( ut and ut.full_address? ) ? ut : @invoice.client }%>
+                 <% if ut and ut.name.present? and format == "facturae32" -%>
+                 <CentreDescription><%= ut.name %></CentreDescription>
+                 <% end -%>
+               </AdministrativeCentre>
                <% end -%>
-             </AdministrativeCentre>
-             <% end -%>
-             <% unless @invoice.unitat_tramitadora.blank? -%>
-             <AdministrativeCentre>
-               <CentreCode><%= @invoice.unitat_tramitadora[0..9] %></CentreCode>
-               <RoleTypeCode>03</RoleTypeCode>
-               <% if @invoice.unitat_tramitadora_name.present? -%>
-                 <Name><%= @invoice.unitat_tramitadora_name[0...40] %></Name>
+               <% unless @invoice.organ_proponent.blank? -%>
+               <AdministrativeCentre>
+                 <CentreCode><%= @invoice.organ_proponent[0..9] %></CentreCode>
+                 <RoleTypeCode>04</RoleTypeCode>
+                 <% op = Dir3Entity.find_by_code(@invoice.organ_proponent) -%>
+                 <%= render :partial => "invoices/address.facturae.xml", :locals => {:entity => ( op and op.full_address? ) ? op : @invoice.client }%>
+                 <% if op and op.name.present? and format == "facturae32" -%>
+                 <CentreDescription><%= op.name %></CentreDescription>
+                 <% else -%>
+                 <CentreDescription><%= @invoice.organ_proponent %></CentreDescription>
+                 <% end -%>
+               </AdministrativeCentre>
                <% end -%>
-               <% ut = Dir3Entity.find_by_code(@invoice.unitat_tramitadora) -%>
-               <%= render :partial => "invoices/address.facturae.xml", :locals => {:entity => ( ut and ut.full_address? ) ? ut : @invoice.client }%>
-               <% if ut and ut.name.present? and format == "facturae32" -%>
-               <CentreDescription><%= ut.name %></CentreDescription>
-               <% end -%>
-             </AdministrativeCentre>
-             <% end -%>
-             <% unless @invoice.organ_proponent.blank? -%>
-             <AdministrativeCentre>
-               <CentreCode><%= @invoice.organ_proponent[0..9] %></CentreCode>
-               <RoleTypeCode>04</RoleTypeCode>
-               <% op = Dir3Entity.find_by_code(@invoice.organ_proponent) -%>
-               <%= render :partial => "invoices/address.facturae.xml", :locals => {:entity => ( op and op.full_address? ) ? op : @invoice.client }%>
-               <% if op and op.name.present? and format == "facturae32" -%>
-               <CentreDescription><%= op.name %></CentreDescription>
-               <% else -%>
-               <CentreDescription><%= @invoice.organ_proponent %></CentreDescription>
-               <% end -%>
-             </AdministrativeCentre>
-             <% end -%>
-             <% unless @invoice.unidad_contratacion.blank? -%>
-             <AdministrativeCentre>
-               <CentreCode><%= @invoice.unidad_contratacion[0..9] %></CentreCode>
-             </AdministrativeCentre>
+             <% else -%>
+               <AdministrativeCentre>
+                 <CentreCode><%= @invoice.unidad_contratacion[0..9] %></CentreCode>
+               </AdministrativeCentre>
              <% end -%>
            </AdministrativeCentres>
          <% end -%>
