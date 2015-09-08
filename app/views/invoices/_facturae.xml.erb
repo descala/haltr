@@ -203,6 +203,13 @@
              <% else -%>
                <AdministrativeCentre>
                  <CentreCode><%= @invoice.unidad_contratacion[0..9] %></CentreCode>
+                 <AddressInSpain>
+                    <Address>.</Address>
+                    <PostCode>00000</PostCode>
+                    <Town>.</Town>
+                    <Province>.</Province>
+                    <CountryCode>ESP</CountryCode>
+                 </AddressInSpain>
                </AdministrativeCentre>
              <% end -%>
            </AdministrativeCentres>
