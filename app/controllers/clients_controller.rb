@@ -78,7 +78,11 @@ class ClientsController < ApplicationController
   end
 
   def create
-    @client = Client.new(params[:client].merge({:project=>@project}))
+    begin
+      @client = Client.new(params[:client].merge({:project=>@project}))
+    rescue
+      @client = Client.new
+    end
     respond_to do |format|
       if @client.save
         format.html {
