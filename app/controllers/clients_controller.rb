@@ -16,7 +16,7 @@ class ClientsController < ApplicationController
   before_filter :set_iso_countries_language
   before_filter :authorize
 
-  accept_api_auth :create, :show, :index, :destroy
+  accept_api_auth :create, :show, :index, :destroy, :update
 
   include CompanyFilter
   before_filter :check_for_company
@@ -100,15 +100,21 @@ class ClientsController < ApplicationController
   end
 
   def update
-    if @client.update_attributes(params[:client])
-      event = Event.new(:name=>'edited',:client=>@client,:user=>User.current)
-      # associate last created audits to this event
-      event.audits = @client.last_audits_without_event
-      event.save!
-      flash[:notice] = l(:notice_successful_update)
-      redirect_to :action => 'index', :project_id => @project
-    else
-      render :action => "edit"
+    respond_to do |format|
+      if @client.update_attributes(params[:client])
+        event = Event.new(:name=>'edited',:client=>@client,:user=>User.current)
+        # associate last created audits to this event
+        event.audits = @client.last_audits_without_event
+        event.save!
+        format.html {
+          flash[:notice] = l(:notice_successful_update)
+          redirect_to :action => 'index', :project_id => @project
+        }
+        format.api  { render_api_ok }
+      else
+        format.html { render :action => "edit" }
+        format.api  { render_validation_errors(@client) }
+      end
     end
   end
 
