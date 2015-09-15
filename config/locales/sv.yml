@@ -651,3 +651,9 @@ sv:
   fa_payment_method_17: 'Bank cheque'
   fa_payment_method_18: 'Cash on delivery'
   fa_payment_method_19: 'Bank card'
+  label_rounding_plural: 'Roundings'
+  field_rounding_method: 'Rounding type'
+  half_up_rounding: 'Round half up'
+  bankers_rounding: "Banker's rounding"
+  truncate_rounding: 'Truncate'
+  round_before_sum: 'Round before sum'

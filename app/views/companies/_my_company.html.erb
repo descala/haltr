@@ -105,6 +105,18 @@
     </div>
   </fieldset>
 
+  <fieldset class="tabular box">
+    <legend><%=l(:label_rounding_plural)%></legend>
+    <div class="seccio grup">
+      <p class="col span-1-de-3">
+      <%= f.select :rounding_method, Company.rounding_methods %>
+      </p>
+      <p class="col span-1-de-3" style="float: left; clear: left; margin-left: 0px;">
+      <span>&nbsp;<%= check_box(:company, :round_before_sum, {:no_label=>true}) %> <%= l(:round_before_sum) %></span>
+      </p>
+    </div>
+  </fieldset>
+
   <fieldset>
     <legend><%=l(:field_company_public)%></legend>
     <div class="seccio grup">

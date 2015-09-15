@@ -113,8 +113,8 @@ class Invoice < ActiveRecord::Base
   # Suma total de importes brutos de los detalles de la factura
   def gross_subtotal(tax_type=nil)
     Haltr::Utils.to_money(lines_with_tax(tax_type).collect { |line|
-      Haltr::Utils.to_money(line.gross_amount, currency)
-    }.sum, currency)
+      Haltr::Utils.to_money(line.gross_amount, currency, company.rounding_method)
+    }.sum, currency, company.rounding_method)
   end
 
   # only used in svefaktura: LineExtensionTotalAmount
@@ -263,8 +263,8 @@ class Invoice < ActiveRecord::Base
   # Total Importe Bruto + Recargos - Descuentos Globales
   def taxable_base(tax_type=nil)
     Haltr::Utils.to_money(lines_with_tax(tax_type).collect {|line|
-      Haltr::Utils.to_money(line.gross_amount, currency)
-    }.sum, currency) - discount_amount(tax_type)
+      Haltr::Utils.to_money(line.gross_amount, currency, company.rounding_method)
+    }.sum, currency, company.rounding_method) - discount_amount(tax_type)
   end
 
   def discount_amount(tax_type=nil)
@@ -503,7 +503,6 @@ _INV
     i_period_start   = Haltr::Utils.get_xpath(doc,xpaths[:invoicing_period_start])
     i_period_end     = Haltr::Utils.get_xpath(doc,xpaths[:invoicing_period_end])
     invoice_total    = Haltr::Utils.get_xpath(doc,xpaths[:invoice_total])
-    invoice_total    = Haltr::Utils.to_money(invoice_total, currency)
     invoice_import   = Haltr::Utils.get_xpath(doc,xpaths[:invoice_import])
     invoice_due_date = Haltr::Utils.get_xpath(doc,xpaths[:invoice_due_date])
     discount_percent = Haltr::Utils.get_xpath(doc,xpaths[:discount_percent])
@@ -553,6 +552,8 @@ _INV
       company ||= user.companies.where('taxcode like ?', "%#{buyer_taxcode}").first
       company ||= user.companies.where('? like concat("%", taxcode)', buyer_taxcode).first
     end
+
+    invoice_total = Haltr::Utils.to_money(invoice_total, currency, company.rounding_method)
 
     if company.nil?
       raise I18n.t :taxcodes_does_not_belong_to_self,
@@ -745,7 +746,7 @@ _INV
       :invoicing_period_end   => i_period_end,
       :total            => invoice_total,
       :currency         => currency,
-      :import           => Haltr::Utils.to_money(invoice_import, currency),
+      :import           => Haltr::Utils.to_money(invoice_import, currency, company.rounding_method),
       :due_date         => invoice_due_date,
       :project          => company.project,
       :terms            => "custom",
@@ -760,7 +761,7 @@ _INV
       :charge_amount    => charge,
       :charge_reason    => charge_reason,
       :accounting_cost  => accounting_cost,
-      :payments_on_account => Haltr::Utils.to_money(payments_on_account, currency),
+      :payments_on_account => Haltr::Utils.to_money(payments_on_account, currency, company.rounding_method),
       :fa_person_type    => fa_person_type,
       :fa_residence_type => fa_residence_type,
       :fa_taxcode        => fa_taxcode,

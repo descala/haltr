@@ -197,7 +197,7 @@
           <% if @invoice.has_line_charges? -%>
             <td class="item-price"><%= h line_price(line, 'charge') %></td>
           <% end -%>
-          <td class="line-total last"><%=h money(Haltr::Utils.to_money(line.taxable_base, @invoice.currency)) %></td>
+          <td class="line-total last"><%=h money(Haltr::Utils.to_money(line.taxable_base, @invoice.currency, @invoice.company.rounding_method)) %></td>
         </tr>
         <% unless line.notes.blank? -%>
           <tr>

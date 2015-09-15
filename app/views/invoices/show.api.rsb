@@ -46,7 +46,7 @@ api.invoice do
   api.array :lines do
     @invoice.invoice_lines.each do |line|
       api.line do
-        api.quantity line.quantity
+        api.quantity line.quantity.to_f
         api.description line.description
         api.price line.price
       end

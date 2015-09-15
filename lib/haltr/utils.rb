@@ -222,14 +222,21 @@ module Haltr
         val.to_f
       end
 
-      def to_money(import, currency=nil)
+      def to_money(import, currency=nil, rounding_method=nil)
         currency ||= Setting.plugin_haltr['default_currency']
         currency = Money::Currency.new(currency)
         import = float_parse(import.to_s)
         import = BigDecimal.new(import.to_s) * currency.subunit_to_unit
         if import % 1 != 0
-          # apply banker's rounding
-          import = import.round(0, BigDecimal::ROUND_HALF_EVEN)
+          rounding_method ||= :half_up
+          case rounding_method.to_sym
+          when :bankers
+            import = import.round(0, BigDecimal::ROUND_HALF_EVEN)
+          when :truncate
+            import = import.to_i
+          else # defaults to half_up
+            import = import.round(0)
+          end
         end
         Money.new(import.to_i, currency)
       end

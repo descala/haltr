@@ -15,8 +15,9 @@ class CompanyTest < ActiveSupport::TestCase
                     :project_id => 1,
                     :email => "email@example.com",
                     :postalcode => "08080",
-                    :country => "is")
-    assert c.valid?
+                    :country => "is",
+                    :rounding_method => 'half_up')
+    assert c.valid?, c.errors.full_messages.join(' ')
     c.country = "es"
     assert !c.valid?
     c.taxcode = "ESX4942978W"
