@@ -41,4 +41,9 @@ class CompanyTest < ActiveSupport::TestCase
     c.quote_mail_customization = ''
     c.quote_mail_body_es = 'Body'
   end
+
+  test 'company last_name never is blank' do
+    assert_equal '.', companies('company1').last_name
+  end
+
 end
