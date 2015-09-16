@@ -8,6 +8,7 @@
     <p class="col span-1-de-2">
     <%= f.label_for_field :name, :label => l('name_or_company') %>
     <%= f.text_field :name, :required => true, :no_label => true %>
+      <p style="float: right;"><%= check_box(:company, :persontype, {:no_label=>true}, 'F', 'J') %> <%= l(:self_employed) %></p>
     </p>
   </div>
   <div class="seccio grup">
@@ -101,7 +102,6 @@
         <%= link_to_add_association l(:button_add_tax), f, :taxes, 'data-association-insertion-node' => '#taxes', 'data-association-insertion-method' => 'append' %>
       </span>
       </p>
-      <p><%= check_box(:company, :persontype, {:no_label=>true}, 'F', 'J') %> <%= l(:self_employed) %></p>
     </div>
   </fieldset>
 

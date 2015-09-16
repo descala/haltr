@@ -38,6 +38,11 @@ es:
   default: false
   category: S
   facturae_id: '04'
+- name: IRPF
+  percent: -15.0
+  default: false
+  category: S
+  facturae_id: '04'
 - name: IGIC
   percent: 0.0
   default: false

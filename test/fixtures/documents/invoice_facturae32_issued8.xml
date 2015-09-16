@@ -218,11 +218,11 @@
         <Installment>
           <InstallmentDueDate>2012-06-01</InstallmentDueDate>
           <InstallmentAmount>671.00</InstallmentAmount>
-          <PaymentMeans>02</PaymentMeans>
-          <AccountToBeDebited>
+          <PaymentMeans>04</PaymentMeans>
+          <AccountToBeCredited>
             <IBAN>ES8023100001180000012345</IBAN>
             <BIC>biiiiiiiiic</BIC>
-          </AccountToBeDebited>
+          </AccountToBeCredited>
         </Installment>
       </PaymentDetails>
       <AdditionalData>

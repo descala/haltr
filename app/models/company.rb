@@ -59,10 +59,13 @@ class Company < ActiveRecord::Base
     name.split(" ").first
   end
 
+  # https://www.ingent.net/issues/5425
   def last_name
     ln = name.split(" ")
     ln.shift
     ln.join(" ")
+    ln = '.' if ln.blank?
+    ln
   end
 
   def currency=(v)

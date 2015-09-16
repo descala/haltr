@@ -550,7 +550,6 @@ _INV
     fa_bank_code      = Haltr::Utils.get_xpath(doc,xpaths[:fa_bank_code])
     fa_clauses        = Haltr::Utils.get_xpath(doc,xpaths[:fa_clauses])
     fa_payment_method = Haltr::Utils.get_xpath(doc,xpaths[:fa_payment_method])
-    fa_payment_method = Haltr::Utils.payment_method_from_facturae(fa_payment_method)
 
     invoice, client, client_role, company, user = nil
 
@@ -1009,6 +1008,9 @@ _INV
         client.set_if_blank(:bic,bic)
       end
       client.save!
+      # Use any of our bank_infos to receive the payment, let say the last one,
+      # because we dont have this information in the facturae xml
+      self.bank_info = company.bank_infos.last
     elsif (is_a? ReceivedInvoice and debit?) or (is_a? IssuedInvoice and transfer?)
       # account is our account, where we should be charged
       # or         our account, where client should transfer
