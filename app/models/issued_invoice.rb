@@ -257,7 +257,7 @@ class IssuedInvoice < InvoiceDocument
   def update_status
     update_imports
     if is_paid?
-      if (state?(:sent) or state?(:accepted) or state?(:allegedly_paid))
+      if can_paid?
         update_attribute(:state, :closed)
         Event.create(name: 'paid', invoice: self, user: User.current)
       end
