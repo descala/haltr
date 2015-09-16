@@ -1,0 +1,48 @@
+<div class="seccio grup">
+  <div class="col span-2-de-2">
+    <ul class="menu-rapid">
+      <li>
+      <%= link_to_if_authorized l(:label_client_office_new), new_client_client_office_path(@client), :class => 'icon icon-add' %>
+      </li>
+    </ul>
+  </div>
+</div>
+
+<!--taula-->
+<div class="seccio grup">
+  <div class="col span-2-de-2">
+    <table class="taula-1 list">
+      <thead>
+        <tr>
+          <th><%= l(:field_name) %></th>
+          <th><%= l(:field_city) %></th>
+          <th><%= l(:button_edit) %></th>
+          <th><%= l(:button_delete) %></th>
+        </tr>
+      </thead>
+      <tbody>
+        <% @client.client_offices.each do |office| -%>
+          <tr class="user <%= cycle("odd", "even") %>" />
+            <td><%=h office.name %></td>
+            <td><%=h office.city %></td>
+            <td align="center"><%= link_to_if_authorized l(:button_edit), edit_client_client_office_path(@client, office), :class => 'icon icon-edit editar' %></td>
+            <td align="center"><%= link_to_if_authorized l(:button_delete), {:action=>'destroy',:id=>office} , :confirm => l(:text_are_you_sure), :method => :delete, :class => 'icon icon-del eliminar' %></td>
+          </tr>
+        <% end -%>
+      </tbody>
+      <tfoot>
+        <tr>
+          <td colspan="6">&nbsp;</td>
+        </tr>
+      </tfoot>
+    </table>
+  </div>
+</div>
+<!--final taula-->
+
+<% html_title(l(:button_client_offices)) -%>
+
+<% content_for :sidebar do %>
+  <%= render_menu :companies_menu, @project %>
+<% end %>
+
