@@ -605,4 +605,14 @@ class InvoiceTest < ActiveSupport::TestCase
     assert_equal ["person1@example.com", "mail@client1.com"], invoices(:i13).recipient_emails
   end
 
+  test 'it checks round_before_sum on company' do
+    i = invoices(:i15)
+    assert_equal false, i.company.round_before_sum
+    assert_equal 1828.07, i.tax_amount.dollars
+    assert_equal 1828.07, i.tax_amount(i.taxes.first).dollars
+    i.company.round_before_sum = true
+    assert_equal 1828.06, i.tax_amount.dollars
+    assert_equal 1828.06, i.tax_amount(i.taxes.first).dollars
+  end
+
 end

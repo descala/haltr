@@ -319,3 +319,15 @@ i14:
   project_id: 2
   state: accepted
   client_email_override: override@example.com
+
+i15:
+  id: 15
+  type: IssuedInvoice
+  client_id: 1
+  currency: EUR
+  date: 2014-12-16
+  due_date: 2015-01-16
+  number: "2014/i14"
+  payment_method: 2
+  project_id: 2
+  state: accepted
