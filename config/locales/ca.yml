@@ -667,3 +667,6 @@ ca:
   fa_payment_method_17: 'Xec bancari'
   fa_payment_method_18: 'Pagament contra reemborsament'
   fa_payment_method_19: 'Pagament mitjançant targeta'
+  label_client_office_new: Nova sucursal
+  label_client_office_plural: Sucursals
+  label_client_office: Sucursal

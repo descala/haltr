@@ -33,6 +33,19 @@ class ClientOfficesController < ApplicationController
     end
   end
 
+  def edit
+    @client_office = @client.client_offices.find(params[:id])
+  end
+
+  def update
+    @client_office = @client.client_offices.find(params[:id])
+    if @client_office.update_attributes(params[:client_office])
+      redirect_to client_client_offices_path(@client), notice: l(:notice_successful_update)
+    else
+      render action: :edit
+    end
+  end
+
   def destroy
     @client.client_offices.find(params[:id]).destroy rescue nil
     redirect_to client_client_offices_path(@client)

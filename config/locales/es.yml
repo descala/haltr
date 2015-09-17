@@ -669,3 +669,6 @@ es:
   fa_payment_method_17: 'Cheque bancario'
   fa_payment_method_18: 'Pago contra reembolso'
   fa_payment_method_19: 'Pago mediante tarjeta'
+  label_client_office_new: Nueva sucursal
+  label_client_office_plural: Sucursales
+  label_client_office: Sucursal
