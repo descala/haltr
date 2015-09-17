@@ -114,3 +114,13 @@
   </p>
 </div>
 
+<% if @client.client_offices.any? -%>
+
+<div class="seccio grup">
+  <p class="col span-1-de-3">
+  <label for="client_office_id"><%= l(:label_client_office) %></label>
+  <%= select :invoice, :client_office_id, @client.client_offices.collect {|office| [office.name, office.id] }, {selected: @invoice.client_office_id, include_blank: true} %>
+  </p>
+</div>
+
+<% end -%>

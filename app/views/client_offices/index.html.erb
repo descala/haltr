@@ -1,10 +1,13 @@
 <div class="seccio grup">
-  <div class="col span-2-de-2">
+  <div class="col span-1-de-2">
     <ul class="menu-rapid">
       <li>
       <%= link_to_if_authorized l(:label_client_office_new), new_client_client_office_path(@client), :class => 'icon icon-add' %>
       </li>
     </ul>
+  </div>
+  <div class="col span-1-de-2">
+    <h1 style="float: right;"><%= @client.name %> - <%= l(:label_client_office_plural) %></h1>
   </div>
 </div>
 
@@ -40,7 +43,7 @@
 </div>
 <!--final taula-->
 
-<% html_title(l(:button_client_offices)) -%>
+<% html_title(l(:label_client_office_plural)) -%>
 
 <% content_for :sidebar do %>
   <%= render_menu :companies_menu, @project %>

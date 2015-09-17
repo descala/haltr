@@ -88,7 +88,7 @@
   <% unless @client.new_record? -%>
   <div class="vcard client">
   <div class="client-info">
-    <h3><%= client_name_with_link @client %></h3>
+    <h3><%= client_name_with_link @client %><%= " - #{@invoice.client_office.name}" if @invoice.client_office %></h3>
     <address class="adr">
       <div class="street-address"><%=h @client.address %></div>
       <div class="street-address"><%=h @client.address2 %></div>

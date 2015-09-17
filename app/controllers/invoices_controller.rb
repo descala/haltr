@@ -174,6 +174,9 @@ class InvoicesController < ApplicationController
     end
     @client = @invoice.client
     @invoice.project = @project
+
+    @invoice.client_office = nil unless @client.client_offices.any? {|office| office.id == @invoice.client_office_id }
+
     if @invoice.save
       respond_to do |format|
         format.html {
@@ -234,6 +237,8 @@ class InvoicesController < ApplicationController
     # mark as "_destroy" all taxes with an empty tax code
     # and copy global "exempt comment" to all exempt taxes
     parsed_params = parse_invoice_params
+
+    @invoice.client_office = nil unless Client.find(params[:invoice][:client_id]).client_offices.any? {|office| office.id == @invoice.client_office_id }
 
     if @invoice.update_attributes(parsed_params)
       event = Event.new(:name=>'edited',:invoice=>@invoice,:user=>User.current)
@@ -762,6 +767,12 @@ class InvoicesController < ApplicationController
         taxcode2 = "#{@client.country}#{@client.taxcode}"
       end
       @external_company = ExternalCompany.where('taxcode in (?, ?)', @client.taxcode, taxcode2).first
+    end
+    if @invoice.client_office
+      # overwrite client attributes with its office
+      ClientOffice::CLIENT_FIELDS.each do |f|
+        @client[f] = @invoice.client_office.send(f)
+      end
     end
   rescue ActiveRecord::RecordNotFound
     render_404
