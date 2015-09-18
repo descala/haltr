@@ -919,19 +919,20 @@ _INV
 
     Redmine::Hook.call_hook(:model_invoice_import_before_save, :invoice=>invoice)
 
-    if keep_original
+    if keep_original and validate
       begin
-        if validate
-          invoice.save!
-        else
-          invoice.save(validate: false)
-        end
+        invoice.save!
       rescue ActiveRecord::RecordInvalid
         raise invoice.errors.full_messages.join(". ")
       end
     else
-      invoice.save(:validate=>false)
+      # prevent duplicate invoices #5433
+      if company.project.invoices.any? {|i| i.number == invoice_number }
+        raise "#{I18n.t :field_number} #{I18n.t 'activerecord.errors.messages.taken'}"
+      end
+      invoice.save(validate: false)
     end
+
     logger.info "created new invoice with id #{invoice.id} for company #{company.name}. time=#{Time.now}"
     return invoice
   rescue
