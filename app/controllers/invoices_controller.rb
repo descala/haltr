@@ -45,6 +45,11 @@ class InvoicesController < ApplicationController
 
     invoices = @project.issued_invoices.includes(:client)
 
+    # additional invoice filters
+    if Redmine::Hook.call_hook(:additional_invoice_filters,:project=>@project,:invoices=>invoices).any?
+      invoices = Redmine::Hook.call_hook(:additional_invoice_filters,:project=>@project,:invoices=>invoices)[0]
+    end
+
     if params[:invoices]
       invoices = invoices.where(["invoices.id in (?)",params[:invoices]])
     end

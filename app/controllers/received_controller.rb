@@ -8,6 +8,11 @@ class ReceivedController < InvoicesController
 
     invoices = @project.invoices.includes(:client).scoped.where("type = ?","ReceivedInvoice")
 
+    # additional invoice filters
+    if Redmine::Hook.call_hook(:additional_invoice_filters,:project=>@project,:invoices=>invoices).any?
+      invoices = Redmine::Hook.call_hook(:additional_invoice_filters,:project=>@project,:invoices=>invoices)[0]
+    end
+
     unless params["state_all"] == "1"
       statelist=[]
       %w(new sending sent error closed discarded).each do |state|
