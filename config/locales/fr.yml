@@ -649,3 +649,6 @@ fr:
   fa_payment_method_17: 'Bank cheque'
   fa_payment_method_18: 'Cash on delivery'
   fa_payment_method_19: 'Bank card'
+  label_client_office_new: Nouvelle succursale
+  label_client_offices: Succursales
+  label_client_office: Succursale

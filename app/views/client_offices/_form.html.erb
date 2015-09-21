@@ -1,0 +1,44 @@
+<%= error_messages_for 'client_office' %>
+
+<fieldset class="tabular box">
+  <legend><%=l(@client_office.new_record? ? :label_client_office_new : :label_client_office)%></legend>
+
+  <div class="seccio grup">
+    <p class="col span-1-de-2">
+      <%= f.text_field :name, :required => true %>
+    </p>
+    <p class="col span-1-de-2">
+      <%= f.text_field :email%>
+    </p>
+  </div>
+
+  <div class="seccio grup">
+    <p class="col span-2-de-2">
+      <%= f.text_field :address %>
+    </p>
+  </div>
+
+  <div class="seccio grup">
+    <p class="col span-2-de-2">
+      <%= f.text_field :address2 %>
+    </p>
+  </div>
+
+  <div class="seccio grup">
+    <p class="col span-1-de-4">
+    <%= f.text_field :postalcode %>
+    </p>
+    <p class="col span-1-de-4">
+    <%= f.text_field :city %>
+    </p>
+    <p class="col span-1-de-4">
+    <%= f.text_field :province %>
+    </p>
+    <p class="col span-1-de-4">
+      <%= f.label_for_field :country %>
+      <%= f.iso_country_select :country, [:es] %>
+    </p>
+  </div>
+
+
+</fieldset>
