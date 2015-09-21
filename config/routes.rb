@@ -15,6 +15,7 @@ match 'invoices/total_chart' => 'charts#invoice_total', :via => :get, :as => :in
 resources :projects do
   resources :clients, :only => [:index, :new, :create]
   match :people, :controller => 'people', :action => 'index', :via => :get
+  resources :client_offices, :only => [:index, :new, :create, :edit, :update, :destroy]
   match 'companies/linked_to_mine', :controller => 'companies', :action => 'linked_to_mine', :via => :get
   match 'my_company',    :controller => 'companies', :action => 'my_company',    :via => :get
   match 'bank_info',     :controller => 'companies', :action => 'bank_info',     :via => :get

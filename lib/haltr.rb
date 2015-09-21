@@ -15,6 +15,7 @@ Redmine::MenuManager.map :companies_menu do |menu|
     Client.all(:conditions => ['company_id = ?', p.company]).any?
   }
   menu.push :people, {:controller=>'people', :action => 'index' }, :param => :project_id
+  menu.push :client_offices , {:controller=>'client_offices', :action => 'index' }, :param => :project_id
 end
 
 Redmine::MenuManager.map :my_company_menu do |menu|
