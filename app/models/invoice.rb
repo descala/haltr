@@ -43,7 +43,7 @@ class Invoice < ActiveRecord::Base
   has_many :comments, :as => :commented, :dependent => :delete_all, :order => "created_on"
   belongs_to :client_office
   validates_inclusion_of :client_office_id, in: [nil], unless: Proc.new {|i|
-    i.client.client_offices.any? {|o| o.id == i.client_office_id }
+    i.client and i.client.client_offices.any? {|o| o.id == i.client_office_id }
   }
 
   validates_presence_of :client, :date, :currency, :project_id, :unless => Proc.new {|i| i.type == "ReceivedInvoice" }
