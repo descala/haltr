@@ -180,7 +180,7 @@ class InvoicesController < ApplicationController
     @client = @invoice.client
     @invoice.project = @project
 
-    @invoice.client_office = nil unless @client.client_offices.any? {|office| office.id == @invoice.client_office_id }
+    @invoice.client_office = nil unless @client and @client.client_offices.any? {|office| office.id == @invoice.client_office_id }
 
     if @invoice.save
       respond_to do |format|
