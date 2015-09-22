@@ -38,7 +38,7 @@ class ClientOfficesController < ApplicationController
   def new
     @client_office = ClientOffice.new(
       # fill with client data
-      Hash[%w(address address2 city province postalcode country email).map {|sym| [sym, @client[sym]]}]
+      Hash[ClientOffice::CLIENT_FIELDS.map {|sym| [sym, @client[sym]]}]
     )
     @client_office.client = @client
   end
