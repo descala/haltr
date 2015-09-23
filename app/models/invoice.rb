@@ -570,13 +570,13 @@ _INV
       company ||= user.companies.where('? like concat("%", taxcode)', buyer_taxcode).first
     end
 
-    invoice_total = Haltr::Utils.to_money(invoice_total, currency, company.rounding_method)
-
     if company.nil?
       raise I18n.t :taxcodes_does_not_belong_to_self,
         :tcs => "#{buyer_taxcode} - #{seller_taxcode}",
         :tc  => user.companies.collect{|c|c.taxcode}.join(',')
     end
+
+    invoice_total = Haltr::Utils.to_money(invoice_total, currency, company.rounding_method)
 
     # check if it is a received_invoice or an issued_invoice.
     if company.taxcode.include?(buyer_taxcode) or buyer_taxcode.include?(company.taxcode)
