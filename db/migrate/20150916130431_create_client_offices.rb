@@ -14,6 +14,7 @@ class CreateClientOffices < ActiveRecord::Migration
 
       t.timestamps
     end
+    add_index :client_offices, :client_id
   end
 
 end
