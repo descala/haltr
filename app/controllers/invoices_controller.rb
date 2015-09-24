@@ -161,6 +161,11 @@ class InvoicesController < ApplicationController
     if params[:created_client_id]
       @created_client = Client.find params[:created_client_id]
     end
+    if @invoice.partially_amended_id
+      @to_amend = Invoice.find @invoice.partially_amended_id rescue nil
+    else
+      @to_amend = Invoice.find_by_amend_id @invoice.id
+    end
   end
 
   def create
@@ -182,7 +187,23 @@ class InvoicesController < ApplicationController
 
     @invoice.client_office = nil unless @client and @client.client_offices.any? {|office| office.id == @invoice.client_office_id }
 
+    if params[:to_amend] and params[:amend_type]
+      @to_amend = @project.invoices.find params[:to_amend]
+      case params[:amend_type]
+      when 'total'
+        @to_amend.amend = @invoice
+      when 'partial'
+        @invoice.partially_amended_id = @to_amend.id
+      else
+        raise "unknown amend type: #{params[:amend_type]}"
+      end
+    end
+
     if @invoice.save
+      if @to_amend and params[:amend_type] == 'total'
+        @to_amend.save(validate: false)
+        @to_amend.amend_and_close
+      end
       respond_to do |format|
         format.html {
           flash[:notice] = l(:notice_successful_create)
@@ -225,7 +246,7 @@ class InvoicesController < ApplicationController
       @client ||= Client.new
 
       respond_to do |format|
-        format.html { render :action => 'new' }
+        format.html { render :action => (@to_amend ? 'amend_for_invoice' : 'new') }
         format.api { render_validation_errors(@invoice) }
       end
     end
@@ -669,8 +690,18 @@ class InvoicesController < ApplicationController
   end
 
   def amend_for_invoice
-    amend = @invoice.create_amend
-    redirect_to :action => 'edit', :id => amend
+    @to_amend = @invoice
+    @invoice = IssuedInvoice.new(
+      @to_amend.attributes.update(
+        state: 'new',
+        number: "#{@to_amend.number}-R"),
+        amend_reason_code: '15'
+    )
+    @to_amend.invoice_lines.each do |line|
+      il = line.dup
+      il.taxes = line.taxes.collect {|tax| tax.dup }
+      @invoice.invoice_lines << il
+    end
   end
 
   def mail

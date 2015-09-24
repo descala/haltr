@@ -1,9 +1,16 @@
 <div class="invoice-header-container">
 <div id="amends">
-<% if @invoice.amend and @invoice.amend != @invoice -%>
-  <h3><%=l(:amended_by_invoice, :link => link_to_if_authorized("#{l(:label_amendment_invoice)} #{@invoice.amend.number}",
-                                                 :controller => 'invoices', :action=>'show', :id=>@invoice.amend)).html_safe %></h3>
-    <% end -%>
+  <% if @invoice.amend and @invoice.amend != @invoice -%>
+    <h3><%=l(:amended_by_invoice, :link => link_to_if_authorized("#{l(:label_amendment_invoice)} #{@invoice.amend.number}",
+                                                                 :controller => 'invoices', :action=>'show', :id=>@invoice.amend)).html_safe %></h3>
+  <% elsif @invoice.partial_amends.any? -%>
+    <h3><%=l(:partially_amended_by_invoices) %>:
+      <% @invoice.partial_amends.each do |amend| -%>
+        <%=link_to_if_authorized("#{l(:label_amendment_invoice)} #{amend.number}", :controller => 'invoices', :action=>'show', :id=>amend) %>
+        <%= " - " unless @invoice.partial_amends.last == amend %>
+      <% end -%>
+    </h3>
+  <% end -%>
   </div>
   <!-- Vendor Info -->
   <div class="vcard vendor">
@@ -50,11 +57,13 @@
   <% end -%>
   <div class="invoice-info">
   <span class="date"><%=h l(:field_date)%> <strong><%=h format_date @invoice.date %></strong></span><br/>
-  <% if @invoice.amend_of -%>
-  <% if @invoice.amend_of == @invoice -%>
+  <% if @invoice.is_amend? -%>
+  <% if @invoice.amend_of and @invoice.amend_of == @invoice -%>
     <span class="invoice-terms"><%=h l(:label_amended_invoice)%>: ?</span><br/>
-  <% else -%>
+  <% elsif @invoice.amend_of -%>
     <span class="invoice-terms"><%=h l(:label_amended_invoice)%>: <%= link_to_if_authorized @invoice.amend_of.number,{:controller => 'invoices', :action => 'show', :id => @invoice.amend_of} %></span><br/>
+  <% else -%>
+    <span class="invoice-terms"><%=h l(:label_amended_invoice)%>: <%= link_to_if_authorized @invoice.partial_amend_of.number,{:controller => 'invoices', :action => 'show', :id => @invoice.partial_amend_of} %></span><br/>
   <% end -%>
   <% end -%>
   <% unless @invoice.due_date.blank? -%>

@@ -5,25 +5,54 @@
 <fieldset class="tabular box">
   <legend><%=l(:invoice_data)%></legend>
 
-  <div class="seccio grup">
-    <p class="col span-2-de-2" id="client_select">
-    <%= render :partial=>'invoices/clients',
-      :locals => { :selected => @created_client || @invoice.client_id } %>
+  <% if @to_amend -%>
+    <div class="seccio grup">
+      <p class="col span-1-de-2">
+      <span>
+        <span><%= l(:amended_invoice, link: @to_amend.number) %></span>
+      </span>
+      </p>
+      <p class="col span-1-de-2">
+      <span><%= l(:client) %>:
+        <span><%= @invoice.client %></span>
+      </span>
+      </p>
+    </div>
+
+    <div class="seccio grup">
+      <p class="col span-1-de-2">
+      <%= radio_button_tag 'amend_type', 'total', !@invoice.partially_amended_id.present?, disabled: !@invoice.new_record? %> <%= label_tag(:amend_type_total, l(:amend_total), style: 'display: inline') %>
+      <%= radio_button_tag 'amend_type', 'partial', @invoice.partially_amended_id.present?, style: 'margin-left: 20px;', disabled: !@invoice.new_record? %> <%= label_tag(:amend_type_partial, l(:amend_partial), style: 'display: inline;') %>
+      <%= hidden_field_tag 'to_amend', @to_amend.id %>
+      <%= f.hidden_field 'client_id', value: @invoice.client_id %>
+      </p>
+      <p class="col span-1-de-2">
+      <%= f.select :amend_reason_code, Invoice.amend_reason_codes.collect {|code| [l("amend_reason_#{code}"), code] } %>
+      </p>
+    </div>
+
+  <% else -%>
+
+    <div class="seccio grup">
+      <p class="col span-2-de-2" id="client_select">
+      <%= render :partial=>'invoices/clients',
+        :locals => { :selected => @created_client || @invoice.client_id } %>
     </p>
-  </div>
+    </div>
+  <% end -%>
 
   <div class="seccio grup">
     <p class="col span-2-de-6">
       <%= f.text_field :date, :size => 10, :required => true %><%= calendar_for('invoice_date') %>
     </p>
-    <p class="col span-<%= (@invoice.amend_of || @invoice.series_code.present? || User.current.allowed_to?(:view_invoice_extra_fields, @project)) ? '1' : '2' %>-de-6">
+    <p class="col span-<%= (@invoice.is_amend? || @invoice.series_code.present? || User.current.allowed_to?(:view_invoice_extra_fields, @project)) ? '1' : '2' %>-de-6">
       <% if controller.controller_name == "invoice_templates" -%>
         <%= f.select :frequency, frequencies_for_select, :required => true %>
       <% else -%>
         <%= f.text_field :number, :size => 10, :required => true, :label => l(:field_invoice_number) %> <span class="text"><%= "#{l(:label_last_invoice_number)}: #{IssuedInvoice.last_number(@project)}" if @project.issued_invoices.any?%></span>
       <% end -%>
     </p>
-    <% if @invoice.amend_of || @invoice.series_code.present? || User.current.allowed_to?(:view_invoice_extra_fields, @project) -%>
+    <% if @invoice.is_amend? || @invoice.series_code.present? || User.current.allowed_to?(:view_invoice_extra_fields, @project) -%>
       <p class="col span-1-de-6">
       <%= f.text_field :series_code %>
       </p>

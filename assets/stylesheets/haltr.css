@@ -107,7 +107,7 @@ th.money, td.money, .money{
   margin: 30px;
 }
 
-.amended {
+.amended, .amended td a {
   text-decoration: line-through;
 } 
 

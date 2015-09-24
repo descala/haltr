@@ -232,18 +232,24 @@
             <InvoiceSeriesCode><%=h @invoice.series_code%></InvoiceSeriesCode>
 <% end -%>
             <InvoiceDocumentType>FC</InvoiceDocumentType>
-            <InvoiceClass><%= @invoice.amend_of ? "OR" : "OO" %></InvoiceClass>
-<% if @invoice.amend_of -%>
+            <InvoiceClass><%= @invoice.is_amend? ? "OR" : "OO" %></InvoiceClass>
+<% if @invoice.is_amend? -%>
+  <% amended_invoice = @invoice.partial_amend_of ? @invoice.partial_amend_of : @invoice.amend_of -%>
             <Corrective>
-              <InvoiceNumber><%= @invoice.amend_of != @invoice ? @invoice.amend_of.number : '?'%></InvoiceNumber>
-              <ReasonCode>15</ReasonCode>
-              <ReasonDescription>Literales legales</ReasonDescription>
+              <InvoiceNumber><%= amended_invoice != @invoice ? amended_invoice.number : '?'%></InvoiceNumber>
+              <ReasonCode><%= @invoice.amend_reason_code %></ReasonCode>
+              <ReasonDescription><%= l("amend_reason_#{@invoice.amend_reason_code}", locale: :es) %></ReasonDescription>
               <TaxPeriod>
-                <StartDate><%=@invoice.amend_of.date%></StartDate>
-                <EndDate><%=@invoice.amend_of.date%></EndDate>
+                <StartDate><%=amended_invoice.date%></StartDate>
+                <EndDate><%=amended_invoice.date%></EndDate>
               </TaxPeriod>
+              <% if @invoice.partially_amended_id -%>
+              <CorrectionMethod>02</CorrectionMethod>
+              <CorrectionMethodDescription>Rectificación por diferencias</CorrectionMethodDescription>
+              <% else -%>
               <CorrectionMethod>01</CorrectionMethod>
               <CorrectionMethodDescription>Rectificación íntegra</CorrectionMethodDescription>
+              <% end -%>
               <AdditionalReasonDescription><%=@invoice.extra_info%></AdditionalReasonDescription>
             </Corrective>
 <% end -%>
