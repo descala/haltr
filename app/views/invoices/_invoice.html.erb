@@ -324,16 +324,20 @@
 </div>
 
 <div class="notes">
-<% if !@invoice.extra_info.blank? or
-     @invoice.taxes.collect {|t| t if t.exempt? and !t.comment.blank? }.compact.any? -%>
+<% if @invoice.extra_info.present? or
+    @invoice.taxes.collect {|t| t if t.exempt? and !t.comment.blank? }.compact.any? or
+    @invoice.amend_reason.present? -%>
     <h3><%=h l(:field_extra_info)%></h3>
-    <% unless @invoice.extra_info.blank? -%>
+    <% if @invoice.extra_info.present? -%>
       <span class="invoice-terms"><%= simple_format(h @invoice.extra_info) %></span>
     <% end -%>
     <% @invoice.taxes_uniq.each do |t| -%>
       <% next unless t.exempt? and !t.comment.blank? -%>
       <span class="invoice-terms"><%= simple_format(h "#{tax_name(t)}: #{t.comment}") %></span>
     <% end -%><br/>
+    <% if @invoice.amend_reason.present? -%>
+      <span class="invoice-terms"><%= t :field_amend_reason %>: <%= t("amend_reason_#{@invoice.amend_reason}", default: @invoice.amend_reason) %></span>
+    <% end -%>
 <% end -%>
 </div>
 
