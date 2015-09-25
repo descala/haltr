@@ -163,8 +163,10 @@ class InvoicesController < ApplicationController
     end
     if @invoice.partially_amended_id
       @to_amend = Invoice.find @invoice.partially_amended_id rescue nil
+      @amend_type = 'partial'
     else
       @to_amend = Invoice.find_by_amend_id @invoice.id
+      @amend_type = 'total'
     end
   end
 
@@ -254,6 +256,13 @@ class InvoicesController < ApplicationController
   end
 
   def update
+    if @invoice.partially_amended_id
+      @to_amend = Invoice.find @invoice.partially_amended_id rescue nil
+      @amend_type = 'partial'
+    else
+      @to_amend = Invoice.find_by_amend_id @invoice.id
+      @amend_type = 'total'
+    end
     @invoice.save_attachments(params[:attachments] || (params[:invoice] && params[:invoice][:uploads]))
 
     #TODO: need to access invoice taxes before update_attributes, if not
