@@ -2,6 +2,10 @@
 <%= error_messages_for 'client' %>
 <%= f.hidden_field :quote_id %>
 
+<%= hidden_field_tag 'to_amend', @amend_type %>
+<%= hidden_field_tag 'to_amend', @to_amend.id %>
+<%= f.hidden_field 'client_id', value: @invoice.client_id %>
+
 <fieldset class="tabular box">
   <legend><%=l(:invoice_data)%></legend>
 
@@ -9,26 +13,17 @@
     <div class="seccio grup">
       <p class="col span-1-de-2">
       <span>
-        <span><%= l(:amended_invoice, link: @to_amend.number) %></span>
+        <span><%= l(:amended_invoice, link: @to_amend.number) %> (<%= l("amend_#{@amend_type}") %>)</span><br />
+        <span><%= l(:client) %>:
+          <span><%= @invoice.client %></span>
+        </span>
       </span>
       </p>
-      <p class="col span-1-de-2">
-      <span><%= l(:client) %>:
-        <span><%= @invoice.client %></span>
-      </span>
-      </p>
-    </div>
-
-    <div class="seccio grup">
-      <p class="col span-1-de-2">
-      <%= radio_button_tag 'amend_type', 'total', !@invoice.partially_amended_id.present?, disabled: !@invoice.new_record? %> <%= label_tag(:amend_type_total, l(:amend_total), style: 'display: inline') %>
-      <%= radio_button_tag 'amend_type', 'partial', @invoice.partially_amended_id.present?, style: 'margin-left: 20px;', disabled: !@invoice.new_record? %> <%= label_tag(:amend_type_partial, l(:amend_partial), style: 'display: inline;') %>
-      <%= hidden_field_tag 'to_amend', @to_amend.id %>
-      <%= f.hidden_field 'client_id', value: @invoice.client_id %>
-      </p>
-      <p class="col span-1-de-2">
-      <%= f.select :amend_reason_code, Invoice.amend_reason_codes.collect {|code| [l("amend_reason_#{code}"), code] } %>
-      </p>
+      <% if @amend_type == 'partial' -%>
+        <p class="col span-1-de-2">
+        <%= f.select :amend_reason_code, Invoice.amend_reason_codes.collect {|code| [l("amend_reason_#{code}"), code] } %>
+        </p>
+      <% end -%>
     </div>
 
   <% else -%>

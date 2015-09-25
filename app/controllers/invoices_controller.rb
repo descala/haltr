@@ -691,6 +691,7 @@ class InvoicesController < ApplicationController
 
   def amend_for_invoice
     @to_amend = @invoice
+    @amend_type = params[:amend_type]
     @invoice = IssuedInvoice.new(
       @to_amend.attributes.update(
         state: 'new',

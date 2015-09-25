@@ -39,7 +39,7 @@ th.money, td.money, .money{
     float: none;
     border-bottom: dashed 1px #FFF;
     padding: 0;
-    margin: 0 10px !important;
+    margin: 0 0px !important;
     display: block;
     font-size: 12px;
 }
@@ -48,13 +48,35 @@ th.money, td.money, .money{
     background: none;
     border-radius: none;
     box-shadow: none;
-    padding: 5px 0px;
+    padding: 5px 20px;
     margin: 0;
     text-shadow: 0 1px 0 #FFFFFF;
     font-size: 14px;
     font-weight: 500;
 }
-
+.menu-rapid ul li.submenu {
+  white-space: nowrap;
+}
+.menu-rapid ul ul {
+  display:none;
+  position:absolute;
+  top:100%;
+  left:0;
+  background:#fff;
+  padding:0;
+}
+.menu-rapid  ul ul li {
+  float:none;
+}
+.menu-rapid ul ul a {
+  line-height:120%;
+  padding:10px 15px;
+}
+.menu-rapid ul li:hover > ul {
+  display:block;
+  margin-left: 241px;
+  margin-top: -110px;
+}
 .invoice-navigator {
   float: right !important;
 }
