@@ -14,7 +14,7 @@
           <span><%= @invoice.client %></span>
         </span>
       </span>
-      <%= hidden_field_tag 'to_amend', @amend_type %>
+      <%= hidden_field_tag 'amend_type', @amend_type %>
       <%= hidden_field_tag 'to_amend', @to_amend.id %>
       <%= f.hidden_field 'client_id', value: @invoice.client_id %>
       </p>
