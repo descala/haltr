@@ -674,7 +674,7 @@ es:
   label_client_office: Sede
   amend_total: Sustitutiva
   amend_partial: Por diferencias
-  field_amend_reason_code: Motivo de rectificación
+  field_amend_reason: Motivo de rectificación
   amend_reason_01: "Número de la factura"
   amend_reason_02: "Serie de la factura"
   amend_reason_03: "Fecha expedición"

@@ -192,6 +192,7 @@ class InvoicesController < ApplicationController
       case params[:amend_type]
       when 'total'
         @to_amend.amend = @invoice
+        @invoice.amend_reason = '015'
       when 'partial'
         @invoice.partially_amended_id = @to_amend.id
       else
@@ -696,7 +697,7 @@ class InvoicesController < ApplicationController
       @to_amend.attributes.update(
         state: 'new',
         number: "#{@to_amend.number}-R"),
-        amend_reason_code: '15'
+        amend_reason: '15'
     )
     @to_amend.invoice_lines.each do |line|
       il = line.dup

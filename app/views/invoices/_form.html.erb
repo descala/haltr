@@ -2,10 +2,6 @@
 <%= error_messages_for 'client' %>
 <%= f.hidden_field :quote_id %>
 
-<%= hidden_field_tag 'to_amend', @amend_type %>
-<%= hidden_field_tag 'to_amend', @to_amend.id %>
-<%= f.hidden_field 'client_id', value: @invoice.client_id %>
-
 <fieldset class="tabular box">
   <legend><%=l(:invoice_data)%></legend>
 
@@ -18,10 +14,17 @@
           <span><%= @invoice.client %></span>
         </span>
       </span>
+      <%= hidden_field_tag 'to_amend', @amend_type %>
+      <%= hidden_field_tag 'to_amend', @to_amend.id %>
+      <%= f.hidden_field 'client_id', value: @invoice.client_id %>
       </p>
       <% if @amend_type == 'partial' -%>
         <p class="col span-1-de-2">
-        <%= f.select :amend_reason_code, Invoice.amend_reason_codes.collect {|code| [l("amend_reason_#{code}"), code] } %>
+        <% if ExportChannels.format(@invoice.client.invoice_format) =~ /^facturae/ -%>
+          <%= f.select :amend_reason, Invoice.amend_reason_codes.collect {|code| [l("amend_reason_#{code}"), code] } %>
+        <% else -%>
+          <%= f.text_field :amend_reason %>
+        <% end -%>
         </p>
       <% end -%>
     </div>

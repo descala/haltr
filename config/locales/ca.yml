@@ -672,7 +672,7 @@ ca:
   label_client_office: Seu
   amend_total: Substitutiva
   amend_partial: Per diferències
-  field_amend_reason_code: Motiu de rectificació
+  field_amend_reason: Motiu de rectificació
   amend_reason_01: "Número de la factura"
   amend_reason_02: "Serie de la factura"
   amend_reason_03: "Fecha expedición"

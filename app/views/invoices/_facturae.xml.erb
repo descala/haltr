@@ -237,8 +237,8 @@
   <% amended_invoice = @invoice.partial_amend_of ? @invoice.partial_amend_of : @invoice.amend_of -%>
             <Corrective>
               <InvoiceNumber><%= amended_invoice != @invoice ? amended_invoice.number : '?'%></InvoiceNumber>
-              <ReasonCode><%= @invoice.amend_reason_code %></ReasonCode>
-              <ReasonDescription><%= l("amend_reason_#{@invoice.amend_reason_code}", locale: :es) %></ReasonDescription>
+              <ReasonCode><%= @invoice.amend_reason %></ReasonCode>
+              <ReasonDescription><%= l("amend_reason_#{@invoice.amend_reason}", locale: :es) %></ReasonDescription>
               <TaxPeriod>
                 <StartDate><%=amended_invoice.date%></StartDate>
                 <EndDate><%=amended_invoice.date%></EndDate>
