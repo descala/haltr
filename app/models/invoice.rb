@@ -36,9 +36,14 @@ class Invoice < ActiveRecord::Base
   #has_many :taxes, :through => :invoice_lines
   belongs_to :project, :counter_cache => true
   belongs_to :client
+  # an invoice can have one sustitutive amend
   belongs_to :amend, :class_name => "Invoice", :foreign_key => 'amend_id'
-  belongs_to :bank_info
   has_one :amend_of, :class_name => "Invoice", :foreign_key => 'amend_id'
+  # an invoice can have several partial amends
+  has_many :partial_amends, class_name: 'Invoice', foreign_key: 'partially_amended_id'
+  belongs_to :partial_amend_of, class_name: 'Invoice', foreign_key: 'partially_amended_id'
+
+  belongs_to :bank_info
   belongs_to :quote
   has_many :comments, :as => :commented, :dependent => :delete_all, :order => "created_on"
   belongs_to :client_office
@@ -247,6 +252,10 @@ class Invoice < ActiveRecord::Base
   end
 
   def amended?
+    false # Only IssuedInvoices can be an amend
+  end
+
+  def is_amend?
     false # Only IssuedInvoices can be an amend
   end
 
@@ -517,6 +526,7 @@ _INV
     accounting_cost  = Haltr::Utils.get_xpath(doc,xpaths[:accounting_cost])
     payments_on_account = Haltr::Utils.get_xpath(doc,xpaths[:payments_on_account]) || 0
     amend_of         = Haltr::Utils.get_xpath(doc,xpaths[:amend_of])
+    amend_type       = Haltr::Utils.get_xpath(doc,xpaths[:amend_type])
     party_id         = Haltr::Utils.get_xpath(doc,xpaths[:party_id])
 
     # factoring assignment data
@@ -583,8 +593,12 @@ _INV
     if amend_of
       raise "Cannot amend received invoices" if invoice.is_a? ReceivedInvoice
       amended = company.project.issued_invoices.find_by_number(amend_of)
-      if amended
+      if amended and amend_type == '01'
         invoice.amend_of = amended
+      elsif amended and amend_type == '02'
+        invoice.partial_amend_of = amended
+      #elsif amended
+        #TODO 03 and 04 not yet supported
       else
         # importing amend invoice for an unexisting invoice, assign self id as
         # amended_invoice as a dirty hack
@@ -1095,6 +1109,10 @@ _INV
     TO_UTF_FIELDS.each do |f|
       self.send("#{f}=",Redmine::CodesetUtil.replace_invalid_utf8(self.send(f)))
     end
+  end
+
+  def self.amend_reason_codes
+    %w(01 02 03 04 05 06 07 08 09 10 11 12 13 14 15 16 80 81 82 83 84 85)
   end
 
   private
