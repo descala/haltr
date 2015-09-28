@@ -528,6 +528,7 @@ _INV
     amend_of         = Haltr::Utils.get_xpath(doc,xpaths[:amend_of])
     amend_type       = Haltr::Utils.get_xpath(doc,xpaths[:amend_type])
     party_id         = Haltr::Utils.get_xpath(doc,xpaths[:party_id])
+    legal_literals   = Haltr::Utils.get_xpath(doc,xpaths[:legal_literals])
 
     # factoring assignment data
     fa_person_type    = Haltr::Utils.get_xpath(doc,xpaths[:fa_person_type])
@@ -794,6 +795,7 @@ _INV
       :fa_bank_code      => fa_bank_code,
       :fa_clauses        => fa_clauses,
       :party_identification => party_id,
+      :legal_literals    => legal_literals
     )
 
     if raw_invoice.respond_to? :filename             # Mail::Part

@@ -157,6 +157,8 @@ module Haltr
           xpaths[:fa_bank_code]       = "//FileHeader/FactoringAssignmentData/PaymentDetails/Installment/*/BankCode"
           xpaths[:fa_clauses]         = "//FileHeader/FactoringAssignmentData/FactoringAssignmentClauses"
 
+          xpaths[:legal_literals]     = "//Invoices/Invoice/LegalLiterals/LegalReference"
+
         elsif format =~ /ubl/
           xpaths[:invoice_number]     = "/Invoice/cbc:ID"
           xpaths[:invoice_date]       = "/Invoice/cbc:IssueDate"
