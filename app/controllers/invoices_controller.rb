@@ -191,6 +191,7 @@ class InvoicesController < ApplicationController
 
     if params[:to_amend] and params[:amend_type]
       @to_amend = @project.invoices.find params[:to_amend]
+      @amend_type = params[:amend_type]
       case params[:amend_type]
       when 'total'
         @to_amend.amend = @invoice
