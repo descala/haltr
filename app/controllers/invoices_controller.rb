@@ -195,7 +195,7 @@ class InvoicesController < ApplicationController
       case params[:amend_type]
       when 'total'
         @to_amend.amend = @invoice
-        @invoice.amend_reason = '015'
+        @invoice.amend_reason = '15'
       when 'partial'
         @invoice.partially_amended_id = @to_amend.id
       else
