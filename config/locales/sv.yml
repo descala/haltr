@@ -679,3 +679,4 @@ sv:
   amend_reason_84: "Taxable Base modified due to firm court ruling or administrative decision"
   amend_reason_85: "Taxable Base modified due to unpaid outputs where there is a judgement opening insolvency proceedings"
   partially_amended_by_invoices: "Partially rectified by"
+  awarding: "Awarding"

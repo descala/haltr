@@ -16,15 +16,17 @@ class Invoice < ActiveRecord::Base
   # 1 - cash (al comptat)
   # 2 - debit (rebut domiciliat)
   # 4 - transfer (transferència)
-  PAYMENT_CASH = 1
-  PAYMENT_DEBIT = 2
+  PAYMENT_CASH     = 1
+  PAYMENT_DEBIT    = 2
   PAYMENT_TRANSFER = 4
-  PAYMENT_SPECIAL = 13
+  PAYMENT_AWARDING = 7
+  PAYMENT_SPECIAL  = 13
 
   PAYMENT_CODES = {
     PAYMENT_CASH     => {:facturae => '01', :ubl => '10'},
     PAYMENT_DEBIT    => {:facturae => '02', :ubl => '49'},
     PAYMENT_TRANSFER => {:facturae => '04', :ubl => '31'},
+    PAYMENT_AWARDING => {:facturae => '07', :ubl => '??'},
     PAYMENT_SPECIAL  => {:facturae => '13', :ubl => '??'},
   }
 
@@ -180,6 +182,7 @@ class Invoice < ActiveRecord::Base
     else
       pm << [l("transfer"),PAYMENT_TRANSFER]
     end
+    pm << [l("awarding"),PAYMENT_AWARDING]
     pm << [l("other"),PAYMENT_SPECIAL]
   end
 
