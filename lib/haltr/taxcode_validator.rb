@@ -9,11 +9,30 @@ module Haltr::TaxcodeValidator
   extend ActiveSupport::Concern
 
   included do
+
     before_validation :normalize_taxcode
-    validates :taxcode, :valvat => {:match_country => :country, :checksum => true}, :if => :eu?
+
+    validates :taxcode, valvat: {
+      match_country: :country,
+      checksum:      true,
+      allow_blank:   true,
+    }, if: Proc.new {|c| c.gb? }
+
+    validates_presence_of :company_identifier,
+      if: Proc.new {|c| c.gb? and c.taxcode.blank? }
+
+    validates :taxcode, :valvat => {
+      match_country: :country,
+      checksum:      true,
+      allow_blank:   false,
+    }, if: Proc.new {|c| !c.gb? and c.eu? }
 
     def eu?
       Valvat::Utils::EU_COUNTRIES.include?(country.upcase)
+    end
+
+    def gb?
+      country == 'gb'
     end
 
     def normalize_taxcode
