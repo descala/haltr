@@ -527,6 +527,7 @@ _INV
     payments_on_account = Haltr::Utils.get_xpath(doc,xpaths[:payments_on_account]) || 0
     amend_of         = Haltr::Utils.get_xpath(doc,xpaths[:amend_of])
     amend_type       = Haltr::Utils.get_xpath(doc,xpaths[:amend_type])
+    amend_reason     = Haltr::Utils.get_xpath(doc,xpaths[:amend_reason])
     party_id         = Haltr::Utils.get_xpath(doc,xpaths[:party_id])
     legal_literals   = Haltr::Utils.get_xpath(doc,xpaths[:legal_literals])
 
@@ -605,6 +606,7 @@ _INV
         # amended_invoice as a dirty hack
         invoice.amend_of = invoice
       end
+      invoice.amend_reason = amend_reason
     end
 
     # if it is an issued invoice, and
