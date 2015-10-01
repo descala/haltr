@@ -14,4 +14,8 @@ class ClientOffice < ActiveRecord::Base
     end
   end
 
+  def to_s
+    name.blank? ? client.to_s : name
+  end
+
 end

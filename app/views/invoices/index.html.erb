@@ -158,7 +158,7 @@
               <td><%= check_box_tag("ids[]", invoice.id, false, :id => nil) %></td>
               <td><%=h link_to_if_authorized invoice.number, :action => 'show', :id => invoice %></td>
               <td><%=h format_date invoice.date %></td>
-              <td><%=h invoice.client %></td>
+              <td><%=h invoice.client_office ? invoice.client_office : invoice.client %></td>
               <td class="money"><%= money(invoice.subtotal) %></td>
               <td class="money"><%= money(invoice.total) %></td>
               <td <%='class="pastdue"'.html_safe if invoice.past_due?%>><%=h format_date invoice.due_date %></td>
