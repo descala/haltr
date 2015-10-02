@@ -1098,6 +1098,14 @@ _INV
     }.uniq.size > 1)
   end
 
+  def amend_reason
+    read_attribute(:amend_reason).blank? ? '15' : read_attribute(:amend_reason)
+  end
+
+  def self.amend_reason_codes
+    %w(01 02 03 04 05 06 07 08 09 10 11 12 13 14 15 16 80 81 82 83 84 85)
+  end
+
   protected
 
   def increment_counter
@@ -1116,10 +1124,6 @@ _INV
     TO_UTF_FIELDS.each do |f|
       self.send("#{f}=",Redmine::CodesetUtil.replace_invalid_utf8(self.send(f)))
     end
-  end
-
-  def self.amend_reason_codes
-    %w(01 02 03 04 05 06 07 08 09 10 11 12 13 14 15 16 80 81 82 83 84 85)
   end
 
   private
