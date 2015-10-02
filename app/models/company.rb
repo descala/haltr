@@ -271,14 +271,6 @@ class Company < ActiveRecord::Base
     I18n.default_locale.to_s
   end
 
-  def roles
-    project.users.collect {|user|
-      user.roles_for_project(project)
-    }.flatten.uniq.compact.reject {|role|
-      role.builtin == Role::BUILTIN_NON_MEMBER
-    }
-  end
-
   private
 
   def update_linked_clients

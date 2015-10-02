@@ -123,7 +123,7 @@ resources :payments
 
 match '/companies/logo/:project_id' => 'companies#logo', :via => :get
 match '/companies/logo_by_taxcode/:taxcode' => 'companies#logo_by_taxcode', :via => :get
-resources :companies, :only => [:update,:index]
+resources :companies, :only => [:update]
 
 resources :external_companies
 match 'external_companies/csv_import' => 'external_companies#csv_import', :via => :post
