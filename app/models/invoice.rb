@@ -1099,7 +1099,11 @@ _INV
   end
 
   def amend_reason
-    read_attribute(:amend_reason).blank? ? '15' : read_attribute(:amend_reason)
+    if read_attribute(:amend_reason).blank?
+      is_amend? ? '15' : ''
+    else
+      read_attribute(:amend_reason)
+    end
   end
 
   def self.amend_reason_codes
