@@ -6,6 +6,8 @@ class CompaniesController < ApplicationController
   menu_item Haltr::MenuItem.new(:my_company,:bank_info),         :only => [:bank_info]
   menu_item Haltr::MenuItem.new(:my_company,:connections),       :only => [:connections]
   menu_item Haltr::MenuItem.new(:my_company,:customization),     :only => [:customization]
+  menu_item :companies, only: ['index']
+
   layout 'haltr'
   helper :haltr
 
@@ -18,10 +20,39 @@ class CompaniesController < ApplicationController
               :linked_to_mine,:logo,:add_bank_info,:check_iban]
   before_filter :find_company, :only => [:update]
   before_filter :set_iso_countries_language
-  before_filter :authorize, :except => [:logo,:logo_by_taxcode]
+  before_filter :authorize, :except => [:logo,:logo_by_taxcode,:index]
+  before_filter :require_admin, only: [:index]
   skip_before_filter :check_if_login_required, :only => [:logo,:logo_by_taxcode]
   before_filter :check_for_company,
     :only => [:my_company,:bank_info,:connections,:customization]
+
+  def index
+    sort_init 'companies.name'
+    sort_update %w(companies.name companies.taxcode)
+    companies = Company.includes(project: [{ user: [members: [member_roles: :role]]}])
+
+    if params[:taxcode]
+      companies = companies.where("companies.taxcode like ?", "%#{params[:taxcode]}%")
+    end
+
+    if params[:name]
+      companies = companies.where("companies.name like ?", "%#{params[:name]}%")
+    end
+
+    if params[:role]
+      companies = companies.where("roles.name like ?", "%#{params[:role]}%")
+    end
+
+    @limit = per_page_option
+    @company_count = companies.count
+    @company_pages = Paginator.new self, @company_count, @limit, params[:page]
+    @offset ||= @company_pages.offset
+    @companies = companies.find(:all,
+                                order: sort_clause,
+                                limit: @limit,
+                                offset: @offset)
+    render layout: 'admin'
+  end
 
   def check_for_company
     if @project.company.nil?

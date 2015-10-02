@@ -1,0 +1,69 @@
+<!--filtres-->
+<div class="seccio grup">
+  <div class="col span-2-de-2">
+    <div class="filtres">
+      <div class="titularAcc">
+        <%= l(:label_filter_plural) %>
+      </div>
+      <div class="contingutAcc">
+        <%= form_tag({:id=>@project}, :method => :get, :class => 'formee') do %>
+          <fieldset>
+            <legend><%= l(:label_search) %></legend>
+
+            <div class="seccio grup">
+              <div class="col span-1-de-3">
+                <label for="taxcode"><%= l(:field_taxcode) %></label>
+                <%= text_field_tag :taxcode, params[:taxcode] %>
+              </div>
+              <div class="col span-1-de-3">
+                <label for="name"><%= l(:field_name) %></label>
+                <%= text_field_tag :name, params[:name], :size => 10, :style => "width: 90%;" %>
+              </div>
+              <div class="col span-1-de-3">
+                <label for="role"><%= l(:field_role) %></label>
+                <%= text_field_tag :role, params[:role], :size => 10, :style => "width: 90%;" %>
+              </div>
+            </div>
+            <div class="seccio grup">
+              <div class="col span-3-de-3" style="text-align: right;">
+                <%= submit_tag l(:button_apply), :class => "small", :name => nil %>
+              </div>
+            </div>
+          </fieldset>
+        <% end %>
+      </div>
+    </div>
+  </div>
+</div>
+<!--final filtres-->
+
+<div class="seccio grup">
+  <div class="col span-2-de-2">
+    <table class="taula-1 list companies" style="margin-top: 30px;">
+      <thead>
+        <tr>
+          <%= sort_header_tag 'companies.taxcode', caption: l(:field_taxcode) %>
+          <%= sort_header_tag 'companies.name',    caption: l(:field_name) %>
+          <th><%= l :label_role_plural %></th>
+        </tr>
+      </thead>
+      <% @companies.each do |company| -%>
+        <% roles = (company.roles.collect {|r| r.name }.join(', ') rescue "?") -%>
+        <% roles = '---' if roles.blank? -%>
+        <tr class="<%= cycle('odd senar','even parell') %>">
+          <td><%= company.taxcode %></td>
+          <td><%= company.name %></td>
+          <td><%= link_to(roles, settings_project_path(company.project, tab: :members)) rescue "?" %></td>
+        </tr>
+      <% end -%>
+    </table>
+  </div>
+</div>
+
+<!--paginacio-->
+<div class="seccio grup paginacio pagination">
+  <%= pagination_links_full @company_pages, @company_count %>
+</div>
+<!--final paginacio-->
+
+<% html_title(l(:label_companies)) -%>
