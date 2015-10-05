@@ -697,3 +697,4 @@ ca:
   amend_reason_85: "Base imponible modificada cuotas repercutidas no satisfechas. Auto de declaración de concurso"
   partially_amended_by_invoices: "Parcialment rectificada per"
   awarding: "Contracte d'adjudicació"
+  field_issuer_transaction_reference: "Contra-albarà"
