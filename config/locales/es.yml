@@ -576,7 +576,7 @@ es:
   client: "Cliente"
   pending_auth_requests: "Hay peticiones pendientes de autorización: %{num} empresas se quieren vincular al tu perfil"
   denied_requests: "Peticiones denegadas"
-  self_employed: "Soy trabajador autónomo o una SCP"
+  self_employed: "Soy trabajador autónomo"
   organ_gestor: "Órgano gestor"
   oficina_comptable: "Oficina contable"
   unitat_tramitadora: "Unidad tramitadora"
