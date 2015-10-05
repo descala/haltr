@@ -59,6 +59,8 @@ resources :projects do
   match 'invoice_status_chart' => 'charts#invoice_status', :via => :get, :as => :invoice_status_chart
   match 'top_clients_chart' => 'charts#top_clients', :via => :get, :as => :top_clients_chart
   match 'cash_flow' => 'charts#cash_flow', :via => :get
+  match 'payments/reports' => 'payments#reports', :via => [:get]
+  match 'payments/report_payment_list' => 'payments#report_payment_list', :via => [:post]
 end
 resources :clients do
   resources :people, :only => [:index, :new, :create]

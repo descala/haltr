@@ -305,6 +305,7 @@ en:
   save_without_mail: "Save without sending mail"
   field_sepa_type: "SEPA payments type"
   label_payment_initiation: "Payment initiation"
+  label_payment_report: Payments report
 
   # Settings
   field_taxcode: VAT Id Number

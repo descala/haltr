@@ -1,0 +1,26 @@
+<%= form_tag project_payments_report_payment_list_path(@project), :class => 'formee' do %>
+  <fieldset>
+    <legend><%= l(:label_payment_report) %></legend>
+    <div class="seccio grup">
+      <div class="col span-1-de-3">
+        <label for="date_from"><%=l(:field_date)%></label>
+        <%= text_field_tag :date_from, (params[:date_from].nil? ? Date.new(Date.today.year) : params[:date_from]), :size => 10, :style => "width: 90%;" %><%= calendar_for('date_from') %>
+      </div>
+      <div class="col span-1-de-3">
+        <label for="date_to"><%=l(:label_to)%></label>
+        <%= text_field_tag :date_to, (params[:date_to].nil? ? Date.today : params[:date_to]), :size => 10, :style => "width: 90%;" %><%= calendar_for('date_to') %>
+      </div>
+      <div class="col span-1-de-3">
+      </div>
+    </div>
+    <div class="seccio grup">
+      <div class="col span-2-de-2">
+        <%= submit_tag l(:button_apply), :class => "small", :name => nil %>
+      </div>
+    </div>
+  </fieldset>
+<% end -%>
+
+<% content_for :sidebar do %>
+  <%= render_menu :payments_menu, @project %>
+<% end %>

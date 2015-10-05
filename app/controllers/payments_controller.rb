@@ -4,6 +4,7 @@ class PaymentsController < ApplicationController
   menu_item Haltr::MenuItem.new(:payments,:payments_level2)
   menu_item Haltr::MenuItem.new(:payments,:payment_initiation), :only=> [:payment_initiation,:payment_done,:n19,:sepa,:invoices]
   menu_item Haltr::MenuItem.new(:payments,:import_aeb43),       :only=> [:import_aeb43_index,:import_aeb43]
+  menu_item Haltr::MenuItem.new(:payments,:reports), :only => [:reports,:report_payment_list]
   layout 'haltr'
   helper :haltr
   helper :sort
@@ -242,6 +243,30 @@ class PaymentsController < ApplicationController
 
   def invoices
     @invoices = @project.issued_invoices.find(params[:invoices])
+  end
+
+  def report_payment_list
+    @from     = params[:date_from] || 3.months.ago
+    @to       = params[:date_to]   || Date.today
+    begin
+      @from.to_date
+    rescue
+      flash[:error]="invalid date: #{@from}"
+      @from = 3.months.ago
+    end
+    begin
+      @to.to_date
+    rescue
+      flash[:error]="invalid date: #{@to}"
+      @to = Date.today
+    end
+
+    @invoices_by_payment_method = @project.invoices.
+      where('payment_method = ? and due_date >= ? and due_date <= ?', Invoice::PAYMENT_DEBIT, @from, @to).
+      group_by(&:payment_method)
+    @bank_infos = @project.company.bank_infos
+    @invoices = {}
+    # TODO
   end
 
   private

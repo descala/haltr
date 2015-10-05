@@ -302,6 +302,7 @@ sv:
   save_without_mail: "Spara utan att skicka mail"
   field_sepa_type: "SEPA payments type"
   label_payment_initiation: "Payment initiation"
+  label_payment_report: Payments report
 
   # Settings
   field_taxcode: Momsregistreringsnummer
