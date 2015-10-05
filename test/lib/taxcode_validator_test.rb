@@ -32,4 +32,21 @@ class TaxcodeValidatorTest < ActiveSupport::TestCase
     assert client.valid?
   end
 
+  test 'fr clients require taxcode or company_identifier' do
+    client = Client.new(
+      country: 'fr',
+      name: 'test',
+      language: 'en',
+      project_id: 1
+    )
+    assert !client.valid?
+    assert_equal 'Organization ID can\'t be blank', client.errors.full_messages.join(' ')
+    client.taxcode = '12345678901'
+    assert client.valid?, client.errors.full_messages.join(' ')
+    client.taxcode = ''
+    assert !client.valid?
+    client.company_identifier = '1234'
+    assert client.valid?
+  end
+
 end
