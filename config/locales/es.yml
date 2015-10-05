@@ -286,6 +286,7 @@ es:
   field_phone_office: Teléfono oficina
   field_phone_mobile: Teléfono móvil
   label_phone: Teléfono
+  field_info: Información extra
 
   # Tasks
   label_task_plural: Tareas

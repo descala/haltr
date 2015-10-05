@@ -272,6 +272,7 @@ da:
   field_phone_office: Kontor Telefon
   field_phone_mobile: Mobile Telefon
   label_phone: Telefon
+  field_info: Extra information
  
   # Tasks
   label_task_plural: Opgaver

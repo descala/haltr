@@ -271,6 +271,7 @@ sv:
   field_phone_office: Jobbtelefon
   field_phone_mobile: Mobiltelefon
   label_phone: Telefon
+  field_info: Extra information
 
   # Tasks
   label_task_plural: Uppgifter

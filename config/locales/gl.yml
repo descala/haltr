@@ -284,6 +284,7 @@ gl:
   field_phone_office: Teléfono oficina
   field_phone_mobile: Teléfono móbil
   label_phone: Teléfono
+  field_info: Extra information
 
   # Tasks
   label_task_plural: Tarefas
