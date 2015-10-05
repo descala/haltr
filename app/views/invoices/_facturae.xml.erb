@@ -141,7 +141,7 @@
 <% else -%>
             <ResidenceTypeCode>E</ResidenceTypeCode>
 <% end -%>
-            <TaxIdentificationNumber><%=h @client.taxcode.strip%></TaxIdentificationNumber>
+            <TaxIdentificationNumber><%=h @client.taxcode.to_s.strip%></TaxIdentificationNumber>
          </TaxIdentification>
          <% if call_hook(:facturae_administrative_centres).present? -%>
            <%= call_hook(:facturae_administrative_centres) %>

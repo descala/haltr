@@ -43,7 +43,7 @@ class InvoicesController < ApplicationController
     sort_init 'invoices.created_at', 'desc'
     sort_update %w(invoices.created_at state_updated_at number date due_date clients.name import_in_cents)
 
-    invoices = @project.issued_invoices.includes(:client)
+    invoices = @project.issued_invoices.includes(:client).includes(:client_office)
 
     # additional invoice filters
     if Redmine::Hook.call_hook(:additional_invoice_filters,:project=>@project,:invoices=>invoices).any?
@@ -69,7 +69,7 @@ class InvoicesController < ApplicationController
     # client filter
     # TODO: change view collection_select (doesnt display previously selected client)
     unless params[:client_id].blank?
-      invoices = invoices.where("client_id = ?", params[:client_id])
+      invoices = invoices.where("invoices.client_id = ?", params[:client_id])
       @client_id = params[:client_id].to_i rescue nil
     end
 
@@ -93,7 +93,7 @@ class InvoicesController < ApplicationController
       invoices = invoices.where("clients.taxcode like ?","%#{params[:taxcode]}%")
     end
     unless params[:name].blank?
-      invoices = invoices.where("clients.name like ?","%#{params[:name]}%")
+      invoices = invoices.where("clients.name like ? or client_offices.name like ?","%#{params[:name]}%","%#{params[:name]}%")
     end
     unless params[:number].blank?
       if params[:number] =~ /,/

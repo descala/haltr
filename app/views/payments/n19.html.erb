@@ -2,9 +2,9 @@
 5180<%= n19taxcode(@project.company.taxcode) %>000<%= @fecha_confeccion %>      <%= n19_fix(@project.company.name,60) %><%= @bank_info.bank_account.to_s[0..7] %><%= ' '*66%>
 5380<%= n19taxcode(@project.company.taxcode) %>000<%= @fecha_confeccion %><%= @due_date.to_formatted_s :ddmmyy %><%= @project.company.name[0..39].ljust(40)%><%= @bank_info.bank_account.to_s[0..19] %>        01<%= ' '*64%>
 <% @clients.each do |client, invoices|; r1 += 1; r2 += 1 -%>
-5680<%= n19taxcode(@project.company.taxcode) %>000<%= n19taxcode(client.taxcode).ljust(12) %><%= n19_fix(client.name,40) %><%= client.bank_account[0..19].rjust(20) %><%= sprintf("%010d",invoices.collect {|i| i.total.cents}.sum) %><%= ' '*16 %><%= "FRA #{invoices.first.number}".ljust(30) %><%= number_with_delimiter(invoices.first.total).rjust(10) %><%= ' '*8 %>
+5680<%= n19taxcode(@project.company.taxcode) %>000<%= n19taxcode(client.taxcode.to_s).ljust(12) %><%= n19_fix(client.name,40) %><%= client.bank_account[0..19].rjust(20) %><%= sprintf("%010d",invoices.collect {|i| i.total.cents}.sum) %><%= ' '*16 %><%= "FRA #{invoices.first.number}".ljust(30) %><%= number_with_delimiter(invoices.first.total).rjust(10) %><%= ' '*8 %>
 <% invoices.shift; i=0; invoices.each do |invoice| i=i+1; r2 += 1; -%>
-568<%=i%><%= n19taxcode(@project.company.taxcode) %>000<%= n19taxcode(client.taxcode).ljust(12) %><%= "FRA #{invoice.number}".ljust(30) %><%= number_with_delimiter(invoice.total).rjust(10) %><%= ' '*94 %>
+568<%=i%><%= n19taxcode(@project.company.taxcode) %>000<%= n19taxcode(client.taxcode.to_s).ljust(12) %><%= "FRA #{invoice.number}".ljust(30) %><%= number_with_delimiter(invoice.total).rjust(10) %><%= ' '*94 %>
 <% end -%>
 <% end -%>
 5880<%= n19taxcode(@project.company.taxcode) %>000                                                                        <%= sprintf("%010d",@total.cents) %>      <%= sprintf("%010d",r1) %><%= sprintf("%010d",r2 + 2) %><%= ' '*38%>

@@ -16,15 +16,17 @@ class Invoice < ActiveRecord::Base
   # 1 - cash (al comptat)
   # 2 - debit (rebut domiciliat)
   # 4 - transfer (transferència)
-  PAYMENT_CASH = 1
-  PAYMENT_DEBIT = 2
+  PAYMENT_CASH     = 1
+  PAYMENT_DEBIT    = 2
   PAYMENT_TRANSFER = 4
-  PAYMENT_SPECIAL = 13
+  PAYMENT_AWARDING = 7
+  PAYMENT_SPECIAL  = 13
 
   PAYMENT_CODES = {
     PAYMENT_CASH     => {:facturae => '01', :ubl => '10'},
     PAYMENT_DEBIT    => {:facturae => '02', :ubl => '49'},
     PAYMENT_TRANSFER => {:facturae => '04', :ubl => '31'},
+    PAYMENT_AWARDING => {:facturae => '07', :ubl => '??'},
     PAYMENT_SPECIAL  => {:facturae => '13', :ubl => '??'},
   }
 
@@ -180,6 +182,7 @@ class Invoice < ActiveRecord::Base
     else
       pm << [l("transfer"),PAYMENT_TRANSFER]
     end
+    pm << [l("awarding"),PAYMENT_AWARDING]
     pm << [l("other"),PAYMENT_SPECIAL]
   end
 
@@ -527,6 +530,7 @@ _INV
     payments_on_account = Haltr::Utils.get_xpath(doc,xpaths[:payments_on_account]) || 0
     amend_of         = Haltr::Utils.get_xpath(doc,xpaths[:amend_of])
     amend_type       = Haltr::Utils.get_xpath(doc,xpaths[:amend_type])
+    amend_reason     = Haltr::Utils.get_xpath(doc,xpaths[:amend_reason])
     party_id         = Haltr::Utils.get_xpath(doc,xpaths[:party_id])
     legal_literals   = Haltr::Utils.get_xpath(doc,xpaths[:legal_literals])
 
@@ -605,6 +609,7 @@ _INV
         # amended_invoice as a dirty hack
         invoice.amend_of = invoice
       end
+      invoice.amend_reason = amend_reason
     end
 
     # if it is an issued invoice, and
@@ -1093,6 +1098,18 @@ _INV
     }.uniq.size > 1)
   end
 
+  def amend_reason
+    if read_attribute(:amend_reason).blank?
+      is_amend? ? '15' : ''
+    else
+      read_attribute(:amend_reason)
+    end
+  end
+
+  def self.amend_reason_codes
+    %w(01 02 03 04 05 06 07 08 09 10 11 12 13 14 15 16 80 81 82 83 84 85)
+  end
+
   protected
 
   def increment_counter
@@ -1111,10 +1128,6 @@ _INV
     TO_UTF_FIELDS.each do |f|
       self.send("#{f}=",Redmine::CodesetUtil.replace_invalid_utf8(self.send(f)))
     end
-  end
-
-  def self.amend_reason_codes
-    %w(01 02 03 04 05 06 07 08 09 10 11 12 13 14 15 16 80 81 82 83 84 85)
   end
 
   private
