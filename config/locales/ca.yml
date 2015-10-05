@@ -284,6 +284,7 @@ ca:
   field_phone_office: Telèfon oficina
   field_phone_mobile: Telèfon mòbil
   label_phone: Telèfon
+  field_info: Informació extra
 
   # Tasks
   label_task_plural: Tasques

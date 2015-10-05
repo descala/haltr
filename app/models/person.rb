@@ -4,11 +4,13 @@ class Person < ActiveRecord::Base
 
   belongs_to :client
 
-  validates_presence_of :client, :first_name, :last_name, :email
-  validates_uniqueness_of :email, :scope => :client_id
+  validates_presence_of :client, :first_name, :last_name
+  validates_uniqueness_of :email, :scope => :client_id, :allow_blank => true
   validates_format_of :email,
     :with => /\A[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]+(,[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]+)*\z/,
-    :allow_nil => true
+    :allow_nil => true,
+    :allow_blank => true
+
 
   def to_label
     "#{first_name} #{last_name}"
