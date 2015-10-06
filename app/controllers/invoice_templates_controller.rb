@@ -89,7 +89,7 @@ class InvoiceTemplatesController < InvoicesController
       begin
         @drafts << t.invoices_until(@date)
       rescue RuntimeError => e
-        flash.now[:warning] = l(:warning_can_not_generate_invoice,t.to_s)
+        flash.now[:warning] = l(:warning_can_not_generate_invoice,view_context.link_to(t.to_s, edit_invoice_template_path(t))).html_safe
         flash.now[:error] = e.message
       end
     end
