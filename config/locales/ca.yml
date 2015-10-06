@@ -284,6 +284,7 @@ ca:
   field_phone_office: Telèfon oficina
   field_phone_mobile: Telèfon mòbil
   label_phone: Telèfon
+  field_info: Informació extra
 
   # Tasks
   label_task_plural: Tasques
@@ -698,3 +699,4 @@ ca:
   amend_reason_85: "Base imponible modificada cuotas repercutidas no satisfechas. Auto de declaración de concurso"
   partially_amended_by_invoices: "Parcialment rectificada per"
   awarding: "Contracte d'adjudicació"
+  field_issuer_transaction_reference: "Contra-albarà"

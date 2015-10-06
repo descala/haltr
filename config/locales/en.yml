@@ -274,6 +274,7 @@ en:
   field_phone_office: Office phone
   field_phone_mobile: Mobile phone
   label_phone: Phone
+  field_info: Extra information
 
   # Tasks
   label_task_plural: Tasks
@@ -685,3 +686,4 @@ en:
   amend_reason_85: "Taxable Base modified due to unpaid outputs where there is a judgement opening insolvency proceedings"
   partially_amended_by_invoices: "Partially rectified by"
   awarding: "Awarding"
+  field_issuer_transaction_reference: "Receiving advice"

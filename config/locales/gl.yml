@@ -284,6 +284,7 @@ gl:
   field_phone_office: Teléfono oficina
   field_phone_mobile: Teléfono móbil
   label_phone: Teléfono
+  field_info: Extra information
 
   # Tasks
   label_task_plural: Tarefas
@@ -698,3 +699,4 @@ gl:
   amend_reason_85: "Base imponible modificada cuotas repercutidas no satisfechas. Auto de declaración de concurso"
   partially_amended_by_invoices: "Parcialmente rectificada por"
   awarding: "Contrato de adjudicación"
+  field_issuer_transaction_reference: "Contra-albarán"

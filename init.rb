@@ -66,7 +66,6 @@ Redmine::Plugin.register :haltr do
       { :clients   => [:index, :show, :new, :edit, :create, :update, :destroy, :check_cif, :link_to_profile, :unlink,
                        :allow_link, :deny_link, :ccc2iban],
         :people    => [:index, :new, :show, :edit, :create, :update, :destroy],
-        :client_offices => [:index, :new, :show, :edit, :create, :update, :destroy],
         :invoices  => [:index, :new, :edit, :create, :update, :destroy, :show, :mark_sent, :mark_closed, :mark_not_sent,
                        :destroy_payment, :send_invoice, :legal, :update_payment_stuff, :amend_for_invoice, :download_new_invoices,
                        :send_new_invoices, :duplicate_invoice, :reports, :report_channel_state, :report_invoice_list, :context_menu, :bulk_mark_as, :original, :show_original,
@@ -100,7 +99,7 @@ Redmine::Plugin.register :haltr do
     permission :restricted_use,
       { :clients   => [:index, :edit, :check_cif, :ccc2iban, :update],
         :people    => [:index, :edit],
-        :client_offices => [:index, :edit],
+        :client_offices => [:index, :edit, :update],
         :invoices  => [:index, :show, :legal, :download_new_invoices, :reports, :report_channel_state, :report_invoice_list,
                        :context_menu, :show_original, :send_invoice,
                        :send_new_invoices, :number_to_id],
@@ -149,6 +148,10 @@ Redmine::Plugin.register :haltr do
     permission :manage_external_companies, {
       :external_companies => [:index, :new, :create, :edit, :update, :destroy, :csv_import],
       :dir3_entities => [:index, :new, :create, :edit, :update, :destroy, :csv_import]
+    }
+
+    permission :use_client_offices, {
+      :client_offices => [:index, :new, :show, :edit, :create, :update, :destroy],
     }
 
     # Loads permisons from config/channels.yml
