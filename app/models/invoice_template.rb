@@ -44,6 +44,8 @@ class InvoiceTemplate < Invoice
     end
     self.save!
     return i
+  rescue ActiveRecord::RecordInvalid
+    raise i.errors.full_messages.join(', ')
   end
 
   def label

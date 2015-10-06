@@ -88,7 +88,7 @@ class InvoiceTemplatesController < InvoicesController
       end
       begin
         @drafts << t.invoices_until(@date)
-      rescue ActiveRecord::RecordInvalid => e
+      rescue RuntimeError => e
         flash.now[:warning] = l(:warning_can_not_generate_invoice,t.to_s)
         flash.now[:error] = e.message
       end
