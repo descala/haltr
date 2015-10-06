@@ -92,7 +92,7 @@
                 <%= text_field_tag :number, params[:number] %>
               </div>
               <div class="col span-1-de-3">
-                <label for="number"><%= l(:field_state_updated_at) %> <%= l(:label_greater_or_equal) %></label>
+                <label for="state_updated_at_from"><%= l(:field_state_updated_at) %> <%= l(:label_greater_or_equal) %></label>
                 <%= text_field_tag :state_updated_at_from, params[:state_updated_at_from], :size => 10, :style => "width: 90%;" %><%= calendar_for('state_updated_at_from') %>
               </div>
               <div class="col span-1-de-3">
