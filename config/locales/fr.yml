@@ -306,6 +306,7 @@ fr:
   save_without_mail: "Enregistrer sans l'envoi du email"
   field_sepa_type: "SEPA payments type"
   label_payment_initiation: "Payment initiation"
+  label_payment_report: Payments report
 
   # Settings
   field_taxcode: N° TVA

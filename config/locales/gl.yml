@@ -316,6 +316,7 @@ gl:
   save_without_mail: "Gardar sen enviar mail"
   field_sepa_type: "tipo de pagamentos SEPA"
   label_payment_initiation: "Introducir pagamentos"
+  label_invoice_report: Informe de pagamentos
 
   # Settings
   field_taxcode: "NIF"

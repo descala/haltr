@@ -539,6 +539,10 @@ class InvoicesController < ApplicationController
                        :backtrace => e.backtrace)
     logger.info e
     logger.info e.backtrace
+    # Get notifications of type NameError if ExceptionNotifier is installed
+    if defined?(ExceptionNotifier) and e.is_a?(NameError)
+      ExceptionNotifier.notify_exception(e)
+    end
     #raise e if Rails.env == "development"
   ensure
     redirect_back_or_default(:action => 'show', :id => @invoice)
