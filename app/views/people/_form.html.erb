@@ -3,9 +3,14 @@
 <fieldset class="tabular box">
   <legend><%=l(@person.new_record? ? :label_person_new : :label_person)%></legend>
 
-  <p>
-  <%= @person.new_record? ? @client.name : @person.client.name %>
-  </p>
+  <div class="seccio grup">
+    <p class="col span-1-de-2">
+    <label for="client">
+      <%= l(:label_company) %>
+    </label>
+    <%= text_field_tag('client', @client.name, disabled: true) %>
+    </p>
+  </div>
 
   <div class="seccio grup">
     <p class="col span-1-de-2">
@@ -36,7 +41,7 @@
 
   <div class="seccio grup">
     <p class="col span-1-de-2">
-    <%= f.text_area :info, :rows=>8, :cols=>100 %>
+      <%= f.text_area :info, :rows=>8, :cols=>100 %>
     </p>
   </div>
 
