@@ -5,6 +5,15 @@
 
   <div class="seccio grup">
     <p class="col span-1-de-2">
+    <label for="client">
+      <%= l(:label_company) %>
+    </label>
+    <%= text_field_tag('client', @client.name, disabled: true) %>
+    </p>
+  </div>
+
+  <div class="seccio grup">
+    <p class="col span-1-de-2">
       <%= f.text_field :name, :required => true %>
     </p>
     <p class="col span-1-de-2">

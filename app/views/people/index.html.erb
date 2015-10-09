@@ -1,11 +1,14 @@
 <% if @client %>
 <div class="seccio grup">
-  <div class="col span-2-de-2">
+  <div class="col span-1-de-2">
     <ul class="menu-rapid">
       <li>
       <%= link_to_if_authorized l(:label_person_new), new_client_person_path(@client), :class => 'icon icon-add' %>
       </li>
     </ul>
+  </div>
+  <div class="col span-1-de-2">
+    <h1 style="float: right;"><%= @client.name %> - <%=l(:label_person_plural)%></h1>
   </div>
 </div>
 <%end%>
@@ -46,9 +49,6 @@
 <!--taula-->
 <div class="seccio grup">
   <div class="col span-2-de-2">
-    <% if @client %>
-      <%=h @client %><br><br>
-    <% end %>
     <table class="taula-1 list">
       <thead>
         <tr>
