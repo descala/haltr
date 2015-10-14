@@ -586,7 +586,7 @@ _INV
     elsif company.taxcode.include?(seller_taxcode) or seller_taxcode.include?(company.taxcode)
       invoice = IssuedInvoice.new
       client   = company.project.clients.where('taxcode like ?', "%#{buyer_taxcode}").first
-      client ||= company.project.clients.where('? like concat("%", taxcode)', buyer_taxcode).first
+      client ||= company.project.clients.where('? like concat("%", taxcode) and taxcode != ""', buyer_taxcode).first
       client_role = "buyer"
     else
       raise I18n.t :taxcodes_does_not_belong_to_self,
@@ -613,7 +613,7 @@ _INV
     end
 
     # if it is an issued invoice, and
-    #    the client allready exists, and
+    #    the client already exists, and
     #    this client has different email than this invoice, then
     # save the email address to the invoice (overrides client email) 
     if client_role == "buyer" and client
