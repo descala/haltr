@@ -47,7 +47,7 @@
             <span class="locality"><%=h @client.city.strip unless @client.city.blank? %></span>
             <% unless @client.province.blank? -%>, <span class="region"><%=h @client.province %></span><% end -%>
           <% end -%>
-          <div class="country-name"><%=h @client.country_name if @client.country and @client.country.downcase != @company.country.downcase %></div>
+          <div class="country-name"><%=h @client.country_name if @client.country and @client.country.casecmp(@company.country) != 0 %></div>
         </address>
         <div><strong><%=h l(:field_taxcode) %>:</strong><span class="tax-id"> <%=h @client.taxcode.upcase if @client.taxcode %></span></div>
         <% if call_hook(:invoice_view_client_info).present? -%>
