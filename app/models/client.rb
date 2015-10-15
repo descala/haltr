@@ -129,7 +129,7 @@ class Client < ActiveRecord::Base
 
   def full_address
     addr = address
-    addr += "\n#{address2}" if address2
+    addr += "\n#{address2}" if address2.present?
     addr
   end
 

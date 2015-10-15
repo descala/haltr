@@ -18,4 +18,14 @@ class ClientOffice < ActiveRecord::Base
     name.blank? ? client.to_s : name
   end
 
+  def full_address
+    addr = address
+    addr += "\n#{address2}" if address2.present?
+    addr
+  end
+
+  def country_alpha3
+    country
+  end
+
 end
