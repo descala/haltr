@@ -3,7 +3,7 @@ require File.dirname(__FILE__) + '/../test_helper'
 
 class InvoiceTest < ActiveSupport::TestCase
 
-  fixtures :clients, :invoices, :invoice_lines, :taxes, :companies, :people, :bank_infos, :dir3_entities, :external_companies
+  fixtures :clients, :invoices, :invoice_lines, :taxes, :companies, :people, :bank_infos, :dir3_entities, :external_companies, :client_offices
 
   def setup
     User.current=nil
@@ -606,6 +606,24 @@ class InvoiceTest < ActiveSupport::TestCase
     # Not overrided
     assert_nil invoices(:i13).client_email_override
     assert_equal ["person1@example.com", "mail@client1.com"], invoices(:i13).recipient_emails
+  end
+
+  # import invoice_facturae32_issued7.xml
+  test 'create issued_invoice from facturae32 creates client_office when client data does not match' do
+    assert_equal 1, clients(:clients_001).client_offices.count
+    file    = File.new(File.join(File.dirname(__FILE__),'..','fixtures','documents','invoice_facturae32_issued7.xml'))
+    invoice = Invoice.create_from_xml(file,User.find_by_login('jsmith'),"1234",'uploaded',User.current.name)
+    assert_equal 2, clients(:clients_001).client_offices.count
+    assert_equal clients(:clients_001).client_offices.last.id, invoice.client_office_id
+  end
+
+  # import invoice_facturae32_issued9.xml
+  test 'create issued_invoice from facturae32 uses existing client_office when client data matches' do
+    assert_equal 1, clients(:clients_001).client_offices.count
+    file    = File.new(File.join(File.dirname(__FILE__),'..','fixtures','documents','invoice_facturae32_issued9.xml'))
+    invoice = Invoice.create_from_xml(file,User.find_by_login('jsmith'),"1234",'uploaded',User.current.name)
+    assert_equal 1, clients(:clients_001).client_offices.count
+    assert_equal clients(:clients_001).client_offices.first.id, invoice.client_office_id
   end
 
 end
