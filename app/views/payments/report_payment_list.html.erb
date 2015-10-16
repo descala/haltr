@@ -1,0 +1,68 @@
+<% if @invoices_by_payment_method -%>
+  <div class="invoices_report">
+    <h2><%= l(:label_payment_report) %></h2>
+    <p><%=l(:with_date) %> <%= format_date @from %> - <%= format_date @to %> (<%=l(:field_due_date)%>)</p>
+  </div>
+
+  <table class="taula-1 list" width="100%">
+    <% @invoices_by_payment_method.each do |method,invoices_pm| -%>
+
+      <% next if invoices_pm.first.bank_info.nil? %>
+
+      <tr class="imparell">
+        <th><%=l("debit_through",:bank_account=>invoices_pm.first.bank_info.name)%></th>
+      </tr>
+
+      <% invoices_pm.group_by(&:due_date).sort.each do |date,invoices| %>
+
+        <tr>
+          <td>
+            <table class="taula-1 list" width="100%">
+
+              <tr class="imparell">
+                <th>
+                  <%=l(:charge_bank_on_date)%> <b><%= format_date invoices.first.due_date %></b>.
+                  <%=l(:field_amount)%> <b><%= money(invoices.sum(&:total)) %></b>
+                </th>
+              </tr>
+
+              <tr>
+                <td>
+                  <table class="taula-1 list" width="100%">
+                    <tr class="imparell">
+                      <th><%=l(:field_number)%></th>
+                      <th><%=l(:field_date)%></th>
+                      <th><%=l(:field_taxcode)%></th>
+                      <th><%=l(:field_amount)%></th>
+                    </tr>
+
+                    <% invoices.each do |i| -%>
+                      <tr class="<%= cycle("odd imparell", "even parell") %>">
+                        <td><%= i.number %></td>
+                        <td><%= format_date i.date %></td>
+                        <td><%= i.client.taxcode %></td>
+                        <td class="money"><%= money(i.total) %></td>
+                      </tr>
+                    <% end -%>
+
+                  </table>
+
+                </td>
+              </tr>
+            </table>
+          <% end -%>
+
+          </td>
+        </tr>
+      <% end -%>
+  </table>
+
+<% else -%>
+  <p class="nodata"><%= l(:nothing_to_report) %></p>
+<% end -%>
+
+<p><%= link_to l('back'), project_payments_reports_path %></p>
+
+<% content_for :sidebar do %>
+  <%= render_menu :payments_menu, @project %>
+<% end %>

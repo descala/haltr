@@ -286,6 +286,7 @@ es:
   field_phone_office: Teléfono oficina
   field_phone_mobile: Teléfono móvil
   label_phone: Teléfono
+  field_info: Información extra
 
   # Tasks
   label_task_plural: Tareas
@@ -317,6 +318,7 @@ es:
   save_without_mail: "Guardar sin enviar mail"
   field_sepa_type: "tipo de pagos SEPA"
   label_payment_initiation: "Introducir pagos"
+  label_payment_report: Informe de pagos
 
   # Settings
   field_taxcode: "NIF"
@@ -576,12 +578,12 @@ es:
   client: "Cliente"
   pending_auth_requests: "Hay peticiones pendientes de autorización: %{num} empresas se quieren vincular al tu perfil"
   denied_requests: "Peticiones denegadas"
-  self_employed: "Soy trabajador autónomo o una SCP"
+  self_employed: "Soy trabajador autónomo"
   organ_gestor: "Órgano gestor"
   oficina_comptable: "Oficina contable"
   unitat_tramitadora: "Unidad tramitadora"
-  field_organ_proponent: "Órgano Promotor (Servicio del Ayuntamiento que hace el encargo)"
-  organ_proponent: "Órgano Promotor (Servicio del Ayuntamiento que hace el encargo)"
+  field_organ_proponent: "Órgano Promotor"
+  organ_proponent: "Órgano Promotor"
   external_companies: "Empresas externas"
   external_company: "Empresa externa"
   export_channels: "Canales"
@@ -676,3 +678,34 @@ es:
   bankers_rounding: 'Redondeo bancario'
   truncate_rounding: 'Truncar'
   round_before_sum: 'Redondear antes de sumar'
+  label_client_office_new: Nueva sede
+  label_client_offices: Sedes
+  label_client_office: Sede
+  amend_total: Sustitutiva
+  amend_partial: Por diferencias
+  field_amend_reason: Motivo de rectificación
+  amend_reason_01: "Número de la factura"
+  amend_reason_02: "Serie de la factura"
+  amend_reason_03: "Fecha expedición"
+  amend_reason_04: "Nombre y apellidos/Razón social - Emisor"
+  amend_reason_05: "Nombre y apellidos/Razón social - Receptor"
+  amend_reason_06: "Identificación fiscal Emisor/Obligado"
+  amend_reason_07: "Identificación fiscal Receptor"
+  amend_reason_08: "Domicilio Emisor/Obligado"
+  amend_reason_09: "Domicilio Receptor"
+  amend_reason_10: "Detalle Operación"
+  amend_reason_11: "Porcentaje impositivo a aplicar"
+  amend_reason_12: "Cuota tributaria a aplicar"
+  amend_reason_13: "Fecha/Periodo a aplicar"
+  amend_reason_14: "Clase de factura"
+  amend_reason_15: "Literales legales"
+  amend_reason_16: "Base imponible"
+  amend_reason_80: "Cálculo de cuotas repercutidas"
+  amend_reason_81: "Cálculo de cuotas retenidas"
+  amend_reason_82: "Base imponible modificada por devolución de envases/embalajes"
+  amend_reason_83: "Base imponible modificada por descuentos y bonificaciones"
+  amend_reason_84: "Base imponible modificada por resolución firme, judicial o administrativa"
+  amend_reason_85: "Base imponible modificada cuotas repercutidas no satisfechas. Auto de declaración de concurso"
+  partially_amended_by_invoices: "Parcialmente rectificada por"
+  awarding: "Contrato de adjudicación"
+  field_issuer_transaction_reference: "Contra-albarán"

@@ -7,7 +7,7 @@
     <% if @invoice.respond_to?(:accounting_cost) and !@invoice.accounting_cost.blank? %>
       <cbc:AccountingCost><%=@invoice.accounting_cost%></cbc:AccountingCost>
     <% end %>
-<% if @invoice.amend_of -%>
+<% if @invoice.is_amend? -%>
       <cac:DiscrepancyResponse>
         <cbc:ReferenceID>1</cbc:ReferenceID>
         <cbc:Description><%=h @invoice.extra_info%></cbc:Description>
@@ -18,10 +18,10 @@
           <cbc:ID><%=h @invoice.ponumber%></cbc:ID>
         </cac:OrderReference>
 <% end -%>
-<% if @invoice.amend_of -%>
+<% if @invoice.is_amend? -%>
           <cac:BillingReference>
             <cac:InvoiceDocumentReference>
-              <cbc:ID><%=@invoice.amend_of.number%></cbc:ID>
+              <cbc:ID><%=@invoice.amend_of ? @invoice.amend_of.number : @invoice.partial_amend_of.number %></cbc:ID>
             </cac:InvoiceDocumentReference>
           </cac:BillingReference>
 <% end -%>
@@ -79,7 +79,7 @@
         <% end -%>
       </cac:Party>
     </cac:AccountingCustomerParty>
-<% unless @invoice.amend_of -%>
+<% unless @invoice.is_amend? -%>
       <cac:PaymentMeans>
         <cbc:PaymentMeansCode><%=h @invoice.payment_method_code(:ubl) %></cbc:PaymentMeansCode>
         <cbc:PaymentDueDate><%=h @invoice.due_date%></cbc:PaymentDueDate>
@@ -185,7 +185,7 @@
         <cbc:PayableAmount currencyID="<%=h @client.currency%>"><%=h haltr_precision @invoice.total.dollars%></cbc:PayableAmount>
       </cac:LegalMonetaryTotal>
 <% @invoice.invoice_lines.each_with_index do |invoice_line,index| -%>
-        <cac:<%= @invoice.amend_of ? "CreditNoteLine" : "InvoiceLine" %>>
+        <cac:<%= @invoice.is_amend? ? "CreditNoteLine" : "InvoiceLine" %>>
           <cbc:ID><%=h index + 1%></cbc:ID>
 <% unless invoice_line.notes.blank? -%>
           <cbc:Note><%=invoice_line.notes%></cbc:Note>
@@ -209,7 +209,7 @@
           <cac:Price>
             <cbc:PriceAmount currencyID="<%=h @client.currency%>"><%=h haltr_precision(invoice_line.price,2)%></cbc:PriceAmount>
           </cac:Price>
-        </cac:<%= @invoice.amend_of ? "CreditNoteLine" : "InvoiceLine" %>>
+        </cac:<%= @invoice.is_amend? ? "CreditNoteLine" : "InvoiceLine" %>>
 <% end -%>	
-</<%= @invoice.amend_of ? "CreditNote" : "Invoice" %>>
+</<%= @invoice.is_amend? ? "CreditNote" : "Invoice" %>>
 <% lang = find_language(User.current.language); lang ||= Setting.default_language; set_language_if_valid(lang) -%>

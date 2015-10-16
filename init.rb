@@ -78,13 +78,14 @@ Redmine::Plugin.register :haltr do
         :events    => [:file] },
       :require => :member
 
-    permission :manage_payments, { :payments => [:index, :new, :edit, :create, :update, :destroy, :payment_initiation, :n19, :payment_done, :import_aeb43_index, :import_aeb43, :invoices] }, :require => :member
+    permission :manage_payments, { :payments => [:index, :new, :edit, :create, :update, :destroy, :payment_initiation, :n19, :payment_done, :import_aeb43_index, :import_aeb43, :invoices, :reports, :report_payment_list] }, :require => :member
     permission :use_templates, { :invoice_templates => [:index, :new, :edit, :create, :update, :destroy, :show, :new_from_invoice,
                                  :new_invoices_from_template, :create_invoices, :update_taxes, :context_menu] }, :require => :member
 
     permission :use_all_readonly,
       { :clients   => [:index, :edit, :check_cif, :ccc2iban],
         :people    => [:index, :edit],
+        :client_offices => [:index, :edit],
         :invoices  => [:index, :show, :legal, :download_new_invoices, :reports, :report_channel_state, :report_invoice_list,
                        :context_menu, :show_original, :number_to_id, :edit],
         :received  => [:index, :show, :show_original, :legal, :context_menu],
@@ -98,6 +99,7 @@ Redmine::Plugin.register :haltr do
     permission :restricted_use,
       { :clients   => [:index, :edit, :check_cif, :ccc2iban, :update],
         :people    => [:index, :edit],
+        :client_offices => [:index, :edit, :update],
         :invoices  => [:index, :show, :legal, :download_new_invoices, :reports, :report_channel_state, :report_invoice_list,
                        :context_menu, :show_original, :send_invoice,
                        :send_new_invoices, :number_to_id],
@@ -146,6 +148,10 @@ Redmine::Plugin.register :haltr do
     permission :manage_external_companies, {
       :external_companies => [:index, :new, :create, :edit, :update, :destroy, :csv_import],
       :dir3_entities => [:index, :new, :create, :edit, :update, :destroy, :csv_import]
+    }
+
+    permission :use_client_offices, {
+      :client_offices => [:index, :new, :show, :edit, :create, :update, :destroy],
     }
 
     # Loads permisons from config/channels.yml

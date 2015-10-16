@@ -136,5 +136,20 @@
   </table>
   <% end -%>
 
+  <% if @invoice.invoice_lines.any? {|l| l.issuer_transaction_reference.present? } or User.current.allowed_to?(:view_invoice_extra_fields, @project)-%>
+  <table class="formee invoice_lines">
+    <thead>
+      <tr>
+        <th><%= l(:field_issuer_transaction_reference) %></th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><%= f.text_field :issuer_transaction_reference, :no_label => true %></td>
+      </tr>
+    </tbody>
+  </table>
+  <% end -%>
+
   <hr style="margin: 15px 0"/>
 </div>

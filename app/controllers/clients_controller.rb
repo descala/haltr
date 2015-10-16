@@ -155,15 +155,20 @@ class ClientsController < ApplicationController
       render :partial => 'cif_info', :locals => {:client=>nil,:company=>nil}
     else
       # we are creating/editing a new client
-      # search a company with specified taxcode and (semi)public profile
-      company = Company.where(
-        "taxcode in (?, ?) and (public='public' or public='semipublic')", taxcode, taxcode2
-      ).first
-      company ||= ExternalCompany.where("taxcode in (?, ?)", taxcode, taxcode2).first
-      render :partial => "cif_info", :locals => { :client => client,
-                                                  :company => company,
-                                                  :context => params[:context],
-                                                  :invoice_id => params[:invoice_id] }
+      # if taxcode is blank render nothing.. we can't search by taxcode if blank
+      if taxcode.blank? or taxcode2.blank?
+        render :partial => 'cif_info', :locals => {:client=>nil,:company=>nil}
+      else
+        # search a company with specified taxcode and (semi)public profile
+        company = Company.where(
+          "taxcode in (?, ?) and (public='public' or public='semipublic')", taxcode, taxcode2
+        ).first
+        company ||= ExternalCompany.where("taxcode in (?, ?)", taxcode, taxcode2).first
+        render :partial => "cif_info", :locals => { :client => client,
+                                                    :company => company,
+                                                    :context => params[:context],
+                                                    :invoice_id => params[:invoice_id] }
+      end
     end
   end
 

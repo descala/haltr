@@ -271,6 +271,7 @@ sv:
   field_phone_office: Jobbtelefon
   field_phone_mobile: Mobiltelefon
   label_phone: Telefon
+  field_info: Extra information
 
   # Tasks
   label_task_plural: Uppgifter
@@ -302,6 +303,7 @@ sv:
   save_without_mail: "Spara utan att skicka mail"
   field_sepa_type: "SEPA payments type"
   label_payment_initiation: "Payment initiation"
+  label_payment_report: Payments report
 
   # Settings
   field_taxcode: Momsregistreringsnummer
@@ -562,8 +564,8 @@ sv:
   organ_gestor: "Òrgan gestor"
   oficina_comptable: "Oficina comptable"
   unitat_tramitadora: "Unitat tramitadora"
-  field_organ_proponent: "Órgano Promotor (Servicio del Ayuntamiento que hace el encargo)"
-  organ_proponent: "Órgano Promotor (Servicio del Ayuntamiento que hace el encargo)"
+  field_organ_proponent: "Órgano Promotor"
+  organ_proponent: "Órgano Promotor"
   external_companies: "External companies"
   external_company: "External company"
   export_channels: "Channels"
@@ -657,3 +659,34 @@ sv:
   bankers_rounding: "Banker's rounding"
   truncate_rounding: 'Truncate'
   round_before_sum: 'Round before sum'
+  label_client_office_new: Ny filial
+  label_client_offices: Filials
+  label_client_office: Filial
+  amend_total: Complete
+  amend_partial: Partial
+  field_amend_reason: Rectification reason
+  amend_reason_01: "Invoice number"
+  amend_reason_02: "Invoice serial number"
+  amend_reason_03: "Issue date"
+  amend_reason_04: "Name and surnames/Corporate name – Issuer (Sender)"
+  amend_reason_05: "Name and surnames/Corporate name - Receiver"
+  amend_reason_06: "Issuer’s Tax Identification Number"
+  amend_reason_07: "Receiver’s Tax Identification Number"
+  amend_reason_08: "Issuer’s address"
+  amend_reason_09: "Receiver’s address"
+  amend_reason_10: "Item line"
+  amend_reason_11: "Applicable Tax Rate"
+  amend_reason_12: "Applicable Tax Amount"
+  amend_reason_13: "Applicable Date/Period"
+  amend_reason_14: "Invoice Class"
+  amend_reason_15: "Legal literals"
+  amend_reason_16: "Taxable Base"
+  amend_reason_80: "Calculation of tax outputs"
+  amend_reason_81: "Calculation of tax inputs"
+  amend_reason_82: "Taxable Base modified due to return of packages and packaging materials"
+  amend_reason_83: "Taxable Base modified due to discounts and rebates"
+  amend_reason_84: "Taxable Base modified due to firm court ruling or administrative decision"
+  amend_reason_85: "Taxable Base modified due to unpaid outputs where there is a judgement opening insolvency proceedings"
+  partially_amended_by_invoices: "Partially rectified by"
+  awarding: "Awarding"
+  field_issuer_transaction_reference: "Receiving advice"

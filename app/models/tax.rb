@@ -42,6 +42,8 @@ class Tax < ActiveRecord::Base
     'IMSN'     => '14', # Impuesto municipal sobre solares en Navarra
     'IMGSN'    => '15', # Impuesto municipal sobre gastos suntuarios en Navarra
     'IMPN'     => '16', # Impuesto municipal sobre publicidad en Navarra
+    'REAV'     => '17', # Regim especial d'IVA de les agencies de viatges (#5492)
+    'REIVA'    => '17', # Regim especial d'IVA de les agencies de viatges (#5492)
   }
 
   def ==(oth)

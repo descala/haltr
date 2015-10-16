@@ -1,6 +1,6 @@
 <% I18n.locale = :en -%>
 <?xml version="1.0" encoding="UTF-8"?>
-<<%= @invoice.amend_of ? "CreditNote" : "Invoice" %> xmlns="urn:oasis:names:specification:ubl:schema:xsd:<%= @invoice.amend_of ? "CreditNote" : "Invoice" %>-2" xmlns:cac="urn:oasis:names:specification:ubl:schema:xsd:CommonAggregateComponents-2" xmlns:cbc="urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2" xmlns:ccts="urn:un:unece:uncefact:documentation:2" xmlns:ext="urn:oasis:names:specification:ubl:schema:xsd:CommonExtensionComponents-2" xmlns:qdt="urn:oasis:names:specification:ubl:schema:xsd:QualifiedDatatypes-2" xmlns:udt="urn:un:unece:uncefact:data:specification:UnqualifiedDataTypesSchemaModule:2">
+<<%= @invoice.is_amend? ? "CreditNote" : "Invoice" %> xmlns="urn:oasis:names:specification:ubl:schema:xsd:<%= @invoice.is_amend? ? "CreditNote" : "Invoice" %>-2" xmlns:cac="urn:oasis:names:specification:ubl:schema:xsd:CommonAggregateComponents-2" xmlns:cbc="urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2" xmlns:ccts="urn:un:unece:uncefact:documentation:2" xmlns:ext="urn:oasis:names:specification:ubl:schema:xsd:CommonExtensionComponents-2" xmlns:qdt="urn:oasis:names:specification:ubl:schema:xsd:QualifiedDatatypes-2" xmlns:udt="urn:un:unece:uncefact:data:specification:UnqualifiedDataTypesSchemaModule:2">
 <cbc:UBLVersionID>2.0</cbc:UBLVersionID>
 <cbc:CustomizationID>OIOUBL-2.01</cbc:CustomizationID>
 <cbc:ProfileID schemeAgencyID="320" schemeID="urn:oioubl:id:profileid-1.1">Procurement-BilSim-1.0</cbc:ProfileID>

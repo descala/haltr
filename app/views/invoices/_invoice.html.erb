@@ -1,9 +1,16 @@
 <div class="invoice-header-container">
 <div id="amends">
-<% if @invoice.amend and @invoice.amend != @invoice -%>
-  <h3><%=l(:amended_by_invoice, :link => link_to_if_authorized("#{l(:label_amendment_invoice)} #{@invoice.amend.number}",
-                                                 :controller => 'invoices', :action=>'show', :id=>@invoice.amend)).html_safe %></h3>
-    <% end -%>
+  <% if @invoice.amend and @invoice.amend != @invoice -%>
+    <h3><%=l(:amended_by_invoice, :link => link_to_if_authorized("#{l(:label_amendment_invoice)} #{@invoice.amend.number}",
+                                                                 :controller => 'invoices', :action=>'show', :id=>@invoice.amend)).html_safe %></h3>
+  <% elsif @invoice.partial_amends.any? -%>
+    <h3><%=l(:partially_amended_by_invoices) %>:
+      <% @invoice.partial_amends.each do |amend| -%>
+        <%=link_to_if_authorized("#{l(:label_amendment_invoice)} #{amend.number}", :controller => 'invoices', :action=>'show', :id=>amend) %>
+        <%= " - " unless @invoice.partial_amends.last == amend %>
+      <% end -%>
+    </h3>
+  <% end -%>
   </div>
   <!-- Vendor Info -->
   <div class="vcard vendor">
@@ -50,11 +57,13 @@
   <% end -%>
   <div class="invoice-info">
   <span class="date"><%=h l(:field_date)%> <strong><%=h format_date @invoice.date %></strong></span><br/>
-  <% if @invoice.amend_of -%>
-  <% if @invoice.amend_of == @invoice -%>
+  <% if @invoice.is_amend? -%>
+  <% if @invoice.amend_of and @invoice.amend_of == @invoice -%>
     <span class="invoice-terms"><%=h l(:label_amended_invoice)%>: ?</span><br/>
-  <% else -%>
+  <% elsif @invoice.amend_of -%>
     <span class="invoice-terms"><%=h l(:label_amended_invoice)%>: <%= link_to_if_authorized @invoice.amend_of.number,{:controller => 'invoices', :action => 'show', :id => @invoice.amend_of} %></span><br/>
+  <% else -%>
+    <span class="invoice-terms"><%=h l(:label_amended_invoice)%>: <%= link_to_if_authorized @invoice.partial_amend_of.number,{:controller => 'invoices', :action => 'show', :id => @invoice.partial_amend_of} %></span><br/>
   <% end -%>
   <% end -%>
   <% unless @invoice.due_date.blank? -%>
@@ -85,7 +94,7 @@
  </div>
 
   <!-- Client Info -->
-  <% unless @client.new_record? -%>
+  <% unless !@client or @client.new_record? -%>
   <div class="vcard client">
   <div class="client-info">
     <h3><%= client_name_with_link @client %></h3>
@@ -97,7 +106,7 @@
         <span class="locality"><%=h @client.city.strip unless @client.city.blank? %></span>
         <% unless @client.province.blank? -%>, <span class="region"><%=h @client.province %></span><% end -%>
       <% end -%>
-      <div class="country-name"><%=h @client.country_name if @client.country and @client.country.downcase != @company.country.downcase %></div>
+      <div class="country-name"><%=h @client.country_name if @client.country and @client.country.casecmp(@company.country) != 0 %></div>
     </address>
     <div><strong><%=h l(:field_taxcode) %>:</strong><span class="tax-id"> <%=h @client.taxcode.upcase if @client.taxcode %></span></div>
     <% if call_hook(:invoice_view_client_info).present? -%>
@@ -315,16 +324,20 @@
 </div>
 
 <div class="notes">
-<% if !@invoice.extra_info.blank? or
-     @invoice.taxes.collect {|t| t if t.exempt? and !t.comment.blank? }.compact.any? -%>
+<% if @invoice.extra_info.present? or
+    @invoice.taxes.collect {|t| t if t.exempt? and !t.comment.blank? }.compact.any? or
+    @invoice.amend_reason.present? -%>
     <h3><%=h l(:field_extra_info)%></h3>
-    <% unless @invoice.extra_info.blank? -%>
+    <% if @invoice.extra_info.present? -%>
       <span class="invoice-terms"><%= simple_format(h @invoice.extra_info) %></span>
     <% end -%>
     <% @invoice.taxes_uniq.each do |t| -%>
       <% next unless t.exempt? and !t.comment.blank? -%>
       <span class="invoice-terms"><%= simple_format(h "#{tax_name(t)}: #{t.comment}") %></span>
     <% end -%><br/>
+    <% if @invoice.amend_reason.present? -%>
+      <span class="invoice-terms"><%= t :field_amend_reason %>: <%= t("amend_reason_#{@invoice.amend_reason}", default: @invoice.amend_reason) %></span>
+    <% end -%>
 <% end -%>
 </div>
 

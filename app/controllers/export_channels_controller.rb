@@ -9,7 +9,7 @@ class ExportChannelsController < ApplicationController
   def index
     @channels = ExportChannels.available.sort do |a,b|
       if a[1]['order'].blank? and b[1]['order'].blank?
-        a[0].downcase <=> b[0].downcase
+        a[0].casecmp(b[0])
       elsif a[1]['order'].blank?
         1
       elsif b[1]['order'].blank?

@@ -63,7 +63,7 @@ class Company < ActiveRecord::Base
   def last_name
     ln = name.split(" ")
     ln.shift
-    ln.join(" ")
+    ln = ln.join(" ")
     ln = '.' if ln.blank?
     ln
   end

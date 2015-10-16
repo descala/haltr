@@ -15,6 +15,7 @@ Redmine::MenuManager.map :companies_menu do |menu|
     Client.all(:conditions => ['company_id = ?', p.company]).any?
   }
   menu.push :people, {:controller=>'people', :action => 'index' }, :param => :project_id
+  menu.push :client_offices , {:controller=>'client_offices', :action => 'index' }, :param => :project_id
 end
 
 Redmine::MenuManager.map :my_company_menu do |menu|
@@ -43,6 +44,7 @@ end
 Redmine::MenuManager.map :payments_menu do |menu|
   menu.push :payments_level2, {:controller=>'payments',:action=>'index'}, :param => :project_id, :caption => :label_payment_plural
   menu.push :payment_initiation, {:controller=>'payments',:action=>'payment_initiation'}, :param => :project_id
+  menu.push :reports, {:controller=>'payments', :action => 'reports' }, :param => :project_id, :caption=>:label_reports
   menu.push :import_aeb43, {:controller=>'payments',:action=>'import_aeb43_index'}, :param => :project_id
   menu.push :mandates, {:controller=>'mandates',:action=>'index'}, :param => :project_id
 end

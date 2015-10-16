@@ -187,26 +187,14 @@ class IssuedInvoice < InvoiceDocument
     %w(sent refused accepted allegedly_paid closed).include? state
   end
 
-  def create_amend
-    new_attributes = self.attributes
-    new_attributes['state']='new'
-    ai = IssuedInvoice.new(new_attributes)
-    ai.number = "#{number}-R"
-    ai.series_code = I18n.t(:amendment)
-    self.invoice_lines.each do |line|
-      il = line.dup
-      il.taxes = line.taxes.collect {|tax| tax.dup }
-      ai.invoice_lines << il
-    end
-    ai.save(:validate=>false)
-    self.amend_id = ai.id
-    self.save(:validate=>false)
-    self.amend_and_close # change state
-    ai
-  end
-
+  # returns true if invoice has been totally amended (substituted by another)
   def amended?
     (!self.amend_id.nil? and self.amend_id != self.id )
+  end
+
+  # all amends, sustitutive and partial
+  def is_amend?
+    amend_of or partial_amend_of
   end
 
   def last_sent_event

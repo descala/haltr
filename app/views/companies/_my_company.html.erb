@@ -6,7 +6,7 @@
     <%= call_hook(:company_form_taxcode) %>
     </p>
     <p class="col span-1-de-2">
-    <%= f.label_for_field :name, :label => l('name_or_company') %>
+    <%= f.label_for_field :name, :label => l('name_or_company'), :required => true %>
     <%= f.text_field :name, :required => true, :no_label => true %>
       <p style="float: right;"><%= check_box(:company, :persontype, {:no_label=>true}, 'F', 'J') %> <%= l(:self_employed) %></p>
     </p>
@@ -99,7 +99,7 @@
       <p class="col span-2-de-2">
       <!-- cocoon -->
       <span class="mes">
-        <%= link_to_add_association l(:button_add_tax), f, :taxes, 'data-association-insertion-node' => '#taxes', 'data-association-insertion-method' => 'append' %>
+        <%= link_to_add_association l(:button_add_tax), f, :taxes, 'data-association-insertion-node' => '#taxes', 'data-association-insertion-method' => 'append', :partial => 'companies/tax_fields' %>
       </span>
       </p>
     </div>

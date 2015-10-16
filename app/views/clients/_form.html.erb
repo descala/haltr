@@ -100,6 +100,11 @@
       </div>
     <% end -%>
   </div>
+  <div class="seccio grup">
+    <p class="col span-1-de-2">
+    <%= f.text_field :company_identifier %>
+    </p>
+  </div>
 </fieldset>
 
 <div class="client_hiden_fields" style="<%= context =~ /_invoice$/ ? "display:none;" : "" %>">
@@ -146,10 +151,6 @@
 
 </fieldset>
 
-<fieldset>
-  <legend>UBL</legend>
-    <%= f.text_field :company_identifier %>
-</fieldset>
 
 <% if User.current.admin? or User.current.allowed_to?(:send_peppol, @project) -%>
   <fieldset class="tabular box">

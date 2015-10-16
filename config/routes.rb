@@ -15,6 +15,7 @@ match 'invoices/total_chart' => 'charts#invoice_total', :via => :get, :as => :in
 resources :projects do
   resources :clients, :only => [:index, :new, :create]
   match :people, :controller => 'people', :action => 'index', :via => :get
+  resources :client_offices, :only => [:index, :new, :create, :edit, :update, :destroy]
   match 'companies/linked_to_mine', :controller => 'companies', :action => 'linked_to_mine', :via => :get
   match 'my_company',    :controller => 'companies', :action => 'my_company',    :via => :get
   match 'bank_info',     :controller => 'companies', :action => 'bank_info',     :via => :get
@@ -58,9 +59,12 @@ resources :projects do
   match 'invoice_status_chart' => 'charts#invoice_status', :via => :get, :as => :invoice_status_chart
   match 'top_clients_chart' => 'charts#top_clients', :via => :get, :as => :top_clients_chart
   match 'cash_flow' => 'charts#cash_flow', :via => :get
+  match 'payments/reports' => 'payments#reports', :via => [:get]
+  match 'payments/report_payment_list' => 'payments#report_payment_list', :via => [:post]
 end
 resources :clients do
   resources :people, :only => [:index, :new, :create]
+  resources :client_offices, :only => [:index, :new, :create, :edit, :update, :destroy]
 end
 
 resources :people
@@ -80,7 +84,7 @@ match 'invoice_templates', :controller => 'invoice_templates', :action => 'destr
 match 'invoices/:id/mark_as/:state' => 'invoices#mark_as', :via => :get, :as => :mark_as
 match 'invoices/send_invoice/:id' => 'invoices#send_invoice', :via => :get, :as => :send_invoice
 match 'invoices/legal/:id' => 'invoices#legal', :via => :get, :as => :legal
-match 'invoices/amend_for_invoice/:id' => 'invoices#amend_for_invoice', :via => :post, :as => :amend_for_invoice
+match 'invoices/amend_for_invoice/:id' => 'invoices#amend_for_invoice', :via => :get, :as => :amend_for_invoice
 match 'invoices/duplicate_invoice/:id' => 'invoices#duplicate_invoice', :via => :get, :as => :duplicate_invoice
 match 'invoices/destroy_payment/:id' => 'invoices#destroy_payment', :via => :delete, :as => :destroy_payment
 match 'invoices/mail/:id' => 'invoices#mail', :via => :get

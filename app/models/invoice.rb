@@ -16,15 +16,17 @@ class Invoice < ActiveRecord::Base
   # 1 - cash (al comptat)
   # 2 - debit (rebut domiciliat)
   # 4 - transfer (transferència)
-  PAYMENT_CASH = 1
-  PAYMENT_DEBIT = 2
+  PAYMENT_CASH     = 1
+  PAYMENT_DEBIT    = 2
   PAYMENT_TRANSFER = 4
-  PAYMENT_SPECIAL = 13
+  PAYMENT_AWARDING = 7
+  PAYMENT_SPECIAL  = 13
 
   PAYMENT_CODES = {
     PAYMENT_CASH     => {:facturae => '01', :ubl => '10'},
     PAYMENT_DEBIT    => {:facturae => '02', :ubl => '49'},
     PAYMENT_TRANSFER => {:facturae => '04', :ubl => '31'},
+    PAYMENT_AWARDING => {:facturae => '07', :ubl => '??'},
     PAYMENT_SPECIAL  => {:facturae => '13', :ubl => '??'},
   }
 
@@ -36,11 +38,20 @@ class Invoice < ActiveRecord::Base
   #has_many :taxes, :through => :invoice_lines
   belongs_to :project, :counter_cache => true
   belongs_to :client
+  # an invoice can have one sustitutive amend
   belongs_to :amend, :class_name => "Invoice", :foreign_key => 'amend_id'
-  belongs_to :bank_info
   has_one :amend_of, :class_name => "Invoice", :foreign_key => 'amend_id'
+  # an invoice can have several partial amends
+  has_many :partial_amends, class_name: 'Invoice', foreign_key: 'partially_amended_id'
+  belongs_to :partial_amend_of, class_name: 'Invoice', foreign_key: 'partially_amended_id'
+
+  belongs_to :bank_info
   belongs_to :quote
   has_many :comments, :as => :commented, :dependent => :delete_all, :order => "created_on"
+  belongs_to :client_office
+  validates_inclusion_of :client_office_id, in: [nil], unless: Proc.new {|i|
+    i.client and i.client.client_offices.any? {|o| o.id == i.client_office_id }
+  }
 
   validates_presence_of :client, :date, :currency, :project_id, :unless => Proc.new {|i| i.type == "ReceivedInvoice" }
   validates_inclusion_of :currency, :in  => Money::Currency.table.collect {|k,v| v[:iso_code] }, :unless => Proc.new {|i| i.type == "ReceivedInvoice" }
@@ -171,6 +182,7 @@ class Invoice < ActiveRecord::Base
     else
       pm << [l("transfer"),PAYMENT_TRANSFER]
     end
+    pm << [l("awarding"),PAYMENT_AWARDING]
     pm << [l("other"),PAYMENT_SPECIAL]
   end
 
@@ -243,6 +255,10 @@ class Invoice < ActiveRecord::Base
   end
 
   def amended?
+    false # Only IssuedInvoices can be an amend
+  end
+
+  def is_amend?
     false # Only IssuedInvoices can be an amend
   end
 
@@ -531,7 +547,10 @@ _INV
     accounting_cost  = Haltr::Utils.get_xpath(doc,xpaths[:accounting_cost])
     payments_on_account = Haltr::Utils.get_xpath(doc,xpaths[:payments_on_account]) || 0
     amend_of         = Haltr::Utils.get_xpath(doc,xpaths[:amend_of])
+    amend_type       = Haltr::Utils.get_xpath(doc,xpaths[:amend_type])
+    amend_reason     = Haltr::Utils.get_xpath(doc,xpaths[:amend_reason])
     party_id         = Haltr::Utils.get_xpath(doc,xpaths[:party_id])
+    legal_literals   = Haltr::Utils.get_xpath(doc,xpaths[:legal_literals])
 
     # factoring assignment data
     fa_person_type    = Haltr::Utils.get_xpath(doc,xpaths[:fa_person_type])
@@ -587,7 +606,7 @@ _INV
     elsif company.taxcode.include?(seller_taxcode) or seller_taxcode.include?(company.taxcode)
       invoice = IssuedInvoice.new
       client   = company.project.clients.where('taxcode like ?', "%#{buyer_taxcode}").first
-      client ||= company.project.clients.where('? like concat("%", taxcode)', buyer_taxcode).first
+      client ||= company.project.clients.where('? like concat("%", taxcode) and taxcode != ""', buyer_taxcode).first
       client_role = "buyer"
     else
       raise I18n.t :taxcodes_does_not_belong_to_self,
@@ -599,17 +618,22 @@ _INV
     if amend_of
       raise "Cannot amend received invoices" if invoice.is_a? ReceivedInvoice
       amended = company.project.issued_invoices.find_by_number(amend_of)
-      if amended
+      if amended and amend_type == '01'
         invoice.amend_of = amended
+      elsif amended and amend_type == '02'
+        invoice.partial_amend_of = amended
+      #elsif amended
+        #TODO 03 and 04 not yet supported
       else
         # importing amend invoice for an unexisting invoice, assign self id as
         # amended_invoice as a dirty hack
         invoice.amend_of = invoice
       end
+      invoice.amend_reason = amend_reason
     end
 
     # if it is an issued invoice, and
-    #    the client allready exists, and
+    #    the client already exists, and
     #    this client has different email than this invoice, then
     # save the email address to the invoice (overrides client email) 
     if client_role == "buyer" and client
@@ -796,6 +820,7 @@ _INV
       :fa_bank_code      => fa_bank_code,
       :fa_clauses        => fa_clauses,
       :party_identification => party_id,
+      :legal_literals    => legal_literals
     )
 
     if raw_invoice.respond_to? :filename             # Mail::Part
@@ -943,19 +968,20 @@ _INV
 
     Redmine::Hook.call_hook(:model_invoice_import_before_save, :invoice=>invoice)
 
-    if keep_original
+    if keep_original and validate
       begin
-        if validate
-          invoice.save!
-        else
-          invoice.save(validate: false)
-        end
+        invoice.save!
       rescue ActiveRecord::RecordInvalid
         raise invoice.errors.full_messages.join(". ")
       end
     else
-      invoice.save(:validate=>false)
+      # prevent duplicate invoices #5433
+      if company.project.invoices.any? {|i| i.number == invoice_number }
+        raise "#{I18n.t :field_number} #{I18n.t 'activerecord.errors.messages.taken'}"
+      end
+      invoice.save(validate: false)
     end
+
     logger.info "created new invoice with id #{invoice.id} for company #{company.name}. time=#{Time.now}"
 
     # warn user if calculated total != xml total
@@ -1110,6 +1136,18 @@ _INV
     @has_line_ponumber = (invoice_lines.collect {|l|
       l.ponumber
     }.uniq.size > 1)
+  end
+
+  def amend_reason
+    if read_attribute(:amend_reason).blank?
+      is_amend? ? '15' : ''
+    else
+      read_attribute(:amend_reason)
+    end
+  end
+
+  def self.amend_reason_codes
+    %w(01 02 03 04 05 06 07 08 09 10 11 12 13 14 15 16 80 81 82 83 84 85)
   end
 
   protected

@@ -43,7 +43,12 @@ class InvoicesController < ApplicationController
     sort_init 'invoices.created_at', 'desc'
     sort_update %w(invoices.created_at state_updated_at number date due_date clients.name import_in_cents)
 
-    invoices = @project.issued_invoices.includes(:client)
+    invoices = @project.issued_invoices.includes(:client).includes(:client_office)
+
+    # additional invoice filters
+    if Redmine::Hook.call_hook(:additional_invoice_filters,:project=>@project,:invoices=>invoices).any?
+      invoices = Redmine::Hook.call_hook(:additional_invoice_filters,:project=>@project,:invoices=>invoices)[0]
+    end
 
     if params[:invoices]
       invoices = invoices.where(["invoices.id in (?)",params[:invoices]])
@@ -64,7 +69,7 @@ class InvoicesController < ApplicationController
     # client filter
     # TODO: change view collection_select (doesnt display previously selected client)
     unless params[:client_id].blank?
-      invoices = invoices.where("client_id = ?", params[:client_id])
+      invoices = invoices.where("invoices.client_id = ?", params[:client_id])
       @client_id = params[:client_id].to_i rescue nil
     end
 
@@ -88,7 +93,7 @@ class InvoicesController < ApplicationController
       invoices = invoices.where("clients.taxcode like ?","%#{params[:taxcode]}%")
     end
     unless params[:name].blank?
-      invoices = invoices.where("clients.name like ?","%#{params[:name]}%")
+      invoices = invoices.where("clients.name like ? or client_offices.name like ?","%#{params[:name]}%","%#{params[:name]}%")
     end
     unless params[:number].blank?
       if params[:number] =~ /,/
@@ -156,6 +161,13 @@ class InvoicesController < ApplicationController
     if params[:created_client_id]
       @created_client = Client.find params[:created_client_id]
     end
+    if @invoice.partially_amended_id
+      @to_amend = Invoice.find @invoice.partially_amended_id rescue nil
+      @amend_type = 'partial'
+    else
+      @to_amend = Invoice.find_by_amend_id @invoice.id
+      @amend_type = 'total'
+    end
   end
 
   def create
@@ -174,7 +186,28 @@ class InvoicesController < ApplicationController
     end
     @client = @invoice.client
     @invoice.project = @project
+
+    @invoice.client_office = nil unless @client and @client.client_offices.any? {|office| office.id == @invoice.client_office_id }
+
+    if params[:to_amend] and params[:amend_type]
+      @to_amend = @project.invoices.find params[:to_amend]
+      @amend_type = params[:amend_type]
+      case params[:amend_type]
+      when 'total'
+        @to_amend.amend = @invoice
+        @invoice.amend_reason = '15'
+      when 'partial'
+        @invoice.partially_amended_id = @to_amend.id
+      else
+        raise "unknown amend type: #{params[:amend_type]}"
+      end
+    end
+
     if @invoice.save
+      if @to_amend and params[:amend_type] == 'total'
+        @to_amend.save(validate: false)
+        @to_amend.amend_and_close
+      end
       respond_to do |format|
         format.html {
           flash[:notice] = l(:notice_successful_create)
@@ -217,13 +250,20 @@ class InvoicesController < ApplicationController
       @client ||= Client.new
 
       respond_to do |format|
-        format.html { render :action => 'new' }
+        format.html { render :action => (@to_amend ? 'amend_for_invoice' : 'new') }
         format.api { render_validation_errors(@invoice) }
       end
     end
   end
 
   def update
+    if @invoice.partially_amended_id
+      @to_amend = Invoice.find @invoice.partially_amended_id rescue nil
+      @amend_type = 'partial'
+    else
+      @to_amend = Invoice.find_by_amend_id @invoice.id
+      @amend_type = 'total'
+    end
     @invoice.save_attachments(params[:attachments] || (params[:invoice] && params[:invoice][:uploads]))
 
     #TODO: need to access invoice taxes before update_attributes, if not
@@ -234,6 +274,10 @@ class InvoicesController < ApplicationController
     # mark as "_destroy" all taxes with an empty tax code
     # and copy global "exempt comment" to all exempt taxes
     parsed_params = parse_invoice_params
+
+    if params[:invoice][:client_id]
+      @invoice.client_office = nil unless Client.find(params[:invoice][:client_id]).client_offices.any? {|office| office.id == @invoice.client_office_id }
+    end
 
     if @invoice.update_attributes(parsed_params)
       event = Event.new(:name=>'edited',:invoice=>@invoice,:user=>User.current)
@@ -495,6 +539,10 @@ class InvoicesController < ApplicationController
                        :backtrace => e.backtrace)
     logger.info e
     logger.info e.backtrace
+    # Get notifications of type NameError if ExceptionNotifier is installed
+    if defined?(ExceptionNotifier) and e.is_a?(NameError)
+      ExceptionNotifier.notify_exception(e)
+    end
     #raise e if Rails.env == "development"
   ensure
     redirect_back_or_default(:action => 'show', :id => @invoice)
@@ -657,8 +705,19 @@ class InvoicesController < ApplicationController
   end
 
   def amend_for_invoice
-    amend = @invoice.create_amend
-    redirect_to :action => 'edit', :id => amend
+    @to_amend = @invoice
+    @amend_type = params[:amend_type]
+    @invoice = IssuedInvoice.new(
+      @to_amend.attributes.update(
+        state: 'new',
+        number: "#{@to_amend.number}-R"),
+        amend_reason: '15'
+    )
+    @to_amend.invoice_lines.each do |line|
+      il = line.dup
+      il.taxes = line.taxes.collect {|tax| tax.dup }
+      @invoice.invoice_lines << il
+    end
   end
 
   def mail
@@ -762,6 +821,12 @@ class InvoicesController < ApplicationController
         taxcode2 = "#{@client.country}#{@client.taxcode}"
       end
       @external_company = ExternalCompany.where('taxcode in (?, ?)', @client.taxcode, taxcode2).first
+    end
+    if @invoice.client_office
+      # overwrite client attributes with its office
+      ClientOffice::CLIENT_FIELDS.each do |f|
+        @client[f] = @invoice.client_office.send(f)
+      end
     end
   rescue ActiveRecord::RecordNotFound
     render_404
