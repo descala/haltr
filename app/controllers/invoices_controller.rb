@@ -1138,7 +1138,7 @@ class InvoicesController < ApplicationController
   private
 
   def parse_invoice_params
-    parsed_params = params[:invoice]
+    parsed_params = params[:invoice] || {}
     parsed_params['invoice_lines_attributes'] ||= {}
     # accept invoice_lines_attributes = { '0' => {}, ... }
     # and    invoice_lines_attributes = [{}, ...]
