@@ -540,6 +540,8 @@ _INV
     invoice_import   = Haltr::Utils.get_xpath(doc,xpaths[:invoice_import])
     invoice_due_date = Haltr::Utils.get_xpath(doc,xpaths[:invoice_due_date])
     discount_percent = Haltr::Utils.get_xpath(doc,xpaths[:discount_percent])
+    discount_amount  = Haltr::Utils.get_xpath(doc,xpaths[:discount_amount])
+    total_gross      = Haltr::Utils.get_xpath(doc,xpaths[:invoice_totalgross])
     discount_text    = Haltr::Utils.get_xpath(doc,xpaths[:discount_text])
     extra_info       = Haltr::Utils.get_xpath(doc,xpaths[:extra_info])
     charge           = Haltr::Utils.get_xpath(doc,xpaths[:charge])
@@ -778,6 +780,14 @@ _INV
       end
     end
 
+    if discount_amount.present? and discount_percent.blank?
+      # calculate discount percent if only amount is given, issue #5516
+      discount_percent = (BigDecimal.new(discount_amount) * 100 / BigDecimal.new(total_gross))
+    elsif discount_percent =~ / /
+      # there was several DiscountRate, sum them
+      discount_percent = discount_percent.split.collect {|a| Haltr::Utils.float_parse(a) }.sum
+    end
+
     invoice.assign_attributes(
       :number           => invoice_number,
       :series_code      => invoice_series,
@@ -898,12 +908,22 @@ _INV
       end
       # line discounts
       line_discounts = line.xpath(xpaths[:line_discounts])
-      if line_discounts.size > 1
-        raise "too many discounts per line! (#{line_discounts.size})"
-      elsif line_discounts.size == 1
-        il.discount_percent = Haltr::Utils.get_xpath(line_discounts.first,xpaths[:line_discount_percent])
-        il.discount_text = Haltr::Utils.get_xpath(line_discounts.first,xpaths[:line_discount_text])
+      il_disc_percent = 0
+      il_disc_text    = []
+      line_discounts.each do |line_disc|
+        disc_amount  = Haltr::Utils.get_xpath(line_disc,xpaths[:line_discount_amount])
+        disc_percent = Haltr::Utils.get_xpath(line_disc,xpaths[:line_discount_percent])
+        disc_text    = Haltr::Utils.get_xpath(line_disc,xpaths[:line_discount_text])
+        if disc_percent.blank? and disc_amount.present?
+          il_disc_percent += BigDecimal.new(disc_amount) * 100 / il.total_cost
+        elsif disc_percent.present?
+          il_disc_percent += BigDecimal.new(disc_percent)
+        end
+        il_disc_text << disc_text
       end
+      il.discount_percent = il_disc_percent
+      il.discount_text = il_disc_text.join('. ')
+
       # line_charges
       line_charges = line.xpath(xpaths[:line_charges])
       if line_charges.size > 1

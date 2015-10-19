@@ -462,11 +462,13 @@ class InvoiceTest < ActiveSupport::TestCase
     assert_equal Date.new(2010,3,10), invoice.invoicing_period_end
   end
 
-  test 'raise on importing invoice with >1 discount on same line' do
+  test 'when importing invoice with >1 discount on same line, add them' do
     file = File.new(File.join(File.dirname(__FILE__),'..','fixtures','documents','invoice_gob_es2.xml'))
-    assert_raise RuntimeError do
-      Invoice.create_from_xml(file,companies(:company6),"1234",'uploaded',User.current.name,nil,false)
-    end
+    invoice = Invoice.create_from_xml(file,companies(:company6),"1234",'uploaded',User.current.name,nil,false)
+    line = invoice.invoice_lines.first
+    assert_equal 10, line.discount_percent
+    assert_equal "Descuento. Descuento 2", line.discount_text
+    assert_equal 2.50, line.discount_amount
   end
 
   test 'create invoice from facturae32 without saving original' do
@@ -616,6 +618,19 @@ class InvoiceTest < ActiveSupport::TestCase
     i.company.round_before_sum = true
     assert_equal 1828.06, i.tax_amount.dollars
     assert_equal 1828.06, i.tax_amount(i.taxes.first).dollars
+  end
+
+  # import invoice_facturae32_issued10.xml
+  test 'import invoice calculates discount percent from amount when percent not present' do
+    file    = File.new(File.join(File.dirname(__FILE__),'..','fixtures','documents','invoice_facturae32_issued10.xml'))
+    invoice = Invoice.create_from_xml(file,User.find_by_login('jsmith'),"1234",'uploaded',User.current.name)
+    assert_equal 5.95, invoice.discount_percent
+    il = invoice.invoice_lines.first
+    assert_equal 101, il.total_cost
+    assert_equal 10, il.discount_percent
+    assert_equal 10.10, il.discount_amount
+    assert_equal 242.40, invoice.gross_subtotal.dollars
+    assert_equal BigDecimal.new('14.42').to_s, invoice.discount_amount.dollars.to_s
   end
 
 end

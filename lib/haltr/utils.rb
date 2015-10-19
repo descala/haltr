@@ -39,7 +39,9 @@ module Haltr
           xpaths[:invoicing_period_start] = "//Invoices/Invoice/InvoiceIssueData/InvoicingPeriod/StartDate"
           xpaths[:invoicing_period_end]   = "//Invoices/Invoice/InvoiceIssueData/InvoicingPeriod/EndDate"
           xpaths[:invoice_total]      = "//Invoices/Invoice/InvoiceTotals/InvoiceTotal"
+          xpaths[:invoice_totalgross] = "//Invoices/Invoice/InvoiceTotals/TotalGrossAmount"
           xpaths[:invoice_import]     = "//Invoices/Invoice/InvoiceTotals/TotalGrossAmountBeforeTaxes"
+          xpaths[:discount_amount]    = "//Invoices/Invoice/InvoiceTotals/TotalGeneralDiscounts"
           xpaths[:discount_percent]   = "//Invoices/Invoice/InvoiceTotals/GeneralDiscounts/Discount/DiscountRate"
           xpaths[:discount_text]      = "//Invoices/Invoice/InvoiceTotals/GeneralDiscounts/Discount/DiscountReason"
           xpaths[:payments_on_account]= "//Invoices/Invoice/InvoiceTotals/TotalPaymentsOnAccount"
@@ -120,6 +122,7 @@ module Haltr
 
           xpaths[:ponumber]           = "ReceiverTransactionReference"
           # relative to invoice_lines/discounts
+          xpaths[:line_discount_amount]  = "DiscountAmount"
           xpaths[:line_discount_percent] = "DiscountRate"
           xpaths[:line_discount_text]    = "DiscountReason"
           # relative to invoice_lines/charges
