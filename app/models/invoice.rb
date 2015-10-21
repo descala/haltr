@@ -303,7 +303,7 @@ class Invoice < ActiveRecord::Base
 
   def discount_amount(tax_type=nil)
     self.discount_percent = 0 if self.discount_percent.nil?
-    gross_subtotal * (discount_percent / 100.0)
+    gross_subtotal(tax_type) * (discount_percent / 100.0)
   end
 
   def tax_applies_to_all_lines?(tax)
