@@ -618,4 +618,19 @@ class InvoiceTest < ActiveSupport::TestCase
     assert_equal 1828.06, i.tax_amount(i.taxes.first).dollars
   end
 
+  test 'when round_before_sum is checked and invoice has discounts, taxes are calculated correctly' do
+    i = invoices(:i16)
+    assert_equal false, i.company.round_before_sum
+    assert_equal 90.00, i.subtotal.dollars
+    assert_equal 9.00, i.tax_amount(i.taxes.first).dollars
+    assert_equal 9.00, i.tax_amount.dollars
+    assert_equal 99.00, i.total.dollars
+    i.company.round_before_sum = true
+    assert_equal true, i.company.round_before_sum
+    assert_equal 90.00, i.subtotal.dollars
+    assert_equal 9.00, i.tax_amount(i.taxes.first).dollars
+    assert_equal 9.00, i.tax_amount.dollars
+    assert_equal 99.00, i.total.dollars
+  end
+
 end

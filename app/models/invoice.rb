@@ -271,8 +271,10 @@ class Invoice < ActiveRecord::Base
         if company and company.round_before_sum
           # sum([round(price) x tax])
           t += lines_with_tax(tax).collect {|line|
-            Haltr::Utils.to_money(line.gross_amount, currency, company.rounding_method) * (tax.percent / 100.0)
-          }.sum - discount_amount(tax_type)
+            price = Haltr::Utils.to_money(line.gross_amount, currency, company.rounding_method)
+            discount = Haltr::Utils.to_money((line.total_cost*(discount_percent / 100.0)),currency,company.rounding_method)
+            (price - discount)*(tax.percent / 100.0)
+          }.sum
         else
           # sum(price) x tax
           t += taxable_base(tax) * (tax.percent / 100.0)
@@ -283,8 +285,10 @@ class Invoice < ActiveRecord::Base
       if company and company.round_before_sum
         # sum([round(price) x tax])
         t += lines_with_tax(tax_type).collect {|line|
-          Haltr::Utils.to_money(line.gross_amount, currency, company.rounding_method) * (tax_type.percent / 100.0)
-        }.sum - discount_amount(tax_type)
+          price = Haltr::Utils.to_money(line.gross_amount, currency, company.rounding_method)
+          discount = Haltr::Utils.to_money((line.total_cost*(discount_percent / 100.0)),currency, company.rounding_method)
+          (price - discount)*(tax_type.percent / 100.0)
+        }.sum
       else
         # sum(price) x tax
         t += taxable_base(tax_type) * (tax_type.percent / 100.0)

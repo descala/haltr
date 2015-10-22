@@ -167,3 +167,9 @@ tax_vat_21_i15_line2:
   name: VAT
   percent: 21
   category: S
+
+tax_vat_10_i16_line1:
+  invoice_line: i16_line1
+  name: VAT
+  percent: 10
+  category: S

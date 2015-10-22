@@ -185,3 +185,10 @@ i15_line2:
   unit: 1
   price: 818.44
   description: "line 2 of invoice i15"
+
+i16_line1:
+  invoice_id: 16
+  quantity: 1
+  unit: 1
+  price: 100
+  description: "line 1 of invoice i16"
