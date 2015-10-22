@@ -87,15 +87,15 @@ class InvoiceTest < ActiveSupport::TestCase
 
     assert_equal 250, invoices(:invoices_001).subtotal_without_discount.dollars
     assert_equal 225, invoices(:invoices_001).taxable_base.dollars
-    assert_equal 2.25, invoices(:invoices_001).tax_amount.dollars
-    assert_equal(-11.25, invoices(:invoices_001).tax_amount(taxes(:taxes_006)).dollars)
-    assert_equal 13.5, invoices(:invoices_001).tax_amount(taxes(:taxes_005)).dollars
-    assert_equal 6.0, invoices(:invoices_001).tax_amount(taxes(:taxes_007)).dollars
-    assert_equal(-6.0, invoices(:invoices_001).tax_amount(taxes(:taxes_008)).dollars)
+    assert_equal 2.7, invoices(:invoices_001).tax_amount.dollars
+    assert_equal(-13.5, invoices(:invoices_001).tax_amount(taxes(:taxes_006)).dollars)
+    assert_equal 16.2, invoices(:invoices_001).tax_amount(taxes(:taxes_005)).dollars
+    assert_equal 7.2, invoices(:invoices_001).tax_amount(taxes(:taxes_007)).dollars
+    assert_equal(-7.2, invoices(:invoices_001).tax_amount(taxes(:taxes_008)).dollars)
     assert_equal 4, invoices(:invoices_001).taxes_uniq.size
     assert_equal 225, invoices(:invoices_001).subtotal.dollars
     assert_equal 25, invoices(:invoices_001).discount_amount.dollars
-    assert_equal 227.25, invoices(:invoices_001).total.dollars
+    assert_equal 227.7, invoices(:invoices_001).total.dollars
   end
 
   test "currency to upcase" do
