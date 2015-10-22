@@ -14,4 +14,8 @@ class Dir3Entity < ActiveRecord::Base
     country.present?
   end
 
+  def code=(dir3_code)
+    self[:code] = dir3_code.gsub(/ /,'')
+  end
+
 end
