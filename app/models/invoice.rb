@@ -1013,7 +1013,7 @@ _INV
         project:       company.project,
       )
     end
-    raise $!.message
+    raise $!
   end
 
   def send_original?

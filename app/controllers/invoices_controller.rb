@@ -1074,6 +1074,7 @@ class InvoicesController < ApplicationController
   rescue
     respond_to do |format|
       format.html {
+        raise $! if User.current.admin?
         flash[:error] = $!.message
         redirect_to :action => 'import', :project_id => @project
       }
