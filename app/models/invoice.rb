@@ -1144,7 +1144,7 @@ _INV
 
   def amend_reason
     if read_attribute(:amend_reason).blank?
-      is_amend? ? '15' : ''
+      is_amend? ? '16' : ''
     else
       read_attribute(:amend_reason)
     end
