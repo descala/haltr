@@ -705,7 +705,7 @@ _INV
     dir3 = nil
     doc.xpath(xpaths[:dir3s]).each do |line|
       role = Haltr::Utils.get_xpath(line, xpaths[:dir3_role])
-      code = Haltr::Utils.get_xpath(line, xpaths[:dir3_code]).gsub(/ /,'')
+      code = Haltr::Utils.get_xpath(line, xpaths[:dir3_code]).gsub(/ /,'') rescue nil
       case role
       when '01'
         invoice.oficina_comptable  = code
