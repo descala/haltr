@@ -15,7 +15,7 @@ class Dir3Entity < ActiveRecord::Base
   end
 
   def code=(dir3_code)
-    self[:code] = dir3_code.gsub(/ /,'')
+    self[:code] = dir3_code.gsub(/ /,'') rescue nil
   end
 
 end
