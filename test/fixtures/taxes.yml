@@ -143,6 +143,7 @@ tax_vat_0_template1_l1:
   name: VAT
   percent: 0
   category: E
+  comment: Exempt because we do not have to pay it
 
 tax_vat_0_draft1_l1:
   invoice_line_id: 103
