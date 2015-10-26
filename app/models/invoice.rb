@@ -656,32 +656,34 @@ _INV
       end
     end
 
+    # get client data from imported invoice
+    client_taxcode     = client_role == "seller" ? seller_taxcode : buyer_taxcode
+    client_name        = Haltr::Utils.get_xpath(doc,xpaths["#{client_role}_name"]) ||
+      Haltr::Utils.get_xpath(doc,xpaths["#{client_role}_name2"])
+    client_address     = Haltr::Utils.get_xpath(doc,xpaths["#{client_role}_address"])
+    client_province    = Haltr::Utils.get_xpath(doc,xpaths["#{client_role}_province"])
+    if invoice_format =~ /^facturae/
+      country_alpha3 = Haltr::Utils.get_xpath(doc,xpaths["#{client_role}_countrycode"])
+      client_countrycode = SunDawg::CountryIsoTranslater.translate_standard(country_alpha3,"alpha3","alpha2").downcase
+    else
+      client_countrycode = Haltr::Utils.get_xpath(doc,xpaths["#{client_role}_countrycode"])
+    end
+    client_website     = Haltr::Utils.get_xpath(doc,xpaths["#{client_role}_website"])
+    client_email       = Haltr::Utils.get_xpath(doc,xpaths["#{client_role}_email"])
+    client_cp_city     = Haltr::Utils.get_xpath(doc,xpaths["#{client_role}_cp_city"]) ||
+      Haltr::Utils.get_xpath(doc,xpaths["#{client_role}_cp_city2"])
+    client_postalcode  = client_cp_city.split(" ").first rescue ""
+    client_city        = client_cp_city.gsub(/^#{client_postalcode} /,'') rescue ""
+    if client_postalcode.blank?
+      client_postalcode  = Haltr::Utils.get_xpath(doc,xpaths["#{client_role}_cp"])
+    end
+
+    client_language = User.current.language
+    client_language = 'es' if client_language.blank?
+    client_office = nil
+
     # create client if not exists
-    unless client
-      client_taxcode     = client_role == "seller" ? seller_taxcode : buyer_taxcode
-      client_name        = Haltr::Utils.get_xpath(doc,xpaths["#{client_role}_name"]) ||
-                           Haltr::Utils.get_xpath(doc,xpaths["#{client_role}_name2"])
-      client_address     = Haltr::Utils.get_xpath(doc,xpaths["#{client_role}_address"])
-      client_province    = Haltr::Utils.get_xpath(doc,xpaths["#{client_role}_province"])
-      if invoice_format =~ /^facturae/
-        country_alpha3 = Haltr::Utils.get_xpath(doc,xpaths["#{client_role}_countrycode"])
-        client_countrycode = SunDawg::CountryIsoTranslater.translate_standard(country_alpha3,"alpha3","alpha2").downcase
-      else
-        client_countrycode = Haltr::Utils.get_xpath(doc,xpaths["#{client_role}_countrycode"])
-      end
-      client_website     = Haltr::Utils.get_xpath(doc,xpaths["#{client_role}_website"])
-      client_email       = Haltr::Utils.get_xpath(doc,xpaths["#{client_role}_email"])
-      client_cp_city     = Haltr::Utils.get_xpath(doc,xpaths["#{client_role}_cp_city"]) ||
-                           Haltr::Utils.get_xpath(doc,xpaths["#{client_role}_cp_city2"])
-      client_postalcode  = client_cp_city.split(" ").first rescue ""
-      client_city        = client_cp_city.gsub(/^#{client_postalcode} /,'') rescue ""
-      if client_postalcode.blank?
-        client_postalcode  = Haltr::Utils.get_xpath(doc,xpaths["#{client_role}_cp"])
-      end
-
-      client_language = User.current.language
-      client_language = 'es' if client_language.blank?
-
+    if client.nil?
       client = Client.new(
         :taxcode        => client_taxcode,
         :name           => client_name,
@@ -700,6 +702,43 @@ _INV
 
       client.save!(:validate=>false)
       logger.info "created new client \"#{client_name}\" with cif #{client_taxcode} for company #{company.name}. time=#{Time.now}"
+    else
+      # client found by taxcode, but stored data may not match data in invoice
+      # if it doesn't, we create a client_office with data from invoice
+      to_match = {
+        full_address:   client_address.chomp,
+        city:           client_city.chomp,
+        province:       client_province.chomp,
+        postalcode:     client_postalcode.chomp,
+        country_alpha3: client_countrycode.chomp,
+        name:           client_name.chomp
+      }
+      match = to_match.all? {|k, v| client.send(k).to_s.chomp.casecmp(v) == 0 }
+
+      unless match
+        client.client_offices.each do |office|
+          match = to_match.all? {|k, v| office.send(k).to_s.chomp.casecmp(v) == 0 }
+          if match
+            client_office = office
+            break
+          end
+        end
+
+        if client_office.nil?
+          # client and all its client_offices differ from data in invoice
+          client_office = ClientOffice.new(
+            client_id:  client.id,
+            address:    client_address,
+            city:       client_city,
+            province:   client_province,
+            postalcode: client_postalcode,
+            country:    client_countrycode,
+            name:       client_name
+          )
+          client_office.save
+          client.reload
+        end
+      end
     end
 
     dir3 = nil
@@ -786,6 +825,7 @@ _INV
       :number           => invoice_number,
       :series_code      => invoice_series,
       :client           => client,
+      :client_office    => client_office,
       :date             => invoice_date,
       :invoicing_period_start => i_period_start,
       :invoicing_period_end   => i_period_end,
