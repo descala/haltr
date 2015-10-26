@@ -34,10 +34,7 @@ class InvoiceTemplate < Invoice
       l.template_replacements(i.date)
       i.invoice_lines << l
       tl.taxes.each do |tax|
-        l.taxes << Tax.new(name: tax.name,
-                           percent: tax.percent,
-                           category: tax.category,
-                           comment: tax.comment)
+        l.taxes << Tax.new(tax.attributes)
       end
     end
     i.save!

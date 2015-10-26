@@ -15,7 +15,7 @@ invoice1:
 
 template1:
   type: InvoiceTemplate
-  date: 2008-11-24
+  date: <%= Date.today %>
   client: client1
   extra_info: "periode: Desembre 2008"
   frequency: 1
