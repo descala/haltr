@@ -393,13 +393,13 @@
                 <UnitOfMeasure><%=h invoice_line.unit_code(:facturae)%></UnitOfMeasure>
               <% end -%>
               <UnitPriceWithoutTax><%=h haltr_precision(invoice_line.price,6)%></UnitPriceWithoutTax>
-              <TotalCost><%=h haltr_precision(invoice_line.total_cost,(format == "facturae32" ? 6 : 2))%></TotalCost>
+              <TotalCost><%=h haltr_precision(invoice_line.total_cost, *(format == "facturae32" ? [6,2] : 2))%></TotalCost>
 <% if invoice_line.discount_percent > 0 -%>
               <DiscountsAndRebates>
                 <Discount>
                   <DiscountReason><%=h invoice_line.discount_text.blank? ? "." : invoice_line.discount_text %></DiscountReason>
                   <DiscountRate><%=h haltr_precision(invoice_line.discount_percent, 4)%></DiscountRate>
-                  <DiscountAmount><%=h haltr_precision(invoice_line.discount_amount,(@format =~ /facturae/ ? 6 : 2))%></DiscountAmount>
+                  <DiscountAmount><%=h haltr_precision(invoice_line.discount_amount, *(@format == 'facturae31' ? 2 : [6,2]))%></DiscountAmount>
                 </Discount>
               </DiscountsAndRebates>
 <% end -%>
@@ -407,11 +407,11 @@
               <Charges>
                 <Charge>
                   <ChargeReason><%=h invoice_line.charge_reason.blank? ? "." : invoice_line.charge_reason %></ChargeReason>
-                  <ChargeAmount><%=h haltr_precision(invoice_line.charge,(@format =~ /facturae/ ? 6 : 2))%></ChargeAmount>
+                  <ChargeAmount><%=h haltr_precision(invoice_line.charge,(@format == 'facturae31' ? 2 : [6,2]))%></ChargeAmount>
                 </Charge>
               </Charges>
 <% end -%>
-              <GrossAmount><%=h haltr_precision(invoice_line.gross_amount,(format == "facturae32" ? 6 : 2))%></GrossAmount>
+              <GrossAmount><%=h haltr_precision(invoice_line.gross_amount,(format == "facturae32" ? [6,2] : 2))%></GrossAmount>
 <% if invoice_line.taxes_withheld.any? -%>
               <TaxesWithheld>
 <% invoice_line.taxes_withheld.each do |tax| -%>

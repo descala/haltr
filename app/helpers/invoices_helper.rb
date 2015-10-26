@@ -8,10 +8,14 @@ module InvoicesHelper
     clients.collect {|c| [c.name, c.id, {'data-invoice_format'=>ExportChannels.l(c.invoice_format)}] unless c.name.blank?}.compact
   end
 
-  def haltr_precision(num,precision=2)
-    num=0 if num.nil?
-    # :significant - If true, precision will be the # of significant_digits. If false, the # of fractional digits
-    number_with_precision(num,:precision=>precision,:significant => false)
+  def haltr_precision(num, precision=2, relevant=nil)
+    num = 0 if num.nil?
+    if relevant.present?
+      # relevant first cuts the number, then precision will add zeros
+      num = number_with_precision(num, precision: relevant)
+    end
+    num = number_with_precision(num, precision: precision)
+    num
   end
 
   def send_link_for_invoice
