@@ -939,6 +939,16 @@ _INV
           :event_reason => Haltr::Utils.get_xpath(line,xpaths[:tax_event_reason])
         )
         il.taxes << tax
+        # EquivalenceSurcharges (#5560)
+        re_tax_percent = Haltr::Utils.get_xpath(line_tax,xpaths[:tax_surcharge])
+        if re_tax_percent.present?
+          re_tax = Tax.new(
+            :name     => 'RE',
+            :percent  => re_tax_percent.to_f,
+            :category => tax.category
+          )
+          il.taxes << re_tax
+        end
       end
       # line discounts
       line_discounts = line.xpath(xpaths[:line_discounts])
