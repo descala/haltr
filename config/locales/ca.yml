@@ -358,6 +358,7 @@ ca:
   "custom": Personalitzat
 
   # Frequency
+  mf60: cada 5 anys
   mf36: Cada 3 anys
   mf24: Cada 2 anys
   mf12: Anual
