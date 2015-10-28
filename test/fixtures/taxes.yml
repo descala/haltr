@@ -141,9 +141,9 @@ tax_vat_0_test_import_l1:
 tax_vat_0_template1_l1:
   invoice_line_id: 102
   name: VAT
-  percent: 0
-  category: E
-  comment: Exempt because we do not have to pay it
+  percent: 21
+  category: S
+  comment: Just a comment
 
 tax_vat_0_draft1_l1:
   invoice_line_id: 103
