@@ -262,6 +262,10 @@ class Invoice < ActiveRecord::Base
     false # Only IssuedInvoices can be an amend
   end
 
+  # round_before_sum:
+  #   true:  Arrodonir IVA de cada línia i després sumar
+  #   false: Sumar els IVA de les línies i després arrodonir
+  #TODO: ull amb round_before_sum hi ha facturae que no valida!
   # cost de les taxes (Money)
   def tax_amount(tax_type=nil)
     t = Money.new(0,currency)
