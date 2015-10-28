@@ -145,7 +145,7 @@ module InvoicesHelper
     # tax_name = 'VAT'
     taxes = invoice.taxes_hash[tax_name].sort
     show_category = false
-    if taxes.size != taxes.collect {|t| t.percent}.uniq.size
+    if taxes.size != taxes.collect {|t| t.percent}.uniq.size or tax_name == 'RE'
       show_category = true
     end
     taxes.collect do |tax|

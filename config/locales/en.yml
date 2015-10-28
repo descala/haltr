@@ -428,6 +428,7 @@ en:
   tax_S: "Standard"
   tax_H: "High Rated"
   tax_AA: "Low Rated"
+  tax_AAA: "Super Low Rated"
   bank_info: "Bank info"
   invoice_data: "Invoice data"
 
@@ -694,3 +695,4 @@ en:
   partially_amended_by_invoices: "Partially rectified by"
   awarding: "Awarding"
   field_issuer_transaction_reference: "Receiving advice"
+  re_tax_without_iva_same_category: "Line '%{line}' has RE tax not matching IVA tax"

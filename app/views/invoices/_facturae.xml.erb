@@ -269,6 +269,7 @@
          <TaxesOutputs>
 <% if @invoice.taxes_outputs.any? -%>
 <% @invoice.taxes_outputs.each do |tax| -%>
+  <% next if tax.name == 'RE' -%>
            <Tax>
              <TaxTypeCode><%= Tax::SPAIN_TAXCODES[tax.name.upcase] || '05'%></TaxTypeCode>
              <TaxRate><%=h haltr_precision tax.percent%></TaxRate>
@@ -278,6 +279,15 @@
              <TaxAmount>
                <TotalAmount><%=h haltr_precision @invoice.tax_amount(tax).dollars %></TotalAmount>
              </TaxAmount>
+             <% if tax.name == 'IVA' -%>
+               <% equivalence_surcharge = @invoice.taxes_outputs.select {|t| t.name == 'RE' and t.category == tax.category }.first -%>
+               <% if equivalence_surcharge -%>
+                 <EquivalenceSurcharge><%=h haltr_precision equivalence_surcharge.percent%></EquivalenceSurcharge>
+                 <EquivalenceSurchargeAmount>
+                   <TotalAmount><%=h haltr_precision @invoice.tax_amount(equivalence_surcharge).dollars %></TotalAmount>
+                 </EquivalenceSurchargeAmount>
+               <% end -%>
+             <% end -%>
            </Tax>
 <% end -%>
 <% else -%>
@@ -431,6 +441,7 @@
 <% if invoice_line.taxes_outputs.any? -%>
               <TaxesOutputs>
 <% invoice_line.taxes_outputs.each do |tax| -%>
+  <% next if tax.name == 'RE' -%>
                  <Tax>
                     <TaxTypeCode>01</TaxTypeCode>
                     <TaxRate><%=h haltr_precision tax.percent%></TaxRate>
@@ -440,7 +451,16 @@
                     <TaxAmount>
                       <TotalAmount><%=h haltr_precision(invoice_line.tax_amount(tax))%></TotalAmount>
                     </TaxAmount>
-                 </Tax>
+                    <% if tax.name == 'IVA' -%>
+                      <% equivalence_surcharge = @invoice.taxes_outputs.select {|t| t.name == 'RE' and t.category == tax.category }.first -%>
+                      <% if equivalence_surcharge -%>
+                        <EquivalenceSurcharge><%=h haltr_precision equivalence_surcharge.percent%></EquivalenceSurcharge>
+                        <EquivalenceSurchargeAmount>
+                          <TotalAmount><%=h haltr_precision @invoice.tax_amount(equivalence_surcharge).dollars %></TotalAmount>
+                        </EquivalenceSurchargeAmount>
+                      <% end -%>
+                    <% end -%>
+                  </Tax>
 <% end -%>
               </TaxesOutputs>
 <% end -%>

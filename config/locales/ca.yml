@@ -440,6 +440,7 @@ ca:
   tax_S: "Estàndard"
   tax_H: "Tasa alta"
   tax_AA: "Tasa baixa"
+  tax_AAA: "Tasa super reduïda"
   invoice_data: "Dades factura"
   bank_info: "Dades bancàries"
 
@@ -707,3 +708,4 @@ ca:
   partially_amended_by_invoices: "Parcialment rectificada per"
   awarding: "Contracte d'adjudicació"
   field_issuer_transaction_reference: "Contra-albarà"
+  re_tax_without_iva_same_category: "La línia '%{line}' té un impost RE que no correspon a l'impost IVA"

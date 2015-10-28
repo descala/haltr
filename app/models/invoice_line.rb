@@ -37,6 +37,7 @@ class InvoiceLine < ActiveRecord::Base
   accepts_nested_attributes_for :taxes,
     :allow_destroy => true
   validates_associated :taxes
+  validate :has_same_category_iva_tax, if: Proc.new {|line| line.taxes.any? {|t| t.name == 'RE' } }
 
   # Coste Total.
   # Quantity x UnitPriceWithoutTax
@@ -126,6 +127,17 @@ _LINE
   end
 
   def discount_helper
+  end
+
+  def has_same_category_iva_tax
+    re_taxes = taxes.select {|t| t.name == 'RE' }
+    iva_taxes = taxes.select {|t| t.name == 'IVA' }
+    re_taxes.each do |tax|
+      next if tax.marked_for_destruction?
+      unless iva_taxes.any? {|t| t.category == tax.category }
+        errors.add(:base, l(:re_tax_without_iva_same_category, :line => description))
+      end
+    end
   end
 
   private
