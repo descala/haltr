@@ -692,3 +692,7 @@ sv:
   awarding: "Awarding"
   field_issuer_transaction_reference: "Receiving advice"
   re_tax_without_iva_same_category: "Line '%{line}' has RE tax not matching IVA tax"
+  label_discounts: "Discounts"
+  field_line_discounts_as_imports: "Show line discounts"
+  as_import: "As import"
+  as_percent: "As %"

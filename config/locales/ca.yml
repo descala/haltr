@@ -709,3 +709,7 @@ ca:
   awarding: "Contracte d'adjudicació"
   field_issuer_transaction_reference: "Contra-albarà"
   re_tax_without_iva_same_category: "La línia '%{line}' té un impost RE que no correspon a l'impost IVA"
+  label_discounts: "Descomptes"
+  field_line_discounts_as_imports: "Mostrar els descomptes per línia"
+  as_import: "Com a import"
+  as_percent: "Com a %"

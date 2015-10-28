@@ -711,3 +711,7 @@ es:
   awarding: "Contrato de adjudicación"
   field_issuer_transaction_reference: "Contra-albarán"
   re_tax_without_iva_same_category: "La línea '%{line}' tiene un impuesto RE que no corresponde al impuesto IVA"
+  label_discounts: "Descuentos"
+  field_line_discounts_as_imports: "Mostrar descuentos por línea"
+  as_import: "Como importe"
+  as_percent: "Como %"

@@ -1,3 +1,40 @@
+<fieldset>
+  <legend><%=l(:field_company_public)%></legend>
+  <div class="seccio grup">
+    <p class="col span-1-de-3">
+    <label><%= f.radio_button :public, :public %> <%= help :help_public_profile %> <%=l(:public)%></label>
+    </p>
+    <p class="col span-1-de-3">
+    <label><%= f.radio_button :public, :semipublic %> <%= help :help_semipublic_profile %> <%=l(:semipublic)%></label>
+    </p>
+    <p class="col span-1-de-3">
+    <label><%= f.radio_button :public, :private %> <%= help :help_private_profile %> <%=l(:private)%></label>
+    </p>
+    <p><%= l(:profile_recomended) %></p>
+  </div>
+</fieldset>
+
+<fieldset class="tabular box">
+  <legend><%= l(:label_discounts) %></legend>
+<div class="seccio grup">
+  <p class="col span-1-de-3">
+  <%= f.select :line_discounts_as_imports, [[l('as_percent'),false],[l('as_import'),true]] %>
+  </p>
+</div>
+</fieldset>
+
+<fieldset class="tabular box">
+<legend><%=l(:label_rounding_plural)%></legend>
+<div class="seccio grup">
+  <p class="col span-1-de-3">
+  <%= f.select :rounding_method, Company.rounding_methods %>
+  </p>
+  <p class="col span-1-de-3" style="float: left; clear: left; margin-left: 0px;">
+  <span>&nbsp;<%= check_box(:company, :round_before_sum, {:no_label=>true}) %> <%= l(:round_before_sum) %></span>
+  </p>
+</div>
+</fieldset>
+
 <fieldset class="tabular box" style="padding-bottom: 40px;">
   <legend><%= l(:pdf_customization) %></legend>
   <%= f.select :pdf_template, [[l(:pdf_default),'default'], [l(:pdf_right_windowed_envelope),'right_windowed_envelope']] -%>
