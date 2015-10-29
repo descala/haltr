@@ -623,6 +623,11 @@ ca:
   label_factoring_assignment_data: 'Cessió de factoring'
   field_fa_person_type: "Tipus d'entitat"
   field_fa_residence_type: 'Residència'
+  label_fa_person_type_individual: "Física"
+  label_fa_person_type_entity: "Jurídica"
+  label_fa_residence_type_foreigner: "Extranger"
+  label_fa_residence_type_spain: "Resident"
+  label_fa_residence_type_UE: "Europeu"
   field_fa_taxcode: 'NIF'
   field_fa_name: 'Nom'
   field_fa_address: 'Adreça'
@@ -638,7 +643,7 @@ ca:
   field_fa_clauses: 'Clàusula de cessió'
   field_fa_payment_method: 'Mètode de pagament'
   channel_requires_user_pass: "El canal necessita que configuris usuari i password a 'Connexions' a 'La meva empresa'"
-  download_legal_invoice: "Descarregar factura legal"
+  download_legal_invoice: "Descarregar factura"
   label_report_channel_state: "Factures per canal d'enviament i per estat"
   pdf_customization: "Personalització de PDF"
   field_pdf_template: "Plantilla PDF"
