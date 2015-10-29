@@ -16,7 +16,7 @@ es:
 - name: IVA
   percent: 4.0
   default: false
-  category: AA
+  category: AAA
   facturae_id: '01'
 - name: IVA
   percent: 0.0
@@ -88,6 +88,23 @@ es:
   default: false
   category: H
   facturae_id: '02'
+- name: RE
+  percent: 5.2
+  default: false
+  category: S
+- name: RE
+  percent: 1.4
+  default: false
+  category: AA
+- name: RE
+  percent: 0.5
+  default: false
+  category: AAA
+- name: RE
+  percent: 1.75
+  default: false
+  category: S
+
 fr:
 - name: TVA
   percent: 19.6

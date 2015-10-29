@@ -44,6 +44,7 @@ class Tax < ActiveRecord::Base
     'IMPN'     => '16', # Impuesto municipal sobre publicidad en Navarra
     'REAV'     => '17', # Regim especial d'IVA de les agencies de viatges (#5492)
     'REIVA'    => '17', # Regim especial d'IVA de les agencies de viatges (#5492)
+    'RE'       => '', # Recàrrec d'equivalència (#5560)
   }
 
   def ==(oth)
@@ -97,7 +98,7 @@ class Tax < ActiveRecord::Base
 
   # E=Exempt, NS=NotSubject, Z=ZeroRated, S=Standard, H=High Rate, AA=Low Rate
   def self.categories
-    ['E','NS','Z','S','H','AA']
+    ['E','NS','Z','S','H','AA', 'AAA']
   end
 
   def to_s

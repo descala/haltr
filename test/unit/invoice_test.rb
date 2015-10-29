@@ -651,4 +651,15 @@ class InvoiceTest < ActiveSupport::TestCase
     assert_equal clients(:clients_001).client_offices.first.id, invoice.client_office_id
   end
 
+  test 'import facturae32 with EquivalenceSurcharge taxes' do
+    file = File.new(File.join(File.dirname(__FILE__),'..','fixtures','documents','invoice_gob_es.xml'))
+    invoice = Invoice.create_from_xml(file,companies(:company6),"1234",'uploaded',User.current.name,nil,false)
+    assert_equal(3, invoice.invoice_lines.last.taxes.size)
+    re_taxes = invoice.invoice_lines.last.taxes.select {|tax| tax.name == 'RE'}
+    assert_equal(1, re_taxes.size)
+    re_tax = re_taxes.first
+    assert_equal('S',re_tax.category)
+    assert_equal(1.00,re_tax.percent)
+  end
+
 end

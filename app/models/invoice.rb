@@ -262,6 +262,10 @@ class Invoice < ActiveRecord::Base
     false # Only IssuedInvoices can be an amend
   end
 
+  # round_before_sum:
+  #   true:  Arrodonir IVA de cada línia i després sumar
+  #   false: Sumar els IVA de les línies i després arrodonir
+  #TODO: ull amb round_before_sum hi ha facturae que no valida!
   # cost de les taxes (Money)
   def tax_amount(tax_type=nil)
     t = Money.new(0,currency)
@@ -939,6 +943,16 @@ _INV
           :event_reason => Haltr::Utils.get_xpath(line,xpaths[:tax_event_reason])
         )
         il.taxes << tax
+        # EquivalenceSurcharges (#5560)
+        re_tax_percent = Haltr::Utils.get_xpath(line_tax,xpaths[:tax_surcharge])
+        if re_tax_percent.present?
+          re_tax = Tax.new(
+            :name     => 'RE',
+            :percent  => re_tax_percent.to_f,
+            :category => tax.category
+          )
+          il.taxes << re_tax
+        end
       end
       # line discounts
       line_discounts = line.xpath(xpaths[:line_discounts])

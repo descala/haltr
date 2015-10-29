@@ -128,6 +128,7 @@ module Haltr
           # relative to invoice_lines/taxes
           xpaths[:tax_id]             = "TaxTypeCode"
           xpaths[:tax_percent]        = "TaxRate"
+          xpaths[:tax_surcharge]      = "EquivalenceSurcharge"
 
           xpaths[:dir3s]              = "//Parties/BuyerParty/AdministrativeCentres/AdministrativeCentre"
           # relative to AdministrativeCentre
