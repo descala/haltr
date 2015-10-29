@@ -625,6 +625,11 @@ gl:
   label_factoring_assignment_data: 'Cesión de factoring'
   field_fa_person_type: 'Tipo entidade'
   field_fa_residence_type: 'Residencia'
+  label_fa_person_type_individual: "Física"
+  label_fa_person_type_entity: "Jurídica"
+  label_fa_residence_type_foreigner: "Extranjero"
+  label_fa_residence_type_spain: "Residente"
+  label_fa_residence_type_UE: "Europeo"
   field_fa_taxcode: 'NIF'
   field_fa_name: 'Nome'
   field_fa_address: 'Enderezo'
@@ -640,7 +645,7 @@ gl:
   field_fa_clauses: 'Cláusula de cesión'
   field_fa_payment_method: 'Método de pagamento'
   channel_requires_user_pass: "A canle precisa que configures usuario e password en ‘Conexións’ en ’A miña empresa'"
-  download_legal_invoice: "Descargar factura legal"
+  download_legal_invoice: "Descargar factura"
   label_report_channel_state: "Facturas por canle de envío e estado"
   pdf_customization: "Personalización de PDF"
   field_pdf_template: "Plantilla PDF"

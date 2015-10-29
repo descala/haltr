@@ -607,6 +607,11 @@ fr:
   label_factoring_assignment_data: 'Factoring assignment'
   field_fa_person_type: 'Entity type'
   field_fa_residence_type: 'Residence type'
+  label_fa_person_type_individual: "Individual"
+  label_fa_person_type_entity: "Entity"
+  label_fa_residence_type_foreigner: "Foreigner"
+  label_fa_residence_type_spain: "Resident"
+  label_fa_residence_type_UE: "European"
   field_fa_taxcode: 'VAT ID number'
   field_fa_name: 'Name'
   field_fa_address: 'Address'
@@ -622,7 +627,7 @@ fr:
   field_fa_clauses: 'Assignment clause'
   field_fa_payment_method: 'Payment method'
   channel_requires_user_pass: "Channel requires to configure user and password at 'My company'"
-  download_legal_invoice: "Download legal invoice"
+  download_legal_invoice: "Download invoice"
   label_report_channel_state: "Invoices by Channel and State"
   pdf_customization: "PDF customization"
   field_pdf_template: "PDF template"
