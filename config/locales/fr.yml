@@ -348,6 +348,7 @@ fr:
   "custom": Personnalisé
 
   # Frequency
+  mf60: Tous les 5 ans
   mf36: Tous les 3 ans
   mf24: Tous les 2 ans
   mf12: Annuel

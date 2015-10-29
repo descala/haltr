@@ -347,6 +347,7 @@ nl:
   "custom": Custom
 
   # Frequency
+  mf60: Every 5 years
   mf36: Every 3 years
   mf24: Every 2 years
   mf12: Yearly
