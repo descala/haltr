@@ -203,6 +203,10 @@ class InvoicesController < ApplicationController
       end
     end
 
+    if Redmine::Hook.call_hook(:invoice_before_create,:project=>@project,:invoice=>@invoice,:params=>params).any?
+      @invoice = Redmine::Hook.call_hook(:invoice_before_create,:project=>@project,:invoice=>@invoice,:params=>params)[0]
+    end
+
     if @invoice.save
       if @to_amend and params[:amend_type] == 'total'
         @to_amend.save(validate: false)
