@@ -443,7 +443,7 @@
 <% invoice_line.taxes_outputs.each do |tax| -%>
   <% next if tax.name == 'RE' -%>
                  <Tax>
-                    <TaxTypeCode>01</TaxTypeCode>
+                    <TaxTypeCode><%= Tax::SPAIN_TAXCODES[tax.name.upcase] || '01' %></TaxTypeCode>
                     <TaxRate><%=h haltr_precision tax.percent%></TaxRate>
                     <TaxableBase>
                       <TotalAmount><%=h haltr_precision Haltr::Utils.to_money(invoice_line.total_cost, @invoice.currency, @invoice.company.rounding_method) %></TotalAmount>
