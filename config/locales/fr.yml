@@ -575,6 +575,7 @@ fr:
   field_discount: "Discount"
   field_charge: "Charge"
   download_as_pdf: "Download PDF copy"
+  download_as_xml: "Download XML"
   label_reports: Reports
   visible_fields: "Visible fields"
   required_fields: "Required fields"
