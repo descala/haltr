@@ -593,6 +593,7 @@ ca:
   field_discount: "Descompte"
   field_charge: "Càrrec"
   download_as_pdf: "Descarregar còpia en PDF"
+  download_as_xml: "Descaregar XML"
   label_reports: Informes
   visible_fields: "Camps visibles"
   required_fields: "Camps requerits"

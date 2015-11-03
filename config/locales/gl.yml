@@ -594,6 +594,7 @@ gl:
   field_discount: "Desconto"
   field_charge: "Cargo"
   download_as_pdf: "Descargar copia en PDF"
+  download_as_xml: "Descargar XML"
   label_reports: Informes
   visible_fields: "Campos visibles"
   required_fields: "Campos requiridos"
