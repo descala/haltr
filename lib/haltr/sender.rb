@@ -33,6 +33,8 @@ module Haltr
       else
         if format == 'pdf'
           doc = Haltr::Pdf.generate(invoice)
+        elsif format == 'none'
+          doc = nil
         else
           doc = Haltr::Xml.generate(invoice,format,local_certificate)
         end
