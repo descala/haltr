@@ -782,7 +782,7 @@ _INV
 
     if discount_amount.present? and discount_percent.blank?
       # calculate discount percent if only amount is given, issue #5516
-      discount_percent = (BigDecimal.new(discount_amount) * 100 / BigDecimal.new(total_gross))
+      discount_percent = (BigDecimal.new(discount_amount) * 100 / BigDecimal.new(total_gross)).round(2)
     elsif discount_percent =~ / /
       # there was several DiscountRate, sum them
       discount_percent = discount_percent.split.collect {|a| Haltr::Utils.float_parse(a) }.sum
@@ -921,7 +921,7 @@ _INV
         end
         il_disc_text << disc_text
       end
-      il.discount_percent = il_disc_percent
+      il.discount_percent = il_disc_percent.round(2)
       il.discount_text = il_disc_text.join('. ')
 
       # line_charges
