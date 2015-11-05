@@ -403,7 +403,7 @@ class Invoice < ActiveRecord::Base
   end
 
   def payments_on_account=(value)
-    if value =~ /^[0-9,.']*$/
+    if value =~ /^[-0-9,.']*$/
       value = Money.parse(value)
       write_attribute :payments_on_account_in_cents, value.cents
     else

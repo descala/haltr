@@ -350,7 +350,7 @@
             <TotalTaxOutputs><%=h haltr_precision @invoice.total_tax_outputs.dollars%></TotalTaxOutputs>
             <TotalTaxesWithheld><%=h haltr_precision @invoice.total_taxes_withheld.dollars%></TotalTaxesWithheld>
             <InvoiceTotal><%=h haltr_precision @invoice.total.dollars%></InvoiceTotal>
-            <% if @invoice.payments_on_account_in_cents.to_i > 0 -%>
+            <% if @invoice.payments_on_account_in_cents.to_i != 0 -%>
               <PaymentsOnAccount>
                 <PaymentOnAccount>
                   <PaymentOnAccountDate><%=h @invoice.date%></PaymentOnAccountDate>
@@ -359,7 +359,7 @@
               </PaymentsOnAccount>
             <% end -%>
             <TotalOutstandingAmount><%=h haltr_precision (@invoice.total - @invoice.payments_on_account).dollars%></TotalOutstandingAmount>
-            <% if @invoice.payments_on_account_in_cents.to_i > 0 -%>
+            <% if @invoice.payments_on_account_in_cents.to_i != 0 -%>
               <TotalPaymentsOnAccount><%=h haltr_precision @invoice.payments_on_account.dollars %></TotalPaymentsOnAccount>
             <% end -%>
             <TotalExecutableAmount><%=h haltr_precision (@invoice.total - @invoice.payments_on_account).dollars%></TotalExecutableAmount>
