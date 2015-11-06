@@ -310,8 +310,12 @@ class Invoice < ActiveRecord::Base
   end
 
   def discount_amount(tax_type=nil)
-    self.discount_percent = 0 if self.discount_percent.nil?
-    gross_subtotal(tax_type) * (discount_percent / 100.0)
+    if self[:discount_amount] and self[:discount_amount] != 0
+      Haltr::Utils.to_money(self[:discount_amount], currency, company.rounding_method)
+    else
+      self.discount_percent = 0 if self.discount_percent.nil?
+      gross_subtotal(tax_type) * (discount_percent / 100.0)
+    end
   end
 
   def tax_applies_to_all_lines?(tax)
@@ -549,7 +553,7 @@ _INV
     invoice_due_date = Haltr::Utils.get_xpath(doc,xpaths[:invoice_due_date])
     discount_percent = Haltr::Utils.get_xpath(doc,xpaths[:discount_percent])
     discount_amount  = Haltr::Utils.get_xpath(doc,xpaths[:discount_amount])
-    total_gross      = Haltr::Utils.get_xpath(doc,xpaths[:invoice_totalgross])
+    #total_gross      = Haltr::Utils.get_xpath(doc,xpaths[:invoice_totalgross])
     discount_text    = Haltr::Utils.get_xpath(doc,xpaths[:discount_text])
     extra_info       = Haltr::Utils.get_xpath(doc,xpaths[:extra_info])
     charge           = Haltr::Utils.get_xpath(doc,xpaths[:charge])
@@ -827,11 +831,11 @@ _INV
       end
     end
 
-    if discount_amount.present? and discount_percent.blank?
-      # calculate discount percent if only amount is given, issue #5516
-      discount_percent = (BigDecimal.new(discount_amount) * 100 / BigDecimal.new(total_gross)).round(2)
-    elsif discount_percent =~ / /
-      # there was several DiscountRate, sum them
+    # there are several Discounts, sum them
+    if discount_amount =~ / /
+      discount_amount = discount_amount.split.collect {|a| Haltr::Utils.float_parse(a) }.sum
+    end
+    if discount_percent =~ / /
       discount_percent = discount_percent.split.collect {|a| Haltr::Utils.float_parse(a) }.sum
     end
 
@@ -854,6 +858,7 @@ _INV
       :from             => from,           # u@mail.com, User Name...
       :md5              => md5,
       :original         => keep_original ? raw_xml : nil,
+      :discount_amount  => discount_amount,
       :discount_percent => discount_percent,
       :discount_text    => discount_text,
       :extra_info       => extra_info,
@@ -967,18 +972,21 @@ _INV
       # line discounts
       line_discounts = line.xpath(xpaths[:line_discounts])
       il_disc_percent = 0
+      il_disc_amount  = 0
       il_disc_text    = []
       line_discounts.each do |line_disc|
         disc_amount  = Haltr::Utils.get_xpath(line_disc,xpaths[:line_discount_amount])
         disc_percent = Haltr::Utils.get_xpath(line_disc,xpaths[:line_discount_percent])
         disc_text    = Haltr::Utils.get_xpath(line_disc,xpaths[:line_discount_text])
-        if disc_percent.blank? and disc_amount.present?
-          il_disc_percent += BigDecimal.new(disc_amount) * 100 / il.total_cost
-        elsif disc_percent.present?
+        if disc_amount.present?
+          il_disc_amount += BigDecimal.new(disc_amount)
+        end
+        if disc_percent.present?
           il_disc_percent += BigDecimal.new(disc_percent)
         end
         il_disc_text << disc_text
       end
+      il.discount_amount  = il_disc_amount.round(2)
       il.discount_percent = il_disc_percent.round(2)
       il.discount_text = il_disc_text.join('. ')
 
