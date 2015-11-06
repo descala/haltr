@@ -360,6 +360,7 @@ es:
   "custom": Personalizado
 
   # Frequency
+  mf60: Cada 5 años
   mf36: Cada 3 años
   mf24: Cada 2 años
   mf12: Anual
@@ -441,6 +442,7 @@ es:
   tax_S: "Estándar"
   tax_H: "Tasa alta"
   tax_AA: "Tasa baja"
+  tax_AAA: "Tasa super reducida"
   invoice_data: "Datos factura"
   bank_info: "Datos bancarios"
 
@@ -594,6 +596,7 @@ es:
   field_discount: "Descuento"
   field_charge: "Cargo"
   download_as_pdf: "Descargar copia en PDF"
+  download_as_xml: "Descargar XML"
   label_reports: Informes
   visible_fields: "Campos visibles"
   required_fields: "Campos requeridos"
@@ -625,6 +628,11 @@ es:
   label_factoring_assignment_data: 'Cesión de factoring'
   field_fa_person_type: 'Tipo entidad'
   field_fa_residence_type: 'Residencia'
+  label_fa_person_type_individual: "Física"
+  label_fa_person_type_entity: "Jurídica"
+  label_fa_residence_type_foreigner: "Extranjero"
+  label_fa_residence_type_spain: "Residente"
+  label_fa_residence_type_UE: "Europeo"
   field_fa_taxcode: 'NIF'
   field_fa_name: 'Nombre'
   field_fa_address: 'Dirección'
@@ -640,7 +648,7 @@ es:
   field_fa_clauses: 'Cláusula de cesión'
   field_fa_payment_method: 'Método de pago'
   channel_requires_user_pass: "El canal necesita que configures usuario y password en 'Conexiones' en 'Mi empresa'"
-  download_legal_invoice: "Descargar factura legal"
+  download_legal_invoice: "Descargar factura"
   label_report_channel_state: "Facturas por canal de envío y estado"
   pdf_customization: "Personalización de PDF"
   field_pdf_template: "Plantilla PDF"
@@ -709,3 +717,8 @@ es:
   partially_amended_by_invoices: "Parcialmente rectificada por"
   awarding: "Contrato de adjudicación"
   field_issuer_transaction_reference: "Contra-albarán"
+  re_tax_without_iva_same_category: "La línea '%{line}' tiene un impuesto RE que no corresponde al impuesto IVA"
+  label_discounts: "Descuentos"
+  field_line_discounts_as_imports: "Mostrar descuentos por línea"
+  as_import: "Como importe"
+  as_percent: "Como %"

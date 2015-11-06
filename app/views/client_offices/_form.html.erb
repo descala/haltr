@@ -10,6 +10,8 @@
     </label>
     <%= text_field_tag('client', @client.name, disabled: true) %>
     </p>
+
+    <%= call_hook(:client_office_form, {f: f}) %>
   </div>
 
   <div class="seccio grup">

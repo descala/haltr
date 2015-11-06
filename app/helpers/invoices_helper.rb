@@ -8,10 +8,14 @@ module InvoicesHelper
     clients.collect {|c| [c.name, c.id, {'data-invoice_format'=>ExportChannels.l(c.invoice_format)}] unless c.name.blank?}.compact
   end
 
-  def haltr_precision(num,precision=2)
-    num=0 if num.nil?
-    # :significant - If true, precision will be the # of significant_digits. If false, the # of fractional digits
-    number_with_precision(num,:precision=>precision,:significant => false)
+  def haltr_precision(num, precision=2, relevant=nil)
+    num = 0 if num.nil?
+    if relevant.present?
+      # relevant first cuts the number, then precision will add zeros
+      num = number_with_precision(num, precision: relevant)
+    end
+    num = number_with_precision(num, precision: precision)
+    num
   end
 
   def send_link_for_invoice
@@ -59,7 +63,7 @@ module InvoicesHelper
   end
 
   def frequencies_for_select
-    [1,2,3,6,12,24,36].collect do |f|
+    [1,2,3,6,12,24,36,60].collect do |f|
       [I18n.t("mf#{f}"), f]
     end
   end
@@ -141,7 +145,7 @@ module InvoicesHelper
     # tax_name = 'VAT'
     taxes = invoice.taxes_hash[tax_name].sort
     show_category = false
-    if taxes.size != taxes.collect {|t| t.percent}.uniq.size
+    if taxes.size != taxes.collect {|t| t.percent}.uniq.size or tax_name == 'RE'
       show_category = true
     end
     taxes.collect do |tax|

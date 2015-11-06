@@ -15,7 +15,7 @@ invoice1:
 
 template1:
   type: InvoiceTemplate
-  date: 2008-11-24
+  date: <%= Date.today %>
   client: client1
   extra_info: "periode: Desembre 2008"
   frequency: 1
@@ -331,3 +331,17 @@ i15:
   payment_method: 2
   project_id: 2
   state: accepted
+
+i16:
+  id: 16
+  type: IssuedInvoice
+  client_id: 1
+  currency: EUR
+  date: 2014-12-16
+  due_date: 2015-01-16
+  number: "2014/i14"
+  payment_method: 2
+  project_id: 2
+  state: accepted
+  discount_text: "discount"
+  discount_percent: 10

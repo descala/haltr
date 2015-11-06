@@ -112,7 +112,7 @@ class InvoiceTemplatesController < InvoicesController
       draft.invoice_lines.each do |draft_line|
         l = InvoiceLine.new draft_line.attributes
         draft_line.taxes.each do |tax|
-          l.taxes << Tax.new(:name=>tax.name,:percent=>tax.percent)
+          l.taxes << Tax.new(tax.attributes.except('invoice_line_id'))
         end
         issued.invoice_lines << l
       end

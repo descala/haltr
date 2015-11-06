@@ -16,6 +16,8 @@
       <li>
         <%= link_to(l(:download_legal_invoice), @invoice.last_sent_file_path) %>
       </li>
+    <%else%>
+      <li><%= link_to l(:download_as_xml), {:action=>'show', :id=>@invoice, :format => 'facturae32'}, :class=>'icon-haltr-save' %></li>
     <% end -%>
 
     <li><%= link_to l(:download_as_pdf), {:action=>'show', :id=>@invoice, :format => 'pdf'}, :class=>'icon-haltr-save' %></li>

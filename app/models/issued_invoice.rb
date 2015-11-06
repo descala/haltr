@@ -12,7 +12,7 @@ class IssuedInvoice < InvoiceDocument
   validate :invoice_must_have_lines
 
   before_validation :set_due_date
-  before_save :update_imports
+  before_save :update_imports, :unless => Proc.new {|i| i.changed_attributes.keys == ['state'] }
   after_create :create_event
   after_destroy :release_amended
   before_save :update_status, :unless => Proc.new {|invoicedoc| invoicedoc.state_changed? }

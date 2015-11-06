@@ -3,7 +3,7 @@ require File.dirname(__FILE__) + '/../test_helper'
 
 class InvoiceTest < ActiveSupport::TestCase
 
-  fixtures :clients, :invoices, :invoice_lines, :taxes, :companies, :people, :bank_infos, :dir3_entities, :external_companies
+  fixtures :clients, :invoices, :invoice_lines, :taxes, :companies, :people, :bank_infos, :dir3_entities, :external_companies, :client_offices
 
   def setup
     User.current=nil
@@ -87,15 +87,15 @@ class InvoiceTest < ActiveSupport::TestCase
 
     assert_equal 250, invoices(:invoices_001).subtotal_without_discount.dollars
     assert_equal 225, invoices(:invoices_001).taxable_base.dollars
-    assert_equal 2.25, invoices(:invoices_001).tax_amount.dollars
-    assert_equal(-11.25, invoices(:invoices_001).tax_amount(taxes(:taxes_006)).dollars)
-    assert_equal 13.5, invoices(:invoices_001).tax_amount(taxes(:taxes_005)).dollars
-    assert_equal 6.0, invoices(:invoices_001).tax_amount(taxes(:taxes_007)).dollars
-    assert_equal(-6.0, invoices(:invoices_001).tax_amount(taxes(:taxes_008)).dollars)
+    assert_equal 2.7, invoices(:invoices_001).tax_amount.dollars
+    assert_equal(-13.5, invoices(:invoices_001).tax_amount(taxes(:taxes_006)).dollars)
+    assert_equal 16.2, invoices(:invoices_001).tax_amount(taxes(:taxes_005)).dollars
+    assert_equal 7.2, invoices(:invoices_001).tax_amount(taxes(:taxes_007)).dollars
+    assert_equal(-7.2, invoices(:invoices_001).tax_amount(taxes(:taxes_008)).dollars)
     assert_equal 4, invoices(:invoices_001).taxes_uniq.size
     assert_equal 225, invoices(:invoices_001).subtotal.dollars
     assert_equal 25, invoices(:invoices_001).discount_amount.dollars
-    assert_equal 227.25, invoices(:invoices_001).total.dollars
+    assert_equal 227.7, invoices(:invoices_001).total.dollars
   end
 
   test "currency to upcase" do
@@ -631,6 +631,50 @@ class InvoiceTest < ActiveSupport::TestCase
     assert_equal 10.10, il.discount_amount
     assert_equal 242.40, invoice.gross_subtotal.dollars
     assert_equal BigDecimal.new('14.42').to_s, invoice.discount_amount.dollars.to_s
+  end
+
+  test 'when round_before_sum is checked and invoice has discounts, taxes are calculated correctly' do
+    i = invoices(:i16)
+    assert_equal false, i.company.round_before_sum
+    assert_equal 90.00, i.subtotal.dollars
+    assert_equal 9.00, i.tax_amount(i.taxes.first).dollars
+    assert_equal 9.00, i.tax_amount.dollars
+    assert_equal 99.00, i.total.dollars
+    i.company.round_before_sum = true
+    assert_equal true, i.company.round_before_sum
+    assert_equal 90.00, i.subtotal.dollars
+    assert_equal 9.00, i.tax_amount(i.taxes.first).dollars
+    assert_equal 9.00, i.tax_amount.dollars
+    assert_equal 99.00, i.total.dollars
+  end
+
+  # import invoice_facturae32_issued7.xml
+  test 'create issued_invoice from facturae32 creates client_office when client data does not match' do
+    assert_equal 1, clients(:clients_001).client_offices.count
+    file    = File.new(File.join(File.dirname(__FILE__),'..','fixtures','documents','invoice_facturae32_issued7.xml'))
+    invoice = Invoice.create_from_xml(file,User.find_by_login('jsmith'),"1234",'uploaded',User.current.name)
+    assert_equal 2, clients(:clients_001).client_offices.count
+    assert_equal clients(:clients_001).client_offices.last.id, invoice.client_office_id
+  end
+
+  # import invoice_facturae32_issued9.xml
+  test 'create issued_invoice from facturae32 uses existing client_office when client data matches' do
+    assert_equal 1, clients(:clients_001).client_offices.count
+    file    = File.new(File.join(File.dirname(__FILE__),'..','fixtures','documents','invoice_facturae32_issued9.xml'))
+    invoice = Invoice.create_from_xml(file,User.find_by_login('jsmith'),"1234",'uploaded',User.current.name)
+    assert_equal 1, clients(:clients_001).client_offices.count
+    assert_equal clients(:clients_001).client_offices.first.id, invoice.client_office_id
+  end
+
+  test 'import facturae32 with EquivalenceSurcharge taxes' do
+    file = File.new(File.join(File.dirname(__FILE__),'..','fixtures','documents','invoice_gob_es.xml'))
+    invoice = Invoice.create_from_xml(file,companies(:company6),"1234",'uploaded',User.current.name,nil,false)
+    assert_equal(3, invoice.invoice_lines.last.taxes.size)
+    re_taxes = invoice.invoice_lines.last.taxes.select {|tax| tax.name == 'RE'}
+    assert_equal(1, re_taxes.size)
+    re_tax = re_taxes.first
+    assert_equal('S',re_tax.category)
+    assert_equal(1.00,re_tax.percent)
   end
 
 end

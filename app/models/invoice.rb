@@ -262,6 +262,10 @@ class Invoice < ActiveRecord::Base
     false # Only IssuedInvoices can be an amend
   end
 
+  # round_before_sum:
+  #   true:  Arrodonir IVA de cada línia i després sumar
+  #   false: Sumar els IVA de les línies i després arrodonir
+  #TODO: ull amb round_before_sum hi ha facturae que no valida!
   # cost de les taxes (Money)
   def tax_amount(tax_type=nil)
     t = Money.new(0,currency)
@@ -271,8 +275,10 @@ class Invoice < ActiveRecord::Base
         if company and company.round_before_sum
           # sum([round(price) x tax])
           t += lines_with_tax(tax).collect {|line|
-            Haltr::Utils.to_money(line.gross_amount, currency, company.rounding_method) * (tax.percent / 100.0)
-          }.sum - discount_amount(tax_type)
+            price = Haltr::Utils.to_money(line.gross_amount, currency, company.rounding_method)
+            discount = Haltr::Utils.to_money((line.total_cost*(discount_percent / 100.0)),currency,company.rounding_method)
+            (price - discount)*(tax.percent / 100.0)
+          }.sum
         else
           # sum(price) x tax
           t += taxable_base(tax) * (tax.percent / 100.0)
@@ -283,8 +289,10 @@ class Invoice < ActiveRecord::Base
       if company and company.round_before_sum
         # sum([round(price) x tax])
         t += lines_with_tax(tax_type).collect {|line|
-          Haltr::Utils.to_money(line.gross_amount, currency, company.rounding_method) * (tax_type.percent / 100.0)
-        }.sum - discount_amount(tax_type)
+          price = Haltr::Utils.to_money(line.gross_amount, currency, company.rounding_method)
+          discount = Haltr::Utils.to_money((line.total_cost*(discount_percent / 100.0)),currency, company.rounding_method)
+          (price - discount)*(tax_type.percent / 100.0)
+        }.sum
       else
         # sum(price) x tax
         t += taxable_base(tax_type) * (tax_type.percent / 100.0)
@@ -303,7 +311,7 @@ class Invoice < ActiveRecord::Base
 
   def discount_amount(tax_type=nil)
     self.discount_percent = 0 if self.discount_percent.nil?
-    gross_subtotal * (discount_percent / 100.0)
+    gross_subtotal(tax_type) * (discount_percent / 100.0)
   end
 
   def tax_applies_to_all_lines?(tax)
@@ -395,7 +403,7 @@ class Invoice < ActiveRecord::Base
   end
 
   def payments_on_account=(value)
-    if value =~ /^[0-9,.']*$/
+    if value =~ /^[-0-9,.']*$/
       value = Money.parse(value)
       write_attribute :payments_on_account_in_cents, value.cents
     else
@@ -654,32 +662,34 @@ _INV
       end
     end
 
+    # get client data from imported invoice
+    client_taxcode     = client_role == "seller" ? seller_taxcode : buyer_taxcode
+    client_name        = Haltr::Utils.get_xpath(doc,xpaths["#{client_role}_name"]) ||
+      Haltr::Utils.get_xpath(doc,xpaths["#{client_role}_name2"])
+    client_address     = Haltr::Utils.get_xpath(doc,xpaths["#{client_role}_address"])
+    client_province    = Haltr::Utils.get_xpath(doc,xpaths["#{client_role}_province"])
+    if invoice_format =~ /^facturae/
+      country_alpha3 = Haltr::Utils.get_xpath(doc,xpaths["#{client_role}_countrycode"])
+      client_countrycode = SunDawg::CountryIsoTranslater.translate_standard(country_alpha3,"alpha3","alpha2").downcase
+    else
+      client_countrycode = Haltr::Utils.get_xpath(doc,xpaths["#{client_role}_countrycode"])
+    end
+    client_website     = Haltr::Utils.get_xpath(doc,xpaths["#{client_role}_website"])
+    client_email       = Haltr::Utils.get_xpath(doc,xpaths["#{client_role}_email"])
+    client_cp_city     = Haltr::Utils.get_xpath(doc,xpaths["#{client_role}_cp_city"]) ||
+      Haltr::Utils.get_xpath(doc,xpaths["#{client_role}_cp_city2"])
+    client_postalcode  = client_cp_city.split(" ").first rescue ""
+    client_city        = client_cp_city.gsub(/^#{client_postalcode} /,'') rescue ""
+    if client_postalcode.blank?
+      client_postalcode  = Haltr::Utils.get_xpath(doc,xpaths["#{client_role}_cp"])
+    end
+
+    client_language = User.current.language
+    client_language = 'es' if client_language.blank?
+    client_office = nil
+
     # create client if not exists
-    unless client
-      client_taxcode     = client_role == "seller" ? seller_taxcode : buyer_taxcode
-      client_name        = Haltr::Utils.get_xpath(doc,xpaths["#{client_role}_name"]) ||
-                           Haltr::Utils.get_xpath(doc,xpaths["#{client_role}_name2"])
-      client_address     = Haltr::Utils.get_xpath(doc,xpaths["#{client_role}_address"])
-      client_province    = Haltr::Utils.get_xpath(doc,xpaths["#{client_role}_province"])
-      if invoice_format =~ /^facturae/
-        country_alpha3 = Haltr::Utils.get_xpath(doc,xpaths["#{client_role}_countrycode"])
-        client_countrycode = SunDawg::CountryIsoTranslater.translate_standard(country_alpha3,"alpha3","alpha2").downcase
-      else
-        client_countrycode = Haltr::Utils.get_xpath(doc,xpaths["#{client_role}_countrycode"])
-      end
-      client_website     = Haltr::Utils.get_xpath(doc,xpaths["#{client_role}_website"])
-      client_email       = Haltr::Utils.get_xpath(doc,xpaths["#{client_role}_email"])
-      client_cp_city     = Haltr::Utils.get_xpath(doc,xpaths["#{client_role}_cp_city"]) ||
-                           Haltr::Utils.get_xpath(doc,xpaths["#{client_role}_cp_city2"])
-      client_postalcode  = client_cp_city.split(" ").first rescue ""
-      client_city        = client_cp_city.gsub(/^#{client_postalcode} /,'') rescue ""
-      if client_postalcode.blank?
-        client_postalcode  = Haltr::Utils.get_xpath(doc,xpaths["#{client_role}_cp"])
-      end
-
-      client_language = User.current.language
-      client_language = 'es' if client_language.blank?
-
+    if client.nil?
       client = Client.new(
         :taxcode        => client_taxcode,
         :name           => client_name,
@@ -698,12 +708,49 @@ _INV
 
       client.save!(:validate=>false)
       logger.info "created new client \"#{client_name}\" with cif #{client_taxcode} for company #{company.name}. time=#{Time.now}"
+    else
+      # client found by taxcode, but stored data may not match data in invoice
+      # if it doesn't, we create a client_office with data from invoice
+      to_match = {
+        full_address:   client_address.chomp,
+        city:           client_city.chomp,
+        province:       client_province.chomp,
+        postalcode:     client_postalcode.chomp,
+        country_alpha3: client_countrycode.chomp,
+        name:           client_name.chomp
+      }
+      match = to_match.all? {|k, v| client.send(k).to_s.chomp.casecmp(v) == 0 }
+
+      unless match
+        client.client_offices.each do |office|
+          match = to_match.all? {|k, v| office.send(k).to_s.chomp.casecmp(v) == 0 }
+          if match
+            client_office = office
+            break
+          end
+        end
+
+        if client_office.nil?
+          # client and all its client_offices differ from data in invoice
+          client_office = ClientOffice.new(
+            client_id:  client.id,
+            address:    client_address,
+            city:       client_city,
+            province:   client_province,
+            postalcode: client_postalcode,
+            country:    client_countrycode,
+            name:       client_name
+          )
+          client_office.save
+          client.reload
+        end
+      end
     end
 
     dir3 = nil
     doc.xpath(xpaths[:dir3s]).each do |line|
       role = Haltr::Utils.get_xpath(line, xpaths[:dir3_role])
-      code = Haltr::Utils.get_xpath(line, xpaths[:dir3_code])
+      code = Haltr::Utils.get_xpath(line, xpaths[:dir3_code]).gsub(/ /,'') rescue nil
       case role
       when '01'
         invoice.oficina_comptable  = code
@@ -792,6 +839,7 @@ _INV
       :number           => invoice_number,
       :series_code      => invoice_series,
       :client           => client,
+      :client_office    => client_office,
       :date             => invoice_date,
       :invoicing_period_start => i_period_start,
       :invoicing_period_end   => i_period_end,
@@ -905,6 +953,16 @@ _INV
           :event_reason => Haltr::Utils.get_xpath(line,xpaths[:tax_event_reason])
         )
         il.taxes << tax
+        # EquivalenceSurcharges (#5560)
+        re_tax_percent = Haltr::Utils.get_xpath(line_tax,xpaths[:tax_surcharge])
+        if re_tax_percent.present?
+          re_tax = Tax.new(
+            :name     => 'RE',
+            :percent  => re_tax_percent.to_f,
+            :category => tax.category
+          )
+          il.taxes << re_tax
+        end
       end
       # line discounts
       line_discounts = line.xpath(xpaths[:line_discounts])
@@ -1029,7 +1087,7 @@ _INV
         project:       company.project,
       )
     end
-    raise $!.message
+    raise $!
   end
 
   def send_original?
@@ -1160,7 +1218,7 @@ _INV
 
   def amend_reason
     if read_attribute(:amend_reason).blank?
-      is_amend? ? '15' : ''
+      is_amend? ? '16' : ''
     else
       read_attribute(:amend_reason)
     end

@@ -195,12 +195,16 @@ class InvoicesController < ApplicationController
       case params[:amend_type]
       when 'total'
         @to_amend.amend = @invoice
-        @invoice.amend_reason = '15'
+        @invoice.amend_reason = '16'
       when 'partial'
         @invoice.partially_amended_id = @to_amend.id
       else
         raise "unknown amend type: #{params[:amend_type]}"
       end
+    end
+
+    if Redmine::Hook.call_hook(:invoice_before_create,:project=>@project,:invoice=>@invoice,:params=>params).any?
+      @invoice = Redmine::Hook.call_hook(:invoice_before_create,:project=>@project,:invoice=>@invoice,:params=>params)[0]
     end
 
     if @invoice.save
@@ -711,7 +715,7 @@ class InvoicesController < ApplicationController
       @to_amend.attributes.update(
         state: 'new',
         number: "#{@to_amend.number}-R"),
-        amend_reason: '15'
+        amend_reason: '16'
     )
     @to_amend.invoice_lines.each do |line|
       il = line.dup
@@ -1074,6 +1078,7 @@ class InvoicesController < ApplicationController
   rescue
     respond_to do |format|
       format.html {
+        raise $! unless $!.is_a?(RuntimeError)
         flash[:error] = $!.message
         redirect_to :action => 'import', :project_id => @project
       }
@@ -1138,7 +1143,7 @@ class InvoicesController < ApplicationController
   private
 
   def parse_invoice_params
-    parsed_params = params[:invoice]
+    parsed_params = params[:invoice] || {}
     parsed_params['invoice_lines_attributes'] ||= {}
     # accept invoice_lines_attributes = { '0' => {}, ... }
     # and    invoice_lines_attributes = [{}, ...]

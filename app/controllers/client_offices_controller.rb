@@ -14,6 +14,8 @@ class ClientOfficesController < ApplicationController
   include CompanyFilter
   before_filter :check_for_company
 
+  before_filter :authorize
+
   def index
     sort_init 'name', 'asc'
     sort_update %w(name city)

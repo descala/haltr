@@ -359,6 +359,7 @@ ca:
   "custom": Personalitzat
 
   # Frequency
+  mf60: cada 5 anys
   mf36: Cada 3 anys
   mf24: Cada 2 anys
   mf12: Anual
@@ -440,6 +441,7 @@ ca:
   tax_S: "Estàndard"
   tax_H: "Tasa alta"
   tax_AA: "Tasa baixa"
+  tax_AAA: "Tasa super reduïda"
   invoice_data: "Dades factura"
   bank_info: "Dades bancàries"
 
@@ -448,7 +450,7 @@ ca:
 
   button_save_and_send: Desar i enviar
   button_create_and_send: Crear i enviar
-  bank_account_empty: Cal especificar el numero de compte si el mètode de pagament és una transferència
+  bank_account_empty: Cal especificar el número de compte si el mètode de pagament és una transferència
   errors_prevented_invoice_sent: No s'ha enviat la factura perquè conté errors
   invoice_total: "Total factura"
   total_executable: "Total a pagar"
@@ -591,6 +593,7 @@ ca:
   field_discount: "Descompte"
   field_charge: "Càrrec"
   download_as_pdf: "Descarregar còpia en PDF"
+  download_as_xml: "Descaregar XML"
   label_reports: Informes
   visible_fields: "Camps visibles"
   required_fields: "Camps requerits"
@@ -623,6 +626,11 @@ ca:
   label_factoring_assignment_data: 'Cessió de factoring'
   field_fa_person_type: "Tipus d'entitat"
   field_fa_residence_type: 'Residència'
+  label_fa_person_type_individual: "Física"
+  label_fa_person_type_entity: "Jurídica"
+  label_fa_residence_type_foreigner: "Extranger"
+  label_fa_residence_type_spain: "Resident"
+  label_fa_residence_type_UE: "Europeu"
   field_fa_taxcode: 'NIF'
   field_fa_name: 'Nom'
   field_fa_address: 'Adreça'
@@ -638,7 +646,7 @@ ca:
   field_fa_clauses: 'Clàusula de cessió'
   field_fa_payment_method: 'Mètode de pagament'
   channel_requires_user_pass: "El canal necessita que configuris usuari i password a 'Connexions' a 'La meva empresa'"
-  download_legal_invoice: "Descarregar factura legal"
+  download_legal_invoice: "Descarregar factura"
   label_report_channel_state: "Factures per canal d'enviament i per estat"
   pdf_customization: "Personalització de PDF"
   field_pdf_template: "Plantilla PDF"
@@ -707,3 +715,8 @@ ca:
   partially_amended_by_invoices: "Parcialment rectificada per"
   awarding: "Contracte d'adjudicació"
   field_issuer_transaction_reference: "Contra-albarà"
+  re_tax_without_iva_same_category: "La línia '%{line}' té un impost RE que no correspon a l'impost IVA"
+  label_discounts: "Descomptes"
+  field_line_discounts_as_imports: "Mostrar els descomptes per línia"
+  as_import: "Com a import"
+  as_percent: "Com a %"

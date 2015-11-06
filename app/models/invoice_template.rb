@@ -34,7 +34,7 @@ class InvoiceTemplate < Invoice
       l.template_replacements(i.date)
       i.invoice_lines << l
       tl.taxes.each do |tax|
-        l.taxes << Tax.new(:name=>tax.name,:percent=>tax.percent)
+        l.taxes << Tax.new(tax.attributes.except('invoice_line_id'))
       end
     end
     i.save!

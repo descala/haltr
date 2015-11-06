@@ -133,6 +133,7 @@
 #col2 .open { background: #5bc; }
 #col2 .unpaid { background: #5bc; }
 #col2 .pastdue { background: #f40; }
+#col2 .halfpaid { background: #f40; }
 #col2 .closed { background: #1a8; }
 #col2 .paid { background: #1a8; }
 #col2 .recurring { background: #145c7b; padding-top: 10px; }
@@ -442,8 +443,8 @@ lpayments .item-date { width: 116px; }
 	}
 
 body.client_view {
-  	background: #efefef none;
-	}
+    background: #efefef none;
+    }
 body.client_view #preface1 {
 	margin: 20px auto 0;
 	padding: 9px;
@@ -498,6 +499,9 @@ body.client_view .form-details  {
 	}
 .pastdue {
   color: red;
+}
+.halfpaid {
+  color: blue;
 }
 .invoicelogo img {
   max-height: 200px;

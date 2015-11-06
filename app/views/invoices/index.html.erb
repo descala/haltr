@@ -154,16 +154,20 @@
         </thead>
         <tbody>
           <% @invoices.each do |invoice| -%>
-            <tr id="invoice-<%=invoice.id%>" class="hascontextmenu <%= 'amended ' if invoice.amended? %><%= cycle("odd", "even") %>">
-              <td><%= check_box_tag("ids[]", invoice.id, false, :id => nil) %></td>
-              <td><%=h link_to_if_authorized invoice.number, :action => 'show', :id => invoice %></td>
-              <td><%=h format_date invoice.date %></td>
-              <td><%=h invoice.client_office ? invoice.client_office : invoice.client %></td>
-              <td class="money"><%= money(invoice.subtotal) %></td>
-              <td class="money"><%= money(invoice.total) %></td>
-              <td <%='class="pastdue"'.html_safe if invoice.past_due?%>><%=h format_date invoice.due_date %></td>
-              <td><%=h l("state_#{invoice.state}").capitalize %></td>
-            </tr>
+            <%if invoice.total > invoice.total_paid and invoice.total_paid.cents != 0%>
+              <tr <%='class="halfpaid"'.html_safe%>,  id="invoice-<%=invoice.id%>" class="hascontextmenu <%= 'amended ' if invoice.amended? %><%= cycle("odd", "even") %>">
+              <%else%>
+              <tr id="invoice-<%=invoice.id%>" class="hascontextmenu <%= 'amended ' if invoice.amended? %><%= cycle("odd", "even") %>">
+            <% end %>
+                <td><%= check_box_tag("ids[]", invoice.id, false, :id => nil) %></td>
+                <td><%=h link_to_if_authorized invoice.number, :action => 'show', :id => invoice %></td>
+                <td><%=h format_date invoice.date %></td>
+                <td><%=h invoice.client_office ? invoice.client_office : invoice.client %></td>
+                <td class="money"><%= money(invoice.subtotal) %></td>
+                <td class="money"><%= money(invoice.total) %></td>
+                <td <%='class="pastdue"'.html_safe if invoice.past_due?%>><%=h format_date invoice.due_date %></td>
+                <td><%=h l("state_#{invoice.state}").capitalize %></td>
+              </tr>
           <% end -%>
         </tbody>
         <tfoot>

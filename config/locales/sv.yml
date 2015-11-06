@@ -345,6 +345,7 @@ sv:
   "custom": Annan
 
   # Frequency
+  mf60: Every 5 years
   mf36: Every 3 years
   mf24: Every 2 years
   mf12: Årliga
@@ -427,6 +428,7 @@ sv:
   tax_S: "Standard"
   tax_H: "High Rated"
   tax_AA: "Low Rated"
+  tax_AAA: "Super Low Rated"
   bank_info: "Bank info"
   invoice_data: "Invoice data"
 
@@ -576,6 +578,7 @@ sv:
   field_discount: "Discount"
   field_charge: "Charge"
   download_as_pdf: "Download PDF copy"
+  download_as_xml: "Download XML"
   label_reports: Reports
   visible_fields: "Visible fields"
   required_fields: "Required fields"
@@ -606,6 +609,12 @@ sv:
   label_factoring_assignment_data: 'Factoring assignment'
   field_fa_person_type: 'Entity type'
   field_fa_residence_type: 'Residence type'
+  field_fa_residence_type: 'Residence type'
+  label_fa_person_type_individual: "Individual"
+  label_fa_person_type_entity: "Entity"
+  label_fa_residence_type_foreigner: "Foreigner"
+  label_fa_residence_type_spain: "Resident"
+  label_fa_residence_type_UE: "European"
   field_fa_taxcode: 'VAT ID number'
   field_fa_name: 'Name'
   field_fa_address: 'Address'
@@ -621,7 +630,7 @@ sv:
   field_fa_clauses: 'Assignment clause'
   field_fa_payment_method: 'Payment method'
   channel_requires_user_pass: "Channel requires to configure user and password at 'My company'"
-  download_legal_invoice: "Download legal invoice"
+  download_legal_invoice: "Download invoice"
   label_report_channel_state: "Invoices by Channel and State"
   pdf_customization: "PDF customization"
   field_pdf_template: "PDF template"
@@ -690,3 +699,8 @@ sv:
   partially_amended_by_invoices: "Partially rectified by"
   awarding: "Awarding"
   field_issuer_transaction_reference: "Receiving advice"
+  re_tax_without_iva_same_category: "Line '%{line}' has RE tax not matching IVA tax"
+  label_discounts: "Discounts"
+  field_line_discounts_as_imports: "Show line discounts"
+  as_import: "As import"
+  as_percent: "As %"
