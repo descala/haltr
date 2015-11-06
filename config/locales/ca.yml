@@ -450,7 +450,7 @@ ca:
 
   button_save_and_send: Desar i enviar
   button_create_and_send: Crear i enviar
-  bank_account_empty: Cal especificar el numero de compte si el mètode de pagament és una transferència
+  bank_account_empty: Cal especificar el número de compte si el mètode de pagament és una transferència
   errors_prevented_invoice_sent: No s'ha enviat la factura perquè conté errors
   invoice_total: "Total factura"
   total_executable: "Total a pagar"
