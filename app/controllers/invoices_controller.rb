@@ -1179,6 +1179,22 @@ class InvoicesController < ApplicationController
           tax['comment'] = ''
         end
       end
+      # discounts percent and amount #5516
+      discount = invoice_line.delete(:discount)
+      discount_type = invoice_line.delete(:discount_type)
+      if discount_type == '€'
+        invoice_line[:discount_amount] = discount
+      elsif discount_type == '%'
+        invoice_line[:discount_percent] = discount
+      end
+    end
+    # discounts percent and amount #5516
+    discount = parsed_params.delete(:discount)
+    discount_type = parsed_params.delete(:discount_type)
+    if discount_type == '€'
+      parsed_params[:discount_amount] = discount
+    elsif discount_type == '%'
+      parsed_params[:discount_percent] = discount
     end
     parsed_params
   end

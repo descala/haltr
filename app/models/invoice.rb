@@ -11,7 +11,6 @@ class Invoice < ActiveRecord::Base
   has_associated_audits
   # do not remove, with audit we need to make the other attributes accessible
   attr_protected :created_at, :updated_at
-  attr_accessor :discount_helper
 
   # 1 - cash (al comptat)
   # 2 - debit (rebut domiciliat)
@@ -312,9 +311,36 @@ class Invoice < ActiveRecord::Base
   def discount_amount(tax_type=nil)
     if self[:discount_amount] and self[:discount_amount] != 0
       Haltr::Utils.to_money(self[:discount_amount], currency, company.rounding_method)
+    elsif self[:discount_percent] and self[:discount_percent] != 0
+      gross_subtotal(tax_type) * (self[:discount_percent] / 100.0)
     else
-      self.discount_percent = 0 if self.discount_percent.nil?
-      gross_subtotal(tax_type) * (discount_percent / 100.0)
+      Money.new(0, currency)
+    end
+  end
+
+  def discount_percent
+    if self[:discount_percent] and self[:discount_percent] != 0
+      self[:discount_percent]
+    elsif self[:discount_amount] and self[:discount_amount] != 0
+      (self[:discount_amount].to_f * 100 / gross_subtotal.dollars).round(2)
+    else
+      0
+    end
+  end
+
+  def discount
+    if discount_type == '€'
+      discount_amount
+    else
+      discount_percent
+    end
+  end
+
+  def discount_type
+    if self[:discount_amount] and self[:discount_amount] != 0
+      '€'
+    else
+      '%'
     end
   end
 
@@ -1211,7 +1237,8 @@ _INV
 
   def has_line_discounts?
     return @has_line_discounts unless @has_line_discounts.nil?
-    @has_line_discounts = (invoice_lines.sum(&:discount_percent) > 0)
+    @has_line_discounts = invoice_lines.any? {|l| l.discount_percent != 0 }
+    @has_line_discounts ||= invoice_lines.any? {|l| l.discount_amount != 0 }
   end
 
   def has_line_charges?
@@ -1276,12 +1303,6 @@ _INV
     end
     self.import_in_cents = subtotal.cents
     self.total_in_cents = subtotal.cents + tax_amount.cents
-
-    unless discount_percent and discount_percent > 0
-      if discount_helper.present?
-        self.discount_percent = (discount_helper.to_f * 100 / gross_subtotal.dollars)
-      end
-    end
   end
 
   def invoice_must_have_lines

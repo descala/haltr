@@ -640,7 +640,6 @@ da:
   field_party_identification: "Party identification"
   label_invoice_total: "Total"
   field_unidad_contratacion: "Unidad de contratación / SEF"
-  field_discount_helper: "Calculate discount % from import"
   label_discounts_and_charges: Discounts and charges
   invoice_import_mismatch: "Original invoice import %{original} does not match calculated import %{calculated}"
   invoice_has_no_original: Invoice has no original (transport requires an original document)

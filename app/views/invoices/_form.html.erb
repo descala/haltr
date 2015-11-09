@@ -104,10 +104,11 @@
       <%= f.text_field :discount_text %>
       </p>
       <p class="col span-1-de-3">
-      <%= f.text_field :discount_percent %>
+      <%= f.text_field :discount %>
       </p>
-      <p class="col span-1-de-3">
-      <%= f.text_field :discount_helper %>
+      <p class="col span-1-de-3" style="width: 55px;">
+      <label for="invoice_discount_type">&nbsp;</label>
+      <%= f.select 'discount_type', options_for_select(['€','%']), :no_label => true %>
       </p>
     </div>
 

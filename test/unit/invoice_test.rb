@@ -624,11 +624,11 @@ class InvoiceTest < ActiveSupport::TestCase
   test 'import invoice with discount amount and without discount percent' do
     file    = File.new(File.join(File.dirname(__FILE__),'..','fixtures','documents','invoice_facturae32_issued10.xml'))
     invoice = Invoice.create_from_xml(file,User.find_by_login('jsmith'),"1234",'uploaded',User.current.name)
-    assert_equal 0.0, invoice.discount_percent
+    assert_equal 5.95, invoice.discount_percent
     assert_equal 14.42, invoice.discount_amount.dollars
     il = invoice.invoice_lines.first
     assert_equal 101, il.total_cost
-    assert_equal 0.0, il.discount_percent
+    assert_equal 10.0, il.discount_percent
     assert_equal 10.10, il.discount_amount
     assert_equal 242.40, invoice.gross_subtotal.dollars
     assert_equal BigDecimal.new('14.42').to_s, invoice.discount_amount.dollars.to_s
