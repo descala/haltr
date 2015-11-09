@@ -19,26 +19,36 @@ module ChartsHelper
     projs
   end
 
-  def invoices_past_due(project,from=nil)
+  def invoices_past_due(project,from=nil,currency=nil)
+    invoices = project.issued_invoices
     case from.to_s
     when 'last_year'
-      project.issued_invoices.where(["state != 'closed' and due_date < ? and date >= ?", Date.today, 1.year.ago])
+      invoices = invoices.where(["state != 'closed' and due_date < ? and date >= ?", Date.today, 1.year.ago])
     when 'last_3_months'
-      project.issued_invoices.where(["state != 'closed' and due_date < ? and date >= ?", Date.today, 3.months.ago])
+      invoices = invoices.where(["state != 'closed' and due_date < ? and date >= ?", Date.today, 3.months.ago])
     else
-      project.issued_invoices.where(["state != 'closed' and due_date < ?", Date.today])
+      invoices = invoices.where(["state != 'closed' and due_date < ?", Date.today])
     end
+    if currency
+      invoices = invoices.where("currency = ?", currency)
+    end
+    invoices
   end
 
-  def invoices_on_schedule(project,from=nil)
+  def invoices_on_schedule(project,from=nil,currency=nil)
+    invoices = project.issued_invoices
     case from
     when 'last_year'
-      project.issued_invoices.where(["state != 'closed' and due_date >= ? and date >= ?", Date.today, 1.year.ago])
+      invoices = invoices.where(["state != 'closed' and due_date >= ? and date >= ?", Date.today, 1.year.ago])
     when 'last_3_months'
-      project.issued_invoices.where(["state != 'closed' and due_date >= ? and date >= ?", Date.today, 3.months.ago])
+      invoices = invoices.where(["state != 'closed' and due_date >= ? and date >= ?", Date.today, 3.months.ago])
     else
-      project.issued_invoices.where(["state != 'closed' and due_date >= ?", Date.today])
+      invoices = invoices.where(["state != 'closed' and due_date >= ?", Date.today])
     end
+    if currency
+      invoices = invoices.where("currency = ?", currency)
+    end
+    invoices
   end
 
 end

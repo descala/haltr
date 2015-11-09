@@ -11,5 +11,11 @@
                  :class => 'chart_prefs'
   %>
 
-  <%= column_chart invoice_total_chart_path, id: "chart_invoice_total_chart", library: {isStacked: true, vAxis: {title: "#{l(:invoice_total)} (€)" }} %>
+  <% currencies = [] -%>
+  <% haltr_projects.each do |project| %>
+    <% currencies += project.invoices.group(:currency).count.keys -%>
+  <% end -%>
+  <% currencies.uniq.each do |currency| -%>
+    <%= column_chart invoice_total_chart_path(currency: currency), id: "chart_invoice_total_chart_#{currency}", library: {isStacked: true, vAxis: {title: "#{l(:chart_invoice_total)} (#{currency})" }} %>
+  <% end -%>
 </div>

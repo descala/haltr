@@ -13,7 +13,10 @@
     %>
 
   <% haltr_projects.each do |project| %>
+    <% currencies = project.invoices.group(:currency).count.keys -%>
     <h3><%= project.company.name if haltr_projects.size > 1 %></h3>
-    <%= column_chart project_invoice_status_chart_path(project), id: "chart_invoice_status_#{project.identifier}", library: {isStacked: true, vAxis: {title: "#{l(:invoice_status)} (€)" }} %>
+    <% currencies.each do |currency| -%>
+      <%= column_chart project_invoice_status_chart_path(project, currency: currency), id: "chart_invoice_status_#{project.identifier}_#{currency}", library: {isStacked: true, vAxis: {title: "#{l(:chart_invoice_status)} (#{currency})" }} %>
+    <% end -%>
   <% end %>
 </div>
