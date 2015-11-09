@@ -107,6 +107,11 @@ class InvoicesController < ApplicationController
       invoices = invoices.where("state_updated_at >= ?", params[:state_updated_at_from])
     end
 
+    # client invoice_format filter
+    unless params[:invoice_format].blank?
+      invoices = invoices.where("clients.invoice_format = ?", params[:invoice_format])
+    end
+
     if params[:format] == 'csv' and !User.current.allowed_to?(:export_invoices, @project)
       @status= l(:contact_support)
       @message=l(:notice_not_authorized)
