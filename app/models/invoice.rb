@@ -1114,6 +1114,8 @@ _INV
                                       :company_id   => company.id)
       end
     end
+  rescue ActiveRecord::RecordInvalid
+    raise $!.message # raise RuntimeError
   end
 
   def next
