@@ -12,7 +12,7 @@
 
   <% haltr_projects.each do |project| -%>
   <%
-      currencies = project.invoices.group(:currency).count.keys
+      currencies = project.issued_invoices.group(:currency).count.keys
       currencies.each do |currency|
   -%>
     <%

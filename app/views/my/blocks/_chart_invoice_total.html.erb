@@ -13,7 +13,7 @@
 
   <% currencies = [] -%>
   <% haltr_projects.each do |project| %>
-    <% currencies += project.invoices.group(:currency).count.keys -%>
+    <% currencies += project.issued_invoices.group(:currency).count.keys -%>
   <% end -%>
   <% currencies.uniq.each do |currency| -%>
     <%= column_chart invoice_total_chart_path(currency: currency), id: "chart_invoice_total_chart_#{currency}", library: {isStacked: true, vAxis: {title: "#{l(:chart_invoice_total)} (#{currency})" }} %>
