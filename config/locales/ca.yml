@@ -720,3 +720,4 @@ ca:
   field_line_discounts_as_imports: "Mostrar els descomptes per línia"
   as_import: "Com a import"
   as_percent: "Com a %"
+  has_text: "Conté el text"

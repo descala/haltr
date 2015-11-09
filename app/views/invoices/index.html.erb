@@ -101,6 +101,15 @@
 
             <div class="seccio grup">
               <div class="col span-2-de-3">
+                <label for="number"><%= l(:field_has_text) %></label>
+                <%= text_field_tag :has_text, params[:has_text] %>
+              </div>
+              <div class="col span-1-de-3">
+              </div>
+            </div>
+
+            <div class="seccio grup">
+              <div class="col span-2-de-3">
                 <fieldset style="margin: 0;">
                   <legend>client</legend>
                   <div class="seccio grup">
