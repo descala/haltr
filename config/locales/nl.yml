@@ -703,4 +703,4 @@ nl:
   field_line_discounts_as_imports: "Show line discounts"
   as_import: "As import"
   as_percent: "As %"
-  has_text: "With text"
+  field_has_text: "With text"
