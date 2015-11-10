@@ -298,7 +298,7 @@ class Invoice < ActiveRecord::Base
         t += taxable_base(tax_type) * (tax_type.percent / 100.0)
       end
     end
-    t
+    Haltr::Utils.to_money(t, currency, company.rounding_method)
   end
 
   # Base imponible a precio de mercado
