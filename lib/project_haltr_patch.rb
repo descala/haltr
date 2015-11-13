@@ -21,6 +21,7 @@ module ProjectHaltrPatch
       has_many :draft_invoices
       has_many :events
       has_many :import_errors
+      has_many :invoice_lines, :through => :invoices
     end
  
   end
