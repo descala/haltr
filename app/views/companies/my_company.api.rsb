@@ -1,10 +1,19 @@
 # vi: ft=ruby
 
 api.my_company do
-  %w(taxcode name email phone address city postalcode province country website
-  invoice_format currency company_identifier).each do |attr|
-    api.send(attr, @company.send(attr))
-  end
+  api.taxcode            @company.taxcode
+  api.name               @company.name
+  api.email              @company.email
+  api.phone              @company.phone
+  api.address            @company.address
+  api.city               @company.city
+  api.postalcode         @company.postalcode
+  api.province           @company.province
+  api.country            @company.country
+  api.website            @company.website
+  api.invoice_format     @company.invoice_format
+  api.currency           @company.currency
+  api.company_identifier @company.company_identifier
   api.logo url_for(
     {controller: 'companies', action: 'logo', project_id: @company.project}
   )
