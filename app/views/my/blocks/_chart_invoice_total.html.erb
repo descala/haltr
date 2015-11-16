@@ -6,16 +6,10 @@
                                               t(:all_by_year)=>"all_by_year",
                                               t(:all_by_month)=>"all_by_month"},
                                              User.current.pref.others[:chart_invoice_total]),
-                 :data  => { :url => url_for(update_chart_preference_path) },
+                 :data  => { :url => url_for(update_chart_preference_path(project_id: @project.id)) },
                  :id    => 'chart_invoice_total',
                  :class => 'chart_prefs'
   %>
 
-  <% currencies = [] -%>
-  <% haltr_projects.each do |project| %>
-    <% currencies += project.issued_invoices.group(:currency).count.keys -%>
-  <% end -%>
-  <% currencies.uniq.each do |currency| -%>
-    <%= column_chart invoice_total_chart_path(currency: currency), id: "chart_invoice_total_chart_#{currency}", library: {isStacked: true, vAxis: {title: "#{l(:chart_invoice_total)} (#{currency})" }} %>
-  <% end -%>
+  <%= column_chart project_invoice_total_chart_path(project_id: @project.id), id: "chart_invoice_total_chart", library: {isStacked: false, vAxis: {title: l(:chart_invoice_total) }} %>
 </div>

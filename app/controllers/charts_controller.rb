@@ -1,7 +1,7 @@
 class ChartsController < ApplicationController
   unloadable
 
-  before_filter :find_project_by_project_id, :only => [:invoice_status,:top_clients,:cash_flow]
+  before_filter :find_project_by_project_id
   before_filter :authorize, :except => [:invoice_total, :update_chart_preference]
   include ChartsHelper
   helper :haltr
@@ -9,40 +9,34 @@ class ChartsController < ApplicationController
   accept_api_auth :invoice_total, :invoice_status, :top_clients, :cash_flow
 
   def invoice_total
-    projects = haltr_projects
-    if projects.any?
-      chart_data = []
-      pref = params[:pref] || User.current.pref.others[:chart_invoice_total]
-      projects.each do |project|
-        projdata = project.issued_invoices
-        if params[:currency]
-          projdata = projdata.where("currency = ?", params[:currency])
-        end
-        case pref
-        when "all_by_year"
-          projdata = projdata.where(["date > ?", 7.years.ago]).
-            group_by_year(:date, format: "%Y").sum('total_in_cents/100')
-        when "last_month_by_week"
-          projdata = projdata.where(["date > ?", 1.month.ago]).
-            group_by_week(:date, format: "%Y/%W").sum('total_in_cents/100')
-        when "all_by_month"
-          projdata = projdata.where(["date > ?", 7.years.ago]).
-            group_by_month(:date, format: "%Y/%m").sum('total_in_cents/100')
-        else # last_year_by_month
-          projdata = projdata.where(["date > ?", 1.years.ago]).
-            group_by_month(:date, format: "%Y/%m").sum('total_in_cents/100')
-        end
-        chart_data << {
-          name: project.company.name,
-          data: projdata
-        }
+    chart_data = []
+    pref = params[:pref] || User.current.pref.others[:chart_invoice_total]
+    currencies = @project.issued_invoices.group(:currency).count.keys
+    currencies.each do |currency|
+      projdata = @project.issued_invoices
+      projdata = projdata.where("currency = ?", currency)
+      case pref
+      when "all_by_year"
+        projdata = projdata.where(["date > ?", 7.years.ago]).
+          group_by_year(:date, format: "%Y").sum('total_in_cents/100')
+      when "last_month_by_week"
+        projdata = projdata.where(["date > ?", 1.month.ago]).
+          group_by_week(:date, format: "%Y/%W").sum('total_in_cents/100')
+      when "all_by_month"
+        projdata = projdata.where(["date > ?", 7.years.ago]).
+          group_by_month(:date, format: "%Y/%m").sum('total_in_cents/100')
+      else # last_year_by_month
+        projdata = projdata.where(["date > ?", 1.years.ago]).
+          group_by_month(:date, format: "%Y/%m").sum('total_in_cents/100')
       end
-      respond_to do |format|
-        format.json { render json: chart_data.chart_json  }
-        format.xml  { render xml: JSON.parse(chart_data.chart_json) }
-      end
-    else
-      render_404
+      chart_data << {
+        name: currency,
+        data: projdata
+      }
+    end
+    respond_to do |format|
+      format.json { render json: chart_data.chart_json  }
+      format.xml  { render xml: JSON.parse(chart_data.chart_json) }
     end
   end
 
@@ -127,10 +121,17 @@ class ChartsController < ApplicationController
     respond_to do |format|
       format.api do
         pref = params[:pref] || User.current.pref.others[:chart_cashflow]
-        @due_invoices = invoices_past_due(@project, pref)
-        @invoices     = invoices_on_schedule(@project, pref)
-        @due_invoices_sum = Money.new(@due_invoices.sum('total_in_cents'),@project.company.currency)
-        @invoices_sum     = Money.new(@invoices.sum('total_in_cents'),@project.company.currency)
+        @due_invoices     = {}
+        @invoices         = {}
+        @due_invoices_sum = {}
+        @invoices_sum     = {}
+        @currencies = @project.issued_invoices.group(:currency).count.keys
+        @currencies.each do |currency|
+          @due_invoices[currency]     = invoices_past_due(@project, pref, currency)
+          @invoices[currency]         = invoices_on_schedule(@project, pref, currency)
+          @due_invoices_sum[currency] = Money.new(@due_invoices[currency].sum('total_in_cents'), currency)
+          @invoices_sum[currency]     = Money.new(@invoices[currency].sum('total_in_cents'), currency)
+        end
       end
     end
   end
