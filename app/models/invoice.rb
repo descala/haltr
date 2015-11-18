@@ -311,7 +311,13 @@ class Invoice < ActiveRecord::Base
 
   def discount_amount(tax_type=nil)
     if self[:discount_amount] and self[:discount_amount] != 0
-      Haltr::Utils.to_money(self[:discount_amount], currency, company.rounding_method)
+      if tax_type.nil?
+        Haltr::Utils.to_money(self[:discount_amount], currency, company.rounding_method)
+      else
+        # must calculate discount percent to calculate taxable base for a tax_type
+        # (issue 5517 note-5)
+        gross_subtotal(tax_type) * (discount_percent / 100.0)
+      end
     elsif self[:discount_percent] and self[:discount_percent] != 0
       gross_subtotal(tax_type) * (self[:discount_percent] / 100.0)
     else

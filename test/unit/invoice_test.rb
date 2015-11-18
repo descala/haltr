@@ -632,6 +632,8 @@ class InvoiceTest < ActiveSupport::TestCase
     assert_equal 10.10, il.discount_amount
     assert_equal 242.40, invoice.gross_subtotal.dollars
     assert_equal BigDecimal.new('14.42').to_s, invoice.discount_amount.dollars.to_s
+    assert_equal 85.49, invoice.taxable_base(invoice.taxes.select {|t| t.percent == 21 }.first).dollars
+    assert_equal 142.49, invoice.taxable_base(invoice.taxes.select {|t| t.percent == 10 }.first).dollars
   end
 
   test 'when round_before_sum is checked and invoice has discounts, taxes are calculated correctly' do
