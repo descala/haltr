@@ -68,6 +68,7 @@ class Invoice < ActiveRecord::Base
 
   validate :bank_info_belongs_to_self
   validate :has_all_fields_required_by_external_company
+  validate :fa_taxcode_requires_other_fa_fields
 
   composed_of :import,
     :class_name => "Money",
@@ -297,7 +298,7 @@ class Invoice < ActiveRecord::Base
         t += taxable_base(tax_type) * (tax_type.percent / 100.0)
       end
     end
-    t
+    Haltr::Utils.to_money(t, currency, company.rounding_method)
   end
 
   # Base imponible a precio de mercado
@@ -537,6 +538,13 @@ _INV
     %w(fa_person_type fa_residence_type fa_taxcode).reject { |attr|
       self.send(attr).blank? or self.send(attr) == 0
     }.size == 3
+  end
+
+  def fa_taxcode_requires_other_fa_fields
+    if fa_taxcode.present?
+      errors.add(:fa_person_type, :blank) if fa_person_type.blank?
+      errors.add(:fa_residence_type, :blank) if fa_residence_type.blank?
+    end
   end
 
   def self.create_from_xml(raw_invoice,user_or_company,md5,transport,from=nil,issued=nil,keep_original=true,validate=true)

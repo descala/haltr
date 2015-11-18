@@ -83,7 +83,7 @@ Redmine::Plugin.register :haltr do
                                  :new_invoices_from_template, :create_invoices, :update_taxes, :context_menu] }, :require => :member
 
     permission :use_all_readonly,
-      { :clients   => [:index, :edit, :check_cif, :ccc2iban],
+      { :clients   => [:index, :show, :edit, :check_cif, :ccc2iban],
         :people    => [:index, :edit],
         :client_offices => [:index, :edit],
         :invoices  => [:index, :show, :legal, :download_new_invoices, :reports, :report_channel_state, :report_invoice_list,
@@ -97,7 +97,7 @@ Redmine::Plugin.register :haltr do
       :require => :member
 
     permission :restricted_use,
-      { :clients   => [:index, :edit, :check_cif, :ccc2iban, :update],
+      { :clients   => [:index, :show, :edit, :check_cif, :ccc2iban, :update],
         :people    => [:index, :edit],
         :client_offices => [:index, :edit, :update],
         :invoices  => [:index, :show, :legal, :download_new_invoices, :reports, :report_channel_state, :report_invoice_list,

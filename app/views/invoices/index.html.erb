@@ -101,6 +101,15 @@
 
             <div class="seccio grup">
               <div class="col span-2-de-3">
+                <label for="number"><%= l(:field_has_text) %></label>
+                <%= text_field_tag :has_text, params[:has_text] %>
+              </div>
+              <div class="col span-1-de-3">
+              </div>
+            </div>
+
+            <div class="seccio grup">
+              <div class="col span-2-de-3">
                 <fieldset style="margin: 0;">
                   <legend>client</legend>
                   <div class="seccio grup">
@@ -116,10 +125,18 @@
 
                   <div class="seccio grup">
                     <div class="col span-2-de-2">
-                      <label for="_client_id"><%= l(:label_company) %></label>
+                      <label for="client_id"><%= l(:label_company) %></label>
                       <%= collection_select(nil, :client_id, Client.find(:all, :order => 'name', :conditions => ["project_id = ?", @project]), :id, :name, {:include_blank => true, :selected => @client_id}) %>
                     </div>
                   </div>
+
+                  <div class="seccio grup">
+                    <div class="col span-2-de-2">
+                      <label for=""><%= l(:field_invoice_format) %></label>
+                      <%= select(nil, :invoice_format, ExportChannels.for_select(@project), { include_blank: true, selected: params[:invoice_format]}) %>
+                    </div>
+                  </div>
+
                 </fieldset>
               </div>
               <div class="col span-1-de-3" style="position: absolute; bottom: 15px; right: 15px; text-align: right;">

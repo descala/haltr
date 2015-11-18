@@ -58,15 +58,25 @@ class ReceivedController < InvoicesController
       invoices = invoices.where("number like ?","%#{params[:number]}%")
     end
 
+    case params[:format]
+    when 'csv', 'pdf'
+      @limit = Setting.issues_export_limit.to_i
+    when 'xml', 'json'
+      @offset, @limit = api_offset_and_limit
+    else
+      @limit = per_page_option
+    end
+
     @invoice_count = invoices.count
     @invoice_pages = Paginator.new self, @invoice_count,
 		per_page_option,
 		params['page']
+    @offset ||= @invoice_pages.current.offset
     @invoices =  invoices.find :all,
        :order => sort_clause,
        :include => [:client],
-       :limit  =>  @invoice_pages.items_per_page,
-       :offset =>  @invoice_pages.current.offset
+       :limit  =>  @limit,
+       :offset =>  @offset
 
     @unread = invoices.where("type = ? AND has_been_read = ?", 'ReceivedInvoice', false).count
   end

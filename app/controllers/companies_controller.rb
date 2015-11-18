@@ -23,6 +23,8 @@ class CompaniesController < ApplicationController
   before_filter :check_for_company,
     :only => [:my_company,:bank_info,:connections,:customization]
 
+  accept_api_auth :my_company
+
   def check_for_company
     if @project.company.nil?
       user_mail = User.find_by_project_id(@project.id).mail rescue ""
@@ -40,7 +42,14 @@ class CompaniesController < ApplicationController
 
   def my_company
     @partial='my_company'
-    render :action => 'edit'
+    respond_to do |format|
+      format.html do
+        render :action => 'edit'
+      end
+      format.api do
+        render action: :my_company
+      end
+    end
   end
 
   def bank_info

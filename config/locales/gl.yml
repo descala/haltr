@@ -719,3 +719,4 @@ gl:
   field_line_discounts_as_imports: "Mostrar descuentos por línea"
   as_import: "Como importe"
   as_percent: "Como %"
+  field_has_text: "Contiene el texto"
