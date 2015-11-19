@@ -235,8 +235,9 @@
             <InvoiceClass><%= @invoice.is_amend? ? "OR" : "OO" %></InvoiceClass>
 <% if @invoice.is_amend? -%>
   <% amended_invoice = @invoice.partial_amend_of ? @invoice.partial_amend_of : @invoice.amend_of -%>
+  <% amended_invoice = @invoice unless amended_invoice -%>
             <Corrective>
-              <InvoiceNumber><%= amended_invoice != @invoice ? amended_invoice.number : '?'%></InvoiceNumber>
+              <InvoiceNumber><%= amended_invoice != @invoice ? amended_invoice.number : @invoice.amended_number%></InvoiceNumber>
               <ReasonCode><%= @invoice.amend_reason %></ReasonCode>
               <ReasonDescription><%= l("amend_reason_#{@invoice.amend_reason}", locale: :es) %></ReasonDescription>
               <TaxPeriod>

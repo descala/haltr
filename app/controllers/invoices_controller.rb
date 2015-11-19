@@ -211,6 +211,7 @@ class InvoicesController < ApplicationController
       else
         raise "unknown amend type: #{params[:amend_type]}"
       end
+      @invoice.amended_number = @to_amend.number
     end
 
     if Redmine::Hook.call_hook(:invoice_before_create,:project=>@project,:invoice=>@invoice,:params=>params).any?
@@ -725,7 +726,8 @@ class InvoicesController < ApplicationController
       @to_amend.attributes.update(
         state: 'new',
         number: "#{@to_amend.number}-R"),
-        amend_reason: '16'
+        amend_reason: '16',
+        amended_number: @to_amend.number
     )
     @to_amend.invoice_lines.each do |line|
       il = line.dup

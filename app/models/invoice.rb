@@ -645,6 +645,7 @@ _INV
         # amended_invoice as a dirty hack
         invoice.amend_of = invoice
       end
+      invoice.amended_number = amend_of
       invoice.amend_reason = amend_reason
     end
 

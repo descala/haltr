@@ -108,7 +108,7 @@ class IssuedInvoice < InvoiceDocument
   end
 
   def label
-    if self.amend_of
+    if self.amend_of or self.amended_number
       l :label_amendment_invoice
     else
       l :label_invoice
@@ -194,7 +194,7 @@ class IssuedInvoice < InvoiceDocument
 
   # all amends, sustitutive and partial
   def is_amend?
-    amend_of or partial_amend_of
+    amend_of or partial_amend_of or amended_number
   end
 
   def last_sent_event
