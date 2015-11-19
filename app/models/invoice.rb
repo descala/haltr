@@ -42,7 +42,7 @@ class Invoice < ActiveRecord::Base
   belongs_to :amend, :class_name => "Invoice", :foreign_key => 'amend_id'
   has_one :amend_of, :class_name => "Invoice", :foreign_key => 'amend_id'
   # an invoice can have several partial amends
-  has_many :partial_amends, class_name: 'Invoice', foreign_key: 'partially_amended_id'
+  has_many :partial_amends, class_name: 'Invoice', foreign_key: 'partially_amended_id', conditions: proc { ["id != ?", self.id] }
   belongs_to :partial_amend_of, class_name: 'Invoice', foreign_key: 'partially_amended_id'
 
   belongs_to :bank_info
@@ -642,8 +642,12 @@ _INV
         #TODO 03 and 04 not yet supported
       else
         # importing amend invoice for an unexisting invoice, assign self id as
-        # amended_invoice as a dirty hack
-        invoice.amend_of = invoice
+        # amended as a dirty hack
+        if amend_type == '02'
+          invoice.partial_amend_of = invoice
+        else
+          invoice.amend_of = invoice
+        end
       end
       invoice.amended_number = amend_of
       invoice.amend_reason = amend_reason
