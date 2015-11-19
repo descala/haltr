@@ -519,6 +519,17 @@ _INV
 
   def self.create_from_xml(raw_invoice,user_or_company,md5,transport,from=nil,issued=nil,keep_original=true,validate=true)
 
+    file_name = nil
+    if raw_invoice.respond_to? :filename             # Mail::Part
+      file_name = raw_invoice.filename
+    elsif raw_invoice.respond_to? :original_filename # UploadedFile
+      file_name = raw_invoice.original_filename
+    elsif raw_invoice.respond_to? :path              # File (tests)
+      file_name = File.basename(raw_invoice.path)
+    else
+      file_name = "invoice.xml"
+    end
+
     if raw_invoice.is_a? String
       raw_xml = raw_invoice
     else
@@ -881,18 +892,9 @@ _INV
       :fa_bank_code      => fa_bank_code,
       :fa_clauses        => fa_clauses,
       :party_identification => party_id,
-      :legal_literals    => legal_literals
+      :legal_literals    => legal_literals,
+      :file_name         => file_name
     )
-
-    if raw_invoice.respond_to? :filename             # Mail::Part
-      invoice.file_name = raw_invoice.filename
-    elsif raw_invoice.respond_to? :original_filename # UploadedFile
-      invoice.file_name = raw_invoice.original_filename
-    elsif raw_invoice.respond_to? :path              # File (tests)
-      invoice.file_name = File.basename(raw_invoice.path)
-    else
-      invoice.file_name = "invoice.xml"
-    end
 
     if invoice_format =~ /facturae/
       xml_payment_method = Haltr::Utils.get_xpath(doc,xpaths[:payment_method])
@@ -1074,7 +1076,7 @@ _INV
   rescue
     if company and company.project
       ImportError.create(
-        filename:      (invoice.file_name rescue ""),
+        filename:      file_name,
         import_errors: $!.message,
         original:      raw_xml,
         project:       company.project,
