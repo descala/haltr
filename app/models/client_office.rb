@@ -10,7 +10,7 @@ class ClientOffice < ActiveRecord::Base
 
   CLIENT_FIELDS.each do |attr|
     define_method(attr) do
-      read_attribute(attr).blank? ? client.send(attr) : read_attribute(attr)
+      (client and read_attribute(attr).blank?) ? client.send(attr) : read_attribute(attr)
     end
   end
 
