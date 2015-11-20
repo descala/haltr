@@ -1,3 +1,4 @@
+<% if @project -%>
 <div class="chart_cashflow">
   <%= render :partial => 'common/chart_headers' %>
   <h3><%= l(:chart_cashflow) %></h3>
@@ -45,3 +46,4 @@
   </fieldset>
   <% end -%>
 </div>
+<% end -%>

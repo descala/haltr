@@ -1,3 +1,4 @@
+<% if @project -%>
 <div class="chart_invoice_status">
   <%= render :partial => 'common/chart_headers' %>
 
@@ -18,3 +19,4 @@
     <%= column_chart project_invoice_status_chart_path(@project, currency: currency), id: "chart_invoice_status_#{@project.identifier}_#{currency}", library: {isStacked: true, vAxis: {title: "#{l(:chart_invoice_status)} (#{currency})" }} %>
   <% end -%>
 </div>
+<% end -%>

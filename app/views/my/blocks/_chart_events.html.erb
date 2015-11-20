@@ -1,3 +1,4 @@
+<% if @project -%>
 <div class="chart_events">
   <%= render :partial => 'common/chart_headers' %>
   <% old_project = @project %>
@@ -51,3 +52,4 @@
 
   <% @project = old_project %>
 </div>
+<% end -%>
