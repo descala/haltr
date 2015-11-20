@@ -4,7 +4,7 @@ class ClientOffice < ActiveRecord::Base
 
   belongs_to :client
   has_many :invoices, dependent: :nullify
-  validates_presence_of :name
+  validates_presence_of :name, :client_id
 
   CLIENT_FIELDS = %w( address address2 city province postalcode country email name )
 
