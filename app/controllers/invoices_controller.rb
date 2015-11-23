@@ -41,7 +41,7 @@ class InvoicesController < ApplicationController
 
   def index
     sort_init 'invoices.created_at', 'desc'
-    sort_update %w(invoices.created_at state_updated_at number date due_date clients.name import_in_cents)
+    sort_update %w(invoices.created_at state number date due_date clients.name import_in_cents)
 
     invoices = @project.issued_invoices.includes(:invoice_lines).includes(:client).includes(:client_office)
 
