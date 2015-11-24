@@ -485,10 +485,12 @@ class InvoicesController < ApplicationController
   end
 
   def show_original
-    case @invoice.original
-    when /<SchemaVersion>3\.2<\/SchemaVersion>/
+    doc   = Nokogiri::XML(@invoice.original)
+    schema_version = doc.xpath('//SchemaVersion').text rescue nil
+    case schema_version
+    when "3.2"
       template = 'invoices/visor_face_32.xsl.erb'
-    when /<SchemaVersion>3\.2\.1<\/SchemaVersion>/
+    when "3.2.1"
       template = 'invoices/visor_face_321.xsl.erb'
     else
       redirect_to action: 'show', id: @invoice
@@ -502,7 +504,6 @@ class InvoicesController < ApplicationController
     @autocall = params[:autocall]
     @autocall_args = params[:autocall_args]
     @format = params["format"]
-    doc   = Nokogiri::XML(@invoice.original)
     xslt  = Nokogiri::XSLT(render_to_string(:template=>template,:layout=>false))
     @out  = xslt.transform(doc)
     respond_to do |format|
