@@ -4,7 +4,7 @@
   <% if @invoice -%>
     <!-- actions for a single invoice -->
     <li>
-    <%= context_menu_link l(:button_show), received_path(@invoice),
+      <%= context_menu_link l(:button_show), {controller: :received, action: :show, id: @invoice},
       :class=>'icon-show', :disabled=>!@can[:edit] %>
     </li>
     <li>
