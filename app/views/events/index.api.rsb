@@ -1,0 +1,43 @@
+# vi: ft=ruby
+#    name
+#    invoice_id
+#        invoice.number
+#        invoice.state
+#    text de l'event en el locale de l'usuari
+#    canvi d'estat: si aquest event ha generat un canvi d'estat en la factura o no
+
+
+api.array :events, api_meta(:total_count => @event_count, :offset => @offset, :limit => @limit) do
+  @events.each do |event|
+    api.event do
+      api.name event.name
+      if event.invoice
+        api.invoice do
+          api.id event.invoice_id
+          api.number event.invoice.number
+          api.state  event.invoice.state
+          api.state_updated_at event.invoice.state_updated_at
+        end
+      elsif event.client
+        api.client do
+          api.id event.client.id
+          api.name event.client.name
+        end
+      elsif event.invoice_id
+        api.invoice do
+          api.id event.invoice_id
+        end
+      elsif event.client_id
+        api.client do
+          api.id event.client_id
+        end
+      else
+        api.info event.to_s
+      end
+      api.text l(event.name)
+      api.created_at event.created_at
+      api.updated_at event.updated_at
+    end
+  end
+end
+

@@ -75,7 +75,7 @@ Redmine::Plugin.register :haltr do
                        :mark_refused_with_mail, :legal, :context_menu, :original, :validate, :bulk_mark_as],
         :companies => [:my_company,:bank_info,:update,:linked_to_mine,:check_iban],
         :charts    => [:invoice_total, :invoice_status, :top_clients, :cash_flow],
-        :events    => [:file] },
+        :events    => [:file, :index] },
       :require => :member
 
     permission :manage_payments, { :payments => [:index, :new, :edit, :create, :update, :destroy, :payment_initiation, :n19, :payment_done, :import_aeb43_index, :import_aeb43, :invoices, :reports, :report_payment_list] }, :require => :member
@@ -93,7 +93,7 @@ Redmine::Plugin.register :haltr do
         :payments  => [:index, :n19],
         :invoice_templates => [:index, :show, :context_menu],
         :charts    => [:invoice_total, :invoice_status, :top_clients],
-        :events    => [:file] },
+        :events    => [:file, :index] },
       :require => :member
 
     permission :restricted_use,
@@ -108,7 +108,7 @@ Redmine::Plugin.register :haltr do
         :payments  => [:index, :n19],
         :invoice_templates => [:index, :show, :context_menu],
         :charts    => [:invoice_total, :invoice_status, :top_clients],
-        :events    => [:file] },
+        :events    => [:file, :index] },
       :require => :member
 
     permission :bulk_operations,

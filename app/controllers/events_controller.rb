@@ -5,10 +5,10 @@ class EventsController < ApplicationController
   skip_before_filter :check_if_login_required, :only => [ :create ]
   before_filter :check_remote_ip, :except => [:file, :index]
   before_filter :find_event, :only => [:file]
-  before_filter :authorize, :only => [:file]
-  before_filter :require_admin, :only => [:index]
+  before_filter :find_project_by_project_id, :only => [:index]
+  before_filter :authorize, :only => [:file, :index]
 
-  accept_api_auth :file
+  accept_api_auth :file, :index
 
   helper :sort
   include SortHelper
@@ -17,24 +17,36 @@ class EventsController < ApplicationController
     sort_init   'created_at', 'desc'
     sort_update %w(created_at type)
 
-    @project = Project.find(params[:project_id]) if params[:project_id]
     if @project
       events = Event.where(project_id: @project.id)
     else
       events = Event.scoped
     end
 
+    if params[:from_time]
+      events = events.where('created_at >= ?', params[:from_time])
+    end
+
+    case params[:format]
+    when 'xml', 'json'
+      @offset, @limit = api_offset_and_limit
+    else
+      @limit = per_page_option
+    end
+
+    @event_count = events.count
+    @event_pages = Paginator.new self, @event_count, @limit, params['page']
+    @offset ||= @event_pages.offset
+    @events =  events.find :all,
+      :order   => sort_clause,
+      :include => [:invoice],
+      :limit   => @event_pages.items_per_page,
+      :offset  => @offset
+
     respond_to do |format|
       format.html do
-        @event_count = events.count
-        @event_pages = Paginator.new self, @event_count,
-          per_page_option,
-          params['page']
-        @events =  events.find :all,
-          :order   => sort_clause,
-          :include => [:invoice],
-          :limit   => @event_pages.items_per_page,
-          :offset  => @event_pages.current.offset
+      end
+      format.api do
       end
     end
   end
