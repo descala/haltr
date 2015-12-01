@@ -38,6 +38,7 @@ api.array :events, api_meta(:total_count => @event_count, :offset => @offset, :l
       begin
         api.description render :partial => "events/#{event.type.underscore}.html", :locals => {:e=>event}
       rescue ActionView::MissingTemplate
+        api.description render :partial => "events/event.html", :locals => {:e=>event}
       end
       api.created_at event.created_at
       api.updated_at event.updated_at
