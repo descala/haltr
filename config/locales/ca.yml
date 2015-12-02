@@ -721,3 +721,4 @@ ca:
   as_import: "Com a import"
   as_percent: "Com a %"
   field_has_text: "Conté el text"
+  default_invoice_format: 'Format i transport de factures per als nous usuaris'

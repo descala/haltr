@@ -57,7 +57,8 @@ Redmine::Plugin.register :haltr do
     'default_country' => 'es',
     'default_currency' => 'EUR',
     'hide_unauthorized' => '1',
-    'return_path' => ''
+    'return_path' => '',
+    'default_invoice_format' => ''
   },
   :partial => '/common/settings'
 

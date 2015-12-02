@@ -723,3 +723,4 @@ es:
   as_import: "Como importe"
   as_percent: "Como %"
   field_has_text: "Contiene el texto"
+  default_invoice_format: 'Formato y transporte de facturas para los nuevos usuarios'

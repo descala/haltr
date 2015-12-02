@@ -6,3 +6,4 @@
 <p><label><%=l(:default_country) %></label><%= select_tag('settings[default_country]', options_for_select(ISO::Countries::COUNTRIES.collect {|k,v| [v,k.to_s]}.sort,@settings['default_country'])) %></p>
 <p><label><%=l(:default_currency) %></label><%= select_tag('settings[default_currency]', options_for_select(HaltrHelper.currency_options_for_select, @settings['default_currency'])) %></p>
 <p><label><%=l(:return_path) %></label><%= text_field_tag('settings[return_path]', @settings['return_path']) %></p>
+<p><label><%=l(:default_invoice_format) %></label><%= select_tag('settings[default_invoice_format]', options_for_select(ExportChannels.for_select(nil), selected: @settings['default_invoice_format'])) %></p>
