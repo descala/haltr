@@ -447,7 +447,7 @@
                     <TaxTypeCode><%= Tax::SPAIN_TAXCODES[tax.name.upcase] || '01' %></TaxTypeCode>
                     <TaxRate><%=h haltr_precision tax.percent%></TaxRate>
                     <TaxableBase>
-                      <TotalAmount><%=h haltr_precision Haltr::Utils.to_money(invoice_line.total_cost, @invoice.currency, @invoice.company.rounding_method) %></TotalAmount>
+                      <TotalAmount><%=h haltr_precision Haltr::Utils.to_money(invoice_line.taxable_base, @invoice.currency, @invoice.company.rounding_method) %></TotalAmount>
                     </TaxableBase>
                     <TaxAmount>
                       <TotalAmount><%=h haltr_precision(invoice_line.tax_amount(tax))%></TotalAmount>
