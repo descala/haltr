@@ -83,6 +83,30 @@ class ReceivedController < InvoicesController
 
   def show
     @invoice.update_attribute(:has_been_read, true)
+    respond_to do |format|
+      format.html
+      format.api do
+        # Force "json" if format is emtpy
+        # Used in refresher.js to check invoice status
+        params[:format] ||= 'json'
+      end
+      format.pdf do
+        @is_pdf = true
+        @debug = params[:debug]
+        render :pdf => @invoice.pdf_name_without_extension,
+          :disposition => params[:view] ? 'inline' : 'attachment',
+          :layout => "invoice.html",
+          :template=>"invoices/show_pdf",
+          :formats => :html,
+          :show_as_html => params[:debug],
+          :margin => {
+            :top    => 20,
+            :bottom => 20,
+            :left   => 30,
+            :right  => 20
+          }
+      end
+    end
   end
 
   def show_original
