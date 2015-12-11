@@ -12,42 +12,13 @@
     </h3>
   <% end -%>
   </div>
-  <!-- Vendor Info -->
+
   <div class="vcard vendor">
-  <div class="invoicelogo">
-    <% if @company.attachments.any? -%>
-      <% if @is_pdf %>
-        <% if @debug %>
-          <%= tag 'img', :src => "/invoices/logo/#{@company.attachments.first.id}/#{@company.attachments.first.filename}", :alt => "#{@company.name} Logo" -%>
-        <% else %>
-          <%= tag 'img', :src => @company.attachments.first.diskfile -%>
-        <% end -%>
-      <% else %>
-          <%= tag 'img', :src => "/invoices/logo/#{@company.attachments.first.id}/#{@company.attachments.first.filename}", :alt => "#{@company.name} Logo" -%>
-      <% end -%>
-  <% end -%>
-  </div>
-  <div class="vendor-info">
-    <% if @invoice.is_a?(Quote) and !@invoice.description.blank? -%>
-      <h2><%=@invoice.description%></h2>
+    <% if @invoice.is_a? ReceivedInvoice -%>
+      <%= render partial: 'client_info' -%>
+    <% else -%>
+      <%= render partial: 'vendor_info' -%>
     <% end -%>
-    <h3><%=h @company.name %></h3>
-    <address class="adr">
-      <div class="street-address"><%=h @company.address %></div>
-      <span class="postal-code"><%=h @company.postalcode %></span> <span class="locality"><%=h @company.city %></span>
-      <div class="region"><%=h @company.province %></div>
-      <div class="country-name"></div>
-    </address>
-    <div><strong><%=h l(:field_taxcode) %></strong><span class="tax-id"> <%=h @company.taxcode %></span></div>
-    <div style="height:10px;"></div>
-    <div><%= @company.website %></div>
-    <div><%= @company.email %></div>
-    <% if @invoice.party_identification.present? -%>
-      <div>
-        <%= t(:field_party_identification) %>: <%= @invoice.party_identification %>
-      </div>
-    <% end -%>
-  </div>
   </div>
 
   <!-- Invoice Number and Info -->
@@ -95,60 +66,14 @@
   <%= call_hook(:invoice_view_invoice_info) %>
  </div>
 
-  <!-- Client Info -->
-  <% unless !@client or @client.new_record? -%>
   <div class="vcard client">
-  <div class="client-info">
-    <h3><%= client_name_with_link @client %></h3>
-    <address class="adr">
-      <div class="street-address"><%=h @client.address %></div>
-      <div class="street-address"><%=h @client.address2 %></div>
-      <span class="postal-code"><%=h @client.postalcode %></span>
-      <% if !@client.city.blank? or !@client.province.blank? -%>
-        <span class="locality"><%=h @client.city.strip unless @client.city.blank? %></span>
-        <% unless @client.province.blank? -%>, <span class="region"><%=h @client.province %></span><% end -%>
-      <% end -%>
-      <div class="country-name"><%=h @client.country_name if @client.country and @client.country.casecmp(@company.country) != 0 %></div>
-    </address>
-    <div><strong><%=h l(:field_taxcode) %>:</strong><span class="tax-id"> <%=h @client.taxcode.upcase if @client.taxcode %></span></div>
-    <% if call_hook(:invoice_view_client_info).present? -%>
-      <%= call_hook(:invoice_view_client_info) %>
-    <% elsif @invoice.has_dir3_info? -%>
-      <% if @invoice.oficina_comptable.present? -%>
-      <div>
-        <%=h l(:oficina_comptable) %>: <%= @invoice.oficina_comptable %>
-      </div>
-      <% end -%>
-      <% if @invoice.organ_gestor.present? -%>
-      <div>
-        <%=h l(:organ_gestor) %>: <%= @invoice.organ_gestor %>
-      </div>
-      <% end -%>
-      <% if @invoice.unitat_tramitadora.present? -%>
-      <div>
-        <%=h l(:unitat_tramitadora) %>: <%= @invoice.unitat_tramitadora %>
-      </div>
-      <% end -%>
-      <% if @invoice.organ_proponent.present? -%>
-        <div>
-          <%= h l(:field_organ_proponent) %>: <%= @invoice.organ_proponent %>
-        </div>
-      <% end -%>
-      <% if @invoice.unidad_contratacion.present? -%>
-        <div>
-          <%= h l(:field_unidad_contratacion) %>: <%= @invoice.unidad_contratacion%>
-        </div>
-      <% end -%>
-    <% end -%>
-    <% if @invoice.file_reference.present? -%>
-      <div>
-        <%= h l(:field_file_reference) %>: <%= @invoice.file_reference %>
-      </div>
+    <% if @invoice.is_a? ReceivedInvoice -%>
+      <%= render partial: 'vendor_info' -%>
+    <% else -%>
+      <%= render partial: 'client_info' -%>
     <% end -%>
   </div>
-  </div>
-  <% end -%>
- </div>
+
 
 <!-- Invoice Data -->
 <div class="invoice">
