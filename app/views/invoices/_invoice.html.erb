@@ -17,7 +17,20 @@
     <% if @invoice.is_a? ReceivedInvoice -%>
       <%= render partial: 'client_info' -%>
     <% else -%>
-      <%= render partial: 'vendor_info' -%>
+      <div class="invoicelogo">
+        <% if @company.attachments.any? -%>
+          <% if @is_pdf %>
+            <% if @debug %>
+              <%= tag 'img', :src => "/invoices/logo/#{@company.attachments.first.id}/#{@company.attachments.first.filename}", :alt => "#{@company.name} Logo" -%>
+            <% else %>
+              <%= tag 'img', :src => @company.attachments.first.diskfile -%>
+            <% end -%>
+          <% else %>
+            <%= tag 'img', :src => "/invoices/logo/#{@company.attachments.first.id}/#{@company.attachments.first.filename}", :alt => "#{@company.name} Logo" -%>
+          <% end -%>
+        <% end -%>
+      </div>
+      <%= render partial: 'company_info' -%>
     <% end -%>
   </div>
 
@@ -68,7 +81,7 @@
 
   <div class="vcard client">
     <% if @invoice.is_a? ReceivedInvoice -%>
-      <%= render partial: 'vendor_info' -%>
+      <%= render partial: 'company_info' -%>
     <% else -%>
       <%= render partial: 'client_info' -%>
     <% end -%>
