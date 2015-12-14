@@ -15,7 +15,7 @@
 
   <div class="vcard vendor">
     <% if @invoice.is_a? ReceivedInvoice -%>
-      <%= render partial: 'client_info' -%>
+      <%= render partial: 'invoices/client_info' -%>
     <% else -%>
       <div class="invoicelogo">
         <% if @company.attachments.any? -%>
@@ -30,7 +30,7 @@
           <% end -%>
         <% end -%>
       </div>
-      <%= render partial: 'company_info' -%>
+      <%= render partial: 'invoices/company_info' -%>
     <% end -%>
   </div>
 
@@ -81,9 +81,9 @@
 
   <div class="vcard client">
     <% if @invoice.is_a? ReceivedInvoice -%>
-      <%= render partial: 'company_info' -%>
+      <%= render partial: 'invoices/company_info' -%>
     <% else -%>
-      <%= render partial: 'client_info' -%>
+      <%= render partial: 'invoices/client_info' -%>
     <% end -%>
   </div>
 
