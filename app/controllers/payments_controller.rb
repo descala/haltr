@@ -182,7 +182,7 @@ class PaymentsController < ApplicationController
           mandate_date_of_signature: Date.new(2009,10,31),
           local_instrument:          local_instrument,
           sequence_type:             'RCUR',
-          reference:                 "#{invoice_numbers}",
+          reference:                 "#{invoice_numbers}"[0..34],
           remittance_information:    "#{l(:label_invoice)} #{invoice_numbers}",
           requested_date:            due_date.to_date,
         )
