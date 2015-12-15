@@ -27,6 +27,14 @@ class EventsController < ApplicationController
       events = events.where('created_at >= ?', params[:from_time])
     end
 
+    if params[:invoice_id]
+      events = events.where('invoice_id = ?', params[:invoice_id])
+    end
+
+    unless User.current.admin?
+      events = events.where("type!='HiddenEvent'")
+    end
+
     case params[:format]
     when 'xml', 'json'
       @offset, @limit = api_offset_and_limit
