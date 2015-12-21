@@ -148,7 +148,7 @@ class IssuedInvoice < InvoiceDocument
 
   def self.last_number(project)
     # assume invoices with > date will have > number
-    numbers = project.issued_invoices.order(:date, :created_at).last(10).collect {|i|
+    numbers = project.issued_invoices.order(:date, :created_at).limit(10).collect {|i|
       i.number
     }.compact
     numbers.sort_by do |num|
