@@ -3,8 +3,7 @@ class ExportFormats
 
   def self.available
     # See config/formats.yml.example
-    @@formats ||= File.read(File.join(File.dirname(__FILE__), "../../config/formats.yml"))
-    YAML.load(@@formats)
+    @@formats ||= YAML.load(File.read(File.join(File.dirname(__FILE__), "../../config/formats.yml")))
   rescue Exception => e
     puts "Exception while retrieving formats.yml: #{e.message}"
     {}
