@@ -418,9 +418,7 @@ class InvoicesController < ApplicationController
   end
 
   def show
-    @invoices_not_sent = InvoiceDocument.find(:all,:conditions => ["client_id = ? and state = 'new'",@client.id]).sort
-    @invoices_sent = InvoiceDocument.find(:all,:conditions => ["client_id = ? and state = 'sent'",@client.id]).sort
-    @invoices_closed = InvoiceDocument.find(:all,:conditions => ["client_id = ? and state = 'closed'",@client.id]).sort
+    set_sent_and_closed
     @js = ExportChannels[@client.invoice_format]['javascript'] rescue nil
     @autocall = params[:autocall]
     @autocall_args = params[:autocall_args]
@@ -497,9 +495,7 @@ class InvoicesController < ApplicationController
       return
     end
     @is_pdf = (params[:format] == 'pdf')
-    @invoices_not_sent = InvoiceDocument.find(:all,:conditions => ["client_id = ? and state = 'new'",@client.id]).sort
-    @invoices_sent = InvoiceDocument.find(:all,:conditions => ["client_id = ? and state = 'sent'",@client.id]).sort
-    @invoices_closed = InvoiceDocument.find(:all,:conditions => ["client_id = ? and state = 'closed'",@client.id]).sort
+    set_sent_and_closed
     @js = ExportChannels[@client.invoice_format]['javascript'] rescue nil
     @autocall = params[:autocall]
     @autocall_args = params[:autocall_args]
@@ -628,7 +624,7 @@ class InvoicesController < ApplicationController
     if company
       project = company.project
       number = params[:num]
-      invoice = IssuedInvoice.find(:all,:conditions=>["number = ? AND project_id = ?",number,project.id]).first if project
+      invoice = IssuedInvoice.where(["number = ? AND project_id = ?",number,project.id]).first if project
     end
     if invoice.nil?
       render_404
@@ -644,9 +640,8 @@ class InvoicesController < ApplicationController
   def view
     @last_success_sending_event = @invoice.last_success_sending_event
     @lines = @invoice.invoice_lines
+    set_sent_and_closed
     @invoices_not_sent = []
-    @invoices_sent = IssuedInvoice.find(:all,:conditions => ["client_id = ? and state = 'sent'",@client.id]).sort
-    @invoices_closed = IssuedInvoice.find(:all,:conditions => ["client_id = ? and state = 'closed'",@client.id]).sort
     unless @invoice.has_been_read or User.current.projects.include?(@invoice.project) or User.current.admin?
       Event.create!(:name=>'read',:invoice=>@invoice,:user=>User.current)
       @invoice.update_attribute(:has_been_read,true)
@@ -1194,6 +1189,12 @@ class InvoicesController < ApplicationController
       end
     end
     parsed_params
+  end
+
+  def set_sent_and_closed
+    @invoices_not_sent = InvoiceDocument.where(["client_id = ? and state = 'new'",@client.id]).order(:number)
+    @invoices_sent = InvoiceDocument.where(["client_id = ? and state = 'sent'",@client.id]).order(:number)
+    @invoices_closed = InvoiceDocument.where(["client_id = ? and state = 'closed'",@client.id]).order(:number)
   end
 
 end
