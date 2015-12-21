@@ -82,19 +82,19 @@ class Client < ActiveRecord::Base
   alias :to_s :to_label
 
   def invoice_templates
-    self.invoices.find(:all,:conditions=>["type=?","InvoiceTemplate"])
+    self.invoices.where(["type=?","InvoiceTemplate"])
   end
 
   def invoice_documents
-    self.invoices.find(:all,:conditions=>["type=?","IssuedInvoice"])
+    self.invoices.where(["type=?","IssuedInvoice"])
   end
 
   def issued_invoices
-    self.invoices.find(:all,:conditions=>["type=?","IssuedInvoice"])
+    self.invoices.where(["type=?","IssuedInvoice"])
   end
 
   def received_invoices
-    self.invoices.find(:all,:conditions=>["type=?","ReceivedInvoice"])
+    self.invoices.where(["type=?","ReceivedInvoice"])
   end
 
   def allowed?
