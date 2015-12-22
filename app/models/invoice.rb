@@ -1049,7 +1049,7 @@ _INV
       end
     else
       # prevent duplicate invoices #5433
-      if company.project.invoices.any? {|i| i.number == invoice_number }
+      if company.project.invoices.find_by_number(invoice_number)
         raise "#{I18n.t :field_number} #{I18n.t 'activerecord.errors.messages.taken'}"
       end
       invoice.save(validate: false)
