@@ -31,6 +31,8 @@
         <td>
         <% if due_invoices.count > 0 and due_invoices.count < 20 -%>
           <%= link_to("#{due_invoices.count} #{l(:label_invoice_plural)}", project_invoices_path(:project_id=>@project, :invoices => due_invoices.collect {|i| i.id })) -%>
+        <% else -%>
+          <%= "#{due_invoices.count} #{l(:label_invoice_plural)}" -%>
         <% end -%>
         </td>
         <td></td>
@@ -41,6 +43,8 @@
         <td>
           <% if invoices.count > 0 and invoices.count < 20 -%>
             <%= link_to("#{invoices.count} #{l(:label_invoice_plural)}", project_invoices_path(:project_id=>@project, :invoices => invoices.collect {|i| i.id })) -%>
+          <% else -%>
+            <%= "#{invoices.count} #{l(:label_invoice_plural)}" -%>
           <% end -%>
         </td>
       </tr>
