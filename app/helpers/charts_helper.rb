@@ -20,14 +20,13 @@ module ChartsHelper
   end
 
   def invoices_past_due(project,from=nil,currency=nil)
-    invoices = project.issued_invoices.includes('payments')
-    # cal posar payments al where pq sino no fa el join
-    invoices = invoices.where("payments.id is not null")
+    invoices = project.issued_invoices.
+      joins('LEFT JOIN payments ON payments.invoice_id = invoices.id')
     case from.to_s
     when 'last_year'
-      invoices = invoices.where(["state != 'closed' and due_date < ? and date >= ?", Date.today, 1.year.ago])
+      invoices = invoices.where(["state != 'closed' and due_date < ? and invoices.date >= ?", Date.today, 1.year.ago])
     when 'last_3_months'
-      invoices = invoices.where(["state != 'closed' and due_date < ? and date >= ?", Date.today, 3.months.ago])
+      invoices = invoices.where(["state != 'closed' and due_date < ? and invoices.date >= ?", Date.today, 3.months.ago])
     else
       invoices = invoices.where(["state != 'closed' and due_date < ?", Date.today])
     end
@@ -38,12 +37,13 @@ module ChartsHelper
   end
 
   def invoices_on_schedule(project,from=nil,currency=nil)
-    invoices = project.issued_invoices
+    invoices = project.issued_invoices.
+      joins('LEFT JOIN payments ON payments.invoice_id = invoices.id')
     case from
     when 'last_year'
-      invoices = invoices.where(["state != 'closed' and due_date >= ? and date >= ?", Date.today, 1.year.ago])
+      invoices = invoices.where(["state != 'closed' and due_date >= ? and invoices.date >= ?", Date.today, 1.year.ago])
     when 'last_3_months'
-      invoices = invoices.where(["state != 'closed' and due_date >= ? and date >= ?", Date.today, 3.months.ago])
+      invoices = invoices.where(["state != 'closed' and due_date >= ? and invoices.date >= ?", Date.today, 3.months.ago])
     else
       invoices = invoices.where(["state != 'closed' and due_date >= ?", Date.today])
     end
