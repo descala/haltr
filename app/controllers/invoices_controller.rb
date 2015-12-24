@@ -1192,12 +1192,12 @@ class InvoicesController < ApplicationController
   end
 
   def set_sent_and_closed
-    @invoices_not_sent = InvoiceDocument.where(["client_id = ? and state = 'new'",@client.id]).order("number desc").limit(10)
-    @invoices_not_sent_count = InvoiceDocument.where(["client_id = ? and state = 'new'",@client.id]).order("number desc").count
-    @invoices_sent = InvoiceDocument.where(["client_id = ? and state = 'sent'",@client.id]).order("date desc").limit(10)
-    @invoices_sent_count = InvoiceDocument.where(["client_id = ? and state = 'sent'",@client.id]).order("date desc").count
-    @invoices_closed = InvoiceDocument.where(["client_id = ? and state = 'closed'",@client.id]).order("number desc").limit(10)
-    @invoices_closed_count = InvoiceDocument.where(["client_id = ? and state = 'closed'",@client.id]).order("number desc").count
+    @invoices_not_sent = InvoiceDocument.where(["client_id = ? and state = 'new'",@client.id]).order("id desc").limit(10)
+    @invoices_not_sent_count = InvoiceDocument.where(["client_id = ? and state = 'new'",@client.id]).order("id desc").count
+    @invoices_sent = InvoiceDocument.where(["client_id = ? and state = 'sent'",@client.id]).order("id desc").limit(10)
+    @invoices_sent_count = InvoiceDocument.where(["client_id = ? and state = 'sent'",@client.id]).order("id desc").count
+    @invoices_closed = InvoiceDocument.where(["client_id = ? and state = 'closed'",@client.id]).order("id desc").limit(10)
+    @invoices_closed_count = InvoiceDocument.where(["client_id = ? and state = 'closed'",@client.id]).order("id desc").count
   end
 
 end
