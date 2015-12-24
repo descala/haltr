@@ -20,7 +20,9 @@ module ChartsHelper
   end
 
   def invoices_past_due(project,from=nil,currency=nil)
-    invoices = project.issued_invoices
+    invoices = project.issued_invoices.includes('payments')
+    # cal posar payments al where pq sino no fa el join
+    invoices = invoices.where("payments.id is not null")
     case from.to_s
     when 'last_year'
       invoices = invoices.where(["state != 'closed' and due_date < ? and date >= ?", Date.today, 1.year.ago])
