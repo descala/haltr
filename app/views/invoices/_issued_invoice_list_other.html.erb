@@ -2,7 +2,7 @@
 <h3><%=l(:open_invoices)%></h3>
 <p>
 <% @invoices_not_sent.each_with_index do |invoice, i| -%>
-  <%=link_to_invoice invoice, @invoice %><%= ", " unless invoice == @invoices_not_sent.last %>
+  <%=link_to_invoice invoice, @invoice %><%= ", " unless invoice == @invoices_not_sent.last and @invoices_closed_count <= 10 %>
   <% if @invoices_not_sent_count > 10 and i == 9 -%>
     <%= link_to "[ ...#{@invoices_not_sent_count} #{l :label_invoice_plural}]", project_invoices_path(@project, client_id: invoice.client, new: '1') %>
   <% end -%>
@@ -14,7 +14,7 @@
 <h3><%=l(:pending_invoices)%></h3>
 <p>
 <% @invoices_sent.each_with_index do |invoice, i| -%>
-  <%=link_to_invoice invoice, @invoice %><%= ", " unless invoice == @invoices_sent.last %>
+  <%=link_to_invoice invoice, @invoice %><%= ", " unless invoice == @invoices_sent.last and @invoices_closed_count <= 10 %>
   <% if @invoices_sent_count > 10 and i == 9 -%>
     <%= link_to "[ ...#{@invoices_sent_count} #{l :label_invoice_plural}]", project_invoices_path(@project, client_id: invoice.client, sent: '1') %>
   <% end -%>
@@ -26,7 +26,7 @@
 <h3><%=l(:closed_invoices)%></h3>
 <p>
 <% @invoices_closed.each_with_index do |invoice, i| -%>
-  <%=link_to_invoice invoice, @invoice %><%= ", " unless invoice == @invoices_closed.last %>
+  <%=link_to_invoice invoice, @invoice %><%= ", " unless invoice == @invoices_closed.last and @invoices_closed_count <= 10 %>
   <% if @invoices_closed_count > 10 and i == 9 -%>
     <%= link_to "[ ...#{@invoices_closed_count} #{l :label_invoice_plural}]", project_invoices_path(@project, client_id: invoice.client, closed: '1') %>
   <% end -%>
