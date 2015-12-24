@@ -1,24 +1,35 @@
 <% if @invoices_not_sent.any? -%>
 <h3><%=l(:open_invoices)%></h3>
 <p>
-<% @invoices_not_sent.each do |invoice| -%>
+<% @invoices_not_sent.last(10).reverse.each_with_index do |invoice, i| -%>
   <%=link_to_invoice invoice, @invoice %><%= ", " unless invoice == @invoices_not_sent.last %>
+  <% if @invoices_not_sent.size > 10 and i == 9 -%>
+    <%= link_to "[ ...#{@invoices_not_sent.size} #{l :label_invoice_plural}]", project_invoices_path(@project, client_id: invoice.client, new: '1') %>
+  <% end -%>
 <% end -%>
 </p>
 <% end -%>
+
 <% if @invoices_sent.any? -%>
 <h3><%=l(:pending_invoices)%></h3>
 <p>
-<% @invoices_sent.each do |invoice| -%>
+<% @invoices_sent.first(10).each_with_index do |invoice, i| -%>
   <%=link_to_invoice invoice, @invoice %><%= ", " unless invoice == @invoices_sent.last %>
+  <% if @invoices_sent.size > 10 and i == 9 -%>
+    <%= link_to "[ ...#{@invoices_sent.size} #{l :label_invoice_plural}]", project_invoices_path(@project, client_id: invoice.client, sent: '1') %>
+  <% end -%>
 <% end -%>
 </p>
 <% end -%>
+
 <% if @invoices_closed.any? -%>
 <h3><%=l(:closed_invoices)%></h3>
 <p>
-<% @invoices_closed.each do |invoice| -%>
+<% @invoices_closed.first(10).each_with_index do |invoice, i| -%>
   <%=link_to_invoice invoice, @invoice %><%= ", " unless invoice == @invoices_closed.last %>
+  <% if @invoices_closed.size > 10 and i == 9 -%>
+    <%= link_to "[ ...#{@invoices_closed.size} #{l :label_invoice_plural}]", project_invoices_path(@project, client_id: invoice.client, closed: '1') %>
+  <% end -%>
 <% end -%>
 </p>
 <% end -%>
