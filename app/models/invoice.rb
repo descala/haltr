@@ -61,6 +61,7 @@ class Invoice < ActiveRecord::Base
   before_save :fields_to_utf8
   after_create :increment_counter
   before_destroy :decrement_counter
+  before_save :call_before_save_hook
 
   accepts_nested_attributes_for :invoice_lines,
     :allow_destroy => true,
@@ -1235,6 +1236,10 @@ _INV
   def decrement_counter
     Project.decrement_counter "invoices_count", project_id
     Project.decrement_counter "#{type.to_s.pluralize.underscore}_count", project_id
+  end
+
+  def call_before_save_hook
+    Redmine::Hook.call_hook(:model_invoice_before_save, :invoice=>self)
   end
 
   # non-utf characters can break conversion to PDF and signature
