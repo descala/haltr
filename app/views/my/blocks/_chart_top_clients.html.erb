@@ -1,3 +1,4 @@
+<% if @project -%>
 <div class="chart_top_clients">
   <%= render :partial => 'common/chart_headers' %>
 
@@ -7,7 +8,7 @@
                                               t(:all_by_year)=>"all_by_year",
                                               t(:all_by_month)=>"all_by_month"},
                                              User.current.pref.others[:chart_top_clients]),
-                 :data  => { :url => url_for(update_chart_preference_path) },
+                 :data  => { :url => url_for(update_chart_preference_path(project_id: @project.id)) },
                  :id    => 'chart_top_clients',
                  :class => 'chart_prefs'
   %>
@@ -20,3 +21,4 @@
     <% end -%>
   <% end %>
 </div>
+<% end -%>

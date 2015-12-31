@@ -134,8 +134,8 @@ module InvoicesHelper
   end
 
   def client_name_with_link(client)
-    if authorize_for('clients', 'edit')
-      link_to h(client.name), {:controller=>'clients',:action=>'edit',:id=>client}
+    if authorize_for('clients', 'show')
+      link_to h(client.name), {:controller=>'clients',:action=>'show',:id=>client}
     else
       h(client.name)
     end
@@ -299,5 +299,18 @@ module InvoicesHelper
     else
       'doc'
     end
+  end
+
+  def invoice_summary(invoice)
+    lines = Array.new
+    invoice.invoice_lines.each_with_index do |line,i|
+      break if i > 2
+      lines << truncate(line.description,length:50)
+    end
+    desc = Array.new
+    desc << money(invoice.total)
+    desc << invoice.date unless invoice.is_a? InvoiceTemplate
+    desc << lines.join(" | ")
+    desc.join(" * ")
   end
 end

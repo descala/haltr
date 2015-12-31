@@ -64,4 +64,8 @@ class InvoiceTemplate < Invoice
     false
   end
 
+  def number
+    date
+  end
+
 end

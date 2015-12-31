@@ -148,7 +148,7 @@ select.tax {
 }
 
 .pastdue {
-  color: red;
+  color: red !important;
 }
 .halfpaid {
   color: blue;
@@ -286,4 +286,32 @@ span#send_info {
   position: absolute;
   top: -13px;
   right: 0px;
+}
+
+.controller-clients .client-info {
+  border: 1px outset orange;
+  margin-bottom: 10px;
+  padding: 10px;
+}
+
+.controller-clients .people-info {
+  border: 1px outset grey;
+  margin-bottom: 10px;
+  padding: 10px;
+}
+
+.controller-clients .events {
+  border: 1px outset grey;
+  margin-bottom: 10px;
+  padding: 10px;
+}
+
+.controller-clients .invoices-box {
+  border: 1px outset grey;
+  margin-bottom: 10px;
+  padding: 10px;
+}
+
+.controller-clients .client-info h3 {
+  font-size: 120%;
 }

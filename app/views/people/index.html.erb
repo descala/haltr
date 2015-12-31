@@ -8,7 +8,7 @@
     </ul>
   </div>
   <div class="col span-1-de-2">
-    <h1 style="float: right;"><%= @client.name %> - <%=l(:label_person_plural)%></h1>
+    <h1 style="float: right;"><%= link_to(@client.name, client_path(@client)) %> - <%=l(:label_person_plural)%></h1>
   </div>
 </div>
 <%end%>

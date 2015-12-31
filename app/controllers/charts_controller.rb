@@ -2,6 +2,7 @@ class ChartsController < ApplicationController
   unloadable
 
   before_filter :find_project_by_project_id
+  before_filter :find_optional_client, :only => [:invoice_status, :update_chart_preference]
   before_filter :authorize, :except => [:invoice_total, :update_chart_preference]
   include ChartsHelper
   helper :haltr
@@ -42,7 +43,11 @@ class ChartsController < ApplicationController
 
   def invoice_status
     pref = params[:pref] || User.current.pref.others[:chart_invoice_status]
-    invoices = @project.issued_invoices
+    if @client
+      invoices = @client.issued_invoices
+    else
+      invoices = @project.issued_invoices
+    end
     if params[:currency]
       invoices = invoices.where("currency = ?", params[:currency])
     end
@@ -149,4 +154,11 @@ class ChartsController < ApplicationController
       format.js
     end
   end
+
+  def find_optional_client
+    if params[:client] and client = Client.find(params[:client])
+      @client = client
+    end
+  end
+
 end
