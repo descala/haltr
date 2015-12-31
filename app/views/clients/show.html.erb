@@ -1,0 +1,34 @@
+<div class="seccio grup">
+  <div class="col span-2-de-2">
+    <ul class="menu-rapid">
+      <li><%= link_to_if_authorized l("label_company_new"), new_project_client_path(@project), :class => 'icon icon-add' %></li>
+      <li><%= link_to_if_authorized l(:button_edit), { :action => 'edit', :id => @client }, :class => 'icon icon-edit' %></li>
+      <li><%= link_to_if_authorized l(:button_delete), { :action => 'destroy', :id => @client}, :confirm=>l(:text_are_you_sure), :method=>:delete, :class=>'icon icon-del' %></li>
+      <% if @client.next%>
+        <li class="invoice-navigator"><%=h link_to_if_authorized l(:label_next), :action => 'show', :id => @client.next %></li>
+      <% end %>
+       <% if @client.previous %>
+        <li class="invoice-navigator"><%=h link_to_if_authorized l(:label_previous), :action => 'show', :id => @client.previous %></li>
+      <% end %>
+    </ul>
+  </div>
+</div>
+
+<div class="client-info">
+  <h3><%=h @client.name %></h3>
+  <address>
+    <div class="address"><%=h @client.full_address %></div>
+    <span class="postalcode"><%=h @client.postalcode %></span> <span class="city"><%=h @client.city %></span>
+    <div class="province"><%=h @client.province %></div>
+    <div class="country"><%=h @client.country_name %></div>
+  </address>
+  <div><strong><%=h l(:field_taxcode) %></strong><span class="tax-id"> <%=h @client.taxcode %></span></div>
+  <div><%= @client.website %></div>
+  <div><%= mail_to(@client.email) %></div>
+</div>
+
+
+
+<% content_for :sidebar do %>
+  <%= render_menu :companies_menu, @project %>
+<% end %>

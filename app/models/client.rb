@@ -193,6 +193,14 @@ class Client < ActiveRecord::Base
     mails.uniq.compact
   end
 
+  def next
+    project.clients.first(:conditions=>["id > ?", self.id])
+  end
+
+  def previous
+    project.clients.last(:conditions=>["id < ?", self.id])
+  end
+
   protected
 
   # called after_create (only NEW clients)

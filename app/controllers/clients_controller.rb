@@ -61,9 +61,9 @@ class ClientsController < ApplicationController
        :offset =>  @offset
   end
 
-  # Only used in API
   def show
     respond_to do |format|
+      format.html
       format.api
     end
   end
@@ -87,7 +87,7 @@ class ClientsController < ApplicationController
       if @client.save
         format.html {
           flash[:notice] = l(:notice_successful_create)
-          redirect_to :action=>'index', :project_id=>@project
+          redirect_to :action=>'show', :id=>@client
         }
         format.js
         format.api { render :action => 'show', :status => :created, :location => client_url(@client) }
@@ -108,7 +108,7 @@ class ClientsController < ApplicationController
         event.save!
         format.html {
           flash[:notice] = l(:notice_successful_update)
-          redirect_to :action => 'index', :project_id => @project
+          redirect_to :action=>'show', :id=>@client
         }
         format.api  { render_api_ok }
       else
