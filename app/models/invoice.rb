@@ -945,7 +945,7 @@ _INV
              :delivery_note_number         => line_delivery_note_number,
              :ponumber     => Haltr::Utils.get_xpath(line,xpaths[:ponumber]),
            )
-      # invoice taxes. Known taxes are described at config/taxes.yml
+      # invoice line taxes. Known taxes are described at config/taxes.yml
       line.xpath(*xpaths[:line_taxes]).each do |line_tax|
         percent = Haltr::Utils.get_xpath(line_tax,xpaths[:tax_percent])
         if line_tax.path =~ /\/TaxesWithheld\//
@@ -989,6 +989,22 @@ _INV
       line_file_reference ||= Haltr::Utils.get_xpath(line,xpaths[:file_reference])
       line_r_contract_reference ||= Haltr::Utils.get_xpath(line,xpaths[:r_contract_reference])
       invoice.invoice_lines << il
+    end
+
+    # global IRPF, to import only if none of the lines has IRPF #5764
+    if invoice.invoice_lines.all? {|l| l.taxes.all? {|tax| tax.percent >= 0 }}
+      glob_irpf = Haltr::Utils.get_xpath(doc,xpaths[:glob_irpf])
+      if glob_irpf
+        glob_irpf = "-#{glob_irpf}"
+        glob_irpf_tax = Haltr::TaxHelper.new_tax(
+          :format  => invoice_format,
+          :id      => '04',
+          :percent => glob_irpf
+        )
+        invoice.invoice_lines.each do |il|
+          il.taxes << glob_irpf_tax.dup
+        end
+      end
     end
 
     # Assume just one file_reference and
