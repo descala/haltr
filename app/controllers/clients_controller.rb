@@ -62,6 +62,8 @@ class ClientsController < ApplicationController
   end
 
   def show
+    @people = @client.people
+    @events= @client.invoice_events.where("events.type!='HiddenEvent'").limit(10)
     respond_to do |format|
       format.html
       format.api

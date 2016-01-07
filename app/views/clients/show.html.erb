@@ -22,9 +22,33 @@
     <div class="province"><%=h @client.province %></div>
     <div class="country"><%=h @client.country_name %></div>
   </address>
-  <div><strong><%=h l(:field_taxcode) %></strong><span class="tax-id"> <%=h @client.taxcode %></span></div>
-  <div><%= @client.website %></div>
+  <div><%= link_to(@client.website, "http://#{@client.website}", :target=>'_blank') if @client.website%></div>
   <div><%= mail_to(@client.email) %></div>
+  <div><%= @client.phone %></div>
+  <div><%= ll(@client.language,:general_lang_name)%></div>
+  <div><%= @client.currency %> - <%=Money::Currency.find(@client.currency).name %></div>
+  <div><strong><%=h l(:field_taxcode) %></strong><span class="tax-id"> <%=h @client.taxcode %></span></div>
+  <div><%= ExportChannels.l(@client.invoice_format) %></div>
+</div>
+
+<% for person in @people -%>
+  <div class="people-info">
+  <div class="contextual">
+    <%= link_to(l(:button_edit), edit_person_path(person), :class => 'icon icon-edit') %>
+  </div>
+    <h3><%=h person.first_name %> <%=h person.last_name %></h3>
+    <div><%=h person.info%></div>
+    <div><%=mail_to(person.email) %><%= " (#{l(:field_send_invoices_by_mail)})" if person.send_invoices_by_mail %></div>
+    <div><%=h person.phone_office %></div>
+    <div><%=h person.phone_mobile %></div>
+  </div>
+<% end -%>
+
+<div class="events">
+  <h3><%= l(:events)%></h3>
+  <% for event in @events -%>
+    <div><%= format_time event.created_at %> <%= link_to_invoice_with_label(event.invoice)%> <%=l(event.name)%></div>
+  <% end -%>
 </div>
 
 

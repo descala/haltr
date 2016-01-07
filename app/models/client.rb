@@ -10,6 +10,7 @@ class Client < ActiveRecord::Base
   has_many :people,   :dependent => :destroy
   has_many :mandates, :dependent => :destroy
   has_many :events,   :order => :created_at
+  has_many :invoice_events, :through => :invoices, :source => :events, :order => :created_at
   has_many :client_offices, :dependent => :destroy
 
   belongs_to :project   # client of

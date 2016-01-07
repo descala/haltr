@@ -287,3 +287,31 @@ span#send_info {
   top: -13px;
   right: 0px;
 }
+
+.controller-clients .client-info {
+  border: 1px outset orange;
+  margin-right: 10px;
+  margin-bottom: 10px;
+  padding: 10px;
+  float: left;
+}
+
+.controller-clients .people-info {
+  border: 1px outset grey;
+  margin-right: 10px;
+  margin-bottom: 10px;
+  padding: 10px;
+  float: left;
+}
+
+.controller-clients .events {
+  border: 1px outset grey;
+  margin-right: 10px;
+  margin-bottom: 10px;
+  padding: 10px;
+  float: left;
+}
+
+.controller-clients .client-info h3 {
+  font-size: 120%;
+}
