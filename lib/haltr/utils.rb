@@ -96,6 +96,7 @@ module Haltr
           xpaths[:iban]               = "*/IBAN"
           xpaths[:bic]                = "*/BIC"
 
+          xpaths[:glob_irpf]          = "//Invoices/Invoice/TaxesWithheld/Tax/TaxRate"
           xpaths[:invoice_lines]      = "//Invoices/Invoice/Items/InvoiceLine"
           # relative to invoice_lines
           xpaths[:i_transaction_ref]  = "IssuerTransactionReference"
