@@ -290,28 +290,24 @@ span#send_info {
 
 .controller-clients .client-info {
   border: 1px outset orange;
-  margin-right: 10px;
   margin-bottom: 10px;
   padding: 10px;
 }
 
 .controller-clients .people-info {
   border: 1px outset grey;
-  margin-right: 10px;
   margin-bottom: 10px;
   padding: 10px;
 }
 
 .controller-clients .events {
   border: 1px outset grey;
-  margin-right: 10px;
   margin-bottom: 10px;
   padding: 10px;
 }
 
 .controller-clients .invoices-box {
   border: 1px outset grey;
-  margin-right: 10px;
   margin-bottom: 10px;
   padding: 10px;
 }

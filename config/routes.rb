@@ -27,6 +27,7 @@ resources :projects do
   match 'invoices/download_new' => 'invoices#download_new_invoices', :via => :get
   match 'invoices/update_payment_stuff' => 'invoices#update_payment_stuff', :via => :get
   match 'invoices/new/:client' => 'invoices#new', :via => :get, :as => :client_new_invoice
+  match 'invoice_templates/new/:client' => 'invoice_templates#new', :via => :get, :as => :client_new_invoice_template
   resources :invoices, :only => [:index, :new, :create]
   resources :received, :only => [:index, :new, :create]
   resources :invoice_templates, :only => [:index, :new, :create]
@@ -112,7 +113,7 @@ match 'invoice/:client_hashid/:invoice_id' => 'invoices#view', :client_hashid =>
 match 'invoices/logo/:attachment_id/:filename' => 'invoices#logo', :attachment_id => /\d+/, :filename => /.*/
 
 resources :invoices, :has_many => :events
-resources :received
+resources :received_invoices, :controller => :received
 match 'received/mark_refused/:id' => 'received#mark_refused', :as => :mark_refused
 match 'received/mark_refused_with_mail/:id' => 'received#mark_refused_with_mail', :as => :mark_refused_with_mail
 match 'received/mark_accepted/:id' => 'received#mark_accepted', :as => :mark_accepted

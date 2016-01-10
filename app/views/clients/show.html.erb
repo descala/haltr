@@ -71,20 +71,31 @@
 <div class="splitcontentright">
 
   <div class="invoices-box">
-    <div class="contextual">
-      <div class="new"><%= link_to_if_authorized l(:button_new_invoice), project_client_new_invoice_path(:project_id=>@project.id,:client=>@client.id), :class => 'nova-f-btt', :title=>l(:label_invoice_new) %></div>
-    </div>
     <% if @client.issued_invoices.any? %>
-      <h3><%= l(:label_issued)%> <%= link_to_if_authorized("(#{@client.issued_invoices.count})", project_invoices_path(:project_id=>@project, :client_id=>@client), :title=>l(:label_issued)) %></h3>
+      <h3><%= l(:label_issued)%> <%= link_to_if_authorized("(#{@client.issued_invoices.count})", project_invoices_path(:project_id=>@project, :client_id=>@client)) %></h3>
+      <% @client.issued_invoices.last(10).reverse.each do |invoice| %>
+        <%= link_to(invoice.number, invoice_path(invoice), :title => money(invoice.total)) %>
+      <% end %>
     <% end %>
-
 
     <% if @client.received_invoices.any? %>
-      <h3><%= l(:label_received) %> <%= link_to_if_authorized(@client.received_invoices.count, {:controller=>'received', :action=>'index', :id=>@project, :client_id=>@client}, :title=>l(:label_received)) %></h3>
+      <h3><%= l(:label_received) %> <%= link_to_if_authorized("(#{@client.received_invoices.count})", {:controller=>'received', :action=>'index', :project_id=>@project, :client_id=>@client}, :title=>l(:label_received)) %></h3>
+      <% @client.received_invoices.last(10).reverse.each do |invoice| %>
+        <%= link_to(invoice.number, received_invoice_path(invoice), :title => money(invoice.total)) %>
+      <% end %>
     <% end %>
 
+    <% if @client.invoice_templates.any? %>
+      <h3><%= l(:label_invoice_template_plural)%> <%= link_to_if_authorized("(#{@client.invoice_templates.count})", project_invoice_templates_path(:project_id=>@project, :client_id=>@client)) %></h3>
+      <% @client.invoice_templates.last(10).reverse.each do |template| %>
+        <%= link_to(template.date, invoice_template_path(template), :title => money(template.total)) %>
+      <% end %>
+  <% end %>
 
   </div>
+
+  <%= link_to_if_authorized l(:button_new_invoice), project_client_new_invoice_path(:project_id=>@project,:client=>@client), :class => 'icon icon-add' %>
+  <%= link_to_if_authorized l(:label_invoice_template_new), project_client_new_invoice_template_path(:project_id=>@project,:client=>@client), :class => 'icon icon-add' %>
 
   <%= render :partial => 'common/chart_headers' %>
   <%= column_chart project_invoice_status_chart_path(@project, currency: @client.currency), id: "chart_invoice_status_#{@project.identifier}_#{@client.currency}", library: {isStacked: true, vAxis: {title: "#{l(:chart_invoice_status)} (#{@client.currency})" }} %>
