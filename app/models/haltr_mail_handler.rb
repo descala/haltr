@@ -54,6 +54,8 @@ class HaltrMailHandler < MailHandler # < ActionMailer::Base
               end
             end
             break #TODO: allow incoming invoice to several companies?
+          else
+            log "Company not found by taxcode (#{to.split("@").first}) nor by email (#{to})"
           end
         end
         unless company_found
