@@ -77,7 +77,7 @@
     <%= link_to_if_authorized l(:button_new_invoice), project_client_new_invoice_path(:project_id=>@project,:client=>@client), :class => 'icon icon-add' -%>
     <% @client.issued_invoices.last(10).reverse.each do |invoice| %>
       ,
-      <%= link_to(invoice.number, invoice_path(invoice), :title => invoice_summary(invoice)) -%>
+      <%= link_to(invoice.number, invoice_path(invoice), :title => invoice_summary(invoice), :class => invoice.past_due? ? 'pastdue' : nil ) -%>
     <% end %>
     <%= " ..." if @client.issued_invoices.count > 10 %>
 
@@ -90,6 +90,7 @@
     <%= " ..." if @client.invoice_templates.count > 10 %>
 
     <h3><%= l(:label_received) %> <%= link_to_if_authorized("(#{@client.received_invoices.count})", {:controller=>'received', :action=>'index', :project_id=>@project, :client_id=>@client}, :title=>l(:label_received)) %></h3>
+    <%= link_to_if_authorized l(:label_import), project_received_import_path(@project), :class => 'icon icon-add' %>
     <% @client.received_invoices.last(10).reverse.each do |invoice| %>
       ,
       <%= link_to(invoice.number, received_invoice_path(invoice), :title => invoice_summary(invoice)) %>
@@ -103,8 +104,6 @@
   </div>
 
 </div>
-
-
 
 <% content_for :sidebar do %>
   <%= render_menu :companies_menu, @project %>

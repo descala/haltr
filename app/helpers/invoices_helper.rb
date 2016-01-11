@@ -307,6 +307,10 @@ module InvoicesHelper
       break if i > 2
       lines << truncate(line.description,length:50)
     end
-    h("#{money(invoice.total)} * #{lines.join(" * ")}")
+    desc = Array.new
+    desc << money(invoice.total)
+    desc << invoice.date unless invoice.is_a? InvoiceTemplate
+    desc << lines.join(" | ")
+    desc.join(" * ")
   end
 end

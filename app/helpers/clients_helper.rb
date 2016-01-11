@@ -18,10 +18,12 @@ module ClientsHelper
       client.payment_method_text
     elsif client.cash?
       l(:cash_str)
+    else
+      ""
     end.html_safe
   end
 
   def client_terms(client)
-    Terms.new(client.terms).description.downcase
+    Terms.new(client.terms).description.downcase rescue nil
   end
 end
