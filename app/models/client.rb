@@ -6,6 +6,7 @@ class Client < ActiveRecord::Base
   attr_protected :created_at, :updated_at
 
   include Haltr::BankInfoValidator
+  include Haltr::PaymentMethods
   has_many :invoices, :dependent => :destroy
   has_many :people,   :dependent => :destroy
   has_many :mandates, :dependent => :destroy
@@ -64,7 +65,7 @@ class Client < ActiveRecord::Base
     IssuedInvoice.where(
       client_id:      self.id,
       state:          ['sent','registered'],
-      payment_method: Invoice::PAYMENT_DEBIT,
+      payment_method: PAYMENT_DEBIT,
       due_date:       due_date,
       bank_info_id:   bank_info_id
     )
@@ -132,24 +133,6 @@ class Client < ActiveRecord::Base
     addr = address
     addr += "\n#{address2}" if address2.present?
     addr
-  end
-
-  def payment_method=(v)
-    if v =~ /_/
-      write_attribute(:payment_method,v.split("_")[0])
-      self.bank_info_id=v.split("_")[1]
-    else
-      write_attribute(:payment_method,v)
-      self.bank_info=nil
-    end
-  end
-
-  def payment_method
-    if [Invoice::PAYMENT_TRANSFER, Invoice::PAYMENT_DEBIT].include?(read_attribute(:payment_method)) and bank_info
-      "#{read_attribute(:payment_method)}_#{bank_info.id}"
-    else
-      read_attribute(:payment_method)
-    end
   end
 
   def set_if_blank(atr,val)

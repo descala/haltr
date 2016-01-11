@@ -300,4 +300,13 @@ module InvoicesHelper
       'doc'
     end
   end
+
+  def invoice_summary(invoice)
+    lines = Array.new
+    invoice.invoice_lines.each_with_index do |line,i|
+      break if i > 2
+      lines << truncate(line.description,length:50)
+    end
+    h("#{money(invoice.total)} * #{lines.join(" * ")}")
+  end
 end

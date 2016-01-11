@@ -5,7 +5,7 @@ class ClientsController < ApplicationController
   menu_item Haltr::MenuItem.new(:companies,:companies_level2)
 
   layout 'haltr'
-  helper :haltr, :invoices
+  helper :haltr, :invoices, :charts
 
   helper :sort
   include SortHelper
