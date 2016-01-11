@@ -629,7 +629,7 @@ _INV
     if company.taxcode.include?(buyer_taxcode) or buyer_taxcode.include?(company.taxcode)
       invoice = ReceivedInvoice.new
       client   = company.project.clients.where('taxcode like ?', "%#{seller_taxcode}").first
-      client ||= company.project.clients.where('? like concat("%", taxcode)', seller_taxcode).first
+      client ||= company.project.clients.where('? like concat("%", taxcode) and taxcode != ""', seller_taxcode).first
       client_role= "seller"
     elsif company.taxcode.include?(seller_taxcode) or seller_taxcode.include?(company.taxcode)
       invoice = IssuedInvoice.new
