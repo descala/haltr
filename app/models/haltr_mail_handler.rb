@@ -118,7 +118,9 @@ class HaltrMailHandler < MailHandler # < ActionMailer::Base
     # haltr sets invoice id on header
     id = haltr_headers["X-Haltr-Id"]
     # b2brouter sets invoice id on filename
-    id ||= haltr_headers["X-Haltr-Filename"].split("_").last.split(".").first
+    if haltr_headers["X-Haltr-Filename"]
+      id ||= haltr_headers["X-Haltr-Filename"].split("_").last.split(".").first
+    end
     Invoice.find(id.to_i)
   end
 
