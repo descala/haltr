@@ -1098,6 +1098,9 @@ _INV
         original:      raw_xml,
         project:       company.project,
       )
+      logger.error "Error creating new invoice for company #{company.name} (#{$!.message}). time=#{Time.now}"
+    else
+      logger.error "Error creating new invoice (#{$!.message}). time=#{Time.now}"
     end
     raise $!
   end
