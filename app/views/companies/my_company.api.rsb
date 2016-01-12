@@ -14,6 +14,7 @@ api.my_company do
   api.invoice_format     @company.invoice_format
   api.currency           @company.currency
   api.company_identifier @company.company_identifier
+  api.edi_code           @company.edi_code
   api.logo url_for(
     {controller: 'companies', action: 'logo', project_id: @company.project}
   )

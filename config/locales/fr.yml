@@ -704,3 +704,4 @@ fr:
   as_percent: "As %"
   field_has_text: "With text"
   default_invoice_format: 'Invoice transport and format for new users'
+  field_edi_code: "EDI Code"

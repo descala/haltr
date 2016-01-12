@@ -32,6 +32,10 @@ class ClientsController < ApplicationController
       clients = clients.where("LOWER(name) LIKE ? OR LOWER(address) LIKE ? OR LOWER(address2) LIKE ? OR LOWER(taxcode) LIKE ?", name, name, name, name)
     end
 
+    unless params[:edi_code].blank?
+      clients = clients.where("edi_code = ?", params[:edi_code])
+    end
+
     unless params[:taxcode].blank?
       taxcode = params[:taxcode].encode(
         'UTF-8', 'binary', invalid: :replace, undef: :replace, replace: ''
