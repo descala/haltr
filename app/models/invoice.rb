@@ -1110,6 +1110,12 @@ _INV
       original and !modified_since_created? and invoice_format != 'pdf'
   end
 
+  def original_root_namespace
+    Nokogiri::XML(original).root.namespace.href
+  rescue
+    nil
+  end
+
   def parse_xml_bank_info(xml)
     doc          = Nokogiri::XML(xml)
     xpaths       = Haltr::Utils.xpaths_for(invoice_format)
