@@ -16,6 +16,10 @@
 
 <div class="splitcontentleft">
   <div class="client-info">
+    <div class="contextual">
+    <%= link_to_if_authorized l(:label_person_new), new_client_person_path(@client), :class => 'icon icon-add' %>
+    <%= link_to_if_authorized l(:label_client_office_new), new_client_client_office_path(@client), :class => 'icon icon-add' %>
+    </div>
     <h3><%=h @client.name %></h3>
     <address>
       <div class="address"><%=h @client.full_address %></div>
@@ -61,12 +65,14 @@
     </div>
   <% end -%>
 
-  <div class="events">
-    <h3><%= l(:events)%></h3>
-    <% @events.reverse.each do |event| -%>
-      <div><%= format_time event.created_at %> <%= link_to(event.invoice.number, invoice_path(event.invoice), :title => invoice_summary(event.invoice)) -%> <%=l(event.name)%></div>
-    <% end -%>
-  </div>
+  <% if @events.any? %>
+    <div class="events">
+      <h3><%= l(:events)%></h3>
+      <% @events.reverse.each do |event| -%>
+        <div><%= format_time event.created_at %> <%= link_to(event.invoice.number, invoice_path(event.invoice), :title => invoice_summary(event.invoice)) -%> <%=l(event.name)%></div>
+      <% end -%>
+    </div>
+  <% end %>
 </div>
 
 <div class="splitcontentright">
@@ -83,7 +89,7 @@
 
     <h3><%= l(:label_invoice_template_plural)%> <%= link_to_if_authorized("(#{@client.invoice_templates.count})", project_invoice_templates_path(:project_id=>@project, :client_id=>@client)) %></h3>
     <%= link_to_if_authorized l(:label_invoice_template_new), project_client_new_invoice_template_path(:project_id=>@project,:client=>@client), :class => 'icon icon-add' %>
-    <% @client.invoice_templates.last(10).reverse.each do |template| %>
+    <% @client.invoice_templates.last(10).each do |template| %>
       ,
       <%= link_to(template.number, invoice_template_path(template), :title => invoice_summary(template)) %>
     <% end %>
