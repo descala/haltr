@@ -62,4 +62,12 @@ class InvoiceTemplate < Invoice
     false
   end
 
+  def invoice_img
+    nil
+  end
+
+  def number
+    date
+  end
+
 end
