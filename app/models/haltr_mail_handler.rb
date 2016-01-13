@@ -19,12 +19,12 @@ class HaltrMailHandler < MailHandler # < ActionMailer::Base
 
       if email.to and email.to.include? Setting.plugin_haltr['return_path']
         # bounced invoice
-        Rails.logger.info "Bounced invoice mail received"
+        log "Bounced invoice mail received"
         invoices << process_bounce(email)
         Event.create(:name=>'bounced',:invoice=>invoices.first)
       else
         # incoming invoices (PDF/XML)
-        Rails.logger.info "Incoming invoice mail with #{raw_invoices.size} attached invoices"
+        log "Incoming invoice mail with #{raw_invoices.size} attached invoices"
         company_found=false
         email['to'].to_s.scan(/[\w.]+@[\w.]+/).each do |to|
           company = Company.find_by_taxcode(to.split("@").first)
@@ -41,7 +41,7 @@ class HaltrMailHandler < MailHandler # < ActionMailer::Base
               md5 = `md5sum #{tmpfile.path} | cut -d" " -f1`.chomp
               if found_invoice = Invoice.find_by_md5(md5)
                 invoices << found_invoice
-                Rails.logger.error "Discarding repeated invoice with md5 #{md5}. Invoice.id = #{found_invoice.id}"
+                log "Discarding repeated invoice with md5 #{md5}. Invoice.id = #{found_invoice.id}", 'error'
               else
                 if raw_invoice.content_type =~ /xml/
                   invoices << Invoice.create_from_xml(raw_invoice,company,from,md5,'email')
@@ -49,20 +49,22 @@ class HaltrMailHandler < MailHandler # < ActionMailer::Base
                 elsif raw_invoice.content_type =~ /pdf/
                   invoices << process_pdf_file(raw_invoice,company,md5,'email',from)
                 else
-                  Rails.logger.info "Discarding #{raw_invoice.filename} on incoming mail (#{raw_invoice.content_type})"
+                  log "Discarding #{raw_invoice.filename} on incoming mail (#{raw_invoice.content_type})"
                 end
               end
             end
             break #TODO: allow incoming invoice to several companies?
+          else
+            log "Company not found by taxcode (#{to.split("@").first}) nor by email (#{to})"
           end
         end
         unless company_found
-          Rails.logger.info "Discarding email for #{email['to'].to_s} (Can't find any company)"
+          log "Discarding email for #{email['to'].to_s} (Can't find any company)"
         end
       end
     else
       # we do not process emails without attachments
-      Rails.logger.info "email has no attachments"
+      log "email has no attachments"
     end
     return invoices
   end
@@ -118,7 +120,9 @@ class HaltrMailHandler < MailHandler # < ActionMailer::Base
     # haltr sets invoice id on header
     id = haltr_headers["X-Haltr-Id"]
     # b2brouter sets invoice id on filename
-    id ||= haltr_headers["X-Haltr-Filename"].split("_").last.split(".").first
+    if haltr_headers["X-Haltr-Filename"]
+      id ||= haltr_headers["X-Haltr-Filename"].split("_").last.split(".").first
+    end
     Invoice.find(id.to_i)
   end
 
@@ -136,6 +140,11 @@ class HaltrMailHandler < MailHandler # < ActionMailer::Base
       end
     end
     invoices
+  end
+
+  def log(msg, level='info')
+    msg = "[HaltrMailHandler] - #{Time.now} - #{msg}"
+    Rails.logger.send(level, msg)
   end
 
 end
