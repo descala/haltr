@@ -16,7 +16,9 @@ module Haltr
     def generate(invoice,format,local_certificate=false, as_file=false, force=false)
       # if it is an imported invoice, has not been modified and
       # invoice format  matches client format, send original file
-      if invoice.send_original? and !force
+      # check also original_root_namespace to verify that original is an xml,
+      # it could be in other formats, like EDI
+      if invoice.send_original? and !force and invoice.original_root_namespace
         xml = invoice.original
       else
         if format == 'efffubl'

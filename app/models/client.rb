@@ -22,6 +22,7 @@ class Client < ActiveRecord::Base
 
   validates_presence_of :hashid
   validates_uniqueness_of :taxcode, :scope => :project_id, :allow_blank => true
+  validates_uniqueness_of :edi_code, :scope => :project_id, :allow_blank => true
   validates_uniqueness_of :hashid
 
   validates_presence_of     :project_id, :name, :currency, :language, :invoice_format, :if => Proc.new {|c| c.company_id.blank? }

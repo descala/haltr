@@ -722,3 +722,4 @@ ca:
   as_percent: "Com a %"
   field_has_text: "Conté el text"
   default_invoice_format: 'Format i transport de factures per als nous usuaris'
+  field_edi_code: "Codi EDI"

@@ -724,3 +724,4 @@ es:
   as_percent: "Como %"
   field_has_text: "Contiene el texto"
   default_invoice_format: 'Formato y transporte de facturas para los nuevos usuarios'
+  field_edi_code: "Código EDI"

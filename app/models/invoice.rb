@@ -166,6 +166,16 @@ class Invoice < ActiveRecord::Base
     self.project.company
   end
 
+  def company_name
+    project.company.name
+  end
+
+  def line_descriptions_txt
+    invoice_lines.collect do |line|
+      " * #{line.description}"
+    end.join("\n")
+  end
+
   def custom_due?
     terms == "custom"
   end
@@ -551,7 +561,7 @@ _INV
     if company.taxcode.include?(buyer_taxcode) or buyer_taxcode.include?(company.taxcode)
       invoice = ReceivedInvoice.new
       client   = company.project.clients.where('taxcode like ?', "%#{seller_taxcode}").first
-      client ||= company.project.clients.where('? like concat("%", taxcode)', seller_taxcode).first
+      client ||= company.project.clients.where('? like concat("%", taxcode) and taxcode != ""', seller_taxcode).first
       client_role= "seller"
     elsif company.taxcode.include?(seller_taxcode) or seller_taxcode.include?(company.taxcode)
       invoice = IssuedInvoice.new
@@ -1020,6 +1030,9 @@ _INV
         original:      raw_xml,
         project:       company.project,
       )
+      logger.error "Error creating new invoice for company #{company.name} (#{$!.message}). time=#{Time.now}"
+    else
+      logger.error "Error creating new invoice (#{$!.message}). time=#{Time.now}"
     end
     raise $!
   end
@@ -1027,6 +1040,12 @@ _INV
   def send_original?
     Redmine::Hook.call_hook(:model_invoice_send_original, :invoice=>self) != [false] and
       original and !modified_since_created? and invoice_format != 'pdf'
+  end
+
+  def original_root_namespace
+    Nokogiri::XML(original).root.namespace.href
+  rescue
+    nil
   end
 
   def parse_xml_bank_info(xml)
