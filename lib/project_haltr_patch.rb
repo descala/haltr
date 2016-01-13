@@ -30,12 +30,6 @@ module ProjectHaltrPatch
   end
   
   module InstanceMethods
-
-    # prevent project.issued_invoices to include DraftInvoices
-    def issued_invoices
-      super.where("type != 'DraftInvoice'")
-    end
-
   end
 
 end
