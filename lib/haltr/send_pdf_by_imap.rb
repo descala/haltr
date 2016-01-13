@@ -20,7 +20,7 @@ module Haltr
                             :invoice      => invoice,
                             :notes        => invoice.recipient_emails.join(', '),
                             :file         => pdf,
-                            :filename     => filename,
+                            :filename     => pdf_name,
                             :content_type => 'application/pdf',
                             :class_for_send => 'send_pdf_by_imap')
     end
@@ -80,7 +80,7 @@ module Haltr
       end
 
       # pdf
-      mail.add_file(filename: filename, content: pdf)
+      mail.add_file(filename: pdf_name, content: pdf)
 
       # other invoice attachments
       invoice.attachments.each do |attachment|
@@ -90,8 +90,9 @@ module Haltr
       mail
     end
 
-    def filename
-      "#{I18n.t(:label_invoice)}_#{invoice.number.gsub(/[^\w]/,'_')}.pdf" rescue "Invoice.pdf"
+    def pdf_name
+      "#{I18n.t(:label_invoice, :locale => invoice.client.language)}-#{invoice.number.gsub('/','')}.pdf"
     end
+
   end
 end

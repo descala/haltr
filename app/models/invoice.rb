@@ -244,6 +244,16 @@ class Invoice < ActiveRecord::Base
     self.project.company
   end
 
+  def company_name
+    project.company.name
+  end
+
+  def line_descriptions_txt
+    invoice_lines.collect do |line|
+      " * #{line.description}"
+    end.join("\n")
+  end
+
   def custom_due?
     terms == "custom"
   end
