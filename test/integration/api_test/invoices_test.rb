@@ -54,7 +54,7 @@ class Redmine::ApiTest::InvoicesTest < Redmine::ApiTest::Base
   test 'invoice index' do
     get '/projects/onlinestore/invoices.json', {}, credentials('jsmith')
     assert_response :success
-    assert_equal '2013-02-05', JSON(response.body)['invoices'].first['due_date']
+    assert_equal Date.tomorrow.to_s, JSON(response.body)['invoices'].first['due_date']
   end
 
   test 'invoice index with state_updated_at filter' do
