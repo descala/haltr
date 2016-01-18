@@ -1051,7 +1051,7 @@ _INV
       a.file = StringIO.new data
       a.author = User.current
       a.description = Haltr::Utils.get_xpath(attach, xpaths[:attach_description])
-      a.filename = "attachment#{index+1}.#{ext}"
+      a.filename = "facturae_#{invoice.number.gsub('/','')}_#{index+1}.#{ext}"
       to_attach << a
     end
     invoice.attachments = to_attach
