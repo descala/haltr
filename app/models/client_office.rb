@@ -6,6 +6,8 @@ class ClientOffice < ActiveRecord::Base
   has_many :invoices, dependent: :nullify
   validates_presence_of :name, :client_id
 
+  iso_country :country
+
   CLIENT_FIELDS = %w( address address2 city province postalcode country email name )
 
   CLIENT_FIELDS.each do |attr|

@@ -60,7 +60,7 @@
         <div class="address"><%=h client_office.full_address %></div>
         <span class="postalcode"><%=h client_office.postalcode %></span> <span class="city"><%=h client_office.city %></span>
         <div class="province"><%=h client_office.province %></div>
-        <div class="country"><%=h client_office.country %></div>
+        <div class="country"><%=h client_office.country_name %></div>
       </address>
     </div>
   <% end -%>
@@ -68,9 +68,12 @@
   <% if @events.any? %>
     <div class="events">
       <h3><%= l(:events)%></h3>
-      <% @events.reverse.each do |event| -%>
+      <% @events.each do |event| -%>
         <div><%= format_time event.created_at %> <%= link_to(event.invoice.number, invoice_path(event.invoice), :title => invoice_summary(event.invoice)) -%> <%=l(event.name)%></div>
       <% end -%>
+      <% if @events_count > 10 %>
+        <div>...</div>
+      <% end %>
     </div>
   <% end %>
 </div>
@@ -81,7 +84,7 @@
 
     <h3><%= l(:label_issued)%> <%= link_to_if_authorized("(#{@client.issued_invoices.count})", project_invoices_path(:project_id=>@project, :client_id=>@client)) %></h3>
     <%= link_to_if_authorized l(:button_new_invoice), project_client_new_invoice_path(:project_id=>@project,:client=>@client), :class => 'icon icon-add' -%>
-    <% @client.issued_invoices.last(10).reverse.each do |invoice| %>
+    <% @client.issued_invoices.order('date desc, created_at desc').limit(10).each do |invoice| %>
       ,
       <%= link_to(invoice.number, invoice_path(invoice), :title => invoice_summary(invoice), :class => invoice.past_due? ? 'pastdue' : nil ) -%>
     <% end %>
@@ -89,7 +92,7 @@
 
     <h3><%= l(:label_invoice_template_plural)%> <%= link_to_if_authorized("(#{@client.invoice_templates.count})", project_invoice_templates_path(:project_id=>@project, :client_id=>@client)) %></h3>
     <%= link_to_if_authorized l(:label_invoice_template_new), project_client_new_invoice_template_path(:project_id=>@project,:client=>@client), :class => 'icon icon-add' %>
-    <% @client.invoice_templates.last(10).each do |template| %>
+    <% @client.invoice_templates.order('date desc, created_at desc').limit(10).each do |template| %>
       ,
       <%= link_to(template.number, invoice_template_path(template), :title => invoice_summary(template)) %>
     <% end %>
@@ -97,7 +100,7 @@
 
     <h3><%= l(:label_received) %> <%= link_to_if_authorized("(#{@client.received_invoices.count})", {:controller=>'received', :action=>'index', :project_id=>@project, :client_id=>@client}, :title=>l(:label_received)) %></h3>
     <%= link_to_if_authorized l(:label_import), project_received_import_path(@project), :class => 'icon icon-add' %>
-    <% @client.received_invoices.last(10).reverse.each do |invoice| %>
+    <% @client.received_invoices.order('created_at desc').limit(10).each do |invoice| %>
       ,
       <%= link_to(invoice.number, received_invoice_path(invoice), :title => invoice_summary(invoice)) %>
     <% end %>
