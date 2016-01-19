@@ -1,6 +1,6 @@
 require File.dirname(__FILE__) + '/../test_helper'
 
-class MailNotifierTest < ActiveSupport::TestCase
+class MailNotifierTest < ActionMailer::TestCase
 
   include ActionDispatch::Assertions::SelectorAssertions
 
@@ -39,7 +39,11 @@ class MailNotifierTest < ActiveSupport::TestCase
     invoice = Invoice.first
     assert_equal invoice.type, "IssuedInvoice"
     reason = "reason"
-    assert MailNotifier.issued_invoice_paid(invoice,reason).deliver
+    email = MailNotifier.issued_invoice_paid(invoice,reason).deliver
+    assert !ActionMailer::Base.deliveries.empty?
+    assert_equal ['redmine@example.net'], email.from
+    assert_equal invoice.client.recipient_emails, email.to
+    assert_equal 'You have been invited by me@example.com', email.subject
     assert_select_email do
       assert_select 'p', :text => 'Company1 has received payment for invoice number invoices_001'
       assert_select 'p', :text => 'reason'

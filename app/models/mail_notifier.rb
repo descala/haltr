@@ -7,7 +7,7 @@ class MailNotifier < Mailer
     I18n.locale = invoice.client.language
     @invoice = invoice
     @reason = reason
-    mail :to => invoice.client.email,
+    mail :to => invoice.client.recipient_emails,
       :from => Setting.mail_from,
       :subject => I18n.t(:received_invoice_accepted,
                          :num => invoice.number,
@@ -21,7 +21,7 @@ class MailNotifier < Mailer
     if invoice.fetch_from_backup
       attachments[invoice.legal_filename] = invoice.legal_invoice
     end
-    mail :to => invoice.client.email,
+    mail :to => invoice.client.recipient_emails,
       :from => Setting.mail_from,
       :subject => I18n.t(:received_invoice_refused,
                          :num => invoice.number,
@@ -37,7 +37,7 @@ class MailNotifier < Mailer
     end
     subject = I18n.t(:received_invoice_paid, :num => invoice.number,
                      :company => invoice.company.name)
-    mail :to => invoice.client.email,
+    mail :to => invoice.client.recipient_emails,
       :from => Setting.mail_from,
       :subject => subject
   end
@@ -51,7 +51,7 @@ class MailNotifier < Mailer
     end
     subject = I18n.t(:issued_invoice_paid, :num => invoice.number,
                      :company => invoice.company.name)
-    mail :to => invoice.client.email,
+    mail :to => invoice.client.recipient_emails,
       :from => Setting.mail_from,
       :subject => subject
   end
