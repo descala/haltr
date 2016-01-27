@@ -457,6 +457,7 @@ class InvoicesController < ApplicationController
         format.oioubl20    { render_xml Haltr::Xml.generate(@invoice, 'oioubl20', false, false, true) }
         format.efffubl     { render_xml Haltr::Xml.generate(@invoice, 'efffubl', false, false, true) }
         format.original    { render_xml @invoice.original }
+        format.edifact     { render text: Haltr::Edifact.generate(@invoice, false, true), content_type: 'text' }
       else
         format.facturae30  { download_xml Haltr::Xml.generate(@invoice, 'facturae30', false, false, true) }
         format.facturae31  { download_xml Haltr::Xml.generate(@invoice, 'facturae31', false, false, true) }

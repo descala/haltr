@@ -61,3 +61,8 @@ efffubl:
   name: "EFFF"
   validators: Haltr::Validator::Ubl
   content-type: "text-xml"
+
+edifact:
+  name: "EDIFact"
+  validators:
+  content-type: "text"

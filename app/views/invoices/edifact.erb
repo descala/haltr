@@ -1,0 +1,63 @@
+UNA:+.? '
+UNB+UNOC:2+<%=@company.edi_code%>:14+<%='unb_receiver'%>:14+<%=Time.now.strftime("%d%m%y")%>:<%=Time.now.strftime("%H%M")%>+<%="MSG#{@invoice.number}#{@invoice.date}"[0..15]%>'
+UNH+<%="#{@invoice.number}#{@invoice.date}"[0..12]%>+INVOIC:D:93A:UN:EAN007'
+BGM+<%='380'%>+<%=@invoice.number[0..16]%>+9'
+DTM+137:<%=@invoice.date%>:102'
+<% unless @invoice.payment_method_code(:edifact).blank? %>
+PAI+<%=@invoice.payment_method_code(:edifact)%>'
+<% end %>
+<% unless ''.blank?%>
+FTX+AAI+++<%=@invoice.extra_info%>'
+<% end %>
+<% unless ''.blank? %>
+DTM+95E:<%='fechaefe'%>:102'
+<% end %>
+<% unless @invoice.delivery_note_number.blank? %>
+RFF+DQ:<%=@invoice.delivery_note_number%>'
+<% end %>
+<% unless @invoice.ponumber.blank? %>
+RFF+ON:<%=@invoice.ponumber[0..16]%>'
+DTM+171:<%='fechaped'%>:102'
+<% end %>
+<% unless ''.blank? %>
+RFF+CT:<%='ot[0..34]'%>'
+<% end %>
+NAD+SCO+<%=@company.edi_code%>::9++<%=@company.name[0..34]%>::<%=@company.company_identifier[20..39]%>+<%=@company.address[0..34]%>+<%=@company.city[0..34]%>+<%=@company.province[0..34]%>+<%=@company.postalcode%>+<%=@company.country%>'
+RFF+VA:<%=@company.edi_code%>'
+NAD+BCO+<%=@client.edi_code%>::9++<%=@client.name%>::<%='merca'%>+<%=@client.address%>+<%=@client.city%>+<%=@client.province%>+<%=@client.postalcode%>+<%=@client.country%>'
+RFF+VA:<%=@client.taxcode%>'
+NAD+BY+<%='comprador'%>::9'
+<% unless ''.blank? %>
+RFF+API:<%='rffapi'%>'
+<% end %>
+<% unless ''.blank? %>
+NAD+DP+<%='receptor'%>::9'
+<% end %>
+NAD+SU+<%=@company.edi_code%>::9++<%=@company.name[0..34]%>::<%=@company.company_identifier[20..39]%>+<%=@company.address[0..34]%>+<%=@company.city[0..34]%>+<%=@company.province[0..34]%>+<%=@company.postalcode%>+<%=@company.country%>'
+CUX+2:<%=@client.currency%>:4'
+<% @invoice.invoice_lines.each_with_index do |l,num| %>
+LIN+<%=num+1%>++<%=l.article_code%>:EN'
+IMD+F++:::<%=l.description%>'
+QTY+47:<%=l.quantity%>:<%=l.unit%>'
+MOA+66:<%=l.taxable_base%>'
+PRI+AAA:<%=l.price%>'
+TAX+7+VAT+++:::<%=l.taxes[0].percent%>'
+MOA+124:<%=@invoice.taxes[0].percent%>'
+<% end %>
+UNS+S'
+CNT+2:<%=@invoice.invoice_lines.size%>'
+MOA+79:<%='sumnetos'%>'
+<% if @invoice.charge_amount.to_s.to_f > 0 %>
+MOA+259:<%=@invoice.charge_amount%>'
+<% end %>
+<% if @invoice.discount_amount.to_s.to_f > 0 %>
+MOA+260:<%=@invoice.discount_amount%>'
+<% end %>
+MOA+125:<%=@invoice.taxable_base%>'
+MOA+176:<%=@invoice.tax_amount%>'
+MOA+139:<%=@invoice.total%>'
+TAX+7+VAT+++:::<%=@invoice.taxes[0].percent%>'
+MOA+125:<%=@invoice.taxable_base%>'
+MOA+176:<%=@invoice.tax_amount%>'
+UNT+{segmentcount}+<%="#{@invoice.number}#{@invoice.date}"[0..12]%>'
+UNZ+1+<%="MSG#{@invoice.number}#{@invoice.date}"[0..15]%>'
