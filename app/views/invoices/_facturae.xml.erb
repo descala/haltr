@@ -386,9 +386,7 @@
 <% else -%>
               <%= call_hook(:facturae_file_reference) %>
 <% end -%>
-              <% if call_hook(:facturae_administrative_centres).present? -%>
-                <%= call_hook(:facturae_sequence_number) %>
-              <% elsif !invoice_line.sequence_number.blank? -%>
+              <% if invoice_line.sequence_number.present? -%>
                 <SequenceNumber><%=invoice_line.sequence_number%></SequenceNumber>
               <% end -%>
               <% if @invoice.delivery_note_number.present? or invoice_line.delivery_note_number.present? -%>
