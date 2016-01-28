@@ -18,6 +18,10 @@ module InvoicesHelper
     num
   end
 
+  def edi_number(num)
+    haltr_precision(num).gsub(',','.')
+  end
+
   def send_link_for_invoice
     confirm = @invoice.sent? ? j(l(:sure_to_resend_invoice, :num=>@invoice.number).html_safe) : nil
     if @invoice.valid? and @invoice.can_queue? and
