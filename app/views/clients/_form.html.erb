@@ -101,11 +101,17 @@
     <% end -%>
   </div>
   <div class="seccio grup">
-    <p class="col span-1-de-2">
+    <p class="col span-1-de-4">
     <%= f.text_field :company_identifier %>
     </p>
-    <p class="col span-1-de-2">
+    <p class="col span-1-de-4">
     <%= f.text_field :edi_code %>
+    </p>
+    <p class="col span-1-de-4">
+    <%= f.text_field :buyer_edi_code %>
+    </p>
+    <p class="col span-1-de-4">
+    <%= f.text_field :receiver_edi_code %>
     </p>
   </div>
 </fieldset>

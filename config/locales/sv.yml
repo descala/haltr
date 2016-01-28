@@ -707,3 +707,7 @@ sv:
   field_has_text: "With text"
   default_invoice_format: 'Invoice transport and format for new users'
   field_edi_code: "EDI Code"
+  field_order_date: "Order date"
+  field_contract_number: "Contract number"
+  field_buyer_edi_code: "Buyer EDI code"
+  field_receiver_edi_code: "Receiver EDI code"

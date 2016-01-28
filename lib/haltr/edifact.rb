@@ -35,6 +35,9 @@ module Haltr
                          :@client  => client },
           :layout   => false
         )
+        # count total lines from UNH to UNT (both included), to {segmentcount}
+        unh_to_unt = /^UNH.*^UNT/m.match(edi).to_s
+        edi.gsub!('{segmentcount}',unh_to_unt.lines.count.to_s)
       end
       if as_file
         edi_file = Tempfile.new("invoice_#{invoice.id}.edi")

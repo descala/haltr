@@ -88,6 +88,15 @@
   </div>
 
   <div class="seccio grup">
+    <p class="col span-1-de-3">
+    <%= f.text_field :order_date, :size => 10 %><%= calendar_for('invoice_order_date') %>
+    </p>
+    <p class="col span-1-de-3">
+    <%= f.text_field :contract_number %>
+    </p>
+  </div>
+
+  <div class="seccio grup">
     <p class="col span-3-de-3">
     <%= f.text_area :extra_info, :rows=>3 %>
     </p>

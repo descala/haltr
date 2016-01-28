@@ -11,11 +11,11 @@ module Haltr
     PAYMENT_SPECIAL  = 13
 
     PAYMENT_CODES = {
-      PAYMENT_CASH     => {:facturae => '01', :ubl => '10'},
-      PAYMENT_DEBIT    => {:facturae => '02', :ubl => '49'},
-      PAYMENT_TRANSFER => {:facturae => '04', :ubl => '31'},
-      PAYMENT_AWARDING => {:facturae => '07', :ubl => '??'},
-      PAYMENT_SPECIAL  => {:facturae => '13', :ubl => '??'},
+      PAYMENT_CASH     => {:facturae => '01', :ubl => '10', :edifact => '10'},
+      PAYMENT_DEBIT    => {:facturae => '02', :ubl => '49', :edifact => '42'},
+      PAYMENT_TRANSFER => {:facturae => '04', :ubl => '31', :edifact => '31'},
+      PAYMENT_AWARDING => {:facturae => '07', :ubl => '??', :edifact => ''  },
+      PAYMENT_SPECIAL  => {:facturae => '13', :ubl => '??', :edifact => ''  },
     }
 
     def payment_method=(v)
