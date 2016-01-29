@@ -1,8 +1,8 @@
 UNA:+.? '
-UNB+UNOC:2+<%=@company.edi_code%>:14+<%=@client.edi_code%>:14+<%=Time.now.strftime("%d%m%y")%>:<%=Time.now.strftime("%H%M")%>+<%="MSG#{@invoice.number}#{@invoice.date}"[0..15]%>'
-UNH+<%="#{@invoice.number}#{@invoice.date}"[0..12]%>+INVOIC:D:93A:UN:EAN007'
+UNB+UNOC:2+<%=@company.edi_code%>:14+<%=@client.edi_code%>:14+<%=Time.now.strftime("%d%m%y")%>:<%=Time.now.strftime("%H%M")%>+<%="MSG#{@invoice.number}#{edi_date @invoice.date}"[0..15]%>'
+UNH+<%="#{@invoice.number}#{edi_date @invoice.date}"[0..12]%>+INVOIC:D:93A:UN:EAN007'
 BGM+<%='380'%>+<%=@invoice.number[0..16]%>+9'
-DTM+137:<%=@invoice.date%>:102'
+DTM+137:<%=edi_date @invoice.date%>:102'
 <% unless @invoice.payment_method_code(:edifact).blank? %>
 PAI+<%=@invoice.payment_method_code(:edifact)%>'
 <% end %>
@@ -22,7 +22,7 @@ DTM+171:<%=@invoice.order_date%>:102'
 <% unless ''.blank? %>
 RFF+CT:<%=@invoice.contract_number[0..34]%>'
 <% end %>
-NAD+SCO+<%=@company.edi_code%>::9++<%=@company.name[0..34]%>::<%=@company.company_identifier[20..39]%>+<%=@company.address[0..34]%>+<%=@company.city[0..34]%>+<%=@company.province[0..34]%>+<%=@company.postalcode%>+<%=@company.country%>'
+NAD+SCO+<%=@company.edi_code%>::9++<%=@company.name[0..34]%>::<%=@company.company_identifier[0..19]%>+<%=@company.address[0..34]%>+<%=@company.city[0..34]%>+<%=@company.province[0..34]%>+<%=@company.postalcode%>+<%=@company.country%>'
 RFF+VA:<%=@company.edi_code%>'
 NAD+BCO+<%=@client.edi_code%>::9++<%=@client.name%>::<%=@client.company_identifier%>+<%=@client.address%>+<%=@client.city%>+<%=@client.province%>+<%=@client.postalcode%>+<%=@client.country%>'
 RFF+VA:<%=@client.taxcode%>'
@@ -30,7 +30,7 @@ NAD+BY+<%=@client.buyer_edi_code%>::9'
 <% unless ''.blank? %>
 NAD+DP+<%=@client.receiver_edi_code%>::9'
 <% end %>
-NAD+SU+<%=@company.edi_code%>::9++<%=@company.name[0..34]%>::<%=@company.company_identifier[20..39]%>+<%=@company.address[0..34]%>+<%=@company.city[0..34]%>+<%=@company.province[0..34]%>+<%=@company.postalcode%>+<%=@company.country%>'
+NAD+SU+<%=@company.edi_code%>::9++<%=@company.name[0..34]%>::<%=@company.company_identifier[0..19]%>+<%=@company.address[0..34]%>+<%=@company.city[0..34]%>+<%=@company.province[0..34]%>+<%=@company.postalcode%>+<%=@company.country%>'
 CUX+2:<%=@client.currency%>:4'
 <% @invoice.invoice_lines.each_with_index do |l,num| %>
 LIN+<%=num+1%>++<%=l.article_code%>:EN'
@@ -60,5 +60,5 @@ TAX+7+VAT+++:::<%=edi_number tax.percent%>'
 MOA+125:<%=edi_number @invoice.taxable_base(tax)%>'
 MOA+176:<%=edi_number @invoice.tax_amount(tax)%>'
 <% end -%>
-UNT+{segmentcount}+<%="#{@invoice.number}#{@invoice.date}"[0..12]%>'
-UNZ+1+<%="MSG#{@invoice.number}#{@invoice.date}"[0..15]%>'
+UNT+{segmentcount}+<%="#{@invoice.number}#{edi_date @invoice.date}"[0..12]%>'
+UNZ+1+<%="MSG#{@invoice.number}#{edi_date @invoice.date}"[0..15]%>'

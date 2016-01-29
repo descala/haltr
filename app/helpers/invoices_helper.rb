@@ -22,6 +22,10 @@ module InvoicesHelper
     haltr_precision(num).gsub(',','.')
   end
 
+  def edi_date(date)
+    date.strftime("%Y%m%d")
+  end
+
   def send_link_for_invoice
     confirm = @invoice.sent? ? j(l(:sure_to_resend_invoice, :num=>@invoice.number).html_safe) : nil
     if @invoice.valid? and @invoice.can_queue? and
