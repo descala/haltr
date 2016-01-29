@@ -263,6 +263,7 @@ fr:
   s_litters: l
   s_days: j
   s_other: ""
+  boxes: 'Boxes'
 
   # People
   label_person: Personne

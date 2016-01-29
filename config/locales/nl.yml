@@ -262,6 +262,7 @@ nl:
   days: Days
   s_days: d
   s_other: ""
+  boxes: 'Boxes'
 
   # People
   label_person: Person

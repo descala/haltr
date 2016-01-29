@@ -275,6 +275,7 @@ es:
   days: Días
   s_days: d
   s_other: ""
+  boxes: 'Cajas'
 
   # People
   label_person: Persona

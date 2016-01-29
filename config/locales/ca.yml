@@ -273,6 +273,7 @@ ca:
   days: Dies
   s_days: d
   s_other: ""
+  boxes: 'Caixes'
 
   # People
   label_person: Persona
