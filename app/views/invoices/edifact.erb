@@ -17,7 +17,7 @@ RFF+DQ:<%=@invoice.delivery_note_number%>'
 <% end %>
 <% unless @invoice.ponumber.blank? %>
 RFF+ON:<%=@invoice.ponumber[0..16]%>'
-DTM+171:<%=@invoice.order_date%>:102'
+DTM+171:<%=edi_date @invoice.order_date%>:102'
 <% end %>
 <% unless ''.blank? %>
 RFF+CT:<%=@invoice.contract_number[0..34]%>'
