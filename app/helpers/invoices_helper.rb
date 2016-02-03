@@ -23,6 +23,7 @@ module InvoicesHelper
   end
 
   def edi_date(date)
+    date = Date.today if date.nil?
     date.strftime("%Y%m%d")
   end
 
