@@ -568,8 +568,7 @@ class InvoicesController < ApplicationController
   end
 
   def download_new_invoices
-    require 'zip/zip'
-    require 'zip/zipfilesystem'
+    require 'zip'
     @company = @project.company
     invoices = IssuedInvoice.find_not_sent @project
     # just a safe big limit
@@ -580,7 +579,7 @@ class InvoicesController < ApplicationController
     end
     zip_file = Tempfile.new "#{@project.identifier}_invoices.zip", 'tmp'
     logger.info "Creating zip file '#{zip_file.path}' for invoice ids #{invoices.collect{|i|i.id}.join(',')}."
-    Zip::ZipOutputStream.open(zip_file.path) do |zos|
+    Zip::OutputStream.open(zip_file.path) do |zos|
       invoices.each do |invoice|
         @invoice = invoice
         @lines = @invoice.invoice_lines
@@ -910,8 +909,7 @@ class InvoicesController < ApplicationController
       redirect_back_or_default(:action=>'index',:project_id=>@project.id)
       return
     end
-    require 'zip/zip'
-    require 'zip/zipfilesystem'
+    require 'zip'
     # just a safe big limit
     if @invoices.size > 100
       flash[:error] = l(:too_much_invoices,:num=>@invoices.size)
@@ -920,7 +918,7 @@ class InvoicesController < ApplicationController
     end
     zip_file = Tempfile.new ["#{@project.identifier}_invoices", ".zip"], 'tmp'
     logger.info "Creating zip file '#{zip_file.path}' for invoice ids #{@invoices.collect{|i|i.id}.join(',')}."
-    Zip::ZipOutputStream.open(zip_file.path) do |zos|
+    Zip::OutputStream.open(zip_file.path) do |zos|
       @invoices.each do |invoice|
         @invoice = invoice
         @lines = @invoice.invoice_lines

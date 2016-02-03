@@ -158,7 +158,7 @@ class ReceivedController < InvoicesController
     zipped = []
     zip_file = Tempfile.new ["#{@project.identifier}_invoices", ".zip"], 'tmp'
     logger.info "Creating zip file '#{zip_file.path}' for invoice ids #{@invoices.collect{|i|i.id}.join(',')}."
-    Zip::ZipOutputStream.open(zip_file.path) do |zos|
+    Zip::OutputStream.open(zip_file.path) do |zos|
       @invoices.each do |invoice|
         filename = invoice.file_name || 'invoice'
         file = Tempfile.new(filename)
