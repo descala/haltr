@@ -31,8 +31,6 @@ NAD+BY+<%=@client.buyer_edi_code%>::9'
 NAD+DP+<%=@client.receiver_edi_code%>::9'
 <% end %>
 NAD+SU+<%=@company.edi_code%>::9++<%=@company.name.to_s[0..34]%>::<%=@company.company_identifier.to_s[0..19]%>+<%=@company.address.to_s[0..34]%>+<%=@company.city.to_s[0..34]%>+<%=@company.province.to_s[0..34]%>+<%=@company.postalcode%>+<%=@company.country%>'
-NAD+IV+<%=@client.buyer_edi_code%>::9'
-NAD+DP+<%=@client.receiver_edi_code%>::9'
 CUX+2:<%=@client.currency%>:4'
 <% @invoice.invoice_lines.each_with_index do |l,num| %>
 LIN+<%=num+1%>++<%=l.article_code%>:EN'
@@ -40,9 +38,6 @@ IMD+F++:::<%=l.description.to_s[0..34]%>'
 QTY+47:<%=edi_number l.quantity%>:<%=l.unit_code(:edifact)%>'
 MOA+66:<%=edi_number l.taxable_base%>'
 PRI+AAA:<%=edi_number l.price%>'
-<% if @invoice.delivery_note_number.present? or l.delivery_note_number.present? -%>
-RFF+DQ:<%= l.delivery_note_number.present? ? l.delivery_note_number : @invoice.delivery_note_number %>'
-<% end -%>
 <% l.taxes.each do |tax| -%>
 TAX+7+VAT+++:::<%=edi_number tax.percent%>'
 MOA+124:<%=edi_number l.tax_amount(tax)%>'
