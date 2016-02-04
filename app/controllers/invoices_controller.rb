@@ -478,6 +478,7 @@ class InvoicesController < ApplicationController
         format.oioubl20    { download_xml Haltr::Xml.generate(@invoice, 'oioubl20', false, false, true) }
         format.efffubl     { download_xml Haltr::Xml.generate(@invoice, 'efffubl', false, false, true) }
         format.original    { download_xml @invoice.original }
+        format.edifact     { download_txt Haltr::Edifact.generate(@invoice, false, true) }
       end
     end
   end
@@ -490,6 +491,12 @@ class InvoicesController < ApplicationController
     send_data xml,
       :type => 'text/xml; charset=UTF-8;',
       :disposition => "attachment; filename=#{@invoice.pdf_name_without_extension}.xml"
+  end
+
+  def download_txt(txt)
+    send_data txt,
+      :type => 'text; charset=UTF-8;',
+      :disposition => "attachment; filename=#{@invoice.pdf_name_without_extension}.txt"
   end
 
   def show_original
