@@ -52,7 +52,7 @@ class Redmine::ApiTest::InvoicesTest < Redmine::ApiTest::Base
   end
 
   test 'invoice index' do
-    get '/projects/onlinestore/invoices.json', {}, credentials('jsmith')
+    get '/projects/onlinestore/invoices.json?sort=number', {}, credentials('jsmith')
     assert_response :success
     assert_equal Date.tomorrow.to_s, JSON(response.body)['invoices'].first['due_date']
   end
