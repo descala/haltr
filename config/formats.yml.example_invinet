@@ -64,5 +64,5 @@ efffubl:
 
 edifact:
   name: "EDIFact"
-  validators:
+  validators: Haltr::Validator::Edifact
   content-type: "text"
