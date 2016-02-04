@@ -1147,12 +1147,12 @@ _INV
       # client found by taxcode, but stored data may not match data in invoice
       # if it doesn't, we create a client_office with data from invoice
       to_match = {
-        full_address:   client_hash[:address].to_s.chomp,
-        city:           client_hash[:city].to_s.chomp,
-        province:       client_hash[:province].to_s.chomp,
-        postalcode:     client_hash[:postalcode].to_s.chomp,
-        country_alpha3: client_hash[:country].to_s.chomp,
-        name:           client_hash[:name].to_s.chomp,
+        full_address: client_hash[:address].to_s.chomp,
+        city:         client_hash[:city].to_s.chomp,
+        province:     client_hash[:province].to_s.chomp,
+        postalcode:   client_hash[:postalcode].to_s.chomp,
+        country:      client_hash[:country].to_s.chomp,
+        name:         client_hash[:name].to_s.chomp,
       }
       match = to_match.all? {|k, v| client.send(k).to_s.chomp.casecmp(v) == 0 }
       unless match
