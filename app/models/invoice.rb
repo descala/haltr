@@ -530,7 +530,7 @@ _INV
     fa_clauses        = Haltr::Utils.get_xpath(doc,xpaths[:fa_clauses])
     fa_payment_method = Haltr::Utils.get_xpath(doc,xpaths[:fa_payment_method])
 
-    invoice, client, client_role, company, user = nil
+    invoice, client_role, company, user = nil
 
     # prevent nil/blank taxcodes, since it will match all on 'like' conditions
     seller_taxcode = 'empty_seller_taxcode' if seller_taxcode.blank?
@@ -559,14 +559,10 @@ _INV
 
     # check if it is a received_invoice or an issued_invoice.
     if company.taxcode.include?(buyer_taxcode) or buyer_taxcode.include?(company.taxcode)
-      invoice = ReceivedInvoice.new
-      client   = company.project.clients.where('taxcode like ?', "%#{seller_taxcode}").first
-      client ||= company.project.clients.where('? like concat("%", taxcode) and taxcode != ""', seller_taxcode).first
+      invoice = ReceivedInvoice.new(project: company.project)
       client_role= "seller"
     elsif company.taxcode.include?(seller_taxcode) or seller_taxcode.include?(company.taxcode)
-      invoice = IssuedInvoice.new
-      client   = company.project.clients.where('taxcode like ?', "%#{buyer_taxcode}").first
-      client ||= company.project.clients.where('? like concat("%", taxcode) and taxcode != ""', buyer_taxcode).first
+      invoice = IssuedInvoice.new(project: company.project)
       client_role = "buyer"
     else
       raise I18n.t :taxcodes_does_not_belong_to_self,
@@ -595,17 +591,6 @@ _INV
       end
       invoice.amended_number = amend_of
       invoice.amend_reason = amend_reason
-    end
-
-    # if it is an issued invoice, and
-    #    the client already exists, and
-    #    this client has different email than this invoice, then
-    # save the email address to the invoice (overrides client email) 
-    if client_role == "buyer" and client
-      client_email = Haltr::Utils.get_xpath(doc,xpaths["buyer_email"])
-      if client_email and client_email != client.email
-        invoice.client_email_override = client_email
-      end
     end
 
     # if passed issued param, check if it should be an IssuedInvoice or a ReceivedInvoice
@@ -641,11 +626,9 @@ _INV
 
     client_language = User.current.language
     client_language = 'es' if client_language.blank?
-    client_office = nil
 
-    # create client if not exists
-    if client.nil?
-      client = Client.new(
+    invoice.set_client_from_hash(
+      {
         :taxcode        => client_taxcode,
         :name           => client_name,
         :address        => client_address,
@@ -659,46 +642,17 @@ _INV
         :project        => company.project,
         :invoice_format => 'paper',
         :language       => client_language
-      )
-
-      client.save!(:validate=>false)
-      logger.info "created new client \"#{client_name}\" with cif #{client_taxcode} for company #{company.name}. time=#{Time.now}"
-    else
-      # client found by taxcode, but stored data may not match data in invoice
-      # if it doesn't, we create a client_office with data from invoice
-      to_match = {
-        full_address:   client_address.chomp,
-        city:           client_city.chomp,
-        province:       client_province.chomp,
-        postalcode:     client_postalcode.chomp,
-        country_alpha3: client_countrycode.chomp,
-        name:           client_name.chomp
       }
-      match = to_match.all? {|k, v| client.send(k).to_s.chomp.casecmp(v) == 0 }
+    )
 
-      unless match
-        client.client_offices.each do |office|
-          match = to_match.all? {|k, v| office.send(k).to_s.chomp.casecmp(v) == 0 }
-          if match
-            client_office = office
-            break
-          end
-        end
-
-        if client_office.nil?
-          # client and all its client_offices differ from data in invoice
-          client_office = ClientOffice.new(
-            client_id:  client.id,
-            address:    client_address,
-            city:       client_city,
-            province:   client_province,
-            postalcode: client_postalcode,
-            country:    client_countrycode,
-            name:       client_name
-          )
-          client_office.save
-          client.reload
-        end
+    # if it is an issued invoice, and
+    #    the client already exists, and
+    #    this client has different email than this invoice, then
+    # save the email address to the invoice (overrides client email
+    if client_role == "buyer" and invoice.client
+      client_email = Haltr::Utils.get_xpath(doc,xpaths["buyer_email"])
+      if client_email and client_email != invoice.client.email
+        invoice.client_email_override = client_email
       end
     end
 
@@ -738,7 +692,7 @@ _INV
         end
         dir3 = Dir3Entity.find_by_code(code)
         # and add relation to ExternalCompany if exist
-        ec = ExternalCompany.find_by_taxcode client.taxcode
+        ec = ExternalCompany.find_by_taxcode invoice.client.taxcode
         if ec
           case role
           when '01'
@@ -785,8 +739,6 @@ _INV
     invoice.assign_attributes(
       :number           => invoice_number,
       :series_code      => invoice_series,
-      :client           => client,
-      :client_office    => client_office,
       :date             => invoice_date,
       :invoicing_period_start => i_period_start,
       :invoicing_period_end   => i_period_end,
@@ -1181,6 +1133,57 @@ _INV
 
   def self.amend_reason_codes
     %w(01 02 03 04 05 06 07 08 09 10 11 12 13 14 15 16 80 81 82 83 84 85)
+  end
+
+  # set invoice client from hash, first searches or clients by taxcode, if it
+  # matches uses existing client, if not, creates a new one. Then it compares
+  # client fields and creates a client_office if it differs.
+  # assigns invoice [and client_office] to self.
+  #
+  def set_client_from_hash(client_hash)
+    self.client   = project.clients.where('taxcode like ?', "%#{client_hash[:taxcode]}").first
+    self.client ||= project.clients.where('? like concat("%", taxcode) and taxcode != ""', client_hash[:taxcode]).first
+    if client
+      # client found by taxcode, but stored data may not match data in invoice
+      # if it doesn't, we create a client_office with data from invoice
+      to_match = {
+        full_address:   client_hash[:address].to_s.chomp,
+        city:           client_hash[:city].to_s.chomp,
+        province:       client_hash[:province].to_s.chomp,
+        postalcode:     client_hash[:postalcode].to_s.chomp,
+        country_alpha3: client_hash[:country].to_s.chomp,
+        name:           client_hash[:name].to_s.chomp,
+      }
+      match = to_match.all? {|k, v| client.send(k).to_s.chomp.casecmp(v) == 0 }
+      unless match
+        client.client_offices.each do |office|
+          match = to_match.all? {|k, v| office.send(k).to_s.chomp.casecmp(v) == 0 }
+          if match
+            self.client_office = office
+            break
+          end
+        end
+
+        if client_office.nil?
+          # client and all its client_offices differ from data in invoice
+          self.client_office = ClientOffice.new(
+            client_id:  client.id,
+            address:    client_hash[:address].to_s.chomp,
+            city:       client_hash[:city].to_s.chomp,
+            province:   client_hash[:province].to_s.chomp,
+            postalcode: client_hash[:postalcode].to_s.chomp,
+            country:    client_hash[:country].to_s.chomp,
+            name:       client_hash[:name].to_s.chomp
+          )
+          client_office.save!
+          client.reload
+        end
+      end
+    else
+      self.client = Client.new(client_hash)
+      client.save!(:validate=>false)
+      logger.info "created new client \"#{client.name}\" with cif #{client.taxcode} for company #{project.company.name}. time=#{Time.now}"
+    end
   end
 
   protected

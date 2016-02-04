@@ -185,7 +185,15 @@ class InvoicesController < ApplicationController
     # and copy global "exempt comment" to all exempt taxes
     parsed_params = parse_invoice_params
 
+    # in API calls we accept client as a Hash with its data
+    client_hash = parsed_params.delete(:client)
+
     @invoice = invoice_class.new(parsed_params)
+
+    if client_hash
+      @invoice.set_client_from_hash(client_hash)
+    end
+
     @invoice.save_attachments(params[:attachments] || (params[:invoice] && params[:invoice][:uploads]))
     if @invoice.invoice_lines.empty?
       il = InvoiceLine.new
