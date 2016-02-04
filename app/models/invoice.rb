@@ -1181,6 +1181,7 @@ _INV
       end
     else
       self.client = Client.new(client_hash)
+      client.project = self.project
       client.save!(:validate=>false)
       logger.info "created new client \"#{client.name}\" with cif #{client.taxcode} for company #{project.company.name}. time=#{Time.now}"
     end

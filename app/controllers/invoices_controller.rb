@@ -189,6 +189,7 @@ class InvoicesController < ApplicationController
     client_hash = parsed_params.delete(:client)
 
     @invoice = invoice_class.new(parsed_params)
+    @invoice.project ||= @project
 
     if client_hash
       @invoice.set_client_from_hash(client_hash)
