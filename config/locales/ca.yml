@@ -316,7 +316,7 @@ ca:
   save_and_mail: "Desar i enviar mail"
   save_without_mail: "Desar sense enviar mail"
   field_sepa_type: "Tipus de pagaments SEPA"
-  label_payment_initiation: "Introduir pagaments"
+  label_payment_initiation: "Càrrecs SEPA"
   label_payment_report: Informe de pagaments
 
   # Settings
@@ -375,8 +375,6 @@ ca:
   warning_can_not_generate_invoice: "No s'ha pogut generar la factura de la plantilla %{value}"
   notice_invoice_sent: "La factura s'està enviant"
   error_invoice_not_sent: "La factura %{num} no s'ha pogut enviar"
-  notice_empty_n19: "No hi ha dades per generar un N19"
-  notice_n19_done: "S'ha tancat el N19 de data %{value}"
   notice_empty_sepa: "No hi ha dades per generar un fitxer SEPA"
   notice_payment_done: "S'ha tancat el %{payment_type} de data %{value}"
   notice_uploaded_file_not_found: "No s'ha trobat el fitxer"
@@ -497,7 +495,6 @@ ca:
   label_mandate: "Mandat"
   field_delete_signed_doc: "Eliminar document signat"
   label_mandates: "Mandats"
-  n19_requires_bank_account: "Per generar N19 cal omplir el teu compte bancari"
   field_bank_infos: "Dades bancàries"
   success_sending_notification_by_mail: "Notificació enviada"
   error_sending_notification_by_mail: "Error enviant la notificació"

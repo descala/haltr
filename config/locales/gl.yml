@@ -316,7 +316,7 @@ gl:
   save_and_mail: "Gardar e enviar mail"
   save_without_mail: "Gardar sen enviar mail"
   field_sepa_type: "tipo de pagamentos SEPA"
-  label_payment_initiation: "Introducir pagamentos"
+  label_payment_initiation: "Adeudos SEPA"
   label_invoice_report: Informe de pagamentos
 
   # Settings
@@ -374,8 +374,6 @@ gl:
   warning_can_not_generate_invoice: "Non se puido xerar a factura da plantilla %{value}"
   notice_invoice_sent: "A factura estase enviando"
   error_invoice_not_sent: "A factura %{num} non se puido enviar"
-  notice_empty_n19: "Non hai datos para xerar un N19"
-  notice_n19_done: "Pechouse o N19 con data %{value}"
   notice_empty_sepa: "Non hai datos para xerar un ficheiro SEPA"
   notice_payment_done: "Pechouse o %{payment_type} de data %{value}"
   notice_uploaded_file_not_found: "Non se atopou o ficheiro"
@@ -497,7 +495,6 @@ gl:
   label_mandate: "Mandato"
   field_delete_signed_doc: "Eliminar documento asinado"
   label_mandates: "Mandatos"
-  n19_requires_bank_account: "Para xerar N19 debes encher cos datos da túa conta bancaria"
   field_bank_infos: "Datos bancarios"
   success_sending_notification_by_mail: "Notificación enviada"
   error_sending_notification_by_mail: "Erro enviando a notificación"

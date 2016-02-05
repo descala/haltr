@@ -305,7 +305,7 @@ nl:
   save_and_mail: "Save and send mail"
   save_without_mail: "Save without sending mail"
   field_sepa_type: "SEPA payments type"
-  label_payment_initiation: "Payment initiation"
+  label_payment_initiation: "SEPA Debit"
   label_payment_report: Payments report
 
   # Settings
@@ -363,7 +363,6 @@ nl:
   warning_can_not_generate_invoice: "Can not generate invoice form template %{value}"
   notice_invoice_sent: "Invoice will be sent"
   error_invoice_not_sent: "Could not send invoice %{num}"
-  notice_empty_n19: "No data to create N19"
   notice_payment_done: "%{payment_type} for due date %{value} maked as done"
   notice_uploaded_file_not_found: "File not found"
 
@@ -473,7 +472,6 @@ nl:
   label_mandate: "Mandate"
   field_delete_signed_doc: "Delete signed document"
   label_mandates: "Mandates"
-  n19_requires_bank_account: "To generate n19 you must fill your bank account"
   field_bank_infos: "Bank details"
   success_sending_notification_by_mail: "Notification sent"
   error_sending_notification_by_mail: "Error sending notification"
@@ -512,7 +510,6 @@ nl:
   template_too_old: "Template for %{client} too old (too much invoices to generate)"
   quote_acceptance: "Acceptance of quote"
   iban_is_invalid: IBAN is not valid
-  notice_n19_done: N19 for %{value} has been closed
   notice_empty_sepa: No data to generate a SEPA file
   button_save_and_send: Save and send
   button_create_and_send: Create and send

@@ -79,7 +79,7 @@ Redmine::Plugin.register :haltr do
         :events    => [:file, :index] },
       :require => :member
 
-    permission :manage_payments, { :payments => [:index, :new, :edit, :create, :update, :destroy, :payment_initiation, :n19, :payment_done, :import_aeb43_index, :import_aeb43, :invoices, :reports, :report_payment_list] }, :require => :member
+    permission :manage_payments, { :payments => [:index, :new, :edit, :create, :update, :destroy, :payment_initiation, :payment_done, :import_aeb43_index, :import_aeb43, :invoices, :reports, :report_payment_list] }, :require => :member
     permission :use_templates, { :invoice_templates => [:index, :new, :edit, :create, :update, :destroy, :show, :new_from_invoice,
                                  :new_invoices_from_template, :create_invoices, :update_taxes, :context_menu] }, :require => :member
 
@@ -91,7 +91,7 @@ Redmine::Plugin.register :haltr do
                        :context_menu, :show_original, :number_to_id, :edit],
         :received  => [:index, :show, :show_original, :legal, :context_menu],
         :companies => [:my_company,:bank_info, :linked_to_mine, :check_iban],
-        :payments  => [:index, :n19],
+        :payments  => [:index],
         :invoice_templates => [:index, :show, :context_menu],
         :charts    => [:invoice_total, :invoice_status, :top_clients],
         :events    => [:file, :index] },
@@ -106,7 +106,7 @@ Redmine::Plugin.register :haltr do
                        :send_new_invoices, :number_to_id],
         :received  => [:index, :show, :show_original, :legal, :context_menu],
         :companies => [:my_company,:bank_info, :linked_to_mine, :check_iban],
-        :payments  => [:index, :n19],
+        :payments  => [:index],
         :invoice_templates => [:index, :show, :context_menu],
         :charts    => [:invoice_total, :invoice_status, :top_clients],
         :events    => [:file, :index] },

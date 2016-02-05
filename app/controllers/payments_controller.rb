@@ -2,7 +2,7 @@ class PaymentsController < ApplicationController
 
   unloadable
   menu_item Haltr::MenuItem.new(:payments,:payments_level2)
-  menu_item Haltr::MenuItem.new(:payments,:payment_initiation), :only=> [:payment_initiation,:payment_done,:n19,:sepa,:invoices]
+  menu_item Haltr::MenuItem.new(:payments,:payment_initiation), :only=> [:payment_initiation,:payment_done,:sepa,:invoices]
   menu_item Haltr::MenuItem.new(:payments,:import_aeb43),       :only=> [:import_aeb43_index,:import_aeb43]
   menu_item Haltr::MenuItem.new(:payments,:reports), :only => [:reports,:report_payment_list]
   layout 'haltr'
@@ -101,9 +101,7 @@ class PaymentsController < ApplicationController
         @invoices_to_pay_by_bank_info[bi][due_date] = {}
         invoices.each do |invoice|
           unless invoice.client.bank_account.blank? and invoice.client.iban.blank?
-            @invoices_to_pay_by_bank_info[bi][due_date]["n19"] ||= []
             @invoices_to_pay_by_bank_info[bi][due_date]["sepa_#{invoice.client.sepa_type}"] ||= []
-            @invoices_to_pay_by_bank_info[bi][due_date]["n19"] << invoice
             @invoices_to_pay_by_bank_info[bi][due_date]["sepa_#{invoice.client.sepa_type}"] << invoice
           end
         end
@@ -115,28 +113,6 @@ class PaymentsController < ApplicationController
         @invoices_to_pay_by_bank_info.delete(bi)
       end
     end
-  end
-
-  # generate spanish AEB Nº19
-  def n19
-    @due_date         = Date.parse(params[:due_date])
-    @fecha_cargo      = @due_date.to_formatted_s(:ddmmyy)
-    @fecha_confeccion = Date.today.to_formatted_s(:ddmmyy)
-    @bank_info        = BankInfo.find params[:bank_info]
-    if @bank_info.bank_account.blank? and @bank_info.iban.blank?
-      flash[:error] = l(:n19_requires_bank_account)
-      redirect_to project_my_company_path(@project)
-      return
-    end
-    @clients          = @bank_info.invoices.find(params[:invoices]).group_by(&:client)
-    @total            = Money.new 0, Money::Currency.new(Setting.plugin_haltr['default_currency'])
-    @clients.values.flatten.each do |invoice|
-      @total += invoice.total
-    end
-
-    I18n.locale = :es
-    output = render_to_string :layout => false
-    send_data output, :filename => filename_for_content_disposition("n19-#{@fecha_cargo[4..5]}-#{@fecha_cargo[2..3]}-#{@fecha_cargo[0..1]}.txt"), :type => 'text/plain'
   end
 
   def sepa

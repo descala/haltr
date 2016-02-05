@@ -304,7 +304,7 @@ da:
   save_and_mail: "Gem og send e-mail"
   save_without_mail: "Gem uden at sende e-mail"
   field_sepa_type: "SEPA payments type"
-  label_payment_initiation: "Payment initiation"
+  label_payment_initiation: "SEPA Debit"
   label_payment_report: Payments report
  
   # Settings
@@ -362,8 +362,6 @@ da:
   warning_can_not_generate_invoice: "Kan ikke generere faktura formularskabelon %{value}"
   notice_invoice_sent: "Faktura vil blive sendt"
   error_invoice_not_sent: "Kunne ikke sende faktura %{num}"
-  notice_empty_n19: "Ingen data til at skabe N19"
-  notice_n19_done: "N19 for %{value} has been closed"
   notice_empty_sepa: "No data to generate a SEPA file"
   notice_payment_done: "%{payment_type} for forfaldsdatoen %{value} maked som udført"
   notice_uploaded_file_not_found: "Fil ikke fundet"
@@ -483,7 +481,6 @@ da:
   label_mandate: "Mandate"
   field_delete_signed_doc: "Delete signed document"
   label_mandates: "Mandates"
-  n19_requires_bank_account: "To generate n19 you must fill your bank account"
   field_bank_infos: "Bank details"
   success_sending_notification_by_mail: "Notification sent"
   error_sending_notification_by_mail: "Error sending notification"

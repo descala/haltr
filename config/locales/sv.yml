@@ -303,7 +303,7 @@ sv:
   save_and_mail: "Spara och skicka mail"
   save_without_mail: "Spara utan att skicka mail"
   field_sepa_type: "SEPA payments type"
-  label_payment_initiation: "Payment initiation"
+  label_payment_initiation: "SEPA Debit"
   label_payment_report: Payments report
 
   # Settings
@@ -361,8 +361,6 @@ sv:
   warning_can_not_generate_invoice: "Kan inte skapa fkatura från mall %{value}"
   notice_invoice_sent: "Faktura kommer att skickas"
   error_invoice_not_sent: "Kunde inte skicka faktura %{num}"
-  notice_empty_n19: "Ingen data finns för att skapa N19"
-  notice_n19_done: "N19 for %{value} has been closed"
   notice_empty_sepa: "No data to generate a SEPA file"
   notice_payment_done: "%{payment_type} för betaldatum %{value} markerad som utförd"
   notice_uploaded_file_not_found: "Filen hittades inte"
@@ -481,7 +479,6 @@ sv:
   label_mandate: "Mandate"
   field_delete_signed_doc: "Delete signed document"
   label_mandates: "Mandates"
-  n19_requires_bank_account: "To generate n19 you must fill your bank account"
   field_bank_infos: "Bank details"
   success_sending_notification_by_mail: "Notification sent"
   error_sending_notification_by_mail: "Error sending notification"
