@@ -19,7 +19,7 @@ RFF+DQ:<%=@invoice.delivery_note_number%>'
 RFF+ON:<%=@invoice.ponumber.to_s[0..16]%>'
 DTM+171:<%=edi_date @invoice.order_date%>:102'
 <% end %>
-<% unless ''.blank? %>
+<% unless @invoice.contract_number.blank? %>
 RFF+CT:<%=@invoice.contract_number.to_s[0..34]%>'
 <% end %>
 NAD+SCO+<%=@company.edi_code%>::9++<%=@company.name.to_s[0..34]%>::<%=@company.company_identifier.to_s[0..19]%>+<%=@company.address.to_s[0..34]%>+<%=@company.city.to_s[0..34]%>+<%=@company.province.to_s[0..34]%>+<%=@company.postalcode%>+<%=@company.country%>'
@@ -27,9 +27,6 @@ RFF+VA:<%=@company.edi_code%>'
 NAD+BCO+<%=@client.edi_code%>::9++<%=@client.name%>::<%=@client.company_identifier%>+<%=@client.address%>+<%=@client.city%>+<%=@client.province%>+<%=@client.postalcode%>+<%=@client.country%>'
 RFF+VA:<%=@client.taxcode%>'
 NAD+BY+<%=@client.buyer_edi_code%>::9'
-<% unless ''.blank? %>
-NAD+DP+<%=@client.receiver_edi_code%>::9'
-<% end %>
 NAD+SU+<%=@company.edi_code%>::9++<%=@company.name.to_s[0..34]%>::<%=@company.company_identifier.to_s[0..19]%>+<%=@company.address.to_s[0..34]%>+<%=@company.city.to_s[0..34]%>+<%=@company.province.to_s[0..34]%>+<%=@company.postalcode%>+<%=@company.country%>'
 NAD+IV+<%=@client.buyer_edi_code%>::9'
 NAD+DP+<%=@client.receiver_edi_code%>::9'
