@@ -88,7 +88,7 @@
           <% @invoices.each do |invoice| -%>
             <tr id="invoice-<%=invoice.id%>" class="<%= cycle("odd", "even") %> hascontextmenu">
               <td><%= check_box_tag("ids[]", invoice.id, false, :id => nil) %></td>
-              <td><%=h link_to(format_date(invoice.date), edit_invoice_template_path(invoice)) %></td>
+              <td><%=h link_to(format_date(invoice.date), invoice_template_path(invoice)) %></td>
               <td><%= l("mf#{invoice.frequency}") %></td>
               <td><%=h invoice.client %></td>
               <td class="money"><%= money(invoice.total) %></td>

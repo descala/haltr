@@ -203,7 +203,7 @@ module InvoicesHelper
 
   def payment_method_info
     i = @invoice
-    if i.is_a?(IssuedInvoice) or i.is_a?(Quote)
+    if i.is_a?(IssuedInvoice) or i.is_a?(Quote) or i.is_a?(InvoiceTemplate)
       if i.debit?
         # IssuedInvoice + debit, show clients iban
         if i.client.use_iban?

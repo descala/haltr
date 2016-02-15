@@ -68,4 +68,8 @@ class InvoiceTemplate < Invoice
     date
   end
 
+  def payments
+    []
+  end
+
 end

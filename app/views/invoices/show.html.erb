@@ -2,7 +2,11 @@
 <div class="seccio grup">
   <div class="col span-2-de-2">
     <ul class="menu-rapid">
-      <li><%= link_to_if_authorized l("label_invoice_new"), new_project_invoice_path(@project), :class => 'icon icon-add' %></li>
+      <% if @invoice.is_a? InvoiceTemplate %>
+        <li><%= link_to_if_authorized l("label_invoice_template_new"), new_project_invoice_template_path(@project), :class => 'icon icon-add' %></li>
+      <% else %>
+        <li><%= link_to_if_authorized l("label_invoice_new"), new_project_invoice_path(@project), :class => 'icon icon-add' %></li>
+      <% end %>
       <li><%= link_to_if_authorized l(:button_edit), { :action => 'edit', :id => @invoice }, :class => 'icon icon-edit' %></li>
       <li><%= link_to_if_authorized l(:button_delete), { :action => 'destroy', :id => @invoice}, :confirm=>l(:text_are_you_sure), :method=>:delete, :class=>'icon icon-del' %></li>
       <%= render :partial => "#{@invoice.class.to_s.underscore}_menu" %>
