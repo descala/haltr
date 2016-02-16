@@ -141,13 +141,13 @@
               <cbc:TaxableAmount currencyID="<%=h @client.currency%>"><%=h haltr_precision(@invoice.taxable_base(tax).dollars)%></cbc:TaxableAmount>
               <cbc:TaxAmount currencyID="<%=h @client.currency%>"><%=h haltr_precision(@invoice.tax_amount(tax).dollars) %></cbc:TaxAmount>
               <cac:TaxCategory>
-                <cbc:ID schemeID="UN/ECE 5305" schemeAgencyID="6"><%=category%></cbc:ID>
+                <cbc:ID schemeID="UNCL5305" schemeAgencyID="6"><%=category%></cbc:ID>
                 <cbc:Percent><%=h haltr_precision(tax.percent)%></cbc:Percento>
                 <% if tax.comment and tax.comment.size > 0 %>
                   <cbc:TaxExemptionReason><%=h tax.comment%></cbc:TaxExemptionReason>
                 <% end %>
                 <cac:TaxScheme>
-                  <cbc:ID schemeID="UN/ECE 5153" schemeAgencyID="6"><%=Haltr::TaxHelper.ubl(tax.name)%></cbc:ID>
+                  <cbc:ID schemeID="UNCL5153" schemeAgencyID="6"><%=Haltr::TaxHelper.ubl(tax.name)%></cbc:ID>
                 </cac:TaxScheme>
               </cac:TaxCategory>
             </cac:TaxSubtotal>
@@ -159,10 +159,10 @@
             <cbc:TaxableAmount currencyID="<%=h @client.currency%>"><%=@invoice.charge_amount.dollars%></cbc:TaxableAmount>
             <cbc:TaxAmount currencyID="<%=h @client.currency%>">0.00</cbc:TaxAmount>
             <cac:TaxCategory>
-              <cbc:ID schemeID="UN/ECE 5305" schemeAgencyID="6">Z</cbc:ID>
+              <cbc:ID schemeID="UNCL5305" schemeAgencyID="6">Z</cbc:ID>
               <cbc:Percent>0.00</cbc:Percent>
               <cac:TaxScheme>
-                <cbc:ID schemeID="UN/ECE 5153" schemeAgencyID="6">VAT</cbc:ID>
+                <cbc:ID schemeID="UNCL5153" schemeAgencyID="6">VAT</cbc:ID>
               </cac:TaxScheme>
             </cac:TaxCategory>
           </cac:TaxSubtotal>
@@ -199,9 +199,9 @@
 <% end -%>
             <% invoice_line.taxes.each do |tax_line| -%>
             <cac:ClassifiedTaxCategory>
-              <cbc:ID schemeID="UN/ECE 5305" schemeAgencyID="6"><%=h tax_line.category%></cbc:ID>
+              <cbc:ID schemeID="UNCL5305" schemeAgencyID="6"><%=h tax_line.category%></cbc:ID>
               <cac:TaxScheme>
-                <cbc:ID schemeID="UN/ECE 5153" schemeAgencyID="6"><%= Haltr::TaxHelper.ubl(tax_line.name) %></cbc:ID>
+                <cbc:ID schemeID="UNCL5153" schemeAgencyID="6"><%= Haltr::TaxHelper.ubl(tax_line.name) %></cbc:ID>
               </cac:TaxScheme>
             </cac:ClassifiedTaxCategory>
           <% end -%>
