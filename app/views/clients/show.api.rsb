@@ -25,4 +25,5 @@ api.client do
   api.edi_code            @client.edi_code
   api.created_at          @client.created_at
   api.updated_at          @client.updated_at
+  api.phone               @client.phone
 end
