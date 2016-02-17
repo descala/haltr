@@ -29,6 +29,11 @@ api.invoice do
   api.ponumber @invoice.ponumber
   api.payment_method_info payment_method_info
 
+  # discounts
+  api.discount_text    @invoice.discount_text
+  api.discount_percent @invoice.discount_percent.to_f
+  api.discount_amount  @invoice.discount_amount.to_f
+
   # subtotal
   api.subtotal @invoice.subtotal.to_f
 
