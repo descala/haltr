@@ -20,41 +20,45 @@
           <table>
             <% i = 0 -%>
             <% a.audited_changes.each do |field,values| -%>
-              <% next if values.blank? or field == 'original' -%>
-              <% if values.is_a?(Array) -%>
-                <% next if value_for_audit(field,values[0]).blank? and value_for_audit(field,values[1]).blank? -%>
-                <% i += 2 -%>
-                <tr class="new-values">
-                  <td><%= label_for_audit(field) %></td>
-                  <td>&nbsp;</td>
-                  <td><strong><%= value_for_audit(field,values[1]) %></strong></td>
-                </tr>
-                <tr class="old-values">
-                  <td><%= label_for_audit(field) %></td>
-                  <td>&nbsp;</td>
-                  <td><strong><%= value_for_audit(field,values[0]) %></strong></td>
-                </tr>
-              <% elsif a.action=='destroy' -%>
-                <% i += 1 -%>
-                <tr class="old-values">
-                  <td><%= label_for_audit(field) %></td>
-                  <td>&nbsp;</td>
-                  <td><strong><%= value_for_audit(field,values) %></strong></td>
-                </tr>
-              <% else -%>
-                <% i += 1 -%>
-                <tr class="new-values">
-                  <td><%= label_for_audit(field) %></td>
-                  <td>&nbsp;</td>
-                  <td><strong><%= value_for_audit(field,values) %></strong></td>
-                </tr>
-              <% end -%>
-              <% if i >= 10 -%>
-                <% i = 0 -%>
-                </table>
-              </td>
-              <td>
-                <table>
+              <% begin -%>
+                <% next if values.blank? or field == 'original' -%>
+                <% if values.is_a?(Array) -%>
+                  <% next if value_for_audit(field,values[0]).blank? and value_for_audit(field,values[1]).blank? -%>
+                  <% i += 2 -%>
+                  <tr class="new-values">
+                    <td><%= label_for_audit(field) %></td>
+                    <td>&nbsp;</td>
+                    <td><strong><%= value_for_audit(field,values[1]) %></strong></td>
+                  </tr>
+                  <tr class="old-values">
+                    <td><%= label_for_audit(field) %></td>
+                    <td>&nbsp;</td>
+                    <td><strong><%= value_for_audit(field,values[0]) %></strong></td>
+                  </tr>
+                <% elsif a.action=='destroy' -%>
+                  <% i += 1 -%>
+                  <tr class="old-values">
+                    <td><%= label_for_audit(field) %></td>
+                    <td>&nbsp;</td>
+                    <td><strong><%= value_for_audit(field,values) %></strong></td>
+                  </tr>
+                <% else -%>
+                  <% i += 1 -%>
+                  <tr class="new-values">
+                    <td><%= label_for_audit(field) %></td>
+                    <td>&nbsp;</td>
+                    <td><strong><%= value_for_audit(field,values) %></strong></td>
+                  </tr>
+                <% end -%>
+                <% if i >= 10 -%>
+                  <% i = 0 -%>
+                  </table>
+                </td>
+                <td>
+                  <table>
+                <% end -%>
+              <% rescue Exception => e -%>
+                <%= e.message %>
               <% end -%>
             <% end -%>
           </table>
