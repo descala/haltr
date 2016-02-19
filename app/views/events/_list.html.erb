@@ -22,7 +22,7 @@
 
             <div id="audited_<%=e.id%>" class="audited">
               <% e.audits.each do |a| -%>
-                <%= render partial: "audits/audit", locals: { a: a } rescue $!.message %>
+                <%= render partial: "audits/audit", locals: { a: a } %>
               <% end -%>
             </div>
 
