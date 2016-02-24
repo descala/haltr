@@ -8,7 +8,7 @@ class ClientOffice < ActiveRecord::Base
 
   iso_country :country
 
-  CLIENT_FIELDS = %w( address address2 city province postalcode country email name )
+  CLIENT_FIELDS = %w( address address2 city province postalcode country email name destination_edi_code )
 
   CLIENT_FIELDS.each do |attr|
     define_method(attr) do
