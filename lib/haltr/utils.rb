@@ -181,6 +181,7 @@ module Haltr
                                           "/xmlns:Invoice/cac:AccountingSupplierParty/cac:Party/cac:PostalAddress/cbc:CityName" ]
           xpaths[:seller_cp_city2]    = nil
           xpaths[:buyer_taxcode]      = "/xmlns:Invoice/cac:AccountingCustomerParty/cac:Party/cac:PartyTaxScheme/cbc:CompanyID"
+          xpaths[:buyer_taxcode_id]      = "/xmlns:Invoice/cac:AccountingCustomerParty/cac:Party/cac:PartyIdentification/cbc:ID"
           xpaths[:buyer_name]         = "/xmlns:Invoice/cac:AccountingCustomerParty/cac:Party/cac:PartyName/cbc:Name"
           xpaths[:buyer_name2]        = nil
           xpaths[:buyer_address]      = [ "/xmlns:Invoice/cac:AccountingCustomerParty/cac:Party/cac:PostalAddress/cbc:StreetName",

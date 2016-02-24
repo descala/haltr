@@ -492,6 +492,9 @@ _INV
     xpaths         = Haltr::Utils.xpaths_for(invoice_format)
     seller_taxcode = Haltr::Utils.get_xpath(doc,xpaths[:seller_taxcode])
     buyer_taxcode  = Haltr::Utils.get_xpath(doc,xpaths[:buyer_taxcode])
+    if buyer_taxcode.nil? and ubl_version
+      buyer_taxcode  = Haltr::Utils.get_xpath(doc,xpaths[:buyer_taxcode_id])
+    end
     currency       = Haltr::Utils.get_xpath(doc,xpaths[:currency])
     # invoice data
     invoice_number   = Haltr::Utils.get_xpath(doc,xpaths[:invoice_number])
