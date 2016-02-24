@@ -101,6 +101,7 @@ sv:
   debit_through: betalning, igenom %{bank_account}
   transfer: Bankbetalning
   transfer_to: Bankbetalning till %{bank_account}
+  cheque: Cheque
   other: Annan
   requires_client_bank_account: Kundens bankkonto krävs
   requires_company_bank_account: Bankkonto måste registreras

@@ -114,6 +114,7 @@ gl:
   debit_through: Cargar en conta, usando %{bank_account}
   transfer: Transferencia bancaria
   transfer_to: Transferencia bancaria a %{bank_account}
+  cheque: Reposición
   other: Outros
   requires_client_bank_account: require conta bancaria do cliente
   requires_company_bank_account: require conta bancaria propia

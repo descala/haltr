@@ -8,6 +8,7 @@ module Haltr
     PAYMENT_DEBIT    = 2
     PAYMENT_TRANSFER = 4
     PAYMENT_AWARDING = 7
+    PAYMENT_CHEQUE   = 12
     PAYMENT_SPECIAL  = 13
 
     PAYMENT_CODES = {
@@ -15,6 +16,7 @@ module Haltr
       PAYMENT_DEBIT    => {:facturae => '02', :ubl => '49', :edifact => '42'},
       PAYMENT_TRANSFER => {:facturae => '04', :ubl => '31', :edifact => '31'},
       PAYMENT_AWARDING => {:facturae => '07', :ubl => '??', :edifact => ''  },
+      PAYMENT_CHEQUE   => {:facturae => '12', :ubl => '??', :edifact => '20'},
       PAYMENT_SPECIAL  => {:facturae => '13', :ubl => '??', :edifact => ''  },
     }
 
@@ -61,6 +63,7 @@ module Haltr
         pm << [I18n.t("transfer"),PAYMENT_TRANSFER]
       end
       pm << [I18n.t("awarding"),PAYMENT_AWARDING]
+      pm << [I18n.t("cheque"),PAYMENT_CHEQUE]
       pm << [I18n.t("other"),PAYMENT_SPECIAL]
     end
 

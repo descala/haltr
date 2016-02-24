@@ -103,6 +103,7 @@ fr:
   debit_through: Débiter paiement, à travers %{bank_account}
   transfer: Transfert bancaire
   transfer_to: Transfert bancaire au %{bank_account}
+  cheque: Cheque
   other: Autres
   requires_client_bank_account: exige le compte bancaire du client
   requires_company_bank_account: exige le propre compte bancaire

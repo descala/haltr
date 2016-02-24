@@ -113,6 +113,7 @@ ca:
   debit_through: Carregar al compte, mitjançant %{bank_account}
   transfer: Transferència bancària
   transfer_to: Transferència bancària a %{bank_account}
+  cheque: Reposició
   other: Altres
   requires_client_bank_account: requereix compte bancari del client
   requires_company_bank_account: requereix compte bancari propi

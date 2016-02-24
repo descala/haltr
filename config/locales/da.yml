@@ -101,6 +101,7 @@ da:
   debit_through: Debet betaling, durch %{bank_account}
   transfer: Bankoverførsel
   transfer_to: Bankoverførsel til %{bank_account}
+  cheque: Cheque
   other: Andre
   requires_client_bank_account: kræver klient bankkonto
   requires_company_bank_account: kræver self-service bank konto

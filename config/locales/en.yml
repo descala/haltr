@@ -103,6 +103,7 @@ en:
   debit_through: Debit payment, through %{bank_account}
   transfer: Bank transfer
   transfer_to: Bank transfer to %{bank_account}
+  cheque: Cheque
   other: Other
   requires_client_bank_account: requires client bank account
   requires_company_bank_account: requires a bank account in your company
