@@ -469,6 +469,9 @@ _INV
       raw_xml = raw_invoice.read
     end
     doc               = Nokogiri::XML(raw_xml)
+    if doc.child.name == "StandardBusinessDocument"
+      doc = Haltr::Utils.extract_from_sbdh(doc)
+    end
     doc_no_namespaces = doc.dup.remove_namespaces!
     facturae_version  = doc.at_xpath("//FileHeader/SchemaVersion")
     ubl_version       = doc_no_namespaces.at_xpath("//Invoice/UBLVersionID")
@@ -511,6 +514,7 @@ _INV
     amend_reason     = Haltr::Utils.get_xpath(doc,xpaths[:amend_reason])
     party_id         = Haltr::Utils.get_xpath(doc,xpaths[:party_id])
     legal_literals   = Haltr::Utils.get_xpath(doc,xpaths[:legal_literals])
+
 
     # factoring assignment data
     fa_person_type    = Haltr::Utils.get_xpath(doc,xpaths[:fa_person_type])
