@@ -101,6 +101,7 @@ da:
   debit_through: Debet betaling, durch %{bank_account}
   transfer: Bankoverførsel
   transfer_to: Bankoverførsel til %{bank_account}
+  cheque: Cheque
   other: Andre
   requires_client_bank_account: kræver klient bankkonto
   requires_company_bank_account: kræver self-service bank konto
@@ -708,5 +709,7 @@ da:
   field_edi_code: "EDI Code"
   field_order_date: "Order date"
   field_contract_number: "Contract number"
-  field_buyer_edi_code: "Buyer EDI code"
-  field_receiver_edi_code: "Receiver EDI code"
+  field_buyer_edi_code: "Buyer EDI"
+  field_receiver_edi_code: "Receiver EDI"
+  field_destination_edi_code: "Delivery party EDI"
+  field_payer_edi_code: "Payer EDI"

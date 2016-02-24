@@ -113,6 +113,7 @@ ca:
   debit_through: Carregar al compte, mitjançant %{bank_account}
   transfer: Transferència bancària
   transfer_to: Transferència bancària a %{bank_account}
+  cheque: Reposició
   other: Altres
   requires_client_bank_account: requereix compte bancari del client
   requires_company_bank_account: requereix compte bancari propi
@@ -720,8 +721,10 @@ ca:
   as_percent: "Com a %"
   field_has_text: "Conté el text"
   default_invoice_format: 'Format i transport de factures per als nous usuaris'
-  field_edi_code: "Codi EDI"
+  field_edi_code: "PO EDI legal"
   field_order_date: "Data de la comanda"
   field_contract_number: "Número de contracte"
-  field_buyer_edi_code: "Codi EDI del comprador"
-  field_receiver_edi_code: "Codi EDI del receptor"
+  field_buyer_edi_code: "PO EDI comprador"
+  field_receiver_edi_code: "PO EDI receptor factura"
+  field_destination_edi_code: "PO EDI receptor mercaderia"
+  field_payer_edi_code: "PO EDI emissor pagament"

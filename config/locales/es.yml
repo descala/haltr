@@ -115,6 +115,7 @@ es:
   debit_through: Cargar en cuenta, usando %{bank_account}
   transfer: Transferencia bancaria
   transfer_to: Transferencia bancaria a %{bank_account}
+  cheque: Reposición
   other: Otros
   requires_client_bank_account: requiere cuenta bancaria del cliente
   requires_company_bank_account: requiere cuenta bancaria propia
@@ -722,8 +723,10 @@ es:
   as_percent: "Como %"
   field_has_text: "Contiene el texto"
   default_invoice_format: 'Formato y transporte de facturas para los nuevos usuarios'
-  field_edi_code: "Código EDI"
+  field_edi_code: "PO EDI legal"
   field_order_date: "Fecha del pedido"
   field_contract_number: "Número de contrato"
-  field_buyer_edi_code: "Código EDI del comprador"
-  field_receiver_edi_code: "Código EDI del receptor"
+  field_buyer_edi_code: "PO EDI comprador"
+  field_receiver_edi_code: "PO EDI receptor factura"
+  field_destination_edi_code: "PO EDI receptor mercancia"
+  field_payer_edi_code: "PO EDI emisor pago"

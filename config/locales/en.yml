@@ -103,6 +103,7 @@ en:
   debit_through: Debit payment, through %{bank_account}
   transfer: Bank transfer
   transfer_to: Bank transfer to %{bank_account}
+  cheque: Cheque
   other: Other
   requires_client_bank_account: requires client bank account
   requires_company_bank_account: requires a bank account in your company
@@ -710,5 +711,7 @@ en:
   field_edi_code: "EDI Code"
   field_order_date: "Order date"
   field_contract_number: "Contract number"
-  field_buyer_edi_code: "Buyer EDI code"
-  field_receiver_edi_code: "Receiver EDI code"
+  field_buyer_edi_code: "Buyer EDI"
+  field_receiver_edi_code: "Receiver EDI"
+  field_destination_edi_code: "Delivery party EDI"
+  field_payer_edi_code: "Payer EDI"
