@@ -109,7 +109,8 @@ class InvoicesControllerTest < ActionController::TestCase
     post :import, {
       file:       fixture_file_upload('/documents/invoice_facturae32_issued.xml'),
       commit:     'Importar',
-      project_id: 'onlinestore'
+      project_id: 'onlinestore',
+      issued:     'true'
     }
     p=Project.find(2)
     assert User.current.allowed_to?(:import_invoices,p), "user #{User.current.login} has not import_invoices permission in project #{p.name}"
