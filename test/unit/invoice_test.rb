@@ -662,4 +662,11 @@ class InvoiceTest < ActiveSupport::TestCase
     assert_equal(1.00,re_tax.percent)
   end
 
+  test 'import UBL 2.0 with SBDH' do
+    file = File.new(File.join(File.dirname(__FILE__),'../fixtures/documents/invoice_ubl_with_sbdh.xml'))
+    invoice = Invoice.create_from_xml(file,companies(:company6),"1234",'uploaded',User.current.name,nil,false)
+    assert invoice.valid?, invoice.errors.messages.to_s
+    assert_equal '5503070490', invoice.client.taxcode
+  end
+
 end

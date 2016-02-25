@@ -1063,16 +1063,20 @@ class InvoicesController < ApplicationController
 
   # Used in form POST - facturae in multipart POST 'file' field
   def import
-    params[:issued] ||= '1'
     if request.post?
       file = params[:file]
       @invoice = nil
+      unless params[:issued].nil?
+        @issued = ( params[:issued] == 'true' )
+      else
+        @issued = nil
+      end
       if file && file.size > 0
         md5 = `md5sum #{file.path} | cut -d" " -f1`.chomp
         user_or_company = User.current.admin? ? @project.company : User.current
         @invoice = Invoice.create_from_xml(
           file, user_or_company, md5,'uploaded',nil,
-          params[:issued] == '1',
+          @issued,
           params['keep_original'] != 'false',
           params['validate'] != 'false'
         )
@@ -1097,6 +1101,8 @@ class InvoicesController < ApplicationController
           render action: 'show', status: :created, location: invoice_path(@invoice)
         }
       end
+    else
+      @issued = ( self.class != ReceivedController )
     end
   rescue
     respond_to do |format|

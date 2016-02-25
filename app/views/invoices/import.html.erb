@@ -7,6 +7,7 @@
         <%= file_field_tag "file" %>
         <%= check_box_tag "send_after_import" %> <%= l(:send_after_import) %>
       </div>
+      <%= hidden_field_tag(:issued, @issued) %>
       <%= submit_tag l(:label_import) %>
     <% end %>
 
