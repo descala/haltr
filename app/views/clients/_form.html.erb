@@ -105,23 +105,6 @@
     <%= f.text_field :company_identifier %>
     </p>
   </div>
-  <div class="seccio grup">
-    <p class="col span-1-de-5">
-    <%= f.text_field :edi_code %>
-    </p>
-    <p class="col span-1-de-5">
-    <%= f.text_field :buyer_edi_code %>
-    </p>
-    <p class="col span-1-de-5">
-    <%= f.text_field :receiver_edi_code %>
-    </p>
-    <p class="col span-1-de-5">
-    <%= f.text_field :destination_edi_code %>
-    </p>
-    <p class="col span-1-de-5">
-    <%= f.text_field :payer_edi_code %>
-    </p>
-  </div>
 </fieldset>
 
 <div class="client_hiden_fields" style="<%= context =~ /_invoice$/ ? "display:none;" : "" %>">
@@ -181,6 +164,28 @@
       </p>
   </fieldset>
 <% end -%>
+
+<fieldset class="tabular box">
+  <legend>EDI</legend>
+  <div class="seccio grup">
+    <p class="col span-1-de-5">
+    <%= f.text_field :edi_code %>
+    </p>
+    <p class="col span-1-de-5">
+    <%= f.text_field :buyer_edi_code %>
+    </p>
+    <p class="col span-1-de-5">
+    <%= f.text_field :receiver_edi_code %>
+    </p>
+    <p class="col span-1-de-5">
+    <%= f.text_field :destination_edi_code %>
+    </p>
+    <p class="col span-1-de-5">
+    <%= f.text_field :payer_edi_code %>
+    </p>
+  </div>
+</fieldset>
+
 </div>
 
 <% content_for :header_tags do -%>
