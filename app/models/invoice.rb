@@ -1217,6 +1217,8 @@ _INV
   private
 
   def set_due_date
+    # invoices created by rest can have due_date but no terms
+    self.terms = "custom" if terms.nil? and due_date.present?
     self.due_date = terms_object.due_date unless terms == "custom"
   end
 

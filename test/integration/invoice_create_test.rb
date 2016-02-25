@@ -159,7 +159,7 @@ class InvoiceCreaeteTest < ActionController::IntegrationTest
         "charge_reason"=>"",
         "extra_info"=>"",
         "currency"=>"EUR",
-        "terms"=>"0",
+        "due_date"=>"2016-05-15",
         "payment_method_text"=>"",
         "invoice_lines_attributes"=>
         [
@@ -203,6 +203,7 @@ class InvoiceCreaeteTest < ActionController::IntegrationTest
     assert_equal(1, invoice.client.client_offices.size)
     assert_equal(invoice.client.client_offices.first.id, invoice.client_office.id)
     assert_equal("12345678901234", invoice.client_office.destination_edi_code)
+    assert_equal("2016-05-15", invoice.due_date.strftime("%Y-%m-%d"))
   end
 
 end
