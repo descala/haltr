@@ -121,9 +121,12 @@ class Event < ActiveRecord::Base
     if automatic?
       begin
         new_state = invoice.state_transitions.select {|t|
-          t.event == name
+          t.event.to_s == name.to_s
         }.first.to
         invoice.update_attribute(:state, new_state)
+
+        Redmine::Hook.call_hook(:model_event_after_update_invoice,
+                                event: self, new_state: new_state)
       rescue
         invoice.send(name)
       end
