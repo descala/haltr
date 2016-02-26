@@ -469,7 +469,7 @@ _INV
       raw_xml = raw_invoice.read
     end
     doc               = Nokogiri::XML(raw_xml)
-    if doc.child.name == "StandardBusinessDocument"
+    if doc.child and doc.child.name == "StandardBusinessDocument"
       doc = Haltr::Utils.extract_from_sbdh(doc)
     end
     doc_no_namespaces = doc.dup.remove_namespaces!
