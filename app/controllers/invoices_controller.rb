@@ -190,6 +190,7 @@ class InvoicesController < ApplicationController
 
     # in API calls we accept bank_account, for client or company
     bank_account = parsed_params.delete(:bank_account)
+    iban         = parsed_params.delete(:iban)
 
     @invoice = invoice_class.new(parsed_params)
     @invoice.project ||= @project
@@ -198,9 +199,9 @@ class InvoicesController < ApplicationController
       @invoice.set_client_from_hash(client_hash)
     end
 
-    if bank_account
+    if bank_account || iban
       begin
-        @invoice.set_bank_info(bank_account, nil, nil)
+        @invoice.set_bank_info(bank_account, iban, nil)
       rescue
         @invoice.errors.add(:base, $!.message)
         respond_to do |format|
