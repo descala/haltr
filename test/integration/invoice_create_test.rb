@@ -153,13 +153,14 @@ class InvoiceCreaeteTest < ActionController::IntegrationTest
         "ponumber"=>"",
         "discount_text"=>"",
         "accounting_cost"=>"",
-        "payment_method"=>"1",
+        "payment_method"=>"2",
         "charge_amount"=>"",
         "date"=>"2013-02-12",
         "charge_reason"=>"",
         "extra_info"=>"",
         "currency"=>"EUR",
         "due_date"=>"2016-05-15",
+        "bank_account"=>"20811234761234567890",
         "payment_method_text"=>"",
         "invoice_lines_attributes"=>
         [

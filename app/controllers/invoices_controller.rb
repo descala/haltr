@@ -188,11 +188,27 @@ class InvoicesController < ApplicationController
     # in API calls we accept client as a Hash with its data
     client_hash = parsed_params.delete(:client)
 
+    # in API calls we accept bank_account, for client or company
+    bank_account = parsed_params.delete(:bank_account)
+
     @invoice = invoice_class.new(parsed_params)
     @invoice.project ||= @project
 
     if client_hash
       @invoice.set_client_from_hash(client_hash)
+    end
+
+    if bank_account
+      begin
+        @invoice.set_bank_info(bank_account, nil, nil)
+      rescue
+        @invoice.errors.add(:base, $!.message)
+        respond_to do |format|
+          format.html { render :action => 'new' }
+          format.api { render_validation_errors(@invoice) }
+        end
+        return
+      end
     end
 
     @invoice.save_attachments(params[:attachments] || (params[:invoice] && params[:invoice][:uploads]))
