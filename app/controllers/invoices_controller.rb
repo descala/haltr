@@ -911,7 +911,7 @@ class InvoicesController < ApplicationController
     if @invoice.is_a? IssuedInvoice and params[:controller] != "invoices"
       redirect_to(invoice_path(@invoice)) && return
     elsif @invoice.is_a? ReceivedInvoice and params[:controller] != "received"
-      redirect_to(received_invoice_path(@invoice)) && return
+      redirect_to(received_invoice_path(@invoice, format: params[:format])) && return
     elsif @invoice.is_a? InvoiceTemplate and params[:controller] != "invoice_templates"
       redirect_to invoice_template_path(@invoice) && return
     end
