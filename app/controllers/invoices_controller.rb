@@ -193,31 +193,37 @@ class InvoicesController < ApplicationController
     iban         = parsed_params.delete(:iban)
 
     # accept dir3 info
-    oficina_comptable = parsed_params.delete(:oficina_comptable)
-    if oficina_comptable
-      parsed_params[:oficina_comptable] = oficina_comptable[:code]
-      if client_hash
-        Dir3Entity.new_from_hash(oficina_comptable, client_hash[:taxcode], '01')
-      else
-        Dir3Entity.new_from_hash(oficina_comptable)
+    unless parsed_params[:oficina_comptable].is_a? String
+      oficina_comptable = parsed_params.delete(:oficina_comptable)
+      if oficina_comptable
+        parsed_params[:oficina_comptable] = oficina_comptable[:code]
+        if client_hash
+          Dir3Entity.new_from_hash(oficina_comptable, client_hash[:taxcode], '01')
+        else
+          Dir3Entity.new_from_hash(oficina_comptable)
+        end
       end
     end
-    organ_gestor = parsed_params.delete(:organ_gestor)
-    if organ_gestor
-      parsed_params[:organ_gestor] = organ_gestor[:code]
-      if client_hash
-        Dir3Entity.new_from_hash(organ_gestor, client_hash[:taxcode], '02')
-      else
-        Dir3Entity.new_from_hash(organ_gestor)
+    unless parsed_params[:organ_gestor].is_a? String
+      organ_gestor = parsed_params.delete(:organ_gestor)
+      if organ_gestor
+        parsed_params[:organ_gestor] = organ_gestor[:code]
+        if client_hash
+          Dir3Entity.new_from_hash(organ_gestor, client_hash[:taxcode], '02')
+        else
+          Dir3Entity.new_from_hash(organ_gestor)
+        end
       end
     end
-    unitat_tramitadora = parsed_params.delete(:unitat_tramitadora)
-    if unitat_tramitadora
-      parsed_params[:unitat_tramitadora] = unitat_tramitadora[:code]
-      if client_hash
-        Dir3Entity.new_from_hash(unitat_tramitadora, client_hash[:taxcode], '03')
-      else
-        Dir3Entity.new_from_hash(unitat_tramitadora)
+    unless parsed_params[:unitat_tramitadora].is_a? String
+      unitat_tramitadora = parsed_params.delete(:unitat_tramitadora)
+      if unitat_tramitadora
+        parsed_params[:unitat_tramitadora] = unitat_tramitadora[:code]
+        if client_hash
+          Dir3Entity.new_from_hash(unitat_tramitadora, client_hash[:taxcode], '03')
+        else
+          Dir3Entity.new_from_hash(unitat_tramitadora)
+        end
       end
     end
 
