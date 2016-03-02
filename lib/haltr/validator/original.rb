@@ -11,7 +11,7 @@ module Haltr
 
       def original_validations
         # has original file
-        if !send_original? or (!new_record? and changed_attributes.any? {|attr, value| attr != "state"})
+        if !send_original? or (!new_record? and changed_attributes.any? {|attr, value| !%w(state terms).include?(attr)})
           errors.add(:base, I18n.t(:invoice_has_no_original))
         end
       end
