@@ -185,12 +185,41 @@ class InvoicesController < ApplicationController
     # and copy global "exempt comment" to all exempt taxes
     parsed_params = parse_invoice_params
 
-    # in API calls we accept client as a Hash with its data
+    # accept client as a Hash with its data
     client_hash = parsed_params.delete(:client)
 
-    # in API calls we accept bank_account, for client or company
+    # accept bank_account, for client or company
     bank_account = parsed_params.delete(:bank_account)
     iban         = parsed_params.delete(:iban)
+
+    # accept dir3 info
+    oficina_comptable = parsed_params.delete(:oficina_comptable)
+    if oficina_comptable
+      parsed_params[:oficina_comptable] = oficina_comptable[:code]
+      if client_hash
+        Dir3Entity.new_from_hash(oficina_comptable, client_hash[:taxcode], '01')
+      else
+        Dir3Entity.new_from_hash(oficina_comptable)
+      end
+    end
+    organ_gestor = parsed_params.delete(:organ_gestor)
+    if organ_gestor
+      parsed_params[:organ_gestor] = organ_gestor[:code]
+      if client_hash
+        Dir3Entity.new_from_hash(organ_gestor, client_hash[:taxcode], '02')
+      else
+        Dir3Entity.new_from_hash(organ_gestor)
+      end
+    end
+    unitat_tramitadora = parsed_params.delete(:unitat_tramitadora)
+    if unitat_tramitadora
+      parsed_params[:unitat_tramitadora] = unitat_tramitadora[:code]
+      if client_hash
+        Dir3Entity.new_from_hash(unitat_tramitadora, client_hash[:taxcode], '03')
+      else
+        Dir3Entity.new_from_hash(unitat_tramitadora)
+      end
+    end
 
     @invoice = invoice_class.new(parsed_params)
     @invoice.project ||= @project
@@ -244,7 +273,7 @@ class InvoicesController < ApplicationController
       @invoice = Redmine::Hook.call_hook(:invoice_before_create,:project=>@project,:invoice=>@invoice,:params=>params)[0]
     end
 
-    if @invoice.save
+    if @invoice.save(validate: (params[:validate] != 'false'))
       if @to_amend and params[:amend_type] == 'total'
         @to_amend.save(validate: false)
         @to_amend.amend_and_close

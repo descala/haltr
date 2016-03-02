@@ -666,7 +666,6 @@ _INV
       end
     end
 
-    dir3 = nil
     doc.xpath(xpaths[:dir3s]).each do |line|
       role = Haltr::Utils.get_xpath(line, xpaths[:dir3_role])
       code = Haltr::Utils.get_xpath(line, xpaths[:dir3_code]).gsub(/ /,'') rescue nil
@@ -685,65 +684,15 @@ _INV
         # unknown role
       end
       # save unknown Dir3 entities
-      begin
-        # dir3 with other code or unexisting one
-        if (dir3 and dir3.code != code) or Dir3Entity.find_by_code(code).nil?
-          country = Haltr::Utils.get_xpath(line, xpaths[:dir3_country])
-          country = SunDawg::CountryIsoTranslater.translate_standard(country,"alpha3","alpha2").downcase rescue country
-          dir3 = Dir3Entity.create!(
-            code:       code,
-            name:       Haltr::Utils.get_xpath(line, xpaths[:dir3_name]),
-            address:    Haltr::Utils.get_xpath(line, xpaths[:dir3_address]),
-            postalcode: Haltr::Utils.get_xpath(line, xpaths[:dir3_postcode]),
-            city:       Haltr::Utils.get_xpath(line, xpaths[:dir3_town]),
-            province:   Haltr::Utils.get_xpath(line, xpaths[:dir3_province]),
-            country:    country
-          )
-        end
-        dir3 = Dir3Entity.find_by_code(code)
-        # and add relation to ExternalCompany if exist
-        ec = ExternalCompany.find_by_taxcode invoice.client.taxcode
-        if ec
-          case role
-          when '01'
-            unless ec.oficines_comptables =~ /#{code}/
-              if ec.oficines_comptables.blank?
-                ec.update_attribute :oficines_comptables, code
-              else
-                ec.update_attribute :oficines_comptables, "#{ec.oficines_comptables},#{code}"
-              end
-            end
-          when '02'
-            unless ec.organs_gestors =~ /#{code}/
-              if ec.organs_gestors.blank?
-                ec.update_attribute :organs_gestors, code
-              else
-                ec.update_attribute :organs_gestors, "#{ec.organs_gestors},#{code}"
-              end
-            end
-          when '03'
-            unless ec.unitats_tramitadores =~ /#{code}/
-              if ec.unitats_tramitadores.blank?
-                ec.update_attribute :unitats_tramitadores, code
-              else
-                ec.update_attribute :unitats_tramitadores, "#{ec.unitats_tramitadores},#{code}"
-              end
-            end
-          when '04'
-            unless ec.organs_proponents =~ /#{code}/
-              if ec.organs_proponents.blank?
-                ec.update_attribute :organs_proponents, code
-              else
-                ec.update_attribute :organs_proponents, "#{ec.organs_proponents},#{code}"
-              end
-            end
-          else
-            # unknown role
-          end
-        end
-      rescue ActiveRecord::RecordInvalid
-        raise $! if Rails.env == 'test'
-      end
+      Dir3Entity.new_from_hash({
+        code: code,
+        name:       Haltr::Utils.get_xpath(line, xpaths[:dir3_name]),
+        address:    Haltr::Utils.get_xpath(line, xpaths[:dir3_address]),
+        postalcode: Haltr::Utils.get_xpath(line, xpaths[:dir3_postcode]),
+        city:       Haltr::Utils.get_xpath(line, xpaths[:dir3_town]),
+        province:   Haltr::Utils.get_xpath(line, xpaths[:dir3_province]),
+        country:    Haltr::Utils.get_xpath(line, xpaths[:dir3_country])
+      }, invoice.client.taxcode, role)
     end
 
     invoice.assign_attributes(
