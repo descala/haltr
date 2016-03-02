@@ -4,7 +4,7 @@ class ReceivedInvoiceEvent < Event
     if invoice
       "#{l(:by_mail_from, :email=>invoice.from)}"
     else
-      "#{l(:by_mail_from)}"
+      "#{l(:by_mail_from, :email=>'?')}"
     end
   end
 
