@@ -15,6 +15,15 @@
 </fieldset>
 
 <fieldset class="tabular box">
+  <legend><%= l(:label_invoice_viewer) %></legend>
+<div class="seccio grup">
+  <p class="col span-1-de-3">
+  <%= f.select :invoice_viewer, [[l(:label_invoice_viewer_standard),'standard'],[l(:label_invoice_viewer_xslt), 'xslt']] %>
+  </p>
+</div>
+</fieldset>
+
+<fieldset class="tabular box">
   <legend><%= l(:label_discounts) %></legend>
 <div class="seccio grup">
   <p class="col span-1-de-3">

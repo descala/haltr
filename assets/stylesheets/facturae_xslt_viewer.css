@@ -1,0 +1,34 @@
+#workspace1
+{
+}
+.titulo1
+{
+  padding-left: 20px;
+  FONT-WEIGHT: bold;
+  FONT-SIZE: 18px;
+  TEXT-ALIGN: center;
+  color: #555;
+}
+.titulo2
+{
+  background-color: #deeefe;
+  color: #3b6bbf;
+  FONT-SIZE: 14px;
+  TEXT-ALIGN: center
+}
+.titulopeque
+{
+  FONT-SIZE: 11px;
+  FONT-WEIGHT: bold;
+  color: #555;
+}
+TD
+{
+  FONT-SIZE: 14px;
+}
+HR
+{
+  COLOR: #003399;
+  TEXT-ALIGN: center
+}
+
