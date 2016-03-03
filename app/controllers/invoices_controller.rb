@@ -279,7 +279,9 @@ class InvoicesController < ApplicationController
       @invoice = Redmine::Hook.call_hook(:invoice_before_create,:project=>@project,:invoice=>@invoice,:params=>params)[0]
     end
 
-    if @invoice.save(validate: (params[:validate] != 'false'))
+    # prevent duplicate invoices #5433 #5891
+    validate = params[:validate] != 'false' or @project.invoices.find_by_number(@invoice.number)
+    if @invoice.save(validate: validate)
       if @to_amend and params[:amend_type] == 'total'
         @to_amend.save(validate: false)
         @to_amend.amend_and_close
