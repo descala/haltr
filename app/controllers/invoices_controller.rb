@@ -37,7 +37,7 @@ class InvoicesController < ApplicationController
   before_filter :check_for_company, :except => PUBLIC_METHODS
 
   skip_before_filter :verify_authenticity_token, :only => [:base64doc]
-  accept_api_auth :import, :import_facturae, :number_to_id, :update, :show, :index, :destroy, :create
+  accept_api_auth :import, :import_facturae, :number_to_id, :update, :show, :index, :destroy, :create, :send_invoice
 
   def index
     sort_init 'invoices.created_at', 'desc'
@@ -602,14 +602,29 @@ class InvoicesController < ApplicationController
     end
     @invoice.queue!
     Haltr::Sender.send_invoice(@invoice, User.current)
-    flash[:notice] = "#{l(:notice_invoice_sent)}"
+    respond_to do |format|
+      format.html do
+        flash[:notice] = "#{l(:notice_invoice_sent)}"
+      end
+      format.api do
+        render_api_ok
+      end
+    end
   rescue StateMachine::InvalidTransition => e
-    flash[:error] = l(:state_not_allowed_for_sending, state: l("state_#{@invoice.state}"))
+    error = l(:state_not_allowed_for_sending, state: l("state_#{@invoice.state}"))
+    respond_to do |format|
+      format.html do
+        flash[:error] = error
+      end
+      format.api do
+        @error_messages = [error]
+        render :template => 'common/error_messages.api', :status => :unprocessable_entity, :layout => nil
+      end
+    end
   rescue Exception => e
     # e.backtrace does not fit in session leading to
     #   ActionController::Session::CookieStore::CookieOverflow
     msg = "#{l(:error_invoice_not_sent, :num=>@invoice.number)}: #{e.message}"
-    flash[:error] = msg
     EventError.create(
       user:    User.current,
       invoice: @invoice,
@@ -627,8 +642,23 @@ class InvoicesController < ApplicationController
       ExceptionNotifier.notify_exception(e)
     end
     #raise e if Rails.env == "development"
+    respond_to do |format|
+      format.html do
+        flash[:error] = msg
+      end
+      format.api do
+        @error_messages = [msg]
+        render :template => 'common/error_messages.api', :status => :unprocessable_entity, :layout => nil
+      end
+    end
   ensure
-    redirect_back_or_default(:action => 'show', :id => @invoice)
+    respond_to do |format|
+      format.html do
+        redirect_back_or_default(:action => 'show', :id => @invoice)
+      end
+      format.api do
+      end
+    end
   end
 
   def send_new_invoices
