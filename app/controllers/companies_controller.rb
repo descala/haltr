@@ -38,7 +38,7 @@ class CompaniesController < ApplicationController
                              name:           @project.name,
                              email:          user_mail,
                              invoice_format: default_invoice_format,
-                             public:         'public')
+                             public:         'private')
       @company.save(:validate=>false)
     else
       @company = @project.company
