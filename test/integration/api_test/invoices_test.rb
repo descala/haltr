@@ -19,7 +19,7 @@ class Redmine::ApiTest::InvoicesTest < Redmine::ApiTest::Base
 
     assert_response :unprocessable_entity
     assert_equal 'application/xml', response.content_type
-    assert_tag 'errors', :child => {:tag => 'error', :content => "Number has already been taken"}
+    assert_tag 'errors', :child => {:tag => 'error', :content => "Number has already been taken for year 2012"}
   end
 
   test 'shows invoice' do

@@ -583,7 +583,7 @@ _INV
     # amend invoices
     if amend_of
       raise "Cannot amend received invoices" if invoice.is_a? ReceivedInvoice
-      amended = company.project.issued_invoices.find_by_number(amend_of)
+      amended = company.project.issued_invoices.find_last_by_number(amend_of)
       if amended and amend_type == '01'
         invoice.amend_of = amended
       elsif amended and amend_type == '02'
@@ -904,8 +904,8 @@ _INV
       end
     else
       # prevent duplicate invoices #5433
-      if company.project.invoices.find_by_number(invoice_number)
-        raise "#{I18n.t :field_number} #{I18n.t 'activerecord.errors.messages.taken'}"
+      if !invoice.valid? and invoice.errors.has_key? :number
+        raise "#{I18n.t :field_number} #{i.errors[:number]}"
       end
       invoice.save(validate: false)
     end
