@@ -3,12 +3,14 @@
 <li>
   <a href="#"><%= l(:more_options) %></a>
   <ul>
-    <% %w(new sent accepted registered refused closed).each do |state| -%>
-      <% next if @invoice.state == state -%>
-      <li><%=link_to(t("manual_mark_as", state: t("state_#{state}")), mark_as_path(@invoice, state: state), class: "icon-haltr-mark-#{state}")%></li>
-    <% end -%>
-
-    <hr />
+    <li class="submenu"><a href="#"><%= l(:manual_mark_as, state: '') %></a>
+      <ul>
+        <% %w(new sent accepted registered refused closed).each do |state| -%>
+          <% next if @invoice.state == state -%>
+          <li><%=link_to(l("state_#{state}"), mark_as_path(@invoice, state: state), class: "icon-haltr-mark-#{state}")%></li>
+        <% end -%>
+      </ul>
+    </li>
 
     <%= call_hook(:issued_invoice_menu_top) %>
 
