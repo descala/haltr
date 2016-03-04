@@ -230,6 +230,12 @@ class InvoicesController < ApplicationController
     @invoice = invoice_class.new(parsed_params)
     @invoice.project ||= @project
 
+    if @invoice.fa_country.to_s.size == 3
+      @invoice.fa_country = SunDawg::CountryIsoTranslater.translate_standard(
+        @invoice.fa_country, "alpha3", "alpha2"
+      ).downcase rescue @invoice.fa_country
+    end
+
     if client_hash
       @invoice.set_client_from_hash(client_hash)
     end

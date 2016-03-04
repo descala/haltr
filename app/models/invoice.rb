@@ -618,12 +618,7 @@ _INV
       Haltr::Utils.get_xpath(doc,xpaths["#{client_role}_name2"])
     client_address     = Haltr::Utils.get_xpath(doc,xpaths["#{client_role}_address"])
     client_province    = Haltr::Utils.get_xpath(doc,xpaths["#{client_role}_province"])
-    if invoice_format =~ /^facturae/
-      country_alpha3 = Haltr::Utils.get_xpath(doc,xpaths["#{client_role}_countrycode"])
-      client_countrycode = SunDawg::CountryIsoTranslater.translate_standard(country_alpha3,"alpha3","alpha2").downcase
-    else
-      client_countrycode = Haltr::Utils.get_xpath(doc,xpaths["#{client_role}_countrycode"])
-    end
+    client_country     = Haltr::Utils.get_xpath(doc,xpaths["#{client_role}_countrycode"])
     client_website     = Haltr::Utils.get_xpath(doc,xpaths["#{client_role}_website"])
     client_email       = Haltr::Utils.get_xpath(doc,xpaths["#{client_role}_email"])
     client_cp_city     = Haltr::Utils.get_xpath(doc,xpaths["#{client_role}_cp_city"]) ||
@@ -643,7 +638,7 @@ _INV
         :name           => client_name,
         :address        => client_address,
         :province       => client_province,
-        :country        => client_countrycode,
+        :country        => client_country,
         :website        => client_website,
         :email          => client_email,
         :postalcode     => client_postalcode,
@@ -1104,6 +1099,11 @@ _INV
   # assigns invoice [and client_office] to self.
   #
   def set_client_from_hash(client_hash)
+    if client_hash[:country] and client_hash[:country].size == 3
+      client_hash[:country] = SunDawg::CountryIsoTranslater.translate_standard(
+        client_hash[:country], "alpha3", "alpha2"
+      ).downcase rescue client_hash[:country]
+    end
     self.client   = project.clients.where('taxcode like ?', "%#{client_hash[:taxcode]}").first
     self.client ||= project.clients.where('? like concat("%", taxcode) and taxcode != ""', client_hash[:taxcode]).first
     if client
