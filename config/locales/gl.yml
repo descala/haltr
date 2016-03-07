@@ -728,4 +728,9 @@ gl:
   field_receiver_edi_code: "EDI del receptor"
   field_destination_edi_code: "EDI receptor mercancia"
   field_payer_edi_code: "EDI del pagador"
-
+  label_invoice_viewer: "Visualización de facturas"
+  field_invoice_viewer: "Visualización de facturas importadas"
+  label_invoice_viewer_standard: "Usar visor por defecto"
+  label_invoice_viewer_xslt : "Usar visor XSLT"
+  xslt_not_available: "No hay ningún XSLT disponible para el formato del original de esta factura"
+  xslt_shows_original: "Esta factura se ha modificado. El formato XSLT refleja el original sin los cambios"

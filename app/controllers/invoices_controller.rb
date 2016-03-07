@@ -15,7 +15,7 @@ class InvoicesController < ApplicationController
   PUBLIC_METHODS = [:by_taxcode_and_num,:view,:download,:mail,:logo,:haltr_sign]
 
   before_filter :find_project_by_project_id, :only => [:index,:new,:create,:send_new_invoices,:download_new_invoices,:update_payment_stuff,:new_invoices_from_template,:reports,:report_channel_state,:report_invoice_list,:create_invoices,:update_taxes,:import,:import_facturae]
-  before_filter :find_invoice, :only => [:edit,:update,:mark_accepted_with_mail,:mark_accepted,:mark_refused_with_mail,:mark_refused,:duplicate_invoice,:base64doc,:show,:send_invoice,:legal,:amend_for_invoice,:original,:validate,:show_original, :mark_as_accepted, :mark_as, :add_comment]
+  before_filter :find_invoice, :only => [:edit,:update,:mark_accepted_with_mail,:mark_accepted,:mark_refused_with_mail,:mark_refused,:duplicate_invoice,:base64doc,:show,:send_invoice,:legal,:amend_for_invoice,:original,:validate, :mark_as_accepted, :mark_as, :add_comment]
   before_filter :find_invoices, :only => [:context_menu,:bulk_download,:bulk_mark_as,:bulk_send,:destroy,:bulk_validate]
   before_filter :find_payment, :only => [:destroy_payment]
   before_filter :find_hashid, :only => [:view,:download]
@@ -487,13 +487,40 @@ class InvoicesController < ApplicationController
   end
 
   def show
+    show_original = false
+    invoice_nokogiri = Nokogiri::XML(@invoice.original)
+    template = original_xsl_template(invoice_nokogiri)
+    case params[:view_with]
+    when 'standard'
+      # continue
+    when 'xslt'
+      if template
+        flash.now[:error] = l(:xslt_shows_original) unless @invoice.send_original?
+        show_original = true
+      else
+        flash[:error] = l(:xslt_not_available)
+        redirect_to(action: 'show', id: @invoice)
+        return
+      end
+    else
+      if @company.invoice_viewer == 'xslt' and @invoice.send_original? and template 
+        show_original = true
+      end
+    end
+    if show_original
+      @invoice_root_namespace = Haltr::Utils.root_namespace(invoice_nokogiri) rescue nil
+      xslt = render_to_string(:template=>template,:layout=>false)
+      @invoice_xslt_html = Nokogiri::XSLT(xslt).transform(invoice_nokogiri)
+    end
     set_sent_and_closed
     @js = ExportChannels[@client.invoice_format]['javascript'] rescue nil
     @autocall = params[:autocall]
     @autocall_args = params[:autocall_args]
     @format = params["format"]
     respond_to do |format|
-      format.html
+      format.html do
+        render :template => 'invoices/show_with_xsl' if show_original
+      end
       format.api do
         # Force "json" if format is emtpy
         # Used in refresher.js to check invoice status
@@ -505,7 +532,9 @@ class InvoicesController < ApplicationController
         render :pdf => @invoice.pdf_name_without_extension,
           :disposition => params[:view] ? 'inline' : 'attachment',
           :layout => "invoice.html",
-          :template=>"invoices/show_pdf",
+          # TODO 
+          # :template=> show_original ? "invoice/show_with_xsl" : "invoices/show_pdf",
+          :template=> "invoices/show_pdf",
           :formats => :html,
           :show_as_html => params[:debug],
           :margin => {
@@ -557,46 +586,6 @@ class InvoicesController < ApplicationController
     send_data txt,
       :type => 'text; charset=UTF-8;',
       :disposition => "attachment; filename=#{@invoice.pdf_name_without_extension}.txt"
-  end
-
-  def show_original
-    doc   = Nokogiri::XML(@invoice.original)
-    schema_version = doc.xpath('//SchemaVersion').text rescue nil
-    case schema_version
-    when "3.2"
-      template = 'invoices/visor_face_32.xsl.erb'
-    when "3.2.1"
-      template = 'invoices/visor_face_321.xsl.erb'
-    else
-      redirect_to action: 'show', id: @invoice
-      return
-    end
-    @is_pdf = (params[:format] == 'pdf')
-    set_sent_and_closed
-    @js = ExportChannels[@client.invoice_format]['javascript'] rescue nil
-    @autocall = params[:autocall]
-    @autocall_args = params[:autocall_args]
-    @format = params["format"]
-    xslt  = Nokogiri::XSLT(render_to_string(:template=>template,:layout=>false))
-    @out  = xslt.transform(doc)
-    respond_to do |format|
-      format.html do
-        render :template => 'invoices/show_with_xsl'
-      end
-      format.pdf do
-        @debug = params[:debug]
-        render :pdf => @invoice.pdf_name_without_extension,
-          :disposition => 'attachment',
-          :layout => "invoice.html",
-          :template=>"invoices/show_with_xsl",
-          :formats => :html,
-          :show_as_html => params[:debug],
-          :margin => {:top => 20,
-            :bottom => 20,
-            :left   => 30,
-            :right  => 20}
-      end
-    end
   end
 
   def send_invoice
@@ -1260,6 +1249,16 @@ class InvoicesController < ApplicationController
   end
 
   private
+
+  def original_xsl_template(doc)
+    namespace = Haltr::Utils.root_namespace(doc) rescue nil
+    case namespace
+    when "http://www.facturae.es/Facturae/2014/v3.2.1/Facturae", "http://www.facturae.es/Facturae/2009/v3.2/Facturae"
+      'invoices/facturae_xslt_viewer.xsl.erb'
+    else
+      nil
+    end
+  end
 
   def parse_invoice_params
     parsed_params = params[:invoice] || {}

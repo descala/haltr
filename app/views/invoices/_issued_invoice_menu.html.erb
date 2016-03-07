@@ -3,14 +3,26 @@
 <li>
   <a href="#"><%= l(:more_options) %></a>
   <ul>
-    <% %w(new sent accepted registered refused closed).each do |state| -%>
-      <% next if @invoice.state == state -%>
-      <li><%=link_to(t("manual_mark_as", state: t("state_#{state}")), mark_as_path(@invoice, state: state), class: "icon-haltr-mark-#{state}")%></li>
-    <% end -%>
-
-    <hr />
+    <li class="submenu"><a href="#"><%= l(:manual_mark_as, state: '') %></a>
+      <ul>
+        <% %w(new sent accepted registered refused closed).each do |state| -%>
+          <% next if @invoice.state == state -%>
+          <li><%=link_to(l("state_#{state}"), mark_as_path(@invoice, state: state), class: "icon-haltr-mark-#{state}")%></li>
+        <% end -%>
+      </ul>
+    </li>
 
     <%= call_hook(:issued_invoice_menu_top) %>
+
+    <% if @invoice_xslt_html %>
+      <li>
+        <%= link_to(l(:label_invoice_viewer_standard), "?view_with=standard") %>
+      </li>
+    <% else %>
+      <li>
+        <%= link_to(l(:label_invoice_viewer_xslt), "?view_with=xslt") %>
+      </li>
+    <% end %>
 
     <% if @invoice.last_sent_file_path -%>
       <li>
@@ -20,7 +32,7 @@
       <li><%= link_to l(:download_as_xml), {:action=>'show', :id=>@invoice, :format => 'facturae32'}, :class=>'icon-haltr-save' %></li>
     <% end -%>
 
-    <li><%= link_to l(:download_as_pdf), {:action=>'show', :id=>@invoice, :format => 'pdf'}, :class=>'icon-haltr-save' %></li>
+    <li><%= link_to l(:download_as_pdf), {:action=>'show', :id=>@invoice, :format => 'pdf', :view_with => (@invoice_xslt_html ? 'xslt' : '')}, :class=>'icon-haltr-save' %></li>
 
     <% unless hide_to_user(:manage_payments) -%>
       <% if @invoice.state?(:sent) or @invoice.state?(:allegedly_paid) or @invoice.state?(:registered) -%>

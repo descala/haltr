@@ -70,7 +70,6 @@ th.money, td.money, .money{
 }
 .menu-rapid ul ul a {
   line-height:120%;
-  padding:10px 15px;
 }
 .menu-rapid ul li:hover > ul {
   display:block;

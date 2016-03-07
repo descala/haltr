@@ -127,7 +127,7 @@ class Client < ActiveRecord::Base
   # removes non ascii characters from language code
   # for safe xml generation
   def language_string
-    self.language.scan(/[a-z]+/i).first
+    self.language.scan(/[a-z]+/i).first rescue nil
   end
 
   def full_address
