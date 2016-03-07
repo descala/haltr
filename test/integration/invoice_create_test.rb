@@ -61,7 +61,7 @@ class InvoiceCreaeteTest < ActionController::IntegrationTest
       }
     }
 
-    invoice = Invoice.find_by_number 'invoice_created_test_1'
+    invoice = Invoice.last
     assert_redirected_to :controller => "invoices", :action => "show", :id => invoice
     assert_equal 1, invoice.invoice_lines.size
     assert_equal 2, invoice.invoice_lines.first.taxes.size
@@ -126,7 +126,7 @@ class InvoiceCreaeteTest < ActionController::IntegrationTest
       }
     }
 
-    invoice = Invoice.find_by_number 'invoice_created_test_2'
+    invoice = Invoice.last
     assert_redirected_to :controller => "invoices", :action => "show", :id => invoice
     assert_equal 1, invoice.invoice_lines.size
     assert_equal 2, invoice.invoice_lines.first.taxes.size
@@ -194,7 +194,7 @@ class InvoiceCreaeteTest < ActionController::IntegrationTest
       }
     }
 
-    invoice = Invoice.find_by_number 'invoice_created_test_1'
+    invoice = Invoice.last
     assert_redirected_to :controller => "invoices", :action => "show", :id => invoice
     assert_equal 1, invoice.invoice_lines.size
     assert_equal 2, invoice.invoice_lines.first.taxes.size
@@ -295,7 +295,7 @@ class InvoiceCreaeteTest < ActionController::IntegrationTest
       }
     }
 
-    invoice = Invoice.find_by_number 'invoice_created_test_1'
+    invoice = Invoice.last
     assert_redirected_to :controller => "invoices", :action => "show", :id => invoice
 
     # it created 2 new dir3_entities
@@ -408,7 +408,7 @@ class InvoiceCreaeteTest < ActionController::IntegrationTest
       }
     }
 
-    invoice = Invoice.find_by_number 'invoice_created_test_1'
+    invoice = Invoice.last
     assert_equal 'F',          invoice.fa_person_type
     assert_equal 'R',          invoice.fa_residence_type
     assert_equal 'ESP4802400D',invoice.fa_taxcode
