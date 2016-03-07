@@ -293,6 +293,17 @@ module Haltr
         return Nokogiri.XML(extracted_doc.to_xml)
       end
 
+      def root_namespace(doc)
+        doc=Nokogiri::XML(doc) unless doc.is_a? Nokogiri::XML::Document
+        if doc.root.nil?
+          raise "Is not a valid XML"
+        elsif doc.root.namespace.nil?
+          raise "XML does not have a root namespace"
+        else
+          doc.root.namespace.href
+        end
+      end
+
     end
   end
 end

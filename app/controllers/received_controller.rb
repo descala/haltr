@@ -83,43 +83,7 @@ class ReceivedController < InvoicesController
 
   def show
     @invoice.update_attribute(:has_been_read, true)
-    respond_to do |format|
-      format.html
-      format.api do
-        # Force "json" if format is emtpy
-        # Used in refresher.js to check invoice status
-        params[:format] ||= 'json'
-      end
-      format.pdf do
-        @is_pdf = true
-        @debug = params[:debug]
-        render :pdf => @invoice.pdf_name_without_extension,
-          :disposition => params[:view] ? 'inline' : 'attachment',
-          :layout => "invoice.html",
-          :template=>"invoices/show_pdf",
-          :formats => :html,
-          :show_as_html => params[:debug],
-          :margin => {
-            :top    => 20,
-            :bottom => 20,
-            :left   => 30,
-            :right  => 20
-          }
-      end
-    end
-  end
-
-  def show_original
-    @invoice.update_attribute(:has_been_read, true) if @invoice.is_a? ReceivedInvoice
-    if @invoice.invoice_format == "pdf"
-      render :template => 'received/show_pdf'
-    else
-      doc  = Nokogiri::XML(@invoice.original)
-      # TODO: received/facturae31.xsl.erb and received/facturae30.xsl.erb templates
-      xslt = Nokogiri::XSLT(render_to_string(:template=>'received/facturae32.xsl.erb',:layout=>false))
-      @out  = xslt.transform(doc)
-      render :template => 'received/show_with_xsl'
-    end
+    super
   end
 
   def mark_accepted_with_mail
