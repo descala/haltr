@@ -121,7 +121,7 @@ class IssuedInvoice < InvoiceDocument
 
   def number_must_be_uniq
     if type == "IssuedInvoice"
-      query = IssuedInvoice.where(project_id: project, number: number)
+      query = IssuedInvoice.where(project_id: project, number: number, series_code: series_code)
       query = query.where("YEAR(date) = #{date.year}") unless date.nil?
       query = query.where("id != #{id}") unless new_record?
       if query.any?

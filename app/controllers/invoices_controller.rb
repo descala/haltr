@@ -722,7 +722,8 @@ class InvoicesController < ApplicationController
     if company
       project = company.project
       query = IssuedInvoice.where(number: params[:num], project_id: project)
-      query = query.where(date: params[:date]) if params[:date]
+      query = query.where(date: params[:date]) if params[:date].present?
+      query = query.where(series_code: params[:serie]) if params[:serie].present?
       invoice = query.last if project
     end
     if invoice.nil?
