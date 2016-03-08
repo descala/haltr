@@ -736,3 +736,4 @@ es:
   label_invoice_viewer_xslt : "Usar visor XSLT"
   xslt_not_available: "No hay ningún XSLT disponible para el formato del original de esta factura"
   xslt_shows_original: "Esta factura se ha modificado. El formato XSLT refleja el original sin los cambios"
+  skip_invoice_validations: No validar la factura al importar
