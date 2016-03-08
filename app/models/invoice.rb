@@ -516,6 +516,8 @@ _INV
     accounting_cost  = Haltr::Utils.get_xpath(doc,xpaths[:accounting_cost])
     payments_on_account = Haltr::Utils.get_xpath(doc,xpaths[:payments_on_account]) || 0
     amend_of         = Haltr::Utils.get_xpath(doc,xpaths[:amend_of])
+    #TODO: serie
+    _amend_of_serie  = Haltr::Utils.get_xpath(doc,xpaths[:amend_of_serie])
     amend_type       = Haltr::Utils.get_xpath(doc,xpaths[:amend_type])
     amend_reason     = Haltr::Utils.get_xpath(doc,xpaths[:amend_reason])
     party_id         = Haltr::Utils.get_xpath(doc,xpaths[:party_id])
@@ -582,6 +584,7 @@ _INV
 
     # amend invoices
     if amend_of
+      #TODO: comprovar amend_of_serie
       raise "Cannot amend received invoices" if invoice.is_a? ReceivedInvoice
       amended = company.project.issued_invoices.find_last_by_number(amend_of)
       if amended and amend_type == '01'

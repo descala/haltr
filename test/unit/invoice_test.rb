@@ -669,4 +669,20 @@ class InvoiceTest < ActiveSupport::TestCase
     assert_equal '5503070490', invoice.client.taxcode
   end
 
+  test 'invoice can repeat number+serie if year changes' do
+    i = IssuedInvoice.new(invoices(:invoice1).attributes)
+    i.invoice_lines = invoices(:invoice1).invoice_lines
+    # invalid: same number+serie, same year
+    assert !i.valid?
+    assert(i.errors.messages.keys.include?(:number))
+    # valid: same number+serie, same year
+    i.date = i.date + 1.year
+    assert i.valid?, i.errors.messages.to_s
+    # valid: same number different serie, year ignored
+    i.series_code = 16
+    assert i.valid?, i.errors.messages.to_s
+    i.date = invoices(:invoice1).date
+    assert i.valid?, i.errors.messages.to_s
+  end
+
 end

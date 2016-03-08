@@ -12,6 +12,7 @@ invoice1:
   bank_info_id: 1
   import_in_cents: 92568
   total_in_cents: 92568
+  series_code: 15
 
 template1:
   type: InvoiceTemplate
