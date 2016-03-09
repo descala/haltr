@@ -62,6 +62,7 @@ da:
   field_number: Nummer
   field_invoice_number: Faktura nummer
   label_last_invoice_number: "Sidste brugt"
+  number_taken_in_year: has already been taken for year %{year}
   field_date: Dato
   field_client: Kunde
   field_extra_info: Noter

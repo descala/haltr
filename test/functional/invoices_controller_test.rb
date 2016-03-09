@@ -105,6 +105,16 @@ class InvoicesControllerTest < ActionController::TestCase
     @request.session[:user_id] = 2
   end
 
+  test 'by_taxcode_and_num with date' do
+    @request.session[:user_id] = nil
+    get :by_taxcode_and_num, :num => "08/001", "taxcode"=>"77310058C", "date"=>"2008-11-24"
+    assert_response :success
+    assert_equal "855445292", @response.body
+    get :by_taxcode_and_num, :num => "08/001", "taxcode"=>"77310058C", "date"=>"1111-11-11"
+    assert_response :not_found
+    @request.session[:user_id] = 2
+  end
+
   test 'import invoice' do
     post :import, {
       file:       fixture_file_upload('/documents/invoice_facturae32_issued.xml'),

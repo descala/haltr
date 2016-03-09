@@ -8,7 +8,7 @@ class IssuedInvoice < InvoiceDocument
 
   belongs_to :invoice_template
   validates_presence_of :number, :unless => Proc.new {|invoice| invoice.type == "DraftInvoice"}
-  validates_uniqueness_of :number, :scope => [:project_id,:type], :if => Proc.new {|i| i.type == "IssuedInvoice" }
+  validate :number_must_be_uniq
   validate :invoice_must_have_lines
 
   before_validation :set_due_date
@@ -117,6 +117,21 @@ class IssuedInvoice < InvoiceDocument
 
   def to_label
     "#{number}"
+  end
+
+  def number_must_be_uniq
+    if type == "IssuedInvoice"
+      query = IssuedInvoice.where(project_id: project, number: number)
+      query = query.where("YEAR(date) = #{date.year}") unless date.nil?
+      query = query.where("id != #{id}") unless new_record?
+      if query.any?
+        if date.nil?
+          errors.add(:number, :taken)
+        else
+          errors.add(:number, l(:number_taken_in_year, year: date.year))
+        end
+      end
+    end
   end
 
   def self.find_can_be_sent(project)
