@@ -287,7 +287,7 @@ class InvoicesController < ApplicationController
 
     # prevent duplicate invoices #5433 #5891
     validate = params[:validate] != 'false'
-    if !validate and !invoice.valid? and invoice.errors.has_key?(:number)
+    if !validate and !@invoice.valid? and @invoice.errors.has_key?(:number)
       validate = true
     end
     if @invoice.save(validate: validate)
