@@ -16,6 +16,7 @@ th.money, td.money, .money{
 .menu-rapid li {
   display: inline-block;
   margin-left: 20px;
+  position: relative;
 }
 
 .menu-rapid ul {
@@ -74,7 +75,7 @@ th.money, td.money, .money{
 .menu-rapid ul li:hover > ul {
   display:block;
   margin-left: 241px;
-  margin-top: -110px;
+  margin-top: -26px;
 }
 .invoice-navigator {
   float: right !important;
