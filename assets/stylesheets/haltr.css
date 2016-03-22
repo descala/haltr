@@ -9,7 +9,7 @@ html>body .tabular div {overflow:hidden;}
 ul.menu-rapid li, #sidebar ul li {list-style-type:none;}
 
 th.money, td.money, .money{
-  text-align: right;
+  text-align: right !important;
   white-space: nowrap;
 }
 
