@@ -74,7 +74,7 @@ gl:
   button_add_invoice_line: Engade unha nova liña á factura
   field_invoice_number: Número
   label_last_invoice_number: "Último usado"
-  number_taken_in_year: ya se está utilizando para el año %{year}
+  number_taken_in_year: %{number} ya se está utilizando para el año %{year}
   field_date: Data
   field_client: Cliente
   field_extra_info: Notas

@@ -63,7 +63,7 @@ nl:
   field_number: Number
   field_invoice_number: Invoice number
   label_last_invoice_number: "Last used"
-  number_taken_in_year: has already been taken for year %{year}
+  number_taken_in_year: %{number} has already been taken for year %{year}
   field_date: Date
   field_client: Client
   field_extra_info: Notes
