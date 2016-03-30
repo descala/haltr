@@ -63,7 +63,7 @@ fr:
   field_number: Numéro
   field_invoice_number: Numéro facture
   label_last_invoice_number: Dernier utilisé
-  number_taken_in_year: %{number} has already been taken for year %{year}
+  number_taken_in_year: "%{number} has already been taken for year %{year}"
   field_date: Date
   field_client: Client
   field_extra_info: Notes

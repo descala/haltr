@@ -72,7 +72,7 @@ ca:
   field_number: Número
   field_invoice_number: Número de factura
   label_last_invoice_number: "Últim fet servir"
-  number_taken_in_year: %{number} ja s'està utilitzant a l'any %{year}
+  number_taken_in_year: "%{number} ja s'està utilitzant a l'any %{year}"
   field_date: Data
   field_client: Client
   field_extra_info: Notes

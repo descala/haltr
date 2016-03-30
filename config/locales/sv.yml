@@ -62,7 +62,7 @@ sv:
   field_number: Nummer
   field_invoice_number: Factura nummer
   label_last_invoice_number: "Senast använda"
-  number_taken_in_year: %{number} has already been taken for year %{year}
+  number_taken_in_year: "%{number} has already been taken for year %{year}"
   field_date: Datum
   field_client: Kund
   field_extra_info: Anteckningar
