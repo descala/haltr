@@ -873,6 +873,7 @@ _INV
              end
       data = case data_compression
              when 'ZIP'
+               require 'zip'
                Zip::InputStream.open(StringIO.new(data)) do |io|
                  _entry = io.get_next_entry
                  io.read
