@@ -906,7 +906,7 @@ _INV
     else
       # prevent duplicate invoices #5433
       if !invoice.valid? and invoice.errors.has_key? :number
-        raise "#{I18n.t :field_number} #{i.errors[:number]}"
+        raise "#{I18n.t :field_number} #{invoice.errors[:number]}"
       end
       invoice.save(validate: false)
     end
