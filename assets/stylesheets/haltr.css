@@ -353,6 +353,10 @@ span#send_info {
   left: 50%;
   margin-left: -10px;
   z-index: 2;
+}
+.controller-received #attachments_fields .description {
+  display: none !important;
+}
 .controller-clients .client-info {
   border: 1px outset orange;
   margin-bottom: 10px;

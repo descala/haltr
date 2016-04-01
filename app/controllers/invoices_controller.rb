@@ -1144,24 +1144,24 @@ class InvoicesController < ApplicationController
     end
   end
 
-  # Used in form POST - facturae in multipart POST 'file' field
+  # Used in form POST - multiple file upload
   def import
     if request.post?
-      file = params[:file]
       @invoice = nil
       unless params[:issued].nil?
         @issued = ( params[:issued] == 'true' )
       else
         @issued = nil
       end
-      if file && file.size > 0
-        md5 = `md5sum #{file.path} | cut -d" " -f1`.chomp
-        case file.content_type
+      errors =  []
+      params[:attachments].each do |key, attachment_param|
+        attachment = Attachment.find_by_token(attachment_param['token'])
+        case attachment.content_type
         when /xml/
           user_or_company = User.current.admin? ? @project.company : User.current
           transport = params[:transport] || 'uploaded'
           @invoice = Invoice.create_from_xml(
-            file, user_or_company, md5, transport,nil,
+            attachment, user_or_company, attachment.digest, transport,nil,
             @issued,
             params['keep_original'] != 'false',
             params['validate'] != 'false'
@@ -1178,15 +1178,18 @@ class InvoicesController < ApplicationController
           @invoice.project   = @project
           @invoice.state     = :processing_pdf
           @invoice.transport = transport
-          @invoice.md5       = md5
-          @invoice.original  = file.read
+          @invoice.md5       = attachment.digest
+          @invoice.original  = File.binread(attachment.diskfile)
           @invoice.invoice_format = 'pdf'
-          @invoice.save!(validate: false)
+          @invoice.save(validate: false)
           Event.create(:name=>'processing_pdf',:invoice=>@invoice)
           Haltr::SendPdfToWs.send(@invoice)
         else
-          raise "unknown file type: '#{file.content_type}' for #{file.path}"
+          errors <<  "unknown file type: '#{attachment.content_type}' for #{attachment.filename}"
         end
+      end
+      if errors.size > 0
+        raise errors.join
       end
       respond_to do |format|
         format.html {

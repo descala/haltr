@@ -1,12 +1,16 @@
-<!--formulari-->
 <div class="seccio grup">
   <div class="col span-2-de-2">
 
     <%= form_tag({:action => 'import', :project_id => @project}, :class=>'formee', :multipart => true) do %>
-      <div>
-        <%= file_field_tag "file" %>
-        <%= check_box_tag "send_after_import" %> <%= l(:send_after_import) %>
-        <%= check_box_tag 'validate', 'false' %> <%= l(:skip_invoice_validations) %>
+      <div class="box tabular">
+        <p>
+        <label><%=l(:label_attachment_plural)%></label>
+        <%= render :partial => 'attachments/form' %>
+        </p>
+        <% if @issued %>
+          <%= check_box_tag "send_after_import" %> <%= l(:send_after_import) %>
+          <%= check_box_tag 'validate', 'false' %> <%= l(:skip_invoice_validations) %>
+        <% end -%>
       </div>
       <%= hidden_field_tag(:issued, @issued) %>
       <%= submit_tag l(:label_import) %>
@@ -14,12 +18,15 @@
 
   </div>
 </div>
-<!--final formulari-->
 
 <% html_title(l(:import_invoice)) -%>
 
 <% content_for :sidebar do %>
   <%= render_menu :invoices_menu, @project %>
+<% end %>
+
+<% content_for :header_tags do %>
+  <%= javascript_include_tag 'attachments' %>
 <% end %>
 
 <%= context_menu invoices_context_menu_path %>
