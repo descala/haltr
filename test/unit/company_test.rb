@@ -15,8 +15,9 @@ class CompanyTest < ActiveSupport::TestCase
                     :project_id => 1,
                     :email => "email@example.com",
                     :postalcode => "08080",
-                    :country => "is")
-    assert c.valid?
+                    :country => "is",
+                    :rounding_method => 'half_up')
+    assert c.valid?, c.errors.full_messages.join(' ')
     c.country = "es"
     assert !c.valid?
     c.taxcode = "ESX4942978W"
@@ -41,4 +42,9 @@ class CompanyTest < ActiveSupport::TestCase
     c.quote_mail_customization = ''
     c.quote_mail_body_es = 'Body'
   end
+
+  test 'company last_name never is blank' do
+    assert_equal '.', companies('company1').last_name
+  end
+
 end

@@ -48,17 +48,19 @@
         <th><%=l(:label_issued)%></th>
         <th><%=l(:label_received)%></th>
         <th><%=l(:label_person_plural)%></th>
+        <th><%=l(:label_client_offices)%></th>
         <th><%=l(:label_invoice_new)%></th>
       </thead>
       <tbody>
         <% for client in @clients -%>
-          <% onclick_edit = "onclick=\"javascript: document.location = '#{url_for(:action=>'edit', :id=>client)}'\"".html_safe -%>
+          <% onclick_show = "onclick=\"javascript: document.location = '#{url_for(:action=>'show', :id=>client)}'\"".html_safe -%>
           <tr class="user <%= cycle("odd senar", "even parell") %>">
-            <td class"taxcode" style="cursor:pointer;" <%= onclick_edit %>><%=image_tag("link.png") if client.linked?%><%= link_to_if_authorized client.taxcode, :action=>'edit', :id=>client %></td>
+            <td class"taxcode" style="cursor:pointer;" <%= onclick_show %>><%=image_tag("link.png") if client.linked?%><%= link_to_if_authorized client.taxcode, :action=>'show', :id=>client %></td>
             <td class="name"><%=h client.name%></td>
             <td class="invoices"><%= client.issued_invoices.any? ? link_to_if_authorized(client.issued_invoices.count, {:controller=>'invoices', :action=>'index', :id=>@project, :client_id=>client}, :title=>l(:label_issued)) : "-" %></td>
             <td class="invoices"><%= client.received_invoices.any? ? link_to_if_authorized(client.received_invoices.count, {:controller=>'received', :action=>'index', :id=>@project, :client_id=>client}, :title=>l(:label_received)) : "-" %></td>
-            <td class="people"><%= link_to_if_authorized l(:label_person_plural), client_people_path(client), :class=>'persones-btt', :title=>l(:label_person_plural) %></td>
+            <td class="people"><%= link_to_if_authorized client.people.count, client_people_path(client), :title=>l(:label_person_plural) %></td>
+            <td class="client_offices"><%= link_to client.client_offices.count, client_client_offices_path(client), :class=>'client_offices-btt', :title=>l(:label_client_offices) %></td>
             <td class="new"><%= link_to_if_authorized l(:button_new_invoice), project_client_new_invoice_path(:project_id=>@project.id,:client=>client.id), :class => 'nova-f-btt', :title=>l(:label_invoice_new) %></td>
           </tr>
         <% end -%>

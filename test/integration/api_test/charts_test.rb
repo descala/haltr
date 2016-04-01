@@ -8,15 +8,15 @@ class Redmine::ApiTest::ChartsTest < Redmine::ApiTest::Base
   end
 
   test 'invoice total' do
-    get "/invoices/total_chart.json?pref=all_by_year", {}, credentials('jsmith')
+    get "/projects/onlinestore/invoices/total_chart.json?pref=all_by_year", {}, credentials('jsmith')
     assert_response :success
-    assert_equal ["2008", "1851.36"], JSON(response.body)[0]['data'].first
+    assert_equal ["2011", "1888.0"], JSON(response.body)[0]['data'].first
   end
 
   test 'invoice status' do
     get "/projects/onlinestore/invoice_status_chart.json?pref=all_by_year", {}, credentials('jsmith')
     assert_response :success
-    assert_equal ["2008", 0], JSON(response.body)[0]['data'].first
+    assert_equal ["2011", 0], JSON(response.body)[0]['data'].first
   end
 
   test 'top clients' do
@@ -35,13 +35,13 @@ class Redmine::ApiTest::ChartsTest < Redmine::ApiTest::Base
     # last_year_by_month / other
     get "/projects/onlinestore/top_clients_chart.json?pref=unknown_pref", {}, credentials('jsmith')
     assert_response :success
-    assert_equal [{"name"=>"Client1", "data"=>[["2014/12", "0"]]}], JSON(response.body)
+    assert_equal({}, JSON(response.body))
   end
 
   test 'cash flow' do
     get "/projects/onlinestore/cash_flow.json?pref=all", {}, credentials('jsmith')
     assert_response :success
-    assert_equal 1851.36, JSON(response.body)['cash_flow']['invoices_sum']
+    assert_equal 1851.36, JSON(response.body)['cash_flow']['EUR']['invoices_sum']
   end
 
 end

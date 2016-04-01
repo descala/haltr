@@ -68,7 +68,7 @@
       <tr>
         <td style="width: 78px">
           <%= f.text_field(:discount_percent, no_label: true, class: 'discount_percent_line') %>
-          <span style="font-size:15px; margin-left: -20px; margin-right: 4px;">%</span>
+          <span style="font-size:15px; margin-left: -20px;">%</span>
         </td>
         <td style="width: 255px">
           <%= f.text_field(:discount_helper, no_label: true, class: 'discount_helper_line') %>
@@ -131,6 +131,21 @@
         <% if @invoice.invoice_lines.any? {|l| l.delivery_note_number.present? } or User.current.allowed_to?(:view_invoice_extra_fields, @project) -%>
           <td><%= f.text_field :delivery_note_number, :no_label => true %></td>
         <% end -%>
+      </tr>
+    </tbody>
+  </table>
+  <% end -%>
+
+  <% if @invoice.invoice_lines.any? {|l| l.issuer_transaction_reference.present? } or User.current.allowed_to?(:view_invoice_extra_fields, @project)-%>
+  <table class="formee invoice_lines">
+    <thead>
+      <tr>
+        <th><%= l(:field_issuer_transaction_reference) %></th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><%= f.text_field :issuer_transaction_reference, :no_label => true %></td>
       </tr>
     </tbody>
   </table>

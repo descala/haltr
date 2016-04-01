@@ -2,22 +2,18 @@
 module PaymentsHelper
 
   def invoices_for_select
+    candidate_states = "('sent','registered','accepted')"
     if @payment.invoice
-      cond = ["(clients.project_id = ? and state != 'closed') OR invoices.id=?", @project, @payment.invoice]
+      cond = ["(project_id = ? and state in #{candidate_states}) OR invoices.id=?", @project, @payment.invoice]
     else
-      cond = ["clients.project_id = ? and state != 'closed'", @project]
+      cond = ["project_id = ? and state in #{candidate_states}", @project]
     end
-    invoices = {I18n.t("IssuedInvoice")=>[],I18n.t("ReceivedInvoice")=>[]}
-    InvoiceDocument.find(:all, :order => 'number DESC', :include => 'client', :conditions => cond).collect do |c|
-      next unless invoices.keys.include?(I18n.t(c.type)) # DraftInvoice
-      #[ "#{c.class} - #{c.number} #{c.total.to_s.rjust(10).gsub(' ','_')}€ #{c.client}", c.id ]
-      invoices[I18n.t(c.type)] << [ "#{c.number} #{c.total.to_s.rjust(10).gsub(' ','_')}€ #{c.client}", c.id ]
+    invoices_for_select = {I18n.t("IssuedInvoice")=>[],I18n.t("ReceivedInvoice")=>[]}
+    @project.invoices.where(cond).order('number DESC').collect do |c|
+      next unless invoices_for_select.keys.include?(I18n.t(c.type)) # DraftInvoice
+      invoices_for_select[I18n.t(c.type)] << [ "#{c.number} #{c.total.to_s.rjust(10).gsub(' ','_')}€ #{c.client}", c.id ]
     end
-    invoices
-  end
-
-  def n19_fix(string,n=40)
-    string.to_ascii[0..n-1].upcase.ljust(n).html_safe
+    invoices_for_select
   end
 
 end

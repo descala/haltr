@@ -47,7 +47,7 @@
             <span class="locality"><%=h @client.city.strip unless @client.city.blank? %></span>
             <% unless @client.province.blank? -%>, <span class="region"><%=h @client.province %></span><% end -%>
           <% end -%>
-          <div class="country-name"><%=h @client.country_name if @client.country and @client.country.downcase != @company.country.downcase %></div>
+          <div class="country-name"><%=h @client.country_name if @client.country and @client.country.casecmp(@company.country) != 0 %></div>
         </address>
         <div><strong><%=h l(:field_taxcode) %>:</strong><span class="tax-id"> <%=h @client.taxcode.upcase if @client.taxcode %></span></div>
         <% if call_hook(:invoice_view_client_info).present? -%>
@@ -100,11 +100,13 @@
 <% end -%>
 <div class="invoice-info">
   <span class="date"><%=h l(:field_date)%> <strong><%=h format_date @invoice.date %></strong></span><br/>
-  <% if @invoice.amend_of -%>
-  <% if @invoice.amend_of == @invoice -%>
-    <span class="invoice-terms"><%=h l(:label_amended_invoice)%>: ?</span><br/>
-  <% else -%>
+  <% if @invoice.is_amend? -%>
+  <% if (@invoice.amend_of and @invoice.amend_of == @invoice) or (@invoice.partial_amend_of and @invoice.partial_amend_of == @invoice) -%>
+    <span class="invoice-terms"><%=h l(:label_amended_invoice)%>: <%= @invoice.amended_number %></span><br/>
+  <% elsif @invoice.amend_of -%>
     <span class="invoice-terms"><%=h l(:label_amended_invoice)%>: <%= link_to_if_authorized @invoice.amend_of.number,{:controller => 'invoices', :action => 'show', :id => @invoice.amend_of} %></span><br/>
+  <% else -%>
+    <span class="invoice-terms"><%=h l(:label_amended_invoice)%>: <%= link_to_if_authorized @invoice.partial_amend_of.number,{:controller => 'invoices', :action => 'show', :id => @invoice.partial_amend_of} %></span><br/>
   <% end -%>
   <% end -%>
   <% unless @invoice.due_date.blank? -%>
@@ -197,7 +199,7 @@
           <% if @invoice.has_line_charges? -%>
             <td class="item-price"><%= h line_price(line, 'charge') %></td>
           <% end -%>
-          <td class="line-total last"><%=h money(line.taxable_base.to_money(@invoice.currency)) %></td>
+          <td class="line-total last"><%=h money(Haltr::Utils.to_money(line.taxable_base, @invoice.currency, @invoice.company.rounding_method)) %></td>
         </tr>
         <% unless line.notes.blank? -%>
           <tr>
@@ -253,7 +255,7 @@
         <th><%=h l(:label_invoice_total)%>:</th>
         <td><%=h money(@invoice.total) %></td>
       </tr>
-      <% if @invoice.payments_on_account_in_cents.to_i > 0 -%>
+      <% if @invoice.payments_on_account_in_cents.to_i != 0 -%>
         <tr>
           <th><%=h l(:field_payments_on_account) %></th>
           <td><%=h money(@invoice.payments_on_account) %></td>

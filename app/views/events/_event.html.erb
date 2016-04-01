@@ -1,11 +1,19 @@
 <%=h e -%>
-<% unless e.notes.blank? -%>
-  :
-  <%=Redmine::CodesetUtil.replace_invalid_utf8(
-    e.notes.is_a?(Array) ?
-    I18n.t(e.notes, :default => e.notes).join(" ") :
-    I18n.t(e.notes, :default => e.notes))
-  %>
+<% unless e.notes.blank? -%>:
+  <%
+    message = ""
+  if e.notes.is_a?(Array)
+    if e.notes.size == 2 and e.notes[1].is_a? Hash
+      message = I18n.t(e.notes[0], e.notes[1].merge(:default => e.notes[0]))
+    else
+      message = I18n.t(e.notes, :default => e.notes).join(" ")
+    end
+  else
+    message = I18n.t(*e.notes, :default => e.notes)
+  end
+-%>
+<%= Redmine::CodesetUtil.replace_invalid_utf8(message) %>
+
 <% end -%>
 <% unless e.codi_registre.blank? -%>
   ( reg. <%= e.codi_registre %> )

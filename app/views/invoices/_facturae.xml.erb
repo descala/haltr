@@ -141,68 +141,76 @@
 <% else -%>
             <ResidenceTypeCode>E</ResidenceTypeCode>
 <% end -%>
-            <TaxIdentificationNumber><%=h @client.taxcode.strip%></TaxIdentificationNumber>
+            <TaxIdentificationNumber><%=h @client.taxcode.to_s.strip%></TaxIdentificationNumber>
          </TaxIdentification>
          <% if call_hook(:facturae_administrative_centres).present? -%>
            <%= call_hook(:facturae_administrative_centres) %>
          <% elsif @invoice.has_dir3_info? -%>
            <AdministrativeCentres>
-             <% unless @invoice.oficina_comptable.blank? -%>
-             <AdministrativeCentre>
-               <CentreCode><%= @invoice.oficina_comptable[0..9] %></CentreCode>
-               <RoleTypeCode>01</RoleTypeCode>
-               <% if @invoice.oficina_comptable_name.present? -%>
-                 <Name><%= @invoice.oficina_comptable_name[0...40] %></Name>
+             <% if @invoice.unidad_contratacion.blank? -%>
+               <% unless @invoice.oficina_comptable.blank? -%>
+               <AdministrativeCentre>
+                 <CentreCode><%= @invoice.oficina_comptable[0..9] %></CentreCode>
+                 <RoleTypeCode>01</RoleTypeCode>
+                 <% if @invoice.oficina_comptable_name.present? -%>
+                   <Name><%= @invoice.oficina_comptable_name[0...40] %></Name>
+                 <% end -%>
+                 <% oc = Dir3Entity.find_by_code(@invoice.oficina_comptable) -%>
+                 <%= render :partial => "invoices/address.facturae.xml", :locals => {:entity => ( oc and oc.full_address? ) ? oc : @invoice.client }%>
+                 <% if oc and oc.name.present? and format == "facturae32" -%>
+                 <CentreDescription><%= oc.name %></CentreDescription>
+                 <% end -%>
+               </AdministrativeCentre>
                <% end -%>
-               <% oc = Dir3Entity.find_by_code(@invoice.oficina_comptable) -%>
-               <%= render :partial => "invoices/address.facturae.xml", :locals => {:entity => ( oc and oc.full_address? ) ? oc : @invoice.client }%>
-               <% if oc and oc.name.present? and format == "facturae32" -%>
-               <CentreDescription><%= oc.name %></CentreDescription>
+               <% unless @invoice.organ_gestor.blank? -%>
+               <AdministrativeCentre>
+                 <CentreCode><%= @invoice.organ_gestor[0..9] %></CentreCode>
+                 <RoleTypeCode>02</RoleTypeCode>
+                 <% og = Dir3Entity.find_by_code(@invoice.organ_gestor) -%>
+                 <%= render :partial => "invoices/address.facturae.xml", :locals => {:entity => ( og and og.full_address? ) ? og : @invoice.client }%>
+                 <% if og and og.name.present? and format == "facturae32" -%>
+                 <CentreDescription><%= og.name %></CentreDescription>
+                 <% end -%>
+               </AdministrativeCentre>
                <% end -%>
-             </AdministrativeCentre>
-             <% end -%>
-             <% unless @invoice.organ_gestor.blank? -%>
-             <AdministrativeCentre>
-               <CentreCode><%= @invoice.organ_gestor[0..9] %></CentreCode>
-               <RoleTypeCode>02</RoleTypeCode>
-               <% og = Dir3Entity.find_by_code(@invoice.organ_gestor) -%>
-               <%= render :partial => "invoices/address.facturae.xml", :locals => {:entity => ( og and og.full_address? ) ? og : @invoice.client }%>
-               <% if og and og.name.present? and format == "facturae32" -%>
-               <CentreDescription><%= og.name %></CentreDescription>
+               <% unless @invoice.unitat_tramitadora.blank? -%>
+               <AdministrativeCentre>
+                 <CentreCode><%= @invoice.unitat_tramitadora[0..9] %></CentreCode>
+                 <RoleTypeCode>03</RoleTypeCode>
+                 <% if @invoice.unitat_tramitadora_name.present? -%>
+                   <Name><%= @invoice.unitat_tramitadora_name[0...40] %></Name>
+                 <% end -%>
+                 <% ut = Dir3Entity.find_by_code(@invoice.unitat_tramitadora) -%>
+                 <%= render :partial => "invoices/address.facturae.xml", :locals => {:entity => ( ut and ut.full_address? ) ? ut : @invoice.client }%>
+                 <% if ut and ut.name.present? and format == "facturae32" -%>
+                 <CentreDescription><%= ut.name %></CentreDescription>
+                 <% end -%>
+               </AdministrativeCentre>
                <% end -%>
-             </AdministrativeCentre>
-             <% end -%>
-             <% unless @invoice.unitat_tramitadora.blank? -%>
-             <AdministrativeCentre>
-               <CentreCode><%= @invoice.unitat_tramitadora[0..9] %></CentreCode>
-               <RoleTypeCode>03</RoleTypeCode>
-               <% if @invoice.unitat_tramitadora_name.present? -%>
-                 <Name><%= @invoice.unitat_tramitadora_name[0...40] %></Name>
+               <% unless @invoice.organ_proponent.blank? -%>
+               <AdministrativeCentre>
+                 <CentreCode><%= @invoice.organ_proponent[0..9] %></CentreCode>
+                 <RoleTypeCode>04</RoleTypeCode>
+                 <% op = Dir3Entity.find_by_code(@invoice.organ_proponent) -%>
+                 <%= render :partial => "invoices/address.facturae.xml", :locals => {:entity => ( op and op.full_address? ) ? op : @invoice.client }%>
+                 <% if op and op.name.present? and format == "facturae32" -%>
+                 <CentreDescription><%= op.name %></CentreDescription>
+                 <% else -%>
+                 <CentreDescription><%= @invoice.organ_proponent %></CentreDescription>
+                 <% end -%>
+               </AdministrativeCentre>
                <% end -%>
-               <% ut = Dir3Entity.find_by_code(@invoice.unitat_tramitadora) -%>
-               <%= render :partial => "invoices/address.facturae.xml", :locals => {:entity => ( ut and ut.full_address? ) ? ut : @invoice.client }%>
-               <% if ut and ut.name.present? and format == "facturae32" -%>
-               <CentreDescription><%= ut.name %></CentreDescription>
-               <% end -%>
-             </AdministrativeCentre>
-             <% end -%>
-             <% unless @invoice.organ_proponent.blank? -%>
-             <AdministrativeCentre>
-               <CentreCode><%= @invoice.organ_proponent[0..9] %></CentreCode>
-               <RoleTypeCode>04</RoleTypeCode>
-               <% op = Dir3Entity.find_by_code(@invoice.organ_proponent) -%>
-               <%= render :partial => "invoices/address.facturae.xml", :locals => {:entity => ( op and op.full_address? ) ? op : @invoice.client }%>
-               <% if op and op.name.present? and format == "facturae32" -%>
-               <CentreDescription><%= op.name %></CentreDescription>
-               <% else -%>
-               <CentreDescription><%= @invoice.organ_proponent %></CentreDescription>
-               <% end -%>
-             </AdministrativeCentre>
-             <% end -%>
-             <% unless @invoice.unidad_contratacion.blank? -%>
-             <AdministrativeCentre>
-               <CentreCode><%= @invoice.unidad_contratacion[0..9] %></CentreCode>
-             </AdministrativeCentre>
+             <% else -%>
+               <AdministrativeCentre>
+                 <CentreCode><%= @invoice.unidad_contratacion[0..9] %></CentreCode>
+                 <AddressInSpain>
+                    <Address>.</Address>
+                    <PostCode>00000</PostCode>
+                    <Town>.</Town>
+                    <Province>.</Province>
+                    <CountryCode>ESP</CountryCode>
+                 </AddressInSpain>
+               </AdministrativeCentre>
              <% end -%>
            </AdministrativeCentres>
          <% end -%>
@@ -224,18 +232,25 @@
             <InvoiceSeriesCode><%=h @invoice.series_code%></InvoiceSeriesCode>
 <% end -%>
             <InvoiceDocumentType>FC</InvoiceDocumentType>
-            <InvoiceClass><%= @invoice.amend_of ? "OR" : "OO" %></InvoiceClass>
-<% if @invoice.amend_of -%>
+            <InvoiceClass><%= @invoice.is_amend? ? "OR" : "OO" %></InvoiceClass>
+<% if @invoice.is_amend? -%>
+  <% amended_invoice = @invoice.partial_amend_of ? @invoice.partial_amend_of : @invoice.amend_of -%>
+  <% amended_invoice = @invoice unless amended_invoice -%>
             <Corrective>
-              <InvoiceNumber><%= @invoice.amend_of != @invoice ? @invoice.amend_of.number : '?'%></InvoiceNumber>
-              <ReasonCode>15</ReasonCode>
-              <ReasonDescription>Literales legales</ReasonDescription>
+              <InvoiceNumber><%= amended_invoice != @invoice ? amended_invoice.number : @invoice.amended_number%></InvoiceNumber>
+              <ReasonCode><%= @invoice.amend_reason %></ReasonCode>
+              <ReasonDescription><%= l("amend_reason_#{@invoice.amend_reason}", locale: :es) %></ReasonDescription>
               <TaxPeriod>
-                <StartDate><%=@invoice.amend_of.date%></StartDate>
-                <EndDate><%=@invoice.amend_of.date%></EndDate>
+                <StartDate><%=amended_invoice.date%></StartDate>
+                <EndDate><%=amended_invoice.date%></EndDate>
               </TaxPeriod>
+              <% if @invoice.partially_amended_id -%>
+              <CorrectionMethod>02</CorrectionMethod>
+              <CorrectionMethodDescription>Rectificación por diferencias</CorrectionMethodDescription>
+              <% else -%>
               <CorrectionMethod>01</CorrectionMethod>
               <CorrectionMethodDescription>Rectificación íntegra</CorrectionMethodDescription>
+              <% end -%>
               <AdditionalReasonDescription><%=@invoice.extra_info%></AdditionalReasonDescription>
             </Corrective>
 <% end -%>
@@ -255,6 +270,7 @@
          <TaxesOutputs>
 <% if @invoice.taxes_outputs.any? -%>
 <% @invoice.taxes_outputs.each do |tax| -%>
+  <% next if tax.name == 'RE' -%>
            <Tax>
              <TaxTypeCode><%= Tax::SPAIN_TAXCODES[tax.name.upcase] || '05'%></TaxTypeCode>
              <TaxRate><%=h haltr_precision tax.percent%></TaxRate>
@@ -264,6 +280,15 @@
              <TaxAmount>
                <TotalAmount><%=h haltr_precision @invoice.tax_amount(tax).dollars %></TotalAmount>
              </TaxAmount>
+             <% if tax.name == 'IVA' -%>
+               <% equivalence_surcharge = @invoice.taxes_outputs.select {|t| t.name == 'RE' and t.category == tax.category }.first -%>
+               <% if equivalence_surcharge -%>
+                 <EquivalenceSurcharge><%=h haltr_precision equivalence_surcharge.percent%></EquivalenceSurcharge>
+                 <EquivalenceSurchargeAmount>
+                   <TotalAmount><%=h haltr_precision @invoice.tax_amount(equivalence_surcharge).dollars %></TotalAmount>
+                 </EquivalenceSurchargeAmount>
+               <% end -%>
+             <% end -%>
            </Tax>
 <% end -%>
 <% else -%>
@@ -326,7 +351,7 @@
             <TotalTaxOutputs><%=h haltr_precision @invoice.total_tax_outputs.dollars%></TotalTaxOutputs>
             <TotalTaxesWithheld><%=h haltr_precision @invoice.total_taxes_withheld.dollars%></TotalTaxesWithheld>
             <InvoiceTotal><%=h haltr_precision @invoice.total.dollars%></InvoiceTotal>
-            <% if @invoice.payments_on_account_in_cents.to_i > 0 -%>
+            <% if @invoice.payments_on_account_in_cents.to_i != 0 -%>
               <PaymentsOnAccount>
                 <PaymentOnAccount>
                   <PaymentOnAccountDate><%=h @invoice.date%></PaymentOnAccountDate>
@@ -335,7 +360,7 @@
               </PaymentsOnAccount>
             <% end -%>
             <TotalOutstandingAmount><%=h haltr_precision (@invoice.total - @invoice.payments_on_account).dollars%></TotalOutstandingAmount>
-            <% if @invoice.payments_on_account_in_cents.to_i > 0 -%>
+            <% if @invoice.payments_on_account_in_cents.to_i != 0 -%>
               <TotalPaymentsOnAccount><%=h haltr_precision @invoice.payments_on_account.dollars %></TotalPaymentsOnAccount>
             <% end -%>
             <TotalExecutableAmount><%=h haltr_precision (@invoice.total - @invoice.payments_on_account).dollars%></TotalExecutableAmount>
@@ -361,9 +386,7 @@
 <% else -%>
               <%= call_hook(:facturae_file_reference) %>
 <% end -%>
-              <% if call_hook(:facturae_administrative_centres).present? -%>
-                <%= call_hook(:facturae_sequence_number) %>
-              <% elsif !invoice_line.sequence_number.blank? -%>
+              <% if invoice_line.sequence_number.present? -%>
                 <SequenceNumber><%=invoice_line.sequence_number%></SequenceNumber>
               <% end -%>
               <% if @invoice.delivery_note_number.present? or invoice_line.delivery_note_number.present? -%>
@@ -379,13 +402,13 @@
                 <UnitOfMeasure><%=h invoice_line.unit_code(:facturae)%></UnitOfMeasure>
               <% end -%>
               <UnitPriceWithoutTax><%=h haltr_precision(invoice_line.price,6)%></UnitPriceWithoutTax>
-              <TotalCost><%=h haltr_precision(invoice_line.total_cost,(format == "facturae32" ? 6 : 2))%></TotalCost>
+              <TotalCost><%=h haltr_precision(invoice_line.total_cost, *(format == "facturae32" ? [6,2] : 2))%></TotalCost>
 <% if invoice_line.discount_percent > 0 -%>
               <DiscountsAndRebates>
                 <Discount>
                   <DiscountReason><%=h invoice_line.discount_text.blank? ? "." : invoice_line.discount_text %></DiscountReason>
                   <DiscountRate><%=h haltr_precision(invoice_line.discount_percent, 4)%></DiscountRate>
-                  <DiscountAmount><%=h haltr_precision(invoice_line.discount_amount,(@format =~ /facturae/ ? 6 : 2))%></DiscountAmount>
+                  <DiscountAmount><%=h haltr_precision(invoice_line.discount_amount, *(@format == 'facturae31' ? 2 : [6,2]))%></DiscountAmount>
                 </Discount>
               </DiscountsAndRebates>
 <% end -%>
@@ -393,11 +416,11 @@
               <Charges>
                 <Charge>
                   <ChargeReason><%=h invoice_line.charge_reason.blank? ? "." : invoice_line.charge_reason %></ChargeReason>
-                  <ChargeAmount><%=h haltr_precision(invoice_line.charge,(@format =~ /facturae/ ? 6 : 2))%></ChargeAmount>
+                  <ChargeAmount><%=h haltr_precision(invoice_line.charge, *(@format == 'facturae31' ? 2 : [6,2]))%></ChargeAmount>
                 </Charge>
               </Charges>
 <% end -%>
-              <GrossAmount><%=h haltr_precision(invoice_line.gross_amount,(format == "facturae32" ? 6 : 2))%></GrossAmount>
+              <GrossAmount><%=h haltr_precision(invoice_line.gross_amount, *(format == "facturae32" ? [6,2] : 2))%></GrossAmount>
 <% if invoice_line.taxes_withheld.any? -%>
               <TaxesWithheld>
 <% invoice_line.taxes_withheld.each do |tax| -%>
@@ -405,7 +428,7 @@
                    <TaxTypeCode>04</TaxTypeCode>
                    <TaxRate><%=h haltr_precision tax.percent * -1 %></TaxRate>
                    <TaxableBase>
-                      <TotalAmount><%=h haltr_precision invoice_line.taxable_base.to_money(@invoice.currency) %></TotalAmount>
+                      <TotalAmount><%=h haltr_precision Haltr::Utils.to_money(invoice_line.taxable_base, @invoice.currency, @invoice.company.rounding_method) %></TotalAmount>
                    </TaxableBase>
                    <TaxAmount>
                      <TotalAmount><%=h haltr_precision(invoice_line.tax_amount(tax)*-1)%></TotalAmount>
@@ -417,16 +440,26 @@
 <% if invoice_line.taxes_outputs.any? -%>
               <TaxesOutputs>
 <% invoice_line.taxes_outputs.each do |tax| -%>
+  <% next if tax.name == 'RE' -%>
                  <Tax>
-                    <TaxTypeCode>01</TaxTypeCode>
+                    <TaxTypeCode><%= Tax::SPAIN_TAXCODES[tax.name.upcase] || '01' %></TaxTypeCode>
                     <TaxRate><%=h haltr_precision tax.percent%></TaxRate>
                     <TaxableBase>
-                      <TotalAmount><%=h haltr_precision(invoice_line.total_cost.to_money(@invoice.currency))%></TotalAmount>
+                      <TotalAmount><%=h haltr_precision Haltr::Utils.to_money(invoice_line.taxable_base, @invoice.currency, @invoice.company.rounding_method) %></TotalAmount>
                     </TaxableBase>
                     <TaxAmount>
                       <TotalAmount><%=h haltr_precision(invoice_line.tax_amount(tax))%></TotalAmount>
                     </TaxAmount>
-                 </Tax>
+                    <% if tax.name == 'IVA' -%>
+                      <% equivalence_surcharge = @invoice.taxes_outputs.select {|t| t.name == 'RE' and t.category == tax.category }.first -%>
+                      <% if equivalence_surcharge -%>
+                        <EquivalenceSurcharge><%=h haltr_precision equivalence_surcharge.percent%></EquivalenceSurcharge>
+                        <EquivalenceSurchargeAmount>
+                          <TotalAmount><%=h haltr_precision @invoice.tax_amount(equivalence_surcharge).dollars %></TotalAmount>
+                        </EquivalenceSurchargeAmount>
+                      <% end -%>
+                    <% end -%>
+                  </Tax>
 <% end -%>
               </TaxesOutputs>
 <% end -%>

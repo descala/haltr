@@ -5,6 +5,15 @@
 
   <div class="seccio grup">
     <p class="col span-1-de-2">
+    <label for="client">
+      <%= l(:label_company) %>
+    </label>
+    <%= text_field_tag('client', @client.name, disabled: true) %>
+    </p>
+  </div>
+
+  <div class="seccio grup">
+    <p class="col span-1-de-2">
       <%= f.text_field :first_name, :required => true %>
     </p>
     <p class="col span-1-de-2">
@@ -14,7 +23,7 @@
 
   <div class="seccio grup">
     <p class="col span-1-de-2">
-      <%= f.text_field :email, :required => true %>
+      <%= f.text_field :email, :required => false %>
     </p>
     <p class="col span-1-de-2">
       <%= f.check_box  :send_invoices_by_mail%>
@@ -29,5 +38,12 @@
       <%= f.text_field :phone_mobile %>
     </p>
   </div>
+
+  <div class="seccio grup">
+    <p class="col span-1-de-2">
+      <%= f.text_area :info, :rows=>8, :cols=>100 %>
+    </p>
+  </div>
+
 
 </fieldset>

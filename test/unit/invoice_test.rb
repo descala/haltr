@@ -3,7 +3,7 @@ require File.dirname(__FILE__) + '/../test_helper'
 
 class InvoiceTest < ActiveSupport::TestCase
 
-  fixtures :clients, :invoices, :invoice_lines, :taxes, :companies, :people, :bank_infos, :dir3_entities, :external_companies
+  fixtures :clients, :invoices, :invoice_lines, :taxes, :companies, :people, :bank_infos, :dir3_entities, :external_companies, :client_offices
 
   def setup
     User.current=nil
@@ -87,15 +87,15 @@ class InvoiceTest < ActiveSupport::TestCase
 
     assert_equal 250, invoices(:invoices_001).subtotal_without_discount.dollars
     assert_equal 225, invoices(:invoices_001).taxable_base.dollars
-    assert_equal 2.25, invoices(:invoices_001).tax_amount.dollars
-    assert_equal(-11.25, invoices(:invoices_001).tax_amount(taxes(:taxes_006)).dollars)
-    assert_equal 13.5, invoices(:invoices_001).tax_amount(taxes(:taxes_005)).dollars
-    assert_equal 6.0, invoices(:invoices_001).tax_amount(taxes(:taxes_007)).dollars
-    assert_equal(-6.0, invoices(:invoices_001).tax_amount(taxes(:taxes_008)).dollars)
+    assert_equal 2.7, invoices(:invoices_001).tax_amount.dollars
+    assert_equal(-13.5, invoices(:invoices_001).tax_amount(taxes(:taxes_006)).dollars)
+    assert_equal 16.2, invoices(:invoices_001).tax_amount(taxes(:taxes_005)).dollars
+    assert_equal 7.2, invoices(:invoices_001).tax_amount(taxes(:taxes_007)).dollars
+    assert_equal(-7.2, invoices(:invoices_001).tax_amount(taxes(:taxes_008)).dollars)
     assert_equal 4, invoices(:invoices_001).taxes_uniq.size
     assert_equal 225, invoices(:invoices_001).subtotal.dollars
     assert_equal 25, invoices(:invoices_001).discount_amount.dollars
-    assert_equal 227.25, invoices(:invoices_001).total.dollars
+    assert_equal 227.7, invoices(:invoices_001).total.dollars
   end
 
   test "currency to upcase" do
@@ -308,6 +308,7 @@ class InvoiceTest < ActiveSupport::TestCase
     assert_equal "Anonymous", invoice.from
     assert_equal "1234", invoice.md5
     assert invoice.debit?, "invoice payment is debit"
+    assert_equal '2_4', invoice.payment_method
     assert_equal "invoice_facturae32_issued.xml", invoice.file_name
     # invoice lines
     assert_equal 3, invoice.invoice_lines.size
@@ -362,7 +363,7 @@ class InvoiceTest < ActiveSupport::TestCase
     assert_equal "invoice notes", invoice.extra_info
     assert invoice.debit?, "invoice payment is debit"
     assert_equal "1233333333333333", invoice.client.bank_account
-    assert_nil invoice.bank_info
+    assert_equal bank_infos(:bi4), invoice.bank_info
     # invoice lines
     assert_equal 1, invoice.invoice_lines.size
     il = invoice.invoice_lines.first
@@ -370,12 +371,12 @@ class InvoiceTest < ActiveSupport::TestCase
     assert_equal 150,    il.quantity
     # taxes
     assert_equal 2,      il.taxes.size
-    assert_equal 'IVA',  il.taxes[0].name
-    assert_equal 10.0,   il.taxes[0].percent
-    assert_equal 'AA',   il.taxes[0].category
-    assert_equal 'IRPF', il.taxes[1].name
-    assert_equal 21.0,   il.taxes[1].percent
-    assert_equal 'S',    il.taxes[1].category
+    assert_equal 'IVA',  il.taxes[1].name
+    assert_equal 10.0,   il.taxes[1].percent
+    assert_equal 'AA',   il.taxes[1].category
+    assert_equal 'IRPF', il.taxes[0].name
+    assert_equal(-21.0,  il.taxes[0].percent)
+    assert_equal 'S',    il.taxes[0].category
     # email override lluis@ingent.net, instead of client1@email.com
     assert_equal 'lluis@ingent.net', invoice.client_email_override
   end
@@ -590,10 +591,12 @@ class InvoiceTest < ActiveSupport::TestCase
     assert_equal '20000000000000000000',     invoice.fa_info
     assert_equal Date.new(2015,5,6),         invoice.fa_duedate
     assert_equal 372.08,                     invoice.fa_import
-    assert_equal 4,                          invoice.fa_payment_method
+    assert_equal '04',                       invoice.fa_payment_method
     assert_equal 'ES1234567890123456789012', invoice.fa_iban
     assert_equal 'ABCABCAAXXX',              invoice.fa_bank_code
     assert_equal 'Clauses',                  invoice.fa_clauses
+    assert invoice.transfer?, "invoice payment is transfer"
+    assert_match(/4_\d+/, invoice.payment_method)
   end
 
   test 'overrides client email with client_email_override' do
@@ -603,6 +606,67 @@ class InvoiceTest < ActiveSupport::TestCase
     # Not overrided
     assert_nil invoices(:i13).client_email_override
     assert_equal ["person1@example.com", "mail@client1.com"], invoices(:i13).recipient_emails
+  end
+
+  test 'it checks round_before_sum on company' do
+    i = invoices(:i15)
+    assert_equal false, i.company.round_before_sum
+    assert_equal 1828.07, i.tax_amount.dollars
+    assert_equal 1828.07, i.tax_amount(i.taxes.first).dollars
+    i.company.round_before_sum = true
+    assert_equal 1828.06, i.tax_amount.dollars
+    assert_equal 1828.06, i.tax_amount(i.taxes.first).dollars
+  end
+
+  test 'when round_before_sum is checked and invoice has discounts, taxes are calculated correctly' do
+    i = invoices(:i16)
+    assert_equal false, i.company.round_before_sum
+    assert_equal 90.00, i.subtotal.dollars
+    assert_equal 9.00, i.tax_amount(i.taxes.first).dollars
+    assert_equal 9.00, i.tax_amount.dollars
+    assert_equal 99.00, i.total.dollars
+    i.company.round_before_sum = true
+    assert_equal true, i.company.round_before_sum
+    assert_equal 90.00, i.subtotal.dollars
+    assert_equal 9.00, i.tax_amount(i.taxes.first).dollars
+    assert_equal 9.00, i.tax_amount.dollars
+    assert_equal 99.00, i.total.dollars
+  end
+
+  # import invoice_facturae32_issued7.xml
+  test 'create issued_invoice from facturae32 creates client_office when client data does not match' do
+    assert_equal 1, clients(:clients_001).client_offices.count
+    file    = File.new(File.join(File.dirname(__FILE__),'..','fixtures','documents','invoice_facturae32_issued7.xml'))
+    invoice = Invoice.create_from_xml(file,User.find_by_login('jsmith'),"1234",'uploaded',User.current.name)
+    assert_equal 2, clients(:clients_001).client_offices.count
+    assert_equal clients(:clients_001).client_offices.last.id, invoice.client_office_id
+  end
+
+  # import invoice_facturae32_issued9.xml
+  test 'create issued_invoice from facturae32 uses existing client_office when client data matches' do
+    assert_equal 1, clients(:clients_001).client_offices.count
+    file    = File.new(File.join(File.dirname(__FILE__),'..','fixtures','documents','invoice_facturae32_issued9.xml'))
+    invoice = Invoice.create_from_xml(file,User.find_by_login('jsmith'),"1234",'uploaded',User.current.name)
+    assert_equal 1, clients(:clients_001).client_offices.count
+    assert_equal clients(:clients_001).client_offices.first.id, invoice.client_office_id
+  end
+
+  test 'import facturae32 with EquivalenceSurcharge taxes' do
+    file = File.new(File.join(File.dirname(__FILE__),'..','fixtures','documents','invoice_gob_es.xml'))
+    invoice = Invoice.create_from_xml(file,companies(:company6),"1234",'uploaded',User.current.name,nil,false)
+    assert_equal(3, invoice.invoice_lines.last.taxes.size)
+    re_taxes = invoice.invoice_lines.last.taxes.select {|tax| tax.name == 'RE'}
+    assert_equal(1, re_taxes.size)
+    re_tax = re_taxes.first
+    assert_equal('S',re_tax.category)
+    assert_equal(1.00,re_tax.percent)
+  end
+
+  test 'import UBL 2.0 with SBDH' do
+    file = File.new(File.join(File.dirname(__FILE__),'../fixtures/documents/invoice_ubl_with_sbdh.xml'))
+    invoice = Invoice.create_from_xml(file,companies(:company6),"1234",'uploaded',User.current.name,nil,false)
+    assert invoice.valid?, invoice.errors.messages.to_s
+    assert_equal '5503070490', invoice.client.taxcode
   end
 
 end

@@ -8,6 +8,11 @@ class ReceivedController < InvoicesController
 
     invoices = @project.invoices.includes(:client).scoped.where("type = ?","ReceivedInvoice")
 
+    # additional invoice filters
+    if Redmine::Hook.call_hook(:additional_invoice_filters,:project=>@project,:invoices=>invoices).any?
+      invoices = Redmine::Hook.call_hook(:additional_invoice_filters,:project=>@project,:invoices=>invoices)[0]
+    end
+
     unless params["state_all"] == "1"
       statelist=[]
       %w(new sending sent error closed discarded).each do |state|
@@ -53,34 +58,32 @@ class ReceivedController < InvoicesController
       invoices = invoices.where("number like ?","%#{params[:number]}%")
     end
 
+    case params[:format]
+    when 'csv', 'pdf'
+      @limit = Setting.issues_export_limit.to_i
+    when 'xml', 'json'
+      @offset, @limit = api_offset_and_limit
+    else
+      @limit = per_page_option
+    end
+
     @invoice_count = invoices.count
     @invoice_pages = Paginator.new self, @invoice_count,
 		per_page_option,
 		params['page']
+    @offset ||= @invoice_pages.current.offset
     @invoices =  invoices.find :all,
        :order => sort_clause,
        :include => [:client],
-       :limit  =>  @invoice_pages.items_per_page,
-       :offset =>  @invoice_pages.current.offset
+       :limit  =>  @limit,
+       :offset =>  @offset
 
     @unread = invoices.where("type = ? AND has_been_read = ?", 'ReceivedInvoice', false).count
   end
 
   def show
     @invoice.update_attribute(:has_been_read, true)
-  end
-
-  def show_original
-    @invoice.update_attribute(:has_been_read, true) if @invoice.is_a? ReceivedInvoice
-    if @invoice.invoice_format == "pdf"
-      render :template => 'received/show_pdf'
-    else
-      doc  = Nokogiri::XML(@invoice.original)
-      # TODO: received/facturae31.xsl.erb and received/facturae30.xsl.erb templates
-      xslt = Nokogiri::XSLT(render_to_string(:template=>'received/facturae32.xsl.erb',:layout=>false))
-      @out  = xslt.transform(doc)
-      render :template => 'received/show_with_xsl'
-    end
+    super
   end
 
   def mark_accepted_with_mail
@@ -119,7 +122,7 @@ class ReceivedController < InvoicesController
     zipped = []
     zip_file = Tempfile.new ["#{@project.identifier}_invoices", ".zip"], 'tmp'
     logger.info "Creating zip file '#{zip_file.path}' for invoice ids #{@invoices.collect{|i|i.id}.join(',')}."
-    Zip::ZipOutputStream.open(zip_file.path) do |zos|
+    Zip::OutputStream.open(zip_file.path) do |zos|
       @invoices.each do |invoice|
         filename = invoice.file_name || 'invoice'
         file = Tempfile.new(filename)
@@ -173,11 +176,6 @@ class ReceivedController < InvoicesController
   end
 
   def bulk_validate
-  end
-
-  def import
-    params[:issued] = 0
-    super
   end
 
   private

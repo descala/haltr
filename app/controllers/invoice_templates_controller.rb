@@ -88,8 +88,8 @@ class InvoiceTemplatesController < InvoicesController
       end
       begin
         @drafts << t.invoices_until(@date)
-      rescue ActiveRecord::RecordInvalid => e
-        flash.now[:warning] = l(:warning_can_not_generate_invoice,t.to_s)
+      rescue RuntimeError => e
+        flash.now[:warning] = l(:warning_can_not_generate_invoice,view_context.link_to(t.to_s, edit_invoice_template_path(t))).html_safe
         flash.now[:error] = e.message
       end
     end
@@ -112,7 +112,7 @@ class InvoiceTemplatesController < InvoicesController
       draft.invoice_lines.each do |draft_line|
         l = InvoiceLine.new draft_line.attributes
         draft_line.taxes.each do |tax|
-          l.taxes << Tax.new(:name=>tax.name,:percent=>tax.percent)
+          l.taxes << Tax.new(tax.attributes.except('invoice_line_id'))
         end
         issued.invoice_lines << l
       end

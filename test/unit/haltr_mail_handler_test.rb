@@ -64,7 +64,7 @@ class HaltrMailHandlerTest < ActiveSupport::TestCase
     assert invoices.size == 1, "it finds 1 invoice (#{invoices.size})"
     invoice = invoices.first
     assert invoice.events.last.name == 'bounced', "it creates an event for the bounce (last event: #{invoice.events.last.name})"
-    assert invoice.state == 'discarded', "Invoice dinal state is discarded (#{invoice.state})"
+    assert invoice.state == 'discarded', "Invoice final state is discarded (#{invoice.state})"
   end
 
   # TODO test does not create invoice when 

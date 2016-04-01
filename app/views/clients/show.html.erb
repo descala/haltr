@@ -1,0 +1,119 @@
+<div class="seccio grup">
+<div class="col span-2-de-2">
+  <ul class="menu-rapid">
+    <li><%= link_to_if_authorized l("label_company_new"), new_project_client_path(@project), :class => 'icon icon-add' %></li>
+    <li><%= link_to_if_authorized l(:button_edit), { :action => 'edit', :id => @client }, :class => 'icon icon-edit' %></li>
+    <li><%= link_to_if_authorized l(:button_delete), { :action => 'destroy', :id => @client}, :confirm=>l(:text_are_you_sure), :method=>:delete, :class=>'icon icon-del' %></li>
+    <% if @client.next%>
+      <li class="invoice-navigator"><%=h link_to_if_authorized l(:label_next), :action => 'show', :id => @client.next %></li>
+    <% end %>
+    <% if @client.previous %>
+      <li class="invoice-navigator"><%=h link_to_if_authorized l(:label_previous), :action => 'show', :id => @client.previous %></li>
+    <% end %>
+  </ul>
+</div>
+</div>
+
+<div class="splitcontentleft">
+  <div class="client-info">
+    <div class="contextual">
+    <%= link_to_if_authorized l(:label_person_new), new_client_person_path(@client), :class => 'icon icon-add' %>
+    <%= link_to_if_authorized l(:label_client_office_new), new_client_client_office_path(@client), :class => 'icon icon-add' %>
+    </div>
+    <h3><%=h @client.name %></h3>
+    <address>
+      <div class="address"><%=h @client.full_address %></div>
+      <span class="postalcode"><%=h @client.postalcode %></span> <span class="city"><%=h @client.city %></span>
+      <div class="province"><%=h @client.province %></div>
+      <div class="country"><%=h @client.country_name %></div>
+    </address>
+    <div><%= link_to(@client.website, "http://#{@client.website}", :target=>'_blank') if @client.website%></div>
+    <div><%= mail_to(@client.email) %></div>
+    <div><%= @client.phone %></div>
+    <div><%= ll(@client.language,:general_lang_name)%></div>
+    <div><strong><%=h l(:field_taxcode) %></strong><span class="tax-id"> <%=h @client.taxcode %></span></div>
+    <div><%= ExportChannels.l(@client.invoice_format) %></div>
+    <div title="<%= @client.currency %> - <%=Money::Currency.find(@client.currency).name %>"><%= client_payment_method_info(@client) %></div>
+    <div><%= l(:field_terms) %> <%= client_terms(@client) %></div>
+  </div>
+
+  <% for person in @people -%>
+    <div class="people-info">
+      <div class="contextual">
+        <%= link_to_if_authorized(l(:button_edit), edit_person_path(person), :class => 'icon icon-edit') %>
+      </div>
+      <h3><%= l(:label_person) %>: <%=h person.first_name %> <%=h person.last_name %></h3>
+      <div><%=h person.info%></div>
+      <div><%=mail_to(person.email) %><%= " (#{l(:field_send_invoices_by_mail)})" if person.send_invoices_by_mail %></div>
+      <div><%=h person.phone_office %></div>
+      <div><%=h person.phone_mobile %></div>
+    </div>
+  <% end -%>
+
+  <% for client_office in @client_offices -%>
+    <div class="people-info">
+      <div class="contextual">
+        <%= link_to_if_authorized(l(:button_edit), edit_client_client_office_path(@client, client_office), :class => 'icon icon-edit') %>
+      </div>
+      <h3><%= l(:label_client_office) %>: <%=h client_office.name %></h3>
+      <address>
+        <div class="address"><%=h client_office.full_address %></div>
+        <span class="postalcode"><%=h client_office.postalcode %></span> <span class="city"><%=h client_office.city %></span>
+        <div class="province"><%=h client_office.province %></div>
+        <div class="country"><%=h client_office.country_name %></div>
+      </address>
+    </div>
+  <% end -%>
+
+  <% if @events.any? %>
+    <div class="events">
+      <h3><%= l(:events)%></h3>
+      <% @events.each do |event| -%>
+        <div><%= format_time event.created_at %> <%= link_to(event.invoice.number, invoice_path(event.invoice), :title => invoice_summary(event.invoice)) -%> <%=l(event.name)%></div>
+      <% end -%>
+      <% if @events_count > 10 %>
+        <div>...</div>
+      <% end %>
+    </div>
+  <% end %>
+</div>
+
+<div class="splitcontentright">
+
+  <div class="invoices-box">
+
+    <h3><%= l(:label_issued)%> <%= link_to_if_authorized("(#{@client.issued_invoices.count})", project_invoices_path(:project_id=>@project, :client_id=>@client)) %></h3>
+    <%= link_to_if_authorized l(:button_new_invoice), project_client_new_invoice_path(:project_id=>@project,:client=>@client), :class => 'icon icon-add' -%>
+    <% @client.issued_invoices.order('date desc, created_at desc').limit(10).each do |invoice| %>
+      ,
+      <%= link_to(invoice.number, invoice_path(invoice), :title => invoice_summary(invoice), :class => invoice.past_due? ? 'pastdue' : nil ) -%>
+    <% end %>
+    <%= " ..." if @client.issued_invoices.count > 10 %>
+
+    <h3><%= l(:label_invoice_template_plural)%> <%= link_to_if_authorized("(#{@client.invoice_templates.count})", project_invoice_templates_path(:project_id=>@project, :client_id=>@client)) %></h3>
+    <%= link_to_if_authorized l(:label_invoice_template_new), project_client_new_invoice_template_path(:project_id=>@project,:client=>@client), :class => 'icon icon-add' %>
+    <% @client.invoice_templates.order('date desc, created_at desc').limit(10).each do |template| %>
+      ,
+      <%= link_to(template.number, invoice_template_path(template), :title => invoice_summary(template)) %>
+    <% end %>
+    <%= " ..." if @client.invoice_templates.count > 10 %>
+
+    <h3><%= l(:label_received) %> <%= link_to_if_authorized("(#{@client.received_invoices.count})", {:controller=>'received', :action=>'index', :project_id=>@project, :client_id=>@client}, :title=>l(:label_received)) %></h3>
+    <%= link_to_if_authorized l(:label_import), project_received_import_path(@project), :class => 'icon icon-add' %>
+    <% @client.received_invoices.order('created_at desc').limit(10).each do |invoice| %>
+      ,
+      <%= link_to(invoice.number, received_invoice_path(invoice), :title => invoice_summary(invoice)) %>
+    <% end %>
+    <%= " ..." if @client.received_invoices.count > 10 %>
+
+  </div>
+
+  <%= render :partial => "my/blocks/chart_invoice_status" %>
+
+  </div>
+
+</div>
+
+<% content_for :sidebar do %>
+  <%= render_menu :companies_menu, @project %>
+<% end %>

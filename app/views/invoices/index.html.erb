@@ -92,8 +92,17 @@
                 <%= text_field_tag :number, params[:number] %>
               </div>
               <div class="col span-1-de-3">
-                <label for="number"><%= l(:field_state_updated_at) %> <%= l(:label_greater_or_equal) %></label>
+                <label for="state_updated_at_from"><%= l(:field_state_updated_at) %> <%= l(:label_greater_or_equal) %></label>
                 <%= text_field_tag :state_updated_at_from, params[:state_updated_at_from], :size => 10, :style => "width: 90%;" %><%= calendar_for('state_updated_at_from') %>
+              </div>
+              <div class="col span-1-de-3">
+              </div>
+            </div>
+
+            <div class="seccio grup">
+              <div class="col span-2-de-3">
+                <label for="number"><%= l(:field_has_text) %></label>
+                <%= text_field_tag :has_text, params[:has_text] %>
               </div>
               <div class="col span-1-de-3">
               </div>
@@ -116,10 +125,18 @@
 
                   <div class="seccio grup">
                     <div class="col span-2-de-2">
-                      <label for="_client_id"><%= l(:label_company) %></label>
+                      <label for="client_id"><%= l(:label_company) %></label>
                       <%= collection_select(nil, :client_id, Client.find(:all, :order => 'name', :conditions => ["project_id = ?", @project]), :id, :name, {:include_blank => true, :selected => @client_id}) %>
                     </div>
                   </div>
+
+                  <div class="seccio grup">
+                    <div class="col span-2-de-2">
+                      <label for=""><%= l(:field_invoice_format) %></label>
+                      <%= select(nil, :invoice_format, ExportChannels.for_select(@project), { include_blank: true, selected: params[:invoice_format]}) %>
+                    </div>
+                  </div>
+
                 </fieldset>
               </div>
               <div class="col span-1-de-3" style="position: absolute; bottom: 15px; right: 15px; text-align: right;">
@@ -149,21 +166,25 @@
             <%= sort_header_tag('import_in_cents', :caption => l(:label_subtotal)) %>
             <%= sort_header_tag('import_in_cents', :caption => l(:label_invoice_total)) %>
             <%= sort_header_tag('due_date', :caption => l(:field_due_date)) %>
-            <%= sort_header_tag('state_updated_at', :title => l(:label_sort_by, "\"#{l(:field_state_updated_at)}\""), :caption => l(:field_state)) %>
+            <%= sort_header_tag('state', :title => l(:label_sort_by, "\"#{l(:field_state)}\""), :caption => l(:field_state)) %>
           </tr>
         </thead>
         <tbody>
           <% @invoices.each do |invoice| -%>
-            <tr id="invoice-<%=invoice.id%>" class="hascontextmenu <%= 'amended ' if invoice.amended? %><%= cycle("odd", "even") %>">
-              <td><%= check_box_tag("ids[]", invoice.id, false, :id => nil) %></td>
-              <td><%=h link_to_if_authorized (invoice.number || "???"), :action => 'show', :id => invoice %></td>
-              <td><%=h format_date invoice.date %></td>
-              <td><%=h invoice.client %></td>
-              <td class="money"><%= money(invoice.subtotal) %></td>
-              <td class="money"><%= money(invoice.total) %></td>
-              <td <%='class="pastdue"'.html_safe if invoice.past_due?%>><%=h format_date invoice.due_date %></td>
-              <td><%=h l("state_#{invoice.state}").capitalize %></td>
-            </tr>
+            <%if invoice.total > invoice.total_paid and invoice.total_paid.cents != 0%>
+              <tr <%='class="halfpaid"'.html_safe%>,  id="invoice-<%=invoice.id%>" class="hascontextmenu <%= 'amended ' if invoice.amended? %><%= cycle("odd", "even") %>">
+              <%else%>
+              <tr id="invoice-<%=invoice.id%>" class="hascontextmenu <%= 'amended ' if invoice.amended? %><%= cycle("odd", "even") %>">
+            <% end %>
+                <td><%= check_box_tag("ids[]", invoice.id, false, :id => nil) %></td>
+                <td><%=h link_to_if_authorized invoice.number, :action => 'show', :id => invoice %></td>
+                <td><%=h format_date invoice.date %></td>
+                <td><%=h invoice.client_office ? invoice.client_office : invoice.client %></td>
+                <td class="money"><%= money(invoice.subtotal) %></td>
+                <td class="money"><%= money(invoice.total) %></td>
+                <td <%='class="pastdue"'.html_safe if invoice.past_due?%>><%=h format_date invoice.due_date %></td>
+                <td><%=h l("state_#{invoice.state}").capitalize %></td>
+              </tr>
           <% end -%>
         </tbody>
         <tfoot>

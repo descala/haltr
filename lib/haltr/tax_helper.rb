@@ -80,10 +80,11 @@ module Haltr
       when 'es'
         taxes << Tax.new(:name=>'IVA',:percent=>21.0,:default=>true,:category=>'S')
         taxes << Tax.new(:name=>'IVA',:percent=>10.0,:default=>false,:category=>'AA')
-        taxes << Tax.new(:name=>'IVA',:percent=>4.0, :default=>false,:category=>'AA')
+        taxes << Tax.new(:name=>'IVA',:percent=>4.0, :default=>false,:category=>'AAA')
         taxes << Tax.new(:name=>'IVA',:percent=>0.0, :default=>false,:category=>'Z')
         taxes << Tax.new(:name=>'IVA',:percent=>0.0, :default=>false,:category=>'E')
         taxes << Tax.new(:name=>'IRPF',:percent=>-19.0, :default=>false,:category=>'S')
+        taxes << Tax.new(:name=>'IRPF',:percent=>-15.0, :default=>false,:category=>'S')
       when 'fr'
         taxes << Tax.new(:name=>'TVA',:percent=>19.6,:default=>true,:category=>'S')
         taxes << Tax.new(:name=>'TVA',:percent=>5.5, :default=>false,:category=>'AA')

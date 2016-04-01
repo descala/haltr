@@ -70,7 +70,7 @@
       </TaxIdentification>
       <AdministrativeCentres>
         <AdministrativeCentre>
-          <CentreCode>P00000010</CentreCode>
+          <CentreCode>P0 0000010</CentreCode>
           <RoleTypeCode>01</RoleTypeCode>
           <Name>Oficina Comptable</Name>
           <AddressInSpain>
@@ -82,7 +82,7 @@
           </AddressInSpain>
         </AdministrativeCentre>
         <AdministrativeCentre>
-          <CentreCode>P00000010</CentreCode>
+          <CentreCode>P0000 0010</CentreCode>
           <RoleTypeCode>02</RoleTypeCode>
           <Name>Organ Gestor</Name>
           <AddressInSpain>
@@ -94,7 +94,7 @@
           </AddressInSpain>
         </AdministrativeCentre>
         <AdministrativeCentre>
-          <CentreCode>P00000010</CentreCode>
+          <CentreCode>P000000 10</CentreCode>
           <RoleTypeCode>03</RoleTypeCode>
           <Name>Unitat Tramitadora</Name>
           <AddressInSpain>

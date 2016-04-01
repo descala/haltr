@@ -141,8 +141,9 @@ tax_vat_0_test_import_l1:
 tax_vat_0_template1_l1:
   invoice_line_id: 102
   name: VAT
-  percent: 0
-  category: E
+  percent: 21
+  category: S
+  comment: Just a comment
 
 tax_vat_0_draft1_l1:
   invoice_line_id: 103
@@ -155,3 +156,21 @@ tax_vat_0_i9_line1:
   name: VAT
   percent: 0
   category: E
+
+tax_vat_21_i15_line1:
+  invoice_line: i15_line1
+  name: VAT
+  percent: 21
+  category: S
+
+tax_vat_21_i15_line2:
+  invoice_line: i15_line2
+  name: VAT
+  percent: 21
+  category: S
+
+tax_vat_10_i16_line1:
+  invoice_line: i16_line1
+  name: VAT
+  percent: 10
+  category: S

@@ -5,7 +5,7 @@ class ClientsController < ApplicationController
   menu_item Haltr::MenuItem.new(:companies,:companies_level2)
 
   layout 'haltr'
-  helper :haltr, :invoices
+  helper :haltr, :invoices, :charts
 
   helper :sort
   include SortHelper
@@ -16,7 +16,7 @@ class ClientsController < ApplicationController
   before_filter :set_iso_countries_language
   before_filter :authorize
 
-  accept_api_auth :create, :show, :index, :destroy
+  accept_api_auth :create, :show, :index, :destroy, :update
 
   include CompanyFilter
   before_filter :check_for_company
@@ -30,6 +30,10 @@ class ClientsController < ApplicationController
     unless params[:name].blank?
       name = "%#{params[:name].strip.downcase}%"
       clients = clients.where("LOWER(name) LIKE ? OR LOWER(address) LIKE ? OR LOWER(address2) LIKE ? OR LOWER(taxcode) LIKE ?", name, name, name, name)
+    end
+
+    unless params[:edi_code].blank?
+      clients = clients.where("edi_code = ?", params[:edi_code])
     end
 
     unless params[:taxcode].blank?
@@ -61,9 +65,13 @@ class ClientsController < ApplicationController
        :offset =>  @offset
   end
 
-  # Only used in API
   def show
+    @people = @client.people
+    @events = @client.invoice_events.where("events.type!='HiddenEvent'").order("created_at desc").limit(10)
+    @events_count = @client.invoice_events.where("events.type!='HiddenEvent'").count
+    @client_offices= @client.client_offices
     respond_to do |format|
+      format.html
       format.api
     end
   end
@@ -78,12 +86,16 @@ class ClientsController < ApplicationController
   end
 
   def create
-    @client = Client.new(params[:client].merge({:project=>@project}))
+    begin
+      @client = Client.new(params[:client].merge({:project=>@project}))
+    rescue
+      @client = Client.new
+    end
     respond_to do |format|
       if @client.save
         format.html {
           flash[:notice] = l(:notice_successful_create)
-          redirect_to :action=>'index', :project_id=>@project
+          redirect_to :action=>'show', :id=>@client
         }
         format.js
         format.api { render :action => 'show', :status => :created, :location => client_url(@client) }
@@ -96,15 +108,21 @@ class ClientsController < ApplicationController
   end
 
   def update
-    if @client.update_attributes(params[:client])
-      event = Event.new(:name=>'edited',:client=>@client,:user=>User.current)
-      # associate last created audits to this event
-      event.audits = @client.last_audits_without_event
-      event.save!
-      flash[:notice] = l(:notice_successful_update)
-      redirect_to :action => 'index', :project_id => @project
-    else
-      render :action => "edit"
+    respond_to do |format|
+      if @client.update_attributes(params[:client])
+        event = Event.new(:name=>'edited',:client=>@client,:user=>User.current)
+        # associate last created audits to this event
+        event.audits = @client.last_audits_without_event
+        event.save!
+        format.html {
+          flash[:notice] = l(:notice_successful_update)
+          redirect_to :action=>'show', :id=>@client
+        }
+        format.api  { render_api_ok }
+      else
+        format.html { render :action => "edit" }
+        format.api  { render_validation_errors(@client) }
+      end
     end
   end
 
@@ -145,15 +163,20 @@ class ClientsController < ApplicationController
       render :partial => 'cif_info', :locals => {:client=>nil,:company=>nil}
     else
       # we are creating/editing a new client
-      # search a company with specified taxcode and (semi)public profile
-      company = Company.where(
-        "taxcode in (?, ?) and (public='public' or public='semipublic')", taxcode, taxcode2
-      ).first
-      company ||= ExternalCompany.where("taxcode in (?, ?)", taxcode, taxcode2).first
-      render :partial => "cif_info", :locals => { :client => client,
-                                                  :company => company,
-                                                  :context => params[:context],
-                                                  :invoice_id => params[:invoice_id] }
+      # if taxcode is blank render nothing.. we can't search by taxcode if blank
+      if taxcode.blank? or taxcode2.blank?
+        render :partial => 'cif_info', :locals => {:client=>nil,:company=>nil}
+      else
+        # search a company with specified taxcode and (semi)public profile
+        company = Company.where(
+          "taxcode in (?, ?) and (public='public' or public='semipublic')", taxcode, taxcode2
+        ).first
+        company ||= ExternalCompany.where("taxcode in (?, ?)", taxcode, taxcode2).first
+        render :partial => "cif_info", :locals => { :client => client,
+                                                    :company => company,
+                                                    :context => params[:context],
+                                                    :invoice_id => params[:invoice_id] }
+      end
     end
   end
 

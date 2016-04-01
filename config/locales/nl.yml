@@ -63,6 +63,7 @@ nl:
   field_number: Number
   field_invoice_number: Invoice number
   label_last_invoice_number: "Last used"
+  number_taken_in_year: "%{number} has already been taken for year %{year}"
   field_date: Date
   field_client: Client
   field_extra_info: Notes
@@ -103,6 +104,7 @@ nl:
   debit_through: Debit payment, through %{bank_account}
   transfer: Bank transfer
   transfer_to: Bank transfer to %{bank_account}
+  cheque: Cheque
   other: Other
   requires_client_bank_account: requires client bank account
   requires_company_bank_account: requires a bank account in your company
@@ -262,6 +264,7 @@ nl:
   days: Days
   s_days: d
   s_other: ""
+  boxes: 'Boxes'
 
   # People
   label_person: Person
@@ -273,6 +276,7 @@ nl:
   field_phone_office: Office phone
   field_phone_mobile: Mobile phone
   label_phone: Phone
+  field_info: Extra information
 
   # Tasks
   label_task_plural: Tasks
@@ -303,7 +307,8 @@ nl:
   save_and_mail: "Save and send mail"
   save_without_mail: "Save without sending mail"
   field_sepa_type: "SEPA payments type"
-  label_payment_initiation: "Payment initiation"
+  label_payment_initiation: "SEPA Debit"
+  label_payment_report: Payments report
 
   # Settings
   field_taxcode: VAT Id Number
@@ -345,6 +350,7 @@ nl:
   "custom": Custom
 
   # Frequency
+  mf60: Every 5 years
   mf36: Every 3 years
   mf24: Every 2 years
   mf12: Yearly
@@ -359,7 +365,6 @@ nl:
   warning_can_not_generate_invoice: "Can not generate invoice form template %{value}"
   notice_invoice_sent: "Invoice will be sent"
   error_invoice_not_sent: "Could not send invoice %{num}"
-  notice_empty_n19: "No data to create N19"
   notice_payment_done: "%{payment_type} for due date %{value} maked as done"
   notice_uploaded_file_not_found: "File not found"
 
@@ -422,6 +427,7 @@ nl:
   tax_S: "Standard"
   tax_H: "High Rated"
   tax_AA: "Low Rated"
+  tax_AAA: "Super Low Rated"
   bank_info: "Bank info"
   invoice_data: "Invoice data"
 
@@ -468,7 +474,6 @@ nl:
   label_mandate: "Mandate"
   field_delete_signed_doc: "Delete signed document"
   label_mandates: "Mandates"
-  n19_requires_bank_account: "To generate n19 you must fill your bank account"
   field_bank_infos: "Bank details"
   success_sending_notification_by_mail: "Notification sent"
   error_sending_notification_by_mail: "Error sending notification"
@@ -507,7 +512,6 @@ nl:
   template_too_old: "Template for %{client} too old (too much invoices to generate)"
   quote_acceptance: "Acceptance of quote"
   iban_is_invalid: IBAN is not valid
-  notice_n19_done: N19 for %{value} has been closed
   notice_empty_sepa: No data to generate a SEPA file
   button_save_and_send: Save and send
   button_create_and_send: Create and send
@@ -561,8 +565,8 @@ nl:
   organ_gestor: "Òrgan gestor"
   oficina_comptable: "Oficina comptable"
   unitat_tramitadora: "Unitat tramitadora"
-  field_organ_proponent: "Órgano Promotor (Servicio del Ayuntamiento que hace el encargo)"
-  organ_proponent: "Órgano Promotor (Servicio del Ayuntamiento que hace el encargo)"
+  field_organ_proponent: "Órgano Promotor"
+  organ_proponent: "Órgano Promotor"
   external_companies: "External companies"
   external_company: "External company"
   export_channels: "Channels"
@@ -576,6 +580,7 @@ nl:
   field_discount: "Discount"
   field_charge: "Charge"
   download_as_pdf: "Download PDF copy"
+  download_as_xml: "Download XML"
   label_reports: Reports
   visible_fields: "Visible fields"
   required_fields: "Required fields"
@@ -606,6 +611,12 @@ nl:
   label_factoring_assignment_data: 'Factoring assignment'
   field_fa_person_type: 'Entity type'
   field_fa_residence_type: 'Residence type'
+  field_fa_residence_type: 'Residence type'
+  label_fa_person_type_individual: "Individual"
+  label_fa_person_type_entity: "Entity"
+  label_fa_residence_type_foreigner: "Foreigner"
+  label_fa_residence_type_spain: "Resident"
+  label_fa_residence_type_UE: "European"
   field_fa_taxcode: 'VAT ID number'
   field_fa_name: 'Name'
   field_fa_address: 'Address'
@@ -621,7 +632,7 @@ nl:
   field_fa_clauses: 'Assignment clause'
   field_fa_payment_method: 'Payment method'
   channel_requires_user_pass: "Channel requires to configure user and password at 'My company'"
-  download_legal_invoice: "Download legal invoice"
+  download_legal_invoice: "Download invoice"
   label_report_channel_state: "Invoices by Channel and State"
   pdf_customization: "PDF customization"
   field_pdf_template: "PDF template"
@@ -632,4 +643,83 @@ nl:
   field_unidad_contratacion: "Unidad de contratación / SEF"
   field_discount_helper: "Calculate discount % from import"
   label_discounts_and_charges: Discounts and charges
+  invoice_import_mismatch: "Original invoice import %{original} does not match calculated import %{calculated}"
   invoice_has_no_original: Invoice has no original (transport requires an original document)
+  fa_payment_method_01: 'In cash'
+  fa_payment_method_02: 'Direct debit'
+  fa_payment_method_03: 'Receipt'
+  fa_payment_method_04: 'Credit transfer'
+  fa_payment_method_05: 'Accepted bill of exchange'
+  fa_payment_method_06: 'Documentary credit'
+  fa_payment_method_07: 'Awarded contract'
+  fa_payment_method_08: 'Bill of exchange'
+  fa_payment_method_09: 'Promissory note signed by the debtor'
+  fa_payment_method_10: 'Promissory note'
+  fa_payment_method_11: 'Cheque'
+  fa_payment_method_12: 'Reposition'
+  fa_payment_method_13: 'Specials'
+  fa_payment_method_14: 'Compensation'
+  fa_payment_method_15: 'Payment by postgiro'
+  fa_payment_method_16: 'Certified cheque'
+  fa_payment_method_17: 'Bank cheque'
+  fa_payment_method_18: 'Cash on delivery'
+  fa_payment_method_19: 'Bank card'
+  label_rounding_plural: 'Roundings'
+  field_rounding_method: 'Rounding type'
+  half_up_rounding: 'Round half up'
+  bankers_rounding: "Banker's rounding"
+  truncate_rounding: 'Truncate'
+  round_before_sum: 'Round before sum'
+  label_client_office_new: New branch
+  label_client_offices: Branches
+  label_client_office: Branch
+  amend_total: Complete
+  amend_partial: Partial
+  field_amend_reason: Rectification reason
+  amend_reason_01: "Invoice number"
+  amend_reason_02: "Invoice serial number"
+  amend_reason_03: "Issue date"
+  amend_reason_04: "Name and surnames/Corporate name – Issuer (Sender)"
+  amend_reason_05: "Name and surnames/Corporate name - Receiver"
+  amend_reason_06: "Issuer’s Tax Identification Number"
+  amend_reason_07: "Receiver’s Tax Identification Number"
+  amend_reason_08: "Issuer’s address"
+  amend_reason_09: "Receiver’s address"
+  amend_reason_10: "Item line"
+  amend_reason_11: "Applicable Tax Rate"
+  amend_reason_12: "Applicable Tax Amount"
+  amend_reason_13: "Applicable Date/Period"
+  amend_reason_14: "Invoice Class"
+  amend_reason_15: "Legal literals"
+  amend_reason_16: "Taxable Base"
+  amend_reason_80: "Calculation of tax outputs"
+  amend_reason_81: "Calculation of tax inputs"
+  amend_reason_82: "Taxable Base modified due to return of packages and packaging materials"
+  amend_reason_83: "Taxable Base modified due to discounts and rebates"
+  amend_reason_84: "Taxable Base modified due to firm court ruling or administrative decision"
+  amend_reason_85: "Taxable Base modified due to unpaid outputs where there is a judgement opening insolvency proceedings"
+  partially_amended_by_invoices: "Partially rectified by"
+  awarding: "Awarding"
+  field_issuer_transaction_reference: "Receiving advice"
+  re_tax_without_iva_same_category: "Line '%{line}' has RE tax not matching IVA tax"
+  label_discounts: "Discounts"
+  field_line_discounts_as_imports: "Show line discounts"
+  as_import: "As import"
+  as_percent: "As %"
+  field_has_text: "With text"
+  default_invoice_format: 'Invoice transport and format for new users'
+  field_edi_code: "EDI Code"
+  field_order_date: "Order date"
+  field_contract_number: "Contract number"
+  field_buyer_edi_code: "Buyer EDI"
+  field_receiver_edi_code: "Receiver EDI"
+  field_destination_edi_code: "Delivery party EDI"
+  field_payer_edi_code: "Payer EDI"
+  label_invoice_viewer: "Invoice viewer"
+  field_invoice_viewer: "Viewer used to display received invoices"
+  label_invoice_viewer_standard: "Use default viewer"
+  label_invoice_viewer_xslt : "Use XSLT viewer"
+  xslt_not_available: "We do not have an XSLT for the format of this invoice"
+  xslt_shows_original: "This invoice has been modified. The XSLT format shows the original without your changes"
+  skip_invoice_validations: "Skip invoice validation"
+  by_peppol: "Received by Peppol"

@@ -3,13 +3,12 @@ class ExportChannels
   unloadable
 
   def self.use_file(file)
-    @@channels = File.read(File.join(File.dirname(__FILE__), "../../config/#{file}"))
+    @@channels = YAML.load(File.read(File.join(File.dirname(__FILE__), "../../config/#{file}")))
   end
 
   def self.available
     # See config/channels.yml.example
-    @@channels ||= File.read(File.join(File.dirname(__FILE__), "../../config/channels.yml"))
-    YAML.load(@@channels)
+    @@channels ||= YAML.load(File.read(File.join(File.dirname(__FILE__), "../../config/channels.yml")))
   rescue Exception => e
     puts "Exception while retrieving channels.yml: #{e.message}"
     {}
@@ -89,7 +88,7 @@ class ExportChannels
   def self.for_select(current_project)
     available.sort { |a,b|
       if a[1]['order'].blank? and b[1]['order'].blank?
-        a[0].downcase <=> b[0].downcase
+        a[0].casecmp(b[0])
       elsif a[1]['order'].blank?
         1
       elsif b[1]['order'].blank?

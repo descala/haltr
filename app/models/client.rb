@@ -6,10 +6,13 @@ class Client < ActiveRecord::Base
   attr_protected :created_at, :updated_at
 
   include Haltr::BankInfoValidator
+  include Haltr::PaymentMethods
   has_many :invoices, :dependent => :destroy
   has_many :people,   :dependent => :destroy
   has_many :mandates, :dependent => :destroy
-  has_many :events, :order => :created_at
+  has_many :events,   :order => :created_at
+  has_many :invoice_events, :through => :invoices, :source => :events
+  has_many :client_offices, :dependent => :destroy
 
   belongs_to :project   # client of
   belongs_to :company,  # linked to
@@ -19,6 +22,7 @@ class Client < ActiveRecord::Base
 
   validates_presence_of :hashid
   validates_uniqueness_of :taxcode, :scope => :project_id, :allow_blank => true
+  validates_uniqueness_of :edi_code, :scope => :project_id, :allow_blank => true
   validates_uniqueness_of :hashid
 
   validates_presence_of     :project_id, :name, :currency, :language, :invoice_format, :if => Proc.new {|c| c.company_id.blank? }
@@ -62,7 +66,7 @@ class Client < ActiveRecord::Base
     IssuedInvoice.where(
       client_id:      self.id,
       state:          ['sent','registered'],
-      payment_method: Invoice::PAYMENT_DEBIT,
+      payment_method: PAYMENT_DEBIT,
       due_date:       due_date,
       bank_info_id:   bank_info_id
     )
@@ -81,19 +85,19 @@ class Client < ActiveRecord::Base
   alias :to_s :to_label
 
   def invoice_templates
-    self.invoices.find(:all,:conditions=>["type=?","InvoiceTemplate"])
+    self.invoices.where(["type=?","InvoiceTemplate"])
   end
 
   def invoice_documents
-    self.invoices.find(:all,:conditions=>["type=?","IssuedInvoice"])
+    self.invoices.where(["type=?","IssuedInvoice"])
   end
 
   def issued_invoices
-    self.invoices.find(:all,:conditions=>["type=?","IssuedInvoice"])
+    self.invoices.where(["type=?","IssuedInvoice"])
   end
 
   def received_invoices
-    self.invoices.find(:all,:conditions=>["type=?","ReceivedInvoice"])
+    self.invoices.where(["type=?","ReceivedInvoice"])
   end
 
   def allowed?
@@ -123,31 +127,13 @@ class Client < ActiveRecord::Base
   # removes non ascii characters from language code
   # for safe xml generation
   def language_string
-    self.language.scan(/[a-z]+/i).first
+    self.language.scan(/[a-z]+/i).first rescue nil
   end
 
   def full_address
     addr = address
-    addr += "\n#{address2}" if address2
+    addr += "\n#{address2}" if address2.present?
     addr
-  end
-
-  def payment_method=(v)
-    if v =~ /_/
-      write_attribute(:payment_method,v.split("_")[0])
-      self.bank_info_id=v.split("_")[1]
-    else
-      write_attribute(:payment_method,v)
-      self.bank_info=nil
-    end
-  end
-
-  def payment_method
-    if [Invoice::PAYMENT_TRANSFER, Invoice::PAYMENT_DEBIT].include?(read_attribute(:payment_method)) and bank_info
-      "#{read_attribute(:payment_method)}_#{bank_info.id}"
-    else
-      read_attribute(:payment_method)
-    end
   end
 
   def set_if_blank(atr,val)
@@ -190,6 +176,14 @@ class Client < ActiveRecord::Base
     end
     mails << email if email.present?
     mails.uniq.compact
+  end
+
+  def next
+    project.clients.first(:conditions=>["id > ?", self.id])
+  end
+
+  def previous
+    project.clients.last(:conditions=>["id < ?", self.id])
   end
 
   protected

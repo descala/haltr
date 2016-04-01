@@ -16,7 +16,9 @@ module Haltr
     def generate(invoice,format,local_certificate=false, as_file=false, force=false)
       # if it is an imported invoice, has not been modified and
       # invoice format  matches client format, send original file
-      if invoice.send_original? and !force
+      # check also original_root_namespace to verify that original is an xml,
+      # it could be in other formats, like EDI
+      if invoice.send_original? and !force and invoice.original_root_namespace
         xml = invoice.original
       else
         if format == 'efffubl'
@@ -24,11 +26,18 @@ module Haltr
         else
           pdf = nil
         end
+        client = invoice.client
+        if invoice.client_office
+          # overwrite client attributes with its office
+          ClientOffice::CLIENT_FIELDS.each do |f|
+            client[f] = invoice.client_office.send(f)
+          end
+        end
         xml = render(
           :template => "invoices/#{format}",
           :locals   => { :@invoice => invoice,
                          :@company => invoice.company,
-                         :@client  => invoice.client,
+                         :@client  => client,
                          :@efffubl_base64_pdf => pdf,
                          :@format  => format,
                          :@local_certificate  => local_certificate },

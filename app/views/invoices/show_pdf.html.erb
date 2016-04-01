@@ -64,9 +64,9 @@
     @is_pdf = true if @is_pdf.nil?
 -%>
 
-<% if @invoice.client.language -%>
+<% if @client and @client.language -%>
   <% before_locale = I18n.locale %>
-  <% I18n.locale = @invoice.client.language rescue before_locale %>
+  <% I18n.locale = @client.language rescue before_locale %>
 <% end -%>
 
 <div class="invoice_data">

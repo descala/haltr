@@ -9,13 +9,14 @@ html>body .tabular div {overflow:hidden;}
 ul.menu-rapid li, #sidebar ul li {list-style-type:none;}
 
 th.money, td.money, .money{
-  text-align: right;
+  text-align: right !important;
   white-space: nowrap;
 }
 
 .menu-rapid li {
   display: inline-block;
   margin-left: 20px;
+  position: relative;
 }
 
 .menu-rapid ul {
@@ -39,7 +40,7 @@ th.money, td.money, .money{
     float: none;
     border-bottom: dashed 1px #FFF;
     padding: 0;
-    margin: 0 10px !important;
+    margin: 0 0px !important;
     display: block;
     font-size: 12px;
 }
@@ -48,13 +49,34 @@ th.money, td.money, .money{
     background: none;
     border-radius: none;
     box-shadow: none;
-    padding: 5px 0px;
+    padding: 5px 20px;
     margin: 0;
     text-shadow: 0 1px 0 #FFFFFF;
     font-size: 14px;
     font-weight: 500;
 }
-
+.menu-rapid ul li.submenu {
+  white-space: nowrap;
+}
+.menu-rapid ul ul {
+  display:none;
+  position:absolute;
+  top:100%;
+  left:0;
+  background:#fff;
+  padding:0;
+}
+.menu-rapid  ul ul li {
+  float:none;
+}
+.menu-rapid ul ul a {
+  line-height:120%;
+}
+.menu-rapid ul li:hover > ul {
+  display:block;
+  margin-left: 241px;
+  margin-top: -26px;
+}
 .invoice-navigator {
   float: right !important;
 }
@@ -107,7 +129,7 @@ th.money, td.money, .money{
   margin: 30px;
 }
 
-.amended {
+.amended, .amended td a {
   text-decoration: line-through;
 } 
 
@@ -126,7 +148,10 @@ select.tax {
 }
 
 .pastdue {
-  color: red;
+  color: red !important;
+}
+.halfpaid {
+  color: blue;
 }
 .disabled {
   text-decoration: none !important;
@@ -328,4 +353,30 @@ span#send_info {
   left: 50%;
   margin-left: -10px;
   z-index: 2;
+.controller-clients .client-info {
+  border: 1px outset orange;
+  margin-bottom: 10px;
+  padding: 10px;
+}
+
+.controller-clients .people-info {
+  border: 1px outset grey;
+  margin-bottom: 10px;
+  padding: 10px;
+}
+
+.controller-clients .events {
+  border: 1px outset grey;
+  margin-bottom: 10px;
+  padding: 10px;
+}
+
+.controller-clients .invoices-box {
+  border: 1px outset grey;
+  margin-bottom: 10px;
+  padding: 10px;
+}
+
+.controller-clients .client-info h3 {
+  font-size: 120%;
 }

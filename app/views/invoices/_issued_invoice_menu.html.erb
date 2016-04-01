@@ -3,57 +3,76 @@
 <% end -%>
 
 <li>
-<a href="#"><%= l(:more_options) %></a>
-<ul>
-  <% %w(new sent accepted registered refused closed).each do |state| -%>
-    <% next if @invoice.state == state -%>
-    <li><%=link_to(t("manual_mark_as", state: t("state_#{state}")), mark_as_path(@invoice, state: state), class: "icon-haltr-mark-#{state}")%></li>
-  <% end -%>
-
-  <hr />
-
-  <%= call_hook(:issued_invoice_menu_top) %>
-
-  <% if @invoice.last_sent_file_path -%>
-    <li>
-    <%= link_to(l(:download_legal_invoice), @invoice.last_sent_file_path) %>
+  <a href="#"><%= l(:more_options) %></a>
+  <ul>
+    <li class="submenu"><a href="#"><%= l(:manual_mark_as, state: '') %></a>
+      <ul>
+        <% %w(new sent accepted registered refused closed).each do |state| -%>
+          <% next if @invoice.state == state -%>
+          <li><%=link_to(l("state_#{state}"), mark_as_path(@invoice, state: state), class: "icon-haltr-mark-#{state}")%></li>
+        <% end -%>
+      </ul>
     </li>
-  <% end -%>
 
-  <li><%= link_to l(:download_as_pdf), {:action=>'show', :id=>@invoice, :format => 'pdf'}, :class=>'icon-haltr-save' %></li>
+    <%= call_hook(:issued_invoice_menu_top) %>
 
-  <% unless hide_to_user(:manage_payments) -%>
-    <% if @invoice.state?(:sent) or @invoice.state?(:allegedly_paid) or @invoice.state?(:registered) -%>
-      <li><%= link_to l(:receive_payment), {:controller=>'payments', :action=>'new', :project_id=>@project, :invoice_id=>@invoice}, :class=>'icon-haltr-payment' %></li>
+    <% if @invoice_xslt_html %>
+      <li>
+        <%= link_to(l(:label_invoice_viewer_standard), "?view_with=standard") %>
+      </li>
+    <% else %>
+      <li>
+        <%= link_to(l(:label_invoice_viewer_xslt), "?view_with=xslt") %>
+      </li>
+    <% end %>
+
+    <% if @invoice.last_sent_file_path -%>
+      <li>
+        <%= link_to(l(:download_legal_invoice), @invoice.last_sent_file_path) %>
+      </li>
+    <%else%>
+      <li><%= link_to l(:download_as_xml), {:action=>'show', :id=>@invoice, :format => 'facturae32'}, :class=>'icon-haltr-save' %></li>
     <% end -%>
-  <% end -%>
 
-  <% unless hide_to_user(:use_templates) -%>
-    <% if @invoice.invoice_template_id and @invoice.invoice_template -%>
-      <li><%= link_to "#{l(:show_template)} #{@invoice.invoice_template.id}", {:controller=>'invoice_templates',:action=>'show', :id=>@invoice.invoice_template_id }, :class=>'icon-haltr-templates' %></li>
-    <% else -%>
-      <li><%= link_to l(:generate_template_from_invoice), {:controller=>'invoice_templates',:action=>'new_from_invoice',:id=>@invoice}, :class => 'icon-haltr-template' %></li>
+    <li><%= link_to l(:download_as_pdf), {:action=>'show', :id=>@invoice, :format => 'pdf', :view_with => (@invoice_xslt_html ? 'xslt' : '')}, :class=>'icon-haltr-save' %></li>
+
+    <% unless hide_to_user(:manage_payments) -%>
+      <% if @invoice.state?(:sent) or @invoice.state?(:allegedly_paid) or @invoice.state?(:registered) -%>
+        <li><%= link_to l(:receive_payment), {:controller=>'payments', :action=>'new', :project_id=>@project, :invoice_id=>@invoice}, :class=>'icon-haltr-payment' %></li>
+      <% end -%>
     <% end -%>
-  <% end -%>
 
-  <% unless @invoice.amended? -%>
-    <li><%= link_to l(:create_amend_invoice), {:controller => 'invoices', :action => 'amend_for_invoice', :id => @invoice}, :method => :post, :class => 'icon-haltr-template' %></li>
-  <% end -%>
-  <li><%= link_to l(:duplicate_invoice), {:controller => 'invoices', :action => 'duplicate_invoice', :id => @invoice}, :class => 'icon-haltr-invoice' %></li>
-  <% unless Setting.plugin_haltr['issues_controller_name'].blank? -%>
-    <li>
-    <%= link_to l(:report_issue_with_invoice),
-      { :controller => Setting.plugin_haltr['issues_controller_name'],
-        :action => 'new',
-        :project_id => @project,
-        'issue[subject]' => l(:invoice_issue_subject, :id=>@invoice.id),
-        'issue[description]' => l(:invoice_issue_body) },
-      :class => 'icon-haltr-report' %>
+    <% unless hide_to_user(:use_templates) -%>
+      <% if @invoice.invoice_template_id and @invoice.invoice_template -%>
+        <li><%= link_to "#{l(:show_template)} #{@invoice.invoice_template.id}", {:controller=>'invoice_templates',:action=>'show', :id=>@invoice.invoice_template_id }, :class=>'icon-haltr-templates' %></li>
+      <% else -%>
+        <li><%= link_to l(:generate_template_from_invoice), {:controller=>'invoice_templates',:action=>'new_from_invoice',:id=>@invoice}, :class => 'icon-haltr-template' %></li>
+      <% end -%>
+    <% end -%>
+
+    <% unless @invoice.amended? -%>
+      <li class="submenu"><a href="#"><%= l(:create_amend_invoice) %></a>
+        <ul>
+          <li><%= link_to l(:amend_total),   {:controller => 'invoices', :action => 'amend_for_invoice', :id => @invoice, :amend_type => :total}, :class => 'icon-haltr-template' %></li>
+          <li><%= link_to l(:amend_partial), {:controller => 'invoices', :action => 'amend_for_invoice', :id => @invoice, :amend_type => :partial}, :class => 'icon-haltr-template' %></li>
+        </ul>
+      </li>
+    <% end -%>
+    <li><%= link_to l(:duplicate_invoice), {:controller => 'invoices', :action => 'duplicate_invoice', :id => @invoice}, :class => 'icon-haltr-invoice' %></li>
+    <% unless Setting.plugin_haltr['issues_controller_name'].blank? -%>
+      <li>
+        <%= link_to l(:report_issue_with_invoice),
+          { :controller => Setting.plugin_haltr['issues_controller_name'],
+            :action => 'new',
+            :project_id => @project,
+            'issue[subject]' => l(:invoice_issue_subject, :id=>@invoice.id),
+            'issue[description]' => l(:invoice_issue_body) },
+          :class => 'icon-haltr-report' %>
     </li>
   <% end -%>
 
   <%= call_hook(:issued_invoice_menu_bottom) %>
 
-</ul>
+  </ul>
 </li>
 

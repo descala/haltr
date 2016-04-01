@@ -1,0 +1,11 @@
+client_office_001:
+  client_id: 1
+  name: Client1office1
+  address: "street, 1"
+  address2: ""
+  postalcode: 08080
+  city: Barcelona
+  province: Barcelona
+  country: es
+  email: mail@client1.com
+

@@ -2,6 +2,8 @@ class Company < ActiveRecord::Base
 
   unloadable
 
+  ROUNDING_METHODS = %w( half_up bankers truncate )
+
   belongs_to :project
 
   # these are the linked clients: where this company apears in other
@@ -12,6 +14,7 @@ class Company < ActiveRecord::Base
   validates_presence_of :name, :project_id, :email, :postalcode, :country
   validates_uniqueness_of :taxcode, :allow_blank => true
   validates_inclusion_of :currency, :in  => Money::Currency.table.collect {|k,v| v[:iso_code] }
+  validates_inclusion_of :rounding_method, :in => ROUNDING_METHODS
   validates_format_of :email,
     :with => /\A[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]+(,[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]+)*\z/,
     :allow_nil => true
@@ -56,10 +59,13 @@ class Company < ActiveRecord::Base
     name.split(" ").first
   end
 
+  # https://www.ingent.net/issues/5425
   def last_name
     ln = name.split(" ")
     ln.shift
-    ln.join(" ")
+    ln = ln.join(" ")
+    ln = '.' if ln.blank?
+    ln
   end
 
   def currency=(v)
@@ -96,6 +102,7 @@ class Company < ActiveRecord::Base
   def only_one_default_tax_per_name
     deftaxes = {}
     taxes.each do |tax|
+      next if tax.marked_for_destruction?
       errors.add(:base, l(:only_one_default_allowed_for, :tax_name=>tax.name)) if deftaxes[tax.name] and tax.default
       deftaxes[tax.name] = tax.default
     end
@@ -265,6 +272,13 @@ class Company < ActiveRecord::Base
     self.project.users.collect {|u| u unless u.admin?}.compact.first.language
   rescue
     I18n.default_locale.to_s
+  end
+
+  # for select on my_company view
+  def self.rounding_methods
+    ROUNDING_METHODS.collect {|m|
+      [ I18n.t("#{m}_rounding"), m ]
+    }
   end
 
   private

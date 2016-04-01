@@ -8,11 +8,11 @@ class IssuedInvoice < InvoiceDocument
 
   belongs_to :invoice_template
   validates_presence_of :number, :unless => Proc.new {|invoice| invoice.type == "DraftInvoice"}
-  validates_uniqueness_of :number, :scope => [:project_id,:type], :if => Proc.new {|i| i.type == "IssuedInvoice" }
+  validate :number_must_be_uniq
   validate :invoice_must_have_lines
 
   before_validation :set_due_date
-  before_save :update_imports
+  before_save :update_imports, :unless => Proc.new {|i| i.changed_attributes.keys == ['state'] }
   after_create :create_event
   after_destroy :release_amended
   before_save :update_status, :unless => Proc.new {|invoicedoc| invoicedoc.state_changed? }
@@ -114,7 +114,7 @@ class IssuedInvoice < InvoiceDocument
   end
 
   def label
-    if self.amend_of
+    if self.amend_of or self.amended_number
       l :label_amendment_invoice
     else
       l :label_invoice
@@ -123,6 +123,21 @@ class IssuedInvoice < InvoiceDocument
 
   def to_label
     "#{number}"
+  end
+
+  def number_must_be_uniq
+    if type == "IssuedInvoice"
+      query = IssuedInvoice.where(project_id: project, number: number)
+      query = query.where("YEAR(date) = #{date.year}") unless date.nil?
+      query = query.where("id != #{id}") unless new_record?
+      if query.any?
+        if date.nil?
+          errors.add(:number, :taken)
+        else
+          errors.add(:number, l(:number_taken_in_year, number: number, year: date.year))
+        end
+      end
+    end
   end
 
   def self.find_can_be_sent(project)
@@ -154,7 +169,7 @@ class IssuedInvoice < InvoiceDocument
 
   def self.last_number(project)
     # assume invoices with > date will have > number
-    numbers = project.issued_invoices.order(:date, :created_at).last(10).collect {|i|
+    numbers = project.issued_invoices.order("date DESC, created_at DESC").limit(10).collect {|i|
       i.number
     }.compact
     numbers.sort_by do |num|
@@ -193,26 +208,14 @@ class IssuedInvoice < InvoiceDocument
     %w(sent refused accepted allegedly_paid closed).include? state
   end
 
-  def create_amend
-    new_attributes = self.attributes
-    new_attributes['state']='new'
-    ai = IssuedInvoice.new(new_attributes)
-    ai.number = "#{number}-R"
-    ai.series_code = I18n.t(:amendment)
-    self.invoice_lines.each do |line|
-      il = line.dup
-      il.taxes = line.taxes.collect {|tax| tax.dup }
-      ai.invoice_lines << il
-    end
-    ai.save(:validate=>false)
-    self.amend_id = ai.id
-    self.save(:validate=>false)
-    self.amend_and_close # change state
-    ai
-  end
-
+  # returns true if invoice has been totally amended (substituted by another)
   def amended?
     (!self.amend_id.nil? and self.amend_id != self.id )
+  end
+
+  # all amends, sustitutive and partial
+  def is_amend?
+    amend_of or partial_amend_of or amended_number
   end
 
   def last_sent_event
@@ -263,7 +266,7 @@ class IssuedInvoice < InvoiceDocument
   def update_status
     update_imports
     if is_paid?
-      if (state?(:sent) or state?(:accepted) or state?(:allegedly_paid))
+      if can_paid?
         update_attribute(:state, :closed)
         Event.create(name: 'paid', invoice: self, user: User.current)
       end

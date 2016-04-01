@@ -10,6 +10,7 @@ module ProjectHaltrPatch
       has_one :company
       has_many :clients
       has_many :people, :through => :clients
+      has_many :client_offices, :through => :clients
       has_many :mandates, :through => :clients
       has_many :invoices
       has_many :invoice_templates
@@ -20,6 +21,7 @@ module ProjectHaltrPatch
       has_many :draft_invoices
       has_many :events
       has_many :import_errors
+      has_many :invoice_lines, :through => :invoices
     end
  
   end

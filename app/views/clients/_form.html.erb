@@ -100,6 +100,11 @@
       </div>
     <% end -%>
   </div>
+  <div class="seccio grup">
+    <p class="col span-1-de-4">
+    <%= f.text_field :company_identifier %>
+    </p>
+  </div>
 </fieldset>
 
 <div class="client_hiden_fields" style="<%= context =~ /_invoice$/ ? "display:none;" : "" %>">
@@ -128,7 +133,7 @@
 
   <div class="seccio grup">
     <p class="col span-1-de-2">
-    <%= f.select(:payment_method, Invoice.payment_methods(@project.company)) %><br/>
+    <%= f.select(:payment_method, Haltr::PaymentMethods.for_select(@project.company)) %><br/>
     <%= f.text_area(:payment_method_text, :cols => 40, :rows => 2, :no_label => true, :id => 'payment_other', :style => (client.payment_method==Invoice::PAYMENT_SPECIAL) ? '' : 'display: none;') %>
     </p>
     <p class="col span-1-de-2">
@@ -146,10 +151,6 @@
 
 </fieldset>
 
-<fieldset>
-  <legend>UBL</legend>
-    <%= f.text_field :company_identifier %>
-</fieldset>
 
 <% if User.current.admin? or User.current.allowed_to?(:send_peppol, @project) -%>
   <fieldset class="tabular box">
@@ -163,6 +164,28 @@
       </p>
   </fieldset>
 <% end -%>
+
+<fieldset class="tabular box">
+  <legend>EDI</legend>
+  <div class="seccio grup">
+    <p class="col span-1-de-5">
+    <%= f.text_field :edi_code %>
+    </p>
+    <p class="col span-1-de-5">
+    <%= f.text_field :buyer_edi_code %>
+    </p>
+    <p class="col span-1-de-5">
+    <%= f.text_field :receiver_edi_code %>
+    </p>
+    <p class="col span-1-de-5">
+    <%= f.text_field :destination_edi_code %>
+    </p>
+    <p class="col span-1-de-5">
+    <%= f.text_field :payer_edi_code %>
+    </p>
+  </div>
+</fieldset>
+
 </div>
 
 <% content_for :header_tags do -%>

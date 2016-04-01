@@ -2,6 +2,7 @@
 
 api.invoice do
   api.id @invoice.id
+  api.number @invoice.number
   api.project(
     :id => @invoice.project_id,
     :name => @invoice.project.name
@@ -14,11 +15,24 @@ api.invoice do
   api.client(
     :id => @invoice.client_id,
     :name => @invoice.client.name,
-    :taxcode => @invoice.client.taxcode
+    :taxcode => @invoice.client.taxcode,
+    :address    => @invoice.client.address,
+    :address2   => @invoice.client.address2,
+    :postalcode => @invoice.client.postalcode,
+    :city       => @invoice.client.city,
+    :province   => @invoice.client.province,
+    :country    => @invoice.client.country
   ) unless @invoice.client.nil?
   api.state @invoice.state
   api.date @invoice.date
   api.due_date @invoice.due_date
+  api.ponumber @invoice.ponumber
+  api.payment_method_info payment_method_info
+
+  # discounts
+  api.discount_text    @invoice.discount_text
+  api.discount_percent @invoice.discount_percent.to_f
+  api.discount_amount  @invoice.discount_amount.to_f
 
   # subtotal
   api.subtotal @invoice.subtotal.to_f
@@ -46,9 +60,10 @@ api.invoice do
   api.array :lines do
     @invoice.invoice_lines.each do |line|
       api.line do
-        api.quantity line.quantity
+        api.quantity line.quantity.to_f
         api.description line.description
-        api.price line.price
+        api.price line.price.to_f
+        api.total_cost line.total_cost.to_f
       end
     end
   end if include_in_api_response?('lines')

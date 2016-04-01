@@ -76,7 +76,7 @@ module Import
     attr_accessor :line
     
     def aammdd_date(pos)
-      Date.strptime(line[pos..pos+6], '%y%m%d')
+      Date.strptime(line[pos..pos+6], '%y%m%d') rescue nil
     end
     def money(pos,len)
       Money.new(line[pos..pos+len].to_i, Money::Currency.new(Setting.plugin_haltr['default_currency']))

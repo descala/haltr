@@ -72,6 +72,7 @@ ca:
   field_number: Número
   field_invoice_number: Número de factura
   label_last_invoice_number: "Últim fet servir"
+  number_taken_in_year: "%{number} ja s'està utilitzant a l'any %{year}"
   field_date: Data
   field_client: Client
   field_extra_info: Notes
@@ -113,6 +114,7 @@ ca:
   debit_through: Carregar al compte, mitjançant %{bank_account}
   transfer: Transferència bancària
   transfer_to: Transferència bancària a %{bank_account}
+  cheque: Reposició
   other: Altres
   requires_client_bank_account: requereix compte bancari del client
   requires_company_bank_account: requereix compte bancari propi
@@ -273,6 +275,7 @@ ca:
   days: Dies
   s_days: d
   s_other: ""
+  boxes: 'Caixes'
 
   # People
   label_person: Persona
@@ -284,6 +287,7 @@ ca:
   field_phone_office: Telèfon oficina
   field_phone_mobile: Telèfon mòbil
   label_phone: Telèfon
+  field_info: Informació extra
 
   # Tasks
   label_task_plural: Tasques
@@ -314,7 +318,8 @@ ca:
   save_and_mail: "Desar i enviar mail"
   save_without_mail: "Desar sense enviar mail"
   field_sepa_type: "Tipus de pagaments SEPA"
-  label_payment_initiation: "Introduir pagaments"
+  label_payment_initiation: "Càrrecs SEPA"
+  label_payment_report: Informe de pagaments
 
   # Settings
   field_taxcode: "NIF"
@@ -357,6 +362,7 @@ ca:
   "custom": Personalitzat
 
   # Frequency
+  mf60: cada 5 anys
   mf36: Cada 3 anys
   mf24: Cada 2 anys
   mf12: Anual
@@ -371,8 +377,6 @@ ca:
   warning_can_not_generate_invoice: "No s'ha pogut generar la factura de la plantilla %{value}"
   notice_invoice_sent: "La factura s'està enviant"
   error_invoice_not_sent: "La factura %{num} no s'ha pogut enviar"
-  notice_empty_n19: "No hi ha dades per generar un N19"
-  notice_n19_done: "S'ha tancat el N19 de data %{value}"
   notice_empty_sepa: "No hi ha dades per generar un fitxer SEPA"
   notice_payment_done: "S'ha tancat el %{payment_type} de data %{value}"
   notice_uploaded_file_not_found: "No s'ha trobat el fitxer"
@@ -438,6 +442,7 @@ ca:
   tax_S: "Estàndard"
   tax_H: "Tasa alta"
   tax_AA: "Tasa baixa"
+  tax_AAA: "Tasa super reduïda"
   invoice_data: "Dades factura"
   bank_info: "Dades bancàries"
 
@@ -446,7 +451,7 @@ ca:
 
   button_save_and_send: Desar i enviar
   button_create_and_send: Crear i enviar
-  bank_account_empty: Cal especificar el numero de compte si el mètode de pagament és una transferència
+  bank_account_empty: Cal especificar el número de compte si el mètode de pagament és una transferència
   errors_prevented_invoice_sent: No s'ha enviat la factura perquè conté errors
   invoice_total: "Total factura"
   total_executable: "Total a pagar"
@@ -492,7 +497,6 @@ ca:
   label_mandate: "Mandat"
   field_delete_signed_doc: "Eliminar document signat"
   label_mandates: "Mandats"
-  n19_requires_bank_account: "Per generar N19 cal omplir el teu compte bancari"
   field_bank_infos: "Dades bancàries"
   success_sending_notification_by_mail: "Notificació enviada"
   error_sending_notification_by_mail: "Error enviant la notificació"
@@ -592,6 +596,7 @@ ca:
   field_discount: "Descompte"
   field_charge: "Càrrec"
   download_as_pdf: "Descarregar còpia en PDF"
+  download_as_xml: "Descaregar XML"
   label_reports: Informes
   visible_fields: "Camps visibles"
   required_fields: "Camps requerits"
@@ -624,6 +629,11 @@ ca:
   label_factoring_assignment_data: 'Cessió de factoring'
   field_fa_person_type: "Tipus d'entitat"
   field_fa_residence_type: 'Residència'
+  label_fa_person_type_individual: "Física"
+  label_fa_person_type_entity: "Jurídica"
+  label_fa_residence_type_foreigner: "Extranger"
+  label_fa_residence_type_spain: "Resident"
+  label_fa_residence_type_UE: "Europeu"
   field_fa_taxcode: 'NIF'
   field_fa_name: 'Nom'
   field_fa_address: 'Adreça'
@@ -639,7 +649,7 @@ ca:
   field_fa_clauses: 'Clàusula de cessió'
   field_fa_payment_method: 'Mètode de pagament'
   channel_requires_user_pass: "El canal necessita que configuris usuari i password a 'Connexions' a 'La meva empresa'"
-  download_legal_invoice: "Descarregar factura legal"
+  download_legal_invoice: "Descarregar factura"
   label_report_channel_state: "Factures per canal d'enviament i per estat"
   pdf_customization: "Personalització de PDF"
   field_pdf_template: "Plantilla PDF"
@@ -650,4 +660,83 @@ ca:
   field_unidad_contratacion: "Unitat de contractació / SEF"
   field_discount_helper: "Calcular % de descompte des d'import"
   label_discounts_and_charges: Descomptes i càrrecs
+  invoice_import_mismatch: "L'import de la factura original %{original} és diferent del calculat %{calculated}"
   invoice_has_no_original: La factura no té original (el transport requereix un document original)
+  fa_payment_method_01: 'Al comptat'
+  fa_payment_method_02: 'Rebut domiciliat'
+  fa_payment_method_03: 'Rebut'
+  fa_payment_method_04: 'Transferència'
+  fa_payment_method_05: 'Lletra acceptada'
+  fa_payment_method_06: 'Crèdit documentari'
+  fa_payment_method_07: 'Contracte adjudicació'
+  fa_payment_method_08: 'Lletra de canvi'
+  fa_payment_method_09: 'Pagaré a la ordre'
+  fa_payment_method_10: 'Pagaré no a la ordre'
+  fa_payment_method_11: 'Xec'
+  fa_payment_method_12: 'Reposició'
+  fa_payment_method_13: 'Especials'
+  fa_payment_method_14: 'Compensació'
+  fa_payment_method_15: 'Gir postal'
+  fa_payment_method_16: 'Xec conformat'
+  fa_payment_method_17: 'Xec bancari'
+  fa_payment_method_18: 'Pagament contra reemborsament'
+  fa_payment_method_19: 'Pagament mitjançant targeta'
+  label_rounding_plural: 'Arrodoniments'
+  field_rounding_method: "Tipus d'arrodoniment"
+  half_up_rounding: 'Arrodonir cap amunt'
+  bankers_rounding: 'Arrodoniment bancari'
+  truncate_rounding: 'Truncar decimals'
+  round_before_sum: 'Arrodonir abans de sumar'
+  label_client_office_new: Nova seu
+  label_client_offices: Seus
+  label_client_office: Seu
+  amend_total: Substitutiva
+  amend_partial: Per diferències
+  field_amend_reason: Motiu de rectificació
+  amend_reason_01: "Número de la factura"
+  amend_reason_02: "Serie de la factura"
+  amend_reason_03: "Fecha expedición"
+  amend_reason_04: "Nombre y apellidos/Razón Social-Emisor"
+  amend_reason_05: "Nombre y apellidos/Razón Social-Receptor"
+  amend_reason_06: "Identificación fiscal Emisor/obligado"
+  amend_reason_07: "Identificación fiscal Receptor"
+  amend_reason_08: "Domicilio Emisor/Obligado"
+  amend_reason_09: "Domicilio Receptor"
+  amend_reason_10: "Detalle Operación"
+  amend_reason_11: "Porcentaje impositivo a aplicar"
+  amend_reason_12: "Cuota tributaria a aplicar"
+  amend_reason_13: "Fecha/Periodo a aplicar"
+  amend_reason_14: "Clase de factura"
+  amend_reason_15: "Literales legales"
+  amend_reason_16: "Base imponible"
+  amend_reason_80: "Cálculo de cuotas repercutidas"
+  amend_reason_81: "Cálculo de cuotas retenidas"
+  amend_reason_82: "Base imponible modificada por devolución de envases / embalajes"
+  amend_reason_83: "Base imponible modificada por descuentos y bonificaciones"
+  amend_reason_84: "Base imponible modificada por resolución firme, judicial o administrativa"
+  amend_reason_85: "Base imponible modificada cuotas repercutidas no satisfechas. Auto de declaración de concurso"
+  partially_amended_by_invoices: "Parcialment rectificada per"
+  awarding: "Contracte d'adjudicació"
+  field_issuer_transaction_reference: "Contra-albarà"
+  re_tax_without_iva_same_category: "La línia '%{line}' té un impost RE que no correspon a l'impost IVA"
+  label_discounts: "Descomptes"
+  field_line_discounts_as_imports: "Mostrar els descomptes per línia"
+  as_import: "Com a import"
+  as_percent: "Com a %"
+  field_has_text: "Conté el text"
+  default_invoice_format: 'Format i transport de factures per als nous usuaris'
+  field_edi_code: "PO EDI legal"
+  field_order_date: "Data de la comanda"
+  field_contract_number: "Número de contracte"
+  field_buyer_edi_code: "PO EDI comprador"
+  field_receiver_edi_code: "PO EDI receptor factura"
+  field_destination_edi_code: "PO EDI receptor mercaderia"
+  field_payer_edi_code: "PO EDI emissor pagament"
+  label_invoice_viewer: "Visualització de factures"
+  field_invoice_viewer: "Visualització de les factures importades"
+  label_invoice_viewer_standard: "Usar el visor normal"
+  label_invoice_viewer_xslt : "Usar el visor XSLT"
+  xslt_not_available: "No hi ha cap XSLT disponible pel format original d'aquesta factura"
+  xslt_shows_original: "Aquesta factura s'ha modificat. El format XSLT reflecteix l'original, sense el canvis."
+  skip_invoice_validations: No validar la factura al importar
+  by_peppol: "Rebuda per Peppol"

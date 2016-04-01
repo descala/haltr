@@ -1,11 +1,11 @@
 <tr>
   <td width="10%"><%=payment_type.split("_").last%></td>
-  <td width="40%">
+  <td>
     (<%= link_to("#{invoices.size} #{l(:label_invoice_plural)}", :action => 'invoices', :project_id => @project, :invoices => invoices.collect {|i| i.id })-%> <%=h money(invoices.collect {|i| i.total}.sum) %>)
   </td>
   <td>
     <%= link_to l(:button_download),
-      { :action     => payment_type.split("_").first, # n19 / sepa
+      { :action     => payment_type.split("_").first, # sepa
         :project_id => @project,
         :due_date   => due_date,
         :bank_info  => bank_info,
@@ -13,7 +13,9 @@
         :invoices   => invoices.collect {|i| i.id } },
       :style => (due_date < Date.today ? "color: red;" : ""),
       :title => (due_date < Date.today ? "#{l(:field_due_date)}: #{format_date due_date}" : "")
-    %> /
+    %>
+  </td>
+  <td>
     <%= link_to l(:button_mark_done),
       { :action       => "payment_done",
         :project_id   => @project,

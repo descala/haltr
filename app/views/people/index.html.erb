@@ -1,11 +1,14 @@
 <% if @client %>
 <div class="seccio grup">
-  <div class="col span-2-de-2">
+  <div class="col span-1-de-2">
     <ul class="menu-rapid">
       <li>
       <%= link_to_if_authorized l(:label_person_new), new_client_person_path(@client), :class => 'icon icon-add' %>
       </li>
     </ul>
+  </div>
+  <div class="col span-1-de-2">
+    <h1 style="float: right;"><%= link_to(@client.name, client_path(@client)) %> - <%=l(:label_person_plural)%></h1>
   </div>
 </div>
 <%end%>
@@ -53,6 +56,7 @@
           <%= sort_header_tag('last_name', :caption => l(:field_last_name)) %>
           <%= sort_header_tag('email', :caption => l(:field_email)) %>
           <th><%= l(:label_phone) %></th>
+          <% if @client == nil %> <th><%= l(:label_company) %></th> <% end %>
           <th><%= l(:button_edit) %></th>
           <th><%= l(:button_delete) %></th>
         </tr>
@@ -64,6 +68,7 @@
             <td><%=h person.last_name %></td>
             <td><%=h person.email %></td>
             <td><%=h person.phone %></td>
+            <% if @client == nil %> <td><%=h person.client %></td> <% end %>
             <td align="center"><%= link_to_if_authorized l(:button_edit), {:action=>'edit',:id=>person}, :class => 'icon icon-edit editar' %></td>
             <td align="center"><%= link_to_if_authorized l(:button_delete), {:action=>'destroy',:id=>person} , :confirm => l(:text_are_you_sure), :method => :delete, :class => 'icon icon-del eliminar' %></td>
           </tr>

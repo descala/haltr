@@ -75,6 +75,7 @@ es:
   button_add_invoice_line: Añade una nueva línea a la factura
   field_invoice_number: Número de factura
   label_last_invoice_number: "Último usado"
+  number_taken_in_year: "%{number} ya se está utilizando para el año %{year}"
   field_date: Fecha
   field_client: Cliente
   field_extra_info: Notas
@@ -115,6 +116,7 @@ es:
   debit_through: Cargar en cuenta, usando %{bank_account}
   transfer: Transferencia bancaria
   transfer_to: Transferencia bancaria a %{bank_account}
+  cheque: Reposición
   other: Otros
   requires_client_bank_account: requiere cuenta bancaria del cliente
   requires_company_bank_account: requiere cuenta bancaria propia
@@ -275,6 +277,7 @@ es:
   days: Días
   s_days: d
   s_other: ""
+  boxes: 'Cajas'
 
   # People
   label_person: Persona
@@ -286,6 +289,7 @@ es:
   field_phone_office: Teléfono oficina
   field_phone_mobile: Teléfono móvil
   label_phone: Teléfono
+  field_info: Información extra
 
   # Tasks
   label_task_plural: Tareas
@@ -316,7 +320,8 @@ es:
   save_and_mail: "Guardar y enviar mail"
   save_without_mail: "Guardar sin enviar mail"
   field_sepa_type: "tipo de pagos SEPA"
-  label_payment_initiation: "Introducir pagos"
+  label_payment_initiation: "Adeudos SEPA"
+  label_payment_report: Informe de pagos
 
   # Settings
   field_taxcode: "NIF"
@@ -358,6 +363,7 @@ es:
   "custom": Personalizado
 
   # Frequency
+  mf60: Cada 5 años
   mf36: Cada 3 años
   mf24: Cada 2 años
   mf12: Anual
@@ -372,8 +378,6 @@ es:
   warning_can_not_generate_invoice: "No se ha podido generar la factura de la plantilla %{value}"
   notice_invoice_sent: "La factura se esta enviando"
   error_invoice_not_sent: "La factura %{num} no se ha podido enviar"
-  notice_empty_n19: "No hay datos para generar un N19"
-  notice_n19_done: "Se ha cerrado el N19 con fecha %{value}"
   notice_empty_sepa: "No hay datos para generar un fichero SEPA"
   notice_payment_done: "Se ha cerrado el %{payment_type} de fecha %{value}"
   notice_uploaded_file_not_found: "No se ha encontrado el fichero"
@@ -439,6 +443,7 @@ es:
   tax_S: "Estándar"
   tax_H: "Tasa alta"
   tax_AA: "Tasa baja"
+  tax_AAA: "Tasa super reducida"
   invoice_data: "Datos factura"
   bank_info: "Datos bancarios"
 
@@ -494,7 +499,6 @@ es:
   label_mandate: "Mandato"
   field_delete_signed_doc: "Eliminar documento firmado"
   label_mandates: "Mandatos"
-  n19_requires_bank_account: "Para generar N19 debes rellenar tu cuenta bancaria"
   field_bank_infos: "Datos bancarios"
   success_sending_notification_by_mail: "Notificación enviada"
   error_sending_notification_by_mail: "Error enviando la notificación"
@@ -576,12 +580,12 @@ es:
   client: "Cliente"
   pending_auth_requests: "Hay peticiones pendientes de autorización: %{num} empresas se quieren vincular al tu perfil"
   denied_requests: "Peticiones denegadas"
-  self_employed: "Soy trabajador autónomo o una SCP"
+  self_employed: "Soy trabajador autónomo"
   organ_gestor: "Órgano gestor"
   oficina_comptable: "Oficina contable"
   unitat_tramitadora: "Unidad tramitadora"
-  field_organ_proponent: "Órgano Promotor (Servicio del Ayuntamiento que hace el encargo)"
-  organ_proponent: "Órgano Promotor (Servicio del Ayuntamiento que hace el encargo)"
+  field_organ_proponent: "Órgano Promotor"
+  organ_proponent: "Órgano Promotor"
   external_companies: "Empresas externas"
   external_company: "Empresa externa"
   export_channels: "Canales"
@@ -595,6 +599,7 @@ es:
   field_discount: "Descuento"
   field_charge: "Cargo"
   download_as_pdf: "Descargar copia en PDF"
+  download_as_xml: "Descargar XML"
   label_reports: Informes
   visible_fields: "Campos visibles"
   required_fields: "Campos requeridos"
@@ -626,6 +631,11 @@ es:
   label_factoring_assignment_data: 'Cesión de factoring'
   field_fa_person_type: 'Tipo entidad'
   field_fa_residence_type: 'Residencia'
+  label_fa_person_type_individual: "Física"
+  label_fa_person_type_entity: "Jurídica"
+  label_fa_residence_type_foreigner: "Extranjero"
+  label_fa_residence_type_spain: "Residente"
+  label_fa_residence_type_UE: "Europeo"
   field_fa_taxcode: 'NIF'
   field_fa_name: 'Nombre'
   field_fa_address: 'Dirección'
@@ -641,7 +651,7 @@ es:
   field_fa_clauses: 'Cláusula de cesión'
   field_fa_payment_method: 'Método de pago'
   channel_requires_user_pass: "El canal necesita que configures usuario y password en 'Conexiones' en 'Mi empresa'"
-  download_legal_invoice: "Descargar factura legal"
+  download_legal_invoice: "Descargar factura"
   label_report_channel_state: "Facturas por canal de envío y estado"
   pdf_customization: "Personalización de PDF"
   field_pdf_template: "Plantilla PDF"
@@ -652,4 +662,83 @@ es:
   field_unidad_contratacion: "Unidad de contratación / SEF"
   field_discount_helper: "Calcular % de descuento desde importe"
   label_discounts_and_charges: Descuentos y cargos
+  invoice_import_mismatch: "El importe de la factura original %{original} es diferente del calculado %{calculated}"
   invoice_has_no_original: La factura no tiene original (el transporte requiere un documento original)
+  fa_payment_method_01: 'Al contado'
+  fa_payment_method_02: 'Recibo domiciliado'
+  fa_payment_method_03: 'Recibo'
+  fa_payment_method_04: 'Transferencia'
+  fa_payment_method_05: 'Letra aceptada'
+  fa_payment_method_06: 'Crédito documentario'
+  fa_payment_method_07: 'Contrato adjudicación'
+  fa_payment_method_08: 'Letra de cambio'
+  fa_payment_method_09: 'Pagaré a la orden'
+  fa_payment_method_10: 'Pagaré no a la orden'
+  fa_payment_method_11: 'Cheque'
+  fa_payment_method_12: 'Reposición'
+  fa_payment_method_13: 'Especiales'
+  fa_payment_method_14: 'Compensación'
+  fa_payment_method_15: 'Giro postal'
+  fa_payment_method_16: 'Cheque conformado'
+  fa_payment_method_17: 'Cheque bancario'
+  fa_payment_method_18: 'Pago contra reembolso'
+  fa_payment_method_19: 'Pago mediante tarjeta'
+  label_rounding_plural: 'Redondeos'
+  field_rounding_method: 'Tipo de redondeo'
+  half_up_rounding: 'Redondeo hacia arriba'
+  bankers_rounding: 'Redondeo bancario'
+  truncate_rounding: 'Truncar'
+  round_before_sum: 'Redondear antes de sumar'
+  label_client_office_new: Nueva sede
+  label_client_offices: Sedes
+  label_client_office: Sede
+  amend_total: Sustitutiva
+  amend_partial: Por diferencias
+  field_amend_reason: Motivo de rectificación
+  amend_reason_01: "Número de la factura"
+  amend_reason_02: "Serie de la factura"
+  amend_reason_03: "Fecha expedición"
+  amend_reason_04: "Nombre y apellidos/Razón Social-Emisor"
+  amend_reason_05: "Nombre y apellidos/Razón Social-Receptor"
+  amend_reason_06: "Identificación fiscal Emisor/obligado"
+  amend_reason_07: "Identificación fiscal Receptor"
+  amend_reason_08: "Domicilio Emisor/Obligado"
+  amend_reason_09: "Domicilio Receptor"
+  amend_reason_10: "Detalle Operación"
+  amend_reason_11: "Porcentaje impositivo a aplicar"
+  amend_reason_12: "Cuota tributaria a aplicar"
+  amend_reason_13: "Fecha/Periodo a aplicar"
+  amend_reason_14: "Clase de factura"
+  amend_reason_15: "Literales legales"
+  amend_reason_16: "Base imponible"
+  amend_reason_80: "Cálculo de cuotas repercutidas"
+  amend_reason_81: "Cálculo de cuotas retenidas"
+  amend_reason_82: "Base imponible modificada por devolución de envases / embalajes"
+  amend_reason_83: "Base imponible modificada por descuentos y bonificaciones"
+  amend_reason_84: "Base imponible modificada por resolución firme, judicial o administrativa"
+  amend_reason_85: "Base imponible modificada cuotas repercutidas no satisfechas. Auto de declaración de concurso"
+  partially_amended_by_invoices: "Parcialmente rectificada por"
+  awarding: "Contrato de adjudicación"
+  field_issuer_transaction_reference: "Contra-albarán"
+  re_tax_without_iva_same_category: "La línea '%{line}' tiene un impuesto RE que no corresponde al impuesto IVA"
+  label_discounts: "Descuentos"
+  field_line_discounts_as_imports: "Mostrar descuentos por línea"
+  as_import: "Como importe"
+  as_percent: "Como %"
+  field_has_text: "Contiene el texto"
+  default_invoice_format: 'Formato y transporte de facturas para los nuevos usuarios'
+  field_edi_code: "PO EDI legal"
+  field_order_date: "Fecha del pedido"
+  field_contract_number: "Número de contrato"
+  field_buyer_edi_code: "PO EDI comprador"
+  field_receiver_edi_code: "PO EDI receptor factura"
+  field_destination_edi_code: "PO EDI receptor mercancia"
+  field_payer_edi_code: "PO EDI emisor pago"
+  label_invoice_viewer: "Visualización de facturas"
+  field_invoice_viewer: "Visualización de facturas importadas"
+  label_invoice_viewer_standard: "Usar visor por defecto"
+  label_invoice_viewer_xslt : "Usar visor XSLT"
+  xslt_not_available: "No hay ningún XSLT disponible para el formato del original de esta factura"
+  xslt_shows_original: "Esta factura se ha modificado. El formato XSLT refleja el original sin los cambios"
+  skip_invoice_validations: No validar la factura al importar
+  by_peppol: "Recibida por Peppol"

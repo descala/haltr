@@ -8,10 +8,23 @@ module InvoicesHelper
     clients.collect {|c| [c.name, c.id, {'data-invoice_format'=>ExportChannels.l(c.invoice_format)}] unless c.name.blank?}.compact
   end
 
-  def haltr_precision(num,precision=2)
-    num=0 if num.nil?
-    # :significant - If true, precision will be the # of significant_digits. If false, the # of fractional digits
-    number_with_precision(num,:precision=>precision,:significant => false)
+  def haltr_precision(num, precision=2, relevant=nil)
+    num = 0 if num.nil?
+    if relevant.present?
+      # relevant first cuts the number, then precision will add zeros
+      num = number_with_precision(num, precision: relevant)
+    end
+    num = number_with_precision(num, precision: precision)
+    num
+  end
+
+  def edi_number(num)
+    haltr_precision(num).gsub(',','.')
+  end
+
+  def edi_date(date)
+    date = Date.today if date.nil?
+    date.strftime("%Y%m%d")
   end
 
   def send_link_for_invoice
@@ -59,7 +72,7 @@ module InvoicesHelper
   end
 
   def frequencies_for_select
-    [1,2,3,6,12,24,36].collect do |f|
+    [1,2,3,6,12,24,36,60].collect do |f|
       [I18n.t("mf#{f}"), f]
     end
   end
@@ -130,8 +143,8 @@ module InvoicesHelper
   end
 
   def client_name_with_link(client)
-    if authorize_for('clients', 'edit')
-      link_to h(client.name), {:controller=>'clients',:action=>'edit',:id=>client}
+    if authorize_for('clients', 'show')
+      link_to h(client.name), {:controller=>'clients',:action=>'show',:id=>client}
     else
       h(client.name)
     end
@@ -141,7 +154,7 @@ module InvoicesHelper
     # tax_name = 'VAT'
     taxes = invoice.taxes_hash[tax_name].sort
     show_category = false
-    if taxes.size != taxes.collect {|t| t.percent}.uniq.size
+    if taxes.size != taxes.collect {|t| t.percent}.uniq.size or tax_name == 'RE'
       show_category = true
     end
     taxes.collect do |tax|
@@ -190,7 +203,7 @@ module InvoicesHelper
 
   def payment_method_info
     i = @invoice
-    if i.is_a?(IssuedInvoice) or i.is_a?(Quote)
+    if i.is_a?(IssuedInvoice) or i.is_a?(Quote) or i.is_a?(InvoiceTemplate)
       if i.debit?
         # IssuedInvoice + debit, show clients iban
         if i.client.use_iban?
@@ -238,6 +251,9 @@ module InvoicesHelper
           "#{l(:debit_str)}<br />" +
             "#{ba[0..3]} #{ba[4..7]} #{ba[8..9]} #{ba[10..19]}"
         end
+      elsif i.debit?
+        # ReceivedInvoice without bank_info, show only 'debit'
+          "#{l(:debit_str)}<br />"
       elsif i.transfer?
         # ReceivedInvoice + transfer, show clients iban
         if i.client.use_iban?
@@ -292,5 +308,18 @@ module InvoicesHelper
     else
       'doc'
     end
+  end
+
+  def invoice_summary(invoice)
+    lines = Array.new
+    invoice.invoice_lines.each_with_index do |line,i|
+      break if i > 2
+      lines << truncate(line.description,length:50)
+    end
+    desc = Array.new
+    desc << money(invoice.total)
+    desc << invoice.date unless invoice.is_a? InvoiceTemplate
+    desc << lines.join(" | ")
+    desc.join(" * ")
   end
 end
