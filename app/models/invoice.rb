@@ -1137,7 +1137,7 @@ _INV
             city:                 client_hash[:city].to_s.chomp,
             province:             client_hash[:province].to_s.chomp,
             postalcode:           client_hash[:postalcode].to_s.chomp,
-            country:              client_hash[:country].to_s.chomp,
+            country:              client_hash[:country].to_s.chomp.downcase,
             name:                 client_hash[:name].to_s.chomp,
             destination_edi_code: client_hash[:destination_edi_code].to_s.chomp
           )
