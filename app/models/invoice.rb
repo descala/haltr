@@ -624,7 +624,7 @@ _INV
     client_cp_city     = Haltr::Utils.get_xpath(doc,xpaths["#{client_role}_cp_city"]) ||
       Haltr::Utils.get_xpath(doc,xpaths["#{client_role}_cp_city2"])
     client_postalcode  = client_cp_city.split(" ").first rescue ""
-    client_city        = client_cp_city.gsub(/^#{client_postalcode} /,'') rescue ""
+    client_city        = client_cp_city.gsub(/^#{client_postalcode} ?/,'') rescue ""
     if client_postalcode.blank?
       client_postalcode  = Haltr::Utils.get_xpath(doc,xpaths["#{client_role}_cp"])
     end
