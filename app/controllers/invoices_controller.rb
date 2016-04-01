@@ -1003,7 +1003,7 @@ class InvoicesController < ApplicationController
   end
 
   def bulk_download
-    unless ExportFormats.available.keys.include? params[:in]
+    unless ExportFormats.available.keys.include?(params[:in]) or params[:controller]=='received'
       flash[:error] = "unknown format #{params[:in]}"
       redirect_back_or_default(:action=>'index',:project_id=>@project.id)
       return
@@ -1022,13 +1022,19 @@ class InvoicesController < ApplicationController
         @invoice = invoice
         @lines = @invoice.invoice_lines
         @client = @invoice.client
-        file_name = @invoice.pdf_name_without_extension
-        file_name += (params[:in] == "pdf" ? ".pdf" : ".xml")
-        zos.put_next_entry(file_name)
-        if params[:in] == "pdf"
-          zos.print Haltr::Pdf.generate(@invoice)
+        if invoice.is_a? ReceivedInvoice
+          filename = invoice.file_name || "invoice_#{invoice.id}.#{invoice.invoice_format}"
+          zos.put_next_entry(filename)
+          zos.print invoice.original
         else
-          zos.print Haltr::Xml.generate(@invoice,params[:in])
+          file_name = @invoice.pdf_name_without_extension
+          file_name += (params[:in] == "pdf" ? ".pdf" : ".xml")
+          zos.put_next_entry(file_name)
+          if params[:in] == "pdf"
+            zos.print Haltr::Pdf.generate(@invoice)
+          else
+            zos.print Haltr::Xml.generate(@invoice,params[:in])
+          end
         end
         logger.info "Added #{file_name}"
       end
@@ -1155,37 +1161,44 @@ class InvoicesController < ApplicationController
       end
       errors =  []
       params[:attachments].each do |key, attachment_param|
-        attachment = Attachment.find_by_token(attachment_param['token'])
-        case attachment.content_type
-        when /xml/
-          user_or_company = User.current.admin? ? @project.company : User.current
-          transport = params[:transport] || 'uploaded'
-          @invoice = Invoice.create_from_xml(
-            attachment, user_or_company, attachment.digest, transport,nil,
-            @issued,
-            params['keep_original'] != 'false',
-            params['validate'] != 'false'
-          )
-          if @invoice and ["true","1"].include?(params[:send_after_import])
-            begin
-              Haltr::Sender.send_invoice(@invoice, User.current)
-              @invoice.queue
-            rescue
+        begin
+          attachment = Attachment.find_by_token(attachment_param['token'])
+          case attachment.content_type
+          when /xml/
+            user_or_company = User.current.admin? ? @project.company : User.current
+            transport = params[:transport] || 'uploaded'
+            @invoice = Invoice.create_from_xml(
+              attachment, user_or_company, attachment.digest, transport,nil,
+              @issued,
+              params['keep_original'] != 'false',
+              params['validate'] != 'false'
+            )
+            if @invoice and ["true","1"].include?(params[:send_after_import])
+              begin
+                Haltr::Sender.send_invoice(@invoice, User.current)
+                @invoice.queue
+              rescue
+              end
             end
+          when /pdf/
+            @invoice = params[:issued] == '1' ? IssuedInvoice.new : ReceivedInvoice.new
+            @invoice.project   = @project
+            @invoice.state     = :processing_pdf
+            @invoice.transport = transport
+            @invoice.md5       = attachment.digest
+            @invoice.original  = File.binread(attachment.diskfile)
+            @invoice.invoice_format = 'pdf'
+            @invoice.has_been_read = true
+            @invoice.file_name = attachment.filename
+            @invoice.save(validate: false)
+            Event.create(:name=>'processing_pdf',:invoice=>@invoice)
+            Haltr::SendPdfToWs.send(@invoice)
+          else
+            errors <<  "unknown file type: '#{attachment.content_type}' for #{attachment.filename}"
           end
-        when /pdf/
-          @invoice = params[:issued] == '1' ? IssuedInvoice.new : ReceivedInvoice.new
-          @invoice.project   = @project
-          @invoice.state     = :processing_pdf
-          @invoice.transport = transport
-          @invoice.md5       = attachment.digest
-          @invoice.original  = File.binread(attachment.diskfile)
-          @invoice.invoice_format = 'pdf'
-          @invoice.save(validate: false)
-          Event.create(:name=>'processing_pdf',:invoice=>@invoice)
-          Haltr::SendPdfToWs.send(@invoice)
-        else
-          errors <<  "unknown file type: '#{attachment.content_type}' for #{attachment.filename}"
+        ensure
+          # Attachments are only temporaly used to create Invoices
+          attachment.destroy if attachment
         end
       end
       if errors.size > 0

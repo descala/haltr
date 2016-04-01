@@ -110,49 +110,6 @@ class ReceivedController < InvoicesController
     render :text => "OK"
   end
 
-  def bulk_download
-    require 'zip/zip'
-    require 'zip/zipfilesystem'
-    # just a safe big limit
-    if @invoices.size > 100
-      flash[:error] = l(:too_much_invoices,:num=>@invoices.size)
-      redirect_to :action=>'index', :project_id=>@project
-      return
-    end
-    zipped = []
-    zip_file = Tempfile.new ["#{@project.identifier}_invoices", ".zip"], 'tmp'
-    logger.info "Creating zip file '#{zip_file.path}' for invoice ids #{@invoices.collect{|i|i.id}.join(',')}."
-    Zip::OutputStream.open(zip_file.path) do |zos|
-      @invoices.each do |invoice|
-        filename = invoice.file_name || 'invoice'
-        file = Tempfile.new(filename)
-        file.binmode
-        file.write invoice.original
-        logger.info "Created #{file.path}"
-        file.close
-        i=2
-        while zipped.include?(filename)
-          extension = File.extname(filename)
-          base      = filename.gsub(/#{extension}$/,'')
-          filename  = "#{base}_#{i}#{extension}"
-          i += 1
-        end
-        zipped << filename
-        zos.put_next_entry(filename)
-        zos << IO.binread(file.path)
-        logger.info "Added #{filename} from #{file.path}"
-      end
-    end
-    zip_file.close
-    send_file zip_file.path, :type => "application/zip", :filename => "#{@project.identifier}-invoices.zip"
-  rescue LoadError
-    flash[:error] = l(:zip_gem_required)
-    redirect_to :action => 'index', :project_id => @project
-  rescue Errno::ECONNREFUSED, Errno::EHOSTUNREACH => e
-    flash[:warning]=l(:cant_connect_trace, e.message)
-    redirect_to :action => 'show', :id => @invoice
-  end
-
   def bulk_mark_as
     all_changed = true
     @invoices.each do |i|
