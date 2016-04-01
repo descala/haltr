@@ -1157,8 +1157,9 @@ class InvoicesController < ApplicationController
       if file && file.size > 0
         md5 = `md5sum #{file.path} | cut -d" " -f1`.chomp
         user_or_company = User.current.admin? ? @project.company : User.current
+        transport = params[:transport] || 'uploaded'
         @invoice = Invoice.create_from_xml(
-          file, user_or_company, md5,'uploaded',nil,
+          file, user_or_company, md5,transport,nil,
           @issued,
           params['keep_original'] != 'false',
           params['validate'] != 'false'
