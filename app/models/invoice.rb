@@ -1141,7 +1141,7 @@ _INV
             name:                 client_hash[:name].to_s.chomp,
             destination_edi_code: client_hash[:destination_edi_code].to_s.chomp
           )
-          client_office.save!
+          raise "#{l(:label_client_office)}: #{client_office.errors.full_messages.join('. ')}" unless client_office.save
           client.reload
           self.client_office_id = client_office.id
         end

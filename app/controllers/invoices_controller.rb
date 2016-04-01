@@ -1190,7 +1190,7 @@ class InvoicesController < ApplicationController
   rescue
     respond_to do |format|
       format.html {
-        raise $! unless $!.is_a?(RuntimeError)
+        raise $! unless $!.is_a?(StandardError)
         flash[:error] = $!.message
         redirect_to :action => 'import', :project_id => @project
       }
