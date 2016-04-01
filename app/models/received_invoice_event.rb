@@ -1,10 +1,15 @@
 class ReceivedInvoiceEvent < Event
 
   def to_s
-    if invoice
-      "#{l(:by_mail_from, :email=>invoice.from)}"
+    case name
+    when "peppol"
+      "#{l(:by_peppol)}"
     else
-      "#{l(:by_mail_from, :email=>'?')}"
+      if invoice and invoice.from
+        "#{l(:by_mail_from, :email=>invoice.from)}"
+      else
+        "#{l(:by_mail_from, :email=>'?')}"
+      end
     end
   end
 

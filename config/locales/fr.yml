@@ -718,3 +718,4 @@ fr:
   xslt_not_available: "We do not have an XSLT for the format of this invoice"
   xslt_shows_original: "This invoice has been modified. The XSLT format shows the original without your changes"
   skip_invoice_validations: "Skip invoice validation"
+  by_peppol: "Received by Peppol"

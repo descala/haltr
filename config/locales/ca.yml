@@ -736,3 +736,4 @@ ca:
   xslt_not_available: "No hi ha cap XSLT disponible pel format original d'aquesta factura"
   xslt_shows_original: "Aquesta factura s'ha modificat. El format XSLT reflecteix l'original, sense el canvis."
   skip_invoice_validations: No validar la factura al importar
+  by_peppol: "Rebuda per Peppol"
