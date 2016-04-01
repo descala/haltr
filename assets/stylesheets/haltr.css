@@ -264,32 +264,22 @@ div.action-linked_to_mine #companies {
 }
 
 #invoice_img {
-  clear: left;
-  float: left;
-  width: 150%;
-  margin-left: -25%;
 }
 #invoice_img .container2 {
-  float: left;
-  position: relative;
-  right: 50%;
-  width: 100%;
 }
 #invoice_img .colu1 {
   float:left;
-  left: 52%;
-  position: relative;
-  width: 46%;
+  width: 49%;
 }
 #invoice_img .colu2 {
   float:left;
-  left: 56%;
+  margin-left: 1%;
   overflow: hidden;
-  position: relative;
-  width: 46%;
+  width: 50%;
 }
 .colu1 img {
   border: 1px solid #666666;
+  width: 100%;
 }
 
 div.attachments span.size {
