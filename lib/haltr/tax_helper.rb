@@ -95,6 +95,10 @@ module Haltr
         taxes << Tax.new(:name=>'VAT',:percent=>6.0, :default=>false,:category=>'AAA')
       when 'dk'
         taxes << Tax.new(:name=>'NUMS',:percent=>25.0,:default=>true,:category=>'S')
+      when 'gb'
+        taxes << Tax.new(name: 'VAT', percent: 20.0, default: true, category: 'S')
+        taxes << Tax.new(name: 'VAT', percent: 5.0, default: false, category: 'AA')
+        taxes << Tax.new(name: 'VAT', percent: 0.0, default: false, category: 'Z')
       end
       taxes
     end
