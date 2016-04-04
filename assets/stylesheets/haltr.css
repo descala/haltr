@@ -270,6 +270,7 @@ div.action-linked_to_mine #companies {
 #invoice_img .colu1 {
   float:left;
   width: 49%;
+  position: relative;
 }
 #invoice_img .colu2 {
   float:left;
@@ -279,7 +280,10 @@ div.action-linked_to_mine #companies {
 }
 .colu1 img {
   border: 1px solid #666666;
-  width: 100%;
+
+/* TODO
+ * adjust width to div
+ * width: 100%; */
 }
 
 div.attachments span.size {

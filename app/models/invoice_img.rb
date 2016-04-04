@@ -30,7 +30,7 @@ class InvoiceImg < ActiveRecord::Base
       # Creates auxiliar line
       line = InvoiceLine.new(
         quantity: 1,
-        description: 'Aux',
+        description: 'Original invoice in PDF format',
         price: decimal(t)
       )
       invoice.invoice_lines << line
@@ -38,8 +38,8 @@ class InvoiceImg < ActiveRecord::Base
     if t=tags[:tax_percentage] and invoice.invoice_lines.any?
       invoice.invoice_lines.each do |invoice_line|
         tax = Tax.new(
-          name: 'Aux',
-          percent: decimal(t)
+          name: 'IVA',
+          percent: decimal(t)*100
         )
         invoice_line.taxes << tax
       end
