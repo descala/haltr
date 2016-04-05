@@ -271,19 +271,24 @@ div.action-linked_to_mine #companies {
   float:left;
   width: 49%;
   position: relative;
+  border: 1px solid #666666;
+}
+#invoice_img .colu1 div {
+  display: inline-block;
 }
 #invoice_img .colu2 {
   float:left;
   margin-left: 1%;
   overflow: hidden;
-  width: 50%;
+  width: 49%;
 }
 .colu1 img {
-  border: 1px solid #666666;
-
-/* TODO
- * adjust width to div
- * width: 100%; */
+}
+table.received_show {
+  width: auto;
+}
+table.received_show td {
+  text-align: left;
 }
 
 div.attachments span.size {
@@ -312,6 +317,16 @@ span#send_info {
   right: 0px;
 }
 
+.rectangle-txt-edit {
+  position: absolute;
+  padding: 0;
+  color: transparent;
+  background: rgba(234, 252, 23, .1);
+  /* TODO
+   * adapt to box size
+  font-size: 1vh;
+  */
+}
 .rectangle-txt {
   position: absolute;
   padding: 0;

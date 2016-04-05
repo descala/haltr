@@ -22,20 +22,7 @@
 <!--final menu rapid-->
 
 <% if @invoice.invoice_img -%>
-
-<div id="invoice_img" class="container1">
-  <div class="container2">
-
-    <div class="colu1">
-      <%= render :template=>'invoice_imgs/show' %>
-    </div>
-
-    <div class="colu2">
-    </div>
-
-  </div>
-</div>
-
+  <%= render :partial=>'received/png_show' %>
 <% else -%>
 
       <div id="invoice_wrapper">

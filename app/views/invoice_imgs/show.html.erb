@@ -1,8 +1,0 @@
-<%=  image_tag(project_invoice_img_path(@invoice.invoice_img, project_id: @project)) %>
-<% @invoice.invoice_img.tokens && @invoice.invoice_img.tokens.each do |number,attributes| %>
-  <div id="<%=number%>" class="rectangle-txt" data-text="<%=h attributes[:text]%>" style="left:<%=attributes[:x0]%>px; top:<%=attributes[:y0]%>px; width:<%=attributes[:x1].to_i-attributes[:x0].to_i%>px; height:<%=attributes[:y1].to_i-attributes[:y0].to_i%>px;" data-tag="?"></div>
-<% end %>
-<% @invoice.invoice_img.tags && @invoice.invoice_img.tags.each do |tag,number| %>
-  <% attributes = @invoice.invoice_img.tokens[number] -%>
-  <div id="<%=number%>" class="rectangle-txt" data-text="<%=h attributes[:text]%>" style="left:<%=attributes[:x0]%>px; top:<%=attributes[:y0]%>px; width:<%=attributes[:x1].to_i-attributes[:x0].to_i%>px; height:<%=attributes[:y1].to_i-attributes[:y0].to_i%>px;" data-tag="<%=tag.to_s%>"></div>
-<% end %>
