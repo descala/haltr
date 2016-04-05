@@ -3,7 +3,11 @@
   <div class="col span-2-de-2">
     <ul class="menu-rapid">
       <%=  call_hook(:invoices_index_menu_top) %>
-      <li><%= link_to_if_authorized(l("label_invoice_new"), new_project_invoice_path(@project), :class => 'icon icon-add') %></li>
+          <% if controller.controller_name == "invoices" %>
+            <li><%= link_to_if_authorized(l("label_invoice_new"), new_project_invoice_path(@project), :class => 'icon icon-add') %></li>
+          <% else %>
+            <li><%= link_to_if_authorized(l("label_invoice_new"), new_project_received_path(@project), :class => 'icon icon-add') %></li>
+          <% end %>
       <% if num_can_be_sent > 0 -%>
         <li>
         <%= link_to_if_authorized "#{l(:button_send_invoices)} (#{num_can_be_sent})",{:action => 'send_new_invoices'} %>
@@ -21,7 +25,11 @@
       <% end -%>
       <% if User.current.allowed_to?(:import_invoices, @project) -%>
         <li>
-        <%= link_to l(:label_import), project_invoices_import_path(@project) -%>
+          <% if controller.controller_name == "invoices" %>
+            <%= link_to l(:label_import), project_invoices_import_path(@project) -%>
+          <% else %>
+            <%= link_to l(:label_import), project_received_import_path(@project) -%>
+          <% end %>
         </li>
       <% end -%>
       <%=  call_hook(:invoices_index_menu_bottom) %>

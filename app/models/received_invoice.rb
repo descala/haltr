@@ -38,6 +38,10 @@ class ReceivedInvoice < InvoiceDocument
     "#{number}"
   end
 
+  def sent?
+    false
+  end
+
   def past_due?
     #TODO
     false
