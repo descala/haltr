@@ -39,7 +39,7 @@
   <%= call_hook(:view_received_context_menu_end, {:invoices=>@invoices, :can=>@can, :back=>@back }) %>
 
   <li>
-  <%= context_menu_link l(:button_delete), received_invoices_path(:ids=>@invoice_ids, :back_url=>@back),
+  <%= context_menu_link l(:button_delete), received_path(:ids=>@invoice_ids, :back_url=>@back),
     :method=>:delete, :data=>{:confirm=>l(:text_invoices_destroy_confirmation)}, :class=>'icon-del', :disabled=>!@can[:edit] %>
   </li>
 
