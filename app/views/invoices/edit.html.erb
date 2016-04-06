@@ -4,8 +4,8 @@
   <div class="container2">
 
   <div class="colu1" style="background-image: url('<%=project_invoice_img_path(@invoice.invoice_img, project_id: @project)%>')">
-    <% @invoice.invoice_img.tokens && @invoice.invoice_img.tokens.each do |number,attributes| %>
-      <div class="rectangle-txt-edit" style="left:<%=attributes[:x0]%>px; top:<%=attributes[:y0]%>px; width:<%=attributes[:x1].to_i-attributes[:x0].to_i%>px; height:<%=attributes[:y1].to_i-attributes[:y0].to_i%>px;"><%=h attributes[:text]%></div>
+    <% @invoice.invoice_img.useful_tokens.each do |number,attributes| %>
+      <div class="rectangle-txt-edit" style="left:<%=attributes[:x0]%>px; top:<%=attributes[:y0]%>px; width:<%=attributes[:x1].to_i-attributes[:x0].to_i%>px; height:<%=attributes[:y1].to_i-attributes[:y0].to_i%>px; font-size: <%=attributes[:y1].to_i-attributes[:y0].to_i-3%>px"><%=h attributes[:text]%></div>
     <%end%>
     <div style="height: 1000px;">
     </div>

@@ -57,6 +57,12 @@ class InvoiceImg < ActiveRecord::Base
     data[:tags] || {}
   end
 
+  def useful_tokens
+    tokens.select do |number, attributes|
+      attributes[:text] and attributes[:text].size > 1
+    end
+  end
+
   def tokens
     return {} if data.nil?
     data[:tokens] || {}

@@ -322,10 +322,6 @@ span#send_info {
   padding: 0;
   color: transparent;
   background: rgba(234, 252, 23, .1);
-  /* TODO
-   * adapt to box size
-  font-size: 1vh;
-  */
 }
 .rectangle-txt {
   position: absolute;
