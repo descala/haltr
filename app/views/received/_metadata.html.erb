@@ -1,0 +1,22 @@
+<div class="metadata">
+<table class="list received_show">
+  <thead></thead>
+  <tbody>
+    <tr>
+      <td><%= l(:field_client) %></td>
+      <td><%= render partial: 'client_info' if @client %></td>
+    </tr>
+    <tr>
+      <td><%=h l(:field_date)%></td>
+      <td><%=h format_date @invoice.date %></td>
+    </tr>
+    <% @invoice.invoice_img.tags.each do |tag,number| %>
+      <% attributes = @invoice.invoice_img.tokens[number] -%>
+      <tr class="<%= cycle("odd", "even") %>" >
+        <td><%=tag.to_s%></td>
+        <td><%=attributes[:text]%></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+</div>

@@ -80,4 +80,12 @@ class InvoiceImg < ActiveRecord::Base
   rescue
     0
   end
+
+  def width
+    data['width']
+  end
+
+  def height
+    data['height']
+  end
 end

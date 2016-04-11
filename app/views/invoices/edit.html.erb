@@ -20,11 +20,7 @@
   <div class="col span-2-de-2">
 
     <%= labelled_form_for :invoice, @invoice, :url => { :action => 'update', :id => @invoice }, :html => {:method => :put, :class => 'formee'}  do |f| %>
-      <% if @invoice.is_a? ReceivedInvoice -%>
-        <%= render :partial => 'received/form', :locals => { :f => f } %>
-      <% else -%>
-        <%= render :partial => 'invoices/form', :locals => { :f => f } %>
-      <% end -%>
+      <%= render :partial => 'invoices/form', :locals => { :f => f } %>
       <% if @invoice.original and !@invoice.modified_since_created? -%>
         <%= f.submit l(:button_save), :name => 'save', :confirm => l(:overriding_original_warn) %>
       <% else -%>

@@ -269,7 +269,6 @@ div.action-linked_to_mine #companies {
 }
 #invoice_img .colu1 {
   float:left;
-  width: 49%;
   position: relative;
   border: 1px solid #666666;
 }
@@ -277,10 +276,9 @@ div.action-linked_to_mine #companies {
   display: inline-block;
 }
 #invoice_img .colu2 {
-  float:left;
+  float:right;
   margin-left: 1%;
   overflow: hidden;
-  width: 49%;
 }
 .colu1 img {
 }
@@ -322,6 +320,11 @@ span#send_info {
   padding: 0;
   color: transparent;
   background: rgba(234, 252, 23, .1);
+}
+.rectangle-txt-edit:hover span{
+  background: white;
+  color: black;
+  border: 1px solid green;
 }
 .rectangle-txt {
   position: absolute;
