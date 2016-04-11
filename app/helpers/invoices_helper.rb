@@ -217,19 +217,23 @@ module InvoicesHelper
           ba = i.client.bank_account || ""
           "#{l(:debit_str)}<br />#{ba[0..3]} #{ba[4..7]} ** ******#{ba[16..19]}"
         end
-      elsif i.transfer? and i.bank_info
-        # IssuedInvoice + transfer, show our iban
-        if i.bank_info.use_iban?
-          iban = i.bank_info.iban || ""
-          bic  = i.bank_info.bic || ""
-          s="#{l(:transfer_str)}<br />"
-          s+="IBAN #{iban.scan(/.{1,4}/).join(' ')}<br />"
-          s+="BIC #{bic}<br />" unless bic.blank?
-          s
+      elsif i.transfer?
+        if i.bank_info
+          # IssuedInvoice + transfer, show our iban
+          if i.bank_info.use_iban?
+            iban = i.bank_info.iban || ""
+            bic  = i.bank_info.bic || ""
+            s="#{l(:transfer_str)}<br />"
+            s+="IBAN #{iban.scan(/.{1,4}/).join(' ')}<br />"
+            s+="BIC #{bic}<br />" unless bic.blank?
+            s
+          else
+            ba = i.bank_info.bank_account ||= "" rescue ""
+            "#{l(:transfer_str)}<br />" +
+              "#{ba[0..3]} #{ba[4..7]} #{ba[8..9]} #{ba[10..19]}"
+          end
         else
-          ba = i.bank_info.bank_account ||= "" rescue ""
-          "#{l(:transfer_str)}<br />" +
-            "#{ba[0..3]} #{ba[4..7]} #{ba[8..9]} #{ba[10..19]}"
+          l(:transfer)
         end
       elsif i.special?
         i.payment_method_text

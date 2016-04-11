@@ -412,6 +412,7 @@ class InvoicesController < ApplicationController
   def destroy
     @invoices.each do |invoice|
       begin
+        invoice.events.destroy_all
         invoice.reload.destroy
         event = EventDestroy.new(:name    => "deleted_#{invoice.type.underscore}",
                                  :notes   => invoice.number,

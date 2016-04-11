@@ -127,6 +127,7 @@ class ClientsController < ApplicationController
   end
 
   def destroy
+    @client.events.destroy_all
     @client.destroy
     event = EventDestroy.new(:name    => "deleted_client",
                              :notes   => @client.name,
