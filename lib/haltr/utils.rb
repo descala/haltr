@@ -23,7 +23,7 @@ module Haltr
       # retrieve xpath from document
       # if xpath is an array, concatenates its values
       def get_xpath(doc,xpath)
-        val = doc.xpath(*xpath) rescue nil
+        val = doc.xpath(*xpath)
         val.blank? ? nil : val.collect {|v| v.text }.join(" ")
       end
 
