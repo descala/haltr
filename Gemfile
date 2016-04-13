@@ -32,3 +32,4 @@ gem 'valvat', :git => 'https://github.com/descala/valvat.git', :branch => 'maste
 gem 'shared-mime-info'
 
 gem 'rest-client'
+gem 'fuzzy_match'

@@ -329,10 +329,9 @@ i15pdf:
   currency: EUR
   date: 2014-12-16
   due_date: 2015-01-16
-  number: "2014/i14"
+  number: "2016/i15pdf"
   payment_method: 2
   project_id: 2
-  state: accepted
 
 i15:
   id: 15

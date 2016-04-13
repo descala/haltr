@@ -49,7 +49,9 @@ class InvoiceImg < ActiveRecord::Base
     else
       invoice.state=:new
     end
+    invoice.client = fuzzy_match_client unless invoice.client
     invoice.save(validate: false)
+    self.save
   end
 
   def tags
@@ -58,9 +60,20 @@ class InvoiceImg < ActiveRecord::Base
   end
 
   def useful_tokens
-    tokens.select do |number, attributes|
-      attributes[:text] and attributes[:text].size > 1
+    useful = {}
+    tokens.each do |number, attributes|
+      if attributes[:text] and attributes[:text].size > 1
+        useful[number] = attributes
+        width =  attributes[:x1].to_i - attributes[:x0].to_i
+        height = attributes[:y1].to_i - attributes[:y0].to_i
+        if height > width
+          # Rotate -90
+          useful[number][:x1] = attributes[:x0].to_i + height
+          useful[number][:y1] = attributes[:y0].to_i + width
+        end
+      end
     end
+    return useful
   end
 
   def tokens
@@ -88,4 +101,36 @@ class InvoiceImg < ActiveRecord::Base
   def height
     data['height']
   end
+
+  def fuzzy_match_client
+    require 'fuzzy_match'
+    match_tokens = tokens.collect do |k,v|
+      v[:text].split(/\.|:/) if v[:text] =~ /\d/
+    end.flatten.compact
+    fm = FuzzyMatch.new(match_tokens, threshold: 0.6)
+    best_client_match = nil
+    best_text = nil
+    best_score = 0.6
+    invoice.company.project.clients.each do |client|
+      text, score = fm.find_with_score(client.taxcode)
+      if score and  score > best_score
+        best_client_match = client
+        best_score = score
+        best_text = text
+      end
+    end
+    if best_client_match
+      tokens.each do |number, token|
+        tags['seller_taxcode'] = number if token[:text].include?(best_text)
+      end
+    end
+    company_match = fm.find(invoice.company.taxcode)
+    if company_match
+      tokens.each do |number, token|
+        tags['buyer_taxcode'] = number if token[:text].include?(company_match)
+      end
+    end
+    return best_client_match
+  end
+
 end
