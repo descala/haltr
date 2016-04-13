@@ -2,6 +2,8 @@
 
 api.cash_flow do
   @currencies.each do |currency|
+    # TODO now lib/redmine/views/builders/structure.rb uses BlankSlate
+    #      method "send" can not be used anymore
     api.send(currency) do
       api.due_invoices_sum @due_invoices_sum[currency].to_f
       api.array :due_invoices_id do

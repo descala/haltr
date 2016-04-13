@@ -1,11 +1,11 @@
 # use this to recreate test database
 
-rake db:drop db:create db:migrate RAILS_ENV=test REDMINE_LANG=en
-rake redmine:load_default_data RAILS_ENV=test REDMINE_LANG=en
+bundle exec rake db:drop db:create db:migrate RAILS_ENV=test REDMINE_LANG=en
+bundle exec rake redmine:load_default_data RAILS_ENV=test REDMINE_LANG=en
 
 # preload Redmine fixtures
 
-rake db:fixtures:load redmine:plugins:migrate RAILS_ENV=test
+bundle exec rake db:fixtures:load redmine:plugins:migrate RAILS_ENV=test
 
 # configure channels.yaml
 cd plugins/haltr/config && ln -s channels.yml.example channels.yml; cd -
@@ -19,7 +19,7 @@ cd plugins/haltr/config && ln -s channels.yml.example channels.yml; cd -
 zeus start
 
 # start guard in another terminal
-guard -G plugins/haltr/Guardfile
+bundle exec guard -G plugins/haltr/Guardfile
 
 ##### ISSUES #####
 
@@ -32,8 +32,9 @@ rm -rf test/fixtures/configuration/
 
 # https://github.com/guard/guard-minitest/pull/98
 # tests run twice after saving file on vim. To avoid this, use last guard-minitest from github (included in bundle):
-bundle exec guard -G plugins/haltr/Guardfile
 
+# if no test is run, remove from Redmine's Gemfile the line:
+# gem "test-unit", "~> 3.0
 
 # with Zeus < 0.15.1
 #

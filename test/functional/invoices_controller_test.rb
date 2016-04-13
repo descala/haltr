@@ -116,8 +116,11 @@ class InvoicesControllerTest < ActionController::TestCase
   end
 
   test 'import invoice' do
+    set_tmp_attachments_directory
+    attachment = Attachment.create!(:file => fixture_file_upload('/documents/invoice_facturae32_issued.xml','text/xml',true), :author_id => 2)
+
     post :import, {
-      file:       fixture_file_upload('/documents/invoice_facturae32_issued.xml','text/xml'),
+      attachments: {'p0' => {'token' => attachment.token}},
       commit:     'Importar',
       project_id: 'onlinestore',
       issued:     'true'
@@ -138,8 +141,11 @@ class InvoicesControllerTest < ActionController::TestCase
                :body => "",
                :headers => {})
 
+    set_tmp_attachments_directory
+    attachment = Attachment.create!(:file => fixture_file_upload('/documents/invoice_pdf_signed.pdf','application/pdf',true), :author_id => 2)
+
     post :import, {
-      file:       fixture_file_upload('/documents/invoice_pdf_signed.pdf','application/pdf'),
+      attachments: {'p0' => {'token' => attachment.token}},
       commit:     'Importar',
       project_id: 'onlinestore',
       issued:     '1'

@@ -1165,15 +1165,16 @@ class InvoicesController < ApplicationController
         @issued = nil
       end
       errors =  []
+      transport = params[:transport] || 'uploaded'
       params[:attachments].each do |key, attachment_param|
         begin
           attachment = Attachment.find_by_token(attachment_param['token'])
           case attachment.content_type
           when /xml/
             user_or_company = User.current.admin? ? @project.company : User.current
-            transport = params[:transport] || 'uploaded'
             @invoice = Invoice.create_from_xml(
-              attachment, user_or_company, attachment.digest, transport,nil,
+              File.read(attachment.diskfile),
+              user_or_company, attachment.digest, transport,nil,
               @issued,
               params['keep_original'] != 'false',
               params['validate'] != 'false'
