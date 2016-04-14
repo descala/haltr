@@ -1,5 +1,8 @@
 <div id="invoice_img" class="container1">
 <div class="container2">
+<%= form_tag({}) do -%>
+  <%= hidden_field_tag 'back_url', url_for(params), :id => nil %>
+  <%= hidden_field_tag 'id', @invoice.invoice_img.id, :id => nil %>
 
   <div class="colu2">
     <%= render partial: 'metadata' %>
@@ -7,7 +10,10 @@
 
   <div class="colu1" style="width: <%=@invoice.invoice_img.width%>px; background-image: url('<%=project_invoice_img_path(@invoice.invoice_img, project_id: @project)%>')">
     <% @invoice.invoice_img.tokens && @invoice.invoice_img.useful_tokens.each do |number,attributes| %>
-      <div class="rectangle-txt-edit" style="left:<%=attributes[:x0]%>px; top:<%=attributes[:y0]%>px; width:<%=attributes[:x1].to_i-attributes[:x0].to_i%>px; height:<%=attributes[:y1].to_i-attributes[:y0].to_i%>px; font-size: <%=font_size(attributes)%>px;"><span class="hascontextmenu" id="invoice-<%=number%>" style="line-height: <%=font_size(attributes)%>px;"><%=h attributes[:text]%></span></div>
+      <div class="rectangle-txt-edit hascontextmenu" style="left:<%=attributes[:x0]%>px; top:<%=attributes[:y0]%>px; width:<%=attributes[:x1].to_i-attributes[:x0].to_i%>px; height:<%=attributes[:y1].to_i-attributes[:y0].to_i%>px; font-size: <%=font_size(attributes)%>px;">
+        <%= check_box_tag("token_ids[]", number, false, :id => nil) %>
+        <span style="line-height: <%=font_size(attributes)%>px;"><%=h attributes[:text]%></span>
+      </div>
     <% end %>
     <% @invoice.invoice_img.tags && @invoice.invoice_img.tags.each do |tag,number| %>
       <% attributes = @invoice.invoice_img.tokens[number] -%>
@@ -17,7 +23,8 @@
     </div>
   </div>
 
+<% end %>
 </div>
 </div>
 
-<%= context_menu invoices_context_menu_path %>
+<%= invoice_imgs_context_menu invoice_imgs_context_menu_path %>

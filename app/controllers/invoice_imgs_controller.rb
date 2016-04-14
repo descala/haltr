@@ -1,9 +1,11 @@
 class InvoiceImgsController < ApplicationController
   unloadable
 
-  before_filter :find_project_by_project_id, :except => [:create]
+  before_filter :find_invoice_img, :except => [:create,:show]
+  before_filter :find_project_by_project_id, :only=> [:show]
   skip_before_filter :check_if_login_required, :only => [:create]
   before_filter :check_remote_ip,              :only => [:create]
+  helper :context_menus
 
   def show
     send_data(Haltr::Utils.decompress(InvoiceImg.find(params[:id]).img),
@@ -24,6 +26,20 @@ class InvoiceImgsController < ApplicationController
     end
   end
 
+  def context_menu
+    @token_ids = params[:token_ids]
+    @back = back_url
+    @tags = %w(seller_taxcode invoice_number)
+    render :layout => false
+  end
+
+  def tag
+    # TODO support more than one token_id per tag
+    @invoice_img.tags[params['tag']] = params[:token_ids].first
+    @invoice_img.save
+    redirect_back_or_default(:controller=>'received',:action=>'index',:project_id=>@project.id)
+  end
+
   #TODO: duplicated code
   def check_remote_ip
     allowed_ips = Setting.plugin_haltr['b2brouter_ip'].gsub(/ /,'').split(",") << "127.0.0.1"
@@ -32,6 +48,14 @@ class InvoiceImgsController < ApplicationController
       logger.error "Not allowed from IP #{request.remote_ip} (allowed IPs: #{allowed_ips.join(', ')})\n"
       return false
     end
+  end
+
+  def find_invoice_img
+    @invoice_img = InvoiceImg.find params[:id]
+    @invoice = @invoice_img.invoice
+    @project = @invoice.project
+  rescue ActiveRecord::RecordNotFound
+    render_404
   end
 
 end

@@ -65,6 +65,7 @@ resources :projects do
   match 'events' => 'events#index', via: :get
 end
 resources :invoice_imgs, :only => [:create]
+match 'invoice_imgs/:id/tag/:tag' => 'invoice_imgs#tag', :as => 'invoice_imgs_tag'
 
 resources :clients do
   resources :people, :only => [:index, :new, :create]
@@ -76,6 +77,7 @@ match 'invoices/context_menu', :to => 'invoices#context_menu', :as => 'invoices_
 match 'received/context_menu', :to => 'received#context_menu', :as => 'received_context_menu', :via => [:get, :post]
 match 'import_errors/context_menu', :to => 'import_errors#context_menu', :as => 'import_errors_context_menu', :via => [:get, :post]
 match 'invoice_templates/context_menu', :to => 'invoice_templates#context_menu', :as => 'invoice_templates_context_menu', :via => [:get, :post]
+match 'invoice_imgs/context_menu', :to => 'invoice_imgs#context_menu', :as => 'invoice_imgs_context_menu', :via => [:get, :post]
 match 'invoices/bulk_download' => 'invoices#bulk_download'
 match 'received/bulk_download' => 'received#bulk_download'
 match 'invoices/bulk_mark_as' => 'invoices#bulk_mark_as'

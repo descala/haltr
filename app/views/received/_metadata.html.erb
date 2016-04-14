@@ -14,7 +14,7 @@
       <% attributes = @invoice.invoice_img.tokens[number] -%>
       <tr class="<%= cycle("odd", "even") %>" >
         <td><%=tag.to_s%></td>
-        <td><%=attributes[:text]%></td>
+        <td><%=attributes[:text] rescue nil%></td>
       </tr>
     <% end %>
   </tbody>

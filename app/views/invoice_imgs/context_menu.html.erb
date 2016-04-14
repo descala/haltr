@@ -1,0 +1,9 @@
+<ul>
+<% @tags.each do |tag| %>
+  <li>
+    <%= context_menu_link l("tag_#{tag}"),
+      invoice_imgs_tag_path(:id=>@invoice_img.id,:token_ids=>@token_ids,:tag=>tag, :back_url=>@back),
+      :class=>'icon-add' %>
+  </li>
+<% end %>
+</ul>

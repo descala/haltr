@@ -19,6 +19,10 @@ class InvoiceImg < ActiveRecord::Base
     end
   end
 
+  before_update do
+    # TODO update invoice
+  end
+
   def update_invoice
     if t=tags[:issue]
       invoice.date = text(t)
@@ -53,6 +57,7 @@ class InvoiceImg < ActiveRecord::Base
     invoice.save(validate: false)
     self.save
   end
+
 
   def tags
     return {} if data.nil?

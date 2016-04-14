@@ -321,6 +321,9 @@ span#send_info {
   color: transparent;
   background: rgba(234, 252, 23, .1);
 }
+.rectangle-txt-edit input{
+  display: none;
+}
 .rectangle-txt-edit:hover span{
   background: white;
   color: black;
