@@ -280,6 +280,9 @@ div.action-linked_to_mine #companies {
   margin-left: 1%;
   overflow: hidden;
 }
+.colu2 .metadata {
+  margin-left: 10px;
+}
 .colu1 img {
 }
 table.received_show {
@@ -315,55 +318,35 @@ span#send_info {
   right: 0px;
 }
 
-.rectangle-txt-edit {
+.rectangle-txt {
   position: absolute;
   padding: 0;
   color: transparent;
   background: rgba(234, 252, 23, .1);
 }
-.rectangle-txt-edit input{
+.rectangle-txt input{
   display: none;
 }
-.rectangle-txt-edit:hover span{
+.rectangle-txt:hover span{
   background: white;
   color: black;
   border: 1px solid green;
+  z-index: 1;
 }
-.rectangle-txt {
-  position: absolute;
-  padding: 0;
-  background: rgba(234, 252, 23, .2);
-  z-index: 2;
-}
-.rectangle-txt:hover {
-  border: 1px solid;
+.rectangle-tag {
+  border-radius: 0.25em;
+  color: #fff;
+  display: inline;
+  font-size: 75%;
+  font-weight: 700;
+  line-height: 1;
+  padding: 0.2em 0.6em 0.3em;
   text-align: center;
-}
-.rectangle-txt:hover:before {
-  content: attr(data-tag);
-  color: white;
-  display: block;
-  background: green;
+  vertical-align: baseline;
+  white-space: nowrap;
+  background: rgba(92, 184, 92, .7);
+  box-sizing: border-box;
   position: absolute;
-  width: 100px;
-  top: 20px;
-  left: -7px;
-  right: -7px;
-  padding: 5px;
-  z-index: 2;
-}
-.rectangle-txt:hover:after{
-  content: "";
-  position: absolute;
-  display: block;
-  width: 0;
-  height: 0;
-  border: solid 12px transparent;
-  border-bottom-color: green;
-  top: 0;
-  left: 50%;
-  margin-left: -10px;
-  z-index: 2;
 }
 .controller-received #attachments_fields .description {
   display: none !important;

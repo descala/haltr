@@ -370,6 +370,17 @@ en:
   notice_payment_done: "%{payment_type} for due date %{value} maked as done"
   notice_uploaded_file_not_found: "File not found"
 
+  # Received invoice_imgs
+  label_extracted: Extracted auxiliar information
+  tag_seller_taxcode: Seller VAT ID
+  tag_buyer_taxcode: Buyed VAT ID
+  tag_invoice_number: Invoice number
+  tag_tax_percentage: Tax Percentage
+  tag_tax_amount: Tax amount
+  tag_issue: Issue date
+  tag_due: Due date
+  tag_total: Total
+
   hide_full_form: "Show less fields"
   show_full_form: "Show more fields"
   field_created_at: "Created at"

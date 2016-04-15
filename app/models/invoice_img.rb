@@ -10,6 +10,12 @@ class InvoiceImg < ActiveRecord::Base
     errors.add(:invoice) unless self.invoice and self.invoice.is_a? InvoiceDocument
   end
 
+  after_initialize do
+    self.data = {} if data.nil?
+    self.data[:tags] = {} if tags.nil?
+    self.data[:tokens] = {} if tokens.nil?
+  end
+
   after_create do
     update_invoice if data and tags
     if tags.any?
@@ -58,10 +64,15 @@ class InvoiceImg < ActiveRecord::Base
     self.save
   end
 
+  def tag(key)
+    number = tags[key]
+    tokens[number]['text']
+  rescue
+    nil
+  end
 
   def tags
-    return {} if data.nil?
-    data[:tags] || {}
+    data[:tags]
   end
 
   def useful_tokens
@@ -82,8 +93,7 @@ class InvoiceImg < ActiveRecord::Base
   end
 
   def tokens
-    return {} if data.nil?
-    data[:tokens] || {}
+    data[:tokens]
   end
 
   def text(token)
@@ -132,10 +142,16 @@ class InvoiceImg < ActiveRecord::Base
     company_match = fm.find(invoice.company.taxcode)
     if company_match
       tokens.each do |number, token|
-        tags['buyer_taxcode'] = number if token[:text].include?(company_match)
+        if token[:text].include?(company_match)
+          tags['buyer_taxcode'] = number 
+        end
       end
     end
     return best_client_match
+  end
+
+  def all_possible_tags
+    %w(invoice_number seller_taxcode buyer_taxcode issue due tax_percentage tax_amount total)
   end
 
 end

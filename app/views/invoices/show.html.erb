@@ -22,7 +22,7 @@
 <!--final menu rapid-->
 
 <% if @invoice.invoice_img -%>
-  <%= render :partial=>'received/png_show' %>
+  <%= render :partial=>'invoice_imgs/show', locals: {invoice_img: @invoice.invoice_img } %>
 <% else -%>
 
       <div id="invoice_wrapper">
