@@ -280,6 +280,12 @@ div.action-linked_to_mine #companies {
   margin-left: 1%;
   overflow: hidden;
 }
+#invoice_img fieldset {
+  width: 630px;
+}
+#invoice_img h3 {
+  padding: 0;
+}
 .colu2 .metadata {
   margin-left: 10px;
 }

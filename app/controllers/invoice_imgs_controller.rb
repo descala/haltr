@@ -29,14 +29,37 @@ class InvoiceImgsController < ApplicationController
   def context_menu
     @token_ids = params[:token_ids]
     @back = back_url
-    @tags = %w(seller_taxcode invoice_number)
+    text = params[:token_ids].collect do |token_id|
+      @invoice_img.tokens[token_id]['text'] rescue nil
+    end.join(' ')
+    @tags = []
+    if text =~ /[a-zA-Z]/
+      @tags += %w(seller_name)
+    end
+    if text =~ /\d/
+      @tags +=  %w(invoice_number seller_taxcode issue due subtotal tax_percentage tax_amount total)
+    end
     render :layout => false
+  end
+
+  def update
+    @invoice_img.all_possible_tags.each do |tag|
+      next if params[tag].empty?
+      token_number = @invoice_img.tags[tag]
+      if token_number
+        @invoice_img.tokens[token_number]['text'] = params[tag]
+      else
+        #TODO
+      end
+    end
+    @invoice_img.update_invoice
+    redirect_back_or_default(:controller=>'received',:action=>'show',:id=>@invoice_img.invoice.id)
   end
 
   def tag
     # TODO support more than one token_id per tag
     @invoice_img.tags[params['tag']] = params[:token_ids].first
-    @invoice_img.save
+    @invoice_img.update_invoice
     redirect_back_or_default(:controller=>'received',:action=>'index',:project_id=>@project.id)
   end
 

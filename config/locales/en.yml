@@ -372,14 +372,17 @@ en:
 
   # Received invoice_imgs
   label_extracted: Extracted auxiliar information
+  tag_seller_name: Seller name
   tag_seller_taxcode: Seller VAT ID
   tag_buyer_taxcode: Buyed VAT ID
   tag_invoice_number: Invoice number
-  tag_tax_percentage: Tax Percentage
+  tag_tax_percentage: Tax %
+  tag_subtotal: Taxable base
   tag_tax_amount: Tax amount
   tag_issue: Issue date
   tag_due: Due date
   tag_total: Total
+  update_invoice: Update invoice
 
   hide_full_form: "Show less fields"
   show_full_form: "Show more fields"

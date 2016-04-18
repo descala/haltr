@@ -1,48 +1,63 @@
-<div class="metadata">
-<table class="list received_show">
-  <thead>
-    <tr>
-      <th colspan="2"><%= l(:label_received_invoice) %></th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr class="odd">
-      <td><%=h l(:field_invoice_number)%></td>
-      <td><%=h format_date @invoice.date %></td>
-    </tr>
-    <tr>
-      <td><%= l(:field_client) %></td>
-      <td><%= render partial: 'client_info' if @client %></td>
-    </tr>
-    <tr class="odd">
-      <td><%=h l(:field_date)%></td>
-      <td><%=h format_date @invoice.date %></td>
-    </tr>
- </tbody>
-</table>
+<div>
+<h2 class="invoice-ID"><%=h @invoice.label %> <%=h @invoice.number %></h2>
+<div class="vcard vendor">
+  <%= render partial: 'invoices/client_info' -%>
+</div>
+<div class="invoice-info">
+  <span class="date"><%=h l(:field_date)%> <strong><%=h format_date @invoice.date %></strong></span><br/>
+  <span class="invoice-terms<%=h " pastdue" if @invoice.past_due?%>"><%=h l(:field_due_date)%> <%=h format_date @invoice.due_date %></span><br/>
 </div>
 
-<div class="metadata">
-<%= form_tag(invoice_img_path(invoice_img)) do -%>
-<table class="list received_show">
-  <thead>
-    <tr>
-      <th colspan="2"><%= l(:label_extracted) %></th>
+<table class="invoice-calculations" border="0" cellpadding="0" cellspacing="0">
+  <tbody><tr class="invoice-subtotal">
+      <th><%=h l(:label_subtotal)%>:</th>
+      <td><%=h money(@invoice.subtotal) %></td>
     </tr>
-  </thead>
-  <tbody>
-    <% invoice_img.all_possible_tags.each do |tag| %>
-      <tr class="<%= cycle("odd", "even") %>" >
-        <td><%=l("tag_#{tag}")%></td>
-        <td><%= text_field_tag tag, invoice_img.tag(tag) %> </td>
+    <% @invoice.taxes_uniq.each do |tax| -%>
+      <tr class="sales-tax">
+        <th><%= h tax_name(tax) %> <%= " #{l(:over_taxable_base)} #{money(@invoice.taxable_base(tax))}" unless @invoice.tax_applies_to_all_lines?(tax) %>:</th>
+        <td><%= h money(@invoice.tax_amount(tax)) %></td>
       </tr>
-    <% end %>
-  </tbody>
-  <tfoot>
-    <tr>
-      <th colspan="2"><%= submit_tag l(:update_invoice) %></th>
+    <% end -%>
+    <tr class="invoice-total">
+      <th><%=h l(:label_invoice_total)%>:</th>
+      <td><%=h money(@invoice.total) %></td>
     </tr>
-  </tfoot>
+    <% if @invoice.payments_on_account_in_cents.to_i != 0 -%>
+      <tr>
+        <th><%=h l(:field_payments_on_account) %></th>
+        <td><%=h money(@invoice.payments_on_account) %></td>
+      </tr>
+      <tr class="invoice-total">
+        <th><%=h l(:total_executable) %></th>
+        <td><%=h money(@invoice.total - @invoice.payments_on_account) %></td>
+      </tr>
+    <% end -%>
+  </tbody>
 </table>
-<% end %>
+
+<div class="metadata">
+  <%= form_tag(invoice_img_path(invoice_img), method: :put) do -%>
+    <table class="list received_show">
+      <thead>
+        <tr>
+          <th colspan="2"><%= l(:label_extracted) %></th>
+        </tr>
+      </thead>
+      <tbody>
+        <% invoice_img.all_possible_tags.each do |tag| %>
+          <tr class="<%= cycle("odd", "even") %>" >
+            <td><%=l("tag_#{tag}")%></td>
+            <td><%= text_field_tag tag, invoice_img.tag(tag) %> </td>
+          </tr>
+        <% end %>
+      </tbody>
+      <tfoot>
+        <tr>
+          <th colspan="2"><%= submit_tag l(:update_invoice) %></th>
+        </tr>
+      </tfoot>
+    </table>
+  <% end %>
+</div>
 </div>

@@ -30,6 +30,9 @@ class InvoiceImg < ActiveRecord::Base
   end
 
   def update_invoice
+    if t=tags[:invoice_number]
+      invoice.number = text(t)
+    end
     if t=tags[:issue]
       invoice.date = text(t)
     end
@@ -37,27 +40,44 @@ class InvoiceImg < ActiveRecord::Base
       invoice.due_date = text(t)
     end
     if t=tags[:subtotal]
-      # Creates auxiliar line
-      line = InvoiceLine.new(
-        quantity: 1,
-        description: 'Original invoice in PDF format',
-        price: decimal(t)
-      )
-      invoice.invoice_lines << line
+      if invoice.invoice_lines.count == 1
+        # Updates auxiliar line
+        aux_line = invoice.invoice_lines.first
+        aux_line.price = decimal(t)
+        aux_line.save
+      else
+        # Creates auxiliar line
+        aux_line = InvoiceLine.new(
+          quantity: 1,
+          description: 'Original invoice in PDF format',
+          price: decimal(t)
+        )
+        invoice.invoice_lines << aux_line
+      end
     end
     if t=tags[:tax_percentage] and invoice.invoice_lines.any?
       invoice.invoice_lines.each do |invoice_line|
-        tax = Tax.new(
-          name: 'IVA',
-          percent: decimal(t)*100
-        )
-        invoice_line.taxes << tax
+        if invoice_line.taxes.count == 1
+          tax = invoice_line.taxes.first
+          tax.percent = decimal(t)*100
+          tax.save
+        else
+          tax = Tax.new(
+            name: 'IVA',
+            percent: decimal(t)*100
+          )
+          invoice_line.taxes << tax
+        end
       end
     end
     if invoice.is_a? ReceivedInvoice
       invoice.state=:received
     else
       invoice.state=:new
+    end
+    if tags[:seller_taxcode]
+      client = invoice.company.project.clients.where(taxcode: tags[:seller_taxcode])
+      invoice.client = client
     end
     invoice.client = fuzzy_match_client unless invoice.client
     invoice.save(validate: false)
@@ -151,7 +171,7 @@ class InvoiceImg < ActiveRecord::Base
   end
 
   def all_possible_tags
-    %w(invoice_number seller_taxcode buyer_taxcode issue due tax_percentage tax_amount total)
+    %w(invoice_number seller_name seller_taxcode buyer_taxcode issue due subtotal tax_percentage tax_amount total)
   end
 
 end
