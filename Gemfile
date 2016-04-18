@@ -33,3 +33,5 @@ gem 'shared-mime-info'
 
 gem 'rest-client'
 gem 'fuzzy_match'
+gem 'whatlanguage'
+gem 'countries'

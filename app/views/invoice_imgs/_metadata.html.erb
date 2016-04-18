@@ -48,7 +48,7 @@
         <% invoice_img.all_possible_tags.each do |tag| %>
           <tr class="<%= cycle("odd", "even") %>" >
             <td><%=l("tag_#{tag}")%></td>
-            <td><%= text_field_tag tag, invoice_img.tag(tag) %> </td>
+            <td><%= text_field_tag tag, invoice_img.tagv(tag) %> </td>
           </tr>
         <% end %>
       </tbody>

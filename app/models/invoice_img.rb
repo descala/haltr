@@ -30,16 +30,11 @@ class InvoiceImg < ActiveRecord::Base
   end
 
   def update_invoice
-    if t=tags[:invoice_number]
-      invoice.number = text(t)
-    end
-    if t=tags[:issue]
-      invoice.date = text(t)
-    end
-    if t=tags[:due]
-      invoice.due_date = text(t)
-    end
-    if t=tags[:subtotal]
+    tags[:language]  = what_language unless tagv(:language)
+    invoice.number   = tagv(:invoice_number)
+    invoice.date     = tagv(:issue)
+    invoice.due_date = tagv(:due)
+    if t=tagv(:subtotal)
       if invoice.invoice_lines.count == 1
         # Updates auxiliar line
         aux_line = invoice.invoice_lines.first
@@ -55,7 +50,7 @@ class InvoiceImg < ActiveRecord::Base
         invoice.invoice_lines << aux_line
       end
     end
-    if t=tags[:tax_percentage] and invoice.invoice_lines.any?
+    if t=tagv(:tax_percentage) and invoice.invoice_lines.any?
       invoice.invoice_lines.each do |invoice_line|
         if invoice_line.taxes.count == 1
           tax = invoice_line.taxes.first
@@ -75,18 +70,33 @@ class InvoiceImg < ActiveRecord::Base
     else
       invoice.state=:new
     end
-    if tags[:seller_taxcode]
-      client = invoice.company.project.clients.where(taxcode: tags[:seller_taxcode])
-      invoice.client = client
+    if !invoice.client
+      if tagv(:seller_taxcode)
+        invoice.client = invoice.company.project.clients.where(taxcode: tagv(:seller_taxcode)).first
+        if !invoice.client and  tagv(:seller_name)
+          new_client = Client.new(
+            project: invoice.project,
+            name:    tagv(:seller_name),
+            taxcode: tagv(:seller_taxcode),
+            country: iso_country_from_text(tagv(:seller_country)),
+            language: tags[:language]
+          )
+          invoice.client = new_client if new_client.save
+        end
+      end
     end
     invoice.client = fuzzy_match_client unless invoice.client
     invoice.save(validate: false)
     self.save
   end
 
-  def tag(key)
-    number = tags[key]
-    tokens[number]['text']
+  def tagv(key)
+    reference = tags[key]
+    if tokens[reference]
+      tokens[reference]['text']
+    else
+      reference
+    end
   rescue
     nil
   end
@@ -122,8 +132,8 @@ class InvoiceImg < ActiveRecord::Base
 
   # "€600.00"
   # "18,00%"
-  def decimal(token)
-    cents = text(token).gsub(/\D/,'').to_i
+  def decimal(value)
+    cents = value.gsub(/\D/,'').to_i
     cents / 100.0
   rescue
     0
@@ -170,8 +180,22 @@ class InvoiceImg < ActiveRecord::Base
     return best_client_match
   end
 
+  def what_language
+    require 'whatlanguage'
+    invoice_string = tokens.collect do |k,v|
+      v[:text] unless v[:text] =~ /\d/
+    end.flatten.compact.join(' ')
+    WhatLanguage.new.language_iso(invoice_string)
+  end
+
+  def iso_country_from_text(country_txt)
+    fm = FuzzyMatch.new(ISO3166::Country.translations(tagv(:language)))
+    # ["ES", "Espanya"]
+    fm.find(country_txt)[0].downcase rescue invoice.company.country
+  end
+
   def all_possible_tags
-    %w(invoice_number seller_name seller_taxcode buyer_taxcode issue due subtotal tax_percentage tax_amount total)
+    %w(invoice_number language seller_country seller_name seller_taxcode buyer_taxcode issue due subtotal tax_percentage tax_amount total)
   end
 
 end

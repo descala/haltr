@@ -15,6 +15,7 @@
         </div>
       <% end %>
       <% invoice_img.tags && invoice_img.tags.each do |tag,number| %>
+        <% next if invoice_img.tokens[number].nil? -%>
         <% attributes = invoice_img.tokens[number] -%>
         <div class="rectangle-tag" style="left:<%=attributes[:x1].to_i+5%>px; top:<%=attributes[:y0].to_i-2%>px;"><%= l("tag_#{tag}") %></div>
       <% end %>

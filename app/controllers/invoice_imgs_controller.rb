@@ -34,7 +34,7 @@ class InvoiceImgsController < ApplicationController
     end.join(' ')
     @tags = []
     if text =~ /[a-zA-Z]/
-      @tags += %w(seller_name)
+      @tags += %w(seller_name seller_country)
     end
     if text =~ /\d/
       @tags +=  %w(invoice_number seller_taxcode issue due subtotal tax_percentage tax_amount total)
@@ -46,10 +46,10 @@ class InvoiceImgsController < ApplicationController
     @invoice_img.all_possible_tags.each do |tag|
       next if params[tag].empty?
       token_number = @invoice_img.tags[tag]
-      if token_number
+      if token_number and @invoice_img.tokens[token_number]
         @invoice_img.tokens[token_number]['text'] = params[tag]
       else
-        #TODO
+        @invoice_img.tags[tag] = params[tag]
       end
     end
     @invoice_img.update_invoice
