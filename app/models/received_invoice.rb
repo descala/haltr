@@ -43,8 +43,7 @@ class ReceivedInvoice < InvoiceDocument
   end
 
   def past_due?
-    #TODO
-    false
+    !state?(:paid) && due_date && due_date < Date.today
   end
 
   def label

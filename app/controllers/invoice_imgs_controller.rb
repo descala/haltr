@@ -32,13 +32,16 @@ class InvoiceImgsController < ApplicationController
     text = params[:token_ids].collect do |token_id|
       @invoice_img.tokens[token_id]['text'] rescue nil
     end.join(' ')
-    @tags = []
+    @current_tag = @invoice_img.tags.invert[params[:token_ids].first]
+    tags = []
     if text =~ /[a-zA-Z]/
-      @tags += %w(seller_name seller_country)
+      tags += %w(seller_name seller_country)
     end
     if text =~ /\d/
-      @tags +=  %w(invoice_number seller_taxcode issue due subtotal tax_percentage tax_amount total)
+      tags +=  %w(invoice_number seller_taxcode issue due subtotal tax_percentage tax_amount total)
     end
+    @assiged_tags = @invoice_img.tags.keys
+    @missing_tags = tags - @assiged_tags
     render :layout => false
   end
 
@@ -57,8 +60,16 @@ class InvoiceImgsController < ApplicationController
   end
 
   def tag
-    # TODO support more than one token_id per tag
-    @invoice_img.tags[params['tag']] = params[:token_ids].first
+    if params[:token_ids].nil?
+      # clear tag
+      @invoice_img.tags.delete(params['tag'])
+    else
+      if params[:token_ids].size == 1
+        @invoice_img.tags[params['tag']] = params[:token_ids].first
+      else
+        @invoice_img.tags[params['tag']] = params[:token_ids]
+      end
+    end
     @invoice_img.update_invoice
     redirect_back_or_default(:controller=>'received',:action=>'index',:project_id=>@project.id)
   end

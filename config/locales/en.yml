@@ -385,6 +385,8 @@ en:
   tag_due: Due date
   tag_total: Total
   update_invoice: Update invoice
+  replace_tags: Replace
+  clear_tag: Remove
 
   hide_full_form: "Show less fields"
   show_full_form: "Show more fields"

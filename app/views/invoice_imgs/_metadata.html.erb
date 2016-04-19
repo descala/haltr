@@ -3,10 +3,8 @@
 <div class="vcard vendor">
   <%= render partial: 'invoices/client_info' -%>
 </div>
-<div class="invoice-info">
   <span class="date"><%=h l(:field_date)%> <strong><%=h format_date @invoice.date %></strong></span><br/>
   <span class="invoice-terms<%=h " pastdue" if @invoice.past_due?%>"><%=h l(:field_due_date)%> <%=h format_date @invoice.due_date %></span><br/>
-</div>
 
 <table class="invoice-calculations" border="0" cellpadding="0" cellspacing="0">
   <tbody><tr class="invoice-subtotal">

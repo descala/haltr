@@ -263,33 +263,26 @@ div.action-linked_to_mine #companies {
   font-size: 10px;
 }
 
-#invoice_img {
-}
-#invoice_img .container2 {
-}
-#invoice_img .colu1 {
-  float:left;
+#invoice_img .image {
   position: relative;
   border: 1px solid #666666;
 }
-#invoice_img .colu1 div {
-  display: inline-block;
+#invoice_img .colu1 {
+  float: left;
+  margin-right: 10px;
 }
 #invoice_img .colu2 {
-  float:right;
-  margin-left: 1%;
-  overflow: hidden;
-}
-#invoice_img fieldset {
-  width: 630px;
+  float: left;
+  width: 40%;
 }
 #invoice_img h3 {
   padding: 0;
 }
+.controller-received select#invoice_client_id {
+  width: 50%;
+}
 .colu2 .metadata {
   margin-left: 10px;
-}
-.colu1 img {
 }
 table.received_show {
   width: auto;
@@ -333,7 +326,7 @@ span#send_info {
 .rectangle-txt input{
   display: none;
 }
-.rectangle-txt:hover span{
+.rectangle-txt:not(.context-menu-selection):hover span{
   background: white;
   color: black;
   border: 1px solid green;

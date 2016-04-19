@@ -92,10 +92,16 @@ class InvoiceImg < ActiveRecord::Base
 
   def tagv(key)
     reference = tags[key]
-    if tokens[reference]
-      tokens[reference]['text']
+    if reference.is_a? Array
+      reference.collect do |ref|
+        tokens[ref]['text']
+      end.join(' ')
     else
-      reference
+      if tokens[reference]
+        tokens[reference]['text']
+      else
+        reference
+      end
     end
   rescue
     nil
@@ -150,7 +156,7 @@ class InvoiceImg < ActiveRecord::Base
   def fuzzy_match_client
     require 'fuzzy_match'
     match_tokens = tokens.collect do |k,v|
-      v[:text].split(/\.|:/) if v[:text] =~ /\d/
+      v[:text].gsub(/\.|:/,'') if v[:text] =~ /\d/
     end.flatten.compact
     fm = FuzzyMatch.new(match_tokens, threshold: 0.6)
     best_client_match = nil

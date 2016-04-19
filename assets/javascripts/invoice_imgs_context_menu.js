@@ -26,7 +26,7 @@ function contextMenuClick(event) {
   contextMenuHide();
   if (target.is('a') || target.is('img')) { return; }
   if (event.which == 1 || (navigator.appVersion.match(/\bMSIE\b/))) {
-    var tr = target.parents('tr').first();
+    var tr = target.parents('div').first();
     if (tr.length && tr.hasClass('hascontextmenu')) {
       // a row was clicked, check if the click was on checkbox
       if (target.is('input')) {
