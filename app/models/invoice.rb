@@ -78,7 +78,10 @@ class Invoice < ActiveRecord::Base
 
   after_initialize :set_default_values
 
-  acts_as_attachable :view_permission => :use_invoice_attachments, :delete_permission => :use_invoice_attachments
+  acts_as_attachable :view_permission => :use_invoice_attachments,
+                   :delete_permission => :use_invoice_attachments,
+                           :after_add => :attachment_added,
+                       :before_remove => :attachment_removed
 
   def set_default_values
     self.currency ||= self.client.currency rescue nil
@@ -1253,6 +1256,24 @@ _INV
   # translations for accepts_nested_attributes_for
   def self.human_attribute_name(attribute_key_name, *args)
     super(attribute_key_name.to_s.gsub(/invoice_lines\./,''), *args)
+  end
+
+  def attachment_added(obj)
+    Event.create(
+      :name => :invoice_attachment_added,
+      :notes => obj.filename,
+      :invoice => self,
+      :user => User.current
+    )
+  end
+
+  def attachment_removed(obj)
+    Event.create(
+      :name => :invoice_attachment_destoy,
+      :notes => obj.filename,
+      :invoice => self,
+      :user => User.current
+    )
   end
 
 end

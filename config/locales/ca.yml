@@ -737,3 +737,5 @@ ca:
   xslt_shows_original: "Aquesta factura s'ha modificat. El format XSLT reflecteix l'original, sense el canvis."
   skip_invoice_validations: No validar la factura al importar
   by_peppol: "Rebuda per Peppol"
+  invoice_attachment_added: "Annex afegit"
+  invoice_attachment_destoy: "Annex esborrat"

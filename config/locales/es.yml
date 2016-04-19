@@ -739,3 +739,5 @@ es:
   xslt_shows_original: "Esta factura se ha modificado. El formato XSLT refleja el original sin los cambios"
   skip_invoice_validations: No validar la factura al importar
   by_peppol: "Recibida por Peppol"
+  invoice_attachment_added: "Anexo añadido"
+  invoice_attachment_destoy: "Anexo borrado"

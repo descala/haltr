@@ -719,3 +719,5 @@ fr:
   xslt_shows_original: "This invoice has been modified. The XSLT format shows the original without your changes"
   skip_invoice_validations: "Skip invoice validation"
   by_peppol: "Received by Peppol"
+  invoice_attachment_added: "Annex added"
+  invoice_attachment_destoy: "Annex deleted"
