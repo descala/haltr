@@ -1259,6 +1259,7 @@ _INV
   end
 
   def attachment_added(obj)
+    return if new_record?
     Event.create(
       :name => :invoice_attachment_added,
       :notes => obj.filename,
