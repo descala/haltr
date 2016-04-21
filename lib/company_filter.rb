@@ -17,7 +17,7 @@ module CompanyFilter
       @project.reload
     end
     unless @project.company.valid?
-      message = "#{l(:halt_configure_before_use)}<br/>#{@project.company.errors.full_messages.join('<br/>')}".html_safe
+      message = "#{l(:halt_configure_before_use, href: view_context.link_to(l(:company_href), project_my_company_path(@project)))}<br/>#{@project.company.errors.full_messages.join('<br/>')}".html_safe
       flash.now[:error] = message
       if User.current.admin?
         flash.now[:error] = message

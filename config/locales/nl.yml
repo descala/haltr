@@ -256,7 +256,7 @@ nl:
   units: Units
   hours: Hours
   kilograms: Kilograms
-  litters: Litters
+  litters: Litres
   s_units: ""
   s_hours: h
   s_kilograms: kg
@@ -361,7 +361,8 @@ nl:
 
   # Errors
   cant_connect_trace: "Can't connect to b2brouter platform. %{value}"
-  halt_configure_before_use: Please first configure company settings
+  halt_configure_before_use: "Please first configure %{href} settings"
+  company_href: "company"
   warning_can_not_generate_invoice: "Can not generate invoice form template %{value}"
   notice_invoice_sent: "Invoice will be sent"
   error_invoice_not_sent: "Could not send invoice %{num}"
@@ -723,3 +724,5 @@ nl:
   xslt_shows_original: "This invoice has been modified. The XSLT format shows the original without your changes"
   skip_invoice_validations: "Skip invoice validation"
   by_peppol: "Received by Peppol"
+  invoice_attachment_added: "Annex added"
+  invoice_attachment_destoy: "Annex deleted"

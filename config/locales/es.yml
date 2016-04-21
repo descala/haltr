@@ -374,7 +374,8 @@ es:
 
   # Errors
   cant_connect_trace: "No se puede conectar con la plataforma b2brouter"
-  halt_configure_before_use: "Por favor, primero configura los datos de tu empresa"
+  halt_configure_before_use: "Por favor, revisa los datos de %{href}"
+  company_href: "mi empresa"
   warning_can_not_generate_invoice: "No se ha podido generar la factura de la plantilla %{value}"
   notice_invoice_sent: "La factura se esta enviando"
   error_invoice_not_sent: "La factura %{num} no se ha podido enviar"
@@ -742,3 +743,5 @@ es:
   xslt_shows_original: "Esta factura se ha modificado. El formato XSLT refleja el original sin los cambios"
   skip_invoice_validations: No validar la factura al importar
   by_peppol: "Recibida por Peppol"
+  invoice_attachment_added: "Anexo añadido"
+  invoice_attachment_destoy: "Anexo borrado"

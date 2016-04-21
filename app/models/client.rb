@@ -32,6 +32,7 @@ class Client < ActiveRecord::Base
 #  validates_uniqueness_of :name, :scope => :project_id
 #  validates_length_of :name, :maximum => 30
 #  validates_format_of :identifier, :with => /^[a-z0-9\-]*$/
+  validates_format_of :postalcode, with: /\A[0-9]{5}\z/, if: Proc.new {|i| i.country == 'es'}
 
   before_validation :set_hashid_value
   before_validation :copy_linked_profile
@@ -184,6 +185,10 @@ class Client < ActiveRecord::Base
 
   def previous
     project.clients.last(:conditions=>["id < ?", self.id])
+  end
+
+  def postalcode=(v)
+    write_attribute(:postalcode, v.gsub(' ', ''))
   end
 
   protected
