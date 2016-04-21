@@ -11,8 +11,8 @@
         :bank_info  => bank_info,
         :sepa_type  => payment_type.split("_").last,
         :invoices   => invoices.collect {|i| i.id } },
-      :style => (due_date < Date.today ? "color: red;" : ""),
-      :title => (due_date < Date.today ? "#{l(:field_due_date)}: #{format_date due_date}" : "")
+      :style => (due_date.nil? or due_date < Date.today ? "color: red;" : ""),
+      :title => (due_date.nil? or due_date < Date.today ? "#{l(:field_due_date)}: #{format_date due_date}" : "")
     %>
   </td>
   <td>
