@@ -359,7 +359,8 @@ sv:
 
   # Errors
   cant_connect_trace: "Kan inte få kontakt med  b2brouter plattformen. %{value}"
-  halt_configure_before_use: Var god och registera företag först
+  halt_configure_before_use: "Var god och registera %{href} först"
+  company_href: "företag "
   warning_can_not_generate_invoice: "Kan inte skapa fkatura från mall %{value}"
   notice_invoice_sent: "Faktura kommer att skickas"
   error_invoice_not_sent: "Kunde inte skicka faktura %{num}"

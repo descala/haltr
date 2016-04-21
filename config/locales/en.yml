@@ -362,7 +362,8 @@ en:
 
   # Errors
   cant_connect_trace: "Can't connect to b2brouter platform. %{value}"
-  halt_configure_before_use: Please first configure your company settings
+  halt_configure_before_use: "Please first configure %{href} settings"
+  company_href: "company"
   warning_can_not_generate_invoice: "Can not generate invoice form template %{value}"
   notice_invoice_sent: "Invoice will be sent"
   error_invoice_not_sent: "Could not send invoice %{num}"

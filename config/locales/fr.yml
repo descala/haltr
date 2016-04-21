@@ -362,7 +362,8 @@ fr:
 
   # Errors
   cant_connect_trace: "Ne peut se connecter à la plate-forme b2brouter. %{value}"
-  halt_configure_before_use: "Veuillez d abord configurer votre compagnie"
+  halt_configure_before_use: "Veuillez d abord configurer votre %{href}"
+  company_href: "compagnie"
   warning_can_not_generate_invoice: "Ne peut générer la facture depuis le modèle %{value}"
   notice_invoice_sent: "Facture est en cours d'envoi"
   error_invoice_not_sent: "N'a pas pu envoyer la facture %{num}"

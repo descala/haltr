@@ -372,7 +372,8 @@ gl:
 
   # Errors
   cant_connect_trace: "Non se pode conectar coa plataforma b2brouter"
-  halt_configure_before_use: "Por favor, primeiro configura os datos da túa empresa"
+  halt_configure_before_use: "Por favor, primeiro configura os datos da %{href}"
+  company_href: "túa empresa"
   warning_can_not_generate_invoice: "Non se puido xerar a factura da plantilla %{value}"
   notice_invoice_sent: "A factura estase enviando"
   error_invoice_not_sent: "A factura %{num} non se puido enviar"

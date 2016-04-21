@@ -360,7 +360,8 @@ da:
  
   # Errors
   cant_connect_trace: "Kan ikke forbinde til b2brouter platform. %{value}"
-  halt_configure_before_use: Please first configure company settings
+  halt_configure_before_use: "Please first configure %{href} settings"
+  company_href: "company"
   warning_can_not_generate_invoice: "Kan ikke generere faktura formularskabelon %{value}"
   notice_invoice_sent: "Faktura vil blive sendt"
   error_invoice_not_sent: "Kunne ikke sende faktura %{num}"
