@@ -1,51 +1,51 @@
 <!-- Client Info -->
 <% unless !@client or @client.new_record? -%>
-    <div class="client-info">
-      <h3><%= client_name_with_link @client %></h3>
-      <address class="adr">
-        <div class="street-address"><%=h @client.address %></div>
-        <div class="street-address"><%=h @client.address2 %></div>
-        <span class="postal-code"><%=h @client.postalcode %></span>
-        <% if !@client.city.blank? or !@client.province.blank? -%>
-          <span class="locality"><%=h @client.city.strip unless @client.city.blank? %></span>
-          <% unless @client.province.blank? -%>, <span class="region"><%=h @client.province %></span><% end -%>
-        <% end -%>
-        <div class="country-name"><%=h @client.country_name if @client.country and @client.country.casecmp(@company.country) != 0 %></div>
-      </address>
-      <div><strong><%=h l(:field_taxcode) %>:</strong><span class="tax-id"> <%=h @client.taxcode.upcase if @client.taxcode %></span></div>
-      <% if call_hook(:invoice_view_client_info).present? -%>
-        <%= call_hook(:invoice_view_client_info) %>
-      <% elsif @invoice.has_dir3_info? -%>
-        <% if @invoice.oficina_comptable.present? -%>
-          <div>
-            <%=h l(:oficina_comptable) %>: <%= @invoice.oficina_comptable %>
-          </div>
-        <% end -%>
-        <% if @invoice.organ_gestor.present? -%>
-          <div>
-            <%=h l(:organ_gestor) %>: <%= @invoice.organ_gestor %>
-          </div>
-        <% end -%>
-        <% if @invoice.unitat_tramitadora.present? -%>
-          <div>
-            <%=h l(:unitat_tramitadora) %>: <%= @invoice.unitat_tramitadora %>
-          </div>
-        <% end -%>
-        <% if @invoice.organ_proponent.present? -%>
-          <div>
-            <%= h l(:field_organ_proponent) %>: <%= @invoice.organ_proponent %>
-          </div>
-        <% end -%>
-        <% if @invoice.unidad_contratacion.present? -%>
-          <div>
-            <%= h l(:field_unidad_contratacion) %>: <%= @invoice.unidad_contratacion%>
-          </div>
-        <% end -%>
+  <div class="client-info">
+    <h3><%= client_name_with_link @client %></h3>
+    <address class="adr">
+      <div class="street-address"><%=h @client.address %></div>
+      <div class="street-address"><%=h @client.address2 %></div>
+      <span class="postal-code"><%=h @client.postalcode %></span>
+      <% if !@client.city.blank? or !@client.province.blank? -%>
+        <span class="locality"><%=h @client.city.strip unless @client.city.blank? %></span>
+        <% unless @client.province.blank? -%>, <span class="region"><%=h @client.province %></span><% end -%>
       <% end -%>
-      <% if @invoice.file_reference.present? -%>
+      <div class="country-name"><%=h @client.country_name if @client.country and @client.country.casecmp(@company.country) != 0 %></div>
+    </address>
+    <div><strong><%=h l(:field_taxcode) %>:</strong><span class="tax-id"> <%=h @client.taxcode.upcase if @client.taxcode %></span></div>
+    <% if call_hook(:invoice_view_client_info).present? -%>
+      <%= call_hook(:invoice_view_client_info) %>
+    <% elsif @invoice.has_dir3_info? -%>
+      <% if @invoice.oficina_comptable.present? -%>
         <div>
-          <%= h l(:field_file_reference) %>: <%= @invoice.file_reference %>
+          <%=h l(:oficina_comptable) %>: <%= @invoice.oficina_comptable %>
         </div>
       <% end -%>
-    </div>
+      <% if @invoice.organ_gestor.present? -%>
+        <div>
+          <%=h l(:organ_gestor) %>: <%= @invoice.organ_gestor %>
+        </div>
+      <% end -%>
+      <% if @invoice.unitat_tramitadora.present? -%>
+        <div>
+          <%=h l(:unitat_tramitadora) %>: <%= @invoice.unitat_tramitadora %>
+        </div>
+      <% end -%>
+      <% if @invoice.organ_proponent.present? -%>
+        <div>
+          <%= h l(:field_organ_proponent) %>: <%= @invoice.organ_proponent %>
+        </div>
+      <% end -%>
+      <% if @invoice.unidad_contratacion.present? -%>
+        <div>
+          <%= h l(:field_unidad_contratacion) %>: <%= @invoice.unidad_contratacion%>
+        </div>
+      <% end -%>
+    <% end -%>
+    <% if @invoice.file_reference.present? -%>
+      <div>
+        <%= h l(:field_file_reference) %>: <%= @invoice.file_reference %>
+      </div>
+    <% end -%>
+  </div>
 <% end -%>

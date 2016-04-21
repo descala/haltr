@@ -11,46 +11,46 @@
       <% end -%>
     </h3>
   <% end -%>
-  </div>
+</div>
 
-  <div class="vcard vendor">
-    <% if @invoice.is_a? ReceivedInvoice -%>
-      <%= render partial: 'invoices/client_info' -%>
-    <% else -%>
-      <div class="invoicelogo">
-        <% if @company.attachments.any? -%>
-          <% if @is_pdf %>
-            <% if @debug %>
-              <%= tag 'img', :src => "/invoices/logo/#{@company.attachments.first.id}/#{@company.attachments.first.filename}", :alt => "#{@company.name} Logo" -%>
-            <% else %>
-              <%= tag 'img', :src => @company.attachments.first.diskfile -%>
-            <% end -%>
-          <% else %>
+<div class="vcard vendor">
+  <% if @invoice.is_a? ReceivedInvoice -%>
+    <%= render partial: 'invoices/client_info' -%>
+  <% else -%>
+    <div class="invoicelogo">
+      <% if @company.attachments.any? -%>
+        <% if @is_pdf %>
+          <% if @debug %>
             <%= tag 'img', :src => "/invoices/logo/#{@company.attachments.first.id}/#{@company.attachments.first.filename}", :alt => "#{@company.name} Logo" -%>
+          <% else %>
+            <%= tag 'img', :src => @company.attachments.first.diskfile -%>
           <% end -%>
+        <% else %>
+          <%= tag 'img', :src => "/invoices/logo/#{@company.attachments.first.id}/#{@company.attachments.first.filename}", :alt => "#{@company.name} Logo" -%>
         <% end -%>
-      </div>
-      <%= render partial: 'invoices/company_info' -%>
-    <% end -%>
-  </div>
-
-  <!-- Invoice Number and Info -->
-  <h2 class="invoice-ID"><%=h @invoice.label %> <%=h @invoice.number %></h2>
-  <% unless @invoice.series_code.blank? -%>
-  <h3><%= l(:field_series_code) %>: <%= @invoice.series_code %></h3>
+      <% end -%>
+    </div>
+    <%= render partial: 'invoices/company_info' -%>
   <% end -%>
-  <div class="invoice-info">
+</div>
+
+<!-- Invoice Number and Info -->
+<h2 class="invoice-ID"><%=h @invoice.label %> <%=h @invoice.number %></h2>
+<% unless @invoice.series_code.blank? -%>
+  <h3><%= l(:field_series_code) %>: <%= @invoice.series_code %></h3>
+<% end -%>
+<div class="invoice-info">
   <span class="date"><%=h l(:field_date)%> <strong><%=h format_date @invoice.date %></strong></span><br/>
   <% if @invoice.is_amend? -%>
-  <% if (@invoice.amend_of and @invoice.amend_of == @invoice) or (@invoice.partial_amend_of and @invoice.partial_amend_of == @invoice) -%>
-    <span class="invoice-terms"><%=h l(:label_amended_invoice)%>: <%= @invoice.amended_number %></span><br/>
-  <% elsif @invoice.amend_of -%>
-    <span class="invoice-terms"><%=h l(:label_amended_invoice)%>: <%= link_to_if_authorized @invoice.amend_of.number,{:controller => 'invoices', :action => 'show', :id => @invoice.amend_of} %></span><br/>
-  <% elsif @invoice.partial_amend_of -%>
-    <span class="invoice-terms"><%=h l(:label_amended_invoice)%>: <%= link_to_if_authorized @invoice.partial_amend_of.number,{:controller => 'invoices', :action => 'show', :id => @invoice.partial_amend_of} %></span><br/>
-  <% else -%>
-    <span class="invoice-terms"><%=h l(:label_amended_invoice)%>: <%= @invoice.amended_number %></span><br/>
-  <% end -%>
+    <% if (@invoice.amend_of and @invoice.amend_of == @invoice) or (@invoice.partial_amend_of and @invoice.partial_amend_of == @invoice) -%>
+      <span class="invoice-terms"><%=h l(:label_amended_invoice)%>: <%= @invoice.amended_number %></span><br/>
+    <% elsif @invoice.amend_of -%>
+      <span class="invoice-terms"><%=h l(:label_amended_invoice)%>: <%= link_to_if_authorized @invoice.amend_of.number,{:controller => 'invoices', :action => 'show', :id => @invoice.amend_of} %></span><br/>
+    <% elsif @invoice.partial_amend_of -%>
+      <span class="invoice-terms"><%=h l(:label_amended_invoice)%>: <%= link_to_if_authorized @invoice.partial_amend_of.number,{:controller => 'invoices', :action => 'show', :id => @invoice.partial_amend_of} %></span><br/>
+    <% else -%>
+      <span class="invoice-terms"><%=h l(:label_amended_invoice)%>: <%= @invoice.amended_number %></span><br/>
+    <% end -%>
   <% end -%>
   <% unless @invoice.due_date.blank? -%>
     <% if @invoice.is_a?(Quote) -%>
@@ -77,15 +77,15 @@
     <span class="invoice-terms"><%=h "#{t(:field_receiver_contract_reference)} #{@invoice.receiver_contract_reference}" %></span>
   <% end -%>
   <%= call_hook(:invoice_view_invoice_info) %>
- </div>
+</div>
 
-  <div class="vcard client">
-    <% if @invoice.is_a? ReceivedInvoice -%>
-      <%= render partial: 'invoices/company_info' -%>
-    <% else -%>
-      <%= render partial: 'invoices/client_info' -%>
-    <% end -%>
-  </div>
+<div class="vcard client">
+  <% if @invoice.is_a? ReceivedInvoice -%>
+    <%= render partial: 'invoices/company_info' -%>
+  <% else -%>
+    <%= render partial: 'invoices/client_info' -%>
+  <% end -%>
+</div>
 
 
 <!-- Invoice Data -->
@@ -140,10 +140,10 @@
             <%=h line.description %>
             <% if line.charge_reason.present? -%>
               <br /><%= l(:field_charge) %>: <%= line.charge_reason %>
-            <% end -%>
-            <% if line.discount_text.present? and line.discount_text != '.' -%>
-              <br /><%= l(:field_discount) %>: <%= line.discount_text %>
-            <% end -%>
+          <% end -%>
+          <% if line.discount_text.present? and line.discount_text != '.' -%>
+            <br /><%= l(:field_discount) %>: <%= line.discount_text %>
+        <% end -%>
           </td>
           <% if @lines.any? {|l| !l.sequence_number.blank? } -%>
             <td><%= line.sequence_number %></td>
@@ -202,75 +202,75 @@
       <% end -%>
 
 
-  </tbody></table>
-
-  <!-- Totals Details -->
-  <table class="invoice-calculations" border="0" cellpadding="0" cellspacing="0">
-    <tbody><tr class="invoice-subtotal">
-        <th><%=h l(:label_subtotal)%>:</th>
-        <td><%=h money(@invoice.subtotal) %></td>
-      </tr>
-      <% @invoice.taxes_uniq.each do |tax| -%>
-      <tr class="sales-tax">
-        <th><%= h tax_name(tax) %> <%= " #{l(:over_taxable_base)} #{money(@invoice.taxable_base(tax))}" unless @invoice.tax_applies_to_all_lines?(tax) %>:</th>
-        <td><%= h money(@invoice.tax_amount(tax)) %></td>
-      </tr>
-      <% end -%>
-      <tr class="invoice-total">
-        <th><%=h l(:label_invoice_total)%>:</th>
-        <td><%=h money(@invoice.total) %></td>
-      </tr>
-      <% if @invoice.payments_on_account_in_cents.to_i != 0 -%>
-        <tr>
-          <th><%=h l(:field_payments_on_account) %></th>
-          <td><%=h money(@invoice.payments_on_account) %></td>
-        </tr>
-        <tr class="invoice-total">
-          <th><%=h l(:total_executable) %></th>
-          <td><%=h money(@invoice.total - @invoice.payments_on_account) %></td>
-        </tr>
-      <% end -%>
-  </tbody></table>
-
-  <% if @invoice.is_a?(IssuedInvoice) and @invoice.payments.any? -%>
-
-    <!-- Payment Details -->
-    <table class="line-items payments" border="0" cellpadding="0" cellspacing="0">
-      <tbody>
-        <tr>
-          <th class="item-delete first"></th>
-          <th class="item-date"><%=h l :field_due_date %></th>
-          <th class="item-description"><%=h l :field_description%></th>
-          <th class="line-total last"><%=h l :field_quantity %></th>
-        </tr>
-        <% @invoice.payments.each do |payment| -%>
-          <tr>
-            <td class="item-delete first"><%= link_to_if_authorized "", {:action=>'destroy_payment',:id=>payment} , :confirm => l(:text_are_you_sure), :method => :delete, :class => 'icon icon-del' %></td>
-            <td class="item-date first"><%=h format_date payment.date %></td>
-            <td class="item-description"><%=h payment.description %></td>
-            <td class="line-total last"><%=h money(payment.amount) %></td>
-          </tr>
-        <% end -%>
-      </tbody>
-    </table>
-
-    <!-- Payment Total Details -->
-    <table class="invoice-calculations payments" border="0" cellpadding="0" cellspacing="0">
-      <tbody>
-        <tr class="invoice-total">
-          <th><%=h l :field_total_paid %>:</th>
-          <td><%=h money(@invoice.total_paid) %></td>
-        </tr>
     </tbody></table>
 
-  <% end -%>
+    <!-- Totals Details -->
+    <table class="invoice-calculations" border="0" cellpadding="0" cellspacing="0">
+      <tbody><tr class="invoice-subtotal">
+          <th><%=h l(:label_subtotal)%>:</th>
+          <td><%=h money(@invoice.subtotal) %></td>
+        </tr>
+        <% @invoice.taxes_uniq.each do |tax| -%>
+          <tr class="sales-tax">
+            <th><%= h tax_name(tax) %> <%= " #{l(:over_taxable_base)} #{money(@invoice.taxable_base(tax))}" unless @invoice.tax_applies_to_all_lines?(tax) %>:</th>
+            <td><%= h money(@invoice.tax_amount(tax)) %></td>
+          </tr>
+        <% end -%>
+        <tr class="invoice-total">
+          <th><%=h l(:label_invoice_total)%>:</th>
+          <td><%=h money(@invoice.total) %></td>
+        </tr>
+        <% if @invoice.payments_on_account_in_cents.to_i != 0 -%>
+          <tr>
+            <th><%=h l(:field_payments_on_account) %></th>
+            <td><%=h money(@invoice.payments_on_account) %></td>
+          </tr>
+          <tr class="invoice-total">
+            <th><%=h l(:total_executable) %></th>
+            <td><%=h money(@invoice.total - @invoice.payments_on_account) %></td>
+          </tr>
+        <% end -%>
+      </tbody></table>
+
+      <% if @invoice.is_a?(IssuedInvoice) and @invoice.payments.any? -%>
+
+        <!-- Payment Details -->
+        <table class="line-items payments" border="0" cellpadding="0" cellspacing="0">
+          <tbody>
+            <tr>
+              <th class="item-delete first"></th>
+              <th class="item-date"><%=h l :field_due_date %></th>
+              <th class="item-description"><%=h l :field_description%></th>
+              <th class="line-total last"><%=h l :field_quantity %></th>
+            </tr>
+            <% @invoice.payments.each do |payment| -%>
+              <tr>
+                <td class="item-delete first"><%= link_to_if_authorized "", {:action=>'destroy_payment',:id=>payment} , :confirm => l(:text_are_you_sure), :method => :delete, :class => 'icon icon-del' %></td>
+                <td class="item-date first"><%=h format_date payment.date %></td>
+                <td class="item-description"><%=h payment.description %></td>
+                <td class="line-total last"><%=h money(payment.amount) %></td>
+              </tr>
+            <% end -%>
+          </tbody>
+        </table>
+
+        <!-- Payment Total Details -->
+        <table class="invoice-calculations payments" border="0" cellpadding="0" cellspacing="0">
+          <tbody>
+            <tr class="invoice-total">
+              <th><%=h l :field_total_paid %>:</th>
+              <td><%=h money(@invoice.total_paid) %></td>
+            </tr>
+          </tbody></table>
+
+        <% end -%>
 
 </div>
 
 <div class="notes">
-<% if @invoice.extra_info.present? or
-    @invoice.taxes.collect {|t| t if t.exempt? and !t.comment.blank? }.compact.any? or
-    @invoice.amend_reason.present? -%>
+  <% if @invoice.extra_info.present? or
+      @invoice.taxes.collect {|t| t if t.exempt? and !t.comment.blank? }.compact.any? or
+      @invoice.amend_reason.present? -%>
     <h3><%=h l(:field_extra_info)%></h3>
     <% if @invoice.extra_info.present? -%>
       <span class="invoice-terms"><%= simple_format(h @invoice.extra_info) %></span>
@@ -282,7 +282,7 @@
     <% if @invoice.amend_reason.present? -%>
       <span class="invoice-terms"><%= t :field_amend_reason %>: <%= t("amend_reason_#{@invoice.amend_reason}", default: @invoice.amend_reason) %></span>
     <% end -%>
-<% end -%>
+  <% end -%>
 </div>
 
 <% unless @invoice.company.company_identifier.blank? %>
