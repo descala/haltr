@@ -844,8 +844,10 @@ class InvoicesController < ApplicationController
   end
 
   def report_invoice_list
-    @from     = params[:date_from] || 3.months.ago
-    @to       = params[:date_to]   || Date.today
+    @from     = params[:date_from]
+    @to       = params[:date_to]
+    @from = 3.months.ago if @from.blank?
+    @to   = Date.today   if @to.blank?
     begin
       @from.to_date
     rescue
