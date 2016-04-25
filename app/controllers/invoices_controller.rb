@@ -1215,7 +1215,11 @@ class InvoicesController < ApplicationController
       respond_to do |format|
         format.html {
           if @invoice
-            redirect_to invoice_path(@invoice)
+            if params[:attachments].count > 1
+              redirect_to project_received_index_path
+            else
+              redirect_to invoice_path(@invoice)
+            end
           else
             flash[:warning] = l(:notice_uploaded_file_not_found)
             redirect_to :action => 'import', :project_id => @project

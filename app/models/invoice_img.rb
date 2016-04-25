@@ -25,44 +25,56 @@ class InvoiceImg < ActiveRecord::Base
     end
   end
 
-  before_update do
-    # TODO update invoice
-  end
-
   def update_invoice
     tags[:language]  = what_language unless tagv(:language)
     invoice.number   = tagv(:invoice_number)
     invoice.date     = tagv(:issue)
     invoice.due_date = tagv(:due)
-    if t=tagv(:subtotal)
+    subtotal         = tagv(:subtotal).to_money rescue nil
+    tax_percentage   = tagv(:tax_percentage).to_money rescue nil
+    tax_amount       = tagv(:tax_amount).to_money rescue nil
+    total            = tagv(:total).to_money rescue nil
+    if tax_amount and total
+      subtotal = total - tax_amount
+    end
+    if tax_percentage and total
+      subtotal = total / ( 1 + tax_percentage.cents / 10000.0 )
+    end
+    if subtotal
       if invoice.invoice_lines.count == 1
         # Updates auxiliar line
         aux_line = invoice.invoice_lines.first
-        aux_line.price = decimal(t)
+        aux_line.price = subtotal
         aux_line.save
       else
         # Creates auxiliar line
         aux_line = InvoiceLine.new(
           quantity: 1,
           description: 'Original invoice in PDF format',
-          price: decimal(t)
+          price: subtotal
         )
         invoice.invoice_lines << aux_line
       end
     end
-    if t=tagv(:tax_percentage) and invoice.invoice_lines.any?
+    if tax_amount and !tax_percentage
+      tax_percentage = tax_amount / subtotal * 100
+    end
+    if tax_percentage and invoice.invoice_lines.any?
       invoice.invoice_lines.each do |invoice_line|
         if invoice_line.taxes.count == 1
           tax = invoice_line.taxes.first
-          tax.percent = decimal(t)*100
+          tax.percent = tax_percentage
           tax.save
         else
           tax = Tax.new(
             name: 'IVA',
-            percent: decimal(t)*100
+            percent: tax_percentage
           )
           invoice_line.taxes << tax
         end
+      end
+      if tax_amount
+        # TODO check tax_amount
       end
     end
     if invoice.is_a? ReceivedInvoice
@@ -134,15 +146,6 @@ class InvoiceImg < ActiveRecord::Base
 
   def text(token)
     data[:tokens][token][:text] rescue nil
-  end
-
-  # "€600.00"
-  # "18,00%"
-  def decimal(value)
-    cents = value.gsub(/\D/,'').to_i
-    cents / 100.0
-  rescue
-    0
   end
 
   def width
