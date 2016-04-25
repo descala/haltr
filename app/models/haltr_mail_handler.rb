@@ -66,7 +66,10 @@ class HaltrMailHandler < MailHandler # < ActionMailer::Base
       # we do not process emails without attachments
       log "email has no attachments"
     end
-    return invoices
+    invoices.compact!
+    txt = "#{invoices.size} invoices affected by mail"
+    txt += " (#{invoices.collect {|i| i.id}.join(', ')})" if invoices.any?
+    return txt
   end
 
   private
