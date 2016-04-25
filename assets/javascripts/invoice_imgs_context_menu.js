@@ -76,7 +76,11 @@ function contextMenuCreate() {
     var menu = document.createElement("div");
     menu.setAttribute("id", "context-menu");
     menu.setAttribute("style", "display:none;");
-    document.getElementById("content").appendChild(menu);
+    var el = document.getElementById("content");
+    if (el == null) {
+      el = document.getElementById("b2b-content");
+    }
+    el.appendChild(menu);
   }
 }
 
