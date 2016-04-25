@@ -33,7 +33,7 @@ class HaltrMailHandlerController < ApplicationController
         Rails.logger.info "Unknown recipient #{message.to} for message with id #{message.message_id}"
       end
     end
-    Rails.logger.info processed.join("\n")
+    Rails.logger.info processed.join("\n") if processed.any?
     render text: processed.join("\n")
   end
 
