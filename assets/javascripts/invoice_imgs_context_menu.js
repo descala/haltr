@@ -4,7 +4,7 @@ var contextMenuUrl;
 function contextMenuRightClick(event) {
   var target = $(event.target);
   if (target.is('a')) {return;}
-  var tr = target.parents('div').first();
+  var tr = target
   if (!tr.hasClass('hascontextmenu')) {return;}
   event.preventDefault();
   if (!contextMenuIsSelected(tr)) {
@@ -26,7 +26,7 @@ function contextMenuClick(event) {
   contextMenuHide();
   if (target.is('a') || target.is('img')) { return; }
   if (event.which == 1 || (navigator.appVersion.match(/\bMSIE\b/))) {
-    var tr = target.parents('div').first();
+    var tr = target
     if (tr.length && tr.hasClass('hascontextmenu')) {
       // a row was clicked, check if the click was on checkbox
       if (target.is('input')) {

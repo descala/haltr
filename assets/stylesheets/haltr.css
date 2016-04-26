@@ -327,7 +327,7 @@ span#send_info {
 .rectangle-txt input{
   display: none;
 }
-.rectangle-txt:not(.context-menu-selection):hover span{
+.rectangle-txt:not(.context-menu-selection):hover {
   background: white;
   color: black;
   z-index: 1;
@@ -335,7 +335,7 @@ span#send_info {
 .rectangle-txt.hastag{
   z-index: 0;
 }
-.rectangle-txt.hastag span{
+.rectangle-txt.hastag {
   background: white;
   color: black;
   border: none;

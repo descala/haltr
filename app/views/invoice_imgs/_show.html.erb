@@ -6,9 +6,9 @@
       <%= hidden_field_tag 'back_url', url_for(params), :id => nil %>
       <%= hidden_field_tag 'id', invoice_img.id, :id => nil %>
       <% invoice_img.tokens && invoice_img.useful_tokens.each do |number,attributes| %>
-        <div class="rectangle-txt hascontextmenu <%='hastag' if invoice_img.token_has_tag?(number)%>" style="left:<%=attributes[:x0]%>px; top:<%=attributes[:y0]%>px; width:<%=attributes[:x1].to_i-attributes[:x0].to_i+1%>px; height:<%=attributes[:y1].to_i-attributes[:y0].to_i+1%>px; font-size: <%=font_size(attributes)%>px;">
+        <div class="rectangle-txt hascontextmenu <%='hastag' if invoice_img.token_has_tag?(number)%>" style="<%=invoice_img_token_style(attributes)%>">
           <%= check_box_tag("token_ids[]", number, false, :id => nil) %>
-          <span style="line-height: <%=font_size(attributes)%>px;"><%=h attributes[:text]%></span>
+          <%=h attributes[:text]%>
         </div>
       <% end %>
       <% invoice_img.tags && invoice_img.tags.each_key do |tag| %>

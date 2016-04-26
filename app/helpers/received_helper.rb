@@ -1,7 +1,4 @@
 module ReceivedHelper
-  def font_size(attributes)
-    [attributes[:y1].to_i-attributes[:y0].to_i-1, 9].max
-  end
   def invoice_imgs_context_menu(url)
     unless @context_menu_included
       content_for :header_tags do
@@ -34,5 +31,9 @@ module ReceivedHelper
       y = attributes[:y0].to_i
     end
     "<div class=\"rectangle-tag\" style=\"left:#{x+5}px; top:#{y-1}px;\">#{l("tag_#{tag}")}</div>".html_safe
+  end
+  def invoice_img_token_style(attributes)
+    font_size = [attributes[:y1].to_i-attributes[:y0].to_i-1, 9].max
+    "left:#{attributes[:x0].to_i-1}px; top:#{attributes[:y0].to_i-1}px; height:#{attributes[:y1].to_i-attributes[:y0].to_i+1}px; font-size:#{font_size}px;"
   end
 end
