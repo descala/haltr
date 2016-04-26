@@ -786,29 +786,57 @@ _INV
              :delivery_note_number         => line_delivery_note_number,
              :ponumber     => Haltr::Utils.get_xpath(line,xpaths[:ponumber]),
            )
-      # invoice line taxes. Known taxes are described at config/taxes.yml
-      line.xpath(*xpaths[:line_taxes]).each do |line_tax|
-        percent = Haltr::Utils.get_xpath(line_tax,xpaths[:tax_percent])
-        if line_tax.path =~ /\/TaxesWithheld\//
-          percent = "-#{percent}"
-        end
-        tax = Haltr::TaxHelper.new_tax(
-          :format  => invoice_format,
-          :id      => Haltr::Utils.get_xpath(line_tax,xpaths[:tax_id]),
-          :percent => percent,
-          :event_code => Haltr::Utils.get_xpath(line,xpaths[:tax_event_code]),
-          :event_reason => Haltr::Utils.get_xpath(line,xpaths[:tax_event_reason])
-        )
-        il.taxes << tax
-        # EquivalenceSurcharges (#5560)
-        re_tax_percent = Haltr::Utils.get_xpath(line_tax,xpaths[:tax_surcharge])
-        if re_tax_percent.present?
-          re_tax = Tax.new(
-            :name     => 'RE',
-            :percent  => re_tax_percent.to_f,
-            :category => tax.category
+      if invoice_format =~ /facturae/
+        # invoice line taxes. Known taxes are described at config/taxes.yml
+        line.xpath(*xpaths[:line_taxes]).each do |line_tax|
+          percent = Haltr::Utils.get_xpath(line_tax,xpaths[:tax_percent])
+          if line_tax.path =~ /\/TaxesWithheld\//
+            percent = "-#{percent}"
+          end
+          tax = Haltr::TaxHelper.new_tax(
+            :format  => invoice_format,
+            :id      => Haltr::Utils.get_xpath(line_tax,xpaths[:tax_id]),
+            :percent => percent,
+            :event_code => Haltr::Utils.get_xpath(line,xpaths[:tax_event_code]),
+            :event_reason => Haltr::Utils.get_xpath(line,xpaths[:tax_event_reason])
           )
-          il.taxes << re_tax
+          il.taxes << tax
+          # EquivalenceSurcharges (#5560)
+          re_tax_percent = Haltr::Utils.get_xpath(line_tax,xpaths[:tax_surcharge])
+          if re_tax_percent.present?
+            re_tax = Tax.new(
+              :name     => 'RE',
+              :percent  => re_tax_percent.to_f,
+              :category => tax.category
+            )
+            il.taxes << re_tax
+          end
+        end
+      else # ubl
+        tax_definitions = {}
+        doc.xpath(*xpaths[:global_taxes]).each do |gt|
+          gt_name     = Haltr::Utils.get_xpath(gt, xpaths[:gtax_name])
+          gt_percent  = Haltr::Utils.get_xpath(gt, xpaths[:gtax_percent])
+          gt_category = Haltr::Utils.get_xpath(gt, xpaths[:gtax_category])
+          tax_definitions[gt_name] ||= {}
+          tax_definitions[gt_name][gt_category] = gt_percent
+        end
+        line.xpath(*xpaths[:line_taxes]).each do |line_tax|
+          name     = Haltr::Utils.get_xpath(line_tax, xpaths[:tax_name])
+          category = Haltr::Utils.get_xpath(line_tax, xpaths[:tax_category])
+          if !tax_definitions.has_key?(name)
+            raise "malformed UBL: line has unknown tax #{name}"
+          elsif !tax_definitions[name].has_key?(category)
+            raise "malformed UBL: line has unknown tax category #{category} for tax #{name}"
+          end
+          percent  = tax_definitions[name][category]
+          tax = Haltr::TaxHelper.new_tax(
+            format:   invoice_format,
+            name:     name,
+            percent:  percent,
+            category: category
+          )
+          il.taxes << tax
         end
       end
       # line discounts
