@@ -139,3 +139,5 @@ match 'dir3_entities/csv_import' => 'dir3_entities#csv_import', :via => :post
 resources :export_channels
 
 match '/charts/update_chart_preference' => 'charts#update_chart_preference', :via => :get, :as => :update_chart_preference
+
+match '/haltr_mail_handler/check_mail' => 'haltr_mail_handler#check_mail', :via => :get, :as => :haltr_mail_handler_check_mail

@@ -196,6 +196,12 @@ module Haltr
           xpaths[:buyer_cp_city2]     = nil
           xpaths[:currency]           = "/xmlns:Invoice/cbc:DocumentCurrencyCode"
 
+          xpaths[:global_taxes]       = "/xmlns:Invoice/cac:TaxTotal/cac:TaxSubtotal"
+          # relative to global_taxes
+          xpaths[:gtax_category]      = "cac:TaxCategory/cbc:ID"
+          xpaths[:gtax_percent]       = "cac:TaxCategory/cbc:Percent"
+          xpaths[:gtax_name]          = "cac:TaxCategory/cac:TaxScheme/cbc:ID"
+
           xpaths[:invoice_lines]      = "//cac:InvoiceLine"
           # relative to invoice_lines
           xpaths[:i_transaction_ref]  = "IssuerTransactionReference" # todo
@@ -204,7 +210,7 @@ module Haltr
           xpaths[:line_description]   = "cac:Item/cbc:Name"
           xpaths[:line_price]         = "cac:Price/cbc:PriceAmount"
           xpaths[:line_unit]          = "cbc:InvoicedQuantity/@unitCode"
-          xpaths[:line_taxes]         = ["cac:TaxTotal/cac:TaxSubtotal","cac:WithholdingTaxTotal/cac:TaxSubtotal"]
+          xpaths[:line_taxes]         = ["cac:Item/cac:ClassifiedTaxCategory"]
           xpaths[:line_notes]         = "cac:Item/cbc:Description"
           xpaths[:line_code]          = "cac:Item/cac:SellersItemIdentification/cbc:ID"
           xpaths[:line_discounts]     = "cac:AllowanceCharges[/cbc:ChargeIndicator='false']/*"
@@ -228,9 +234,8 @@ module Haltr
           xpaths[:line_charge]        = "cbc:Amount"
           xpaths[:line_charge_reason] = "cbc:AllowanceChargeReason"
           # relative to invoice_lines/taxes
-          xpaths[:tax_id]             = "cac:TaxCategory/cac:TaxScheme/cbc:ID"
-          xpaths[:tax_percent]        = "cac:TaxCategory/cbc:Percent"
-          xpaths[:tax_surcharge]      = "EquivalenceSurcharge" # todo
+          xpaths[:tax_name]           = "cac:TaxScheme/cbc:ID"
+          xpaths[:tax_category]       = "cbc:ID"
 
         end
         xpaths

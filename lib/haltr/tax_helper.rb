@@ -35,7 +35,12 @@ module Haltr
         end
 
       when /ubl/
-        #TODO
+        # TODO: categories
+        return Tax.new(
+          name:     attributes[:name],
+          percent:  attributes[:percent],
+          category: attributes[:category]
+        )
       end
 
       return Tax.new(
