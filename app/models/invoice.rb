@@ -738,11 +738,11 @@ _INV
       :file_name         => file_name
     )
 
+    xml_payment_method = Haltr::Utils.get_xpath(doc,xpaths[:payment_method])
     if invoice_format =~ /facturae/
-      xml_payment_method = Haltr::Utils.get_xpath(doc,xpaths[:payment_method])
       invoice.payment_method = Haltr::Utils.payment_method_from_facturae(xml_payment_method)
     else
-      #TODO ubl
+      invoice.payment_method = Haltr::Utils.payment_method_from_ubl(xml_payment_method)
     end
 
     # bank info
