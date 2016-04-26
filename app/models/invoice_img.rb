@@ -144,8 +144,12 @@ class InvoiceImg < ActiveRecord::Base
     data[:tokens]
   end
 
+  def token_has_tag?(token)
+    tags.invert[token]
+  end
+
   def text(token)
-    data[:tokens][token][:text] rescue nil
+    data[:tokens][token][:text].gsub!("\t",' ') rescue nil
   end
 
   def width

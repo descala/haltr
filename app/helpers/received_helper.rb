@@ -20,15 +20,19 @@ module ReceivedHelper
   def invoice_img_tag_div(invoice_img, tag)
     reference = invoice_img.tags[tag]
     if reference.is_a? Array
-      # TODO
       x = 0
       y = 0
+      reference.each do |number|
+        attributes = invoice_img.tokens[number]
+        x = attributes[:x1].to_i if attributes[:x1].to_i > x
+        y = attributes[:y0].to_i if attributes[:y0].to_i > y
+      end
     else
       return if invoice_img.tokens[reference].nil?
       attributes = invoice_img.tokens[reference]
-      x = attributes[:x1].to_i + 5
-      y = attributes[:y0].to_i - 2
+      x = attributes[:x1].to_i
+      y = attributes[:y0].to_i
     end
-    "<div class=\"rectangle-tag\" style=\"left:#{x}px; top:#{y}px;\">#{l("tag_#{tag}")}</div>".html_safe
+    "<div class=\"rectangle-tag\" style=\"left:#{x+5}px; top:#{y-1}px;\">#{l("tag_#{tag}")}</div>".html_safe
   end
 end
