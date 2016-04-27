@@ -197,7 +197,8 @@ module Haltr
           xpaths[:buyer_cp_city2]     = nil
           xpaths[:currency]           = "/xmlns:Invoice/cbc:DocumentCurrencyCode"
 
-          xpaths[:global_taxes]       = "/xmlns:Invoice/cac:TaxTotal/cac:TaxSubtotal"
+          xpaths[:global_taxes]       = ["/xmlns:Invoice/cac:TaxTotal/cac:TaxSubtotal",
+                                         "/xmlns:Invoice/cac:WithholdingTaxTotal/cac:TaxSubtotal"]
           # relative to global_taxes
           xpaths[:gtax_category]      = "cac:TaxCategory/cbc:ID"
           xpaths[:gtax_percent]       = "cac:TaxCategory/cbc:Percent"
