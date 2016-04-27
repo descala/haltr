@@ -1263,7 +1263,10 @@ class InvoicesController < ApplicationController
     case namespace
     when "http://www.facturae.es/Facturae/2014/v3.2.1/Facturae", "http://www.facturae.es/Facturae/2009/v3.2/Facturae"
       'invoices/facturae_xslt_viewer.xsl.erb'
+    when "urn:oasis:names:specification:ubl:schema:xsd:Invoice-2"
+      'invoices/TRDM-010a-Invoice-NO.xsl.erb'
     else
+      binding.pry
       nil
     end
   end
