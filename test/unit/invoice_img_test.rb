@@ -34,8 +34,8 @@ class InvoiceImgTest < ActiveSupport::TestCase
   test "fuzzy_match_client" do
     invoice_img = invoice_imgs(:image1)
     assert_equal clients(:client1), invoice_img.fuzzy_match_client
-    assert_equal 69, invoice_img.tags['seller_taxcode']
-    assert_equal 70, invoice_img.tags['buyer_taxcode']
+    assert_equal 69, invoice_img.tags[:seller_taxcode]
+    assert_equal 70, invoice_img.tags[:buyer_taxcode]
   end
 
   test "ensure keys are symbols" do

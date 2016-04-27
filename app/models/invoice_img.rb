@@ -11,7 +11,7 @@ class InvoiceImg < ActiveRecord::Base
   end
 
   after_initialize do
-    return unless data.is_a? HashWithIndifferentAccess
+    return unless data.is_a? HashWithIndifferentAccess or Rails.env == 'test'
     # if data is a HashWithIndifferentAccess tranform to a Hash
     # ensure data keys are symbols and tag numbers are integers
     initial_data = data
