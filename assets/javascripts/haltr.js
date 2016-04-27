@@ -154,11 +154,6 @@ $(document).ready(function() {
     }
   });
 
-  /* Estructura 
-  $(document).on('click', '.rectangle-txt-edit', function(e) {
-    alert('hi');
-  });
-  */
 });
 
 

@@ -117,13 +117,13 @@ function contextMenuShow(event) {
 
       /* display the menu above and/or to the left of the click if needed */
       if (max_width > window_width) {
-       render_x -= menu_width;
+       render_x = render_x - menu_width + 1;
        $('#context-menu').addClass('reverse-x');
       } else {
        $('#context-menu').removeClass('reverse-x');
       }
       if (max_height > window_height) {
-       render_y -= menu_height;
+       render_y = render_y - menu_height + 1;
        $('#context-menu').addClass('reverse-y');
       } else {
        $('#context-menu').removeClass('reverse-y');
