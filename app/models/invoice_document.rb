@@ -3,7 +3,7 @@ class InvoiceDocument < Invoice
   unloadable
 
   has_many :payments, :foreign_key => :invoice_id, :dependent => :destroy
-  has_one :invoice_img, :foreign_key => 'invoice_id'
+  has_one :invoice_img, :foreign_key => :invoice_id, :dependent => :destroy
 
   attr_accessor :legal_filename, :legal_content_type, :legal_invoice
 
