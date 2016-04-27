@@ -145,7 +145,7 @@ class InvoiceImg < ActiveRecord::Base
     if data.is_a? Hash
       data[:tags]
     else
-      binding.pry
+      raise "Data is a #{data.class}. Must be a Hash"
     end
   end
 
