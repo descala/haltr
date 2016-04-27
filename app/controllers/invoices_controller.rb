@@ -1301,9 +1301,15 @@ class InvoicesController < ApplicationController
 
   def original_xsl_template(doc)
     namespace = Haltr::Utils.root_namespace(doc) rescue nil
+    if namespace == "http://www.unece.org/cefact/namespaces/StandardBusinessDocumentHeader"
+      doc = Haltr::Utils.extract_from_sbdh(doc)
+      namespace = Haltr::Utils.root_namespace(doc) rescue nil
+    end
     case namespace
     when "http://www.facturae.es/Facturae/2014/v3.2.1/Facturae", "http://www.facturae.es/Facturae/2009/v3.2/Facturae"
       'invoices/facturae_xslt_viewer.xsl.erb'
+    when "urn:oasis:names:specification:ubl:schema:xsd:Invoice-2"
+      'invoices/TRDM-010a-Invoice-NO.xsl.erb'
     else
       nil
     end

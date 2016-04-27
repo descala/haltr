@@ -167,6 +167,7 @@ module Haltr
           xpaths[:invoice_date]       = "/xmlns:Invoice/cbc:IssueDate"
           xpaths[:invoice_total]      = "/xmlns:Invoice/cac:LegalMonetaryTotal/cbc:TaxInclusiveAmount"
           xpaths[:invoice_import]     = "/xmlns:Invoice/cac:LegalMonetaryTotal/cbc:TaxExclusiveAmount"
+          xpaths[:payment_method]     = "/xmlns:Invoice/cac:PaymentMeans/cbc:PaymentMeansCode"
           xpaths[:invoice_due_date]   = "/xmlns:Invoice/cac:PaymentMeans/cbc:PaymentDueDate"
           xpaths[:seller_taxcode]     = "/xmlns:Invoice/cac:AccountingSupplierParty/cac:Party/cac:PartyTaxScheme/cbc:CompanyID"
           xpaths[:seller_name]        = "/xmlns:Invoice/cac:AccountingSupplierParty/cac:Party/cac:PartyName/cbc:Name"
@@ -196,7 +197,8 @@ module Haltr
           xpaths[:buyer_cp_city2]     = nil
           xpaths[:currency]           = "/xmlns:Invoice/cbc:DocumentCurrencyCode"
 
-          xpaths[:global_taxes]       = "/xmlns:Invoice/cac:TaxTotal/cac:TaxSubtotal"
+          xpaths[:global_taxes]       = ["/xmlns:Invoice/cac:TaxTotal/cac:TaxSubtotal",
+                                         "/xmlns:Invoice/cac:WithholdingTaxTotal/cac:TaxSubtotal"]
           # relative to global_taxes
           xpaths[:gtax_category]      = "cac:TaxCategory/cbc:ID"
           xpaths[:gtax_percent]       = "cac:TaxCategory/cbc:Percent"
@@ -247,6 +249,14 @@ module Haltr
           facturae_codes[codes[:facturae]] = haltr_code
         end
         facturae_codes[code]
+      end
+
+      def payment_method_from_ubl(code)
+        ubl_codes = {}
+        Invoice::PAYMENT_CODES.each do |haltr_code, codes|
+          ubl_codes[codes[:ubl]] = haltr_code
+        end
+        ubl_codes[code]
       end
 
       def float_parse(value)

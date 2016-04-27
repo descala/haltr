@@ -389,12 +389,14 @@ class Invoice < ActiveRecord::Base
   # Format of resulting hash:
   # { "VAT" => { "S" => [ tax_example, tax_example2 ], "E" => [ tax_example ] } }
   # tax_example should be passed tax_amount
-  def taxes_by_category
+  #
+  def taxes_by_category(positive: true)
     cts = {}
-    taxes_outputs.each do |tax|
+    t = positive ? taxes_outputs : taxes_withheld
+    t.each do |tax|
       cts[tax.name] = {}
     end
-    taxes_outputs.each do |tax|
+    t.each do |tax|
       unless cts[tax.name].values.flatten.include?(tax)
         cts[tax.name][tax.category] ||= []
         cts[tax.name][tax.category] << tax
@@ -738,11 +740,11 @@ _INV
       :file_name         => file_name
     )
 
+    xml_payment_method = Haltr::Utils.get_xpath(doc,xpaths[:payment_method])
     if invoice_format =~ /facturae/
-      xml_payment_method = Haltr::Utils.get_xpath(doc,xpaths[:payment_method])
       invoice.payment_method = Haltr::Utils.payment_method_from_facturae(xml_payment_method)
-    else
-      #TODO ubl
+    else # ubl
+      invoice.payment_method = Haltr::Utils.payment_method_from_ubl(xml_payment_method)
     end
 
     # bank info

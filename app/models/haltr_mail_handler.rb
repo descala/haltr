@@ -67,6 +67,9 @@ class HaltrMailHandler < MailHandler # < ActionMailer::Base
       log "email has no attachments"
     end
     invoices.compact!
+    if Rails.env == 'test'
+      return invoices
+    end
     txt = "#{invoices.size} invoices affected by mail"
     txt += " (#{invoices.collect {|i| i.id}.join(', ')})" if invoices.any?
     return txt
