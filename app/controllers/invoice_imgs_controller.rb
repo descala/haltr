@@ -48,6 +48,7 @@ class InvoiceImgsController < ApplicationController
   def update
     @invoice_img.all_possible_tags.each do |tag|
       next if params[tag].empty?
+      next if @invoice_img.tagv(tag) == params[tag]
       token_number = @invoice_img.tags[tag]
       if token_number and @invoice_img.tokens[token_number]
         @invoice_img.tokens[token_number]['text'] = params[tag]
