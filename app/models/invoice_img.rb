@@ -79,7 +79,9 @@ class InvoiceImg < ActiveRecord::Base
       end
     end
     if tax_amount and !tax_percentage
-      tax_percentage = tax_amount / subtotal * 100 rescue nil
+      if subtotal != 0
+        tax_percentage = tax_amount / subtotal * 100 rescue nil
+      end
     end
     if tax_percentage and invoice.invoice_lines.any?
       invoice.invoice_lines.each do |invoice_line|
