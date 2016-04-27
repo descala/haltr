@@ -331,15 +331,15 @@ span#send_info {
   background: white;
   color: black;
   z-index: 1;
-}
-.rectangle-txt.hastag{
-  z-index: 0;
+  border: 1px solid green;
 }
 .rectangle-txt.hastag {
-  background: white;
+  background: yellow;
   color: black;
   border: none;
   z-index: 0;
+  font-weight: bold;
+  border: 1px solid yellow;
 }
 .rectangle-tag {
   border-radius: 0.25em;

@@ -30,10 +30,11 @@ module ReceivedHelper
       x = attributes[:x1].to_i
       y = attributes[:y0].to_i
     end
-    "<div class=\"rectangle-tag\" style=\"left:#{x+5}px; top:#{y-1}px;\">#{l("tag_#{tag}")}</div>".html_safe
+    "<div class=\"rectangle-tag\" style=\"left:#{x+8}px; top:#{y}px;\">#{l("tag_#{tag}")}</div>".html_safe
   end
   def invoice_img_token_style(attributes)
     font_size = [attributes[:y1].to_i-attributes[:y0].to_i-1, 9].max
-    "left:#{attributes[:x0].to_i-1}px; top:#{attributes[:y0].to_i-1}px; height:#{attributes[:y1].to_i-attributes[:y0].to_i+1}px; font-size:#{font_size}px;"
+    font_size = 16 if font_size > 16
+    "left:#{attributes[:x0].to_i-1}px; top:#{attributes[:y0].to_i-1}px; height:#{attributes[:y1].to_i-attributes[:y0].to_i+2}px; min-width:#{attributes[:x1].to_i-attributes[:x0].to_i+2}px; font-size:#{font_size}px; line-height: <%=font_size%>px;"
   end
 end

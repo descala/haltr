@@ -27,7 +27,7 @@ class InvoiceImg < ActiveRecord::Base
 
   def update_invoice
     tags[:language]  = what_language unless tagv(:language)
-    invoice.number   = tagv(:invoice_number)
+    invoice.number   = tagv(:invoice_number).gsub(/\s/,'') rescue nil
     invoice.date     = tagv(:issue)
     invoice.due_date = tagv(:due)
     subtotal         = tagv(:subtotal).to_money rescue nil
@@ -106,11 +106,11 @@ class InvoiceImg < ActiveRecord::Base
     reference = tags[key]
     if reference.is_a? Array
       reference.collect do |ref|
-        tokens[ref]['text']
+        tokens[ref][:text]
       end.join(' ')
     else
       if tokens[reference]
-        tokens[reference]['text']
+        tokens[reference][:text]
       else
         reference
       end
@@ -121,6 +121,21 @@ class InvoiceImg < ActiveRecord::Base
 
   def tags
     data[:tags]
+  end
+
+  def tags_inverted
+    return @tags_inverted if @tags_inverted
+    @tags_inverted = {}
+    tags.each do |old_key,old_value|
+      if old_value.is_a? Array
+        old_value.each do |old_array_vaule|
+          @tags_inverted[old_array_vaule]=old_key
+        end
+      else
+          @tags_inverted[old_value]=old_key
+      end
+    end
+    @tags_inverted
   end
 
   def useful_tokens
@@ -145,7 +160,7 @@ class InvoiceImg < ActiveRecord::Base
   end
 
   def token_has_tag?(token)
-    tags.invert[token]
+    tags_inverted[token]
   end
 
   def text(token)
