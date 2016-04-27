@@ -108,7 +108,7 @@ class InvoiceImg < ActiveRecord::Base
     end
     if !invoice.client
       if tagv(:seller_taxcode)
-        invoice.client = invoice.company.project.clients.where(taxcode: tagv(:seller_taxcode)).first
+        invoice.client = invoice.company.project.clients.where(taxcode: tagv(:seller_taxcode).gsub(/\s/,'')).first
         if !invoice.client and  tagv(:seller_name)
           new_client = Client.new(
             project: invoice.project,
@@ -205,6 +205,7 @@ class InvoiceImg < ActiveRecord::Base
 
   def fuzzy_match_client
     require 'fuzzy_match'
+    # Method #1 - fuzzy match against all tokens with numbers
     match_tokens = tokens.collect do |k,v|
       v[:text].gsub(/\.|:/,'') if v[:text] =~ /\d/
     end.flatten.compact
@@ -224,12 +225,27 @@ class InvoiceImg < ActiveRecord::Base
       tokens.each do |number, token|
         tags[:seller_taxcode] = number if token[:text].include?(best_text)
       end
+    else
+      # Method #2 - join all text and look for an exact match
+      #             finds client, but does not tag
+      all_text = tokens.collect do |k,v|
+        v[:text].gsub(/\.|:/,'')
+      end.flatten.compact.join('').downcase
+      invoice.company.project.clients.each do |client|
+        if all_text.include?(client.taxcode.downcase)
+          best_client_match = client
+          break
+        end
+      end
     end
-    company_match = fm.find(invoice.company.taxcode)
-    if company_match
-      tokens.each do |number, token|
-        if token[:text].include?(company_match)
-          tags[:buyer_taxcode] = number
+    # Try to tag our taxcode
+    unless tags[:buyer_taxcode]
+      company_match = fm.find(invoice.company.taxcode)
+      if company_match
+        tokens.each do |number, token|
+          if token[:text].include?(company_match)
+            tags[:buyer_taxcode] = number
+          end
         end
       end
     end

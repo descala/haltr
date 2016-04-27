@@ -37,6 +37,7 @@ class InvoiceImgsController < ApplicationController
     if text =~ /[a-zA-Z]/
       tags += [:seller_name, :seller_country]
     end
+    tags += [:seller_taxcode]
     if text =~ /\d/
       tags += @invoice_img.all_possible_tags
     end
