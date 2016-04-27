@@ -1266,7 +1266,6 @@ class InvoicesController < ApplicationController
     when "urn:oasis:names:specification:ubl:schema:xsd:Invoice-2"
       'invoices/TRDM-010a-Invoice-NO.xsl.erb'
     else
-      binding.pry
       nil
     end
   end
