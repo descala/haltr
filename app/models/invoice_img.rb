@@ -4,16 +4,38 @@ class InvoiceImg < ActiveRecord::Base
   belongs_to :invoice
   validate :has_associated_invoice
 
-  serialize :data
+  serialize :data, Hash
 
   def has_associated_invoice
     errors.add(:invoice) unless self.invoice and self.invoice.is_a? InvoiceDocument
   end
 
   after_initialize do
-    self.data = {} if data.nil?
-    self.data[:tags] = {} if tags.nil?
-    self.data[:tokens] = {} if tokens.nil?
+    return unless data.is_a? HashWithIndifferentAccess
+    # if data is a HashWithIndifferentAccess tranform to a Hash
+    # ensure data keys are symbols and tag numbers are integers
+    initial_data = data
+    initial_tags = initial_data['tags'] || {}
+    initial_tokens= initial_data['tokens'] || {}
+    self.data = {}
+    self.data[:tags] = {}
+    self.data[:tokens] = {}
+    self.data[:width] = initial_data['width']
+    self.data[:height] = initial_data['height']
+    self.data[:name] = initial_data['name']
+    initial_tags.each do |tag, token_number|
+      value = token_number.to_i rescue token_number
+      self.data[:tags][tag.to_sym] = value
+    end
+    initial_tokens.each do |token_number, token_data|
+      token = {}
+      token[:text] = token_data['text']
+      token[:x0] = token_data['x0'].to_i
+      token[:x1] = token_data['x1'].to_i
+      token[:y0] = token_data['y0'].to_i
+      token[:y1] = token_data['y1'].to_i
+      self.data[:tokens][token_number.to_i] = token
+    end
   end
 
   after_create do
@@ -57,7 +79,7 @@ class InvoiceImg < ActiveRecord::Base
       end
     end
     if tax_amount and !tax_percentage
-      tax_percentage = tax_amount / subtotal * 100
+      tax_percentage = tax_amount / subtotal * 100 rescue nil
     end
     if tax_percentage and invoice.invoice_lines.any?
       invoice.invoice_lines.each do |invoice_line|
@@ -120,7 +142,11 @@ class InvoiceImg < ActiveRecord::Base
   end
 
   def tags
-    data[:tags]
+    if data.is_a? Hash
+      data[:tags]
+    else
+      binding.pry
+    end
   end
 
   def tags_inverted
@@ -160,19 +186,19 @@ class InvoiceImg < ActiveRecord::Base
   end
 
   def token_has_tag?(token)
-    tags_inverted[token]
+    tags_inverted[token.to_i]
   end
 
   def text(token)
-    data[:tokens][token][:text].gsub!("\t",' ') rescue nil
+    data[:tokens][token.to_i][:text].gsub!("\t",' ') rescue nil
   end
 
   def width
-    data['width']
+    data[:width]
   end
 
   def height
-    data['height']
+    data[:height]
   end
 
   def fuzzy_match_client
@@ -194,14 +220,14 @@ class InvoiceImg < ActiveRecord::Base
     end
     if best_client_match
       tokens.each do |number, token|
-        tags['seller_taxcode'] = number if token[:text].include?(best_text)
+        tags[:seller_taxcode] = number if token[:text].include?(best_text)
       end
     end
     company_match = fm.find(invoice.company.taxcode)
     if company_match
       tokens.each do |number, token|
         if token[:text].include?(company_match)
-          tags['buyer_taxcode'] = number 
+          tags[:buyer_taxcode] = number
         end
       end
     end
@@ -223,7 +249,7 @@ class InvoiceImg < ActiveRecord::Base
   end
 
   def all_possible_tags
-    %w(invoice_number language seller_country seller_name seller_taxcode buyer_taxcode issue due subtotal tax_percentage tax_amount total)
+    [:invoice_number, :language, :seller_country, :seller_name, :seller_taxcode, :buyer_taxcode, :issue, :due, :subtotal, :tax_percentage, :tax_amount, :total]
   end
 
 end

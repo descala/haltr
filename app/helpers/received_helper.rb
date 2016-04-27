@@ -20,7 +20,7 @@ module ReceivedHelper
       x = 0
       y = 0
       reference.each do |number|
-        attributes = invoice_img.tokens[number]
+        attributes = invoice_img.tokens[number.to_i]
         x = attributes[:x1].to_i if attributes[:x1].to_i > x
         y = attributes[:y0].to_i if attributes[:y0].to_i > y
       end

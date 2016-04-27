@@ -30,18 +30,18 @@ class InvoiceImgsController < ApplicationController
     @token_ids = params[:token_ids]
     @back = back_url
     text = params[:token_ids].collect do |token_id|
-      @invoice_img.tokens[token_id]['text'] rescue nil
+      @invoice_img.tokens[token_id.to_i][:text] rescue nil
     end.join(' ')
-    @current_tag = @invoice_img.tags.invert[params[:token_ids].first]
+    @current_tag = @invoice_img.tags_inverted[params[:token_ids].first.to_i]
     tags = []
     if text =~ /[a-zA-Z]/
-      tags += %w(seller_name seller_country)
+      tags += [:seller_name, :seller_country]
     end
     if text =~ /\d/
-      tags +=  %w(invoice_number seller_taxcode issue due subtotal tax_percentage tax_amount total)
+      tags += @invoice_img.all_possible_tags
     end
     @assiged_tags = @invoice_img.tags.keys
-    @missing_tags = tags - @assiged_tags
+    @missing_tags = tags.uniq - @assiged_tags - [:language]
     render :layout => false
   end
 
@@ -51,7 +51,7 @@ class InvoiceImgsController < ApplicationController
       next if @invoice_img.tagv(tag) == params[tag]
       token_number = @invoice_img.tags[tag]
       if token_number and @invoice_img.tokens[token_number]
-        @invoice_img.tokens[token_number]['text'] = params[tag]
+        @invoice_img.tokens[token_number][:text] = params[tag]
       else
         @invoice_img.tags[tag] = params[tag]
       end
@@ -63,12 +63,12 @@ class InvoiceImgsController < ApplicationController
   def tag
     if params[:token_ids].nil?
       # clear tag
-      @invoice_img.tags.delete(params['tag'])
+      @invoice_img.tags.delete(params['tag'].to_sym)
     else
       if params[:token_ids].size == 1
-        @invoice_img.tags[params['tag']] = params[:token_ids].first
+        @invoice_img.tags[params['tag'].to_sym] = params[:token_ids].first.to_i
       else
-        @invoice_img.tags[params['tag']] = params[:token_ids]
+        @invoice_img.tags[params['tag'].to_sym] = params[:token_ids].collect{|n|n.to_i}
       end
     end
     @invoice_img.update_invoice
