@@ -314,6 +314,9 @@ module Haltr
           raise "Is not a valid XML"
         elsif doc.root.namespace.nil?
           raise "XML does not have a root namespace"
+        elsif doc.root.namespace.href == "http://www.unece.org/cefact/namespaces/StandardBusinessDocumentHeader"
+          doc = Haltr::Utils.extract_from_sbdh(doc)
+          Haltr::Utils.root_namespace(doc)
         else
           doc.root.namespace.href
         end
