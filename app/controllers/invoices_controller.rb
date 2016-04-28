@@ -493,8 +493,11 @@ class InvoicesController < ApplicationController
   def show
     show_original = false
     invoice_nokogiri = Nokogiri::XML(@invoice.original)
-    if invoice_nokogiri.root.namespace.href =~ /StandardBusinessDocumentHeader/
-      invoice_nokogiri = Haltr::Utils.extract_from_sbdh(invoice_nokogiri)
+    begin
+      if invoice_nokogiri.root.namespace.href =~ /StandardBusinessDocumentHeader/
+        invoice_nokogiri = Haltr::Utils.extract_from_sbdh(invoice_nokogiri)
+      end
+    rescue
     end
     template = original_xsl_template(invoice_nokogiri)
     case params[:view_with]
