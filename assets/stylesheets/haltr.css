@@ -282,7 +282,7 @@ div.action-linked_to_mine #companies {
   width: 50%;
 }
 .colu2 .metadata {
-  margin-left: 10px;
+  margin-top: 10px;
 }
 table.received_show {
   width: auto;
@@ -355,9 +355,16 @@ span#send_info {
   background: rgba(92, 184, 92, .7);
   box-sizing: border-box;
   position: absolute;
+  z-index: 1;
 }
 .controller-received #attachments_fields .description {
   display: none !important;
+}
+#invoice_img .invoice-calculations th {
+  padding-left: 0;
+}
+#invoice_img h2.invoice-ID {
+  padding-left: 40px;
 }
 .controller-clients .client-info {
   border: 1px outset orange;

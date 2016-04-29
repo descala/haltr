@@ -214,6 +214,7 @@ class InvoiceImg < ActiveRecord::Base
     best_text = nil
     best_score = 0.6
     invoice.company.project.clients.each do |client|
+      next if client.taxcode.empty?
       text, score = fm.find_with_score(client.taxcode)
       if score and  score > best_score
         best_client_match = client
@@ -232,6 +233,7 @@ class InvoiceImg < ActiveRecord::Base
         v[:text].gsub(/\.|:/,'')
       end.flatten.compact.join('').downcase
       invoice.company.project.clients.each do |client|
+        next if client.taxcode.empty?
         if all_text.include?(client.taxcode.downcase)
           best_client_match = client
           break
