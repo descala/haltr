@@ -20,11 +20,7 @@
       </p>
       <% if @amend_type == 'partial' -%>
         <p class="col span-1-de-2">
-        <% if ExportChannels.format(@invoice.client.invoice_format) =~ /^facturae/ -%>
           <%= f.select :amend_reason, Invoice.amend_reason_codes.collect {|code| [l("amend_reason_#{code}"), code] } %>
-        <% else -%>
-          <%= f.text_field :amend_reason %>
-        <% end -%>
         </p>
       <% end -%>
     </div>
