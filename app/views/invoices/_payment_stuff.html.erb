@@ -47,7 +47,8 @@
 <% else -%>
   <% if (@external_company and @external_company.visible_dir3) or
       (@client and ExportChannels.punts_generals.include?(@client.invoice_format)) or
-      (@invoice and @invoice.has_dir3_info?) -%>
+      (@invoice and @invoice.has_dir3_info?) or
+      (@client and ExportChannels.format(@client.invoice_format) =~ /facturae/) -%>
     <div class="seccio grup">
       <p class="col span-1-de-3">
       <%= render :partial => 'invoices/dir3', locals: { role: 'organ_gestor'} %>
