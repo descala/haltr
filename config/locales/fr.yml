@@ -722,3 +722,4 @@ fr:
   by_peppol: "Received by Peppol"
   invoice_attachment_added: "Annex added"
   invoice_attachment_destoy: "Annex deleted"
+  field_xpaths_from_original: "XPATHS to preserve from original"

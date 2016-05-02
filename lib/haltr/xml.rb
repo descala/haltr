@@ -44,6 +44,18 @@ module Haltr
           :formats  => :xml,
           :layout   => false
         )
+        # client can have xpaths in xpaths_from_original, if so, replace
+        # generated ones by original, refs #5938
+        if invoice.original.present? and client.xpaths_from_original.present?
+          doc      = Nokogiri.parse(xml)
+          doc_orig = Nokogiri.parse(invoice.original)
+          client.xpaths_from_original.each_line do |xpath|
+            orig_fragment = doc_orig.at_xpath(xpath)
+            orig_fragment ||= ''
+            doc.at_xpath(xpath).replace(orig_fragment) rescue nil
+          end
+          xml = doc.to_s
+        end
         xml = Haltr::Xml.clean_xml(xml)
       end
       if as_file
