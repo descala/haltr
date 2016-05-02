@@ -74,7 +74,7 @@ gl:
   button_add_invoice_line: Engade unha nova liña á factura
   field_invoice_number: Número
   label_last_invoice_number: "Último usado"
-  number_taken_in_year: ya se está utilizando para el año %{year}
+  number_taken_in_year: "%{number} ya se está utilizando para el año %{year}"
   field_date: Data
   field_client: Cliente
   field_extra_info: Notas
@@ -372,7 +372,8 @@ gl:
 
   # Errors
   cant_connect_trace: "Non se pode conectar coa plataforma b2brouter"
-  halt_configure_before_use: "Por favor, primeiro configura os datos da túa empresa"
+  halt_configure_before_use: "Por favor, primeiro configura os datos da %{href}"
+  company_href: "túa empresa"
   warning_can_not_generate_invoice: "Non se puido xerar a factura da plantilla %{value}"
   notice_invoice_sent: "A factura estase enviando"
   error_invoice_not_sent: "A factura %{num} non se puido enviar"
@@ -735,3 +736,7 @@ gl:
   label_invoice_viewer_xslt : "Usar visor XSLT"
   xslt_not_available: "No hay ningún XSLT disponible para el formato del original de esta factura"
   xslt_shows_original: "Esta factura se ha modificado. El formato XSLT refleja el original sin los cambios"
+  skip_invoice_validations: "No validar la factura al importar"
+  by_peppol: "Recibida por Peppol"
+  invoice_attachment_added: "Anexo añadido"
+  invoice_attachment_destoy: "Anexo borrado"

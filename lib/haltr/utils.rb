@@ -168,6 +168,7 @@ module Haltr
           xpaths[:invoice_date]       = "/xmlns:Invoice/cbc:IssueDate"
           xpaths[:invoice_total]      = "/xmlns:Invoice/cac:LegalMonetaryTotal/cbc:TaxInclusiveAmount"
           xpaths[:invoice_import]     = "/xmlns:Invoice/cac:LegalMonetaryTotal/cbc:TaxExclusiveAmount"
+          xpaths[:payment_method]     = "/xmlns:Invoice/cac:PaymentMeans/cbc:PaymentMeansCode"
           xpaths[:invoice_due_date]   = "/xmlns:Invoice/cac:PaymentMeans/cbc:PaymentDueDate"
           xpaths[:seller_taxcode]     = "/xmlns:Invoice/cac:AccountingSupplierParty/cac:Party/cac:PartyTaxScheme/cbc:CompanyID"
           xpaths[:seller_name]        = "/xmlns:Invoice/cac:AccountingSupplierParty/cac:Party/cac:PartyName/cbc:Name"
@@ -197,6 +198,13 @@ module Haltr
           xpaths[:buyer_cp_city2]     = nil
           xpaths[:currency]           = "/xmlns:Invoice/cbc:DocumentCurrencyCode"
 
+          xpaths[:global_taxes]       = ["/xmlns:Invoice/cac:TaxTotal/cac:TaxSubtotal",
+                                         "/xmlns:Invoice/cac:WithholdingTaxTotal/cac:TaxSubtotal"]
+          # relative to global_taxes
+          xpaths[:gtax_category]      = "cac:TaxCategory/cbc:ID"
+          xpaths[:gtax_percent]       = "cac:TaxCategory/cbc:Percent"
+          xpaths[:gtax_name]          = "cac:TaxCategory/cac:TaxScheme/cbc:ID"
+
           xpaths[:invoice_lines]      = "//cac:InvoiceLine"
           # relative to invoice_lines
           xpaths[:i_transaction_ref]  = "IssuerTransactionReference" # todo
@@ -205,7 +213,7 @@ module Haltr
           xpaths[:line_description]   = "cac:Item/cbc:Name"
           xpaths[:line_price]         = "cac:Price/cbc:PriceAmount"
           xpaths[:line_unit]          = "cbc:InvoicedQuantity/@unitCode"
-          xpaths[:line_taxes]         = ["cac:TaxTotal/cac:TaxSubtotal","cac:WithholdingTaxTotal/cac:TaxSubtotal"]
+          xpaths[:line_taxes]         = ["cac:Item/cac:ClassifiedTaxCategory"]
           xpaths[:line_notes]         = "cac:Item/cbc:Description"
           xpaths[:line_code]          = "cac:Item/cac:SellersItemIdentification/cbc:ID"
           xpaths[:line_discounts]     = "cac:AllowanceCharges[/cbc:ChargeIndicator='false']/*"
@@ -229,9 +237,8 @@ module Haltr
           xpaths[:line_charge]        = "cbc:Amount"
           xpaths[:line_charge_reason] = "cbc:AllowanceChargeReason"
           # relative to invoice_lines/taxes
-          xpaths[:tax_id]             = "cac:TaxCategory/cac:TaxScheme/cbc:ID"
-          xpaths[:tax_percent]        = "cac:TaxCategory/cbc:Percent"
-          xpaths[:tax_surcharge]      = "EquivalenceSurcharge" # todo
+          xpaths[:tax_name]           = "cac:TaxScheme/cbc:ID"
+          xpaths[:tax_category]       = "cbc:ID"
 
         end
         xpaths
@@ -243,6 +250,14 @@ module Haltr
           facturae_codes[codes[:facturae]] = haltr_code
         end
         facturae_codes[code]
+      end
+
+      def payment_method_from_ubl(code)
+        ubl_codes = {}
+        Invoice::PAYMENT_CODES.each do |haltr_code, codes|
+          ubl_codes[codes[:ubl]] = haltr_code
+        end
+        ubl_codes[code]
       end
 
       def float_parse(value)
@@ -300,6 +315,9 @@ module Haltr
           raise "Is not a valid XML"
         elsif doc.root.namespace.nil?
           raise "XML does not have a root namespace"
+        elsif doc.root.namespace.href == "http://www.unece.org/cefact/namespaces/StandardBusinessDocumentHeader"
+          doc = Haltr::Utils.extract_from_sbdh(doc)
+          Haltr::Utils.root_namespace(doc)
         else
           doc.root.namespace.href
         end

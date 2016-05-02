@@ -72,7 +72,7 @@ ca:
   field_number: Número
   field_invoice_number: Número de factura
   label_last_invoice_number: "Últim fet servir"
-  number_taken_in_year: ja s'està utilitzant a l'any %{year}
+  number_taken_in_year: "%{number} ja s'està utilitzant a l'any %{year}"
   field_date: Data
   field_client: Client
   field_extra_info: Notes
@@ -373,7 +373,8 @@ ca:
 
   # Errors
   cant_connect_trace: "No es pot connectar a la plataforma B2BRouter"
-  halt_configure_before_use: "Si us plau, primer de tot configura les dades de la teva empresa"
+  halt_configure_before_use: "Si us plau, revisa les dades de %{href}"
+  company_href: "la meva empresa"
   warning_can_not_generate_invoice: "No s'ha pogut generar la factura de la plantilla %{value}"
   notice_invoice_sent: "La factura s'està enviant"
   error_invoice_not_sent: "La factura %{num} no s'ha pogut enviar"
@@ -735,3 +736,7 @@ ca:
   label_invoice_viewer_xslt : "Usar el visor XSLT"
   xslt_not_available: "No hi ha cap XSLT disponible pel format original d'aquesta factura"
   xslt_shows_original: "Aquesta factura s'ha modificat. El format XSLT reflecteix l'original, sense el canvis."
+  skip_invoice_validations: No validar la factura al importar
+  by_peppol: "Rebuda per Peppol"
+  invoice_attachment_added: "Annex afegit"
+  invoice_attachment_destoy: "Annex esborrat"

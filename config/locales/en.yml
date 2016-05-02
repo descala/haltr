@@ -63,7 +63,7 @@ en:
   field_number: Number
   field_invoice_number: Invoice number
   label_last_invoice_number: "Last used"
-  number_taken_in_year: has already been taken for year %{year}
+  number_taken_in_year: "%{number} has already been taken for year %{year}"
   field_date: Date
   field_client: Client
   field_extra_info: Notes
@@ -257,7 +257,7 @@ en:
   units: Units
   hours: Hours
   kilograms: Kilograms
-  litters: Litters
+  litters: Litres
   s_units: ""
   s_hours: h
   s_kilograms: kg
@@ -362,7 +362,8 @@ en:
 
   # Errors
   cant_connect_trace: "Can't connect to b2brouter platform. %{value}"
-  halt_configure_before_use: Please first configure your company settings
+  halt_configure_before_use: "Please first configure %{href} settings"
+  company_href: "company"
   warning_can_not_generate_invoice: "Can not generate invoice form template %{value}"
   notice_invoice_sent: "Invoice will be sent"
   error_invoice_not_sent: "Could not send invoice %{num}"
@@ -567,9 +568,9 @@ en:
   pending_auth_requests: "There are pending authorization requests: %{num} companies want to link your profile"
   denied_requests: "Denied requests"
   self_employed: "I am self-employed"
-  organ_gestor: "Òrgan gestor"
-  oficina_comptable: "Oficina comptable"
-  unitat_tramitadora: "Unitat tramitadora"
+  organ_gestor: "Managing unit"
+  oficina_comptable: "Accounting unit"
+  unitat_tramitadora: "Processing unit"
   field_organ_proponent: "Órgano Promotor"
   organ_proponent: "Órgano Promotor"
   external_companies: "External companies"
@@ -722,3 +723,7 @@ en:
   label_invoice_viewer_xslt : "Use XSLT viewer"
   xslt_not_available: "We do not have an XSLT for the format of this invoice"
   xslt_shows_original: "This invoice has been modified. The XSLT format shows the original without your changes"
+  skip_invoice_validations: "Skip invoice validation"
+  by_peppol: "Received by Peppol"
+  invoice_attachment_added: "Annex added"
+  invoice_attachment_destoy: "Annex deleted"

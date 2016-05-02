@@ -128,7 +128,7 @@ class IssuedInvoice < InvoiceDocument
         if date.nil?
           errors.add(:number, :taken)
         else
-          errors.add(:number, l(:number_taken_in_year, year: date.year))
+          errors.add(:number, l(:number_taken_in_year, number: number, year: date.year))
         end
       end
     end

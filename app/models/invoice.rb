@@ -78,7 +78,10 @@ class Invoice < ActiveRecord::Base
 
   after_initialize :set_default_values
 
-  acts_as_attachable :view_permission => :use_invoice_attachments, :delete_permission => :use_invoice_attachments
+  acts_as_attachable :view_permission => :use_invoice_attachments,
+                   :delete_permission => :use_invoice_attachments,
+                           :after_add => :attachment_added,
+                       :before_remove => :attachment_removed
 
   def set_default_values
     self.currency ||= self.client.currency rescue nil
@@ -386,12 +389,14 @@ class Invoice < ActiveRecord::Base
   # Format of resulting hash:
   # { "VAT" => { "S" => [ tax_example, tax_example2 ], "E" => [ tax_example ] } }
   # tax_example should be passed tax_amount
-  def taxes_by_category
+  #
+  def taxes_by_category(positive: true)
     cts = {}
-    taxes_outputs.each do |tax|
+    t = positive ? taxes_outputs : taxes_withheld
+    t.each do |tax|
       cts[tax.name] = {}
     end
-    taxes_outputs.each do |tax|
+    t.each do |tax|
       unless cts[tax.name].values.flatten.include?(tax)
         cts[tax.name][tax.category] ||= []
         cts[tax.name][tax.category] << tax
@@ -627,7 +632,7 @@ _INV
     client_cp_city     = Haltr::Utils.get_xpath(doc,xpaths["#{client_role}_cp_city"]) ||
       Haltr::Utils.get_xpath(doc,xpaths["#{client_role}_cp_city2"])
     client_postalcode  = client_cp_city.split(" ").first rescue ""
-    client_city        = client_cp_city.gsub(/^#{client_postalcode} /,'') rescue ""
+    client_city        = client_cp_city.gsub(/^#{client_postalcode} ?/,'') rescue ""
     if client_postalcode.blank?
       client_postalcode  = Haltr::Utils.get_xpath(doc,xpaths["#{client_role}_cp"])
     end
@@ -738,11 +743,11 @@ _INV
       :file_name         => file_name
     )
 
+    xml_payment_method = Haltr::Utils.get_xpath(doc,xpaths[:payment_method])
     if invoice_format =~ /facturae/
-      xml_payment_method = Haltr::Utils.get_xpath(doc,xpaths[:payment_method])
       invoice.payment_method = Haltr::Utils.payment_method_from_facturae(xml_payment_method)
-    else
-      #TODO ubl
+    else # ubl
+      invoice.payment_method = Haltr::Utils.payment_method_from_ubl(xml_payment_method)
     end
 
     # bank info
@@ -786,29 +791,57 @@ _INV
              :delivery_note_number         => line_delivery_note_number,
              :ponumber     => Haltr::Utils.get_xpath(line,xpaths[:ponumber]),
            )
-      # invoice line taxes. Known taxes are described at config/taxes.yml
-      line.xpath(*xpaths[:line_taxes]).each do |line_tax|
-        percent = Haltr::Utils.get_xpath(line_tax,xpaths[:tax_percent])
-        if line_tax.path =~ /\/TaxesWithheld\//
-          percent = "-#{percent}"
-        end
-        tax = Haltr::TaxHelper.new_tax(
-          :format  => invoice_format,
-          :id      => Haltr::Utils.get_xpath(line_tax,xpaths[:tax_id]),
-          :percent => percent,
-          :event_code => Haltr::Utils.get_xpath(line,xpaths[:tax_event_code]),
-          :event_reason => Haltr::Utils.get_xpath(line,xpaths[:tax_event_reason])
-        )
-        il.taxes << tax
-        # EquivalenceSurcharges (#5560)
-        re_tax_percent = Haltr::Utils.get_xpath(line_tax,xpaths[:tax_surcharge])
-        if re_tax_percent.present?
-          re_tax = Tax.new(
-            :name     => 'RE',
-            :percent  => re_tax_percent.to_f,
-            :category => tax.category
+      if invoice_format =~ /facturae/
+        # invoice line taxes. Known taxes are described at config/taxes.yml
+        line.xpath(*xpaths[:line_taxes]).each do |line_tax|
+          percent = Haltr::Utils.get_xpath(line_tax,xpaths[:tax_percent])
+          if line_tax.path =~ /\/TaxesWithheld\//
+            percent = "-#{percent}"
+          end
+          tax = Haltr::TaxHelper.new_tax(
+            :format  => invoice_format,
+            :id      => Haltr::Utils.get_xpath(line_tax,xpaths[:tax_id]),
+            :percent => percent,
+            :event_code => Haltr::Utils.get_xpath(line,xpaths[:tax_event_code]),
+            :event_reason => Haltr::Utils.get_xpath(line,xpaths[:tax_event_reason])
           )
-          il.taxes << re_tax
+          il.taxes << tax
+          # EquivalenceSurcharges (#5560)
+          re_tax_percent = Haltr::Utils.get_xpath(line_tax,xpaths[:tax_surcharge])
+          if re_tax_percent.present?
+            re_tax = Tax.new(
+              :name     => 'RE',
+              :percent  => re_tax_percent.to_f,
+              :category => tax.category
+            )
+            il.taxes << re_tax
+          end
+        end
+      else # ubl
+        tax_definitions = {}
+        doc.xpath(*xpaths[:global_taxes]).each do |gt|
+          gt_name     = Haltr::Utils.get_xpath(gt, xpaths[:gtax_name])
+          gt_percent  = Haltr::Utils.get_xpath(gt, xpaths[:gtax_percent])
+          gt_category = Haltr::Utils.get_xpath(gt, xpaths[:gtax_category])
+          tax_definitions[gt_name] ||= {}
+          tax_definitions[gt_name][gt_category] = gt_percent
+        end
+        line.xpath(*xpaths[:line_taxes]).each do |line_tax|
+          name     = Haltr::Utils.get_xpath(line_tax, xpaths[:tax_name])
+          category = Haltr::Utils.get_xpath(line_tax, xpaths[:tax_category])
+          if !tax_definitions.has_key?(name)
+            raise "malformed UBL: line has unknown tax #{name}"
+          elsif !tax_definitions[name].has_key?(category)
+            raise "malformed UBL: line has unknown tax category #{category} for tax #{name}"
+          end
+          percent  = tax_definitions[name][category]
+          tax = Haltr::TaxHelper.new_tax(
+            format:   invoice_format,
+            name:     name,
+            percent:  percent,
+            category: category
+          )
+          il.taxes << tax
         end
       end
       # line discounts
@@ -876,6 +909,7 @@ _INV
              end
       data = case data_compression
              when 'ZIP'
+               require 'zip'
                Zip::InputStream.open(StringIO.new(data)) do |io|
                  _entry = io.get_next_entry
                  io.read
@@ -908,7 +942,7 @@ _INV
     else
       # prevent duplicate invoices #5433
       if !invoice.valid? and invoice.errors.has_key? :number
-        raise "#{I18n.t :field_number} #{i.errors[:number]}"
+        raise "#{I18n.t :field_number} #{invoice.errors[:number]}"
       end
       invoice.save(validate: false)
     end
@@ -1139,11 +1173,11 @@ _INV
             city:                 client_hash[:city].to_s.chomp,
             province:             client_hash[:province].to_s.chomp,
             postalcode:           client_hash[:postalcode].to_s.chomp,
-            country:              client_hash[:country].to_s.chomp,
+            country:              client_hash[:country].to_s.chomp.downcase,
             name:                 client_hash[:name].to_s.chomp,
             destination_edi_code: client_hash[:destination_edi_code].to_s.chomp
           )
-          client_office.save!
+          raise "#{l(:label_client_office)}: #{client_office.errors.full_messages.join('. ')}" unless client_office.save
           client.reload
           self.client_office_id = client_office.id
         end
@@ -1255,6 +1289,25 @@ _INV
   # translations for accepts_nested_attributes_for
   def self.human_attribute_name(attribute_key_name, *args)
     super(attribute_key_name.to_s.gsub(/invoice_lines\./,''), *args)
+  end
+
+  def attachment_added(obj)
+    return if new_record?
+    Event.create(
+      :name => :invoice_attachment_added,
+      :notes => obj.filename,
+      :invoice => self,
+      :user => User.current
+    )
+  end
+
+  def attachment_removed(obj)
+    Event.create(
+      :name => :invoice_attachment_destoy,
+      :notes => obj.filename,
+      :invoice => self,
+      :user => User.current
+    )
   end
 
 end

@@ -287,7 +287,7 @@ class InvoicesController < ApplicationController
 
     # prevent duplicate invoices #5433 #5891
     validate = params[:validate] != 'false'
-    if !validate and !invoice.valid? and invoice.errors.has_key?(:number)
+    if !validate and !@invoice.valid? and @invoice.errors.has_key?(:number)
       validate = true
     end
     if @invoice.save(validate: validate)
@@ -408,6 +408,7 @@ class InvoicesController < ApplicationController
   def destroy
     @invoices.each do |invoice|
       begin
+        invoice.events.destroy_all
         invoice.reload.destroy
         event = EventDestroy.new(:name    => "deleted_#{invoice.type.underscore}",
                                  :notes   => invoice.number,
@@ -492,6 +493,12 @@ class InvoicesController < ApplicationController
   def show
     show_original = false
     invoice_nokogiri = Nokogiri::XML(@invoice.original)
+    begin
+      if invoice_nokogiri.root.namespace.href =~ /StandardBusinessDocumentHeader/
+        invoice_nokogiri = Haltr::Utils.extract_from_sbdh(invoice_nokogiri)
+      end
+    rescue
+    end
     template = original_xsl_template(invoice_nokogiri)
     case params[:view_with]
     when 'standard'
@@ -844,8 +851,10 @@ class InvoicesController < ApplicationController
   end
 
   def report_invoice_list
-    @from     = params[:date_from] || 3.months.ago
-    @to       = params[:date_to]   || Date.today
+    @from     = params[:date_from]
+    @to       = params[:date_to]
+    @from = 3.months.ago if @from.blank?
+    @to   = Date.today   if @to.blank?
     begin
       @from.to_date
     rescue
@@ -1158,8 +1167,9 @@ class InvoicesController < ApplicationController
       if file && file.size > 0
         md5 = `md5sum #{file.path} | cut -d" " -f1`.chomp
         user_or_company = User.current.admin? ? @project.company : User.current
+        transport = params[:transport] || 'uploaded'
         @invoice = Invoice.create_from_xml(
-          file, user_or_company, md5,'uploaded',nil,
+          file, user_or_company, md5,transport,nil,
           @issued,
           params['keep_original'] != 'false',
           params['validate'] != 'false'
@@ -1191,7 +1201,7 @@ class InvoicesController < ApplicationController
   rescue
     respond_to do |format|
       format.html {
-        raise $! unless $!.is_a?(RuntimeError)
+        raise $! unless $!.is_a?(StandardError)
         flash[:error] = $!.message
         redirect_to :action => 'import', :project_id => @project
       }
@@ -1260,6 +1270,8 @@ class InvoicesController < ApplicationController
     case namespace
     when "http://www.facturae.es/Facturae/2014/v3.2.1/Facturae", "http://www.facturae.es/Facturae/2009/v3.2/Facturae"
       'invoices/facturae_xslt_viewer.xsl.erb'
+    when "urn:oasis:names:specification:ubl:schema:xsd:Invoice-2"
+      'invoices/TRDM-010a-Invoice-NO.xsl.erb'
     else
       nil
     end
