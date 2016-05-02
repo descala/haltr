@@ -740,3 +740,4 @@ gl:
   by_peppol: "Recibida por Peppol"
   invoice_attachment_added: "Anexo añadido"
   invoice_attachment_destoy: "Anexo borrado"
+  field_xpaths_from_original: "XPATHS a conservar del original"
