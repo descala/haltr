@@ -745,3 +745,4 @@ es:
   by_peppol: "Recibida por Peppol"
   invoice_attachment_added: "Anexo añadido"
   invoice_attachment_destoy: "Anexo borrado"
+  field_tax_point_date: "Fecha de Servicio"

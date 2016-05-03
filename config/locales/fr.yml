@@ -725,3 +725,4 @@ fr:
   by_peppol: "Received by Peppol"
   invoice_attachment_added: "Annex added"
   invoice_attachment_destoy: "Annex deleted"
+  field_tax_point_date: "Tax Point Date"
