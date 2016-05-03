@@ -36,6 +36,7 @@ module Haltr
           xpaths[:amend_type]         = "//Invoices/Invoice/InvoiceHeader/Corrective/CorrectionMethod"
           xpaths[:amend_reason]       = "//Invoices/Invoice/InvoiceHeader/Corrective/ReasonCode"
           xpaths[:invoice_date]       = "//Invoices/Invoice/InvoiceIssueData/IssueDate"
+          xpaths[:tax_point_date]     = "//Invoices/Invoice/InvoiceIssueData/OperationDate"
           xpaths[:invoicing_period_start] = "//Invoices/Invoice/InvoiceIssueData/InvoicingPeriod/StartDate"
           xpaths[:invoicing_period_end]   = "//Invoices/Invoice/InvoiceIssueData/InvoicingPeriod/EndDate"
           xpaths[:invoice_total]      = "//Invoices/Invoice/InvoiceTotals/InvoiceTotal"
@@ -165,6 +166,7 @@ module Haltr
         elsif format =~ /ubl/
           xpaths[:invoice_number]     = "/xmlns:Invoice/cbc:ID"
           xpaths[:invoice_date]       = "/xmlns:Invoice/cbc:IssueDate"
+          xpaths[:tax_point_date]     = "/xmlns:Invoice/cbc:TaxPointDate"
           xpaths[:invoice_total]      = "/xmlns:Invoice/cac:LegalMonetaryTotal/cbc:TaxInclusiveAmount"
           xpaths[:invoice_import]     = "/xmlns:Invoice/cac:LegalMonetaryTotal/cbc:TaxExclusiveAmount"
           xpaths[:payment_method]     = "/xmlns:Invoice/cac:PaymentMeans/cbc:PaymentMeansCode"

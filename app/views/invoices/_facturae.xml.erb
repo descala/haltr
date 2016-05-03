@@ -275,6 +275,9 @@
          </InvoiceHeader>
          <InvoiceIssueData>
             <IssueDate><%=h @invoice.date%></IssueDate>
+<% if @invoice.tax_point_date.present? -%>
+            <OperationDate><%=h @invoice.tax_point_date%></OperationDate>
+<% end -%>
 <% if @invoice.invoicing_period_start.present? and @invoice.invoicing_period_end.present? -%>
             <InvoicingPeriod>
               <StartDate><%=h @invoice.invoicing_period_start%></StartDate>

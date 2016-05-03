@@ -508,6 +508,7 @@ _INV
     invoice_number   = Haltr::Utils.get_xpath(doc,xpaths[:invoice_number])
     invoice_series   = Haltr::Utils.get_xpath(doc,xpaths[:invoice_series])
     invoice_date     = Haltr::Utils.get_xpath(doc,xpaths[:invoice_date])
+    tax_point_date   = Haltr::Utils.get_xpath(doc,xpaths[:tax_point_date])
     i_period_start   = Haltr::Utils.get_xpath(doc,xpaths[:invoicing_period_start])
     i_period_end     = Haltr::Utils.get_xpath(doc,xpaths[:invoicing_period_end])
     invoice_total    = Haltr::Utils.get_xpath(doc,xpaths[:invoice_total])
@@ -699,6 +700,7 @@ _INV
       :number           => invoice_number,
       :series_code      => invoice_series,
       :date             => invoice_date,
+      :tax_point_date   => tax_point_date,
       :invoicing_period_start => i_period_start,
       :invoicing_period_end   => i_period_end,
       :total            => invoice_total,

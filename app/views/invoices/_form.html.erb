@@ -70,7 +70,10 @@
     </p>
   </div>
 
-  <% if @invoice.invoicing_period_start || @invoice.invoicing_period_end || User.current.allowed_to?(:view_invoice_extra_fields, @project) -%>
+  <% if @invoice.invoicing_period_start.present? ||
+      @invoice.invoicing_period_end.present? ||
+      @invoice.tax_point_date.present? ||
+      User.current.allowed_to?(:view_invoice_extra_fields, @project) -%>
     <div class="seccio grup">
       <p class="col span-1-de-3">
       <%= f.text_field :invoicing_period_start, :size => 10 %><%= calendar_for('invoice_invoicing_period_start') %>
