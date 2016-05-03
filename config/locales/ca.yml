@@ -740,3 +740,4 @@ ca:
   by_peppol: "Rebuda per Peppol"
   invoice_attachment_added: "Annex afegit"
   invoice_attachment_destoy: "Annex esborrat"
+  field_tax_point_date: "Data de Servei"
