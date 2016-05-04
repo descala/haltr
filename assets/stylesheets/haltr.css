@@ -315,3 +315,6 @@ span#send_info {
 .controller-clients .client-info h3 {
   font-size: 120%;
 }
+.select_to_edit {
+  cursor: pointer;
+}
