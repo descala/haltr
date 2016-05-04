@@ -52,7 +52,25 @@ module Haltr
           client.xpaths_from_original.each_line do |xpath|
             orig_fragment = doc_orig.at_xpath(xpath)
             orig_fragment ||= ''
-            doc.at_xpath(xpath).replace(orig_fragment) rescue nil
+
+            # node in original but not in generated
+            if orig_fragment.present? and doc.at_xpath(xpath).nil?
+              # search for a placeholder in comments
+              placeholder = doc.at_xpath("//comment()[contains(., '#{xpath.strip}')]")
+              if placeholder
+                placeholder.replace(orig_fragment)
+              else
+                #TODO: raise? we don't know where to put the original fragment
+                # we need to add a placeholder to facturae template
+                raise xpath
+              end
+
+            elsif orig_fragment.present? # node in both
+              doc.at_xpath(xpath).replace(orig_fragment) rescue nil
+
+            else # node missing in original
+              #TODO: delete from generated?
+            end
           end
           xml = doc.to_s
         end
@@ -80,9 +98,19 @@ module Haltr
 XSL
       doc  = Nokogiri::XML(xml)
       xslt = Nokogiri::XSLT(xsl)
+      # remove all comments
+      doc.xpath("//comment()").collect {|c| c.remove }
       out  = xslt.transform(doc)
       out.to_xml
     end
+
+    ## remove empty nodes
+    ## we use them as placeholders for xpaths_from_original
+    ## http://stackoverflow.com/questions/20123176
+    #def self.traverse_and_clean(doc)
+    #  doc.children.map { |child| traverse_and_clean(child) }
+    #  doc.remove if doc.content.blank?
+    #end
 
   end
 
