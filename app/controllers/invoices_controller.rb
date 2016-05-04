@@ -1177,6 +1177,12 @@ class InvoicesController < ApplicationController
       params[:attachments].each do |key, attachment_param|
         begin
           attachment = Attachment.find_by_token(attachment_param['token'])
+          if attachment.content_type.blank?
+            # http://stackoverflow.com/questions/51572
+            attachment.content_type =
+              IO.popen(["file", "--brief", "--mime-type", attachment.diskfile],
+                       in: :close, err: :close) { |io| io.read.chomp }
+          end
           case attachment.content_type
           when /xml/
             user_or_company = User.current.admin? ? @project.company : User.current
