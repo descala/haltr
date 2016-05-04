@@ -1,7 +1,10 @@
   <cbc:ID><%=h @invoice.number%></cbc:ID>
   <cbc:IssueDate><%=h @invoice.date%></cbc:IssueDate>
-<% if @invoice.extra_info? -%>	
+<% if @invoice.extra_info? -%>
         <cbc:Note><%=h @invoice.extra_info%></cbc:Note>
+<% end -%>
+<% if @invoice.tax_point_date.present? -%>
+        <cbc:TaxPointDate><%=h @invoice.tax_point_date%></cbc:TaxPointDate>
 <% end -%>
     <cbc:DocumentCurrencyCode listID="ISO 4217 Alpha" listAgencyID="6"><%=h @client.currency%></cbc:DocumentCurrencyCode>
     <% if @invoice.respond_to?(:accounting_cost) and !@invoice.accounting_cost.blank? %>

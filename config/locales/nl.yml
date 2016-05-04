@@ -724,3 +724,4 @@ nl:
   invoice_attachment_added: "Annex added"
   invoice_attachment_destoy: "Annex deleted"
   field_xpaths_from_original: "XPATHS to preserve from original"
+  field_tax_point_date: "Tax Point Date"

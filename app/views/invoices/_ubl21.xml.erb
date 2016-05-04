@@ -3,6 +3,9 @@
 <% if @invoice.extra_info? -%>	
         <cbc:Note><%=h @invoice.extra_info%></cbc:Note>
 <% end -%>
+<% if @invoice.tax_point_date.present? -%>
+        <cbc:TaxPointDate><%=h @invoice.tax_point_date%></cbc:TaxPointDate>
+<% end -%>
     <cbc:DocumentCurrencyCode listID="ISO4217" listAgencyID="6"><%=h @client.currency%></cbc:DocumentCurrencyCode>
     <% if @invoice.respond_to?(:accounting_cost) and !@invoice.accounting_cost.blank? %>
       <cbc:AccountingCost><%=@invoice.accounting_cost%></cbc:AccountingCost>
