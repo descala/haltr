@@ -186,6 +186,16 @@
   </div>
 </fieldset>
 
+<% if User.current.admin? or User.current.allowed_to?(:set_client_xpaths, @project) -%>
+  <fieldset class="tabular box">
+    <legend>XPATH</legend>
+    <div class="seccio grup">
+      <p class="col span-1-de-2">
+        <%= f.text_area :xpaths_from_original %>
+      </p>
+  </fieldset>
+<% end -%>
+
 </div>
 
 <% content_for :header_tags do -%>
