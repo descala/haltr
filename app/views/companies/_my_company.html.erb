@@ -1,9 +1,10 @@
 <div class="tabular box">
 
+  <%= call_hook(:company_form_taxcode) %>
+
   <div class="seccio grup">
     <p class="col span-1-de-2">
     <%= f.text_field :taxcode, :required => true %>
-    <%= call_hook(:company_form_taxcode) %>
     </p>
     <p class="col span-1-de-2">
     <%= f.label_for_field :name, :label => l('name_or_company'), :required => true %>
