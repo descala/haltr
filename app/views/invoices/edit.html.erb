@@ -2,7 +2,7 @@
 <div class="seccio grup">
   <div class="col span-2-de-2">
 
-    <% if %(sending sent registered accepted allegedly_paid closed).include?(@invoice.state) -%>
+    <% if %w(sending sent registered accepted allegedly_paid closed).include?(@invoice.state) -%>
       <div class="flash warning"><%=raw l(:warn_edit_invoice)%></div>
     <% end -%>
 
