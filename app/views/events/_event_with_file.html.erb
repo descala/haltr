@@ -6,3 +6,15 @@
   ( reg. <%= e.codi_registre %> )
 <% end -%>
 <%= h link_to_if_authorized(l(e.name =~ /_notification/ ? :download_notification : :download_legal), event_file_path(e)) %>
+<% if e.extra_notes.present? -%>
+<%= "( #{link_to_function(l(:view_mail), "$('#event_#{e.id}').show();") } )".html_safe %>
+  <div id="event_<%=e.id%>" style="display:none;">
+    <div class="mail_box">
+      <div id="mail">
+        <%= simple_format e.extra_notes %>
+        <%= link_to_function(l(:back), "$('#event_#{e.id}').hide();") %>
+      </div>
+    </div>
+    <div class="overlay"></div>
+  </div>
+<% end -%>

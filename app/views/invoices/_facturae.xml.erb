@@ -384,6 +384,7 @@
             <% if @invoice.payments_on_account_in_cents.to_i != 0 -%>
               <TotalPaymentsOnAccount><%=h haltr_precision @invoice.payments_on_account.dollars %></TotalPaymentsOnAccount>
             <% end -%>
+            <!-- //Invoices/Invoice/InvoiceTotals/AmountsWithheld -->
             <TotalExecutableAmount><%=h haltr_precision (@invoice.total - @invoice.payments_on_account).dollars%></TotalExecutableAmount>
          </InvoiceTotals>
          <Items>
