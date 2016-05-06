@@ -728,5 +728,4 @@ da:
   field_tax_point_date: "Tax Point Date"
   field_xpaths_from_original: "XPATHS to preserve from original"
   warn_edit_invoice: "You are about to edit a sent invoice.<br />
-Your customer won't receive the changes you made.<br />
-Corrective invoices can be created to ensure that your customer receives the modifications."
+Your customer will not receive the changes you made unless you resend it."
