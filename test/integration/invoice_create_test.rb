@@ -432,4 +432,78 @@ class InvoiceCreaeteTest < ActionController::IntegrationTest
     assert_equal 'F', invoice.fa_person_type
   end
 
+  def test_create_new_invoice_with_pdf_original
+    post "/login", :username => 'jsmith', :password => 'jsmith'
+
+    get "/projects/onlinestore/invoices/new"
+    assert_response :success
+
+    orig = File.read(Rails.root.join(
+      'plugins/haltr/test/fixtures/documents/invoice_pdf_signed.pdf'
+    ))
+
+    post "/projects/onlinestore/invoices",
+    {
+      "commit"=>"Create",
+      "action"=>"create",
+      "id"=>"onlinestore",
+      "controller"=>"invoices",
+      "invoice"=>
+      {
+        "original" => orig,
+        "transport" => 'uploaded',
+        "discount_percent"=>"0",
+        "number"=>"invoice_created_test_1",
+        "ponumber"=>"",
+        "discount_text"=>"",
+        "accounting_cost"=>"",
+        "payment_method"=>"1",
+        "charge_amount"=>"",
+        "date"=>"2013-02-12",
+        "charge_reason"=>"",
+        "client_id"=>"404360906",
+        "extra_info"=>"",
+        "currency"=>"EUR",
+        "terms"=>"0",
+        "payment_method_text"=>"",
+        "invoice_lines_attributes"=>
+        {
+          "0"=>
+          {
+            "taxes_attributes"=>
+            {
+              "0"=>
+              {
+                "name"=>"TAXA",
+                "code"=>"10.0_S",
+                "comment"=>"comment for TAXA 10%"
+              },
+                "1"=>
+              {
+                "name"=>"TAXB",
+                "code"=>"20.0_S",
+                "comment"=>"coment for TAXB 20%"
+              }
+            },
+              "quantity"=>"1",
+              "unit"=>"1",
+              "price"=>"100",
+              "description"=>"This line has two taxes TAX1 and TAX2 "
+          }
+        }
+      }
+    }
+
+    invoice = Invoice.last
+    binding.pry
+    assert_redirected_to :controller => "invoices", :action => "show", :id => invoice
+    assert_equal 1, invoice.invoice_lines.size
+    assert_equal 2, invoice.invoice_lines.first.taxes.size
+    # comments should be blank since taxes not exempt
+    assert_equal "", invoice.invoice_lines.first.taxes.first.comment
+    assert_equal "", invoice.invoice_lines.first.taxes.last.comment
+  end
+
+
+
 end
