@@ -455,7 +455,7 @@ _INV
     end
   end
 
-  def self.create_from_xml(raw_invoice,user_or_company,md5,transport,from=nil,issued=nil,keep_original=true,validate=true)
+  def self.create_from_xml(raw_invoice,user_or_company,md5,transport,from=nil,issued=nil,keep_original=true,validate=true,override_original=nil,override_original_name=nil)
 
     file_name = nil
     if raw_invoice.respond_to? :filename             # Mail::Part
@@ -699,6 +699,17 @@ _INV
       }, invoice.client.taxcode, role)
     end
 
+    original = nil
+    original_format = nil
+    if override_original.present? and override_original_name.present?
+      original  = Haltr::Utils.decompress(override_original)
+      file_name = override_original_name
+      # TODO: support override_original other than PDF
+      original_format = 'pdf'
+    elsif keep_original
+      original = raw_xml
+    end
+
     invoice.assign_attributes(
       :number           => invoice_number,
       :series_code      => invoice_series,
@@ -712,11 +723,11 @@ _INV
       :due_date         => invoice_due_date,
       :project          => company.project,
       :terms            => "custom",
-      :invoice_format   => invoice_format, # facturae3.2, ubl21...
+      :invoice_format   => original_format || invoice_format, # facturae3.2, ubl21...
       :transport        => transport,      # email, uploaded
       :from             => from,           # u@mail.com, User Name...
       :md5              => md5,
-      :original         => keep_original ? raw_xml : nil,
+      :original         => original,
       :discount_percent => discount_percent,
       :discount_text    => discount_text,
       :extra_info       => extra_info,
@@ -988,7 +999,7 @@ _INV
 
   def send_original?
     Redmine::Hook.call_hook(:model_invoice_send_original, :invoice=>self) != [false] and
-      original and !modified_since_created? and invoice_format != 'pdf'
+      original and !modified_since_created?
   end
 
   def original_root_namespace

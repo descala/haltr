@@ -726,3 +726,5 @@ sv:
   invoice_attachment_destoy: "Annex deleted"
   field_xpaths_from_original: "XPATHS to preserve from original"
   field_tax_point_date: "Tax Point Date"
+  warn_edit_invoice: "You are about to edit a sent invoice.<br />
+Your customer will not receive the changes you made unless you resend it."

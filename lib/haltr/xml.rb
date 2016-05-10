@@ -46,7 +46,10 @@ module Haltr
         )
         # client can have xpaths in xpaths_from_original, if so, replace
         # generated ones by original, refs #5938
-        if invoice.original.present? and client.xpaths_from_original.present?
+        orig_format = invoice.invoice_format
+        if invoice.has_original? and ExportFormats[orig_format] and
+            client.xpaths_from_original.present? and
+            ExportFormats[orig_format]["content-type"] == 'text-xml'
           doc      = Nokogiri.parse(xml)
           doc_orig = Nokogiri.parse(invoice.original)
           client.xpaths_from_original.each_line do |xpath|
@@ -54,7 +57,8 @@ module Haltr
             orig_fragment ||= ''
 
             # node in original but not in generated
-            if orig_fragment.present? and doc.at_xpath(xpath).nil?
+            if orig_fragment.present? and doc.at_xpath(xpath).nil? and
+                (orig_fragment.text.present? or orig_fragment.children.any?)
               # search for a placeholder in comments
               placeholder = doc.at_xpath("//comment()[contains(., '#{xpath.strip}')]")
               if placeholder

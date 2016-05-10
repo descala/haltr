@@ -513,7 +513,7 @@ class InvoicesController < ApplicationController
         return
       end
     else
-      if @company.invoice_viewer == 'xslt' and @invoice.send_original? and template 
+      if @company.invoice_viewer == 'xslt' and @invoice.send_original? and template
         show_original = true
       end
     end
@@ -537,22 +537,29 @@ class InvoicesController < ApplicationController
         params[:format] ||= 'json'
       end
       format.pdf do
-        @is_pdf = true
-        @debug = params[:debug]
-        render :pdf => @invoice.pdf_name_without_extension,
-          :disposition => params[:view] ? 'inline' : 'attachment',
-          :layout => "invoice.html",
-          # TODO 
-          # :template=> show_original ? "invoice/show_with_xsl" : "invoices/show_pdf",
-          :template=> "invoices/show_pdf",
-          :formats => :html,
-          :show_as_html => params[:debug],
-          :margin => {
-            :top    => 20,
-            :bottom => 20,
-            :left   => 30,
-            :right  => 20
-          }
+        if @invoice.send_original? and @invoice.invoice_format == 'pdf'
+          send_data @invoice.original,
+            :type => 'application/pdf',
+            :filename => @invoice.file_name,
+            :disposition => 'attachment'
+        else
+          @is_pdf = true
+          @debug = params[:debug]
+          render :pdf => @invoice.pdf_name_without_extension,
+            :disposition => params[:view] ? 'inline' : 'attachment',
+            :layout => "invoice.html",
+            # TODO
+            # :template=> show_original ? "invoice/show_with_xsl" : "invoices/show_pdf",
+            :template=> "invoices/show_pdf",
+            :formats => :html,
+            :show_as_html => params[:debug],
+            :margin => {
+              :top    => 20,
+              :bottom => 20,
+              :left   => 30,
+              :right  => 20
+            }
+        end
       end
       if params[:debug]
         format.facturae30  { render_xml Haltr::Xml.generate(@invoice, 'facturae30', false, false, true) }
@@ -564,7 +571,20 @@ class InvoicesController < ApplicationController
         format.svefaktura  { render_xml Haltr::Xml.generate(@invoice, 'svefaktura', false, false, true) }
         format.oioubl20    { render_xml Haltr::Xml.generate(@invoice, 'oioubl20', false, false, true) }
         format.efffubl     { render_xml Haltr::Xml.generate(@invoice, 'efffubl', false, false, true) }
-        format.original    { render_xml @invoice.original }
+        format.original {
+          ct = ExportFormats[@invoice.invoice_format]["content-type"] rescue ""
+          case ct
+          when 'text-xml'
+            render_xml @invoice.original
+          when 'application-pdf'
+            send_data @invoice.original,
+              :type => 'application/pdf',
+              :filename => @invoice.pdf_name,
+              :disposition => 'attachment'
+          else
+            render text: "Unknown original format: #{@invoice.invoice_format}"
+          end
+        }
         format.edifact     { render text: Haltr::Edifact.generate(@invoice, false, true), content_type: 'text' }
       else
         format.facturae30  { download_xml Haltr::Xml.generate(@invoice, 'facturae30', false, false, true) }
@@ -576,7 +596,20 @@ class InvoicesController < ApplicationController
         format.svefaktura  { download_xml Haltr::Xml.generate(@invoice, 'svefaktura', false, false, true) }
         format.oioubl20    { download_xml Haltr::Xml.generate(@invoice, 'oioubl20', false, false, true) }
         format.efffubl     { download_xml Haltr::Xml.generate(@invoice, 'efffubl', false, false, true) }
-        format.original    { download_xml @invoice.original }
+        format.original {
+          ct = ExportFormats[@invoice.invoice_format]["content-type"] rescue ""
+          case ct
+          when 'text-xml'
+            render_xml @invoice.original
+          when 'application-pdf'
+            send_data @invoice.original,
+              :type => 'application/pdf',
+              :filename => @invoice.pdf_name,
+              :disposition => 'attachment'
+          else
+            render text: "Unknown original format: #{@invoice.invoice_format}"
+          end
+        }
         format.edifact     { download_txt Haltr::Edifact.generate(@invoice, false, true) }
       end
     end
@@ -1172,7 +1205,9 @@ class InvoicesController < ApplicationController
           file, user_or_company, md5,transport,nil,
           @issued,
           params['keep_original'] != 'false',
-          params['validate'] != 'false'
+          params['validate'] != 'false',
+          params['override_original'],
+          params['override_original_name']
         )
       end
       if @invoice and ["true","1"].include?(params[:send_after_import])
