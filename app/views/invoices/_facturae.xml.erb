@@ -545,6 +545,7 @@
             </Installment>
           </PaymentDetails>
 <% end -%>
+          <!-- //Invoices/Invoice/LegalLiterals/LegalReference -->
 <% unless @invoice.legal_literals.blank? -%>
           <LegalLiterals>
             <LegalReference><%=@invoice.legal_literals%></LegalReference>
