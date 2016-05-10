@@ -54,7 +54,8 @@ module Haltr
             orig_fragment ||= ''
 
             # node in original but not in generated
-            if orig_fragment.present? and doc.at_xpath(xpath).nil?
+            if orig_fragment.present? and doc.at_xpath(xpath).nil? and
+                (orig_fragment.text.present? or orig_fragment.children.any?)
               # search for a placeholder in comments
               placeholder = doc.at_xpath("//comment()[contains(., '#{xpath.strip}')]")
               if placeholder
