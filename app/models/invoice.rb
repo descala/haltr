@@ -41,6 +41,7 @@ class Invoice < ActiveRecord::Base
   validates_inclusion_of :currency, :in  => Money::Currency.table.collect {|k,v| v[:iso_code] }, :unless => Proc.new {|i| i.type == "ReceivedInvoice" }
   validates_numericality_of :charge_amount_in_cents, :allow_nil => true
   validates_numericality_of :payments_on_account_in_cents, :allow_nil => true
+  validates_numericality_of :amounts_withheld_in_cents, :allow_nil => true
 
   before_save :fields_to_utf8
   after_create :increment_counter
@@ -351,6 +352,16 @@ class Invoice < ActiveRecord::Base
     else
       # this + validates_numericality_of will raise an error if not a number
       write_attribute :payments_on_account_in_cents, value
+    end
+  end
+
+  def amounts_withheld=(value)
+    if value =~ /^[-0-9,.']*$/
+      value = Money.parse(value)
+      write_attribute :amounts_withheld_in_cents, value.cents
+    else
+      # this + validates_numericality_of will raise an error if not a number
+      write_attribute :amounts_withheld_in_cents, value
     end
   end
 
