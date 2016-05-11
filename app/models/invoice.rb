@@ -336,7 +336,7 @@ class Invoice < ActiveRecord::Base
   end
 
   def charge_amount=(value)
-    if value =~ /^[0-9,.']*$/
+    if value.to_s =~ /^[0-9,.']*$/
       value = Money.parse(value)
       write_attribute :charge_amount_in_cents, value.cents
     else
@@ -346,7 +346,7 @@ class Invoice < ActiveRecord::Base
   end
 
   def payments_on_account=(value)
-    if value =~ /^[-0-9,.']*$/
+    if value.to_s =~ /^[-0-9,.']*$/
       value = Money.parse(value)
       write_attribute :payments_on_account_in_cents, value.cents
     else
@@ -356,7 +356,7 @@ class Invoice < ActiveRecord::Base
   end
 
   def amounts_withheld=(value)
-    if value =~ /^[-0-9,.']*$/
+    if value.to_s =~ /^[-0-9,.']*$/
       value = Money.parse(value)
       write_attribute :amounts_withheld_in_cents, value.cents
     else
