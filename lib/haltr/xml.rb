@@ -46,7 +46,7 @@ module Haltr
         )
         # client can have xpaths in xpaths_from_original, if so, replace
         # generated ones by original, refs #5938
-        if invoice.original.present? and client.xpaths_from_original.present?
+        if client.xpaths_from_original.present? and invoice.original and !invoice.original.empty?
           doc      = Nokogiri.parse(xml)
           doc_orig = Nokogiri.parse(invoice.original)
           client.xpaths_from_original.each_line do |xpath|
