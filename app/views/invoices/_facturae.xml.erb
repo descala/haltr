@@ -29,7 +29,7 @@
             <TotalAmount><%=h haltr_precision (@invoice.total - @invoice.payments_on_account).dollars %></TotalAmount>
          </TotalOutstandingAmount>
          <TotalExecutableAmount>
-            <TotalAmount><%=h haltr_precision (@invoice.total - @invoice.payments_on_account).dollars %></TotalAmount>
+            <TotalAmount><%=h haltr_precision (@invoice.total - @invoice.payments_on_account - @invoice.amounts_withheld).dollars %></TotalAmount>
          </TotalExecutableAmount>
          <InvoiceCurrencyCode><%=h  @invoice.currency %></InvoiceCurrencyCode>
       </Batch>
@@ -384,8 +384,13 @@
             <% if @invoice.payments_on_account_in_cents.to_i != 0 -%>
               <TotalPaymentsOnAccount><%=h haltr_precision @invoice.payments_on_account.dollars %></TotalPaymentsOnAccount>
             <% end -%>
-            <!-- //Invoices/Invoice/InvoiceTotals/AmountsWithheld -->
-            <TotalExecutableAmount><%=h haltr_precision (@invoice.total - @invoice.payments_on_account).dollars%></TotalExecutableAmount>
+            <% if @invoice.amounts_withheld_in_cents.to_i != 0 -%>
+              <AmountsWithheld>
+                <!-- //Invoices/Invoice/InvoiceTotals/AmountsWithheld/WithholdingReason -->
+                <WithholdingAmount><%=h haltr_precision @invoice.amounts_withheld.dollars %></WithholdingAmount>
+              </AmountsWithheld>
+            <% end -%>
+            <TotalExecutableAmount><%=h haltr_precision (@invoice.total - @invoice.payments_on_account - @invoice.amounts_withheld).dollars%></TotalExecutableAmount>
          </InvoiceTotals>
          <Items>
 <% @invoice.invoice_lines.each do |invoice_line| -%>
@@ -504,7 +509,7 @@
          <PaymentDetails>
             <Installment>
               <InstallmentDueDate><%=h @invoice.due_date%></InstallmentDueDate>
-               <InstallmentAmount><%=h haltr_precision @invoice.total.dollars%></InstallmentAmount>
+               <InstallmentAmount><%=h haltr_precision (@invoice.total - @invoice.amounts_withheld).dollars%></InstallmentAmount>
                <PaymentMeans><%=h @invoice.payment_method_code(:facturae) %></PaymentMeans>
 <% if @invoice.debit? and @client.use_iban? -%>
                <AccountToBeDebited>

@@ -76,6 +76,11 @@ class Invoice < ActiveRecord::Base
     :mapping => [%w(payments_on_account_in_cents cents), %w(currency currency_as_string)],
     :constructor => Proc.new { |cents, currency| Money.new(cents || 0, currency || Money::Currency.new(Setting.plugin_haltr['default_currency'])) }
 
+  composed_of :amounts_withheld,
+    :class_name => "Money",
+    :mapping => [%w(amounts_withheld_in_cents cents), %w(currency currency_as_string)],
+    :constructor => Proc.new { |cents, currency| Money.new(cents || 0, currency || Money::Currency.new(Setting.plugin_haltr['default_currency'])) }
+
   after_initialize :set_default_values
 
   acts_as_attachable :view_permission => :use_invoice_attachments,
@@ -521,6 +526,7 @@ _INV
     charge_reason    = Haltr::Utils.get_xpath(doc,xpaths[:charge_reason])
     accounting_cost  = Haltr::Utils.get_xpath(doc,xpaths[:accounting_cost])
     payments_on_account = Haltr::Utils.get_xpath(doc,xpaths[:payments_on_account]) || 0
+    amounts_withheld = Haltr::Utils.get_xpath(doc,xpaths[:amounts_withheld]) || 0
     amend_of         = Haltr::Utils.get_xpath(doc,xpaths[:amend_of])
     amend_type       = Haltr::Utils.get_xpath(doc,xpaths[:amend_type])
     amend_reason     = Haltr::Utils.get_xpath(doc,xpaths[:amend_reason])
@@ -721,6 +727,7 @@ _INV
       :charge_reason    => charge_reason,
       :accounting_cost  => accounting_cost,
       :payments_on_account => Haltr::Utils.to_money(payments_on_account, currency, company.rounding_method),
+      :amounts_withheld  => Haltr::Utils.to_money(amounts_withheld, currency, company.rounding_method),
       :fa_person_type    => fa_person_type,
       :fa_residence_type => fa_residence_type,
       :fa_taxcode        => fa_taxcode,
