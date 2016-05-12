@@ -731,3 +731,4 @@ en:
   field_xpaths_from_original: "XPATHS to preserve from original"
   warn_edit_invoice: "You are about to edit a sent invoice.<br />
 Your customer will not receive the changes you made unless you resend it."
+  view_invoice_requires_login: "Require login to view invoices"

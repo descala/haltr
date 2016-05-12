@@ -11,6 +11,11 @@ class Company < ActiveRecord::Base
   has_many :clients, :as => :company, :dependent => :nullify
   has_many :taxes, :class_name => "Tax", :dependent => :destroy, :order => "name,percent DESC"
   has_many :bank_infos, :dependent => :destroy, :order => "name,bank_account,iban,bic DESC"
+
+  # self referential association
+  has_many :providers
+  has_many :company_providers, through: :providers, dependent: :destroy
+
   validates_presence_of :name, :project_id, :email, :postalcode, :country
   validates_uniqueness_of :taxcode, :allow_blank => true
   validates_inclusion_of :currency, :in  => Money::Currency.table.collect {|k,v| v[:iso_code] }

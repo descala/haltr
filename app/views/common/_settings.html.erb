@@ -7,3 +7,4 @@
 <p><label><%=l(:default_currency) %></label><%= select_tag('settings[default_currency]', options_for_select(HaltrHelper.currency_options_for_select, @settings['default_currency'])) %></p>
 <p><label><%=l(:return_path) %></label><%= text_field_tag('settings[return_path]', @settings['return_path']) %></p>
 <p><label><%=l(:default_invoice_format) %></label><%= select_tag('settings[default_invoice_format]', options_for_select(ExportChannels.for_select(nil), selected: @settings['default_invoice_format'])) %></p>
+<p><label><%=l(:view_invoice_requires_login) %></label><%= check_box_tag('settings[view_invoice_requires_login]', 1, @settings['view_invoice_requires_login']) %></p>

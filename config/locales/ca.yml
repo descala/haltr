@@ -744,3 +744,4 @@ ca:
   field_xpaths_from_original: "XPATHS a conservar de l'original"
   warn_edit_invoice: "Estàs a punt d'editar una factura que ha estat enviada.<br />
 Tingues en compte que el teu client no rebrà els canvis a no ser que la tornis a enviar."
+  view_invoice_requires_login: "Requerir login per veure les factures"
