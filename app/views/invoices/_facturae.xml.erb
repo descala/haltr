@@ -362,12 +362,8 @@
              </Charge>
            </GeneralSurcharges>
 <% end -%>
-<% if @invoice.discount_percent and @invoice.discount_percent > 0 -%>
             <TotalGeneralDiscounts><%=h haltr_precision(@invoice.discount_amount.dollars,2)%></TotalGeneralDiscounts>
-<% end -%>
-<% if @invoice.charge_amount.cents > 0 -%>
-           <TotalGeneralSurcharges><%=h haltr_precision(@invoice.charge_amount.dollars,2)%></TotalGeneralSurcharges>
-<% end -%>
+            <TotalGeneralSurcharges><%=h haltr_precision(@invoice.charge_amount.dollars,2)%></TotalGeneralSurcharges>
             <TotalGrossAmountBeforeTaxes><%=h haltr_precision(@invoice.subtotal.dollars)%></TotalGrossAmountBeforeTaxes>
             <TotalTaxOutputs><%=h haltr_precision @invoice.total_tax_outputs.dollars%></TotalTaxOutputs>
             <TotalTaxesWithheld><%=h haltr_precision @invoice.total_taxes_withheld.dollars%></TotalTaxesWithheld>
@@ -380,10 +376,9 @@
                 </PaymentOnAccount>
               </PaymentsOnAccount>
             <% end -%>
+            <TotalFinancialExpenses>0.00</TotalFinancialExpenses>
             <TotalOutstandingAmount><%=h haltr_precision (@invoice.total - @invoice.payments_on_account).dollars%></TotalOutstandingAmount>
-            <% if @invoice.payments_on_account_in_cents.to_i != 0 -%>
-              <TotalPaymentsOnAccount><%=h haltr_precision @invoice.payments_on_account.dollars %></TotalPaymentsOnAccount>
-            <% end -%>
+            <TotalPaymentsOnAccount><%=h haltr_precision @invoice.payments_on_account.dollars %></TotalPaymentsOnAccount>
             <% if @invoice.amounts_withheld_in_cents.to_i != 0 -%>
               <AmountsWithheld>
                 <!-- //Invoices/Invoice/InvoiceTotals/AmountsWithheld/WithholdingReason -->
