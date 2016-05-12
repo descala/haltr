@@ -669,4 +669,11 @@ class InvoiceTest < ActiveSupport::TestCase
     assert_equal '5503070490', invoice.client.taxcode
   end
 
+  test 'import facturae32 with AmountsWithheld' do
+    file = File.new(File.join(File.dirname(__FILE__),'..','fixtures','documents','invoice_amounts_withheld.xml'))
+    invoice = Invoice.create_from_xml(file,companies(:company6),"1234",'uploaded',User.current.name,nil,false)
+    assert_equal(50059.38, invoice.total.dollars)
+    assert_equal(4678.45, invoice.amounts_withheld.dollars)
+  end
+
 end
