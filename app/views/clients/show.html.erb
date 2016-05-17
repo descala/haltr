@@ -97,6 +97,26 @@
       <%= link_to(template.number, invoice_template_path(template), :title => invoice_summary(template)) %>
     <% end %>
     <%= " ..." if @client.invoice_templates.count > 10 %>
+    <% if @client.template_invoice_lines.any? %>
+      <table class="line-items" border="0" cellpadding="0" cellspacing="0">
+        <thead>
+          <tr>
+            <td colspan="2"></td>
+          </tr>
+        </thead>
+        <tbody>
+          <% @client.template_invoice_lines.each do |line| %>
+            <tr>
+              <td><%= line.description %></td>
+              <td class="line-total"><%=h money(Haltr::Utils.to_money(line.taxable_base)) %></td>
+            </tr>
+          <% end %>
+          <tr>
+            <td colspan="2" class="invoice-templates-total line-total"><%=h money(@templates_total)%></td>
+          </tr>
+        </tbody>
+      </table>
+    <% end %>
 
     <h3><%= l(:label_received) %> <%= link_to_if_authorized("(#{@client.received_invoices.count})", {:controller=>'received', :action=>'index', :project_id=>@project, :client_id=>@client}, :title=>l(:label_received)) %></h3>
     <%= link_to_if_authorized l(:label_import), project_received_import_path(@project), :class => 'icon icon-add' %>
@@ -110,10 +130,11 @@
 
   <%= render :partial => "my/blocks/chart_invoice_status" %>
 
-  </div>
-
 </div>
 
 <% content_for :sidebar do %>
   <%= render_menu :companies_menu, @project %>
+<% end %>
+<% content_for :header_tags do %>
+  <%= stylesheet_link_tag 'minimal', :plugin => 'haltr' %>
 <% end %>

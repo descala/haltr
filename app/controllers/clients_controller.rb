@@ -70,6 +70,7 @@ class ClientsController < ApplicationController
     @events = @client.invoice_events.where("events.type!='HiddenEvent'").order("created_at desc").limit(10)
     @events_count = @client.invoice_events.where("events.type!='HiddenEvent'").count
     @client_offices= @client.client_offices
+    @templates_total = @client.template_invoice_lines.sum{|line|line.taxable_base}.to_money(@client.currency) rescue nil
     respond_to do |format|
       format.html
       format.api
