@@ -94,7 +94,8 @@ Redmine::Plugin.register :haltr do
         :payments  => [:index, :payment_initiation, :invoices, :reports, :report_payment_list],
         :invoice_templates => [:index, :show, :context_menu],
         :charts    => [:invoice_total, :invoice_status, :top_clients],
-        :events    => [:file, :index] },
+        :events    => [:file, :index],
+        :import_errors => [:index, :show] },
       :require => :member
 
     permission :restricted_use,
@@ -155,6 +156,8 @@ Redmine::Plugin.register :haltr do
     permission :use_client_offices, {
       :client_offices => [:index, :new, :show, :edit, :create, :update, :destroy],
     }
+
+    permission :set_client_xpaths, {}
 
     # Loads permisons from config/channels.yml
     ExportChannels.permissions.each do |permission,actions|

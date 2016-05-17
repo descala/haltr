@@ -17,6 +17,10 @@
 <div class="seccio grup">
   <div class="col span-2-de-2">
 
+    <% if %w(sending sent registered accepted allegedly_paid closed).include?(@invoice.state) -%>
+      <div class="flash warning"><%=raw l(:warn_edit_invoice)%></div>
+    <% end -%>
+
     <%= labelled_form_for :invoice, @invoice, :url => { :action => 'update', :id => @invoice }, :html => {:method => :put, :class => 'formee'}  do |f| %>
       <%= render :partial => 'invoices/form', :locals => { :f => f } %>
       <% if @invoice.original and !@invoice.modified_since_created? -%>

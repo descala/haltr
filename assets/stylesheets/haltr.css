@@ -396,3 +396,7 @@ span#send_info {
 .select_to_edit {
   cursor: pointer;
 }
+td.invoice-templates-total {
+  border: none;
+  font-weight: bold;
+}
