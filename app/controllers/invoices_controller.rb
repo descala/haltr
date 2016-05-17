@@ -44,7 +44,7 @@ class InvoicesController < ApplicationController
     sort_update %w(invoices.created_at state number date due_date clients.name import_in_cents)
 
     if self.class == ReceivedController
-      invoices = @project.invoices.includes(:client).scoped.where("type = ?","ReceivedInvoice")
+      invoices = @project.invoices.includes(:invoice_lines).includes(:client).scoped.where("type = ?","ReceivedInvoice")
     else
       invoices = @project.issued_invoices.includes(:invoice_lines).includes(:client).includes(:client_office)
     end
