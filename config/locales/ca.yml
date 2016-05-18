@@ -744,3 +744,6 @@ ca:
   field_tax_point_date: "Data de Servei"
   warn_edit_invoice: "Estàs a punt d'editar una factura que ha estat enviada.<br />
 Tingues en compte que el teu client no rebrà els canvis a no ser que la tornis a enviar."
+  label_invoice_viewer_pdf: "Usar el visor PDF"
+  pdf_viewer_not_available: "No es pot fer servir el visor PDF amb aquesta factura, format original incorrecte"
+  pdf_shows_original: "Aquesta factura s'ha modificat. El format PDF reflecteix l'original, sense el canvis."

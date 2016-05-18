@@ -746,3 +746,6 @@ es:
   field_tax_point_date: "Fecha de Servicio"
   warn_edit_invoice: "Estás a punto de editar una factura que ha sido enviada.<br />
 Ten presente que los cambios que realices no los recibirá tu cliente a no ser que la vuelvas a enviar."
+  label_invoice_viewer_pdf: "Usar visor PDF"
+  pdf_viewer_not_available: "No podemos mostrar esta factura con el visor PDF, formato original incorrecto"
+  pdf_shows_original: "Esta factura se ha modificado. El visor PDF refleja el original sin los cambios"
