@@ -495,7 +495,6 @@ class InvoiceCreaeteTest < ActionController::IntegrationTest
     }
 
     invoice = Invoice.last
-    binding.pry
     assert_redirected_to :controller => "invoices", :action => "show", :id => invoice
     assert_equal 1, invoice.invoice_lines.size
     assert_equal 2, invoice.invoice_lines.first.taxes.size
