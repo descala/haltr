@@ -512,15 +512,28 @@ class InvoicesController < ApplicationController
         redirect_to(action: 'show', id: @invoice)
         return
       end
+    when 'pdf'
+      if @invoice.invoice_format == 'pdf'
+        flash.now[:error] = l(:pdf_shows_original) unless @invoice.send_original?
+        show_original = true
+      else
+        flash[:error] = l(:pdf_viewer_not_available)
+        redirect_to(action: 'show', id: @invoice)
+        return
+      end
     else
       if @company.invoice_viewer == 'xslt' and @invoice.send_original? and template
         show_original = true
       end
     end
     if show_original
-      @invoice_root_namespace = Haltr::Utils.root_namespace(invoice_nokogiri) rescue nil
-      xslt = render_to_string(:template=>template,:layout=>false)
-      @invoice_xslt_html = Nokogiri::XSLT(xslt).transform(invoice_nokogiri)
+      if @invoice.invoice_format == 'pdf'
+        @invoice_pdf = true
+      else
+        @invoice_root_namespace = Haltr::Utils.root_namespace(invoice_nokogiri) rescue nil
+        xslt = render_to_string(:template=>template,:layout=>false)
+        @invoice_xslt_html = Nokogiri::XSLT(xslt).transform(invoice_nokogiri)
+      end
     end
     set_sent_and_closed
     @js = ExportChannels[@client.invoice_format]['javascript'] rescue nil
@@ -529,7 +542,7 @@ class InvoicesController < ApplicationController
     @format = params["format"]
     respond_to do |format|
       format.html do
-        render :template => 'invoices/show_with_xsl' if show_original
+        render :template => 'invoices/show_with_xsl' if show_original and @invoice.invoice_format != 'pdf'
       end
       format.api do
         # Force "json" if format is emtpy
