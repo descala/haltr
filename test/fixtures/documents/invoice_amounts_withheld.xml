@@ -1,0 +1,153 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<nm:Facturae xmlns:nm="http://www.facturae.es/Facturae/2014/v3.2.1/Facturae" xmlns:prx="urn:sap.com:proxy:EAE:/1SAI/TAS66E21661F6922095866E:731">
+  <FileHeader>
+    <SchemaVersion>3.2.1</SchemaVersion>
+    <Modality>I</Modality>
+    <InvoiceIssuerType>EM</InvoiceIssuerType>
+    <Batch>
+      <BatchIdentifier>67pruebaM</BatchIdentifier>
+      <InvoicesCount>1</InvoicesCount>
+      <TotalInvoicesAmount>
+        <TotalAmount>50059.38</TotalAmount>
+      </TotalInvoicesAmount>
+      <TotalOutstandingAmount>
+        <TotalAmount>50059.38</TotalAmount>
+      </TotalOutstandingAmount>
+      <TotalExecutableAmount>
+        <TotalAmount>45380.93</TotalAmount>
+      </TotalExecutableAmount>
+      <InvoiceCurrencyCode>EUR</InvoiceCurrencyCode>
+    </Batch>
+  </FileHeader>
+  <Parties>
+    <SellerParty>
+      <TaxIdentification>
+        <PersonTypeCode>J</PersonTypeCode>
+        <ResidenceTypeCode>R</ResidenceTypeCode>
+        <TaxIdentificationNumber>ESB10317980</TaxIdentificationNumber>
+      </TaxIdentification>
+      <LegalEntity>
+        <CorporateName>Company, S.A.</CorporateName>
+        <TradeName>Company, S.A.</TradeName>
+        <RegistrationData>
+          <RegisterOfCompaniesLocation>REG.MERC.MADRID</RegisterOfCompaniesLocation>
+          <Sheet>M-33855</Sheet>
+          <Folio>135</Folio>
+          <Volume>1855</Volume>
+          <AdditionalRegistrationData>INSCRIPCIÓN 55ª</AdditionalRegistrationData>
+        </RegistrationData>
+        <AddressInSpain>
+          <Address>Avda. Rondaleria, 33 2º Of.4</Address>
+          <PostCode>38206</PostCode>
+          <Town>La Laguna</Town>
+          <Province>Tenerife</Province>
+          <CountryCode>ESP</CountryCode>
+        </AddressInSpain>
+      </LegalEntity>
+    </SellerParty>
+    <BuyerParty>
+      <TaxIdentification>
+        <PersonTypeCode>J</PersonTypeCode>
+        <ResidenceTypeCode>R</ResidenceTypeCode>
+        <TaxIdentificationNumber>ES123456789</TaxIdentificationNumber>
+      </TaxIdentification>
+      <LegalEntity>
+        <CorporateName>Company 2</CorporateName>
+        <AddressInSpain>
+          <Address>JUAN DE LA QUESADA 9</Address>
+          <PostCode>35001</PostCode>
+          <Town>LAS PALMAS DE GRAN CANARIA</Town>
+          <Province>Las Palmas</Province>
+          <CountryCode>ESP</CountryCode>
+        </AddressInSpain>
+      </LegalEntity>
+    </BuyerParty>
+  </Parties>
+  <Invoices>
+    <Invoice>
+      <InvoiceHeader>
+        <InvoiceNumber>67pruebaM</InvoiceNumber>
+        <InvoiceSeriesCode>2016</InvoiceSeriesCode>
+        <InvoiceDocumentType>FC</InvoiceDocumentType>
+        <InvoiceClass>OO</InvoiceClass>
+      </InvoiceHeader>
+      <InvoiceIssueData>
+        <IssueDate>2016-03-29</IssueDate>
+        <InvoicingPeriod>
+          <StartDate>2016-03-01</StartDate>
+          <EndDate>2016-03-29</EndDate>
+        </InvoicingPeriod>
+        <InvoiceCurrencyCode>EUR</InvoiceCurrencyCode>
+        <TaxCurrencyCode>EUR</TaxCurrencyCode>
+        <LanguageName>es</LanguageName>
+      </InvoiceIssueData>
+      <TaxesOutputs>
+        <Tax>
+          <TaxTypeCode>03</TaxTypeCode>
+          <TaxRate>7.00</TaxRate>
+          <TaxableBase>
+            <TotalAmount>46784.47</TotalAmount>
+          </TaxableBase>
+          <TaxAmount>
+            <TotalAmount>3274.91</TotalAmount>
+          </TaxAmount>
+        </Tax>
+      </TaxesOutputs>
+      <InvoiceTotals>
+        <TotalGrossAmount>46784.47</TotalGrossAmount>
+        <TotalGeneralDiscounts>0.00</TotalGeneralDiscounts>
+        <TotalGeneralSurcharges>0.00</TotalGeneralSurcharges>
+        <TotalGrossAmountBeforeTaxes>46784.47</TotalGrossAmountBeforeTaxes>
+        <TotalTaxOutputs>3274.91</TotalTaxOutputs>
+        <TotalTaxesWithheld>0.00</TotalTaxesWithheld>
+        <InvoiceTotal>50059.38</InvoiceTotal>
+        <TotalFinancialExpenses>0.00</TotalFinancialExpenses>
+        <TotalOutstandingAmount>50059.38</TotalOutstandingAmount>
+        <TotalPaymentsOnAccount>0.00</TotalPaymentsOnAccount>
+        <AmountsWithheld>
+          <WithholdingReason>SEGÚN PEDIDO</WithholdingReason>
+          <WithholdingAmount>4678.45</WithholdingAmount>
+        </AmountsWithheld>
+        <TotalExecutableAmount>45380.93</TotalExecutableAmount>
+        <TotalReimbursableExpenses>0.00</TotalReimbursableExpenses>
+      </InvoiceTotals>
+      <Items>
+        <InvoiceLine>
+          <IssuerTransactionReference>1000367316</IssuerTransactionReference>
+          <ReceiverTransactionReference>32133342</ReceiverTransactionReference>
+          <SequenceNumber>000100</SequenceNumber>
+          <ItemDescription>ACONDICIONAMIENTO NAVE Y OFIC. MAYORAZGO</ItemDescription>
+          <Quantity>1.000</Quantity>
+          <UnitPriceWithoutTax>46784.470</UnitPriceWithoutTax>
+          <TotalCost>46784.47</TotalCost>
+          <GrossAmount>46784.47</GrossAmount>
+          <TaxesOutputs>
+            <Tax>
+              <TaxTypeCode>03</TaxTypeCode>
+              <TaxRate>7.00</TaxRate>
+              <TaxableBase>
+                <TotalAmount>46784.47</TotalAmount>
+              </TaxableBase>
+              <TaxAmount>
+                <TotalAmount>3274.91</TotalAmount>
+              </TaxAmount>
+            </Tax>
+          </TaxesOutputs>
+        </InvoiceLine>
+      </Items>
+      <PaymentDetails>
+        <Installment>
+          <InstallmentDueDate>2016-05-24</InstallmentDueDate>
+          <InstallmentAmount>45380.93</InstallmentAmount>
+          <PaymentMeans>04</PaymentMeans>
+          <AccountToBeCredited>
+            <IBAN>ES4445556666000000000022</IBAN>
+          </AccountToBeCredited>
+        </Installment>
+      </PaymentDetails>
+      <LegalLiterals>
+        <LegalReference/>
+      </LegalLiterals>
+    </Invoice>
+  </Invoices>
+</nm:Facturae>

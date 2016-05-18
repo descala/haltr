@@ -41,6 +41,7 @@ class Invoice < ActiveRecord::Base
   validates_inclusion_of :currency, :in  => Money::Currency.table.collect {|k,v| v[:iso_code] }, :unless => Proc.new {|i| i.type == "ReceivedInvoice" }
   validates_numericality_of :charge_amount_in_cents, :allow_nil => true
   validates_numericality_of :payments_on_account_in_cents, :allow_nil => true
+  validates_numericality_of :amounts_withheld_in_cents, :allow_nil => true
 
   before_save :fields_to_utf8
   after_create :increment_counter
@@ -74,6 +75,11 @@ class Invoice < ActiveRecord::Base
   composed_of :payments_on_account,
     :class_name => "Money",
     :mapping => [%w(payments_on_account_in_cents cents), %w(currency currency_as_string)],
+    :constructor => Proc.new { |cents, currency| Money.new(cents || 0, currency || Money::Currency.new(Setting.plugin_haltr['default_currency'])) }
+
+  composed_of :amounts_withheld,
+    :class_name => "Money",
+    :mapping => [%w(amounts_withheld_in_cents cents), %w(currency currency_as_string)],
     :constructor => Proc.new { |cents, currency| Money.new(cents || 0, currency || Money::Currency.new(Setting.plugin_haltr['default_currency'])) }
 
   after_initialize :set_default_values
@@ -330,7 +336,7 @@ class Invoice < ActiveRecord::Base
   end
 
   def charge_amount=(value)
-    if value =~ /^[0-9,.']*$/
+    if value.to_s =~ /^[0-9,.']*$/
       value = Money.parse(value)
       write_attribute :charge_amount_in_cents, value.cents
     else
@@ -340,12 +346,22 @@ class Invoice < ActiveRecord::Base
   end
 
   def payments_on_account=(value)
-    if value =~ /^[-0-9,.']*$/
+    if value.to_s =~ /^[-0-9,.']*$/
       value = Money.parse(value)
       write_attribute :payments_on_account_in_cents, value.cents
     else
       # this + validates_numericality_of will raise an error if not a number
       write_attribute :payments_on_account_in_cents, value
+    end
+  end
+
+  def amounts_withheld=(value)
+    if value.to_s =~ /^[-0-9,.']*$/
+      value = Money.parse(value)
+      write_attribute :amounts_withheld_in_cents, value.cents
+    else
+      # this + validates_numericality_of will raise an error if not a number
+      write_attribute :amounts_withheld_in_cents, value
     end
   end
 
@@ -521,6 +537,7 @@ _INV
     charge_reason    = Haltr::Utils.get_xpath(doc,xpaths[:charge_reason])
     accounting_cost  = Haltr::Utils.get_xpath(doc,xpaths[:accounting_cost])
     payments_on_account = Haltr::Utils.get_xpath(doc,xpaths[:payments_on_account]) || 0
+    amounts_withheld = Haltr::Utils.get_xpath(doc,xpaths[:amounts_withheld]) || 0
     amend_of         = Haltr::Utils.get_xpath(doc,xpaths[:amend_of])
     #TODO: serie
     _amend_of_serie  = Haltr::Utils.get_xpath(doc,xpaths[:amend_of_serie])
@@ -735,6 +752,7 @@ _INV
       :charge_reason    => charge_reason,
       :accounting_cost  => accounting_cost,
       :payments_on_account => Haltr::Utils.to_money(payments_on_account, currency, company.rounding_method),
+      :amounts_withheld  => Haltr::Utils.to_money(amounts_withheld, currency, company.rounding_method),
       :fa_person_type    => fa_person_type,
       :fa_residence_type => fa_residence_type,
       :fa_taxcode        => fa_taxcode,
