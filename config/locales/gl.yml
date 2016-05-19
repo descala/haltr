@@ -745,3 +745,4 @@ gl:
   warn_edit_invoice: "Estás a punto de editar una factura que ha sido enviada.<br />
 Ten presente que los cambios que realices no los recibirá tu cliente a no ser que la vuelvas a enviar."
   view_invoice_requires_login: "Requerir login para ver facturas"
+  from_issued: "Recibida"

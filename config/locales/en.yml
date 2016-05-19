@@ -732,3 +732,4 @@ en:
   warn_edit_invoice: "You are about to edit a sent invoice.<br />
 Your customer will not receive the changes you made unless you resend it."
   view_invoice_requires_login: "Require login to view invoices"
+  from_issued: "Received"
