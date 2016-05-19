@@ -54,6 +54,53 @@ class ReceivedInvoice < InvoiceDocument
     write_attribute :import_in_cents, i.cents
   end
 
+  def self.create_from_issued(issued, project)
+    target = project.company
+    source = issued.project.company
+    client = target.project.clients.find_by_taxcode(source.taxcode)
+    client ||= Client.create!(
+      project_id:     target.project_id,
+      name:           source.name,
+      taxcode:        source.taxcode,
+      address:        source.address,
+      city:           source.city,
+      postalcode:     source.postalcode,
+      province:       source.province,
+      website:        source.website,
+      email:          source.email,
+      country:        source.country,
+      currency:       source.currency,
+      invoice_format: source.invoice_format,
+      schemeid:       source.schemeid,
+      endpointid:     source.endpointid,
+      language:       source.language,
+      allowed:        nil
+    )
+    # copy issued invoice attributes
+    ReceivedInvoice.create!(
+      issued.attributes.merge(
+        state:     :received,
+        transport: 'from_issued',
+        project:   target.project,
+        client:    client,
+        bank_info: nil,
+        original:  (issued.last_sent_event.file rescue nil),
+        invoice_lines: issued.invoice_lines.collect {|il|
+          new_il = il.dup
+          new_il.taxes = il.taxes.collect {|t|
+            Tax.new(
+              name:     t.name,
+              percent:  t.percent,
+              category: t.category,
+              comment:  t.comment
+            )
+          }
+          new_il
+        }
+      )
+    )
+  end
+
   protected
 
   def create_event

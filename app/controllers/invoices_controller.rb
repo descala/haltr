@@ -790,7 +790,36 @@ class InvoicesController < ApplicationController
   end
 
   # public view of invoice, without a session, using :find_hashid
+  # has a setting in haltr plugin conf to require clients to register
   def view
+    if Setting['plugin_haltr']['view_invoice_requires_login']
+      if User.current.logged? and User.current.project
+        user_c = User.current.project.company
+        unless user_c.company_providers.include?(@invoice.project.company)
+          # add project to providers
+          user_c.company_providers << @invoice.project.company
+          # create received invoices
+          @invoice.project.invoices.select {|i| i.client == @invoice.client }.each do |issued|
+            ReceivedInvoice.create_from_issued(issued, User.current.project)
+          end
+        end
+        # redirect to received invoice
+        received = User.current.project.received_invoices.find_by_number_and_series_code(
+          @invoice.number, @invoice.series_code
+        )
+        if received
+          redirect_to received_invoice_path(received)
+        else
+          #TODO: warn about invoice not found?
+          redirect_to controller: 'received', action: 'index', project_id: User.current.project
+        end
+        return
+      elsif !User.current.logged?
+        # ask user to login/register
+        redirect_to signin_path(client_hashid: params[:client_hashid], invoice_id: params[:invoice_id])
+        return
+      end
+    end
     @last_success_sending_event = @invoice.last_success_sending_event
     @lines = @invoice.invoice_lines
     set_sent_and_closed
