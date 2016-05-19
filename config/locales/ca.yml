@@ -748,3 +748,4 @@ Tingues en compte que el teu client no rebrà els canvis a no ser que la tornis 
   pdf_viewer_not_available: "No es pot fer servir el visor PDF amb aquesta factura, format original incorrecte"
   pdf_shows_original: "Aquesta factura s'ha modificat. El format PDF reflecteix l'original, sense el canvis."
   view_invoice_requires_login: "Requerir login per veure les factures"
+  from_issued: "Rebuda"
