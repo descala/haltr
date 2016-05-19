@@ -746,7 +746,7 @@ class InvoicesController < ApplicationController
   # has a setting in haltr plugin conf to require clients to register
   def view
     if Setting['plugin_haltr']['view_invoice_requires_login']
-      if User.current.logged?
+      if User.current.logged? and User.current.project
         user_c = User.current.project.company
         unless user_c.company_providers.include?(@invoice.project.company)
           # add project to providers
@@ -766,11 +766,12 @@ class InvoicesController < ApplicationController
           #TODO: warn about invoice not found?
           redirect_to controller: 'received', action: 'index', project_id: User.current.project
         end
-      else
+        return
+      elsif !User.current.logged?
         # ask user to login/register
-        render text: "ask user to register"
+        redirect_to signin_path(client_hashid: params[:client_hashid], invoice_id: params[:invoice_id])
+        return
       end
-      return
     end
     @last_success_sending_event = @invoice.last_success_sending_event
     @lines = @invoice.invoice_lines

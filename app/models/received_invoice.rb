@@ -84,7 +84,7 @@ class ReceivedInvoice < InvoiceDocument
         project:   target.project,
         client:    client,
         bank_info: nil,
-        original:  issued.original,
+        original:  (issued.last_sent_event.file rescue nil),
         invoice_lines: issued.invoice_lines.collect {|il|
           new_il = il.dup
           new_il.taxes = il.taxes.collect {|t|
