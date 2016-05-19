@@ -130,6 +130,18 @@ class Event < ActiveRecord::Base
       rescue
         invoice.send(name)
       end
+
+      # on success_sending check if our company is provider for client, if so
+      # create a ReceivedInvoice on client side.
+      if name.to_s == 'success_sending'
+        our_company    = invoice.project.company
+        client_company = our_company.company_providers.find_by_taxcode(
+          invoice.client.taxcode
+        )
+        if client_company
+          ReceivedInvoice.create_from_issued(invoice, client_company.project)
+        end
+      end
     end
   end
 
