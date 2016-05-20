@@ -89,6 +89,12 @@ class Client < ActiveRecord::Base
     self.invoices.where(["type=?","InvoiceTemplate"])
   end
 
+  def template_invoice_lines
+    invoice_templates.collect do |invoice_template|
+      invoice_template.invoice_lines
+    end.flatten
+  end
+
   def invoice_documents
     self.invoices.where(["type=?","IssuedInvoice"])
   end

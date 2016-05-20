@@ -676,4 +676,44 @@ class InvoiceTest < ActiveSupport::TestCase
     assert_equal(4678.45, invoice.amounts_withheld.dollars)
   end
 
+  test 'change ponumber on lines when changes on invoice' do
+    invoice = IssuedInvoice.new(
+      client_id: 1,
+      date: '19-05-2016',
+      number: '98789',
+      terms: '0',
+      due_date: '19-06-2016',
+      import_in_cents: 8500,
+      ponumber: '123',
+      currency: 'EUR',
+      payment_method: 1,
+      project_id: 2,
+      total_in_cents: 10030
+    )
+    il = InvoiceLine.new(
+      quantity: 1,
+      description: 'desc',
+      price: 10.0,
+      unit: 1,
+      ponumber: '987'
+    )
+    il.taxes << Tax.new(
+      name: 'IVA',
+      percent: 21.0,
+      category: 'S'
+    )
+    invoice.invoice_lines << il
+    assert invoice.save
+    assert_equal('123', invoice.ponumber)
+    assert_equal('987', invoice.invoice_lines.first.ponumber)
+    invoice.payment_method = 2
+    assert invoice.save
+    assert_equal('123', invoice.ponumber)
+    assert_equal('987', invoice.invoice_lines.first.ponumber)
+    invoice.ponumber = '345'
+    assert invoice.save
+    assert_equal('345', invoice.ponumber)
+    assert_equal('345', invoice.invoice_lines.first.ponumber)
+  end
+
 end
