@@ -1,7 +1,7 @@
 <div class="seccio grup">
   <div class="col span-2-de-2">
 
-    <%= form_tag({:action => 'import', :project_id => @project}, :class=>'formee', :multipart => true) do %>
+    <%= form_tag({:action => 'import', :project_id => @project}, :multipart => true) do %>
       <div class="box tabular">
         <p>
         <label><%=l(:label_attachment_plural)%></label>

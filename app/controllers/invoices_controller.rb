@@ -1164,6 +1164,8 @@ class InvoicesController < ApplicationController
   end
 
   # Used in form POST - multiple file upload
+  # TODO: mantaing the old one file upload /projects/:project_id/received/import(.:format) as others use it
+  #       rename this and use another route
   def import
     if request.post?
       @invoice = nil
