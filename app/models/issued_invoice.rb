@@ -17,6 +17,7 @@ class IssuedInvoice < InvoiceDocument
   after_destroy :release_amended
   before_save :update_status, :unless => Proc.new {|invoicedoc| invoicedoc.state_changed? }
   before_save :set_state_updated_at
+  before_save :set_lines_ponumber, :if => Proc.new {|i| i.ponumber_changed? and !i.new_record? }
 
   # new sending sent error discarded closed
   state_machine :state, :initial => :new do
@@ -282,6 +283,12 @@ class IssuedInvoice < InvoiceDocument
   def set_state_updated_at
     if state_changed?
       write_attribute :state_updated_at, Time.now
+    end
+  end
+
+  def set_lines_ponumber
+    invoice_lines.each do |l|
+      l.ponumber = ponumber
     end
   end
 

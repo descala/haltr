@@ -792,17 +792,18 @@ class InvoicesController < ApplicationController
   # public view of invoice, without a session, using :find_hashid
   # has a setting in haltr plugin conf to require clients to register
   def view
-    if Setting['plugin_haltr']['view_invoice_requires_login']
-      if User.current.logged? and User.current.project
-        user_c = User.current.project.company
-        unless user_c.company_providers.include?(@invoice.project.company)
-          # add project to providers
-          user_c.company_providers << @invoice.project.company
-          # create received invoices
-          @invoice.project.invoices.select {|i| i.client == @invoice.client }.each do |issued|
-            ReceivedInvoice.create_from_issued(issued, User.current.project)
-          end
+    @client_hashid = params[:client_hashid]
+    if User.current.logged? and User.current.project
+      user_c = User.current.project.company
+      unless user_c.company_providers.include?(@invoice.project.company)
+        # add project to providers
+        user_c.company_providers << @invoice.project.company
+        # create received invoices
+        @invoice.project.invoices.select {|i| i.client == @invoice.client }.each do |issued|
+          ReceivedInvoice.create_from_issued(issued, User.current.project)
         end
+      end
+      if Setting['plugin_haltr']['view_invoice_requires_login']
         # redirect to received invoice
         received = User.current.project.received_invoices.find_by_number_and_series_code(
           @invoice.number, @invoice.series_code
@@ -814,9 +815,11 @@ class InvoicesController < ApplicationController
           redirect_to controller: 'received', action: 'index', project_id: User.current.project
         end
         return
-      elsif !User.current.logged?
+      end
+    elsif !User.current.logged?
+      if Setting['plugin_haltr']['view_invoice_requires_login']
         # ask user to login/register
-        redirect_to signin_path(client_hashid: params[:client_hashid], invoice_id: params[:invoice_id])
+        redirect_to signin_path(client_hashid: @client_hashid, invoice_id: @invoice.id)
         return
       end
     end
