@@ -395,6 +395,8 @@
               <% end -%>
               <% if call_hook(:facturae_receiver_contract_reference).present? -%>
                 <%= call_hook(:facturae_receiver_contract_reference) %>
+              <% elsif invoice_line.receiver_contract_reference.present? -%>
+                <ReceiverContractReference><%=invoice_line.receiver_contract_reference%></ReceiverContractReference>
               <% elsif @invoice.receiver_contract_reference.present? -%>
                 <ReceiverContractReference><%=@invoice.receiver_contract_reference%></ReceiverContractReference>
               <% end -%>
@@ -403,8 +405,10 @@
               <% elsif @invoice.ponumber.present? -%>
                 <ReceiverTransactionReference><%=h(@invoice.ponumber)[0..19]%></ReceiverTransactionReference>
               <% end -%>
-<% if format == "facturae32" and !@invoice.file_reference.blank? -%>
-              <%if @invoice.file_reference%><FileReference><%=@invoice.file_reference%></FileReference><%end-%>
+<% if format == "facturae32" and invoice_line.file_reference.present? -%>
+              <FileReference><%=invoice_line.file_reference%></FileReference>
+<% elsif format == "facturae32" and @invoice.file_reference.present? -%>
+              <FileReference><%=@invoice.file_reference%></FileReference>
 <% else -%>
               <%= call_hook(:facturae_file_reference) %>
 <% end -%>
