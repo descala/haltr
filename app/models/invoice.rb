@@ -775,9 +775,6 @@ _INV
     end
     invoice.payment_method_text = Haltr::Utils.get_xpath(doc,xpaths[:payment_method_text])
 
-    line_file_reference = nil
-    line_r_contract_reference = nil
-
     # invoice lines
     doc.xpath(xpaths[:invoice_lines]).each do |line|
 
@@ -806,7 +803,9 @@ _INV
              :issuer_transaction_reference => Haltr::Utils.get_xpath(line,xpaths[:i_transaction_ref]),
              :sequence_number              => Haltr::Utils.get_xpath(line,xpaths[:sequence_number]),
              :delivery_note_number         => line_delivery_note_number,
-             :ponumber     => Haltr::Utils.get_xpath(line,xpaths[:ponumber]),
+             :ponumber                     => Haltr::Utils.get_xpath(line,xpaths[:ponumber]),
+             :file_reference               => Haltr::Utils.get_xpath(line,xpaths[:file_reference]),
+             :receiver_contract_reference  => Haltr::Utils.get_xpath(line,xpaths[:r_contract_reference])
            )
       if invoice_format =~ /facturae/
         # invoice line taxes. Known taxes are described at config/taxes.yml
@@ -877,8 +876,6 @@ _INV
         il.charge = Haltr::Utils.get_xpath(line_charges.first,xpaths[:line_charge])
         il.charge_reason = Haltr::Utils.get_xpath(line_charges.first,xpaths[:line_charge_reason])
       end
-      line_file_reference ||= Haltr::Utils.get_xpath(line,xpaths[:file_reference])
-      line_r_contract_reference ||= Haltr::Utils.get_xpath(line,xpaths[:r_contract_reference])
       invoice.invoice_lines << il
     end
 
@@ -898,14 +895,10 @@ _INV
       end
     end
 
-    # Assume just one file_reference and
-    # receiver_contract_reference per Invoice
-    invoice.file_reference = line_file_reference
-    invoice.receiver_contract_reference = line_r_contract_reference
-
-    if !invoice.has_line_ponumber? and invoice.invoice_lines.any? and invoice.invoice_lines.first.ponumber.present?
-      invoice.ponumber = invoice.invoice_lines.first.ponumber
-    end
+    # assign value to invoice field to prevent validation errors on import
+    invoice.file_reference = invoice.invoice_lines.first.file_reference
+    invoice.ponumber = invoice.invoice_lines.first.ponumber
+    invoice.receiver_contract_reference = invoice.invoice_lines.first.receiver_contract_reference
 
     # attachments
     to_attach = []
