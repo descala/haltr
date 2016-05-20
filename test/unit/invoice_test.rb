@@ -483,7 +483,8 @@ class InvoiceTest < ActiveSupport::TestCase
     assert_equal 10, invoice.invoice_lines.first.discount_percent
     assert_equal 'carrec linia1', invoice.invoice_lines.first.charge_reason
     assert_equal 'desc1', invoice.invoice_lines.first.discount_text
-    assert_equal 'filereference', invoice.file_reference
+    assert_equal 'filereference', invoice.invoice_lines.first.file_reference
+    assert_nil invoice.invoice_lines.last.file_reference
   end
 
   test 'invoice with discount TotalAmount is same as TotalGrossAmountBeforeTaxes' do
@@ -676,7 +677,7 @@ class InvoiceTest < ActiveSupport::TestCase
     assert_equal(4678.45, invoice.amounts_withheld.dollars)
   end
 
-  test 'change ponumber on lines when changes on invoice' do
+  test 'change ponumber, file_reference and receiver_contract_reference on lines when changes on invoice' do
     invoice = IssuedInvoice.new(
       client_id: 1,
       date: '19-05-2016',
@@ -684,18 +685,22 @@ class InvoiceTest < ActiveSupport::TestCase
       terms: '0',
       due_date: '19-06-2016',
       import_in_cents: 8500,
-      ponumber: '123',
       currency: 'EUR',
       payment_method: 1,
       project_id: 2,
-      total_in_cents: 10030
+      total_in_cents: 10030,
+      ponumber: 'ponumber',
+      file_reference: 'file_ref',
+      receiver_contract_reference: 'rcr'
     )
     il = InvoiceLine.new(
       quantity: 1,
       description: 'desc',
       price: 10.0,
       unit: 1,
-      ponumber: '987'
+      ponumber: 'line_ponumber',
+      file_reference: 'line_file_ref',
+      receiver_contract_reference: 'line_rcr'
     )
     il.taxes << Tax.new(
       name: 'IVA',
@@ -704,16 +709,30 @@ class InvoiceTest < ActiveSupport::TestCase
     )
     invoice.invoice_lines << il
     assert invoice.save
-    assert_equal('123', invoice.ponumber)
-    assert_equal('987', invoice.invoice_lines.first.ponumber)
+    assert_equal('ponumber', invoice.ponumber)
+    assert_equal('line_ponumber', invoice.invoice_lines.first.ponumber)
+    assert_equal('file_ref', invoice.file_reference)
+    assert_equal('line_file_ref', invoice.invoice_lines.first.file_reference)
+    assert_equal('rcr', invoice.receiver_contract_reference)
+    assert_equal('line_rcr', invoice.invoice_lines.first.receiver_contract_reference)
     invoice.payment_method = 2
     assert invoice.save
-    assert_equal('123', invoice.ponumber)
-    assert_equal('987', invoice.invoice_lines.first.ponumber)
-    invoice.ponumber = '345'
+    assert_equal('ponumber', invoice.ponumber)
+    assert_equal('line_ponumber', invoice.invoice_lines.first.ponumber)
+    assert_equal('file_ref', invoice.file_reference)
+    assert_equal('line_file_ref', invoice.invoice_lines.first.file_reference)
+    assert_equal('rcr', invoice.receiver_contract_reference)
+    assert_equal('line_rcr', invoice.invoice_lines.first.receiver_contract_reference)
+    invoice.ponumber = 'new_ponumber'
+    invoice.file_reference = 'new_file_ref'
+    invoice.receiver_contract_reference = 'new_rcr'
     assert invoice.save
-    assert_equal('345', invoice.ponumber)
-    assert_equal('345', invoice.invoice_lines.first.ponumber)
+    assert_equal('new_ponumber', invoice.ponumber)
+    assert_equal('new_ponumber', invoice.invoice_lines.first.ponumber)
+    assert_equal('new_file_ref', invoice.file_reference)
+    assert_equal('new_file_ref', invoice.invoice_lines.first.file_reference)
+    assert_equal('new_rcr', invoice.receiver_contract_reference)
+    assert_equal('new_rcr', invoice.invoice_lines.first.receiver_contract_reference)
   end
 
 end
