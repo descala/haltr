@@ -456,7 +456,7 @@ class InvoiceTest < ActiveSupport::TestCase
     assert_equal 0, invoice.invoice_lines[1].discount_percent
     assert_equal 'Descuento', invoice.invoice_lines[0].discount_text
     assert_equal '132413842', invoice.invoice_lines[0].delivery_note_number
-    assert_nil invoice.ponumber
+    assert_equal 'BBBH-38272', invoice.ponumber
     assert_equal 'BBBH-38272', invoice.invoice_lines.first.ponumber
     assert_equal Date.new(2010,3,9),  invoice.invoicing_period_start
     assert_equal Date.new(2010,3,10), invoice.invoicing_period_end
@@ -483,6 +483,7 @@ class InvoiceTest < ActiveSupport::TestCase
     assert_equal 10, invoice.invoice_lines.first.discount_percent
     assert_equal 'carrec linia1', invoice.invoice_lines.first.charge_reason
     assert_equal 'desc1', invoice.invoice_lines.first.discount_text
+    assert_equal 'filereference', invoice.file_reference
     assert_equal 'filereference', invoice.invoice_lines.first.file_reference
     assert_nil invoice.invoice_lines.last.file_reference
   end
