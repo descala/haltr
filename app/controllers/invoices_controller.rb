@@ -522,7 +522,7 @@ class InvoicesController < ApplicationController
         return
       end
     else
-      if @company.invoice_viewer == 'xslt' and @invoice.send_original? and template
+      if @company.invoice_viewer == 'original' and @invoice.send_original? and template
         show_original = true
       end
     end

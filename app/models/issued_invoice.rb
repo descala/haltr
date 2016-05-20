@@ -17,7 +17,7 @@ class IssuedInvoice < InvoiceDocument
   after_destroy :release_amended
   before_save :update_status, :unless => Proc.new {|invoicedoc| invoicedoc.state_changed? }
   before_save :set_state_updated_at
-  before_save :set_lines_ponumber, :if => Proc.new {|i| i.ponumber_changed? and !i.new_record? }
+  before_save :override_line_values, :unless => Proc.new {|i| i.new_record? }
 
   # new sending sent error discarded closed
   state_machine :state, :initial => :new do
@@ -286,9 +286,21 @@ class IssuedInvoice < InvoiceDocument
     end
   end
 
-  def set_lines_ponumber
-    invoice_lines.each do |l|
-      l.ponumber = ponumber
+  def override_line_values
+    if ponumber_changed?
+      invoice_lines.each do |l|
+        l.ponumber = ponumber
+      end
+    end
+    if file_reference_changed?
+      invoice_lines.each do |l|
+        l.file_reference = file_reference
+      end
+    end
+    if receiver_contract_reference_changed?
+      invoice_lines.each do |l|
+        l.receiver_contract_reference = receiver_contract_reference
+      end
     end
   end
 
