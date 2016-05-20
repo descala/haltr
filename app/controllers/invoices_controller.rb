@@ -756,19 +756,17 @@ class InvoicesController < ApplicationController
           ReceivedInvoice.create_from_issued(issued, User.current.project)
         end
       end
-      if Setting['plugin_haltr']['view_invoice_requires_login']
-        # redirect to received invoice
-        received = User.current.project.received_invoices.find_by_number_and_series_code(
-          @invoice.number, @invoice.series_code
-        )
-        if received
-          redirect_to received_invoice_path(received)
-        else
-          #TODO: warn about invoice not found?
-          redirect_to controller: 'received', action: 'index', project_id: User.current.project
-        end
-        return
+      # redirect to received invoice
+      received = User.current.project.received_invoices.find_by_number_and_series_code(
+        @invoice.number, @invoice.series_code
+      )
+      if received
+        redirect_to received_invoice_path(received)
+      else
+        #TODO: warn about invoice not found?
+        redirect_to controller: 'received', action: 'index', project_id: User.current.project
       end
+      return
     elsif !User.current.logged?
       if Setting['plugin_haltr']['view_invoice_requires_login']
         # ask user to login/register
