@@ -906,6 +906,11 @@ _INV
       end
     end
 
+    # assign value to invoice field to prevent validation errors on import
+    invoice.file_reference = invoice.invoice_lines.first.file_reference
+    invoice.ponumber = invoice.invoice_lines.first.ponumber
+    invoice.receiver_contract_reference = invoice.invoice_lines.first.receiver_contract_reference
+
     # attachments
     to_attach = []
     doc.xpath(xpaths[:attachments]).each_with_index do |attach, index|
