@@ -471,7 +471,7 @@ _INV
     end
   end
 
-  def self.create_from_xml(raw_invoice,user_or_company,md5,transport,from=nil,issued=nil,keep_original=true,validate=true)
+  def self.create_from_xml(raw_invoice,user_or_company,md5,transport,from=nil,issued=nil,keep_original=true,validate=true,override_original=nil,override_original_name=nil)
 
     file_name = nil
     if raw_invoice.respond_to? :filename             # Mail::Part
@@ -713,6 +713,17 @@ _INV
       }, invoice.client.taxcode, role)
     end
 
+    original = nil
+    original_format = nil
+    if override_original.present? and override_original_name.present?
+      original  = Haltr::Utils.decompress(override_original)
+      file_name = override_original_name
+      # TODO: support override_original other than PDF
+      original_format = 'pdf'
+    elsif keep_original
+      original = raw_xml
+    end
+
     invoice.assign_attributes(
       :number           => invoice_number,
       :series_code      => invoice_series,
@@ -726,11 +737,11 @@ _INV
       :due_date         => invoice_due_date,
       :project          => company.project,
       :terms            => "custom",
-      :invoice_format   => invoice_format, # facturae3.2, ubl21...
+      :invoice_format   => original_format || invoice_format, # facturae3.2, ubl21...
       :transport        => transport,      # email, uploaded
       :from             => from,           # u@mail.com, User Name...
       :md5              => md5,
-      :original         => keep_original ? raw_xml : nil,
+      :original         => original,
       :discount_percent => discount_percent,
       :discount_text    => discount_text,
       :extra_info       => extra_info,
@@ -775,9 +786,6 @@ _INV
     end
     invoice.payment_method_text = Haltr::Utils.get_xpath(doc,xpaths[:payment_method_text])
 
-    line_file_reference = nil
-    line_r_contract_reference = nil
-
     # invoice lines
     doc.xpath(xpaths[:invoice_lines]).each do |line|
 
@@ -806,7 +814,9 @@ _INV
              :issuer_transaction_reference => Haltr::Utils.get_xpath(line,xpaths[:i_transaction_ref]),
              :sequence_number              => Haltr::Utils.get_xpath(line,xpaths[:sequence_number]),
              :delivery_note_number         => line_delivery_note_number,
-             :ponumber     => Haltr::Utils.get_xpath(line,xpaths[:ponumber]),
+             :ponumber                     => Haltr::Utils.get_xpath(line,xpaths[:ponumber]),
+             :file_reference               => Haltr::Utils.get_xpath(line,xpaths[:file_reference]),
+             :receiver_contract_reference  => Haltr::Utils.get_xpath(line,xpaths[:r_contract_reference])
            )
       if invoice_format =~ /facturae/
         # invoice line taxes. Known taxes are described at config/taxes.yml
@@ -877,8 +887,6 @@ _INV
         il.charge = Haltr::Utils.get_xpath(line_charges.first,xpaths[:line_charge])
         il.charge_reason = Haltr::Utils.get_xpath(line_charges.first,xpaths[:line_charge_reason])
       end
-      line_file_reference ||= Haltr::Utils.get_xpath(line,xpaths[:file_reference])
-      line_r_contract_reference ||= Haltr::Utils.get_xpath(line,xpaths[:r_contract_reference])
       invoice.invoice_lines << il
     end
 
@@ -898,14 +906,10 @@ _INV
       end
     end
 
-    # Assume just one file_reference and
-    # receiver_contract_reference per Invoice
-    invoice.file_reference = line_file_reference
-    invoice.receiver_contract_reference = line_r_contract_reference
-
-    if !invoice.has_line_ponumber? and invoice.invoice_lines.any? and invoice.invoice_lines.first.ponumber.present?
-      invoice.ponumber = invoice.invoice_lines.first.ponumber
-    end
+    # assign value to invoice field to prevent validation errors on import
+    invoice.file_reference = invoice.invoice_lines.first.file_reference
+    invoice.ponumber = invoice.invoice_lines.first.ponumber
+    invoice.receiver_contract_reference = invoice.invoice_lines.first.receiver_contract_reference
 
     # attachments
     to_attach = []
@@ -1003,7 +1007,7 @@ _INV
 
   def send_original?
     Redmine::Hook.call_hook(:model_invoice_send_original, :invoice=>self) != [false] and
-      original and !modified_since_created? and invoice_format != 'pdf'
+      original and !modified_since_created?
   end
 
   def original_root_namespace

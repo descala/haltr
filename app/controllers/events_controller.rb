@@ -102,9 +102,9 @@ class EventsController < ApplicationController
           tf = Tempfile.new('')
           tf.binmode
           tf.write(data)
+          tf.close
           content_type = IO.popen(['file', '--brief', '--mime-type', tf.path],
                                   :in => :close, :err => :close) {|io| io.read.chomp }
-          tf.close
           tf.unlink
         rescue
           content_type = ""

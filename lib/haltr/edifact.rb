@@ -18,7 +18,7 @@ module Haltr
       # invoice format  matches client format, send original file
       # check also original_root_namespace to verify that original is an edi,
       # it could be in other formats, like EDI
-      if invoice.send_original? and !force and invoice.original =~ /^UNA/
+      if invoice.send_original? and !force and (invoice.original =~ /^UNA/ rescue false)
         edi = invoice.original
       else
         client = invoice.client
