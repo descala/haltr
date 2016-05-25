@@ -115,11 +115,11 @@ class InvoicesControllerTest < ActionController::TestCase
     @request.session[:user_id] = 2
   end
 
-  test 'import invoice' do
+  test 'import invoice with multiple upload' do
     set_tmp_attachments_directory
     attachment = Attachment.create!(:file => fixture_file_upload('/documents/invoice_facturae32_issued.xml','text/xml',true), :author_id => 2)
 
-    post :import, {
+    post :upload, {
       attachments: {'p0' => {'token' => attachment.token}},
       commit:     'Importar',
       project_id: 'onlinestore',
@@ -134,7 +134,7 @@ class InvoicesControllerTest < ActionController::TestCase
     assert invoice.original
   end
 
-  test 'import pdf invoice' do
+  test 'import pdf invoice with multiple upload' do
 
     stub_request(:post, "http://localhost:3000/api/v1/transactions")
     .to_return(:status => 200,
@@ -144,7 +144,7 @@ class InvoicesControllerTest < ActionController::TestCase
     set_tmp_attachments_directory
     attachment = Attachment.create!(:file => fixture_file_upload('/documents/invoice_pdf_signed.pdf','application/pdf',true), :author_id => 2)
 
-    post :import, {
+    post :upload, {
       attachments: {'p0' => {'token' => attachment.token}},
       commit:     'Importar',
       project_id: 'onlinestore',
