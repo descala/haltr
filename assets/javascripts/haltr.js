@@ -246,3 +246,4 @@ function show_accepted_form() {
   $("#invoice-accept").show();
 }
 
+

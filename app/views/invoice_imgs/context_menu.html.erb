@@ -1,0 +1,27 @@
+<ul>
+<% @missing_tags.each do |tag| %>
+  <li>
+    <%= context_menu_link l("tag_#{tag}"),
+      invoice_imgs_tag_path(:id=>@invoice_img.id,:token_ids=>@token_ids,:tag=>tag, :back_url=>@back),
+      :class=>'icon-add' %>
+  </li>
+<% end %>
+<li class="folder">
+  <a href="#" class="submenu icon-edit"><%= l(:replace_tags) %></a>
+  <ul>
+    <% @assiged_tags.each do |tag| %>
+      <li>
+        <%= context_menu_link l("tag_#{tag}"),
+          invoice_imgs_tag_path(:id=>@invoice_img.id,:token_ids=>@token_ids,:tag=>tag, :back_url=>@back) %>
+    </li>
+    <% end %>
+  </ul>
+</li>
+<% if @current_tag %>
+  <li>
+    <%= context_menu_link l("clear_tag"),
+      invoice_imgs_tag_path(:id=>@invoice_img.id,:tag=>@current_tag, :back_url=>@back),
+      :class=>'icon-del' %>
+</li>
+    <% end %>
+</ul>

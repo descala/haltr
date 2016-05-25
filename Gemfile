@@ -16,6 +16,7 @@ group :test do
   gem 'zeus'
   gem 'rb-inotify', '~> 0.9'
   gem 'libnotify'
+  gem 'webmock'
 end
 
 gem 'iban-tools', :git => 'https://github.com/descala/iban-tools.git', :branch => 'master'
@@ -29,5 +30,9 @@ gem 'audited-activerecord', '~> 3.0'
 
 gem 'valvat', :git => 'https://github.com/descala/valvat.git', :branch => 'master'
 gem 'shared-mime-info'
+
 gem 'rest-client'
+gem 'fuzzy_match'
+gem 'whatlanguage'
+gem 'countries'
 gem 'pdfjs_rails'

@@ -23,6 +23,8 @@ resources :projects do
   match 'add_bank_info', :controller => 'companies', :action => 'add_bank_info', :via => :get
   match 'invoices/import' => 'invoices#import', :via => [:get,:post]
   match 'received/import' => 'received#import', :via => [:get,:post]
+  match 'invoices/upload' => 'invoices#upload', :via => [:get,:post]
+  match 'received/upload' => 'received#upload', :via => [:get,:post]
   match 'invoices/send_new' => 'invoices#send_new_invoices', :via => :get
   match 'invoices/download_new' => 'invoices#download_new_invoices', :via => :get
   match 'invoices/update_payment_stuff' => 'invoices#update_payment_stuff', :via => :get
@@ -50,6 +52,7 @@ resources :projects do
   match 'check_iban' => 'companies#check_iban', :via => :get, :as => :check_iban
   match 'ccc2iban' => 'clients#ccc2iban', :via => :get, :as => :ccc2iban
   resources :quotes, :only => [:index, :new, :create]
+  resources :invoice_imgs, :only => [:show]
   match 'invoices/add_attachment' => 'invoices#add_attachment', :via => :post
   resources :import_errors, :only => [:index, :show, :destroy, :create]
   match 'import_errors' => 'import_errors#destroy', :via => :delete, :as => 'project_import_errors'
@@ -63,6 +66,9 @@ resources :projects do
   match 'payments/report_payment_list' => 'payments#report_payment_list', :via => [:post]
   match 'events' => 'events#index', via: :get
 end
+resources :invoice_imgs, :only => [:create,:update]
+match 'invoice_imgs/:id/tag/:tag' => 'invoice_imgs#tag', :as => 'invoice_imgs_tag'
+
 resources :clients do
   resources :people, :only => [:index, :new, :create]
   resources :client_offices, :only => [:index, :new, :create, :edit, :update, :destroy]
@@ -73,6 +79,7 @@ match 'invoices/context_menu', :to => 'invoices#context_menu', :as => 'invoices_
 match 'received/context_menu', :to => 'received#context_menu', :as => 'received_context_menu', :via => [:get, :post]
 match 'import_errors/context_menu', :to => 'import_errors#context_menu', :as => 'import_errors_context_menu', :via => [:get, :post]
 match 'invoice_templates/context_menu', :to => 'invoice_templates#context_menu', :as => 'invoice_templates_context_menu', :via => [:get, :post]
+match 'invoice_imgs/context_menu', :to => 'invoice_imgs#context_menu', :as => 'invoice_imgs_context_menu', :via => [:get, :post]
 match 'invoices/bulk_download' => 'invoices#bulk_download'
 match 'received/bulk_download' => 'received#bulk_download'
 match 'invoices/bulk_mark_as' => 'invoices#bulk_mark_as'
@@ -81,7 +88,7 @@ match 'received/bulk_validate' => 'received#bulk_validate'
 match 'invoices/bulk_send' => 'invoices#bulk_send'
 match 'invoices/by_taxcode_and_num' => 'invoices#by_taxcode_and_num', :via => :get
 match 'invoices', :controller => 'invoices', :action => 'destroy', :via => :delete
-match 'received', :controller => 'received', :action => 'destroy', :via => :delete
+match 'received_invoices', :controller => 'received', :action => 'destroy', :via => :delete
 match 'invoice_templates', :controller => 'invoice_templates', :action => 'destroy', :via => :delete
 match 'invoices/:id/mark_as/:state' => 'invoices#mark_as', :via => :get, :as => :mark_as
 match 'invoices/send_invoice/:id' => 'invoices#send_invoice', :via => :get, :as => :send_invoice

@@ -14,7 +14,7 @@ class InvoicesController < ApplicationController
 
   PUBLIC_METHODS = [:by_taxcode_and_num,:view,:download,:mail,:logo,:haltr_sign]
 
-  before_filter :find_project_by_project_id, :only => [:index,:new,:create,:send_new_invoices,:download_new_invoices,:update_payment_stuff,:new_invoices_from_template,:reports,:report_channel_state,:report_invoice_list,:create_invoices,:update_taxes,:import,:import_facturae]
+  before_filter :find_project_by_project_id, :only => [:index,:new,:create,:send_new_invoices,:download_new_invoices,:update_payment_stuff,:new_invoices_from_template,:reports,:report_channel_state,:report_invoice_list,:create_invoices,:update_taxes,:upload,:import,:import_facturae]
   before_filter :find_invoice, :only => [:edit,:update,:mark_accepted_with_mail,:mark_accepted,:mark_refused_with_mail,:mark_refused,:duplicate_invoice,:base64doc,:show,:send_invoice,:legal,:amend_for_invoice,:original,:validate, :mark_as_accepted, :mark_as, :add_comment]
   before_filter :find_invoices, :only => [:context_menu,:bulk_download,:bulk_mark_as,:bulk_send,:destroy,:bulk_validate]
   before_filter :find_payment, :only => [:destroy_payment]
@@ -43,7 +43,11 @@ class InvoicesController < ApplicationController
     sort_init 'invoices.created_at', 'desc'
     sort_update %w(invoices.created_at state number date due_date clients.name import_in_cents)
 
-    invoices = @project.issued_invoices.includes(:invoice_lines).includes(:client).includes(:client_office)
+    if self.class == ReceivedController
+      invoices = @project.invoices.includes(:invoice_lines).includes(:client).scoped.where("type = ?","ReceivedInvoice")
+    else
+      invoices = @project.issued_invoices.includes(:invoice_lines).includes(:client).includes(:client_office)
+    end
 
     # additional invoice filters
     if Redmine::Hook.call_hook(:additional_invoice_filters,:project=>@project,:invoices=>invoices).any?
@@ -1030,7 +1034,7 @@ class InvoicesController < ApplicationController
   end
 
   def find_invoices
-    @invoices = invoice_class.find_all_by_id(params[:id] || params[:ids])
+    @invoices = Invoice.find_all_by_id(params[:id] || params[:ids])
     raise ActiveRecord::RecordNotFound if @invoices.empty?
     raise Unauthorized unless @invoices.collect {|i| i.project }.uniq.size == 1
     @project = @invoices.first.project
@@ -1089,7 +1093,7 @@ class InvoicesController < ApplicationController
   end
 
   def bulk_download
-    unless ExportFormats.available.keys.include? params[:in]
+    unless ExportFormats.available.keys.include?(params[:in]) or params[:controller]=='received'
       flash[:error] = "unknown format #{params[:in]}"
       redirect_back_or_default(:action=>'index',:project_id=>@project.id)
       return
@@ -1108,13 +1112,19 @@ class InvoicesController < ApplicationController
         @invoice = invoice
         @lines = @invoice.invoice_lines
         @client = @invoice.client
-        file_name = @invoice.pdf_name_without_extension
-        file_name += (params[:in] == "pdf" ? ".pdf" : ".xml")
-        zos.put_next_entry(file_name)
-        if params[:in] == "pdf"
-          zos.print Haltr::Pdf.generate(@invoice)
+        if invoice.is_a? ReceivedInvoice
+          filename = invoice.file_name || "invoice_#{invoice.id}.#{invoice.invoice_format}"
+          zos.put_next_entry(filename)
+          zos.print invoice.original
         else
-          zos.print Haltr::Xml.generate(@invoice,params[:in])
+          file_name = @invoice.pdf_name_without_extension
+          file_name += (params[:in] == "pdf" ? ".pdf" : ".xml")
+          zos.put_next_entry(file_name)
+          if params[:in] == "pdf"
+            zos.print Haltr::Pdf.generate(@invoice)
+          else
+            zos.print Haltr::Xml.generate(@invoice,params[:in])
+          end
         end
         logger.info "Added #{file_name}"
       end
@@ -1230,7 +1240,7 @@ class InvoicesController < ApplicationController
     end
   end
 
-  # Used in form POST - facturae in multipart POST 'file' field
+  # Used in API only - facturae in multipart POST 'file' field
   def import
     if request.post?
       file = params[:file]
@@ -1282,6 +1292,107 @@ class InvoicesController < ApplicationController
         raise $! unless $!.is_a?(StandardError)
         flash[:error] = $!.message
         redirect_to :action => 'import', :project_id => @project
+      }
+      format.api {
+        @error_messages = [$!.message]
+        render :template => 'common/error_messages.api', :status => :unprocessable_entity, :layout => nil
+      }
+    end
+  end
+
+  # Used in form POST - multiple file upload
+  def upload
+    if request.post?
+      @invoice = nil
+      unless params[:issued].nil?
+        @issued = ( params[:issued] == 'true' )
+      else
+        @issued = nil
+      end
+      errors =  []
+      transport = params[:transport] || 'uploaded'
+      params[:attachments].each do |key, attachment_param|
+        begin
+          attachment = Attachment.find_by_token(attachment_param['token'])
+          if attachment.content_type.blank?
+            # http://stackoverflow.com/questions/51572
+            attachment.content_type =
+              IO.popen(["file", "--brief", "--mime-type", attachment.diskfile],
+                       in: :close, err: :close) { |io| io.read.chomp }
+          end
+          case attachment.content_type
+          when /xml/
+            user_or_company = User.current.admin? ? @project.company : User.current
+            @invoice = Invoice.create_from_xml(
+              File.read(attachment.diskfile),
+              user_or_company, attachment.digest, transport,nil,
+              @issued,
+              params['keep_original'] != 'false',
+              params['validate'] != 'false',
+              params['override_original'],
+              params['override_original_name']
+            )
+            if @invoice and ["true","1"].include?(params[:send_after_import])
+              begin
+                Haltr::Sender.send_invoice(@invoice, User.current)
+                @invoice.queue
+              rescue
+              end
+            end
+          when /pdf/
+            @invoice = params[:issued] == '1' ? IssuedInvoice.new : ReceivedInvoice.new
+            @invoice.project   = @project
+            @invoice.state     = :processing_pdf
+            @invoice.transport = transport
+            @invoice.md5       = attachment.digest
+            @invoice.original  = File.binread(attachment.diskfile)
+            @invoice.invoice_format = 'pdf'
+            @invoice.has_been_read = true
+            @invoice.file_name = attachment.filename
+            @invoice.save(validate: false)
+            Event.create(:name=>'processing_pdf',:invoice=>@invoice)
+            Haltr::SendPdfToWs.send(@invoice)
+          else
+            errors <<  "unknown file type: '#{attachment.content_type}' for #{attachment.filename}"
+          end
+        ensure
+          # Attachments are only temporaly used to create Invoices
+          attachment.destroy if attachment
+        end
+      end
+      if errors.size > 0
+        raise errors.join
+      end
+      respond_to do |format|
+        format.html {
+          if @invoice
+            if params[:attachments].count > 1
+              if self.class == ReceivedController
+                redirect_to project_received_index_path
+              else
+                redirect_to project_invoices_path
+              end
+            else
+              redirect_to invoice_path(@invoice)
+            end
+          else
+            flash[:warning] = l(:notice_uploaded_file_not_found)
+            redirect_to :action => 'upload', :project_id => @project
+          end
+        }
+        format.api {
+          render action: 'show', status: :created, location: invoice_path(@invoice)
+        }
+      end
+    else
+      @issued = ( self.class != ReceivedController )
+    end
+  rescue
+    respond_to do |format|
+      format.html {
+        raise $! unless $!.is_a?(StandardError)
+        flash[:error] = $!.message
+        redirect_to :action => 'upload', :project_id => @project
       }
       format.api {
         @error_messages = [$!.message]

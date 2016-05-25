@@ -1,3 +1,18 @@
+<% if @invoice.invoice_img -%>
+
+<div id="invoice_img">
+
+  <div class="colu1">
+    <div class="image"  style="width: <%=@invoice.invoice_img.width%>px; background-image: url('<%=project_invoice_img_path(@invoice.invoice_img, project_id: @project)%>')">
+      <div style="height: <%=@invoice.invoice_img.height%>px;">
+      </div>
+    </div>
+  </div>
+
+  <div class="colu2">
+
+<% end -%>
+
 <!--formulari-->
 <div class="seccio grup">
   <div class="col span-2-de-2">
@@ -7,11 +22,7 @@
     <% end -%>
 
     <%= labelled_form_for :invoice, @invoice, :url => { :action => 'update', :id => @invoice }, :html => {:method => :put, :class => 'formee'}  do |f| %>
-      <% if @invoice.is_a? ReceivedInvoice -%>
-        <%= render :partial => 'received/form', :locals => { :f => f } %>
-      <% else -%>
-        <%= render :partial => 'invoices/form', :locals => { :f => f } %>
-      <% end -%>
+      <%= render :partial => 'invoices/form', :locals => { :f => f } %>
       <% if @invoice.original and !@invoice.modified_since_created? -%>
         <%= f.submit l(:button_save), :name => 'save', :confirm => l(:overriding_original_warn) %>
       <% else -%>
@@ -29,6 +40,15 @@
   </div>
 </div>
 <!--final formulari-->
+
+<% if @invoice.invoice_img -%>
+  </div>
+
+</div>
+<% end -%>
+
+
+
 
 <div id="new_client_wrapper" style="display:none;">
   <%= render :partial => 'invoices/new_client', :locals => {:context => "edit_invoice"} %>

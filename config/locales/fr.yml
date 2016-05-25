@@ -371,6 +371,24 @@ fr:
   notice_payment_done: "%{payment_type} pour date d'échéance %{value} marquée comme faite"
   notice_uploaded_file_not_found: "Fichier non trouvé"
 
+  # Received invoice_imgs
+  label_extracted: Extracted auxiliar information
+  tag_seller_name: Seller name
+  tag_language: Invoice language
+  tag_seller_taxcode: Seller VAT Id
+  tag_seller_country: Seller country
+  tag_buyer_taxcode: Buyed VAT Id
+  tag_invoice_number: Invoice number
+  tag_tax_percentage: Tax %
+  tag_subtotal: Taxable base
+  tag_tax_amount: Tax amount
+  tag_issue: Issue date
+  tag_due: Due date
+  tag_total: Total
+  update_invoice: Update invoice
+  replace_tags: Replace
+  clear_tag: Remove
+
   hide_full_form: "Montrer moins de champs"
   show_full_form: "Montrer plus de champs"
   field_created_at: "Créé à"
@@ -575,6 +593,9 @@ fr:
   field_file_reference: "File number"
   import_issued_from_received: "File to import is an issued invoice"
   import_received_from_issued: "File to import is a received invoice"
+  processing_pdf: "Processing PDF"
+  state_processing_pdf: "Processing PDF"
+  processed_pdf: "PDF processed"
   field_discount: "Discount"
   field_charge: "Charge"
   download_as_pdf: "Download PDF copy"

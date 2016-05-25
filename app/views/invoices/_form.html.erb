@@ -43,7 +43,10 @@
       <% if controller.controller_name == "invoice_templates" -%>
         <%= f.select :frequency, frequencies_for_select, :required => true %>
       <% else -%>
-        <%= f.text_field :number, :size => 10, :required => true, :label => l(:field_invoice_number) %> <span class="text"><%= "#{l(:label_last_invoice_number)}: #{IssuedInvoice.last_number(@project)}" if @project.issued_invoices.any?%></span>
+        <%= f.text_field :number, :size => 10, :required => true, :label => l(:field_invoice_number) %>
+        <% if @invoice.is_a? IssuedInvoice %>
+          <span class="text"><%= "#{l(:label_last_invoice_number)}: #{IssuedInvoice.last_number(@project)}" if @project.issued_invoices.any?%></span>
+    <% end -%>
       <% end -%>
     </p>
     <% if @invoice.is_amend? || @invoice.series_code.present? || User.current.allowed_to?(:view_invoice_extra_fields, @project) -%>
@@ -108,6 +111,7 @@
 
 </fieldset>
 
+<% unless @invoice.is_a?(ReceivedInvoice) %>
 <fieldset class="tabular box">
   <legend class="titularAcc"><%= l(:label_discounts_and_charges) %></legend>
   <div class="contingutAcc">
@@ -146,8 +150,9 @@
 
   </div>
 </fieldset>
+<% end -%>
 
-<% if User.current.allowed_to?(:view_invoice_extra_fields, @project) or @invoice.has_factoring_data? -%>
+<% if (User.current.allowed_to?(:view_invoice_extra_fields, @project) or @invoice.has_factoring_data?) and !@invoice.is_a?(ReceivedInvoice) -%>
   <fieldset class="tabular box">
     <legend class="titularAcc"><%= l(:label_factoring_assignment_data) %></legend>
     <div class="contingutAcc">

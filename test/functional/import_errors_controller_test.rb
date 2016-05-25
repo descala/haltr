@@ -5,6 +5,7 @@ class ImportErrorsControllerTest < ActionController::TestCase
 
   def setup
     User.current = nil
+    Setting.rest_api_enabled = '1'
   end
 
   test 'require auth' do

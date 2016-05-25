@@ -3,6 +3,7 @@ class InvoiceDocument < Invoice
   unloadable
 
   has_many :payments, :foreign_key => :invoice_id, :dependent => :destroy
+  has_one :invoice_img, :foreign_key => :invoice_id, :dependent => :destroy
 
   attr_accessor :legal_filename, :legal_content_type, :legal_invoice
 
@@ -56,6 +57,14 @@ class InvoiceDocument < Invoice
       paid_amount += payment.amount.cents
     end
     Money.new(paid_amount,currency)
+  end
+
+  def original=(s)
+    write_attribute(:original, Haltr::Utils.compress(s))
+  end
+
+  def original
+    Haltr::Utils.decompress(read_attribute(:original))
   end
 
   # https://rails.lighthouseapp.com/projects/8994/tickets/2389-sti-changes-behavior-depending-on-environment
