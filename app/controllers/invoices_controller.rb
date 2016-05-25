@@ -516,15 +516,28 @@ class InvoicesController < ApplicationController
         redirect_to(action: 'show', id: @invoice)
         return
       end
+    when 'pdf'
+      if @invoice.invoice_format == 'pdf'
+        flash.now[:error] = l(:pdf_shows_original) unless @invoice.send_original?
+        show_original = true
+      else
+        flash[:error] = l(:pdf_viewer_not_available)
+        redirect_to(action: 'show', id: @invoice)
+        return
+      end
     else
-      if @company.invoice_viewer == 'xslt' and @invoice.send_original? and template 
+      if @company.invoice_viewer == 'original' and @invoice.send_original? and template
         show_original = true
       end
     end
     if show_original
-      @invoice_root_namespace = Haltr::Utils.root_namespace(invoice_nokogiri) rescue nil
-      xslt = render_to_string(:template=>template,:layout=>false)
-      @invoice_xslt_html = Nokogiri::XSLT(xslt).transform(invoice_nokogiri)
+      if @invoice.invoice_format == 'pdf'
+        @invoice_pdf = true
+      else
+        @invoice_root_namespace = Haltr::Utils.root_namespace(invoice_nokogiri) rescue nil
+        xslt = render_to_string(:template=>template,:layout=>false)
+        @invoice_xslt_html = Nokogiri::XSLT(xslt).transform(invoice_nokogiri)
+      end
     end
     set_sent_and_closed
     @js = ExportChannels[@client.invoice_format]['javascript'] rescue nil
@@ -533,7 +546,7 @@ class InvoicesController < ApplicationController
     @format = params["format"]
     respond_to do |format|
       format.html do
-        render :template => 'invoices/show_with_xsl' if show_original
+        render :template => 'invoices/show_with_xsl' if show_original and @invoice.invoice_format != 'pdf'
       end
       format.api do
         # Force "json" if format is emtpy
@@ -541,22 +554,29 @@ class InvoicesController < ApplicationController
         params[:format] ||= 'json'
       end
       format.pdf do
-        @is_pdf = true
-        @debug = params[:debug]
-        render :pdf => @invoice.pdf_name_without_extension,
-          :disposition => params[:view] ? 'inline' : 'attachment',
-          :layout => "invoice.html",
-          # TODO 
-          # :template=> show_original ? "invoice/show_with_xsl" : "invoices/show_pdf",
-          :template=> "invoices/show_pdf",
-          :formats => :html,
-          :show_as_html => params[:debug],
-          :margin => {
-            :top    => 20,
-            :bottom => 20,
-            :left   => 30,
-            :right  => 20
-          }
+        if @invoice.send_original? and @invoice.invoice_format == 'pdf'
+          send_data @invoice.original,
+            :type => 'application/pdf',
+            :filename => @invoice.file_name,
+            :disposition => 'attachment'
+        else
+          @is_pdf = true
+          @debug = params[:debug]
+          render :pdf => @invoice.pdf_name_without_extension,
+            :disposition => params[:view] ? 'inline' : 'attachment',
+            :layout => "invoice.html",
+            # TODO
+            # :template=> show_original ? "invoice/show_with_xsl" : "invoices/show_pdf",
+            :template=> "invoices/show_pdf",
+            :formats => :html,
+            :show_as_html => params[:debug],
+            :margin => {
+              :top    => 20,
+              :bottom => 20,
+              :left   => 30,
+              :right  => 20
+            }
+        end
       end
       if params[:debug]
         format.facturae30  { render_xml Haltr::Xml.generate(@invoice, 'facturae30', false, false, true) }
@@ -568,7 +588,20 @@ class InvoicesController < ApplicationController
         format.svefaktura  { render_xml Haltr::Xml.generate(@invoice, 'svefaktura', false, false, true) }
         format.oioubl20    { render_xml Haltr::Xml.generate(@invoice, 'oioubl20', false, false, true) }
         format.efffubl     { render_xml Haltr::Xml.generate(@invoice, 'efffubl', false, false, true) }
-        format.original    { render_xml @invoice.original }
+        format.original {
+          ct = ExportFormats[@invoice.invoice_format]["content-type"] rescue ""
+          case ct
+          when 'text-xml'
+            render_xml @invoice.original
+          when 'application-pdf'
+            send_data @invoice.original,
+              :type => 'application/pdf',
+              :filename => @invoice.pdf_name,
+              :disposition => 'attachment'
+          else
+            render text: "Unknown original format: #{@invoice.invoice_format}"
+          end
+        }
         format.edifact     { render text: Haltr::Edifact.generate(@invoice, false, true), content_type: 'text' }
       else
         format.facturae30  { download_xml Haltr::Xml.generate(@invoice, 'facturae30', false, false, true) }
@@ -580,7 +613,20 @@ class InvoicesController < ApplicationController
         format.svefaktura  { download_xml Haltr::Xml.generate(@invoice, 'svefaktura', false, false, true) }
         format.oioubl20    { download_xml Haltr::Xml.generate(@invoice, 'oioubl20', false, false, true) }
         format.efffubl     { download_xml Haltr::Xml.generate(@invoice, 'efffubl', false, false, true) }
-        format.original    { download_xml @invoice.original }
+        format.original {
+          ct = ExportFormats[@invoice.invoice_format]["content-type"] rescue ""
+          case ct
+          when 'text-xml'
+            render_xml @invoice.original
+          when 'application-pdf'
+            send_data @invoice.original,
+              :type => 'application/pdf',
+              :filename => @invoice.pdf_name,
+              :disposition => 'attachment'
+          else
+            render text: "Unknown original format: #{@invoice.invoice_format}"
+          end
+        }
         format.edifact     { download_txt Haltr::Edifact.generate(@invoice, false, true) }
       end
     end
@@ -747,7 +793,37 @@ class InvoicesController < ApplicationController
   end
 
   # public view of invoice, without a session, using :find_hashid
+  # has a setting in haltr plugin conf to require clients to register
   def view
+    @client_hashid = params[:client_hashid]
+    if User.current.logged? and User.current.project
+      user_c = User.current.project.company
+      unless user_c.company_providers.include?(@invoice.project.company)
+        # add project to providers
+        user_c.company_providers << @invoice.project.company
+        # create received invoices
+        @invoice.project.invoices.select {|i| i.client == @invoice.client }.each do |issued|
+          ReceivedInvoice.create_from_issued(issued, User.current.project)
+        end
+      end
+      # redirect to received invoice
+      received = User.current.project.received_invoices.find_by_number_and_series_code(
+        @invoice.number, @invoice.series_code
+      )
+      if received
+        redirect_to received_invoice_path(received)
+      else
+        #TODO: warn about invoice not found?
+        redirect_to controller: 'received', action: 'index', project_id: User.current.project
+      end
+      return
+    elsif !User.current.logged?
+      if Setting['plugin_haltr']['view_invoice_requires_login']
+        # ask user to login/register
+        redirect_to signin_path(client_hashid: @client_hashid, invoice_id: @invoice.id)
+        return
+      end
+    end
     @last_success_sending_event = @invoice.last_success_sending_event
     @lines = @invoice.invoice_lines
     set_sent_and_closed
@@ -1193,7 +1269,9 @@ class InvoicesController < ApplicationController
               user_or_company, attachment.digest, transport,nil,
               @issued,
               params['keep_original'] != 'false',
-              params['validate'] != 'false'
+              params['validate'] != 'false',
+              params['override_original'],
+              params['override_original_name']
             )
             if @invoice and ["true","1"].include?(params[:send_after_import])
               begin
