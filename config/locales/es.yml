@@ -383,6 +383,24 @@ es:
   notice_payment_done: "Se ha cerrado el %{payment_type} de fecha %{value}"
   notice_uploaded_file_not_found: "No se ha encontrado el fichero"
 
+  # Received invoice_imgs
+  label_extracted: Información auxiliar extraida del PDF
+  tag_seller_name: Nombre del vendedor
+  tag_language: Idioma de la factura
+  tag_seller_taxcode: NIF del vendedor
+  tag_seller_country: País del vendedor
+  tag_buyer_taxcode: NIF del comprador
+  tag_invoice_number: Número de factura
+  tag_tax_percentage: Impuesto %
+  tag_subtotal: Base imponible
+  tag_tax_amount: Impuesto €
+  tag_issue: Fecha de emisión
+  tag_due: Fecha de vencimiento
+  tag_total: Total
+  update_invoice: Actualitzar factura
+  replace_tags: Substituir
+  clear_tag: Eliminar
+
   hide_full_form: "Mostrar menos campos"
   show_full_form: "Mostrar más campos"
   field_created_at: "Creada el"

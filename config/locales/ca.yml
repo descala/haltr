@@ -382,6 +382,24 @@ ca:
   notice_payment_done: "S'ha tancat el %{payment_type} de data %{value}"
   notice_uploaded_file_not_found: "No s'ha trobat el fitxer"
 
+  # Received invoice_imgs
+  label_extracted: Informació auxiliar extreta del PDF
+  tag_seller_name: Nom del venedor
+  tag_language: Idioma de la factura
+  tag_seller_taxcode: NIF del venedor
+  tag_seller_country: País del venedor
+  tag_buyer_taxcode: NIF del comprador
+  tag_invoice_number: Número de factura
+  tag_tax_percentage: "Impost %"
+  tag_subtotal: Base imposable
+  tag_tax_amount: "Impost €"
+  tag_issue: Data d'emisió
+  tag_due: Data de venciment
+  tag_total: Total
+  update_invoice: Actualitzar la factura
+  replace_tags: Substituir
+  clear_tag: Eliminar
+
   hide_full_form: "Mostrar menys camps"
   show_full_form: "Mostrar mes camps"
   field_created_at: "Creada el"
