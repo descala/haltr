@@ -23,6 +23,8 @@ resources :projects do
   match 'add_bank_info', :controller => 'companies', :action => 'add_bank_info', :via => :get
   match 'invoices/import' => 'invoices#import', :via => [:get,:post]
   match 'received/import' => 'received#import', :via => [:get,:post]
+  match 'invoices/upload' => 'invoices#upload', :via => [:get,:post]
+  match 'received/upload' => 'received#upload', :via => [:get,:post]
   match 'invoices/send_new' => 'invoices#send_new_invoices', :via => :get
   match 'invoices/download_new' => 'invoices#download_new_invoices', :via => :get
   match 'invoices/update_payment_stuff' => 'invoices#update_payment_stuff', :via => :get

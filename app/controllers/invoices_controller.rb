@@ -14,7 +14,7 @@ class InvoicesController < ApplicationController
 
   PUBLIC_METHODS = [:by_taxcode_and_num,:view,:download,:mail,:logo,:haltr_sign]
 
-  before_filter :find_project_by_project_id, :only => [:index,:new,:create,:send_new_invoices,:download_new_invoices,:update_payment_stuff,:new_invoices_from_template,:reports,:report_channel_state,:report_invoice_list,:create_invoices,:update_taxes,:import,:import_facturae]
+  before_filter :find_project_by_project_id, :only => [:index,:new,:create,:send_new_invoices,:download_new_invoices,:update_payment_stuff,:new_invoices_from_template,:reports,:report_channel_state,:report_invoice_list,:create_invoices,:update_taxes,:upload,:import,:import_facturae]
   before_filter :find_invoice, :only => [:edit,:update,:mark_accepted_with_mail,:mark_accepted,:mark_refused_with_mail,:mark_refused,:duplicate_invoice,:base64doc,:show,:send_invoice,:legal,:amend_for_invoice,:original,:validate, :mark_as_accepted, :mark_as, :add_comment]
   before_filter :find_invoices, :only => [:context_menu,:bulk_download,:bulk_mark_as,:bulk_send,:destroy,:bulk_validate]
   before_filter :find_payment, :only => [:destroy_payment]
@@ -1239,10 +1239,68 @@ class InvoicesController < ApplicationController
     end
   end
 
-  # Used in form POST - multiple file upload
-  # TODO: mantaing the old one file upload /projects/:project_id/received/import(.:format) as others use it
-  #       rename this and use another route
+  # Used in API only - facturae in multipart POST 'file' field
   def import
+    if request.post?
+      file = params[:file]
+      @invoice = nil
+      unless params[:issued].nil?
+        @issued = ( params[:issued] == 'true' )
+      else
+        @issued = nil
+      end
+      if file && file.size > 0
+        md5 = `md5sum #{file.path} | cut -d" " -f1`.chomp
+        user_or_company = User.current.admin? ? @project.company : User.current
+        transport = params[:transport] || 'uploaded'
+        @invoice = Invoice.create_from_xml(
+          file, user_or_company, md5,transport,nil,
+          @issued,
+          params['keep_original'] != 'false',
+          params['validate'] != 'false',
+          params['override_original'],
+          params['override_original_name']
+        )
+      end
+      if @invoice and ["true","1"].include?(params[:send_after_import])
+        begin
+          Haltr::Sender.send_invoice(@invoice, User.current)
+          @invoice.queue
+        rescue
+        end
+      end
+      respond_to do |format|
+        format.html {
+          if @invoice
+            redirect_to invoice_path(@invoice)
+          else
+            flash[:warning] = l(:notice_uploaded_file_not_found)
+            redirect_to :action => 'import', :project_id => @project
+          end
+        }
+        format.api {
+          render action: 'show', status: :created, location: invoice_path(@invoice)
+        }
+      end
+    else
+      @issued = ( self.class != ReceivedController )
+    end
+  rescue
+    respond_to do |format|
+      format.html {
+        raise $! unless $!.is_a?(StandardError)
+        flash[:error] = $!.message
+        redirect_to :action => 'import', :project_id => @project
+      }
+      format.api {
+        @error_messages = [$!.message]
+        render :template => 'common/error_messages.api', :status => :unprocessable_entity, :layout => nil
+      }
+    end
+  end
+
+  # Used in form POST - multiple file upload
+  def upload
     if request.post?
       @invoice = nil
       unless params[:issued].nil?
@@ -1308,13 +1366,17 @@ class InvoicesController < ApplicationController
         format.html {
           if @invoice
             if params[:attachments].count > 1
-              redirect_to project_received_index_path
+              if self.class == ReceivedController
+                redirect_to project_received_index_path
+              else
+                redirect_to project_invoices_path
+              end
             else
               redirect_to invoice_path(@invoice)
             end
           else
             flash[:warning] = l(:notice_uploaded_file_not_found)
-            redirect_to :action => 'import', :project_id => @project
+            redirect_to :action => 'upload', :project_id => @project
           end
         }
         format.api {
@@ -1329,7 +1391,7 @@ class InvoicesController < ApplicationController
       format.html {
         raise $! unless $!.is_a?(StandardError)
         flash[:error] = $!.message
-        redirect_to :action => 'import', :project_id => @project
+        redirect_to :action => 'upload', :project_id => @project
       }
       format.api {
         @error_messages = [$!.message]

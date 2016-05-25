@@ -26,9 +26,9 @@
       <% if User.current.allowed_to?(:import_invoices, @project) -%>
         <li>
           <% if controller.controller_name == "invoices" %>
-            <%= link_to l(:label_import), project_invoices_import_path(@project) -%>
+            <%= link_to l(:label_import), project_invoices_upload_path(@project) -%>
           <% else %>
-            <%= link_to l(:label_import), project_received_import_path(@project) -%>
+            <%= link_to l(:label_import), project_received_upload_path(@project) -%>
           <% end %>
         </li>
       <% end -%>
