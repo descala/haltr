@@ -46,6 +46,11 @@ es:
 - name: IGIC
   percent: 0.0
   default: false
+  category: NS
+  facturae_id: '03'
+- name: IGIC
+  percent: 0.0
+  default: false
   category: Z
   facturae_id: '03'
 - name: IGIC

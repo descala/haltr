@@ -10,6 +10,7 @@ module Haltr
       case attributes[:format]
       when /facturae/
         taxes = TAX_LIST[:es].select {|t| t[:facturae_id] == attributes[:id]}
+        category = nil
         taxes.each do |t|
           if attributes[:event_code]
             # Is E(01) or NS(02)
@@ -30,7 +31,8 @@ module Haltr
           return Tax.new(
             name:     taxes[0][:name],
             percent:  attributes[:percent],
-            category: 'S'
+            category: category ? category : 'S',
+            comment: attributes[:event_reason]
           )
         end
 
