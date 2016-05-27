@@ -68,6 +68,7 @@ resources :projects do
 end
 resources :invoice_imgs, :only => [:create,:update]
 match 'invoice_imgs/:id/tag/:tag' => 'invoice_imgs#tag', :as => 'invoice_imgs_tag'
+match 'invoice_imgs/train_data' => 'invoice_imgs#train_data'
 
 resources :clients do
   resources :people, :only => [:index, :new, :create]

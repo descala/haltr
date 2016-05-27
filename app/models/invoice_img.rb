@@ -268,6 +268,16 @@ class InvoiceImg < ActiveRecord::Base
     fm.find(country_txt)[0].downcase rescue invoice.company.country
   end
 
+  def as_json(options)
+    {
+      id: self.invoice.id,
+      tags: tags,
+      tokens: tokens,
+      width: width,
+      height: height
+    }
+  end
+
   def all_possible_tags
     [:invoice_number, :language, :seller_country, :seller_name, :seller_taxcode, :buyer_taxcode, :issue, :due, :subtotal, :tax_percentage, :tax_amount, :total]
   end
