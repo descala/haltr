@@ -24,7 +24,7 @@ module Haltr
       # if xpath is an array, concatenates its values
       def get_xpath(doc,xpath)
         val = doc.xpath(*xpath)
-        val.blank? ? nil : val.collect {|v| v.text }.join(" ")
+        val.blank? ? nil : val.collect {|v| v.text.to_s.strip }.join(" ")
       end
 
       def xpaths_for(format)

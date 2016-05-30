@@ -657,6 +657,10 @@ _INV
 
     client_language = User.current.language
     client_language = 'es' if client_language.blank?
+    default_channel = 'paper'
+    if ExportChannels.available.include? 'link_to_pdf_by_mail'
+      default_channel = 'link_to_pdf_by_mail'
+    end
 
     invoice.set_client_from_hash(
       {
@@ -671,7 +675,7 @@ _INV
         :city           => client_city,
         :currency       => currency,
         :project        => company.project,
-        :invoice_format => 'paper',
+        :invoice_format => default_channel,
         :language       => client_language
       }
     )

@@ -278,6 +278,10 @@ class InvoiceTest < ActiveSupport::TestCase
     invoice = Invoice.create_from_xml(file,companies(:company1),"1234",'uploaded',User.current.name)
     client  = Client.find_by_taxcode "ESP1700000A"
     assert_not_nil client
+    default_channel = 'paper'
+    if ExportChannels.available.include? 'link_to_pdf_by_mail'
+      default_channel = 'link_to_pdf_by_mail'
+    end
     # client
     assert_equal "ESP1700000A", client.taxcode
     assert_equal "David Copperfield", client.name
@@ -292,7 +296,7 @@ class InvoiceTest < ActiveSupport::TestCase
     assert_equal invoice.company.project, client.project
     assert_equal "ES8023100001180000012345", client.iban
     assert_equal "biiiiiiiiic", client.bic
-    assert_equal "paper", client.invoice_format
+    assert_equal default_channel, client.invoice_format
     # invoice
     assert       invoice.is_a?(IssuedInvoice)
     assert_equal client, invoice.client
@@ -667,8 +671,9 @@ class InvoiceTest < ActiveSupport::TestCase
   test 'import UBL 2.0 with SBDH' do
     file = File.new(File.join(File.dirname(__FILE__),'../fixtures/documents/invoice_ubl_with_sbdh.xml'))
     invoice = Invoice.create_from_xml(file,companies(:company6),"1234",'uploaded',User.current.name,nil,false)
-    assert invoice.valid?, invoice.errors.messages.to_s
     assert_equal '5503070490', invoice.client.taxcode
+    assert !invoice.valid?
+    assert_equal ["Invoice's client has no email defined"], invoice.errors.full_messages
   end
 
   test 'invoice can repeat number+serie if year changes' do

@@ -89,4 +89,16 @@ class TaxHelperTest < ActiveSupport::TestCase
     assert_equal "S", taxes["IRPF"].first.category
   end
 
+  test "event_code and event_reason" do
+    tax = Haltr::TaxHelper.new_tax(
+      format: 'facturae321',
+      id: '03',
+      percent: '0.00',
+      event_code: '02',
+      event_reason: 'Operación no sujeta a IGIC'
+    )
+    assert_equal('NS', tax.category)
+    assert_equal('Operación no sujeta a IGIC', tax.comment)
+  end
+
 end
