@@ -43,9 +43,6 @@
             <cbc:ID>VAT</cbc:ID>
           </cac:TaxScheme>
         </cac:PartyTaxScheme>
-        <cac:PartyLegalEntity>
-          <cbc:CompanyID><%=h @company.taxcode%></cbc:CompanyID>
-        </cac:PartyLegalEntity>
 <% end -%>
         <%= render :partial => "invoices/ubl_party_legal_entity", :format => :xml, :locals => {:entity => @company} %>
         <% if @company.email and !@company.email.blank? -%>
