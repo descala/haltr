@@ -491,7 +491,9 @@ class InvoicesController < ApplicationController
   end
 
   def show
-    show_original = false
+    show_original  = false
+    show_last_sent = false
+    sent_nokogiri    = nil
     invoice_nokogiri = Nokogiri::XML(@invoice.original)
     begin
       if invoice_nokogiri.root.namespace.href =~ /StandardBusinessDocumentHeader/
@@ -522,11 +524,40 @@ class InvoicesController < ApplicationController
         return
       end
     else
-      if @company.invoice_viewer == 'original' and @invoice.send_original? and template
+      # https://www.ingent.net/issues/6014
+      if @invoice.state == 'sent' and @invoice.last_sent_event
+        case @invoice.last_sent_event.content_type
+        when 'application/pdf'
+          show_last_sent = true
+        when 'application/xml'
+          sent_nokogiri = Nokogiri::XML(@invoice.last_sent_event.file)
+          begin
+            if sent_nokogiri.root.namespace.href =~ /StandardBusinessDocumentHeader/
+              sent_nokogiri = Haltr::Utils.extract_from_sbdh(sent_nokogiri)
+            end
+          rescue
+          end
+          template = original_xsl_template(sent_nokogiri)
+          if template
+            show_last_sent = true
+          end
+        end
+      end
+      if !show_last_sent and @company.invoice_viewer == 'original' and @invoice.send_original? and template
         show_original = true
       end
     end
-    if show_original
+
+    if show_last_sent
+      if @invoice.last_sent_event.content_type == 'application/pdf'
+        @invoice_pdf_last_sent = true
+      else
+        @invoice_root_namespace = Haltr::Utils.root_namespace(sent_nokogiri) rescue nil
+        xslt = render_to_string(template: template, layout: false)
+        @invoice_xslt_html = Nokogiri::XSLT(xslt).transform(sent_nokogiri)
+      end
+
+    elsif show_original
       if @invoice.invoice_format == 'pdf'
         @invoice_pdf = true
       else
@@ -542,7 +573,10 @@ class InvoicesController < ApplicationController
     @format = params["format"]
     respond_to do |format|
       format.html do
-        render :template => 'invoices/show_with_xsl' if show_original and @invoice.invoice_format != 'pdf'
+        if (show_last_sent and @invoice.last_sent_event.content_type == 'application/xml') or
+            (show_original and @invoice.invoice_format != 'pdf')
+          render :template => 'invoices/show_with_xsl'
+        end
       end
       format.api do
         # Force "json" if format is emtpy
