@@ -20,10 +20,24 @@
       <%=f.text_field :imap_username%>
       </p>
       <p class="col span-2-de-6">
-      <%=f.text_field :imap_password%>
+      <%=f.password_field :imap_password, value: @company.imap_password %>
+      <%= link_to(l(:button_show), '#', :id=>'show_imap_password', :onclick=>'return change_imap_password_type();')%>
       </p>
     </div>
   </fieldset>
+
+  <script>
+    function change_imap_password_type() {
+      var obj = $('#company_imap_password')[0];
+      if (obj.type == 'password') {
+        obj.type = 'text';
+      } else {
+        obj.type = 'password';
+      }
+      return false;
+    }
+  </script>
+
 <% end -%>
 
 <% if User.current.admin? or User.current.allowed_to?(:send_peppol, @project) -%>

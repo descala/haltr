@@ -33,5 +33,11 @@ class UtilsTest < ActiveSupport::TestCase
     invoice = Haltr::Utils.extract_from_sbdh(doc)
     assert_equal '0070075', invoice.xpath("/xmlns:Invoice/cbc:ID").text
   end
+
+  test 'removes leading and trailing spaces' do
+    xml = "<xml><withspaces>  a test    </withspaces></xml>"
+    doc = Nokogiri::XML(xml)
+    assert_equal 'a test', Haltr::Utils.get_xpath(doc,'//withspaces')
+  end
 end
 

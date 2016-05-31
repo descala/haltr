@@ -33,6 +33,7 @@ module ChartsHelper
     if currency
       invoices = invoices.where("currency = ?", currency)
     end
+    invoices = invoices.where("state not in ('error', 'refused')")
     invoices
   end
 
@@ -44,7 +45,7 @@ module ChartsHelper
     when 'last_3_months'
       date_from = 3.months.ago.to_date
     end
-    project_invoices_path(:project_id=>project,new:1,sending:1,sent:1,error:1,discarded:1,registered:1,refused:1,accepted:1,due_date_to:Date.yesterday,date_from:date_from,date_to:'')
+    project_invoices_path(:project_id=>project,new:1,sending:1,sent:1,discarded:1,registered:1,accepted:1,due_date_to:Date.yesterday,date_from:date_from,date_to:'')
   end
 
   def invoices_on_schedule(project,from=nil,currency=nil)
@@ -61,6 +62,7 @@ module ChartsHelper
     if currency
       invoices = invoices.where("currency = ?", currency)
     end
+    invoices = invoices.where("state not in ('error', 'refused')")
     invoices
   end
 
@@ -72,7 +74,7 @@ module ChartsHelper
     when 'last_3_months'
       date_from = 3.months.ago.to_date
     end
-    project_invoices_path(:project_id=>project,new:1,sending:1,sent:1,error:1,discarded:1,registered:1,refused:1,accepted:1,due_date_from:Date.today,date_from:date_from,date_to:'')
+    project_invoices_path(:project_id=>project,new:1,sending:1,sent:1,discarded:1,registered:1,accepted:1,due_date_from:Date.today,date_from:date_from,date_to:'')
   end
 
 end
