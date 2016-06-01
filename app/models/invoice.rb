@@ -658,7 +658,7 @@ _INV
     client_language = User.current.language
     client_language = 'es' if client_language.blank?
     default_channel = 'paper'
-    if ExportChannels.available.include? 'link_to_pdf_by_mail'
+    if ExportChannels.available? 'link_to_pdf_by_mail'
       default_channel = 'link_to_pdf_by_mail'
     end
 
