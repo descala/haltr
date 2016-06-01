@@ -102,7 +102,7 @@ Redmine::Plugin.register :haltr do
       { :clients   => [:index, :show, :edit, :check_cif, :ccc2iban, :update],
         :people    => [:index, :edit],
         :client_offices => [:index, :edit, :update],
-        :invoices  => [:index, :show, :legal, :download_new_invoices, :reports, :report_channel_state, :report_invoice_list,
+        :invoices  => [:index, :show, :legal, :download_new_invoices, :reports, :report_channel_state, :report_invoice_list, :report_received_table,
                        :context_menu, :send_invoice,
                        :send_new_invoices, :number_to_id],
         :received  => [:index, :show, :legal, :context_menu],

@@ -28,6 +28,29 @@
   </fieldset>
 <% end %>
 
+<%= form_tag project_invoices_report_received_table_path(@project), :class => 'formee' do %>
+  <fieldset>
+    <legend><%= l(:label_received) %></legend>
+    <div class="seccio grup">
+      <div class="col span-1-de-3">
+        <label for="date_from_received"><%=l(:field_date)%></label>
+        <%= text_field_tag :date_from_received, (params[:date_from_received].nil? ? Date.new(Date.today.year) : params[:date_from_received]), :size => 10, :style => "width: 90%;" %><%= calendar_for('date_from_received') %>
+      </div>
+      <div class="col span-1-de-3">
+        <label for="date_to_received"><%=l(:label_to)%></label>
+        <%= text_field_tag :date_to_received, (params[:date_to_received].nil? ? Date.today : params[:date_to_received]), :size => 10, :style => "width: 90%;" %><%= calendar_for('date_to_received') %>
+      </div>
+      <div class="col span-1-de-3">
+      </div>
+    </div>
+    <div class="seccio grup">
+      <div class="col span-2-de-2">
+        <%= submit_tag l(:button_apply), :class => "small", :name => nil %>
+      </div>
+    </div>
+  </fieldset>
+<% end -%>
+
 <% content_for :sidebar do %>
   <%= render_menu :invoices_menu, @project %>
 <% end %>

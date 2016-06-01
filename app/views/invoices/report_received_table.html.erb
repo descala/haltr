@@ -1,0 +1,42 @@
+<div class="invoices_report">
+<h2><%= l(:label_received) %></h2>
+<p><%=l(:with_date) %> <%= format_date @from %> - <%= format_date @to %></p>
+</div>
+
+<% if @clients.any? and @months.any? -%>
+
+
+    <table class="taula-1 list" width="100%">
+
+      <tr class="imparell">
+        <th></th>
+        <% @months.keys.each do |date| %>
+          <th><%= I18n.t("date.abbr_month_names")[date.month] %></th>
+        <% end %>
+      </tr>
+
+      <% @clients.each do |client,invoices| -%>
+        <% invoices_by_months = invoices.group_by_month(&:date) %>
+        <tr class="<%= cycle("odd imparell", "even parell") %>">
+          <th><%= client.name %></th>
+          <% @months.keys.each do |date| %>
+            <td>
+            <%  invoices_by_months[date].to_a.each do |invoice| %>
+              <%= link_to(invoice.number, received_invoice_path(invoice), :title => invoice_summary(invoice)) %>
+            <% end %>
+            </td>
+          <% end %>
+        </tr>
+      <% end -%>
+
+    </table>
+
+<% else -%>
+  <p class="nodata"><%= l(:nothing_to_report) %></p>
+<% end -%>
+
+<p><%= link_to l('back'), project_invoices_reports_path %></p>
+
+<% content_for :sidebar do %>
+  <%= render_menu :invoices_menu, @project %>
+<% end %>

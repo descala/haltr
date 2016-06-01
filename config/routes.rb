@@ -39,6 +39,7 @@ resources :projects do
   match 'invoices/reports' => 'invoices#reports', :via => [:get]
   match 'invoices/report_invoice_list' => 'invoices#report_invoice_list', :via => [:post]
   match 'invoices/report_channel_state' => 'invoices#report_channel_state', :via => [:get]
+  match 'invoices/report_received_table' => 'invoices#report_received_table', :via => [:post]
   resources :payments, :only => [:index, :new, :create]
   match 'payments/import_aeb43_index' => 'payments#import_aeb43_index'
   match 'payments/import_aeb43' => 'payments#import_aeb43'
