@@ -13,6 +13,7 @@
         <% @months.keys.each do |date| %>
           <th><%= I18n.t("date.abbr_month_names")[date.month] %></th>
         <% end %>
+        <th><%= l(:label_total) %></th>
       </tr>
 
       <% @clients.each do |client,invoices| -%>
@@ -26,6 +27,7 @@
             <% end %>
             </td>
           <% end %>
+          <td class="money"><%= money(@client_totals[client]) %></td>
         </tr>
       <% end -%>
 

@@ -993,11 +993,15 @@ class InvoicesController < ApplicationController
       @to = Date.today
     end
     invoices = @project.received_invoices.includes(:client).where(
-      ["date >= ? and date <= ? and amend_id is null", @from, @to]
+      ["date >= ? and date <= ? and client_id is not null", @from, @to]
     ).order(:number)
     invoices = invoices.where("date >= ?", @from).where("date <= ?", @to)
     @months = invoices.to_a.group_by_month(&:date)
     @clients = invoices.to_a.group_by(&:client).sort
+    @client_totals = {}
+    @clients.each do |client, client_invoices|
+      @client_totals[client] = client_invoices.sum(&:total)
+    end
   end
 
   ### methods not reachable with any route:

@@ -28,7 +28,7 @@
   </fieldset>
 <% end %>
 
-<%= form_tag project_invoices_report_received_table_path(@project), :class => 'formee' do %>
+<%= form_tag project_invoices_report_received_table_path(@project), :method => :get, :class => 'formee' do %>
   <fieldset>
     <legend><%= l(:label_received) %></legend>
     <div class="seccio grup">
