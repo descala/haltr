@@ -170,7 +170,10 @@ class Company < ActiveRecord::Base
 
   ################## methods for mail customization ##################
   def invoice_mail_subject(lang,invoice=nil)
-    subj = invoice_mail_customization["subject"][lang] rescue nil
+    subj = nil
+    if User.current.admin? or User.current.allowed_to?(:email_customization, User.current.project)
+      subj = invoice_mail_customization["subject"][lang] rescue nil
+    end
     if subj.blank?
       subj = I18n.t(:invoice_mail_subject,:locale=>lang)
       unless Redmine::Hook.call_hook(:replace_invoice_mail_subject).join.blank?
@@ -195,7 +198,10 @@ class Company < ActiveRecord::Base
   end
 
   def invoice_mail_body(lang,invoice=nil)
-    body = invoice_mail_customization["body"][lang] rescue nil
+    body = nil
+    if User.current.admin? or User.current.allowed_to?(:email_customization, User.current.project)
+      body = invoice_mail_customization["body"][lang] rescue nil
+    end
     if body.blank?
       body = I18n.t(:invoice_mail_body,:locale=>lang)
       unless Redmine::Hook.call_hook(:replace_invoice_mail_body).join.blank?
@@ -220,7 +226,10 @@ class Company < ActiveRecord::Base
   end
 
   def quote_mail_subject(lang,quote=nil)
-    subj = quote_mail_customization["subject"][lang] rescue nil
+    subj = nil
+    if User.current.admin? or User.current.allowed_to?(:email_customization, User.current.project)
+      subj = quote_mail_customization["subject"][lang] rescue nil
+    end
     if subj.blank?
       subj = I18n.t(:quote_mail_subject,:locale=>lang)
       unless Redmine::Hook.call_hook(:replace_quote_mail_subject).join.blank?
@@ -245,7 +254,10 @@ class Company < ActiveRecord::Base
   end
 
   def quote_mail_body(lang,quote=nil)
-    body = quote_mail_customization["body"][lang] rescue nil
+    body = nil
+    if User.current.admin? or User.current.allowed_to?(:email_customization, User.current.project)
+      body = quote_mail_customization["body"][lang] rescue nil
+    end
     if body.blank?
       body = I18n.t(:quote_mail_body,:locale=>lang)
       unless Redmine::Hook.call_hook(:replace_quote_mail_body).join.blank?
