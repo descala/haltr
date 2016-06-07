@@ -821,6 +821,23 @@ class InvoicesController < ApplicationController
       end
     end
     @last_success_sending_event = @invoice.last_success_sending_event
+    if @last_success_sending_event.content_type == 'application/pdf'
+      @show_pdf = true
+    elsif @last_success_sending_event.content_type == 'application/xml'
+      template = original_xsl_template(Nokogiri::XML(@last_success_sending_event.file))
+      if template
+        invoice_nokogiri = Nokogiri::XML(@last_success_sending_event.file)
+        @invoice_root_namespace = Haltr::Utils.root_namespace(invoice_nokogiri) rescue nil
+        xslt = render_to_string(:template=>template,:layout=>false)
+        begin
+          if invoice_nokogiri.root.namespace.href =~ /StandardBusinessDocumentHeader/
+            invoice_nokogiri = Haltr::Utils.extract_from_sbdh(invoice_nokogiri)
+          end
+          @invoice_xslt_html = Nokogiri::XSLT(xslt).transform(invoice_nokogiri)
+        rescue
+        end
+      end
+    end
     @lines = @invoice.invoice_lines
     set_sent_and_closed
     @invoices_not_sent = []
