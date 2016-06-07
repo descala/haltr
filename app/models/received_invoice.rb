@@ -77,7 +77,7 @@ class ReceivedInvoice < InvoiceDocument
       allowed:        nil
     )
     # copy issued invoice attributes
-    ReceivedInvoice.create!(
+    ReceivedInvoice.new(
       issued.attributes.merge(
         state:     :received,
         transport: 'from_issued',
@@ -98,7 +98,7 @@ class ReceivedInvoice < InvoiceDocument
           new_il
         }
       )
-    )
+    ).save(validate: false)
   end
 
   protected
