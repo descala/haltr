@@ -2,6 +2,8 @@ class ReceivedController < InvoicesController
 
   menu_item Haltr::MenuItem.new(:invoices,:received)
 
+  skip_before_filter :check_for_company, :only=> [:index, :show]
+
   def index
     sort_init 'invoices.created_at', 'desc'
     sort_update %w(invoices.created_at state number date due_date clients.name import_in_cents)

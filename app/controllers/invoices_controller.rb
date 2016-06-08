@@ -793,7 +793,8 @@ class InvoicesController < ApplicationController
   def view
     @client_hashid = params[:client_hashid]
     if User.current.logged? and User.current.project and
-        User.current.project.company.taxcode == @invoice.client.taxcode
+        (User.current.project.company.taxcode == @invoice.client.taxcode or
+         User.current.project.company.taxcode.blank?)
       user_c = User.current.project.company
       unless user_c.company_providers.include?(@invoice.project.company)
         # add project to providers
