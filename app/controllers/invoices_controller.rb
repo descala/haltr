@@ -792,7 +792,8 @@ class InvoicesController < ApplicationController
   # has a setting in haltr plugin conf to require clients to register
   def view
     @client_hashid = params[:client_hashid]
-    if User.current.logged? and User.current.project
+    if User.current.logged? and User.current.project and
+        User.current.project.company.taxcode == @invoice.client.taxcode
       user_c = User.current.project.company
       unless user_c.company_providers.include?(@invoice.project.company)
         # add project to providers
