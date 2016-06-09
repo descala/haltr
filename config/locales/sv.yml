@@ -733,7 +733,8 @@ sv:
   field_tax_point_date: "Tax Point Date"
   field_xpaths_from_original: "XPATHS to preserve from original"
   warn_edit_invoice: "You are about to edit a sent invoice.<br />
-Your customer will not receive the changes you made unless you resend it."
+Your customer will not receive the changes you made unless you resend it.<br />
+If you save it, will be marked as New."
   from_issued: "Received"
   pdf_shows_original: "This invoice has been modified. The PDF viewer shows the original without your changes"
   label_invoice_view_sent: "View sent document"

@@ -751,7 +751,8 @@ es:
   field_tax_point_date: "Fecha de Servicio"
   field_xpaths_from_original: "XPATHS a conservar del original"
   warn_edit_invoice: "Estás a punto de editar una factura que ha sido enviada.<br />
-Ten presente que los cambios que realices no los recibirá tu cliente a no ser que la vuelvas a enviar."
+Ten presente que los cambios que realices no los recibirá tu cliente a no ser que la vuelvas a enviar.<br />
+Si la guardas, se marcará como Nueva."
   view_invoice_requires_login: "Requerir login para ver facturas"
   from_issued: "Recibida"
   pdf_shows_original: "Esta factura se ha modificado. El visor PDF refleja el original sin los cambios"

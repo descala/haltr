@@ -362,6 +362,11 @@ class InvoicesController < ApplicationController
     # and copy global "exempt comment" to all exempt taxes
     parsed_params = parse_invoice_params
 
+    # mark invoice as new
+    if %w(sent registered accepted allegedly_paid closed).include?(@invoice.state)
+      parsed_params[:state] = 'new'
+    end
+
     if params[:invoice][:client_id]
       @invoice.client_office = nil unless Client.find(params[:invoice][:client_id]).client_offices.any? {|office| office.id == @invoice.client_office_id }
     end
@@ -497,7 +502,7 @@ class InvoicesController < ApplicationController
       if @invoice.last_success_sending_event and
           %w(sent registered accepted allegedly_paid closed).include?(@invoice.state)
         params[:view] = 'sent'
-      else
+      elsif @invoice.original and @invoice.send_original?
         params[:view] = @company.invoice_viewer
       end
     end
