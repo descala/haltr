@@ -366,6 +366,11 @@ class InvoicesController < ApplicationController
     # and copy global "exempt comment" to all exempt taxes
     parsed_params = parse_invoice_params
 
+    # mark invoice as new
+    if %w(sent registered accepted allegedly_paid closed).include?(@invoice.state)
+      parsed_params[:state] = 'new'
+    end
+
     if params[:invoice][:client_id]
       @invoice.client_office = nil unless Client.find(params[:invoice][:client_id]).client_offices.any? {|office| office.id == @invoice.client_office_id }
     end
@@ -495,82 +500,67 @@ class InvoicesController < ApplicationController
   end
 
   def show
-    show_original  = false
-    show_last_sent = false
-    sent_nokogiri    = nil
-    invoice_nokogiri = Nokogiri::XML(@invoice.original)
-    begin
-      if invoice_nokogiri.root.namespace.href =~ /StandardBusinessDocumentHeader/
-        invoice_nokogiri = Haltr::Utils.extract_from_sbdh(invoice_nokogiri)
+    invoice_nokogiri = nil
+    @invoice_pdf = nil
+    unless %w(original sent db).include?(params[:view])
+      if @invoice.last_success_sending_event and
+          %w(sent registered accepted allegedly_paid closed).include?(@invoice.state)
+        params[:view] = 'sent'
+      elsif @invoice.original and @invoice.send_original?
+        params[:view] = @company.invoice_viewer
       end
-    rescue
     end
-    template = original_xsl_template(invoice_nokogiri)
-    case params[:view_with]
-    when 'standard'
-      # continue
-    when 'xslt'
-      if template
-        flash.now[:error] = l(:xslt_shows_original) unless @invoice.send_original?
-        show_original = true
+    case params[:view]
+    when 'original'
+      if @invoice.invoice_format == 'pdf'
+        flash.now[:error] = l(:pdf_shows_original) unless @invoice.send_original?
+        @invoice_pdf = invoices_original_path(@invoice, format: 'pdf')
       else
+        invoice_nokogiri = Nokogiri::XML(@invoice.original)
+      end
+    when 'sent'
+      if @invoice.last_success_sending_event
+        if @invoice.last_success_sending_event.content_type == 'application/pdf'
+          @invoice_pdf = client_event_file_path(@invoice.last_success_sending_event,
+                                                client_hashid: @invoice.client.hashid)
+        else
+          invoice_nokogiri = Nokogiri::XML(@invoice.last_success_sending_event.file)
+          begin
+            if invoice_nokogiri.root.namespace.href =~ /StandardBusinessDocumentHeader/
+              invoice_nokogiri = Haltr::Utils.extract_from_sbdh(invoice_nokogiri)
+            end
+          rescue
+          end
+          template = original_xsl_template(invoice_nokogiri)
+        end
+      else
+      end
+    when 'db'
+      # continue
+    end
+    if invoice_nokogiri
+      # show a xml with xslt
+      begin
+        if invoice_nokogiri.root.namespace.href =~ /StandardBusinessDocumentHeader/
+          invoice_nokogiri = Haltr::Utils.extract_from_sbdh(invoice_nokogiri)
+        end
+      rescue
+      end
+      template = original_xsl_template(invoice_nokogiri)
+      if template
+        if params[:view] == 'original' and !@invoice.send_original?
+          flash.now[:error] = l(:xslt_shows_original)
+        end
+        @invoice_root_namespace = Haltr::Utils.root_namespace(invoice_nokogiri) rescue nil
+        xslt = render_to_string(:template=>template,:layout=>false)
+        @invoice_xslt_html = Nokogiri::XSLT(xslt).transform(invoice_nokogiri)
+      elsif @invoice.original
         flash[:error] = l(:xslt_not_available)
         redirect_to(action: 'show', id: @invoice)
         return
       end
-    when 'pdf'
-      if @invoice.invoice_format == 'pdf'
-        flash.now[:error] = l(:pdf_shows_original) unless @invoice.send_original?
-        show_original = true
-      else
-        flash[:error] = l(:pdf_viewer_not_available)
-        redirect_to(action: 'show', id: @invoice)
-        return
-      end
-    else
-      # https://www.ingent.net/issues/6014
-      if %w(sent registered accepted allegedly_paid closed).
-          include?(@invoice.state) and @invoice.last_sent_event
-        case @invoice.last_sent_event.content_type
-        when 'application/pdf'
-          show_last_sent = true
-        when 'application/xml'
-          sent_nokogiri = Nokogiri::XML(@invoice.last_sent_event.file)
-          begin
-            if sent_nokogiri.root.namespace.href =~ /StandardBusinessDocumentHeader/
-              sent_nokogiri = Haltr::Utils.extract_from_sbdh(sent_nokogiri)
-            end
-          rescue
-          end
-          template = original_xsl_template(sent_nokogiri)
-          if template
-            show_last_sent = true
-          end
-        end
-      end
-      if !show_last_sent and @company.invoice_viewer == 'original' and @invoice.send_original? and template
-        show_original = true
-      end
     end
 
-    if show_last_sent
-      if @invoice.last_sent_event.content_type == 'application/pdf'
-        @invoice_pdf_last_sent = true
-      else
-        @invoice_root_namespace = Haltr::Utils.root_namespace(sent_nokogiri) rescue nil
-        xslt = render_to_string(template: template, layout: false)
-        @invoice_xslt_html = Nokogiri::XSLT(xslt).transform(sent_nokogiri)
-      end
-
-    elsif show_original
-      if @invoice.invoice_format == 'pdf'
-        @invoice_pdf = true
-      else
-        @invoice_root_namespace = Haltr::Utils.root_namespace(invoice_nokogiri) rescue nil
-        xslt = render_to_string(:template=>template,:layout=>false)
-        @invoice_xslt_html = Nokogiri::XSLT(xslt).transform(invoice_nokogiri)
-      end
-    end
     set_sent_and_closed
     @js = ExportChannels[@client.invoice_format]['javascript'] rescue nil
     @autocall = params[:autocall]
@@ -578,10 +568,7 @@ class InvoicesController < ApplicationController
     @format = params["format"]
     respond_to do |format|
       format.html do
-        if (show_last_sent and @invoice.last_sent_event.content_type == 'application/xml') or
-            (show_original and @invoice.invoice_format != 'pdf')
-          render :template => 'invoices/show_with_xsl'
-        end
+        render :template => 'invoices/show_with_xsl' if @invoice_xslt_html
       end
       format.api do
         # Force "json" if format is emtpy
@@ -835,10 +822,10 @@ class InvoicesController < ApplicationController
     if User.current.logged? and User.current.project and
         (User.current.project.company.taxcode == @invoice.client.taxcode or
          User.current.project.company.taxcode.blank?)
-      user_c = User.current.project.company
-      unless user_c.company_providers.include?(@invoice.project.company)
+      user_company = User.current.project.company
+      unless user_company.company_providers.include?(@invoice.project.company)
         # add project to providers
-        user_c.company_providers << @invoice.project.company
+        user_company.company_providers << @invoice.project.company
         # create received invoices
         @invoice.project.invoices.select {|i| i.client == @invoice.client }.each do |issued|
           ReceivedInvoice.create_from_issued(issued, User.current.project)
@@ -862,14 +849,15 @@ class InvoicesController < ApplicationController
         return
       end
     end
-    @last_success_sending_event = @invoice.last_success_sending_event
-    if @last_success_sending_event
-      if @last_success_sending_event.content_type == 'application/pdf'
-        @show_pdf = true
-      elsif @last_success_sending_event.content_type == 'application/xml'
-        template = original_xsl_template(Nokogiri::XML(@last_success_sending_event.file))
+
+    @lsse = @invoice.last_success_sending_event
+    if @lsse
+      if @lsse.content_type == 'application/pdf'
+        @invoice_pdf = client_event_file_path(@lsse, client_hashid: @invoice.client.hashid)
+      elsif @lsse.content_type == 'application/xml'
+        invoice_nokogiri = Nokogiri::XML(@lsse.file)
+        template = original_xsl_template(invoice_nokogiri)
         if template
-          invoice_nokogiri = Nokogiri::XML(@last_success_sending_event.file)
           @invoice_root_namespace = Haltr::Utils.root_namespace(invoice_nokogiri) rescue nil
           xslt = render_to_string(:template=>template,:layout=>false)
           begin
@@ -883,6 +871,7 @@ class InvoicesController < ApplicationController
         end
       end
     end
+
     @lines = @invoice.invoice_lines
     set_sent_and_closed
     @invoices_not_sent = []

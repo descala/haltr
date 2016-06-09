@@ -745,7 +745,6 @@ sv:
   label_invoice_viewer: "Invoice viewer"
   field_invoice_viewer: "Viewer used to display received invoices"
   label_invoice_viewer_standard: "Use default viewer"
-  label_invoice_viewer_xslt : "Use XSLT viewer"
   xslt_not_available: "We do not have an XSLT for the format of this invoice"
   xslt_shows_original: "This invoice has been modified. The XSLT format shows the original without your changes"
   skip_invoice_validations: "Skip invoice validation"
@@ -755,9 +754,10 @@ sv:
   field_xpaths_from_original: "XPATHS to preserve from original"
   field_tax_point_date: "Tax Point Date"
   warn_edit_invoice: "You are about to edit a sent invoice.<br />
-Your customer will not receive the changes you made unless you resend it."
+Your customer will not receive the changes you made unless you resend it.<br />
+If you save it, will be marked as New."
   view_invoice_requires_login: "Require login to view invoices"
   from_issued: "Received"
-  label_invoice_viewer_pdf: "Use PDF viewer"
-  pdf_viewer_not_available: "We can't show this invoice using PDF viewer, incorrect original format"
   pdf_shows_original: "This invoice has been modified. The PDF viewer shows the original without your changes"
+  label_invoice_view_sent: "View sent document"
+  label_invoice_view_original: "View original document"
