@@ -13,7 +13,14 @@
       <div id="workspace2">
         <div id="col1">
 
-          <%= render :partial=>'invoices/invoice' %>
+          <% if @show_pdf -%>
+            <iframe src="/pdfjs/web/viewer.html?file=<%=client_event_file_path(@last_success_sending_event, client_hashid: @client.hashid)%>" style="border: 0" width="100%" height="800" frameborder="0" scrolling="no"></iframe>
+          <% elsif @invoice_xslt_html -%>
+            <%=@invoice_xslt_html.to_html.html_safe%>
+            <%= link_to_attachments @invoice, thumbnails: false, author: false %>
+          <% else -%>
+            <%= render :partial=>'invoices/invoice' %>
+          <% end -%>
 
         </div>
       </div>
@@ -27,4 +34,8 @@
 
 <% content_for :header_tags do %>
   <%= stylesheet_link_tag 'minimal', :plugin => 'haltr' %>
+  <% if @invoice_xslt_html -%>
+    <%= stylesheet_link_tag 'facturae_xslt_viewer', :plugin => 'haltr' %>
+    <%= javascript_include_tag "facturae_xslt_viewer", :plugin => "haltr"%>
+  <% end -%>
 <% end %>

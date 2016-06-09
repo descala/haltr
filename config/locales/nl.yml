@@ -408,6 +408,13 @@ nl:
   field_imap_password: "Password"
   field_imap_from: "From"
 
+  field_smtp_host: "SMTP server"
+  field_smtp_port: "Port"
+  field_smtp_ssl: "Use SSL"
+  field_smtp_username: "Username"
+  field_smtp_password: "Password"
+  field_smtp_from: "From"
+
   permission_general_use: "Use Haltr plugin"
   permission_manage_payments: "Manage payments"
   permission_use_templates: "Invoice templates"
