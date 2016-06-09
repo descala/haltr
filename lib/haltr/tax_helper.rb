@@ -12,9 +12,11 @@ module Haltr
         taxes = TAX_LIST[:es].select {|t| t[:facturae_id] == attributes[:id]}
         category = nil
         taxes.each do |t|
-          if attributes[:event_code]
+          if attributes[:event_code].present?
             # Is E(01) or NS(02)
-            category = attributes[:event_code] == '01' ? 'E' : 'NS'
+            if attributes[:percent].to_f == 0
+              category = attributes[:event_code] == '01' ? 'E' : 'NS'
+            end
             if t[:percent] == attributes[:percent].to_f and category == t[:category]
               new_tax = Tax.new(t.dup.keep_if {|k,v| %w(name percent category).include?(k)})
               new_tax.comment = attributes[:event_reason]

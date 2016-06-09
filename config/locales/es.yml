@@ -440,6 +440,13 @@ es:
   field_imap_password: "Contraseña"
   field_imap_from: "Remitente"
 
+  field_smtp_host: "Servidor SMTP"
+  field_smtp_port: "Puerto"
+  field_smtp_ssl: "Usar SSL"
+  field_smtp_username: "Usuario"
+  field_smtp_password: "Contraseña"
+  field_smtp_from: "Remitente"
+
   permission_general_use: "Utilizar el plugin Haltr"
   permission_manage_payments: "Gestionar pagos"
   permission_use_templates: "Plantillas de facturas"

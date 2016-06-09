@@ -439,6 +439,13 @@ ca:
   field_imap_password: "Contrasenya"
   field_imap_from: "Remitent"
 
+  field_smtp_host: "Servidor SMTP"
+  field_smtp_port: "Port"
+  field_smtp_ssl: "Fer servir SSL"
+  field_smtp_username: "Nom d'usuari"
+  field_smtp_password: "Contrasenya"
+  field_smtp_from: "Remitent"
+
   permission_general_use: "Utilitzar el plugin Haltr"
   permission_manage_payments: "Gestionar pagaments"
   permission_use_templates: "Plantilles de factures"

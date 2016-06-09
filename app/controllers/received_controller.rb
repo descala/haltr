@@ -2,6 +2,8 @@ class ReceivedController < InvoicesController
 
   menu_item Haltr::MenuItem.new(:invoices,:received)
 
+  skip_before_filter :check_for_company, :only=> [:index, :show]
+
   def show
     @invoice.update_attribute(:has_been_read, true)
     super

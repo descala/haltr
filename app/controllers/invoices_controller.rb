@@ -529,7 +529,8 @@ class InvoicesController < ApplicationController
       end
     else
       # https://www.ingent.net/issues/6014
-      if @invoice.state == 'sent' and @invoice.last_sent_event
+      if %w(sent registered accepted allegedly_paid closed).
+          include?(@invoice.state) and @invoice.last_sent_event
         case @invoice.last_sent_event.content_type
         when 'application/pdf'
           show_last_sent = true
@@ -831,7 +832,9 @@ class InvoicesController < ApplicationController
   # has a setting in haltr plugin conf to require clients to register
   def view
     @client_hashid = params[:client_hashid]
-    if User.current.logged? and User.current.project
+    if User.current.logged? and User.current.project and
+        (User.current.project.company.taxcode == @invoice.client.taxcode or
+         User.current.project.company.taxcode.blank?)
       user_c = User.current.project.company
       unless user_c.company_providers.include?(@invoice.project.company)
         # add project to providers
@@ -860,6 +863,25 @@ class InvoicesController < ApplicationController
       end
     end
     @last_success_sending_event = @invoice.last_success_sending_event
+    if @last_success_sending_event
+      if @last_success_sending_event.content_type == 'application/pdf'
+        @show_pdf = true
+      elsif @last_success_sending_event.content_type == 'application/xml'
+        template = original_xsl_template(Nokogiri::XML(@last_success_sending_event.file))
+        if template
+          invoice_nokogiri = Nokogiri::XML(@last_success_sending_event.file)
+          @invoice_root_namespace = Haltr::Utils.root_namespace(invoice_nokogiri) rescue nil
+          xslt = render_to_string(:template=>template,:layout=>false)
+          begin
+            if invoice_nokogiri.root.namespace.href =~ /StandardBusinessDocumentHeader/
+              invoice_nokogiri = Haltr::Utils.extract_from_sbdh(invoice_nokogiri)
+            end
+            @invoice_xslt_html = Nokogiri::XSLT(xslt).transform(invoice_nokogiri)
+          rescue
+          end
+        end
+      end
+    end
     @lines = @invoice.invoice_lines
     set_sent_and_closed
     @invoices_not_sent = []

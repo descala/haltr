@@ -428,6 +428,13 @@ fr:
   field_imap_password: "Mot de passe"
   field_imap_from: "De"
 
+  field_smtp_host: "SMTP server"
+  field_smtp_port: "Port"
+  field_smtp_ssl: "Use SSL"
+  field_smtp_username: "Username"
+  field_smtp_password: "Password"
+  field_smtp_from: "From"
+
   permission_general_use: "Utiliser le plugin Haltr"
   permission_manage_payments: "Gére les paiements"
   permission_use_templates: "Modèles de factures"

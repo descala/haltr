@@ -433,8 +433,11 @@ class Invoice < ActiveRecord::Base
   def extra_info_plus_tax_comments
     tax_comments = self.taxes.collect do |tax|
       tax.comment unless tax.comment.blank?
-    end.compact.uniq.join(". ")
-    ([extra_info,tax_comments]-['']).compact.join('. ')
+    end.compact
+    tax_comments.unshift(extra_info)
+    tax_comments.delete('')
+    tax_comments.uniq!
+    tax_comments.compact.join('. ')
   end
 
   def to_s
@@ -658,7 +661,7 @@ _INV
     client_language = User.current.language
     client_language = 'es' if client_language.blank?
     default_channel = 'paper'
-    if ExportChannels.available.include? 'link_to_pdf_by_mail'
+    if ExportChannels.available? 'link_to_pdf_by_mail'
       default_channel = 'link_to_pdf_by_mail'
     end
 

@@ -2,11 +2,12 @@ class EventsController < ApplicationController
   unloadable
   helper :haltr
 
-  skip_before_filter :check_if_login_required, :only => [ :create ]
+  skip_before_filter :check_if_login_required, :only => [ :create, :file ]
   before_filter :check_remote_ip, :except => [:file, :index]
   before_filter :find_event, :only => [:file]
   before_filter :find_project_by_project_id, :only => [:index]
-  before_filter :authorize, :only => [:file, :index]
+  before_filter :authorize, :only => [:index]
+  before_filter :authorize_or_find_hashid, only: [:file]
 
   accept_api_auth :file, :index
 
@@ -135,6 +136,16 @@ class EventsController < ApplicationController
       render :text => "Not allowed from your IP #{request.remote_ip}\n", :status => 403
       logger.error "Not allowed from IP #{request.remote_ip} (allowed IPs: #{allowed_ips.join(', ')})\n"
       return false
+    end
+  end
+
+  # on invoice#view we need to access events files to show them in pdf viewer
+  # authenticate with client_hashid
+  def authorize_or_find_hashid
+    client = Client.find_by_hashid params[:client_hashid]
+    unless client and client.project.events.find(params[:id])
+      authorize
+      return
     end
   end
 
