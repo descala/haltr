@@ -545,7 +545,7 @@ class InvoicesController < ApplicationController
         @invoice_root_namespace = Haltr::Utils.root_namespace(invoice_nokogiri) rescue nil
         xslt = render_to_string(:template=>template,:layout=>false)
         @invoice_xslt_html = Nokogiri::XSLT(xslt).transform(invoice_nokogiri)
-      else
+      elsif @invoice.original
         flash[:error] = l(:xslt_not_available)
         redirect_to(action: 'show', id: @invoice)
         return
