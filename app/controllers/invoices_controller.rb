@@ -838,6 +838,7 @@ class InvoicesController < ApplicationController
             end
             @invoice_xslt_html = Nokogiri::XSLT(xslt).transform(invoice_nokogiri)
           rescue
+            flash[:warning]=$!.message
           end
         end
       end
