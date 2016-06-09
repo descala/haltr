@@ -16,16 +16,15 @@
 
     <% if @invoice_xslt_html or @invoice_pdf %>
       <li>
-        <%= link_to(l(:label_invoice_viewer_standard), "?view_with=standard") %>
+        <%= link_to(l(:label_invoice_viewer_standard), "?view=db") %>
       </li>
     <% else %>
-      <li>
-        <% if @invoice.invoice_format == 'pdf' -%>
-          <%= link_to(l(:label_invoice_viewer_pdf), "?view_with=pdf") %>
-        <% else -%>
-          <%= link_to(l(:label_invoice_viewer_xslt), "?view_with=xslt") %>
-        <% end -%>
-      </li>
+      <% if @invoice.last_sent_event -%>
+        <li><%= link_to(l(:label_invoice_view_sent), "?view=sent") %></li>
+      <% end -%>
+      <% if @invoice.original -%>
+        <li><%= link_to(l(:label_invoice_view_original), "?view=original") %></li>
+      <% end -%>
     <% end %>
 
     <% if @invoice.last_sent_file_path -%>
