@@ -525,7 +525,8 @@ class InvoicesController < ApplicationController
       end
     else
       # https://www.ingent.net/issues/6014
-      if @invoice.state == 'sent' and @invoice.last_sent_event
+      if %w(sent registered accepted allegedly_paid closed).
+          include?(@invoice.state) and @invoice.last_sent_event
         case @invoice.last_sent_event.content_type
         when 'application/pdf'
           show_last_sent = true
