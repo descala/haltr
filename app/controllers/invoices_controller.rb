@@ -499,10 +499,7 @@ class InvoicesController < ApplicationController
     invoice_nokogiri = nil
     @invoice_pdf = nil
     unless %w(original sent db).include?(params[:view])
-      if @invoice.last_success_sending_event and
-          %w(sent registered accepted allegedly_paid closed).include?(@invoice.state)
-        params[:view] = 'sent'
-      elsif @invoice.original and @invoice.send_original?
+      if @invoice.original and @invoice.send_original?
         params[:view] = @company.invoice_viewer
       end
     end
@@ -581,7 +578,7 @@ class InvoicesController < ApplicationController
           @is_pdf = true
           @debug = params[:debug]
           render :pdf => @invoice.pdf_name_without_extension,
-            :disposition => params[:view] ? 'inline' : 'attachment',
+            :disposition => params[:disposition] == 'inline' ? 'inline' : 'attachment',
             :layout => "invoice.html",
             # TODO
             # :template=> show_original ? "invoice/show_with_xsl" : "invoices/show_pdf",
