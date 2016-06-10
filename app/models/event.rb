@@ -123,7 +123,7 @@ class Event < ActiveRecord::Base
         new_state = invoice.state_transitions.select {|t|
           t.event.to_s == name.to_s
         }.first.to
-        invoice.update_column(:state, new_state)
+        invoice.update_attribute(:state, new_state)
 
         Redmine::Hook.call_hook(:model_event_after_update_invoice,
                                 event: self, new_state: new_state)
