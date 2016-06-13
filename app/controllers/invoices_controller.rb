@@ -946,9 +946,10 @@ class InvoicesController < ApplicationController
     @invoice = IssuedInvoice.new(
       @to_amend.attributes.update(
         state: 'new',
-        number: "#{@to_amend.number}-R"),
-        amend_reason: '16',
-        amended_number: @to_amend.number
+        number: IssuedInvoice.next_number(@project)
+      ),
+      amend_reason: '16',
+      amended_number: @to_amend.number
     )
     @to_amend.invoice_lines.each do |line|
       il = line.dup
