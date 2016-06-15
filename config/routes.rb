@@ -62,7 +62,7 @@ resources :projects do
   match 'cash_flow' => 'charts#cash_flow', :via => :get
   match 'payments/reports' => 'payments#reports', :via => [:get]
   match 'payments/report_payment_list' => 'payments#report_payment_list', :via => [:post]
-  match 'events' => 'events#index', via: :get
+  match 'events' => 'events#index', via: [:get,:post]
 end
 resources :clients do
   resources :people, :only => [:index, :new, :create]

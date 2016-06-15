@@ -67,6 +67,7 @@
 
   <% if @events.any? %>
     <div class="events">
+      <p class="contextual"><%= link_to l(:label_any), project_events_path(project_id: @project) %></p>
       <h3><%= l(:events)%></h3>
       <% @events.each do |event| -%>
         <div><%= format_time event.created_at %> <%= link_to(event.invoice.number, invoice_path(event.invoice), :title => invoice_summary(event.invoice)) -%> <%=l(event.name)%></div>

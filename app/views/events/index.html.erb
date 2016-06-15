@@ -1,58 +1,106 @@
 <%= render partial: 'common/chart_headers' %>
+<!--filtres-->
+<div class="seccio grup">
+  <div class="col span-2-de-2">
+    <div class="filtres">
+      <div class="titularAcc">
+        <%= l(:label_filter_plural) %>
+      </div>
+      <div class="contingutAcc">
+        <%= form_tag({:id=>@project}, :method => :get, :class => 'formee') do %>
+          <fieldset>
+            <legend><%= l(:label_search) %></legend>
 
-<table class="list">
-  <thead>
-    <tr>
-      <% unless @project -%>
-        <th><%= l(:field_project) %></th>
-      <% end -%>
-      <%= sort_header_tag('created_at', caption: l(:field_date)) %>
-      <%= sort_header_tag('type', caption: l(:field_type)) %>
-      <th></th>
-      <th></th>
-    </tr>
-  </thead>
-  <tbody>
-    <% @events.each do |e| -%>
-      <tr>
-        <% unless @project -%>
-          <td><%= link_to(e.project.name, events_path(project_id: e.project)) %></td>
-        <% end -%>
-        <td width="130"><%= format_time e.created_at %></td>
-        <td title="<%=e.id%>"><%= e.type %></td>
-        <td>
-          <% if e.invoice -%>
-            <%= link_to_invoice_with_label(e.invoice) -%>
-          <% elsif e.client -%>
-            <%= link_to "#{l(:field_client)} #{e.client.name}", edit_client_path(e.client) -%>
-          <% elsif e.invoice_id -%>
-            <%= e.invoice_id %>
-          <% elsif e.client_id -%>
-            <%= e.client_id %>
-          <% else -%>
-            <%= e.to_s %>
+            <div class="seccio grup">
+              <div class="col span-1-de-3">
+                <label for="from_time"><%=l(:field_date)%></label>
+                <%= text_field_tag :from_time, params[:from_time], :size => 10, :style => "width: 90%;" %><%= calendar_for('from_time') %>
+              </div>
+              <div class="col span-1-de-3">
+                <label for="to_time"><%=l(:label_to)%></label>
+                <%= text_field_tag :to_time, params[:to_time], :size => 10, :style => "width: 90%;" %><%= calendar_for('to_time') %>
+              </div>
+              <div class="col span-1-de-3">
+              </div>
+            </div>
+
+            <div class="col span-1-de-3" style="position: absolute; bottom: 15px; right: 15px; text-align: right;">
+              <%= submit_tag l(:button_apply), :class => "small", :name => nil %>
+            </div>
+          </fieldset>
+        <% end %>
+      </div>
+    </div>
+  </div>
+</div>
+<!--final filtres-->
+
+<div class="seccio grup">
+  <div class="col span-2-de-2">
+    <table class="list">
+      <thead>
+        <tr>
+          <% unless @project -%>
+            <th><%= l(:field_project) %></th>
           <% end -%>
-        </td>
-        <td><%= render partial: "events/event_short", locals: {e: e} %></td>
-      </tr>
-
-      <tr>
-        <td></td>
-        <td></td>
-        <td colspan="2">
-          <div id="audited_<%=e.id%>" class="audited">
-            <ul>
-              <% e.audits.each do |a| -%>
-                <%= render partial: "audits/audit", locals: { a: a } %>
+          <%= sort_header_tag('created_at', caption: l(:field_date)) %>
+          <% if User.current.admin? -%>
+            <%= sort_header_tag('type', caption: l(:field_type)) %>
+          <% end -%>
+          <th></th>
+          <th></th>
+        </tr>
+      </thead>
+      <tbody>
+        <% @events.each do |e| -%>
+          <tr>
+            <% unless @project -%>
+              <td><%= link_to(e.project.name, project_events_path(project_id: e.project)) %></td>
+            <% end -%>
+            <td width="130"><%= format_time e.created_at %></td>
+            <% if User.current.admin? -%>
+              <td title="<%=e.id%>"><%= e.type %></td>
+            <% end -%>
+            <td>
+              <% if e.invoice -%>
+                <%= link_to_invoice_with_label(e.invoice) -%>
+              <% elsif e.client -%>
+                <%= link_to "#{l(:field_client)} #{e.client.name}", edit_client_path(e.client) -%>
+              <% elsif e.invoice_id -%>
+                <%= e.invoice_id %>
+              <% elsif e.client_id -%>
+                <%= e.client_id %>
+              <% else -%>
+                <%= e.to_s %>
               <% end -%>
-            </ul>
-          </div>
-        </td>
-      </tr>
+            </td>
+            <td><%= render partial: "events/event_short", locals: {e: e} %></td>
+          </tr>
 
-    <% end -%>
-  </tbody>
-</table>
+          <tr>
+            <td></td>
+            <td></td>
+            <td colspan="2">
+              <div id="audited_<%=e.id%>" class="audited">
+                <ul>
+                  <% e.audits.each do |a| -%>
+                    <%= render partial: "audits/audit", locals: { a: a } %>
+                  <% end -%>
+                </ul>
+              </div>
+            </td>
+          </tr>
+
+        <% end -%>
+      </tbody>
+        <tfoot>
+          <tr>
+            <td colspan="10">&nbsp;</td>
+          </tr>
+        </tfoot>
+    </table>
+  </div>
+</div>
 
 <!--paginacio-->
 <div class="seccio grup paginacio pagination">

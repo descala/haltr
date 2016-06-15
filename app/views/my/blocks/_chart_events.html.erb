@@ -1,5 +1,6 @@
 <% if @project -%>
 <div class="chart_events">
+  <p class="contextual"><%= link_to l(:label_any), events_path(:project_id=>@project) %></p>
   <%= render :partial => 'common/chart_headers' %>
   <% old_project = @project %>
   <h3><%= l(:chart_events) %></h3>
