@@ -24,11 +24,15 @@ class EventsController < ApplicationController
       events = Event.scoped
     end
 
-    if params[:from_time]
+    if params[:from_time].present?
       events = events.where('created_at >= ?', params[:from_time])
     end
 
-    if params[:invoice_id]
+    if params[:to_time].present?
+      events = events.where('created_at <= ?', params[:to_time].to_date.end_of_day)
+    end
+
+    if params[:invoice_id].present?
       events = events.where('invoice_id = ?', params[:invoice_id])
     end
 
