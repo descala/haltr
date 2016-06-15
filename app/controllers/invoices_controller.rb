@@ -366,16 +366,16 @@ class InvoicesController < ApplicationController
     # and copy global "exempt comment" to all exempt taxes
     parsed_params = parse_invoice_params
 
-    # mark invoice as new
-    if %w(sent registered accepted allegedly_paid closed).include?(@invoice.state)
-      parsed_params[:state] = 'new'
-    end
-
     if params[:invoice][:client_id]
       @invoice.client_office = nil unless Client.find(params[:invoice][:client_id]).client_offices.any? {|office| office.id == @invoice.client_office_id }
     end
 
     if @invoice.update_attributes(parsed_params)
+      # mark invoice as new
+      if %w(sent registered accepted allegedly_paid closed).include?(@invoice.state)
+        @invoice.update_attribute(:state, 'new')
+      end
+
       event = Event.new(:name=>'edited',:invoice=>@invoice,:user=>User.current)
       # associate last created audits to this event
       event.audits = @invoice.last_audits_without_event
@@ -503,10 +503,7 @@ class InvoicesController < ApplicationController
     invoice_nokogiri = nil
     @invoice_pdf = nil
     unless %w(original sent db).include?(params[:view])
-      if @invoice.last_success_sending_event and
-          %w(sent registered accepted allegedly_paid closed).include?(@invoice.state)
-        params[:view] = 'sent'
-      elsif @invoice.original and @invoice.send_original?
+      if @invoice.original and @invoice.send_original?
         params[:view] = @company.invoice_viewer
       end
     end
@@ -585,7 +582,7 @@ class InvoicesController < ApplicationController
           @is_pdf = true
           @debug = params[:debug]
           render :pdf => @invoice.pdf_name_without_extension,
-            :disposition => params[:view] ? 'inline' : 'attachment',
+            :disposition => params[:disposition] == 'inline' ? 'inline' : 'attachment',
             :layout => "invoice.html",
             # TODO
             # :template=> show_original ? "invoice/show_with_xsl" : "invoices/show_pdf",
@@ -954,9 +951,10 @@ class InvoicesController < ApplicationController
     @invoice = IssuedInvoice.new(
       @to_amend.attributes.update(
         state: 'new',
-        number: "#{@to_amend.number}-R"),
-        amend_reason: '16',
-        amended_number: @to_amend.number
+        number: IssuedInvoice.next_number(@project)
+      ),
+      amend_reason: '16',
+      amended_number: @to_amend.number
     )
     @to_amend.invoice_lines.each do |line|
       il = line.dup

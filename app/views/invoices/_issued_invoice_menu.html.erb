@@ -37,7 +37,7 @@
       <li><%= link_to l(:download_as_xml), {:action=>'show', :id=>@invoice, :format => 'facturae32'}, :class=>'icon-haltr-save' %></li>
     <% end -%>
 
-    <li><%= link_to l(:download_as_pdf), {:action=>'show', :id=>@invoice, :format => 'pdf', :view_with => (@invoice_xslt_html ? 'xslt' : '')}, :class=>'icon-haltr-save' %></li>
+    <li><%= link_to l(:download_as_pdf), {:action=>'show', :id=>@invoice, :format => 'pdf'}, :class=>'icon-haltr-save' %></li>
 
     <% unless hide_to_user(:manage_payments) -%>
       <% if @invoice.state?(:sent) or @invoice.state?(:allegedly_paid) or @invoice.state?(:registered) -%>

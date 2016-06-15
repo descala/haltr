@@ -178,4 +178,32 @@ class InvoicesControllerTest < ActionController::TestCase
     assert_response :success
   end
 
+  test 'edit sent invoice sets state to new' do
+    i = invoices(:invoices_002)
+    i = Invoice.find i.id
+    assert_equal 'sent', i.state
+    assert_equal 100.3, i.total.dollars
+    assert_equal 15, i.discount_percent
+    lines = i.invoice_lines.collect {|l| l.attributes }
+    new_line = {
+      quantity: 1,
+      description: 'new',
+      price: 10,
+      taxes_attributes: [{
+        name: 'IVA',
+        percent: 0,
+        category: 'E'
+      }]
+    }
+    lines << new_line
+    put :update, id: i, invoice: {
+      invoice_lines_attributes: lines
+    }
+    i.reload
+    # editing a sent invoice should set state to new
+    assert_equal 'new', i.state
+    # it should update imports too, despite only invoice_lines changed
+    assert_equal 108.8, i.total.dollars
+  end
+
 end
