@@ -549,7 +549,9 @@ class InvoicesController < ApplicationController
         @invoice_xslt_html = Nokogiri::XSLT(xslt).transform(invoice_nokogiri)
       elsif @invoice.original
         flash[:error] = l(:xslt_not_available)
-        redirect_to(action: 'show', id: @invoice)
+        unless @invoice.is_a?(ReceivedInvoice)
+          redirect_to(action: 'show', id: @invoice)
+        end
         return
       end
     end
