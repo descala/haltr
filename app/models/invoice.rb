@@ -1014,7 +1014,7 @@ _INV
 
   def send_original?
     Redmine::Hook.call_hook(:model_invoice_send_original, :invoice=>self) != [false] and
-      original.present? and !modified_since_created?
+      original and !modified_since_created?
   end
 
   def original_root_namespace
