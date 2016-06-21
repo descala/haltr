@@ -123,6 +123,7 @@ sv:
   state_new: "Ny"
   state_sending: "Skickar"
   state_sent: "Skickat"
+  state_read: "Read"
   state_error: "Ej signerad"
   state_closed: "Avslutad"
   state_discarded: "Avfärdad"

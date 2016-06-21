@@ -4,6 +4,9 @@ class IssuedInvoice < InvoiceDocument
 
   unloadable
 
+  has_one :created_invoice, class_name: 'ReceivedInvoice',
+    foreign_key: 'created_from_invoice_id'
+
   include Haltr::ExportableDocument
 
   belongs_to :invoice_template
@@ -43,19 +46,19 @@ class IssuedInvoice < InvoiceDocument
       transition [:new,:sending,:error,:discarded] => :sent
     end
     event :mark_unsent do
-      transition [:sent,:sending,:closed,:error,:discarded] => :new
+      transition [:sent,:read,:sending,:closed,:error,:discarded] => :new
     end
     event :error_sending do
       transition :sending => :error
     end
     event :close do
-      transition [:new,:sent,:registered] => :closed
+      transition [:new,:sent,:read,:registered] => :closed
     end
     event :discard_sending do
       transition [:error,:sending] => :discarded
     end
     event :paid do
-      transition [:sent,:accepted,:allegedly_paid,:registered] => :closed
+      transition [:sent,:read,:accepted,:allegedly_paid,:registered] => :closed
     end
     event :unpaid do
       transition :closed => :sent
@@ -101,6 +104,9 @@ class IssuedInvoice < InvoiceDocument
     end
     event :mark_as_closed do
       transition all => :closed
+    end
+    event :read do
+      transition :sent => :read
     end
   end
 

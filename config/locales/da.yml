@@ -123,6 +123,7 @@ da:
   state_new: "Ny"
   state_sending: "Sender"
   state_sent: "Sendt"
+  state_read: "Read"
   state_error: "Ikke signere"
   state_closed: "Lukket"
   state_discarded: "Kasseret"

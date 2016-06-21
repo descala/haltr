@@ -135,6 +135,7 @@ ca:
   state_new: "Nova"
   state_sending: "Enviant-se"
   state_sent: "Enviada"
+  state_read: "Llegida"
   state_error: "Error"
   state_closed: "Tancada"
   state_discarded: "Descartada"

@@ -4,6 +4,8 @@ class ReceivedInvoice < InvoiceDocument
 
   unloadable
 
+  belongs_to :created_from_invoice, class_name: 'IssuedInvoice'
+
   after_create :create_event
 
   state_machine :state, :initial => :received do
@@ -85,6 +87,7 @@ class ReceivedInvoice < InvoiceDocument
         client:    client,
         bank_info: nil,
         original:  (issued.last_sent_event.file rescue nil),
+        created_from_invoice: issued,
         invoice_lines: issued.invoice_lines.collect {|il|
           new_il = il.dup
           new_il.taxes = il.taxes.collect {|t|

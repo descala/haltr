@@ -137,6 +137,7 @@ es:
   state_new: "Nueva"
   state_sending: "Enviándose"
   state_sent: "Enviada"
+  state_read: "Leída"
   state_error: "Error"
   state_closed: "Cerrada"
   state_discarded: "Descartada"

@@ -209,7 +209,7 @@ table.invoice_lines {
   color: black;
   text-shadow: 0 0 5px #fff;
 }
-.ribbon-sent, .ribbon-accepted, .ribbon-closed, .ribbon-paid, .ribbon-registered {
+.ribbon-read, .ribbon-sent, .ribbon-accepted, .ribbon-closed, .ribbon-paid, .ribbon-registered {
   background-color: green;
 }
 .ribbon-error, .ribbon-discarded, .ribbon-refused {

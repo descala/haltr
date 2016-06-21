@@ -136,6 +136,7 @@ gl:
   state_new: "Nova"
   state_sending: "Enviándose"
   state_sent: "Enviada"
+  state_read: "Leída"
   state_error: "Erro"
   state_closed: "Pechada"
   state_discarded: "Desbotada"

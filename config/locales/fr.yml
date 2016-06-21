@@ -125,6 +125,7 @@ fr:
   state_new: "Nouveau"
   state_sending: "Emission"
   state_sent: "Envoyé"
+  state_read: "Read"
   state_error: "Error"
   state_closed: "Clos"
   state_discarded: "Annulé"
