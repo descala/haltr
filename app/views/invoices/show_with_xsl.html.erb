@@ -7,7 +7,9 @@
     <div class="col span-2-de-2">
       <ul class="menu-rapid">
         <li><%= link_to_if_authorized l("label_invoice_new"), new_project_invoice_path(@project), :class => 'icon icon-add' %></li>
-        <li><%= link_to_if_authorized l(:button_edit), { :action => 'edit', :id => @invoice }, :class => 'icon icon-edit' %></li>
+        <% unless @invoice.is_a?(ReceivedInvoice) -%>
+          <li><%= link_to_if_authorized l(:button_edit), { :action => 'edit', :id => @invoice }, :class => 'icon icon-edit' %></li>
+        <% end -%>
         <li><%= link_to_if_authorized l(:button_delete), { :action => 'destroy', :id => @invoice}, :confirm=>l(:text_are_you_sure), :method=>:delete, :class=>'icon icon-del' %></li>
         <%= render :partial => "#{@invoice.class.to_s.underscore}_menu" %>
         <% if @invoice.next%>
