@@ -88,6 +88,15 @@ class ReceivedController < InvoicesController
     super
   end
 
+  def edit
+    unless @invoice.invoice_format == 'pdf'
+      flash[:error] = "Can't edit received invoices"
+      redirect_to(:action=>'index',:project_id=>@project.id)
+      return
+    end
+    super
+  end
+
   def mark_accepted_with_mail
     MailNotifier.delay.received_invoice_accepted(@invoice,params[:reason])
     mark_accepted
