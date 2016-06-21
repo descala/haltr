@@ -1392,9 +1392,9 @@ class InvoicesController < ApplicationController
     namespace = Haltr::Utils.root_namespace(doc) rescue nil
     case namespace
     when "http://www.facturae.es/Facturae/2014/v3.2.1/Facturae", "http://www.facturae.es/Facturae/2009/v3.2/Facturae"
-      'invoices/facturae_xslt_viewer.xsl.erb'
+      'invoices/facturae_xslt_viewer.xsl'
     when "urn:oasis:names:specification:ubl:schema:xsd:Invoice-2"
-      'invoices/TRDM-010a-Invoice-NO.xsl.erb'
+      'invoices/TRDM-010a-Invoice-NO.xsl'
     else
       nil
     end
