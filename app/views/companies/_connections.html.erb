@@ -1,3 +1,45 @@
+<% if User.current.admin? or User.current.allowed_to?(:email_customization, @project) -%>
+  <fieldset class="tabular box">
+    <legend>SMTP</legend>
+    <div class="seccio grup">
+      <p class="col span-2-de-6">
+      <%=f.text_field :smtp_host%>
+      </p>
+      <p class="col span-2-de-6">
+      <%=f.text_field :smtp_port%>
+      </p>
+      <p class="col span-2-de-6">
+      <%=f.check_box :smtp_ssl%>&nbsp;
+      </p>
+    </div>
+    <div class="seccio grup">
+      <p class="col span-2-de-6">
+      <%=f.text_field :smtp_from, placeholder: 'Name <email@domain.com>' %>
+      </p>
+      <p class="col span-2-de-6">
+      <%=f.text_field :smtp_username%>
+      </p>
+      <p class="col span-2-de-6">
+      <%=f.password_field :smtp_password, value: @company.smtp_password %>
+      <%= link_to(l(:button_show), '#', :id=>'show_smtp_password', :onclick=>'return change_smtp_password_type();')%>
+      </p>
+    </div>
+  </fieldset>
+
+  <script>
+    function change_smtp_password_type() {
+      var obj = $('#company_smtp_password')[0];
+      if (obj.type == 'password') {
+        obj.type = 'text';
+      } else {
+        obj.type = 'password';
+      }
+      return false;
+    }
+  </script>
+
+<% end -%>
+
 <% if User.current.admin? or User.current.allowed_to?(:use_imap_draft, @project) -%>
   <fieldset class="tabular box">
     <legend>IMAP</legend>

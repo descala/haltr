@@ -52,6 +52,7 @@ class CompaniesController < ApplicationController
         render :action => 'edit'
       end
       format.api do
+        params[:format] ||= 'json'
         render action: :my_company
       end
     end

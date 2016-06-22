@@ -4,6 +4,8 @@ class ReceivedInvoice < InvoiceDocument
 
   unloadable
 
+  belongs_to :created_from_invoice, class_name: 'IssuedInvoice'
+
   after_create :create_event
   before_save :update_imports
 
@@ -87,7 +89,7 @@ class ReceivedInvoice < InvoiceDocument
       allowed:        nil
     )
     # copy issued invoice attributes
-    ReceivedInvoice.create!(
+    ReceivedInvoice.new(
       issued.attributes.merge(
         state:     :received,
         transport: 'from_issued',
@@ -95,6 +97,7 @@ class ReceivedInvoice < InvoiceDocument
         client:    client,
         bank_info: nil,
         original:  (issued.last_sent_event.file rescue nil),
+        created_from_invoice: issued,
         invoice_lines: issued.invoice_lines.collect {|il|
           new_il = il.dup
           new_il.taxes = il.taxes.collect {|t|
@@ -108,7 +111,7 @@ class ReceivedInvoice < InvoiceDocument
           new_il
         }
       )
-    )
+    ).save(validate: false)
   end
 
   protected

@@ -7,7 +7,11 @@
       <% elsif @invoice.is_a? IssuedInvoice %>
         <li><%= link_to_if_authorized l("label_invoice_new"), new_project_invoice_path(@project), :class => 'icon icon-add' %></li>
       <% end %>
-      <li><%= link_to_if_authorized l(:button_edit), { :action => 'edit', :id => @invoice }, :class => 'icon icon-edit' %></li>
+      <% if @invoice.is_a?(ReceivedInvoice) and @invoice.invoice_format == 'pdf' -%>
+        <li><%= link_to_if_authorized l(:button_edit_metadata), { :action => 'edit', :id => @invoice }, :class => 'icon icon-edit' %></li>
+      <% elsif !@invoice.is_a?(ReceivedInvoice) -%>
+        <li><%= link_to_if_authorized l(:button_edit), { :action => 'edit', :id => @invoice }, :class => 'icon icon-edit' %></li>
+      <% end -%>
       <li><%= link_to_if_authorized l(:button_delete), { :action => 'destroy', :id => @invoice}, :confirm=>l(:text_are_you_sure), :method=>:delete, :class=>'icon icon-del' %></li>
       <%= render :partial => "#{@invoice.class.to_s.underscore}_menu" %>
       <% if @invoice.next%>
@@ -22,7 +26,7 @@
 <!--final menu rapid-->
 
 <% if @invoice_pdf -%>
-  <iframe src="/pdfjs/web/viewer.html?file=<%=invoices_original_path(@invoice, format: 'pdf')%>" style="border: 0" width="100%" height="800" frameborder="0" scrolling="no"></iframe>
+  <iframe src="/pdfjs/web/viewer.html?file=<%=@invoice_pdf%>" style="border: 0" width="100%" height="800" frameborder="0" scrolling="no"></iframe>
 <% else -%>
 
   <% if @invoice.invoice_img -%>

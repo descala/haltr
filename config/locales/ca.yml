@@ -135,6 +135,7 @@ ca:
   state_new: "Nova"
   state_sending: "Enviant-se"
   state_sent: "Enviada"
+  state_read: "Llegida"
   state_error: "Error"
   state_closed: "Tancada"
   state_discarded: "Descartada"
@@ -438,6 +439,13 @@ ca:
   field_imap_username: "Nom d'usuari"
   field_imap_password: "Contrasenya"
   field_imap_from: "Remitent"
+
+  field_smtp_host: "Servidor SMTP"
+  field_smtp_port: "Port"
+  field_smtp_ssl: "Fer servir SSL"
+  field_smtp_username: "Nom d'usuari"
+  field_smtp_password: "Contrasenya"
+  field_smtp_from: "Remitent"
 
   permission_general_use: "Utilitzar el plugin Haltr"
   permission_manage_payments: "Gestionar pagaments"
@@ -754,7 +762,6 @@ ca:
   label_invoice_viewer: "Visualització de factures"
   field_invoice_viewer: "Visualització de les factures importades"
   label_invoice_viewer_standard: "Usar el visor normal"
-  label_invoice_viewer_xslt : "Usar el visor XSLT"
   xslt_not_available: "No hi ha cap XSLT disponible pel format original d'aquesta factura"
   xslt_shows_original: "Aquesta factura s'ha modificat. El format XSLT reflecteix l'original, sense el canvis."
   skip_invoice_validations: No validar la factura al importar
@@ -764,9 +771,11 @@ ca:
   field_tax_point_date: "Data de Servei"
   field_xpaths_from_original: "XPATHS a conservar de l'original"
   warn_edit_invoice: "Estàs a punt d'editar una factura que ha estat enviada.<br />
-Tingues en compte que el teu client no rebrà els canvis a no ser que la tornis a enviar."
+Tingues en compte que el teu client no rebrà els canvis a no ser que la tornis a enviar.<br />
+Si la deses, es marcara com a Nova."
   view_invoice_requires_login: "Requerir login per veure les factures"
   from_issued: "Rebuda"
-  label_invoice_viewer_pdf: "Usar el visor PDF"
-  pdf_viewer_not_available: "No es pot fer servir el visor PDF amb aquesta factura, format original incorrecte"
   pdf_shows_original: "Aquesta factura s'ha modificat. El format PDF reflecteix l'original, sense el canvis."
+  label_invoice_view_sent: "Veure document enviat"
+  label_invoice_view_original: "Veure document original"
+  button_edit_metadata: "Editar metadades"
