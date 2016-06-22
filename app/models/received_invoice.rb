@@ -69,6 +69,7 @@ class ReceivedInvoice < InvoiceDocument
   def self.create_from_issued(issued, project)
     target = project.company
     source = issued.project.company
+
     client = target.project.clients.find_by_taxcode(source.taxcode)
     client ||= Client.create!(
       project_id:     target.project_id,
@@ -88,6 +89,13 @@ class ReceivedInvoice < InvoiceDocument
       language:       source.language,
       allowed:        nil
     )
+
+    # the format of this invoice is the format of the document last sent
+    sent_invoice_format = 'xml'
+    if issued.last_sent_event.content_type == 'application/pdf'
+      sent_invoice_format = 'pdf'
+    end
+
     # copy issued invoice attributes
     ReceivedInvoice.new(
       issued.attributes.merge(
@@ -96,6 +104,7 @@ class ReceivedInvoice < InvoiceDocument
         project:   target.project,
         client:    client,
         bank_info: nil,
+        invoice_format: sent_invoice_format,
         original:  (issued.last_sent_event.file rescue nil),
         created_from_invoice: issued,
         invoice_lines: issued.invoice_lines.collect {|il|
