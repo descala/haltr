@@ -91,10 +91,7 @@ class ReceivedInvoice < InvoiceDocument
     )
 
     # the format of this invoice is the format of the document last sent
-    sent_invoice_format = 'xml'
-    if issued.last_sent_event.content_type == 'application/pdf'
-      sent_invoice_format = 'pdf'
-    end
+    sent_invoice_format = ExportChannels.format(issued.client.invoice_format)
 
     # copy issued invoice attributes
     ReceivedInvoice.new(
