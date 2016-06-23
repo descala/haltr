@@ -814,6 +814,7 @@ class InvoicesController < ApplicationController
   def view
     @client_hashid = params[:client_hashid]
     if User.current.logged? and User.current.project and
+        User.current.project != @invoice.project and
         (User.current.project.company.taxcode == @invoice.client.taxcode or
          User.current.project.company.taxcode.blank?)
       user_company = User.current.project.company
