@@ -108,6 +108,15 @@ class IssuedInvoice < InvoiceDocument
     event :read do
       transition :sent => :read
     end
+    event :received_notification do
+      transition all => :read
+    end
+    event :failed_notification do
+      transition all => :error
+    end
+    event :cancelled_notification do
+      transition all => :cancelled
+    end
   end
 
   def sent?
