@@ -822,7 +822,7 @@ class InvoicesController < ApplicationController
         # add project to providers
         user_company.company_providers << @invoice.project.company
         # create received invoices
-        @invoice.project.invoices.select {|i| i.client == @invoice.client }.each do |issued|
+        @invoice.project.issued_invoices.select {|i| i.client == @invoice.client }.each do |issued|
           ReceivedInvoice.create_from_issued(issued, User.current.project)
         end
       end
@@ -878,6 +878,7 @@ class InvoicesController < ApplicationController
   rescue ActionView::MissingTemplate
     nil
   rescue Exception => e
+    flash[:error]=e.message
     logger.debug e
     render_404
   end
