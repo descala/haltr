@@ -56,7 +56,7 @@ class InvoicesController < ApplicationController
 
     unless params["state_all"] == "1"
       statelist=[]
-      %w(new sending sent error closed discarded registered refused accepted allegedly_paid).each do |state|
+      %w(new sending sent read error cancelled closed discarded registered refused accepted allegedly_paid).each do |state|
         if params[state] == "1"
           statelist << "'#{state}'"
         end
