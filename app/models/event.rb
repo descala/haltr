@@ -145,6 +145,8 @@ class Event < ActiveRecord::Base
         end
       end
     end
+    Redmine::Hook.call_hook(:model_event_after_create,
+                            event: self, new_state: invoice.state)
   end
 
 end
