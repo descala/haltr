@@ -84,7 +84,21 @@ class ReceivedController < InvoicesController
   end
 
   def show
-    @invoice.update_attribute(:has_been_read, true)
+    unless User.current.admin?
+      @invoice.update_attribute(:has_been_read, true)
+      if @invoice.created_from_invoice
+        @invoice.created_from_invoice.read
+      end
+    end
+    super
+  end
+
+  def edit
+    unless @invoice.invoice_format == 'pdf'
+      flash[:error] = "Can't edit received invoices"
+      redirect_to(:action=>'index',:project_id=>@project.id)
+      return
+    end
     super
   end
 
@@ -94,6 +108,14 @@ class ReceivedController < InvoicesController
   end
 
   def mark_accepted
+    if @invoice.created_from_invoice
+      Event.create(
+        name: 'accept_notification',
+        invoice_id: @invoice.created_from_invoice_id,
+        user_id: User.current.id,
+        notes: params[:reason]
+      )
+    end
     Event.create(:name=>'accept',:invoice=>@invoice,:user=>User.current)
     redirect_to :back
   rescue ActionController::RedirectBackError
@@ -106,6 +128,14 @@ class ReceivedController < InvoicesController
   end
 
   def mark_refused
+    if @invoice.created_from_invoice
+      Event.create(
+        name: 'refuse_notification',
+        invoice_id: @invoice.created_from_invoice_id,
+        user_id: User.current.id,
+        notes: params[:reason]
+      )
+    end
     Event.create(:name=>'refuse',:invoice=>@invoice,:user=>User.current)
     redirect_to :back
   rescue ActionController::RedirectBackError

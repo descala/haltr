@@ -4,6 +4,9 @@ class IssuedInvoice < InvoiceDocument
 
   unloadable
 
+  has_one :created_invoice, class_name: 'ReceivedInvoice',
+    foreign_key: 'created_from_invoice_id'
+
   include Haltr::ExportableDocument
 
   belongs_to :invoice_template
@@ -43,19 +46,19 @@ class IssuedInvoice < InvoiceDocument
       transition [:new,:sending,:error,:discarded] => :sent
     end
     event :mark_unsent do
-      transition [:sent,:sending,:closed,:error,:discarded] => :new
+      transition [:sent,:read,:sending,:closed,:error,:discarded] => :new
     end
     event :error_sending do
       transition :sending => :error
     end
     event :close do
-      transition [:new,:sent,:registered] => :closed
+      transition [:new,:sent,:read,:registered] => :closed
     end
     event :discard_sending do
       transition [:error,:sending] => :discarded
     end
     event :paid do
-      transition [:sent,:accepted,:allegedly_paid,:registered] => :closed
+      transition [:sent,:read,:accepted,:allegedly_paid,:registered] => :closed
     end
     event :unpaid do
       transition :closed => :sent
@@ -102,6 +105,18 @@ class IssuedInvoice < InvoiceDocument
     event :mark_as_closed do
       transition all => :closed
     end
+    event :read do
+      transition :sent => :read
+    end
+    event :received_notification do
+      transition all => :read
+    end
+    event :failed_notification do
+      transition all => :error
+    end
+    event :cancelled_notification do
+      transition all => :cancelled
+    end
   end
 
   def sent?
@@ -122,9 +137,8 @@ class IssuedInvoice < InvoiceDocument
 
   def number_must_be_uniq
     if type == "IssuedInvoice"
-      query = IssuedInvoice.where(project_id: project, number: number)
+      query = IssuedInvoice.where(project_id: project, number: number, series_code: series_code)
       query = query.where(["YEAR(date) = ?", date.year]) unless date.nil?
-      query = query.where(["series_code = ?", series_code])
       query = query.where(["id != ?", id]) unless new_record?
       if query.any?
         if date.nil?
@@ -201,7 +215,7 @@ class IssuedInvoice < InvoiceDocument
   end
 
   def visible_by_client?
-    %w(sent refused accepted allegedly_paid closed).include? state
+    %w(sent read refused accepted allegedly_paid closed).include? state
   end
 
   # returns true if invoice has been totally amended (substituted by another)

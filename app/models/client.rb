@@ -194,7 +194,7 @@ class Client < ActiveRecord::Base
   end
 
   def postalcode=(v)
-    write_attribute(:postalcode, v.gsub(' ', ''))
+    write_attribute(:postalcode, v.to_s.gsub(' ', ''))
   end
 
   protected

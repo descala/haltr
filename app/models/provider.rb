@@ -6,6 +6,7 @@ class Provider < ActiveRecord::Base
 
   after_create :create_inverse, unless: :has_inverse?
   after_destroy :destroy_inverses, if: :has_inverse?
+  validate :cant_be_company_provider_of_self
 
   def create_inverse
     self.class.create(inverse_provider_options)
@@ -25,6 +26,12 @@ class Provider < ActiveRecord::Base
 
   def inverse_provider_options
     { company_provider_id: company_id, company_id: company_provider_id }
+  end
+
+  def cant_be_company_provider_of_self
+    if company_id == company_provider_id
+      errors.add(:company_providers, "can't be provider of self!")
+    end
   end
 
 end

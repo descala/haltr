@@ -56,7 +56,7 @@ class InvoicesController < ApplicationController
 
     unless params["state_all"] == "1"
       statelist=[]
-      %w(new sending sent error closed discarded registered refused accepted allegedly_paid).each do |state|
+      %w(new sending sent read error cancelled closed discarded registered refused accepted allegedly_paid).each do |state|
         if params[state] == "1"
           statelist << "'#{state}'"
         end
@@ -549,7 +549,9 @@ class InvoicesController < ApplicationController
         @invoice_xslt_html = Nokogiri::XSLT(xslt).transform(invoice_nokogiri)
       elsif @invoice.original
         flash[:error] = l(:xslt_not_available)
-        redirect_to(action: 'show', id: @invoice)
+        unless @invoice.is_a?(ReceivedInvoice)
+          redirect_to(action: 'show', id: @invoice)
+        end
         return
       end
     end
@@ -812,6 +814,7 @@ class InvoicesController < ApplicationController
   def view
     @client_hashid = params[:client_hashid]
     if User.current.logged? and User.current.project and
+        User.current.project != @invoice.project and
         (User.current.project.company.taxcode == @invoice.client.taxcode or
          User.current.project.company.taxcode.blank?)
       user_company = User.current.project.company
@@ -819,7 +822,7 @@ class InvoicesController < ApplicationController
         # add project to providers
         user_company.company_providers << @invoice.project.company
         # create received invoices
-        @invoice.project.invoices.select {|i| i.client == @invoice.client }.each do |issued|
+        @invoice.project.issued_invoices.select {|i| i.client == @invoice.client }.each do |issued|
           ReceivedInvoice.create_from_issued(issued, User.current.project)
         end
       end
@@ -875,6 +878,7 @@ class InvoicesController < ApplicationController
   rescue ActionView::MissingTemplate
     nil
   rescue Exception => e
+    flash[:error]=e.message
     logger.debug e
     render_404
   end
@@ -1390,9 +1394,9 @@ class InvoicesController < ApplicationController
     namespace = Haltr::Utils.root_namespace(doc) rescue nil
     case namespace
     when "http://www.facturae.es/Facturae/2014/v3.2.1/Facturae", "http://www.facturae.es/Facturae/2009/v3.2/Facturae"
-      'invoices/facturae_xslt_viewer.xsl.erb'
+      'invoices/facturae_xslt_viewer.xsl'
     when "urn:oasis:names:specification:ubl:schema:xsd:Invoice-2"
-      'invoices/TRDM-010a-Invoice-NO.xsl.erb'
+      'invoices/TRDM-010a-Invoice-NO.xsl'
     else
       nil
     end
