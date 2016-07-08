@@ -47,9 +47,9 @@
         <%= h l(:field_file_reference) %>: <%= @invoice.file_reference %>
       </div>
     <% end -%>
-    <% if @invoice.invoice_lines.any? {|l| !l[:issuer_transaction_reference].empty?} -%>
+    <% if @invoice.invoice_lines.any? {|l| l.issuer_transaction_reference.present? } -%>
       <div>
-        <%= h l(:field_issuer_transaction_reference) %>: <%= @invoice.invoice_lines.find_all{|il| !il[:issuer_transaction_reference].empty?}.collect {|l| l.issuer_transaction_reference}.uniq.join(', ') %>
+        <%= h l(:field_issuer_transaction_reference) %>: <%= @invoice.invoice_lines.select {|il| il.issuer_transaction_reference.present? }.collect {|l| l.issuer_transaction_reference }.uniq.join(', ') %>
       </div>
     <% end -%>
   </div>
