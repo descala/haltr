@@ -5,6 +5,7 @@ class ExternalCompaniesController < ApplicationController
   menu_item :external_companies
   before_filter :authorize_global
   helper :haltr
+  accept_api_auth :show
 
   include CsvImporter
 
@@ -38,6 +39,15 @@ class ExternalCompaniesController < ApplicationController
     else
       render :action => 'edit'
     end
+  end
+
+  def show
+    @external_company = ExternalCompany.find_by_taxcode!(params[:id])
+    respond_to do |format|
+      format.api
+    end
+  rescue ActiveRecord::RecordNotFound
+    render_404
   end
 
   def destroy
