@@ -42,6 +42,7 @@ class Invoice < ActiveRecord::Base
   validates_numericality_of :charge_amount_in_cents, :allow_nil => true
   validates_numericality_of :payments_on_account_in_cents, :allow_nil => true
   validates_numericality_of :amounts_withheld_in_cents, :allow_nil => true
+  validates_numericality_of :exchange_rate, :allow_nil => true
 
   before_save :fields_to_utf8
   after_create :increment_counter
