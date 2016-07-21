@@ -212,7 +212,7 @@ table.invoice_lines {
 .ribbon-read, .ribbon-sent, .ribbon-accepted, .ribbon-closed, .ribbon-paid, .ribbon-registered {
   background-color: green;
 }
-.ribbon-error, .ribbon-discarded, .ribbon-refused {
+.ribbon-error, .ribbon-discarded, .ribbon-refused, .ribbon-cancelled {
   background-color: red;
 }
 .haltr_event_error {

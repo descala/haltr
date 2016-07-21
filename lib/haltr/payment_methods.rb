@@ -10,6 +10,7 @@ module Haltr
     PAYMENT_AWARDING = 7
     PAYMENT_CHEQUE   = 12
     PAYMENT_SPECIAL  = 13
+    PAYMENT_CREDIT   = 19
 
     PAYMENT_CODES = {
       PAYMENT_CASH     => {:facturae => '01', :ubl => '10', :edifact => '10'},
@@ -18,6 +19,7 @@ module Haltr
       PAYMENT_AWARDING => {:facturae => '07', :ubl => '??', :edifact => ''  },
       PAYMENT_CHEQUE   => {:facturae => '12', :ubl => '??', :edifact => '20'},
       PAYMENT_SPECIAL  => {:facturae => '13', :ubl => '??', :edifact => ''  },
+      PAYMENT_CREDIT   => {:facturae => '19', :ubl => '??', :edifact => ''  },
     }
 
     def payment_method=(v)
@@ -62,6 +64,7 @@ module Haltr
       else
         pm << [I18n.t("transfer"),PAYMENT_TRANSFER]
       end
+      pm << [I18n.t("fa_payment_method_19"),PAYMENT_CREDIT]
       pm << [I18n.t("awarding"),PAYMENT_AWARDING]
       pm << [I18n.t("cheque"),PAYMENT_CHEQUE]
       pm << [I18n.t("other"),PAYMENT_SPECIAL]
@@ -81,6 +84,10 @@ module Haltr
 
     def special?
       read_attribute(:payment_method) == PAYMENT_SPECIAL
+    end
+
+    def credit?
+      read_attribute(:payment_method) == PAYMENT_CREDIT
     end
 
   end

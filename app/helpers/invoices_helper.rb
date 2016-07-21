@@ -235,6 +235,8 @@ module InvoicesHelper
         else
           l(:transfer)
         end
+      elsif i.credit?
+        l(:fa_payment_method_19)
       elsif i.special?
         i.payment_method_text
       elsif i.cash?

@@ -159,6 +159,10 @@ Redmine::Plugin.register :haltr do
 
     permission :set_client_xpaths, {}
 
+    permission :view_channels, {
+      :export_channels => [:index],
+    }
+
     # Loads permisons from config/channels.yml
     ExportChannels.permissions.each do |permission,actions|
       permission permission, actions, :require => :member

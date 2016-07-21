@@ -60,7 +60,7 @@ class InvoicesController < ApplicationController
 
     unless params["state_all"] == "1"
       statelist=[]
-      %w(new sending sent error closed discarded registered refused accepted allegedly_paid).each do |state|
+      %w(new sending sent read error cancelled closed discarded registered refused accepted allegedly_paid).each do |state|
         if params[state] == "1"
           statelist << "'#{state}'"
         end
@@ -819,6 +819,7 @@ class InvoicesController < ApplicationController
   def view
     @client_hashid = params[:client_hashid]
     if User.current.logged? and User.current.project and
+        User.current.project != @invoice.project and
         (User.current.project.company.taxcode == @invoice.client.taxcode or
          User.current.project.company.taxcode.blank?)
       user_company = User.current.project.company
@@ -826,7 +827,7 @@ class InvoicesController < ApplicationController
         # add project to providers
         user_company.company_providers << @invoice.project.company
         # create received invoices
-        @invoice.project.invoices.select {|i| i.client == @invoice.client }.each do |issued|
+        @invoice.project.issued_invoices.select {|i| i.client == @invoice.client }.each do |issued|
           ReceivedInvoice.create_from_issued(issued, User.current.project)
         end
       end
@@ -882,6 +883,7 @@ class InvoicesController < ApplicationController
   rescue ActionView::MissingTemplate
     nil
   rescue Exception => e
+    flash[:error]=e.message
     logger.debug e
     render_404
   end

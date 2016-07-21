@@ -114,6 +114,15 @@ class IssuedInvoice < InvoiceDocument
     event :read do
       transition :sent => :read
     end
+    event :received_notification do
+      transition all => :read
+    end
+    event :failed_notification do
+      transition all => :error
+    end
+    event :cancelled_notification do
+      transition all => :cancelled
+    end
   end
 
   def sent?
@@ -212,7 +221,7 @@ class IssuedInvoice < InvoiceDocument
   end
 
   def visible_by_client?
-    %w(sent refused accepted allegedly_paid closed).include? state
+    %w(sent read refused accepted allegedly_paid closed).include? state
   end
 
   # returns true if invoice has been totally amended (substituted by another)
