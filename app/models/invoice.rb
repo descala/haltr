@@ -1175,9 +1175,7 @@ _INV
     end
     self.client   = project.clients.where('taxcode like ?', "%#{client_hash[:taxcode]}").first
     self.client ||= project.clients.where('? like concat("%", taxcode) and taxcode != ""', client_hash[:taxcode]).first
-    external_compamy = ExternalCompany.where('taxcode like ?', "%#{client_hash[:taxcode]}").first
-    external_compamy ||= ExternalCompany.where('? like concat("%", taxcode) and taxcode != ""', client_hash[:taxcode]).first
-    if client && external_compamy.nil?
+    if client and client.company.nil?
       # client found by taxcode, but stored data may not match data in invoice
       # if it doesn't, we create a client_office with data from invoice
       to_match = {
@@ -1220,8 +1218,10 @@ _INV
       unless client
         self.client = Client.new(client_hash)
         client.project = self.project
-        if external_compamy
-          self.client.company = external_compamy
+        external_company = ExternalCompany.where('taxcode like ?', "%#{client_hash[:taxcode]}").first
+        external_company ||= ExternalCompany.where('? like concat("%", taxcode) and taxcode != ""', client_hash[:taxcode]).first
+        if external_company
+          self.client.company = external_company
         end
       end
       client.save!(:validate=>false)
