@@ -22,4 +22,4 @@ guard :minitest, :zeus => true, :all_on_start => false, :all_after_pass => false
 end
 
 #notification :notifysend
-notification :libnotify
+#notification :libnotify
