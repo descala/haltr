@@ -23,7 +23,7 @@ class TaxcodeValidatorTest < ActiveSupport::TestCase
       project_id: 1
     )
     assert !client.valid?
-    assert_equal 'Organization ID can\'t be blank', client.errors.full_messages.join(' ')
+    assert_equal 'Organization ID/Company Registration Number can\'t be blank', client.errors.full_messages.join(' ')
     client.taxcode = '123456789'
     assert client.valid?, client.errors.full_messages.join(' ')
     client.taxcode = ''
@@ -40,7 +40,7 @@ class TaxcodeValidatorTest < ActiveSupport::TestCase
       project_id: 1
     )
     assert !client.valid?
-    assert_equal 'Organization ID can\'t be blank', client.errors.full_messages.join(' ')
+    assert_equal 'Organization ID/Company Registration Number can\'t be blank', client.errors.full_messages.join(' ')
     client.taxcode = '12345678901'
     assert client.valid?, client.errors.full_messages.join(' ')
     client.taxcode = ''
