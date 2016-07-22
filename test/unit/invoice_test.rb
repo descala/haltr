@@ -219,6 +219,8 @@ class InvoiceTest < ActiveSupport::TestCase
   test 'create received_invoice from facturae32' do
     # client does not exist
     assert_nil Client.find_by_taxcode "ESP1700000A"
+    # and there's no external company
+    assert_nil ExternalCompany.find_by_taxcode "ESP1700000A"
     file    = File.new(File.join(File.dirname(__FILE__),'..','fixtures','documents','invoice_facturae32_signed.xml'))
     invoice = Invoice.create_from_xml(file,companies(:company1),"1234",'uploaded',User.current.name)
     client  = Client.find_by_taxcode "ESP1700000A"
@@ -337,6 +339,7 @@ class InvoiceTest < ActiveSupport::TestCase
   # import invoice_facturae32_issued2.xml
   test 'create issued_invoice from facturae32 with irpf, discount, bank_account and existing client' do
     client = Client.find_by_taxcode "A13585625"
+    assert_nil client.company # not linked
     client_count = Client.count
     # client exists
     assert_not_nil client
@@ -739,6 +742,48 @@ class InvoiceTest < ActiveSupport::TestCase
     assert_equal('new_file_ref', invoice.invoice_lines.first.file_reference)
     assert_equal('new_rcr', invoice.receiver_contract_reference)
     assert_equal('new_rcr', invoice.invoice_lines.first.receiver_contract_reference)
+  end
+
+  test 'import invoice and create client linked to an external company' do
+    ext_comp = ExternalCompany.find_by_taxcode 'ESB17915224'
+    assert_not_nil ext_comp
+    assert_nil Client.find_by_taxcode 'ESB17915224'
+    file    = File.new(File.join(File.dirname(__FILE__),'..','fixtures','documents','invoice_facturae32_issued10.xml'))
+    invoice = Invoice.create_from_xml(file,User.find_by_login('jsmith'),"1234",'uploaded',User.current.name)
+    assert_equal 'ESB17915224', invoice.client.taxcode
+    client = Client.find_by_taxcode 'ESB17915224'
+    assert_not_nil client
+    assert_not_nil client.company
+    assert_equal client.company, ext_comp
+  end
+
+  test 'import invoice with existing client linked to an external company' do
+    ext_comp = ExternalCompany.find_by_taxcode 'ESB17915224'
+    assert_not_nil ext_comp
+    assert_nil Client.find_by_taxcode 'ESB17915224'
+    client = Client.create!(project_id: 2, company: ext_comp)
+    assert_equal ext_comp.id, client.company_id
+    file = File.new(File.join(File.dirname(__FILE__),'..','fixtures','documents','invoice_facturae32_issued10.xml'))
+    invoice = Invoice.create_from_xml(file,User.find_by_login('jsmith'),"1234",'uploaded',User.current.name)
+    assert_equal invoice.client, client
+    assert_equal ext_comp.id, invoice.client.company_id
+  end
+
+  test 'import invoice does not create client_office when client its linked to external company' do
+    client_offices = ClientOffice.count
+    ext_comp = ExternalCompany.find_by_taxcode 'ESB17915224'
+    ext_comp.update_attribute(:postalcode, '08720')
+    assert_not_nil ext_comp
+    assert_nil Client.find_by_taxcode 'ESB17915224'
+    client = Client.create!(project_id: 2, company: ext_comp)
+    assert_equal ext_comp.id, client.company_id
+    assert_equal '08720', client.postalcode
+    file = File.new(File.join(File.dirname(__FILE__),'..','fixtures','documents','invoice_facturae32_issued10.xml'))
+    invoice = Invoice.create_from_xml(file,User.find_by_login('jsmith'),"1234",'uploaded',User.current.name)
+    assert_equal client_offices, ClientOffice.count
+    assert_equal invoice.client, client
+    assert_equal ext_comp.id, invoice.client.company_id
+    assert_equal '08720', invoice.client.postalcode
   end
 
 end
