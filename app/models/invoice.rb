@@ -705,6 +705,9 @@ _INV
         invoice.unitat_tramitadora_name = Haltr::Utils.get_xpath(line, xpaths[:dir3_name])
       when '04'
         invoice.organ_proponent    = code
+      when nil
+        # https://www.ingent.net/issues/6074 (Unitat contractació / SEF)
+        invoice.unitat_contractacio = code
       else
         # unknown role
       end
