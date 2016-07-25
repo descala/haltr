@@ -44,7 +44,7 @@
 
 <% if call_hook(:invoice_form_administrative_centres).present? -%>
   <%= call_hook(:invoice_form_administrative_centres) %>
-<% elsif @invoice.unitat_contractacio.present?-%>
+<% elsif @invoice and @invoice.unitat_contractacio.present?-%>
     <div class="seccio grup">
       <p class="col span-1-de-3">
       <label for="invoice_unitat_contractacio">
