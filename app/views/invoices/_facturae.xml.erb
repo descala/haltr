@@ -154,6 +154,19 @@
          </TaxIdentification>
          <% if call_hook(:facturae_administrative_centres).present? -%>
            <%= call_hook(:facturae_administrative_centres) %>
+         <% elsif @invoice.unitat_contractacio.present? -%>
+           <AdministrativeCentres>
+             <AdministrativeCentre>
+               <CentreCode><%= @invoice.unitat_contractacio %></CentreCode>
+               <AddressInSpain>
+                 <Address />
+                 <PostCode>00000</PostCode>
+                 <Town />
+                 <Province />
+                 <CountryCode>ESP</CountryCode>
+               </AddressInSpain>
+             </AdministrativeCentre>
+           </AdministrativeCentres>
          <% elsif @invoice.has_dir3_info? -%>
            <AdministrativeCentres>
              <% if @invoice.unidad_contratacion.blank? -%>
