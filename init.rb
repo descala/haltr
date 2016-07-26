@@ -30,7 +30,7 @@ require_dependency File.expand_path(File.join(File.dirname(__FILE__), 'app/model
 
 require_dependency 'haltr/hooks'
 
-if (Redmine::VERSION::MAJOR == 1 and Redmine::VERSION::MINOR >= 4) or Redmine::VERSION::MAJOR == 2
+if (Redmine::VERSION::MAJOR == 1 and Redmine::VERSION::MINOR >= 4) or Redmine::VERSION::MAJOR == 2 or Redmine::VERSION::MAJOR == 3
   require_dependency 'country_iso_translater'
 else
   config.gem 'sundawg_country_codes', :lib => 'country_iso_translater'

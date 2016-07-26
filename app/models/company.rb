@@ -9,8 +9,8 @@ class Company < ActiveRecord::Base
   # these are the linked clients: where this company apears in other
   # companies' client list
   has_many :clients, :as => :company, :dependent => :nullify
-  has_many :taxes, :class_name => "Tax", :dependent => :destroy, :order => "name,percent DESC"
-  has_many :bank_infos, :dependent => :destroy, :order => "name,bank_account,iban,bic DESC"
+  has_many :taxes, :class_name => "Tax", :dependent => :destroy
+  has_many :bank_infos, :dependent => :destroy
 
   # self referential association
   has_many :providers
@@ -47,6 +47,15 @@ class Company < ActiveRecord::Base
   after_initialize :set_default_values
   serialize :invoice_mail_customization
   serialize :quote_mail_customization
+
+  include Redmine::SafeAttributes
+  safe_attributes 'name', 'taxcode', 'address', 'city', 'postalcode', 'province', 'website', 'email',
+    'country', 'currency', 'public', 'invoice_format', 'schemeid', 'endpointid', 'company_identifier',
+    'imap_host', 'imap_port', 'imap_ssl', 'imap_username', 'imap_password', 'imap_from',
+    'invoice_mail_customization', 'quote_mail_customization', 'persontype', 'phone', 'pdf_template',
+    'rounding_method', 'round_before_sum', 'line_discounts_as_imports', 'edi_code', 'invoice_viewer',
+    'smtp_host', 'smtp_port', 'smtp_ssl', 'smtp_from', 'smtp_username', 'smtp_password', 'bcc_me'
+
 
   def set_default_values
     #TODO: Add default country taxes

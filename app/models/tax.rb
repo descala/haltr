@@ -11,7 +11,7 @@ class Tax < ActiveRecord::Base
   validates_presence_of :name
   validates_numericality_of :percent,
     :unless => Proc.new { |tax| tax.exempt? }
-  validates_format_of :name, :with => /^[a-zA-Z]+$/
+  validates_format_of :name, :with => /\A[a-zA-Z]+\z/
   # only one name-percent combination per invoice_line:
   #TODO: see rails bug https://github.com/rails/rails/issues/4568 on
   # validates_uniqueness_of with accepts_nested_attributes_for

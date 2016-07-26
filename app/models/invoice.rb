@@ -18,7 +18,7 @@ class Invoice < ActiveRecord::Base
   TO_UTF_FIELDS = %w(extra_info)
 
   has_many :invoice_lines, :dependent => :destroy
-  has_many :events, :order => 'created_at'
+  has_many :events
   #has_many :taxes, :through => :invoice_lines
   belongs_to :project, :counter_cache => true
   belongs_to :client
@@ -26,12 +26,12 @@ class Invoice < ActiveRecord::Base
   belongs_to :amend, :class_name => "Invoice", :foreign_key => 'amend_id'
   has_one :amend_of, :class_name => "Invoice", :foreign_key => 'amend_id'
   # an invoice can have several partial amends
-  has_many :partial_amends, class_name: 'Invoice', foreign_key: 'partially_amended_id', conditions: proc { ["id != ?", self.id] }
+  has_many :partial_amends, class_name: 'Invoice', foreign_key: 'partially_amended_id'
   belongs_to :partial_amend_of, class_name: 'Invoice', foreign_key: 'partially_amended_id'
 
   belongs_to :bank_info
   belongs_to :quote
-  has_many :comments, :as => :commented, :dependent => :delete_all, :order => "created_on"
+  has_many :comments, :as => :commented, :dependent => :delete_all
   belongs_to :client_office
   validates_inclusion_of :client_office_id, in: [nil], unless: Proc.new {|i|
     i.client and i.client.client_offices.any? {|o| o.id == i.client_office_id }

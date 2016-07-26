@@ -13,7 +13,7 @@ class AddCompanies < ActiveRecord::Migration
       t.string  "email"
       t.string  "bank_account", :limit => 24
       t.string  "logo_url"
-      t.timestamps
+      t.timestamps null: false
     end
   end
 

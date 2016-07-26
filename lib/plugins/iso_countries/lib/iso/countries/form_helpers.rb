@@ -4,7 +4,7 @@ module ActionView #:nodoc:
       # Return select and option tags for the given object and method, using iso_options_for_select to generate the list of option tags.
 
       def iso_country_select(object, method, priority_countries = nil, options = {}, html_options = {})
-        InstanceTag.new(object, method, self).to_iso_select_tag(priority_countries, options, html_options)
+        ActiveModelInstanceTag.new(object, method, self).to_iso_select_tag(priority_countries, options, html_options)
       end
 
 

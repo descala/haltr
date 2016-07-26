@@ -126,7 +126,7 @@
                   <div class="seccio grup">
                     <div class="col span-2-de-2">
                       <label for="client_id"><%= l(:label_company) %></label>
-                      <%= collection_select(nil, :client_id, Client.find(:all, :order => 'name', :conditions => ["project_id = ?", @project]), :id, :name, {:include_blank => true, :selected => @client_id}) %>
+                      <%= collection_select(nil, :client_id, Client.where(["project_id = ?", @project]).order(:name).all, :id, :name, {:include_blank => true, :selected => @client_id}) %>
                     </div>
                   </div>
 

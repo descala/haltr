@@ -15,7 +15,7 @@ class ExternalCompany < ActiveRecord::Base
     :allow_nil => true,
     :allow_blank => true
   validates_format_of [:organs_gestors,:unitats_tramitadores,:oficines_comptables,:organs_proponents],
-    :with => /^[A-Z0-9, ]*$/i,
+    :with => /\A[A-Z0-9, ]*\z/i,
     :allow_nil => true,
     :allow_blank => true
 

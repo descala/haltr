@@ -136,11 +136,7 @@ class InvoicesController < ApplicationController
     @invoice_count = invoices.count
     @invoice_pages = Paginator.new self, @invoice_count, @limit, params['page']
     @offset ||= @invoice_pages.offset
-    @invoices =  invoices.find(:all,
-                               :order => sort_clause,
-                               :include => [:client],
-                               :limit  =>  @limit,
-                               :offset =>  @offset)
+    @invoices = invoices.order(sort_clause).limit(@limit).offset(@offset).includes(:client).to_a
 
     respond_to do |format|
       format.html
@@ -154,7 +150,7 @@ class InvoicesController < ApplicationController
 
   def new
     @client = Client.find(params[:client]) if params[:client]
-    @client ||= Client.find(:all, :order => 'name', :conditions => ["project_id = ?", @project]).first
+    @client ||= Client.where(:order => 'name', :conditions => ["project_id = ?", @project]).first
     @client ||= Client.new(:country=>@project.company.country,
                            :currency=>@project.company.currency,
                            :language=>User.current.language)
@@ -333,7 +329,7 @@ class InvoicesController < ApplicationController
     else
       logger.info "Invoice errors #{@invoice.errors.full_messages}"
       # Add a client in order to render the form with the errors
-      @client ||= Client.find(:all, :order => 'name', :conditions => ["project_id = ?", @project]).first
+      @client ||= Client.where(:order => 'name', :conditions => ["project_id = ?", @project]).first
       @client ||= Client.new
 
       respond_to do |format|
@@ -1032,9 +1028,9 @@ class InvoicesController < ApplicationController
       return
     end
     @company = @client.project.company
-    invoices = IssuedInvoice.find(:all,
-                                  :conditions => ["client_id=? AND id=?",@client.id,params[:invoice_id]]
-                                 ).delete_if { |i| !i.visible_by_client? }
+    invoices = IssuedInvoice.where(
+      :conditions => ["client_id=? AND id=?",@client.id,params[:invoice_id]]
+    ).all.delete_if { |i| !i.visible_by_client? }
     if invoices.size != 1
       render_404
       return

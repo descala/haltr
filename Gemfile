@@ -6,13 +6,11 @@ gem "gettext"
 gem "sundawg_country_codes" #, :lib => 'country_iso_translater'
 gem 'rubyzip', '>= 1.0.0'
 gem 'csv-mapper'
-gem 'nokogiri'
 gem 'wicked_pdf'
 gem 'chronic' # needed for 'lib/estructura'
 
 group :test do
   gem 'guard-minitest', :github => 'guard/guard-minitest'
-  gem "minitest", "~> 4.0"
   gem 'zeus'
   gem 'libnotify'
 end
@@ -24,7 +22,7 @@ gem 'render_anywhere', :require => false, :github => 'yappbox/render_anywhere', 
 
 gem 'groupdate'
 gem 'chartkick'
-gem 'audited-activerecord', '~> 3.0'
+gem 'audited-activerecord'
 
 gem 'valvat', :git => 'https://github.com/descala/valvat.git', :branch => 'master'
 gem 'shared-mime-info'
