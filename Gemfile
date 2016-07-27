@@ -1,5 +1,3 @@
-source 'https://rubygems.org'
-
 gem "money", "=5.0.0"
 gem "state_machine"
 gem "gettext"
