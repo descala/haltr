@@ -108,7 +108,7 @@ class CompaniesController < ApplicationController
         return
       end
     end
-    if @company.update_attributes(params[:company])
+    if @company.update_attributes(params[:company].to_hash)
       unless @company.taxes.collect {|t| t unless t.marked_for_destruction? }.compact.any?
         @company.taxes = []
         @company.taxes = default_taxes_for(@company.country)

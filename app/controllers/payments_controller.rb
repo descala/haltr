@@ -32,14 +32,11 @@ class PaymentsController < ApplicationController
       payments = payments.scoped conditions: [conditions, *fields.collect {name}]
     end
 
+    @limit = per_page_option
     @payment_count = payments.count
-    @payment_pages = Paginator.new self, @payment_count,
-		per_page_option,
-		params['page']
-    @payments = payments.find :all, :order => sort_clause,
-       :include => :invoice,
-       :limit  => @payment_pages.items_per_page,
-       :offset => @payment_pages.current.offset
+    @payment_pages = Paginator.new self, @payment_count, @limit, params['page']
+    @offset ||= @payment_pages.offset
+    @payments= payments.order(sort_clause).limit(@limit).offset(@offset).to_a
   end
 
 
