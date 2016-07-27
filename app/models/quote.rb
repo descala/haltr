@@ -1,6 +1,6 @@
 class Quote < Invoice
 
-  unloadable
+
 
   include Haltr::ExportableDocument
 

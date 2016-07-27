@@ -1,6 +1,6 @@
 class ClientOfficesController < ApplicationController
 
-  unloadable
+
   menu_item Haltr::MenuItem.new(:companies,:client_offices)
 
   layout 'haltr'

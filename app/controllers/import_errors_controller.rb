@@ -1,6 +1,6 @@
 class ImportErrorsController < ApplicationController
 
-  unloadable
+
   menu_item Haltr::MenuItem.new(:invoices,:import_errors)
   helper :haltr
   layout 'haltr'

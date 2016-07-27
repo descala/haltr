@@ -1,5 +1,5 @@
 class EventsController < ApplicationController
-  unloadable
+
   helper :haltr
 
   skip_before_filter :check_if_login_required, :only => [ :create, :file ]

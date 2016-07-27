@@ -1,6 +1,6 @@
 class Person < ActiveRecord::Base
 
-  unloadable
+
 
   belongs_to :client
 

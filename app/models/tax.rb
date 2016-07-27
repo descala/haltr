@@ -1,6 +1,6 @@
 class Tax < ActiveRecord::Base
 
-  unloadable
+
   audited :associated_with => :invoice_line, :except => [:id, :invoice_line_id]
 
   # do not remove, with audit we need to make the other attributes accessible

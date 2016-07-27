@@ -1,6 +1,6 @@
 class ClientOffice < ActiveRecord::Base
 
-  unloadable
+
 
   belongs_to :client
   has_many :invoices, dependent: :nullify

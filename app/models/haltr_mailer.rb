@@ -3,7 +3,7 @@ class HaltrMailer < ActionMailer::Base
   helper :application
   helper :haltr
 
-  unloadable
+
   include Redmine::I18n
   require "digest/md5"
 

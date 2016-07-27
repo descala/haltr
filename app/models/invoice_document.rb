@@ -1,6 +1,6 @@
 class InvoiceDocument < Invoice
 
-  unloadable
+
 
   has_many :payments, :foreign_key => :invoice_id, :dependent => :destroy
 

@@ -1,6 +1,6 @@
 class InvoiceTemplatesController < InvoicesController 
 
-  unloadable
+
   menu_item Haltr::MenuItem.new(:invoices,:templates)
 
   # skip parent controller filters, add later

@@ -2,7 +2,7 @@
 #   rake state_machine:draw FILE=invoice.rb CLASS=IssuedInvoice ORIENTATION=landscape
 class IssuedInvoice < InvoiceDocument
 
-  unloadable
+
 
   has_one :created_invoice, class_name: 'ReceivedInvoice',
     foreign_key: 'created_from_invoice_id'

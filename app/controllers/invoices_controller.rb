@@ -1,6 +1,6 @@
 class InvoicesController < ApplicationController
 
-  unloadable
+
   menu_item Haltr::MenuItem.new(:invoices,:invoices_level2)
   menu_item Haltr::MenuItem.new(:invoices,:reports), :only => [:reports, :report_channel_state, :report_invoice_list]
   helper :haltr

@@ -1,6 +1,6 @@
 class ClientsController < ApplicationController
 
-  unloadable
+
 
   menu_item Haltr::MenuItem.new(:companies,:companies_level2)
 

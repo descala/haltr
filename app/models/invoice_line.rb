@@ -1,6 +1,6 @@
 class InvoiceLine < ActiveRecord::Base
 
-  unloadable
+
 
   include Haltr::FloatParser
   float_parse :discount_percent, :price, :quantity, :charge

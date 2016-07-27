@@ -1,6 +1,6 @@
 class Company < ActiveRecord::Base
 
-  unloadable
+
 
   ROUNDING_METHODS = %w( half_up bankers truncate )
 

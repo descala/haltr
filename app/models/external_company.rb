@@ -1,6 +1,6 @@
 class ExternalCompany < ActiveRecord::Base
 
-  unloadable
+
 
   has_many :clients,
     :as        => :company,

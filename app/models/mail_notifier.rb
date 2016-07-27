@@ -1,7 +1,7 @@
 class MailNotifier < Mailer
   layout 'mail_notifier'
   helper :haltr
-  unloadable
+
 
   def received_invoice_accepted(invoice,reason)
     I18n.locale = invoice.client.language

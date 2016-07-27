@@ -1,6 +1,6 @@
 class Invoice < ActiveRecord::Base
 
-  unloadable
+
 
   include HaltrHelper
   include Haltr::FloatParser

@@ -1,6 +1,6 @@
 class PeopleController < ApplicationController
 
-  unloadable
+
   menu_item Haltr::MenuItem.new(:companies,:people)
   layout 'haltr'
   helper :haltr

@@ -1,6 +1,6 @@
 class Client < ActiveRecord::Base
 
-  unloadable
+
   audited except: [:hashid, :project]
   # do not remove, with audit we need to make the other attributes accessible
   attr_protected :created_at, :updated_at

@@ -1,6 +1,6 @@
 class Mandate < ActiveRecord::Base
 
-  unloadable
+
   belongs_to :client
   validates_presence_of :client
   validate :signed_doc_is_pdf

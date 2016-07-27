@@ -1,5 +1,5 @@
 class Dir3EntitiesController < ApplicationController
-  unloadable
+
 
   layout 'admin'
   menu_item :dir3_entities

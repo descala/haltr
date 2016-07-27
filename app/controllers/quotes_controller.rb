@@ -1,5 +1,5 @@
 class QuotesController < ApplicationController
-  unloadable
+
   menu_item Haltr::MenuItem.new(:invoices,:quotes)
   helper :haltr
   helper :invoices

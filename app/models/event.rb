@@ -1,5 +1,5 @@
 class Event < ActiveRecord::Base
-  unloadable
+
 
   validates_presence_of :name
   validates_presence_of :project_id

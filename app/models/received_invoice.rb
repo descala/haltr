@@ -2,7 +2,7 @@
 #   rake state_machine:draw FILE=invoice.rb CLASS=ReceivedInvoice
 class ReceivedInvoice < InvoiceDocument
 
-  unloadable
+
 
   belongs_to :created_from_invoice, class_name: 'IssuedInvoice'
 

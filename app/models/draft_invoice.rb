@@ -1,6 +1,6 @@
 class DraftInvoice < IssuedInvoice
 
-  unloadable
+
 
   validates_uniqueness_of :date, :scope => :invoice_template_id
 
