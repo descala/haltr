@@ -58,11 +58,5 @@ class InvoiceDocument < Invoice
     Money.new(paid_amount,currency)
   end
 
-  # https://rails.lighthouseapp.com/projects/8994/tickets/2389-sti-changes-behavior-depending-on-environment
-  # must be at the bottom of class
-  %w(received_invoice issued_invoice).each do |r| 
-    require_dependency r
-  end if Rails.env.development?
-
 end
 

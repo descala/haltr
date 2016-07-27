@@ -1,5 +1,3 @@
-require_dependency 'user'
-
 module UserHaltrPatch
   def self.included(base) # :nodoc:
     # Same as typing in the class

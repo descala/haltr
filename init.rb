@@ -2,7 +2,7 @@ require 'redmine'
 
 Rails.logger.info 'Starting haltr plugin'
 
-require_dependency 'haltr'
+require 'haltr'
 
 # Haltr has plugins of his own
 # similar to config/initializers/00-core_plugins.rb in Redmine
@@ -24,14 +24,14 @@ end
 
 Date::DATE_FORMATS[:ddmmyy] = "%d%m%y"
 
-require_dependency 'utils'
-require_dependency 'iso_countries'
-require_dependency File.expand_path(File.join(File.dirname(__FILE__), 'app/models/export_channels'))
+require 'utils'
+require 'iso_countries'
+require File.expand_path(File.join(File.dirname(__FILE__), 'app/models/export_channels'))
 
-require_dependency 'haltr/hooks'
+require 'haltr/hooks'
 
 if (Redmine::VERSION::MAJOR == 1 and Redmine::VERSION::MINOR >= 4) or Redmine::VERSION::MAJOR == 2 or Redmine::VERSION::MAJOR == 3
-  require_dependency 'country_iso_translater'
+  require 'country_iso_translater'
 else
   config.gem 'sundawg_country_codes', :lib => 'country_iso_translater'
   config.gem 'money', :version => '>=5.0.0'
