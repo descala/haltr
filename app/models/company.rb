@@ -7,8 +7,8 @@ class Company < ActiveRecord::Base
   # these are the linked clients: where this company apears in other
   # companies' client list
   has_many :clients, :as => :company, :dependent => :nullify
-  has_many :taxes, :class_name => "Tax", :dependent => :destroy
-  has_many :bank_infos, :dependent => :destroy
+  has_many :taxes, -> {order "name,percent DESC"}, :class_name => "Tax", :dependent => :destroy
+  has_many :bank_infos, -> {order "name,bank_account,iban,bic DESC"}, :dependent => :destroy
 
   # self referential association
   has_many :providers

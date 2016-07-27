@@ -22,8 +22,8 @@ class Event < ActiveRecord::Base
     :author_key => :user_id,
     :permission => :general_use,
     :timestamp => "#{Event.table_name}.created_at",
-    :find_options => {:include => [:user, {:invoice => :project}],
-                      :conditions => "events.name in ('success_sending')"}
+    :scope => {:include => [:user, {:invoice => :project}],
+               :conditions => "events.name in ('success_sending')"}
 
   acts_as_event :type => 'error_event',
     :title => Proc.new {|e| "#{I18n.t(e.invoice.type)} #{e.invoice.number} (#{I18n.t('state_'+e.invoice.state)})" },
@@ -34,8 +34,8 @@ class Event < ActiveRecord::Base
     :author_key => :user_id,
     :permission => :general_use,
     :timestamp => "#{Event.table_name}.created_at",
-    :find_options => {:include => [:user, {:invoice => :project}],
-                      :conditions => "events.name in ('error_sending','discard_sending')"}
+    :scope => {:include => [:user, {:invoice => :project}],
+               :conditions => "events.name in ('error_sending','discard_sending')"}
   ########################
 
   serialize :info

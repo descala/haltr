@@ -31,10 +31,10 @@ class ClientOfficesController < ApplicationController
     @client_office_pages = Paginator.new self, @client_office_count,
 		per_page_option,
 		params['page']
-    @client_offices = client_offices.find :all,
-       :order => sort_clause,
-       :limit  => @client_office_pages.items_per_page,
-       :offset => @client_office_pages.current.offset
+    @client_offices = client_offices.
+      where(limit:  @client_office_pages.items_per_page).
+      where(offset: @client_office_pages.current.offset).
+      order(sort_clause)
   end
 
   def new

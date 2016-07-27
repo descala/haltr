@@ -165,7 +165,7 @@ module HaltrHelper
     elsif name == "unit"
       l(InvoiceLine::UNIT_CODES[value][:name], :default=>value) rescue value
     elsif name == "country"
-      ISO::Countries.get_country(value)
+      ISO3166::Country[value].translations[I18n.locale.to_s]
     elsif name == "language"
       l(:general_lang_name,:locale=>value, :default=>value)
     elsif name == "invoice_format"

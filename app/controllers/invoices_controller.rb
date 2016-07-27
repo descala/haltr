@@ -149,7 +149,7 @@ class InvoicesController < ApplicationController
 
   def new
     @client = Client.find(params[:client]) if params[:client]
-    @client ||= Client.where(:order => 'name', :conditions => ["project_id = ?", @project]).first
+    @client ||= Client.where(project_id: @project).order(:name).first
     @client ||= Client.new(:country=>@project.company.country,
                            :currency=>@project.company.currency,
                            :language=>User.current.language)

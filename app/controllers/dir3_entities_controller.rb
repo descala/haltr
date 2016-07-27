@@ -9,7 +9,7 @@ class Dir3EntitiesController < ApplicationController
   include CsvImporter
 
   def index
-    @dir3_entities = Dir3Entity.all(order: :name)
+    @dir3_entities = Dir3Entity.order(:name)
   end
 
   def new
