@@ -185,11 +185,11 @@ class Client < ActiveRecord::Base
   end
 
   def next
-    project.clients.first(:conditions=>["id > ?", self.id])
+    project.clients.where(["id > ?", self.id]).first
   end
 
   def previous
-    project.clients.last(:conditions=>["id < ?", self.id])
+    project.clients.where(["id > ?", self.id]).last
   end
 
   def postalcode=(v)
