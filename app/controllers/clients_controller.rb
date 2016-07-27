@@ -13,7 +13,6 @@ class ClientsController < ApplicationController
   before_filter :find_project_by_project_id, :only => [:index,:new,:create,:ccc2iban]
   before_filter :find_project,  :only => [:link_to_profile,:allow_link,:deny_link,:check_cif]
   before_filter :find_client, :except => [:index,:new,:create,:link_to_profile,:allow_link,:deny_link,:check_cif,:ccc2iban]
-  before_filter :set_iso_countries_language
   before_filter :authorize
 
   accept_api_auth :create, :show, :index, :destroy, :update
@@ -258,10 +257,6 @@ class ClientsController < ApplicationController
     @project = @client.project
   rescue ActiveRecord::RecordNotFound
     render_404
-  end
-
-  def set_iso_countries_language
-    ISO::Countries.set_language I18n.locale.to_s
   end
 
 end

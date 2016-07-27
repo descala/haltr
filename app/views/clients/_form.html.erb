@@ -70,7 +70,7 @@
         <%= f.text_field :country, :value => ISO::Countries.get_country(client.country), :readonly => client.linked?, :required => true %>
       <% else -%>
         <%= f.label_for_field :country, :required => true %>
-        <%= f.iso_country_select :country, [:es] %>
+        <%= f.country_select :country, priority_countries: [@project.company.country] %>
       <% end -%>
       </p>
     </div>

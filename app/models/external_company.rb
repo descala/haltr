@@ -1,7 +1,5 @@
 class ExternalCompany < ActiveRecord::Base
 
-
-
   has_many :clients,
     :as        => :company,
     :dependent => :nullify
@@ -20,7 +18,6 @@ class ExternalCompany < ActiveRecord::Base
     :allow_blank => true
 
   after_save :update_linked_clients
-  iso_country :country
   include CountryUtils
   include Haltr::TaxcodeValidator
 

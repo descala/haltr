@@ -25,7 +25,6 @@ end
 Date::DATE_FORMATS[:ddmmyy] = "%d%m%y"
 
 require 'utils'
-require 'iso_countries'
 require File.expand_path(File.join(File.dirname(__FILE__), 'app/models/export_channels'))
 
 require 'haltr/hooks'

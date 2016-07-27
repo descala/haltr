@@ -1,7 +1,5 @@
 class Company < ActiveRecord::Base
 
-
-
   ROUNDING_METHODS = %w( half_up bankers truncate )
 
   belongs_to :project
@@ -28,7 +26,6 @@ class Company < ActiveRecord::Base
   acts_as_attachable :view_permission => :general_use,
                      :delete_permission => :general_use
   after_save :update_linked_clients
-  iso_country :country
   include CountryUtils
   include Haltr::TaxcodeValidator
 

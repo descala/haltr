@@ -20,7 +20,6 @@ class InvoicesController < ApplicationController
   before_filter :find_payment, :only => [:destroy_payment]
   before_filter :find_hashid, :only => [:view,:download]
   before_filter :find_attachment, :only => [:logo]
-  before_filter :set_iso_countries_language
   before_filter :find_invoice_by_number, only: [:number_to_id]
   before_filter :authorize, :except => PUBLIC_METHODS
   skip_before_filter :check_if_login_required, :only => PUBLIC_METHODS
@@ -1086,10 +1085,6 @@ class InvoicesController < ApplicationController
     @payment = Payment.find(params[:id])
     @invoice = @payment.invoice
     @project = @invoice.project
-  end
-
-  def set_iso_countries_language
-    ISO::Countries.set_language I18n.locale.to_s
   end
 
   #TODO: duplicated code
