@@ -229,7 +229,7 @@ class Company < ActiveRecord::Base
 
   def quote_mail_subject(lang,quote=nil)
     subj = nil
-    project = invoice ? invoice.project : nil
+    project = quote ? quote.project : nil
     if User.current.admin? or User.current.allowed_to?(:email_customization, project)
       subj = quote_mail_customization["subject"][lang] rescue nil
     end
@@ -258,7 +258,7 @@ class Company < ActiveRecord::Base
 
   def quote_mail_body(lang,quote=nil)
     body = nil
-    project = invoice ? invoice.project : nil
+    project = quote ? quote.project : nil
     if User.current.admin? or User.current.allowed_to?(:email_customization, project)
       body = quote_mail_customization["body"][lang] rescue nil
     end
