@@ -14,7 +14,6 @@ group :test do
   gem 'guard-minitest', :github => 'guard/guard-minitest'
   gem "minitest", "~> 4.0"
   gem 'zeus'
-  gem 'rb-inotify', '~> 0.9'
   gem 'libnotify'
   gem 'webmock'
 end

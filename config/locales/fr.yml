@@ -667,9 +667,9 @@ fr:
   field_party_identification: "Party identification"
   label_invoice_total: "Total"
   field_unidad_contratacion: "Unidad de contratación / SEF"
-  field_discount_helper: "Calculate discount % from import"
+  field_discount_helper: "Calculate discount % from amount"
   label_discounts_and_charges: Discounts and charges
-  invoice_import_mismatch: "Original invoice import %{original} does not match calculated import %{calculated}"
+  invoice_import_mismatch: "Original invoice amount %{original} does not match calculated amount %{calculated}"
   invoice_has_no_original: Invoice has no original (transport requires an original document)
   fa_payment_method_01: 'In cash'
   fa_payment_method_02: 'Direct debit'
@@ -761,3 +761,13 @@ If you save it, will be marked as New."
   label_invoice_view_sent: "View sent document"
   label_invoice_view_original: "View original document"
   button_edit_metadata: "Edit metadata"
+  received_notification: "Notification: Invoice received"
+  failed_notification: "Notification: Error validation invoice"
+  cancelled_notification: "Notification: Invoice cancelled"
+  state_cancelled: "Cancelled"
+  annotated_notification: "Notification: Invoice accounted"
+  recognised_notification: "Notification: Recognised payment obligation"
+  state_read_plural: "Read"
+  state_cancelled_plural: "Cancelled"
+  field_bcc_me: "Send me copy of invoices"
+  unitat_contractacio: "Unidad contratación / SEF"

@@ -7,6 +7,8 @@
     <%=simple_format e.backtrace.join("\n") %>
     </li>
   </ul>
+<% elsif e.error -%>
+  <%= e.error %>
 <% end %>
 <% if e.url -%>
   <%= link_to h(e), e.url %>

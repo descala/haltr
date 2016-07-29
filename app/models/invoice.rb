@@ -705,6 +705,9 @@ _INV
         invoice.unitat_tramitadora_name = Haltr::Utils.get_xpath(line, xpaths[:dir3_name])
       when '04'
         invoice.organ_proponent    = code
+      when nil
+        # https://www.ingent.net/issues/6074 (Unitat contractació / SEF)
+        invoice.unitat_contractacio = code
       else
         # unknown role
       end
@@ -1175,7 +1178,7 @@ _INV
     end
     self.client   = project.clients.where('taxcode like ?', "%#{client_hash[:taxcode]}").first
     self.client ||= project.clients.where('? like concat("%", taxcode) and taxcode != ""', client_hash[:taxcode]).first
-    if client
+    if client and client.company.nil?
       # client found by taxcode, but stored data may not match data in invoice
       # if it doesn't, we create a client_office with data from invoice
       to_match = {
@@ -1215,8 +1218,15 @@ _INV
         end
       end
     else
-      self.client = Client.new(client_hash)
-      client.project = self.project
+      unless client
+        self.client = Client.new(client_hash)
+        client.project = self.project
+        external_company = ExternalCompany.where('taxcode like ?', "%#{client_hash[:taxcode]}").first
+        external_company ||= ExternalCompany.where('? like concat("%", taxcode) and taxcode != ""', client_hash[:taxcode]).first
+        if external_company
+          self.client.company = external_company
+        end
+      end
       client.save!(:validate=>false)
       logger.info "created new client \"#{client.name}\" with cif #{client.taxcode} for company #{project.company.name}. time=#{Time.now}"
     end

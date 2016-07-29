@@ -44,6 +44,15 @@
 
 <% if call_hook(:invoice_form_administrative_centres).present? -%>
   <%= call_hook(:invoice_form_administrative_centres) %>
+<% elsif @invoice and @invoice.unitat_contractacio.present?-%>
+    <div class="seccio grup">
+      <p class="col span-1-de-3">
+      <label for="invoice_unitat_contractacio">
+        <%= l(:unitat_contractacio) %>
+      </label>
+      <%= text_field :invoice, :unitat_contractacio%>
+      </p>
+    </div>
 <% else -%>
   <% if (@external_company and @external_company.visible_dir3) or
       (@client and ExportChannels.punts_generals.include?(@client.invoice_format)) or
