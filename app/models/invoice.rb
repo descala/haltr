@@ -1138,12 +1138,12 @@ _INV
 
   def has_line_discounts?
     return @has_line_discounts unless @has_line_discounts.nil?
-    @has_line_discounts = (invoice_lines.sum(&:discount_percent) > 0)
+    @has_line_discounts = (invoice_lines.to_a.sum(&:discount_percent) > 0)
   end
 
   def has_line_charges?
     return @has_line_charges unless @has_line_charges.nil?
-    @has_line_charges = (invoice_lines.sum(&:charge) > 0)
+    @has_line_charges = (invoice_lines.to_a.sum(&:charge) > 0)
   end
 
   def has_line_ponumber?

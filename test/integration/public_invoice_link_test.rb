@@ -1,6 +1,8 @@
 require File.dirname(__FILE__) + '/../test_helper'
 
-class PublicInvoiceLinkTest < ActionController::IntegrationTest
+class PublicInvoiceLinkTest < Redmine::IntegrationTest
+
+  fixtures :companies, :invoices, :invoice_lines, :taxes, :clients
 
   # 855445292 is 'invoice1'
 

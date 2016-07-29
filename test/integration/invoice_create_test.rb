@@ -1,6 +1,6 @@
 require File.dirname(__FILE__) + '/../test_helper'
 
-class InvoiceCreaeteTest < ActionController::IntegrationTest
+class InvoiceCreaeteTest< Redmine::IntegrationTest
 
   fixtures :companies, :invoices, :invoice_lines, :taxes, :client_offices,
     :dir3_entities

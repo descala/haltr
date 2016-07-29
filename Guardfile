@@ -3,7 +3,7 @@
 
 H="plugins/haltr"
 
-guard :minitest, :zeus => true, :all_on_start => false, :all_after_pass => false, :test_folders => ["#{H}/test"] do
+guard :minitest, :all_on_start => false, :all_after_pass => false, :test_folders => ["#{H}/test"] do
   watch(%r{^#{H}/lib/(.+)\.rb$})                          { |m| "#{H}/test/#{m[1]}_test.rb" }
   watch(%r{^#{H}/lib/haltr/(.+)\.rb$})                    { |m| "#{H}/test/lib/#{m[1]}_test.rb" }
   watch(%r{^#{H}/lib/haltr/bank_info_validator.rb$})      { ["#{H}/test/unit/bank_info_test.rb", "#{H}/test/unit/client_test.rb"] }

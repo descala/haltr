@@ -1027,9 +1027,7 @@ class InvoicesController < ApplicationController
       return
     end
     @company = @client.project.company
-    invoices = IssuedInvoice.where(
-      :conditions => ["client_id=? AND id=?",@client.id,params[:invoice_id]]
-    ).all.delete_if { |i| !i.visible_by_client? }
+    invoices = IssuedInvoice.where(["client_id=? AND id=?",@client.id,params[:invoice_id]]).all.to_a.delete_if { |i| !i.visible_by_client? }
     if invoices.size != 1
       render_404
       return
