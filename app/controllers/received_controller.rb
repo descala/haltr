@@ -74,11 +74,7 @@ class ReceivedController < InvoicesController
 		per_page_option,
 		params['page']
     @offset ||= @invoice_pages.current.offset
-    @invoices =  invoices.find :all,
-       :order => sort_clause,
-       :include => [:client],
-       :limit  =>  @limit,
-       :offset =>  @offset
+    @invoices =  invoices.includes(:client).order(sort_clause).limit(@limit).offset(@offset)
 
     @unread = invoices.where("type = ? AND has_been_read = ?", 'ReceivedInvoice', false).count
   end

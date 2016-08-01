@@ -21,11 +21,8 @@ class QuotesController < ApplicationController
     @invoice_pages = Paginator.new self, @invoice_count,
 		per_page_option,
 		params['page']
-    @invoices =  invoices.find :all,
-       :order => sort_clause,
-       :include => [:client],
-       :limit  =>  @invoice_pages.items_per_page,
-       :offset =>  @invoice_pages.current.offset
+    @invoices =  invoices.includes(:client).order(sort_clause).
+      limit(@invoice_pages.items_per_page).offset(@invoice_pages.current.offset)
   end
 
   def show
@@ -67,7 +64,7 @@ class QuotesController < ApplicationController
 
   def new
     @client = Client.find(params[:client]) if params[:client]
-    @client ||= Client.find(:all, :order => 'name', :conditions => ["project_id = ?", @project]).first
+    @client ||= Client.where("project_id = ?", @project).order.('name').first
     @client ||= Client.new
     @invoice = Quote.new(:project=>@project,:date=>Date.today,:number=>Quote.next_number(@project))
     il = InvoiceLine.new
@@ -121,7 +118,7 @@ class QuotesController < ApplicationController
     else
       logger.info "Invoice errors #{@invoice.errors.full_messages}"
       # Add a client in order to render the form with the errors
-      @client ||= Client.find(:all, :order => 'name', :conditions => ["project_id = ?", @project]).first
+      @client ||= Client.where("project_id = ?", @project).order('name').first
       @client ||= Client.new
       render :action => "new"
     end

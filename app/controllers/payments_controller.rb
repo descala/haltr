@@ -92,9 +92,9 @@ class PaymentsController < ApplicationController
     @invoices_to_pay_by_bank_info = {}
     @project.company.bank_infos.each do |bi|
       @invoices_to_pay_by_bank_info[bi] = {}
-      bi.invoices.find(:all,
-        :conditions => ["state IN ('sent','registered') AND payment_method = ?", Invoice::PAYMENT_DEBIT],
-        ).reject {|i| i.due_date.nil? }.group_by(&:due_date).each do |due_date, invoices|
+      bi.invoices.where(
+        "state IN ('sent','registered') AND payment_method = ?", Invoice::PAYMENT_DEBIT
+      ).reject {|i| i.due_date.nil? }.group_by(&:due_date).each do |due_date, invoices|
         @invoices_to_pay_by_bank_info[bi][due_date] = {}
         invoices.each do |invoice|
           unless invoice.client.bank_account.blank? and invoice.client.iban.blank?
@@ -117,9 +117,7 @@ class PaymentsController < ApplicationController
     due_date = params[:due_date]
     bank_info = BankInfo.find params[:bank_info]
     render_404 && return if bank_info.blank?
-    clients_all = Client.find(:all,
-                          :conditions => ["iban != '' and project_id = ?", @project.id],
-                          :order => 'taxcode')
+    clients_all = Client.where("iban != '' and project_id = ?", @project.id).order('taxcode')
     clients = clients_all.reject do |client|
       client.sepa_type != params[:sepa_type] || client.bank_invoices_total(due_date, bank_info.id).zero?
     end

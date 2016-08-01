@@ -45,11 +45,8 @@ class InvoiceTemplatesController < InvoicesController
     @invoice_pages = Paginator.new self, @invoice_count,
 		per_page_option,
 		params['page']
-    @invoices = templates.find :all,
-       :order   => sort_clause,
-       :include => [:client],
-       :limit   => @invoice_pages.items_per_page,
-       :offset  => @invoice_pages.current.offset
+    @invoices = templates.includes(:client).limit(@invoice_pages.items_per_page).
+      offset(@invoice_pages.current.offset).order(sort_clause)
   end
 
   def new_from_invoice
@@ -74,8 +71,10 @@ class InvoiceTemplatesController < InvoicesController
     @number = IssuedInvoice.next_number(@project)
     days = params[:days] || 10
     @date = Date.today + days.to_i.day
-    @drafts = DraftInvoice.find :all, :include => [:client], :conditions => ["clients.project_id = ?", @project.id], :order => "date ASC"
-    templates = InvoiceTemplate.find :all, :include => [:client], :conditions => ["clients.project_id = ? and date <= ?", @project.id, @date], :order => "date ASC"
+    @drafts = DraftInvoice.includes(:client).where("clients.project_id = ?", @project.id).order("date ASC")
+    templates = InvoiceTemplate.includes(:client).
+      where("clients.project_id = ? and date <= ?", @project.id, @date).
+      order("date ASC")
     templates.each do |t|
       if t.frequency < 6 and t.date < 1.year.ago.to_date
         # limit to 1 year invoices with frequency < 6 months
@@ -125,7 +124,7 @@ class InvoiceTemplatesController < InvoicesController
         flash.now[:error] = issued.errors.full_messages.join ","
       end
     end
-    @drafts = DraftInvoice.find :all, :include => [:client], :conditions => ["clients.project_id = ?", @project.id], :order => "date ASC"
+    @drafts = DraftInvoice.includes(:client).where("clients.project_id = ?", @project.id).order("date ASC")
     render :action => 'new_invoices_from_template'
   end
 

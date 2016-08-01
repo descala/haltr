@@ -18,16 +18,15 @@ class ImportErrorsController < ApplicationController
     sort_init 'created_at', 'desc'
     sort_update %w(created_at filename import_errors)
 
-    import_errors = @project.import_errors.scoped
+    import_errors = @project.import_errors
 
     @import_errors_count = import_errors.count
     @import_errors_pages = Paginator.new self, @import_errors_count,
       per_page_option, params[:page]
-    @import_errors = import_errors.all(
-      order:  sort_clause,
-      limit:  @import_errors_pages.items_per_page,
-      offset: @import_errors_pages.current.offset
-    )
+    @import_errors = import_errors.
+      limit(@import_errors_pages.items_per_page).
+      offset(@import_errors_pages.current.offset).
+      order(sort_clause)
   end
 
   def show

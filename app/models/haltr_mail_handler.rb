@@ -97,7 +97,11 @@ class HaltrMailHandler < MailHandler # < ActionMailer::Base
     text_file.unlink
     ds.apply_rules
     ds.fix_amounts
-    client = Client.find(:all, :conditions => ["project_id = ? AND taxcode = ?",@company.project_id,ds.tax_identification_number]).first
+    client = Client.where(
+      "project_id = ? AND taxcode = ?",
+      @company.project_id,
+      ds.tax_identification_number
+    ).first
     ri = ReceivedInvoice.new(:number          => ds.invoice_number,
                             :client          => client,
                             :date            => ds.issue_date,
