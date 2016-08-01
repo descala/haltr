@@ -123,6 +123,9 @@ class IssuedInvoice < InvoiceDocument
     event :cancelled_notification do
       transition all => :cancelled
     end
+    event :annotated_notification do
+      transition all => :accounted
+    end
   end
 
   def sent?
