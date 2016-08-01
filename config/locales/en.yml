@@ -336,7 +336,7 @@ en:
   return_path: "Return-Path (for bounces)"
 
   # Terms
-  "0": Immediately
+  "0": Upon Receipt
   "15": 15 days
   "30": 30 days
   "60": 60 days
@@ -400,7 +400,7 @@ en:
   missing_svefaktura_debit: "Direct debit not allowed"
 
   label_update_taxes: "Update the taxes of templates"
-  field_company_identifier: "Organization ID"
+  field_company_identifier: "Organization ID/Company Registration Number"
 
   label_linked_to_mine: "Linked companies"
 
@@ -632,7 +632,7 @@ en:
   field_fa_address: 'Address'
   field_fa_postcode: 'Postcode'
   field_fa_town: 'City'
-  field_fa_province: 'Province'
+  field_fa_province: 'Province/County'
   field_fa_country: 'Country'
   field_fa_info: 'Information'
   field_fa_duedate: 'Due date'
@@ -651,9 +651,9 @@ en:
   field_party_identification: "Party identification"
   label_invoice_total: "Total"
   field_unidad_contratacion: "Unidad de contratación / SEF"
-  field_discount_helper: "Calculate discount % from import"
+  field_discount_helper: "Calculate discount % from amount"
   label_discounts_and_charges: Discounts and charges
-  invoice_import_mismatch: "Original invoice import %{original} does not match calculated import %{calculated}"
+  invoice_import_mismatch: "Original invoice amount %{original} does not match calculated amount %{calculated}"
   invoice_has_no_original: Invoice has no original (transport requires an original document)
   fa_payment_method_01: 'In cash'
   fa_payment_method_02: 'Direct debit'
@@ -756,3 +756,6 @@ If you save it, will be marked as New."
   field_bcc_me: "Send me copy of invoices"
   field_exchange_rate: "Exchange rate"
   field_exchange_date: "Exchange date"
+  unitat_contractacio: "Unidad contratación / SEF"
+  state_annotated: "Annotated"
+  state_annotated_plural: "Annotated"

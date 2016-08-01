@@ -73,7 +73,7 @@ class Event < ActiveRecord::Base
     events  = %w(bounced sent_notification delivered_notification)
     events += %w(refuse_notification accept_notification paid_notification)
     events += %w(registered_notification accept refuse received_notification)
-    events += %w(failed_notification cancelled_notification)
+    events += %w(failed_notification cancelled_notification annotated_notification)
 
     actions = %w(sending receiving validating_signature)
     actions.each do |a|
