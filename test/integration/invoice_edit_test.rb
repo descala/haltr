@@ -1,6 +1,6 @@
 require File.dirname(__FILE__) + '/../test_helper'
 
-class InvoiceEditTest < ActionController::IntegrationTest
+class InvoiceEditTest < Redmine::IntegrationTest
 
   # TODO fixtures here break other tests ???
 

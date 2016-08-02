@@ -1,6 +1,6 @@
 require File.dirname(__FILE__) + '/../test_helper'
 
-class UserPublicLinkTest < ActionController::IntegrationTest
+class UserPublicLinkTest < Redmine::IntegrationTest
 
   fixtures :companies, :invoices, :invoice_lines, :taxes
 

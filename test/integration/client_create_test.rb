@@ -1,6 +1,6 @@
 require File.dirname(__FILE__) + '/../test_helper'
 
-class ClientCreaeteTest < ActionController::IntegrationTest
+class ClientCreaeteTest < Redmine::IntegrationTest
 
   fixtures :clients
 
