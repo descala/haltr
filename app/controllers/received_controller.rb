@@ -74,11 +74,7 @@ class ReceivedController < InvoicesController
 		per_page_option,
 		params['page']
     @offset ||= @invoice_pages.current.offset
-    @invoices =  invoices.find :all,
-       :order => sort_clause,
-       :include => [:client],
-       :limit  =>  @limit,
-       :offset =>  @offset
+    @invoices =  invoices.includes(:client).order(sort_clause).limit(@limit).offset(@offset)
 
     @unread = invoices.where("type = ? AND has_been_read = ?", 'ReceivedInvoice', false).count
   end
@@ -87,7 +83,7 @@ class ReceivedController < InvoicesController
     unless User.current.admin?
       @invoice.update_attribute(:has_been_read, true)
       if @invoice.created_from_invoice
-        @invoice.created_from_invoice.read
+        @invoice.created_from_invoice.read!
       end
     end
     super
@@ -191,11 +187,11 @@ class ReceivedController < InvoicesController
       next if i.state == params[:state]
       case params[:state]
       when "accepted"
-        all_changed &&= (i.accept || i.unpaid)
+        all_changed &&= (i.accept! || i.unpaid!)
       when "paid"
-        all_changed &&= i.paid
+        all_changed &&= i.paid!
       when "refused"
-        all_changed &&= i.refuse
+        all_changed &&= i.refuse!
       else
         flash[:error] = "unknown state #{params[:state]}"
       end

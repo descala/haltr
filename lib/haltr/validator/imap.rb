@@ -4,10 +4,13 @@ module Haltr
 
       def self.included(base)
         condition = Proc.new {|invoice|
-          return false unless invoice.client
-          ExportChannels.validators(
-            invoice.client.invoice_format
-          ).include?(Haltr::Validator::Imap)
+          if invoice.client
+            ExportChannels.validators(
+              invoice.client.invoice_format
+            ).include?(Haltr::Validator::Imap)
+          else
+            false
+          end
         }
         base.class_eval do
           validate :company_has_imap_config, if: condition

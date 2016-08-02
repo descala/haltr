@@ -17,7 +17,7 @@ module Haltr
         end
         begin
           Haltr::Sender.send_invoice(invoice, user)
-          invoice.queue(user)
+          invoice.queue!(user)
           log("SENT   invoice  #{invoice.id}")
         rescue Exception => error
           begin

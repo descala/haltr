@@ -305,7 +305,7 @@ class Invoice < ActiveRecord::Base
   end
 
   def taxes_outputs
-    #taxes.find(:all, :group => 'name,percent', :conditions => "percent >= 0")
+    #taxes.where("percent >= 0").group('name,percent')
     taxes_uniq.collect { |tax|
       tax if tax.percent >= 0
     }.compact
@@ -320,7 +320,7 @@ class Invoice < ActiveRecord::Base
   end
 
   def taxes_withheld
-    #taxes.find(:all, :group => 'name,percent', :conditions => "percent < 0")
+    #taxes.where("percent < 0").group('name,percent')
     taxes_uniq.collect {|tax|
       tax if tax.percent < 0
     }.compact
@@ -1074,11 +1074,11 @@ _INV
   end
 
   def next
-    project.invoices.first(:conditions=>["id > ? and type = ?", self.id, self.type])
+    project.invoices.where("id > ? and type = ?", self.id, self.type).first
   end
 
   def previous
-    project.invoices.last(:conditions=>["id < ? and type = ?", self.id, self.type])
+    project.invoices.where("id < ? and type = ?", self.id, self.type).last
   end
 
   def visible_events

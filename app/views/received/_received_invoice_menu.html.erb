@@ -2,12 +2,12 @@
   <li><%= link_to_if_authorized l(:download_original), {:controller=>'received', :action=>'original', :id=>@invoice}, :class=>'icon-haltr-save' %></li>
 <% end -%>
 
-<% if @invoice.state?(:received) -%>
+<% if @invoice.received? -%>
   <li><%= link_to_function(I18n.t(:mark_accepted), "show_accepted_form();") if authorize_for(:received || :received, :mark_accepted) %></li>
   <li><%= link_to_function(I18n.t(:mark_refused),  "show_refused_form();") if authorize_for(:received || :received, :mark_refused) %></li>
 <% end -%>
 
-<% if @invoice.state?(:accepted) -%>
+<% if @invoice.accepted? -%>
   <li><%= link_to_if_authorized l(:make_payment), {:controller=>'payments', :action=>'new', :project_id=>@project, :invoice_id=>@invoice}, :class=>'icon-haltr-payment' %></li>
 <% end -%>
 

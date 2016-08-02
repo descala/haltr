@@ -168,7 +168,8 @@ class Company < ActiveRecord::Base
   ################## methods for mail customization ##################
   def invoice_mail_subject(lang,invoice=nil)
     subj = nil
-    if User.current.admin? or User.current.allowed_to?(:email_customization, User.current.project)
+    project = invoice ? invoice.project : nil
+    if User.current.admin? or User.current.allowed_to?(:email_customization, project)
       subj = invoice_mail_customization["subject"][lang] rescue nil
     end
     if subj.blank?
@@ -196,7 +197,8 @@ class Company < ActiveRecord::Base
 
   def invoice_mail_body(lang,invoice=nil)
     body = nil
-    if User.current.admin? or User.current.allowed_to?(:email_customization, User.current.project)
+    project = invoice ? invoice.project : nil
+    if User.current.admin? or User.current.allowed_to?(:email_customization, project)
       body = invoice_mail_customization["body"][lang] rescue nil
     end
     if body.blank?
@@ -224,7 +226,8 @@ class Company < ActiveRecord::Base
 
   def quote_mail_subject(lang,quote=nil)
     subj = nil
-    if User.current.admin? or User.current.allowed_to?(:email_customization, User.current.project)
+    project = quote ? quote.project : nil
+    if User.current.admin? or User.current.allowed_to?(:email_customization, project)
       subj = quote_mail_customization["subject"][lang] rescue nil
     end
     if subj.blank?
@@ -252,7 +255,8 @@ class Company < ActiveRecord::Base
 
   def quote_mail_body(lang,quote=nil)
     body = nil
-    if User.current.admin? or User.current.allowed_to?(:email_customization, User.current.project)
+    project = quote ? quote.project : nil
+    if User.current.admin? or User.current.allowed_to?(:email_customization, project)
       body = quote_mail_customization["body"][lang] rescue nil
     end
     if body.blank?

@@ -111,7 +111,7 @@
     end
   end
 
-  if @invoice.is_a? IssuedInvoice and @invoice.state? :sending
+  if @invoice.is_a? IssuedInvoice and @invoice.sending?
     content_for :header_tags do
       javascript_include_tag 'refresher.js', plugin: 'haltr'
     end

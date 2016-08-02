@@ -30,10 +30,7 @@ class PeopleController < ApplicationController
     @person_pages = Paginator.new self, @person_count,
 		per_page_option,
 		params['page']
-    @people = people.find :all,
-       :order => sort_clause,
-       :limit  => @person_pages.items_per_page,
-       :offset => @person_pages.current.offset
+    @people = people.order(sort_clause).limit(@person_pages.items_per_page).offset(@person_pages.current.offset)
   end
 
   def show

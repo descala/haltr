@@ -1,5 +1,4 @@
 gem "money", "=5.0.0"
-gem "state_machine"
 gem "gettext"
 gem "sundawg_country_codes" #, :lib => 'country_iso_translater'
 gem 'rubyzip', '>= 1.0.0'
@@ -21,3 +20,4 @@ gem 'shared-mime-info'
 gem 'rest-client'
 gem 'pdfjs_rails'
 gem 'country_select'
+gem 'aasm'

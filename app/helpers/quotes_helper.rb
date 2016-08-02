@@ -1,7 +1,7 @@
 module QuotesHelper
 
   def send_link_for_quote
-    confirm = @invoice.sent? ? j(l(:sure_to_resend_quote, :num=>@invoice.number).html_safe) : nil
+    confirm = @invoice.has_been_sent? ? j(l(:sure_to_resend_quote, :num=>@invoice.number).html_safe) : nil
     if @invoice.valid?
         # sending through invoices#send_invoice
         link_to_if_authorized l(:label_send),

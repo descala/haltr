@@ -19,7 +19,7 @@ module Haltr::ExportableDocument
         recipients = nil
         if channel
           format = channel["locales"][I18n.locale.to_s]
-          if channel.has_key?("validators") and channel["validators"].to_a.include? "Haltr::Validator::Mail"
+          if channel.has_key?("validators") and [channel["validators"]].flatten.include? "Haltr::Validator::Mail"
             recipients = "\n#{self.recipient_emails.join("\n")}"
           end
         else
