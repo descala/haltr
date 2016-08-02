@@ -64,7 +64,7 @@ class QuotesController < ApplicationController
 
   def new
     @client = Client.find(params[:client]) if params[:client]
-    @client ||= Client.where("project_id = ?", @project).order.('name').first
+    @client ||= Client.where("project_id = ?", @project).order('name').first
     @client ||= Client.new
     @invoice = Quote.new(:project=>@project,:date=>Date.today,:number=>Quote.next_number(@project))
     il = InvoiceLine.new
@@ -178,7 +178,7 @@ class QuotesController < ApplicationController
       raise @invoice.errors.full_messages.join(", ") # unless @invoice.valid?(:pdf_by_mail)
     end
     Delayed::Job.enqueue Haltr::SendPdfByMail.new(@invoice,User.current)
-    @invoice.quote_send
+    @invoice.quote_send!
     flash[:notice] = "#{l(:notice_quote_sent)}"
   rescue Exception => e
     flash[:error] = "#{l(:error_quote_not_sent, :num=>@invoice.number)}: #{e.message}"
@@ -189,7 +189,7 @@ class QuotesController < ApplicationController
 
   def accept
     @quote = @invoice
-    @quote.quote_accept
+    @quote.quote_accept!
     @client = @quote.client
     @invoice = IssuedInvoice.new
     @invoice.attributes = @quote.attributes
@@ -206,7 +206,7 @@ class QuotesController < ApplicationController
   end
 
   def refuse
-    @invoice.quote_refuse
+    @invoice.quote_refuse!
     redirect_to :action => 'index', :project_id => @project
   end
 

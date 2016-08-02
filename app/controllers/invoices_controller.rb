@@ -288,7 +288,7 @@ class InvoicesController < ApplicationController
     if @invoice.save(validate: validate)
       if @to_amend and params[:amend_type] == 'total'
         @to_amend.save(validate: false)
-        @to_amend.amend_and_close
+        @to_amend.amend_and_close!
       end
       respond_to do |format|
         format.html {
@@ -318,7 +318,7 @@ class InvoicesController < ApplicationController
           if @invoice and ["true","1"].include?(params[:send_after_import])
             begin
               Haltr::Sender.send_invoice(@invoice, User.current)
-              @invoice.queue
+              @invoice.queue!
             rescue
             end
           end
@@ -477,17 +477,18 @@ class InvoicesController < ApplicationController
         # rails replaces '+' with ' '. we undo that.
         file.write Base64.decode64(file_contents.gsub(' ','+'))
         file.close
-        @invoice.queue!
-        Haltr::Sender.send_invoice(@invoice, User.current, true, file)
-        logger.info "Invoice #{@invoice.id} #{file.path} queued"
-        render :text => "Document sent. document = #{file}"
+        if @invoice.queue!
+          Haltr::Sender.send_invoice(@invoice, User.current, true, file)
+          logger.info "Invoice #{@invoice.id} #{file.path} queued"
+          render :text => "Document sent. document = #{file}"
+        else
+          logger.info "Invoice #{@invoice.id}: #{l(:state_not_allowed_for_sending, state: l("state_#{@invoice.state}"))}"
+          render text: l(:state_not_allowed_for_sending, state: l("state_#{@invoice.state}"))
+        end
       else
         render :text => "Missing document"
       end
     end
-  rescue StateMachine::InvalidTransition
-    logger.info "Invoice #{@invoice.id}: #{l(:state_not_allowed_for_sending, state: l("state_#{@invoice.state}"))}"
-    render text: l(:state_not_allowed_for_sending, state: l("state_#{@invoice.state}"))
   end
 
   def show
@@ -667,25 +668,26 @@ class InvoicesController < ApplicationController
     unless ExportChannels.can_send? @invoice.client.invoice_format
       raise "#{l(:export_channel)}: #{ExportChannels.l(@invoice.client.invoice_format)}"
     end
-    @invoice.queue!
-    Haltr::Sender.send_invoice(@invoice, User.current)
-    respond_to do |format|
-      format.html do
-        flash[:notice] = "#{l(:notice_invoice_sent)}"
+    if @invoice.queue!
+      Haltr::Sender.send_invoice(@invoice, User.current)
+      respond_to do |format|
+        format.html do
+          flash[:notice] = "#{l(:notice_invoice_sent)}"
+        end
+        format.api do
+          render_api_ok
+        end
       end
-      format.api do
-        render_api_ok
-      end
-    end
-  rescue StateMachine::InvalidTransition => e
-    error = l(:state_not_allowed_for_sending, state: l("state_#{@invoice.state}"))
-    respond_to do |format|
-      format.html do
-        flash[:error] = error
-      end
-      format.api do
-        @error_messages = [error]
-        render :template => 'common/error_messages.api', :status => :unprocessable_entity, :layout => nil
+    else
+      error = l(:state_not_allowed_for_sending, state: l("state_#{@invoice.state}"))
+      respond_to do |format|
+        format.html do
+          flash[:error] = error
+        end
+        format.api do
+          @error_messages = [error]
+          render :template => 'common/error_messages.api', :status => :unprocessable_entity, :layout => nil
+        end
       end
     end
   rescue Exception => e
@@ -1164,17 +1166,13 @@ class InvoicesController < ApplicationController
 
   def mark_as
     if %w(new sent accepted registered refused closed).include? params[:state]
-      begin
-        @invoice.send("mark_as_#{params[:state]}!")
-      rescue StateMachine::InvalidTransition
-        # mark_as_* raise this on invalid invoices
-        @invoice.update_attribute(:state, params[:state])
-        Event.create(
-          name: "done_mark_as_#{params[:state]}",
-          invoice: @invoice,
-          user: User.current
-        )
-      end
+      @invoice.send("mark_as_#{params[:state]}!")
+      @invoice.update_attribute(:state, params[:state])
+      Event.create(
+        name: "done_mark_as_#{params[:state]}",
+        invoice: @invoice,
+        user: User.current
+      )
     else
       flash[:error] = "unknown state #{params[:state]}"
     end
@@ -1292,7 +1290,7 @@ class InvoicesController < ApplicationController
       if @invoice and ["true","1"].include?(params[:send_after_import])
         begin
           Haltr::Sender.send_invoice(@invoice, User.current)
-          @invoice.queue
+          @invoice.queue!
         rescue
         end
       end

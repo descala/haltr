@@ -181,7 +181,7 @@ class PaymentsController < ApplicationController
     invoices  = bank_info.invoices.find(params[:invoices])
     invoices.each do |invoice|
       Payment.new_to_close(invoice).save
-      invoice.close
+      invoice.close!
     end
     flash[:notice] = l(:notice_payment_done, :payment_type => params[:payment_type], :value => params[:due_date])
     redirect_to :action => 'payment_initiation', :project_id => @project

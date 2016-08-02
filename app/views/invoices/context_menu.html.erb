@@ -7,7 +7,7 @@
     <%= context_menu_link l(:button_send),
       send_invoice_path(@invoice, :back_url=>@back),
       :class => 'icon-send',
-      :confirm => (@invoice.sent? ? j(l(:sure_to_resend_invoice,:num=>@invoice.number)) : nil) %>
+      :confirm => (@invoice.has_been_sent? ? j(l(:sure_to_resend_invoice,:num=>@invoice.number)) : nil) %>
     </li>
     <li>
     <%= context_menu_link l(:button_edit), edit_invoice_path(@invoice),

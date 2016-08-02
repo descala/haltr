@@ -1,31 +1,35 @@
-# to draw states graph execute:
-#   rake state_machine:draw FILE=invoice.rb CLASS=ReceivedInvoice
 class ReceivedInvoice < InvoiceDocument
-
-
 
   belongs_to :created_from_invoice, class_name: 'IssuedInvoice'
 
   after_create :create_event
 
-  state_machine :state, :initial => :received do
-    before_transition do |invoice,transition|
-      unless Event.automatic.include?(transition.event.to_s)
-        Event.create(:name=>transition.event.to_s,:invoice=>invoice,:user=>User.current)
-      end
-    end
+  include AASM
+
+  aasm column: :state, skip_validation_on_save: true, whiny_transitions: false do
+    state :received, initial: true
+    state :accepted, :paid, :refused
+
+    before_all_events :aasm_create_event
 
     event :refuse do
-      transition [:accepted,:received] => :refused
+      transitions [:accepted,:received] => :refused
     end
     event :accept do
-      transition [:received,:accepted] => :accepted
+      transitions [:received,:accepted] => :accepted
     end
     event :paid do
-      transition :accepted => :paid
+      transitions :accepted => :paid
     end
     event :unpaid do
-      transition :paid => :accepted
+      transitions :paid => :accepted
+    end
+  end
+
+  def aasm_create_event
+    name = aasm.current_event.to_s.gsub('!','')
+    unless Event.automatic.include? name
+      Event.create(:name=>name,:invoice=>self,:user=>User.current)
     end
   end
 
