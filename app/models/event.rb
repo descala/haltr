@@ -130,7 +130,7 @@ class Event < ActiveRecord::Base
         Redmine::Hook.call_hook(:model_event_after_update_invoice,
                                 event: self, new_state: new_state)
       rescue
-        invoice.send(name)
+        invoice.send("#{name}!")
       end
 
       # on success_sending check if our company is provider for client, if so

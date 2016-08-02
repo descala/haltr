@@ -504,9 +504,9 @@ class InvoiceTest < ActiveSupport::TestCase
   test 'imports dir3 data and stores it to db' do
     assert_nil Dir3Entity.find_by_code('P00000010')
     extcomp = ExternalCompany.find_by_taxcode 'ESB17915224'
-    assert_not_match(/P00000010/, extcomp.organs_gestors)
-    assert_not_match(/P00000010/, extcomp.unitats_tramitadores)
-    assert_not_match(/P00000010/, extcomp.oficines_comptables)
+    refute_match(/P00000010/, extcomp.organs_gestors)
+    refute_match(/P00000010/, extcomp.unitats_tramitadores)
+    refute_match(/P00000010/, extcomp.oficines_comptables)
     file    = File.new(File.join(File.dirname(__FILE__),'..','fixtures','documents','invoice_facturae32_issued4.xml'))
     invoice = Invoice.create_from_xml(file,companies(:company1),"1234",'uploaded',User.current.name,nil,false)
     assert_equal('P00000010',invoice.organ_gestor)

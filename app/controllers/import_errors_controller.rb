@@ -74,7 +74,7 @@ class ImportErrorsController < ApplicationController
   end
 
   def find_import_errors
-    @import_errors = ImportError.find_all_by_id(params[:id] || params[:ids])
+    @import_errors = ImportError.where(id: (params[:id] || params[:ids]))
     raise ActiveRecord::RecordNotFound if @import_errors.empty?
     raise Unauthorized unless @import_errors.collect {|i| i.project }.uniq.size == 1
     @project = @import_errors.first.project

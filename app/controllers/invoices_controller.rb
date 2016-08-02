@@ -328,7 +328,7 @@ class InvoicesController < ApplicationController
     else
       logger.info "Invoice errors #{@invoice.errors.full_messages}"
       # Add a client in order to render the form with the errors
-      @client ||= Client.where(:order => 'name', :conditions => ["project_id = ?", @project]).first
+      @client ||= Client.where("project_id = ?", @project).order('name').first
       @client ||= Client.new
 
       respond_to do |format|
@@ -419,10 +419,10 @@ class InvoicesController < ApplicationController
         # nothing to do, invoice was already deleted (eg. by a parent)
       end
     end
-      respond_to do |format|
-        format.html { redirect_back_or_default(:action => 'index', :project_id => @project, :back_url => params[:back_url]) }
-        format.api  { render_api_ok }
-      end
+    respond_to do |format|
+      format.html { redirect_back_or_default(:action => 'index', :project_id => @project, :back_url => params[:back_url]) }
+      format.api  { render_api_ok }
+    end
   end
 
   def destroy_payment
@@ -1072,7 +1072,7 @@ class InvoicesController < ApplicationController
   end
 
   def find_invoices
-    @invoices = invoice_class.find_all_by_id(params[:id] || params[:ids])
+    @invoices = invoice_class.where(id: (params[:id] || params[:ids]))
     raise ActiveRecord::RecordNotFound if @invoices.empty?
     raise Unauthorized unless @invoices.collect {|i| i.project }.uniq.size == 1
     @project = @invoices.first.project
