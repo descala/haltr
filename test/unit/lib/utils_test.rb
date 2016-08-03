@@ -1,4 +1,4 @@
-require File.dirname(__FILE__) + '/../test_helper'
+require File.expand_path('../../../test_helper', __FILE__)
 
 class UtilsTest < ActiveSupport::TestCase
 
@@ -28,7 +28,7 @@ class UtilsTest < ActiveSupport::TestCase
   end
 
   test 'sbdh extract' do
-    file = File.new(File.join(File.dirname(__FILE__),'../fixtures/documents/invoice_ubl_with_sbdh.xml'))
+    file = File.new(File.expand_path('../../../fixtures/documents/invoice_ubl_with_sbdh.xml', __FILE__))
     doc = Nokogiri::XML(file)
     invoice = Haltr::Utils.extract_from_sbdh(doc)
     assert_equal '0070075', invoice.xpath("/xmlns:Invoice/cbc:ID").text
