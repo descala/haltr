@@ -22,9 +22,9 @@ class Event < ActiveRecord::Base
     :author_key => :user_id,
     :permission => :general_use,
     :timestamp => "#{Event.table_name}.created_at",
-    :scope => {:include => [:user, {:invoice => :project}],
-               :conditions => "events.name in ('success_sending')"}
-
+    :scope => preload(:user, {:invoice => :project}).
+    where("events.name in ('success_sending')").
+    joins("LEFT JOIN #{Project.table_name} ON #{Project.table_name}.id = #{Event.table_name}.project_id")
   acts_as_event :type => 'error_event',
     :title => Proc.new {|e| "#{I18n.t(e.invoice.type)} #{e.invoice.number} (#{I18n.t('state_'+e.invoice.state)})" },
     :url => Proc.new {|e| {:controller=>'invoices', :action=>'show', :id=>e.invoice_id} },
@@ -34,8 +34,9 @@ class Event < ActiveRecord::Base
     :author_key => :user_id,
     :permission => :general_use,
     :timestamp => "#{Event.table_name}.created_at",
-    :scope => {:include => [:user, {:invoice => :project}],
-               :conditions => "events.name in ('error_sending','discard_sending')"}
+    :scope => preload(:user, {:invoice => :project}).
+    where("events.name in ('error_sending','discard_sending')").
+    joins("LEFT JOIN #{Project.table_name} ON #{Project.table_name}.id = #{Event.table_name}.project_id")
   ########################
 
   serialize :info
