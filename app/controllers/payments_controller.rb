@@ -193,7 +193,7 @@ class PaymentsController < ApplicationController
   def import_aeb43
     file = params[:file]
     if file && file.size > 0
-      importer = Import::Aeb43.new file.path
+      importer = Haltr::Import::Aeb43.new file.path
       @errors = []
       @moviments = importer.moviments
       @moviments.each do |m|

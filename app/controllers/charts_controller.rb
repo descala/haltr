@@ -1,6 +1,5 @@
 class ChartsController < ApplicationController
 
-
   before_filter :find_project_by_project_id
   before_filter :find_optional_client, :only => [:invoice_status, :update_chart_preference]
   before_filter :authorize, :except => [:invoice_total, :update_chart_preference]

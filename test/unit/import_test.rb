@@ -5,7 +5,7 @@ class ImportTest < ActiveSupport::TestCase
   def setup
     assert 'EUR', Setting.plugin_haltr['default_currency']
     filename = File.dirname(__FILE__) + '/../fixtures/txt/aeb43.txt'
-    importer = Import::Aeb43.new filename
+    importer = Haltr::Import::Aeb43.new filename
     @moviments = importer.moviments
   end
   
@@ -14,7 +14,7 @@ class ImportTest < ActiveSupport::TestCase
     assert_kind_of Array, @moviments
     
     m = @moviments.shift
-    assert_kind_of Import::Moviment, m
+    assert_kind_of Haltr::Import::Moviment, m
     assert_equal Date.strptime('01/01/09', '%d/%m/%y'), m.date_o
     assert_equal Date.strptime('01/01/09', '%d/%m/%y'), m.date_v
     assert_equal "FACTURA TARGETA CREDIT", m.txt1

@@ -22,6 +22,12 @@ Dir.glob(File.join(File.dirname(__FILE__), "lib/plugins/*")).sort.each do |direc
   end
 end
 
+# groupdate won't work with config.active_record.default_timezone = :local
+# https://github.com/ankane/groupdate/issues/66
+unless ActiveRecord::Base.default_timezone == :utc
+  ActiveRecord::Base.default_timezone = :utc
+end
+
 Date::DATE_FORMATS[:ddmmyy] = "%d%m%y"
 
 require 'utils'
