@@ -503,6 +503,4 @@ class InvoiceCreaeteTest< Redmine::IntegrationTest
     assert_equal "", invoice.invoice_lines.first.taxes.last.comment
   end
 
-
-
 end

@@ -675,6 +675,7 @@ class InvoiceTest < ActiveSupport::TestCase
     file = File.new(File.join(File.dirname(__FILE__),'../fixtures/documents/invoice_ubl_with_sbdh.xml'))
     invoice = Invoice.create_from_xml(file,companies(:company6),"1234",'uploaded',User.current.name,nil,false)
     assert_equal '5503070490', invoice.client.taxcode
+    invoice.client.update_attribute :invoice_format, 'pdf_by_mail'
     assert !invoice.valid?
     assert_equal ["Invoice's client has no email defined"], invoice.errors.full_messages
   end
