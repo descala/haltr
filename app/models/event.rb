@@ -1,6 +1,5 @@
 class Event < ActiveRecord::Base
 
-
   validates_presence_of :name
   validates_presence_of :project_id
   belongs_to :project
@@ -8,6 +7,8 @@ class Event < ActiveRecord::Base
   belongs_to :invoice
   belongs_to :client
   has_many :audits, :class_name=>'Audited::Adapters::ActiveRecord::Audit'
+
+  attr_protected :created_at, :updated_at
 
   before_validation :set_project_if_nil
   after_create :update_invoice, :unless => Proc.new {|event| event.invoice.nil?}

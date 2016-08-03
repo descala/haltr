@@ -8,7 +8,7 @@ class ReceivedController < InvoicesController
     sort_init 'invoices.created_at', 'desc'
     sort_update %w(invoices.created_at state number date due_date clients.name import_in_cents)
 
-    invoices = @project.invoices.includes(:client).scoped.where("type = ?","ReceivedInvoice")
+    invoices = @project.invoices.includes(:client).where("type = ?","ReceivedInvoice")
 
     # additional invoice filters
     if Redmine::Hook.call_hook(:additional_invoice_filters,:project=>@project,:invoices=>invoices).any?

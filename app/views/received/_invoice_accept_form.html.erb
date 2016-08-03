@@ -24,6 +24,6 @@
 
 <%= form_tag(mark_accepted_path(@invoice)) do %>
   <%= submit_tag I18n.t(:accept_without_mail) %>
-  <%= button_to_function I18n.t(:cancel), "$('#invoice-accept').hide();" %>
+  <%= button_tag I18n.t(:cancel), onclick: "$('#invoice-accept').hide(); return false;" %>
 <% end -%>
 </fieldset>
