@@ -112,7 +112,7 @@ class ReceivedController < InvoicesController
         notes: params[:reason]
       )
     end
-    Event.create(:name=>'accept',:invoice=>@invoice,:user=>User.current)
+    Event.create(:name=>'accept',:invoice=>@invoice,:user=>User.current, :notes => params[:reason])
     redirect_to :back
   rescue ActionController::RedirectBackError
     render :text => "OK"
@@ -132,7 +132,7 @@ class ReceivedController < InvoicesController
         notes: params[:reason]
       )
     end
-    Event.create(:name=>'refuse',:invoice=>@invoice,:user=>User.current)
+    Event.create(:name=>'refuse',:invoice=>@invoice,:user=>User.current, :notes => params[:reason])
     redirect_to :back
   rescue ActionController::RedirectBackError
     render :text => "OK"
