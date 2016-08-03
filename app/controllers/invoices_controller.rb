@@ -133,7 +133,7 @@ class InvoicesController < ApplicationController
     end
 
     @invoice_count = invoices.count
-    @invoice_pages = Paginator.new self, @invoice_count, @limit, params['page']
+    @invoice_pages = Paginator.new @invoice_count, @limit, params['page']
     @offset ||= @invoice_pages.offset
     @invoices = invoices.order(sort_clause).limit(@limit).offset(@offset).includes(:client).to_a
 

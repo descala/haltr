@@ -27,7 +27,7 @@ class PeopleController < ApplicationController
     end
 
     @person_count = people.count
-    @person_pages = Paginator.new self, @person_count,
+    @person_pages = Paginator.new @person_count,
 		per_page_option,
 		params['page']
     @people = people.order(sort_clause).limit(@person_pages.items_per_page).offset(@person_pages.current.offset)

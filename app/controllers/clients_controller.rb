@@ -56,7 +56,7 @@ class ClientsController < ApplicationController
     end
 
     @client_count = clients.count
-    @client_pages = Paginator.new self, @client_count, @limit, params['page']
+    @client_pages = Paginator.new @client_count, @limit, params['page']
     @offset ||= @client_pages.offset
     @clients = clients.order(sort_clause).limit(@limit).offset(@offset).to_a
   end

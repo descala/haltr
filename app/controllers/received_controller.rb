@@ -70,7 +70,7 @@ class ReceivedController < InvoicesController
     end
 
     @invoice_count = invoices.count
-    @invoice_pages = Paginator.new self, @invoice_count,
+    @invoice_pages = Paginator.new @invoice_count,
 		per_page_option,
 		params['page']
     @offset ||= @invoice_pages.current.offset

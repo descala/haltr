@@ -28,7 +28,7 @@ class ClientOfficesController < ApplicationController
     end
 
     @client_office_count = client_offices.count
-    @client_office_pages = Paginator.new self, @client_office_count,
+    @client_office_pages = Paginator.new @client_office_count,
 		per_page_option,
 		params['page']
     @client_offices = client_offices.
