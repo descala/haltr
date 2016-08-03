@@ -71,10 +71,12 @@ class InvoiceTemplatesController < InvoicesController
     @number = IssuedInvoice.next_number(@project)
     days = params[:days] || 10
     @date = Date.today + days.to_i.day
-    @drafts = DraftInvoice.includes(:client).where("clients.project_id = ?", @project.id).order("date ASC")
+    @drafts = DraftInvoice.includes(:client).
+      where("clients.project_id = ?", @project.id).
+      references(:client).order("date ASC")
     templates = InvoiceTemplate.includes(:client).
       where("clients.project_id = ? and date <= ?", @project.id, @date).
-      order("date ASC")
+      references(:client).order("date ASC")
     templates.each do |t|
       if t.frequency < 6 and t.date < 1.year.ago.to_date
         # limit to 1 year invoices with frequency < 6 months
@@ -92,7 +94,7 @@ class InvoiceTemplatesController < InvoicesController
         flash.now[:error] = e.message
       end
     end
-    @drafts.flatten!
+    @drafts.to_a.flatten!
   end
 
   # creates invoices form draft invoices
@@ -124,7 +126,9 @@ class InvoiceTemplatesController < InvoicesController
         flash.now[:error] = issued.errors.full_messages.join ","
       end
     end
-    @drafts = DraftInvoice.includes(:client).where("clients.project_id = ?", @project.id).order("date ASC")
+    @drafts = DraftInvoice.includes(:client).
+      where("clients.project_id = ?", @project.id).
+      references(:client).order("date ASC")
     render :action => 'new_invoices_from_template'
   end
 

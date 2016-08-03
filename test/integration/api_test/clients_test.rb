@@ -21,7 +21,7 @@ class Redmine::ApiTest::ClientsTest < Redmine::ApiTest::Base
         credentials('jsmith')
     assert_response :unprocessable_entity
     assert_equal 'application/xml', response.content_type
-    assert_tag 'errors', :child => {:tag => 'error', :content => "VAT Id Number has already been taken"}
+    assert_select 'errors', :child => {:tag => 'error', :content => "VAT Id Number has already been taken"}
   end
 
   test 'show' do
