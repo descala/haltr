@@ -5,6 +5,8 @@ class Dir3Entity < ActiveRecord::Base
   validates_presence_of :code, :name
   validates_uniqueness_of :code
 
+  attr_protected :created_at, :updated_at
+
   def full_address?
     address.present? and
     postalcode.present? and
