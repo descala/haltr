@@ -24,12 +24,21 @@
          <InvoicesCount>1</InvoicesCount>
          <TotalInvoicesAmount>
             <TotalAmount><%=h haltr_precision @invoice.total.dollars %></TotalAmount>
+            <% if @invoice.currency != 'EUR' and @invoice.exchange_rate -%>
+              <EquivalentInEuros><%=h haltr_precision(@invoice.total.dollars * @invoice.exchange_rate) %></EquivalentInEuros>
+            <% end -%>
          </TotalInvoicesAmount>
          <TotalOutstandingAmount>
             <TotalAmount><%=h haltr_precision (@invoice.total - @invoice.payments_on_account).dollars %></TotalAmount>
+            <% if @invoice.currency != 'EUR' and @invoice.exchange_rate -%>
+              <EquivalentInEuros><%=h haltr_precision((@invoice.total - @invoice.payments_on_account).dollars * @invoice.exchange_rate) %></EquivalentInEuros>
+            <% end -%>
          </TotalOutstandingAmount>
          <TotalExecutableAmount>
             <TotalAmount><%=h haltr_precision (@invoice.total - @invoice.payments_on_account - @invoice.amounts_withheld).dollars %></TotalAmount>
+            <% if @invoice.currency != 'EUR' and @invoice.exchange_rate -%>
+              <EquivalentInEuros><%=h haltr_precision((@invoice.total - @invoice.payments_on_account - @invoice.amounts_withheld).dollars * @invoice.exchange_rate) %></EquivalentInEuros>
+            <% end -%>
          </TotalExecutableAmount>
          <InvoiceCurrencyCode><%=h  @invoice.currency %></InvoiceCurrencyCode>
       </Batch>
@@ -297,8 +306,14 @@
               <EndDate><%=h @invoice.invoicing_period_end%></EndDate>
             </InvoicingPeriod>
 <% end -%>
-            <InvoiceCurrencyCode><%=h @client.currency%></InvoiceCurrencyCode>
-            <TaxCurrencyCode><%=h @client.currency%></TaxCurrencyCode>
+            <InvoiceCurrencyCode><%=h @invoice.currency%></InvoiceCurrencyCode>
+            <% if @invoice.currency != 'EUR' and @invoice.exchange_rate -%>
+              <ExchangeRateDetails>
+                <ExchangeRate><%= @invoice.exchange_rate %></ExchangeRate>
+                <ExchangeDate><%= @invoice.exchange_date %></ExchangeDate>
+              </ExchangeRateDetails>
+            <% end -%>
+            <TaxCurrencyCode>EUR</TaxCurrencyCode>
             <LanguageName><%=h @client.language_string%></LanguageName>
          </InvoiceIssueData>
          <TaxesOutputs>
@@ -310,9 +325,15 @@
              <TaxRate><%=h haltr_precision tax.percent%></TaxRate>
              <TaxableBase>
                <TotalAmount><%=h haltr_precision(@invoice.taxable_base(tax).dollars)%></TotalAmount>
+               <% if @invoice.currency != 'EUR' and @invoice.exchange_rate -%>
+                 <EquivalentInEuros><%=h haltr_precision(@invoice.taxable_base(tax).dollars * @invoice.exchange_rate) %></EquivalentInEuros>
+               <% end -%>
              </TaxableBase>
              <TaxAmount>
                <TotalAmount><%=h haltr_precision @invoice.tax_amount(tax).dollars %></TotalAmount>
+               <% if @invoice.currency != 'EUR' and @invoice.exchange_rate -%>
+                 <EquivalentInEuros><%=h haltr_precision(@invoice.tax_amount(tax).dollars * @invoice.exchange_rate) %></EquivalentInEuros>
+               <% end -%>
              </TaxAmount>
              <% if tax.name == 'IVA' -%>
                <% equivalence_surcharge = @invoice.taxes_outputs.select {|t| t.name == 'RE' and t.category == tax.category }.first -%>
@@ -320,6 +341,9 @@
                  <EquivalenceSurcharge><%=h haltr_precision equivalence_surcharge.percent%></EquivalenceSurcharge>
                  <EquivalenceSurchargeAmount>
                    <TotalAmount><%=h haltr_precision @invoice.tax_amount(equivalence_surcharge).dollars %></TotalAmount>
+                   <% if @invoice.currency != 'EUR' and @invoice.exchange_rate -%>
+                     <EquivalentInEuros><%=h haltr_precision(@invoice.tax_amount(equivalence_surcharge).dollars * @invoice.exchange_rate) %></EquivalentInEuros>
+                   <% end -%>
                  </EquivalenceSurchargeAmount>
                <% end -%>
              <% end -%>
@@ -331,9 +355,15 @@
              <TaxRate>0.00</TaxRate>
              <TaxableBase>
                <TotalAmount><%=h haltr_precision(@invoice.taxable_base.dollars)%></TotalAmount>
+               <% if @invoice.currency != 'EUR' and @invoice.exchange_rate -%>
+                 <EquivalentInEuros><%=h haltr_precision(@invoice.taxable_base.dollars * @invoice.exchange_rate) %></EquivalentInEuros>
+               <% end -%>
              </TaxableBase>
              <TaxAmount>
                <TotalAmount>0.00</TotalAmount>
+               <% if @invoice.currency != 'EUR' and @invoice.exchange_rate -%>
+                 <EquivalentInEuros>0.00</EquivalentInEuros>
+               <% end -%>
              </TaxAmount>
            </Tax>
 <% end -%>
@@ -347,9 +377,15 @@
                <TaxRate><%=h haltr_precision tax.percent * -1 %></TaxRate>
                <TaxableBase>
                   <TotalAmount><%=h haltr_precision @invoice.taxable_base(tax).dollars%></TotalAmount>
+                  <% if @invoice.currency != 'EUR' and @invoice.exchange_rate -%>
+                    <EquivalentInEuros><%=h haltr_precision(@invoice.taxable_base(tax).dollars * @invoice.exchange_rate) %></EquivalentInEuros>
+                  <% end -%>
                </TaxableBase>
                <TaxAmount>
                  <TotalAmount><%=h haltr_precision @invoice.tax_amount(tax).dollars * -1 %></TotalAmount>
+                 <% if @invoice.currency != 'EUR' and @invoice.exchange_rate -%>
+                   <EquivalentInEuros><%=h haltr_precision(@invoice.tax_amount(tax).dollars * -1 * @invoice.exchange_rate) %></EquivalentInEuros>
+                 <% end -%>
                </TaxAmount>
             </Tax>
 <% end -%>
@@ -471,9 +507,15 @@
                    <TaxRate><%=h haltr_precision tax.percent * -1 %></TaxRate>
                    <TaxableBase>
                       <TotalAmount><%=h haltr_precision Haltr::Utils.to_money(invoice_line.taxable_base, @invoice.currency, @invoice.company.rounding_method) %></TotalAmount>
+                      <% if @invoice.currency != 'EUR' and @invoice.exchange_rate -%>
+                        <EquivalentInEuros><%=h haltr_precision(Haltr::Utils.to_money(invoice_line.taxable_base, @invoice.currency, @invoice.company.rounding_method) * @invoice.exchange_rate) %></EquivalentInEuros>
+                      <% end -%>
                    </TaxableBase>
                    <TaxAmount>
                      <TotalAmount><%=h haltr_precision(invoice_line.tax_amount(tax)*-1)%></TotalAmount>
+                     <% if @invoice.currency != 'EUR' and @invoice.exchange_rate -%>
+                       <EquivalentInEuros><%=h haltr_precision(invoice_line.tax_amount(tax) * -1 * @invoice.exchange_rate) %></EquivalentInEuros>
+                     <% end -%>
                    </TaxAmount>
                 </Tax>
 <% end -%>
@@ -488,9 +530,15 @@
                     <TaxRate><%=h haltr_precision tax.percent%></TaxRate>
                     <TaxableBase>
                       <TotalAmount><%=h haltr_precision Haltr::Utils.to_money(invoice_line.taxable_base, @invoice.currency, @invoice.company.rounding_method) %></TotalAmount>
+                     <% if @invoice.currency != 'EUR' and @invoice.exchange_rate -%>
+                       <EquivalentInEuros><%=h haltr_precision(Haltr::Utils.to_money(invoice_line.taxable_base, @invoice.currency, @invoice.company.rounding_method) * @invoice.exchange_rate) %></EquivalentInEuros>
+                     <% end -%>
                     </TaxableBase>
                     <TaxAmount>
                       <TotalAmount><%=h haltr_precision(invoice_line.tax_amount(tax))%></TotalAmount>
+                     <% if @invoice.currency != 'EUR' and @invoice.exchange_rate -%>
+                       <EquivalentInEuros><%=h haltr_precision(invoice_line.tax_amount(tax) * @invoice.exchange_rate) %></EquivalentInEuros>
+                     <% end -%>
                     </TaxAmount>
                     <% if tax.name == 'IVA' -%>
                       <% equivalence_surcharge = @invoice.taxes_outputs.select {|t| t.name == 'RE' and t.category == tax.category }.first -%>
@@ -498,6 +546,9 @@
                         <EquivalenceSurcharge><%=h haltr_precision equivalence_surcharge.percent%></EquivalenceSurcharge>
                         <EquivalenceSurchargeAmount>
                           <TotalAmount><%=h haltr_precision @invoice.tax_amount(equivalence_surcharge).dollars %></TotalAmount>
+                          <% if @invoice.currency != 'EUR' and @invoice.exchange_rate -%>
+                            <EquivalentInEuros><%=h haltr_precision(@invoice.tax_amount(equivalence_surcharge).dollars * @invoice.exchange_rate) %></EquivalentInEuros>
+                          <% end -%>
                         </EquivalenceSurchargeAmount>
                       <% end -%>
                     <% end -%>

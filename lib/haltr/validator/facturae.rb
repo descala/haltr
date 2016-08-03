@@ -56,6 +56,10 @@ module Haltr
             errors.add(:due_date, :blank)
           end
         end
+        if currency != 'EUR'
+          errors.add(:exchange_rate, :blank) unless exchange_rate.present?
+          errors.add(:exchange_date, :blank) unless exchange_date.present?
+        end
       end
 
     end
