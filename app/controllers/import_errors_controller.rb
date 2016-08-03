@@ -21,7 +21,7 @@ class ImportErrorsController < ApplicationController
     import_errors = @project.import_errors
 
     @import_errors_count = import_errors.count
-    @import_errors_pages = Paginator.new self, @import_errors_count,
+    @import_errors_pages = Paginator.new @import_errors_count,
       per_page_option, params[:page]
     @import_errors = import_errors.
       limit(@import_errors_pages.items_per_page).

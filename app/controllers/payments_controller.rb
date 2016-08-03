@@ -34,7 +34,7 @@ class PaymentsController < ApplicationController
 
     @limit = per_page_option
     @payment_count = payments.count
-    @payment_pages = Paginator.new self, @payment_count, @limit, params['page']
+    @payment_pages = Paginator.new @payment_count, @limit, params['page']
     @offset ||= @payment_pages.offset
     @payments= payments.order(sort_clause).limit(@limit).offset(@offset).to_a
   end

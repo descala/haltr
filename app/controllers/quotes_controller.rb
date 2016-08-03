@@ -18,7 +18,7 @@ class QuotesController < ApplicationController
     sort_update %w(invoices.created_at state number date due_date clients.name import_in_cents)
     invoices = @project.quotes
     @invoice_count = invoices.count
-    @invoice_pages = Paginator.new self, @invoice_count,
+    @invoice_pages = Paginator.new @invoice_count,
 		per_page_option,
 		params['page']
     @invoices =  invoices.includes(:client).order(sort_clause).

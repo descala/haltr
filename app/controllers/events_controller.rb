@@ -48,7 +48,7 @@ class EventsController < ApplicationController
     end
 
     @event_count = events.count
-    @event_pages = Paginator.new self, @event_count, @limit, params['page']
+    @event_pages = Paginator.new @event_count, @limit, params['page']
     @offset ||= @event_pages.offset
     @events =  events.order(sort_clause).includes(:invoice).
       limit(@event_pages.items_per_page).offset(@offset)

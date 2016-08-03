@@ -42,7 +42,7 @@ class InvoiceTemplatesController < InvoicesController
     end
 
     @invoice_count = templates.count
-    @invoice_pages = Paginator.new self, @invoice_count,
+    @invoice_pages = Paginator.new @invoice_count,
 		per_page_option,
 		params['page']
     @invoices = templates.includes(:client).limit(@invoice_pages.items_per_page).
