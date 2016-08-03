@@ -2,7 +2,7 @@ require File.dirname(__FILE__) + '/../test_helper'
 
 class MailNotifierTest < ActiveSupport::TestCase
 
-  include ActionDispatch::Assertions::SelectorAssertions
+  include Rails::Dom::Testing::Assertions
 
   def setup
     ActionMailer::Base.deliveries.clear

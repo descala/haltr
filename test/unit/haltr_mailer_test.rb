@@ -7,8 +7,7 @@ class HaltrMailerTest < ActiveSupport::TestCase
   fixtures :invoices
 
   include Redmine::I18n
-  include ActionDispatch::Assertions::SelectorAssertions
-  include Rails.application.routes.url_helpers
+  include Rails::Dom::Testing::Assertions
 
   def setup
     ActionMailer::Base.deliveries.clear
