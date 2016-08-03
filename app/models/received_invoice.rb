@@ -6,23 +6,23 @@ class ReceivedInvoice < InvoiceDocument
 
   include AASM
 
-  aasm column: :state, skip_validation_on_save: true, whiny_transitions: false do
+  aasm column: :state, skip_validation_on_save: true, whiny_transitions: true do
     state :received, initial: true
     state :accepted, :paid, :refused
 
     before_all_events :aasm_create_event
 
     event :refuse do
-      transitions [:accepted,:received] => :refused
+      transitions from: [:accepted,:received], to: :refused
     end
     event :accept do
-      transitions [:received,:accepted] => :accepted
+      transitions from: [:received,:accepted], to: :accepted
     end
     event :paid do
-      transitions :accepted => :paid
+      transitions from: :accepted, to: :paid
     end
     event :unpaid do
-      transitions :paid => :accepted
+      transitions from: :paid, to: :accepted
     end
   end
 
