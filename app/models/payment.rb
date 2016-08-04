@@ -1,10 +1,10 @@
 class Payment < ActiveRecord::Base
 
-
-
   belongs_to :invoice
   belongs_to :project
   validates_numericality_of :amount_in_cents, :greater_than => 0
+
+  attr_protected :created_on, :updated_on, :invoice_id, :project_id
 
   after_save do
     old_invoice = InvoiceDocument.find invoice_id_was rescue nil

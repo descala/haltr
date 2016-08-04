@@ -43,8 +43,9 @@ class PaymentsController < ApplicationController
   def new
     @payment_type = params[:payment_type]
     if params[:invoice_id]
-      @invoice = Invoice.find params[:invoice_id]
-      @payment = Payment.new(:invoice_id => @invoice.id, :amount => @invoice.unpaid_amount)
+      @invoice = @project.invoices.find params[:invoice_id]
+      @payment = Payment.new(amount: @invoice.unpaid_amount)
+      @payment.invoice = @invoice
     else
       @payment = Payment.new
     end
@@ -54,8 +55,11 @@ class PaymentsController < ApplicationController
   end
 
   def create
+    if params[:payment][:invoice_id].present?
+      @invoice = @project.invoices.find params[:payment].delete(:invoice_id)
+    end
     @payment = Payment.new(params[:payment].merge({:project=>@project}))
-    @invoice = @payment.invoice
+    @payment.invoice = @invoice
     @reason = params[:reason]
     if @payment.save
       flash[:notice] = l(:notice_successful_create)
@@ -199,7 +203,13 @@ class PaymentsController < ApplicationController
       @moviments.each do |m|
         if m.positiu
           begin
-          p =Payment.new :date => m.date_o, :amount => m.amount, :payment_method => "Account #{m.account}", :reference => "#{m.ref1} #{m.ref2} #{m.txt1} #{m.txt2}".strip, :project => @project
+          p =Payment.new(
+            date: m.date_o,
+            amount: m.amount,
+            payment_method: "Account #{m.account}",
+            reference: "#{m.ref1} #{m.ref2} #{m.txt1} #{m.txt2}".strip,
+            project: @project
+          )
           p.save!
           rescue ActiveRecord::RecordInvalid
             @errors << p
