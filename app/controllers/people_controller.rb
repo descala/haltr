@@ -19,11 +19,11 @@ class PeopleController < ApplicationController
     sort_init 'last_name', 'asc'
     sort_update %w(first_name last_name email)
 
-    people = @client.nil? ? @project.people.scoped :  @client.people.scoped
+    people = @client.nil? ? @project.people :  @client.people
 
     unless params[:name].blank?
       name = "%#{params[:name].strip.downcase}%"
-      people = people.scoped :conditions => ["LOWER(first_name) LIKE ? OR LOWER(last_name) LIKE ? OR LOWER(people.email) LIKE ?", name, name, name]
+      people = people.where(["LOWER(first_name) LIKE ? OR LOWER(last_name) LIKE ? OR LOWER(people.email) LIKE ?", name, name, name])
     end
 
     @person_count = people.count

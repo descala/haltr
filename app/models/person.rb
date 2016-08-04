@@ -11,6 +11,7 @@ class Person < ActiveRecord::Base
     :allow_nil => true,
     :allow_blank => true
 
+  attr_protected :created_at, :updated_at
 
   def to_label
     "#{first_name} #{last_name}"
