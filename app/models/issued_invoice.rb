@@ -290,7 +290,7 @@ class IssuedInvoice < InvoiceDocument
   def update_status
     update_imports
     if is_paid?
-      if can_paid?
+      if may_paid?
         update_attribute(:state, :closed)
         Event.create(name: 'paid', invoice: self, user: User.current)
       end

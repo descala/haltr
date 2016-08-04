@@ -1186,7 +1186,7 @@ class InvoicesController < ApplicationController
     if %w(new sent accepted registered refused closed).include? params[:state]
       @invoices.each do |i|
         next if i.state == params[:state]
-        all_changed = i.send("mark_as_#{params[:state]}") && all_changed
+        all_changed = i.send("mark_as_#{params[:state]}!") && all_changed
       end
     else
       flash[:error] = "unknown state #{params[:state]}"
@@ -1199,7 +1199,7 @@ class InvoicesController < ApplicationController
     @errors=[]
     num_invoices = @invoices.size
     @invoices.collect! do |invoice|
-      if invoice.valid? and invoice.can_queue? and
+      if invoice.valid? and invoice.may_queue? and
           ExportChannels.can_send? invoice.client.invoice_format
         if ExportChannels[invoice.client.invoice_format]['javascript']
           @errors << "#{l(:error_invoice_not_sent, :num=>invoice.number)}: Must be processed individually (channel with javascript)"
@@ -1211,7 +1211,7 @@ class InvoicesController < ApplicationController
         err = "#{l(:error_invoice_not_sent, :num=>invoice.number)}: "
         if !invoice.valid?
           err += invoice.errors.full_messages.join(', ')
-        elsif !invoice.can_queue?
+        elsif !invoice.may_queue?
           err += l(:state_not_allowed_for_sending, state: l("state_#{invoice.state}"))
         else
           err += "#{l(:export_channel)}: #{ExportChannels.l(invoice.client.invoice_format)}"
