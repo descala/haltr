@@ -3,9 +3,7 @@
 module Haltr
   class SendPdfByIMAP < GenericSender
 
-    require 'render_anywhere'
     require 'net/imap'
-    include RenderAnywhere
 
     attr_accessor :invoice, :pdf
 
@@ -63,7 +61,7 @@ module Haltr
 
       Rails.application.routes.default_url_options = { host: Setting.host_name, protocol: Setting.protocol }
 
-      body_txt = render(
+      body_txt = InvoicesController.renderer.render(
         template: "haltr_mailer/send_invoice.text.erb",
         layout:   nil,
         locals:   { :@invoice => invoice, :@body => body }
