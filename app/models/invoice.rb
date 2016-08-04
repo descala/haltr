@@ -522,6 +522,8 @@ _INV
       end
     end
     currency       = Haltr::Utils.get_xpath(doc,xpaths[:currency])
+    exchange_rate  = Haltr::Utils.get_xpath(doc,xpaths[:exchange_rate])
+    exchange_date  = Haltr::Utils.get_xpath(doc,xpaths[:exchange_date])
     # invoice data
     invoice_number   = Haltr::Utils.get_xpath(doc,xpaths[:invoice_number])
     invoice_series   = Haltr::Utils.get_xpath(doc,xpaths[:invoice_series])
@@ -742,6 +744,8 @@ _INV
       :invoicing_period_end   => i_period_end,
       :total            => invoice_total,
       :currency         => currency,
+      :exchange_rate    => exchange_rate,
+      :exchange_date    => exchange_date,
       :import           => Haltr::Utils.to_money(invoice_import, currency, company.rounding_method),
       :due_date         => invoice_due_date,
       :project          => company.project,
