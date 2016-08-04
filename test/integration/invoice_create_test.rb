@@ -98,6 +98,8 @@ class InvoiceCreaeteTest < ActionController::IntegrationTest
         "currency"=>"TRY",
         "terms"=>"0",
         "payment_method_text"=>"",
+        "exchange_rate"=>"1",
+        "exchange_date"=>Date.today,
         "invoice_lines_attributes"=>
         {
           "0"=>
