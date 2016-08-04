@@ -124,6 +124,21 @@
   </p>
 </div>
 
+<div id="exchange_fields" class="seccio grup" style="<%= 'display: none;' if currency == 'EUR' %>">
+  <p class="col span-1-de-3">
+  <label for="invoice_exchange_rate"><%= l(:field_exchange_rate) %></label>
+  <%= text_field :invoice, :exchange_rate %>
+  </p>
+  <p class="col span-1-de-3">
+  <label for="invoice_payment_method"><%= l(:field_exchange_date) %></label>
+  <%= text_field :invoice, :exchange_date, :size => 10 %>
+  <%= calendar_for('invoice_exchange_date') %>
+  </p>
+  <p class="col span-1-de-3">
+  </p>
+</div>
+
+
 <% if @client and @client.client_offices and @client.client_offices.any? -%>
 
 <div class="seccio grup">
