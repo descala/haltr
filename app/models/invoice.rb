@@ -1194,12 +1194,12 @@ _INV
         country:              client_hash[:country].to_s.chomp,
         name:                 client_hash[:name].to_s.chomp,
         destination_edi_code: client_hash[:destination_edi_code].to_s.chomp
-      }
-      match = to_match.all? {|k, v| client.send(k).to_s.chomp.casecmp(v) == 0 }
-      unless match
+      }.reject {|k,v| v.blank? }
+      # check if client data matches client_hash
+      if !to_match.all? {|k, v| client.send(k).to_s.chomp.casecmp(v) == 0 }
+        # check if any client_office matches client_hash
         client.client_offices.each do |office|
-          match = to_match.all? {|k, v| office.send(k).to_s.chomp.casecmp(v) == 0 }
-          if match
+          if to_match.all? {|k, v| office.send(k).to_s.chomp.casecmp(v) == 0 }
             self.client_office = office
             break
           end
