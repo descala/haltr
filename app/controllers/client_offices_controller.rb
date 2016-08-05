@@ -20,11 +20,11 @@ class ClientOfficesController < ApplicationController
     sort_init 'name', 'asc'
     sort_update %w(name city)
 
-    client_offices = @client.nil? ? @project.client_offices.scoped :  @client.client_offices.scoped
+    client_offices = @client.nil? ? @project.client_offices:  @client.client_offices
 
     unless params[:name].blank?
       name = "%#{params[:name].strip.downcase}%"
-      client_offices = client_offices.scoped :conditions => ["LOWER(client_offices.name) LIKE ? OR LOWER(client_offices.city) LIKE ? OR LOWER(client_offices.province) LIKE ?", name, name, name]
+      client_offices = client_offices.where(["LOWER(client_offices.name) LIKE ? OR LOWER(client_offices.city) LIKE ? OR LOWER(client_offices.province) LIKE ?", name, name, name])
     end
 
     @client_office_count = client_offices.count
