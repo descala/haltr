@@ -58,7 +58,7 @@
                   </tr>
                   <tr>
 
-                <% %w(new sending sent read error cancelled closed discarded registered refused accepted allegedly_paid).each do |state| -%>
+                <% %w(new sending sent read error cancelled closed discarded registered refused accepted allegedly_paid annotated).each do |state| -%>
                   <%= "</tr><tr>".html_safe if state == "discarded" %>
                   <td><label class="inline"><%= check_box_tag(state, "1", params[state]) %> <%=l("state_#{state}_plural")%></label></td>
                 <% end -%>

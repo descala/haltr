@@ -42,6 +42,7 @@ class Invoice < ActiveRecord::Base
   validates_numericality_of :charge_amount_in_cents, :allow_nil => true
   validates_numericality_of :payments_on_account_in_cents, :allow_nil => true
   validates_numericality_of :amounts_withheld_in_cents, :allow_nil => true
+  validates_numericality_of :exchange_rate, :allow_nil => true
 
   before_save :fields_to_utf8
   after_create :increment_counter
@@ -523,6 +524,8 @@ _INV
       end
     end
     currency       = Haltr::Utils.get_xpath(doc,xpaths[:currency])
+    exchange_rate  = Haltr::Utils.get_xpath(doc,xpaths[:exchange_rate])
+    exchange_date  = Haltr::Utils.get_xpath(doc,xpaths[:exchange_date])
     # invoice data
     invoice_number   = Haltr::Utils.get_xpath(doc,xpaths[:invoice_number])
     invoice_series   = Haltr::Utils.get_xpath(doc,xpaths[:invoice_series])
@@ -743,6 +746,8 @@ _INV
       :invoicing_period_end   => i_period_end,
       :total            => invoice_total,
       :currency         => currency,
+      :exchange_rate    => exchange_rate,
+      :exchange_date    => exchange_date,
       :import           => Haltr::Utils.to_money(invoice_import, currency, company.rounding_method),
       :due_date         => invoice_due_date,
       :project          => company.project,
@@ -1189,12 +1194,12 @@ _INV
         country:              client_hash[:country].to_s.chomp,
         name:                 client_hash[:name].to_s.chomp,
         destination_edi_code: client_hash[:destination_edi_code].to_s.chomp
-      }
-      match = to_match.all? {|k, v| client.send(k).to_s.chomp.casecmp(v) == 0 }
-      unless match
+      }.reject {|k,v| v.blank? }
+      # check if client data matches client_hash
+      if !to_match.all? {|k, v| client.send(k).to_s.chomp.casecmp(v) == 0 }
+        # check if any client_office matches client_hash
         client.client_offices.each do |office|
-          match = to_match.all? {|k, v| office.send(k).to_s.chomp.casecmp(v) == 0 }
-          if match
+          if to_match.all? {|k, v| office.send(k).to_s.chomp.casecmp(v) == 0 }
             self.client_office = office
             break
           end

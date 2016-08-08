@@ -184,6 +184,10 @@ class ClientsController < ApplicationController
 
   def link_to_profile
     taxcode = params[:company]
+    if taxcode.blank?
+      render_404
+      return
+    end
     if taxcode[0...2].downcase == @project.company.country
       taxcode2 = taxcode[2..-1]
     else

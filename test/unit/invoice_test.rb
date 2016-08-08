@@ -675,8 +675,12 @@ class InvoiceTest < ActiveSupport::TestCase
     file = File.new(File.join(File.dirname(__FILE__),'../fixtures/documents/invoice_ubl_with_sbdh.xml'))
     invoice = Invoice.create_from_xml(file,companies(:company6),"1234",'uploaded',User.current.name,nil,false)
     assert_equal '5503070490', invoice.client.taxcode
-    assert !invoice.valid?
-    assert_equal ["Invoice's client has no email defined"], invoice.errors.full_messages
+    if invoice.client.invoice_format == 'link_to_pdf_by_mail'
+      assert !invoice.valid?
+      assert_equal ["Invoice's client has no email defined"], invoice.errors.full_messages
+    else
+      assert invoice.valid?
+    end
   end
 
   test 'import facturae32 with AmountsWithheld' do
@@ -784,6 +788,30 @@ class InvoiceTest < ActiveSupport::TestCase
     assert_equal invoice.client, client
     assert_equal ext_comp.id, invoice.client.company_id
     assert_equal '08720', invoice.client.postalcode
+  end
+
+  test 'import invoice does not create client_office when values are blank' do
+    invoice = invoices(:invoices_001)
+    client = invoice.client
+    assert_equal 'Client1', client.name
+    assert_equal 1, client.client_offices.size
+
+    invoice.set_client_from_hash(
+      :taxcode        => "A13585625",
+      :name           => nil,
+      :address        => nil,
+      :province       => nil,
+      :country        => nil,
+      :website        => nil,
+      :email          => nil,
+      :postalcode     => nil,
+      :city           => nil,
+      :currency       => nil,
+      :project        => nil,
+      :invoice_format => nil,
+      :language       => nil,
+    )
+    assert_equal 1, client.client_offices.size
   end
 
 end
