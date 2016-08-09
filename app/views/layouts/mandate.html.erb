@@ -3,7 +3,7 @@
   <head>
     <meta http-equiv="content-type" content="text/html; charset=UTF-8"/>
     <title><%= l(:label_mandate) %> | <%= @client.name %></title>
-    <%= wicked_pdf_stylesheet_link_tag "../plugin_assets/haltr/stylesheets/mandates_print" -%>
+    <%= wicked_pdf_stylesheet_link_tag "/plugin_assets/haltr/stylesheets/mandates_print" -%>
   </head>
   <body class="client_view">
     <%= yield %>
