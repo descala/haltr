@@ -173,11 +173,11 @@ class Invoice < ActiveRecord::Base
   end
 
   def company
-    self.project.company
+    self.project.company rescue nil
   end
 
   def company_name
-    project.company.name
+    project.company.name rescue nil
   end
 
   def line_descriptions_txt
