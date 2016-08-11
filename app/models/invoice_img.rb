@@ -10,30 +10,31 @@ class InvoiceImg < ActiveRecord::Base
   end
 
   after_initialize do
-    return unless data.is_a? HashWithIndifferentAccess or Rails.env == 'test'
-    # if data is a HashWithIndifferentAccess tranform to a Hash
-    # ensure data keys are symbols and tag numbers are integers
-    initial_data = data
-    initial_tags = initial_data['tags'] || {}
-    initial_tokens= initial_data['tokens'] || {}
-    self.data = {}
-    self.data[:tags] = {}
-    self.data[:tokens] = {}
-    self.data[:width] = initial_data['width']
-    self.data[:height] = initial_data['height']
-    self.data[:name] = initial_data['name']
-    initial_tags.each do |tag, token_number|
-      value = token_number.to_i rescue token_number
-      self.data[:tags][tag.to_sym] = value
-    end
-    initial_tokens.each do |token_number, token_data|
-      token = {}
-      token[:text] = token_data['text']
-      token[:x0] = token_data['x0'].to_i
-      token[:x1] = token_data['x1'].to_i
-      token[:y0] = token_data['y0'].to_i
-      token[:y1] = token_data['y1'].to_i
-      self.data[:tokens][token_number.to_i] = token
+    if data.is_a? HashWithIndifferentAccess or Rails.env == 'test'
+      # if data is a HashWithIndifferentAccess tranform to a Hash
+      # ensure data keys are symbols and tag numbers are integers
+      initial_data = data
+      initial_tags = initial_data['tags'] || {}
+      initial_tokens= initial_data['tokens'] || {}
+      self.data = {}
+      self.data[:tags] = {}
+      self.data[:tokens] = {}
+      self.data[:width] = initial_data['width']
+      self.data[:height] = initial_data['height']
+      self.data[:name] = initial_data['name']
+      initial_tags.each do |tag, token_number|
+        value = token_number.to_i rescue token_number
+        self.data[:tags][tag.to_sym] = value
+      end
+      initial_tokens.each do |token_number, token_data|
+        token = {}
+        token[:text] = token_data['text']
+        token[:x0] = token_data['x0'].to_i
+        token[:x1] = token_data['x1'].to_i
+        token[:y0] = token_data['y0'].to_i
+        token[:y1] = token_data['y1'].to_i
+        self.data[:tokens][token_number.to_i] = token
+      end
     end
   end
 
