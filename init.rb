@@ -74,7 +74,7 @@ Redmine::Plugin.register :haltr do
         :people    => [:index, :new, :show, :edit, :create, :update, :destroy],
         :invoices  => [:index, :new, :edit, :create, :update, :destroy, :show, :mark_sent, :mark_closed, :mark_not_sent,
                        :destroy_payment, :send_invoice, :legal, :update_payment_stuff, :amend_for_invoice, :download_new_invoices,
-                       :send_new_invoices, :duplicate_invoice, :reports, :report_channel_state, :report_invoice_list, :context_menu, :bulk_mark_as, :original,
+                       :send_new_invoices, :duplicate_invoice, :reports, :report_channel_state, :report_invoice_list, :report_received_table, :context_menu, :bulk_mark_as, :original,
                        :mark_as, :number_to_id],
         :received  => [:index, :new, :edit, :create, :update, :destroy, :show,
                        :mark_accepted, :mark_accepted_with_mail, :mark_refused,
@@ -92,7 +92,7 @@ Redmine::Plugin.register :haltr do
       { :clients   => [:index, :show, :edit, :check_cif, :ccc2iban],
         :people    => [:index, :edit],
         :client_offices => [:index, :edit],
-        :invoices  => [:index, :show, :legal, :download_new_invoices, :reports, :report_channel_state, :report_invoice_list,
+        :invoices  => [:index, :show, :legal, :download_new_invoices, :reports, :report_channel_state, :report_invoice_list, :report_received_table,
                        :context_menu, :number_to_id, :edit],
         :received  => [:index, :show, :legal, :context_menu],
         :companies => [:my_company,:bank_info, :linked_to_mine, :check_iban],
@@ -107,7 +107,7 @@ Redmine::Plugin.register :haltr do
       { :clients   => [:index, :show, :edit, :check_cif, :ccc2iban, :update],
         :people    => [:index, :edit],
         :client_offices => [:index, :edit, :update],
-        :invoices  => [:index, :show, :legal, :download_new_invoices, :reports, :report_channel_state, :report_invoice_list,
+        :invoices  => [:index, :show, :legal, :download_new_invoices, :reports, :report_channel_state, :report_invoice_list, :report_received_table,
                        :context_menu, :send_invoice,
                        :send_new_invoices, :number_to_id],
         :received  => [:index, :show, :legal, :context_menu],
@@ -130,8 +130,9 @@ Redmine::Plugin.register :haltr do
         :mandates => [:index,:new,:show,:create,:edit,:update,:destroy,:signed_doc] }, :require => :member
 
     permission :import_invoices,
-      { :invoices => [:import,:import_facturae],
-        :received => [:import],
+      { :invoices => [:upload,:import,:import_facturae],
+        :received => [:upload,:import],
+        :invoice_imgs => [:context_menu,:tag],
         :import_errors => [:index, :create, :show, :destroy, :context_menu] },
       :require => :member
 

@@ -78,49 +78,18 @@ class HaltrMailHandler < MailHandler # < ActionMailer::Base
   private
 
   def process_pdf_file(raw_invoice,company,from="",md5,transport)
-    @company = company
-
-    # PDF attachment has #<Encoding:ASCII-8BIT>
-    # without force_encoding write halts with: "\xFE" from ASCII-8BIT to UTF-8
-    attachment = raw_invoice.read.chomp
-    attachment.force_encoding('UTF-8')
-    tmpfile = Tempfile.new "pdf"
-    tmpfile.write(attachment)
-    tmpfile.close
-
-    text_file = Tempfile.new "txt"
-    cmd = "pdftotext -f 1 -l 1 -layout #{tmpfile.path} #{text_file.path}"
-    out = `#{cmd} 2>&1`
-    raise "Error with pdftotext <br /><pre>#{cmd}</pre><pre>#{out}</pre>" unless $?.success?
-    ds = Estructura::Invoice.new(text_file.read.chomp,:tax_id=>@company.taxcode)
-    text_file.close
-    text_file.unlink
-    ds.apply_rules
-    ds.fix_amounts
-    client = Client.where(
-      "project_id = ? AND taxcode = ?",
-      @company.project_id,
-      ds.tax_identification_number
-    ).first
-    ri = ReceivedInvoice.new(:number          => ds.invoice_number,
-                            :client          => client,
-                            :date            => ds.issue_date,
-                            :import          => Haltr::Utils.to_money(ds.total_amount, nil, @company.rounding_method),
-#                            :currency        => ds.currency,
-#                            :tax_percent     => ds.tax_rate,
-#                            :subtotal        => ds.invoice_subtotal.to_money,
-#                            :withholding_tax => ds.withholding_tax.to_money,
-                            :due_date        => ds.due_date,
-                            :project         => @company.project)
-
-    ri.md5 = `md5sum #{tmpfile.path} | cut -d" " -f1`.chomp
-    ri.transport=transport
-    ri.from=from
-    ri.invoice_format = "pdf"
-    ri.original = raw_invoice.read.chomp
-    ri.file_name = raw_invoice.filename
-    ri.save!
-    return ri
+    # assume invoices received by mail are always ReceivedInvoices
+    @invoice           = ReceivedInvoice.new
+    @invoice.project   = company.project
+    @invoice.state     = :processing_pdf
+    @invoice.transport = :email
+    @invoice.md5       = md5
+    @invoice.original  = raw_invoice.read
+    @invoice.invoice_format = 'pdf'
+    @invoice.save!(validate: false)
+    Event.create(:name=>'processing_pdf',:invoice=>@invoice)
+    Haltr::SendPdfToWs.send(@invoice)
+    @invoice
   end
 
   def process_bounce(email)

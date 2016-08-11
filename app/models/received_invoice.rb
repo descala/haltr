@@ -3,6 +3,7 @@ class ReceivedInvoice < InvoiceDocument
   belongs_to :created_from_invoice, class_name: 'IssuedInvoice'
 
   after_create :create_event
+  before_save :update_imports
 
   include AASM
 
@@ -31,15 +32,24 @@ class ReceivedInvoice < InvoiceDocument
     unless Event.automatic.include? name
       Event.create(:name=>name,:invoice=>self,:user=>User.current)
     end
+    event :processing_pdf do
+      transition [:received] => :processing_pdf
+    end
+    event :processed_pdf do
+      transition [:processing_pdf] => :received
+    end
   end
 
   def to_label
     "#{number}"
   end
 
-  def past_due?
-    #TODO
+  def sent?
     false
+  end
+
+  def past_due?
+    !paid? && due_date && due_date < Date.today
   end
 
   def label
@@ -117,7 +127,7 @@ class ReceivedInvoice < InvoiceDocument
   protected
 
   def create_event
-    ReceivedInvoiceEvent.create(:name=>self.transport,:invoice=>self,:user=>User.current)
+    ReceivedInvoiceEvent.create!(:name=>self.transport,:invoice=>self,:user=>User.current)
   end
 
 end

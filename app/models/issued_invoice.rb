@@ -78,6 +78,12 @@ class IssuedInvoice < InvoiceDocument
     event :amend_and_close do
       transitions to: :closed
     end
+    event :processing_pdf do
+      transitions from: :new, to: :processing_pdf
+    end
+    event :processed_pdf do
+      transitions from: :processing_pdf, to: :new
+    end
     event :mark_as_new do
       transitions to: :new
     end

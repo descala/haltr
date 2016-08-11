@@ -17,7 +17,11 @@ gem 'audited-activerecord'
 
 gem 'valvat', :git => 'https://github.com/descala/valvat.git', :branch => 'master'
 gem 'shared-mime-info'
+
 gem 'rest-client'
+gem 'fuzzy_match'
+gem 'whatlanguage'
+gem 'countries'
 gem 'pdfjs_rails'
 gem 'country_select'
 gem 'aasm'
