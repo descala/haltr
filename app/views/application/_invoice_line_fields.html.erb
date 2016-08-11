@@ -55,7 +55,7 @@
     </tbody>
   </table>
 
-  <% if User.current.allowed_to?(:view_invoice_extra_fields, @project) or @invoice.invoice_lines.sum(&:discount_percent) > 0 -%>
+  <% if User.current.allowed_to?(:view_invoice_extra_fields, @project) or @invoice.invoice_lines.to_a.sum(&:discount_percent) > 0 -%>
   <table class="formee invoice_lines">
     <thead>
       <tr>
@@ -79,7 +79,7 @@
   </table>
   <% end -%>
 
-  <% if User.current.allowed_to?(:view_invoice_extra_fields, @project) or @invoice.invoice_lines.sum(&:charge) > 0 -%>
+  <% if User.current.allowed_to?(:view_invoice_extra_fields, @project) or @invoice.invoice_lines.to_a.sum(&:charge) > 0 -%>
   <table class="formee invoice_lines">
     <thead>
       <tr>
