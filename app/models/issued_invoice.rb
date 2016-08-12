@@ -174,11 +174,11 @@ class IssuedInvoice < InvoiceDocument
         "state='new' and number is not null and date <= ? and clients.invoice_format in (?)",
         Date.today,
         ExportChannels.can_send.keys
-    ).references(:clients).order("number ASC")
+    ).references(:clients)
   end
 
   def self.find_not_sent(project)
-    project.issued_invoices.where("state='new' and number is not null").order("number ASC")
+    project.issued_invoices.where("state='new' and number is not null")
   end
 
   def self.candidates_for_payment(payment)
