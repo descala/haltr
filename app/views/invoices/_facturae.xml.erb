@@ -310,7 +310,7 @@
             <% if @invoice.currency != 'EUR' and @invoice.exchange_rate -%>
               <ExchangeRateDetails>
                 <ExchangeRate><%= @invoice.exchange_rate %></ExchangeRate>
-                <ExchangeDate><%= @invoice.exchange_date %></ExchangeDate>
+                <ExchangeRateDate><%= @invoice.exchange_date %></ExchangeRateDate>
               </ExchangeRateDetails>
             <% end -%>
             <TaxCurrencyCode>EUR</TaxCurrencyCode>
