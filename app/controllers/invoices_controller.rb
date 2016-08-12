@@ -731,7 +731,7 @@ class InvoicesController < ApplicationController
   end
 
   def send_new_invoices
-    @invoices = IssuedInvoice.find_can_be_sent(@project)
+    @invoices = IssuedInvoice.find_can_be_sent(@project).order("number ASC")
     bulk_send
     render action: 'bulk_send'
   end
@@ -739,7 +739,7 @@ class InvoicesController < ApplicationController
   def download_new_invoices
     require 'zip'
     @company = @project.company
-    invoices = IssuedInvoice.find_not_sent @project
+    invoices = IssuedInvoice.find_not_sent(@project).order("number ASC")
     # just a safe big limit
     if invoices.size > 100
       flash[:error] = l(:too_much_invoices,:num=>invoices.size)
