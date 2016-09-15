@@ -14,7 +14,7 @@ class InvoiceTemplatesController < InvoicesController
     sort_init 'date', 'asc'
     sort_update %w(date number clients.name frequency)
 
-    templates = @project.invoice_templates.includes(:client)
+    templates = @project.invoice_templates
 
     unless params[:name].blank?
       templates = templates.where("clients.name like ?","%#{params[:name]}%")
@@ -29,11 +29,11 @@ class InvoiceTemplatesController < InvoicesController
     end
 
     unless params[:taxcode].blank?
-      templates = templates.where("clients.taxcode like ?", "%#{params[:taxcode]}%")
+      templates = templates.includes(:client).references(:client).where("clients.taxcode like ?","%#{params[:taxcode]}%")
     end
 
     unless params[:name].blank?
-      templates = templates.where("clients.name like ?","%#{params[:name]}%")
+      templates = templates.includes(:client).references(:client).includes(:client_office).references(:client_office).where("clients.name like ? or client_offices.name like ?","%#{params[:name]}%","%#{params[:name]}%")
     end
 
     unless params[:client_id].blank?

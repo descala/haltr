@@ -42,7 +42,7 @@ class InvoicesController < ApplicationController
     sort_init 'invoices.created_at', 'desc'
     sort_update %w(invoices.created_at state number date due_date clients.name import_in_cents)
 
-    invoices = @project.issued_invoices.includes(:invoice_lines).includes(:client).includes(:client_office)
+    invoices = @project.issued_invoices
 
     # additional invoice filters
     if Redmine::Hook.call_hook(:additional_invoice_filters,:project=>@project,:invoices=>invoices).any?
@@ -89,10 +89,10 @@ class InvoicesController < ApplicationController
     end
 
     unless params[:taxcode].blank?
-      invoices = invoices.where("clients.taxcode like ?","%#{params[:taxcode]}%")
+      invoices = invoices.includes(:client).references(:client).where("clients.taxcode like ?","%#{params[:taxcode]}%")
     end
     unless params[:name].blank?
-      invoices = invoices.where("clients.name like ? or client_offices.name like ?","%#{params[:name]}%","%#{params[:name]}%")
+      invoices = invoices.includes(:client).references(:client).includes(:client_office).references(:client_office).where("clients.name like ? or client_offices.name like ?","%#{params[:name]}%","%#{params[:name]}%")
     end
     unless params[:number].blank?
       if params[:number] =~ /,/
@@ -108,12 +108,12 @@ class InvoicesController < ApplicationController
 
     # client invoice_format filter
     unless params[:invoice_format].blank?
-      invoices = invoices.where("clients.invoice_format = ?", params[:invoice_format])
+      invoices = invoices.includes(:client).references(:client).where("clients.invoice_format = ?", params[:invoice_format])
     end
 
     # filter by text
     unless params[:has_text].blank?
-      invoices = invoices.where("invoices.extra_info like ? or invoice_lines.description like ? or invoice_lines.notes like ?", "%#{params[:has_text]}%", "%#{params[:has_text]}%", "%#{params[:has_text]}%")
+      invoices = invoices.includes(:invoice_lines).references(:invoice_lines).where("invoices.extra_info like ? or invoice_lines.description like ? or invoice_lines.notes like ?", "%#{params[:has_text]}%", "%#{params[:has_text]}%", "%#{params[:has_text]}%")
     end
 
     if params[:format] == 'csv' and !User.current.allowed_to?(:export_invoices, @project)
