@@ -19,6 +19,7 @@ module Haltr
                                "default_currency"       => "EUR",
                                "issues_controller_name" => "issues",
                                "return_path"            => 'noreply@haltr.net' }
+      Setting.rest_api_enabled = '1'
 
       # Enables haltr module on project 'OnlineStore'
       Project.find(2).enabled_modules << EnabledModule.new(:name => 'haltr')

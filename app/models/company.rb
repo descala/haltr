@@ -167,11 +167,7 @@ class Company < ActiveRecord::Base
 
   ################## methods for mail customization ##################
   def invoice_mail_subject(lang,invoice=nil)
-    subj = nil
-    project = invoice ? invoice.project : nil
-    if User.current.admin? or User.current.allowed_to?(:email_customization, project)
-      subj = invoice_mail_customization["subject"][lang] rescue nil
-    end
+    subj = invoice_mail_customization["subject"][lang] rescue nil
     if subj.blank?
       subj = I18n.t(:invoice_mail_subject,:locale=>lang)
       unless Redmine::Hook.call_hook(:replace_invoice_mail_subject).join.blank?
@@ -196,11 +192,7 @@ class Company < ActiveRecord::Base
   end
 
   def invoice_mail_body(lang,invoice=nil)
-    body = nil
-    project = invoice ? invoice.project : nil
-    if User.current.admin? or User.current.allowed_to?(:email_customization, project)
-      body = invoice_mail_customization["body"][lang] rescue nil
-    end
+    body = invoice_mail_customization["body"][lang] rescue nil
     if body.blank?
       body = I18n.t(:invoice_mail_body,:locale=>lang)
       unless Redmine::Hook.call_hook(:replace_invoice_mail_body).join.blank?
@@ -225,11 +217,7 @@ class Company < ActiveRecord::Base
   end
 
   def quote_mail_subject(lang,quote=nil)
-    subj = nil
-    project = quote ? quote.project : nil
-    if User.current.admin? or User.current.allowed_to?(:email_customization, project)
-      subj = quote_mail_customization["subject"][lang] rescue nil
-    end
+    subj = quote_mail_customization["subject"][lang] rescue nil
     if subj.blank?
       subj = I18n.t(:quote_mail_subject,:locale=>lang)
       unless Redmine::Hook.call_hook(:replace_quote_mail_subject).join.blank?
@@ -254,11 +242,7 @@ class Company < ActiveRecord::Base
   end
 
   def quote_mail_body(lang,quote=nil)
-    body = nil
-    project = quote ? quote.project : nil
-    if User.current.admin? or User.current.allowed_to?(:email_customization, project)
-      body = quote_mail_customization["body"][lang] rescue nil
-    end
+    body = quote_mail_customization["body"][lang] rescue nil
     if body.blank?
       body = I18n.t(:quote_mail_body,:locale=>lang)
       unless Redmine::Hook.call_hook(:replace_quote_mail_body).join.blank?
