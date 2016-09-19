@@ -218,11 +218,12 @@ class Invoice < ActiveRecord::Base
         # check round_before_sum setting from company #5324
         if company and company.round_before_sum
           # sum([round(price) x tax])
-          t += lines_with_tax(tax).collect {|line|
+          taxes_imports = lines_with_tax(tax).collect {|line|
             price = Haltr::Utils.to_money(line.gross_amount, currency, company.rounding_method)
             discount = Haltr::Utils.to_money((line.total_cost*(discount_percent / 100.0)),currency,company.rounding_method)
             (price - discount)*(tax.percent / 100.0)
-          }.sum
+          }
+          t += taxes_imports.sum
         else
           # sum(price) x tax
           t += taxable_base(tax) * (tax.percent / 100.0)
