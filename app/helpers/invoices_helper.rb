@@ -322,4 +322,9 @@ module InvoicesHelper
     desc << lines.join(" | ")
     desc.join(" * ")
   end
+
+  def invoice_public_view_with_host(h)
+    byebug
+    invoice_public_view_url(h.merge(host: Setting.host_name, protocol: Setting.protocol))
+  end
 end
