@@ -150,7 +150,7 @@
             <td><%= line.sequence_number %></td>
           <% end -%>
           <td class="item-price"><%=h line_price(line, 'price', @invoice) %></td>
-          <% if line.discount_percent > 0 -%>
+          <% if line.discount_amount.to_f != 0 -%>
             <% if @invoice.company.line_discounts_as_imports -%>
               <td class="item-price"><%=h money(Haltr::Utils.to_money(line.discount_amount, @invoice.currency, @invoice.company.rounding_method)) %></td>
             <% else -%>
@@ -175,14 +175,18 @@
         <% end -%>
       <% end -%>
 
-      <% if @invoice.discount_percent and @invoice.discount_percent > 0 -%>
+      <% if @invoice.discount_amount.to_f != 0 -%>
         <tr>
           <td class="item-quantity first"></td>
           <% if @invoice.has_article_codes? -%>
             <td class="item-article_code"></td>
           <% end -%>
           <td class="item-description" <%= 'colspan="2"'.html_safe if @invoice.has_line_discounts? %>><%=h @invoice.discount_text %></td>
-          <td class="item-price"><%=h number_to_percentage(@invoice.discount_percent, precision: 2, strip_insignificant_zeros: true) %></td>
+          <% if @invoice.company.line_discounts_as_imports -%>
+            <td class="item-price"><%=h money(@invoice.discount_amount) %></td>
+          <% else -%>
+            <td class="item-price"><%=h number_to_percentage(@invoice.discount_percent, precision: 2, strip_insignificant_zeros: true) %></td>
+          <% end -%>
           <% if @invoice.has_line_charges? -%>
             <td></td>
           <% end -%>

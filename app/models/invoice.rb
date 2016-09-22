@@ -12,7 +12,6 @@ class Invoice < ActiveRecord::Base
   has_associated_audits
   # do not remove, with audit we need to make the other attributes accessible
   attr_protected :created_at, :updated_at
-  attr_accessor :discount_helper
 
   # remove non-utf8 characters from those fields:
   TO_UTF_FIELDS = %w(extra_info)
@@ -255,8 +254,45 @@ class Invoice < ActiveRecord::Base
   end
 
   def discount_amount(tax_type=nil)
-    self.discount_percent = 0 if self.discount_percent.nil?
-    gross_subtotal(tax_type) * (discount_percent / 100.0)
+    if self[:discount_amount] and self[:discount_amount] != 0
+      if tax_type.nil?
+        Haltr::Utils.to_money(self[:discount_amount], currency, company.rounding_method)
+      else
+        # must calculate discount percent to calculate taxable base for a tax_type
+        # (issue 5517 note-5)
+        gross_subtotal(tax_type) * (discount_percent / 100.0)
+      end
+    elsif self[:discount_percent] and self[:discount_percent] != 0
+      gross_subtotal(tax_type) * (self[:discount_percent] / 100.0)
+    else
+      Money.new(0, currency)
+    end
+  end
+
+  def discount_percent
+    if self[:discount_percent] and self[:discount_percent] != 0
+      self[:discount_percent]
+    elsif self[:discount_amount] and self[:discount_amount] != 0
+      (self[:discount_amount].to_f * 100 / gross_subtotal.dollars).round(2)
+    else
+      0
+    end
+  end
+
+  def discount
+    if discount_type == '€'
+      discount_amount
+    else
+      discount_percent
+    end
+  end
+
+  def discount_type
+    if self[:discount_amount] and self[:discount_amount] != 0
+      '€'
+    else
+      '%'
+    end
   end
 
   def tax_applies_to_all_lines?(tax)
@@ -538,6 +574,8 @@ _INV
     invoice_import   = Haltr::Utils.get_xpath(doc,xpaths[:invoice_import])
     invoice_due_date = Haltr::Utils.get_xpath(doc,xpaths[:invoice_due_date])
     discount_percent = Haltr::Utils.get_xpath(doc,xpaths[:discount_percent])
+    discount_amount  = Haltr::Utils.get_xpath(doc,xpaths[:discount_amount])
+    #total_gross      = Haltr::Utils.get_xpath(doc,xpaths[:invoice_totalgross])
     discount_text    = Haltr::Utils.get_xpath(doc,xpaths[:discount_text])
     extra_info       = Haltr::Utils.get_xpath(doc,xpaths[:extra_info])
     charge           = Haltr::Utils.get_xpath(doc,xpaths[:charge])
@@ -741,6 +779,14 @@ _INV
       original = raw_xml
     end
 
+    # there are several Discounts, sum them
+    if discount_amount =~ / /
+      discount_amount = discount_amount.split.collect {|a| Haltr::Utils.float_parse(a) }.sum
+    end
+    if discount_percent =~ / /
+      discount_percent = discount_percent.split.collect {|a| Haltr::Utils.float_parse(a) }.sum
+    end
+
     invoice.assign_attributes(
       :number           => invoice_number,
       :series_code      => invoice_series,
@@ -761,6 +807,7 @@ _INV
       :from             => from,           # u@mail.com, User Name...
       :md5              => md5,
       :original         => original,
+      :discount_amount  => discount_amount,
       :discount_percent => discount_percent,
       :discount_text    => discount_text,
       :extra_info       => extra_info,
@@ -892,12 +939,25 @@ _INV
       end
       # line discounts
       line_discounts = line.xpath(xpaths[:line_discounts])
-      if line_discounts.size > 1
-        raise "too many discounts per line! (#{line_discounts.size})"
-      elsif line_discounts.size == 1
-        il.discount_percent = Haltr::Utils.get_xpath(line_discounts.first,xpaths[:line_discount_percent])
-        il.discount_text = Haltr::Utils.get_xpath(line_discounts.first,xpaths[:line_discount_text])
+      il_disc_percent = 0
+      il_disc_amount  = 0
+      il_disc_text    = []
+      line_discounts.each do |line_disc|
+        disc_amount  = Haltr::Utils.get_xpath(line_disc,xpaths[:line_discount_amount])
+        disc_percent = Haltr::Utils.get_xpath(line_disc,xpaths[:line_discount_percent])
+        disc_text    = Haltr::Utils.get_xpath(line_disc,xpaths[:line_discount_text])
+        if disc_amount.present?
+          il_disc_amount += BigDecimal.new(disc_amount)
+        end
+        if disc_percent.present?
+          il_disc_percent += BigDecimal.new(disc_percent)
+        end
+        il_disc_text << disc_text
       end
+      il.discount_amount  = il_disc_amount.round(2)
+      il.discount_percent = il_disc_percent.round(2)
+      il.discount_text = il_disc_text.join('. ')
+
       # line_charges
       line_charges = line.xpath(xpaths[:line_charges])
       if line_charges.size > 1
@@ -1147,7 +1207,8 @@ _INV
 
   def has_line_discounts?
     return @has_line_discounts unless @has_line_discounts.nil?
-    @has_line_discounts = (invoice_lines.sum(&:discount_percent) > 0)
+    @has_line_discounts = invoice_lines.any? {|l| l.discount_percent != 0 }
+    @has_line_discounts ||= invoice_lines.any? {|l| l.discount_amount != 0 }
   end
 
   def has_line_charges?
@@ -1283,12 +1344,6 @@ _INV
     end
     self.import_in_cents = subtotal.cents
     self.total_in_cents = subtotal.cents + tax_amount.cents
-
-    unless discount_percent and discount_percent > 0
-      if discount_helper.present?
-        self.discount_percent = (discount_helper.to_f * 100 / gross_subtotal.dollars)
-      end
-    end
   end
 
   def invoice_must_have_lines
