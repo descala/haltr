@@ -59,8 +59,6 @@ module Haltr
         body = invoice.company.invoice_mail_body(invoice.client.language, invoice)
       end
 
-      Rails.application.routes.default_url_options = { host: Setting.host_name, protocol: Setting.protocol }
-
       body_txt = InvoicesController.renderer.render(
         template: "haltr_mailer/send_invoice.text.erb",
         layout:   nil,

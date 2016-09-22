@@ -1,6 +1,6 @@
 <%=
   @body.gsub(/@invoice_url/) {|s|
-    invoice_public_view_url(:invoice_id=>@invoice.id,
+    invoice_public_view_with_host(:invoice_id=>@invoice.id,
                             :client_hashid=>@invoice.client.hashid)
   }
 %>
