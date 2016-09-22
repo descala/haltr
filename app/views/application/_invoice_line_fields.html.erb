@@ -70,7 +70,7 @@
           <%= f.text_field(:discount, no_label: true) %>
         </td>
         <td style="width: 55px">
-          <%= f.select :discount_type, options_for_select(['€','%']), :no_label => true %>
+          <%= f.select :discount_type, ['%','€'], :no_label => true %>
         </td>
         <td colspan="2"><%= f.text_field(:discount_text, :no_label => true) %></td>
       </tr>
