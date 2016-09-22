@@ -219,6 +219,8 @@ class InvoiceTest < ActiveSupport::TestCase
   test 'create received_invoice from facturae32' do
     # client does not exist
     assert_nil Client.find_by_taxcode "ESP1700000A"
+    # and there's no external company
+    assert_nil ExternalCompany.find_by_taxcode "ESP1700000A"
     file    = File.new(File.join(File.dirname(__FILE__),'..','fixtures','documents','invoice_facturae32_signed.xml'))
     invoice = Invoice.create_from_xml(file,companies(:company1),"1234",'uploaded',User.current.name)
     client  = Client.find_by_taxcode "ESP1700000A"
@@ -278,6 +280,10 @@ class InvoiceTest < ActiveSupport::TestCase
     invoice = Invoice.create_from_xml(file,companies(:company1),"1234",'uploaded',User.current.name)
     client  = Client.find_by_taxcode "ESP1700000A"
     assert_not_nil client
+    default_channel = 'paper'
+    if ExportChannels.available.include? 'link_to_pdf_by_mail'
+      default_channel = 'link_to_pdf_by_mail'
+    end
     # client
     assert_equal "ESP1700000A", client.taxcode
     assert_equal "David Copperfield", client.name
@@ -292,7 +298,7 @@ class InvoiceTest < ActiveSupport::TestCase
     assert_equal invoice.company.project, client.project
     assert_equal "ES8023100001180000012345", client.iban
     assert_equal "biiiiiiiiic", client.bic
-    assert_equal "paper", client.invoice_format
+    assert_equal default_channel, client.invoice_format
     # invoice
     assert       invoice.is_a?(IssuedInvoice)
     assert_equal client, invoice.client
@@ -333,6 +339,7 @@ class InvoiceTest < ActiveSupport::TestCase
   # import invoice_facturae32_issued2.xml
   test 'create issued_invoice from facturae32 with irpf, discount, bank_account and existing client' do
     client = Client.find_by_taxcode "A13585625"
+    assert_nil client.company # not linked
     client_count = Client.count
     # client exists
     assert_not_nil client
@@ -456,7 +463,7 @@ class InvoiceTest < ActiveSupport::TestCase
     assert_equal 0, invoice.invoice_lines[1].discount_percent
     assert_equal 'Descuento', invoice.invoice_lines[0].discount_text
     assert_equal '132413842', invoice.invoice_lines[0].delivery_note_number
-    assert_nil invoice.ponumber
+    assert_equal 'BBBH-38272', invoice.ponumber
     assert_equal 'BBBH-38272', invoice.invoice_lines.first.ponumber
     assert_equal Date.new(2010,3,9),  invoice.invoicing_period_start
     assert_equal Date.new(2010,3,10), invoice.invoicing_period_end
@@ -486,6 +493,8 @@ class InvoiceTest < ActiveSupport::TestCase
     assert_equal 'carrec linia1', invoice.invoice_lines.first.charge_reason
     assert_equal 'desc1', invoice.invoice_lines.first.discount_text
     assert_equal 'filereference', invoice.file_reference
+    assert_equal 'filereference', invoice.invoice_lines.first.file_reference
+    assert_nil invoice.invoice_lines.last.file_reference
   end
 
   test 'invoice with discount TotalAmount is same as TotalGrossAmountBeforeTaxes' do
@@ -620,9 +629,9 @@ class InvoiceTest < ActiveSupport::TestCase
     assert_equal 1828.06, i.tax_amount(i.taxes.first).dollars
   end
 
-  # import invoice_facturae32_issued10.xml
+  # import invoice_facturae32_issued11.xml
   test 'import invoice with discount amount and without discount percent' do
-    file    = File.new(File.join(File.dirname(__FILE__),'..','fixtures','documents','invoice_facturae32_issued10.xml'))
+    file    = File.new(File.join(File.dirname(__FILE__),'..','fixtures','documents','invoice_facturae32_issued11.xml'))
     invoice = Invoice.create_from_xml(file,User.find_by_login('jsmith'),"1234",'uploaded',User.current.name)
     assert_equal 5.95, invoice.discount_percent
     assert_equal 14.42, invoice.discount_amount.dollars
@@ -678,6 +687,149 @@ class InvoiceTest < ActiveSupport::TestCase
     re_tax = re_taxes.first
     assert_equal('S',re_tax.category)
     assert_equal(1.00,re_tax.percent)
+  end
+
+  test 'import UBL 2.0 with SBDH' do
+    file = File.new(File.join(File.dirname(__FILE__),'../fixtures/documents/invoice_ubl_with_sbdh.xml'))
+    invoice = Invoice.create_from_xml(file,companies(:company6),"1234",'uploaded',User.current.name,nil,false)
+    assert_equal '5503070490', invoice.client.taxcode
+    if invoice.client.invoice_format == 'link_to_pdf_by_mail'
+      assert !invoice.valid?
+      assert_equal ["Invoice's client has no email defined"], invoice.errors.full_messages
+    else
+      assert invoice.valid?
+    end
+  end
+
+  test 'import facturae32 with AmountsWithheld' do
+    file = File.new(File.join(File.dirname(__FILE__),'..','fixtures','documents','invoice_amounts_withheld.xml'))
+    invoice = Invoice.create_from_xml(file,companies(:company6),"1234",'uploaded',User.current.name,nil,false)
+    assert_equal(50059.38, invoice.total.dollars)
+    assert_equal(4678.45, invoice.amounts_withheld.dollars)
+  end
+
+  test 'change ponumber, file_reference and receiver_contract_reference on lines when changes on invoice' do
+    invoice = IssuedInvoice.new(
+      client_id: 1,
+      date: '19-05-2016',
+      number: '98789',
+      terms: '0',
+      due_date: '19-06-2016',
+      import_in_cents: 8500,
+      currency: 'EUR',
+      payment_method: 1,
+      project_id: 2,
+      total_in_cents: 10030,
+      ponumber: 'ponumber',
+      file_reference: 'file_ref',
+      receiver_contract_reference: 'rcr'
+    )
+    il = InvoiceLine.new(
+      quantity: 1,
+      description: 'desc',
+      price: 10.0,
+      unit: 1,
+      ponumber: 'line_ponumber',
+      file_reference: 'line_file_ref',
+      receiver_contract_reference: 'line_rcr'
+    )
+    il.taxes << Tax.new(
+      name: 'IVA',
+      percent: 21.0,
+      category: 'S'
+    )
+    invoice.invoice_lines << il
+    assert invoice.save
+    assert_equal('ponumber', invoice.ponumber)
+    assert_equal('line_ponumber', invoice.invoice_lines.first.ponumber)
+    assert_equal('file_ref', invoice.file_reference)
+    assert_equal('line_file_ref', invoice.invoice_lines.first.file_reference)
+    assert_equal('rcr', invoice.receiver_contract_reference)
+    assert_equal('line_rcr', invoice.invoice_lines.first.receiver_contract_reference)
+    invoice.payment_method = 2
+    assert invoice.save
+    assert_equal('ponumber', invoice.ponumber)
+    assert_equal('line_ponumber', invoice.invoice_lines.first.ponumber)
+    assert_equal('file_ref', invoice.file_reference)
+    assert_equal('line_file_ref', invoice.invoice_lines.first.file_reference)
+    assert_equal('rcr', invoice.receiver_contract_reference)
+    assert_equal('line_rcr', invoice.invoice_lines.first.receiver_contract_reference)
+    invoice.ponumber = 'new_ponumber'
+    invoice.file_reference = 'new_file_ref'
+    invoice.receiver_contract_reference = 'new_rcr'
+    assert invoice.save
+    assert_equal('new_ponumber', invoice.ponumber)
+    assert_equal('new_ponumber', invoice.invoice_lines.first.ponumber)
+    assert_equal('new_file_ref', invoice.file_reference)
+    assert_equal('new_file_ref', invoice.invoice_lines.first.file_reference)
+    assert_equal('new_rcr', invoice.receiver_contract_reference)
+    assert_equal('new_rcr', invoice.invoice_lines.first.receiver_contract_reference)
+  end
+
+  test 'import invoice and create client linked to an external company' do
+    ext_comp = ExternalCompany.find_by_taxcode 'ESB17915224'
+    assert_not_nil ext_comp
+    assert_nil Client.find_by_taxcode 'ESB17915224'
+    file    = File.new(File.join(File.dirname(__FILE__),'..','fixtures','documents','invoice_facturae32_issued10.xml'))
+    invoice = Invoice.create_from_xml(file,User.find_by_login('jsmith'),"1234",'uploaded',User.current.name)
+    assert_equal 'ESB17915224', invoice.client.taxcode
+    client = Client.find_by_taxcode 'ESB17915224'
+    assert_not_nil client
+    assert_not_nil client.company
+    assert_equal client.company, ext_comp
+  end
+
+  test 'import invoice with existing client linked to an external company' do
+    ext_comp = ExternalCompany.find_by_taxcode 'ESB17915224'
+    assert_not_nil ext_comp
+    assert_nil Client.find_by_taxcode 'ESB17915224'
+    client = Client.create!(project_id: 2, company: ext_comp)
+    assert_equal ext_comp.id, client.company_id
+    file = File.new(File.join(File.dirname(__FILE__),'..','fixtures','documents','invoice_facturae32_issued10.xml'))
+    invoice = Invoice.create_from_xml(file,User.find_by_login('jsmith'),"1234",'uploaded',User.current.name)
+    assert_equal invoice.client, client
+    assert_equal ext_comp.id, invoice.client.company_id
+  end
+
+  test 'import invoice does not create client_office when client its linked to external company' do
+    client_offices = ClientOffice.count
+    ext_comp = ExternalCompany.find_by_taxcode 'ESB17915224'
+    ext_comp.update_attribute(:postalcode, '08720')
+    assert_not_nil ext_comp
+    assert_nil Client.find_by_taxcode 'ESB17915224'
+    client = Client.create!(project_id: 2, company: ext_comp)
+    assert_equal ext_comp.id, client.company_id
+    assert_equal '08720', client.postalcode
+    file = File.new(File.join(File.dirname(__FILE__),'..','fixtures','documents','invoice_facturae32_issued10.xml'))
+    invoice = Invoice.create_from_xml(file,User.find_by_login('jsmith'),"1234",'uploaded',User.current.name)
+    assert_equal client_offices, ClientOffice.count
+    assert_equal invoice.client, client
+    assert_equal ext_comp.id, invoice.client.company_id
+    assert_equal '08720', invoice.client.postalcode
+  end
+
+  test 'import invoice does not create client_office when values are blank' do
+    invoice = invoices(:invoices_001)
+    client = invoice.client
+    assert_equal 'Client1', client.name
+    assert_equal 1, client.client_offices.size
+
+    invoice.set_client_from_hash(
+      :taxcode        => "A13585625",
+      :name           => nil,
+      :address        => nil,
+      :province       => nil,
+      :country        => nil,
+      :website        => nil,
+      :email          => nil,
+      :postalcode     => nil,
+      :city           => nil,
+      :currency       => nil,
+      :project        => nil,
+      :invoice_format => nil,
+      :language       => nil,
+    )
+    assert_equal 1, client.client_offices.size
   end
 
 end

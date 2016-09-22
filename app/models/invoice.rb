@@ -4,6 +4,7 @@ class Invoice < ActiveRecord::Base
 
   include HaltrHelper
   include Haltr::FloatParser
+  include Haltr::PaymentMethods
   float_parse :discount_percent, :fa_import
 
   audited except: [:import_in_cents, :total_in_cents,
@@ -11,23 +12,6 @@ class Invoice < ActiveRecord::Base
   has_associated_audits
   # do not remove, with audit we need to make the other attributes accessible
   attr_protected :created_at, :updated_at
-
-  # 1 - cash (al comptat)
-  # 2 - debit (rebut domiciliat)
-  # 4 - transfer (transferència)
-  PAYMENT_CASH     = 1
-  PAYMENT_DEBIT    = 2
-  PAYMENT_TRANSFER = 4
-  PAYMENT_AWARDING = 7
-  PAYMENT_SPECIAL  = 13
-
-  PAYMENT_CODES = {
-    PAYMENT_CASH     => {:facturae => '01', :ubl => '10'},
-    PAYMENT_DEBIT    => {:facturae => '02', :ubl => '49'},
-    PAYMENT_TRANSFER => {:facturae => '04', :ubl => '31'},
-    PAYMENT_AWARDING => {:facturae => '07', :ubl => '??'},
-    PAYMENT_SPECIAL  => {:facturae => '13', :ubl => '??'},
-  }
 
   # remove non-utf8 characters from those fields:
   TO_UTF_FIELDS = %w(extra_info)
@@ -41,7 +25,7 @@ class Invoice < ActiveRecord::Base
   belongs_to :amend, :class_name => "Invoice", :foreign_key => 'amend_id'
   has_one :amend_of, :class_name => "Invoice", :foreign_key => 'amend_id'
   # an invoice can have several partial amends
-  has_many :partial_amends, class_name: 'Invoice', foreign_key: 'partially_amended_id'
+  has_many :partial_amends, class_name: 'Invoice', foreign_key: 'partially_amended_id', conditions: proc { ["id != ?", self.id] }
   belongs_to :partial_amend_of, class_name: 'Invoice', foreign_key: 'partially_amended_id'
 
   belongs_to :bank_info
@@ -56,10 +40,13 @@ class Invoice < ActiveRecord::Base
   validates_inclusion_of :currency, :in  => Money::Currency.table.collect {|k,v| v[:iso_code] }, :unless => Proc.new {|i| i.type == "ReceivedInvoice" }
   validates_numericality_of :charge_amount_in_cents, :allow_nil => true
   validates_numericality_of :payments_on_account_in_cents, :allow_nil => true
+  validates_numericality_of :amounts_withheld_in_cents, :allow_nil => true
+  validates_numericality_of :exchange_rate, :allow_nil => true
 
   before_save :fields_to_utf8
   after_create :increment_counter
   before_destroy :decrement_counter
+  before_save :call_before_save_hook
 
   accepts_nested_attributes_for :invoice_lines,
     :allow_destroy => true,
@@ -90,9 +77,17 @@ class Invoice < ActiveRecord::Base
     :mapping => [%w(payments_on_account_in_cents cents), %w(currency currency_as_string)],
     :constructor => Proc.new { |cents, currency| Money.new(cents || 0, currency || Money::Currency.new(Setting.plugin_haltr['default_currency'])) }
 
+  composed_of :amounts_withheld,
+    :class_name => "Money",
+    :mapping => [%w(amounts_withheld_in_cents cents), %w(currency currency_as_string)],
+    :constructor => Proc.new { |cents, currency| Money.new(cents || 0, currency || Money::Currency.new(Setting.plugin_haltr['default_currency'])) }
+
   after_initialize :set_default_values
 
-  acts_as_attachable :view_permission => :use_invoice_attachments, :delete_permission => :use_invoice_attachments
+  acts_as_attachable :view_permission => :use_invoice_attachments,
+                   :delete_permission => :use_invoice_attachments,
+                           :after_add => :attachment_added,
+                       :before_remove => :attachment_removed
 
   def set_default_values
     self.currency ||= self.client.currency rescue nil
@@ -164,68 +159,6 @@ class Invoice < ActiveRecord::Base
     terms_object.description
   end
 
-  # for transfer payment method it returns an entry for each bank_account on company:
-  # ["transfer to <bank_info.name>", "<PAYMENT_TRANSFER>_<bank_info.id>"]
-  # or one generic entry if there are no bank_infos on company:
-  # ["transfer", PAYMENT_TRANSFER]
-  def self.payment_methods(company)
-    pm = [['---',''],[l("cash"), PAYMENT_CASH]]
-    if company.bank_infos.any?
-      tr = []
-      db = []
-      company.bank_infos.each do |bank_info|
-        tr << [l("debit_through",:bank_account=>bank_info.name), "#{PAYMENT_DEBIT}_#{bank_info.id}"]
-        db << [l("transfer_to",:bank_account=>bank_info.name),"#{PAYMENT_TRANSFER}_#{bank_info.id}"]
-      end
-      pm += tr
-      pm += db
-    else
-      pm << [l("transfer"),PAYMENT_TRANSFER]
-    end
-    pm << [l("awarding"),PAYMENT_AWARDING]
-    pm << [l("other"),PAYMENT_SPECIAL]
-  end
-
-  def payment_method=(v)
-    if v =~ /_/
-      write_attribute(:payment_method,v.split("_")[0])
-      self.bank_info_id=v.split("_")[1]
-    else
-      write_attribute(:payment_method,v)
-      self.bank_info=nil
-    end
-  end
-
-  def payment_method
-    if [PAYMENT_TRANSFER, PAYMENT_DEBIT].include?(read_attribute(:payment_method)) and bank_info
-      "#{read_attribute(:payment_method)}_#{bank_info.id}"
-    else
-      read_attribute(:payment_method)
-    end
-  end
-
-  def cash?
-    read_attribute(:payment_method) == PAYMENT_CASH
-  end
-
-  def debit?
-    read_attribute(:payment_method) == PAYMENT_DEBIT
-  end
-
-  def transfer?
-    read_attribute(:payment_method) == PAYMENT_TRANSFER
-  end
-
-  def special?
-    read_attribute(:payment_method) == PAYMENT_SPECIAL
-  end
-
-  def payment_method_code(format, attr=:payment_method)
-    if PAYMENT_CODES[self[attr].to_i]
-      PAYMENT_CODES[self[attr].to_i][format]
-    end
-  end
-
   def <=>(oth)
     if self.number.nil? and oth.number.nil?
       0
@@ -239,7 +172,17 @@ class Invoice < ActiveRecord::Base
   end
 
   def company
-    self.project.company
+    self.project.company rescue nil
+  end
+
+  def company_name
+    project.company.name rescue nil
+  end
+
+  def line_descriptions_txt
+    invoice_lines.collect do |line|
+      " * #{line.description}"
+    end.join("\n")
   end
 
   def custom_due?
@@ -274,11 +217,12 @@ class Invoice < ActiveRecord::Base
         # check round_before_sum setting from company #5324
         if company and company.round_before_sum
           # sum([round(price) x tax])
-          t += lines_with_tax(tax).collect {|line|
+          taxes_imports = lines_with_tax(tax).collect {|line|
             price = Haltr::Utils.to_money(line.gross_amount, currency, company.rounding_method)
             discount = Haltr::Utils.to_money((line.total_cost*(discount_percent / 100.0)),currency,company.rounding_method)
             (price - discount)*(tax.percent / 100.0)
-          }.sum
+          }
+          t += taxes_imports.sum
         else
           # sum(price) x tax
           t += taxable_base(tax) * (tax.percent / 100.0)
@@ -430,7 +374,7 @@ class Invoice < ActiveRecord::Base
   end
 
   def charge_amount=(value)
-    if value =~ /^[0-9,.']*$/
+    if value.to_s =~ /^[0-9,.']*$/
       value = Money.parse(value)
       write_attribute :charge_amount_in_cents, value.cents
     else
@@ -440,12 +384,22 @@ class Invoice < ActiveRecord::Base
   end
 
   def payments_on_account=(value)
-    if value =~ /^[-0-9,.']*$/
+    if value.to_s =~ /^[-0-9,.']*$/
       value = Money.parse(value)
       write_attribute :payments_on_account_in_cents, value.cents
     else
       # this + validates_numericality_of will raise an error if not a number
       write_attribute :payments_on_account_in_cents, value
+    end
+  end
+
+  def amounts_withheld=(value)
+    if value.to_s =~ /^[-0-9,.']*$/
+      value = Money.parse(value)
+      write_attribute :amounts_withheld_in_cents, value.cents
+    else
+      # this + validates_numericality_of will raise an error if not a number
+      write_attribute :amounts_withheld_in_cents, value
     end
   end
 
@@ -489,12 +443,14 @@ class Invoice < ActiveRecord::Base
   # Format of resulting hash:
   # { "VAT" => { "S" => [ tax_example, tax_example2 ], "E" => [ tax_example ] } }
   # tax_example should be passed tax_amount
-  def taxes_by_category
+  #
+  def taxes_by_category(positive: true)
     cts = {}
-    taxes_outputs.each do |tax|
+    t = positive ? taxes_outputs : taxes_withheld
+    t.each do |tax|
       cts[tax.name] = {}
     end
-    taxes_outputs.each do |tax|
+    t.each do |tax|
       unless cts[tax.name].values.flatten.include?(tax)
         cts[tax.name][tax.category] ||= []
         cts[tax.name][tax.category] << tax
@@ -515,8 +471,11 @@ class Invoice < ActiveRecord::Base
   def extra_info_plus_tax_comments
     tax_comments = self.taxes.collect do |tax|
       tax.comment unless tax.comment.blank?
-    end.compact.uniq.join(". ")
-    ([extra_info,tax_comments]-['']).compact.join('. ')
+    end.compact
+    tax_comments.unshift(extra_info)
+    tax_comments.delete('')
+    tax_comments.uniq!
+    tax_comments.compact.join('. ')
   end
 
   def to_s
@@ -553,7 +512,18 @@ _INV
     end
   end
 
-  def self.create_from_xml(raw_invoice,user_or_company,md5,transport,from=nil,issued=nil,keep_original=true,validate=true)
+  def self.create_from_xml(raw_invoice,user_or_company,md5,transport,from=nil,issued=nil,keep_original=true,validate=true,override_original=nil,override_original_name=nil)
+
+    file_name = nil
+    if raw_invoice.respond_to? :filename             # Mail::Part
+      file_name = raw_invoice.filename
+    elsif raw_invoice.respond_to? :original_filename # UploadedFile
+      file_name = raw_invoice.original_filename
+    elsif raw_invoice.respond_to? :path              # File (tests)
+      file_name = File.basename(raw_invoice.path)
+    else
+      file_name = "invoice.xml"
+    end
 
     if raw_invoice.is_a? String
       raw_xml = raw_invoice
@@ -561,6 +531,9 @@ _INV
       raw_xml = raw_invoice.read
     end
     doc               = Nokogiri::XML(raw_xml)
+    if doc.child and doc.child.name == "StandardBusinessDocument"
+      doc = Haltr::Utils.extract_from_sbdh(doc)
+    end
     doc_no_namespaces = doc.dup.remove_namespaces!
     facturae_version  = doc.at_xpath("//FileHeader/SchemaVersion")
     ubl_version       = doc_no_namespaces.at_xpath("//Invoice/UBLVersionID")
@@ -581,11 +554,20 @@ _INV
     xpaths         = Haltr::Utils.xpaths_for(invoice_format)
     seller_taxcode = Haltr::Utils.get_xpath(doc,xpaths[:seller_taxcode])
     buyer_taxcode  = Haltr::Utils.get_xpath(doc,xpaths[:buyer_taxcode])
+    if buyer_taxcode.nil? and ubl_version
+      buyer_taxcode  = Haltr::Utils.get_xpath(doc,xpaths[:buyer_taxcode_id])
+      if buyer_taxcode.nil?
+        buyer_taxcode  = Haltr::Utils.get_xpath(doc,xpaths[:buyer_endpoint_id])
+      end
+    end
     currency       = Haltr::Utils.get_xpath(doc,xpaths[:currency])
+    exchange_rate  = Haltr::Utils.get_xpath(doc,xpaths[:exchange_rate])
+    exchange_date  = Haltr::Utils.get_xpath(doc,xpaths[:exchange_date])
     # invoice data
     invoice_number   = Haltr::Utils.get_xpath(doc,xpaths[:invoice_number])
     invoice_series   = Haltr::Utils.get_xpath(doc,xpaths[:invoice_series])
     invoice_date     = Haltr::Utils.get_xpath(doc,xpaths[:invoice_date])
+    tax_point_date   = Haltr::Utils.get_xpath(doc,xpaths[:tax_point_date])
     i_period_start   = Haltr::Utils.get_xpath(doc,xpaths[:invoicing_period_start])
     i_period_end     = Haltr::Utils.get_xpath(doc,xpaths[:invoicing_period_end])
     invoice_total    = Haltr::Utils.get_xpath(doc,xpaths[:invoice_total])
@@ -600,11 +582,13 @@ _INV
     charge_reason    = Haltr::Utils.get_xpath(doc,xpaths[:charge_reason])
     accounting_cost  = Haltr::Utils.get_xpath(doc,xpaths[:accounting_cost])
     payments_on_account = Haltr::Utils.get_xpath(doc,xpaths[:payments_on_account]) || 0
+    amounts_withheld = Haltr::Utils.get_xpath(doc,xpaths[:amounts_withheld]) || 0
     amend_of         = Haltr::Utils.get_xpath(doc,xpaths[:amend_of])
     amend_type       = Haltr::Utils.get_xpath(doc,xpaths[:amend_type])
     amend_reason     = Haltr::Utils.get_xpath(doc,xpaths[:amend_reason])
     party_id         = Haltr::Utils.get_xpath(doc,xpaths[:party_id])
     legal_literals   = Haltr::Utils.get_xpath(doc,xpaths[:legal_literals])
+
 
     # factoring assignment data
     fa_person_type    = Haltr::Utils.get_xpath(doc,xpaths[:fa_person_type])
@@ -624,7 +608,7 @@ _INV
     fa_clauses        = Haltr::Utils.get_xpath(doc,xpaths[:fa_clauses])
     fa_payment_method = Haltr::Utils.get_xpath(doc,xpaths[:fa_payment_method])
 
-    invoice, client, client_role, company, user = nil
+    invoice, client_role, company, user = nil
 
     # prevent nil/blank taxcodes, since it will match all on 'like' conditions
     seller_taxcode = 'empty_seller_taxcode' if seller_taxcode.blank?
@@ -653,14 +637,10 @@ _INV
 
     # check if it is a received_invoice or an issued_invoice.
     if company.taxcode.include?(buyer_taxcode) or buyer_taxcode.include?(company.taxcode)
-      invoice = ReceivedInvoice.new
-      client   = company.project.clients.where('taxcode like ?', "%#{seller_taxcode}").first
-      client ||= company.project.clients.where('? like concat("%", taxcode)', seller_taxcode).first
+      invoice = ReceivedInvoice.new(project: company.project)
       client_role= "seller"
     elsif company.taxcode.include?(seller_taxcode) or seller_taxcode.include?(company.taxcode)
-      invoice = IssuedInvoice.new
-      client   = company.project.clients.where('taxcode like ?', "%#{buyer_taxcode}").first
-      client ||= company.project.clients.where('? like concat("%", taxcode) and taxcode != ""', buyer_taxcode).first
+      invoice = IssuedInvoice.new(project: company.project)
       client_role = "buyer"
     else
       raise I18n.t :taxcodes_does_not_belong_to_self,
@@ -671,7 +651,7 @@ _INV
     # amend invoices
     if amend_of
       raise "Cannot amend received invoices" if invoice.is_a? ReceivedInvoice
-      amended = company.project.issued_invoices.find_by_number(amend_of)
+      amended = company.project.issued_invoices.find_last_by_number(amend_of)
       if amended and amend_type == '01'
         invoice.amend_of = amended
       elsif amended and amend_type == '02'
@@ -680,21 +660,15 @@ _INV
         #TODO 03 and 04 not yet supported
       else
         # importing amend invoice for an unexisting invoice, assign self id as
-        # amended_invoice as a dirty hack
-        invoice.amend_of = invoice
+        # amended as a dirty hack
+        if amend_type == '02'
+          invoice.partial_amend_of = invoice
+        else
+          invoice.amend_of = invoice
+        end
       end
+      invoice.amended_number = amend_of
       invoice.amend_reason = amend_reason
-    end
-
-    # if it is an issued invoice, and
-    #    the client already exists, and
-    #    this client has different email than this invoice, then
-    # save the email address to the invoice (overrides client email) 
-    if client_role == "buyer" and client
-      client_email = Haltr::Utils.get_xpath(doc,xpaths["buyer_email"])
-      if client_email and client_email != client.email
-        invoice.client_email_override = client_email
-      end
     end
 
     # if passed issued param, check if it should be an IssuedInvoice or a ReceivedInvoice
@@ -712,86 +686,53 @@ _INV
       Haltr::Utils.get_xpath(doc,xpaths["#{client_role}_name2"])
     client_address     = Haltr::Utils.get_xpath(doc,xpaths["#{client_role}_address"])
     client_province    = Haltr::Utils.get_xpath(doc,xpaths["#{client_role}_province"])
-    if invoice_format =~ /^facturae/
-      country_alpha3 = Haltr::Utils.get_xpath(doc,xpaths["#{client_role}_countrycode"])
-      client_countrycode = SunDawg::CountryIsoTranslater.translate_standard(country_alpha3,"alpha3","alpha2").downcase
-    else
-      client_countrycode = Haltr::Utils.get_xpath(doc,xpaths["#{client_role}_countrycode"])
-    end
+    client_country     = Haltr::Utils.get_xpath(doc,xpaths["#{client_role}_countrycode"])
     client_website     = Haltr::Utils.get_xpath(doc,xpaths["#{client_role}_website"])
     client_email       = Haltr::Utils.get_xpath(doc,xpaths["#{client_role}_email"])
     client_cp_city     = Haltr::Utils.get_xpath(doc,xpaths["#{client_role}_cp_city"]) ||
       Haltr::Utils.get_xpath(doc,xpaths["#{client_role}_cp_city2"])
     client_postalcode  = client_cp_city.split(" ").first rescue ""
-    client_city        = client_cp_city.gsub(/^#{client_postalcode} /,'') rescue ""
+    client_city        = client_cp_city.gsub(/^#{client_postalcode} ?/,'') rescue ""
     if client_postalcode.blank?
       client_postalcode  = Haltr::Utils.get_xpath(doc,xpaths["#{client_role}_cp"])
     end
 
     client_language = User.current.language
     client_language = 'es' if client_language.blank?
-    client_office = nil
+    default_channel = 'paper'
+    if ExportChannels.available? 'link_to_pdf_by_mail'
+      default_channel = 'link_to_pdf_by_mail'
+    end
 
-    # create client if not exists
-    if client.nil?
-      client = Client.new(
+    invoice.set_client_from_hash(
+      {
         :taxcode        => client_taxcode,
         :name           => client_name,
         :address        => client_address,
         :province       => client_province,
-        :country        => client_countrycode,
+        :country        => client_country,
         :website        => client_website,
         :email          => client_email,
         :postalcode     => client_postalcode,
         :city           => client_city,
         :currency       => currency,
         :project        => company.project,
-        :invoice_format => 'paper',
+        :invoice_format => default_channel,
         :language       => client_language
-      )
-
-      client.save!(:validate=>false)
-      logger.info "created new client \"#{client_name}\" with cif #{client_taxcode} for company #{company.name}. time=#{Time.now}"
-    else
-      # client found by taxcode, but stored data may not match data in invoice
-      # if it doesn't, we create a client_office with data from invoice
-      to_match = {
-        full_address:   client_address.chomp,
-        city:           client_city.chomp,
-        province:       client_province.chomp,
-        postalcode:     client_postalcode.chomp,
-        country_alpha3: client_countrycode.chomp,
-        name:           client_name.chomp
       }
-      match = to_match.all? {|k, v| client.send(k).to_s.chomp.casecmp(v) == 0 }
+    )
 
-      unless match
-        client.client_offices.each do |office|
-          match = to_match.all? {|k, v| office.send(k).to_s.chomp.casecmp(v) == 0 }
-          if match
-            client_office = office
-            break
-          end
-        end
-
-        if client_office.nil?
-          # client and all its client_offices differ from data in invoice
-          client_office = ClientOffice.new(
-            client_id:  client.id,
-            address:    client_address,
-            city:       client_city,
-            province:   client_province,
-            postalcode: client_postalcode,
-            country:    client_countrycode,
-            name:       client_name
-          )
-          client_office.save
-          client.reload
-        end
+    # if it is an issued invoice, and
+    #    the client already exists, and
+    #    this client has different email than this invoice, then
+    # save the email address to the invoice (overrides client email
+    if client_role == "buyer" and invoice.client
+      client_email = Haltr::Utils.get_xpath(doc,xpaths["buyer_email"])
+      if client_email and client_email != invoice.client.email
+        invoice.client_email_override = client_email
       end
     end
 
-    dir3 = nil
     doc.xpath(xpaths[:dir3s]).each do |line|
       role = Haltr::Utils.get_xpath(line, xpaths[:dir3_role])
       code = Haltr::Utils.get_xpath(line, xpaths[:dir3_code]).gsub(/ /,'') rescue nil
@@ -806,69 +747,33 @@ _INV
         invoice.unitat_tramitadora_name = Haltr::Utils.get_xpath(line, xpaths[:dir3_name])
       when '04'
         invoice.organ_proponent    = code
+      when nil
+        # https://www.ingent.net/issues/6074 (Unitat contractació / SEF)
+        invoice.unitat_contractacio = code
       else
         # unknown role
       end
       # save unknown Dir3 entities
-      begin
-        # dir3 with other code or unexisting one
-        if (dir3 and dir3.code != code) or Dir3Entity.find_by_code(code).nil?
-          country = Haltr::Utils.get_xpath(line, xpaths[:dir3_country])
-          country = SunDawg::CountryIsoTranslater.translate_standard(country,"alpha3","alpha2").downcase rescue country
-          dir3 = Dir3Entity.create!(
-            code:       code,
-            name:       Haltr::Utils.get_xpath(line, xpaths[:dir3_name]),
-            address:    Haltr::Utils.get_xpath(line, xpaths[:dir3_address]),
-            postalcode: Haltr::Utils.get_xpath(line, xpaths[:dir3_postcode]),
-            city:       Haltr::Utils.get_xpath(line, xpaths[:dir3_town]),
-            province:   Haltr::Utils.get_xpath(line, xpaths[:dir3_province]),
-            country:    country
-          )
-        end
-        dir3 = Dir3Entity.find_by_code(code)
-        # and add relation to ExternalCompany if exist
-        ec = ExternalCompany.find_by_taxcode client.taxcode
-        if ec
-          case role
-          when '01'
-            unless ec.oficines_comptables =~ /#{code}/
-              if ec.oficines_comptables.blank?
-                ec.update_attribute :oficines_comptables, code
-              else
-                ec.update_attribute :oficines_comptables, "#{ec.oficines_comptables},#{code}"
-              end
-            end
-          when '02'
-            unless ec.organs_gestors =~ /#{code}/
-              if ec.organs_gestors.blank?
-                ec.update_attribute :organs_gestors, code
-              else
-                ec.update_attribute :organs_gestors, "#{ec.organs_gestors},#{code}"
-              end
-            end
-          when '03'
-            unless ec.unitats_tramitadores =~ /#{code}/
-              if ec.unitats_tramitadores.blank?
-                ec.update_attribute :unitats_tramitadores, code
-              else
-                ec.update_attribute :unitats_tramitadores, "#{ec.unitats_tramitadores},#{code}"
-              end
-            end
-          when '04'
-            unless ec.organs_proponents =~ /#{code}/
-              if ec.organs_proponents.blank?
-                ec.update_attribute :organs_proponents, code
-              else
-                ec.update_attribute :organs_proponents, "#{ec.organs_proponents},#{code}"
-              end
-            end
-          else
-            # unknown role
-          end
-        end
-      rescue ActiveRecord::RecordInvalid
-        raise $! if Rails.env == 'test'
-      end
+      Dir3Entity.new_from_hash({
+        code: code,
+        name:       Haltr::Utils.get_xpath(line, xpaths[:dir3_name]),
+        address:    Haltr::Utils.get_xpath(line, xpaths[:dir3_address]),
+        postalcode: Haltr::Utils.get_xpath(line, xpaths[:dir3_postcode]),
+        city:       Haltr::Utils.get_xpath(line, xpaths[:dir3_town]),
+        province:   Haltr::Utils.get_xpath(line, xpaths[:dir3_province]),
+        country:    Haltr::Utils.get_xpath(line, xpaths[:dir3_country])
+      }, invoice.client.taxcode, role)
+    end
+
+    original = nil
+    original_format = nil
+    if override_original.present? and override_original_name.present?
+      original  = Haltr::Utils.decompress(override_original)
+      file_name = override_original_name
+      # TODO: support override_original other than PDF
+      original_format = 'pdf'
+    elsif keep_original
+      original = raw_xml
     end
 
     # there are several Discounts, sum them
@@ -882,22 +787,23 @@ _INV
     invoice.assign_attributes(
       :number           => invoice_number,
       :series_code      => invoice_series,
-      :client           => client,
-      :client_office    => client_office,
       :date             => invoice_date,
+      :tax_point_date   => tax_point_date,
       :invoicing_period_start => i_period_start,
       :invoicing_period_end   => i_period_end,
       :total            => invoice_total,
       :currency         => currency,
+      :exchange_rate    => exchange_rate,
+      :exchange_date    => exchange_date,
       :import           => Haltr::Utils.to_money(invoice_import, currency, company.rounding_method),
       :due_date         => invoice_due_date,
       :project          => company.project,
       :terms            => "custom",
-      :invoice_format   => invoice_format, # facturae3.2, ubl21...
+      :invoice_format   => original_format || invoice_format, # facturae3.2, ubl21...
       :transport        => transport,      # email, uploaded
       :from             => from,           # u@mail.com, User Name...
       :md5              => md5,
-      :original         => keep_original ? raw_xml : nil,
+      :original         => original,
       :discount_amount  => discount_amount,
       :discount_percent => discount_percent,
       :discount_text    => discount_text,
@@ -906,6 +812,7 @@ _INV
       :charge_reason    => charge_reason,
       :accounting_cost  => accounting_cost,
       :payments_on_account => Haltr::Utils.to_money(payments_on_account, currency, company.rounding_method),
+      :amounts_withheld  => Haltr::Utils.to_money(amounts_withheld, currency, company.rounding_method),
       :fa_person_type    => fa_person_type,
       :fa_residence_type => fa_residence_type,
       :fa_taxcode        => fa_taxcode,
@@ -923,24 +830,15 @@ _INV
       :fa_bank_code      => fa_bank_code,
       :fa_clauses        => fa_clauses,
       :party_identification => party_id,
-      :legal_literals    => legal_literals
+      :legal_literals    => legal_literals,
+      :file_name         => file_name
     )
 
-    if raw_invoice.respond_to? :filename             # Mail::Part
-      invoice.file_name = raw_invoice.filename
-    elsif raw_invoice.respond_to? :original_filename # UploadedFile
-      invoice.file_name = raw_invoice.original_filename
-    elsif raw_invoice.respond_to? :path              # File (tests)
-      invoice.file_name = File.basename(raw_invoice.path)
-    else
-      invoice.file_name = "invoice.xml"
-    end
-
+    xml_payment_method = Haltr::Utils.get_xpath(doc,xpaths[:payment_method])
     if invoice_format =~ /facturae/
-      xml_payment_method = Haltr::Utils.get_xpath(doc,xpaths[:payment_method])
       invoice.payment_method = Haltr::Utils.payment_method_from_facturae(xml_payment_method)
-    else
-      #TODO ubl
+    else # ubl
+      invoice.payment_method = Haltr::Utils.payment_method_from_ubl(xml_payment_method)
     end
 
     # bank info
@@ -950,9 +848,6 @@ _INV
       invoice.parse_xml_bank_info(doc.xpath(xpaths[:to_be_credited]).to_s)
     end
     invoice.payment_method_text = Haltr::Utils.get_xpath(doc,xpaths[:payment_method_text])
-
-    line_file_reference = nil
-    line_r_contract_reference = nil
 
     # invoice lines
     doc.xpath(xpaths[:invoice_lines]).each do |line|
@@ -982,31 +877,61 @@ _INV
              :issuer_transaction_reference => Haltr::Utils.get_xpath(line,xpaths[:i_transaction_ref]),
              :sequence_number              => Haltr::Utils.get_xpath(line,xpaths[:sequence_number]),
              :delivery_note_number         => line_delivery_note_number,
-             :ponumber     => Haltr::Utils.get_xpath(line,xpaths[:ponumber]),
+             :ponumber                     => Haltr::Utils.get_xpath(line,xpaths[:ponumber]),
+             :file_reference               => Haltr::Utils.get_xpath(line,xpaths[:file_reference]),
+             :receiver_contract_reference  => Haltr::Utils.get_xpath(line,xpaths[:r_contract_reference])
            )
-      # invoice taxes. Known taxes are described at config/taxes.yml
-      line.xpath(*xpaths[:line_taxes]).each do |line_tax|
-        percent = Haltr::Utils.get_xpath(line_tax,xpaths[:tax_percent])
-        if line_tax.path =~ /\/TaxesWithheld\//
-          percent = "-#{percent}"
-        end
-        tax = Haltr::TaxHelper.new_tax(
-          :format  => invoice_format,
-          :id      => Haltr::Utils.get_xpath(line_tax,xpaths[:tax_id]),
-          :percent => percent,
-          :event_code => Haltr::Utils.get_xpath(line,xpaths[:tax_event_code]),
-          :event_reason => Haltr::Utils.get_xpath(line,xpaths[:tax_event_reason])
-        )
-        il.taxes << tax
-        # EquivalenceSurcharges (#5560)
-        re_tax_percent = Haltr::Utils.get_xpath(line_tax,xpaths[:tax_surcharge])
-        if re_tax_percent.present?
-          re_tax = Tax.new(
-            :name     => 'RE',
-            :percent  => re_tax_percent.to_f,
-            :category => tax.category
+      if invoice_format =~ /facturae/
+        # invoice line taxes. Known taxes are described at config/taxes.yml
+        line.xpath(*xpaths[:line_taxes]).each do |line_tax|
+          percent = Haltr::Utils.get_xpath(line_tax,xpaths[:tax_percent])
+          if line_tax.path =~ /\/TaxesWithheld\//
+            percent = "-#{percent}"
+          end
+          tax = Haltr::TaxHelper.new_tax(
+            :format  => invoice_format,
+            :id      => Haltr::Utils.get_xpath(line_tax,xpaths[:tax_id]),
+            :percent => percent,
+            :event_code => Haltr::Utils.get_xpath(line,xpaths[:tax_event_code]),
+            :event_reason => Haltr::Utils.get_xpath(line,xpaths[:tax_event_reason])
           )
-          il.taxes << re_tax
+          il.taxes << tax
+          # EquivalenceSurcharges (#5560)
+          re_tax_percent = Haltr::Utils.get_xpath(line_tax,xpaths[:tax_surcharge])
+          if re_tax_percent.present?
+            re_tax = Tax.new(
+              :name     => 'RE',
+              :percent  => re_tax_percent.to_f,
+              :category => tax.category
+            )
+            il.taxes << re_tax
+          end
+        end
+      else # ubl
+        tax_definitions = {}
+        doc.xpath(*xpaths[:global_taxes]).each do |gt|
+          gt_name     = Haltr::Utils.get_xpath(gt, xpaths[:gtax_name])
+          gt_percent  = Haltr::Utils.get_xpath(gt, xpaths[:gtax_percent])
+          gt_category = Haltr::Utils.get_xpath(gt, xpaths[:gtax_category])
+          tax_definitions[gt_name] ||= {}
+          tax_definitions[gt_name][gt_category] = gt_percent
+        end
+        line.xpath(*xpaths[:line_taxes]).each do |line_tax|
+          name     = Haltr::Utils.get_xpath(line_tax, xpaths[:tax_name])
+          category = Haltr::Utils.get_xpath(line_tax, xpaths[:tax_category])
+          if !tax_definitions.has_key?(name)
+            raise "malformed UBL: line has unknown tax #{name}"
+          elsif !tax_definitions[name].has_key?(category)
+            raise "malformed UBL: line has unknown tax category #{category} for tax #{name}"
+          end
+          percent  = tax_definitions[name][category]
+          tax = Haltr::TaxHelper.new_tax(
+            format:   invoice_format,
+            name:     name,
+            percent:  percent,
+            category: category
+          )
+          il.taxes << tax
         end
       end
       # line discounts
@@ -1038,19 +963,29 @@ _INV
         il.charge = Haltr::Utils.get_xpath(line_charges.first,xpaths[:line_charge])
         il.charge_reason = Haltr::Utils.get_xpath(line_charges.first,xpaths[:line_charge_reason])
       end
-      line_file_reference ||= Haltr::Utils.get_xpath(line,xpaths[:file_reference])
-      line_r_contract_reference ||= Haltr::Utils.get_xpath(line,xpaths[:r_contract_reference])
       invoice.invoice_lines << il
     end
 
-    # Assume just one file_reference and
-    # receiver_contract_reference per Invoice
-    invoice.file_reference = line_file_reference
-    invoice.receiver_contract_reference = line_r_contract_reference
-
-    if !invoice.has_line_ponumber? and invoice.invoice_lines.any? and invoice.invoice_lines.first.ponumber.present?
-      invoice.ponumber = invoice.invoice_lines.first.ponumber
+    # global IRPF, to import only if none of the lines has IRPF #5764
+    if invoice.invoice_lines.all? {|l| l.taxes.all? {|tax| tax.percent >= 0 }}
+      glob_irpf = Haltr::Utils.get_xpath(doc,xpaths[:glob_irpf])
+      if glob_irpf
+        glob_irpf = "-#{glob_irpf}"
+        glob_irpf_tax = Haltr::TaxHelper.new_tax(
+          :format  => invoice_format,
+          :id      => '04',
+          :percent => glob_irpf
+        )
+        invoice.invoice_lines.each do |il|
+          il.taxes << glob_irpf_tax.dup
+        end
+      end
     end
+
+    # assign value to invoice field to prevent validation errors on import
+    invoice.file_reference = invoice.invoice_lines.first.file_reference
+    invoice.ponumber = invoice.invoice_lines.first.ponumber
+    invoice.receiver_contract_reference = invoice.invoice_lines.first.receiver_contract_reference
 
     # attachments
     to_attach = []
@@ -1071,6 +1006,7 @@ _INV
              end
       data = case data_compression
              when 'ZIP'
+               require 'zip'
                Zip::InputStream.open(StringIO.new(data)) do |io|
                  _entry = io.get_next_entry
                  io.read
@@ -1087,7 +1023,7 @@ _INV
       a.file = StringIO.new data
       a.author = User.current
       a.description = Haltr::Utils.get_xpath(attach, xpaths[:attach_description])
-      a.filename = "attachment#{index+1}.#{ext}"
+      a.filename = "facturae_#{invoice.number.gsub('/','')}_#{index+1}.#{ext}"
       to_attach << a
     end
     invoice.attachments = to_attach
@@ -1102,8 +1038,8 @@ _INV
       end
     else
       # prevent duplicate invoices #5433
-      if company.project.invoices.any? {|i| i.number == invoice_number }
-        raise "#{I18n.t :field_number} #{I18n.t 'activerecord.errors.messages.taken'}"
+      if !invoice.valid? and invoice.errors.has_key? :number
+        raise "#{I18n.t :field_number} #{invoice.errors[:number]}"
       end
       invoice.save(validate: false)
     end
@@ -1129,18 +1065,31 @@ _INV
   rescue
     if company and company.project
       ImportError.create(
-        filename:      (invoice.file_name rescue ""),
+        filename:      file_name,
         import_errors: $!.message,
         original:      raw_xml,
         project:       company.project,
       )
+      logger.error "Error creating new invoice for company #{company.name} (#{$!.message}). time=#{Time.now}"
+    else
+      logger.error "Error creating new invoice (#{$!.message}). time=#{Time.now}"
     end
     raise $!
   end
 
+  def has_original?
+    original.present? rescue true
+  end
+
   def send_original?
     Redmine::Hook.call_hook(:model_invoice_send_original, :invoice=>self) != [false] and
-      original and !modified_since_created? and invoice_format != 'pdf'
+      original and !modified_since_created?
+  end
+
+  def original_root_namespace
+    Nokogiri::XML(original).root.namespace.href
+  rescue
+    nil
   end
 
   def parse_xml_bank_info(xml)
@@ -1149,6 +1098,10 @@ _INV
     bank_account = Haltr::Utils.get_xpath(doc,xpaths[:bank_account])
     iban         = Haltr::Utils.get_xpath(doc,xpaths[:iban])
     bic          = Haltr::Utils.get_xpath(doc,xpaths[:bic])
+    set_bank_info(bank_account, iban, bic)
+  end
+
+  def set_bank_info(bank_account, iban, bic)
     return unless bank_account or iban
     if (is_a? IssuedInvoice and debit?) or (is_a? ReceivedInvoice and transfer?)
       # account is client account, where we should charge
@@ -1279,16 +1232,85 @@ _INV
     %w(01 02 03 04 05 06 07 08 09 10 11 12 13 14 15 16 80 81 82 83 84 85)
   end
 
+  # set invoice client from hash, first searches or clients by taxcode, if it
+  # matches uses existing client, if not, creates a new one. Then it compares
+  # client fields and creates a client_office if it differs.
+  # assigns invoice [and client_office] to self.
+  #
+  def set_client_from_hash(client_hash)
+    if client_hash[:country] and client_hash[:country].size == 3
+      client_hash[:country] = SunDawg::CountryIsoTranslater.translate_standard(
+        client_hash[:country], "alpha3", "alpha2"
+      ).downcase rescue client_hash[:country]
+    end
+    self.client   = project.clients.where('taxcode like ?', "%#{client_hash[:taxcode]}").first
+    self.client ||= project.clients.where('? like concat("%", taxcode) and taxcode != ""', client_hash[:taxcode]).first
+    if client and client.company.nil?
+      # client found by taxcode, but stored data may not match data in invoice
+      # if it doesn't, we create a client_office with data from invoice
+      to_match = {
+        full_address:         client_hash[:address].to_s.chomp,
+        city:                 client_hash[:city].to_s.chomp,
+        province:             client_hash[:province].to_s.chomp,
+        postalcode:           client_hash[:postalcode].to_s.chomp,
+        country:              client_hash[:country].to_s.chomp,
+        name:                 client_hash[:name].to_s.chomp,
+        destination_edi_code: client_hash[:destination_edi_code].to_s.chomp
+      }.reject {|k,v| v.blank? }
+      # check if client data matches client_hash
+      if !to_match.all? {|k, v| client.send(k).to_s.chomp.casecmp(v) == 0 }
+        # check if any client_office matches client_hash
+        client.client_offices.each do |office|
+          if to_match.all? {|k, v| office.send(k).to_s.chomp.casecmp(v) == 0 }
+            self.client_office = office
+            break
+          end
+        end
+
+        if client_office.nil?
+          # client and all its client_offices differ from data in invoice
+          self.client_office = ClientOffice.new(
+            client_id:            client.id,
+            address:              client_hash[:address].to_s.chomp,
+            city:                 client_hash[:city].to_s.chomp,
+            province:             client_hash[:province].to_s.chomp,
+            postalcode:           client_hash[:postalcode].to_s.chomp,
+            country:              client_hash[:country].to_s.chomp.downcase,
+            name:                 client_hash[:name].to_s.chomp,
+            destination_edi_code: client_hash[:destination_edi_code].to_s.chomp
+          )
+          raise "#{l(:label_client_office)}: #{client_office.errors.full_messages.join('. ')}" unless client_office.save
+          client.reload
+          self.client_office_id = client_office.id
+        end
+      end
+    else
+      unless client
+        self.client = Client.new(client_hash)
+        client.project = self.project
+        external_company = ExternalCompany.where('taxcode like ?', "%#{client_hash[:taxcode]}").first
+        external_company ||= ExternalCompany.where('? like concat("%", taxcode) and taxcode != ""', client_hash[:taxcode]).first
+        if external_company
+          self.client.company = external_company
+        end
+      end
+      client.save!(:validate=>false)
+      logger.info "created new client \"#{client.name}\" with cif #{client.taxcode} for company #{project.company.name}. time=#{Time.now}"
+    end
+  end
+
   protected
 
   def increment_counter
-    Project.increment_counter "invoices_count", project_id
-    Project.increment_counter "#{type.to_s.pluralize.underscore}_count", project_id
+    Project.increment_counter "#{type.to_s.pluralize.underscore}_count".to_sym, project_id
   end
 
   def decrement_counter
-    Project.decrement_counter "invoices_count", project_id
-    Project.decrement_counter "#{type.to_s.pluralize.underscore}_count", project_id
+    Project.decrement_counter "#{type.to_s.pluralize.underscore}_count".to_sym, project_id
+  end
+
+  def call_before_save_hook
+    Redmine::Hook.call_hook(:model_invoice_before_save, :invoice=>self)
   end
 
   # non-utf characters can break conversion to PDF and signature
@@ -1302,6 +1324,8 @@ _INV
   private
 
   def set_due_date
+    # invoices created by rest can have due_date but no terms
+    self.terms = "custom" if terms.nil? and due_date.present?
     self.due_date = terms_object.due_date unless terms == "custom"
   end
 
@@ -1332,7 +1356,7 @@ _INV
   end
 
   def has_all_fields_required_by_external_company
-    if client and client.taxcode
+    if client and client.taxcode and project
       taxcode = client.taxcode
       if taxcode[0...2].downcase == project.company.country
         taxcode2 = taxcode[2..-1]
@@ -1366,6 +1390,25 @@ _INV
   # translations for accepts_nested_attributes_for
   def self.human_attribute_name(attribute_key_name, *args)
     super(attribute_key_name.to_s.gsub(/invoice_lines\./,''), *args)
+  end
+
+  def attachment_added(obj)
+    return if new_record?
+    Event.create(
+      :name => :invoice_attachment_added,
+      :notes => obj.filename,
+      :invoice => self,
+      :user => User.current
+    )
+  end
+
+  def attachment_removed(obj)
+    Event.create(
+      :name => :invoice_attachment_destoy,
+      :notes => obj.filename,
+      :invoice => self,
+      :user => User.current
+    )
   end
 
 end

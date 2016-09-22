@@ -50,7 +50,7 @@
                   </tr>
                   <tr>
 
-                <% %w(new sending sent error closed discarded registered refused accepted allegedly_paid).each do |state| -%>
+                <% %w(new sending sent read error cancelled closed discarded registered refused accepted allegedly_paid annotated).each do |state| -%>
                   <%= "</tr><tr>".html_safe if state == "discarded" %>
                   <td><label class="inline"><%= check_box_tag(state, "1", params[state]) %> <%=l("state_#{state}_plural")%></label></td>
                 <% end -%>
@@ -166,7 +166,7 @@
             <%= sort_header_tag('import_in_cents', :caption => l(:label_subtotal)) %>
             <%= sort_header_tag('import_in_cents', :caption => l(:label_invoice_total)) %>
             <%= sort_header_tag('due_date', :caption => l(:field_due_date)) %>
-            <%= sort_header_tag('state_updated_at', :title => l(:label_sort_by, "\"#{l(:field_state_updated_at)}\""), :caption => l(:field_state)) %>
+            <%= sort_header_tag('state', :title => l(:label_sort_by, "\"#{l(:field_state)}\""), :caption => l(:field_state)) %>
           </tr>
         </thead>
         <tbody>

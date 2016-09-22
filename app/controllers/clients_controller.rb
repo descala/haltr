@@ -5,7 +5,7 @@ class ClientsController < ApplicationController
   menu_item Haltr::MenuItem.new(:companies,:companies_level2)
 
   layout 'haltr'
-  helper :haltr, :invoices
+  helper :haltr, :invoices, :charts
 
   helper :sort
   include SortHelper
@@ -30,6 +30,10 @@ class ClientsController < ApplicationController
     unless params[:name].blank?
       name = "%#{params[:name].strip.downcase}%"
       clients = clients.where("LOWER(name) LIKE ? OR LOWER(address) LIKE ? OR LOWER(address2) LIKE ? OR LOWER(taxcode) LIKE ?", name, name, name, name)
+    end
+
+    unless params[:edi_code].blank?
+      clients = clients.where("edi_code = ?", params[:edi_code])
     end
 
     unless params[:taxcode].blank?
@@ -61,9 +65,14 @@ class ClientsController < ApplicationController
        :offset =>  @offset
   end
 
-  # Only used in API
   def show
+    @people = @client.people
+    @events = @client.invoice_events.where("events.type!='HiddenEvent'").order("created_at desc").limit(10)
+    @events_count = @client.invoice_events.where("events.type!='HiddenEvent'").count
+    @client_offices= @client.client_offices
+    @templates_total = @client.template_invoice_lines.sum{|line|line.taxable_base}.to_money(@client.currency) rescue nil
     respond_to do |format|
+      format.html
       format.api
     end
   end
@@ -87,7 +96,7 @@ class ClientsController < ApplicationController
       if @client.save
         format.html {
           flash[:notice] = l(:notice_successful_create)
-          redirect_to :action=>'index', :project_id=>@project
+          redirect_to :action=>'show', :id=>@client
         }
         format.js
         format.api { render :action => 'show', :status => :created, :location => client_url(@client) }
@@ -108,7 +117,7 @@ class ClientsController < ApplicationController
         event.save!
         format.html {
           flash[:notice] = l(:notice_successful_update)
-          redirect_to :action => 'index', :project_id => @project
+          redirect_to :action=>'show', :id=>@client
         }
         format.api  { render_api_ok }
       else
@@ -119,6 +128,7 @@ class ClientsController < ApplicationController
   end
 
   def destroy
+    @client.events.destroy_all
     @client.destroy
     event = EventDestroy.new(:name    => "deleted_client",
                              :notes   => @client.name,
@@ -174,6 +184,10 @@ class ClientsController < ApplicationController
 
   def link_to_profile
     taxcode = params[:company]
+    if taxcode.blank?
+      render_404
+      return
+    end
     if taxcode[0...2].downcase == @project.company.country
       taxcode2 = taxcode[2..-1]
     else

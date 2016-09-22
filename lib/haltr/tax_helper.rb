@@ -10,10 +10,13 @@ module Haltr
       case attributes[:format]
       when /facturae/
         taxes = TAX_LIST[:es].select {|t| t[:facturae_id] == attributes[:id]}
+        category = nil
         taxes.each do |t|
-          if attributes[:event_code]
+          if attributes[:event_code].present?
             # Is E(01) or NS(02)
-            category = attributes[:event_code] == '01' ? 'E' : 'NS'
+            if attributes[:percent].to_f == 0
+              category = attributes[:event_code] == '01' ? 'E' : 'NS'
+            end
             if t[:percent] == attributes[:percent].to_f and category == t[:category]
               new_tax = Tax.new(t.dup.keep_if {|k,v| %w(name percent category).include?(k)})
               new_tax.comment = attributes[:event_reason]
@@ -30,12 +33,18 @@ module Haltr
           return Tax.new(
             name:     taxes[0][:name],
             percent:  attributes[:percent],
-            category: 'S'
+            category: category ? category : 'S',
+            comment: attributes[:event_reason]
           )
         end
 
       when /ubl/
-        #TODO
+        # TODO: categories
+        return Tax.new(
+          name:     attributes[:name],
+          percent:  attributes[:percent],
+          category: attributes[:category]
+        )
       end
 
       return Tax.new(
@@ -95,6 +104,10 @@ module Haltr
         taxes << Tax.new(:name=>'VAT',:percent=>6.0, :default=>false,:category=>'AAA')
       when 'dk'
         taxes << Tax.new(:name=>'NUMS',:percent=>25.0,:default=>true,:category=>'S')
+      when 'gb'
+        taxes << Tax.new(name: 'VAT', percent: 20.0, default: true, category: 'S')
+        taxes << Tax.new(name: 'VAT', percent: 5.0, default: false, category: 'AA')
+        taxes << Tax.new(name: 'VAT', percent: 0.0, default: false, category: 'Z')
       end
       taxes
     end

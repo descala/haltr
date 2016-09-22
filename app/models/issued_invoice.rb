@@ -4,11 +4,14 @@ class IssuedInvoice < InvoiceDocument
 
   unloadable
 
+  has_one :created_invoice, class_name: 'ReceivedInvoice',
+    foreign_key: 'created_from_invoice_id'
+
   include Haltr::ExportableDocument
 
   belongs_to :invoice_template
   validates_presence_of :number, :unless => Proc.new {|invoice| invoice.type == "DraftInvoice"}
-  validates_uniqueness_of :number, :scope => [:project_id,:type], :if => Proc.new {|i| i.type == "IssuedInvoice" }
+  validate :number_must_be_uniq
   validate :invoice_must_have_lines
 
   before_validation :set_due_date
@@ -17,6 +20,7 @@ class IssuedInvoice < InvoiceDocument
   after_destroy :release_amended
   before_save :update_status, :unless => Proc.new {|invoicedoc| invoicedoc.state_changed? }
   before_save :set_state_updated_at
+  before_save :override_line_values, :unless => Proc.new {|i| i.new_record? }
 
   # new sending sent error discarded closed
   state_machine :state, :initial => :new do
@@ -42,19 +46,19 @@ class IssuedInvoice < InvoiceDocument
       transition [:new,:sending,:error,:discarded] => :sent
     end
     event :mark_unsent do
-      transition [:sent,:sending,:closed,:error,:discarded] => :new
+      transition [:sent,:read,:sending,:closed,:error,:discarded] => :new
     end
     event :error_sending do
       transition :sending => :error
     end
     event :close do
-      transition [:new,:sent,:registered] => :closed
+      transition [:new,:sent,:read,:registered] => :closed
     end
     event :discard_sending do
       transition [:error,:sending] => :discarded
     end
     event :paid do
-      transition [:sent,:accepted,:allegedly_paid,:registered] => :closed
+      transition [:sent,:read,:accepted,:allegedly_paid,:registered] => :closed
     end
     event :unpaid do
       transition :closed => :sent
@@ -101,6 +105,21 @@ class IssuedInvoice < InvoiceDocument
     event :mark_as_closed do
       transition all => :closed
     end
+    event :read do
+      transition :sent => :read
+    end
+    event :received_notification do
+      transition all => :read
+    end
+    event :failed_notification do
+      transition all => :error
+    end
+    event :cancelled_notification do
+      transition all => :cancelled
+    end
+    event :annotated_notification do
+      transition all => :accounted
+    end
   end
 
   def sent?
@@ -108,7 +127,7 @@ class IssuedInvoice < InvoiceDocument
   end
 
   def label
-    if self.amend_of
+    if self.amend_of or self.amended_number
       l :label_amendment_invoice
     else
       l :label_invoice
@@ -117,6 +136,26 @@ class IssuedInvoice < InvoiceDocument
 
   def to_label
     "#{number}"
+  end
+
+  def number_must_be_uniq
+    if type == "IssuedInvoice"
+      if series_code.blank?
+        series_code_value = ["", nil]
+      else
+        series_code_value = series_code
+      end
+      query = IssuedInvoice.where(project_id: project, number: number, series_code: series_code_value)
+      query = query.where(["YEAR(date) = ?", date.year]) unless date.nil?
+      query = query.where(["id != ?", id]) unless new_record?
+      if query.any?
+        if date.nil?
+          errors.add(:number, :taken)
+        else
+          errors.add(:number, l(:number_taken_in_year, number: number, year: date.year))
+        end
+      end
+    end
   end
 
   def self.find_can_be_sent(project)
@@ -148,7 +187,7 @@ class IssuedInvoice < InvoiceDocument
 
   def self.last_number(project)
     # assume invoices with > date will have > number
-    numbers = project.issued_invoices.order(:date, :created_at).last(10).collect {|i|
+    numbers = project.issued_invoices.order("date DESC, created_at DESC").limit(10).collect {|i|
       i.number
     }.compact
     numbers.sort_by do |num|
@@ -184,7 +223,7 @@ class IssuedInvoice < InvoiceDocument
   end
 
   def visible_by_client?
-    %w(sent refused accepted allegedly_paid closed).include? state
+    %w(sent read refused accepted allegedly_paid closed).include? state
   end
 
   # returns true if invoice has been totally amended (substituted by another)
@@ -194,7 +233,7 @@ class IssuedInvoice < InvoiceDocument
 
   # all amends, sustitutive and partial
   def is_amend?
-    amend_of or partial_amend_of
+    amend_of or partial_amend_of or amended_number
   end
 
   def last_sent_event
@@ -267,6 +306,24 @@ class IssuedInvoice < InvoiceDocument
   def set_state_updated_at
     if state_changed?
       write_attribute :state_updated_at, Time.now
+    end
+  end
+
+  def override_line_values
+    if ponumber_changed?
+      invoice_lines.each do |l|
+        l.ponumber = ponumber
+      end
+    end
+    if file_reference_changed?
+      invoice_lines.each do |l|
+        l.file_reference = file_reference
+      end
+    end
+    if receiver_contract_reference_changed?
+      invoice_lines.each do |l|
+        l.receiver_contract_reference = receiver_contract_reference
+      end
     end
   end
 

@@ -1,6 +1,6 @@
 require File.dirname(__FILE__) + '/../test_helper'
 
-class HaltrUtilsTest < ActiveSupport::TestCase
+class UtilsTest < ActiveSupport::TestCase
 
   test 'to_money' do
     assert_equal 300,  Haltr::Utils.to_money(3).cents
@@ -27,5 +27,17 @@ class HaltrUtilsTest < ActiveSupport::TestCase
     assert_equal 1,    Haltr::Utils.to_money('0.019',nil,:truncate).cents
   end
 
+  test 'sbdh extract' do
+    file = File.new(File.join(File.dirname(__FILE__),'../fixtures/documents/invoice_ubl_with_sbdh.xml'))
+    doc = Nokogiri::XML(file)
+    invoice = Haltr::Utils.extract_from_sbdh(doc)
+    assert_equal '0070075', invoice.xpath("/xmlns:Invoice/cbc:ID").text
+  end
+
+  test 'removes leading and trailing spaces' do
+    xml = "<xml><withspaces>  a test    </withspaces></xml>"
+    doc = Nokogiri::XML(xml)
+    assert_equal 'a test', Haltr::Utils.get_xpath(doc,'//withspaces')
+  end
 end
 

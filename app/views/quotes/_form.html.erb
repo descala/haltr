@@ -106,7 +106,7 @@
         <th></th>
         <th><%=l(:field_description)%></th>
         <%= call_hook(:invoice_form_order_line_reference_header) %>
-        <th><%=l(:field_price)%></th>
+        <th><%=l(:field_import)%></th>
         <% @invoice.taxes_hash.keys.sort.each do |name| -%>
           <th id="<%=name%>_title" style="<%= 'display: none;' unless @invoice.tax_per_line?(name)%>">
             <%= name %>

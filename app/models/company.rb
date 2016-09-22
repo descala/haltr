@@ -11,6 +11,11 @@ class Company < ActiveRecord::Base
   has_many :clients, :as => :company, :dependent => :nullify
   has_many :taxes, :class_name => "Tax", :dependent => :destroy, :order => "name,percent DESC"
   has_many :bank_infos, :dependent => :destroy, :order => "name,bank_account,iban,bic DESC"
+
+  # self referential association
+  has_many :providers
+  has_many :company_providers, through: :providers, dependent: :destroy
+
   validates_presence_of :name, :project_id, :email, :postalcode, :country
   validates_uniqueness_of :taxcode, :allow_blank => true
   validates_inclusion_of :currency, :in  => Money::Currency.table.collect {|k,v| v[:iso_code] }
@@ -18,6 +23,7 @@ class Company < ActiveRecord::Base
   validates_format_of :email,
     :with => /\A[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]+(,[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]+)*\z/,
     :allow_nil => true
+  validates_format_of :postalcode, with: /\A[0-9]{5}\z/, if: Proc.new {|i| i.country == 'es'}
   validate :only_one_default_tax_per_name
   acts_as_attachable :view_permission => :general_use,
                      :delete_permission => :general_use
@@ -279,6 +285,10 @@ class Company < ActiveRecord::Base
     ROUNDING_METHODS.collect {|m|
       [ I18n.t("#{m}_rounding"), m ]
     }
+  end
+
+  def postalcode=(v)
+    write_attribute(:postalcode, v.gsub(' ', ''))
   end
 
   private

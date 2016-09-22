@@ -1,3 +1,4 @@
+<% if @project -%>
 <div class="chart_cashflow">
   <%= render :partial => 'common/chart_headers' %>
   <h3><%= l(:chart_cashflow) %></h3>
@@ -16,21 +17,28 @@
   -%>
   <%
       due_invoices = invoices_past_due(@project,User.current.pref.others[:chart_cashflow],currency)
-      due_invoices_sum = Money.new(due_invoices.sum('total_in_cents'),currency)
+      due_invoices_paid = due_invoices.sum('payments.amount_in_cents').to_i
+      due_invoices_sum = Money.new(due_invoices.sum('total_in_cents').to_i - due_invoices_paid,currency)
       invoices = invoices_on_schedule(@project,User.current.pref.others[:chart_cashflow],currency)
-      invoices_sum = Money.new(invoices.sum('total_in_cents'),currency)
+      invoices_paid = invoices.sum('payments.amount_in_cents').to_i
+      invoices_sum = Money.new(invoices.sum('total_in_cents').to_i - invoices_paid,currency)
   -%>
   <fieldset>
     <table class="cashflow">
       <tr>
         <th><%= l(:past_due) %>:</th>
         <td class="past_due"><%=h money(due_invoices_sum) %></td>
-        <td><%= link_to("#{due_invoices.size} #{l(:label_invoice_plural)}", project_invoices_path(:project_id=>@project, :invoices => due_invoices.collect {|i| i.id })) if due_invoices.size > 0 -%></td>
+        <td>
+          <%= link_to("#{due_invoices.count} #{l(:label_invoice_plural)}",  invoices_past_due_path(@project, User.current.pref.others[:chart_cashflow]) ) if due_invoices.count > 0 %>
+        </td>
+        <td></td>
       </tr>
       <tr>
         <th><%= l(:on_schedule) %>:</th>
         <td class="on_schedule"><%=h money(invoices_sum) %></td>
-        <td><%= link_to("#{invoices.size} #{l(:label_invoice_plural)}", project_invoices_path(:project_id=>@project, :invoices => invoices.collect {|i| i.id })) if invoices.size > 0 -%></td>
+        <td>
+          <%= link_to("#{invoices.count} #{l(:label_invoice_plural)}",  invoices_on_schedule_path(@project, User.current.pref.others[:chart_cashflow]) ) if invoices.count > 0 %>
+        </td>
       </tr>
       <tr>
         <th/>
@@ -45,3 +53,4 @@
   </fieldset>
   <% end -%>
 </div>
+<% end -%>

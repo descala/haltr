@@ -28,12 +28,17 @@ class CompaniesController < ApplicationController
   def check_for_company
     if @project.company.nil?
       user_mail = User.find_by_project_id(@project.id).mail rescue ""
+      if ExportChannels.available? Setting.plugin_haltr['default_invoice_format']
+        default_invoice_format = Setting.plugin_haltr['default_invoice_format']
+      else
+        default_invoice_format = 'paper'
+      end
       # company should be already created by lib/company_filter
       @company = Company.new(project:        @project,
                              name:           @project.name,
                              email:          user_mail,
-                             invoice_format: 'paper',
-                             public:         'public')
+                             invoice_format: default_invoice_format,
+                             public:         'private')
       @company.save(:validate=>false)
     else
       @company = @project.company
@@ -47,6 +52,7 @@ class CompaniesController < ApplicationController
         render :action => 'edit'
       end
       format.api do
+        params[:format] ||= 'json'
         render action: :my_company
       end
     end

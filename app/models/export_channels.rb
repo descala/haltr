@@ -3,13 +3,12 @@ class ExportChannels
   unloadable
 
   def self.use_file(file)
-    @@channels = File.read(File.join(File.dirname(__FILE__), "../../config/#{file}"))
+    @@channels = YAML.load(File.read(File.join(File.dirname(__FILE__), "../../config/#{file}")))
   end
 
   def self.available
     # See config/channels.yml.example
-    @@channels ||= File.read(File.join(File.dirname(__FILE__), "../../config/channels.yml"))
-    YAML.load(@@channels)
+    @@channels ||= YAML.load(File.read(File.join(File.dirname(__FILE__), "../../config/channels.yml")))
   rescue Exception => e
     puts "Exception while retrieving channels.yml: #{e.message}"
     {}

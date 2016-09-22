@@ -20,11 +20,7 @@
       </p>
       <% if @amend_type == 'partial' -%>
         <p class="col span-1-de-2">
-        <% if ExportChannels.format(@invoice.client.invoice_format) =~ /^facturae/ -%>
           <%= f.select :amend_reason, Invoice.amend_reason_codes.collect {|code| [l("amend_reason_#{code}"), code] } %>
-        <% else -%>
-          <%= f.text_field :amend_reason %>
-        <% end -%>
         </p>
       <% end -%>
     </div>
@@ -72,19 +68,31 @@
     <% end -%>
       <%= f.text_field :delivery_note_number, no_label: true %>
     </p>
+  </div>
 
-    <% if @invoice.invoicing_period_start || @invoice.invoicing_period_end || User.current.allowed_to?(:view_invoice_extra_fields, @project) -%>
-      <p class="col span-1-de-3">
-      <%= f.text_field :invoicing_period_start, :size => 10 %><%= calendar_for('invoice_invoicing_period_start') %>
-      </p>
-      <p class="col span-1-de-3">
-      <%= f.text_field :invoicing_period_end, :size => 10 %><%= calendar_for('invoice_invoicing_period_end') %>
-      </p>
-    <% end -%>
+  <div class="seccio grup">
+    <p class="col span-1-de-3">
+    <%= f.text_field :invoicing_period_start, :size => 10 %><%= calendar_for('invoice_invoicing_period_start') %>
+    </p>
+    <p class="col span-1-de-3">
+    <%= f.text_field :invoicing_period_end, :size => 10 %><%= calendar_for('invoice_invoicing_period_end') %>
+    </p>
+    <p class="col span-1-de-3">
+    <%= f.text_field :tax_point_date, :size => 10 %><%= calendar_for('invoice_tax_point_date') %>
+    </p>
   </div>
 
   <div id="payment_stuff">
     <%= render :partial => 'invoices/payment_stuff' %>
+  </div>
+
+  <div class="seccio grup">
+    <p class="col span-1-de-3">
+    <%= f.text_field :order_date, :size => 10 %><%= calendar_for('invoice_order_date') %>
+    </p>
+    <p class="col span-1-de-3">
+    <%= f.text_field :contract_number %>
+    </p>
   </div>
 
   <div class="seccio grup">

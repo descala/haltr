@@ -138,6 +138,14 @@ $(document).ready(function() {
     $('#denied_requests').toggle();
   });
 
+  $(document).on('change', 'select#invoice_currency', function(e) {
+    if ($("select#invoice_currency option:selected" ).val() == 'EUR') {
+      $('div#exchange_fields').hide();
+    } else {
+      $('div#exchange_fields').show();
+    }
+  });
+
 });
 
 

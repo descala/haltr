@@ -19,7 +19,7 @@ class Redmine::ApiTest::InvoicesTest < Redmine::ApiTest::Base
 
     assert_response :unprocessable_entity
     assert_equal 'application/xml', response.content_type
-    assert_tag 'errors', :child => {:tag => 'error', :content => "Number has already been taken"}
+    assert_tag 'errors', :child => {:tag => 'error', :content => "Number 767 has already been taken for year 2012"}
   end
 
   test 'shows invoice' do
@@ -27,10 +27,26 @@ class Redmine::ApiTest::InvoicesTest < Redmine::ApiTest::Base
     assert_response :success
     invoice = JSON(response.body)['invoice']
     assert_equal 'new', invoice['state']
+    assert_equal 'i6', invoice['number']
+    assert_equal 'client order number 123', invoice['ponumber']
+    assert_equal 'Cash payment', invoice['payment_method_info']
     assert_equal 'Company1', invoice['company']['name']
     assert_equal 'Client1', invoice['client']['name']
+    assert_equal '08080', invoice['client']['postalcode']
+    assert_equal 'es', invoice['client']['country']
     assert_equal 1.0, invoice['lines'].first['quantity']
-    assert_equal 100.0, invoice['taxes'].first['amount']
+    assert_equal 1000.0, invoice['lines'].first['price']
+    assert_equal 1000.0, invoice['lines'].first['total_cost']
+
+    # discounts
+    assert_equal nil, invoice['discount_text']
+    assert_equal 0.0, invoice['discount_percent']
+    assert_equal 0.0, invoice['discount_amount']
+
+    # totals
+    assert_equal 1010.0, invoice['subtotal']
+    assert_equal  100.0, invoice['taxes'][0]['amount']
+    assert_equal 1110.0, invoice['total']
 
     # TODO emulate call from javascript
 #    get '/invoices/6', nil, {"Accept" => "application/json", "X-Requested-With" => "XMLHttpRequest"}.merge(credentials('jsmith'))
@@ -52,9 +68,9 @@ class Redmine::ApiTest::InvoicesTest < Redmine::ApiTest::Base
   end
 
   test 'invoice index' do
-    get '/projects/onlinestore/invoices.json', {}, credentials('jsmith')
+    get '/projects/onlinestore/invoices.json?sort=number', {}, credentials('jsmith')
     assert_response :success
-    assert_equal '2013-02-05', JSON(response.body)['invoices'].first['due_date']
+    assert_equal Date.tomorrow.to_s, JSON(response.body)['invoices'].first['due_date']
   end
 
   test 'invoice index with state_updated_at filter' do

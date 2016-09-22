@@ -104,14 +104,6 @@ module HaltrHelper
   rescue ActionController::RoutingError
   end
 
-  def n19taxcode(taxcode)
-    if taxcode and taxcode.size > 9
-      taxcode.last(9)
-    else
-      taxcode
-    end
-  end
-
   def iban_for_mandate
     if @client.iban.blank?
       #iban = "#{@client.country_alpha2}______________________"

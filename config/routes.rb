@@ -5,6 +5,7 @@
 
 resources :events
 match 'events/file/:id' => 'events#file', :via => :get, :as => :event_file
+match 'events/file/:client_hashid/:id' => 'events#file', :via => :get, :as => :client_event_file
 
 match '/clients/check_cif/:id' => 'clients#check_cif', :via => :get
 match '/clients/link_to_profile/:id' => 'clients#link_to_profile', :via => :get
@@ -27,6 +28,7 @@ resources :projects do
   match 'invoices/download_new' => 'invoices#download_new_invoices', :via => :get
   match 'invoices/update_payment_stuff' => 'invoices#update_payment_stuff', :via => :get
   match 'invoices/new/:client' => 'invoices#new', :via => :get, :as => :client_new_invoice
+  match 'invoice_templates/new/:client' => 'invoice_templates#new', :via => :get, :as => :client_new_invoice_template
   resources :invoices, :only => [:index, :new, :create]
   resources :received, :only => [:index, :new, :create]
   resources :invoice_templates, :only => [:index, :new, :create]
@@ -40,7 +42,6 @@ resources :projects do
   match 'payments/import_aeb43_index' => 'payments#import_aeb43_index'
   match 'payments/import_aeb43' => 'payments#import_aeb43'
   match 'payments/payment_initiation'  => 'payments#payment_initiation',  :via => :get
-  match 'payments/n19'  => 'payments#n19',  :via => :get
   match 'payments/sepa' => 'payments#sepa', :via => :get
   resources :mandates
   match 'mandates/:id/signed_doc' => 'mandates#signed_doc', :via => :get, :as => 'mandate_signed_doc'
@@ -61,6 +62,7 @@ resources :projects do
   match 'cash_flow' => 'charts#cash_flow', :via => :get
   match 'payments/reports' => 'payments#reports', :via => [:get]
   match 'payments/report_payment_list' => 'payments#report_payment_list', :via => [:post]
+  match 'events' => 'events#index', via: [:get,:post]
 end
 resources :clients do
   resources :people, :only => [:index, :new, :create]
@@ -93,8 +95,6 @@ match 'invoices/base64doc/:id/:doc_format' => 'invoices#base64doc', :via => [:ge
 match 'invoices/haltr_sign' => 'invoices#haltr_sign', :via => :get
 match 'invoices/original/:id' => 'invoices#original', :via => :get, :as => :invoices_original
 match 'received/original/:id' => 'received#original', :via => :get, :as => :received_original
-match 'invoices/show_original/:id' => 'invoices#show_original', :via => :get, :as => :invoices_show_original
-match 'received/show_original/:id' => 'received#show_original', :via => :get, :as => :received_show_original
 match 'invoices/number_to_id/:number' => 'invoices#number_to_id', :via => :get, :as => :invoices_number_to_id, :constraints => { :number => /.+/ }
 resources :invoices
 resources :quotes, :only => [:show, :edit, :update, :destroy]
@@ -111,7 +111,7 @@ match 'invoice/:client_hashid/:invoice_id' => 'invoices#view', :client_hashid =>
 match 'invoices/logo/:attachment_id/:filename' => 'invoices#logo', :attachment_id => /\d+/, :filename => /.*/
 
 resources :invoices, :has_many => :events
-resources :received
+resources :received_invoices, :controller => :received
 match 'received/mark_refused/:id' => 'received#mark_refused', :as => :mark_refused
 match 'received/mark_refused_with_mail/:id' => 'received#mark_refused_with_mail', :as => :mark_refused_with_mail
 match 'received/mark_accepted/:id' => 'received#mark_accepted', :as => :mark_accepted
@@ -135,3 +135,5 @@ match 'dir3_entities/csv_import' => 'dir3_entities#csv_import', :via => :post
 resources :export_channels
 
 match '/charts/update_chart_preference' => 'charts#update_chart_preference', :via => :get, :as => :update_chart_preference
+
+match '/haltr_mail_handler/check_mail' => 'haltr_mail_handler#check_mail', :via => :get, :as => :haltr_mail_handler_check_mail

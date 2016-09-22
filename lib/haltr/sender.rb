@@ -35,6 +35,13 @@ module Haltr
           doc = Haltr::Pdf.generate(invoice)
         elsif format == 'none'
           doc = nil
+        elsif format == 'original'
+          unless invoice.original
+            raise 'invoice original is nil!'
+          end
+          doc = invoice.original
+        elsif format == 'edifact'
+          doc = Haltr::Edifact.generate(invoice)
         else
           doc = Haltr::Xml.generate(invoice,format,local_certificate)
         end

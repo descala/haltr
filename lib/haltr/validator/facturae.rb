@@ -22,7 +22,7 @@ module Haltr
         end
 
         # facturae needs taxcodes
-        if company.taxcode.blank?
+        if company.blank? or company.taxcode.blank?
           errors.add(:base, I18n.t(:company_taxcode_needed))
         end
         if client.taxcode.blank?
@@ -55,6 +55,10 @@ module Haltr
           if due_date.blank?
             errors.add(:due_date, :blank)
           end
+        end
+        if currency != 'EUR'
+          errors.add(:exchange_rate, :blank) unless exchange_rate.present?
+          errors.add(:exchange_date, :blank) unless exchange_date.present?
         end
       end
 

@@ -2,13 +2,14 @@ class EventsController < ApplicationController
   unloadable
   helper :haltr
 
-  skip_before_filter :check_if_login_required, :only => [ :create ]
+  skip_before_filter :check_if_login_required, :only => [ :create, :file ]
   before_filter :check_remote_ip, :except => [:file, :index]
   before_filter :find_event, :only => [:file]
-  before_filter :authorize, :only => [:file]
-  before_filter :require_admin, :only => [:index]
+  before_filter :find_project_by_project_id, :only => [:index]
+  before_filter :authorize, :only => [:index]
+  before_filter :authorize_or_find_hashid, only: [:file]
 
-  accept_api_auth :file
+  accept_api_auth :file, :index
 
   helper :sort
   include SortHelper
@@ -17,24 +18,48 @@ class EventsController < ApplicationController
     sort_init   'created_at', 'desc'
     sort_update %w(created_at type)
 
-    @project = Project.find(params[:project_id]) if params[:project_id]
     if @project
       events = Event.where(project_id: @project.id)
     else
       events = Event.scoped
     end
 
+    if params[:from_time].present?
+      events = events.where('created_at >= ?', params[:from_time])
+    end
+
+    if params[:to_time].present?
+      events = events.where('created_at <= ?', params[:to_time].to_date.end_of_day)
+    end
+
+    if params[:invoice_id].present?
+      events = events.where('invoice_id = ?', params[:invoice_id])
+    end
+
+    unless User.current.admin?
+      events = events.where("type!='HiddenEvent'")
+    end
+
+    case params[:format]
+    when 'xml', 'json'
+      @offset, @limit = api_offset_and_limit
+    else
+      @limit = per_page_option
+    end
+
+    @event_count = events.count
+    @event_pages = Paginator.new self, @event_count, @limit, params['page']
+    @offset ||= @event_pages.offset
+    @events =  events.find :all,
+      :order   => sort_clause,
+      :include => [:invoice],
+      :limit   => @event_pages.items_per_page,
+      :offset  => @offset
+
     respond_to do |format|
       format.html do
-        @event_count = events.count
-        @event_pages = Paginator.new self, @event_count,
-          per_page_option,
-          params['page']
-        @events =  events.find :all,
-          :order   => sort_clause,
-          :include => [:invoice],
-          :limit   => @event_pages.items_per_page,
-          :offset  => @event_pages.current.offset
+      end
+      format.api do
       end
     end
   end
@@ -82,9 +107,9 @@ class EventsController < ApplicationController
           tf = Tempfile.new('')
           tf.binmode
           tf.write(data)
+          tf.close
           content_type = IO.popen(['file', '--brief', '--mime-type', tf.path],
                                   :in => :close, :err => :close) {|io| io.read.chomp }
-          tf.close
           tf.unlink
         rescue
           content_type = ""
@@ -115,6 +140,16 @@ class EventsController < ApplicationController
       render :text => "Not allowed from your IP #{request.remote_ip}\n", :status => 403
       logger.error "Not allowed from IP #{request.remote_ip} (allowed IPs: #{allowed_ips.join(', ')})\n"
       return false
+    end
+  end
+
+  # on invoice#view we need to access events files to show them in pdf viewer
+  # authenticate with client_hashid
+  def authorize_or_find_hashid
+    client = Client.find_by_hashid params[:client_hashid]
+    unless client and client.project.events.find(params[:id])
+      authorize
+      return
     end
   end
 

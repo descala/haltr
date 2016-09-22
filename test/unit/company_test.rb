@@ -43,6 +43,15 @@ class CompanyTest < ActiveSupport::TestCase
     c.quote_mail_body_es = 'Body'
   end
 
+  test 'email customization' do
+    c = companies('company1')
+    assert_equal "Invoice num @invoice.number", c.invoice_mail_subject_en
+    c.invoice_mail_subject_en = "Yayh"
+    assert_equal "Yayh", c.invoice_mail_subject_en
+    c.invoice_mail_body_en = "Yayh"
+    assert_equal "Yayh", c.invoice_mail_body_en
+  end
+
   test 'company last_name never is blank' do
     assert_equal '.', companies('company1').last_name
   end

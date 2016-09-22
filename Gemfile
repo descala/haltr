@@ -4,7 +4,7 @@ gem "money", "=5.0.0"
 gem "state_machine"
 gem "gettext"
 gem "sundawg_country_codes" #, :lib => 'country_iso_translater'
-gem "zip"
+gem 'rubyzip', '>= 1.0.0'
 gem 'csv-mapper'
 gem 'nokogiri'
 gem 'wicked_pdf'
@@ -14,7 +14,6 @@ group :test do
   gem 'guard-minitest', :github => 'guard/guard-minitest'
   gem "minitest", "~> 4.0"
   gem 'zeus'
-  gem 'rb-inotify', '~> 0.9'
   gem 'libnotify'
 end
 
@@ -29,3 +28,5 @@ gem 'audited-activerecord', '~> 3.0'
 
 gem 'valvat', :git => 'https://github.com/descala/valvat.git', :branch => 'master'
 gem 'shared-mime-info'
+gem 'rest-client'
+gem 'pdfjs_rails'

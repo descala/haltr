@@ -42,8 +42,9 @@ class ClientCreaeteTest < ActionController::IntegrationTest
       },
     }
 
-    assert_redirected_to :controller=>"clients", :action=>"index"
-    assert Client.find_by_taxcode 'ESS0811001G'
+    client = Client.find_by_taxcode 'ESS0811001G'
+    assert client
+    assert_redirected_to :controller=>"clients", :action=>"show", :id=>client
   end
 
 end

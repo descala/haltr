@@ -15,6 +15,15 @@
 </fieldset>
 
 <fieldset class="tabular box">
+  <legend><%= l(:label_invoice_viewer) %></legend>
+<div class="seccio grup">
+  <p class="col span-1-de-3">
+  <%= f.select :invoice_viewer, [[l(:label_invoice_viewer_standard),'standard'],[l(:view_original), 'original']] %>
+  </p>
+</div>
+</fieldset>
+
+<fieldset class="tabular box">
   <legend><%= l(:label_discounts) %></legend>
 <div class="seccio grup">
   <p class="col span-1-de-3">
@@ -80,6 +89,8 @@
         </div>
       </div>
     <% end -%>
+    <hr/>
+    <p><%= f.check_box :bcc_me, no_label: true %><%= l "field_bcc_me"%></p>
   </fieldset>
 </fieldset>
 

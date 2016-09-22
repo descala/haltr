@@ -70,8 +70,10 @@ class Event < ActiveRecord::Base
   end
 
   def self.automatic
-    events  = %w(bounced sent_notification delivered_notification registered_notification)
-    events += %w(refuse_notification accept_notification paid_notification accept refuse)
+    events  = %w(bounced sent_notification delivered_notification)
+    events += %w(refuse_notification accept_notification paid_notification)
+    events += %w(registered_notification accept refuse received_notification)
+    events += %w(failed_notification cancelled_notification annotated_notification)
 
     actions = %w(sending receiving validating_signature)
     actions.each do |a|
@@ -92,7 +94,7 @@ class Event < ActiveRecord::Base
     end
   end
 
-  %w(notes class_for_send md5 error backtrace codi_registre url created_by).each do |c|
+  %w(notes class_for_send md5 error backtrace codi_registre url created_by extra_notes).each do |c|
     src = <<-END_SRC
       def #{c}
         info[:#{c}] rescue nil
@@ -121,13 +123,30 @@ class Event < ActiveRecord::Base
     if automatic?
       begin
         new_state = invoice.state_transitions.select {|t|
-          t.event == name
+          t.event.to_s == name.to_s
         }.first.to
         invoice.update_attribute(:state, new_state)
+
+        Redmine::Hook.call_hook(:model_event_after_update_invoice,
+                                event: self, new_state: new_state)
       rescue
         invoice.send(name)
       end
+
+      # on success_sending check if our company is provider for client, if so
+      # create a ReceivedInvoice on client side.
+      if name.to_s == 'success_sending'
+        our_company    = invoice.project.company
+        client_company = our_company.company_providers.find_by_taxcode(
+          invoice.client.taxcode
+        )
+        if client_company
+          ReceivedInvoice.create_from_issued(invoice, client_company.project)
+        end
+      end
     end
+    Redmine::Hook.call_hook(:model_event_after_create,
+                            event: self, new_state: invoice.state)
   end
 
 end

@@ -9,13 +9,14 @@ html>body .tabular div {overflow:hidden;}
 ul.menu-rapid li, #sidebar ul li {list-style-type:none;}
 
 th.money, td.money, .money{
-  text-align: right;
+  text-align: right !important;
   white-space: nowrap;
 }
 
 .menu-rapid li {
   display: inline-block;
   margin-left: 20px;
+  position: relative;
 }
 
 .menu-rapid ul {
@@ -70,12 +71,11 @@ th.money, td.money, .money{
 }
 .menu-rapid ul ul a {
   line-height:120%;
-  padding:10px 15px;
 }
 .menu-rapid ul li:hover > ul {
   display:block;
   margin-left: 241px;
-  margin-top: -110px;
+  margin-top: -26px;
 }
 .invoice-navigator {
   float: right !important;
@@ -148,7 +148,7 @@ select.tax {
 }
 
 .pastdue {
-  color: red;
+  color: red !important;
 }
 .halfpaid {
   color: blue;
@@ -209,10 +209,10 @@ table.invoice_lines {
   color: black;
   text-shadow: 0 0 5px #fff;
 }
-.ribbon-sent, .ribbon-accepted, .ribbon-closed, .ribbon-paid, .ribbon-registered {
+.ribbon-read, .ribbon-sent, .ribbon-accepted, .ribbon-closed, .ribbon-paid, .ribbon-registered, .ribbon-accounted {
   background-color: green;
 }
-.ribbon-error, .ribbon-discarded, .ribbon-refused {
+.ribbon-error, .ribbon-discarded, .ribbon-refused, .ribbon-cancelled {
   background-color: red;
 }
 .haltr_event_error {
@@ -286,4 +286,39 @@ span#send_info {
   position: absolute;
   top: -13px;
   right: 0px;
+}
+
+.controller-clients .client-info {
+  border: 1px outset orange;
+  margin-bottom: 10px;
+  padding: 10px;
+}
+
+.controller-clients .people-info {
+  border: 1px outset grey;
+  margin-bottom: 10px;
+  padding: 10px;
+}
+
+.controller-clients .events {
+  border: 1px outset grey;
+  margin-bottom: 10px;
+  padding: 10px;
+}
+
+.controller-clients .invoices-box {
+  border: 1px outset grey;
+  margin-bottom: 10px;
+  padding: 10px;
+}
+
+.controller-clients .client-info h3 {
+  font-size: 120%;
+}
+.select_to_edit {
+  cursor: pointer;
+}
+td.invoice-templates-total {
+  border: none;
+  font-weight: bold;
 }

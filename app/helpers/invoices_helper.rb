@@ -18,6 +18,15 @@ module InvoicesHelper
     num
   end
 
+  def edi_number(num)
+    haltr_precision(num).gsub(',','.')
+  end
+
+  def edi_date(date)
+    date = Date.today if date.nil?
+    date.strftime("%Y%m%d")
+  end
+
   def send_link_for_invoice
     confirm = @invoice.sent? ? j(l(:sure_to_resend_invoice, :num=>@invoice.number).html_safe) : nil
     if @invoice.valid? and @invoice.can_queue? and
@@ -134,8 +143,8 @@ module InvoicesHelper
   end
 
   def client_name_with_link(client)
-    if authorize_for('clients', 'edit')
-      link_to h(client.name), {:controller=>'clients',:action=>'edit',:id=>client}
+    if authorize_for('clients', 'show')
+      link_to h(client.name), {:controller=>'clients',:action=>'show',:id=>client}
     else
       h(client.name)
     end
@@ -194,7 +203,7 @@ module InvoicesHelper
 
   def payment_method_info
     i = @invoice
-    if i.is_a?(IssuedInvoice) or i.is_a?(Quote)
+    if i.is_a?(IssuedInvoice) or i.is_a?(Quote) or i.is_a?(InvoiceTemplate)
       if i.debit?
         # IssuedInvoice + debit, show clients iban
         if i.client.use_iban?
@@ -208,20 +217,26 @@ module InvoicesHelper
           ba = i.client.bank_account || ""
           "#{l(:debit_str)}<br />#{ba[0..3]} #{ba[4..7]} ** ******#{ba[16..19]}"
         end
-      elsif i.transfer? and i.bank_info
-        # IssuedInvoice + transfer, show our iban
-        if i.bank_info.use_iban?
-          iban = i.bank_info.iban || ""
-          bic  = i.bank_info.bic || ""
-          s="#{l(:transfer_str)}<br />"
-          s+="IBAN #{iban.scan(/.{1,4}/).join(' ')}<br />"
-          s+="BIC #{bic}<br />" unless bic.blank?
-          s
+      elsif i.transfer?
+        if i.bank_info
+          # IssuedInvoice + transfer, show our iban
+          if i.bank_info.use_iban?
+            iban = i.bank_info.iban || ""
+            bic  = i.bank_info.bic || ""
+            s="#{l(:transfer_str)}<br />"
+            s+="IBAN #{iban.scan(/.{1,4}/).join(' ')}<br />"
+            s+="BIC #{bic}<br />" unless bic.blank?
+            s
+          else
+            ba = i.bank_info.bank_account ||= "" rescue ""
+            "#{l(:transfer_str)}<br />" +
+              "#{ba[0..3]} #{ba[4..7]} #{ba[8..9]} #{ba[10..19]}"
+          end
         else
-          ba = i.bank_info.bank_account ||= "" rescue ""
-          "#{l(:transfer_str)}<br />" +
-            "#{ba[0..3]} #{ba[4..7]} #{ba[8..9]} #{ba[10..19]}"
+          l(:transfer)
         end
+      elsif i.credit?
+        l(:fa_payment_method_19)
       elsif i.special?
         i.payment_method_text
       elsif i.cash?
@@ -242,6 +257,9 @@ module InvoicesHelper
           "#{l(:debit_str)}<br />" +
             "#{ba[0..3]} #{ba[4..7]} #{ba[8..9]} #{ba[10..19]}"
         end
+      elsif i.debit?
+        # ReceivedInvoice without bank_info, show only 'debit'
+          "#{l(:debit_str)}<br />"
       elsif i.transfer?
         # ReceivedInvoice + transfer, show clients iban
         if i.client.use_iban?
@@ -284,7 +302,7 @@ module InvoicesHelper
 
   def select_to_edit(field)
     if @external_company and @external_company.send("dir3_#{field.to_s.pluralize}").any?
-      content_tag(:span, image_tag('edit.png'), data: {field: field}, class: 'select_to_edit required')
+      content_tag :span, l(:button_edit), data: {field: field}, :class => 'icon icon-edit select_to_edit required'
     end
   end
 
@@ -296,5 +314,18 @@ module InvoicesHelper
     else
       'doc'
     end
+  end
+
+  def invoice_summary(invoice)
+    lines = Array.new
+    invoice.invoice_lines.each_with_index do |line,i|
+      break if i > 2
+      lines << truncate(line.description,length:50)
+    end
+    desc = Array.new
+    desc << money(invoice.total)
+    desc << invoice.date unless invoice.is_a? InvoiceTemplate
+    desc << lines.join(" | ")
+    desc.join(" * ")
   end
 end

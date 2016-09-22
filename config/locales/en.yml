@@ -63,6 +63,7 @@ en:
   field_number: Number
   field_invoice_number: Invoice number
   label_last_invoice_number: "Last used"
+  number_taken_in_year: "%{number} has already been taken for year %{year}"
   field_date: Date
   field_client: Client
   field_extra_info: Notes
@@ -103,6 +104,7 @@ en:
   debit_through: Debit payment, through %{bank_account}
   transfer: Bank transfer
   transfer_to: Bank transfer to %{bank_account}
+  cheque: Cheque
   other: Other
   requires_client_bank_account: requires client bank account
   requires_company_bank_account: requires a bank account in your company
@@ -123,6 +125,7 @@ en:
   state_new: "New"
   state_sending: "Sending"
   state_sent: "Sent"
+  state_read: "Read"
   state_error: "Error"
   state_closed: "Closed"
   state_discarded: "Discarded"
@@ -255,7 +258,7 @@ en:
   units: Units
   hours: Hours
   kilograms: Kilograms
-  litters: Litters
+  litters: Litres
   s_units: ""
   s_hours: h
   s_kilograms: kg
@@ -263,6 +266,7 @@ en:
   days: Days
   s_days: d
   s_other: ""
+  boxes: 'Boxes'
 
   # People
   label_person: Person
@@ -305,7 +309,7 @@ en:
   save_and_mail: "Save and send mail"
   save_without_mail: "Save without sending mail"
   field_sepa_type: "SEPA payments type"
-  label_payment_initiation: "Payment initiation"
+  label_payment_initiation: "SEPA Debit"
   label_payment_report: Payments report
 
   # Settings
@@ -332,7 +336,7 @@ en:
   return_path: "Return-Path (for bounces)"
 
   # Terms
-  "0": Immediately
+  "0": Upon Receipt
   "15": 15 days
   "30": 30 days
   "60": 60 days
@@ -359,12 +363,11 @@ en:
 
   # Errors
   cant_connect_trace: "Can't connect to b2brouter platform. %{value}"
-  halt_configure_before_use: Please first configure your company settings
+  halt_configure_before_use: "Please first configure %{href} settings"
+  company_href: "company"
   warning_can_not_generate_invoice: "Can not generate invoice form template %{value}"
   notice_invoice_sent: "Invoice will be sent"
   error_invoice_not_sent: "Could not send invoice %{num}"
-  notice_empty_n19: "No data to create N19"
-  notice_n19_done: "N19 for %{value} has been closed"
   notice_empty_sepa: "No data to generate a SEPA file"
   notice_payment_done: "%{payment_type} for due date %{value} maked as done"
   notice_uploaded_file_not_found: "File not found"
@@ -397,7 +400,7 @@ en:
   missing_svefaktura_debit: "Direct debit not allowed"
 
   label_update_taxes: "Update the taxes of templates"
-  field_company_identifier: "Organization ID"
+  field_company_identifier: "Organization ID/Company Registration Number"
 
   label_linked_to_mine: "Linked companies"
 
@@ -407,6 +410,13 @@ en:
   field_imap_username: "Username"
   field_imap_password: "Password"
   field_imap_from: "From"
+
+  field_smtp_host: "SMTP server"
+  field_smtp_port: "Port"
+  field_smtp_ssl: "Use SSL"
+  field_smtp_username: "Username"
+  field_smtp_password: "Password"
+  field_smtp_from: "From"
 
   permission_general_use: "Use Haltr plugin"
   permission_manage_payments: "Manage payments"
@@ -484,7 +494,6 @@ en:
   label_mandate: "Mandate"
   field_delete_signed_doc: "Delete signed document"
   label_mandates: "Mandates"
-  n19_requires_bank_account: "To generate n19 you must fill your bank account"
   field_bank_infos: "Bank details"
   success_sending_notification_by_mail: "Notification sent"
   error_sending_notification_by_mail: "Error sending notification"
@@ -567,9 +576,9 @@ en:
   pending_auth_requests: "There are pending authorization requests: %{num} companies want to link your profile"
   denied_requests: "Denied requests"
   self_employed: "I am self-employed"
-  organ_gestor: "Òrgan gestor"
-  oficina_comptable: "Oficina comptable"
-  unitat_tramitadora: "Unitat tramitadora"
+  organ_gestor: "Managing unit"
+  oficina_comptable: "Accounting unit"
+  unitat_tramitadora: "Processing unit"
   field_organ_proponent: "Órgano Promotor"
   organ_proponent: "Órgano Promotor"
   external_companies: "External companies"
@@ -623,7 +632,7 @@ en:
   field_fa_address: 'Address'
   field_fa_postcode: 'Postcode'
   field_fa_town: 'City'
-  field_fa_province: 'Province'
+  field_fa_province: 'Province/County'
   field_fa_country: 'Country'
   field_fa_info: 'Information'
   field_fa_duedate: 'Due date'
@@ -643,7 +652,7 @@ en:
   label_invoice_total: "Total"
   field_unidad_contratacion: "Unidad de contratación / SEF"
   label_discounts_and_charges: Discounts and charges
-  invoice_import_mismatch: "Original invoice import %{original} does not match calculated import %{calculated}"
+  invoice_import_mismatch: "Original invoice amount %{original} does not match calculated amount %{calculated}"
   invoice_has_no_original: Invoice has no original (transport requires an original document)
   fa_payment_method_01: 'In cash'
   fa_payment_method_02: 'Direct debit'
@@ -707,3 +716,45 @@ en:
   as_import: "As import"
   as_percent: "As %"
   field_has_text: "With text"
+  default_invoice_format: 'Invoice transport and format for new users'
+  field_edi_code: "EDI Code"
+  field_order_date: "Order date"
+  field_contract_number: "Contract number"
+  field_buyer_edi_code: "Buyer EDI"
+  field_receiver_edi_code: "Receiver EDI"
+  field_destination_edi_code: "Delivery party EDI"
+  field_payer_edi_code: "Payer EDI"
+  label_invoice_viewer: "Invoice viewer"
+  field_invoice_viewer: "Viewer used to display received invoices"
+  label_invoice_viewer_standard: "Use default viewer"
+  xslt_not_available: "We do not have an XSLT for the format of this invoice"
+  xslt_shows_original: "This invoice has been modified. The XSLT format shows the original without your changes"
+  skip_invoice_validations: "Skip invoice validation"
+  by_peppol: "Received by Peppol"
+  invoice_attachment_added: "Annex added"
+  invoice_attachment_destoy: "Annex deleted"
+  field_tax_point_date: "Tax Point Date"
+  field_xpaths_from_original: "XPATHS to preserve from original"
+  warn_edit_invoice: "You are about to edit a sent invoice.<br />
+Your customer will not receive the changes you made unless you resend it.<br />
+If you save it, will be marked as New."
+  view_invoice_requires_login: "Require login to view invoices"
+  from_issued: "Received"
+  pdf_shows_original: "This invoice has been modified. The PDF viewer shows the original without your changes"
+  label_invoice_view_sent: "View sent document"
+  label_invoice_view_original: "View original document"
+  button_edit_metadata: "Edit metadata"
+  received_notification: "Notification: Invoice received"
+  failed_notification: "Notification: Error validation invoice"
+  cancelled_notification: "Notification: Invoice cancelled"
+  state_cancelled: "Cancelled"
+  annotated_notification: "Notification: Invoice accounted"
+  recognised_notification: "Notification: Recognised payment obligation"
+  state_read_plural: "Read"
+  state_cancelled_plural: "Cancelled"
+  field_bcc_me: "Send me copy of invoices"
+  field_exchange_rate: "Exchange rate"
+  field_exchange_date: "Exchange date"
+  unitat_contractacio: "Unidad contratación / SEF"
+  state_accounted: "Annotated"
+  state_accounted_plural: "Annotated"

@@ -1,44 +1,28 @@
-<div style="margin-bottom:40px;">
-  <table cellpadding="0" cellspacing="0" width="100%">
-
-    <tr>
-      <td>
-        <% if @company.attachments.any? -%>
-          <% if @is_pdf %>
-            <% if @debug %>
-              <%= tag 'img', :src => "/invoices/logo/#{@company.attachments.first.id}/#{@company.attachments.first.filename}", :alt => "#{@company.name} Logo", :style=>"margin-right: 40px;" -%>
-            <% else %>
-              <%= tag 'img', :src => @company.attachments.first.diskfile, :style=>"margin-right: 40px;" -%>
-            <% end -%>
-          <% else %>
-            <%= tag 'img', :src => "/invoices/logo/#{@company.attachments.first.id}/#{@company.attachments.first.filename}", :alt => "#{@company.name} Logo", :style=>"margin-right: 40px;" -%>
-          <% end -%>
+<div class="invoice-header-container">
+<div class="vcard vendor">
+  <div class="invoicelogo">
+    <% if @company.attachments.any? -%>
+      <% if @is_pdf %>
+        <% if @debug %>
+          <%= tag 'img', :src => "/invoices/logo/#{@company.attachments.first.id}/#{@company.attachments.first.filename}", :alt => "#{@company.name} Logo", :style=>"margin-right: 40px;" -%>
+        <% else %>
+          <%= tag 'img', :src => @company.attachments.first.diskfile, :style=>"margin-right: 40px;" -%>
         <% end -%>
-      </td>
+      <% else %>
+        <%= tag 'img', :src => "/invoices/logo/#{@company.attachments.first.id}/#{@company.attachments.first.filename}", :alt => "#{@company.name} Logo", :style=>"margin-right: 40px;" -%>
+      <% end -%>
+    <% end -%>
+  </div>
+  <%= render partial: 'invoices/company_info' -%>
+</div>
 
-      <td style="vertical-align:bottom">
-        <p style="margin-bottom: 0;"><b><%= l(:label_quote).upcase %></b></p>
-        <p style="margin-bottom: 0; font-size: x-large;"><b><%= @invoice.title %></b></p>
-      </td>
+<h3><%= l(:label_quote).upcase %></h3>
+<h2 class="invoice-ID"><%=h @invoice.title %></h2>
 
-      <td style="text-align: right;">
-        <div>
-          <h3><%=h @company.name %></h3>
-          <address class="adr">
-            <div class="street-address"><%=h @company.address %></div>
-            <span class="postal-code"><%=h @company.postalcode %></span> <span class="locality"><%=h @company.city %></span>
-            <div class="region"><%=h @company.province %></div>
-            <div class="country-name"></div>
-          </address>
-          <div><strong><%=h l(:field_taxcode) %></strong><span class="tax-id"> <%=h @company.taxcode %></span></div>
-          <div style="height:10px;"></div>
-          <div><%= @company.website %></div>
-          <div><%= @company.email %></div>
-        </div>
-      </td>
+<div class="vcard client">
+  <%= render partial: 'invoices/client_info' -%>
+</div>
 
-    </tr>
-  </table>
 </div>
 
 <table style="float: right;">

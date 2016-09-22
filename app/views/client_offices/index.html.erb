@@ -9,7 +9,7 @@
       </ul>
     </div>
     <div class="col span-1-de-2">
-      <h1 style="float: right;"><%= @client.name %> - <%= l(:label_client_offices) %></h1>
+      <h1 style="float: right;"><%= link_to(@client.name, client_path(@client)) %> - <%= l(:label_client_offices) %></h1>
     </div>
   </div>
 
@@ -129,7 +129,7 @@
               <td><%=h office.name %></td>
               <td><%=h office.city %></td>
               <td align="center"><%= link_to_if_authorized l(:button_edit), edit_client_client_office_path(office.client, office), :class => 'icon icon-edit editar' %></td>
-              <td align="center"><%= link_to_if_authorized l(:button_delete), {:action=>'destroy',:id=>office} , :confirm => l(:text_are_you_sure), :method => :delete, :class => 'icon icon-del eliminar' %></td>
+              <td align="center"><%= link_to_if_authorized l(:button_delete), {:action=>'destroy', :client_id=>office.client_id, :id=>office}, :confirm => l(:text_are_you_sure), :method => :delete, :class => 'icon icon-del eliminar' %></td>
             </tr>
           <% end -%>
         </tbody>

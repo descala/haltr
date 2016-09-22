@@ -2,6 +2,8 @@ class ReceivedController < InvoicesController
 
   menu_item Haltr::MenuItem.new(:invoices,:received)
 
+  skip_before_filter :check_for_company, :only=> [:index, :show]
+
   def index
     sort_init 'invoices.created_at', 'desc'
     sort_update %w(invoices.created_at state number date due_date clients.name import_in_cents)
@@ -82,20 +84,22 @@ class ReceivedController < InvoicesController
   end
 
   def show
-    @invoice.update_attribute(:has_been_read, true)
+    unless User.current.admin?
+      @invoice.update_attribute(:has_been_read, true)
+      if @invoice.created_from_invoice
+        @invoice.created_from_invoice.read
+      end
+    end
+    super
   end
 
-  def show_original
-    @invoice.update_attribute(:has_been_read, true) if @invoice.is_a? ReceivedInvoice
-    if @invoice.invoice_format == "pdf"
-      render :template => 'received/show_pdf'
-    else
-      doc  = Nokogiri::XML(@invoice.original)
-      # TODO: received/facturae31.xsl.erb and received/facturae30.xsl.erb templates
-      xslt = Nokogiri::XSLT(render_to_string(:template=>'received/facturae32.xsl.erb',:layout=>false))
-      @out  = xslt.transform(doc)
-      render :template => 'received/show_with_xsl'
+  def edit
+    unless @invoice.invoice_format == 'pdf'
+      flash[:error] = "Can't edit received invoices"
+      redirect_to(:action=>'index',:project_id=>@project.id)
+      return
     end
+    super
   end
 
   def mark_accepted_with_mail
@@ -104,6 +108,14 @@ class ReceivedController < InvoicesController
   end
 
   def mark_accepted
+    if @invoice.created_from_invoice
+      Event.create(
+        name: 'accept_notification',
+        invoice_id: @invoice.created_from_invoice_id,
+        user_id: User.current.id,
+        notes: params[:reason]
+      )
+    end
     Event.create(:name=>'accept',:invoice=>@invoice,:user=>User.current)
     redirect_to :back
   rescue ActionController::RedirectBackError
@@ -116,6 +128,14 @@ class ReceivedController < InvoicesController
   end
 
   def mark_refused
+    if @invoice.created_from_invoice
+      Event.create(
+        name: 'refuse_notification',
+        invoice_id: @invoice.created_from_invoice_id,
+        user_id: User.current.id,
+        notes: params[:reason]
+      )
+    end
     Event.create(:name=>'refuse',:invoice=>@invoice,:user=>User.current)
     redirect_to :back
   rescue ActionController::RedirectBackError
@@ -134,7 +154,7 @@ class ReceivedController < InvoicesController
     zipped = []
     zip_file = Tempfile.new ["#{@project.identifier}_invoices", ".zip"], 'tmp'
     logger.info "Creating zip file '#{zip_file.path}' for invoice ids #{@invoices.collect{|i|i.id}.join(',')}."
-    Zip::ZipOutputStream.open(zip_file.path) do |zos|
+    Zip::OutputStream.open(zip_file.path) do |zos|
       @invoices.each do |invoice|
         filename = invoice.file_name || 'invoice'
         file = Tempfile.new(filename)
@@ -188,11 +208,6 @@ class ReceivedController < InvoicesController
   end
 
   def bulk_validate
-  end
-
-  def import
-    params[:issued] = 0
-    super
   end
 
   private

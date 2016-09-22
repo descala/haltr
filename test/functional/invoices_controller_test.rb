@@ -105,11 +105,22 @@ class InvoicesControllerTest < ActionController::TestCase
     @request.session[:user_id] = 2
   end
 
+  test 'by_taxcode_and_num with date' do
+    @request.session[:user_id] = nil
+    get :by_taxcode_and_num, :num => "08/001", "taxcode"=>"77310058C", "date"=>"2008-11-24"
+    assert_response :success
+    assert_equal "855445292", @response.body
+    get :by_taxcode_and_num, :num => "08/001", "taxcode"=>"77310058C", "date"=>"1111-11-11"
+    assert_response :not_found
+    @request.session[:user_id] = 2
+  end
+
   test 'import invoice' do
     post :import, {
       file:       fixture_file_upload('/documents/invoice_facturae32_issued.xml'),
       commit:     'Importar',
-      project_id: 'onlinestore'
+      project_id: 'onlinestore',
+      issued:     'true'
     }
     p=Project.find(2)
     assert User.current.allowed_to?(:import_invoices,p), "user #{User.current.login} has not import_invoices permission in project #{p.name}"
@@ -126,6 +137,34 @@ class InvoicesControllerTest < ActionController::TestCase
       invoice: {}
     }
     assert_response :success
+  end
+
+  test 'edit sent invoice sets state to new' do
+    i = invoices(:invoices_002)
+    i = Invoice.find i.id
+    assert_equal 'sent', i.state
+    assert_equal 100.3, i.total.dollars
+    assert_equal 15, i.discount_percent
+    lines = i.invoice_lines.collect {|l| l.attributes }
+    new_line = {
+      quantity: 1,
+      description: 'new',
+      price: 10,
+      taxes_attributes: [{
+        name: 'IVA',
+        percent: 0,
+        category: 'E'
+      }]
+    }
+    lines << new_line
+    put :update, id: i, invoice: {
+      invoice_lines_attributes: lines
+    }
+    i.reload
+    # editing a sent invoice should set state to new
+    assert_equal 'new', i.state
+    # it should update imports too, despite only invoice_lines changed
+    assert_equal 108.8, i.total.dollars
   end
 
 end

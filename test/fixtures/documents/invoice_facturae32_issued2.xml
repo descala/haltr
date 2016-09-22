@@ -34,6 +34,10 @@
         <TotalAmount>90.78</TotalAmount>
       </TotalExecutableAmount>
       <InvoiceCurrencyCode>USD</InvoiceCurrencyCode>
+      <ExchangeRateDetails>
+        <ExchangeRate>1.0</ExchangeRate>
+        <ExchangeDate>2016-08-04</ExchangeDate>
+      </ExchangeRateDetails>
     </Batch>
   </FileHeader>
   <Parties>

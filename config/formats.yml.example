@@ -26,6 +26,11 @@ facturae32:
   validators: Haltr::Validator::Facturae
   content-type: "text-xml"
 
+facturae321:
+  name: "Facturae 3.2.1"
+  validators: Haltr::Validator::Facturae
+  content-type: "text-xml"
+
 peppolubl20:
   name: "PEPPOL BIS 1"
   validators: Haltr::Validator::Ubl

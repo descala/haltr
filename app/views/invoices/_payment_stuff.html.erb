@@ -44,10 +44,20 @@
 
 <% if call_hook(:invoice_form_administrative_centres).present? -%>
   <%= call_hook(:invoice_form_administrative_centres) %>
+<% elsif @invoice and @invoice.unitat_contractacio.present?-%>
+    <div class="seccio grup">
+      <p class="col span-1-de-3">
+      <label for="invoice_unitat_contractacio">
+        <%= l(:unitat_contractacio) %>
+      </label>
+      <%= text_field :invoice, :unitat_contractacio%>
+      </p>
+    </div>
 <% else -%>
   <% if (@external_company and @external_company.visible_dir3) or
       (@client and ExportChannels.punts_generals.include?(@client.invoice_format)) or
-      (@invoice and @invoice.has_dir3_info?) -%>
+      (@invoice and @invoice.has_dir3_info?) or
+      (@client and ExportChannels.format(@client.invoice_format) =~ /facturae/) -%>
     <div class="seccio grup">
       <p class="col span-1-de-3">
       <%= render :partial => 'invoices/dir3', locals: { role: 'organ_gestor'} %>
@@ -99,7 +109,7 @@
   </p>
   <p class="col span-1-de-3">
   <label for="invoice_payment_method"><%= l(:field_payment_method) %></label>
-  <%= select(:invoice, :payment_method, Invoice.payment_methods(@project.company), {:selected=>payment_method}, :style => 'vertical-align: top;') %>
+  <%= select(:invoice, :payment_method, Haltr::PaymentMethods.for_select(@project.company), {:selected=>payment_method}, :style => 'vertical-align: top;') %>
   <%= text_area(:invoice, :payment_method_text, :cols => 40, :rows => 2, :value => payment_method_text, :id => 'payment_other', :style => (payment_method==Invoice::PAYMENT_SPECIAL) ? '' : 'display: none;') %>
   </p>
   <p class="col span-1-de-3">
@@ -114,12 +124,29 @@
   </p>
 </div>
 
-<% if @client and @client.client_offices.any? -%>
+<div id="exchange_fields" class="seccio grup" style="<%= 'display: none;' if currency == 'EUR' %>">
+  <p class="col span-1-de-3">
+  <label for="invoice_exchange_rate"><%= l(:field_exchange_rate) %></label>
+  <%= text_field :invoice, :exchange_rate %>
+  </p>
+  <p class="col span-1-de-3">
+  <label for="invoice_payment_method"><%= l(:field_exchange_date) %></label>
+  <%= text_field :invoice, :exchange_date, :size => 10 %>
+  <%= calendar_for('invoice_exchange_date') %>
+  </p>
+  <p class="col span-1-de-3">
+  </p>
+</div>
+
+
+<% if @client and @client.client_offices and @client.client_offices.any? -%>
 
 <div class="seccio grup">
   <p class="col span-1-de-3">
   <label for="client_office_id"><%= l(:label_client_office) %></label>
-  <%= select :invoice, :client_office_id, @client.client_offices.collect {|office| [office.name, office.id] }, {selected: (@invoice.client_office_id rescue nil), include_blank: true} %>
+  <%= select :invoice, :client_office_id, @client.client_offices.collect {|office|
+    ["#{office.name} #{office.destination_edi_code}", office.id]
+  }, {selected: (@invoice.client_office_id rescue nil), include_blank: true} %>
   </p>
 </div>
 

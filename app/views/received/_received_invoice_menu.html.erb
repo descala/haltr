@@ -1,4 +1,6 @@
-<li><%= link_to_if_authorized "#{l(:button_download)} #{@invoice.invoice_format}", {:controller=>'received', :action=>'original', :id=>@invoice}, :class=>'icon-haltr-save' %></li>
+<% if @invoice.has_original? -%>
+  <li><%= link_to_if_authorized l(:download_original), {:controller=>'received', :action=>'original', :id=>@invoice}, :class=>'icon-haltr-save' %></li>
+<% end -%>
 
 <% if @invoice.state?(:received) -%>
   <li><%= link_to_function(I18n.t(:mark_accepted), "show_accepted_form();") if authorize_for(:received || :received, :mark_accepted) %></li>
@@ -8,3 +10,14 @@
 <% if @invoice.state?(:accepted) -%>
   <li><%= link_to_if_authorized l(:make_payment), {:controller=>'payments', :action=>'new', :project_id=>@project, :invoice_id=>@invoice}, :class=>'icon-haltr-payment' %></li>
 <% end -%>
+
+<% unless @invoice.invoice_format == 'pdf' -%>
+  <li><%= link_to l(:download_as_pdf), {:action=>'show', :id=>@invoice, :format => 'pdf'}, :class=>'icon-haltr-save' %></li>
+<% end -%>
+
+<div id="invoice-refuse" style="display: none;">
+  <%= render :partial => "invoice_refuse_form" %>
+</div>
+<div id="invoice-accept" style="display: none;">
+  <%= render :partial => "invoice_accept_form" %>
+</div>

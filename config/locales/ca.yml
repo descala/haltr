@@ -72,6 +72,7 @@ ca:
   field_number: Número
   field_invoice_number: Número de factura
   label_last_invoice_number: "Últim fet servir"
+  number_taken_in_year: "%{number} ja s'està utilitzant a l'any %{year}"
   field_date: Data
   field_client: Client
   field_extra_info: Notes
@@ -113,6 +114,7 @@ ca:
   debit_through: Carregar al compte, mitjançant %{bank_account}
   transfer: Transferència bancària
   transfer_to: Transferència bancària a %{bank_account}
+  cheque: Reposició
   other: Altres
   requires_client_bank_account: requereix compte bancari del client
   requires_company_bank_account: requereix compte bancari propi
@@ -133,6 +135,7 @@ ca:
   state_new: "Nova"
   state_sending: "Enviant-se"
   state_sent: "Enviada"
+  state_read: "Llegida"
   state_error: "Error"
   state_closed: "Tancada"
   state_discarded: "Descartada"
@@ -273,6 +276,7 @@ ca:
   days: Dies
   s_days: d
   s_other: ""
+  boxes: 'Caixes'
 
   # People
   label_person: Persona
@@ -315,7 +319,7 @@ ca:
   save_and_mail: "Desar i enviar mail"
   save_without_mail: "Desar sense enviar mail"
   field_sepa_type: "Tipus de pagaments SEPA"
-  label_payment_initiation: "Introduir pagaments"
+  label_payment_initiation: "Càrrecs SEPA"
   label_payment_report: Informe de pagaments
 
   # Settings
@@ -370,12 +374,11 @@ ca:
 
   # Errors
   cant_connect_trace: "No es pot connectar a la plataforma B2BRouter"
-  halt_configure_before_use: "Si us plau, primer de tot configura les dades de la teva empresa"
+  halt_configure_before_use: "Si us plau, revisa les dades de %{href}"
+  company_href: "la meva empresa"
   warning_can_not_generate_invoice: "No s'ha pogut generar la factura de la plantilla %{value}"
   notice_invoice_sent: "La factura s'està enviant"
   error_invoice_not_sent: "La factura %{num} no s'ha pogut enviar"
-  notice_empty_n19: "No hi ha dades per generar un N19"
-  notice_n19_done: "S'ha tancat el N19 de data %{value}"
   notice_empty_sepa: "No hi ha dades per generar un fitxer SEPA"
   notice_payment_done: "S'ha tancat el %{payment_type} de data %{value}"
   notice_uploaded_file_not_found: "No s'ha trobat el fitxer"
@@ -418,6 +421,13 @@ ca:
   field_imap_username: "Nom d'usuari"
   field_imap_password: "Contrasenya"
   field_imap_from: "Remitent"
+
+  field_smtp_host: "Servidor SMTP"
+  field_smtp_port: "Port"
+  field_smtp_ssl: "Fer servir SSL"
+  field_smtp_username: "Nom d'usuari"
+  field_smtp_password: "Contrasenya"
+  field_smtp_from: "Remitent"
 
   permission_general_use: "Utilitzar el plugin Haltr"
   permission_manage_payments: "Gestionar pagaments"
@@ -496,7 +506,6 @@ ca:
   label_mandate: "Mandat"
   field_delete_signed_doc: "Eliminar document signat"
   label_mandates: "Mandats"
-  n19_requires_bank_account: "Per generar N19 cal omplir el teu compte bancari"
   field_bank_infos: "Dades bancàries"
   success_sending_notification_by_mail: "Notificació enviada"
   error_sending_notification_by_mail: "Error enviant la notificació"
@@ -692,9 +701,9 @@ ca:
   amend_reason_01: "Número de la factura"
   amend_reason_02: "Serie de la factura"
   amend_reason_03: "Fecha expedición"
-  amend_reason_04: "Nombre y apellidos/Razón social - Emisor"
-  amend_reason_05: "Nombre y apellidos/Razón social - Receptor"
-  amend_reason_06: "Identificación fiscal Emisor/Obligado"
+  amend_reason_04: "Nombre y apellidos/Razón Social-Emisor"
+  amend_reason_05: "Nombre y apellidos/Razón Social-Receptor"
+  amend_reason_06: "Identificación fiscal Emisor/obligado"
   amend_reason_07: "Identificación fiscal Receptor"
   amend_reason_08: "Domicilio Emisor/Obligado"
   amend_reason_09: "Domicilio Receptor"
@@ -707,7 +716,7 @@ ca:
   amend_reason_16: "Base imponible"
   amend_reason_80: "Cálculo de cuotas repercutidas"
   amend_reason_81: "Cálculo de cuotas retenidas"
-  amend_reason_82: "Base imponible modificada por devolución de envases/embalajes"
+  amend_reason_82: "Base imponible modificada por devolución de envases / embalajes"
   amend_reason_83: "Base imponible modificada por descuentos y bonificaciones"
   amend_reason_84: "Base imponible modificada por resolución firme, judicial o administrativa"
   amend_reason_85: "Base imponible modificada cuotas repercutidas no satisfechas. Auto de declaración de concurso"
@@ -720,3 +729,45 @@ ca:
   as_import: "Com a import"
   as_percent: "Com a %"
   field_has_text: "Conté el text"
+  default_invoice_format: 'Format i transport de factures per als nous usuaris'
+  field_edi_code: "PO EDI legal"
+  field_order_date: "Data de la comanda"
+  field_contract_number: "Número de contracte"
+  field_buyer_edi_code: "PO EDI comprador"
+  field_receiver_edi_code: "PO EDI receptor factura"
+  field_destination_edi_code: "PO EDI receptor mercaderia"
+  field_payer_edi_code: "PO EDI emissor pagament"
+  label_invoice_viewer: "Visualització de factures"
+  field_invoice_viewer: "Visualització de les factures importades"
+  label_invoice_viewer_standard: "Usar el visor normal"
+  xslt_not_available: "No hi ha cap XSLT disponible pel format original d'aquesta factura"
+  xslt_shows_original: "Aquesta factura s'ha modificat. El format XSLT reflecteix l'original, sense el canvis."
+  skip_invoice_validations: No validar la factura al importar
+  by_peppol: "Rebuda per Peppol"
+  invoice_attachment_added: "Annex afegit"
+  invoice_attachment_destoy: "Annex esborrat"
+  field_tax_point_date: "Data de Servei"
+  field_xpaths_from_original: "XPATHS a conservar de l'original"
+  warn_edit_invoice: "Estàs a punt d'editar una factura que ha estat enviada.<br />
+Tingues en compte que el teu client no rebrà els canvis a no ser que la tornis a enviar.<br />
+Si la deses, es marcara com a Nova."
+  view_invoice_requires_login: "Requerir login per veure les factures"
+  from_issued: "Rebuda"
+  pdf_shows_original: "Aquesta factura s'ha modificat. El format PDF reflecteix l'original, sense el canvis."
+  label_invoice_view_sent: "Veure document enviat"
+  label_invoice_view_original: "Veure document original"
+  button_edit_metadata: "Editar metadades"
+  received_notification: "Notificació: Factura rebuda"
+  failed_notification: "Notificació: Error de validació de la factura"
+  cancelled_notification: "Notificació: Factura cancel·lada"
+  state_cancelled: "Cancel·lada"
+  annotated_notification: "Notificació: Factura comptabilitzada"
+  recognised_notification: "Notificació: Reconeguda obligació de pagament"
+  state_read_plural: "Llegides"
+  state_cancelled_plural: "Cancel·lades"
+  field_bcc_me: "Enviar-me copia de les factures"
+  field_exchange_rate: "Tasa de canvi"
+  field_exchange_date: "Data de canvi"
+  unitat_contractacio: "Unitat contractació / SEF"
+  state_accounted: "Comptabilitzada"
+  state_accounted_plural: "Comptabilitzades"

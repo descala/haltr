@@ -1,20 +1,37 @@
-<?xml version="1.0" encoding="ISO-8859-1" ?>
-<m:Facturae xmlns:m="http://www.facturae.es/Facturae/2009/v3.2/Facturae">
+<?xml version="1.0" encoding="UTF-8"?>
+<facturae:Facturae xmlns:facturae="http://www.facturae.es/Facturae/2009/v3.2/Facturae">
   <FileHeader>
     <SchemaVersion>3.2</SchemaVersion>
     <Modality>I</Modality>
-    <InvoiceIssuerType>RE</InvoiceIssuerType>
+    <InvoiceIssuerType>TE</InvoiceIssuerType>
+    <ThirdParty>
+      <TaxIdentification>
+        <PersonTypeCode>J</PersonTypeCode>
+        <ResidenceTypeCode>R</ResidenceTypeCode>
+        <TaxIdentificationNumber>ESB63276174</TaxIdentificationNumber>
+      </TaxIdentification>
+      <LegalEntity>
+        <CorporateName>Invinet Sistemes 2003, S.L</CorporateName>
+        <AddressInSpain>
+          <Address>Ribes 31</Address>
+          <PostCode>08013</PostCode>
+          <Town>Barcelona</Town>
+          <Province>Barcelona</Province>
+          <CountryCode>ESP</CountryCode>
+        </AddressInSpain>
+      </LegalEntity>
+    </ThirdParty>
     <Batch>
-      <BatchIdentifier>164-FV</BatchIdentifier>
+      <BatchIdentifier>ES77310058C2014/i15</BatchIdentifier>
       <InvoicesCount>1</InvoicesCount>
       <TotalInvoicesAmount>
-        <TotalAmount>             260.19</TotalAmount>
+        <TotalAmount>10.00</TotalAmount>
       </TotalInvoicesAmount>
       <TotalOutstandingAmount>
-        <TotalAmount>             260.19</TotalAmount>
+        <TotalAmount>10.00</TotalAmount>
       </TotalOutstandingAmount>
       <TotalExecutableAmount>
-        <TotalAmount>             260.19</TotalAmount>
+        <TotalAmount>10.00</TotalAmount>
       </TotalExecutableAmount>
       <InvoiceCurrencyCode>EUR</InvoiceCurrencyCode>
     </Batch>
@@ -24,185 +41,93 @@
       <TaxIdentification>
         <PersonTypeCode>J</PersonTypeCode>
         <ResidenceTypeCode>R</ResidenceTypeCode>
-        <TaxIdentificationNumber>77310058C</TaxIdentificationNumber>
+        <TaxIdentificationNumber>ES77310058C</TaxIdentificationNumber>
       </TaxIdentification>
       <LegalEntity>
-        <CorporateName>COMPANY NAME, S.L.</CorporateName>
+        <CorporateName>Company1</CorporateName>
         <AddressInSpain>
-          <Address>CL STREET NAME 65</Address>
-          <PostCode>28037</PostCode>
-          <Town>EDIFICIO A PLANTA 3ª</Town>
-          <Province>MADRID</Province>
+          <Address/>
+          <PostCode>08720</PostCode>
+          <Town>Barcelona</Town>
+          <Province/>
           <CountryCode>ESP</CountryCode>
         </AddressInSpain>
+        <ContactDetails>
+          <WebAddress/>
+          <ElectronicMail>test@example.com</ElectronicMail>
+        </ContactDetails>
       </LegalEntity>
     </SellerParty>
     <BuyerParty>
       <TaxIdentification>
-        <PersonTypeCode>F</PersonTypeCode>
+        <PersonTypeCode>J</PersonTypeCode>
         <ResidenceTypeCode>R</ResidenceTypeCode>
-        <TaxIdentificationNumber>ESA13585625</TaxIdentificationNumber>
+        <TaxIdentificationNumber>ESB17915224</TaxIdentificationNumber>
       </TaxIdentification>
-      <Individual>
-        <Name>251161</Name>
-        <FirstSurname>251161</FirstSurname>
-        <SecondSurname>
-        </SecondSurname>
+      <LegalEntity>
+        <CorporateName>External Company 1</CorporateName>
         <AddressInSpain>
-          <Address>CL MADRID 25</Address>
-          <PostCode>28005</PostCode>
-          <Town>MADRID</Town>
-          <Province>MADRID</Province>
+          <Address/>
+          <PostCode>08080</PostCode>
+          <Town/>
+          <Province/>
           <CountryCode>ESP</CountryCode>
         </AddressInSpain>
-      </Individual>
+        <ContactDetails>
+          <ElectronicMail/>
+          <ContactPersons/>
+        </ContactDetails>
+      </LegalEntity>
     </BuyerParty>
   </Parties>
   <Invoices>
     <Invoice>
       <InvoiceHeader>
-        <InvoiceNumber>0001/FV/164/15</InvoiceNumber>
-        <InvoiceSeriesCode>FV</InvoiceSeriesCode>
+        <InvoiceNumber>2014/i15</InvoiceNumber>
         <InvoiceDocumentType>FC</InvoiceDocumentType>
         <InvoiceClass>OO</InvoiceClass>
       </InvoiceHeader>
       <InvoiceIssueData>
-        <IssueDate>2015-10-06</IssueDate>
+        <IssueDate>2016-07-22</IssueDate>
         <InvoiceCurrencyCode>EUR</InvoiceCurrencyCode>
         <TaxCurrencyCode>EUR</TaxCurrencyCode>
-        <LanguageName>es</LanguageName>
+        <LanguageName>ca</LanguageName>
       </InvoiceIssueData>
       <TaxesOutputs>
         <Tax>
           <TaxTypeCode>01</TaxTypeCode>
-          <TaxRate>              21.00</TaxRate>
+          <TaxRate>0.00</TaxRate>
           <TaxableBase>
-            <TotalAmount>              85.50</TotalAmount>
+            <TotalAmount>10.00</TotalAmount>
           </TaxableBase>
           <TaxAmount>
-            <TotalAmount>              17.96</TotalAmount>
-          </TaxAmount>
-        </Tax>
-        <Tax>
-          <TaxTypeCode>01</TaxTypeCode>
-          <TaxRate>              10.00</TaxRate>
-          <TaxableBase>
-            <TotalAmount>             142.48</TotalAmount>
-          </TaxableBase>
-          <TaxAmount>
-            <TotalAmount>              14.25</TotalAmount>
+            <TotalAmount>0.00</TotalAmount>
           </TaxAmount>
         </Tax>
       </TaxesOutputs>
       <InvoiceTotals>
-        <TotalGrossAmount>             242.40</TotalGrossAmount>
-        <GeneralDiscounts>
-          <Discount>
-            <DiscountReason>DESC.AGEN.1234567890</DiscountReason>
-            <DiscountAmount>              12.120000</DiscountAmount>
-          </Discount>
-          <Discount>
-            <DiscountReason>DESCUENTO PRONTO PAGO</DiscountReason>
-            <DiscountAmount>               2.300000</DiscountAmount>
-          </Discount>
-        </GeneralDiscounts>
-        <TotalGeneralDiscounts>              14.42</TotalGeneralDiscounts>
-        <TotalGrossAmountBeforeTaxes>             227.98</TotalGrossAmountBeforeTaxes>
-        <TotalTaxOutputs>              32.21</TotalTaxOutputs>
-        <TotalTaxesWithheld>               0.00</TotalTaxesWithheld>
-        <InvoiceTotal>             260.19</InvoiceTotal>
-        <TotalOutstandingAmount>             260.19</TotalOutstandingAmount>
-        <TotalExecutableAmount>             260.19</TotalExecutableAmount>
+        <TotalGrossAmount>10.00</TotalGrossAmount>
+        <TotalGeneralDiscounts>0.00</TotalGeneralDiscounts>
+        <TotalGeneralSurcharges>0.00</TotalGeneralSurcharges>
+        <TotalGrossAmountBeforeTaxes>10.00</TotalGrossAmountBeforeTaxes>
+        <TotalTaxOutputs>0.00</TotalTaxOutputs>
+        <TotalTaxesWithheld>0.00</TotalTaxesWithheld>
+        <InvoiceTotal>10.00</InvoiceTotal>
+        <TotalFinancialExpenses>0.00</TotalFinancialExpenses>
+        <TotalOutstandingAmount>10.00</TotalOutstandingAmount>
+        <TotalPaymentsOnAccount>0.00</TotalPaymentsOnAccount>
+        <TotalExecutableAmount>10.00</TotalExecutableAmount>
       </InvoiceTotals>
       <Items>
         <InvoiceLine>
-          <ItemDescription>SOLOMILLO</ItemDescription>
-          <Quantity>              10.000</Quantity>
-          <UnitOfMeasure>03</UnitOfMeasure>
-          <UnitPriceWithoutTax>              10.100000</UnitPriceWithoutTax>
-          <TotalCost>             101.000000</TotalCost>
-          <DiscountsAndRebates>
-            <Discount>
-              <DiscountReason>DESC.AGEN.1234567890</DiscountReason>
-              <DiscountAmount>              10.100000</DiscountAmount>
-            </Discount>
-          </DiscountsAndRebates>
-          <GrossAmount>              90.900000</GrossAmount>
-          <TaxesOutputs>
-            <Tax>
-              <TaxTypeCode>01</TaxTypeCode>
-              <TaxRate>              21.00</TaxRate>
-              <TaxableBase>
-                <TotalAmount>              90.90</TotalAmount>
-              </TaxableBase>
-              <TaxAmount>
-                <TotalAmount>              19.09</TotalAmount>
-              </TaxAmount>
-            </Tax>
-          </TaxesOutputs>
-          <ArticleCode>37063</ArticleCode>
-        </InvoiceLine>
-        <InvoiceLine>
-          <ItemDescription>PANTALLA PRINCIPAL</ItemDescription>
-          <Quantity>              10.000</Quantity>
+          <ItemDescription>test</ItemDescription>
+          <Quantity>1.0</Quantity>
           <UnitOfMeasure>01</UnitOfMeasure>
-          <UnitPriceWithoutTax>              16.830000</UnitPriceWithoutTax>
-          <TotalCost>             168.300000</TotalCost>
-          <DiscountsAndRebates>
-            <Discount>
-              <DiscountReason>DESC.AGEN.1234567890</DiscountReason>
-              <DiscountAmount>              16.800000</DiscountAmount>
-            </Discount>
-          </DiscountsAndRebates>
-          <GrossAmount>             151.500000</GrossAmount>
-          <TaxesOutputs>
-            <Tax>
-              <TaxTypeCode>01</TaxTypeCode>
-              <TaxRate>              10.00</TaxRate>
-              <TaxableBase>
-                <TotalAmount>             151.50</TotalAmount>
-              </TaxableBase>
-              <TaxAmount>
-                <TotalAmount>              15.15</TotalAmount>
-              </TaxAmount>
-            </Tax>
-          </TaxesOutputs>
-          <ArticleCode>1234</ArticleCode>
+          <UnitPriceWithoutTax>10.000000</UnitPriceWithoutTax>
+          <TotalCost>10.000000</TotalCost>
+          <GrossAmount>10.000000</GrossAmount>
         </InvoiceLine>
       </Items>
-      <PaymentDetails>
-        <Installment>
-          <InstallmentDueDate>2015-11-05</InstallmentDueDate>
-          <InstallmentAmount>              85.86</InstallmentAmount>
-          <PaymentMeans>09</PaymentMeans>
-          <PaymentReconciliationReference>164-FV</PaymentReconciliationReference>
-          <AccountToBeDebited>
-            <IBAN>ES0000000000000000000000</IBAN>
-          </AccountToBeDebited>
-        </Installment>
-        <Installment>
-          <InstallmentDueDate>2015-12-05</InstallmentDueDate>
-          <InstallmentAmount>              85.86</InstallmentAmount>
-          <PaymentMeans>09</PaymentMeans>
-          <PaymentReconciliationReference>164-FV</PaymentReconciliationReference>
-          <AccountToBeDebited>
-            <IBAN>ES0000000000000000000000</IBAN>
-          </AccountToBeDebited>
-        </Installment>
-        <Installment>
-          <InstallmentDueDate>2016-01-04</InstallmentDueDate>
-          <InstallmentAmount>              88.47</InstallmentAmount>
-          <PaymentMeans>09</PaymentMeans>
-          <PaymentReconciliationReference>164-FV</PaymentReconciliationReference>
-          <AccountToBeDebited>
-            <IBAN>ES0000000000000000000000</IBAN>
-          </AccountToBeDebited>
-        </Installment>
-      </PaymentDetails>
-      <AdditionalData>
-        <RelatedInvoice>164-FV</RelatedInvoice>
-        <InvoiceAdditionalInformation>Prueba de Observaciones de Facturas.</InvoiceAdditionalInformation>
-      </AdditionalData>
     </Invoice>
   </Invoices>
-</m:Facturae>
+</facturae:Facturae>
