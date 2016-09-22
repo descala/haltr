@@ -1552,7 +1552,7 @@ class InvoicesController < ApplicationController
         end
       end
       # discounts percent and amount #5516
-      discount = invoice_line.delete(:discount)
+      discount = invoice_line.delete(:discount).to_s.gsub(/-/,'')
       discount_type = invoice_line.delete(:discount_type)
       if discount_type == '€'
         invoice_line[:discount_percent] = 0

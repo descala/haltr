@@ -5,7 +5,7 @@ class Invoice < ActiveRecord::Base
   include HaltrHelper
   include Haltr::FloatParser
   include Haltr::PaymentMethods
-  float_parse :discount_percent, :fa_import
+  float_parse :fa_import, :discount_amount, :discount_percent
 
   audited except: [:import_in_cents, :total_in_cents,
                    :state, :has_been_read, :id, :original]
