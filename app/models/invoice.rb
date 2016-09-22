@@ -173,11 +173,11 @@ class Invoice < ActiveRecord::Base
   end
 
   def company
-    self.project.company
+    self.project.company rescue nil
   end
 
   def company_name
-    project.company.name
+    project.company.name rescue nil
   end
 
   def line_descriptions_txt
@@ -218,11 +218,12 @@ class Invoice < ActiveRecord::Base
         # check round_before_sum setting from company #5324
         if company and company.round_before_sum
           # sum([round(price) x tax])
-          t += lines_with_tax(tax).collect {|line|
+          taxes_imports = lines_with_tax(tax).collect {|line|
             price = Haltr::Utils.to_money(line.gross_amount, currency, company.rounding_method)
             discount = Haltr::Utils.to_money((line.total_cost*(discount_percent / 100.0)),currency,company.rounding_method)
             (price - discount)*(tax.percent / 100.0)
-          }.sum
+          }
+          t += taxes_imports.sum
         else
           # sum(price) x tax
           t += taxable_base(tax) * (tax.percent / 100.0)
@@ -524,6 +525,8 @@ _INV
       end
     end
     currency       = Haltr::Utils.get_xpath(doc,xpaths[:currency])
+    exchange_rate  = Haltr::Utils.get_xpath(doc,xpaths[:exchange_rate])
+    exchange_date  = Haltr::Utils.get_xpath(doc,xpaths[:exchange_date])
     # invoice data
     invoice_number   = Haltr::Utils.get_xpath(doc,xpaths[:invoice_number])
     invoice_series   = Haltr::Utils.get_xpath(doc,xpaths[:invoice_series])
@@ -747,6 +750,8 @@ _INV
       :invoicing_period_end   => i_period_end,
       :total            => invoice_total,
       :currency         => currency,
+      :exchange_rate    => exchange_rate,
+      :exchange_date    => exchange_date,
       :import           => Haltr::Utils.to_money(invoice_import, currency, company.rounding_method),
       :due_date         => invoice_due_date,
       :project          => company.project,
@@ -1193,12 +1198,12 @@ _INV
         country:              client_hash[:country].to_s.chomp,
         name:                 client_hash[:name].to_s.chomp,
         destination_edi_code: client_hash[:destination_edi_code].to_s.chomp
-      }
-      match = to_match.all? {|k, v| client.send(k).to_s.chomp.casecmp(v) == 0 }
-      unless match
+      }.reject {|k,v| v.blank? }
+      # check if client data matches client_hash
+      if !to_match.all? {|k, v| client.send(k).to_s.chomp.casecmp(v) == 0 }
+        # check if any client_office matches client_hash
         client.client_offices.each do |office|
-          match = to_match.all? {|k, v| office.send(k).to_s.chomp.casecmp(v) == 0 }
-          if match
+          if to_match.all? {|k, v| office.send(k).to_s.chomp.casecmp(v) == 0 }
             self.client_office = office
             break
           end

@@ -1,8 +1,5 @@
 <!-- Vendor Info -->
 <div class="vendor-info">
-  <% if @invoice.is_a?(Quote) and !@invoice.description.blank? -%>
-    <h2><%=@invoice.description%></h2>
-  <% end -%>
   <h3><%=h @company.name %></h3>
   <address class="adr">
     <div class="street-address"><%=h @company.address %></div>

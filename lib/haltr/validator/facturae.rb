@@ -22,7 +22,7 @@ module Haltr
         end
 
         # facturae needs taxcodes
-        if company.taxcode.blank?
+        if company.blank? or company.taxcode.blank?
           errors.add(:base, I18n.t(:company_taxcode_needed))
         end
         if client.taxcode.blank?
