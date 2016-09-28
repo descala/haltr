@@ -322,3 +322,21 @@ td.invoice-templates-total {
   border: none;
   font-weight: bold;
 }
+.dl-horizontal dt {
+  clear: left;
+  float: left;
+  overflow: hidden;
+  text-align: right;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  width: 220px;
+}
+dt {
+  font-weight: 700;
+}
+dd, dt {
+  line-height: 1.42857;
+}
+.dl-horizontal dd {
+  margin-left: 240px;
+}
