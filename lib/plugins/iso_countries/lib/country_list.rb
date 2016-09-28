@@ -236,7 +236,7 @@ module ISO
       :ug => N_("Uganda"),
       :ua => N_("Ukraine"),
       :ae => N_("United arab emirates"),
-      :gb => N_("United kingdom"),
+      :gb => N_("United Kingdom"),
       :us => N_("United states"),
       :um => N_("United states minor outlying islands"),
       :uy => N_("Uruguay"),
