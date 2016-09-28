@@ -313,7 +313,7 @@ en:
   label_payment_report: Payments report
 
   # Settings
-  field_taxcode: VAT ID Number (including 2 letter country code)
+  field_taxcode: VAT ID Number
   field_website: Website
   export_channels_path: "Path of export folders"
   field_company: "Company"
