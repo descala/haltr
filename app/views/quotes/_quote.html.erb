@@ -80,6 +80,9 @@
       <tr style="border-top: 1px solid #000;">
         <td class="item-quantity first"></td>
         <td class="item-description"><%=h @invoice.discount_text %></td>
+        <% if @invoice.has_line_discounts? -%>
+          <td></td>
+        <% end -%>
         <td class="item-price"><%=h number_to_percentage(@invoice.discount_percent, :precision=>0) %></td>
         <td class="line-total last">- <%=h money(@invoice.discount_amount) %></td>
       </tr>
