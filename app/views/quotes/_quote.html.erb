@@ -46,6 +46,9 @@
     <tr>
       <th class="item-quantity first"><abbr title="Quantitat">Q</abbr></th>
       <th class="item-description"><%=h l(:field_description)%></th>
+      <% if @invoice.has_line_discounts? -%>
+        <th class="item-price"><%=h l(:field_discount) %></th>
+      <% end -%>
       <th class="item-price"><%=h l(:field_amount) %></th>
       <th class="line-total last"><%=h l(:label_invoice_total)%></th>
     </tr>
@@ -53,9 +56,23 @@
     <% @lines.each do |line| -%>
       <tr>
         <td class="item-quantity first"><%=h quantity(line.quantity) %> <%=h line.unit_short%></td>
-        <td class="item-description"><%=h line.description %></td>
+        <td class="item-description">
+          <%=h line.description %>
+          <% if line.discount_text.present? and line.discount_text != '.' -%>
+            <br /><%= l(:field_discount) %>: <%= line.discount_text %>
+          <% end -%>
+        </td>
+        <% if line.discount_amount.to_f != 0 -%>
+          <% if @invoice.company.line_discounts_as_imports -%>
+            <td class="item-price"><%=h money(Haltr::Utils.to_money(line.discount_amount, @invoice.currency, @invoice.company.rounding_method)) %></td>
+          <% else -%>
+            <td class="item-price"><%=h number_to_percentage(line.discount_percent, precision: 2, strip_insignificant_zeros: true) %></td>
+          <% end -%>
+        <% elsif @invoice.has_line_discounts? -%>
+          <td></td>
+        <% end -%>
         <td class="item-price"><%=h line_price(line) %></td>
-        <td class="line-total last"><%=h money(Haltr::Utils.to_money(line.total_cost, @invoice.currency, @invoice.company.rounding_method)) %></td>
+        <td class="line-total last"><%=h money(Haltr::Utils.to_money(line.taxable_base, @invoice.currency, @invoice.company.rounding_method)) %></td>
       </tr>
     <% end -%>
 
