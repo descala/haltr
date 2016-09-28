@@ -34,7 +34,9 @@
     <div><strong><%=h l(:field_taxcode) %></strong><span class="tax-id"> <%=h @client.taxcode %></span></div>
     <div><%= ExportChannels.l(@client.invoice_format) %></div>
     <div title="<%= @client.currency %> - <%=Money::Currency.find(@client.currency).name %>"><%= client_payment_method_info(@client) %></div>
-    <div><%= l(:field_terms) %> <%= client_terms(@client) %></div>
+    <% if @client.terms != '---' -%>
+      <div><%= l(:field_terms) %> <%= client_terms(@client) %></div>
+    <% end -%>
   </div>
 
   <% for person in @people -%>
