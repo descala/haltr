@@ -328,4 +328,9 @@ module InvoicesHelper
     desc << lines.join(" | ")
     desc.join(" * ")
   end
+
+  def display_series_code_in_form?
+    ((@invoice.company.country == 'es' or @invoice.series_code.present?) and
+      User.current.allowed_to?(:view_invoice_extra_fields,@project))
+  end
 end
