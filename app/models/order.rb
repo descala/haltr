@@ -57,7 +57,7 @@ class Order < ActiveRecord::Base
 
   def self.create_from_edi(file, project)
     edi = file.read
-    order = IssuedOrder.new(
+    order = ReceivedOrder.new(
       project: project,
       original: edi,
       filename: file.original_filename
@@ -123,13 +123,13 @@ class Order < ActiveRecord::Base
         client.taxcode = ""
       end
       unless client.save
-        binding.pry
         raise "CLIENT: #{client.errors.full_messages.join('. ')}"
       end
     else
       #TODO: seus?
     end
     order = (client_role == :buyer) ? ReceivedOrder.new : IssuedOrder.new
+    order.client = client
     order.project  = project
     order.original = xml
     order.filename = file.original_filename
