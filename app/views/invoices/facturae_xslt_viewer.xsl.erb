@@ -791,7 +791,7 @@
 																	RAZÓN SOCIAL:
 																</font>
 
-																<xsl:value-of select="Parties/BuyerParty/LegalEntity/CorporateName"/>
+																<a href="<%= url_for(controller: 'clients', action: 'show', id: @client) %>"><xsl:value-of select="Parties/BuyerParty/LegalEntity/CorporateName"/></a>
 															</td>
 															<td  width="50%">
 																<font class="titulopeque">
