@@ -3,7 +3,7 @@
     <legend>PEPPOL</legend>
     <div class="seccio grup">
       <p class="col span-1-de-2">
-      <%= f.select :schemeid, Peppol::SCHEMEIDS %>
+      <%= f.select :schemeid, Peppol::schemes_for_select %>
       </p>
       <p class="col span-1-de-2">
       <%= f.text_field :endpointid %>
