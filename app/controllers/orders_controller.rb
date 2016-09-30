@@ -99,12 +99,12 @@ class OrdersController < ApplicationController
       format.html {
         #HACK: link to client
         # https://groups.google.com/forum/#!topic/nokogiri-talk/LZjW70XpkLc
-        if @order.client
+        if @order.xml? and @order.client
           @order_xslt_html = @order_xslt_html.to_html.gsub(
             @order.client.name,
             view_context.link_to(@order.client.name, client_path(@order.client))
           ).html_safe
-        else
+        elsif @order.xml?
           @order_xslt_html = @order_xslt_html.to_html.html_safe
         end
         render :show
