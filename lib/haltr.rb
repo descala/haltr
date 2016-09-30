@@ -48,3 +48,8 @@ Redmine::MenuManager.map :payments_menu do |menu|
   menu.push :import_aeb43, {:controller=>'payments',:action=>'import_aeb43_index'}, :param => :project_id
   menu.push :mandates, {:controller=>'mandates',:action=>'index'}, :param => :project_id
 end
+
+Redmine::MenuManager.map :orders_menu do |menu|
+  menu.push :received,      {:controller=>'orders', :action => 'received' }, :param => :project_id, :caption => :label_received_order_plural
+  menu.push :orders_level2, {:controller=>'orders', :action => 'index' }, :param => :project_id, :caption => :label_order_plural
+end

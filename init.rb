@@ -163,6 +163,10 @@ Redmine::Plugin.register :haltr do
       :export_channels => [:index],
     }
 
+    permission :use_orders,
+      { orders: [:index, :show, :destroy, :import, :received, :show_received, :add_comment] },
+      require: :member
+
     # Loads permisons from config/channels.yml
     ExportChannels.permissions.each do |permission,actions|
       permission permission, actions, :require => :member
@@ -174,6 +178,7 @@ Redmine::Plugin.register :haltr do
   menu :project_menu, :companies,  {:controller=>'clients',   :action=>'index'     }, :param=>:project_id, :caption=>:label_companies
   menu :project_menu, :invoices,   {:controller=>'invoices',  :action=>'index'     }, :param=>:project_id, :caption=>:label_invoice_plural
   menu :project_menu, :payments,   {:controller=>'payments',  :action=>'index'     }, :param=>:project_id, :caption=>:label_payment_plural
+  menu :project_menu, :orders,     { controller: 'orders',     action: 'received'  },  param: :project_id, caption: :label_order_plural
   menu :admin_menu, :external_companies, {:controller=>'external_companies', :action=>'index'}, :caption=>:external_companies
   menu :admin_menu, :dir3_entities, {:controller=>'dir3_entities', :action=>'index'}, :caption=>:dir3_entities
   menu :admin_menu, :export_channels, {:controller=>'export_channels', :action=>'index'}, :caption=>:export_channels

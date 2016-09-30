@@ -20,13 +20,13 @@ en:
   field_address: Address
   field_address2: Address
   field_city: City
-  field_province: Province
+  field_province: Region/Province/County
   field_postalcode: Postcode
   field_country: Country
   field_bank_account: Banck account
   button_people: People
   label_people: People
-  field_invoice_format: Preferred invoice transport and format
+  field_invoice_format: Method for receipt documents from this portal
   field_currency: Currency
   field_ponumber: Purchase Order
   cif_belongs_to_company: "This VAT Id Number belongs to company <span style='font-weight: bold;'>%{company}</span>."
@@ -187,7 +187,7 @@ en:
   button_download_new_invoices: "Download zip of new invoices"
   label_download_new_invoices_info: "Creates a zip file with all the new invoices in PDF format"
   field_exempt: "Exempt"
-  field_comment: "Reason of exemption"
+  field_comment: "Reason for exemption"
 
   # Events
   events: "Event log"
@@ -242,7 +242,7 @@ en:
   # Invoice templates
   label_invoice_template_new: New template
   label_invoice_template: Template
-  label_invoice_template_plural: Templates
+  label_invoice_template_plural: Recurring
   label_generated_invoices: Generated invoices
   next_charge: Next charge
   invoices_to_generate: Invoices to generate
@@ -313,7 +313,7 @@ en:
   label_payment_report: Payments report
 
   # Settings
-  field_taxcode: VAT Id Number
+  field_taxcode: VAT ID Number
   field_website: Website
   export_channels_path: "Path of export folders"
   field_company: "Company"
@@ -322,7 +322,7 @@ en:
   b2brouter_ip: "B2brouter IP"
   b2b_subtitle: "Your online invoicing service"
   field_public: "Public profile"
-  private_fields_info: "These fields are private, regardless you choose public profile"
+  private_fields_info: "These fields are always kept private"
   issues_controller_name: "Issues controller name"
   field_iban: IBAN
   field_bic: BIC
@@ -453,7 +453,7 @@ en:
   permission_use_local_signature: "B2BRouter - Sign with local certificate"
   tax_E: "Exempt"
   tax_NS: "Not subject"
-  tax_Z: "Zero Rated"
+  tax_Z: "Zero Rated Supply"
   tax_S: "Standard"
   tax_H: "High Rated"
   tax_AA: "Low Rated"
@@ -563,7 +563,7 @@ en:
   label_issued_invoice: Issued invoice
   label_received_invoice: Received invoice
   label_draft_invoice: Draft invoice
-  name_or_company: "Name or company"
+  name_or_company: "Company Name (or Name – if individual)"
   help_public_profile: "Companies using B2BRouter.net can retrieve basic master data from your company."
   help_semipublic_profile: "Companies using B2BRouter.net can retrieve basic master data from your company upon authorization."
   help_private_profile: "It is not allowed for other companies to get access to your basic master data."
@@ -672,6 +672,7 @@ en:
   field_party_identification: "Party identification"
   label_invoice_total: "Total"
   field_unidad_contratacion: "Unidad de contratación / SEF"
+  field_discount_helper: "Calculate discount % from amount"
   label_discounts_and_charges: Discounts and charges
   invoice_import_mismatch: "Original invoice amount %{original} does not match calculated amount %{calculated}"
   invoice_has_no_original: Invoice has no original (transport requires an original document)
@@ -779,3 +780,13 @@ If you save it, will be marked as New."
   unitat_contractacio: "Unidad contratación / SEF"
   state_accounted: "Annotated"
   state_accounted_plural: "Annotated"
+  field_num_pedido: "Order number"
+  field_fecha_documento: "Document date"
+  field_lugar_entrega: "Delivery place"
+  field_fecha_pedido: "Order date"
+  field_fecha_entrega: "Delivery date"
+  label_order_plural: "Orders"
+  import_order: "Import order"
+  label_received_order_plural: "Received orders"
+  deleted_received_order: "Received order deleted"
+  deleted_issued_order: "Issued order deleted"

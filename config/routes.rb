@@ -66,6 +66,11 @@ resources :projects do
   match 'payments/reports' => 'payments#reports', :via => [:get]
   match 'payments/report_payment_list' => 'payments#report_payment_list', :via => [:post]
   match 'events' => 'events#index', via: [:get,:post]
+  match 'orders/import' => 'orders#import', via: [:get, :post]
+  match 'orders/received' => 'orders#received', via: [:get]
+  match 'orders/received/:id' => 'orders#show_received', via: [:get], as: :received_order
+  match 'orders/add_comment' => 'orders#add_comment', :via => :post
+  resources :orders, only: [:index, :show, :destroy]
 end
 resources :invoice_imgs, :only => [:create,:update]
 match 'invoice_imgs/:id/tag/:tag' => 'invoice_imgs#tag', :as => 'invoice_imgs_tag'

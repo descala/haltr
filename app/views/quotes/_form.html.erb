@@ -39,11 +39,15 @@
   </div>
 
   <div class="seccio grup">
-    <p class="col span-1-de-2">
+    <p class="col span-1-de-3">
       <%= f.text_field :discount_text %>
     </p>
-    <p class="col span-1-de-2">
-      <%= f.text_field :discount_percent %>
+    <p class="col span-1-de-3">
+      <%= f.text_field :discount %>
+    </p>
+    <p class="col span-1-de-3" style="width: 55px;">
+    <label for="invoice_discount_type">&nbsp;</label>
+    <%= f.select 'discount_type', ['%','€'], :no_label => true %>
     </p>
   </div>
 
