@@ -207,8 +207,8 @@ module InvoicesHelper
       if i.debit?
         # IssuedInvoice + debit, show clients iban
         if i.client.use_iban?
-          iban = i.client.iban || ""
-          bic  = i.client.bic || ""
+          iban = i.client_iban || ""
+          bic  = i.client_bic || ""
           s="#{l(:debit_str)}<br />"
           s+="IBAN #{iban[0..3]} #{iban[4..7]} #{iban[8..11]} **** **** #{iban[20..23]}<br />"
           s+="BIC #{bic}<br />" unless bic.blank?
@@ -263,8 +263,8 @@ module InvoicesHelper
       elsif i.transfer?
         # ReceivedInvoice + transfer, show clients iban
         if i.client.use_iban?
-          iban = i.client.iban || ""
-          bic  = i.client.bic || ""
+          iban = i.client_iban || ""
+          bic  = i.client_bic || ""
           s="#{l(:transfer_str)}<br />"
           s+="IBAN #{iban.scan(/.{1,4}/).join(' ')}<br />"
           s+="BIC #{bic}<br />" unless bic.blank?
