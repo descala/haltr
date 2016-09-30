@@ -123,17 +123,13 @@ class Event < ActiveRecord::Base
     # this won't update invoice status if invoice is not valid
     #self.invoice.send(name) if automatic?
     if automatic?
-      begin
-        new_state = invoice.state_transitions.select {|t|
-          t.event.to_s == name.to_s
-        }.first.to
-        invoice.update_attribute(:state, new_state)
-
-        Redmine::Hook.call_hook(:model_event_after_update_invoice,
-                                event: self, new_state: new_state)
-      rescue
-        invoice.send("#{name}!")
-      end
+      invoice.send("#{name}!")
+      # TODO: change to dest state anyway, even if is not allowed
+      #
+      # rescue AASM::InvalidTransition => e
+      #   invoice.update_attribute(:state, new_state)
+      #   Redmine::Hook.call_hook(:model_event_after_update_invoice,
+      #                           event: self, new_state: new_state)
 
       # on success_sending check if our company is provider for client, if so
       # create a ReceivedInvoice on client side.
