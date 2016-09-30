@@ -94,15 +94,35 @@ class OrdersController < ApplicationController
       end
       xslt = Nokogiri.XSLT(File.open("#{File.dirname(__FILE__)}/../../lib/haltr/xslt/OIOUBL_Order.xsl",'rb'))
       @order_xslt_html = xslt.transform(doc)
-      #HACK: link to client
-      if @order.client
-        @order_xslt_html = @order_xslt_html.to_html.gsub(
-          @order.client.name,
-          view_context.link_to(@order.client.name, client_path(@order.client))
-        ).html_safe
-      end
     end
-    render :show
+    respond_to do |format|
+      format.html {
+        #HACK: link to client
+        # https://groups.google.com/forum/#!topic/nokogiri-talk/LZjW70XpkLc
+        if @order.client
+          @order_xslt_html = @order_xslt_html.to_html.gsub(
+            @order.client.name,
+            view_context.link_to(@order.client.name, client_path(@order.client))
+          ).html_safe
+        end
+        render :show
+      }
+      format.pdf {
+        if @order.xml?
+          @order_xslt_html = @order_xslt_html.to_html.html_safe
+        end
+        render pdf: 'order.html',
+        template: 'orders/show',
+        layout: 'order',
+        :show_as_html => params[:debug],
+        :margin => {
+          :top    => 20,
+          :bottom => 20,
+          :left   => 30,
+          :right  => 20
+        }
+      }
+    end
   end
 
   def show_received

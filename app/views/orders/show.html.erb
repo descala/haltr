@@ -4,6 +4,7 @@
     <ul class="menu-rapid">
       <li><%= link_to l(:label_import), project_orders_import_path(project_id: @project) -%></li>
       <li><%= link_to l(:download_original), project_order_path(@order, project_id: @project, download: true), class: 'icon icon-attachment' %></li>
+      <li><%= link_to l(:download_as_pdf), project_order_path(@order, project_id: @project, format: :pdf), class: 'icon icon-attachment' %></li>
       <li><%= link_to_if_authorized l(:button_delete), { :action => 'destroy', :id => @order }, :confirm=>l(:text_are_you_sure), :method=>:delete, :class=>'icon icon-del' %></li>
       <% if @order.next%>
         <li class="invoice-navigator"><%=h link_to_if_authorized l(:label_next), :action => (@order.next.is_a?(IssuedOrder) ? 'show' : 'show_received'), :id => @order.next %></li>

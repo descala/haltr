@@ -37,8 +37,10 @@
   <% end -%>
 </fieldset>
 
-<div style="margin-top: 15px; padding: 15px;">
-  <pre>
+<% unless params[:format] == 'pdf' -%>
+  <div style="margin-top: 15px; padding: 15px;">
+    <pre>
 <%= @order.original.gsub(/'/,"'\r") %>
-  </pre>
-</div>
+    </pre>
+  </div>
+<% end -%>

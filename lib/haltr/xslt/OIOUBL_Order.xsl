@@ -45,19 +45,9 @@
 		<!-- Start HTML -->
 		<html>
 			<head>
-				<link rel="Stylesheet" type="text/css" href="HtmlDependencies/OIOUBL.css"></link>
 				<title>OIOUBL-2.01 dokumentudskrivning version 1.0 release 0.21</title>
 			</head>
 			<body>
-				<!-- Start på ordrehovedet -->
-				<table border="0" width="100%" cellspacing="0" cellpadding="2">
-					<tr>
-						<td colspan="4">
-							<img class="defaultlogo" src="HtmlDependencies/gta_default_logo.jpg" width="100%" alt="Logo"/>
-						</td>
-					</tr>
-				</table>
-				<br/>
 				<table border="0" width="100%" cellspacing="0" cellpadding="2">
 					<tr>
 						<td>
