@@ -104,6 +104,8 @@ class OrdersController < ApplicationController
             @order.client.name,
             view_context.link_to(@order.client.name, client_path(@order.client))
           ).html_safe
+        else
+          @order_xslt_html = @order_xslt_html.to_html.html_safe
         end
         render :show
       }
