@@ -13,7 +13,7 @@ class Order < ActiveRecord::Base
     fecha_pedido:    /ORD=[^:]*::([^+]*)\+\+.'/,
     lugar_entrega:   /CLO=:[^+]*\+([^+]*)\+/,
     fecha_entrega:   /DIN=([^']*)'/,
-    fecha_documento: /FIL=[0-9]\+[0-9]\+([^']*)'/,
+    fecha_documento: /FIL=[0-9]+\+[0-9]\+([^']*)'/,
     # camps que no es desen a la bbdd
     datos_proveedor:   /SDT=([^:]*):([^+]*)\+([^+]*)\+([^:]*):([^:]*):([^:]*):([^:]*):([^']*)'/,
     datos_cliente:     /CDT=([^:]*):([^+]*)\+([^+]*)\+([^:]*):([^:]*):([^:]*):([^:]*):([^']*)'/,
