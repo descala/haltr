@@ -119,20 +119,6 @@ class IssuedInvoice < InvoiceDocument
     end
   end
 
-  def aasm_create_event(user=nil)
-    user ||= User.current
-    name = aasm.current_event.to_s.gsub('!','')
-    unless Event.automatic.include?(name)
-      if name == 'queue' and !new?
-        Event.create(name: 'requeue', invoice: self, user_id: user)
-      elsif name =~ /^mark_as_/
-        Event.create(name: "done_#{name}", invoice: self, user_id: user)
-      else
-        Event.create(name: name, invoice: self, user_id: user)
-      end
-    end
-  end
-
   def has_been_sent?
     sent? or closed? or sending?
   end

@@ -9,7 +9,7 @@ class ReceivedInvoice < InvoiceDocument
 
   aasm column: :state, skip_validation_on_save: true, whiny_transitions: true do
     state :received, initial: true
-    state :accepted, :paid, :refused
+    state :accepted, :paid, :refused, :processing_pdf, :error
 
     before_all_events :aasm_create_event
 
@@ -25,18 +25,14 @@ class ReceivedInvoice < InvoiceDocument
     event :unpaid do
       transitions from: :paid, to: :accepted
     end
-  end
-
-  def aasm_create_event
-    name = aasm.current_event.to_s.gsub('!','')
-    unless Event.automatic.include? name
-      Event.create(:name=>name,:invoice=>self,:user=>User.current)
+    event :error_sending do
+      transitions to: :error
     end
     event :processing_pdf do
-      transition [:received] => :processing_pdf
+      transitions to: :processing_pdf
     end
     event :processed_pdf do
-      transition [:processing_pdf] => :received
+      transitions from: :processing_pdf, to: :received
     end
   end
 

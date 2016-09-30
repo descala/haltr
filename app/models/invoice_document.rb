@@ -59,5 +59,20 @@ class InvoiceDocument < Invoice
     Money.new(paid_amount,currency)
   end
 
+  # Creates an Event unless it is an "automatic" state change
+  def aasm_create_event(user=nil)
+    user ||= User.current
+    name = aasm.current_event.to_s.gsub('!','')
+    unless Event.automatic.include?(name)
+      if name == 'queue' and !new?
+        Event.create(name: 'requeue', invoice: self, user_id: user)
+      elsif name =~ /^mark_as_/
+        Event.create(name: "done_#{name}", invoice: self, user_id: user)
+      else
+        Event.create(name: name, invoice: self, user_id: user)
+      end
+    end
+  end
+
 end
 
