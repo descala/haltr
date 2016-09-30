@@ -1109,8 +1109,9 @@ _INV
       if bank_account
         client.set_if_blank(:bank_account,bank_account)
       else
-        client.set_if_blank(:iban,iban)
-        client.set_if_blank(:bic,bic)
+        # if client iban/bic differs, store them on invoice (#6171)
+        self.client_iban = iban unless client.set_if_blank(:iban,iban)
+        self.client_bic = bic unless client.set_if_blank(:bic,bic)
       end
       client.save!
       # Use any of our bank_infos to receive the payment, let say the last one,
@@ -1297,6 +1298,14 @@ _INV
       client.save!(:validate=>false)
       logger.info "created new client \"#{client.name}\" with cif #{client.taxcode} for company #{project.company.name}. time=#{Time.now}"
     end
+  end
+
+  def client_iban
+    self[:client_iban].blank? ? client.iban : self[:client_iban]
+  end
+
+  def client_bic
+    self[:client_bic].blank? ? client.bic : self[:client_bic]
   end
 
   protected

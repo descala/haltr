@@ -277,6 +277,7 @@ class InvoiceTest < ActiveSupport::TestCase
     # client does not exist
     assert_nil Client.find_by_taxcode "ESP1700000A"
     file    = File.new(File.join(File.dirname(__FILE__),'..','fixtures','documents','invoice_facturae32_issued.xml'))
+    assert_nil(Client.find_by_taxcode "ESP1700000A")
     invoice = Invoice.create_from_xml(file,companies(:company1),"1234",'uploaded',User.current.name)
     client  = Client.find_by_taxcode "ESP1700000A"
     assert_not_nil client
@@ -606,8 +607,8 @@ class InvoiceTest < ActiveSupport::TestCase
     assert_equal 'ES1234567890123456789012', invoice.fa_iban
     assert_equal 'ABCABCAAXXX',              invoice.fa_bank_code
     assert_equal 'Clauses',                  invoice.fa_clauses
-    assert invoice.transfer?, "invoice payment is transfer"
-    assert_match(/4_\d+/, invoice.payment_method)
+    assert invoice.debit?, "invoice payment is debit"
+    assert_match(/2_\d+/, invoice.payment_method)
   end
 
   test 'overrides client email with client_email_override' do
@@ -830,6 +831,23 @@ class InvoiceTest < ActiveSupport::TestCase
       :language       => nil,
     )
     assert_equal 1, client.client_offices.size
+  end
+
+  # import invoice_facturae32_issued8_iban2.xml
+  test 'import invoice with iban != client.iban stores iban on invoice' do
+    file     = File.new(File.join(File.dirname(__FILE__),'..','fixtures','documents','invoice_facturae32_issued8.xml'))
+    file2    = File.new(File.join(File.dirname(__FILE__),'..','fixtures','documents','invoice_facturae32_issued8_iban2.xml'))
+    assert_nil Client.find_by_taxcode 'ESP1700000A'
+    invoice  = Invoice.create_from_xml(file,User.find_by_login('jsmith'),"1234",'uploaded',User.current.name)
+    assert_not_nil Client.find_by_taxcode 'ESP1700000A'
+    assert_equal 'ES8023100001180000012345', invoice.client.iban
+    assert_equal 'biiiiiiiiic', invoice.client.bic
+    invoice2 = Invoice.create_from_xml(file2,User.find_by_login('jsmith'),"1234",'uploaded',User.current.name)
+    assert_equal 'ES8023100001180000012345', invoice.client.iban
+    assert_equal 'biiiiiiiiic', invoice.client.bic
+    assert_equal 'ES8023100001180000012345', invoice2.client.iban
+    assert_equal 'ES0000000000000000000000', invoice2.client_iban
+    assert_equal 'biiiiiiiic2', invoice2.client_bic
   end
 
 end
