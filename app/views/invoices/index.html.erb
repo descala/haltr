@@ -210,4 +210,4 @@
   <%= render_menu :invoices_menu, @project %>
 <% end %>
 
-<%= context_menu invoices_context_menu_path %>
+<%= context_menu "/#{controller.controller_name}/context_menu" %>
