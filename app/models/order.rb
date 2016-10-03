@@ -15,10 +15,44 @@ class Order < ActiveRecord::Base
     fecha_entrega:   /DIN=([^']*)'/,
     fecha_documento: /FIL=[0-9]+\+[0-9]\+([^']*)'/,
     # camps que no es desen a la bbdd
-    datos_proveedor:   /SDT=([^:]*):([^+]*)\+([^+]*)\+([^:]*):([^:]*):([^:]*):([^:]*):([^']*)'/,
-    datos_cliente:     /CDT=([^:]*):([^+]*)\+([^+]*)\+([^:]*):([^:]*):([^:]*):([^:]*):([^']*)'/,
-    direccion_entrega: /CLO=:([^+]*)\+([^+]*)\+([^:]*):([^:]*):([^:]*):([^:]*):([^']*)'/,
-    lineas_pedido:     /OLD=([^+]*)\+:([^+]*)\+\+:([^+]*)\+([^+]*)\+([^+]*)\+([^+]*)\+\+\+([^']*)'/,
+    datos_proveedor: %r{
+      SDT=(?<codigo_po>[^:]*):
+      (?<nombre_po>[^+]*)\+
+      (?<sociedad>[^+]*)\+
+      (?<direccion1>[^:]*):
+      (?<direccion2>[^:]*):
+      (?<direccion3>[^:]*):
+      (?<direccion4>[^:]*):
+      (?<cp>[^']*)'
+    }x,
+    datos_cliente: %r{
+      CDT=(?<codigo_po>[^:]*):
+      (?<nombre_po>[^+]*)\+
+      (?<sociedad>[^+]*)\+
+      (?<direccion1>[^:]*):
+      (?<direccion2>[^:]*):
+      (?<direccion3>[^:]*):
+      (?<direccion4>[^:]*):
+      (?<cp>[^']*)'
+    }x,
+    direccion_entrega: %r{
+      CLO=:(?<codigo_cliente>[^+]*)\+
+      (?<lugar_entrega>[^+]*)\+
+      (?<direccion1>[^:]*):
+      (?<direccion2>[^:]*):
+      (?<direccion3>[^:]*):
+      (?<direccion4>[^:]*):
+      (?<cp>[^']*)'
+    }x,
+    lineas_pedido: %r{
+      OLD=(?<linea_pedido>[^+]*)\+:
+      (?<codigo_articulo_proveedor>[^+]*)\+\+:
+      (?<codigo_articulo_cliente>[^+]*)\+
+      (?<unidades_consumo>[^+]*)\+
+      (?<cantidad>[^+]*)\+
+      (?<precio>[^+]*)\+\+\+
+      (?<descripcion>[^']*)'
+    }x
   }
 
   REGEXPS2 = {
@@ -29,17 +63,28 @@ class Order < ActiveRecord::Base
     fecha_entrega:   /DTM\+2:([0-9]+):/,
     fecha_documento: /UNB\+[^+]*\+[^+]*\+[^+]*\+([^+]*):/,
     # camps que no es desen a la bbdd
-    datos_proveedor:   /NAD\+SU\+([^:+]*):/,
-    datos_cliente:     /NAD\+BY\+([^:+]*):/,
-    direccion_entrega: /NAD\+DP\+([^+:]*)[^+]*\+[^+]*\+([^+]*)\+([^+]*)\+([^+]*)\+([^+]*)\+()([^+]*)'/,
-    lineas_pedido:     /LIN\+[^+]*\+[^+]*\+([^+]*)'/,
-  }
-
-  REGEXPS_KEYS = {
-    datos_proveedor:   %w(codigo_po nombre_po sociedad direccion1 direccion2 direccion3 direccion4 cp),
-    datos_cliente:     %w(codigo_po nombre_po sociedad direccion1 direccion2 direccion3 direccion4 cp),
-    direccion_entrega: %w(codigo_cliente lugar_entrega direccion1 direccion2 direccion3 direccion4 cp),
-    lineas_pedido:     %w(linea_pedido codigo_articulo_proveedor codigo_articulo_cliente unidades_consumo cantidad precio descripcion)
+    datos_proveedor:   /NAD\+SU\+(?<codigo_po>[^:+]*):/,
+    datos_cliente:     /NAD\+BY\+(?<codigo_po>[^:+]*):/,
+    direccion_entrega: %r{
+      NAD\+DP\+(?<codigo_cliente>[^+:]*)[^+]*\+[^+]*\+
+      (?<lugar_entrega>[^+]*)\+
+      (?<direccion1>[^+]*)\+
+      (?<direccion2>[^+]*)\+
+      (?<direccion3>[^+]*)\+
+      (?<cp>[^+]*)'
+    }x,
+    lineas_pedido:     %r{
+      LIN\+(?<linea_pedido>[^+]*)\+[^+]*\+(?<codigo_articulo_cliente>[^+]*)'
+      PIA[^']*\+(?<codigo_articulo_proveedor>[^+]*)'
+      IMD[^:]*:::(?<descripcion>[^']*)'
+      QTY\+21:(?<cantidad>[^']*)'
+      QTY\+59:(?<unidades_consumo>[^']*)'
+      MOA[^']*'
+      PRI\+AAB:(?<precio_bruto>[^']*)'
+      PRI\+AAA:(?<precio_neto>[^']*)'
+      TAX[^']*'
+      MOA[^']*'
+    }x,
   }
 
   XPATHS_ORDER = {
@@ -179,34 +224,32 @@ class Order < ActiveRecord::Base
 
   def datos_proveedor
     if edi?
-      captures = regexps[:datos_proveedor].match(original).captures
-      Hash[REGEXPS_KEYS[:datos_proveedor].zip(captures)]
-    else
+      original.scan(regexps[:datos_proveedor])
+      Hash[ Regexp.last_match.names.zip( Regexp.last_match.captures ) ]
     end
   end
 
   def datos_cliente
     if edi?
-      captures = regexps[:datos_cliente].match(original).captures
-      Hash[REGEXPS_KEYS[:datos_cliente].zip(captures)]
-    else
+      original.scan(regexps[:datos_cliente])
+      Hash[ Regexp.last_match.names.zip( Regexp.last_match.captures ) ]
     end
   end
 
   def direccion_entrega
     if edi?
-      captures = regexps[:direccion_entrega].match(original).captures
-      Hash[REGEXPS_KEYS[:direccion_entrega].zip(captures)]
-    else
+      original.scan(regexps[:direccion_entrega])
+      Hash[ Regexp.last_match.names.zip( Regexp.last_match.captures ) ]
     end
   end
 
   def lineas_pedido
     if edi?
-      original.scan(regexps[:lineas_pedido]).collect do |captures|
-        Hash[REGEXPS_KEYS[:lineas_pedido].zip(captures)]
+      # http://stackoverflow.com/questions/6804557
+      # http://stackoverflow.com/questions/11688726
+      original.to_enum(:scan, regexps[:lineas_pedido]).map do
+        Hash[ Regexp.last_match.names.zip( Regexp.last_match.captures ) ]
       end
-    else
     end
   end
 
