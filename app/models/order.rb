@@ -21,6 +21,20 @@ class Order < ActiveRecord::Base
     lineas_pedido:     /OLD=([^+]*)\+:([^+]*)\+\+:([^+]*)\+([^+]*)\+([^+]*)\+([^+]*)\+\+\+([^']*)'/,
   }
 
+  REGEXPS2 = {
+    # camps que es desaran a la bbdd
+    num_pedido:      /BGM\+[^+]+\+([0-9]+)\+/,
+    fecha_pedido:    /DTM\+137:([0-9]+):/,
+    lugar_entrega:   /NAD\+DP\+[^+]*\+[^+]*\+([^+]*\+[^+]*\+[^+]*\+[^+]*\+[^+]*)'/,
+    fecha_entrega:   /DTM\+2:([0-9]+):/,
+    fecha_documento: /UNB\+[^+]*\+[^+]*\+[^+]*\+([^+]*):/,
+    # camps que no es desen a la bbdd
+    datos_proveedor:   /NAD\+SU\+([^:+]*):/,
+    datos_cliente:     /NAD\+BY\+([^:+]*):/,
+    direccion_entrega: /NAD\+DP\+([^+:]*)[^+]*\+[^+]*\+([^+]*)\+([^+]*)\+([^+]*)\+([^+]*)\+()([^+]*)'/,
+    lineas_pedido:     /LIN\+[^+]*\+[^+]*\+([^+]*)'/,
+  }
+
   REGEXPS_KEYS = {
     datos_proveedor:   %w(codigo_po nombre_po sociedad direccion1 direccion2 direccion3 direccion4 cp),
     datos_cliente:     %w(codigo_po nombre_po sociedad direccion1 direccion2 direccion3 direccion4 cp),
@@ -55,6 +69,14 @@ class Order < ActiveRecord::Base
     country:    "/cac:PostalAddress/cac:Country/cbc:IdentificationCode",
   }
 
+  def self.regexps(edi)
+    !!(edi =~ REGEXPS[:num_pedido]) ? REGEXPS : REGEXPS2
+  end
+
+  def regexps
+    Order.regexps(original)
+  end
+
   def self.create_from_edi(file, project)
     edi = file.read
     order = ReceivedOrder.new(
@@ -62,10 +84,11 @@ class Order < ActiveRecord::Base
       original: edi,
       filename: file.original_filename
     )
-    REGEXPS.keys.each do |key|
+    rgxps = order.regexps
+    rgxps.keys.each do |key|
       next unless order.respond_to? "#{key}="
-      if edi =~ REGEXPS[key]
-        order.send("#{key}=", REGEXPS[key].match(edi)[1])
+      if edi =~ rgxps[key]
+        order.send("#{key}=", rgxps[key].match(edi)[1])
       else
         order.send("#{key}=", "?")
       end
@@ -156,7 +179,7 @@ class Order < ActiveRecord::Base
 
   def datos_proveedor
     if edi?
-      captures = REGEXPS[:datos_proveedor].match(original).captures
+      captures = regexps[:datos_proveedor].match(original).captures
       Hash[REGEXPS_KEYS[:datos_proveedor].zip(captures)]
     else
     end
@@ -164,7 +187,7 @@ class Order < ActiveRecord::Base
 
   def datos_cliente
     if edi?
-      captures = REGEXPS[:datos_cliente].match(original).captures
+      captures = regexps[:datos_cliente].match(original).captures
       Hash[REGEXPS_KEYS[:datos_cliente].zip(captures)]
     else
     end
@@ -172,7 +195,7 @@ class Order < ActiveRecord::Base
 
   def direccion_entrega
     if edi?
-      captures = REGEXPS[:direccion_entrega].match(original).captures
+      captures = regexps[:direccion_entrega].match(original).captures
       Hash[REGEXPS_KEYS[:direccion_entrega].zip(captures)]
     else
     end
@@ -180,7 +203,7 @@ class Order < ActiveRecord::Base
 
   def lineas_pedido
     if edi?
-      original.scan(REGEXPS[:lineas_pedido]).collect do |captures|
+      original.scan(regexps[:lineas_pedido]).collect do |captures|
         Hash[REGEXPS_KEYS[:lineas_pedido].zip(captures)]
       end
     else
