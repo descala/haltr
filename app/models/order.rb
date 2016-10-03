@@ -78,7 +78,7 @@ class Order < ActiveRecord::Base
   end
 
   def self.create_from_edi(file, project)
-    edi = file.read
+    edi = Redmine::CodesetUtil.replace_invalid_utf8(file.read)
     order = ReceivedOrder.new(
       project: project,
       original: edi,
