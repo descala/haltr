@@ -64,7 +64,7 @@ class EventsController < ApplicationController
   def create
     t = params[:event][:type]
     if t =~ /Event/
-      @event = t.constantize.new(params[:event])
+      @event = t.constantize.new(params[:event].except(:type))
     elsif t.blank?
       @event = Event.new(params[:event])
     else

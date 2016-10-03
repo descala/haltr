@@ -5,6 +5,8 @@ class InvoiceImg < ActiveRecord::Base
 
   serialize :data, Hash
 
+  attr_protected :created_at, :updated_at
+
   def has_associated_invoice
     errors.add(:invoice) unless self.invoice and self.invoice.is_a? InvoiceDocument
   end
