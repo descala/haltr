@@ -148,7 +148,9 @@ class Client < ActiveRecord::Base
     if send("read_attribute",atr).blank?
       send("#{atr}=",val)
     end
-    send("read_attribute",atr).gsub(' ','') == val
+    db_val = send("read_attribute",atr)
+    db_val.gsub!(' ','') unless db_val.nil?
+    db_val == val
   end
 
   def bank_account
