@@ -140,7 +140,7 @@ da:
   state_registered: "Registered"
   sending_log: "Log d'enviament"
   sending_log: "Sender log"
-  download_legal: "Download juridisk faktur"
+  download_legal: "Download dokument"
   download_notification: "Download meddelelse"
   label_all_invoices: "Alle fakturaer"
   label_issued: "Udstedte fakturaer"

@@ -139,7 +139,7 @@ sv:
   state_paid_plural: "Betald"
   state_registered: "Registered"
   sending_log: "Skickar log"
-  download_legal: "Ladda ner fakturafilen"
+  download_legal: "Ladda ner dokument"
   download_notification: "Ladda ner notifieringar"
   label_all_invoices: "Alla fakturor"
   label_issued: "Utställda fakturor"

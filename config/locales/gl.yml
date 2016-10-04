@@ -152,7 +152,7 @@ gl:
   state_paid_plural: "Pagadas"
   state_registered: "Rexistrada"
   sending_log: "Log de envío"
-  download_legal: "Descargar factura legal"
+  download_legal: "Descargar documento"
   download_notification: "Descargar notificación"
   label_all_invoices: "Todas"
   label_issued: "Facturas emitidas"
