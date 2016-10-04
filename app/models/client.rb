@@ -144,7 +144,7 @@ class Client < ActiveRecord::Base
   end
 
   def set_if_blank(atr,val)
-    val.gsub!(' ','')
+    val.gsub!(' ','') unless val.nil?
     if send("read_attribute",atr).blank?
       send("#{atr}=",val)
     end
