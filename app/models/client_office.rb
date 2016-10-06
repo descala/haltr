@@ -34,17 +34,19 @@ class ClientOffice < ActiveRecord::Base
   end
 
   def edi_code_is_unique_in_project
-    project.client_offices.each do |co|
-      next unless co.edi_code.to_s.chomp.casecmp(edi_code.to_s.chomp) == 0
-      next if co.eql?(self)
-      errors.add(:edi_code, :taken)
-      return
-    end
-    project.clients.each do |c|
-      next unless c.edi_code.to_s.chomp.casecmp(edi_code.to_s.chomp) == 0
-      next if c.eql?(client)
-      errors.add(:edi_code, :taken)
-      return
+    if edi_code.present?
+      project.client_offices.each do |co|
+        next unless co.edi_code.to_s.chomp.casecmp(edi_code.to_s.chomp) == 0
+        next if co.eql?(self)
+        errors.add(:edi_code, :taken)
+        return
+      end
+      project.clients.each do |c|
+        next unless c.edi_code.to_s.chomp.casecmp(edi_code.to_s.chomp) == 0
+        next if c.eql?(client)
+        errors.add(:edi_code, :taken)
+        return
+      end
     end
   end
 
