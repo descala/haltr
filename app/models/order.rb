@@ -259,7 +259,7 @@ class Order < ActiveRecord::Base
   end
 
   def previous
-    Order.first(conditions: ["project_id = ? and id < ? and type = ?", project.id, id, type])
+    Order.last(conditions: ["project_id = ? and id < ? and type = ?", project.id, id, type])
   end
 
   protected
