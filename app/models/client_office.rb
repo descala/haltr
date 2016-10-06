@@ -3,9 +3,10 @@ class ClientOffice < ActiveRecord::Base
   unloadable
 
   belongs_to :client
+  delegate :project, to: :client
   has_many :invoices, dependent: :nullify
   validates_presence_of :name, :client_id
-  validates_uniqueness_of :edi_code, :scope => :project_id, :allow_blank => true
+  validate :edi_code_is_unique_in_project
 
   iso_country :country
 
@@ -30,6 +31,21 @@ class ClientOffice < ActiveRecord::Base
 
   def country_alpha3
     country
+  end
+
+  def edi_code_is_unique_in_project
+    project.client_offices.each do |co|
+      next unless co.edi_code.to_s.chomp.casecmp(edi_code.to_s.chomp) == 0
+      next if co.eql?(self)
+      errors.add(:edi_code, :taken)
+      return
+    end
+    project.clients.each do |c|
+      next unless c.edi_code.to_s.chomp.casecmp(edi_code.to_s.chomp) == 0
+      next if c.eql?(client)
+      errors.add(:edi_code, :taken)
+      return
+    end
   end
 
 end
