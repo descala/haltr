@@ -247,7 +247,8 @@ class Order < ActiveRecord::Base
     if edi?
       # http://stackoverflow.com/questions/6804557
       # http://stackoverflow.com/questions/11688726
-      original.to_enum(:scan, regexps[:lineas_pedido]).map do
+      # removed \n to match multiple lines
+      original.gsub("\n",'').to_enum(:scan, regexps[:lineas_pedido]).map do
         Hash[ Regexp.last_match.names.zip( Regexp.last_match.captures ) ]
       end
     end
