@@ -5,10 +5,12 @@ class ClientOffice < ActiveRecord::Base
   belongs_to :client
   has_many :invoices, dependent: :nullify
   validates_presence_of :name, :client_id
+  validates_uniqueness_of :edi_code, :scope => :project_id, :allow_blank => true
 
   iso_country :country
 
-  CLIENT_FIELDS = %w( address address2 city province postalcode country email name destination_edi_code )
+  CLIENT_FIELDS = %w( address address2 city province postalcode country email
+  name destination_edi_code edi_code )
 
   CLIENT_FIELDS.each do |attr|
     define_method(attr) do
