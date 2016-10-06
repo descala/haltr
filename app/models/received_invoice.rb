@@ -8,6 +8,11 @@ class ReceivedInvoice < InvoiceDocument
 
   after_create :create_event
 
+  acts_as_event
+  after_create :notify_users_by_mail, if: Proc.new {|o|
+    o.project.company.order_notifications
+  }
+
   state_machine :state, :initial => :received do
     before_transition do |invoice,transition|
       unless Event.automatic.include?(transition.event.to_s)
@@ -114,6 +119,20 @@ class ReceivedInvoice < InvoiceDocument
 
   def create_event
     ReceivedInvoiceEvent.create(:name=>self.transport,:invoice=>self,:user=>User.current)
+  end
+
+  private
+
+  def visible?(usr=nil)
+    (usr || User.current).allowed_to?(:general_use, project)
+  end
+
+  def notify_users_by_mail
+    MailNotifier.received_invoice_add(self).deliver
+  end
+
+  def updated_on
+    updated_at
   end
 
 end
