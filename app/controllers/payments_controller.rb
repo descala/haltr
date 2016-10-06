@@ -96,7 +96,7 @@ class PaymentsController < ApplicationController
     @project.company.bank_infos.each do |bi|
       @invoices_to_pay_by_bank_info[bi] = {}
       bi.invoices.find(:all,
-        :conditions => ["state IN ('sent','registered') AND payment_method = ?", Invoice::PAYMENT_DEBIT],
+        :conditions => ["state IN ('sent','registered','accepted','read') AND payment_method = ?", Invoice::PAYMENT_DEBIT],
         ).reject {|i| i.due_date.nil? }.group_by(&:due_date).each do |due_date, invoices|
         @invoices_to_pay_by_bank_info[bi][due_date] = {}
         invoices.each do |invoice|

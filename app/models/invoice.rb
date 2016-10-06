@@ -1259,6 +1259,7 @@ _INV
         postalcode:           client_hash[:postalcode].to_s.chomp,
         country:              client_hash[:country].to_s.chomp,
         name:                 client_hash[:name].to_s.chomp,
+        edi_code:             client_hash[:edi_code].to_s.chomp,
         destination_edi_code: client_hash[:destination_edi_code].to_s.chomp
       }.reject {|k,v| v.blank? }
       # check if client data matches client_hash
@@ -1271,6 +1272,11 @@ _INV
           end
         end
 
+        # client_office validates uniqueness of edi_code
+        if client.edi_code.to_s.chomp.casecmp(client_hash[:edi_code].to_s.chomp) == 0
+          client_hash[:edi_code] = ''
+        end
+
         if client_office.nil?
           # client and all its client_offices differ from data in invoice
           self.client_office = ClientOffice.new(
@@ -1281,6 +1287,7 @@ _INV
             postalcode:           client_hash[:postalcode].to_s.chomp,
             country:              client_hash[:country].to_s.chomp.downcase,
             name:                 client_hash[:name].to_s.chomp,
+            edi_code:             client_hash[:edi_code].to_s.chomp,
             destination_edi_code: client_hash[:destination_edi_code].to_s.chomp
           )
           raise "#{l(:label_client_office)}: #{client_office.errors.full_messages.join('. ')}" unless client_office.save

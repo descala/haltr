@@ -7,25 +7,89 @@ class Order < ActiveRecord::Base
   has_many :events, :order => :created_at
   after_create :create_event
 
+  acts_as_event
+  after_create :notify_users_by_mail, if: Proc.new {|o|
+    o.project.company.order_notifications
+  }
+
   REGEXPS = {
     # camps que es desaran a la bbdd
     num_pedido:      /ORD=([^:]*)::/,
     fecha_pedido:    /ORD=[^:]*::([^+]*)\+\+.'/,
     lugar_entrega:   /CLO=:[^+]*\+([^+]*)\+/,
     fecha_entrega:   /DIN=([^']*)'/,
-    fecha_documento: /FIL=[0-9]\+[0-9]\+([^']*)'/,
+    fecha_documento: /FIL=[0-9]+\+[0-9]\+([^']*)'/,
     # camps que no es desen a la bbdd
-    datos_proveedor:   /SDT=([^:]*):([^+]*)\+([^+]*)\+([^:]*):([^:]*):([^:]*):([^:]*):([^']*)'/,
-    datos_cliente:     /CDT=([^:]*):([^+]*)\+([^+]*)\+([^:]*):([^:]*):([^:]*):([^:]*):([^']*)'/,
-    direccion_entrega: /CLO=:([^+]*)\+([^+]*)\+([^:]*):([^:]*):([^:]*):([^:]*):([^']*)'/,
-    lineas_pedido:     /OLD=([^+]*)\+:([^+]*)\+\+:([^+]*)\+([^+]*)\+([^+]*)\+([^+]*)\+\+\+([^']*)'/,
+    datos_proveedor: %r{
+      SDT=(?<codigo_po>[^:]*):
+      (?<nombre_po>[^+]*)\+
+      (?<sociedad>[^+]*)\+
+      (?<direccion1>[^:]*):
+      (?<direccion2>[^:]*):
+      (?<direccion3>[^:]*):
+      (?<direccion4>[^:]*):
+      (?<cp>[^']*)'
+    }x,
+    datos_cliente: %r{
+      CDT=(?<codigo_po>[^:]*):
+      (?<nombre_po>[^+]*)\+
+      (?<sociedad>[^+]*)\+
+      (?<direccion1>[^:]*):
+      (?<direccion2>[^:]*):
+      (?<direccion3>[^:]*):
+      (?<direccion4>[^:]*):
+      (?<cp>[^']*)'
+    }x,
+    direccion_entrega: %r{
+      CLO=:(?<codigo_cliente>[^+]*)\+
+      (?<lugar_entrega>[^+]*)\+
+      (?<direccion1>[^:]*):
+      (?<direccion2>[^:]*):
+      (?<direccion3>[^:]*):
+      (?<direccion4>[^:]*):
+      (?<cp>[^']*)'
+    }x,
+    lineas_pedido: %r{
+      OLD=(?<linea_pedido>[^+]*)\+:
+      (?<codigo_articulo_proveedor>[^+]*)\+\+:
+      (?<codigo_articulo_cliente>[^+]*)\+
+      (?<unidades_consumo>[^+]*)\+
+      (?<cantidad>[^+]*)\+
+      (?<precio>[^+]*)\+\+\+
+      (?<descripcion>[^']*)'
+    }x
   }
 
-  REGEXPS_KEYS = {
-    datos_proveedor:   %w(codigo_po nombre_po sociedad direccion1 direccion2 direccion3 direccion4 cp),
-    datos_cliente:     %w(codigo_po nombre_po sociedad direccion1 direccion2 direccion3 direccion4 cp),
-    direccion_entrega: %w(codigo_cliente lugar_entrega direccion1 direccion2 direccion3 direccion4 cp),
-    lineas_pedido:     %w(linea_pedido codigo_articulo_proveedor codigo_articulo_cliente unidades_consumo cantidad precio descripcion)
+  REGEXPS2 = {
+    # camps que es desaran a la bbdd
+    num_pedido:      /BGM\+[^+]+\+([0-9]+)\+/,
+    fecha_pedido:    /DTM\+137:([0-9]+):/,
+    lugar_entrega:   /NAD\+DP\+[^+]*\+[^+]*\+([^+]*\+[^+]*\+[^+]*\+[^+]*\+[^+]*)'/,
+    fecha_entrega:   /DTM\+2:([0-9]+):/,
+    fecha_documento: /UNB\+[^+]*\+[^+]*\+[^+]*\+([^+]*):/,
+    # camps que no es desen a la bbdd
+    datos_proveedor:   /NAD\+SU\+(?<codigo_po>[^:+]*):/,
+    datos_cliente:     /NAD\+BY\+(?<codigo_po>[^:+]*):/,
+    direccion_entrega: %r{
+      NAD\+DP\+(?<codigo_cliente>[^+:]*)[^+]*\+[^+]*\+
+      (?<lugar_entrega>[^+]*)\+
+      (?<direccion1>[^+]*)\+
+      (?<direccion2>[^+]*)\+
+      (?<direccion3>[^+]*)\+
+      (?<cp>[^+]*)'
+    }x,
+    lineas_pedido:     %r{
+      LIN\+(?<linea_pedido>[^+]*)\+[^+]*\+(?<codigo_articulo_cliente>[^+]*)'
+      PIA[^']*\+(?<codigo_articulo_proveedor>[^+]*)'
+      IMD[^:]*:::(?<descripcion>[^']*)'
+      QTY\+21:(?<cantidad>[^']*)'
+      QTY\+59:(?<unidades_consumo>[^']*)'
+      MOA[^']*'
+      PRI\+AAB:(?<precio_bruto>[^']*)'
+      PRI\+AAA:(?<precio_neto>[^']*)'
+      TAX[^']*'
+      MOA[^']*'
+    }x,
   }
 
   XPATHS_ORDER = {
@@ -55,17 +119,26 @@ class Order < ActiveRecord::Base
     country:    "/cac:PostalAddress/cac:Country/cbc:IdentificationCode",
   }
 
+  def self.regexps(edi)
+    !!(edi =~ REGEXPS[:num_pedido]) ? REGEXPS : REGEXPS2
+  end
+
+  def regexps
+    Order.regexps(original)
+  end
+
   def self.create_from_edi(file, project)
-    edi = file.read
+    edi = Redmine::CodesetUtil.replace_invalid_utf8(file.read)
     order = ReceivedOrder.new(
       project: project,
       original: edi,
       filename: file.original_filename
     )
-    REGEXPS.keys.each do |key|
+    rgxps = order.regexps
+    rgxps.keys.each do |key|
       next unless order.respond_to? "#{key}="
-      if edi =~ REGEXPS[key]
-        order.send("#{key}=", REGEXPS[key].match(edi)[1])
+      if edi =~ rgxps[key]
+        order.send("#{key}=", rgxps[key].match(edi)[1])
       else
         order.send("#{key}=", "?")
       end
@@ -156,34 +229,33 @@ class Order < ActiveRecord::Base
 
   def datos_proveedor
     if edi?
-      captures = REGEXPS[:datos_proveedor].match(original).captures
-      Hash[REGEXPS_KEYS[:datos_proveedor].zip(captures)]
-    else
+      original.scan(regexps[:datos_proveedor])
+      Hash[ Regexp.last_match.names.zip( Regexp.last_match.captures ) ]
     end
   end
 
   def datos_cliente
     if edi?
-      captures = REGEXPS[:datos_cliente].match(original).captures
-      Hash[REGEXPS_KEYS[:datos_cliente].zip(captures)]
-    else
+      original.scan(regexps[:datos_cliente])
+      Hash[ Regexp.last_match.names.zip( Regexp.last_match.captures ) ]
     end
   end
 
   def direccion_entrega
     if edi?
-      captures = REGEXPS[:direccion_entrega].match(original).captures
-      Hash[REGEXPS_KEYS[:direccion_entrega].zip(captures)]
-    else
+      original.scan(regexps[:direccion_entrega])
+      Hash[ Regexp.last_match.names.zip( Regexp.last_match.captures ) ]
     end
   end
 
   def lineas_pedido
     if edi?
-      original.scan(REGEXPS[:lineas_pedido]).collect do |captures|
-        Hash[REGEXPS_KEYS[:lineas_pedido].zip(captures)]
+      # http://stackoverflow.com/questions/6804557
+      # http://stackoverflow.com/questions/11688726
+      # removed \n to match multiple lines
+      original.gsub("\n",'').to_enum(:scan, regexps[:lineas_pedido]).map do
+        Hash[ Regexp.last_match.names.zip( Regexp.last_match.captures ) ]
       end
-    else
     end
   end
 
@@ -192,7 +264,7 @@ class Order < ActiveRecord::Base
   end
 
   def previous
-    Order.first(conditions: ["project_id = ? and id < ? and type = ?", project.id, id, type])
+    Order.last(conditions: ["project_id = ? and id < ? and type = ?", project.id, id, type])
   end
 
   protected
@@ -208,6 +280,20 @@ class Order < ActiveRecord::Base
     end
     #event.audits = self.last_audits_without_event
     event.save!
+  end
+
+  private
+
+  def visible?(usr=nil)
+    (usr || User.current).allowed_to?(:use_orders, project)
+  end
+
+  def notify_users_by_mail
+    MailNotifier.order_add(self).deliver
+  end
+
+  def updated_on
+    updated_at
   end
 
 end

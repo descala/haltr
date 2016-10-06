@@ -66,7 +66,7 @@ class Client < ActiveRecord::Base
   def bank_invoices(due_date,bank_info_id)
     IssuedInvoice.where(
       client_id:      self.id,
-      state:          ['sent','registered'],
+      state:          ['sent','registered','accepted','read'],
       payment_method: PAYMENT_DEBIT,
       due_date:       due_date,
       bank_info_id:   bank_info_id

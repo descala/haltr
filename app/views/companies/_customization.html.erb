@@ -70,6 +70,7 @@
         </div>
       </div>
     <% end -%>
+    <p><%= f.check_box :bcc_me, no_label: true %><%= l "field_bcc_me"%></p>
   </fieldset>
   <fieldset style="border: none;">
     <legend><%= l(:label_quote_plural) %></legend>
@@ -89,9 +90,14 @@
         </div>
       </div>
     <% end -%>
-    <hr/>
-    <p><%= f.check_box :bcc_me, no_label: true %><%= l "field_bcc_me"%></p>
   </fieldset>
+</fieldset>
+
+<fieldset class="tabular box" style="padding-bottom: 40px;">
+  <legend><%= l(:mail_notifications) %></legend>
+  <p><%= f.check_box :invoice_notifications, no_label: true %><%= l :label_received %></p>
+  <br />
+  <p><%= f.check_box :order_notifications, no_label: true %><%= l :label_order_plural %></p>
 </fieldset>
 
 <%= call_hook(:company_customization_form_end) %>

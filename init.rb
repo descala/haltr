@@ -95,7 +95,8 @@ Redmine::Plugin.register :haltr do
         :invoice_templates => [:index, :show, :context_menu],
         :charts    => [:invoice_total, :invoice_status, :top_clients],
         :events    => [:file, :index],
-        :import_errors => [:index, :show] },
+        :import_errors => [:index, :show],
+        :orders    => [:index, :show, :received, :show_received] },
       :require => :member
 
     permission :restricted_use,
