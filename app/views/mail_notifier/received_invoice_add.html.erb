@@ -1,1 +1,1 @@
-<%= simple_format(t(:mail_body_invoice_add, title: Setting.app_title, link: link_to(@invoice_url,@invoice_url))) %>
+<%= simple_format(t(:mail_body_invoice_add, title: link_to(Setting.app_title, "#{Setting.protocol}://#{Setting.host_name}"), link: link_to(@invoice_url,@invoice_url))) %>

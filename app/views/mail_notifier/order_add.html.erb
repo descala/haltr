@@ -1,1 +1,1 @@
-<%= simple_format(t(:mail_body_order_add, title: Setting.app_title, link: link_to(@order_url,@order_url))) %>
+<%= simple_format(t(:mail_body_order_add, title: link_to(Setting.app_title,"#{Setting.protocol}://#{Setting.host_name}"), link: link_to(@order_url, @order_url))) %>
