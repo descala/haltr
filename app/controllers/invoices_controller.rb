@@ -878,6 +878,7 @@ class InvoicesController < ApplicationController
     unless @invoice.has_been_read or User.current.projects.include?(@invoice.project) or User.current.admin?
       Event.create!(:name=>'read',:invoice=>@invoice,:user=>User.current)
       @invoice.update_attribute(:has_been_read,true)
+      @invoice.read
     end
     render :layout=>"public"
   rescue ActionView::MissingTemplate

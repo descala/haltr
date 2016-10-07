@@ -180,7 +180,7 @@
         <tbody>
           <% @invoices.each do |invoice| -%>
             <%if invoice.total > invoice.total_paid and invoice.total_paid.cents != 0%>
-              <tr <%='class="halfpaid"'.html_safe%>,  id="invoice-<%=invoice.id%>" class="hascontextmenu <%= 'amended ' if invoice.amended? %><%= cycle("odd", "even") %>">
+              <tr id="invoice-<%=invoice.id%>" class="halfpaid hascontextmenu <%= 'amended ' if invoice.amended? %><%= cycle("odd", "even") %>">
               <%else%>
               <tr id="invoice-<%=invoice.id%>" class="hascontextmenu <%= 'amended ' if invoice.amended? %><%= cycle("odd", "even") %>">
             <% end %>
