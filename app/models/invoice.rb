@@ -5,7 +5,7 @@ class Invoice < ActiveRecord::Base
   include HaltrHelper
   include Haltr::FloatParser
   include Haltr::PaymentMethods
-  float_parse :fa_import, :discount_amount, :discount_percent
+  float_parse :fa_import, :discount_amount, :discount_percent, :exchange_rate
 
   audited except: [:import_in_cents, :total_in_cents,
                    :state, :has_been_read, :id, :original]
@@ -42,6 +42,7 @@ class Invoice < ActiveRecord::Base
   validates_numericality_of :payments_on_account_in_cents, :allow_nil => true
   validates_numericality_of :amounts_withheld_in_cents, :allow_nil => true
   validates_numericality_of :exchange_rate, :allow_nil => true
+  validates_format_of :exchange_rate, with: /\A-?[0-9]+(\.[0-9]{1,2}|)\z/
 
   before_save :fields_to_utf8
   after_create :increment_counter
