@@ -56,6 +56,28 @@ class MailNotifier < Mailer
       :subject => subject
   end
 
+  def received_invoice_add(invoice)
+    redmine_headers 'Project' => invoice.project.identifier,
+                    'invoice-Id' => invoice.id
+    message_id invoice
+    @invoice = invoice
+    @invoice_url = url_for(:project => invoice.project.identifier,
+                           :controller => 'invoices',
+                           :action => 'show', :id => invoice.id)
+    mail :to => invoice.recipients,
+      :subject => l(:mail_subject_invoice_add, :title => Setting.app_title)
+  end
+
+  def order_add(order)
+    redmine_headers 'Project' => order.project.identifier,
+                    'order-Id' => order.id
+    message_id order
+    @order = order
+    @order_url = project_order_url(order, project_id: order.project)
+    mail :to => order.recipients,
+      :subject => l(:mail_subject_order_add, :title => Setting.app_title)
+  end
+
   # delayed_job hooks
 
   def self.failure(job)
