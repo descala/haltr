@@ -8,9 +8,6 @@ class Order < ActiveRecord::Base
   after_create :create_event
 
   acts_as_event
-  after_create :notify_users_by_mail, if: Proc.new {|o|
-    o.project.company.order_notifications
-  }
 
   REGEXPS = {
     # camps que es desaran a la bbdd
@@ -280,20 +277,6 @@ class Order < ActiveRecord::Base
     end
     #event.audits = self.last_audits_without_event
     event.save!
-  end
-
-  private
-
-  def visible?(usr=nil)
-    (usr || User.current).allowed_to?(:use_orders, project)
-  end
-
-  def notify_users_by_mail
-    MailNotifier.order_add(self).deliver
-  end
-
-  def updated_on
-    updated_at
   end
 
 end
