@@ -1,1 +1,1 @@
-<p><%= link_to @invoice.number, @invoice_url %></p>
+<%= simple_format(t(:mail_body_invoice_add, title: Setting.app_title, link: link_to(@invoice_url,@invoice_url))) %>

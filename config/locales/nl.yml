@@ -765,3 +765,19 @@ If you save it, will be marked as New."
   deleted_received_order: "Received order deleted"
   deleted_issued_order: "Issued order deleted"
   mail_notifications: "Email notifications"
+  mail_subject_order_add: "Warning: You have received a new order in %{title}"
+  mail_body_order_add: |
+    Dear user,
+    You have received a new order in your %{title} account.
+    To get the document, please use the following link: %{link}
+
+    With kind regards
+    %{title} Team
+  mail_subject_invoice_add: "Warning: You have received a new invoice in %{title}"
+  mail_body_invoice_add: |
+    Dear user,
+    You have received a new invoice in your %{title} account.
+    To get the document, please use the following link: %{link}
+
+    With kind regards
+    %{title} Team

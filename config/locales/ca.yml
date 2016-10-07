@@ -782,3 +782,21 @@ Si la deses, es marcara com a Nova."
   deleted_received_order: "Comanda rebuda esborrada"
   deleted_issued_order: "Comanda emesa esborrada"
   mail_notifications: "Notificacions per correu electrònic"
+  mail_subject_order_add: "Atenció: Rebuda nova comanda a %{title}"
+  mail_body_order_add: |
+    Estimat usuari,
+    Us notifiquem que heu rebut una comanda al vostre portal %{title}.
+    Per tal de veure'n el contingut, sisplau accediu al següent enllaç: %{link}
+    Quedem a la vostra disposició.
+
+    Salutacions cordials
+    Equip %{title}
+  mail_subject_invoice_add: "Atenció: Rebuda nova factura a %{title}"
+  mail_body_invoice_add: |
+    Estimat usuari,
+    Us notifiquem que heu rebut una factura al vostre portal %{title}.
+    Per tal de veure'n el contingut, sisplau accediu al següent enllaç: %{link}
+    Quedem a la vostra disposició.
+
+    Salutacions cordials
+    Equip %{title}
