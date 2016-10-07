@@ -800,3 +800,21 @@ Si la guardas, se marcará como Nueva."
   deleted_received_order: "Pedido recibido borrado"
   deleted_issued_order: "Pedido emitido borrado"
   mail_notifications: "Notificaciones por correo electrónico"
+  mail_subject_order_add: "Atención: Recibido nuevo pedido en %{title}"
+  mail_body_order_add: |
+    Estimado usuario,
+    Os notificamos que habéis recibido un pedido en vuestro portal %{title}.
+    Para ver el contenido del documento, por favor utilizad el siguiente enlace: %{link}
+    Quedamos a vuestra disposición.
+
+    Saludos cordiales
+    Equipo %{title}
+  mail_subject_invoice_add: "Atención: Recibida nueva factura en %{title}"
+  mail_body_invoice_add: |
+    Estimado usuario,
+    Os notificamos que habéis recibido una factura en vuestro portal %{title}.
+    Para ver el contenido del documento, por favor utilizad el siguiente enlace: %{link}
+    Quedamos a vuestra disposición.
+
+    Saludos cordiales
+    Equipo %{title}

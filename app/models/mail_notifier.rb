@@ -64,9 +64,8 @@ class MailNotifier < Mailer
     @invoice_url = url_for(:project => invoice.project.identifier,
                            :controller => 'invoices',
                            :action => 'show', :id => invoice.id)
-    recipients = invoice.recipients
-    mail :to => recipients,
-      :subject => "notification"
+    mail :to => invoice.recipients,
+      :subject => l(:mail_subject_invoice_add, :title => Setting.app_title)
   end
 
   def order_add(order)
@@ -75,9 +74,8 @@ class MailNotifier < Mailer
     message_id order
     @order = order
     @order_url = project_order_url(order, project_id: order.project)
-    recipients = order.recipients
-    mail :to => recipients,
-      :subject => "notification"
+    mail :to => order.recipients,
+      :subject => l(:mail_subject_order_add, :title => Setting.app_title)
   end
 
   # delayed_job hooks

@@ -1,1 +1,1 @@
-<p><%= link_to @order.num_pedido, @order_url %></p>
+<%= simple_format(t(:mail_body_order_add, title: Setting.app_title, link: link_to(@order_url,@order_url))) %>
