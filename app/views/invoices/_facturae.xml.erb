@@ -309,7 +309,7 @@
             <InvoiceCurrencyCode><%=h @invoice.currency%></InvoiceCurrencyCode>
             <% if @invoice.currency != 'EUR' and @invoice.exchange_rate -%>
               <ExchangeRateDetails>
-                <ExchangeRate><%= @invoice.exchange_rate %></ExchangeRate>
+                <ExchangeRate><%=h haltr_precision(@invoice.exchange_rate, 2) %></ExchangeRate>
                 <ExchangeRateDate><%= @invoice.exchange_date %></ExchangeRateDate>
               </ExchangeRateDetails>
             <% end -%>
