@@ -16,7 +16,7 @@ class PaymentsControllerTest < ActionController::TestCase
     assert_equal 'text/xml', @response.content_type
     xml = Nokogiri::XML(@response.body)
     xml.remove_namespaces!
-    assert_equal invoices(:invoice1).client.iban, xml.xpath('//DbtrAcct/Id/IBAN').text
+    assert_equal invoices(:invoice1).client_iban, xml.xpath('//DbtrAcct/Id/IBAN').text
     assert_equal invoices(:invoice1).bank_info.iban, xml.xpath('//CdtrAcct/Id/IBAN').text
     assert_equal "08/194 08/001", xml.xpath('//EndToEndId').text
     assert_equal "Invoice 08/194 08/001", xml.xpath('//Ustrd').text

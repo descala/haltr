@@ -579,9 +579,9 @@
                <PaymentMeans><%=h @invoice.payment_method_code(:facturae) %></PaymentMeans>
 <% if @invoice.debit? and @client.use_iban? -%>
                <AccountToBeDebited>
-                 <IBAN><%=h @client.iban%></IBAN>
-<% unless @client.bic.blank? -%>
-                 <BIC><%=h @client.bic.ljust(11,'X')%></BIC>
+                 <IBAN><%=h @invoice.client_iban%></IBAN>
+<% unless @invoice.client_bic.blank? -%>
+                 <BIC><%=h @invoice.client_bic.ljust(11,'X')%></BIC>
 <% end -%>
                </AccountToBeDebited>
 <% elsif @invoice.debit? and !@client.bank_account.blank?-%>

@@ -117,7 +117,7 @@
   <Invoices>
     <Invoice>
       <InvoiceHeader>
-        <InvoiceNumber>767</InvoiceNumber>
+        <InvoiceNumber>768</InvoiceNumber>
         <InvoiceDocumentType>FC</InvoiceDocumentType>
         <InvoiceClass>OO</InvoiceClass>
       </InvoiceHeader>
@@ -220,8 +220,8 @@
           <InstallmentAmount>671.00</InstallmentAmount>
           <PaymentMeans>02</PaymentMeans>
           <AccountToBeDebited>
-            <IBAN>ES8023100001180000012345</IBAN>
-            <BIC>biiiiiiiiic</BIC>
+            <IBAN>ES0000000000000000000000</IBAN>
+            <BIC>biiiiiiiic2</BIC>
           </AccountToBeDebited>
         </Installment>
       </PaymentDetails>

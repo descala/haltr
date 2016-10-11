@@ -144,11 +144,13 @@ class Client < ActiveRecord::Base
   end
 
   def set_if_blank(atr,val)
+    val.gsub!(' ','') unless val.nil?
     if send("read_attribute",atr).blank?
       send("#{atr}=",val)
-    elsif send(atr) != val
-      raise "client #{atr} does not match (#{send(atr)} != #{val})"
     end
+    db_val = send("read_attribute",atr)
+    db_val.gsub!(' ','') unless db_val.nil?
+    db_val == val
   end
 
   def bank_account

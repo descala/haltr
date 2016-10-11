@@ -86,13 +86,13 @@
       <cac:PaymentMeans>
         <cbc:PaymentMeansCode listID="UNCL4461"><%=h @invoice.payment_method_code(:ubl) %></cbc:PaymentMeansCode>
         <cbc:PaymentDueDate><%=h @invoice.due_date%></cbc:PaymentDueDate>
-<% if @invoice.debit? and @client.iban and @client.bic and !@client.iban.blank? and !@client.bic.blank? -%>
+<% if @invoice.debit? and @invoice.client_iban.present? and @invoice.client_bic.present? -%>
             <cbc:PaymentChannelCode>IBAN</cbc:PaymentChannelCode>
             <cac:PayerFinancialAccount>
-              <cbc:ID schemeID="IBAN"><%=h @client.iban%></cbc:ID>
+              <cbc:ID schemeID="IBAN"><%=h @invoice.client_iban%></cbc:ID>
               <cac:FinancialInstitutionBranch>
                 <cac:FinancialInstitution>
-                  <cbc:ID schemeID="BIC"><%=h @client.bic%></cbc:ID>
+                  <cbc:ID schemeID="BIC"><%=h @invoice.client_bic%></cbc:ID>
                 </cac:FinancialInstitution>
               </cac:FinancialInstitutionBranch>
             </cac:PayerFinancialAccount>

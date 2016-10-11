@@ -100,7 +100,7 @@ class PaymentsController < ApplicationController
         ).reject {|i| i.due_date.nil? }.group_by(&:due_date).each do |due_date, invoices|
         @invoices_to_pay_by_bank_info[bi][due_date] = {}
         invoices.each do |invoice|
-          unless invoice.client.bank_account.blank? and invoice.client.iban.blank?
+          unless invoice.client.bank_account.blank? and invoice.client_iban.blank?
             @invoices_to_pay_by_bank_info[bi][due_date]["sepa_#{invoice.client.sepa_type}"] ||= []
             @invoices_to_pay_by_bank_info[bi][due_date]["sepa_#{invoice.client.sepa_type}"] << invoice
           end
