@@ -230,7 +230,7 @@ class Order < ActiveRecord::Base
       Hash[ Regexp.last_match.names.zip( Regexp.last_match.captures ) ]
     end
   rescue
-    "?"
+    {}
   end
 
   def datos_cliente
@@ -239,7 +239,7 @@ class Order < ActiveRecord::Base
       Hash[ Regexp.last_match.names.zip( Regexp.last_match.captures ) ]
     end
   rescue
-    "?"
+    {}
   end
 
   def direccion_entrega
@@ -248,7 +248,7 @@ class Order < ActiveRecord::Base
       Hash[ Regexp.last_match.names.zip( Regexp.last_match.captures ) ]
     end
   rescue
-    "?"
+    {}
   end
 
   def lineas_pedido
