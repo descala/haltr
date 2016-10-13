@@ -229,6 +229,8 @@ class Order < ActiveRecord::Base
       original.scan(regexps[:datos_proveedor])
       Hash[ Regexp.last_match.names.zip( Regexp.last_match.captures ) ]
     end
+  rescue
+    "?"
   end
 
   def datos_cliente
@@ -236,6 +238,8 @@ class Order < ActiveRecord::Base
       original.scan(regexps[:datos_cliente])
       Hash[ Regexp.last_match.names.zip( Regexp.last_match.captures ) ]
     end
+  rescue
+    "?"
   end
 
   def direccion_entrega
@@ -243,6 +247,8 @@ class Order < ActiveRecord::Base
       original.scan(regexps[:direccion_entrega])
       Hash[ Regexp.last_match.names.zip( Regexp.last_match.captures ) ]
     end
+  rescue
+    "?"
   end
 
   def lineas_pedido
@@ -254,6 +260,8 @@ class Order < ActiveRecord::Base
         Hash[ Regexp.last_match.names.zip( Regexp.last_match.captures ) ]
       end
     end
+  rescue
+    []
   end
 
   def next
