@@ -1,11 +1,10 @@
 class InvoiceImgsController < ApplicationController
 
-  before_filter :find_invoice_img, :except => [:create,:show,:train_data]
+  before_filter :find_invoice_img, :except => [:create,:show]
   before_filter :find_project_by_project_id, :only=> [:show]
   skip_before_filter :check_if_login_required, :only => [:create]
   before_filter :check_remote_ip,              :only => [:create]
   helper :context_menus
-  accept_api_auth :train_data
 
   def show
     send_data(Haltr::Utils.decompress(InvoiceImg.find(params[:id]).img),
@@ -74,19 +73,6 @@ class InvoiceImgsController < ApplicationController
     end
     @invoice_img.update_invoice
     redirect_back_or_default(:controller=>'received',:action=>'index',:project_id=>@project.id)
-  end
-
-  def train_data
-    unless User.current.admin?
-      render_api_head 403
-      return
-    end
-    @invoice_imgs = InvoiceImg.all
-    respond_to do |format|
-      format.json do
-        render json: @invoice_imgs
-      end
-    end
   end
 
   #TODO: duplicated code
