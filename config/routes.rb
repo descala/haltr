@@ -69,8 +69,7 @@ resources :projects do
   match 'events' => 'events#index', via: [:get,:post]
 end
 resources :invoice_imgs, :only => [:create,:update]
-match 'invoice_imgs/:id/tag/:tag' => 'invoice_imgs#tag', :as => 'invoice_imgs_tag'
-match 'invoice_imgs/train_data' => 'invoice_imgs#train_data'
+match 'invoice_imgs/:id/tag/:tag' => 'invoice_imgs#tag', :as => 'invoice_imgs_tag', :via => :get
 
 resources :clients do
   resources :people, :only => [:index, :new, :create]
