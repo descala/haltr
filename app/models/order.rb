@@ -201,6 +201,7 @@ class Order < ActiveRecord::Base
     if client.new_record?
       client.project = project
       XPATHS_PARTY.each do |key, xpath|
+        next unless client.respond_to?("#{key}=")
         value = Haltr::Utils.get_xpath(doc, "#{XPATHS_ORDER[client_role]}#{xpath}")
         client.send("#{key}=",value)
       end
