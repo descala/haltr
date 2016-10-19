@@ -225,7 +225,11 @@ class OrdersController < ApplicationController
     end
   rescue
     flash[:error] = $!.message
-    redirect_to action: :show, id: @order
+    if @order.is_a? ReceivedOrder
+      redirect_to action: :show_received, id: @order
+    else
+      redirect_to action: :show, id: @order
+    end
   end
 
   private
