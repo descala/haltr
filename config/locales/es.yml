@@ -216,7 +216,7 @@ es:
   unpaid: "Marcada como no pagada"
   edited: "Editada"
   new: "Creada"
-  bounced: "Devuelta: No se pudo entregar en la dirección de correo indicada"
+  bounced: "Devuelta: No se pudo entregar al destinatario indicado"
   validating_format: "Factura recibida"
   success_validating_format: "Validación de formato correcta"
   error_validating_format: "Error en la validación de formato"

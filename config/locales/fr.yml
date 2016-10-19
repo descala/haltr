@@ -205,7 +205,7 @@ fr:
   unpaid: "Marqué comme non payé"
   edited: "Edité"
   new: "Créé"
-  bounced: "Rebondi: Incapable d'envoyer à l'email indiqué"
+  bounced: "Bounced: Unable to deliver to indicated recipient"
   validating_format: "Facture reçue"
   success_validating_format: "Format validé avec success"
   error_validating_format: "Erreur à la validation du format"

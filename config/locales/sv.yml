@@ -202,7 +202,7 @@ sv:
   unpaid: "Markera som ej betald"
   edited: "Ändrad"
   new: "Skapad"
-  bounced: "Misslyckad sändning. Gick inte att skicka till registrerad mail-adress"
+  bounced: "Bounced: Unable to deliver to indicated recipient"
   validating_format: "Mottagen faktura"
   success_validating_format: "Formatvalidering lyckades"
   error_validating_format: "Fel upptäckt vid formatvalidering"

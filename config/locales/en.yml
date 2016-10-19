@@ -205,7 +205,7 @@ en:
   unpaid: "Marked as unpaid"
   edited: "Edited"
   new: "Created"
-  bounced: "Bounced: Unable to deliver to indicated email"
+  bounced: "Bounced: Unable to deliver to indicated recipient"
   validating_format: "Received invoice"
   success_validating_format: "Format validation success"
   error_validating_format: "Error on format validation"
