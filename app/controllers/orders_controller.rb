@@ -6,6 +6,7 @@ class OrdersController < ApplicationController
   menu_item Haltr::MenuItem.new(:orders,:inexistent), :only => [:import]
 
   before_filter :find_project_by_project_id
+  before_filter :find_order, only: [:add_comment, :show, :create_invoice]
   before_filter :authorize
 
   helper :sort
@@ -81,7 +82,6 @@ class OrdersController < ApplicationController
   end
 
   def show
-    @order = Order.where(project_id: @project.id).find(params[:id])
     if params[:download]
       send_data @order.original,
         :type => 'text/plain',
@@ -188,7 +188,6 @@ class OrdersController < ApplicationController
   end
 
   def add_comment
-    @order = Order.where(project_id: @project.id).find(params[:id])
     @comment = Comment.new
     @comment.safe_attributes = params[:comment]
     @comment.author = User.current
@@ -201,6 +200,38 @@ class OrdersController < ApplicationController
     else
       redirect_to project_order_path(@order, project_id: @order.project)
     end
+  end
+
+  def create_invoice
+    if @order.xml?
+      begin
+        xslt = Nokogiri.XSLT(File.open(
+          File.dirname(__FILE__) +
+          "/../../lib/haltr/xslt/Invinet-Order2Invoice.xsl",'rb'
+        ))
+        invoice_xml = xslt.transform(Nokogiri::XML(@order.original)).to_s
+      rescue
+        raise "Error with XSLT transformation"
+      end
+      @invoice = Invoice.create_from_xml(
+        invoice_xml,
+        @order.project.company,
+        Digest::MD5.hexdigest(invoice_xml),
+        'api'
+      )
+      redirect_to invoice_path(@invoice)
+    else
+      raise "Original must be in XML format to create an invoice"
+    end
+  rescue
+    flash[:error] = $!.message
+    redirect_to action: :show, id: @order
+  end
+
+  private
+
+  def find_order
+    @order = Order.where(project_id: @project.id).find(params[:id])
   end
 
 end

@@ -802,3 +802,4 @@ Si la guardas, se marcará como Nueva."
 
     Saludos cordiales
     Equipo %{title}
+  create_invoice_from_order: "Crear factura"

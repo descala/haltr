@@ -163,9 +163,10 @@ Redmine::Plugin.register :haltr do
       :export_channels => [:index],
     }
 
-    permission :use_orders,
-      { orders: [:index, :show, :destroy, :import, :received, :show_received, :add_comment] },
-      require: :member
+    permission :use_orders, {
+      orders: [:index, :show, :destroy, :import, :received, :show_received,
+               :add_comment, :create_invoice]
+    }, require: :member
 
     # Loads permisons from config/channels.yml
     ExportChannels.permissions.each do |permission,actions|

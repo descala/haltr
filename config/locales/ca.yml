@@ -800,3 +800,4 @@ Si la deses, es marcara com a Nova."
 
     Salutacions cordials
     Equip %{title}
+  create_invoice_from_order: "Crear factura"

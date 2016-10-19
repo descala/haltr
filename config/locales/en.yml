@@ -786,3 +786,4 @@ If you save it, will be marked as New."
 
     With kind regards
     %{title} Team
+  create_invoice_from_order: "Create invoice"
