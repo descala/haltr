@@ -6,7 +6,7 @@ class OrdersController < ApplicationController
   menu_item Haltr::MenuItem.new(:orders,:inexistent), :only => [:import]
 
   before_filter :find_project_by_project_id
-  before_filter :find_order, only: [:add_comment, :show, :create_invoice]
+  before_filter :find_order, only: [:add_comment, :show, :show_received, :create_invoice]
   before_filter :authorize
 
   helper :sort
