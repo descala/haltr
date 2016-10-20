@@ -208,7 +208,7 @@ class OrdersController < ApplicationController
   end
 
   def create_invoice
-    if @order.invoice and Invoice.exists? @order.invoice
+    if @order.invoice
       raise "Order already has an invoice: #{@order.invoice.number}"
     end
     invoice_xml = @order.ubl_invoice
