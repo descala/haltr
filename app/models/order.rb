@@ -291,6 +291,26 @@ class Order < ActiveRecord::Base
     Order.last(conditions: ["project_id = ? and id < ? and type = ?", project.id, id, type])
   end
 
+  def ubl_invoice
+    if xml?
+      begin
+        xslt = Nokogiri.XSLT(File.open(
+          File.dirname(__FILE__) +
+          "/../../lib/haltr/xslt/Invinet-Order2Invoice.xsl",'rb'
+        ))
+        xslt.transform(
+          Nokogiri::XML(original),
+          ['ID', "'#{IssuedInvoice.next_number(project)}'",
+           'IssueDate', "'#{Date.today}'"]
+        ).to_s
+      rescue
+        raise "Error with XSLT transformation"
+      end
+    else
+      raise "Original must be in XML format to create an invoice"
+    end
+  end
+
   protected
 
   def create_event

@@ -87,6 +87,11 @@ class OrdersController < ApplicationController
         :type => 'text/plain',
         :disposition => "attachment; filename=#{@order.filename}"
       return
+    elsif params[:show_invoice] and @order.xml?
+      send_data @order.ubl_invoice,
+        type: 'text/plain',
+        disposition: "attachment; filename=#{@order.filename}"
+      return
     elsif @order.xml?
       doc  = Nokogiri::XML(@order.original)
       if doc.child and doc.child.name == "StandardBusinessDocument"
@@ -203,26 +208,14 @@ class OrdersController < ApplicationController
   end
 
   def create_invoice
-    if @order.xml?
-      begin
-        xslt = Nokogiri.XSLT(File.open(
-          File.dirname(__FILE__) +
-          "/../../lib/haltr/xslt/Invinet-Order2Invoice.xsl",'rb'
-        ))
-        invoice_xml = xslt.transform(Nokogiri::XML(@order.original)).to_s
-      rescue
-        raise "Error with XSLT transformation"
-      end
-      @invoice = Invoice.create_from_xml(
-        invoice_xml,
-        @order.project.company,
-        Digest::MD5.hexdigest(invoice_xml),
-        'api'
-      )
-      redirect_to invoice_path(@invoice)
-    else
-      raise "Original must be in XML format to create an invoice"
-    end
+    invoice_xml = @order.ubl_invoice
+    invoice = Invoice.create_from_xml(
+      invoice_xml,
+      @order.project.company,
+      Digest::MD5.hexdigest(invoice_xml),
+      'api'
+    )
+    redirect_to invoice_path(invoice)
   rescue
     flash[:error] = $!.message
     if @order.is_a? ReceivedOrder

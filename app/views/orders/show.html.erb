@@ -59,6 +59,14 @@
 
 <%= render :partial => 'events/list', locals: {events: @order.events} %>
 
+<% if (Rails.env == "development" or User.current.allowed_to?(:use_all_readonly, @project)) and @order.xml? -%>
+<div class="invoice-channel-links">
+<h3>Check generated documents</h3>
+<ul>
+  <li><%= link_to_if_authorized 'UBL invoice', {controller: 'orders', action: 'show', id: @order, show_invoice: true } %></li>
+</ul>
+</div><% end -%>
+
 <% content_for :header_tags do %>
   <%= stylesheet_link_tag 'orders', :plugin => 'haltr_invinet_patches' %>
   <%= stylesheet_link_tag 'minimal', :plugin => 'haltr' %>
