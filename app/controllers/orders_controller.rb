@@ -208,6 +208,9 @@ class OrdersController < ApplicationController
   end
 
   def create_invoice
+    if @order.invoice and Invoice.exists? @order.invoice
+      raise "Order already has an invoice: #{@order.invoice.number}"
+    end
     invoice_xml = @order.ubl_invoice
     invoice = Invoice.create_from_xml(
       invoice_xml,
@@ -215,6 +218,7 @@ class OrdersController < ApplicationController
       Digest::MD5.hexdigest(invoice_xml),
       'api'
     )
+    @order.update_attribute(:invoice_id, invoice.id)
     redirect_to invoice_path(invoice)
   rescue
     flash[:error] = $!.message

@@ -3,6 +3,7 @@ class Order < ActiveRecord::Base
 
   belongs_to :project
   belongs_to :client
+  belongs_to :invoice
   has_many :comments, :as => :commented, :dependent => :delete_all, :order => "created_on"
   has_many :events, :order => :created_at
   after_create :create_event

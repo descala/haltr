@@ -4,7 +4,11 @@
     <ul class="menu-rapid">
       <li><%= link_to l(:label_import), project_orders_import_path(project_id: @project) -%></li>
       <% if @order.xml? -%>
-        <li><%= link_to l(:create_invoice_from_order), {action: :create_invoice, id: @order, project_id: @project}, class: 'icon icon-attachment', method: :post %></li>
+        <% if @order.invoice -%>
+          <li><%= link_to l(:invoice), invoice_path(@order.invoice), class: 'icon icon-attachment' %></li>
+        <% else -%>
+          <li><%= link_to l(:create_invoice_from_order), {action: :create_invoice, id: @order, project_id: @project}, class: 'icon icon-attachment', method: :post %></li>
+        <% end -%>
       <% end -%>
       <li><%= link_to l(:download_original), project_order_path(@order, project_id: @project, download: true), class: 'icon icon-attachment' %></li>
       <li><%= link_to l(:download_as_pdf), project_order_path(@order, project_id: @project, format: :pdf), class: 'icon icon-attachment' %></li>
