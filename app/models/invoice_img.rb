@@ -11,9 +11,23 @@ class InvoiceImg < ActiveRecord::Base
   end
 
   after_initialize do
-    return unless data.is_a? HashWithIndifferentAccess or Rails.env == 'test'
-    # if data is a HashWithIndifferentAccess tranform to a Hash
-    # ensure data keys are symbols and tag numbers are integers
+    if data.is_a? HashWithIndifferentAccess or Rails.env == 'test'
+      # if data is a HashWithIndifferentAccess tranform to a Hash
+      # ensure data keys are symbols and tag numbers are integers
+      fix_datatypes
+    end
+  end
+
+  after_create do
+    update_invoice if data and tags
+    if tags.any?
+      Event.create(name: 'processed_pdf', invoice: invoice)
+    else
+      EventError.create(name: 'processed_pdf', invoice: invoice, notes: 'OCR failed')
+    end
+  end
+
+  def fix_datatypes
     initial_data = data
     initial_tags = initial_data['tags'] || {}
     initial_tokens= initial_data['tokens'] || {}
@@ -24,7 +38,15 @@ class InvoiceImg < ActiveRecord::Base
     self.data[:height] = initial_data['height']
     self.data[:name] = initial_data['name']
     initial_tags.each do |tag, token_number|
-      value = token_number.to_i rescue token_number
+      value = nil
+      if token_number.is_a? Array
+        value = []
+        token_number.each do |num|
+          value << num.to_i rescue token_number
+        end
+      else
+        value = token_number.to_i rescue token_number
+      end
       self.data[:tags][tag.to_sym] = value
     end
     initial_tokens.each do |token_number, token_data|
@@ -35,15 +57,6 @@ class InvoiceImg < ActiveRecord::Base
       token[:y0] = token_data['y0'].to_i
       token[:y1] = token_data['y1'].to_i
       self.data[:tokens][token_number.to_i] = token
-    end
-  end
-
-  after_create do
-    update_invoice if data and tags
-    if tags.any?
-      Event.create(name: 'processed_pdf', invoice: invoice)
-    else
-      EventError.create(name: 'processed_pdf', invoice: invoice, notes: 'OCR failed')
     end
   end
 
@@ -130,11 +143,11 @@ class InvoiceImg < ActiveRecord::Base
     reference = tags[key]
     if reference.is_a? Array
       reference.collect do |ref|
-        tokens[ref][:text]
+        tokens[ref.to_i][:text]
       end.join(' ')
     else
-      if tokens[reference]
-        tokens[reference][:text]
+      if tokens[reference.to_i]
+        tokens[reference.to_i][:text]
       else
         reference
       end
@@ -263,9 +276,13 @@ class InvoiceImg < ActiveRecord::Base
   end
 
   def iso_country_from_text(country_txt)
-    fm = FuzzyMatch.new(ISO3166::Country.translations(tagv(:language)))
-    # ["ES", "Espanya"]
-    fm.find(country_txt)[0].downcase rescue invoice.company.country
+    begin
+      fm = FuzzyMatch.new(ISO3166::Country.translations(tagv(:language)))
+      # ["ES", "Espanya"]
+      fm.find(country_txt)[0].downcase
+    rescue
+      invoice.company.country
+    end
   end
 
   def as_json(options)
