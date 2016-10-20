@@ -64,8 +64,8 @@ class InvoiceImg < ActiveRecord::Base
   def update_invoice
     tags[:language]  = what_language unless tagv(:language)
     invoice.number   = tagv(:invoice_number).gsub(/\s/,'') rescue nil
-    invoice.date     = tagv(:issue)
-    invoice.due_date = tagv(:due)
+    invoice.date     = input_date(tagv(:issue))
+    invoice.due_date = input_date(tagv(:due))
     subtotal         = tagv(:subtotal).to_money rescue nil
     tax_percentage   = tagv(:tax_percentage).to_money rescue nil
     tax_amount       = tagv(:tax_amount).to_money rescue nil
@@ -144,11 +144,11 @@ class InvoiceImg < ActiveRecord::Base
     reference = tags[key]
     if reference.is_a? Array
       reference.collect do |ref|
-        tokens[ref.to_i][:text]
+        tokens[ref][:text]
       end.join(' ')
     else
-      if tokens[reference.to_i]
-        tokens[reference.to_i][:text]
+      if tokens[reference]
+        tokens[reference][:text]
       else
         reference
       end
@@ -284,6 +284,12 @@ class InvoiceImg < ActiveRecord::Base
     rescue
       invoice.company.country
     end
+  end
+
+  def input_date(d)
+    return if d.nil?
+    # Assume year 20xx. 16 -> 2016
+    d.gsub(/([^\d])(\d\d)$/,"\\120\\2}")
   end
 
   def as_json(options)
