@@ -11,9 +11,23 @@ class InvoiceImg < ActiveRecord::Base
   end
 
   after_initialize do
-    return unless data.is_a? HashWithIndifferentAccess or Rails.env == 'test'
-    # if data is a HashWithIndifferentAccess tranform to a Hash
-    # ensure data keys are symbols and tag numbers are integers
+    if data.is_a? HashWithIndifferentAccess or Rails.env == 'test'
+      # if data is a HashWithIndifferentAccess tranform to a Hash
+      # ensure data keys are symbols and tag numbers are integers
+      fix_datatypes
+    end
+  end
+
+  after_create do
+    update_invoice if data and tags
+    if tags.any?
+      Event.create(name: 'processed_pdf', invoice: invoice)
+    else
+      EventError.create(name: 'processed_pdf', invoice: invoice, notes: 'OCR failed')
+    end
+  end
+
+  def fix_datatypes
     initial_data = data
     initial_tags = initial_data['tags'] || {}
     initial_tokens= initial_data['tokens'] || {}
@@ -24,7 +38,15 @@ class InvoiceImg < ActiveRecord::Base
     self.data[:height] = initial_data['height']
     self.data[:name] = initial_data['name']
     initial_tags.each do |tag, token_number|
-      value = token_number.to_i rescue token_number
+      value = nil
+      if token_number.is_a? Array
+        value = []
+        token_number.each do |num|
+          value << num.to_i rescue token_number
+        end
+      else
+        value = token_number.to_i rescue token_number
+      end
       self.data[:tags][tag.to_sym] = value
     end
     initial_tokens.each do |token_number, token_data|
@@ -38,20 +60,11 @@ class InvoiceImg < ActiveRecord::Base
     end
   end
 
-  after_create do
-    update_invoice if data and tags
-    if tags.any?
-      Event.create(name: 'processed_pdf', invoice: invoice)
-    else
-      EventError.create(name: 'processed_pdf', invoice: invoice, notes: 'OCR failed')
-    end
-  end
-
   def update_invoice
     tags[:language]  = what_language unless tagv(:language)
     invoice.number   = tagv(:invoice_number).gsub(/\s/,'') rescue nil
-    invoice.date     = tagv(:issue)
-    invoice.due_date = tagv(:due)
+    invoice.date     = input_date(tagv(:issue))
+    invoice.due_date = input_date(tagv(:due))
     subtotal         = tagv(:subtotal).to_money rescue nil
     tax_percentage   = tagv(:tax_percentage).to_money rescue nil
     tax_amount       = tagv(:tax_amount).to_money rescue nil
@@ -263,9 +276,29 @@ class InvoiceImg < ActiveRecord::Base
   end
 
   def iso_country_from_text(country_txt)
-    fm = FuzzyMatch.new(ISO3166::Country.translations(tagv(:language)))
-    # ["ES", "Espanya"]
-    fm.find(country_txt)[0].downcase rescue invoice.company.country
+    begin
+      fm = FuzzyMatch.new(ISO3166::Country.translations(tagv(:language)))
+      # ["ES", "Espanya"]
+      fm.find(country_txt)[0].downcase
+    rescue
+      invoice.company.country
+    end
+  end
+
+  def input_date(d)
+    return if d.nil?
+    # Assume year 20xx. 16 -> 2016
+    d.gsub(/([^\d])(\d\d)$/,"\\120\\2}")
+  end
+
+  def as_json(options)
+    {
+      id: self.invoice.id,
+      tags: tags,
+      tokens: tokens,
+      width: width,
+      height: height
+    }
   end
 
   def all_possible_tags
