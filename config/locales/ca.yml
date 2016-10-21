@@ -214,7 +214,7 @@ ca:
   unpaid: "Marcada com a no pagada"
   edited: "Editada"
   new: "Creada"
-  bounced: "Retornada: No s'ha pogut lliurar a l'adreça de correu indicada"
+  bounced: "Retornada: No s'ha pogut lliurar al destinatari indicat"
   validating_format: "Factura rebuda"
   success_validating_format: "Validació de format correcta"
   error_validating_format: "Error en la validació de format"
@@ -821,3 +821,5 @@ Si la deses, es marcara com a Nova."
 
     Salutacions cordials
     Equip %{title}
+  create_invoice_from_order: "Crear factura"
+  label_order: "Comanda"

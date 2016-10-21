@@ -203,7 +203,7 @@ da:
   unpaid: "Markeret som ikke batalt"
   edited: "Redigeret"
   new: "Oprettet"
-  bounced: "Bounced: Kan ikke levere til angivne e-mail"
+  bounced: "Bounced: Unable to deliver to indicated recipient"
   validating_format: "Modtaget faktura"
   success_validating_format: "Format validering succes"
   error_validating_format: "Fejl på format validering"
@@ -805,3 +805,5 @@ If you save it, will be marked as New."
 
     With kind regards
     %{title} Team
+  create_invoice_from_order: "Create invoice"
+  label_order: "Order"

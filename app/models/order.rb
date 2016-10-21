@@ -3,14 +3,12 @@ class Order < ActiveRecord::Base
 
   belongs_to :project
   belongs_to :client
+  belongs_to :invoice
   has_many :comments, :as => :commented, :dependent => :delete_all, :order => "created_on"
   has_many :events, :order => :created_at
   after_create :create_event
 
   acts_as_event
-  after_create :notify_users_by_mail, if: Proc.new {|o|
-    o.project.company.order_notifications
-  }
 
   REGEXPS = {
     # camps que es desaran a la bbdd
@@ -110,6 +108,8 @@ class Order < ActiveRecord::Base
   # relatius a seller o buyer
   XPATHS_PARTY = {
     taxcode:    "/cac:PartyTaxScheme/cbc:CompanyID",
+    taxcode2:   "/cac:PartyLegalEntity/cbc:CompanyID",
+    taxcode3:   "/cac:PartyIdentification/cbc:ID",
     name:       "/cac:PartyName/cbc:Name",
     endpointid: "/cbc:EndpointID", # peppol
     address:    "/cac:PostalAddress/cbc:StreetName",
@@ -164,28 +164,45 @@ class Order < ActiveRecord::Base
     if doc.child and doc.child.name == "StandardBusinessDocument"
       doc = Haltr::Utils.extract_from_sbdh(doc)
     end
-    seller_taxcode  = Haltr::Utils.get_xpath(doc, "#{XPATHS_ORDER[:seller]}#{XPATHS_PARTY[:taxcode]}")
+    seller_taxcodes = []
+    seller_taxcodes << Haltr::Utils.get_xpath(doc, "#{XPATHS_ORDER[:seller]}#{XPATHS_PARTY[:taxcode]}")
+    seller_taxcodes << Haltr::Utils.get_xpath(doc, "#{XPATHS_ORDER[:seller]}#{XPATHS_PARTY[:taxcode2]}")
+    seller_taxcodes << Haltr::Utils.get_xpath(doc, "#{XPATHS_ORDER[:seller]}#{XPATHS_PARTY[:taxcode3]}")
+    seller_taxcodes << Haltr::Utils.get_xpath(doc, "#{XPATHS_ORDER[:seller]}#{XPATHS_PARTY[:endpointid]}")
+    seller_taxcodes = seller_taxcodes.reject {|t| t.blank? }.uniq
     seller_endpoint = Haltr::Utils.get_xpath(doc, "#{XPATHS_ORDER[:seller]}#{XPATHS_PARTY[:endpointid]}")
-    buyer_taxcode   = Haltr::Utils.get_xpath(doc, "#{XPATHS_ORDER[:buyer]}#{XPATHS_PARTY[:taxcode]}")
+    buyer_taxcodes  = []
+    buyer_taxcodes << Haltr::Utils.get_xpath(doc, "#{XPATHS_ORDER[:buyer]}#{XPATHS_PARTY[:taxcode]}")
+    buyer_taxcodes << Haltr::Utils.get_xpath(doc, "#{XPATHS_ORDER[:buyer]}#{XPATHS_PARTY[:taxcode2]}")
+    buyer_taxcodes << Haltr::Utils.get_xpath(doc, "#{XPATHS_ORDER[:buyer]}#{XPATHS_PARTY[:taxcode3]}")
+    buyer_taxcodes << Haltr::Utils.get_xpath(doc, "#{XPATHS_ORDER[:buyer]}#{XPATHS_PARTY[:endpointid]}")
+    buyer_taxcodes = buyer_taxcodes.reject {|t| t.blank? }.uniq
     buyer_endpoint  = Haltr::Utils.get_xpath(doc, "#{XPATHS_ORDER[:buyer]}#{XPATHS_PARTY[:endpointid]}")
 
-    if project.company.taxcode == seller_taxcode or project.company.endpointid == seller_endpoint
+    if seller_taxcodes.include?(project.company.taxcode) or project.company.endpointid == seller_endpoint
       client_role = :buyer
-      client_taxcode = buyer_taxcode
-    elsif project.company.taxcode == buyer_taxcode or project.company.endpointid == buyer_endpoint
+      client_taxcodes = buyer_taxcodes
+    elsif buyer_taxcodes.include?(project.company.taxcode) or project.company.endpointid == buyer_endpoint
       client_role = :seller
-      client_taxcode = seller_taxcode
+      client_taxcodes = seller_taxcodes
     else
       peppolid = ", #{project.company.schemeid} #{project.company.endpointid}"
       raise I18n.t :taxcodes_does_not_belong_to_self,
-        :tcs => "#{buyer_taxcode}/#{buyer_endpoint} - #{seller_taxcode}/#{seller_endpoint}",
+        :tcs => "#{buyer_taxcodes.join('/')} - #{seller_taxcodes.join('/')}",
         :tc  => "#{project.company.taxcode}#{peppolid if peppolid.size > 3}"
     end
 
-    client = project.clients.find_or_initialize_by_taxcode(client_taxcode)
+    if client_taxcodes.blank?
+      client = Client.new
+    else
+      client = project.clients.where(taxcode: client_taxcodes).first
+      client ||= Client.new(taxcode: client_taxcodes.first)
+    end
+
     if client.new_record?
       client.project = project
       XPATHS_PARTY.each do |key, xpath|
+        next unless client.respond_to?("#{key}=")
         value = Haltr::Utils.get_xpath(doc, "#{XPATHS_ORDER[client_role]}#{xpath}")
         client.send("#{key}=",value)
       end
@@ -232,6 +249,8 @@ class Order < ActiveRecord::Base
       original.scan(regexps[:datos_proveedor])
       Hash[ Regexp.last_match.names.zip( Regexp.last_match.captures ) ]
     end
+  rescue
+    {}
   end
 
   def datos_cliente
@@ -239,6 +258,8 @@ class Order < ActiveRecord::Base
       original.scan(regexps[:datos_cliente])
       Hash[ Regexp.last_match.names.zip( Regexp.last_match.captures ) ]
     end
+  rescue
+    {}
   end
 
   def direccion_entrega
@@ -246,6 +267,8 @@ class Order < ActiveRecord::Base
       original.scan(regexps[:direccion_entrega])
       Hash[ Regexp.last_match.names.zip( Regexp.last_match.captures ) ]
     end
+  rescue
+    {}
   end
 
   def lineas_pedido
@@ -257,6 +280,8 @@ class Order < ActiveRecord::Base
         Hash[ Regexp.last_match.names.zip( Regexp.last_match.captures ) ]
       end
     end
+  rescue
+    []
   end
 
   def next
@@ -265,6 +290,26 @@ class Order < ActiveRecord::Base
 
   def previous
     Order.last(conditions: ["project_id = ? and id < ? and type = ?", project.id, id, type])
+  end
+
+  def ubl_invoice
+    if xml?
+      begin
+        xslt = Nokogiri.XSLT(File.open(
+          File.dirname(__FILE__) +
+          "/../../lib/haltr/xslt/Invinet-Order2Invoice.xsl",'rb'
+        ))
+        xslt.transform(
+          Nokogiri::XML(original),
+          ['ID', "'#{IssuedInvoice.next_number(project)}'",
+           'IssueDate', "'#{Date.today}'"]
+        ).to_s
+      rescue
+        raise "Error with XSLT transformation"
+      end
+    else
+      raise "Original must be in XML format to create an invoice"
+    end
   end
 
   protected
@@ -280,20 +325,6 @@ class Order < ActiveRecord::Base
     end
     #event.audits = self.last_audits_without_event
     event.save!
-  end
-
-  private
-
-  def visible?(usr=nil)
-    (usr || User.current).allowed_to?(:use_orders, project)
-  end
-
-  def notify_users_by_mail
-    MailNotifier.order_add(self).deliver
-  end
-
-  def updated_on
-    updated_at
   end
 
 end

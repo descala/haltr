@@ -215,7 +215,7 @@ gl:
   unpaid: "Marcada como non pagada"
   edited: "Editada"
   new: "Creada"
-  bounced: "Devolta: Non se puido entregar no enderezo de correo indicado"
+  bounced: "Devuelta: No se pudo entregar al destinatario indicado"
   validating_format: "Factura recibida"
   success_validating_format: "Validación de formato correcta"
   error_validating_format: "Erro na validación de formato"
@@ -818,3 +818,5 @@ Si la guardas, se marcará como Nueva."
 
     Saludos cordiales
     Equipo %{title}
+  create_invoice_from_order: "Crear factura"
+  label_order: "Pedido"

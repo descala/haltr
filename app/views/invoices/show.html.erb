@@ -2,6 +2,9 @@
 <div class="seccio grup">
   <div class="col span-2-de-2">
     <ul class="menu-rapid">
+      <% if @invoice.order -%>
+        <li><%= link_to_if_authorized l(:label_order), project_order_path(@invoice.order, project_id: @project), :class => 'icon' %></li>
+      <% end -%>
       <% if @invoice.is_a? InvoiceTemplate %>
         <li><%= link_to_if_authorized l("label_invoice_template_new"), new_project_invoice_template_path(@project), :class => 'icon icon-add' %></li>
       <% elsif @invoice.is_a? IssuedInvoice %>

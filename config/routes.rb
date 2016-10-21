@@ -70,6 +70,7 @@ resources :projects do
   match 'orders/received' => 'orders#received', via: [:get]
   match 'orders/received/:id' => 'orders#show_received', via: [:get], as: :received_order
   match 'orders/add_comment' => 'orders#add_comment', :via => :post
+  match 'orders/:id/create_invoice' => 'orders#create_invoice', :via => :post
   resources :orders, only: [:index, :show, :destroy]
 end
 resources :invoice_imgs, :only => [:create,:update]

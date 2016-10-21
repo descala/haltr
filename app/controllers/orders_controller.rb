@@ -6,6 +6,7 @@ class OrdersController < ApplicationController
   menu_item Haltr::MenuItem.new(:orders,:inexistent), :only => [:import]
 
   before_filter :find_project_by_project_id
+  before_filter :find_order, only: [:add_comment, :show, :show_received, :create_invoice]
   before_filter :authorize
 
   helper :sort
@@ -81,11 +82,15 @@ class OrdersController < ApplicationController
   end
 
   def show
-    @order = Order.where(project_id: @project.id).find(params[:id])
     if params[:download]
       send_data @order.original,
         :type => 'text/plain',
         :disposition => "attachment; filename=#{@order.filename}"
+      return
+    elsif params[:show_invoice] and @order.xml?
+      send_data @order.ubl_invoice,
+        type: 'text/plain',
+        disposition: "attachment; filename=#{@order.filename}"
       return
     elsif @order.xml?
       doc  = Nokogiri::XML(@order.original)
@@ -188,7 +193,6 @@ class OrdersController < ApplicationController
   end
 
   def add_comment
-    @order = Order.where(project_id: @project.id).find(params[:id])
     @comment = Comment.new
     @comment.safe_attributes = params[:comment]
     @comment.author = User.current
@@ -201,6 +205,34 @@ class OrdersController < ApplicationController
     else
       redirect_to project_order_path(@order, project_id: @order.project)
     end
+  end
+
+  def create_invoice
+    if @order.invoice
+      raise "Order already has an invoice: #{@order.invoice.number}"
+    end
+    invoice_xml = @order.ubl_invoice
+    invoice = Invoice.create_from_xml(
+      invoice_xml,
+      @order.project.company,
+      Digest::MD5.hexdigest(invoice_xml),
+      'api'
+    )
+    @order.update_attribute(:invoice_id, invoice.id)
+    redirect_to invoice_path(invoice)
+  rescue
+    flash[:error] = $!.message
+    if @order.is_a? ReceivedOrder
+      redirect_to action: :show_received, id: @order
+    else
+      redirect_to action: :show, id: @order
+    end
+  end
+
+  private
+
+  def find_order
+    @order = Order.where(project_id: @project.id).find(params[:id])
   end
 
 end

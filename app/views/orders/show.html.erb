@@ -3,6 +3,13 @@
   <div class="col span-2-de-2">
     <ul class="menu-rapid">
       <li><%= link_to l(:label_import), project_orders_import_path(project_id: @project) -%></li>
+      <% if @order.xml? -%>
+        <% if @order.invoice -%>
+          <li><%= link_to l(:invoice), invoice_path(@order.invoice), class: 'icon icon-attachment' %></li>
+        <% else -%>
+          <li><%= link_to l(:create_invoice_from_order), {action: :create_invoice, id: @order, project_id: @project}, class: 'icon icon-attachment', method: :post %></li>
+        <% end -%>
+      <% end -%>
       <li><%= link_to l(:download_original), project_order_path(@order, project_id: @project, download: true), class: 'icon icon-attachment' %></li>
       <li><%= link_to l(:download_as_pdf), project_order_path(@order, project_id: @project, format: :pdf), class: 'icon icon-attachment' %></li>
       <li><%= link_to_if_authorized l(:button_delete), { :action => 'destroy', :id => @order }, :confirm=>l(:text_are_you_sure), :method=>:delete, :class=>'icon icon-del' %></li>
@@ -55,6 +62,14 @@
 </div>
 
 <%= render :partial => 'events/list', locals: {events: @order.events} %>
+
+<% if (Rails.env == "development" or User.current.allowed_to?(:use_all_readonly, @project)) and @order.xml? -%>
+<div class="invoice-channel-links">
+<h3>Check generated documents</h3>
+<ul>
+  <li><%= link_to_if_authorized 'UBL invoice', {controller: 'orders', action: 'show', id: @order, show_invoice: true } %></li>
+</ul>
+</div><% end -%>
 
 <% content_for :header_tags do %>
   <%= stylesheet_link_tag 'orders', :plugin => 'haltr_invinet_patches' %>
