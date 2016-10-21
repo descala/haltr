@@ -384,7 +384,7 @@ ca:
   notice_uploaded_file_not_found: "No s'ha trobat el fitxer"
 
   # Received invoice_imgs
-  label_extracted: Informació auxiliar extreta del PDF
+  label_extracted: Informació extreta del PDF
   tag_seller_name: Nom del venedor
   tag_language: Idioma de la factura
   tag_seller_taxcode: NIF del venedor

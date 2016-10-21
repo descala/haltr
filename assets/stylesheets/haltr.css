@@ -266,6 +266,7 @@ div.action-linked_to_mine #companies {
 #invoice_img .image {
   position: relative;
   border: 1px solid #666666;
+  overflow: hidden;
 }
 #invoice_img .colu1 {
   float: left;
@@ -273,7 +274,6 @@ div.action-linked_to_mine #companies {
 }
 #invoice_img .colu2 {
   float: left;
-  width: 40%;
 }
 #invoice_img h3 {
   padding: 0;
@@ -282,7 +282,6 @@ div.action-linked_to_mine #companies {
   width: 50%;
 }
 .colu2 .metadata {
-  margin-top: 10px;
 }
 table.received_show {
   width: auto;

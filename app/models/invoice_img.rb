@@ -183,7 +183,7 @@ class InvoiceImg < ActiveRecord::Base
   def useful_tokens
     useful = {}
     tokens.each do |number, attributes|
-      if attributes[:text] and attributes[:text].size > 1
+      if attributes[:text] and attributes[:text].gsub(/[^\w]/,'').size > 0
         useful[number] = attributes
         width =  attributes[:x1].to_i - attributes[:x0].to_i
         height = attributes[:y1].to_i - attributes[:y0].to_i
@@ -290,6 +290,8 @@ class InvoiceImg < ActiveRecord::Base
     return if d.nil?
     # Assume year 20xx. 16 -> 2016
     d.gsub(/([^\d])(\d\d)$/,"\\120\\2}")
+    # "3 de mayo de 2014" -> "3 mayo 2014"
+    d.gsub(' de ','')
   end
 
   def as_json(options)
@@ -304,6 +306,14 @@ class InvoiceImg < ActiveRecord::Base
 
   def all_possible_tags
     [:invoice_number, :language, :seller_country, :seller_name, :seller_taxcode, :buyer_taxcode, :issue, :due, :subtotal, :tax_percentage, :tax_amount, :total]
+  end
+
+  def missing_data_messages
+    messages = []
+    messages << 'no_date' if invoice.date.nil?
+    messages << 'no_client' if invoice.client.nil?
+    messages << 'no_totals' if invoice.invoice_lines.count == 0
+    messages
   end
 
 end
