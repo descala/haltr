@@ -227,6 +227,7 @@
             <% invoice_line.taxes.each do |tax_line| -%>
             <cac:ClassifiedTaxCategory>
               <cbc:ID schemeID="UNCL5305" schemeAgencyID="6"><%=h tax_line.category%></cbc:ID>
+              <cbc:Percent><%=h haltr_precision(tax_line.percent)%></cbc:Percento>
               <cac:TaxScheme>
                 <cbc:ID schemeID="UNCL5153" schemeAgencyID="6"><%= Haltr::TaxHelper.ubl(tax_line.name) %></cbc:ID>
               </cac:TaxScheme>
