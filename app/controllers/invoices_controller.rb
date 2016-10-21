@@ -226,6 +226,17 @@ class InvoicesController < ApplicationController
         end
       end
     end
+    unless parsed_params[:organ_proponent].is_a? String
+      organ_proponent = parsed_params.delete(:organ_proponent)
+      if organ_proponent
+        parsed_params[:organ_proponent] = organ_proponent[:code]
+        if client_hash
+          Dir3Entity.new_from_hash(organ_proponent, client_hash[:taxcode], '03')
+        else
+          Dir3Entity.new_from_hash(organ_proponent)
+        end
+      end
+    end
 
     @invoice = invoice_class.new(parsed_params)
     @invoice.project ||= @project
