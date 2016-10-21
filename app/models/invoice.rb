@@ -1247,8 +1247,22 @@ _INV
         client_hash[:country], "alpha3", "alpha2"
       ).downcase rescue client_hash[:country]
     end
-    self.client   = project.clients.where('taxcode like ?', "%#{client_hash[:taxcode]}").first
-    self.client ||= project.clients.where('? like concat("%", taxcode) and taxcode != ""', client_hash[:taxcode]).first
+    # to match ES12345678 when we have 12345678
+    project.clients.where('taxcode like ?', "%#{client_hash[:taxcode]}").each do |c|
+      if c.taxcode =~ /\A.{0,2}#{client_hash[:taxcode]}\z/
+        self.client = c
+        break
+      end
+    end
+    unless self.client
+      # to match 12345678 when we have ES12345678
+      project.clients.where('? like concat("%", taxcode) and taxcode != ""', client_hash[:taxcode]).each do |c|
+        if client_hash[:taxcode] =~ /\A.{0,2}#{c.taxcode}\z/
+          self.client = c
+          break
+        end
+      end
+    end
     if client and client.company.nil?
       # client found by taxcode, but stored data may not match data in invoice
       # if it doesn't, we create a client_office with data from invoice
@@ -1299,8 +1313,23 @@ _INV
       unless client
         self.client = Client.new(client_hash)
         client.project = self.project
-        external_company = ExternalCompany.where('taxcode like ?', "%#{client_hash[:taxcode]}").first
-        external_company ||= ExternalCompany.where('? like concat("%", taxcode) and taxcode != ""', client_hash[:taxcode]).first
+        external_company = nil
+        # to match ES12345678 when we have 12345678
+        ExternalCompany.where('taxcode like ?', "%#{client_hash[:taxcode]}").each do |ec|
+          if ec.taxcode =~ /\A.{0,2}#{client_hash[:taxcode]}\z/
+            external_company = ec
+            break
+          end
+        end
+        unless external_company
+          # to match 12345678 when we have ES12345678
+          ExternalCompany.where('? like concat("%", taxcode) and taxcode != ""', client_hash[:taxcode]).each do |ec|
+            if client_hash[:taxcode] =~ /\A.{0,2}#{ec.taxcode}\z/
+              external_company = ec
+              break
+            end
+          end
+        end
         if external_company
           self.client.company = external_company
         end
