@@ -215,6 +215,11 @@ class Client < ActiveRecord::Base
       %w(taxcode company_identifier name email currency postalcode country province city address website invoice_format language).each do |attr|
         self.send("#{attr}=",company.send(attr))
       end
+      if self.company.respond_to?(:address2)
+        self.address2 = self.company.address2
+      else
+        self.address2 = '' # ExternalCompany has no address2
+      end
     elsif !self.company
       self.allowed = nil
     end
