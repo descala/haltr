@@ -57,6 +57,7 @@
       <span class="invoice-terms<%=h " pastdue" if @invoice.past_due?%>"><%=h l(:valid_until)%> <%=h format_date @invoice.due_date %></span><br/>
     <% else -%>
       <span class="invoice-terms<%=h " pastdue" if @invoice.past_due?%>"><%=h l(:field_due_date)%> <%=h format_date @invoice.due_date %> <%= "(#{@invoice.terms_description})" unless @invoice.custom_due? %></span><br/>
+      <%= call_hook(:invoice_show_after_due_date, { invoice: @invoice }) %>
     <% end -%>
   <% end -%>
   <% if @invoice.invoicing_period_start.present? || @invoice.invoicing_period_end.present? -%>

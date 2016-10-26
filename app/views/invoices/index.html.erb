@@ -182,7 +182,7 @@
                 <td><%=h invoice.client_office ? invoice.client_office : invoice.client %></td>
                 <td class="money"><%= money(invoice.subtotal) %></td>
                 <td class="money"><%= money(invoice.total) %></td>
-                <td <%='class="pastdue"'.html_safe if invoice.past_due?%>><%=h format_date invoice.due_date %></td>
+                <td <%='class="pastdue"'.html_safe if invoice.past_due?%>><%=h format_date invoice.due_date %><%= call_hook(:invoices_index_due_date, { invoice: invoice }) %></td>
                 <td><%=h l("state_#{invoice.state}").capitalize %></td>
               </tr>
           <% end -%>
