@@ -1,4 +1,40 @@
 <div id="invoice_wrapper">
+<div id="invoice_preview_small_box">
+  <h2 class="invoice-ID"><%=h @invoice.number %></h2>
+  <div class="vcard vendor">
+    <%= render partial: 'invoices/client_info' -%>
+  </div>
+  <span class="date"><%=h l(:field_date)%> <strong><%=h format_date @invoice.date %></strong></span><br/>
+  <span class="invoice-terms<%=h " pastdue" if @invoice.past_due?%>"><%=h l(:field_due_date)%> <%=h format_date @invoice.due_date %></span><br/>
+
+  <table class="invoice-calculations" border="0" cellpadding="0" cellspacing="0">
+    <tbody><tr class="invoice-subtotal">
+        <th><%=h l(:label_subtotal)%>:</th>
+        <td><%=h money(@invoice.subtotal) %></td>
+      </tr>
+      <% @invoice.taxes_uniq.each do |tax| -%>
+        <tr class="sales-tax">
+          <th><%= h tax_name(tax) %> <%= " #{l(:over_taxable_base)} #{money(@invoice.taxable_base(tax))}" unless @invoice.tax_applies_to_all_lines?(tax) %>:</th>
+          <td><%= h money(@invoice.tax_amount(tax)) %></td>
+        </tr>
+      <% end -%>
+      <tr class="invoice-total">
+        <th><%=h l(:label_invoice_total)%>:</th>
+        <td><%=h money(@invoice.total) %></td>
+      </tr>
+      <% if @invoice.payments_on_account_in_cents.to_i != 0 -%>
+        <tr>
+          <th><%=h l(:field_payments_on_account) %></th>
+          <td><%=h money(@invoice.payments_on_account) %></td>
+        </tr>
+        <tr class="invoice-total">
+          <th><%=h l(:total_executable) %></th>
+          <td><%=h money(@invoice.total - @invoice.payments_on_account) %></td>
+        </tr>
+      <% end -%>
+    </tbody>
+  </table>
+</div>
 <div class="metadata">
   <%= form_tag(invoice_img_path(invoice_img), method: :put) do -%>
     <table class="list received_show">
