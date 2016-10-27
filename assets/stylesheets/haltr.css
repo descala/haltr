@@ -299,9 +299,16 @@ div.action-linked_to_mine #companies {
   margin: 0;
   margin-bottom: 10px;
   padding: 10px;
+  text-align: right;
 }
 #invoice_preview_small_box .invoice-calculations {
   margin: 0;
+}
+#invoice_preview_small_box .vendor {
+  margin-bottom: 10px;
+}
+#invoice_preview_small_box .invoice-calculations td {
+  padding-right: 2px;
 }
 .controller-received select#invoice_client_id {
   width: 50%;
@@ -378,6 +385,21 @@ span#send_info {
   box-sizing: border-box;
   position: absolute;
   z-index: 1;
+}
+.notfound-tag {
+  border-radius: 0.25em;
+  color: #fff;
+  display: inline;
+  font-size: 12px;
+  font-weight: 700;
+  line-height: 1.7;
+  padding: 0.2em 0.6em 0.3em;
+  margin-bottom: 0.2em;
+  text-align: center;
+  vertical-align: baseline;
+  white-space: nowrap;
+  background: rgba(184, 82, 92, 1);
+  box-sizing: border-box;
 }
 .controller-received #attachments_fields .description {
   display: none !important;
