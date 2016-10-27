@@ -2,6 +2,13 @@
 
 <div class="colu1">
   <div class="image" style="width: <%=invoice_img.width%>px; background-image: url('<%=project_invoice_img_path(invoice_img, project_id: @project)%>')">
+    <div class="ribbon ribbon-<%= @invoice.state %>">
+      <% if @invoice.is_a? InvoiceTemplate %>
+        <span><%=h l("label_invoice_template") %></span>
+      <% else %>
+        <span title="<%= format_time @invoice.state_updated_at %>"><%=h l("state_#{@invoice.state}").capitalize %></span>
+      <% end %>
+    </div>
     <%= form_tag({}) do -%>
       <%= hidden_field_tag 'back_url', url_for(params), :id => nil %>
       <%= hidden_field_tag 'id', invoice_img.id, :id => nil %>
