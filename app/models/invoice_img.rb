@@ -310,12 +310,12 @@ class InvoiceImg < ActiveRecord::Base
     [:invoice_number, :language, :seller_country, :seller_name, :seller_taxcode, :buyer_taxcode, :issue, :due, :subtotal, :tax_percentage, :tax_amount, :total]
   end
 
-  def missing_data_messages
-    messages = []
-    messages << 'no_date' if invoice.date.nil?
-    messages << 'no_client' if invoice.client.nil?
-    messages << 'no_totals' if invoice.invoice_lines.count == 0
-    messages
+  def client?
+    !invoice.client.nil?
+  end
+
+  def lines?
+    invoice.invoice_lines.count > 0
   end
 
 end
