@@ -9,6 +9,7 @@ module Haltr
       req['process']    = "Estructura::Invoice"
       req['invoice_id'] = invoice.id
       req['payload']    = invoice.read_attribute(:original) # already compressed
+      req['payload_filename'] = payload_filename
       req['vat_id']     = invoice.company.taxcode
       req['is_issued']  = invoice.is_a? IssuedInvoice
       req['haltr_url']  = Redmine::Configuration['haltr_url']
@@ -26,6 +27,11 @@ module Haltr
         end
       }
       #TODO: rescue excepcions..
+    end
+
+    def self.payload_filename
+      I18n.locale = User.current.language
+      "#{I18n.t(:label_invoice)}.pdf"
     end
 
   end

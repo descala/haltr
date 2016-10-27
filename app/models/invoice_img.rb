@@ -124,11 +124,13 @@ class InvoiceImg < ActiveRecord::Base
       if tagv(:seller_taxcode)
         invoice.client = invoice.company.project.clients.where(taxcode: tagv(:seller_taxcode).gsub(/\s/,'')).first
         if !invoice.client and  tagv(:seller_name)
+          country_code = tagv(:seller_taxcode)[0..1] if tagv(:seller_taxcode)
+          country_code = iso_country_from_text(tagv(:seller_country)) unless country_code and Valvat::Utils::EU_COUNTRIES.include?(country_code.upcase)
           new_client = Client.new(
             project: invoice.project,
             name:    tagv(:seller_name),
             taxcode: tagv(:seller_taxcode),
-            country: iso_country_from_text(tagv(:seller_country)),
+            country: country_code.downcase,
             language: tags[:language]
           )
           invoice.client = new_client if new_client.save
