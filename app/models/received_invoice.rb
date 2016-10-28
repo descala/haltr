@@ -34,6 +34,9 @@ class ReceivedInvoice < InvoiceDocument
     event :processed_pdf do
       transition [:processing_pdf] => :received
     end
+    event :error_sending do
+      transition :processing_pdf => :error
+    end
   end
 
   def to_label
