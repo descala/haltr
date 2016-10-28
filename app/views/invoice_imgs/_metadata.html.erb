@@ -1,6 +1,6 @@
 <div id="invoice_wrapper">
 <div id="invoice_preview_small_box">
-  <% if @invoice.date %>
+  <% if @invoice.number%>
     <h2 class="invoice-ID"><%=h @invoice.number %></h2>
   <% else %>
     <span class="notfound-tag">
