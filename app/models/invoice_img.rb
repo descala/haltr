@@ -306,7 +306,8 @@ class InvoiceImg < ActiveRecord::Base
   end
 
   def all_possible_tags
-    [:invoice_number, :language, :seller_country, :seller_name, :seller_taxcode, :buyer_taxcode, :issue, :due, :subtotal, :tax_percentage, :tax_amount, :total]
+    [:invoice_number, :language, :seller_country, :seller_name, :seller_taxcode, :buyer_taxcode, :issue, :due, :subtotal, :tax_percentage, :tax_amount,
+     :tax_wh_percentage, :tax_wh_amount, :total]
   end
 
   def client?
