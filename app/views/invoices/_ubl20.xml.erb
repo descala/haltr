@@ -82,7 +82,7 @@
         <% end -%>
       </cac:Party>
     </cac:AccountingCustomerParty>
-<% unless @invoice.is_amend? -%>
+<% if @invoice.payment_method_code(:ubl).present? and @invoice.due_date.present? and !@invoice.is_amend? -%>
       <cac:PaymentMeans>
         <cbc:PaymentMeansCode><%=h @invoice.payment_method_code(:ubl) %></cbc:PaymentMeansCode>
         <cbc:PaymentDueDate><%=h @invoice.due_date%></cbc:PaymentDueDate>
