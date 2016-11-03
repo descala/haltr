@@ -4,8 +4,7 @@
 #        %w(xml json).include? params[:format]
 
 resources :events
-match 'events/file/:id' => 'events#file', :via => :get, :as => :event_file
-match 'events/file/:client_hashid/:id' => 'events#file', :via => :get, :as => :client_event_file
+match 'events/attachment/:client_hashid/:id' => 'events#attachment', :via => :get, :as => :client_event_attachment
 
 match '/clients/check_cif/:id' => 'clients#check_cif', :via => :get
 match '/clients/link_to_profile/:id' => 'clients#link_to_profile', :via => :get
@@ -108,8 +107,6 @@ match 'quotes/send/:id' => 'quotes#send_quote', :via => :get, :as => :send_quote
 match 'quotes/accept/:id' => 'quotes#accept', :via => :get, :as => :accept_quote
 match 'quotes/refuse/:id' => 'quotes#refuse', :via => :get, :as => :refuse_quote
 
-# public access to an invoice using the client hash
-match 'invoice/download/:client_hashid/:invoice_id' => 'invoices#download', :client_hashid => /.*/, :invoice_id => /\d+/, :via => :get, :as => 'invoice_public_download'
 match 'invoice/:client_hashid/:invoice_id' => 'invoices#view', :client_hashid => /.*/, :invoice_id => /\d+/, :via => :get, :as => 'invoice_public_view'
 
 # public access to a company logo, knowing the id and the file name
