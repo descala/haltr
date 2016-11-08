@@ -471,14 +471,20 @@ class Invoice < ActiveRecord::Base
     t
   end
 
-  def extra_info_plus_tax_comments
-    tax_comments = self.taxes.collect do |tax|
+  def tax_comments
+    tc = self.taxes.collect do |tax|
       tax.comment unless tax.comment.blank?
     end.compact
-    tax_comments.unshift(extra_info)
-    tax_comments.delete('')
-    tax_comments.uniq!
-    tax_comments.compact.join('. ')
+    tc.delete('')
+    tc.uniq!
+    tc.compact.join('. ')
+  end
+
+  def legal_literals_plus_tax_comments
+    str = legal_literals.to_s
+    str += '. ' unless str.blank?
+    str += tax_comments
+    str
   end
 
   def to_s
