@@ -783,3 +783,6 @@ If you save it, will be marked as New."
     %{title} Team
   create_invoice_from_order: "Create invoice"
   label_order: "Order"
+  label_company_offices: "Succursales"
+  label_company_office_new: Nouvelle succursale
+  label_company_office: Succursale

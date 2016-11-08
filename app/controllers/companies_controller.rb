@@ -14,14 +14,14 @@ class CompaniesController < ApplicationController
   include Haltr::TaxHelper
 
   before_filter :find_project_by_project_id,
-    :only => [:my_company,:bank_info,:connections,:customization,
-              :linked_to_mine,:logo,:add_bank_info,:check_iban]
+    only: [:my_company,:bank_info,:connections,:customization,:linked_to_mine,
+           :logo,:add_bank_info,:check_iban]
   before_filter :find_company, :only => [:update]
   before_filter :set_iso_countries_language
   before_filter :authorize, :except => [:logo,:logo_by_taxcode]
   skip_before_filter :check_if_login_required, :only => [:logo,:logo_by_taxcode]
   before_filter :check_for_company,
-    :only => [:my_company,:bank_info,:connections,:customization]
+    only: [:my_company,:bank_info,:connections,:customization]
 
   accept_api_auth :my_company
 
