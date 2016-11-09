@@ -192,16 +192,23 @@ class Order < ActiveRecord::Base
         :tc  => "#{project.company.taxcode}#{peppolid if peppolid.size > 3}"
     end
 
+    country = Haltr::Utils.get_xpath(
+      doc, "#{XPATHS_ORDER[client_role]}#{XPATHS_PARTY[:country]}"
+    ).to_s.gsub(/ /,'').upcase
     if client_taxcodes.blank?
       client = Client.new
     else
       client = project.clients.where(taxcode: client_taxcodes).first
+      client ||= project.clients.where(taxcode: client_taxcodes.collect {|t|
+        "#{country}#{t}".gsub(/ /,'')
+      }).first
       client ||= Client.new(taxcode: client_taxcodes.first)
     end
 
     if client.new_record?
       client.project = project
       XPATHS_PARTY.each do |key, xpath|
+        next if key =~ /taxcode/ # do not override already known taxcode
         next unless client.respond_to?("#{key}=")
         value = Haltr::Utils.get_xpath(doc, "#{XPATHS_ORDER[client_role]}#{xpath}")
         client.send("#{key}=",value)
@@ -209,8 +216,13 @@ class Order < ActiveRecord::Base
       client.language = User.current.language
       client.country.downcase! rescue nil
       if !Valvat::Checksum.validate(client.taxcode)
-        client.company_identifier = client.taxcode
-        client.taxcode = ""
+        with_country = "#{client.country.upcase}#{client.taxcode}" rescue client.taxcode
+        if Valvat::Checksum.validate(with_country)
+          client.taxcode = with_country
+        else
+          client.company_identifier = client.taxcode
+          client.taxcode = ""
+        end
       end
       unless client.save
         raise "CLIENT: #{client.errors.full_messages.join('. ')}"
