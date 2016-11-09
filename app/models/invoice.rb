@@ -32,6 +32,7 @@ class Invoice < ActiveRecord::Base
   belongs_to :quote
   has_many :comments, :as => :commented, :dependent => :delete_all, :order => "created_on"
   belongs_to :client_office
+  belongs_to :company_office
   has_one :order, dependent: :nullify
   validates_inclusion_of :client_office_id, in: [nil], unless: Proc.new {|i|
     i.client and i.client.client_offices.any? {|o| o.id == i.client_office_id }

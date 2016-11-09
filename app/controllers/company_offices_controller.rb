@@ -40,7 +40,7 @@ class CompanyOfficesController < ApplicationController
     @company_office = CompanyOffice.new(params[:company_office])
     @company_office.company = @company
     if @company_office.save
-      redirect_to company_company_offices_path(@company), notice: l(:notice_successful_create)
+      redirect_to project_company_offices_path(project_id: @project), notice: l(:notice_successful_create)
     else
       render action: :new
     end
@@ -53,7 +53,7 @@ class CompanyOfficesController < ApplicationController
   def update
     @company_office = @company.company_offices.find(params[:id])
     if @company_office.update_attributes(params[:company_office])
-      redirect_to company_company_offices_path(@company), notice: l(:notice_successful_update)
+      redirect_to project_company_offices_path(project_id: @project), notice: l(:notice_successful_update)
     else
       render action: :edit
     end
@@ -61,7 +61,7 @@ class CompanyOfficesController < ApplicationController
 
   def destroy
     @company.company_offices.find(params[:id]).destroy rescue nil
-    redirect_to company_company_offices_path(@company)
+    redirect_to project_company_offices_path(project_id: @project)
   end
 
   private
