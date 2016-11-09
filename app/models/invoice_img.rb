@@ -123,11 +123,13 @@ class InvoiceImg < ActiveRecord::Base
       if tagv(:seller_taxcode)
         invoice.client = invoice.company.project.clients.where(taxcode: tagv(:seller_taxcode).gsub(/\s/,'')).first
         if !invoice.client and  tagv(:seller_name)
+          country_code = tagv(:seller_taxcode)[0..1] if tagv(:seller_taxcode)
+          country_code = iso_country_from_text(tagv(:seller_country)) unless country_code and Valvat::Utils::EU_COUNTRIES.include?(country_code.upcase)
           new_client = Client.new(
             project: invoice.project,
             name:    tagv(:seller_name),
             taxcode: tagv(:seller_taxcode),
-            country: iso_country_from_text(tagv(:seller_country)),
+            country: country_code.downcase,
             language: tags[:language]
           )
           invoice.client = new_client if new_client.save
@@ -182,7 +184,7 @@ class InvoiceImg < ActiveRecord::Base
   def useful_tokens
     useful = {}
     tokens.each do |number, attributes|
-      if attributes[:text] and attributes[:text].size > 1
+      if attributes[:text] and attributes[:text].gsub(/[^\w]/,'').size > 0
         useful[number] = attributes
         width =  attributes[:x1].to_i - attributes[:x0].to_i
         height = attributes[:y1].to_i - attributes[:y0].to_i
@@ -289,6 +291,8 @@ class InvoiceImg < ActiveRecord::Base
     return if d.nil?
     # Assume year 20xx. 16 -> 2016
     d.gsub(/([^\d])(\d\d)$/,"\\120\\2}")
+    # "3 de mayo de 2014" -> "3 mayo 2014"
+    d.gsub(' de ','')
   end
 
   def as_json(options)
@@ -303,6 +307,14 @@ class InvoiceImg < ActiveRecord::Base
 
   def all_possible_tags
     [:invoice_number, :language, :seller_country, :seller_name, :seller_taxcode, :buyer_taxcode, :issue, :due, :subtotal, :tax_percentage, :tax_amount, :total]
+  end
+
+  def client?
+    !invoice.client.nil?
+  end
+
+  def lines?
+    invoice.invoice_lines.count > 0
   end
 
 end

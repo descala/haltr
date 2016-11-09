@@ -262,27 +262,56 @@ div.action-linked_to_mine #companies {
 .companyid {
   font-size: 10px;
 }
-
+#invoice_img {
+  text-align: center;
+}
 #invoice_img .image {
   position: relative;
   border: 1px solid #666666;
+  overflow: hidden;
 }
 #invoice_img .colu1 {
-  float: left;
+  display: inline-block;
   margin-right: 10px;
+  vertical-align: top;
 }
 #invoice_img .colu2 {
-  float: left;
-  width: 40%;
+  text-align: left;
+  display: inline-block;
+  max-width: 210px;
 }
 #invoice_img h3 {
   padding: 0;
 }
+#invoice_img_edit_metadata .colu1 {
+  margin-top: 20px;
+  border: 1px dotted;
+  float: left;
+  width: 40%;
+}
+#invoice_img_edit_metadata .colu2 {
+  float: left;
+  width: 45%;
+  margin-left: 10px;
+}
+#invoice_preview_small_box {
+  border: 1px dotted;
+  margin: 0;
+  margin-bottom: 10px;
+  padding: 10px;
+  text-align: right;
+}
+#invoice_preview_small_box .invoice-calculations {
+  margin: 0;
+}
+#invoice_preview_small_box .vendor {
+  margin-bottom: 10px;
+}
+#invoice_preview_small_box .invoice-calculations td {
+  padding-right: 2px;
+}
 .controller-received select#invoice_client_id {
   width: 50%;
-}
-.colu2 .metadata {
-  margin-top: 10px;
 }
 table.received_show {
   width: auto;
@@ -357,6 +386,21 @@ span#send_info {
   position: absolute;
   z-index: 1;
 }
+.notfound-tag {
+  border-radius: 0.25em;
+  color: #fff;
+  display: inline;
+  font-size: 12px;
+  font-weight: 700;
+  line-height: 1.7;
+  padding: 0.2em 0.6em 0.3em;
+  margin-bottom: 0.2em;
+  text-align: center;
+  vertical-align: baseline;
+  white-space: nowrap;
+  background: rgba(184, 82, 92, 1);
+  box-sizing: border-box;
+}
 .controller-received #attachments_fields .description {
   display: none !important;
 }
@@ -364,7 +408,8 @@ span#send_info {
   padding-left: 0;
 }
 #invoice_img h2.invoice-ID {
-  padding-left: 40px;
+  padding: 0;
+  text-align: right;
 }
 .controller-clients .client-info {
   border: 1px outset orange;

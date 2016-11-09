@@ -1,12 +1,9 @@
 <% if @invoice.invoice_img -%>
 
-<div id="invoice_img">
+<div id="invoice_img_edit_metadata">
 
   <div class="colu1">
-    <div class="image"  style="width: <%=@invoice.invoice_img.width%>px; background-image: url('<%=project_invoice_img_path(@invoice.invoice_img, project_id: @project)%>')">
-      <div style="height: <%=@invoice.invoice_img.height%>px;">
-      </div>
-    </div>
+    <img src="<%=project_invoice_img_path(@invoice.invoice_img, project_id: @project)%>" width="100%">
   </div>
 
   <div class="colu2">
