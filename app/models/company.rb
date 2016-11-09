@@ -11,6 +11,7 @@ class Company < ActiveRecord::Base
   has_many :clients, :as => :company, :dependent => :nullify
   has_many :taxes, :class_name => "Tax", :dependent => :destroy, :order => "name,percent DESC"
   has_many :bank_infos, :dependent => :destroy, :order => "name,bank_account,iban,bic DESC"
+  has_many :company_offices, dependent: :destroy
 
   # self referential association
   has_many :providers

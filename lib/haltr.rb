@@ -23,6 +23,7 @@ Redmine::MenuManager.map :my_company_menu do |menu|
   menu.push :bank_info,     {:controller=>'companies', :action=>'bank_info'},  :param=>:project_id, :caption=>:bank_info
   menu.push :connections,   {:controller=>'companies', :action=>'connections'}, :param=>:project_id, :caption=>:label_connections
   menu.push :customization, {:controller=>'companies', :action=>'customization'}, :param=>:project_id, :caption=>:label_customization
+  menu.push :company_offices, {:controller=>'company_offices', :action=>'index'}, :param=>:project_id
 end
 
 Redmine::MenuManager.map :invoices_menu do |menu|

@@ -5,7 +5,7 @@
 <% if @external_company and @external_company.send("dir3_#{role.pluralize}").any? -%>
 
   <% if @invoice.nil? or (@external_company.send("dir3_#{role.pluralize}").collect {|d3e| d3e.code }.include?(@invoice.send(role)) or @invoice.send(role).blank?) -%>
-    <%= select(:invoice, role, dir3_for_select(@external_company.send("dir3_#{role.pluralize}"))) %>
+    <%= select(:invoice, role, dir3_for_select(@external_company.send("dir3_#{role.pluralize}")), {include_blank: '--'}) %>
     <%= text_field :invoice, role, style: 'display: none;', disabled: true %>
   <% else -%>
     <%= select(:invoice, role, dir3_for_select(@external_company.send("dir3_#{role.pluralize}")), {}, { style: 'display: none;', disabled: true }) %>

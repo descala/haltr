@@ -280,6 +280,7 @@ class InvoicesController < ApplicationController
     @invoice.project = @project
 
     @invoice.client_office = nil unless @client and @client.client_offices.any? {|office| office.id == @invoice.client_office_id }
+    @invoice.company_office = nil unless @project.company.company_offices.any? {|office| office.id == @invoice.company_office_id }
 
     if params[:to_amend] and params[:amend_type]
       @to_amend = @project.invoices.find params[:to_amend]
@@ -1116,6 +1117,12 @@ class InvoicesController < ApplicationController
       # overwrite client attributes with its office
       ClientOffice::CLIENT_FIELDS.each do |f|
         @client[f] = @invoice.client_office.send(f)
+      end
+    end
+    if @invoice.company_office
+      # overwrite company attributes with its office
+      CompanyOffice::COMPANY_FIELDS.each do |f|
+        @company[f] = @invoice.company_office.send(f)
       end
     end
   rescue ActiveRecord::RecordNotFound

@@ -2,6 +2,19 @@
 <%= error_messages_for 'client' %>
 <%= f.hidden_field :quote_id %>
 
+<% if @project.company.company_offices.any? -%>
+  <div class="seccio grup tabular">
+    <p class="col span-2-de-3">
+    <label for="company_office_id"><%= l(:label_company_office) %></label>
+    <%= select :invoice, :company_office_id, @project.company.company_offices.collect {|office|
+      ["#{office.address} - #{office.city}", office.id]
+    }, { selected: (@invoice.company_office_id rescue nil),
+         include_blank: "#{@project.company.address} - #{@project.company.city}"
+    } %>
+  </p>
+  </div>
+<% end -%>
+
 <fieldset class="tabular box">
   <legend><%=l(:invoice_data)%></legend>
 

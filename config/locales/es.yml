@@ -825,3 +825,6 @@ Si la guardas, se marcará como Nueva."
     Equipo %{title}
   create_invoice_from_order: "Crear factura"
   label_order: "Pedido"
+  label_company_offices: "Sedes"
+  label_company_office_new: Nueva sede
+  label_company_office: Sede

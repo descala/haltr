@@ -32,6 +32,7 @@ class Invoice < ActiveRecord::Base
   belongs_to :quote
   has_many :comments, :as => :commented, :dependent => :delete_all, :order => "created_on"
   belongs_to :client_office
+  belongs_to :company_office
   has_one :order, dependent: :nullify
   validates_inclusion_of :client_office_id, in: [nil], unless: Proc.new {|i|
     i.client and i.client.client_offices.any? {|o| o.id == i.client_office_id }
@@ -471,14 +472,20 @@ class Invoice < ActiveRecord::Base
     t
   end
 
-  def extra_info_plus_tax_comments
-    tax_comments = self.taxes.collect do |tax|
+  def tax_comments
+    tc = self.taxes.collect do |tax|
       tax.comment unless tax.comment.blank?
     end.compact
-    tax_comments.unshift(extra_info)
-    tax_comments.delete('')
-    tax_comments.uniq!
-    tax_comments.compact.join('. ')
+    tc.delete('')
+    tc.uniq!
+    tc.compact.join('. ')
+  end
+
+  def legal_literals_plus_tax_comments
+    str = legal_literals.to_s
+    str += '. ' unless str.blank?
+    str += tax_comments
+    str
   end
 
   def to_s

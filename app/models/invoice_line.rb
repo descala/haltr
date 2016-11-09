@@ -121,7 +121,13 @@ class InvoiceLine < ActiveRecord::Base
   end
 
   def unit_code(format)
-    UNIT_CODES[unit][format] rescue nil
+    UNIT_CODES[unit][format]
+  rescue
+    if format == :ubl
+      'EA'
+    else
+      nil
+    end
   end
 
   def unit_short

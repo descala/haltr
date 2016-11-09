@@ -823,3 +823,6 @@ Si la deses, es marcara com a Nova."
     Equip %{title}
   create_invoice_from_order: "Crear factura"
   label_order: "Comanda"
+  label_company_offices: "Seus"
+  label_company_office_new: Nova seu
+  label_company_office: Seu

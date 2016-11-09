@@ -820,3 +820,6 @@ Si la guardas, se marcará como Nueva."
     Equipo %{title}
   create_invoice_from_order: "Crear factura"
   label_order: "Pedido"
+  label_company_offices: "Sucursales"
+  label_company_office_new: Nueva sucursal
+  label_company_office: Sucursal
