@@ -1,0 +1,33 @@
+<%=
+  cols = [
+    [ :client,   l(:field_taxcode),  :taxcode],
+    [ :client,   l(:field_name),     :name],
+    [ :client,   l(:field_language), :language],
+    [ :client,   l(:field_address),  :address],
+    [ :client,   l(:field_email),    :email],
+    [ :people,   l(:label_people),   nil],
+    [ :template, l(:label_invoice_template), nil]
+  ]
+
+  CSV.generate(
+    :headers       => cols.collect {|c| c[1] },
+    :write_headers => true
+  ) do |csv|
+    @clients.each do |client|
+      csv << cols.collect {|o,l,m|
+        case o.to_s
+        when 'template'
+          client.template_invoice_lines.collect do |line|
+            line.description
+          end.join(" * ")
+        when 'people'
+          client.people.collect do |person|
+            person.email
+          end.join("; ")
+        when 'client'
+          client.send(m)
+        end
+      }.flatten
+    end
+  end.to_s.gsub(/\r\n?/, '\n').html_safe
+%>
