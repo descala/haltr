@@ -1,28 +1,32 @@
 desc "Moves Event#file to a new Attachment"
 
 namespace :haltr do
-    task :event_file_to_attachment => :environment do |task, args|
+  task :event_file_to_attachment => :environment do |task, args|
 
-      begin
+    begin
 
-        Event.all.each do |e|
-          next if e.read_attribute(:file).blank?
-          a = Attachment.new
-          a.file = StringIO.new e.file_old
-          a.author = e.user || User.anonymous
-          a.filename = e.filename
-          a.created_on = e.created_at
-          a.description = "Event #{e.id}"
-          e.attachments << a
+      Event.all.each do |e|
+        next if e.project.nil?
+        next if e.read_attribute(:file).blank?
+        a = Attachment.new
+        a.file = StringIO.new e.file_old
+        a.author = e.user || User.anonymous
+        a.filename = e.filename || 'unknown_filename'
+        a.created_on = e.created_at
+        a.description = "Event #{e.id}"
+        e.attachments << a
+        puts "Attachment e=#{e.id} a=#{a.id} #{a.diskfile}"
+        begin
           e.save!
-          puts "Attachment e=#{e.id} a=#{a.id} #{a.filename}"
+        rescue
+          puts e.errors.messages
+          raise e
         end
- 
-      rescue => error
-        puts "Error: #{error}"
-        raise error
       end
+
+    rescue => error
+      puts "Error: #{error}"
+      raise error
     end
+  end
 end
-
-
