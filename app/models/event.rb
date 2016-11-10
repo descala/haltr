@@ -88,7 +88,7 @@ class Event < ActiveRecord::Base
     events
   end
 
-  attr_accessor :file
+  attr_accessor :file, :filename
 
   def attachment
     attachments.first
