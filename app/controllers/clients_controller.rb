@@ -49,6 +49,8 @@ class ClientsController < ApplicationController
     end
 
     case params[:format]
+    when 'csv', 'pdf'
+      @limit = Setting.issues_export_limit.to_i
     when 'xml', 'json'
       @offset, @limit = api_offset_and_limit
     else
@@ -59,6 +61,13 @@ class ClientsController < ApplicationController
     @client_pages = Paginator.new @client_count, @limit, params['page']
     @offset ||= @client_pages.offset
     @clients = clients.order(sort_clause).limit(@limit).offset(@offset).to_a
+    respond_to do |format|
+      format.html
+      format.api
+      format.csv do
+        @clients = clients.order(sort_clause)
+      end
+    end
   end
 
   def show
