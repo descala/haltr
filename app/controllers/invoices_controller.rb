@@ -248,7 +248,8 @@ class InvoicesController < ApplicationController
     end
 
     if client_hash
-      @invoice.set_client_from_hash(client_hash)
+      client_hash[:project] = @invoice.project
+      @invoice.client, @invoice.client_office = Haltr::Utils.client_from_hash(client_hash)
     end
 
     if bank_account || iban
