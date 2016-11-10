@@ -240,19 +240,6 @@ class IssuedInvoice < InvoiceDocument
     events.order(:created_at).select {|e| e.name == 'success_sending' }.last
   end
 
-  def last_sent_file_path
-    event = last_sent_event
-    begin
-      if event and event.md5
-        Rails.application.routes.url_helpers.legal_path(:id=>id,:md5=>event.md5)
-      else
-        Rails.application.routes.url_helpers.event_file_path(event)
-      end
-    rescue
-      nil
-    end
-  end
-
   def self.states
     state_machine.states.collect do |s|
       s.name

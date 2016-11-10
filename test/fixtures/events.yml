@@ -7,7 +7,6 @@ oldest:
 invoices_001_edited:
   name: edited
   user_id: 2
-  filename: nil
   invoice_id: 1
   project_id: 2
   created_at: <%=t=Time.now%>
@@ -84,8 +83,6 @@ with_file:
     ---
     :notes: Name Of Recipient
     :class_for_send: send_pdf_by_mail
-  filename: readme.txt
-  file: This is the file content
   content_type: plain/text
   created_at: <%=t+=1.minute%>
 accept_notification:
@@ -124,7 +121,5 @@ with_file_notes:
   info: |
     ---
     :notes: this is a literal
-  filename: readme.txt
-  file: This is the file content
   content_type: plain/text
   created_at: <%=t+=1.minute%>

@@ -8,7 +8,6 @@ class EventsController < ApplicationController
   before_filter :find_project_by_project_id, :only => [:index]
   before_filter :authorize, :only => [:index]
   before_filter :authorize_or_find_hashid, only: [:attachment]
-  before_filter :authorize_or_find_hashid, only: [:attachment]
 
   accept_api_auth :index
 

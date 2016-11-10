@@ -90,12 +90,14 @@ class Event < ActiveRecord::Base
 
   attr_accessor :file
 
-  def attachment_content
-    File.read(attachments.first.diskfile)
+  def attachment
+    attachments.first
+  rescue
+    nil
   end
 
-  def file
-    raise "Use attachment"
+  def attachment_content
+    File.read(attachments.first.diskfile)
   end
 
   def create_attachment
