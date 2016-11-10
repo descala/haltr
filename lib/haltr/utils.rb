@@ -178,6 +178,8 @@ module Haltr
           xpaths[:payment_method]     = "/xmlns:Invoice/cac:PaymentMeans/cbc:PaymentMeansCode"
           xpaths[:invoice_due_date]   = "/xmlns:Invoice/cac:PaymentMeans/cbc:PaymentDueDate"
           xpaths[:seller_taxcode]     = "/xmlns:Invoice/cac:AccountingSupplierParty/cac:Party/cac:PartyTaxScheme/cbc:CompanyID"
+          xpaths[:seller_taxcode2]    = "/xmlns:Invoice/cac:AccountingSupplierParty/cac:Party/cac:PartyLegalEntity/cbc:CompanyID"
+          xpaths[:seller_taxcode3]    = "/xmlns:Invoice/cac:AccountingSupplierParty/cac:Party/cac:PartyIdentification/cbc:ID"
           xpaths[:seller_name]        = "/xmlns:Invoice/cac:AccountingSupplierParty/cac:Party/cac:PartyName/cbc:Name"
           xpaths[:seller_name2]       = nil
           xpaths[:seller_address]     = [ "/xmlns:Invoice/cac:AccountingSupplierParty/cac:Party/cac:PostalAddress/cbc:StreetName",

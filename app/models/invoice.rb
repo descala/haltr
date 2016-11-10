@@ -539,7 +539,7 @@ _INV
     else
       raw_xml = raw_invoice.read
     end
-    doc               = Nokogiri::XML(raw_xml)
+    doc = Nokogiri::XML(raw_xml)
     if doc.child and doc.child.name == "StandardBusinessDocument"
       doc = Haltr::Utils.extract_from_sbdh(doc)
     end
@@ -562,6 +562,10 @@ _INV
 
     xpaths         = Haltr::Utils.xpaths_for(invoice_format)
     seller_taxcode = Haltr::Utils.get_xpath(doc,xpaths[:seller_taxcode])
+    if ubl_version
+      seller_taxcode ||= Haltr::Utils.get_xpath(doc,xpaths[:seller_taxcode2])
+      seller_taxcode ||= Haltr::Utils.get_xpath(doc,xpaths[:seller_taxcode3])
+    end
     buyer_taxcode  = Haltr::Utils.get_xpath(doc,xpaths[:buyer_taxcode])
     if buyer_taxcode.nil? and ubl_version
       buyer_taxcode  = Haltr::Utils.get_xpath(doc,xpaths[:buyer_taxcode_id])
