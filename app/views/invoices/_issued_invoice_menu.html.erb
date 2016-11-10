@@ -29,9 +29,9 @@
       <% end -%>
     <% end %>
 
-    <% if @invoice.last_sent_file_path -%>
+    <% if @invoice.last_sent_event -%>
       <li>
-        <%= link_to(l(:download_legal_invoice), @invoice.last_sent_file_path) %>
+        <%= h link_to_attachment(@invoice.last_sent_event.attachment, text: l(:download_legal_invoice), download: true) %>
       </li>
     <%else%>
       <li><%= link_to l(:download_as_xml), {:action=>'show', :id=>@invoice, :format => 'facturae32'}, :class=>'icon-haltr-save' %></li>

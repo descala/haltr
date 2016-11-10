@@ -5,7 +5,7 @@
 <% unless e.codi_registre.blank? -%>
   ( reg. <%= e.codi_registre %> )
 <% end -%>
-<%= h link_to_if_authorized(l(e.name =~ /_notification/ ? :download_notification : :download_legal), event_file_path(e)) %>
+<%= h link_to_attachment(e.attachments.first, text: l(e.name =~ /_notification/ ? :download_notification : :download_legal), download: true) %>
 <% if e.extra_notes.present? -%>
 <%= "( #{link_to_function(l(:view_mail), "$('#event_#{e.id}').show();") } )".html_safe %>
   <div id="event_<%=e.id%>" style="display:none;">
