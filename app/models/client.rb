@@ -8,6 +8,8 @@ class Client < ActiveRecord::Base
   include Haltr::BankInfoValidator
   include Haltr::PaymentMethods
   has_many :invoices, :dependent => :destroy
+  has_many :received_invoices, :dependent => :destroy
+  has_many :invoice_templates, :dependent => :destroy
   has_many :people,   :dependent => :destroy
   has_many :mandates, :dependent => :destroy
   has_many :events, -> {order :created_at}
@@ -84,26 +86,14 @@ class Client < ActiveRecord::Base
 
   alias :to_s :to_label
 
-  def invoice_templates
-    self.invoices.where(["type=?","InvoiceTemplate"])
-  end
-
   def template_invoice_lines
     invoice_templates.collect do |invoice_template|
       invoice_template.invoice_lines
     end.flatten
   end
 
-  def invoice_documents
-    self.invoices.where(["type=?","IssuedInvoice"])
-  end
-
   def issued_invoices
     self.invoices.where(["type=?","IssuedInvoice"])
-  end
-
-  def received_invoices
-    self.invoices.where(["type=?","ReceivedInvoice"])
   end
 
   def allowed?
