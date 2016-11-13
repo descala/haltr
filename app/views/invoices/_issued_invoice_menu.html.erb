@@ -27,7 +27,7 @@
       <% end -%>
     <% end %>
 
-    <% if @invoice.last_sent_event -%>
+    <% if @invoice.last_sent_event and @invoice.last_sent_event.attachment -%>
       <li>
         <%= h link_to_attachment(@invoice.last_sent_event.attachment, text: l(:download_legal_invoice), download: true) %>
       </li>
