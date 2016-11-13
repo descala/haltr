@@ -815,7 +815,7 @@ class InvoiceTest < ActiveSupport::TestCase
     assert_equal 'Client1', client.name
     assert_equal 1, client.client_offices.size
 
-    invoice.set_client_from_hash(
+    invoice.client, invoice.client_office = Haltr::Utils.client_from_hash(
       :taxcode        => "A13585625",
       :name           => nil,
       :address        => nil,
@@ -826,7 +826,7 @@ class InvoiceTest < ActiveSupport::TestCase
       :postalcode     => nil,
       :city           => nil,
       :currency       => nil,
-      :project        => nil,
+      :project        => invoice.project,
       :invoice_format => nil,
       :language       => nil,
     )
@@ -854,21 +854,30 @@ class InvoiceTest < ActiveSupport::TestCase
   test 'does not link to external_company if taxcode does not match' do
     invoice = invoices(:invoices_001)
     invoice.client = nil
-    invoice.set_client_from_hash(taxcode: "FRB17915224")
+    invoice.client, invoice.client_office = Haltr::Utils.client_from_hash(
+      taxcode: "FRB17915224",
+      project: invoice.project
+    )
     assert_nil invoice.client.company_id
   end
 
   test 'does not link to external_company with short taxcodes' do
     invoice = invoices(:invoices_001)
     invoice.client = nil
-    invoice.set_client_from_hash(taxcode: "5224")
+    invoice.client, invoice.client_office = Haltr::Utils.client_from_hash(
+      taxcode: "5224",
+      project: invoice.project
+    )
     assert_nil invoice.client.company_id
   end
 
   test 'links to external_company if taxcode matches but has no country code' do
     invoice = invoices(:invoices_001)
     invoice.client = nil
-    invoice.set_client_from_hash(taxcode: "B17915224")
+    invoice.client, invoice.client_office = Haltr::Utils.client_from_hash(
+      taxcode: "B17915224",
+      project: invoice.project
+    )
     assert_not_nil invoice.client.company_id
     assert_equal 'ESB17915224', invoice.client.taxcode
   end
@@ -876,7 +885,10 @@ class InvoiceTest < ActiveSupport::TestCase
   test 'links to external_company if taxcode matches' do
     invoice = invoices(:invoices_001)
     invoice.client = nil
-    invoice.set_client_from_hash(taxcode: "ESB17915224")
+    invoice.client, invoice.client_office = Haltr::Utils.client_from_hash(
+      taxcode: "ESB17915224",
+      project: invoice.project
+    )
     assert_not_nil invoice.client.company_id
     assert_equal 'ESB17915224', invoice.client.taxcode
   end

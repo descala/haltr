@@ -5,6 +5,7 @@ class ClientOffice < ActiveRecord::Base
   belongs_to :client
   delegate :project, to: :client
   has_many :invoices, dependent: :nullify
+  has_many :orders, dependent: :nullify
   validates_presence_of :name, :client_id
 
   iso_country :country

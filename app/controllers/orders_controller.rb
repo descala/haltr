@@ -65,6 +65,12 @@ class OrdersController < ApplicationController
       orders = orders.where('fecha_entrega <= ?', params[:fecha_entrega_to].gsub('-','')[2..-1])
     end
 
+    # client filter
+    unless params[:client_id].blank?
+      orders = orders.where("client_id = ?", params[:client_id])
+      @client_id = params[:client_id].to_i rescue nil
+    end
+
     @order_count = orders.count
     @order_pages = Paginator.new self, @order_count,
       per_page_option,
