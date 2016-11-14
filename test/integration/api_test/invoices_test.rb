@@ -1,7 +1,7 @@
 require File.dirname(__FILE__) + '/../../test_helper'
 
 class Redmine::ApiTest::InvoicesTest < Redmine::ApiTest::Base
-  fixtures :companies, :invoices, :invoice_lines, :taxes
+  fixtures :companies, :invoices, :invoice_lines, :taxes, :events
 
   def setup
     Setting.rest_api_enabled = '1'
@@ -61,9 +61,12 @@ class Redmine::ApiTest::InvoicesTest < Redmine::ApiTest::Base
   end
 
   test 'shows download_legal_url' do
+    a = Attachment.find 1
+    a.container = invoices(:invoices_001).last_sent_event
+    a.save
     get '/invoices/1.json', {}, credentials('jsmith')
     assert_response :success
-    assert_equal '/events/file/524484085', JSON(response.body)['invoice']['download_legal_url']
+    assert_equal '/attachments/download/1/error281.txt', JSON(response.body)['invoice']['download_legal_url']
     #puts JSON.pretty_generate(JSON(response.body))
   end
 
