@@ -434,7 +434,7 @@ module Haltr
               client.company = external_company
             end
           end
-          client.save!(:validate=>false)
+          client.save!
         end
         [client, client_office]
       end
