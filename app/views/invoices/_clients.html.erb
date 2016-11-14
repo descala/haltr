@@ -6,11 +6,13 @@
   :data => { :remote => true,
              :url => url_for(project_invoices_update_payment_stuff_path(@project, invoice_id: (@invoice ? @invoice.id : nil))) },
   :class => "formee-medium" %>
-<% if @client -%>
 <span id="send_info"><%= l(:transport) %>:
-  <span id="invoice_format"><%= ExportChannels.l(@client.invoice_format) %></span>
+  <span id="invoice_format">
+    <% if @client -%>
+      <%= ExportChannels.l(@client.invoice_format) %>
+    <% end -%>
+  </span>
 </span>
-<% end -%>
 <span class="mes">
   <%=link_to_function(l(:label_company_new),"$('#new_client_wrapper').show();")%>
 </span>
