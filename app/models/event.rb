@@ -105,9 +105,11 @@ class Event < ActiveRecord::Base
       a = Attachment.new
       # @file may be compressed
       a.file = StringIO.new(Haltr::Utils.decompress(@file))
-      a.author = User.current
-      a.filename = filename
-      self.attachments << a
+      if a.file.size > 0
+        a.author = User.current
+        a.filename = filename
+        self.attachments << a
+      end
     end
   end
 
