@@ -653,7 +653,7 @@ en:
   label_invoice_total: "Total"
   field_unidad_contratacion: "Unidad de contratación / SEF"
   field_discount_helper: "Calculate discount % from amount"
-  label_discounts_and_charges: Discounts and charges
+  label_discounts_and_charges: Discounts, charges and withholdings
   invoice_import_mismatch: "Original invoice amount %{original} does not match calculated amount %{calculated}"
   invoice_has_no_original: Invoice has no original (transport requires an original document)
   fa_payment_method_01: 'In cash'
@@ -789,3 +789,5 @@ If you save it, will be marked as New."
     %{title} Team
   create_invoice_from_order: "Create invoice"
   label_order: "Order"
+  field_amounts_withheld_reason: "Withheld reason"
+  field_amounts_withheld: "Withheld amount"

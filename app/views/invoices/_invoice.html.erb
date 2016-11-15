@@ -207,7 +207,6 @@
         </tr>
       <% end -%>
 
-
     </tbody></table>
 
     <!-- Totals Details -->
@@ -226,11 +225,24 @@
           <th><%=h l(:label_invoice_total)%>:</th>
           <td><%=h money(@invoice.total) %></td>
         </tr>
-        <% if @invoice.payments_on_account_in_cents.to_i != 0 -%>
-          <tr>
-            <th><%=h l(:field_payments_on_account) %></th>
-            <td><%=h money(@invoice.payments_on_account) %></td>
-          </tr>
+        <% if @invoice.payments_on_account_in_cents.to_i != 0 or @invoice.amounts_withheld.cents != 0 -%>
+          <% if @invoice.payments_on_account_in_cents.to_i != 0 -%>
+            <tr>
+              <th><%=h l(:field_payments_on_account) %></th>
+              <td><%=h money(@invoice.payments_on_account) %></td>
+            </tr>
+          <% end -%>
+          <% if @invoice.amounts_withheld.cents != 0 -%>
+            <tr>
+              <th>
+                <%= l(:field_amounts_withheld) %>
+                <% if @invoice.amounts_withheld_reason.present? -%>
+                  (<%= h @invoice.amounts_withheld_reason %>)
+                <% end -%>:
+              </th>
+              <td>-<%= h money(@invoice.amounts_withheld) %></td>
+            </tr>
+          <% end -%>
           <tr class="invoice-total">
             <th><%=h l(:total_executable) %></th>
             <td><%=h money(@invoice.total - @invoice.payments_on_account) %></td>

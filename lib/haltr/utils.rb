@@ -46,6 +46,7 @@ module Haltr
           xpaths[:discount_percent]   = "//Invoices/Invoice/InvoiceTotals/GeneralDiscounts/Discount/DiscountRate"
           xpaths[:discount_text]      = "//Invoices/Invoice/InvoiceTotals/GeneralDiscounts/Discount/DiscountReason"
           xpaths[:payments_on_account]= "//Invoices/Invoice/InvoiceTotals/TotalPaymentsOnAccount"
+          xpaths[:amounts_withheld_r] = "//Invoices/Invoice/InvoiceTotals/AmountsWithheld/WithholdingAmount"
           xpaths[:amounts_withheld]   = "//Invoices/Invoice/InvoiceTotals/AmountsWithheld/WithholdingAmount"
           xpaths[:invoice_due_date]   = "//Invoices/Invoice/PaymentDetails/Installment/InstallmentDueDate"
           xpaths[:seller_taxcode]     = "//Parties/SellerParty/TaxIdentification/TaxIdentificationNumber"

@@ -664,7 +664,7 @@ ca:
   field_party_identification: "Codi unitat proveïdora"
   label_invoice_total: "Import"
   field_unidad_contratacion: "Unitat de contractació / SEF"
-  label_discounts_and_charges: Descomptes i càrrecs
+  label_discounts_and_charges: Descomptes, càrrecs i retencions
   invoice_import_mismatch: "L'import de la factura original %{original} és diferent del calculat %{calculated}"
   invoice_has_no_original: La factura no té original (el transport requereix un document original)
   fa_payment_method_01: 'Al comptat'
@@ -802,3 +802,5 @@ Si la deses, es marcara com a Nova."
     Equip %{title}
   create_invoice_from_order: "Crear factura"
   label_order: "Comanda"
+  field_amounts_withheld_reason: "Concepte de retenció"
+  field_amounts_withheld: "Import de retenció"

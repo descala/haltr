@@ -666,7 +666,7 @@ es:
   field_party_identification: "Código unidad proveedora"
   label_invoice_total: "Importe"
   field_unidad_contratacion: "Unidad de contratación / SEF"
-  label_discounts_and_charges: Descuentos y cargos
+  label_discounts_and_charges: Descuentos, cargos y retenciones
   invoice_import_mismatch: "El importe de la factura original %{original} es diferente del calculado %{calculated}"
   invoice_has_no_original: La factura no tiene original (el transporte requiere un documento original)
   fa_payment_method_01: 'Al contado'
@@ -804,3 +804,5 @@ Si la guardas, se marcará como Nueva."
     Equipo %{title}
   create_invoice_from_order: "Crear factura"
   label_order: "Pedido"
+  field_amounts_withheld_reason: "Concepto de retención"
+  field_amounts_withheld: "Importe de retención"

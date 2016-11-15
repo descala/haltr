@@ -595,6 +595,7 @@ _INV
     charge_reason    = Haltr::Utils.get_xpath(doc,xpaths[:charge_reason])
     accounting_cost  = Haltr::Utils.get_xpath(doc,xpaths[:accounting_cost])
     payments_on_account = Haltr::Utils.get_xpath(doc,xpaths[:payments_on_account]) || 0
+    amounts_withheld_reason = Haltr::Utils.get_xpath(doc,xpaths[:amounts_withheld_r])
     amounts_withheld = Haltr::Utils.get_xpath(doc,xpaths[:amounts_withheld]) || 0
     amend_of         = Haltr::Utils.get_xpath(doc,xpaths[:amend_of])
     amend_type       = Haltr::Utils.get_xpath(doc,xpaths[:amend_type])
@@ -823,6 +824,7 @@ _INV
       :charge_reason    => charge_reason,
       :accounting_cost  => accounting_cost,
       :payments_on_account => Haltr::Utils.to_money(payments_on_account, currency, company.rounding_method),
+      :amounts_withheld_reason  => amounts_withheld_reason,
       :amounts_withheld  => Haltr::Utils.to_money(amounts_withheld, currency, company.rounding_method),
       :fa_person_type    => fa_person_type,
       :fa_residence_type => fa_residence_type,
