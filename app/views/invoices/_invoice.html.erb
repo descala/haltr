@@ -245,7 +245,7 @@
           <% end -%>
           <tr class="invoice-total">
             <th><%=h l(:total_executable) %></th>
-            <td><%=h money(@invoice.total - @invoice.payments_on_account) %></td>
+            <td><%=h money(@invoice.total - @invoice.payments_on_account - @invoice.amounts_withheld) %></td>
           </tr>
         <% end -%>
       </tbody></table>
