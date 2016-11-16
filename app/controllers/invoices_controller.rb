@@ -1030,6 +1030,9 @@ class InvoicesController < ApplicationController
       ClientOffice::CLIENT_FIELDS.each do |f|
         @client[f] = @invoice.client_office.send(f)
       end
+      # client copies linked profile before validation, so remove link
+      # to prevent fields beign overwritten
+      @client[:company_id] = nil
     end
   rescue ActiveRecord::RecordNotFound
     render_404
