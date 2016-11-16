@@ -792,23 +792,6 @@ class InvoiceTest < ActiveSupport::TestCase
     assert_equal ext_comp.id, invoice.client.company_id
   end
 
-  test 'import invoice does not create client_office when client its linked to external company' do
-    client_offices = ClientOffice.count
-    ext_comp = ExternalCompany.find_by_taxcode 'ESB17915224'
-    ext_comp.update_attribute(:postalcode, '08720')
-    assert_not_nil ext_comp
-    assert_nil Client.find_by_taxcode 'ESB17915224'
-    client = Client.create!(project_id: 2, company: ext_comp)
-    assert_equal ext_comp.id, client.company_id
-    assert_equal '08720', client.postalcode
-    file = File.new(File.join(File.dirname(__FILE__),'..','fixtures','documents','invoice_facturae32_issued10.xml'))
-    invoice = Invoice.create_from_xml(file,User.find_by_login('jsmith'),"1234",'uploaded',User.current.name)
-    assert_equal client_offices, ClientOffice.count
-    assert_equal invoice.client, client
-    assert_equal ext_comp.id, invoice.client.company_id
-    assert_equal '08720', invoice.client.postalcode
-  end
-
   test 'import invoice does not create client_office when values are blank' do
     invoice = invoices(:invoices_001)
     client = invoice.client
