@@ -365,77 +365,75 @@ module Haltr
             end
           end
         end
-        if client and client.company.nil?
-          # client found by taxcode, but stored data may not match data in invoice
-          # if it doesn't, we create a client_office with data from invoice
-          to_match = {
-            full_address:         client_hash[:address].to_s.chomp,
-            city:                 client_hash[:city].to_s.chomp,
-            province:             client_hash[:province].to_s.chomp,
-            postalcode:           client_hash[:postalcode].to_s.chomp,
-            country:              client_hash[:country].to_s.chomp,
-            name:                 client_hash[:name].to_s.chomp,
-            edi_code:             client_hash[:edi_code].to_s.chomp,
-            destination_edi_code: client_hash[:destination_edi_code].to_s.chomp
-          }.reject {|k,v| v.blank? }
-          # check if client data matches client_hash
-          if !to_match.all? {|k, v| client.send(k).to_s.chomp.casecmp(v) == 0 }
-            # check if any client_office matches client_hash
-            client.client_offices.each do |office|
-              if to_match.all? {|k, v| office.send(k).to_s.chomp.casecmp(v) == 0 }
-                client_office = office
-                break
-              end
-            end
-
-            # client_office validates uniqueness of edi_code
-            if client.edi_code.to_s.chomp.casecmp(client_hash[:edi_code].to_s.chomp) == 0
-              client_hash[:edi_code] = ''
-            end
-
-            if client_office.nil?
-              # client and all its client_offices differ from data in invoice
-              client_office = ClientOffice.new(
-                client_id:            client.id,
-                address:              client_hash[:address].to_s.chomp,
-                city:                 client_hash[:city].to_s.chomp,
-                province:             client_hash[:province].to_s.chomp,
-                postalcode:           client_hash[:postalcode].to_s.chomp,
-                country:              client_hash[:country].to_s.chomp.downcase,
-                name:                 client_hash[:name].to_s.chomp,
-                edi_code:             client_hash[:edi_code].to_s.chomp,
-                destination_edi_code: client_hash[:destination_edi_code].to_s.chomp
-              )
-              raise "#{l(:label_client_office)}: #{client_office.errors.full_messages.join('. ')}" unless client_office.save
-              client.reload
+        unless client
+          client = Client.new(client_hash)
+          client.project = project
+          external_company = nil
+          # to match ES12345678 when we have 12345678
+          ExternalCompany.where('taxcode like ?', "%#{client_hash[:taxcode]}").each do |ec|
+            if ec.taxcode =~ /\A.{0,2}#{client_hash[:taxcode]}\z/
+              external_company = ec
+              break
             end
           end
-        else
-          unless client
-            client = Client.new(client_hash)
-            client.project = project
-            external_company = nil
-            # to match ES12345678 when we have 12345678
-            ExternalCompany.where('taxcode like ?', "%#{client_hash[:taxcode]}").each do |ec|
-              if ec.taxcode =~ /\A.{0,2}#{client_hash[:taxcode]}\z/
+          unless external_company
+            # to match 12345678 when we have ES12345678
+            ExternalCompany.where('? like concat("%", taxcode) and taxcode != ""', client_hash[:taxcode]).each do |ec|
+              if client_hash[:taxcode] =~ /\A.{0,2}#{ec.taxcode}\z/
                 external_company = ec
                 break
               end
             end
-            unless external_company
-              # to match 12345678 when we have ES12345678
-              ExternalCompany.where('? like concat("%", taxcode) and taxcode != ""', client_hash[:taxcode]).each do |ec|
-                if client_hash[:taxcode] =~ /\A.{0,2}#{ec.taxcode}\z/
-                  external_company = ec
-                  break
-                end
-              end
-            end
-            if external_company
-              client.company = external_company
+          end
+          if external_company
+            client.company = external_company
+          end
+          client.save!(validate: false)
+        end
+
+        # stored data may not match data in invoice, if it doesn't,
+        # we create a client_office with data from invoice
+        to_match = {
+          full_address:         client_hash[:address].to_s.chomp,
+          city:                 client_hash[:city].to_s.chomp,
+          province:             client_hash[:province].to_s.chomp,
+          postalcode:           client_hash[:postalcode].to_s.chomp,
+          country:              client_hash[:country].to_s.chomp,
+          name:                 client_hash[:name].to_s.chomp,
+          edi_code:             client_hash[:edi_code].to_s.chomp,
+          destination_edi_code: client_hash[:destination_edi_code].to_s.chomp
+        }.reject {|k,v| v.blank? }
+        # check if client data matches client_hash
+        if !to_match.all? {|k, v| client.send(k).to_s.chomp.casecmp(v) == 0 }
+          # check if any client_office matches client_hash
+          client.client_offices.each do |office|
+            if to_match.all? {|k, v| office.send(k).to_s.chomp.casecmp(v) == 0 }
+              client_office = office
+              break
             end
           end
-          client.save!
+
+          # client_office validates uniqueness of edi_code
+          if client.edi_code.to_s.chomp.casecmp(client_hash[:edi_code].to_s.chomp) == 0
+            client_hash[:edi_code] = ''
+          end
+
+          if client_office.nil?
+            # client and all its client_offices differ from data in invoice
+            client_office = ClientOffice.new(
+              client_id:            client.id,
+              address:              client_hash[:address].to_s.chomp,
+              city:                 client_hash[:city].to_s.chomp,
+              province:             client_hash[:province].to_s.chomp,
+              postalcode:           client_hash[:postalcode].to_s.chomp,
+              country:              client_hash[:country].to_s.chomp.downcase,
+              name:                 client_hash[:name].to_s.chomp,
+              edi_code:             client_hash[:edi_code].to_s.chomp,
+              destination_edi_code: client_hash[:destination_edi_code].to_s.chomp
+            )
+            raise "#{l(:label_client_office)}: #{client_office.errors.full_messages.join('. ')}" unless client_office.save
+            client.reload
+          end
         end
         [client, client_office]
       end
