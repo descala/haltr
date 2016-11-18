@@ -647,7 +647,7 @@ fr:
   field_party_identification: "Party identification"
   label_invoice_total: "Total"
   field_unidad_contratacion: "Unidad de contratación / SEF"
-  label_discounts_and_charges: Discounts and charges
+  label_discounts_and_charges: Discounts, charges and withholdings
   invoice_import_mismatch: "Original invoice amount %{original} does not match calculated amount %{calculated}"
   invoice_has_no_original: Invoice has no original (transport requires an original document)
   fa_payment_method_01: 'In cash'
@@ -786,3 +786,5 @@ If you save it, will be marked as New."
   label_company_offices: "Succursales"
   label_company_office_new: Nouvelle succursale
   label_company_office: Succursale
+  field_amounts_withheld_reason: "Withheld reason"
+  field_amounts_withheld: "Withheld amount"

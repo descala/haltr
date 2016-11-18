@@ -8,6 +8,7 @@ class Client < ActiveRecord::Base
   include Haltr::BankInfoValidator
   include Haltr::PaymentMethods
   has_many :invoices, :dependent => :destroy
+  has_many :orders
   has_many :people,   :dependent => :destroy
   has_many :mandates, :dependent => :destroy
   has_many :events,   :order => :created_at

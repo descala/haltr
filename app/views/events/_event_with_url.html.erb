@@ -2,8 +2,3 @@
 <% unless e.notes.blank? -%>
   ( <%= h e.notes %> )
 <% end -%>
-<% if e.name =~ /_notification/ -%>
-  ( <%= h link_to_if_authorized(l(:download_notification),legal_path(:id=>e.invoice.id,:md5=>e.md5)) %> )
-<% else -%>
-  ( <%= h link_to_if_authorized(l(:download_legal),legal_path(:id=>e.invoice.id,:md5=>e.md5)) %> )
-<% end -%>

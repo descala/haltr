@@ -52,7 +52,13 @@ api.invoice do
   api.total @invoice.total.to_f
 
   api.currency @invoice.currency
-  api.download_legal_url @invoice.last_sent_file_path if @invoice.is_a? IssuedInvoice
+  if @invoice.is_a? IssuedInvoice and @invoice.last_sent_event
+    attachment = @invoice.last_sent_event.attachment
+    if attachment
+      # TODO change download_legal_url name in API
+      api.download_legal_url download_named_attachment_path(attachment, attachment.filename)
+    end
+  end
   api.created_at @invoice.created_at
   api.updated_at @invoice.updated_at
   api.state_updated_at @invoice.state_updated_at
