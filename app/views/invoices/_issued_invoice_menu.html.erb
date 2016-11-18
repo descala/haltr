@@ -38,7 +38,7 @@
     <li><%= link_to l(:download_as_pdf), {:action=>'show', :id=>@invoice, :format => 'pdf'}, :class=>'icon-haltr-save' %></li>
 
     <% unless hide_to_user(:manage_payments) -%>
-      <% if @invoice.state?(:sent) or @invoice.state?(:allegedly_paid) or @invoice.state?(:registered) -%>
+      <% if %w(sent allegedly_paid registered accepted read).include? @invoice.state -%>
         <li><%= link_to l(:receive_payment), {:controller=>'payments', :action=>'new', :project_id=>@project, :invoice_id=>@invoice}, :class=>'icon-haltr-payment' %></li>
       <% end -%>
     <% end -%>
