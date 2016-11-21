@@ -754,7 +754,6 @@ es:
 Ten presente que los cambios que realices no los recibirá tu cliente a no ser que la vuelvas a enviar.<br />
 Si la guardas, se marcará como Nueva."
   view_invoice_requires_login: "Requerir login para ver facturas"
-  from_issued: "Recibida"
   pdf_shows_original: "Esta factura se ha modificado. El visor PDF refleja el original sin los cambios"
   label_invoice_view_sent: "Ver documento enviado"
   label_invoice_view_original: "Ver documento original"
@@ -809,3 +808,4 @@ Si la guardas, se marcará como Nueva."
   label_company_office: Sede
   field_amounts_withheld_reason: "Concepto de retención"
   field_amounts_withheld: "Importe de retención"
+  received_by: "Recibida (%{transport})"

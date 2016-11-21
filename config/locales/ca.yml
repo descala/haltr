@@ -752,7 +752,6 @@ ca:
 Tingues en compte que el teu client no rebrà els canvis a no ser que la tornis a enviar.<br />
 Si la deses, es marcara com a Nova."
   view_invoice_requires_login: "Requerir login per veure les factures"
-  from_issued: "Rebuda"
   pdf_shows_original: "Aquesta factura s'ha modificat. El format PDF reflecteix l'original, sense el canvis."
   label_invoice_view_sent: "Veure document enviat"
   label_invoice_view_original: "Veure document original"
@@ -807,3 +806,4 @@ Si la deses, es marcara com a Nova."
   label_company_office: Seu
   field_amounts_withheld_reason: "Concepte de retenció"
   field_amounts_withheld: "Import de retenció"
+  received_by: "Rebuda (%{transport})"
