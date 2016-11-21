@@ -158,12 +158,8 @@ class InvoicesController < ApplicationController
 
   def new
     @client = Client.find(params[:client]) if params[:client]
-    @client ||= Client.find(:all, :order => 'name', :conditions => ["project_id = ?", @project]).first
-    @client ||= Client.new(:country=>@project.company.country,
-                           :currency=>@project.company.currency,
-                           :language=>User.current.language)
     @invoice = invoice_class.new(:client=>@client,:project=>@project,:date=>Date.today,:number=>IssuedInvoice.next_number(@project))
-    @invoice.currency = @client.currency
+    @invoice.currency = @client.currency if @client
     il = InvoiceLine.new
     @project.company.taxes.each do |tax|
       il.taxes << Tax.new(:name=>tax.name, :percent=>tax.percent) if tax.default
@@ -252,7 +248,8 @@ class InvoicesController < ApplicationController
     end
 
     if client_hash
-      @invoice.set_client_from_hash(client_hash)
+      client_hash[:project] = @invoice.project
+      @invoice.client, @invoice.client_office = Haltr::Utils.client_from_hash(client_hash)
     end
 
     if bank_account || iban
@@ -1068,6 +1065,9 @@ class InvoicesController < ApplicationController
       ClientOffice::CLIENT_FIELDS.each do |f|
         @client[f] = @invoice.client_office.send(f)
       end
+      # client copies linked profile before validation, so remove link
+      # to prevent fields beign overwritten
+      @client[:company_id] = nil
     end
     if @invoice.company_office
       # overwrite company attributes with its office

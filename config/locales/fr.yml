@@ -668,7 +668,7 @@ fr:
   field_party_identification: "Party identification"
   label_invoice_total: "Total"
   field_unidad_contratacion: "Unidad de contratación / SEF"
-  label_discounts_and_charges: Discounts and charges
+  label_discounts_and_charges: Discounts, charges and withholdings
   invoice_import_mismatch: "Original invoice amount %{original} does not match calculated amount %{calculated}"
   invoice_has_no_original: Invoice has no original (transport requires an original document)
   fa_payment_method_01: 'In cash'
@@ -756,7 +756,6 @@ fr:
 Your customer will not receive the changes you made unless you resend it.<br />
 If you save it, will be marked as New."
   view_invoice_requires_login: "Require login to view invoices"
-  from_issued: "Received"
   pdf_shows_original: "This invoice has been modified. The PDF viewer shows the original without your changes"
   label_invoice_view_sent: "View sent document"
   label_invoice_view_original: "View original document"
@@ -807,3 +806,6 @@ If you save it, will be marked as New."
   label_company_offices: "Succursales"
   label_company_office_new: Nouvelle succursale
   label_company_office: Succursale
+  field_amounts_withheld_reason: "Withheld reason"
+  field_amounts_withheld: "Withheld amount"
+  received_by: "Received (%{transport})"

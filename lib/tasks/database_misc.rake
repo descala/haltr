@@ -5,7 +5,8 @@ namespace :haltr do
 
     begin
 
-      Event.all.each do |e|
+      # http://guides.rubyonrails.org/active_record_querying.html#retrieving-multiple-objects-in-batches
+      Event.find_each do |e|
         next if e.project.nil?
         next if e.read_attribute(:file).blank?
         a = Attachment.new
@@ -18,9 +19,9 @@ namespace :haltr do
         puts "Attachment e=#{e.id} a=#{a.id} #{a.diskfile}"
         begin
           e.save!
-        rescue
+        rescue exception
           puts e.errors.messages
-          raise e
+          raise exception
         end
       end
 

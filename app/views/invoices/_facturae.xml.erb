@@ -430,7 +430,7 @@
             <TotalPaymentsOnAccount><%=h haltr_precision @invoice.payments_on_account.dollars %></TotalPaymentsOnAccount>
             <% if @invoice.amounts_withheld_in_cents.to_i != 0 -%>
               <AmountsWithheld>
-                <!-- //Invoices/Invoice/InvoiceTotals/AmountsWithheld/WithholdingReason -->
+                <WithholdingReason><%=h @invoice.amounts_withheld_reason %></WithholdingReason>
                 <WithholdingAmount><%=h haltr_precision @invoice.amounts_withheld.dollars %></WithholdingAmount>
               </AmountsWithheld>
             <% end -%>

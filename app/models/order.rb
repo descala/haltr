@@ -3,6 +3,7 @@ class Order < ActiveRecord::Base
 
   belongs_to :project
   belongs_to :client
+  belongs_to :client_office
   belongs_to :invoice
   has_many :comments, :as => :commented, :dependent => :delete_all, :order => "created_on"
   has_many :events, :order => :created_at
@@ -170,6 +171,7 @@ class Order < ActiveRecord::Base
     seller_taxcodes << Haltr::Utils.get_xpath(doc, "#{XPATHS_ORDER[:seller]}#{XPATHS_PARTY[:taxcode3]}")
     seller_taxcodes << Haltr::Utils.get_xpath(doc, "#{XPATHS_ORDER[:seller]}#{XPATHS_PARTY[:endpointid]}")
     seller_taxcodes = seller_taxcodes.reject {|t| t.blank? }.uniq
+    seller_taxcodes.collect! {|t| t.gsub(/\s/,'') }
     seller_endpoint = Haltr::Utils.get_xpath(doc, "#{XPATHS_ORDER[:seller]}#{XPATHS_PARTY[:endpointid]}")
     buyer_taxcodes  = []
     buyer_taxcodes << Haltr::Utils.get_xpath(doc, "#{XPATHS_ORDER[:buyer]}#{XPATHS_PARTY[:taxcode]}")
@@ -177,6 +179,7 @@ class Order < ActiveRecord::Base
     buyer_taxcodes << Haltr::Utils.get_xpath(doc, "#{XPATHS_ORDER[:buyer]}#{XPATHS_PARTY[:taxcode3]}")
     buyer_taxcodes << Haltr::Utils.get_xpath(doc, "#{XPATHS_ORDER[:buyer]}#{XPATHS_PARTY[:endpointid]}")
     buyer_taxcodes = buyer_taxcodes.reject {|t| t.blank? }.uniq
+    buyer_taxcodes.collect! {|t| t.gsub(/\s/, '') }
     buyer_endpoint  = Haltr::Utils.get_xpath(doc, "#{XPATHS_ORDER[:buyer]}#{XPATHS_PARTY[:endpointid]}")
 
     if seller_taxcodes.include?(project.company.taxcode) or project.company.endpointid == seller_endpoint
@@ -192,34 +195,16 @@ class Order < ActiveRecord::Base
         :tc  => "#{project.company.taxcode}#{peppolid if peppolid.size > 3}"
     end
 
-    if client_taxcodes.blank?
-      client = Client.new
-    else
-      client = project.clients.where(taxcode: client_taxcodes).first
-      client ||= Client.new(taxcode: client_taxcodes.first)
+    client_hash = {}
+    XPATHS_PARTY.each do |k,v|
+      next if k =~ /taxcode/
+      client_hash[k] = Haltr::Utils.get_xpath(doc, "#{XPATHS_ORDER[client_role]}#{v}")
     end
+    client_hash[:taxcode] = client_taxcodes.first
+    client_hash[:project] = project
 
-    if client.new_record?
-      client.project = project
-      XPATHS_PARTY.each do |key, xpath|
-        next unless client.respond_to?("#{key}=")
-        value = Haltr::Utils.get_xpath(doc, "#{XPATHS_ORDER[client_role]}#{xpath}")
-        client.send("#{key}=",value)
-      end
-      client.language = User.current.language
-      client.country.downcase! rescue nil
-      if !Valvat::Checksum.validate(client.taxcode)
-        client.company_identifier = client.taxcode
-        client.taxcode = ""
-      end
-      unless client.save
-        raise "CLIENT: #{client.errors.full_messages.join('. ')}"
-      end
-    else
-      #TODO: seus?
-    end
     order = (client_role == :buyer) ? ReceivedOrder.new : IssuedOrder.new
-    order.client = client
+    order.client, order.client_office = Haltr::Utils.client_from_hash(client_hash)
     order.project  = project
     order.original = xml
     order.filename = file.original_filename

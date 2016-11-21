@@ -149,6 +149,17 @@
       </p>
     </div>
 
+    <div class="seccio grup">
+      <p class="col span-1-de-3">
+      <%= f.text_field :amounts_withheld_reason %>
+      </p>
+      <p class="col span-1-de-3">
+      <%= f.text_field :amounts_withheld, :value => (@invoice.amounts_withheld.cents > 0 ? @invoice.amounts_withheld : "") %>
+      </p>
+      <p class="col span-1-de-3">
+      </p>
+    </div>
+
     <% if User.current.allowed_to?(:view_invoice_extra_fields, @project) -%>
       <div class="seccio grup">
         <p class="col span-1-de-3">
