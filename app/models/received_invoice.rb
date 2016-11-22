@@ -114,6 +114,15 @@ class ReceivedInvoice < InvoiceDocument
     ).save(validate: false)
   end
 
+  def file_name
+    fn = read_attribute('file_name')
+    if date
+      "#{date.strftime("%Y%m%d")}_#{fn}"
+    else
+      "00000000_#{fn}"
+    end
+  end
+
   protected
 
   def create_event
