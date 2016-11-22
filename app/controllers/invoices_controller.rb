@@ -1465,15 +1465,19 @@ class InvoicesController < ApplicationController
   end
 
   def original
+    fn = nil
+    if @invoice.is_a? ReceivedInvoice
+      fn = @invoice.file_name
+    end
     if @invoice.invoice_format == 'pdf'
       send_data @invoice.original,
         :type => 'application/pdf',
-        :filename => @invoice.pdf_name,
+        :filename => fn || @invoice.pdf_name,
         :disposition => params[:disposition] == 'inline' ? 'inline' : 'attachment'
     else
       send_data @invoice.original,
         :type => 'text/xml; charset=UTF-8;',
-        :disposition => "attachment; filename=#{@invoice.xml_name}"
+        :disposition => "attachment; filename=#{fn || @invoice.xml_name}"
     end
   end
 
