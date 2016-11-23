@@ -236,6 +236,7 @@ da:
   done_mark_as_registered: "Manually marked as registered"
   done_mark_as_refused: "Manually marked as refused"
   done_mark_as_closed: "Manually marked as closed"
+  done_mark_as_paid: "Manually marked as paid"
  
   # Invoice templates
   label_invoice_template_new: Ny skablon
