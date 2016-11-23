@@ -7,8 +7,12 @@
   <ul>
     <li class="submenu"><a href="#"><%= l(:manual_mark_as, state: '') %></a>
       <ul>
-        <li><%= link_to_function(I18n.t(:state_accepted), "show_accepted_form();") if authorize_for(:received || :received, :mark_accepted) %></li>
-        <li><%= link_to_function(I18n.t(:state_refused),  "show_refused_form();") if authorize_for(:received || :received, :mark_refused) %></li>
+        <% unless @invoice.state?(:accepted) -%>
+          <li><%= link_to_function(I18n.t(:state_accepted), "show_accepted_form();") if authorize_for(:received || :received, :mark_accepted) %></li>
+        <% end -%>
+        <% unless @invoice.state?(:refused) -%>
+          <li><%= link_to_function(I18n.t(:state_refused),  "show_refused_form();") if authorize_for(:received || :received, :mark_refused) %></li>
+        <% end -%>
         <% if @invoice.state?(:accepted) -%>
           <li><%=link_to(l("state_paid"), mark_as_path(@invoice, state: :paid), class: "icon-haltr-mark-paid")%></li>
         <% end -%>
