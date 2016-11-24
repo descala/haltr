@@ -39,6 +39,9 @@ class ReceivedInvoice < InvoiceDocument
     event :mark_as_paid do
       transition :accepted => :paid
     end
+    event :failed_notification do
+      transition all => :error
+    end
   end
 
   def to_label
