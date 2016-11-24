@@ -9,9 +9,9 @@
     <p><%= f.text_field :province %></p>
     <p><%= f.text_field :website %></p>
     <p><%= f.text_field :email %></p>
-    <p><%= f.label_for_field :country, :required => true %><%= f.country_select :country, priority_countries: [@project.company.country] %></p>
+    <p><%= f.label_for_field :country, :required => true %><%= f.country_select :country, priority_countries: [:es] %></p>
     <p><%= f.select :currency, currency_options_for_select, :required => true %></p>
-    <p><%= f.select :invoice_format, ExportChannels.for_select(@project) %></p>
+    <p><%= f.select :invoice_format, ExportChannels.for_select(nil) %></p>
     <p><%= f.select :language, lang_options_for_select %></p>
     <p>
     <label><%= l :visible_fields %></label>
