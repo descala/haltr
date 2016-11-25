@@ -70,7 +70,7 @@ class Event < ActiveRecord::Base
 
   # automatic events can change invoice status (after_create :update_invoice)
   def automatic?
-    Event.automatic.include? name
+    Event.automatic.include? name.to_s
   end
 
   def self.automatic
