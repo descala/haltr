@@ -389,7 +389,9 @@ module Haltr
           if external_company
             client.company = external_company
           end
-          client.save!(validate: false)
+          # do not add "validate: false" here or you'll end with duplicated
+          # clients, client validates uniqueness of taxcode.
+          client.save!
         end
 
         # stored data may not match data in invoice, if it doesn't,

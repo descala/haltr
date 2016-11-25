@@ -1183,7 +1183,9 @@ class InvoicesController < ApplicationController
   end
 
   def mark_as
-    if %w(new sent accepted registered refused closed).include? params[:state]
+    states = @invoice.is_a?(ReceivedInvoice) ? %w(paid) :
+      %w(new sent accepted registered refused closed)
+    if states.include? params[:state]
       begin
         @invoice.send("mark_as_#{params[:state]}!")
       rescue StateMachine::InvalidTransition

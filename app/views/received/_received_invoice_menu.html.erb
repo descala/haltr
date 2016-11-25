@@ -2,22 +2,25 @@
   <li><%= link_to_if_authorized l(:download_original), {:controller=>'received', :action=>'original', :id=>@invoice}, :class=>'icon-haltr-save' %></li>
 <% end -%>
 
-<% if @invoice.state?(:received) -%>
-  <li><%= link_to_function(I18n.t(:mark_accepted), "show_accepted_form();") if authorize_for(:received || :received, :mark_accepted) %></li>
-  <li><%= link_to_function(I18n.t(:mark_refused),  "show_refused_form();") if authorize_for(:received || :received, :mark_refused) %></li>
-<% end -%>
+<li>
+  <a href="#"><%= l(:more_options) %></a>
+  <ul>
+    <li class="submenu"><a href="#"><%= l(:manual_mark_as, state: '') %></a>
+      <ul>
+        <% unless @invoice.state?(:accepted) -%>
+          <li><%= link_to_function(I18n.t(:state_accepted), "show_accepted_form();") if authorize_for(:received || :received, :mark_accepted) %></li>
+        <% end -%>
+        <% unless @invoice.state?(:refused) -%>
+          <li><%= link_to_function(I18n.t(:state_refused),  "show_refused_form();") if authorize_for(:received || :received, :mark_refused) %></li>
+        <% end -%>
+        <% if @invoice.state?(:accepted) or @invoice.state?(:error) -%>
+          <li><%=link_to(l("state_paid"), mark_as_path(@invoice, state: :paid), class: "icon-haltr-mark-paid")%></li>
+        <% end -%>
+      </ul>
+    </li>
 
-<% if @invoice.state?(:accepted) -%>
-  <li><%= link_to_if_authorized l(:make_payment), {:controller=>'payments', :action=>'new', :project_id=>@project, :invoice_id=>@invoice}, :class=>'icon-haltr-payment' %></li>
-<% end -%>
-
-<% if @invoice.invoice_format != 'pdf' -%>
-  <li><%= link_to l(:download_as_pdf), {:action=>'show', :id=>@invoice, :format => 'pdf'}, :class=>'icon-haltr-save' %></li>
-<% end %>
-
-<div id="invoice-refuse" style="display: none;">
-  <%= render :partial => "invoice_refuse_form" %>
-</div>
-<div id="invoice-accept" style="display: none;">
-  <%= render :partial => "invoice_accept_form" %>
-</div>
+    <% unless @invoice.invoice_format == 'pdf' -%>
+      <li><%= link_to l(:download_as_pdf), {:action=>'show', :id=>@invoice, :format => 'pdf'}, :class=>'icon-haltr-save' %></li>
+    <% end -%>
+  </ul>
+</li>

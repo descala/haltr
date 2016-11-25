@@ -17,15 +17,19 @@ class ReceivedInvoice < InvoiceDocument
   state_machine :state, :initial => :received do
     before_transition do |invoice,transition|
       unless Event.automatic.include?(transition.event.to_s)
-        Event.create(:name=>transition.event.to_s,:invoice=>invoice,:user=>User.current)
+        if transition.event.to_s =~ /^mark_as_/
+          Event.create(:name=>"done_#{transition.event.to_s}",:invoice=>invoice,:user=>User.current)
+        else
+          Event.create(:name=>transition.event.to_s,:invoice=>invoice,:user=>User.current)
+        end
       end
     end
 
     event :refuse do
-      transition [:accepted,:received] => :refused
+      transition all => :refused
     end
     event :accept do
-      transition [:received,:accepted] => :accepted
+      transition all => :accepted
     end
     event :paid do
       transition :accepted => :paid
@@ -41,6 +45,12 @@ class ReceivedInvoice < InvoiceDocument
     end
     event :error_sending do
       transition :processing_pdf => :error
+    end
+    event :mark_as_paid do
+      transition :accepted => :paid
+    end
+    event :failed_notification do
+      transition all => :error
     end
   end
 

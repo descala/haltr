@@ -250,6 +250,7 @@ es:
   done_mark_as_registered: "Marcada manualmente como registrada"
   done_mark_as_refused: "Marcada manualmente como rechazada"
   done_mark_as_closed: "Marcada manualmente como cerrada"
+  done_mark_as_paid: "Marcada manualmente como pagada"
 
   # Invoice templates
   label_invoice_template_new: Nueva plantilla
