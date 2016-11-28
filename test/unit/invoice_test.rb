@@ -251,7 +251,7 @@ class InvoiceTest < ActiveSupport::TestCase
     assert_equal "uploaded", invoice.transport
     assert_equal "Anonymous", invoice.from
     assert_equal "1234", invoice.md5
-    assert_equal "invoice_facturae32_signed.xml", invoice.file_name
+    assert_equal "20120420_invoice_facturae32_signed.xml", invoice.file_name
     # invoice lines
     assert_equal 3, invoice.invoice_lines.size
     assert_equal 600.00, invoice.invoice_lines.collect {|l| l.quantity*l.price }.sum.to_f

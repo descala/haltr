@@ -2,6 +2,7 @@ class HaltrMailer < ActionMailer::Base
   layout 'mailer'
   helper :application
   helper :haltr
+  helper :invoices
 
 
   include Redmine::I18n
