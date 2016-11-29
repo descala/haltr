@@ -49,6 +49,8 @@ pdf_by_mail:
     sv: "PDF till email"
   allowed_permissions:
     :send_by_mail:
+  options:
+    foo: "bar"
 
 signed_pdf:
   order: 25
