@@ -390,6 +390,9 @@ module Haltr
           end
           # do not add "validate: false" here or you'll end with duplicated
           # clients, client validates uniqueness of taxcode.
+          unless client.valid?
+            raise "#{I18n.t(:client)}: #{client.errors.full_messages.join('. ')}"
+          end
           client.save!
         end
 
