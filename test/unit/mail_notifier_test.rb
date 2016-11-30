@@ -4,6 +4,8 @@ class MailNotifierTest < ActiveSupport::TestCase
 
   include Rails::Dom::Testing::Assertions
 
+  fixtures :invoices, :clients, :companies
+
   def setup
     ActionMailer::Base.deliveries.clear
     Setting.host_name = 'mydomain.foo'
