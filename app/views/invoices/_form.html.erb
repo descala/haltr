@@ -2,6 +2,19 @@
 <%= error_messages_for 'client' %>
 <%= f.hidden_field :quote_id %>
 
+<% if @project.company.company_offices.any? -%>
+  <div class="seccio grup tabular">
+    <p class="col span-2-de-3">
+    <label for="company_office_id"><%= l(:label_company_office) %></label>
+    <%= select :invoice, :company_office_id, @project.company.company_offices.collect {|office|
+      ["#{office.address} - #{office.city}", office.id]
+    }, { selected: (@invoice.company_office_id rescue nil),
+         include_blank: "#{@project.company.address} - #{@project.company.city}"
+    } %>
+  </p>
+  </div>
+<% end -%>
+
 <fieldset class="tabular box">
   <legend><%=l(:invoice_data)%></legend>
 
@@ -39,14 +52,14 @@
     <p class="col span-2-de-6">
       <%= f.text_field :date, :size => 10, :required => true %><%= calendar_for('invoice_date') %>
     </p>
-    <p class="col span-<%= (@invoice.is_amend? || @invoice.series_code.present? || User.current.allowed_to?(:view_invoice_extra_fields, @project)) ? '1' : '2' %>-de-6">
+    <p class="col span-<%= display_series_code_in_form? ? '1' : '2' %>-de-6">
       <% if controller.controller_name == "invoice_templates" -%>
         <%= f.select :frequency, frequencies_for_select, :required => true %>
       <% else -%>
         <%= f.text_field :number, :size => 10, :required => true, :label => l(:field_invoice_number) %> <span class="text"><%= "#{l(:label_last_invoice_number)}: #{IssuedInvoice.last_number(@project)}" if @project.issued_invoices.any?%></span>
       <% end -%>
     </p>
-    <% if @invoice.is_amend? || @invoice.series_code.present? || User.current.allowed_to?(:view_invoice_extra_fields, @project) -%>
+    <% if display_series_code_in_form? -%>
       <p class="col span-1-de-6">
       <%= f.text_field :series_code %>
       </p>
@@ -112,10 +125,11 @@
       <%= f.text_field :discount_text %>
       </p>
       <p class="col span-1-de-3">
-      <%= f.text_field :discount_percent %>
+      <%= f.text_field :discount %>
       </p>
-      <p class="col span-1-de-3">
-      <%= f.text_field :discount_helper %>
+      <p class="col span-1-de-3" style="width: 55px;">
+      <label for="invoice_discount_type">&nbsp;</label>
+      <%= f.select 'discount_type', ['%','€'], :no_label => true %>
       </p>
     </div>
 
@@ -128,6 +142,17 @@
       </p>
       <p class="col span-1-de-3">
       <%= f.text_field :accounting_cost %>
+      </p>
+    </div>
+
+    <div class="seccio grup">
+      <p class="col span-1-de-3">
+      <%= f.text_field :amounts_withheld_reason %>
+      </p>
+      <p class="col span-1-de-3">
+      <%= f.text_field :amounts_withheld, :value => (@invoice.amounts_withheld.cents > 0 ? @invoice.amounts_withheld : "") %>
+      </p>
+      <p class="col span-1-de-3">
       </p>
     </div>
 

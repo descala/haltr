@@ -111,8 +111,8 @@
 <fieldset class="tabular box">
   <legend><%=l(:bank_info)%></legend>
   <div class="seccio grup">
-    <% if @client.read_attribute(:bank_account).blank? -%>
-      <% if @client.country=='es' %>
+    <% if @client and @client.read_attribute(:bank_account).blank? -%>
+      <% if @client and @client.country=='es' %>
         <p class="col span-1-de-3">
         <a id="ccc2iban" data-url="<%=project_ccc2iban_path(@project)%>" href="#">Convert spanish CCC to IBAN</a>
         </p>
@@ -157,7 +157,7 @@
     <legend>PEPPOL</legend>
     <div class="seccio grup">
       <p class="col span-1-de-2">
-        <%= f.select :schemeid, Peppol::SCHEMEIDS %>
+        <%= f.select :schemeid, Peppol::schemes_for_select %>
       </p>
       <p class="col span-1-de-2">
         <%= f.text_field :endpointid %>

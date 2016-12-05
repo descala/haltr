@@ -24,6 +24,7 @@ class ClientsController < ApplicationController
     sort_init 'name', 'asc'
     sort_update %w(taxcode name)
 
+    @client_offices = {}
     clients = @project.clients
 
     unless params[:name].blank?
@@ -32,7 +33,17 @@ class ClientsController < ApplicationController
     end
 
     unless params[:edi_code].blank?
-      clients = clients.where("edi_code = ?", params[:edi_code])
+      @project.client_offices.where(
+        'lower(client_offices.edi_code) = ?', params[:edi_code].downcase
+      ).each do |client_office|
+        @client_offices[client_office.client_id] ||= []
+        @client_offices[client_office.client_id] << client_office
+      end
+
+      clients = clients.where(
+        "edi_code = ? or id in (?)",
+        params[:edi_code], @client_offices.keys
+      )
     end
 
     unless params[:taxcode].blank?

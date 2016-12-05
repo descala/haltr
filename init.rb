@@ -92,6 +92,7 @@ Redmine::Plugin.register :haltr do
       { :clients   => [:index, :show, :edit, :check_cif, :ccc2iban],
         :people    => [:index, :edit],
         :client_offices => [:index, :edit],
+        :company_offices => [:index, :edit],
         :invoices  => [:index, :show, :legal, :download_new_invoices, :reports, :report_channel_state, :report_invoice_list,
                        :context_menu, :number_to_id, :edit],
         :received  => [:index, :show, :legal, :context_menu],
@@ -100,13 +101,15 @@ Redmine::Plugin.register :haltr do
         :invoice_templates => [:index, :show, :context_menu],
         :charts    => [:invoice_total, :invoice_status, :top_clients],
         :events    => [:file, :index],
-        :import_errors => [:index, :show] },
+        :import_errors => [:index, :show],
+        :orders    => [:index, :show, :received, :show_received] },
       :require => :member
 
     permission :restricted_use,
       { :clients   => [:index, :show, :edit, :check_cif, :ccc2iban, :update],
         :people    => [:index, :edit],
         :client_offices => [:index, :edit, :update],
+        :company_offices => [:index, :edit, :update],
         :invoices  => [:index, :show, :legal, :download_new_invoices, :reports, :report_channel_state, :report_invoice_list,
                        :context_menu, :send_invoice,
                        :send_new_invoices, :number_to_id],
@@ -135,8 +138,11 @@ Redmine::Plugin.register :haltr do
         :import_errors => [:index, :create, :show, :destroy, :context_menu] },
       :require => :member
 
-    permission :email_customization,   {:companies=>'customization'}, :require => :member
-    permission :configure_connections, {:companies=>'connections'}, :require => :member
+    permission :email_customization,   {:companies=>'customization'},   :require => :member
+    permission :configure_connections, {:companies=>'connections'},     :require => :member
+    permission :use_company_offices,   {
+      :company_offices => [:index, :new, :show, :edit, :create, :update, :destroy],
+    }
 
     permission :invoice_quotes,
       { :quotes => [:index, :new, :create, :show, :edit, :update, :send_quote,
@@ -167,6 +173,11 @@ Redmine::Plugin.register :haltr do
       :export_channels => [:index],
     }
 
+    permission :use_orders, {
+      orders: [:index, :show, :destroy, :import, :received, :show_received,
+               :add_comment, :create_invoice]
+    }, require: :member
+
     # Loads permisons from config/channels.yml
     ExportChannels.permissions.each do |permission,actions|
       permission permission, actions, :require => :member
@@ -178,6 +189,7 @@ Redmine::Plugin.register :haltr do
   menu :project_menu, :companies,  {:controller=>'clients',   :action=>'index'     }, :param=>:project_id, :caption=>:label_companies
   menu :project_menu, :invoices,   {:controller=>'invoices',  :action=>'index'     }, :param=>:project_id, :caption=>:label_invoice_plural
   menu :project_menu, :payments,   {:controller=>'payments',  :action=>'index'     }, :param=>:project_id, :caption=>:label_payment_plural
+  menu :project_menu, :orders,     { controller: 'orders',     action: 'received'  },  param: :project_id, caption: :label_order_plural
   menu :admin_menu, :external_companies, {:controller=>'external_companies', :action=>'index'}, :caption=>:external_companies
   menu :admin_menu, :dir3_entities, {:controller=>'dir3_entities', :action=>'index'}, :caption=>:dir3_entities
   menu :admin_menu, :export_channels, {:controller=>'export_channels', :action=>'index'}, :caption=>:export_channels

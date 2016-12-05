@@ -10,7 +10,7 @@ class TaxcodeValidatorTest < ActiveSupport::TestCase
       project_id: 1
     )
     assert !client.valid?
-    assert_equal 'VAT Id Number is not a valid Spanish vat number', client.errors.full_messages.join
+    assert_equal 'VAT ID Number is not a valid Spanish vat number', client.errors.full_messages.join
     client.taxcode = 'ESP1700000A'
     assert client.valid?, client.errors.full_messages.join(' ')
   end

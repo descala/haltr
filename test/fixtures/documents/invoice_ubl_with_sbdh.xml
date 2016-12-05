@@ -70,7 +70,7 @@
           </cac:Country>
         </cac:PostalAddress>
         <cac:PartyTaxScheme>
-          <cbc:CompanyID schemeID="IS:VSKNR" schemeAgencyID="ZZZ">B10317980</cbc:CompanyID>
+          <cbc:CompanyID schemeID="IS:VSKNR" schemeAgencyID="ZZZ">K103179802</cbc:CompanyID>
           <cac:TaxScheme>
             <cbc:ID schemeID="UN/ECE 5153" schemeAgencyID="6">VAT</cbc:ID>
           </cac:TaxScheme>

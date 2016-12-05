@@ -47,6 +47,7 @@
         <%= sort_header_tag('name', :caption => l(:field_name)) %>
         <th><%=l(:label_issued)%></th>
         <th><%=l(:label_received)%></th>
+        <th><%=l(:label_order_plural)%></th>
         <th><%=l(:label_person_plural)%></th>
         <th><%=l(:label_client_offices)%></th>
         <th><%=l(:label_invoice_new)%></th>
@@ -59,6 +60,7 @@
             <td class="name"><%=h client.name%></td>
             <td class="invoices"><%= client.issued_invoices.any? ? link_to_if_authorized(client.issued_invoices.count, {:controller=>'invoices', :action=>'index', :id=>@project, :client_id=>client}, :title=>l(:label_issued)) : "-" %></td>
             <td class="invoices"><%= client.received_invoices.any? ? link_to_if_authorized(client.received_invoices.count, {:controller=>'received', :action=>'index', :id=>@project, :client_id=>client}, :title=>l(:label_received)) : "-" %></td>
+            <td class="orders"><%= client.orders.any? ? link_to_if_authorized(client.orders.count, {:controller=>'orders', :action=>'received', :id=>@project, :client_id=>client}, :title=>l(:label_received)) : "-" %></td>
             <td class="people"><%= link_to_if_authorized client.people.count, client_people_path(client), :title=>l(:label_person_plural) %></td>
             <td class="client_offices"><%= link_to client.client_offices.count, client_client_offices_path(client), :class=>'client_offices-btt', :title=>l(:label_client_offices) %></td>
             <td class="new"><%= link_to_if_authorized l(:button_new_invoice), project_client_new_invoice_path(:project_id=>@project.id,:client=>client.id), :class => 'nova-f-btt', :title=>l(:label_invoice_new) %></td>

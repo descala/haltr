@@ -65,16 +65,16 @@
         </cac:PartyTaxScheme>
       </cac:Party>
     </cac:AccountingCustomerParty>
-<% unless @invoice.is_amend? -%>
+<% if @invoice.payment_method_code(:ubl).present? and @invoice.due_date.present? and !@invoice.is_amend? -%>
       <cac:PaymentMeans>
         <cbc:PaymentMeansCode><%=h @invoice.payment_method_code(:ubl) %></cbc:PaymentMeansCode>
         <cbc:PaymentDueDate><%=h @invoice.due_date%></cbc:PaymentDueDate>
-<% if @client.iban and @client.bic and !@client.iban.blank? and !@client.bic.blank? -%>
+<% if @invoice.client_iban.present? and @invoice.client_bic.present? -%>
             <cac:PayeeFinancialAccount>
-              <cbc:ID schemeID="IBAN"><%=h @client.iban%></cbc:ID>
+              <cbc:ID schemeID="IBAN"><%=h @invoice.client_iban%></cbc:ID>
               <cac:FinancialInstitutionBranch>
                 <cac:FinancialInstitution>
-                  <cbc:ID schemeID="BIC"><%=h @client.bic%></cbc:ID>
+                  <cbc:ID schemeID="BIC"><%=h @invoice.client_bic%></cbc:ID>
                 </cac:FinancialInstitution>
               </cac:FinancialInstitutionBranch>
             </cac:PayeeFinancialAccount>

@@ -141,7 +141,7 @@ nl:
   state_registered: "Registered"
   sending_log: "Log d'enviament"
   sending_log: "Sending log"
-  download_legal: "Download legal invoice"
+  download_legal: "Download document"
   download_notification: "Download notification"
   label_all_invoices: "All"
   label_issued: "Issued invoices"
@@ -204,7 +204,7 @@ nl:
   unpaid: "Marked as unpaid"
   edited: "Edited"
   new: "Created"
-  bounced: "Bounced: Unable to deliver to indicated email"
+  bounced: "Bounced: Unable to deliver to indicated recipient"
   validating_format: "Received invoice"
   success_validating_format: "Format validation success"
   error_validating_format: "Error on format validation"
@@ -237,6 +237,7 @@ nl:
   done_mark_as_registered: "Manually marked as registered"
   done_mark_as_refused: "Manually marked as refused"
   done_mark_as_closed: "Manually marked as closed"
+  done_mark_as_paid: "Manually marked as paid"
 
   # Invoice templates
   label_invoice_template_new: New template
@@ -603,6 +604,7 @@ nl:
   field_receiver_contract_reference: "Contract / Assignment code"
   invoice_attachments_description: "You can add attachments to the invoce (max %{mb}MB). These documents will be sent along with the invoice."
   invoice_attachments_permission: "Not allowed"
+  label_will_send_original: "Since this electronic invoice has been imported and it has not been updated, the original imported invoice will be sent."
   import_errors: "Import errors"
   text_import_errors_destroy_confirmation: "Are you sure you want to delete the selected import error(s)?"
   field_series_code: "Serie"
@@ -647,8 +649,7 @@ nl:
   field_party_identification: "Party identification"
   label_invoice_total: "Total"
   field_unidad_contratacion: "Unidad de contratación / SEF"
-  field_discount_helper: "Calculate discount % from amount"
-  label_discounts_and_charges: Discounts and charges
+  label_discounts_and_charges: Discounts, charges and withholdings
   invoice_import_mismatch: "Original invoice amount %{original} does not match calculated amount %{calculated}"
   invoice_has_no_original: Invoice has no original (transport requires an original document)
   fa_payment_method_01: 'In cash'
@@ -736,7 +737,6 @@ nl:
 Your customer will not receive the changes you made unless you resend it.<br />
 If you save it, will be marked as New."
   view_invoice_requires_login: "Require login to view invoices"
-  from_issued: "Received"
   pdf_shows_original: "This invoice has been modified. The PDF viewer shows the original without your changes"
   label_invoice_view_sent: "View sent document"
   label_invoice_view_original: "View original document"
@@ -755,3 +755,38 @@ If you save it, will be marked as New."
   unitat_contractacio: "Unidad contratación / SEF"
   state_accounted: "Annotated"
   state_accounted_plural: "Annotated"
+  field_num_pedido: "Order number"
+  field_fecha_documento: "Document date"
+  field_lugar_entrega: "Delivery place"
+  field_fecha_pedido: "Order date"
+  field_fecha_entrega: "Delivery date"
+  label_order_plural: "Orders"
+  import_order: "Import order"
+  label_received_order_plural: "Received orders"
+  deleted_received_order: "Received order deleted"
+  deleted_issued_order: "Issued order deleted"
+  mail_notifications: "Email notifications"
+  mail_subject_order_add: "Warning: You have received a new order in %{title}"
+  mail_body_order_add: |
+    Dear user,
+    You have received a new order in your %{title} account.
+    To get the document, please use the following link: %{link}
+
+    With kind regards
+    %{title} Team
+  mail_subject_invoice_add: "Warning: You have received a new invoice in %{title}"
+  mail_body_invoice_add: |
+    Dear user,
+    You have received a new invoice in your %{title} account.
+    To get the document, please use the following link: %{link}
+
+    With kind regards
+    %{title} Team
+  create_invoice_from_order: "Create invoice"
+  label_order: "Order"
+  label_company_offices: "Branches"
+  label_company_office_new: New branch
+  label_company_office: Branch
+  field_amounts_withheld_reason: "Withheld reason"
+  field_amounts_withheld: "Withheld amount"
+  received_by: "Received (%{transport})"

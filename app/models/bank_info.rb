@@ -3,6 +3,8 @@ class BankInfo < ActiveRecord::Base
   include Haltr::BankInfoValidator
   belongs_to :company
   has_many :invoices, :dependent => :nullify
+  has_many :issued_invoices, :dependent => :nullify
+  has_many :received_invoices, :dependent => :nullify
   has_many :clients, :dependent => :nullify
   validate :has_one_account
   validate :iban_is_correct

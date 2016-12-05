@@ -4,4 +4,4 @@
 <cbc:UBLVersionID>2.0</cbc:UBLVersionID>
 <cbc:CustomizationID>urn:oasis:names:specification:ubl:xpath:Invoice-2.0:sbs-1.0-draft</cbc:CustomizationID>
 <cbc:ProfileID>FFF-B2BRouter.Net</cbc:ProfileID>
-<%= render :partial => "invoices/efffubl", :format => :xml %>
+<%= render :partial => "invoices/efffubl", :format => :xml, :locals => { :ubl_version => '2.0' } %>

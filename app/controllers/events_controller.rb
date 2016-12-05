@@ -2,14 +2,14 @@ class EventsController < ApplicationController
 
   helper :haltr
 
-  skip_before_filter :check_if_login_required, :only => [ :create, :file ]
-  before_filter :check_remote_ip, :except => [:file, :index]
-  before_filter :find_event, :only => [:file]
+  skip_before_filter :check_if_login_required, :only => [ :create, :attachment]
+  before_filter :check_remote_ip, :except => [:index, :attachment]
+  before_filter :find_event, :only => [:attachment]
   before_filter :find_project_by_project_id, :only => [:index]
   before_filter :authorize, :only => [:index]
-  before_filter :authorize_or_find_hashid, only: [:file]
+  before_filter :authorize_or_find_hashid, only: [:attachment]
 
-  accept_api_auth :file, :index
+  accept_api_auth :index
 
   helper :sort
   include SortHelper
@@ -91,39 +91,25 @@ class EventsController < ApplicationController
     end
   end
 
-  def file
-    file_field         = params[:file]         || 'file'
-    filename_field     = params[:filename]     || 'filename'
-    content_type_field = params[:content_type] || 'content_type'
-    data               = @event.try(file_field)         rescue nil
-    filename           = @event.try(filename_field)     rescue nil
-    content_type       = @event.try(content_type_field) rescue nil
-    if data
-      unless content_type # try to guess content_type
-        begin
-          tf = Tempfile.new('')
-          tf.binmode
-          tf.write(data)
-          tf.close
-          content_type = IO.popen(['file', '--brief', '--mime-type', tf.path],
-                                  :in => :close, :err => :close) {|io| io.read.chomp }
-          tf.unlink
-        rescue
-          content_type = ""
-        end
-      end
-      unless filename # try to guess filename
-        require "mime/types"
-        ext = MIME::Types[content_type].first.extensions.first rescue nil
-        filename = "#{@event.id}.#{ext}" if ext
-      end
-      send_data data, :filename => filename, :content_type => content_type
-    else
-      render_404
+  def attachment
+    a = @event.attachments.first
+    if stale?(:etag => a.digest)
+      # images are sent inline
+      send_file a.diskfile, :filename => filename_for_content_disposition(a.filename),
+        :type => detect_content_type(a),
+        :disposition => (a.image? ? 'inline' : 'attachment')
     end
   end
 
   private
+
+  def detect_content_type(attachment)
+    content_type = attachment.content_type
+    if content_type.blank?
+      content_type = Redmine::MimeType.of(attachment.filename)
+    end
+    content_type.to_s
+  end
 
   def find_event
     @event = Event.find params[:id]

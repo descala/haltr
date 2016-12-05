@@ -1,3 +1,10 @@
+<fieldset class="tabular box" style="padding-bottom: 40px;">
+  <legend><%= l(:mail_notifications) %></legend>
+  <p><%= f.check_box :invoice_notifications, no_label: true %><%= l :label_received %></p>
+  <br />
+  <p><%= f.check_box :order_notifications, no_label: true %><%= l :label_received_order_plural %></p>
+</fieldset>
+
 <fieldset>
   <legend><%=l(:field_company_public)%></legend>
   <div class="seccio grup">
@@ -70,6 +77,7 @@
         </div>
       </div>
     <% end -%>
+    <p><%= f.check_box :bcc_me, no_label: true %><%= l "field_bcc_me"%></p>
   </fieldset>
   <fieldset style="border: none;">
     <legend><%= l(:label_quote_plural) %></legend>
@@ -89,8 +97,6 @@
         </div>
       </div>
     <% end -%>
-    <hr/>
-    <p><%= f.check_box :bcc_me, no_label: true %><%= l "field_bcc_me"%></p>
   </fieldset>
 </fieldset>
 

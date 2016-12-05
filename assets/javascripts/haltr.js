@@ -138,22 +138,6 @@ $(document).ready(function() {
     $('#denied_requests').toggle();
   });
 
-  $(document).on('change', '#invoice_discount_helper, #invoice_discount_percent', function(e) {
-    if (e.target.id == 'invoice_discount_helper') {
-      $('#invoice_discount_percent').val('');
-    } else {
-      $('#invoice_discount_helper').val('');
-    }
-  });
-
-  $(document).on('change', '.discount_helper_line, .discount_percent_line', function(e) {
-    if (e.target.id.match(/discount_helper$/)) {
-      $('#'+e.target.id.replace(/helper$/,'percent')).val('');
-    } else {
-      $('#'+e.target.id.replace(/percent$/,'helper')).val('');
-    }
-  });
-
   $(document).on('change', 'select#invoice_currency', function(e) {
     if ($("select#invoice_currency option:selected" ).val() == 'EUR') {
       $('div#exchange_fields').hide();

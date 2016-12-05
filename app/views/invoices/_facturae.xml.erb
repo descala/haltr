@@ -309,7 +309,7 @@
             <InvoiceCurrencyCode><%=h @invoice.currency%></InvoiceCurrencyCode>
             <% if @invoice.currency != 'EUR' and @invoice.exchange_rate -%>
               <ExchangeRateDetails>
-                <ExchangeRate><%= @invoice.exchange_rate %></ExchangeRate>
+                <ExchangeRate><%=h haltr_precision(@invoice.exchange_rate, 2) %></ExchangeRate>
                 <ExchangeRateDate><%= @invoice.exchange_date %></ExchangeRateDate>
               </ExchangeRateDetails>
             <% end -%>
@@ -430,7 +430,7 @@
             <TotalPaymentsOnAccount><%=h haltr_precision @invoice.payments_on_account.dollars %></TotalPaymentsOnAccount>
             <% if @invoice.amounts_withheld_in_cents.to_i != 0 -%>
               <AmountsWithheld>
-                <!-- //Invoices/Invoice/InvoiceTotals/AmountsWithheld/WithholdingReason -->
+                <WithholdingReason><%=h @invoice.amounts_withheld_reason %></WithholdingReason>
                 <WithholdingAmount><%=h haltr_precision @invoice.amounts_withheld.dollars %></WithholdingAmount>
               </AmountsWithheld>
             <% end -%>
@@ -579,9 +579,9 @@
                <PaymentMeans><%=h @invoice.payment_method_code(:facturae) %></PaymentMeans>
 <% if @invoice.debit? and @client.use_iban? -%>
                <AccountToBeDebited>
-                 <IBAN><%=h @client.iban%></IBAN>
-<% unless @client.bic.blank? -%>
-                 <BIC><%=h @client.bic.ljust(11,'X')%></BIC>
+                 <IBAN><%=h @invoice.client_iban%></IBAN>
+<% unless @invoice.client_bic.blank? -%>
+                 <BIC><%=h @invoice.client_bic.ljust(11,'X')%></BIC>
 <% end -%>
                </AccountToBeDebited>
 <% elsif @invoice.debit? and !@client.bank_account.blank?-%>
@@ -616,12 +616,12 @@
             </Installment>
           </PaymentDetails>
 <% end -%>
-<% unless @invoice.legal_literals.blank? -%>
+<% unless @invoice.legal_literals_plus_tax_comments.blank? -%>
           <LegalLiterals>
-            <LegalReference><%=@invoice.legal_literals%></LegalReference>
+            <LegalReference><%=@invoice.legal_literals_plus_tax_comments[0...250]%></LegalReference>
           </LegalLiterals>
 <% end -%>
-<% if (@invoice.extra_info_plus_tax_comments and @invoice.extra_info_plus_tax_comments.size > 0) or @invoice.attachments.any? %>
+<% if @invoice.extra_info.present? or @invoice.attachments.any? %>
           <AdditionalData>
 <% if @invoice.attachments.any? %>
             <RelatedDocuments>
@@ -636,8 +636,8 @@
 <% end %>
             </RelatedDocuments>
 <% end %>
-<% if (@invoice.extra_info_plus_tax_comments and @invoice.extra_info_plus_tax_comments.size > 0) %>
-            <InvoiceAdditionalInformation><%=h @invoice.extra_info_plus_tax_comments[0...2500]%></InvoiceAdditionalInformation>
+<% if @invoice.extra_info.present? %>
+            <InvoiceAdditionalInformation><%=h @invoice.extra_info[0...2500]%></InvoiceAdditionalInformation>
 <% end %>
           </AdditionalData>
 <% end %>

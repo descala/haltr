@@ -214,7 +214,7 @@ ca:
   unpaid: "Marcada com a no pagada"
   edited: "Editada"
   new: "Creada"
-  bounced: "Retornada: No s'ha pogut lliurar a l'adreça de correu indicada"
+  bounced: "Retornada: No s'ha pogut lliurar al destinatari indicat"
   validating_format: "Factura rebuda"
   success_validating_format: "Validació de format correcta"
   error_validating_format: "Error en la validació de format"
@@ -248,6 +248,7 @@ ca:
   done_mark_as_registered: "Marcada manualment com a registrada"
   done_mark_as_refused: "Marcada manualment com a refusada"
   done_mark_as_closed: "Marcada manualment com a tancada"
+  done_mark_as_paid: "Marcada manualment com a pagada"
 
   # Invoice templates
   label_invoice_template_new: Nova factura recurrent
@@ -664,8 +665,7 @@ ca:
   field_party_identification: "Codi unitat proveïdora"
   label_invoice_total: "Import"
   field_unidad_contratacion: "Unitat de contractació / SEF"
-  field_discount_helper: "Calcular % de descompte des d'import"
-  label_discounts_and_charges: Descomptes i càrrecs
+  label_discounts_and_charges: Descomptes, càrrecs i retencions
   invoice_import_mismatch: "L'import de la factura original %{original} és diferent del calculat %{calculated}"
   invoice_has_no_original: La factura no té original (el transport requereix un document original)
   fa_payment_method_01: 'Al comptat'
@@ -753,7 +753,6 @@ ca:
 Tingues en compte que el teu client no rebrà els canvis a no ser que la tornis a enviar.<br />
 Si la deses, es marcara com a Nova."
   view_invoice_requires_login: "Requerir login per veure les factures"
-  from_issued: "Rebuda"
   pdf_shows_original: "Aquesta factura s'ha modificat. El format PDF reflecteix l'original, sense el canvis."
   label_invoice_view_sent: "Veure document enviat"
   label_invoice_view_original: "Veure document original"
@@ -772,3 +771,40 @@ Si la deses, es marcara com a Nova."
   unitat_contractacio: "Unitat contractació / SEF"
   state_accounted: "Comptabilitzada"
   state_accounted_plural: "Comptabilitzades"
+  field_num_pedido: "Número de comanda"
+  field_fecha_documento: "Data del document"
+  field_lugar_entrega: "Lloc d'entrega"
+  field_fecha_pedido: "Data de la comanda"
+  field_fecha_entrega: "Data d'entrega"
+  label_order_plural: "Comandes"
+  import_order: "Importar comanda"
+  label_received_order_plural: "Comandes rebudes"
+  deleted_received_order: "Comanda rebuda esborrada"
+  deleted_issued_order: "Comanda emesa esborrada"
+  mail_notifications: "Notificacions per correu electrònic"
+  mail_subject_order_add: "Atenció: Rebuda nova comanda a %{title}"
+  mail_body_order_add: |
+    Estimat usuari,
+    Us notifiquem que heu rebut una comanda al vostre portal %{title}.
+    Per tal de veure'n el contingut, sisplau accediu al següent enllaç: %{link}
+    Quedem a la vostra disposició.
+
+    Salutacions cordials
+    Equip %{title}
+  mail_subject_invoice_add: "Atenció: Rebuda nova factura a %{title}"
+  mail_body_invoice_add: |
+    Estimat usuari,
+    Us notifiquem que heu rebut una factura al vostre portal %{title}.
+    Per tal de veure'n el contingut, sisplau accediu al següent enllaç: %{link}
+    Quedem a la vostra disposició.
+
+    Salutacions cordials
+    Equip %{title}
+  create_invoice_from_order: "Crear factura"
+  label_order: "Comanda"
+  label_company_offices: "Seus"
+  label_company_office_new: Nova seu
+  label_company_office: Seu
+  field_amounts_withheld_reason: "Concepte de retenció"
+  field_amounts_withheld: "Import de retenció"
+  received_by: "Rebuda (%{transport})"

@@ -55,23 +55,22 @@
     </tbody>
   </table>
 
-  <% if User.current.allowed_to?(:view_invoice_extra_fields, @project) or @invoice.invoice_lines.to_a.sum(&:discount_percent) > 0 -%>
+  <% if User.current.allowed_to?(:view_invoice_extra_fields, @project) or @invoice.has_line_discounts? -%>
   <table class="formee invoice_lines">
     <thead>
       <tr>
         <th><%= l(:field_discount) %></th>
-        <th><%= l(:field_discount_helper) %></th>
+        <th></th>
         <th colspan="2"><%= l(:field_discount_text) %></th>
       </tr>
     </thead>
     <tbody>
       <tr>
         <td style="width: 78px">
-          <%= f.text_field(:discount_percent, no_label: true, class: 'discount_percent_line') %>
-          <span style="font-size:15px; margin-left: -20px;">%</span>
+          <%= f.text_field(:discount, no_label: true) %>
         </td>
-        <td style="width: 255px">
-          <%= f.text_field(:discount_helper, no_label: true, class: 'discount_helper_line') %>
+        <td style="width: 55px">
+          <%= f.select :discount_type, ['%','€'], :no_label => true %>
         </td>
         <td colspan="2"><%= f.text_field(:discount_text, :no_label => true) %></td>
       </tr>

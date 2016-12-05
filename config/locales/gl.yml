@@ -152,7 +152,7 @@ gl:
   state_paid_plural: "Pagadas"
   state_registered: "Rexistrada"
   sending_log: "Log de envío"
-  download_legal: "Descargar factura legal"
+  download_legal: "Descargar documento"
   download_notification: "Descargar notificación"
   label_all_invoices: "Todas"
   label_issued: "Facturas emitidas"
@@ -215,7 +215,7 @@ gl:
   unpaid: "Marcada como non pagada"
   edited: "Editada"
   new: "Creada"
-  bounced: "Devolta: Non se puido entregar no enderezo de correo indicado"
+  bounced: "Devuelta: No se pudo entregar al destinatario indicado"
   validating_format: "Factura recibida"
   success_validating_format: "Validación de formato correcta"
   error_validating_format: "Erro na validación de formato"
@@ -248,6 +248,7 @@ gl:
   done_mark_as_registered: "Marcada manualmente como rexistrada"
   done_mark_as_refused: "Marcada manualmente como rexeitada"
   done_mark_as_closed: "Marcada manualmente como pechada"
+  done_mark_as_paid: "Marcada manualmente como pagada"
 
   # Invoice templates
   label_invoice_template_new: Nova plantilla
@@ -664,8 +665,7 @@ gl:
   field_party_identification: "Código unidade provedora"
   label_invoice_total: "Importe"
   field_unidad_contratacion: "Unidad de contratación / SEF"
-  field_discount_helper: "Calcular % de descuento desde importe"
-  label_discounts_and_charges: Descuentos y cargos
+  label_discounts_and_charges: Descuentos, cargos y retenciones
   invoice_import_mismatch: "El importe de la factura original %{original} es diferente del calculado %{calculated}"
   invoice_has_no_original: La factura no tiene original (el transporte requiere un documento original)
   fa_payment_method_01: 'In cash'
@@ -753,7 +753,6 @@ gl:
 Ten presente que los cambios que realices no los recibirá tu cliente a no ser que la vuelvas a enviar.<br />
 Si la guardas, se marcará como Nueva."
   view_invoice_requires_login: "Requerir login para ver facturas"
-  from_issued: "Recibida"
   pdf_shows_original: "Esta factura se ha modificado. El visor PDF refleja el original sin los cambios"
   label_invoice_view_sent: "Ver documento enviado"
   label_invoice_view_original: "Ver documento original"
@@ -772,3 +771,40 @@ Si la guardas, se marcará como Nueva."
   unitat_contractacio: "Unidad contratación / SEF"
   state_accounted: "Contabilizada"
   state_accounted_plural: "Contabilizadas"
+  field_num_pedido: "Número de pedido"
+  field_fecha_documento: "Fecha del documento"
+  field_lugar_entrega: "Lugar de entrega"
+  field_fecha_pedido: "Fecha del pedido"
+  field_fecha_entrega: "Fecha de entrega"
+  label_order_plural: "Pedidos"
+  import_order: "Importar pedido"
+  label_received_order_plural: "Pedidos recibidos"
+  deleted_received_order: "Pedido recibido borrado"
+  deleted_issued_order: "Pedido emitido borrado"
+  mail_notifications: "Notificaciones por correo electrónico"
+  mail_subject_order_add: "Atención: Recibido nuevo pedido en %{title}"
+  mail_body_order_add: |
+    Estimado usuario,
+    Os notificamos que habéis recibido un pedido en vuestro portal %{title}.
+    Para ver el contenido del documento, por favor utilizad el siguiente enlace: %{link}
+    Quedamos a vuestra disposición.
+
+    Saludos cordiales
+    Equipo %{title}
+  mail_subject_invoice_add: "Atención: Recibida nueva factura en %{title}"
+  mail_body_invoice_add: |
+    Estimado usuario,
+    Os notificamos que habéis recibido una factura en vuestro portal %{title}.
+    Para ver el contenido del documento, por favor utilizad el siguiente enlace: %{link}
+    Quedamos a vuestra disposición.
+
+    Saludos cordiales
+    Equipo %{title}
+  create_invoice_from_order: "Crear factura"
+  label_order: "Pedido"
+  label_company_offices: "Sucursales"
+  label_company_office_new: Nueva sucursal
+  label_company_office: Sucursal
+  field_amounts_withheld_reason: "Concepto de retención"
+  field_amounts_withheld: "Importe de retención"
+  received_by: "Recibida (%{transport})"

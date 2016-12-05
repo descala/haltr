@@ -61,7 +61,39 @@ class InvoiceLine < ActiveRecord::Base
   end
 
   def discount_amount
-    total_cost * (discount_percent / 100.0)
+    if self[:discount_amount] and self[:discount_amount] != 0
+      self[:discount_amount]
+    elsif self[:discount_percent] and self[:discount_percent] != 0
+      total_cost * (self[:discount_percent] / 100.0)
+    else
+      0
+    end
+  end
+
+  def discount_percent
+    if self[:discount_percent] and self[:discount_percent] != 0
+      self[:discount_percent]
+    elsif self[:discount_amount] and self[:discount_amount] != 0
+      self[:discount_amount] * 100 / total_cost
+    else
+      0
+    end
+  end
+
+  def discount
+    if discount_type == '€'
+      discount_amount
+    else
+      discount_percent
+    end
+  end
+
+  def discount_type
+    if self[:discount_amount] and self[:discount_amount] != 0
+      '€'
+    else
+      '%'
+    end
   end
 
   def to_label
@@ -87,7 +119,13 @@ class InvoiceLine < ActiveRecord::Base
   end
 
   def unit_code(format)
-    UNIT_CODES[unit][format] rescue nil
+    UNIT_CODES[unit][format]
+  rescue
+    if format == :ubl
+      'EA'
+    else
+      nil
+    end
   end
 
   def unit_short
@@ -116,17 +154,6 @@ class InvoiceLine < ActiveRecord::Base
   * #{quantity} x #{description} #{price}
 #{taxes_string}
 _LINE
-  end
-
-  def discount_helper=(v)
-    unless discount_percent and discount_percent > 0
-      if v and v.to_f > 0
-        self.discount_percent = (v.to_f * 100 / total_cost)
-      end
-    end
-  end
-
-  def discount_helper
   end
 
   def has_same_category_iva_tax

@@ -2,6 +2,9 @@
 <div class="seccio grup">
   <div class="col span-2-de-2">
     <ul class="menu-rapid">
+      <% if @invoice.order -%>
+        <li><%= link_to_if_authorized l(:label_order), project_order_path(@invoice.order, project_id: @project), :class => 'icon' %></li>
+      <% end -%>
       <% if @invoice.is_a? InvoiceTemplate %>
         <li><%= link_to_if_authorized l("label_invoice_template_new"), new_project_invoice_template_path(@project), :class => 'icon icon-add' %></li>
       <% elsif @invoice.is_a? IssuedInvoice %>
@@ -24,6 +27,15 @@
   </div>
 </div>
 <!--final menu rapid-->
+
+<% if @invoice.is_a? ReceivedInvoice -%>
+  <div id="invoice-refuse" class="accept_refuse_form" style="display: none;">
+    <%= render :partial => "invoice_refuse_form" %>
+  </div>
+  <div id="invoice-accept" class="accept_refuse_form" style="display: none;">
+    <%= render :partial => "invoice_accept_form" %>
+  </div>
+<% end -%>
 
 <% if @invoice_pdf -%>
   <iframe src="/pdfjs/web/viewer.html?file=<%=@invoice_pdf%>" style="border: 0" width="100%" height="800" frameborder="0" scrolling="no"></iframe>
