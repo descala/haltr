@@ -23,5 +23,6 @@ class InvoicesHelperTest < ActionView::TestCase
     client.save
     ExportChannels.use_file('channels.yml.example')
     assert_match(/Signed PDF to email.*Cannot re-send invoices in state Sent/m, send_link_for_invoice)
+    ExportChannels.use_file('channels.yml')
   end
 end
