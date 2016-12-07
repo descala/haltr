@@ -4,7 +4,7 @@ UNH+<%="#{@invoice.number}#{edi_date @invoice.date}".to_s[0..12]%>+INVOIC:D:93A:
 BGM+<%='380'%>+<%=@invoice.number.to_s[0..16]%>+9'
 DTM+137:<%=edi_date @invoice.date%>:102'
 <% unless @invoice.payment_method_code(:edifact).blank? %>
-PAI+++<%=@invoice.payment_method_code(:edifact)%>'
+PAI+::<%=@invoice.payment_method_code(:edifact)%>'
 <% end %>
 <% unless ''.blank?%>
 FTX+AAI+++<%=@invoice.extra_info%>'
