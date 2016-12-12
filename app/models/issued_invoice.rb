@@ -244,9 +244,6 @@ class IssuedInvoice < InvoiceDocument
     state_machine.states.collect do |s|
       s.name
     end
-    unless payment_method.blank?
-      add_export_error([:field_due_date, 'activerecord.errors.messages.blank']) if due_date.blank?
-    end
   end
 
   protected
