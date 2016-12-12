@@ -105,6 +105,7 @@
 <% if @invoice.party_identification.present? -%>
          <PartyIdentification><%=h @invoice.party_identification%></PartyIdentification>
 <% end -%>
+<%= call_hook(:facturae_seller_before_legal_entity) %>
 <% if @company.persontype == "J" -%>
 
          <LegalEntity>
