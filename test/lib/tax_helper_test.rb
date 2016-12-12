@@ -67,7 +67,7 @@ class TaxHelperTest < ActiveSupport::TestCase
 
   test "default taxes" do
     default_taxes = default_taxes_for("es")
-    assert_equal 6, default_taxes.size
+    assert_equal 7, default_taxes.size
     taxes = {}
     default_taxes.each do |tax|
       taxes[tax.name] ||= []
@@ -78,15 +78,40 @@ class TaxHelperTest < ActiveSupport::TestCase
     assert_equal 0,    taxes["IVA"].sort[0].percent
     assert_equal "Z",  taxes["IVA"].sort[1].category
     assert_equal 0,    taxes["IVA"].sort[1].percent
-    assert_equal "AA", taxes["IVA"].sort[2].category
+    assert_equal "AAA", taxes["IVA"].sort[2].category
     assert_equal 4,    taxes["IVA"].sort[2].percent
     assert_equal "AA", taxes["IVA"].sort[3].category
     assert_equal 10,   taxes["IVA"].sort[3].percent
     assert_equal "S",  taxes["IVA"].sort[4].category
     assert_equal 21,   taxes["IVA"].sort[4].percent
     assert             taxes["IVA"].sort[4].default
-    assert_equal 1, taxes["IRPF"].size
+    assert_equal 2, taxes["IRPF"].size
     assert_equal "S", taxes["IRPF"].first.category
+  end
+
+  test "event_code and event_reason" do
+    tax = Haltr::TaxHelper.new_tax(
+      format: 'facturae321',
+      id: '03',
+      percent: '0.00',
+      event_code: '02',
+      event_reason: 'Operación no sujeta a IGIC'
+    )
+    assert_equal('NS', tax.category)
+    assert_equal('Operación no sujeta a IGIC', tax.comment)
+  end
+
+  test "event_code with percent > 0" do
+    tax = Haltr::TaxHelper.new_tax(
+      format: 'facturae32',
+      id: '01',
+      percent: '21.00',
+      event_code: '01',
+      event_reason: ''
+    )
+    assert_equal('S', tax.category)
+    assert_equal('', tax.comment)
+    assert tax.valid?
   end
 
 end

@@ -34,16 +34,18 @@ class InvoiceTemplate < Invoice
       l.template_replacements(i.date)
       i.invoice_lines << l
       tl.taxes.each do |tax|
-        l.taxes << Tax.new(:name=>tax.name,:percent=>tax.percent)
+        l.taxes << Tax.new(tax.attributes.except('invoice_line_id'))
       end
     end
     i.save!
     self.date = self.date.to_time.months_since(self.frequency).to_date
-    if self.terms == "custom"
+    if self.terms == "custom" and self.due_date
       self.due_date = self.due_date.to_time.months_since(self.frequency).to_date
     end
     self.save!
     return i
+  rescue ActiveRecord::RecordInvalid
+    raise i.errors.full_messages.join(', ')
   end
 
   def label
@@ -60,6 +62,14 @@ class InvoiceTemplate < Invoice
 
   def past_due?
     false
+  end
+
+  def number
+    date
+  end
+
+  def payments
+    []
   end
 
 end

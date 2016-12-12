@@ -20,6 +20,7 @@ class HaltrMailer < ActionMailer::Base
     pdf  = options[:pdf]
     xml  = options[:xml]
     from = options[:from] || "#{invoice.company.name.gsub(',','')} <#{invoice.company.email}>"
+    reply_to = options[:reply_to] || "#{invoice.company.name.gsub(',','')} <#{invoice.company.email}>"
     @invoice = invoice
     @invoice_url = invoice_public_view_url(:invoice_id=>invoice.id,
                                            :client_hashid=>invoice.client.hashid)
@@ -42,7 +43,7 @@ class HaltrMailer < ActionMailer::Base
     end
 
     recipients = invoice.recipient_emails.join(', ')
-    bcc        = invoice.company.email
+    bcc        = invoice.company.email if invoice.company.bcc_me?
     subj       = ""
     @body      = ""
     if @invoice.is_a?(Quote)
@@ -53,10 +54,15 @@ class HaltrMailer < ActionMailer::Base
       @body = @invoice.company.invoice_mail_body(@invoice.client.language,@invoice)
     end
 
+    unless Setting.plugin_haltr['return_path'].blank?
+      headers['Return-Path'] = Setting.plugin_haltr['return_path']
+    end
+
     mail :to   => recipients,
       :subject => subj,
       :from    => from,
-      :bcc     => bcc
+      :bcc     => bcc,
+      :reply_to => reply_to
   end
 
   def mail(headers={})

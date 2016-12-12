@@ -1,3 +1,77 @@
 class Peppol
-  SCHEMEIDS=%w(AT:CID AT:GOV AT:KUR AT:VAT DK:CPR DK:CVR DK:P DK:SE DK:VANS DUNS ES:VAT EU:REID EU:VAT FI:OVT FR:SIRET GLN HU:VAT IBAN IS:KT IT:CF IT:FTI IT:SECETI IT:SIA IT:VAT NO:ORGNR NO:VAT SE:ORGNR)
+  SCHEMEIDS= {
+    "AD:VAT"   =>  "Andorra VAT number",
+    "AL:VAT"   =>  "Albania VAT number",
+    "AT:GOV"   =>  "Österreichisches Verwaltungs bzw. Organisationskennzeichen",
+    "AT:KUR"   =>  "Kennziffer des Unternehmensregisters",
+    "AT:VAT"   =>  "Österreichische Umsatzsteuer-Identifikationsnummer",
+    "BA:VAT"   =>  "Bosnia and Herzegovina VAT number",
+    "BE:CBE"   =>  "Belgian Crossroad Bank of Enterprises ",
+    "BE:VAT"   =>  "Belgium VAT number",
+    "BG:VAT"   =>  "Bulgaria VAT number",
+    "CH:VAT"   =>  "Switzerland VAT number",
+    "CY:VAT"   =>  "Cyprus VAT number",
+    "CZ:VAT"   =>  "Czech Republic VAT number",
+    "DE:EPROC" =>  "Beschaffungsamt des Bundesministeriums des Innern",
+    "DE:VAT"   =>  "Germany VAT number",
+    "DIGST "   =>  "DIGSTORG",
+    "DK:CPR"   =>  "Danish Ministry of the Interior and Health",
+    "DK:CVR"   =>  "The Danish Commerce and Companies Agency",
+    "DK:P"     =>  "Danish Chamber of Commerce",
+    "DK:SE"    =>  "Danish Ministry of Taxation, Central Customs and Tax Administration",
+    "DK:VANS"  =>  "Danish VANS providers",
+    "DUNS"     =>  "Dun and Bradstreet Ltd",
+    "EE:VAT"   =>  "Estonia VAT number",
+    "ES:VAT"   =>  "Agencia Española de Administración Tributaria",
+    "EU:REID"  =>  "Business Registers Network",
+    "FI:OVT"   =>  "National Board of Taxes, (Verohallitus)",
+    "FR:SIRENE"=>  "Institut National de la Statistique et des Etudes Economiques, (I.N.S.E.E.)",
+    "FR:SIRET" =>  "DU PONT DE NEMOURS",
+    "FR:VAT"   =>  "French VAT number",
+    "GB:VAT"   =>  "United Kingdom VAT number",
+    "GLN"      =>  "EAN International",
+    "GR:VAT"   =>  "Greece VAT number",
+    "HR:VAT"   =>  "Croatia VAT number",
+    "HU:VAT"   =>  "HU:VAT",
+    "IBAN"     =>  "SOCIETY FOR WORLDWIDE INTERBANK FINANCIAL, TELECOMMUNICATION S.W.I.F.T",
+    "IE:VAT"   =>  "Ireland VAT number",
+    "IS:KT "   =>  "Icelandic National Registry",
+    "IT:CF "   =>  "TAX Authority",
+    "IT:FTI"   =>  "FTI - Ediforum Italia",
+    "IT:IPA"   =>  "Indice delle Pubbliche Amministrazioni",
+    "IT:SECETI"=>  "Servizi Centralizzati SECETI S.p.A.",
+    "IT:SIA"   =>  "SIA-Società Interbancaria per l'Automazione S.p.A.",
+    "IT:VAT"   =>  "Ufficio responsabile gestione partite IVA",
+    "LI:VAT"   =>  "Liechtenstein VAT number",
+    "LT:VAT"   =>  "Lithuania VAT number",
+    "LU:VAT"   =>  "Luxemburg VAT number",
+    "LV:VAT"   =>  "Latvia VAT number",
+    "MC:VAT"   =>  "Monaco VAT number",
+    "ME:VAT"   =>  "Montenegro VAT number",
+    "MK:VAT"   =>  "Macedonia, the former Yugoslav Republic of VAT number",
+    "MT:VAT"   =>  "Malta VAT number",
+    "NL:KVK"   =>  "Vereniging van Kamers van Koophandel en Fabrieken in Nederland, Scheme",
+    "NL:OIN"   =>  "Dutch Originator's Identification Number",
+    "NL:VAT"   =>  "Netherlands VAT number",
+    "NO:ORGNR" =>  "Enhetsregisteret ved Bronnoysundregisterne",
+    "PL:VAT"   =>  "Poland VAT number",
+    "PT:VAT"   =>  "Portugal VAT number",
+    "RO:VAT"   =>  "Romania VAT number",
+    "RS:VAT"   =>  "Serbia VAT number",
+    "SE:ORGNR" =>  "The National Tax Board",
+    "SE:VAT"   =>  "Swedish VAT number",
+    "SI:VAT"   =>  "Slovenia VAT number",
+    "SK:VAT"   =>  "Slovakia VAT number",
+    "SM:VAT"   =>  "San Marino VAT number",
+    "TR:VAT"   =>  "Turkey VAT number",
+    "VA:VAT"   =>  "Holy See (Vatican City State) VAT number"
+  }
+
+  def self.schemes_for_select
+    r = {'None'=>''}
+    SCHEMEIDS.each do |k,v|
+      r["#{k} - #{v}"] = k
+    end
+    return r
+  end
 end

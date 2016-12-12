@@ -8,7 +8,7 @@
       <TaxIdentification>
         <PersonTypeCode>J</PersonTypeCode>
         <ResidenceTypeCode>R</ResidenceTypeCode>
-        <TaxIdentificationNumber>B63276174</TaxIdentificationNumber>
+        <TaxIdentificationNumber>ESB63276174</TaxIdentificationNumber>
       </TaxIdentification>
       <LegalEntity>
         <CorporateName>Invinet Sistemes 2003, S.L</CorporateName>
@@ -34,6 +34,10 @@
         <TotalAmount>90.78</TotalAmount>
       </TotalExecutableAmount>
       <InvoiceCurrencyCode>USD</InvoiceCurrencyCode>
+      <ExchangeRateDetails>
+        <ExchangeRate>1.0</ExchangeRate>
+        <ExchangeDate>2016-08-04</ExchangeDate>
+      </ExchangeRateDetails>
     </Batch>
   </FileHeader>
   <Parties>
@@ -41,7 +45,7 @@
       <TaxIdentification>
         <PersonTypeCode>F</PersonTypeCode>
         <ResidenceTypeCode>R</ResidenceTypeCode>
-        <TaxIdentificationNumber>77310058H</TaxIdentificationNumber>
+        <TaxIdentificationNumber>77310058C</TaxIdentificationNumber>
       </TaxIdentification>
       <Individual>
         <Name>Ingenta</Name>
@@ -63,7 +67,7 @@
       <TaxIdentification>
         <PersonTypeCode>J</PersonTypeCode>
         <ResidenceTypeCode>R</ResidenceTypeCode>
-        <TaxIdentificationNumber>B12345678</TaxIdentificationNumber>
+        <TaxIdentificationNumber>A13585625</TaxIdentificationNumber>
       </TaxIdentification>
       <LegalEntity>
         <CorporateName>A.M.I. S.L.</CorporateName>
@@ -170,7 +174,7 @@
           <InstallmentAmount>90.78</InstallmentAmount>
           <PaymentMeans>02</PaymentMeans>
           <AccountToBeDebited>
-            <AccountNumber>1233333333333333</AccountNumber>
+            <AccountNumber>1233 3333 33 333333</AccountNumber>
           </AccountToBeDebited>
         </Installment>
       </PaymentDetails>

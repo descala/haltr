@@ -1,0 +1,34 @@
+<% if events.any? -%>
+  <!--missatge info-->
+  <div class="seccio grup">
+    <div class="col span-2-de-2">
+      <div class="formee-msg-info invoice-events">
+        <p class="contextual"><%= link_to l(:label_any), project_events_path(project_id: @project) %></p>
+        <h3 id="haltr_events"><%=h l(:events)%></h3>
+        <ul>
+          <% events.reverse.each do |e| -%>
+            <li class="haltr_<%= e.type.underscore %>"><strong><%=format_time e.created_at%></strong> -
+            <% begin -%>
+              <%= render :partial => "events/#{e.type.underscore}", :locals => {:e=>e} %>
+            <% rescue ActionView::MissingTemplate -%>
+              <%= render :partial => "events/event", :locals => {:e=>e} %>
+            <% end -%>
+            <% if e.audits.size > 0 -%>
+            <%= link_to image_tag('zoom_in.png'), '#', :class=>'show-audits', :'data-id'=>e.id %>
+            <% end -%>
+            </li>
+
+            <div id="audited_<%=e.id%>" class="audited">
+              <% e.audits.each do |a| -%>
+                <%= render partial: "audits/audit", locals: { a: a } %>
+              <% end -%>
+            </div>
+
+          <% end -%>
+        </ul>
+      </div>
+    </div>
+  </div>
+  <!--final missatge info-->
+<% end -%>
+

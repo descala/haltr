@@ -1,0 +1,21 @@
+# vi: ft=ruby
+
+api.cash_flow do
+  @currencies.each do |currency|
+    api.send(currency) do
+      api.due_invoices_sum @due_invoices_sum[currency].to_f
+      api.array :due_invoices_id do
+        @due_invoices[currency].each do |invoice|
+          api.invoice_id invoice.id
+        end
+      end if @due_invoices[currency].any?
+      api.invoices_sum @invoices_sum[currency].to_f
+      api.array :invoices_id do
+        @invoices[currency].each do |invoice|
+          api.invoice_id invoice.id
+        end
+      end if @invoices[currency].any?
+      api.currency currency
+    end
+  end
+end

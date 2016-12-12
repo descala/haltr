@@ -1,10 +1,14 @@
+html{
+  min-height:317mm;
+  position:relative;
+}
 body {
-	margin: 40px 40px 40px 100px;
   	padding: 0;
     font-family: "Helvetica Neue",Helvetica,Arial,sans-serif;
     font-size: 14px;
     line-height: 20px;
    	color: #000;
+    height: 100%;
  	}
 h2 {
 	margin: 0 0 .75em;
@@ -49,9 +53,6 @@ a:hover {
 .vendor h3 {
   font-size: 1.3em;
 }
-.invoice {
-	margin: 0 0 20px;
-	}
 .invoice h4 {
 	margin: 0 12px 4px;
 	font-size: 1.5em;
@@ -116,6 +117,9 @@ a:hover {
 .line-items .item-tax input { margin-top: 2px; }
 .line-items .item-price { text-align: right; width: 75px; }
 .line-items .item-price input { text-align: right; width: 65px; height: 18px; }
+.line-items .item-article_code { width: 60px;}
+.line-items .item-delivery_note { width: 115px; }
+.line-items .item-charge-reason { text-align: right; }
 .line-items .line-total {
 	text-align: right;
 	width: 90px;
@@ -191,4 +195,16 @@ a:hover {
 .invoicelogo img {
   max-height: 5cm;
   max-width: 10cm;
+}
+.companyid {
+  clear: left;
+  float: left;
+  margin-top: 20px;
+  font-size: 10px;
+}
+.line-items tr.nobottomline td {
+	border-bottom: none !important;
+}
+div.page-break {
+  page-break-before: always;
 }

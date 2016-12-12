@@ -1,44 +1,28 @@
-<div style="margin-bottom:40px;">
-  <table cellpadding="0" cellspacing="0" width="100%">
-
-    <tr>
-      <td>
-        <% if @company.attachments.any? -%>
-          <% if @is_pdf %>
-            <% if @debug %>
-              <%= tag 'img', :src => "/invoices/logo/#{@company.attachments.first.id}/#{@company.attachments.first.filename}", :alt => "#{@company.name} Logo", :style=>"margin-right: 40px;" -%>
-            <% else %>
-              <%= tag 'img', :src => @company.attachments.first.diskfile, :style=>"margin-right: 40px;" -%>
-            <% end -%>
-          <% else %>
-            <%= tag 'img', :src => "/invoices/logo/#{@company.attachments.first.id}/#{@company.attachments.first.filename}", :alt => "#{@company.name} Logo", :style=>"margin-right: 40px;" -%>
-          <% end -%>
+<div class="invoice-header-container">
+<div class="vcard vendor">
+  <div class="invoicelogo">
+    <% if @company.attachments.any? -%>
+      <% if @is_pdf %>
+        <% if @debug %>
+          <%= tag 'img', :src => "/invoices/logo/#{@company.attachments.first.id}/#{@company.attachments.first.filename}", :alt => "#{@company.name} Logo", :style=>"margin-right: 40px;" -%>
+        <% else %>
+          <%= tag 'img', :src => @company.attachments.first.diskfile, :style=>"margin-right: 40px;" -%>
         <% end -%>
-      </td>
+      <% else %>
+        <%= tag 'img', :src => "/invoices/logo/#{@company.attachments.first.id}/#{@company.attachments.first.filename}", :alt => "#{@company.name} Logo", :style=>"margin-right: 40px;" -%>
+      <% end -%>
+    <% end -%>
+  </div>
+  <%= render partial: 'invoices/company_info' -%>
+</div>
 
-      <td style="vertical-align:bottom">
-        <p style="margin-bottom: 0;"><b><%= l(:label_quote).upcase %></b></p>
-        <p style="margin-bottom: 0; font-size: x-large;"><b><%= @invoice.title %></b></p>
-      </td>
+<h3><%= l(:label_quote).upcase %></h3>
+<h2 class="invoice-ID"><%=h @invoice.title %></h2>
 
-      <td style="text-align: right;">
-        <div>
-          <h3><%=h @company.name %></h3>
-          <address class="adr">
-            <div class="street-address"><%=h @company.address %></div>
-            <span class="postal-code"><%=h @company.postalcode %></span> <span class="locality"><%=h @company.city %></span>
-            <div class="region"><%=h @company.province %></div>
-            <div class="country-name"></div>
-          </address>
-          <div><strong><%=h l(:field_taxcode) %></strong><span class="tax-id"> <%=h @company.taxcode %></span></div>
-          <div style="height:10px;"></div>
-          <div><%= @company.website %></div>
-          <div><%= @company.email %></div>
-        </div>
-      </td>
+<div class="vcard client">
+  <%= render partial: 'invoices/client_info' -%>
+</div>
 
-    </tr>
-  </table>
 </div>
 
 <table style="float: right;">
@@ -62,16 +46,33 @@
     <tr>
       <th class="item-quantity first"><abbr title="Quantitat">Q</abbr></th>
       <th class="item-description"><%=h l(:field_description)%></th>
+      <% if @invoice.has_line_discounts? -%>
+        <th class="item-price"><%=h l(:field_discount) %></th>
+      <% end -%>
       <th class="item-price"><%=h l(:field_amount) %></th>
-      <th class="line-total last"><%=h l(:label_total)%></th>
+      <th class="line-total last"><%=h l(:label_invoice_total)%></th>
     </tr>
 
     <% @lines.each do |line| -%>
       <tr>
         <td class="item-quantity first"><%=h quantity(line.quantity) %> <%=h line.unit_short%></td>
-        <td class="item-description"><%=h line.description %></td>
+        <td class="item-description">
+          <%=h line.description %>
+          <% if line.discount_text.present? and line.discount_text != '.' -%>
+            <br /><%= l(:field_discount) %>: <%= line.discount_text %>
+          <% end -%>
+        </td>
+        <% if line.discount_amount.to_f != 0 -%>
+          <% if @invoice.company.line_discounts_as_imports -%>
+            <td class="item-price"><%=h money(Haltr::Utils.to_money(line.discount_amount, @invoice.currency, @invoice.company.rounding_method)) %></td>
+          <% else -%>
+            <td class="item-price"><%=h number_to_percentage(line.discount_percent, precision: 2, strip_insignificant_zeros: true) %></td>
+          <% end -%>
+        <% elsif @invoice.has_line_discounts? -%>
+          <td></td>
+        <% end -%>
         <td class="item-price"><%=h line_price(line) %></td>
-        <td class="line-total last"><%=h money(line.total) %></td>
+        <td class="line-total last"><%=h money(Haltr::Utils.to_money(line.taxable_base, @invoice.currency, @invoice.company.rounding_method)) %></td>
       </tr>
     <% end -%>
 
@@ -79,8 +80,11 @@
       <tr style="border-top: 1px solid #000;">
         <td class="item-quantity first"></td>
         <td class="item-description"><%=h @invoice.discount_text %></td>
+        <% if @invoice.has_line_discounts? -%>
+          <td></td>
+        <% end -%>
         <td class="item-price"><%=h number_to_percentage(@invoice.discount_percent, :precision=>0) %></td>
-        <td class="line-total last">- <%=h money(@invoice.discount) %></td>
+        <td class="line-total last">- <%=h money(@invoice.discount_amount) %></td>
       </tr>
     <% end -%>
 
@@ -112,7 +116,7 @@
       </tr>
     <% end -%>
     <tr class="invoice-total">
-      <th><%=h l(:label_total)%>:</th>
+      <th><%=h l(:label_invoice_total)%>:</th>
       <td><%=h money(@invoice.total) %></td>
     </tr>
   </tbody>

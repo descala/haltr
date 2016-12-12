@@ -1,0 +1,95 @@
+Return-Path: <>
+Received: from mail.example.net ([unix socket])
+	 by mail.example.net (Cyrus v2.3.7-Invoca-RPM-2.3.7-12.el5_7.2) with LMTPA;
+	 Fri, 29 Nov 2013 16:31:15 +0100
+X-Sieve: CMU Sieve 2.3
+Received: by mail.example.net (mailer)
+	id 6D969104045; Fri, 29 Nov 2013 16:31:15 +0100 (CET)
+Date: Fri, 29 Nov 2013 16:31:15 +0100 (CET)
+From: MAILER-DAEMON@example.net (Mail Delivery System)
+Subject: Undelivered Mail Returned to Sender
+To: noreply@haltr.net
+Auto-Submitted: auto-replied
+MIME-Version: 1.0
+Content-Type: multipart/report; report-type=delivery-status;
+	boundary="E35F810C054.1385739075/mail.example.net"
+Content-Transfer-Encoding: 8bit
+Message-Id: <20131129153115.6D969104045@mail.example.net>
+
+This is a MIME-encapsulated message.
+
+--E35F810C054.1385739075/mail.example.net
+Content-Description: Notification
+Content-Type: text/plain; charset=us-ascii
+
+This is the mail system at host mail.example.net.
+
+I'm sorry to have to inform you that your message could not
+be delivered to one or more recipients. It's attached below.
+
+For further assistance, please send mail to <postmaster>
+
+If you do so, please include this problem report. You can
+delete your own text from the attached returned message.
+
+                   The mail system
+
+<test@example.net>: host ASPMX.L.GOOGLE.COM[74.125.142.27] said:
+    550-5.1.1 The email account that you tried to reach does not exist. Please
+    try 550-5.1.1 double-checking the recipient's email address for typos or
+    550-5.1.1 unnecessary spaces. Learn more at 550 5.1.1
+    http://support.google.com/mail/bin/answer.py?answer=6596
+    u10si36834008igr.51 - gsmtp (in reply to RCPT TO command)
+
+--E35F810C054.1385739075/mail.example.net
+Content-Description: Delivery report
+Content-Type: message/delivery-status
+
+Reporting-MTA: dns; mail.example.net
+X-mailer-Queue-ID: E35F810C054
+X-mailer-Sender: rfc822; noreply@haltr.net
+Arrival-Date: Fri, 29 Nov 2013 16:31:14 +0100 (CET)
+
+Final-Recipient: rfc822; test@example.net
+Original-Recipient: rfc822;test@example.net
+Action: failed
+Status: 5.1.1
+Remote-MTA: dns; ASPMX.L.GOOGLE.COM
+Diagnostic-Code: smtp; 550-5.1.1 The email account that you tried to reach does
+    not exist. Please try 550-5.1.1 double-checking the recipient's email
+    address for typos or 550-5.1.1 unnecessary spaces. Learn more at 550 5.1.1
+    http://support.google.com/mail/bin/answer.py?answer=6596
+    u10si36834008igr.51 - gsmtp
+
+--E35F810C054.1385739075/mail.example.net
+Content-Description: Undelivered Message Headers
+Content-Type: text/rfc822-headers
+Content-Transfer-Encoding: 8bit
+
+Received: from localhost (localhost [127.0.0.1])
+	by mail.example.net (mailer) with ESMTP id E35F810C054
+	for <test@example.net>; Fri, 29 Nov 2013 16:31:14 +0100 (CET)
+X-Virus-Scanned: amavisd-new at example.net
+Received: from mail.example.net ([127.0.0.1])
+	by localhost (mail.example.net [127.0.0.1]) (amavisd-new, port 10024)
+	with LMTP id bf6VotAyc6Vr for <test@example.net>;
+	Fri, 29 Nov 2013 16:31:14 +0100 (CET)
+Received: from localhost (host.example.net [1.2.3.4])
+	(Authenticated sender: user@example.net)
+	by mail.example.net (mailer) with ESMTP id 74A70104045
+	for <test@example.net>; Fri, 29 Nov 2013 16:31:13 +0100 (CET)
+Date: Fri, 29 Nov 2013 16:31:12 +0100
+From: "B2B Router.net" <noreply@haltr.net>
+To: test@example.net
+Subject: Factura =?iso-8859-1?Q?electr=F3nic?= =?iso-8859-1?Q?a?= /
+ Electronic Invoice
+Message-ID: <20131129153112.GA8378@s15429496.onlinehome-server.info>
+MIME-Version: 1.0
+Content-Type: multipart/mixed; boundary="OgqxwSJOaUobr8KG"
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+X-Haltr-MD5: babf267a4419bfb7a13dd5e289a24c09
+X-Haltr-Filename: c4c16b8b5f_2.pdf
+User-Agent: Mutt/1.5.21 (2010-09-15)
+
+--E35F810C054.1385739075/mail.example.net--

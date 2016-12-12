@@ -11,31 +11,15 @@
           <tr>
             <th><%=l(:field_due_date)%></th>
             <th>SEPA</th>
-            <th>N19</th>
           </tr>
           </thead>
           <tbody>
           <% invoices_by_due_date.sort.each do |due_date, invoices_by_payment_type| -%>
             <tr class="<%= cycle("odd", "even") %>">
-              <td width="10%" style="<%= "color: red;" if due_date < Date.today %>"><%=due_date%></td>
-              <td width="45%">
+              <td width="25%" style="<%= "color: red;" if due_date < Date.today %>"><%=format_date(due_date)%></td>
+              <td>
                 <table width="100%">
                 <% invoices_by_payment_type.each do |payment_type, invoices| -%>
-                  <% next unless payment_type =~ /^sepa/i -%>
-                  <%= render partial: 'payment_initiation',
-                    locals: {
-                      payment_type: payment_type,
-                      invoices: invoices,
-                      due_date: due_date,
-                      bank_info: bank_info
-                    } %>
-                <% end -%>
-                </table>
-              </td>
-              <td width="45%">
-                <table width="100%">
-                <% invoices_by_payment_type.each do |payment_type, invoices| -%>
-                  <% next unless payment_type =~ /^n19/i -%>
                   <%= render partial: 'payment_initiation',
                     locals: {
                       payment_type: payment_type,

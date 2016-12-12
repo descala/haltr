@@ -1,0 +1,48 @@
+<fieldset class="tabular box">
+  <legend><%=l(:external_company)%></legend>
+  <div>
+    <p><%= f.text_field :name, :required => true %></p>
+    <p><%= f.text_field :taxcode, :required => true %></p>
+    <p><%= f.text_field :address %></p>
+    <p><%= f.text_field :city %></p>
+    <p><%= f.text_field :postalcode, :required => true %></p>
+    <p><%= f.text_field :province %></p>
+    <p><%= f.text_field :website %></p>
+    <p><%= f.text_field :email %></p>
+    <p><%= f.label_for_field :country, :required => true %><%= f.iso_country_select :country, [:es] %></p>
+    <p><%= f.select :currency, currency_options_for_select, :required => true %></p>
+    <p><%= f.select :invoice_format, ExportChannels.for_select(@project) %></p>
+    <p><%= f.select :language, lang_options_for_select %></p>
+    <p>
+    <label><%= l :visible_fields %></label>
+    <% ExternalCompany::AVAILABLE_FIELDS.each do |field| -%>
+      <% next if %w(ponumber delivery_note_number).include?(field) -%>
+      <%= f.check_box "visible_#{field}", :no_label=>true, :class=>"visible_field" %><%= l "field_#{field}", default: field %>
+    <% end -%>
+    <%= f.check_box "visible_ponumber", :no_label=>true, :checked=>true, :disabled=>true %><%= l "field_ponumber", default: 'ponumber' %>
+    <%= f.check_box "visible_delivery_note_number", :no_label=>true, :checked=>true, :disabled=>true %><%= l "field_delivery_note_number", default: 'delivery_note_number' %>
+    </p>
+    <p>
+    <label><%= l :required_fields %></label>
+    <% ExternalCompany::AVAILABLE_FIELDS.each do |field| -%>
+      <% next if %w(ponumber delivery_note_number).include?(field) -%>
+      <%= f.check_box "required_#{field}", :no_label=>true, :class=>"required_field" %><%= l "field_#{field}", default: field %>
+    <% end -%>
+    <%= f.check_box "required_ponumber", :no_label=>true %><%= l "field_ponumber", default: 'ponumber' %>
+    <%= f.check_box "required_delivery_note_number", :no_label=>true %><%= l "field_delivery_note_number", default: 'delivery_note_number' %>
+    </p>
+    <p><%= f.text_area :organs_gestors, :rows=>8, :cols=>100 %></p>
+    <p style="font-size: 0.6em"><%= render :partial => 'link_to_dir3s', locals: {dir3s: f.object.dir3_organs_gestors } %></p>
+    <p><%= f.text_area :unitats_tramitadores, :rows=>8, :cols=>100 %></p>
+    <p style="font-size: 0.6em"><%= render :partial => 'link_to_dir3s', locals: {dir3s: f.object.dir3_unitats_tramitadores } %></p>
+    <p><%= f.text_area :oficines_comptables, :rows=>8, :cols=>100 %></p>
+    <p style="font-size: 0.6em"><%= render :partial => 'link_to_dir3s', locals: {dir3s: f.object.dir3_oficines_comptables } %></p>
+    <p><%= f.text_area :organs_proponents, :rows=>8, :cols=>100 %></p>
+    <p style="font-size: 0.6em"><%= render :partial => 'link_to_dir3s', locals: {dir3s: f.object.dir3_organs_proponents } %></p>
+    <%= call_hook(:external_company_form_end) %>
+  </div>
+</fieldset>
+
+<% content_for :header_tags do -%>
+  <%= javascript_include_tag('haltr',:plugin=>'haltr')%>
+<% end -%>

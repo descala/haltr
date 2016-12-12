@@ -1,5 +1,22 @@
-<li><strong><%=format_time e.created_at%></strong> - <%=h e %>
+<%=h e %>
 <% unless e.notes.blank? -%>
-  ( <%= h l(e.class_for_send, :emails => e.notes) %> )
+  ( <%= h l(e.class_for_send, :emails => e.notes, :default => e.notes) %> )
 <% end -%>
-<%= h link_to_if_authorized(l(e.name =~ /_notification/ ? :download_notification : :download_legal), project_event_file_path(e, :project_id=>@project)) %>
+<% unless e.codi_registre.blank? -%>
+  ( reg. <%= e.codi_registre %> )
+<% end -%>
+<% if e.attachment -%>
+  <%= h link_to_attachment(e.attachment, text: l(e.name =~ /_notification/ ? :download_notification : :download_legal), download: true) %>
+<% end -%>
+<% if e.extra_notes.present? -%>
+<%= "( #{link_to_function(l(:view_mail), "$('#event_#{e.id}').show();") } )".html_safe %>
+  <div id="event_<%=e.id%>" style="display:none;">
+    <div class="mail_box">
+      <div id="mail">
+        <%= simple_format e.extra_notes %>
+        <%= link_to_function(l(:back), "$('#event_#{e.id}').hide();") %>
+      </div>
+    </div>
+    <div class="overlay"></div>
+  </div>
+<% end -%>

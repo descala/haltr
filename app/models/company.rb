@@ -2,30 +2,36 @@ class Company < ActiveRecord::Base
 
   unloadable
 
+  ROUNDING_METHODS = %w( half_up bankers truncate )
+
   belongs_to :project
 
   # these are the linked clients: where this company apears in other
   # companies' client list
-  has_many :clients, :dependent => :nullify
+  has_many :clients, :as => :company, :dependent => :nullify
   has_many :taxes, :class_name => "Tax", :dependent => :destroy, :order => "name,percent DESC"
   has_many :bank_infos, :dependent => :destroy, :order => "name,bank_account,iban,bic DESC"
-  COUNTRIES_WITHOUT_TAXCODE = ["is","no"]
+  has_many :company_offices, dependent: :destroy
+
+  # self referential association
+  has_many :providers
+  has_many :company_providers, through: :providers, dependent: :destroy
+
   validates_presence_of :name, :project_id, :email, :postalcode, :country
-  validates_presence_of :taxcode, :unless => Proc.new {|company|
-    COUNTRIES_WITHOUT_TAXCODE.include? company.country
-  }
-  validates_length_of :taxcode, :maximum => 20
   validates_uniqueness_of :taxcode, :allow_blank => true
   validates_inclusion_of :currency, :in  => Money::Currency.table.collect {|k,v| v[:iso_code] }
+  validates_inclusion_of :rounding_method, :in => ROUNDING_METHODS
   validates_format_of :email,
     :with => /\A[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]+(,[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]+)*\z/,
     :allow_nil => true
+  validates_format_of :postalcode, with: /\A[0-9]{5}\z/, if: Proc.new {|i| i.country == 'es'}
   validate :only_one_default_tax_per_name
   acts_as_attachable :view_permission => :general_use,
                      :delete_permission => :general_use
   after_save :update_linked_clients
   iso_country :country
   include CountryUtils
+  include Haltr::TaxcodeValidator
 
   accepts_nested_attributes_for :taxes,
     :allow_destroy => true,
@@ -60,10 +66,13 @@ class Company < ActiveRecord::Base
     name.split(" ").first
   end
 
+  # https://www.ingent.net/issues/5425
   def last_name
     ln = name.split(" ")
     ln.shift
-    ln.join(" ")
+    ln = ln.join(" ")
+    ln = '.' if ln.blank?
+    ln
   end
 
   def currency=(v)
@@ -90,15 +99,17 @@ class Company < ActiveRecord::Base
     end.compact
   end
 
-  def taxcode=(tc)
-    # taxcode is used to retrieve logo on xhtml when transforming to PDF,
-    # some chars will make logo retrieval fail (i.e. spaces)
-    write_attribute(:taxcode,tc.to_s.gsub(/\W/,''))
+  def companies_with_denied_link
+    self.clients.collect do |client|
+      next unless client.project and client.project.company
+      client.project.company if client.allowed? == false
+    end.compact
   end
 
   def only_one_default_tax_per_name
     deftaxes = {}
     taxes.each do |tax|
+      next if tax.marked_for_destruction?
       errors.add(:base, l(:only_one_default_allowed_for, :tax_name=>tax.name)) if deftaxes[tax.name] and tax.default
       deftaxes[tax.name] = tax.default
     end
@@ -135,7 +146,11 @@ class Company < ActiveRecord::Base
 
   # http://inza.wordpress.com/2013/10/25/como-preparar-los-mandatos-sepa-identificador-del-acreedor/
   def sepa_creditor_identifier
-    num = "#{taxcode}#{country_alpha2}00".downcase.each_byte.collect do |c|
+    # remove country code from taxcode
+    creditor_business_code = taxcode.gsub(/^#{country}/i,'') rescue ''
+    # if there is no taxcode try with company_identifier
+    creditor_business_code = company_identifier if creditor_business_code==''
+    num = "#{creditor_business_code}#{country_alpha2}00".downcase.each_byte.collect do |c|
       if c <= 57
         c.chr
       else
@@ -145,7 +160,7 @@ class Company < ActiveRecord::Base
     # MOD97-10 from ISO 7064
     control = (98 - ( num % 97 )).to_s.rjust(2,'0')
     # This "000" is the "sufix" in Spanish AEB
-    "#{country_alpha2}#{control}000#{taxcode}"
+    "#{country_alpha2}#{control}000#{creditor_business_code}"
   end
 
   def default_tax_code_for(name)
@@ -175,7 +190,7 @@ class Company < ActiveRecord::Base
   end
 
   def invoice_mail_subject=(lang,value)
-    self.invoice_mail_customization = {} unless invoice_mail_customization
+    self.invoice_mail_customization = {} unless invoice_mail_customization.is_a? Hash
     self.invoice_mail_customization["subject"] = {} unless invoice_mail_customization["subject"]
     self.invoice_mail_customization["subject"][lang] = value
   end
@@ -200,7 +215,7 @@ class Company < ActiveRecord::Base
   end
 
   def invoice_mail_body=(lang,value)
-    self.invoice_mail_customization = {} unless invoice_mail_customization
+    self.invoice_mail_customization = {} unless invoice_mail_customization.is_a? Hash
     self.invoice_mail_customization["body"] = {} unless invoice_mail_customization["body"]
     self.invoice_mail_customization["body"][lang] = value
   end
@@ -225,7 +240,7 @@ class Company < ActiveRecord::Base
   end
 
   def quote_mail_subject=(lang,value)
-    self.quote_mail_customization = {} unless quote_mail_customization
+    self.quote_mail_customization = {} unless quote_mail_customization.is_a? Hash
     self.quote_mail_customization["subject"] = {} unless quote_mail_customization["subject"]
     self.quote_mail_customization["subject"][lang] = value
   end
@@ -250,7 +265,7 @@ class Company < ActiveRecord::Base
   end
 
   def quote_mail_body=(lang,value)
-    self.quote_mail_customization = {} unless quote_mail_customization
+    self.quote_mail_customization = {} unless quote_mail_customization.is_a? Hash
     self.quote_mail_customization["body"] = {} unless quote_mail_customization["body"]
     self.quote_mail_customization["body"][lang] = value
   end
@@ -258,6 +273,23 @@ class Company < ActiveRecord::Base
 
   def respond_to?(method, include_private = false)
     super || method =~ /^(invoice|quote)_mail_(subject|body)_[a-z][a-z][\-A-Z]{0,3}=?$/
+  end
+
+  def language
+    self.project.users.collect {|u| u unless u.admin?}.compact.first.language
+  rescue
+    I18n.default_locale.to_s
+  end
+
+  # for select on my_company view
+  def self.rounding_methods
+    ROUNDING_METHODS.collect {|m|
+      [ I18n.t("#{m}_rounding"), m ]
+    }
+  end
+
+  def postalcode=(v)
+    write_attribute(:postalcode, v.gsub(' ', ''))
   end
 
   private

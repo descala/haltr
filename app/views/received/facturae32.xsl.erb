@@ -32,17 +32,11 @@
             <link href="/plugin_assets/haltr/stylesheets/minimal.css" media="screen" rel="stylesheet" type="text/css" />
         </head>
         <body>
-            <div id="invoice_wrapper">
         
-        <!-- Wrapper -->
-        <div id="invoice_wrapper">
             
             <!-- Workspace -->
             
-            <div id="workspace1" class="haltrinvoice received">
-                <div id="workspace2">
                 
-                <div id="col1">
                     <!-- BEGIN Standard Invoice Markup -->
                     <xsl:apply-templates select="//Parties/SellerParty"/>
                     
@@ -71,7 +65,7 @@
                                         </span>
                                     </th>
                                     <th class="item-price"><%=l(:field_import)%></th>
-                                    <th class="line-total last"><%=l(:label_total)%></th>
+                                    <th class="line-total last"><%=l(:label_invoice_total)%></th>
                                 </tr>
                                 
                                 <xsl:apply-templates select="//InvoiceLine"/>
@@ -112,12 +106,7 @@
                     </div>
                     
                     <!-- END Standard Invoice Markup -->
-                </div>
-                </div>
-      </div>
             
-        </div>
-    </div>  
     </body>
  </html>
     

@@ -1,0 +1,2 @@
+module ExternalCompaniesHelper
+end

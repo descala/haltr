@@ -1,4 +1,5 @@
 # Supported taxes by country
+# E=Exempt, NS=NotSubject, Z=ZeroRated, S=Standard, H=High Rate, AA=Low Rate
 #
 ---
 es:
@@ -15,7 +16,7 @@ es:
 - name: IVA
   percent: 4.0
   default: false
-  category: AA
+  category: AAA
   facturae_id: '01'
 - name: IVA
   percent: 0.0
@@ -27,11 +28,88 @@ es:
   default: false
   category: E
   facturae_id: '01'
+- name: IVA
+  percent: 0.0
+  default: false
+  category: NS
+  facturae_id: '01'
 - name: IRPF
-  percent: -21.0
+  percent: -19.0
   default: false
   category: S
   facturae_id: '04'
+- name: IRPF
+  percent: -15.0
+  default: false
+  category: S
+  facturae_id: '04'
+- name: IGIC
+  percent: 0.0
+  default: false
+  category: NS
+  facturae_id: '03'
+- name: IGIC
+  percent: 0.0
+  default: false
+  category: Z
+  facturae_id: '03'
+- name: IGIC
+  percent: 3.0
+  default: false
+  category: AA
+  facturae_id: '03'
+- name: IGIC
+  percent: 7.0
+  default: false
+  category: S
+  facturae_id: '03'
+- name: IPSI
+  percent: 0.0
+  default: false
+  category: Z
+  facturae_id: '02'
+- name: IPSI
+  percent: 1.0
+  default: false
+  category: AA
+  facturae_id: '02'
+- name: IPSI
+  percent: 2.0
+  default: false
+  category: AA
+  facturae_id: '02'
+- name: IPSI
+  percent: 4.0
+  default: false
+  category: S
+  facturae_id: '02'
+- name: IPSI
+  percent: 9.0
+  default: false
+  category: H
+  facturae_id: '02'
+- name: IPSI
+  percent: 10.0
+  default: false
+  category: H
+  facturae_id: '02'
+- name: RE
+  percent: 5.2
+  default: false
+  category: S
+- name: RE
+  percent: 1.4
+  default: false
+  category: AA
+- name: RE
+  percent: 0.5
+  default: false
+  category: AAA
+- name: RE
+  percent: 1.75
+  default: false
+  category: S
+
 fr:
 - name: TVA
   percent: 19.6
@@ -63,3 +141,16 @@ dk:
   percent: 25.0
   default: true
   category: S
+gb:
+- name: VAT
+  percent: 20.0
+  default: true
+  category: S
+- name: VAT
+  percent: 5.0
+  default: false
+  category: AA
+- name: VAT
+  percent: 0.0
+  default: false
+  category: Z

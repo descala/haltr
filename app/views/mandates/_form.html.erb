@@ -30,7 +30,7 @@
 
   <div class="seccio grup">
     <div class="col span-1-de-2">
-      <% if @mandate.signed_doc -%>
+      <% if @mandate.signed_doc and @mandate.id -%>
         <label><%= l(:current_signed_doc) %></label>
         <p>
         <%= link_to @mandate.signed_doc_filename, project_mandate_signed_doc_path(@mandate,:project_id=>@project) %>

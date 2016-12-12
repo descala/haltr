@@ -32,9 +32,6 @@
 .haltrinvoice h4{
 	margin: 0;
 	}
-.haltrinvoice p {
-	margin: 0 0 .75em;
-	}
 .haltrinvoice input, .haltrinvoice select, .haltrinvoice textarea {
 	margin: 0;
 	}
@@ -136,6 +133,7 @@
 #col2 .open { background: #5bc; }
 #col2 .unpaid { background: #5bc; }
 #col2 .pastdue { background: #f40; }
+#col2 .halfpaid { background: #f40; }
 #col2 .closed { background: #1a8; }
 #col2 .paid { background: #1a8; }
 #col2 .recurring { background: #145c7b; padding-top: 10px; }
@@ -234,6 +232,9 @@
 	line-height: 18px;
 	border-bottom: 1px solid #ddd;
 	}
+.line-items tr.nobottomline td {
+	border-bottom: none !important;
+}
 .line-items td.first { padding-left:12px; }
 .line-items td.last { padding-right:12px; }
 .line-items .item-delete { width: 14px; }
@@ -248,6 +249,9 @@
 .line-items .item-tax input { margin-top: 2px; }
 .line-items .item-price { text-align: right; width: 75px; }
 .line-items .item-price input { text-align: right; width: 65px; height: 18px; }
+.line-items .item-article_code { width: 60px;}
+.line-items .item-delivery_note { width: 115px; }
+.line-items .item-charge-reason { text-align: right; }
 .line-items .line-total {
 	text-align: right;
 	width: 90px;
@@ -439,8 +443,8 @@ lpayments .item-date { width: 116px; }
 	}
 
 body.client_view {
-  	background: #efefef none;
-	}
+    background: #efefef none;
+    }
 body.client_view #preface1 {
 	margin: 20px auto 0;
 	padding: 9px;
@@ -495,6 +499,9 @@ body.client_view .form-details  {
 	}
 .pastdue {
   color: red;
+}
+.halfpaid {
+  color: blue;
 }
 .invoicelogo img {
   max-height: 200px;

@@ -4,52 +4,61 @@ class IssuedInvoice < InvoiceDocument
 
   unloadable
 
+  has_one :created_invoice, class_name: 'ReceivedInvoice',
+    foreign_key: 'created_from_invoice_id'
+
   include Haltr::ExportableDocument
 
   belongs_to :invoice_template
   validates_presence_of :number, :unless => Proc.new {|invoice| invoice.type == "DraftInvoice"}
-  validates_uniqueness_of :number, :scope => [:project_id,:type], :if => Proc.new {|i| i.type == "IssuedInvoice" }
+  validate :number_must_be_uniq
   validate :invoice_must_have_lines
 
   before_validation :set_due_date
-  before_save :update_imports
+  before_save :update_imports, :unless => Proc.new {|i| i.changed_attributes.keys == ['state'] }
   after_create :create_event
   after_destroy :release_amended
   before_save :update_status, :unless => Proc.new {|invoicedoc| invoicedoc.state_changed? }
+  before_save :set_state_updated_at
+  before_save :override_line_values, :unless => Proc.new {|i| i.new_record? }
 
   # new sending sent error discarded closed
   state_machine :state, :initial => :new do
     before_transition do |invoice,transition|
+      user = transition.args.first.is_a?(User) ? transition.args.first : User.current
       unless Event.automatic.include?(transition.event.to_s)
-        Event.create(:name=>transition.event.to_s,:invoice=>invoice,:user=>User.current)
+        if transition.event.to_s == 'queue' and !invoice.state?(:new)
+          Event.create(:name=>'requeue',:invoice=>invoice,:user=>user)
+        elsif transition.event.to_s =~ /^mark_as_/
+          Event.create(name: "done_#{transition.event.to_s}", invoice: invoice, user: user)
+        else
+          Event.create(:name=>transition.event.to_s,:invoice=>invoice,:user=>user)
+        end
       end
     end
     event :manual_send do
       transition [:new,:sending,:error,:discarded] => :sent
     end
     event :queue do
-      transition :new => :sending
-    end
-    event :requeue do
-      transition all - :new => :sending
+      transition [:new, :error, :discarded, :refused] => :sending
     end
     event :success_sending do
-      transition [:sending,:error] => :sent
+      transition [:new,:sending,:error,:discarded] => :sent
     end
     event :mark_unsent do
-      transition [:sent,:closed,:error,:discarded] => :new
+      transition [:sent,:read,:sending,:closed,:error,:discarded] => :new
     end
     event :error_sending do
       transition :sending => :error
     end
     event :close do
-      transition [:new,:sent] => :closed
+      transition [:new,:sent,:read,:registered] => :closed
     end
     event :discard_sending do
       transition [:error,:sending] => :discarded
     end
     event :paid do
-      transition [:sent,:accepted,:allegedly_paid] => :closed
+      transition [:sent,:read,:accepted,:allegedly_paid,:registered] => :closed
     end
     event :unpaid do
       transition :closed => :sent
@@ -58,13 +67,13 @@ class IssuedInvoice < InvoiceDocument
       transition :sent => :discarded
     end
     event :accept_notification do
-      transition [:sent,:refused] => :accepted
+      transition all => :accepted
     end
     event :refuse_notification do
-      transition :sent => :refused
+      transition all => :refused
     end
     event :paid_notification do
-      transition [:sent,:accepted] => :allegedly_paid
+      transition all => :allegedly_paid
     end
     event :sent_notification do
       transition :sent => :sent
@@ -73,10 +82,43 @@ class IssuedInvoice < InvoiceDocument
       transition :sent => :sent
     end
     event :registered_notification do
-      transition :sent => :sent
+      transition all => :registered
     end
     event :amend_and_close do
       transition all=> :closed
+    end
+    event :mark_as_new do
+      transition all => :new
+    end
+    event :mark_as_sent do
+      transition all => :sent
+    end
+    event :mark_as_accepted do
+      transition all => :accepted
+    end
+    event :mark_as_registered do
+      transition all => :registered
+    end
+    event :mark_as_refused do
+      transition all => :refused
+    end
+    event :mark_as_closed do
+      transition all => :closed
+    end
+    event :read do
+      transition :sent => :read
+    end
+    event :received_notification do
+      transition all => :read
+    end
+    event :failed_notification do
+      transition all => :error
+    end
+    event :cancelled_notification do
+      transition all => :cancelled
+    end
+    event :annotated_notification do
+      transition all => :accounted
     end
   end
 
@@ -85,7 +127,7 @@ class IssuedInvoice < InvoiceDocument
   end
 
   def label
-    if self.amend_of
+    if self.amend_of or self.amended_number
       l :label_amendment_invoice
     else
       l :label_invoice
@@ -96,8 +138,34 @@ class IssuedInvoice < InvoiceDocument
     "#{number}"
   end
 
+  def number_must_be_uniq
+    if type == "IssuedInvoice"
+      if series_code.blank?
+        series_code_value = ["", nil]
+      else
+        series_code_value = series_code
+      end
+      query = IssuedInvoice.where(project_id: project, number: number, series_code: series_code_value)
+      query = query.where(["YEAR(date) = ?", date.year]) unless date.nil?
+      query = query.where(["id != ?", id]) unless new_record?
+      if query.any?
+        if date.nil?
+          errors.add(:number, :taken)
+        else
+          errors.add(:number, l(:number_taken_in_year, number: number, year: date.year))
+        end
+      end
+    end
+  end
+
   def self.find_can_be_sent(project)
-    project.issued_invoices.all :conditions => ["state='new' and number is not null and date <= ?", Date.today], :order => "number ASC"
+    project.issued_invoices.includes(:client).all(
+      :conditions => [
+        "state='new' and number is not null and date <= ? and clients.invoice_format in (?)",
+        Date.today,
+        ExportChannels.can_send.keys
+      ], :order => "number ASC"
+    )
   end
 
   def self.find_not_sent(project)
@@ -117,21 +185,11 @@ class IssuedInvoice < InvoiceDocument
     IssuedInvoice.sum :total_in_cents, :conditions => ["state <> 'closed' and due_date < ? and project_id = ?", Date.today, project.id]
   end
 
-  def can_be_exported?
-    # TODO Test if endpoint is correcty configured
-    return @can_be_exported unless @can_be_exported.nil?
-    @can_be_exported = (self.valid? and !ExportChannels.format(client.invoice_format).blank?)
-    ExportChannels.validations(client.invoice_format).each do |v|
-      self.send(v)
-    end
-    @can_be_exported &&= (export_errors.size == 0)
-    @can_be_exported
-  end
-
-  # TODO take into account only last x invoices
-  #      not all the invoices. there may be a lot of old invoices
   def self.last_number(project)
-    numbers = project.issued_invoices.collect {|i| i.number }.compact
+    # assume invoices with > date will have > number
+    numbers = project.issued_invoices.order("date DESC, created_at DESC").limit(10).collect {|i|
+      i.number
+    }.compact
     numbers.sort_by do |num|
       # invoices_001 -> [1,   "invoices_001"]
       # i7           -> [7,   "i7"]
@@ -165,73 +223,26 @@ class IssuedInvoice < InvoiceDocument
   end
 
   def visible_by_client?
-    %w(sent refused accepted allegedly_paid closed).include? state
+    %w(sent read refused accepted allegedly_paid closed).include? state
   end
 
-  def create_amend
-    new_attributes = self.attributes
-    new_attributes['state']='new'
-    ai = IssuedInvoice.new(new_attributes)
-    ai.number = "#{number}-R"
-    self.invoice_lines.each do |line|
-      il = line.dup
-      il.taxes = line.taxes.collect {|tax| tax.dup }
-      ai.invoice_lines << il
-    end
-    ai.save(:validate=>false)
-    self.amend_id = ai.id
-    self.save(:validate=>false)
-    self.amend_and_close # change state
-    ai
-  end
-
+  # returns true if invoice has been totally amended (substituted by another)
   def amended?
-    #!amend.nil?
-    !self.amend_id.nil?
+    (!self.amend_id.nil? and self.amend_id != self.id )
   end
 
-  # facturae 3.x needs taxes to be valid
-  def invoice_has_taxes
-    self.invoice_lines.each do |line|
-      unless line.taxes_outputs.any?
-        add_export_error(:invoice_has_no_taxes)
-      end
-    end
+  # all amends, sustitutive and partial
+  def is_amend?
+    amend_of or partial_amend_of or amended_number
   end
 
-  # facturae needs taxcode
-  def company_has_taxcode
-    if self.company.taxcode.blank?
-      add_export_error(:company_taxcode_needed)
-    end
+  def last_sent_event
+    events.order(:created_at).select {|e| e.name == 'success_sending' }.last
   end
 
-  # facturae needs taxcode
-  def client_has_taxcode
-    if self.client.taxcode.blank?
-      add_export_error(:client_taxcode_needed)
-    end
-  end
-
-  def client_has_postalcode
-    if self.client.postalcode.blank?
-      add_export_error(:client_postalcode_needed)
-    end
-  end
-
-  def payment_method_requirements
-    if debit?
-      c = self.client
-      if c.bank_account.blank? and !c.use_iban?
-        add_export_error([:field_payment_method, :requires_client_bank_account])
-      end
-    elsif transfer?
-      if !bank_info or (bank_info.bank_account.blank? and bank_info.iban.blank?)
-        add_export_error([:field_payment_method, :requires_company_bank_account])
-      elsif (bank_info.bank_account.blank? and !bank_info.use_iban?)
-        add_export_error([:field_payment_method, :requires_company_bank_account])
-        add_export_error([:bank_info, 'activerecord.errors.messages.invalid'])
-      end
+  def self.states
+    state_machine.states.collect do |s|
+      s.name
     end
     unless payment_method.blank?
       add_export_error([:field_due_date, 'activerecord.errors.messages.blank']) if due_date.blank?
@@ -240,56 +251,17 @@ class IssuedInvoice < InvoiceDocument
 
   protected
 
+  # called after_create (only NEW invoices)
   def create_event
-    if self.transport.blank?
-      Event.create(:name=>'new',:invoice=>self,:user=>User.current)
+    if self.original
+      event = EventWithFile.new(:name=>self.transport,:invoice=>self,
+                                :user=>User.current,:file=>self.original,
+                                :filename=>self.file_name)
     else
-      Event.create(:name=>self.transport,:invoice=>self,:user=>User.current)
+      event = Event.new(:name=>(self.transport||'new'),:invoice=>self,:user=>User.current)
     end
-  end
-
-  def client_has_email
-    unless self.recipient_emails.any?
-      add_export_error(:client_has_no_email)
-    end
-  end
-
-  def company_has_imap_config
-    company and
-      !company.imap_host.blank? and
-      !company.imap_username.blank? and
-      !company.imap_password.blank? and
-      !company.imap_port.nil?
-  end
-
-  def ubl_invoice_has_no_taxes_withheld
-    if self.taxes_withheld.any?
-      add_export_error(:ubl_invoice_has_taxes_withheld)
-    end
-  end
-
-  def peppol_fields
-    if self.client.schemeid.blank? or self.client.endpointid.blank?
-      add_export_error(:missing_client_peppol_fields)
-    elsif self.company.schemeid.blank? or self.company.endpointid.blank?
-      add_export_error(:missing_company_peppol_fields)
-    end
-  end
-
-  def svefaktura_fields
-    if self.respond_to?(:accounting_cost) and self.accounting_cost.blank?
-      add_export_error(:missing_svefaktura_account)
-    elsif self.company.company_identifier.blank?
-      add_export_error(:missing_svefaktura_organization)
-    elsif self.debit?
-      add_export_error(:missing_svefaktura_debit)
-    end
-  end
-
-  def oioubl20_fields
-  end
-
-  def efffubl_fields
+    event.audits = self.last_audits_without_event
+    event.save!
   end
 
   def release_amended
@@ -302,13 +274,47 @@ class IssuedInvoice < InvoiceDocument
   def update_status
     update_imports
     if is_paid?
-      if (state?(:sent) or state?(:accepted) or state?(:allegedly_paid))
-        paid
+      if can_paid?
+        update_attribute(:state, :closed)
+        Event.create(name: 'paid', invoice: self, user: User.current)
       end
     else
-      unpaid if state?(:closed)
+      if state?(:closed)
+        update_attribute(:state, :sent)
+        Event.create(name: 'unpaid', invoice: self, user: User.current)
+      end
     end
     return true # always continue saving
+  end
+
+  # if state changes, record state timestamp :state_updated_at
+  # an update to an Invoice sets timestamps as usual, except for:
+  #  :state
+  #  :has_been_read
+  #  :state_updated_at
+  # these attributes do not change updated_at
+  def set_state_updated_at
+    if state_changed?
+      write_attribute :state_updated_at, Time.now
+    end
+  end
+
+  def override_line_values
+    if ponumber_changed?
+      invoice_lines.each do |l|
+        l.ponumber = ponumber
+      end
+    end
+    if file_reference_changed?
+      invoice_lines.each do |l|
+        l.file_reference = file_reference
+      end
+    end
+    if receiver_contract_reference_changed?
+      invoice_lines.each do |l|
+        l.receiver_contract_reference = receiver_contract_reference
+      end
+    end
   end
 
 end

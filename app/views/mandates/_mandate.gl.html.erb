@@ -1,0 +1,65 @@
+<div id="mandate_wrapper">
+  <div id="workspace1" class="haltrmandate">
+
+    <div id="vendor">
+      <div id="logo">
+        <% if @company.attachments.any? -%>
+          <%if !@is_pdf or params[:debug].present? %>
+            <%= tag 'img', :src => "/invoices/logo/#{@company.attachments.first.id}/#{@company.attachments.first.filename}", :alt => "#{@company.name} Logo" -%>
+          <% else %>
+            <%= tag 'img', :src => @company.attachments.first.diskfile -%>
+          <% end -%>
+        <% end -%>
+      </div>
+      <h3><%=h @company.name %></h3>
+      <address class="adr">
+        <div class="street-address"><%=h @company.address %></div>
+        <span class="postal-code"><%=h @company.postalcode %></span> <span class="locality"><%=h @company.city %></span>
+        <div class="region"><%=h @company.province %></div>
+        <div class="country-name"></div>
+      </address>
+      <div><strong><%=h l(:field_taxcode) %></strong><span class="tax-id"> <%=h @company.taxcode %></span></div>
+      <div style="height:10px;"></div>
+      <div><%= @company.website %></div>
+      <div><%= @company.email %></div>
+    </div>
+
+    <div id="mandate_body">
+      <h1 class="center">Orde de domiciliación de adebedamento directo SEPA <%=@mandate.sepa_type%></h1>
+      <h2 class="center">Identificador do acredor: <%=@company.sepa_creditor_identifier%></h2>
+
+      <p>Mediante a sinatura desta orde de domiciliación, o debedor autoriza (A) a INVINET SISTEMES 2003, SL a enviar instrucións á entidade do debedor para adebedar a súa conta e (B) á entidade a efectuar os adebedamentos na súa conta seguindo as instrucións do acredor. Esta orde de domiciliación está prevista para operacións exclusivamente entre empresas e/ou autónomos. O debedor non ten dereito a que a súa entidade lle rembolse unha vez que se realizara o cargo na conta, pero pode solicitarlle á súa entidade que non efectúe o adebedamento na conta até a data debida.</p>
+
+      <table>
+        <tbody>
+          <tr>
+            <td>Nome do adebedor:</td><td><%=@client.name%></td>
+          </tr>
+          <tr>
+            <td>Enderezo do adebedor:</td><td><%=@client.address%></td>
+          </tr>
+          <tr>
+            <td>Número de conta IBAN:</td><td></td>
+          </tr>
+          <tr>
+            <td colspan="2" class="iban"><%= iban_for_mandate.html_safe %></td>
+          </tr>
+          <tr>
+            <td>Tipo de pagamento:</td><td><%=@mandate.recurrent ? "Pagamento recorrente<br/>Este mandato pódese usar para adebedamentos recorrentes".html_safe : "Pagamento único" %></td>
+          </tr>
+        </tbody>
+      </table>
+
+      <p>O abaixo asinante confirma que ten poderes suficientes para a sinatura da presente autorización.</p>
+      <p>Data: O ............... de .................................................... de <%=Date.today.year%>.</p>
+      <p>Sinatura da persoa e selo da empresa.</p>
+      <div id="blank_space">
+      </div>
+
+      <p>Unha vez asinada esta orde de domiciliación debe ser enviada ao acredor para a súa custodia. A entidade de adebedor require autorización deste previa ao cargo na conta dos Adebedamentos Directos B2B. O adebedor poderá xestionar a devandita autorización cos medios que a súa entidade poña á súa disposición.</p>
+
+    </div>
+
+  </div>
+</div>
+

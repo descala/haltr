@@ -1,0 +1,31 @@
+<%= error_messages_for 'ecompany' %>
+
+<div class="seccio grup">
+  <div class="col span-2-de-2">
+
+    <%= labelled_form_for :external_company, @ecompany, :html => {:class=>'tabular'} do |f| %>
+      <%= render :partial => 'form', :locals => {:f=>f} %>
+
+      <%= f.submit %>
+
+    <% end -%>
+
+  </div>
+</div>
+
+<hr />
+
+<h3><%= l(:label_linked_to_mine) %></h3>
+
+<% if @ecompany.clients.any? -%>
+  <div class="clients">
+    <%= @ecompany.clients.collect { |client|
+      if client.project
+        link_to "#{client.project.company.name} (#{client.invoices.count} #{l(:label_invoice_plural)})",
+          project_invoices_path(:project_id=>client.project,:client_id=>client)
+      else
+        "client #{client.id} (deleted project)"
+      end
+    }.join(" - ").html_safe %>
+  </div>
+<% end -%>

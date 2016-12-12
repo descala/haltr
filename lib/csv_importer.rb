@@ -3,127 +3,184 @@ module CsvImporter
   include CsvMapper
 
   def process_clients(options={})
-    @debug = options[:debug]
     @project = options[:project]
     @file_name = options[:file_name]
-
-    map_clients = {
-      "nomfiscal"  => "name",
-      "dirfiscal"  => "address",
-      "dircli2"    => "address2",
-      "pobfiscal"  => "city",
-      "provifiscal"=> "province",
-      "dtofiscal"  => "postalcode",
-      "fecalta"    => "created_at",
-      "e_mail"     => "email",
-      "paginaweb"  => "website",
-      "docpag"     => "payment_method",
-      "codcli"     => "company_identifier"
-    }
+    lang = @project.users.reject {|u| u.admin? }.first.language
 
     result = CsvMapper::import(@file_name) do
       read_attributes_from_file
     end
 
+    valid_clients=[]
+    invalid_clients=[]
+
     result.each do |result_line|
 
-      next if result_line['nifcli'].nil?
-
-      # check existing taxcodes in the project
-      client = result_line['nifcli'].blank? ? nil : @project.clients.find_by_taxcode(result_line['nifcli'])
-
-      # if not found then it is a new taxcode
-      client = Client.new(:project=> @project,
-                          :invoice_format => 'signed_pdf',
-                          :taxcode => result_line['nifcli'],
-                          :terms => '0',
-                          :currency => 'EUR' ) if client.nil?
-
-      map_clients.each do |csv_field,client_field|
-        puts "#{client_field} = #{csv_field} = #{result_line[csv_field]}" if @debug
-        client[client_field] = result_line[csv_field].strip unless result_line[csv_field].nil?
-      end
-
-      if result_line['docpag'].upcase == 'R'
-        client.payment_method = Invoice::PAYMENT_DEBIT
+      taxcode = result_line['taxcode'].downcase
+      if taxcode[0...2].downcase == @project.company.country
+        taxcode2 = taxcode[2..-1]
       else
-        client.payment_method = Invoice::PAYMENT_TRANSFER
+        taxcode2 = "#{@project.company.country}#{taxcode}"
+      end
+      company = Company.where(
+        "taxcode in (?, ?) and (public='public')", taxcode, taxcode2
+      ).first
+      company ||= ExternalCompany.where("taxcode in (?, ?)", taxcode, taxcode2).first
+      if company
+        client = Client.new(company: company)
+      else
+        client = Client.new(result_line.to_h)
+      end
+      client.language ||= lang
+      client.project = @project
+      client.taxcode = taxcode
+
+      unless client.valid?
+        invalid_clients << client.taxcode
+        puts "client #{client.taxcode}: #{client.errors.full_messages.join(', ')}"
+      else
+        valid_clients << client.taxcode
+        puts "client #{client.taxcode}: OK#{" (linked)" if client.company}"
+        client.save!
+      end
+    end
+    puts "------------"
+    puts "created: #{valid_clients.size} clients. Ignored: #{invalid_clients.size} (#{invalid_clients.join(', ')})"
+  end
+
+  def process_invoices(options={})
+    project = options[:project]
+
+    result_invoices = CsvMapper::import(options[:file_name]) do
+      read_attributes_from_file
+    end
+
+    result_invoices.each do |invoice_os|
+
+      client_taxcode = invoice_os.taxcode
+      if client_taxcode
+
+        client = project.clients.find_by_taxcode(client_taxcode)
+        if client.nil?
+          puts "no client with taxcode '#{client_taxcode}'"
+          next
+        end
+      else
+        puts "no client taxcode provided: #{invoice_os.values.join(',')}"
+        next
       end
 
-      # deltete invalid email addresses
-      client.email = '' unless client.email =~ /\A([\w\.\-\+]+)@((?:[-a-z0-9]+\.)+[a-z]{2,})\z/i
+      invoice = IssuedInvoice.new(
+        project: project,
+        currency: 'EUR',
+        date: Date.strptime(invoice_os.date,'%d/%m/%Y'),
+        client: client,
+        number: invoice_os.number,
+        extra_info: invoice_os.extra_info
+      )
+
+      invoice_line = InvoiceLine.new(
+        invoice: invoice,
+        price: invoice_os.price,
+        quantity: 1,
+        unit: 1,
+        description: invoice_os.description
+      )
+
+      invoice.invoice_lines << invoice_line
+
+      Tax.create!(invoice_line: invoice_line, name: "IVA", percent: 0, default: nil, category: "E", comment: "")
 
       begin
-        client.save!
-        puts "====================================" if @debug
-      rescue Exception => error
-        puts "Error importing #{result_line}"
-        raise error
+        invoice.save!
+      rescue ActiveRecord::RecordInvalid
+        puts "Error importing invoice"
+        puts "Invoice #{invoice.inspect}"
+        puts invoice.errors.full_messages
       end
 
     end
   end
 
-  def process_invoices(options={})
-    @debug = options[:debug]
-    @project = options[:project]
-    @file_name = options[:file_name]
-
-    map_invoices = {
-      "idfacv"        => "number",
-      "observaciones" => "extra_info",
-      "base"          => "import_in_cents",
-      "docpag"        => "payment_method",
-      "totapagar"     => "total_in_cents",
-      "centrocoste"   => "accounting_cost"
-    }
-
-
-    result = CsvMapper::import(@file_name) do
+  def process_dir3entities(options={})
+    entities = CsvMapper::import(options[:entities]) do
       read_attributes_from_file
     end
-
-    result.each do |result_line|
-
-      next if result_line['idfacv'].nil?
-
-      if invoice = @project.issued_invoices.find_by_number(result_line['idfacv'])
-        invoice.destroy
-      end
-
-      invoice = IssuedInvoice.new(:project => @project,
-                                  :currency => 'EUR' 
-                                 )
-
-      map_invoices.each do |csv_field,field|
-        puts "#{field} = #{csv_field} = #{result_line[csv_field]}" if @debug
-        invoice[field] = result_line[csv_field].strip unless result_line[csv_field].nil?
-      end
-
-      client_taxcode = result_line['nifcli'].gsub(" ","") unless result_line['nifcli'].nil?
-      invoice.client = client_taxcode.blank? ? nil : @project.clients.find_by_taxcode(client_taxcode)
-      if invoice.client.nil?
-        puts "Invoice #{invoice.number}: client #{client_taxcode} not found"
-        next
-      end
-
-      invoice.due_date = Date.strptime( result_line['fechacontable'],'%d/%m/%Y') unless result_line['fechacontable'].nil?
-      invoice.date = Date.strptime( result_line['fechacontable'],'%d/%m/%Y') unless result_line['fechacontable'].nil?
-      invoice.created_at = Date.strptime( result_line['fecha'],'%d/%m/%Y') unless result_line['fecha'].nil?
-      invoice.date = Date.today if invoice.date.nil?
-      invoice.invoice_lines << InvoiceLine.new(:quantity=>1, :description=>'Auxiliar', :price=>invoice.import_in_cents)
-      invoice.state = 'closed'
-
+    existing = []
+    new      = []
+    error    = []
+    error_messages = []
+    entities.each do |l|
+      next unless l.values.any? {|v| !v.nil? }
+      current = nil
+      current = Dir3Entity.find_by_code(l.code)
+      l_hash = l.members.inject({}) {|h,m| h[m] = l[m] unless l[m].blank? ; h}
+      l_hash[:postalcode] = l_hash[:postalcode].strip.rjust(5, "0") rescue nil
       begin
-        invoice.save!
-        puts "====================================" if @debug
-      rescue Exception => error
-        puts "Error importing #{result_line}"
-        puts "Invoice #{invoice.inspect}"
-        raise error
+        if current
+          current.update_attributes!(l_hash)
+          existing << l
+        else
+          current = Dir3Entity.create!(l_hash)
+          new << current
+        end
+      rescue ActiveRecord::RecordInvalid => e
+        error << l_hash
+        if current
+          puts "Invalid Dir3Entity: #{l_hash[:code]} (#{current.errors.full_messages.join(', ')})"
+          error_messages << "#{current.errors.full_messages.join(', ')}"
+        else
+          puts "Invalid Dir3Entity: #{l_hash[:code]} (#{e})"
+          error_messages << "#{e}"
+        end
       end
-
     end
+    puts "Entities updated: #{existing.size}"
+    puts "Entities created: #{new.size}"
+    return [existing.size, new.size, error.size, error_messages.uniq]
+  end
+
+  def process_external_companies(options={})
+    external_companies = CsvMapper::import(options[:external_companies]) do
+      read_attributes_from_file
+    end
+    existing = []
+    new      = []
+    error    = []
+    error_messages = []
+    external_companies.each do |ec|
+      next unless ec.values.any? {|v| !v.nil? }
+      ec_hash = ec.members.inject({}) {|h,m| h[m] = ec[m] unless ec[m].blank? ; h}
+      ec_hash[:country] ||= 'es'
+      ec_hash[:currency] ||= 'EUR'
+      ec_hash[:invoice_format] ||= 'aoc32'
+      ec_hash[:postalcode] = ec_hash[:postalcode].strip.rjust(5, "0") rescue nil
+      ec_hash.delete(:postalcode) if ec_hash[:postalcode].blank?
+      ec_hash[:visible_dir3] = true if ec_hash[:oficines_comptables] or ec_hash[:unitats_tramitadores] or ec_hash[:organs_gestors]
+      current = nil
+      current = ExternalCompany.find_by_taxcode(ec.taxcode)
+      begin
+        if current
+          current.update_attributes!(ec_hash)
+          existing << ec
+        else
+          current = ExternalCompany.create!(ec_hash)
+          new << current
+        end
+      rescue ActiveRecord::RecordInvalid => e
+        error << ec_hash
+        if current
+          puts "Invalid ExternalCompany: #{ec_hash[:code]} (#{current.errors.full_messages.join(', ')})"
+          error_messages << "#{current.errors.full_messages.join(', ')}"
+        else
+          puts "Invalid ExternalCompany: #{ec_hash[:code]} (#{e})"
+          error_messages << "#{e}"
+        end
+      end
+    end
+    puts "ExternalCompanies updated: #{existing.size}"
+    puts "ExternalCompanies created: #{new.size}"
+    return [existing.size, new.size, error.size, error_messages.uniq]
   end
 
 end

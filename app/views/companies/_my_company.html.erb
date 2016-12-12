@@ -1,20 +1,23 @@
 <div class="tabular box">
 
+  <%= call_hook(:company_form_taxcode) %>
+
   <div class="seccio grup">
     <p class="col span-1-de-2">
     <%= f.text_field :taxcode, :required => true %>
-    <%= call_hook(:company_form_taxcode) %>
     </p>
     <p class="col span-1-de-2">
+    <%= f.label_for_field :name, :label => l('name_or_company'), :required => true %>
+    <%= f.text_field :name, :required => true, :no_label => true %>
+      <p style="float: right;"><%= check_box(:company, :persontype, {:no_label=>true}, 'F', 'J') %> <%= l(:self_employed) %></p>
     </p>
   </div>
   <div class="seccio grup">
     <p class="col span-1-de-2">
-    <%= f.label_for_field :name, :label => l('name_or_company') %>
-    <%= f.text_field :name, :required => true, :no_label => true %>
+    <%= f.text_field :email, :required => true %>
     </p>
     <p class="col span-1-de-2">
-    <%= f.text_field :email, :required => true %>
+    <%= f.text_field :phone, label: l(:label_phone) %>
     </p>
   </div>
   <div class="seccio grup">
@@ -43,11 +46,6 @@
     <%= f.text_field :website %>
     </p>
     <p class="col span-1-de-2">
-    <% if @company.invoice_format.nil? or ExportChannels.for_select(@project).collect {|v| v.last }.include? @company.invoice_format -%>
-      <%= f.select :invoice_format, ExportChannels.for_select(@project) %><%= help :help_invoice_format %>
-    <% else -%>
-      <%= f.select :invoice_format, ExportChannels.for_select(@project) %> <%= I18n.t(@company.invoice_format)%><%= help :help_invoice_format %>
-    <% end -%>
     </p>
   </div>
   <div class="seccio grup">
@@ -55,12 +53,17 @@
     <%= f.select :currency, currency_options_for_select, :required => true %>
     </p>
     <p class="col span-1-de-2">
-    <%=label_tag('attachments[1][file]', l(:logo))%><%= file_field_tag 'attachments[1][file]', :size => 30, :id => nil, :accept => 'image/png,image/gif,image/jpeg' -%>
+    <%=label_tag('attachments[1][file]', l(:logo))%>
+    <%= file_field_tag 'attachments[1][file]', :size=>30, :id=>'logo', :accept=>'image/png,image/gif,image/jpeg' -%>
     <% if @company.attachments.size > 0 -%>
-      <br />
-      <br />
-      <%= image_tag "/attachments/#{@company.attachments.first.id}/#{@company.attachments.first.filename}" -%>
+      <%= image_tag "/attachments/#{@company.attachments.first.id}/#{@company.attachments.first.filename}", style: "margin-top: 10px;" -%>
     <% end -%>
+    </p>
+  </div>
+
+  <div class="seccio grup">
+    <p class="col span-1-de-2">
+    <%= f.text_field :company_identifier %>
     </p>
   </div>
 
@@ -72,7 +75,7 @@
       </div>
     </div>
     <div class="seccio grup">
-      <table id="taxes">
+      <table id="taxes" <%= @company.country == 'es' ? "data-taxes='#{Tax::SPAIN_TAXCODES.keys}'".html_safe : "data-taxes='[]'".html_safe %>>
         <tr>
           <th class="tax_name"><%= l(:field_name) %></th>
           <th class="tax_percent">%</th>
@@ -90,25 +93,9 @@
       <p class="col span-2-de-2">
       <!-- cocoon -->
       <span class="mes">
-        <%= link_to_add_association l(:button_add_tax), f, :taxes, 'data-association-insertion-node' => '#taxes', 'data-association-insertion-method' => 'append' %>
+        <%= link_to_add_association l(:button_add_tax), f, :taxes, 'data-association-insertion-node' => '#taxes', 'data-association-insertion-method' => 'append', :partial => 'companies/tax_fields' %>
       </span>
       </p>
-    </div>
-  </fieldset>
-
-  <fieldset>
-    <legend><%=l(:field_company_public)%></legend>
-    <div class="seccio grup">
-      <p class="col span-1-de-3">
-      <label><%= f.radio_button :public, :public %> <%= help :help_public_profile %> <%=l(:public)%></label>
-      </p>
-      <p class="col span-1-de-3">
-      <label><%= f.radio_button :public, :semipublic %> <%= help :help_semipublic_profile %> <%=l(:semipublic)%></label>
-      </p>
-      <p class="col span-1-de-3">
-      <label><%= f.radio_button :public, :private %> <%= help :help_private_profile %> <%=l(:private)%></label>
-      </p>
-      <p><%= l(:profile_recomended) %></p>
     </div>
   </fieldset>
 

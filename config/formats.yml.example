@@ -3,7 +3,7 @@
 #
 # format_name:    [pdf or the name of a template at app/views/invoices/*.xml.erb] ex. facturae32
 #   name:         [intelligible format name]
-#   validate:     [method name in app/models/issued_invoice.rb] ex. client_has_email
+#   validators:     [method name in app/models/issued_invoice.rb] ex. client_has_email
 #   content-type: [content-type] ex. text-xml
 #
 ---
@@ -13,51 +13,50 @@ pdf:
 
 facturae30:
   name: "Facturae 3.0"
-  validate:
-    - invoice_has_taxes
-    - company_has_taxcode
-    - client_has_taxcode
-    - payment_method_requirements
+  validators: Haltr::Validator::Facturae
   content-type: "text-xml"
 
 facturae31:
   name: "Facturae 3.1"
-  validate:
-    - invoice_has_taxes
-    - company_has_taxcode
-    - client_has_taxcode
-    - payment_method_requirements
+  validators: Haltr::Validator::Facturae
   content-type: "text-xml"
 
 facturae32:
   name: "Facturae 3.2"
-  validate:
-    - invoice_has_taxes
-    - company_has_taxcode
-    - client_has_taxcode
-    - payment_method_requirements
+  validators: Haltr::Validator::Facturae
+  content-type: "text-xml"
+
+facturae321:
+  name: "Facturae 3.2.1"
+  validators: Haltr::Validator::Facturae
   content-type: "text-xml"
 
 peppolubl20:
   name: "PEPPOL BIS 1"
-  validate: ubl_invoice_has_no_taxes_withheld
+  validators: Haltr::Validator::Ubl
+  content-type: "text-xml"
+
+peppolubl21:
+  name: "PEPPOL BIS 2"
+  validators: Haltr::Validator::Ubl
   content-type: "text-xml"
 
 biiubl20:
   name: "BII UBL"
-  validate: ubl_invoice_has_no_taxes_withheld
+  validators: Haltr::Validator::Ubl
   content-type: "text-xml"
 
 svefaktura:
   name: "Svefaktura"
-  validate:
-    - ubl_invoice_has_no_taxes_withheld
-    - svefaktura_fields
+  validators: Haltr::Validator::Svefaktura
   content-type: "text-xml"
 
 oioubl20:
   name: "OIO"
-  validate:
-    - ubl_invoice_has_no_taxes_withheld
-    - oioubl20_fields
+  validators: Haltr::Validator::Ubl
   content-type: "text-xml"
+
+original:
+  name: "Original"
+  validators: Haltr::Validator::Original
+  content-type: "text/plain"

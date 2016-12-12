@@ -4,26 +4,43 @@ class ReceivedInvoice < InvoiceDocument
 
   unloadable
 
+  belongs_to :created_from_invoice, class_name: 'IssuedInvoice'
+
   after_create :create_event
+
+  acts_as_event
+  after_create :notify_users_by_mail, if: Proc.new {|o|
+    o.project.company.order_notifications
+  }
 
   state_machine :state, :initial => :received do
     before_transition do |invoice,transition|
       unless Event.automatic.include?(transition.event.to_s)
-        Event.create(:name=>transition.event.to_s,:invoice=>invoice,:user=>User.current)
+        if transition.event.to_s =~ /^mark_as_/
+          Event.create(:name=>"done_#{transition.event.to_s}",:invoice=>invoice,:user=>User.current)
+        else
+          Event.create(:name=>transition.event.to_s,:invoice=>invoice,:user=>User.current)
+        end
       end
     end
 
     event :refuse do
-      transition [:accepted,:received] => :refused
+      transition all => :refused
     end
     event :accept do
-      transition [:received,:accepted] => :accepted
+      transition all => :accepted
     end
     event :paid do
       transition :accepted => :paid
     end
     event :unpaid do
       transition :paid => :accepted
+    end
+    event :mark_as_paid do
+      transition :accepted => :paid
+    end
+    event :failed_notification do
+      transition all => :error
     end
   end
 
@@ -54,18 +71,78 @@ class ReceivedInvoice < InvoiceDocument
     write_attribute :import_in_cents, i.cents
   end
 
-  def original=(s)
-    write_attribute(:original, Haltr::Utils.compress(s))
-  end
+  def self.create_from_issued(issued, project)
+    target = project.company
+    source = issued.project.company
 
-  def original
-    Haltr::Utils.decompress(read_attribute(:original))
+    client = target.project.clients.find_by_taxcode(source.taxcode)
+    client ||= Client.create!(
+      project_id:     target.project_id,
+      name:           source.name,
+      taxcode:        source.taxcode,
+      address:        source.address,
+      city:           source.city,
+      postalcode:     source.postalcode,
+      province:       source.province,
+      website:        source.website,
+      email:          source.email,
+      country:        source.country,
+      currency:       source.currency,
+      invoice_format: source.invoice_format,
+      schemeid:       source.schemeid,
+      endpointid:     source.endpointid,
+      language:       source.language,
+      allowed:        nil
+    )
+
+    # the format of this invoice is the format of the document last sent
+    sent_invoice_format = ExportChannels.format(issued.client.invoice_format)
+
+    # copy issued invoice attributes
+    ReceivedInvoice.new(
+      issued.attributes.merge(
+        state:     :received,
+        transport: 'from_issued',
+        project:   target.project,
+        client:    client,
+        bank_info: nil,
+        invoice_format: sent_invoice_format,
+        original:  (issued.last_sent_event.file rescue nil),
+        created_from_invoice: issued,
+        invoice_lines: issued.invoice_lines.collect {|il|
+          new_il = il.dup
+          new_il.taxes = il.taxes.collect {|t|
+            Tax.new(
+              name:     t.name,
+              percent:  t.percent,
+              category: t.category,
+              comment:  t.comment
+            )
+          }
+          new_il
+        }
+      )
+    ).save(validate: false)
   end
 
   protected
 
   def create_event
     ReceivedInvoiceEvent.create(:name=>self.transport,:invoice=>self,:user=>User.current)
+  end
+
+  private
+
+  def visible?(usr=nil)
+    (usr || User.current).allowed_to?(:general_use, project)
+  end
+
+  def notify_users_by_mail
+    MailNotifier.received_invoice_add(self).deliver
+  end
+
+  def updated_on
+    updated_at
   end
 
 end

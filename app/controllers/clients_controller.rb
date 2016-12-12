@@ -5,7 +5,7 @@ class ClientsController < ApplicationController
   menu_item Haltr::MenuItem.new(:companies,:companies_level2)
 
   layout 'haltr'
-  helper :haltr, :invoices
+  helper :haltr, :invoices, :charts
 
   helper :sort
   include SortHelper
@@ -16,6 +16,8 @@ class ClientsController < ApplicationController
   before_filter :set_iso_countries_language
   before_filter :authorize
 
+  accept_api_auth :create, :show, :index, :destroy, :update
+
   include CompanyFilter
   before_filter :check_for_company
 
@@ -23,68 +25,150 @@ class ClientsController < ApplicationController
     sort_init 'name', 'asc'
     sort_update %w(taxcode name)
 
-    clients = @project.clients.scoped
+    @client_offices = {}
+    clients = @project.clients
 
     unless params[:name].blank?
       name = "%#{params[:name].strip.downcase}%"
-      clients = clients.scoped :conditions => ["LOWER(name) LIKE ? OR LOWER(address) LIKE ? OR LOWER(address2) LIKE ?", name, name, name]
+      clients = clients.where("LOWER(name) LIKE ? OR LOWER(address) LIKE ? OR LOWER(address2) LIKE ? OR LOWER(taxcode) LIKE ?", name, name, name, name)
+    end
+
+    unless params[:edi_code].blank?
+      @project.client_offices.where(
+        'lower(client_offices.edi_code) = ?', params[:edi_code].downcase
+      ).each do |client_office|
+        @client_offices[client_office.client_id] ||= []
+        @client_offices[client_office.client_id] << client_office
+      end
+
+      clients = clients.where(
+        "edi_code = ? or id in (?)",
+        params[:edi_code], @client_offices.keys
+      )
+    end
+
+    unless params[:taxcode].blank?
+      taxcode = params[:taxcode].encode(
+        'UTF-8', 'binary', invalid: :replace, undef: :replace, replace: ''
+      ).gsub(/\W/,'').downcase
+      if taxcode[0...2].downcase == @project.company.country
+        taxcode2 = taxcode[2..-1]
+      else
+        taxcode2 = "#{@project.company.country}#{taxcode}"
+      end
+
+      clients = clients.where("taxcode in (?, ?)", taxcode, taxcode2)
+    end
+
+    case params[:format]
+    when 'xml', 'json'
+      @offset, @limit = api_offset_and_limit
+    else
+      @limit = per_page_option
     end
 
     @client_count = clients.count
-    @client_pages = Paginator.new self, @client_count,
-		per_page_option,
-		params['page']
+    @client_pages = Paginator.new self, @client_count, @limit, params['page']
+    @offset ||= @client_pages.offset
     @clients =  clients.find :all,
        :order => sort_clause,
-       :limit  =>  @client_pages.items_per_page,
-       :offset =>  @client_pages.current.offset
+       :limit  =>  @limit,
+       :offset =>  @offset
+  end
+
+  def show
+    @people = @client.people
+    @events = @client.invoice_events.where("events.type!='HiddenEvent'").order("created_at desc").limit(10)
+    @events_count = @client.invoice_events.where("events.type!='HiddenEvent'").count
+    @client_offices= @client.client_offices
+    @templates_total = @client.template_invoice_lines.sum{|line|line.taxable_base}.to_money(@client.currency) rescue nil
+    respond_to do |format|
+      format.html
+      format.api
+    end
   end
 
   def new
     @client = Client.new(:country=>@project.company.country,
-                         :currency=>@project.company.currency)
+                         :currency=>@project.company.currency,
+                         :language=>User.current.language)
   end
 
   def edit
-    @company = Company.find(:all, :conditions => ["taxcode = ? and (public='public' or public='semipublic')", @client.taxcode]).first
   end
 
   def create
-    @client = Client.new(params[:client].merge({:project=>@project}))
+    begin
+      @client = Client.new(params[:client].merge({:project=>@project}))
+    rescue
+      @client = Client.new
+    end
     respond_to do |format|
       if @client.save
         format.html {
           flash[:notice] = l(:notice_successful_create)
-          redirect_to :action=>'index', :project_id=>@project
+          redirect_to :action=>'show', :id=>@client
         }
         format.js
+        format.api { render :action => 'show', :status => :created, :location => client_url(@client) }
       else
         format.html { render :action => 'new' }
-        format.js  { render :action => 'create_error' }
+        format.js   { render :action => 'create_error' }
+        format.api  { render_validation_errors(@client) }
       end
     end
   end
 
   def update
-    if @client.update_attributes(params[:client])
-      flash[:notice] = l(:notice_successful_update)
-      redirect_to :action => 'index', :project_id => @project
-    else
-      render :action => "edit"
+    respond_to do |format|
+      if @client.update_attributes(params[:client])
+        event = Event.new(:name=>'edited',:client=>@client,:user=>User.current)
+        # associate last created audits to this event
+        event.audits = @client.last_audits_without_event
+        event.save!
+        format.html {
+          flash[:notice] = l(:notice_successful_update)
+          redirect_to :action=>'show', :id=>@client
+        }
+        format.api  { render_api_ok }
+      else
+        format.html { render :action => "edit" }
+        format.api  { render_validation_errors(@client) }
+      end
     end
   end
 
   def destroy
+    @client.events.destroy_all
     @client.destroy
-    redirect_to :action => 'index', :project_id => @project
+    event = EventDestroy.new(:name    => "deleted_client",
+                             :notes   => @client.name,
+                             :project => @client.project)
+    event.audits = @client.last_audits_without_event
+    event.save!
+    respond_to do |format|
+      format.html { redirect_back_or_default project_clients_path(@project) }
+      format.api  { render_api_ok }
+    end
   end
 
   def check_cif
-    taxcode = params[:value].gsub(/\W/,'') if params[:value]
+    if params[:value]
+      taxcode = params[:value].encode(
+        'UTF-8', 'binary', invalid: :replace, undef: :replace, replace: ''
+      ).gsub(/\W/,'').downcase
+      if taxcode[0...2].downcase == @project.company.country
+        taxcode2 = taxcode[2..-1]
+      else
+        taxcode2 = "#{@project.company.country}#{taxcode}"
+      end
+    end
     # the client we are editing (or nil if creating new one)
     client = Client.find(params[:client]) unless params[:client].blank?
     # search for an existing client with the specified taxcode
-    existing_client = @project.clients.collect {|c| c if c.taxcode == taxcode }.compact.first
+    existing_client = @project.clients.collect {|c|
+      c if [taxcode, taxcode2].include? c.taxcode.to_s.downcase
+    }.compact.first
     # check if we are editing or creating a client and entered a taxcode that
     # already exists on another of our clients
     if existing_client and (( client and client.id != existing_client.id ) or !client )
@@ -92,20 +176,41 @@ class ClientsController < ApplicationController
       render :partial => 'cif_info', :locals => {:client=>nil,:company=>nil}
     else
       # we are creating/editing a new client
-      # search a company with specified taxcode and (semi)public profile
-      company = Company.find(:all,
-                  :conditions => ["taxcode = ? and (public='public' or public='semipublic')", taxcode]).first
-      render :partial => "cif_info", :locals => { :client => client,
-                                                  :company => company,
-                                                  :context => params[:context],
-                                                  :invoice_id => params[:invoice_id] }
+      # if taxcode is blank render nothing.. we can't search by taxcode if blank
+      if taxcode.blank? or taxcode2.blank?
+        render :partial => 'cif_info', :locals => {:client=>nil,:company=>nil}
+      else
+        # search a company with specified taxcode and (semi)public profile
+        company = Company.where(
+          "taxcode in (?, ?) and (public='public' or public='semipublic')", taxcode, taxcode2
+        ).first
+        company ||= ExternalCompany.where("taxcode in (?, ?)", taxcode, taxcode2).first
+        render :partial => "cif_info", :locals => { :client => client,
+                                                    :company => company,
+                                                    :context => params[:context],
+                                                    :invoice_id => params[:invoice_id] }
+      end
     end
   end
 
   def link_to_profile
-    @company = Company.find(params[:company])
-    @client = Client.find(params[:client]) unless params[:client].blank?
-    @client ||= Client.new(:project=>@project)
+    taxcode = params[:company]
+    if taxcode.blank?
+      render_404
+      return
+    end
+    if taxcode[0...2].downcase == @project.company.country
+      taxcode2 = taxcode[2..-1]
+    else
+      taxcode2 = "#{@project.company.country}#{taxcode}"
+    end
+    # ExternalCompany has priority over Company
+    @company = ExternalCompany.where("taxcode in (?, ?)", taxcode, taxcode2).first
+    @company ||= Company.where(
+      "taxcode in (?, ?) and (public='public' or public='semipublic')", taxcode, taxcode2
+    ).first
+    @client    = Client.find(params[:client]) unless params[:client].blank?
+    @client  ||= Client.new(:project=>@project)
     @client.company = @company
     @client.taxcode = @company.taxcode
     if @client.save
@@ -138,9 +243,8 @@ class ClientsController < ApplicationController
   end
 
   def allow_link
-    unless @project.company.taxcode.blank?
-      req = Company.find params[:req]
-      client = req.project.clients.find_by_taxcode(@project.company.taxcode)
+    req = Company.find params[:req]
+    req.project.clients.where("company_id=?", @project.company.id).each do |client|
       client.allowed = true
       client.save
     end
@@ -148,9 +252,8 @@ class ClientsController < ApplicationController
   end
 
   def deny_link
-    unless @project.company.taxcode.blank?
-      req = Company.find params[:req]
-      client = req.project.clients.find_by_taxcode(@project.company.taxcode)
+    req = Company.find params[:req]
+    req.project.clients.where("company_id=?", @project.company.id).each do |client|
       client.allowed = false
       client.save
     end

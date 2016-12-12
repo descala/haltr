@@ -47,8 +47,8 @@ es:
   link_to_profile_suggest: "Puedes %{href} a este cliente"
   link_to_profile: "vincular su perfil público"
   link_to_profile_ask: "pedir autorización para vincular su perfil público"
-  pending_authorization: "Pendiente de autorización de la empresa <span style='font-weight: bold;'>%{company}</span>"
-  denied_authorization: "La empresa <span style='font-weight: bold;'>%{company}</span> ha denegado el permiso para vincular con su perfil"
+  pending_authorization: "Pendiente de la autorización de la empresa <span style='font-weight: bold;'>%{company}</span>"
+  denied_authorization: "La empresa <span style='font-weight: bold;'>%{company}</span> te ha denegado el permiso para vincular su perfil"
   linked_to_profile: "Vinculado a la empresa <span style='font-weight: bold;'>%{company}</span>"
   link_requests: "Peticiones para vincular con su perfil"
   pending_requests: "%{i} peticiones pendientes"
@@ -59,7 +59,7 @@ es:
   public: "Público"
   semipublic: "Requerir autorización"
   private: "Privado"
-  confirm_delete_client_with_invoices: "Atención! El cliente tiene facturas asociadas:\n  %{issued} emitidas\n  %{received} recibidas\n  %{templates} plantillas\nBorrar el cliente y todas sus facturas?"
+  confirm_delete_client_with_invoices: "¡Atención! El cliente tiene facturas asociadas:\n  %{issued} emitidas\n  %{received} recibidas\n  %{templates} plantillas\n¿Borrar el cliente y todas sus facturas?"
 
   # Invoices
   IssuedInvoice: Factura emitida
@@ -72,9 +72,10 @@ es:
   label_invoice_new: Nueva factura
   label_received_invoice_new: Añadir factura recibida
   button_new_invoice: Nueva factura
-  button_add_invoice_line: Añade una nueva linea a la factura
-  field_number: Número
+  button_add_invoice_line: Añade una nueva línea a la factura
+  field_invoice_number: Número de factura
   label_last_invoice_number: "Último usado"
+  number_taken_in_year: "%{number} ya se está utilizando para el año %{year}"
   field_date: Fecha
   field_client: Cliente
   field_extra_info: Notas
@@ -87,10 +88,11 @@ es:
   field_draft: Borrador
   label_invoice_state: Estado
   field_state: Estado
+  field_state_updated_at: Fecha de cambio de estado
   show_template: Ver plantilla
   generate_template_from_invoice: Generar nueva plantilla
   duplicate_invoice: Duplicar esta factura
-  generated_from_template: Generada de la plantilla
+  generated_from_template: Generada desde la plantilla
   receive_payment: Pago
   make_payment: Efectuar pago
   label_paid: Pagado
@@ -106,7 +108,7 @@ es:
   closed_invoices: Facturas cerradas
   label_subtotal: Subtotal
   over_taxable_base: sobre
-  must_have_lines: tiene que tener líneas
+  must_have_lines: debe tener líneas
   send_invoice: Enviar factura
   label_send: Enviar
   cash: En efectivo
@@ -114,6 +116,7 @@ es:
   debit_through: Cargar en cuenta, usando %{bank_account}
   transfer: Transferencia bancaria
   transfer_to: Transferencia bancaria a %{bank_account}
+  cheque: Reposición
   other: Otros
   requires_client_bank_account: requiere cuenta bancaria del cliente
   requires_company_bank_account: requiere cuenta bancaria propia
@@ -129,9 +132,12 @@ es:
   state_error_plural: "Error"
   state_closed_plural: "Cerradas"
   state_discarded_plural: "Descartadas"
+  state_registered_plural: "Registradas"
+  state_allegedly_paid_plural: "Informadas como pagadas"
   state_new: "Nueva"
-  state_sending: "Enviandose"
+  state_sending: "Enviándose"
   state_sent: "Enviada"
+  state_read: "Leída"
   state_error: "Error"
   state_closed: "Cerrada"
   state_discarded: "Descartada"
@@ -145,9 +151,9 @@ es:
   state_accepted_plural: "Aceptadas"
   state_refused_plural: "Rechazadas"
   state_paid_plural: "Pagadas"
-  sending_log: "Log d'enviament"
-  sending_log: "Log de envio"
-  download_legal: "Descargar factura legal"
+  state_registered: "Registrada"
+  sending_log: "Log de envío"
+  download_legal: "Descargar documento"
   download_notification: "Descargar notificación"
   label_all_invoices: "Todas"
   label_issued: "Facturas emitidas"
@@ -168,12 +174,12 @@ es:
   accept_and_mail: "Aceptar con mail"
   accept_without_mail: "Aceptar sin mail"
   cancel: "Cancelar"
-  client_without_email: "El cliente associado no tiene email definido"
+  client_without_email: "El cliente asociado no tiene email definido"
   report_issue_with_invoice: "Informar de un problema con esta factura"
   invoice_issue_subject: "Tengo un problema con la factura con id interno %{id}"
   invoice_issue_body: "-- describe aquí el problema --"
   quick_pdf_view: "Vista rápida del PDF"
-  pdf_invoice_expl: "Esta és una aproximación a la factura recibida, por favor, compruebe que los datos sean correctos con la original"
+  pdf_invoice_expl: "Esta es una aproximación a la factura recibida, por favor, compruebe que los datos sean correctos con la original"
   no_pdf_support: "Parece que no tienes Adobe Reader o soporte para PDF en este navegador. <a href='%{pdf}'>Clica aquí para descargar el PDF</a>"
   client_has_no_email: "El cliente asociado a la factura no tiene correo electrónico definido"
   invoice_has_no_taxes: "La factura tiene aluna línea sin impuestos"
@@ -183,7 +189,7 @@ es:
   amended_invoice: "Rectificación de la %{link}"
   amended_by_invoice: "Rectificada por la %{link}"
   create_amend_invoice: "Crear factura rectificativa"
-  label_amendment_invoice: "Factura Rectificativa"
+  label_amendment_invoice: "Factura rectificativa"
   label_amended_invoice: "Factura rectificada"
   line_specific_tax: "Impuesto por línea"
   default: "Por defecto"
@@ -191,8 +197,8 @@ es:
   add_taxes_on_company: "Puedes gestionar los impuestos en \"Mi empresa\""
   button_download_new_invoices: "Descargar zip de facturas nuevas"
   label_download_new_invoices_info: "Genera un zip con todas las facturas nuevas en formato PDF"
-  field_exempt: "Exempto"
-  field_comment: "Razón de exempción"
+  field_exempt: "Exento"
+  field_comment: "Razón de exención"
 
   # Events
   events: "Log de eventos"
@@ -210,7 +216,7 @@ es:
   unpaid: "Marcada como no pagada"
   edited: "Editada"
   new: "Creada"
-  bounced: "Devuelta: No se pudo entregar a la dirección de correo indicada"
+  bounced: "Devuelta: No se pudo entregar al destinatario indicado"
   validating_format: "Factura recibida"
   success_validating_format: "Validación de formato correcta"
   error_validating_format: "Error en la validación de formato"
@@ -225,6 +231,7 @@ es:
   refuse_notification: "Notificación: Factura rechazada"
   paid_notification: "Notificación: Factura pagada"
   tram_notification: "Notificación: Factura en trámite"
+  unknown_notification: "Notificación"
   by_mail_from: "por email desde %{email}"
   in_format: "en formato %{f}"
   back: "Volver"
@@ -233,8 +240,17 @@ es:
   mark_as_received: "Marcada como recibida"
   uploaded: "Subida"
   email: "Recibida"
+  api: "Creada via API"
   download_original: "Descargar original"
   view_original: "Ver original"
+  manual_mark_as: "Marcar como %{state}"
+  done_mark_as_new: "Marcada manualmente como nueva"
+  done_mark_as_sent: "Marcada manualmente como enviada"
+  done_mark_as_accepted: "Marcada manualmente como aceptada"
+  done_mark_as_registered: "Marcada manualmente como registrada"
+  done_mark_as_refused: "Marcada manualmente como rechazada"
+  done_mark_as_closed: "Marcada manualmente como cerrada"
+  done_mark_as_paid: "Marcada manualmente como pagada"
 
   # Invoice templates
   label_invoice_template_new: Nueva plantilla
@@ -260,8 +276,10 @@ es:
   s_hours: h
   s_kilograms: kg
   s_litters: l
-  days: Dias
+  days: Días
   s_days: d
+  s_other: ""
+  boxes: 'Cajas'
 
   # People
   label_person: Persona
@@ -271,13 +289,14 @@ es:
   field_last_name: Apellidos
   field_email: Email
   field_phone_office: Teléfono oficina
-  field_phone_mobile: Teléfono movil
+  field_phone_mobile: Teléfono móvil
   label_phone: Teléfono
+  field_info: Información extra
 
   # Tasks
   label_task_plural: Tareas
   with_date: Con fecha
-  charge_bank_on_date: Cobrar a dia
+  charge_bank_on_date: Cobrar a día
   nothing_to_report: Nada a mostrar
   nothing_to_generate: Nada a generar
   button_generate_invoices: Nuevas facturas desde plantilla
@@ -288,12 +307,12 @@ es:
   label_import_aeb43: Importar movimientos en formato AEB43
 
   # Payments
-  label_payment: Pagos
+  label_payment: Pago
   label_payment_plural: Pagos
   label_payment_new: Nuevo pago
-  field_amount: Importe
-  field_amount_in_cents: Importe
-  field_payment_method: Metodo de pago
+  field_amount: Precio
+  field_amount_in_cents: Precio
+  field_payment_method: Método de pago
   field_reference: Referencia
   field_total_paid: Total pagado
   received_invoice_paid: "%{company} ha pagado la factura número %{num}"
@@ -303,7 +322,8 @@ es:
   save_and_mail: "Guardar y enviar mail"
   save_without_mail: "Guardar sin enviar mail"
   field_sepa_type: "tipo de pagos SEPA"
-  label_payment_initiation: "Iniciar pagos"
+  label_payment_initiation: "Adeudos SEPA"
+  label_payment_report: Informe de pagos
 
   # Settings
   field_taxcode: "NIF"
@@ -311,21 +331,22 @@ es:
   export_channels_path: "Ubicación de les carpetas de exportación"
   field_company: "Empresa"
   logo: "Logo"
-  trace_url: "URL del b2brouter"
-  b2brouter_ip: "IP del b2brouter"
+  trace_url: "URL del B2BRouter"
+  b2brouter_ip: "IP del B2BRouter"
   b2b_subtitle: "Tu portal de factura electrónica"
   field_public: "Perfil público"
-  private_fields_info: "Los siguientes campos son privados y no se mostrarán aunque escoja hacer público su perfil"
+  private_fields_info: "Los siguientes campos son privados y no se mostrarán aunque tu perfil sea público"
   issues_controller_name: "Nombre del controlador de peticiones"
   field_iban: IBAN
   field_bic: BIC
   default_country: "País por defecto"
   default_currency: "Moneda por defecto"
   hide_unauthorized: "Ocultar funcionalidades no disponibles"
-  invoice_mail_subject: "Factura num @invoice.number"
-  invoice_mail_body: "Le enviamos la factura numero @invoice.number con fecha @invoice.date"
-  quote_mail_subject: "Presupuesto num @quote.number"
-  quote_mail_body: "Le enviamos el presupuesto numero @quote.number con fecha @quote.date"
+  invoice_mail_subject: "Factura núm @invoice.number"
+  invoice_mail_body: "Le enviamos la factura número @invoice.number con fecha @invoice.date"
+  quote_mail_subject: "Presupuesto número @quote.number"
+  quote_mail_body: "Le enviamos el presupuesto número @quote.number con fecha @quote.date"
+  return_path: "Return-Path (para los bounces)"
 
   # Terms
   "0": Al contado
@@ -334,16 +355,19 @@ es:
   "60": 60 días
   "90": 90 días
   "120": 120 días
-  "0m-1": Último dia del mes
-  "1m-1": Último dia del mes siguiente
-  "1m1": 1er día mes siguiente
-  "2m1": "1er día en dos meses" 
+  "0m-1": Último día del mes
+  "1m-1": Último día del mes siguiente
+  "1m1": Primer día mes siguiente
+  "2m1": "Primer día en dos meses" 
   "1m15": Día 15 mes siguiente
   "1m20": Día 20 mes siguiente
   "1m10": Día 10 mes siguiente
   "custom": Personalizado
 
   # Frequency
+  mf60: Cada 5 años
+  mf36: Cada 3 años
+  mf24: Cada 2 años
   mf12: Anual
   mf6: Semestral
   mf3: Trimestral
@@ -352,28 +376,27 @@ es:
 
   # Errors
   cant_connect_trace: "No se puede conectar con la plataforma b2brouter"
-  halt_configure_before_use: "Por favor, primero configura los datos de la empresa"
+  halt_configure_before_use: "Por favor, revisa los datos de %{href}"
+  company_href: "mi empresa"
   warning_can_not_generate_invoice: "No se ha podido generar la factura de la plantilla %{value}"
   notice_invoice_sent: "La factura se esta enviando"
   error_invoice_not_sent: "La factura %{num} no se ha podido enviar"
-  notice_empty_n19: "No hay datos para generar un N19"
-  notice_n19_done: "Se ha cerrado el N19 con fecha %{value}"
   notice_empty_sepa: "No hay datos para generar un fichero SEPA"
   notice_payment_done: "Se ha cerrado el %{payment_type} de fecha %{value}"
-  notice_uploaded_file_not_found: "No s'ha encontrado el fichero"
+  notice_uploaded_file_not_found: "No se ha encontrado el fichero"
 
   hide_full_form: "Mostrar menos campos"
-  show_full_form: "Mostrar mas campos"
+  show_full_form: "Mostrar más campos"
   field_created_at: "Creada el"
-  field_received_at: "Recibida el"
-  info_default_taxes: "Por defecto se crearan los impuestos de tu país"
+  field_received_at: "Fecha recepción"
+  info_default_taxes: "Por defecto se crearán los impuestos de tu país"
   label_invoices_min: "Mínimo de facturas"
   label_stastics: "Estadísticas"
   help_invoice_format: "Formato y transporte preferido de recepción de facturas"
   logo_not_image: "El logo no se ha guardado porque no era una imagen"
   invoices_not_sent: "%{num} facturas no se han podido enviar:"
   invoices_sent: "%{num} facturas enviadas"
-  invoice_limit_reached: "Se ha alcanzado el límite de envio simultáneo (10 facturas).<br />Puedes volver a enviar para procesar 10 facturas más."
+  invoice_limit_reached: "Se ha alcanzado el límite de envío simultáneo (10 facturas).<br />Puedes volver a enviar para procesar 10 facturas más."
   zip_gem_required: "Se necesita instalar la gem 'zip' para usar esta funcionalidad"
   too_much_invoices: "Demasiadas facturas para descargar (%{num} facturas, máximo 100)"
   field_send_invoices_by_mail: "Enviar facturas a este email"
@@ -384,12 +407,13 @@ es:
   missing_company_peppol_fields: "Faltan campos de Peppol de tu empresa"
   missing_client_peppol_fields: "Faltan campos de Peppol del cliente"
   field_accounting_cost: "Centro de coste"
+  field_client_email_override: "No utilizar el email de cliente, sino este"
   missing_svefaktura_account: "Falta el centro de coste"
   missing_svefaktura_organization: "Falta el identificador de empresa"
   missing_svefaktura_debit: "No se pueden crear facturas domiciliadas"
 
   label_update_taxes: "Actualiza los impuestos de las plantillas"
-  field_company_identifier: "ID de empresa"
+  field_company_identifier: "Registro mercantil"
 
   label_linked_to_mine: "Empresas vinculadas"
 
@@ -400,11 +424,19 @@ es:
   field_imap_password: "Contraseña"
   field_imap_from: "Remitente"
 
+  field_smtp_host: "Servidor SMTP"
+  field_smtp_port: "Puerto"
+  field_smtp_ssl: "Usar SSL"
+  field_smtp_username: "Usuario"
+  field_smtp_password: "Contraseña"
+  field_smtp_from: "Remitente"
+
   permission_general_use: "Utilizar el plugin Haltr"
   permission_manage_payments: "Gestionar pagos"
   permission_use_templates: "Plantillas de facturas"
   permission_batch_processes: "Procesos con scripts"
   permission_use_all_readonly: "Uso completo solo lectura"
+  permission_restricted_use: "Uso restringido"
 
   # this depends on permissions defined in channels.yml
   permission_download_pdf: "B2BRouter - Descargar PDF"
@@ -414,11 +446,14 @@ es:
   permission_send_face: "B2BRouter - Enviar a través de FACE"
   permission_send_peppol: "B2BRouter - Enviar a PEPPOL"
   permission_use_local_signature: "B2BRouter - Firmar con certificado local"
+  permission_send_jccm: "B2BRouter - Enviar a través de JCCM"
   tax_E: "Exento"
+  tax_NS: "No sujeto"
   tax_Z: "Tasa cero"
   tax_S: "Estándar"
   tax_H: "Tasa alta"
   tax_AA: "Tasa baja"
+  tax_AAA: "Tasa super reducida"
   invoice_data: "Datos factura"
   bank_info: "Datos bancarios"
 
@@ -428,23 +463,23 @@ es:
 
   button_save_and_send: Guardar y enviar
   button_create_and_send: Crear y enviar
-  bank_account_empty: Tiene que especificar el numero de cuenta si el método de pago és transferéncia
+  bank_account_empty: Debes especificar el número de cuenta si el método de pago es una transferencia
   errors_prevented_invoice_sent: No se ha enviado la factura porque contiene errores
   invoice_total: "Total factura"
   total_executable: "Total a pagar"
-  company_taxcode_needed: "No podem generar el document perquè la teva empresa no té NIF"
-  client_taxcode_needed: "No podem generar el document perquè el client no té NIF"
-  client_postalcode_needed: "No podem generar el document perquè el client no té codi postal"
+  company_taxcode_needed: "No podemos generar el documento porque tu empresa no tiene NIF"
+  client_taxcode_needed: "No podemos generar el documento porque el cliente no tiene NIF"
+  client_postalcode_needed: "No podemos generar el documento porque el cliente no tiene código postal"
   read: "Leído"
-  text_invoices_destroy_confirmation: '¿Seguro que quiere borrar las facturas seleccionadas?'
+  text_invoices_destroy_confirmation: '¿Seguro que quieres borrar las facturas seleccionadas?'
   mark_as: "Marcar como"
   some_states_not_changed: "Algunos estados no se pudieron cambiar"
   button_send: "Enviar"
   some_invoices_sent: "Algunas facturas no se pudieron enviar (enviadas %{sent} de %{total})"
   all_invoices_sent: "Se han enviado las facturas"
   button_add_bank_info: "Añadir cuenta bancaria"
-  page_redirecting_will_lose_unsaved_data: "La pàgina es redirigirà i perdreu les dades no desades, voleu continuar?"
-  label_format: "Format"
+  page_redirecting_will_lose_unsaved_data: "La página se redirigirá y perderás los datos no guardados. ¿Quieres continuar?"
+  label_format: "Formato"
   button_validate: "Validar"
   downloading_doc: 'Descargando el documento...'
   calling_signature: 'Llamando al proceso de firma...'
@@ -452,6 +487,9 @@ es:
   document_sent: 'Documento enviado al servidor.'
   error_sending_signed_doc: 'Error enviando el documento firmado.'
   error_downloading_doc: 'Error Descargando el documento firmado.'
+  error_signing: 'Error al firmar'
+  error_no_certs: 'No existe ningún certificado en el navegador'
+  error_enable_java: 'Se debe permitir la ejecución de Java en esta página'
   loading_applet: 'Cargando applet...'
   applet_already_loaded: "Applet ya cargado."
   applet_loaded: "Applet cargado."
@@ -460,24 +498,23 @@ es:
   sure_to_resend_invoices: "Seguro que quieres reenviar las facturas %{nums}?"
   taxcodes_does_not_belong_to_self: "Los NIF de la factura (%{tcs}) no son de tu empresa (%{tc})"
   label_import: "Importar"
-  overriding_original_warn: "Si guardas esta factura, a partir de ahora se usara la version modificada en lugar del fichero original, estas seguro?"
+  overriding_original_warn: "Si guardas esta factura, se enviará el xml modificado en lugar del xml original. Esto puede implicar la omisión de algún dato presente en el original ¿Estás seguro?"
   label_mandate_new: "Nuevo mandato"
-  field_signature_date: "Fuecha de firma"
+  field_signature_date: "Fecha de firma"
   field_signed_doc: "Documento firmado"
   current_signed_doc: "Documento firmado actual"
   mandate_recurrent: "Mandato recurrente"
-  mandate_non_recurrent: "Mandato unico"
+  mandate_non_recurrent: "Mandato único"
   field_end_date: "Fin de cobro"
   label_mandate: "Mandato"
   field_delete_signed_doc: "Eliminar documento firmado"
   label_mandates: "Mandatos"
-  n19_requires_bank_account: "Para generar n19 debes rellenar tu cuenta bancaria"
   field_bank_infos: "Datos bancarios"
   success_sending_notification_by_mail: "Notificación enviada"
   error_sending_notification_by_mail: "Error enviando la notificación"
   send_signed_pdf_by_mail: "PDF firmado, enviado por email a %{emails}"
   send_signed_pdf_by_imap: "PDF firmado, email para %{emails} en carpeta IMAP"
-  email_customization: "Personalizacion de Email"
+  email_customization: "Personalización de Email"
   field_mail_subject: "Asunto"
   field_mail_body: "Cuerpo"
   send_pdf_by_mail: "PDF enviado por email a %{emails}"
@@ -507,8 +544,19 @@ es:
   refuse_quote: "Desestimar"
   import_invoice: "Importar factura"
   send_after_import: "Enviar después de importar"
-  template_too_old: "La plantilla para %{client} es demasiado antigua (demasiadas facturas a generar)"
+  template_too_old: "La plantilla para %{client} es demasiado antigua"
   quote_acceptance: "Aceptación del presupuesto"
+  chart_invoice_total: Total facturado
+  chart_invoice_status: Total facturado según estado de la factura
+  chart_top_clients: Clientes más facturados
+  chart_cashflow: Flujo de caja
+  chart_events: Últimos eventos
+  past_due: Vencidas
+  on_schedule: Dentro de plazo
+  label_not_paid: No pagado
+  label_issued_invoice: Factura emitida
+  label_received_invoice: Factura recibida
+  label_draft_invoice: Borrador
   label_fiscal_data: "Datos fiscales"
   label_connections: "Conexiones"
   label_customization: "Personalización"
@@ -516,4 +564,249 @@ es:
   help_public_profile: "Las empresas que usan B2BRouter.net pueden recuperar los datos maestros básicos de su empresa."
   help_semipublic_profile: "Las empresas que usan B2BRouter.net pueden recuperar los datos maestros básicos de su empresa previa autorización."
   help_private_profile: "No se permite a las empresas que tengan acceso a los datos maestros básicos de su empresa."
-  profile_recomended: "Desde B2BRouter.net recomendamos usar la opción pública o requerir autorización para facilitar el proceso de facturación a sus clientes."
+  profile_recomended: "Desde B2BRouter.net recomendamos usar la opción pública o requerir autorización para facilitar el proceso de facturación a tus clientes."
+  all_by_year: "Todo, por año"
+  all_by_month: "Todo, por mes"
+  last_year_by_month: "Último año"
+  last_month_by_week: "Último mes"
+  all: "Todo"
+  last_year: "Último año"
+  last_3_months: "Últimos tres meses"
+  field_article_code: "Código"
+  label_error_event_plural: "Eventos de envíos fallados"
+  label_info_event_plural: "Eventos de envíos con éxito"
+  audited_create: "Creado: %{model} creado/a"
+  audited_update: "Actualizado: %{model}"
+  audited_destroy: "Borrado: %{model}"
+  invoice_line: "Línea de factura"
+  invoice: "Factura"
+  tax: "Impuesto"
+  field_percent: "%"
+  field_bank_info: "Cuenta bancaria"
+  deleted_issued_invoice: "Factura emitida borrada"
+  deleted_received_invoice: "Factura recibida borrada"
+  deleted_invoice_template: "Plantilla borrada"
+  deleted_client: "Cliente borrado"
+  client: "Cliente"
+  pending_auth_requests: "Hay peticiones pendientes de autorización: %{num} empresas se quieren vincular al tu perfil"
+  denied_requests: "Peticiones denegadas"
+  self_employed: "Soy trabajador autónomo"
+  organ_gestor: "Órgano gestor"
+  oficina_comptable: "Oficina contable"
+  unitat_tramitadora: "Unidad tramitadora"
+  field_organ_proponent: "Órgano Promotor"
+  organ_proponent: "Órgano Promotor"
+  external_companies: "Empresas externas"
+  external_company: "Empresa externa"
+  export_channels: "Canales"
+  export_channel: "Canal"
+  field_file_reference: "Num expediente"
+  import_issued_from_received: "El fichero a importar corresponde a una factura emitida"
+  import_received_from_issued: "El fichero a importar corresponde a una factura recibida"
+  field_discount: "Descuento"
+  field_charge: "Cargo"
+  download_as_pdf: "Descargar copia en PDF"
+  download_as_xml: "Descargar XML"
+  label_reports: Informes
+  visible_fields: "Campos visibles"
+  required_fields: "Campos requeridos"
+  field_delivery_note_number: "Número de albarán"
+  field_organs_gestors: "Órganos gestores"
+  field_unitats_tramitadores: "Unidades tramitadoras"
+  field_oficines_comptables: "Oficinas contables"
+  field_organs_proponents: "Órganos proponentes"
+  dir3_entities: "Entidades DIR3"
+  field_code: "Código"
+  field_payments_on_account: "Aportación Usuarios/Retención"
+  sequence_number: 'Posición del pedido'
+  mark_as_accepted: 'Marcar como aceptada'
+  field_receiver_contract_reference: "Número de contrato / Código de asignación"
+  invoice_attachments_description: "Permite subir un ficheros relacionados con la factura (máximo %{mb}MB). Estos documentos se adjuntarán a la factura electrónica."
+  invoice_attachments_permission: "No tienes activada la función de adjuntar ficheros"
+  label_will_send_original: "Esta factura tiene original y no se ha modificado. Así pues, se enviará el documento original."
+  import_errors: "Errores de importación"
+  text_import_errors_destroy_confirmation: "¿Seguro que quieres borrar los errores de importación seleccionados?"
+  field_series_code: "Serie"
+  state_not_allowed_for_sending: "No se pueden reenviar facturas en estado %{state}"
+  amendment: "Rectificativa"
+  missing_imap_config: "Falta la configuracion IMAP en 'Mi empresa'"
+  transport: "Transporte"
+  field_legal_literals: "Certificación"
+  field_invoicing_period_start: "Inicio periodo de facturación"
+  field_invoicing_period_end: "Fin periodo de facturación"
+  field_invoicing_period: "Periodo de facturación"
+  label_factoring_assignment_data: 'Cesión de factoring'
+  field_fa_person_type: 'Tipo entidad'
+  field_fa_residence_type: 'Residencia'
+  label_fa_person_type_individual: "Física"
+  label_fa_person_type_entity: "Jurídica"
+  label_fa_residence_type_foreigner: "Extranjero"
+  label_fa_residence_type_spain: "Residente"
+  label_fa_residence_type_UE: "Europeo"
+  field_fa_taxcode: 'NIF'
+  field_fa_name: 'Nombre'
+  field_fa_address: 'Dirección'
+  field_fa_postcode: 'Código postal'
+  field_fa_town: 'Ciudad'
+  field_fa_province: 'Provincia'
+  field_fa_country: 'País'
+  field_fa_info: 'Información'
+  field_fa_duedate: 'Fecha vencimiento'
+  field_fa_import: 'Importe'
+  field_fa_iban: 'IBAN'
+  field_fa_bank_code: 'Código bancario'
+  field_fa_clauses: 'Cláusula de cesión'
+  field_fa_payment_method: 'Método de pago'
+  channel_requires_user_pass: "El canal necesita que configures usuario y password en 'Conexiones' en 'Mi empresa'"
+  download_legal_invoice: "Descargar factura"
+  label_report_channel_state: "Facturas por canal de envío y estado"
+  pdf_customization: "Personalización de PDF"
+  field_pdf_template: "Plantilla PDF"
+  pdf_default: "Por defecto"
+  pdf_right_windowed_envelope: "Plantilla para sobres con ventanilla"
+  field_party_identification: "Código unidad proveedora"
+  label_invoice_total: "Importe"
+  field_unidad_contratacion: "Unidad de contratación / SEF"
+  label_discounts_and_charges: Descuentos, cargos y retenciones
+  invoice_import_mismatch: "El importe de la factura original %{original} es diferente del calculado %{calculated}"
+  invoice_has_no_original: La factura no tiene original (el transporte requiere un documento original)
+  fa_payment_method_01: 'Al contado'
+  fa_payment_method_02: 'Recibo domiciliado'
+  fa_payment_method_03: 'Recibo'
+  fa_payment_method_04: 'Transferencia'
+  fa_payment_method_05: 'Letra aceptada'
+  fa_payment_method_06: 'Crédito documentario'
+  fa_payment_method_07: 'Contrato adjudicación'
+  fa_payment_method_08: 'Letra de cambio'
+  fa_payment_method_09: 'Pagaré a la orden'
+  fa_payment_method_10: 'Pagaré no a la orden'
+  fa_payment_method_11: 'Cheque'
+  fa_payment_method_12: 'Reposición'
+  fa_payment_method_13: 'Especiales'
+  fa_payment_method_14: 'Compensación'
+  fa_payment_method_15: 'Giro postal'
+  fa_payment_method_16: 'Cheque conformado'
+  fa_payment_method_17: 'Cheque bancario'
+  fa_payment_method_18: 'Pago contra reembolso'
+  fa_payment_method_19: 'Pago mediante tarjeta'
+  label_rounding_plural: 'Redondeos'
+  field_rounding_method: 'Tipo de redondeo'
+  half_up_rounding: 'Redondeo hacia arriba'
+  bankers_rounding: 'Redondeo bancario'
+  truncate_rounding: 'Truncar'
+  round_before_sum: 'Redondear antes de sumar'
+  label_client_office_new: Nueva sede
+  label_client_offices: Sedes
+  label_client_office: Sede
+  amend_total: Sustitutiva
+  amend_partial: Por diferencias
+  field_amend_reason: Motivo de rectificación
+  amend_reason_01: "Número de la factura"
+  amend_reason_02: "Serie de la factura"
+  amend_reason_03: "Fecha expedición"
+  amend_reason_04: "Nombre y apellidos/Razón Social-Emisor"
+  amend_reason_05: "Nombre y apellidos/Razón Social-Receptor"
+  amend_reason_06: "Identificación fiscal Emisor/obligado"
+  amend_reason_07: "Identificación fiscal Receptor"
+  amend_reason_08: "Domicilio Emisor/Obligado"
+  amend_reason_09: "Domicilio Receptor"
+  amend_reason_10: "Detalle Operación"
+  amend_reason_11: "Porcentaje impositivo a aplicar"
+  amend_reason_12: "Cuota tributaria a aplicar"
+  amend_reason_13: "Fecha/Periodo a aplicar"
+  amend_reason_14: "Clase de factura"
+  amend_reason_15: "Literales legales"
+  amend_reason_16: "Base imponible"
+  amend_reason_80: "Cálculo de cuotas repercutidas"
+  amend_reason_81: "Cálculo de cuotas retenidas"
+  amend_reason_82: "Base imponible modificada por devolución de envases / embalajes"
+  amend_reason_83: "Base imponible modificada por descuentos y bonificaciones"
+  amend_reason_84: "Base imponible modificada por resolución firme, judicial o administrativa"
+  amend_reason_85: "Base imponible modificada cuotas repercutidas no satisfechas. Auto de declaración de concurso"
+  partially_amended_by_invoices: "Parcialmente rectificada por"
+  awarding: "Contrato de adjudicación"
+  field_issuer_transaction_reference: "Contra-albarán"
+  re_tax_without_iva_same_category: "La línea '%{line}' tiene un impuesto RE que no corresponde al impuesto IVA"
+  label_discounts: "Descuentos"
+  field_line_discounts_as_imports: "Mostrar descuentos por línea"
+  as_import: "Como importe"
+  as_percent: "Como %"
+  field_has_text: "Contiene el texto"
+  default_invoice_format: 'Formato y transporte de facturas para los nuevos usuarios'
+  field_edi_code: "PO EDI legal"
+  field_order_date: "Fecha del pedido"
+  field_contract_number: "Número de contrato"
+  field_buyer_edi_code: "PO EDI comprador"
+  field_receiver_edi_code: "PO EDI receptor factura"
+  field_destination_edi_code: "PO EDI receptor mercancia"
+  field_payer_edi_code: "PO EDI emisor pago"
+  label_invoice_viewer: "Visualización de facturas"
+  field_invoice_viewer: "Visualización de facturas importadas"
+  label_invoice_viewer_standard: "Usar visor por defecto"
+  xslt_not_available: "No hay ningún XSLT disponible para el formato del original de esta factura"
+  xslt_shows_original: "Esta factura se ha modificado. El formato XSLT refleja el original sin los cambios"
+  skip_invoice_validations: No validar la factura al importar
+  by_peppol: "Recibida por Peppol"
+  invoice_attachment_added: "Anexo añadido"
+  invoice_attachment_destoy: "Anexo borrado"
+  field_tax_point_date: "Fecha de Servicio"
+  field_xpaths_from_original: "XPATHS a conservar del original"
+  warn_edit_invoice: "Estás a punto de editar una factura que ha sido enviada.<br />
+Ten presente que los cambios que realices no los recibirá tu cliente a no ser que la vuelvas a enviar.<br />
+Si la guardas, se marcará como Nueva."
+  view_invoice_requires_login: "Requerir login para ver facturas"
+  pdf_shows_original: "Esta factura se ha modificado. El visor PDF refleja el original sin los cambios"
+  label_invoice_view_sent: "Ver documento enviado"
+  label_invoice_view_original: "Ver documento original"
+  button_edit_metadata: "Editar metadatos"
+  received_notification: "Notificación: Factura recibida"
+  failed_notification: "Notificación: Error de validación de la factura"
+  cancelled_notification: "Notificación: Factura cancelada"
+  state_cancelled: "Cancelada"
+  annotated_notification: "Notificación: Factura contabilizada"
+  recognised_notification: "Notificación: Reconocida obligación de pago"
+  state_read_plural: "Leídas"
+  state_cancelled_plural: "Canceladas"
+  field_bcc_me: "Enviarme copia de las facturas"
+  field_exchange_rate: "Tasa de cambio"
+  field_exchange_date: "Fecha de cambio"
+  unitat_contractacio: "Unidad contratación / SEF"
+  state_accounted: "Contabilizada"
+  state_accounted_plural: "Contabilizadas"
+  field_num_pedido: "Número de pedido"
+  field_fecha_documento: "Fecha del documento"
+  field_lugar_entrega: "Lugar de entrega"
+  field_fecha_pedido: "Fecha del pedido"
+  field_fecha_entrega: "Fecha de entrega"
+  label_order_plural: "Pedidos"
+  import_order: "Importar pedido"
+  label_received_order_plural: "Pedidos recibidos"
+  deleted_received_order: "Pedido recibido borrado"
+  deleted_issued_order: "Pedido emitido borrado"
+  mail_notifications: "Notificaciones por correo electrónico"
+  mail_subject_order_add: "Atención: Recibido nuevo pedido en %{title}"
+  mail_body_order_add: |
+    Estimado usuario,
+    Os notificamos que habéis recibido un pedido en vuestro portal %{title}.
+    Para ver el contenido del documento, por favor utilizad el siguiente enlace: %{link}
+    Quedamos a vuestra disposición.
+
+    Saludos cordiales
+    Equipo %{title}
+  mail_subject_invoice_add: "Atención: Recibida nueva factura en %{title}"
+  mail_body_invoice_add: |
+    Estimado usuario,
+    Os notificamos que habéis recibido una factura en vuestro portal %{title}.
+    Para ver el contenido del documento, por favor utilizad el siguiente enlace: %{link}
+    Quedamos a vuestra disposición.
+
+    Saludos cordiales
+    Equipo %{title}
+  create_invoice_from_order: "Crear factura"
+  label_order: "Pedido"
+  label_company_offices: "Sedes"
+  label_company_office_new: Nueva sede
+  label_company_office: Sede
+  field_amounts_withheld_reason: "Concepto de retención"
+  field_amounts_withheld: "Importe de retención"
+  received_by: "Recibida (%{transport})"

@@ -1,22 +1,29 @@
 class Client < ActiveRecord::Base
 
   unloadable
+  audited except: [:hashid, :project]
+  # do not remove, with audit we need to make the other attributes accessible
+  attr_protected :created_at, :updated_at
 
   include Haltr::BankInfoValidator
+  include Haltr::PaymentMethods
   has_many :invoices, :dependent => :destroy
+  has_many :orders
   has_many :people,   :dependent => :destroy
   has_many :mandates, :dependent => :destroy
+  has_many :events,   :order => :created_at
+  has_many :invoice_events, :through => :invoices, :source => :events
+  has_many :client_offices, :dependent => :destroy
 
-  belongs_to :project # client of
-  belongs_to :company # linked to
+  belongs_to :project   # client of
+  belongs_to :company,  # linked to
+    :polymorphic => true
   belongs_to :bank_info # refers to company's bank_info
                         # default one when creating new invoices
 
-  validates_presence_of :taxcode, :unless => Proc.new { |client|
-    Company::COUNTRIES_WITHOUT_TAXCODE.include? client.country
-  }
   validates_presence_of :hashid
   validates_uniqueness_of :taxcode, :scope => :project_id, :allow_blank => true
+  validates_uniqueness_of :edi_code, :scope => :project_id, :allow_blank => true
   validates_uniqueness_of :hashid
 
   validates_presence_of     :project_id, :name, :currency, :language, :invoice_format, :if => Proc.new {|c| c.company_id.blank? }
@@ -26,11 +33,16 @@ class Client < ActiveRecord::Base
 #  validates_uniqueness_of :name, :scope => :project_id
 #  validates_length_of :name, :maximum => 30
 #  validates_format_of :identifier, :with => /^[a-z0-9\-]*$/
+  validates_format_of :postalcode, with: /\A[0-9]{5}\z/, if: Proc.new {|i| i.country == 'es'}, allow_blank: true
 
   before_validation :set_hashid_value
   before_validation :copy_linked_profile
+  before_save :set_hashid_value
+  before_save :copy_linked_profile
+  after_create  :create_event
   iso_country :country
   include CountryUtils
+  include Haltr::TaxcodeValidator
 
   after_initialize :set_default_values
 
@@ -38,8 +50,6 @@ class Client < ActiveRecord::Base
     self.currency       ||= Setting.plugin_haltr['default_currency']
     self.country        ||= Setting.plugin_haltr['default_country']
     self.invoice_format ||= ExportChannels.default
-    self.language       ||= User.current.language
-    self.language         = "es" if self.language.blank?
     self.sepa_type      ||= "CORE"
   end
 
@@ -57,8 +67,8 @@ class Client < ActiveRecord::Base
   def bank_invoices(due_date,bank_info_id)
     IssuedInvoice.where(
       client_id:      self.id,
-      state:          'sent',
-      payment_method: Invoice::PAYMENT_DEBIT,
+      state:          ['sent','registered','accepted','read'],
+      payment_method: PAYMENT_DEBIT,
       due_date:       due_date,
       bank_info_id:   bank_info_id
     )
@@ -71,25 +81,31 @@ class Client < ActiveRecord::Base
   end
 
   def to_label
-    name
+    name.nil? ? taxcode : name
   end
 
   alias :to_s :to_label
 
   def invoice_templates
-    self.invoices.find(:all,:conditions=>["type=?","InvoiceTemplate"])
+    self.invoices.where(["type=?","InvoiceTemplate"])
+  end
+
+  def template_invoice_lines
+    invoice_templates.collect do |invoice_template|
+      invoice_template.invoice_lines
+    end.flatten
   end
 
   def invoice_documents
-    self.invoices.find(:all,:conditions=>["type=?","IssuedInvoice"])
+    self.invoices.where(["type=?","IssuedInvoice"])
   end
 
   def issued_invoices
-    self.invoices.find(:all,:conditions=>["type=?","IssuedInvoice"])
+    self.invoices.where(["type=?","IssuedInvoice"])
   end
 
   def received_invoices
-    self.invoices.find(:all,:conditions=>["type=?","ReceivedInvoice"])
+    self.invoices.where(["type=?","ReceivedInvoice"])
   end
 
   def allowed?
@@ -105,7 +121,7 @@ class Client < ActiveRecord::Base
   end
 
   def language
-    if self.linked?
+    if self.linked? and company.project
       begin
         company.project.users.reject {|u| u.admin? }.first.language
       rescue
@@ -119,39 +135,23 @@ class Client < ActiveRecord::Base
   # removes non ascii characters from language code
   # for safe xml generation
   def language_string
-    self.language.scan(/[a-z]+/i).first
+    self.language.scan(/[a-z]+/i).first rescue nil
   end
 
   def full_address
     addr = address
-    addr += "\n#{address2}" if address2
+    addr += "\n#{address2}" if address2.present?
     addr
   end
 
-  def payment_method=(v)
-    if v =~ /_/
-      write_attribute(:payment_method,v.split("_")[0])
-      self.bank_info_id=v.split("_")[1]
-    else
-      write_attribute(:payment_method,v)
-      self.bank_info=nil
-    end
-  end
-
-  def payment_method
-    if [Invoice::PAYMENT_TRANSFER, Invoice::PAYMENT_DEBIT].include?(read_attribute(:payment_method)) and bank_info
-      "#{read_attribute(:payment_method)}_#{bank_info.id}"
-    else
-      read_attribute(:payment_method)
-    end
-  end
-
   def set_if_blank(atr,val)
+    val.gsub!(' ','') unless val.nil?
     if send("read_attribute",atr).blank?
       send("#{atr}=",val)
-    elsif send(atr) != val
-      raise "client #{atr} does not match (#{send(atr)} != #{val})"
     end
+    db_val = send("read_attribute",atr)
+    db_val.gsub!(' ','') unless db_val.nil?
+    db_val == val
   end
 
   def bank_account
@@ -170,14 +170,57 @@ class Client < ActiveRecord::Base
     end
   end
 
+  def last_audits_without_event
+    audts = (self.audits.where('event_id is NULL')).group_by(&:created_at)
+    last = audts.keys.sort.last
+    audts[last] || []
+  end
+
+  def recipient_people
+    people.find(:all,:order=>'last_name ASC',:conditions=>['send_invoices_by_mail = true'])
+  end
+
+  def recipient_emails
+    mails = recipient_people.collect do |person|
+      person.email if person.email.present?
+    end
+    mails << email if email.present?
+    mails.uniq.compact
+  end
+
+  def next
+    project.clients.first(:conditions=>["id > ?", self.id])
+  end
+
+  def previous
+    project.clients.last(:conditions=>["id < ?", self.id])
+  end
+
+  def postalcode=(v)
+    write_attribute(:postalcode, v.to_s.gsub(' ', ''))
+  end
+
+  protected
+
+  # called after_create (only NEW clients)
+  def create_event
+    event = Event.new(:name=>'new',:client=>self,:user=>User.current)
+    event.audits = self.last_audits_without_event
+    event.save!
+  end
+
   private
 
   def copy_linked_profile
     if self.company and self.allowed?
-      %w(taxcode company_identifier name email currency postalcode country province city address website invoice_format).each do |attr|
+      %w(taxcode company_identifier name email currency postalcode country province city address website invoice_format language).each do |attr|
         self.send("#{attr}=",company.send(attr))
       end
-      self.language = company.project.users.collect {|u| u unless u.admin?}.compact.first.language rescue I18n.default_locale.to_s
+      if self.company.respond_to?(:address2)
+        self.address2 = self.company.address2
+      else
+        self.address2 = '' # ExternalCompany has no address2
+      end
     elsif !self.company
       self.allowed = nil
     end

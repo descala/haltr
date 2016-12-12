@@ -21,15 +21,16 @@
     %>
     </p>
     <p class="col span-1-de-2">
-      <%= f.text_field :company_identifier, :readonly => client.linked? %>
+    <%= f.label_for_field :name, :label => l('name_or_company') %>
+    <%= f.text_field :name, :required => true, :readonly => client.linked?, :no_label => true %>
     </p>
   </div>
   <div class="seccio grup">
     <p class="col span-1-de-3">
-      <%= f.text_field :name, :required => true, :readonly => client.linked? %>
+      <%= f.text_field :email, :readonly => client.linked? %>
     </p>
     <p class="col span-1-de-3">
-      <%= f.text_field :email, :readonly => client.linked? %>
+    <%= f.text_field :phone, :label => l(:label_phone), :readonly => client.linked? %>
     </p>
     <p class="col span-1-de-3">
       <%= f.text_field :website, :readonly => client.linked? %>
@@ -56,7 +57,7 @@
     </div>
     <div class="seccio grup">
       <p class="col span-1-de-4">
-        <%= f.text_field :postalcode, :required => true, :readonly => client.linked? %>
+        <%= f.text_field :postalcode, :readonly => client.linked? %>
       </p>
       <p class="col span-1-de-4">
         <%= f.text_field :city, :readonly => client.linked? %>
@@ -99,14 +100,19 @@
       </div>
     <% end -%>
   </div>
+  <div class="seccio grup">
+    <p class="col span-1-de-4">
+    <%= f.text_field :company_identifier %>
+    </p>
+  </div>
 </fieldset>
 
 <div class="client_hiden_fields" style="<%= context =~ /_invoice$/ ? "display:none;" : "" %>">
 <fieldset class="tabular box">
   <legend><%=l(:bank_info)%></legend>
   <div class="seccio grup">
-    <% if @client.read_attribute(:bank_account).blank? -%>
-      <% if @client.country=='es' %>
+    <% if @client and @client.read_attribute(:bank_account).blank? -%>
+      <% if @client and @client.country=='es' %>
         <p class="col span-1-de-3">
         <a id="ccc2iban" data-url="<%=project_ccc2iban_path(@project)%>" href="#">Convert spanish CCC to IBAN</a>
         </p>
@@ -117,7 +123,7 @@
     </p>
     <% end -%>
     <p class="col span-1-de-3">
-    <%= f.text_field :iban, :size => 24, :class => "iban", "data-url" => project_check_iban_path(@project), "data-span-for-result" => "iban" %>
+    <%= f.text_field :iban, :size => 34, :class => "iban", "data-url" => project_check_iban_path(@project), "data-span-for-result" => "iban" %>
     <span id="iban" class="ibanspan"></span>
     </p>
     <p class="col span-1-de-3">
@@ -127,7 +133,7 @@
 
   <div class="seccio grup">
     <p class="col span-1-de-2">
-    <%= f.select(:payment_method, Invoice.payment_methods(@project.company)) %><br/>
+    <%= f.select(:payment_method, Haltr::PaymentMethods.for_select(@project.company)) %><br/>
     <%= f.text_area(:payment_method_text, :cols => 40, :rows => 2, :no_label => true, :id => 'payment_other', :style => (client.payment_method==Invoice::PAYMENT_SPECIAL) ? '' : 'display: none;') %>
     </p>
     <p class="col span-1-de-2">
@@ -145,18 +151,53 @@
 
 </fieldset>
 
+
 <% if User.current.admin? or User.current.allowed_to?(:send_peppol, @project) -%>
   <fieldset class="tabular box">
     <legend>PEPPOL</legend>
     <div class="seccio grup">
       <p class="col span-1-de-2">
-        <%= f.select :schemeid, Peppol::SCHEMEIDS %>
+        <%= f.select :schemeid, Peppol::schemes_for_select %>
       </p>
       <p class="col span-1-de-2">
         <%= f.text_field :endpointid %>
       </p>
+    </div>
   </fieldset>
 <% end -%>
+
+<fieldset class="tabular box">
+  <legend>EDI</legend>
+  <div class="seccio grup">
+    <p class="col span-1-de-5">
+    <%= f.text_field :edi_code %>
+    </p>
+    <p class="col span-1-de-5">
+    <%= f.text_field :buyer_edi_code %>
+    </p>
+    <p class="col span-1-de-5">
+    <%= f.text_field :receiver_edi_code %>
+    </p>
+    <p class="col span-1-de-5">
+    <%= f.text_field :destination_edi_code %>
+    </p>
+    <p class="col span-1-de-5">
+    <%= f.text_field :payer_edi_code %>
+    </p>
+  </div>
+</fieldset>
+
+<% if User.current.admin? or User.current.allowed_to?(:set_client_xpaths, @project) -%>
+  <fieldset class="tabular box">
+    <legend>XPATH</legend>
+    <div class="seccio grup">
+      <p class="col span-1-de-2">
+        <%= f.text_area :xpaths_from_original %>
+      </p>
+    </div>
+  </fieldset>
+<% end -%>
+
 </div>
 
 <% content_for :header_tags do -%>

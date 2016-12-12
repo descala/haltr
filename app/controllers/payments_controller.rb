@@ -2,8 +2,9 @@ class PaymentsController < ApplicationController
 
   unloadable
   menu_item Haltr::MenuItem.new(:payments,:payments_level2)
-  menu_item Haltr::MenuItem.new(:payments,:payment_initiation), :only=> [:payment_initiation,:payment_done,:n19,:sepa,:invoices]
+  menu_item Haltr::MenuItem.new(:payments,:payment_initiation), :only=> [:payment_initiation,:payment_done,:sepa,:invoices]
   menu_item Haltr::MenuItem.new(:payments,:import_aeb43),       :only=> [:import_aeb43_index,:import_aeb43]
+  menu_item Haltr::MenuItem.new(:payments,:reports), :only => [:reports,:report_payment_list]
   layout 'haltr'
   helper :haltr
   helper :sort
@@ -21,11 +22,14 @@ class PaymentsController < ApplicationController
     sort_init 'payments.date', 'desc'
     sort_update %w(payments.date amount_in_cents invoices.number)
 
-    payments = @project.payments.scoped
+    payments = @project.payments.includes('invoice')
 
-    unless params[:name].blank?
+    if params[:name].present?
       name = "%#{params[:name].strip.downcase}%"
-      payments = payments.scoped :conditions => ["LOWER(payments.payment_method) LIKE ? OR LOWER(reference) LIKE ?", name, name]
+      fields = %w(payments.payment_method reference
+      DATE_FORMAT(payments.date,'%d-%m-%Y') invoices.number amount_in_cents)
+      conditions = fields.collect {|f| "LOWER(#{f}) LIKE ?" }.join(' OR ')
+      payments = payments.scoped conditions: [conditions, *fields.collect {name}]
     end
 
     @payment_count = payments.count
@@ -91,15 +95,13 @@ class PaymentsController < ApplicationController
     @invoices_to_pay_by_bank_info = {}
     @project.company.bank_infos.each do |bi|
       @invoices_to_pay_by_bank_info[bi] = {}
-      bi.invoices.find(:all,
-        :conditions => ["state = 'sent' AND payment_method = ?", Invoice::PAYMENT_DEBIT],
-      ).group_by(&:due_date).each do |due_date, invoices|
+      bi.issued_invoices.find(:all,
+        :conditions => ["state IN ('sent','registered','accepted','read') AND payment_method = ?", Invoice::PAYMENT_DEBIT],
+        ).reject {|i| i.due_date.nil? }.group_by(&:due_date).each do |due_date, invoices|
         @invoices_to_pay_by_bank_info[bi][due_date] = {}
         invoices.each do |invoice|
-          unless invoice.client.bank_account.blank? and invoice.client.iban.blank?
-            @invoices_to_pay_by_bank_info[bi][due_date]["n19"] ||= []
+          unless invoice.client.bank_account.blank? and invoice.client_iban.blank?
             @invoices_to_pay_by_bank_info[bi][due_date]["sepa_#{invoice.client.sepa_type}"] ||= []
-            @invoices_to_pay_by_bank_info[bi][due_date]["n19"] << invoice
             @invoices_to_pay_by_bank_info[bi][due_date]["sepa_#{invoice.client.sepa_type}"] << invoice
           end
         end
@@ -111,28 +113,6 @@ class PaymentsController < ApplicationController
         @invoices_to_pay_by_bank_info.delete(bi)
       end
     end
-  end
-
-  # generate spanish AEB Nº19
-  def n19
-    @due_date         = Date.parse(params[:due_date])
-    @fecha_cargo      = @due_date.to_formatted_s(:ddmmyy)
-    @fecha_confeccion = Date.today.to_formatted_s(:ddmmyy)
-    @bank_info        = BankInfo.find params[:bank_info]
-    if @bank_info.bank_account.blank? and @bank_info.iban.blank?
-      flash[:error] = l(:n19_requires_bank_account)
-      redirect_to project_my_company_path(@project)
-      return
-    end
-    @clients          = @bank_info.invoices.find(params[:invoices]).group_by(&:client)
-    @total            = Money.new 0, Money::Currency.new(Setting.plugin_haltr['default_currency'])
-    @clients.values.flatten.each do |invoice|
-      @total += invoice.total
-    end
-
-    I18n.locale = :es
-    output = render_to_string :layout => false
-    send_data output, :filename => filename_for_content_disposition("n19-#{@fecha_cargo[4..5]}-#{@fecha_cargo[2..3]}-#{@fecha_cargo[0..1]}.txt"), :type => 'text/plain'
   end
 
   def sepa
@@ -170,7 +150,7 @@ class PaymentsController < ApplicationController
           i.number
         end.join(' ')
         sdd.add_transaction(
-          name:                      client.name,
+          name:                      client.name[0..69],
           iban:                      client.iban,
           bic:                       client.bic.blank? ? nil : client.bic,
           amount:                    money.dollars,
@@ -178,7 +158,7 @@ class PaymentsController < ApplicationController
           mandate_date_of_signature: Date.new(2009,10,31),
           local_instrument:          local_instrument,
           sequence_type:             'RCUR',
-          reference:                 "#{invoice_numbers}",
+          reference:                 "#{invoice_numbers}"[0..34],
           remittance_information:    "#{l(:label_invoice)} #{invoice_numbers}",
           requested_date:            due_date.to_date,
         )
@@ -191,7 +171,7 @@ class PaymentsController < ApplicationController
         flash[:warning] = l(:notice_empty_sepa)
         redirect_to :action => 'payment_initiation', :project_id => @project
       end
-    rescue ArgumentError => e
+    rescue ArgumentError, RuntimeError => e
       flash[:warning] = e.to_s
       redirect_to :action => 'payment_initiation', :project_id => @project
     end
@@ -239,6 +219,30 @@ class PaymentsController < ApplicationController
 
   def invoices
     @invoices = @project.issued_invoices.find(params[:invoices])
+  end
+
+  def report_payment_list
+    @from     = params[:date_from] || 3.months.ago
+    @to       = params[:date_to]   || Date.today
+    begin
+      @from.to_date
+    rescue
+      flash[:error]="invalid date: #{@from}"
+      @from = 3.months.ago
+    end
+    begin
+      @to.to_date
+    rescue
+      flash[:error]="invalid date: #{@to}"
+      @to = Date.today
+    end
+
+    @invoices_by_payment_method = @project.invoices.
+      where('payment_method = ? and due_date >= ? and due_date <= ?', Invoice::PAYMENT_DEBIT, @from, @to).
+      group_by(&:payment_method)
+    @bank_infos = @project.company.bank_infos
+    @invoices = {}
+    # TODO
   end
 
   private

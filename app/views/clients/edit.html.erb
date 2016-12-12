@@ -31,3 +31,5 @@
 <% content_for :sidebar do %>
   <%= render_menu :companies_menu, @project %>
 <% end %>
+
+<%= render :partial => 'events/list', locals: {events: @client.events} %>

@@ -61,7 +61,9 @@ fr:
   button_new_invoice: Nouvelle facture
   button_add_invoice_line: Ajouter une nouvelle ligne
   field_number: Numéro
+  field_invoice_number: Numéro facture
   label_last_invoice_number: Dernier utilisé
+  number_taken_in_year: "%{number} has already been taken for year %{year}"
   field_date: Date
   field_client: Client
   field_extra_info: Notes
@@ -74,6 +76,7 @@ fr:
   field_draft: Brouillon
   label_invoice_state: Statut
   field_state: Statut
+  field_state_updated_at: Statut date
   show_template: Montrer modèle
   generate_template_from_invoice: Générer nouveau modèle
   duplicate_invoice: Dup facture
@@ -101,6 +104,7 @@ fr:
   debit_through: Débiter paiement, à travers %{bank_account}
   transfer: Transfert bancaire
   transfer_to: Transfert bancaire au %{bank_account}
+  cheque: Cheque
   other: Autres
   requires_client_bank_account: exige le compte bancaire du client
   requires_company_bank_account: exige le propre compte bancaire
@@ -116,9 +120,12 @@ fr:
   state_error_plural: "Error"
   state_closed_plural: "Closes"
   state_discarded_plural: "Annulées"
+  state_registered_plural: "Registered"
+  state_allegedly_paid_plural: "Reported as paid"
   state_new: "Nouveau"
   state_sending: "Emission"
   state_sent: "Envoyé"
+  state_read: "Read"
   state_error: "Error"
   state_closed: "Clos"
   state_discarded: "Annulé"
@@ -132,9 +139,10 @@ fr:
   state_accepted_plural: "Accepté"
   state_refused_plural: "Refusé"
   state_paid_plural: "Payé"
+  state_registered: "Registered"
   sending_log: "Log d'émission"
   sending_log: "Envoyant log"
-  download_legal: "Télécharger facture légale"
+  download_legal: "Télécharger document"
   download_notification: "Télécharger notification"
   label_all_invoices: "Toutes les factures"
   label_issued: "Factures émises"
@@ -197,7 +205,7 @@ fr:
   unpaid: "Marqué comme non payé"
   edited: "Edité"
   new: "Créé"
-  bounced: "Rebondi: Incapable d'envoyer à l'email indiqué"
+  bounced: "Bounced: Unable to deliver to indicated recipient"
   validating_format: "Facture reçue"
   success_validating_format: "Format validé avec success"
   error_validating_format: "Erreur à la validation du format"
@@ -220,8 +228,17 @@ fr:
   mark_as_received: "Marked as received"
   uploaded: "Uploaded"
   email: "Received"
+  api: "Created via API"
   download_original: "Download original"
   view_original: "View original"
+  manual_mark_as: "Mark as %{state}"
+  done_mark_as_new: "Manually marked as new"
+  done_mark_as_sent: "Manually marked as sent"
+  done_mark_as_accepted: "Manually marked as accepted"
+  done_mark_as_registered: "Manually marked as registered"
+  done_mark_as_refused: "Manually marked as refused"
+  done_mark_as_closed: "Manually marked as closed"
+  done_mark_as_paid: "Manually marked as paid"
 
   # Invoice templates
   label_invoice_template_new: Nouveau modèle
@@ -249,6 +266,8 @@ fr:
   s_kilograms: kg
   s_litters: l
   s_days: j
+  s_other: ""
+  boxes: 'Boxes'
 
   # People
   label_person: Personne
@@ -260,6 +279,7 @@ fr:
   field_phone_office: Tél bureau
   field_phone_mobile: Mobile
   label_phone: Tél
+  field_info: Extra information
 
   # Tasks
   label_task_plural: Tâches
@@ -290,7 +310,8 @@ fr:
   save_and_mail: "Enregistrer et envoyer du email"
   save_without_mail: "Enregistrer sans l'envoi du email"
   field_sepa_type: "SEPA payments type"
-  label_payment_initiation: "Payment initiation"
+  label_payment_initiation: "SEPA Debit"
+  label_payment_report: Payments report
 
   # Settings
   field_taxcode: N° TVA
@@ -313,6 +334,7 @@ fr:
   invoice_mail_body: "We send you invoice number @invoice.number dated @invoice.date"
   quote_mail_subject: "Quote num @quote.number"
   quote_mail_body: "We send you quote number @quote.number dated @quote.date"
+  return_path: "Return-Path (for bounces)"
 
   # Terms
   "0": Immédiatement
@@ -331,6 +353,9 @@ fr:
   "custom": Personnalisé
 
   # Frequency
+  mf60: Tous les 5 ans
+  mf36: Tous les 3 ans
+  mf24: Tous les 2 ans
   mf12: Annuel
   mf6: Semi-annuel
   mf3: Trimestriel
@@ -339,12 +364,11 @@ fr:
 
   # Errors
   cant_connect_trace: "Ne peut se connecter à la plate-forme b2brouter. %{value}"
-  halt_configure_before_use: "Veuillez d abord configurer votre compagnie"
+  halt_configure_before_use: "Veuillez d abord configurer votre %{href}"
+  company_href: "compagnie"
   warning_can_not_generate_invoice: "Ne peut générer la facture depuis le modèle %{value}"
   notice_invoice_sent: "Facture est en cours d'envoi"
   error_invoice_not_sent: "N'a pas pu envoyer la facture %{num}"
-  notice_empty_n19: "Aucune donnée pour créer N19"
-  notice_n19_done: "N19 for %{value} has been closed"
   notice_empty_sepa: "No data to generate a SEPA file"
   notice_payment_done: "%{payment_type} pour date d'échéance %{value} marquée comme faite"
   notice_uploaded_file_not_found: "Fichier non trouvé"
@@ -352,7 +376,7 @@ fr:
   hide_full_form: "Montrer moins de champs"
   show_full_form: "Montrer plus de champs"
   field_created_at: "Créé à"
-  field_received_at: "Reçu à"
+  field_received_at: "Réception"
   info_default_taxes: "Par défaut, il va créer des taxes dans votre pays"
   label_invoices_min: "nombre minimum de factures"
   label_stastics: "Statistiques"
@@ -371,6 +395,7 @@ fr:
   missing_company_peppol_fields: "champs manquants Peppol votre entreprise"
   missing_client_peppol_fields: "champs manquants Peppol client"
   field_accounting_cost: "comptabilisation des coûts"
+  field_client_email_override: "Override the email of the client with this one"
   missing_svefaktura_account: "Manque le centre de cost"
   missing_svefaktura_organization: "Manque l'identifier de l'enterprise"
   missing_svefaktura_debit: "On ne peut pas domicilier les factures"
@@ -387,11 +412,19 @@ fr:
   field_imap_password: "Mot de passe"
   field_imap_from: "De"
 
+  field_smtp_host: "SMTP server"
+  field_smtp_port: "Port"
+  field_smtp_ssl: "Use SSL"
+  field_smtp_username: "Username"
+  field_smtp_password: "Password"
+  field_smtp_from: "From"
+
   permission_general_use: "Utiliser le plugin Haltr"
   permission_manage_payments: "Gére les paiements"
   permission_use_templates: "Modèles de factures"
   permission_batch_processes: "Processus avec scripts"
   permission_use_all_readonly: "Full use readonly"
+  permission_restricted_use: "Restricted use"
 
   # this depends on permissions defined in channels.yml
   permission_download_pdf: "B2BRouter - Télécharger PDF"
@@ -403,10 +436,12 @@ fr:
   permission_use_local_signature: "B2BRouter - Signé avec un certificat local"
 
   tax_E: "Exempt"
+  tax_NS: "Not subject"
   tax_Z: "Détaxés"
   tax_S: "Standard"
   tax_H: "Haute impôt"
   tax_AA: "Bas impôt"
+  tax_AAA: "Super Low Rated"
   invoice_data: "Données de la facture"
   bank_info: "Information bancaire"
 
@@ -458,7 +493,6 @@ fr:
   label_mandate: "Mandate"
   field_delete_signed_doc: "Delete signed document"
   label_mandates: "Mandates"
-  n19_requires_bank_account: "To generate n19 you must fill your bank account"
   field_bank_infos: "Bank details"
   success_sending_notification_by_mail: "Notification sent"
   error_sending_notification_by_mail: "Error sending notification"
@@ -496,6 +530,17 @@ fr:
   send_after_import: "Send after import"
   template_too_old: "Template for %{client} too old (too much invoices to generate)"
   quote_acceptance: "Acceptance of quote"
+  chart_invoice_total: Invoiced Amount
+  chart_invoice_status: Invoiced Amount Status
+  chart_top_clients: Top invoiced clients
+  chart_cashflow: Cash flow
+  chart_events: Latest events
+  past_due: Passant data de venciment
+  on_schedule: Dintre de termini
+  label_not_paid: Not paid
+  label_issued_invoice: Facture émise
+  label_received_invoice: Facture reçue
+  label_draft_invoice: Draft invoice
   label_fiscal_data: "Fiscal data"
   label_connections: "Connections"
   label_customization: "Customization"
@@ -504,3 +549,243 @@ fr:
   help_semipublic_profile: "Companies using B2BRouter.net can retrieve basic master data from your company upon authorization."
   help_private_profile: "It is not allowed for other companies to get access to your basic master data."
   profile_recomended: "B2BRouter.net recommends using the public or semi public profiles to ease the invoicing process to your customers."
+  all_by_year: "All, by year"
+  all_by_month: "All, by month"
+  last_year_by_month: "Last year"
+  last_month_by_week: "Last month"
+  field_article_code: "Code"
+  label_error_event_plural: "Failed shipments events"
+  label_info_event_plural: "Successful shipments events"
+  audited_create: "%{model} created"
+  audited_update: "%{model} updated"
+  audited_destroy: "%{model} deleted"
+  invoice_line: "Invoice line"
+  invoice: "Invoice"
+  tax: "Tax"
+  field_percent: "%"
+  field_bank_info: "Bank account"
+  deleted_issued_invoice: "Issued invoice deleted"
+  deleted_received_invoice: "Received invoice deleted"
+  deleted_invoice_template: "Invoice template deleted"
+  deleted_client: "Client deleted"
+  client: "Client"
+  pending_auth_requests: "There are pending authorization requests: %{num} companies want to link your profile"
+  denied_requests: "Denied requests"
+  self_employed: "I am self-employed"
+  organ_gestor: "Managing unit"
+  oficina_comptable: "Accounting unit"
+  unitat_tramitadora: "Processing unit"
+  field_organ_proponent: "Órgano Promotor"
+  organ_proponent: "Órgano Promotor"
+  external_companies: "External companies"
+  external_company: "External company"
+  export_channels: "Channels"
+  export_channel: "Channel"
+  field_file_reference: "File number"
+  import_issued_from_received: "File to import is an issued invoice"
+  import_received_from_issued: "File to import is a received invoice"
+  field_discount: "Discount"
+  field_charge: "Charge"
+  download_as_pdf: "Download PDF copy"
+  download_as_xml: "Download XML"
+  label_reports: Reports
+  visible_fields: "Visible fields"
+  required_fields: "Required fields"
+  field_delivery_note_number: "Numéro avis d'expédition"
+  field_organs_gestors: "Òrgans gestors"
+  field_unitats_tramitadores: "Unitats tramitadores"
+  field_oficines_comptables: "Oficines comptables"
+  field_organs_proponents: "Òrgans proponents"
+  dir3_entities: "Dir3 entities"
+  field_code: "Code"
+  field_payments_on_account: "Payments on account/Withholding"
+  sequence_number: 'Sequence number'
+  mark_as_accepted: 'Mark as accepted'
+  field_receiver_contract_reference: "Contract / Assignment code"
+  invoice_attachments_description: "You can add attachments to the invoce (max %{mb}MB). These documents will be sent along with the invoice."
+  invoice_attachments_permission: "Not allowed"
+  label_will_send_original: "Since this electronic invoice has been imported and it has not been updated, the original imported invoice will be sent."
+  import_errors: "Import errors"
+  text_import_errors_destroy_confirmation: "Are you sure you want to delete the selected import error(s)?"
+  field_series_code: "Serie"
+  state_not_allowed_for_sending: "Cannot re-send invoices in state %{state}"
+  amendment: "Amendment"
+  missing_imap_config: "Missing IMAP config on 'My company'"
+  transport: "Transport"
+  field_legal_literals: "Certification"
+  field_invoicing_period_start: "Invoicing period start"
+  field_invoicing_period_end: "Invoicing period end"
+  field_invoicing_period: "Invoicing period"
+  label_factoring_assignment_data: 'Factoring assignment'
+  field_fa_person_type: 'Entity type'
+  field_fa_residence_type: 'Residence type'
+  label_fa_person_type_individual: "Individual"
+  label_fa_person_type_entity: "Entity"
+  label_fa_residence_type_foreigner: "Foreigner"
+  label_fa_residence_type_spain: "Resident"
+  label_fa_residence_type_UE: "European"
+  field_fa_taxcode: 'VAT ID number'
+  field_fa_name: 'Name'
+  field_fa_address: 'Address'
+  field_fa_postcode: 'Postcode'
+  field_fa_town: 'City'
+  field_fa_province: 'Province'
+  field_fa_country: 'Country'
+  field_fa_info: 'Information'
+  field_fa_duedate: 'Due date'
+  field_fa_import: 'Amount'
+  field_fa_iban: 'IBAN'
+  field_fa_bank_code: 'Bank code'
+  field_fa_clauses: 'Assignment clause'
+  field_fa_payment_method: 'Payment method'
+  channel_requires_user_pass: "Channel requires to configure user and password at 'My company'"
+  download_legal_invoice: "Download invoice"
+  label_report_channel_state: "Invoices by Channel and State"
+  pdf_customization: "PDF customization"
+  field_pdf_template: "PDF template"
+  pdf_default: "Default template"
+  pdf_right_windowed_envelope: "Right windowed envelope template"
+  field_party_identification: "Party identification"
+  label_invoice_total: "Total"
+  field_unidad_contratacion: "Unidad de contratación / SEF"
+  label_discounts_and_charges: Discounts, charges and withholdings
+  invoice_import_mismatch: "Original invoice amount %{original} does not match calculated amount %{calculated}"
+  invoice_has_no_original: Invoice has no original (transport requires an original document)
+  fa_payment_method_01: 'In cash'
+  fa_payment_method_02: 'Direct debit'
+  fa_payment_method_03: 'Receipt'
+  fa_payment_method_04: 'Credit transfer'
+  fa_payment_method_05: 'Accepted bill of exchange'
+  fa_payment_method_06: 'Documentary credit'
+  fa_payment_method_07: 'Awarded contract'
+  fa_payment_method_08: 'Bill of exchange'
+  fa_payment_method_09: 'Promissory note signed by the debtor'
+  fa_payment_method_10: 'Promissory note'
+  fa_payment_method_11: 'Cheque'
+  fa_payment_method_12: 'Reposition'
+  fa_payment_method_13: 'Specials'
+  fa_payment_method_14: 'Compensation'
+  fa_payment_method_15: 'Payment by postgiro'
+  fa_payment_method_16: 'Certified cheque'
+  fa_payment_method_17: 'Bank cheque'
+  fa_payment_method_18: 'Cash on delivery'
+  fa_payment_method_19: 'Bank card'
+  label_rounding_plural: 'Roundings'
+  field_rounding_method: 'Rounding type'
+  half_up_rounding: 'Round half up'
+  bankers_rounding: "Banker's rounding"
+  truncate_rounding: 'Truncate'
+  round_before_sum: 'Round before sum'
+  label_client_office_new: Nouvelle succursale
+  label_client_offices: Succursales
+  label_client_office: Succursale
+  amend_total: Complete
+  amend_partial: Partial
+  field_amend_reason: Rectification reason
+  amend_reason_01: "Invoice number"
+  amend_reason_02: "Invoice serial number"
+  amend_reason_03: "Issue date"
+  amend_reason_04: "Name and surnames/Corporate name – Issuer (Sender)"
+  amend_reason_05: "Name and surnames/Corporate name - Receiver"
+  amend_reason_06: "Issuer’s Tax Identification Number"
+  amend_reason_07: "Receiver’s Tax Identification Number"
+  amend_reason_08: "Issuer’s address"
+  amend_reason_09: "Receiver’s address"
+  amend_reason_10: "Item line"
+  amend_reason_11: "Applicable Tax Rate"
+  amend_reason_12: "Applicable Tax Amount"
+  amend_reason_13: "Applicable Date/Period"
+  amend_reason_14: "Invoice Class"
+  amend_reason_15: "Legal literals"
+  amend_reason_16: "Taxable Base"
+  amend_reason_80: "Calculation of tax outputs"
+  amend_reason_81: "Calculation of tax inputs"
+  amend_reason_82: "Taxable Base modified due to return of packages and packaging materials"
+  amend_reason_83: "Taxable Base modified due to discounts and rebates"
+  amend_reason_84: "Taxable Base modified due to firm court ruling or administrative decision"
+  amend_reason_85: "Taxable Base modified due to unpaid outputs where there is a judgement opening insolvency proceedings"
+  partially_amended_by_invoices: "Partially rectified by"
+  awarding: "Awarding"
+  field_issuer_transaction_reference: "Receiving advice"
+  re_tax_without_iva_same_category: "Line '%{line}' has RE tax not matching IVA tax"
+  label_discounts: "Discounts"
+  field_line_discounts_as_imports: "Show line discounts"
+  as_import: "As import"
+  as_percent: "As %"
+  field_has_text: "With text"
+  default_invoice_format: 'Invoice transport and format for new users'
+  field_edi_code: "EDI Code"
+  field_order_date: "Order date"
+  field_contract_number: "Contract number"
+  field_buyer_edi_code: "Buyer EDI"
+  field_receiver_edi_code: "Receiver EDI"
+  field_destination_edi_code: "Delivery party EDI"
+  field_payer_edi_code: "Payer EDI"
+  label_invoice_viewer: "Invoice viewer"
+  field_invoice_viewer: "Viewer used to display received invoices"
+  label_invoice_viewer_standard: "Use default viewer"
+  xslt_not_available: "We do not have an XSLT for the format of this invoice"
+  xslt_shows_original: "This invoice has been modified. The XSLT format shows the original without your changes"
+  skip_invoice_validations: "Skip invoice validation"
+  by_peppol: "Received by Peppol"
+  invoice_attachment_added: "Annex added"
+  invoice_attachment_destoy: "Annex deleted"
+  field_tax_point_date: "Tax Point Date"
+  field_xpaths_from_original: "XPATHS to preserve from original"
+  warn_edit_invoice: "You are about to edit a sent invoice.<br />
+Your customer will not receive the changes you made unless you resend it.<br />
+If you save it, will be marked as New."
+  view_invoice_requires_login: "Require login to view invoices"
+  pdf_shows_original: "This invoice has been modified. The PDF viewer shows the original without your changes"
+  label_invoice_view_sent: "View sent document"
+  label_invoice_view_original: "View original document"
+  button_edit_metadata: "Edit metadata"
+  received_notification: "Notification: Invoice received"
+  failed_notification: "Notification: Error validation invoice"
+  cancelled_notification: "Notification: Invoice cancelled"
+  state_cancelled: "Cancelled"
+  annotated_notification: "Notification: Invoice accounted"
+  recognised_notification: "Notification: Recognised payment obligation"
+  state_read_plural: "Read"
+  state_cancelled_plural: "Cancelled"
+  field_bcc_me: "Send me copy of invoices"
+  field_exchange_rate: "Exchange rate"
+  field_exchange_date: "Exchange date"
+  unitat_contractacio: "Unidad contratación / SEF"
+  state_accounted: "Annotated"
+  state_accounted_plural: "Annotated"
+  field_num_pedido: "Order number"
+  field_fecha_documento: "Document date"
+  field_lugar_entrega: "Delivery place"
+  field_fecha_pedido: "Order date"
+  field_fecha_entrega: "Delivery date"
+  label_order_plural: "Orders"
+  import_order: "Import order"
+  label_received_order_plural: "Received orders"
+  deleted_received_order: "Received order deleted"
+  deleted_issued_order: "Issued order deleted"
+  mail_notifications: "Email notifications"
+  mail_subject_order_add: "Warning: You have received a new order in %{title}"
+  mail_body_order_add: |
+    Dear user,
+    You have received a new order in your %{title} account.
+    To get the document, please use the following link: %{link}
+
+    With kind regards
+    %{title} Team
+  mail_subject_invoice_add: "Warning: You have received a new invoice in %{title}"
+  mail_body_invoice_add: |
+    Dear user,
+    You have received a new invoice in your %{title} account.
+    To get the document, please use the following link: %{link}
+
+    With kind regards
+    %{title} Team
+  create_invoice_from_order: "Create invoice"
+  label_order: "Order"
+  label_company_offices: "Succursales"
+  label_company_office_new: Nouvelle succursale
+  label_company_office: Succursale
+  field_amounts_withheld_reason: "Withheld reason"
+  field_amounts_withheld: "Withheld amount"
+  received_by: "Received (%{transport})"

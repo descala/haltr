@@ -1,0 +1,42 @@
+<h1><%= l :import_errors %></h1>
+
+<%= form_tag({}) do -%>
+  <%= hidden_field_tag 'back_url', url_for(params), :id => nil %>
+
+  <div class="seccio grup">
+    <div class="col span-2-de-2">
+      <table class="taula-1 list line-items">
+        <th></th>
+        <%= sort_header_tag :created_at,     caption: l(:field_date) %>
+        <%= sort_header_tag :filename ,      caption: l(:field_filename) %>
+        <%= sort_header_tag :import_errors , caption: l(:import_errors) %>
+        <th></th>
+
+        <% @import_errors.each do |import_error| -%>
+          <tr id="import_error-<%=import_error.id%>" class="<%= cycle 'odd', 'even' %> hascontextmenu">
+            <td><%= check_box_tag("ids[]", import_error.id, false, :id => nil) %></td>
+            <td><%= format_time import_error.created_at %></td>
+            <td><%= link_to import_error.filename, project_import_error_path(import_error, project_id: @project) %></td>
+            <td><%= import_error.import_errors %></td>
+            <td align="center">
+              <%= link_to l(:button_delete), project_import_error_path(import_error, project_id: @project), method: :delete %>
+            </td>
+          </tr>
+        <% end -%>
+
+      </table>
+    </div>
+  </div>
+<% end -%>
+
+<div class="seccio grup paginacio pagination">
+  <%= pagination_links_full @import_errors_pages, @import_errors_count %>
+</div>
+
+<% html_title(l(:import_errors)) -%>
+
+<% content_for :sidebar do %>
+  <%= render_menu :invoices_menu, @project %>
+<% end %>
+
+<%= context_menu import_errors_context_menu_path %>

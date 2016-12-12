@@ -1,12 +1,19 @@
 module Haltr
   class SendPdfByMail < GenericSender
 
-    attr_accessor :pdf, :class_for_send
+    attr_accessor :class_for_send
 
     def perform
       self.pdf ||= Haltr::Pdf.generate(invoice)
       self.class_for_send ||= 'send_pdf_by_mail'
-      HaltrMailer.send_invoice(invoice,{:pdf=>pdf}).deliver!
+      if Redmine::Configuration['haltr_mailer_from']
+        HaltrMailer.send_invoice(
+          invoice,
+          {:pdf=>pdf, :from=>Redmine::Configuration['haltr_mailer_from']}
+        ).deliver!
+      else
+        HaltrMailer.send_invoice(invoice,{:pdf=>pdf}).deliver!
+      end
     rescue Net::SMTPFatalError => e
         EventError.create(
           :name    => "error_sending",

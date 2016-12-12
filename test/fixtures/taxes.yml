@@ -102,3 +102,75 @@ tax_withheld_10_i8_line1:
   percent: -10
   category: S
 
+tax_vat_21_i12_line1:
+  invoice_line: i12_line1
+  name: VAT
+  percent: 21
+  category: S
+
+tax_vat_21_i12_line2:
+  invoice_line: i12_line2
+  name: VAT
+  percent: 21
+  category: S
+
+tax_vat_10_i13_line1:
+  invoice_line: i13_line1
+  name: VAT
+  percent: 10
+  category: S
+
+tax_vat_10_i13_line2:
+  invoice_line: i13_line2
+  name: VAT
+  percent: 10
+  category: S
+
+tax_vat_0_invoice1_l1:
+  invoice_line_id: 100
+  name: VAT
+  percent: 0
+  category: E
+
+tax_vat_0_test_import_l1:
+  invoice_line_id: 101
+  name: VAT
+  percent: 0
+  category: E
+
+tax_vat_0_template1_l1:
+  invoice_line_id: 102
+  name: VAT
+  percent: 21
+  category: S
+  comment: Just a comment
+
+tax_vat_0_draft1_l1:
+  invoice_line_id: 103
+  name: VAT
+  percent: 0
+  category: E
+
+tax_vat_0_i9_line1:
+  invoice_line: i9_line1
+  name: VAT
+  percent: 0
+  category: E
+
+tax_vat_21_i15_line1:
+  invoice_line: i15_line1
+  name: VAT
+  percent: 21
+  category: S
+
+tax_vat_21_i15_line2:
+  invoice_line: i15_line2
+  name: VAT
+  percent: 21
+  category: S
+
+tax_vat_10_i16_line1:
+  invoice_line: i16_line1
+  name: VAT
+  percent: 10
+  category: S

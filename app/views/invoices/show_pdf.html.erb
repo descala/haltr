@@ -1,3 +1,60 @@
+<% if @debug -%>
+<style type="text/css">
+  body {
+    width: 100%;
+    height: 100%;
+    margin: 0;
+    padding: 0;
+    background-color: #FAFAFA;
+    font-family: "DejaVu Sans";
+    font-size: 12px;
+    line-height: 90%;
+  }
+  th, td {
+    font-size: 11px !important;
+  }
+  * {
+    box-sizing: border-box;
+    -moz-box-sizing: border-box;
+  }
+  .page {
+    position: absolute;
+    width: 210mm;
+    min-height: 297mm;
+    padding: 10 10 10 20mm;
+    margin: 7mm 7mm;
+    border: 1px #D3D3D3 solid;
+    border-radius: 5px;
+    background: white;
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+  }
+  .subpage {
+    height: 257mm;
+    padding-left: 30mm;
+    padding-right: 20mm;
+    padding-top: 20mm;
+    padding-bottom: 20mm;
+  }
+  .window {
+    position: absolute;
+    background-color: yellow;
+    width: 100mm;
+    min-height: 45mm;
+    top: 32mm;
+    left: 104mm;
+    opacity: 0.2;
+    z-index: 1;
+  }
+  div.page-break {
+    margin-top: 20mm;
+    margin-bottom: 20mm;
+    border: solid 1px;
+  }
+</style>
+  <div class="window"></div>
+  <div class="page">
+    <div class="subpage">
+<% end -%>
 <%
     @invoice ||= invoice
     @lines   ||= @invoice.invoice_lines
@@ -7,13 +64,44 @@
     @is_pdf = true if @is_pdf.nil?
 -%>
 
-<% if @invoice.client.language -%>
+<% if @client and @client.language -%>
   <% before_locale = I18n.locale %>
-  <% I18n.locale = @invoice.client.language rescue before_locale %>
+  <% I18n.locale = @client.language rescue before_locale %>
 <% end -%>
 
-<%= render :partial=>'invoices/invoice' %>
+<% if @invoice_xslt_html -%>
+  <%=@invoice_xslt_html.to_html.html_safe%>
+<% else -%>
+  <div class="invoice_data">
+    <% begin -%>
+      <%= render partial: "invoices/#{@project.company.pdf_template}" %>
+    <% rescue -%>
+      <%= render partial: 'invoices/invoice' %>
+    <% end -%>
+  </div>
+<% end -%>
 
 <% if defined?(before_locale) -%>
   <% I18n.locale = before_locale %>
+<% end -%>
+<% if @debug -%>
+</div>
+</div>
+<div style="position: fixed; top: 30px; left: 850px; border: 1px solid; padding: 20px;">
+  <%= @project.company.pdf_template %>
+</div>
+<div style="position: fixed; top: 90px; left: 850px; border: 1px solid; padding: 20px;">
+  <%= link_to 'PDF', {:action=>'show', :id=>@invoice, :format => 'pdf'} %>
+</div>
+<% end -%>
+
+<% if @is_pdf and @debug -%>
+  <%= javascript_heads %>
+  <%= javascript_include_tag "/wkhtmltopdf_tableSplitHack.js", :plugin=>'haltr' %>
+
+<% else -%>
+
+  <script src="<%=File.join(Rails.root, 'public','javascripts','jquery-1.8.3-ui-1.9.2-ujs-2.0.3.js') %>" type="text/javascript"></script>
+  <script src="<%=File.join(Rails.root, 'public','javascripts','application.js') %>" type="text/javascript"></script>
+  <script src="<%=File.join(Rails.root, 'public','plugin_assets','haltr','javascripts','wkhtmltopdf_tableSplitHack.js') %>" type="text/javascript"></script>
 <% end -%>

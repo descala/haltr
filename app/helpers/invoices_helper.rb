@@ -2,34 +2,35 @@ module InvoicesHelper
 
   DEFAULT_TAX_PERCENT_VALUES = { :format => "%t %n%p", :negative_format => "%t -%n%p", :separator => ".", :delimiter => ",",
                                  :precision => 2, :significant => false, :strip_insignificant_zeros => false, :tax_name => "VAT" }
-
-  def change_state_link(invoice)
-    if invoice.state?(:closed)
-      link_to_if_authorized(I18n.t(:mark_not_sent), mark_not_sent_path(invoice), :class=>'icon-haltr-mark-not-sent')
-    elsif invoice.sent? and invoice.is_paid?
-      link_to_if_authorized(I18n.t(:mark_closed), mark_closed_path(invoice), :class=>'icon-haltr-mark-closed')
-    elsif invoice.sent?
-      link_to_if_authorized(I18n.t(:mark_not_sent), mark_not_sent_path(invoice), :class=>'icon-haltr-mark-not-sent')
-    else
-      link_to_if_authorized(I18n.t(:mark_sent), mark_sent_path(invoice), :class=>'icon-haltr-mark-sent')
-    end
-  end
-
   def clients_for_select
     clients = Client.find(:all, :order => 'name', :conditions => ["project_id = ?", @project])
     # check if client.valid?: if you request to link profile, and then unlink it, client is invalid
-    clients.collect {|c| [c.name, c.id] if c.valid? }.compact
+    clients.collect {|c| [c.name, c.id, {'data-invoice_format'=>ExportChannels.l(c.invoice_format)}] unless c.name.blank?}.compact
   end
 
-  def precision(num,precision=2)
-    num=0 if num.nil?
-    # :significant - If true, precision will be the # of significant_digits. If false, the # of fractional digits
-    number_with_precision(num,:precision=>precision,:significant => false)
+  def haltr_precision(num, precision=2, relevant=nil)
+    num = 0 if num.nil?
+    if relevant.present?
+      # relevant first cuts the number, then precision will add zeros
+      num = number_with_precision(num, precision: relevant)
+    end
+    num = number_with_precision(num, precision: precision)
+    num
+  end
+
+  def edi_number(num)
+    haltr_precision(num).gsub(',','.')
+  end
+
+  def edi_date(date)
+    date = Date.today if date.nil?
+    date.strftime("%Y%m%d")
   end
 
   def send_link_for_invoice
     confirm = @invoice.sent? ? j(l(:sure_to_resend_invoice, :num=>@invoice.number).html_safe) : nil
-    if @invoice.can_be_exported?
+    if @invoice.valid? and @invoice.can_queue? and
+        ExportChannels.can_send?(@invoice.client.invoice_format)
       unless @js.blank?
         # channel uses javascript to send invoice
         if User.current.allowed_to?(:general_use, @project)
@@ -45,11 +46,15 @@ module InvoicesHelper
           :class=>'icon-haltr-send', :title => @invoice.sending_info.html_safe,
           :confirm => confirm
       end
-    else
+    elsif @invoice.can_queue?
       # invoice has export errors (related to the format or channel)
       # or a format without channel, like "paper"
       link_to l(:label_send), "#", :class=>'icon-haltr-send disabled',
         :title => @invoice.sending_info.html_safe
+    else
+      link_to l(:label_send), "#", :class=>'icon-haltr-send disabled',
+        :title => ("#{@invoice.sending_info}<br/>" +
+        "#{I18n.t(:state_not_allowed_for_sending, state: I18n.t("state_#{@invoice.state}"))}").html_safe
     end
   end
 
@@ -67,7 +72,7 @@ module InvoicesHelper
   end
 
   def frequencies_for_select
-    [1,2,3,6,12].collect do |f|
+    [1,2,3,6,12,24,36,60].collect do |f|
       [I18n.t("mf#{f}"), f]
     end
   end
@@ -83,13 +88,19 @@ module InvoicesHelper
   end
 
   def num_can_be_sent
-    @project.issued_invoices.count(:conditions => ["state='new' and number is not null and date <= ?", Date.today])
+    @project.issued_invoices.includes(:client).count(
+      :conditions => [
+        "state='new' and number is not null and date <= ? and clients.invoice_format in (?)",
+        Date.today,
+        ExportChannels.can_send.keys
+      ]
+    )
   end
 
   def tax_name(tax, options = {})
     return nil if tax.nil?
 
-    return "#{tax.name} #{l(:tax_E)}" if tax.exempt?
+    return "#{tax.name} #{l("tax_#{tax.category}")}" if tax.exempt?
 
     options.symbolize_keys!
     default_format = I18n.translate(:'number.format',
@@ -121,7 +132,7 @@ module InvoicesHelper
     if invoice == current
       invoice.number
     else
-      if User.current.logged? and User.current.projects.include?(invoice.project)
+      if User.current.admin? or (User.current.logged? and User.current.projects.include?(invoice.project))
         link_to(invoice.number, {:action=>'show', :id=>invoice})
       elsif invoice.visible_by_client?
         link_to(invoice.number, {:action=>'view', :client_hashid=>invoice.client.hashid, :invoice_id=>invoice.id}, :class=>'public')
@@ -132,8 +143,8 @@ module InvoicesHelper
   end
 
   def client_name_with_link(client)
-    if authorize_for('clients', 'edit')
-      link_to h(client.name), {:controller=>'clients',:action=>'edit',:id=>client}
+    if authorize_for('clients', 'show')
+      link_to h(client.name), {:controller=>'clients',:action=>'show',:id=>client}
     else
       h(client.name)
     end
@@ -143,7 +154,7 @@ module InvoicesHelper
     # tax_name = 'VAT'
     taxes = invoice.taxes_hash[tax_name].sort
     show_category = false
-    if taxes.size != taxes.collect {|t| t.percent}.uniq.size
+    if taxes.size != taxes.collect {|t| t.percent}.uniq.size or tax_name == 'RE'
       show_category = true
     end
     taxes.collect do |tax|
@@ -154,7 +165,7 @@ module InvoicesHelper
   def tax_label(tax_code,show_category=false)
     # tax_code = '21.0_S'
     percent, category = tax_code.split('_')
-    if category == 'E'
+    if category == 'E' or category == 'NS'
       [l("tax_#{category}"), tax_code]
     else
       if show_category
@@ -192,12 +203,12 @@ module InvoicesHelper
 
   def payment_method_info
     i = @invoice
-    if i.is_a?(IssuedInvoice) or i.is_a?(Quote)
+    if i.is_a?(IssuedInvoice) or i.is_a?(Quote) or i.is_a?(InvoiceTemplate)
       if i.debit?
         # IssuedInvoice + debit, show clients iban
         if i.client.use_iban?
-          iban = i.client.iban || ""
-          bic  = i.client.bic || ""
+          iban = i.client_iban || ""
+          bic  = i.client_bic || ""
           s="#{l(:debit_str)}<br />"
           s+="IBAN #{iban[0..3]} #{iban[4..7]} #{iban[8..11]} **** **** #{iban[20..23]}<br />"
           s+="BIC #{bic}<br />" unless bic.blank?
@@ -206,20 +217,26 @@ module InvoicesHelper
           ba = i.client.bank_account || ""
           "#{l(:debit_str)}<br />#{ba[0..3]} #{ba[4..7]} ** ******#{ba[16..19]}"
         end
-      elsif i.transfer? and i.bank_info
-        # IssuedInvoice + transfer, show our iban
-        if i.bank_info.use_iban?
-          iban = i.bank_info.iban || ""
-          bic  = i.bank_info.bic || ""
-          s="#{l(:transfer_str)}<br />"
-          s+="IBAN #{iban[0..3]} #{iban[4..7]} #{iban[8..11]} #{iban[12..15]} #{iban[16..19]} #{iban[20..23]}<br />"
-          s+="BIC #{bic}<br />" unless bic.blank?
-          s
+      elsif i.transfer?
+        if i.bank_info
+          # IssuedInvoice + transfer, show our iban
+          if i.bank_info.use_iban?
+            iban = i.bank_info.iban || ""
+            bic  = i.bank_info.bic || ""
+            s="#{l(:transfer_str)}<br />"
+            s+="IBAN #{iban.scan(/.{1,4}/).join(' ')}<br />"
+            s+="BIC #{bic}<br />" unless bic.blank?
+            s
+          else
+            ba = i.bank_info.bank_account ||= "" rescue ""
+            "#{l(:transfer_str)}<br />" +
+              "#{ba[0..3]} #{ba[4..7]} #{ba[8..9]} #{ba[10..19]}"
+          end
         else
-          ba = i.bank_info.bank_account ||= "" rescue ""
-          "#{l(:transfer_str)}<br />" +
-            "#{ba[0..3]} #{ba[4..7]} #{ba[8..9]} #{ba[10..19]}"
+          l(:transfer)
         end
+      elsif i.credit?
+        l(:fa_payment_method_19)
       elsif i.special?
         i.payment_method_text
       elsif i.cash?
@@ -232,7 +249,7 @@ module InvoicesHelper
           iban = i.bank_info.iban || ""
           bic  = i.bank_info.bic || ""
           s="#{l(:debit_str)}<br />"
-          s+="IBAN #{iban[0..3]} #{iban[4..7]} #{iban[8..11]} #{iban[12..15]} #{iban[16..19]} #{iban[20..23]}<br />"
+          s+="IBAN #{iban.scan(/.{1,4}/).join(' ')}<br />"
           s+="BIC #{bic}<br />" unless bic.blank?
           s
         else
@@ -240,13 +257,16 @@ module InvoicesHelper
           "#{l(:debit_str)}<br />" +
             "#{ba[0..3]} #{ba[4..7]} #{ba[8..9]} #{ba[10..19]}"
         end
+      elsif i.debit?
+        # ReceivedInvoice without bank_info, show only 'debit'
+          "#{l(:debit_str)}<br />"
       elsif i.transfer?
         # ReceivedInvoice + transfer, show clients iban
         if i.client.use_iban?
-          iban = i.client.iban || ""
-          bic  = i.client.bic || ""
+          iban = i.client_iban || ""
+          bic  = i.client_bic || ""
           s="#{l(:transfer_str)}<br />"
-          s+="IBAN #{iban[0..3]} #{iban[4..7]} #{iban[8..11]} #{iban[12..15]} #{iban[16..19]} #{iban[20..23]}<br />"
+          s+="IBAN #{iban.scan(/.{1,4}/).join(' ')}<br />"
           s+="BIC #{bic}<br />" unless bic.blank?
           s
         else
@@ -263,4 +283,54 @@ module InvoicesHelper
     end
   end
 
+  def dir3_for_select(entities)
+    entities.collect {|entity|
+      if entity.code == entity.name
+        [entity.name, entity.code]
+      else
+        ["#{entity.name} - #{entity.code}", entity.code]
+      end
+    }
+  end
+
+  def required_field_span(field)
+    if (@external_company and @external_company.required_fields.include?(field)) or
+        (field == 'dir3' and @client and @client.invoice_format =~ /face/)
+      content_tag(:span, ' *', class: 'required')
+    end
+  end
+
+  def select_to_edit(field)
+    if @external_company and @external_company.send("dir3_#{field.to_s.pluralize}").any?
+      content_tag :span, l(:button_edit), data: {field: field}, :class => 'icon icon-edit select_to_edit required'
+    end
+  end
+
+  def facturae_attachment_format(attachment)
+    valid_formats = %W(xml doc gif rtf pdf xls jpg bmp tiff)
+    extension = attachment.filename.split('.').last.downcase
+    if valid_formats.include?(extension)
+      extension
+    else
+      'doc'
+    end
+  end
+
+  def invoice_summary(invoice)
+    lines = Array.new
+    invoice.invoice_lines.each_with_index do |line,i|
+      break if i > 2
+      lines << truncate(line.description,length:50)
+    end
+    desc = Array.new
+    desc << money(invoice.total)
+    desc << invoice.date unless invoice.is_a? InvoiceTemplate
+    desc << lines.join(" | ")
+    desc.join(" * ")
+  end
+
+  def display_series_code_in_form?
+    ((@invoice.company.country == 'es' or @invoice.series_code.present?) and
+      User.current.allowed_to?(:view_invoice_extra_fields,@project))
+  end
 end

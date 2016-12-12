@@ -1,0 +1,5 @@
+client_blank:
+  filename: 'test.xml'
+  import_errors: 'Client no pot estar en blanc'
+  original: 'original file contents'
+  project_id: 2

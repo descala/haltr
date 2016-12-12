@@ -34,6 +34,7 @@ $(document).ready(function() {
   $('select#invoice_client_id').bind('ajax:success', function(evt, data, status, xhr){
     $('#payment_stuff').html(xhr.responseText);
     terms();
+    $('span#invoice_format').html($('select#invoice_client_id option:selected').data('invoice_format'));
   })
 
   /* on load, simulate a client change to call above function */
@@ -41,6 +42,26 @@ $(document).ready(function() {
   if (window.location.href.indexOf("/new") > -1) {
     $('select#invoice_client_id').change();
   }
+
+  // external company form
+  $(document).on('click', 'input.visible_field', function(e) {
+    if (!this.checked) {
+      $('#'+$(this).attr('id').replace('visible','required')).prop('checked', false);
+    }
+  });
+  $(document).on('click', 'input.required_field', function(e) {
+    if (this.checked) {
+      $('#'+$(this).attr('id').replace('required','visible')).prop('checked', true);
+    }
+  });
+
+  $(document).on('click', 'span.select_to_edit', function(e) {
+    var field=$(this).data('field');
+    $("select#invoice_"+field).toggle();
+    $("select#invoice_"+field).prop('disabled', !$("select#invoice_"+field).prop('disabled'));
+    $("input#invoice_"+field).toggle();
+    $("input#invoice_"+field).prop('disabled', !$("input#invoice_"+field).prop('disabled'));
+  });
 
   $(document).on('change', '#invoice_terms', function(e) {
     terms();
@@ -83,6 +104,48 @@ $(document).ready(function() {
 
   if ( $('#client_taxcode')[0] ) { client_taxcode_changed() };
 
+  $(document).on('click', 'a.icon-haltr-send.disabled', function(e) {
+    $('div.flash.error').remove();
+    $(this).parents('div').first().append(
+      $("<div></div>").addClass('flash').addClass('error').html($(this).attr('tiptitle'))
+    );
+  });
+
+  $(document).on('click', 'a.show-audits', function(e) {
+    $('#audited_'+$(this).data('id')).toggle();
+    return false;
+  });
+
+  $(document).on('mousemove', 'div.audited li', function(e) {
+    $('div.audited-changes').css({
+      "left":  e.pageX + 15,
+      "top":   e.pageY - $('div#audited_changes_'+$(this).data('id')).height()
+    });
+  });
+
+  $(document).on('mouseenter', 'div.audited li', function(e) {
+    // move element to <body> so absolute positioning works
+    var elem = $('div#audited_changes_'+$(this).data('id')).detach();
+    $('body').append(elem);
+    elem.show();
+  });
+
+  $(document).on('mouseleave', 'div.audited li', function(e) {
+    $('div#audited_changes_'+$(this).data('id')).hide();
+  });
+
+  $('#denied_show_hide').on('click', function(e) {
+    $('#denied_requests').toggle();
+  });
+
+  $(document).on('change', 'select#invoice_currency', function(e) {
+    if ($("select#invoice_currency option:selected" ).val() == 'EUR') {
+      $('div#exchange_fields').hide();
+    } else {
+      $('div#exchange_fields').show();
+    }
+  });
+
 });
 
 
@@ -116,11 +179,11 @@ function global_tax_changed(tax_name, tax_code) {
 function global_tax_check_changed(tax_name) {
   $('#'+tax_name+'_global').prop('disabled', $('#'+tax_name+'_multiple').prop('checked'));
   if ($('#'+tax_name+'_multiple').prop('checked')) {
-    $('#'+tax_name+'_title').show();
+    $('.'+tax_name+'_title').show();
     $('td.tax_'+tax_name).show();
   } else {
     global_tax_changed(tax_name,$('#'+tax_name+'_global').val());
-    $('#'+tax_name+'_title').hide();
+    $('.'+tax_name+'_title').hide();
     $('td.tax_'+tax_name).hide();
   }
 }
@@ -142,12 +205,12 @@ function copy_last_line_tax(tax_name) {
  * or hide it if there are no exempt selects for this tax.
  */
 function tax_changed(tax_name, tax_code) {
-  if (tax_code.match(/_E$/)) {
+  if (tax_code.match(/(_E|_NS)$/)) {
     $('#'+tax_name+'_comment').show();
   } else {
     var hide_comment = true;
     $('select.tax_'+tax_name).each(function(index) {
-      if ($('select.tax_'+tax_name).eq(index).val().match(/_E$/)) {
+      if ($('select.tax_'+tax_name).eq(index).val().match(/(_E|_NS)$/)) {
         hide_comment = false;
       }
     });

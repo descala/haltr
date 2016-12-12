@@ -7,7 +7,7 @@ module Estructura
     R_DATE = /\d{1,4}[-\/\.]\d{1,4}[-\/\.]\d{1,4}/
 
     # Examples:
-    #  ESB00000000
+    #  ESB10317980
     TAX_ID = /\b([a-z][ -]{0,3}\d{8}|[\d\.]{8,10}[ -]{0,3}[a-z]|[a-z][ -]{0,3}\d{7}[ -]{0,3}[a-z]|[a-z]{2,3}\d{8,9})\b/i
 
     def initialize(doc,options={})

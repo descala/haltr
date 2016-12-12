@@ -29,22 +29,91 @@
     payment_method_text = @client.payment_method_text
     terms = @client.terms
   end
+  if @client and @client.taxcode.present?
+    taxcode = @client.taxcode
+    if taxcode[0...2].downcase == @client.country
+      taxcode2 = taxcode[2..-1]
+    else
+      taxcode2 = "#{@client.country}#{taxcode}"
+    end
+    @external_company = ExternalCompany.where('taxcode in (?, ?)', taxcode, taxcode2).first
+  end
 -%>
 
-<%= call_hook(:invoice_form_payment_extra_fields) unless @invoice.is_a?(Quote) or params[:quote] == "true" %>
+<%= call_hook(:invoice_form_payment_extra_fields) unless @invoice.is_a?(Quote) %>
+
+<% if call_hook(:invoice_form_administrative_centres).present? -%>
+  <%= call_hook(:invoice_form_administrative_centres) %>
+<% elsif @invoice and @invoice.unitat_contractacio.present?-%>
+    <div class="seccio grup">
+      <p class="col span-1-de-3">
+      <label for="invoice_unitat_contractacio">
+        <%= l(:unitat_contractacio) %>
+      </label>
+      <%= text_field :invoice, :unitat_contractacio%>
+      </p>
+    </div>
+<% else -%>
+  <% if (@external_company and @external_company.visible_dir3) or
+      (@client and ExportChannels.punts_generals.include?(@client.invoice_format)) or
+      (@invoice and @invoice.has_dir3_info?) or
+      (@client and ExportChannels.format(@client.invoice_format) =~ /facturae/) -%>
+    <div class="seccio grup">
+      <p class="col span-1-de-3">
+      <%= render :partial => 'invoices/dir3', locals: { role: 'organ_gestor'} %>
+      </p>
+      <p class="col span-1-de-3">
+      <%= render :partial => 'invoices/dir3', locals: { role: 'oficina_comptable'} %>
+      </p>
+      <p class="col span-1-de-3">
+      <%= render :partial => 'invoices/dir3', locals: { role: 'unitat_tramitadora'} %>
+      </p>
+    </div>
+  <% end -%>
+  <% if (@external_company and @external_company.visible_organ_proponent) -%>
+    <div class="seccio grup">
+      <p class="col span-1-de-3">
+      <%= render :partial => 'invoices/dir3', locals: { role: 'organ_proponent'} %>
+      </p>
+    </div>
+  <% end -%>
+<% end -%>
+
+
+<% if @external_company -%>
+  <% if @external_company.visible_fields.any? -%>
+    <div class="seccio grup">
+      <% @external_company.visible_fields.each do |field| -%>
+        <% next if %w(dir3 organ_proponent ponumber delivery_note_number payments_on_account).include?(field) -%>
+        <p class="col span-1-de-3">
+        <label for="invoice_<%=field%>"><%= l("field_#{field}") %><%= required_field_span(field)%></label>
+        <%= text_field :invoice, field %>
+        </p>
+      <% end -%>
+    </div>
+  <% end -%>
+  <% if @external_company.visible_fields.include?('payments_on_account') -%>
+    <div class="seccio grup">
+      <p class="col span-1-de-3">
+      <label for="invoice_payments_on_account"><%= l("field_payments_on_account") %><%= required_field_span('payments_on_account')%></label>
+      <%= text_field :invoice, 'payments_on_account' %>
+      </p>
+    </div>
+  <% end -%>
+<% end -%>
 
 <div class="seccio grup">
   <p class="col span-1-de-3">
-    <label for="invoice_currency"><%= l(:field_currency) %><span class="required"> *</span></label>
-    <%= select :invoice, :currency, currency_options_for_select, {:selected=>currency}, :required => true%>
+  <label for="invoice_currency"><%= l(:field_currency) %><span class="required"> *</span></label>
+  <%= select :invoice, :currency, currency_options_for_select, {:selected=>currency}, :required => true%>
   </p>
   <p class="col span-1-de-3">
-    <label for="invoice_payment_method"><%= l(:field_payment_method) %></label>
-    <%= select(:invoice, :payment_method, Invoice.payment_methods(@project.company), {:selected=>payment_method}, :style => 'vertical-align: top;') %>
-    <%= text_area(:invoice, :payment_method_text, :cols => 40, :rows => 2, :value => payment_method_text, :id => 'payment_other', :style => (payment_method==Invoice::PAYMENT_SPECIAL) ? '' : 'display: none;') %>
+  <label for="invoice_payment_method"><%= l(:field_payment_method) %></label>
+  <%= select(:invoice, :payment_method, Haltr::PaymentMethods.for_select(@project.company), {:selected=>payment_method}, :style => 'vertical-align: top;') %>
+  <%= text_area(:invoice, :payment_method_text, :cols => 40, :rows => 2, :value => payment_method_text, :id => 'payment_other', :style => (payment_method==Invoice::PAYMENT_SPECIAL) ? '' : 'display: none;') %>
   </p>
   <p class="col span-1-de-3">
-  <% unless @invoice.is_a?(Quote) or params[:quote] == "true" -%>
+  <% unless @invoice.is_a?(Quote) -%>
     <label for="invoice_terms"><%= l(:field_terms) %></label>
     <%= select(:invoice, :terms, Terms.for_select, {:selected=>terms} ) %>
     <span id="due_date_cal" style="display: <%= terms == "custom" ? "" : "none" %>">
@@ -55,3 +124,30 @@
   </p>
 </div>
 
+<div id="exchange_fields" class="seccio grup" style="<%= 'display: none;' if currency == 'EUR' %>">
+  <p class="col span-1-de-3">
+  <label for="invoice_exchange_rate"><%= l(:field_exchange_rate) %></label>
+  <%= text_field :invoice, :exchange_rate %>
+  </p>
+  <p class="col span-1-de-3">
+  <label for="invoice_payment_method"><%= l(:field_exchange_date) %></label>
+  <%= text_field :invoice, :exchange_date, :size => 10 %>
+  <%= calendar_for('invoice_exchange_date') %>
+  </p>
+  <p class="col span-1-de-3">
+  </p>
+</div>
+
+
+<% if @client and @client.client_offices and @client.client_offices.any? -%>
+
+<div class="seccio grup">
+  <p class="col span-1-de-3">
+  <label for="client_office_id"><%= l(:label_client_office) %></label>
+  <%= select :invoice, :client_office_id, @client.client_offices.collect {|office|
+    ["#{office.name} #{office.destination_edi_code}", office.id]
+  }, {selected: (@invoice.client_office_id rescue nil), include_blank: true} %>
+  </p>
+</div>
+
+<% end -%>

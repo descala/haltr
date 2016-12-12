@@ -1,13 +1,20 @@
 module Haltr
   class SendXmlByMail < GenericSender
 
-    attr_accessor :xml, :format, :class_for_send
+    attr_accessor :format, :class_for_send
 
     def perform
       self.format ||= 'facturae32'
       self.xml    ||= Haltr::Xml.generate(invoice, format)
       self.class_for_send ||= 'send_xml_by_mail'
-      HaltrMailer.send_invoice(invoice,{:xml=>xml}).deliver!
+      if Redmine::Configuration['haltr_mailer_from']
+        HaltrMailer.send_invoice(
+          invoice,
+          {:xml=>xml, :from=>Redmine::Configuration['haltr_mailer_from']}
+        ).deliver!
+      else
+        HaltrMailer.send_invoice(invoice,{:xml=>xml}).deliver!
+      end
     rescue Net::SMTPFatalError => e
         EventError.create(
           :name    => "error_sending",

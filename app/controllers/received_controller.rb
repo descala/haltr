@@ -2,11 +2,18 @@ class ReceivedController < InvoicesController
 
   menu_item Haltr::MenuItem.new(:invoices,:received)
 
+  skip_before_filter :check_for_company, :only=> [:index, :show]
+
   def index
     sort_init 'invoices.created_at', 'desc'
     sort_update %w(invoices.created_at state number date due_date clients.name import_in_cents)
 
     invoices = @project.invoices.includes(:client).scoped.where("type = ?","ReceivedInvoice")
+
+    # additional invoice filters
+    if Redmine::Hook.call_hook(:additional_invoice_filters,:project=>@project,:invoices=>invoices).any?
+      invoices = Redmine::Hook.call_hook(:additional_invoice_filters,:project=>@project,:invoices=>invoices)[0]
+    end
 
     unless params["state_all"] == "1"
       statelist=[]
@@ -53,21 +60,46 @@ class ReceivedController < InvoicesController
       invoices = invoices.where("number like ?","%#{params[:number]}%")
     end
 
+    case params[:format]
+    when 'csv', 'pdf'
+      @limit = Setting.issues_export_limit.to_i
+    when 'xml', 'json'
+      @offset, @limit = api_offset_and_limit
+    else
+      @limit = per_page_option
+    end
+
     @invoice_count = invoices.count
     @invoice_pages = Paginator.new self, @invoice_count,
 		per_page_option,
 		params['page']
+    @offset ||= @invoice_pages.current.offset
     @invoices =  invoices.find :all,
        :order => sort_clause,
        :include => [:client],
-       :limit  =>  @invoice_pages.items_per_page,
-       :offset =>  @invoice_pages.current.offset
+       :limit  =>  @limit,
+       :offset =>  @offset
 
     @unread = invoices.where("type = ? AND has_been_read = ?", 'ReceivedInvoice', false).count
   end
 
   def show
-    @invoice.update_attribute(:has_been_read, true)
+    unless User.current.admin?
+      @invoice.update_attribute(:has_been_read, true)
+      if @invoice.created_from_invoice
+        @invoice.created_from_invoice.read
+      end
+    end
+    super
+  end
+
+  def edit
+    unless @invoice.invoice_format == 'pdf'
+      flash[:error] = "Can't edit received invoices"
+      redirect_to(:action=>'index',:project_id=>@project.id)
+      return
+    end
+    super
   end
 
   def mark_accepted_with_mail
@@ -76,6 +108,14 @@ class ReceivedController < InvoicesController
   end
 
   def mark_accepted
+    if @invoice.created_from_invoice
+      Event.create(
+        name: 'accept_notification',
+        invoice_id: @invoice.created_from_invoice_id,
+        user_id: User.current.id,
+        notes: params[:reason]
+      )
+    end
     Event.create(:name=>'accept',:invoice=>@invoice,:user=>User.current)
     redirect_to :back
   rescue ActionController::RedirectBackError
@@ -88,6 +128,14 @@ class ReceivedController < InvoicesController
   end
 
   def mark_refused
+    if @invoice.created_from_invoice
+      Event.create(
+        name: 'refuse_notification',
+        invoice_id: @invoice.created_from_invoice_id,
+        user_id: User.current.id,
+        notes: params[:reason]
+      )
+    end
     Event.create(:name=>'refuse',:invoice=>@invoice,:user=>User.current)
     redirect_to :back
   rescue ActionController::RedirectBackError
@@ -104,16 +152,16 @@ class ReceivedController < InvoicesController
       return
     end
     zipped = []
-    zip_file = Tempfile.new "#{@project.identifier}_invoices.zip", 'tmp'
+    zip_file = Tempfile.new ["#{@project.identifier}_invoices", ".zip"], 'tmp'
     logger.info "Creating zip file '#{zip_file.path}' for invoice ids #{@invoices.collect{|i|i.id}.join(',')}."
-    Zip::ZipOutputStream.open(zip_file.path) do |zos|
+    Zip::OutputStream.open(zip_file.path) do |zos|
       @invoices.each do |invoice|
-        file = Tempfile.new(invoice.file_name)
+        filename = invoice.file_name || 'invoice'
+        file = Tempfile.new(filename)
         file.binmode
         file.write invoice.original
         logger.info "Created #{file.path}"
         file.close
-        filename = invoice.file_name
         i=2
         while zipped.include?(filename)
           extension = File.extname(filename)
@@ -123,7 +171,7 @@ class ReceivedController < InvoicesController
         end
         zipped << filename
         zos.put_next_entry(filename)
-        zos.print IO.read(file.path)
+        zos << IO.binread(file.path)
         logger.info "Added #{filename} from #{file.path}"
       end
     end

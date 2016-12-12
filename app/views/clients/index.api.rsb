@@ -1,0 +1,25 @@
+# vi: ft=ruby
+
+api.array :clients, api_meta(:total_count => @client_count, :offset => @offset, :limit => @limit) do
+  @clients.each do |client|
+    api.client do
+      api.id client.id
+      api.taxcode client.taxcode
+      api.name client.name
+      api.project(:id => client.project_id, :name => client.project.name) unless client.project.nil?
+      api.edi_code client.edi_code
+      api.created_at client.created_at
+      api.updated_at client.updated_at
+      if @client_offices.has_key?(client.id)
+        api.array :client_offices do
+          @client_offices[client.id].each do |client_office|
+            api.client_office do
+              api.id client_office.id
+              api.edi_code client_office.edi_code
+            end
+          end
+        end
+      end
+    end
+  end
+end

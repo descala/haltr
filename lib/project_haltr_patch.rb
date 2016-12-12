@@ -10,6 +10,8 @@ module ProjectHaltrPatch
       has_one :company
       has_many :clients
       has_many :people, :through => :clients
+      has_many :client_offices, :through => :clients
+      has_many :mandates, :through => :clients
       has_many :invoices
       has_many :invoice_templates
       has_many :issued_invoices
@@ -17,6 +19,9 @@ module ProjectHaltrPatch
       has_many :received_invoices
       has_many :payments
       has_many :draft_invoices
+      has_many :events
+      has_many :import_errors
+      has_many :invoice_lines, :through => :invoices
     end
  
   end
@@ -25,6 +30,12 @@ module ProjectHaltrPatch
   end
   
   module InstanceMethods
+
+    # prevent project.issued_invoices to include DraftInvoices
+    def issued_invoices
+      super.where("type != 'DraftInvoice'")
+    end
+
   end
 
 end

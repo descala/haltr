@@ -2,8 +2,19 @@
 <div class="seccio grup">
   <div class="col span-2-de-2">
     <ul class="menu-rapid">
-      <li><%= link_to_if_authorized l("label_invoice_new"), new_project_invoice_path(@project), :class => 'icon icon-add' %></li>
-      <li><%= link_to_if_authorized l(:button_edit), { :action => 'edit', :id => @invoice }, :class => 'icon icon-edit' %></li>
+      <% if @invoice.order -%>
+        <li><%= link_to_if_authorized l(:label_order), project_order_path(@invoice.order, project_id: @project), :class => 'icon' %></li>
+      <% end -%>
+      <% if @invoice.is_a? InvoiceTemplate %>
+        <li><%= link_to_if_authorized l("label_invoice_template_new"), new_project_invoice_template_path(@project), :class => 'icon icon-add' %></li>
+      <% elsif @invoice.is_a? IssuedInvoice %>
+        <li><%= link_to_if_authorized l("label_invoice_new"), new_project_invoice_path(@project), :class => 'icon icon-add' %></li>
+      <% end %>
+      <% if @invoice.is_a?(ReceivedInvoice) and @invoice.invoice_format == 'pdf' -%>
+        <li><%= link_to_if_authorized l(:button_edit_metadata), { :action => 'edit', :id => @invoice }, :class => 'icon icon-edit' %></li>
+      <% elsif !@invoice.is_a?(ReceivedInvoice) -%>
+        <li><%= link_to_if_authorized l(:button_edit), { :action => 'edit', :id => @invoice }, :class => 'icon icon-edit' %></li>
+      <% end -%>
       <li><%= link_to_if_authorized l(:button_delete), { :action => 'destroy', :id => @invoice}, :confirm=>l(:text_are_you_sure), :method=>:delete, :class=>'icon icon-del' %></li>
       <%= render :partial => "#{@invoice.class.to_s.underscore}_menu" %>
       <% if @invoice.next%>
@@ -17,30 +28,71 @@
 </div>
 <!--final menu rapid-->
 
+<% if @invoice.is_a? ReceivedInvoice -%>
+  <div id="invoice-refuse" class="accept_refuse_form" style="display: none;">
+    <%= render :partial => "invoice_refuse_form" %>
+  </div>
+  <div id="invoice-accept" class="accept_refuse_form" style="display: none;">
+    <%= render :partial => "invoice_accept_form" %>
+  </div>
+<% end -%>
+
+<% if @invoice_pdf -%>
+  <iframe src="/pdfjs/web/viewer.html?file=<%=@invoice_pdf%>" style="border: 0" width="100%" height="800" frameborder="0" scrolling="no"></iframe>
+<% else -%>
+
 <div id="invoice_wrapper">
   <div class="ribbon ribbon-<%= @invoice.state %>">
     <% if @invoice.is_a? InvoiceTemplate %>
       <span><%=h l("label_invoice_template") %></span>
     <% else %>
-      <span><%=h l("state_#{@invoice.state}").capitalize %></span>
+      <span title="<%= format_time @invoice.state_updated_at %>"><%=h l("state_#{@invoice.state}").capitalize %></span>
     <% end %>
   </div>
   <div id="workspace1" class="haltrinvoice">
     <div id="workspace2">
       <div id="col1">
-
       <%= render :partial=>'invoices/invoice' %>
-
+      <%= link_to_attachments @invoice, thumbnails: false, author: false %>
       </div>
     </div>
   </div>
 </div>
 
-<%= render :partial => 'invoices/events'%>
-<%= render :partial => 'invoices/issued_invoice_list_other' if @invoice.is_a? IssuedInvoice %>
-<%= render :partial => 'invoices/channel_links' if (Rails.env == "development" or User.current.admin?) and @invoice.is_a? IssuedInvoice %>
+<% if @invoice.send_original? and @invoice.is_a? IssuedInvoice %>
+  <p>* <%= @invoice.invoice_format.upcase rescue "" %> <%= l(:label_will_send_original) -%></p>
+<% end -%>
 
-<% if @invoice.is_a? InvoiceTemplate and @invoices_generated.any? -%>
+<div class="seccio grup">
+  <div class="col span-2-de-2">
+    <div class="formee-msg-info invoice-comments">
+      <h3 id="haltr_comments">
+        <%=h l(:label_comment_plural)%>
+        <%= toggle_link image_tag('add.png'), "add_comment_form", :focus => "comment_comments" %>
+      </h3>
+      <%= form_tag({:controller => 'invoices', :action => 'add_comment', :id => @invoice, :project_id => @project}, :id => "add_comment_form", :style => "display:none;") do %>
+        <div class="box">
+          <%= text_area 'comment', 'comments', :cols => 80, :rows => 5, :class => 'wiki-edit' %>
+        </div>
+        <p><%= submit_tag l(:button_add) %></p>
+      <% end %>
+
+      <ul>
+        <% @invoice.comments.reverse.each do |comment| -%>
+          <li><strong><%= format_time comment.created_on %></strong> - <%= comment.author.name %>: <%= comment.comments %></li>
+        <% end -%>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<% end -%>
+
+<%= render :partial => 'events/list', locals: {events: @invoice.visible_events} %>
+<%= render :partial => 'invoices/issued_invoice_list_other' if @invoice.is_a? IssuedInvoice %>
+<%= render :partial => 'invoices/channel_links' if (Rails.env == "development" or User.current.allowed_to?(:use_all_readonly, @project)) and @invoice.is_a? IssuedInvoice %>
+
+<% if @invoice.is_a? InvoiceTemplate and @invoices_generated and @invoices_generated.any? -%>
   <h3><%= l(:label_generated_invoices)%></h3>
   <p>
   <% @invoices_generated.each do |invoice| -%>
@@ -67,7 +119,13 @@
   unless @js.blank?
     content_for :header_tags do
       javascript_include_tag('/invoices/haltr_sign.js') +
-      javascript_include_tag('deployjava.js', :plugin => 'haltr')
+      javascript_include_tag('miniapplet.js', :plugin => 'haltr')
+    end
+  end
+
+  if @invoice.is_a? IssuedInvoice and @invoice.state? :sending
+    content_for :header_tags do
+      javascript_include_tag 'refresher.js', plugin: 'haltr'
     end
   end
 %>

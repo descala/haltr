@@ -2,7 +2,7 @@ require File.dirname(__FILE__) + '/../test_helper'
 
 class SendTest < ActiveSupport::TestCase
 
-  fixtures :taxes, :companies, :invoices, :invoice_lines, :clients
+  fixtures :taxes, :companies, :invoices, :invoice_lines, :clients, :people
 
   test "just call empty perform" do
     assert_equal nil, Haltr::GenericSender.new.perform
@@ -17,7 +17,9 @@ class SendTest < ActiveSupport::TestCase
 
   test "just call SendPdfByIMAP" do
     # does not send the email, just stores it in an IMAP folder
-    mail = Haltr::SendPdfByIMAP.new(invoices(:invoices_001),User.find(2)).perform
+    sender = Haltr::SendPdfByIMAP.new(invoices(:invoices_001),User.find(2))
+    sender.immediate_perform('this is a pdf')
+    mail = sender.mail_message
     assert mail.to.include?('person1@example.com')
     assert mail.to.include?('mail@client1.com')
   end

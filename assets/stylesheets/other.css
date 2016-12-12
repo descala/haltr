@@ -1,0 +1,16 @@
+table.cashflow {
+  max-width: 465px;
+  width: 100%;
+}
+table.cashflow td {
+  text-align: right;
+}
+table.cashflow th {
+  font-weight: 500;
+}
+table.cashflow td.total {
+  border-top: solid 1px;
+}
+table.cashflow td.past_due {
+  color: red;
+}

@@ -15,7 +15,7 @@ invoice1:
 
 template1:
   type: InvoiceTemplate
-  date: 2008-11-24
+  date: <%= Date.today %>
   client: client1
   extra_info: "periode: Desembre 2008"
   frequency: 1
@@ -73,7 +73,7 @@ invoices_001:
   frequency: 
   transport: 
   terms: "0"
-  state: new
+  state: sent
 
 invoices_002: 
   id: 2
@@ -99,7 +99,7 @@ invoices_002:
   frequency: 
   transport: 
   terms: "0"
-  state: new
+  state: sent
 
 invoices_003: 
   id: 3
@@ -275,3 +275,73 @@ received_2:
   original: <%= Haltr::Utils.compress(File.read(Rails.root.join('plugins/haltr/test/fixtures/documents/invoice_facturae32_signed.xml'))).gsub("\n","") %>
   from: fixtures@haltr.io
 
+i12:
+  id: 12
+  type: IssuedInvoice
+  client_id: 1
+  currency: EUR
+  date: 2013-04-04
+  due_date: 2013-04-04
+  number: "2014/i12"
+  payment_method: 2
+  ponumber: "client order number 123"
+  project_id: 2
+  state: new
+  discount_percent: 5
+  organ_gestor: 'A09006077'
+  unitat_tramitadora: 'A09006151'
+  oficina_comptable: 'A09006061'
+
+i13:
+  id: 13
+  type: IssuedInvoice
+  client_id: 1
+  currency: EUR
+  date: 2014-12-16
+  due_date: 2015-01-16
+  number: "2014/i13"
+  payment_method: 2
+  project_id: 2
+  state: new
+  discount_percent: 10
+  charge_amount_in_cents: 10000
+  charge_reason: "This are payments we made in the name of the client"
+
+i14:
+  id: 14
+  type: IssuedInvoice
+  client_id: 1
+  currency: EUR
+  date: 2014-12-16
+  due_date: 2015-01-16
+  number: "2014/i14"
+  payment_method: 2
+  project_id: 2
+  state: accepted
+  client_email_override: override@example.com
+
+i15:
+  id: 15
+  type: IssuedInvoice
+  client_id: 1
+  currency: EUR
+  date: 2014-12-16
+  due_date: 2015-01-16
+  number: "2014/i14"
+  payment_method: 2
+  project_id: 2
+  state: accepted
+
+i16:
+  id: 16
+  type: IssuedInvoice
+  client_id: 1
+  currency: EUR
+  date: 2014-12-16
+  due_date: 2015-01-16
+  number: "2014/i14"
+  payment_method: 2
+  project_id: 2
+  state: accepted
+  discount_text: "discount"
+  discount_percent: 10

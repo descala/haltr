@@ -2,6 +2,7 @@
 <div class="seccio grup">
   <div class="col span-2-de-2">
     <ul class="menu-rapid">
+      <%=  call_hook(:invoices_index_menu_top) %>
       <li><%= link_to_if_authorized(l("label_invoice_new"), new_project_invoice_path(@project), :class => 'icon icon-add') %></li>
       <% if num_can_be_sent > 0 -%>
         <li>
@@ -13,6 +14,17 @@
         <%= link_to_if_authorized "#{l(:button_download_new_invoices)} (#{num_not_sent})",{:action => 'download_new_invoices'}, :title => l(:label_download_new_invoices_info) %>
         </li>
       <% end -%>
+      <% if User.current.allowed_to?(:export_invoices, @project) -%>
+        <li>
+        <%= link_to 'CSV', project_invoices_path(@project, format: 'csv') -%>
+        </li>
+      <% end -%>
+      <% if User.current.allowed_to?(:import_invoices, @project) -%>
+        <li>
+        <%= link_to l(:label_import), project_invoices_import_path(@project, params.merge({issued: 1})) -%>
+        </li>
+      <% end -%>
+      <%=  call_hook(:invoices_index_menu_bottom) %>
     </ul>
   </div>
 </div>
@@ -32,10 +44,19 @@
 
             <div id="query_form_content" class="hide-when-print seccio grup">
               <div class="col span-2-de-2">
-                <label class="inline"><%= check_box_tag("state_all", "1", params["state_all"]) %> <%=l("label_all_invoices")%></label>
-                <% %w(new sending sent error closed discarded).each do |state| -%>
-                  <label class="inline"><%= check_box_tag(state, "1", params[state]) %> <%=l("state_#{state}_plural")%></label>
+                <table>
+                  <tr>
+                    <td><label class="inline"><%= check_box_tag("state_all", "1", params["state_all"]) %> <%=l("label_all_invoices")%></label></td>
+                  </tr>
+                  <tr>
+
+                <% %w(new sending sent read error cancelled closed discarded registered refused accepted allegedly_paid annotated).each do |state| -%>
+                  <%= "</tr><tr>".html_safe if state == "discarded" %>
+                  <td><label class="inline"><%= check_box_tag(state, "1", params[state]) %> <%=l("state_#{state}_plural")%></label></td>
                 <% end -%>
+
+                  </tr>
+                </table>
               </div>
             </div>
 
@@ -67,28 +88,58 @@
 
             <div class="seccio grup">
               <div class="col span-1-de-3">
-                <label for="taxcode"><%= l(:field_taxcode) %></label>
-                <%= text_field_tag :taxcode, params[:taxcode] %>
-              </div>
-              <div class="col span-1-de-3">
-                <label for="name"><%= l(:field_name) %></label>
-                <%= text_field_tag :name, params[:name] %>
-              </div>
-              <div class="col span-1-de-3">
                 <label for="number"><%= l(:field_number) %></label>
                 <%= text_field_tag :number, params[:number] %>
+              </div>
+              <div class="col span-1-de-3">
+                <label for="state_updated_at_from"><%= l(:field_state_updated_at) %> <%= l(:label_greater_or_equal) %></label>
+                <%= text_field_tag :state_updated_at_from, params[:state_updated_at_from], :size => 10, :style => "width: 90%;" %><%= calendar_for('state_updated_at_from') %>
+              </div>
+              <div class="col span-1-de-3">
               </div>
             </div>
 
             <div class="seccio grup">
               <div class="col span-2-de-3">
-                <label for="_client_id"><%= l(:label_company) %></label>
-                <%= collection_select(nil, :client_id, Client.find(:all, :order => 'name', :conditions => ["project_id = ?", @project]), :id, :name, {:include_blank => true, :selected => @client_id}) %>
+                <label for="number"><%= l(:field_has_text) %></label>
+                <%= text_field_tag :has_text, params[:has_text] %>
+              </div>
+              <div class="col span-1-de-3">
               </div>
             </div>
 
             <div class="seccio grup">
-              <div class="col span-2-de-2">
+              <div class="col span-2-de-3">
+                <fieldset style="margin: 0;">
+                  <legend>client</legend>
+                  <div class="seccio grup">
+                    <div class="col span-1-de-2">
+                      <label for="taxcode"><%= l(:field_taxcode) %></label>
+                      <%= text_field_tag :taxcode, params[:taxcode] %>
+                    </div>
+                    <div class="col span-1-de-2">
+                      <label for="name"><%= l(:field_name) %></label>
+                      <%= text_field_tag :name, params[:name] %>
+                    </div>
+                  </div>
+
+                  <div class="seccio grup">
+                    <div class="col span-2-de-2">
+                      <label for="client_id"><%= l(:label_company) %></label>
+                      <%= collection_select(nil, :client_id, Client.find(:all, :order => 'name', :conditions => ["project_id = ?", @project]), :id, :name, {:include_blank => true, :selected => @client_id}) %>
+                    </div>
+                  </div>
+
+                  <div class="seccio grup">
+                    <div class="col span-2-de-2">
+                      <label for=""><%= l(:field_invoice_format) %></label>
+                      <%= select(nil, :invoice_format, ExportChannels.for_select(@project), { include_blank: true, selected: params[:invoice_format]}) %>
+                    </div>
+                  </div>
+
+                </fieldset>
+              </div>
+              <div class="col span-1-de-3" style="position: absolute; bottom: 15px; right: 15px; text-align: right;">
                 <%= submit_tag l(:button_apply), :class => "small", :name => nil %>
               </div>
             </div>
@@ -113,23 +164,27 @@
             <%= sort_header_tag('date', :caption => l(:field_date)) %>
             <%= sort_header_tag('clients.name', :caption => l(:field_company)) %>
             <%= sort_header_tag('import_in_cents', :caption => l(:label_subtotal)) %>
-            <%= sort_header_tag('import_in_cents', :caption => l(:label_total)) %>
+            <%= sort_header_tag('import_in_cents', :caption => l(:label_invoice_total)) %>
             <%= sort_header_tag('due_date', :caption => l(:field_due_date)) %>
-            <%= sort_header_tag('state', :caption => l(:field_state)) %>
+            <%= sort_header_tag('state', :title => l(:label_sort_by, "\"#{l(:field_state)}\""), :caption => l(:field_state)) %>
           </tr>
         </thead>
         <tbody>
-          <% for invoice in @invoices -%>
-            <tr id="invoice-<%=invoice.id%>" class="hascontextmenu <%= 'amended ' if invoice.amended? %><%= cycle("odd", "even") %>">
-              <td><%= check_box_tag("ids[]", invoice.id, false, :id => nil) %></td>
-              <td><%=h link_to_if_authorized invoice.number, :action => 'show', :id => invoice %></td>
-              <td><%=h format_date invoice.date %></td>
-              <td><%=h invoice.client %></td>
-              <td class="money"><%= money(invoice.subtotal) %></td>
-              <td class="money"><%= money(invoice.total) %></td>
-              <td <%='class="pastdue"'.html_safe if invoice.past_due?%>><%=h format_date invoice.due_date %></td>
-              <td><%=h l("state_#{invoice.state}").capitalize %></td>
-            </tr>
+          <% @invoices.each do |invoice| -%>
+            <%if invoice.total > invoice.total_paid and invoice.total_paid.cents != 0%>
+              <tr id="invoice-<%=invoice.id%>" class="halfpaid hascontextmenu <%= 'amended ' if invoice.amended? %><%= cycle("odd", "even") %>">
+              <%else%>
+              <tr id="invoice-<%=invoice.id%>" class="hascontextmenu <%= 'amended ' if invoice.amended? %><%= cycle("odd", "even") %>">
+            <% end %>
+                <td><%= check_box_tag("ids[]", invoice.id, false, :id => nil) %></td>
+                <td><%=h link_to_if_authorized invoice.number, :action => 'show', :id => invoice %></td>
+                <td><%=h format_date invoice.date %></td>
+                <td><%=h invoice.client_office ? invoice.client_office : invoice.client %></td>
+                <td class="money"><%= money(invoice.subtotal) %></td>
+                <td class="money"><%= money(invoice.total) %></td>
+                <td <%='class="pastdue"'.html_safe if invoice.past_due?%>><%=h format_date invoice.due_date %><%= call_hook(:invoices_index_due_date, { invoice: invoice }) %></td>
+                <td><%=h l("state_#{invoice.state}").capitalize %></td>
+              </tr>
           <% end -%>
         </tbody>
         <tfoot>

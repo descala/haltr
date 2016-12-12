@@ -6,17 +6,15 @@
   <% else -%>
   <legend><%= l :refuse_notification_to, :mail => @invoice.client.email %></legend>
 <%= form_tag(mark_refused_with_mail_path(@invoice)) do %>
-<pre>
 
-<%= I18n.t(:received_invoice_refused, :num => @invoice.number, :company => @invoice.company.name) %>
+<%= I18n.t(:received_invoice_refused, :num => @invoice.number, :company => @invoice.company.name) %><br />
 
-<%= text_area_tag 'reason', "", :rows => 4, :cols => 40 %>
+<%= text_area_tag 'reason', "", :rows => 4, :cols => 40 %><br />
 
-----------------------------------------
+----------------------------------------<br />
 
 <%= render :partial => "mail_notifier/invoice", :locals => { :invoice => @invoice } %>
-
-</pre>
+<br />
 
 <%= submit_tag I18n.t(:refuse_and_mail) %>
 <% end -%>

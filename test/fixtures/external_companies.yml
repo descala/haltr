@@ -1,0 +1,7 @@
+extcomp1:
+  name: "External Company 1"
+  taxcode: "ESB17915224"
+  postalcode: "08080"
+  country: "es"
+  currency: "EUR"
+  unitats_tramitadores: "P00000011"

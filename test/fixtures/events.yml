@@ -1,12 +1,125 @@
-one:
-  id: 1
-  name: MyString
-  info: MyText
-  user_id: 1
-  filename: MyString
-two:
-  id: 2
-  name: MyString
-  info: MyText
-  user_id: 1
-  filename: MyString
+oldest:
+  name: success_sending
+  user_id: 2
+  invoice_id: 1
+  project_id: 2
+  created_at: <%=Time.now-1.hour%>
+invoices_001_edited:
+  name: edited
+  user_id: 2
+  invoice_id: 1
+  project_id: 2
+  created_at: <%=t=Time.now%>
+invoices_001_queue:
+  name: queue
+  user_id: 2
+  invoice_id: 1
+  project_id: 2
+  created_at: <%=t+=1.minute%>
+invoices_001_manual_send:
+  name: manual_send
+  user_id: 2
+  invoice_id: 1
+  project_id: 2
+  created_at: <%=t+=1.minute%>
+error:
+  name: error
+  user_id: 2
+  invoice_id: 1
+  project_id: 2
+  type: HiddenEvent
+  info: |
+    ---
+    :backtrace:
+      - This is a backtrace ...
+      - Auch
+  created_at: <%=t+=1.minute%>
+error_sending:
+  name: error_sending
+  user_id: 2
+  invoice_id: 1
+  project_id: 2
+  type: EventError
+  info: |
+    ---
+    :notes: Error foo in bar
+with_url:
+  name: success_sending
+  user_id: 2
+  invoice_id: 1
+  project_id: 2
+  type: EventWithUrl
+  info: |
+    ---
+    :notes: These are the notes added to the event
+  created_at: <%=t+=1.minute%>
+with_url_face:
+  name: success_sending
+  user_id: 2
+  invoice_id: 1
+  project_id: 2
+  type: EventWithUrlFace
+  info: |
+    ---
+    :notes: These are the notes added to the event
+  created_at: <%=t+=1.minute%>
+with_mail:
+  name: success_sending
+  user_id: 2
+  invoice_id: 1
+  project_id: 2
+  type: EventWithMail
+  info: |
+    ---
+    :notes: These are the notes added to the event. The text of the email
+  created_at: <%=t+=1.minute%>
+with_file:
+  name: success_sending
+  user_id: 2
+  invoice_id: 1
+  project_id: 2
+  type: EventWithFile
+  info: |
+    ---
+    :notes: Name Of Recipient
+    :class_for_send: send_pdf_by_mail
+  content_type: plain/text
+  created_at: <%=t+=1.minute%>
+accept_notification:
+  name: accept_notification
+  user_id: nil
+  invoice_id: 1
+  type: Event
+  created_at: <%=t+=1.minute%>
+normal_event_but_with_md5:
+  name: success_sending
+  invoice_id: 1
+  project_id: 2
+  type: Event
+  created_at: <%=t+=1.minute%>
+  info: |
+    ---
+    :md5: 6f0e80bdbb75d016ef525c7ba2982390
+template_event:
+  name: edited
+  user_id: 2
+  invoice: template1
+  type: Event
+  created_at: <%=t+=1.minute%>
+received_event:
+  name: accept
+  user_id: 2
+  invoice_id: 10
+  type: Event
+  created_at: <%=t+=1.minute%>
+with_file_notes:
+  name: success_sending
+  user_id: 2
+  invoice_id: 1
+  project_id: 2
+  type: EventWithFile
+  info: |
+    ---
+    :notes: this is a literal
+  content_type: plain/text
+  created_at: <%=t+=1.minute%>

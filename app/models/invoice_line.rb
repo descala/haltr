@@ -2,50 +2,99 @@ class InvoiceLine < ActiveRecord::Base
 
   unloadable
 
+  include Haltr::FloatParser
+  float_parse :discount_percent, :price, :quantity, :charge
+
+  audited :associated_with => :invoice, :except => [:id, :invoice_id]
+  has_associated_audits
+
+
   UNITS     = 1
   HOURS     = 2
   KILOGRAMS = 3
   LITTERS   = 4
   DAYS      = 5
+  OTHER     = 6
+  BOXES     = 7
 
   UNIT_CODES = {
-    UNITS     => {:name => 'units',     :facturae => '01', :ubl => 'C62'},
-    HOURS     => {:name => 'hours',     :facturae => '02', :ubl => 'HUR'},
-    KILOGRAMS => {:name => 'kilograms', :facturae => '03', :ubl => 'KGM'},
-    LITTERS   => {:name => 'litters',   :facturae => '04', :ubl => 'LTR'},
-    DAYS      => {:name => 'days',      :facturae => '05', :ubl => 'DAY'},
+    UNITS     => { name: 'units',     facturae: '01', ubl: 'C62', edifact: 'EA' },
+    HOURS     => { name: 'hours',     facturae: '02', ubl: 'HUR', edifact: 'PCE'},
+    KILOGRAMS => { name: 'kilograms', facturae: '03', ubl: 'KGM', edifact: 'KGM'},
+    LITTERS   => { name: 'litters',   facturae: '04', ubl: 'LTR', edifact: 'LTR'},
+    OTHER     => { name: 'other',     facturae: '05', ubl: 'ZZ',  edifact: 'OTH'},
+    DAYS      => { name: 'days',      facturae: '05', ubl: 'DAY', edifact: 'PCE'},
+    BOXES     => { name: 'boxes',     facturae: '06', ubl: 'CS',  edifact: 'CS' },
   }
 
+  # do not remove, with audit we need to make the other attributes accessible
   attr_protected :created_at, :updated_at
 
   belongs_to :invoice
   has_many :taxes, :class_name => "Tax", :order => "percent", :dependent => :destroy
-  validates_presence_of :description, :unit
   validates_numericality_of :quantity, :price
+  validates_numericality_of :charge, :discount_percent, :allow_nil => true
+  validates_numericality_of :sequence_number, :allow_nil => true, :allow_blank => true
 
   accepts_nested_attributes_for :taxes,
     :allow_destroy => true
   validates_associated :taxes
+  validate :has_same_category_iva_tax, if: Proc.new {|line| line.taxes.any? {|t| t.name == 'RE' } }
 
-  # remove colons "1,23" => "1.23"
-  def price=(v)
-    write_attribute :price, (v.is_a?(String) ? v.gsub(',','.') : v)
+  # Coste Total.
+  # Quantity x UnitPriceWithoutTax
+  def total_cost
+    quantity * price
   end
 
-  # remove colons "1,23" => "1.23"
-  def quanity=(v)
-    write_attribute :quantity, (v.is_a?(String) ? v.gsub(',','.') : v)
-  end
-
-  def total
-    Money.new((price * quantity * Money::Currency.new(invoice.currency).subunit_to_unit).round.to_i, invoice.currency)
+  # Importe bruto.
+  # TotalCost - DiscountAmount + ChargeAmount
+  def gross_amount
+    taxable_base
   end
 
   def taxable_base
-    if invoice.discount_percent
-      total * ( 1 - invoice.discount_percent / 100.0)
+    total_cost - discount_amount + charge
+  end
+
+  # warn! this tax_amount does not include global discounts.
+  def tax_amount(tax)
+    taxable_base * (tax.percent.to_f / 100.0)
+  end
+
+  def discount_amount
+    if self[:discount_amount] and self[:discount_amount] != 0
+      self[:discount_amount]
+    elsif self[:discount_percent] and self[:discount_percent] != 0
+      total_cost * (self[:discount_percent] / 100.0)
     else
-      total
+      0
+    end
+  end
+
+  def discount_percent
+    if self[:discount_percent] and self[:discount_percent] != 0
+      self[:discount_percent]
+    elsif self[:discount_amount] and self[:discount_amount] != 0
+      self[:discount_amount] * 100 / total_cost
+    else
+      0
+    end
+  end
+
+  def discount
+    if discount_type == '€'
+      discount_amount
+    else
+      discount_percent
+    end
+  end
+
+  def discount_type
+    if self[:discount_amount] and self[:discount_amount] != 0
+      '€'
+    else
+      '%'
     end
   end
 
@@ -73,18 +122,30 @@ class InvoiceLine < ActiveRecord::Base
 
   def unit_code(format)
     UNIT_CODES[unit][format]
+  rescue
+    if format == :ubl
+      'EA'
+    else
+      nil
+    end
   end
 
   def unit_short
-    l("s_#{UNIT_CODES[unit][:name]}")
+    l("s_#{UNIT_CODES[unit][:name]}") rescue unit
   end
 
   def taxes_withheld
-    taxes.find(:all, :conditions => "percent < 0")
+    taxes.select {|t| t.percent.to_f < 0 }
   end
 
   def taxes_outputs
-    taxes.find(:all, :conditions => "percent >= 0")
+    taxes.select {|t| t.percent.to_f >= 0 }
+  end
+
+  def exempt_taxes
+    taxes.select do |t|
+      t.exempt?
+    end
   end
 
   def to_s
@@ -95,6 +156,17 @@ class InvoiceLine < ActiveRecord::Base
   * #{quantity} x #{description} #{price}
 #{taxes_string}
 _LINE
+  end
+
+  def has_same_category_iva_tax
+    re_taxes = taxes.select {|t| t.name == 'RE' }
+    iva_taxes = taxes.select {|t| t.name == 'IVA' }
+    re_taxes.each do |tax|
+      next if tax.marked_for_destruction?
+      unless iva_taxes.any? {|t| t.category == tax.category }
+        errors.add(:base, l(:re_tax_without_iva_same_category, :line => description))
+      end
+    end
   end
 
   private
