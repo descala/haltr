@@ -62,7 +62,7 @@ company4:
 company6:
   project_id: 6
   name: Test6
-  taxcode: B10317980
+  taxcode: K103179802
   postalcode: 08080
   currency: EUR
   email: test6@example.com

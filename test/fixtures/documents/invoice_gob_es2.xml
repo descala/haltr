@@ -24,7 +24,7 @@
       <TaxIdentification>
         <PersonTypeCode>J</PersonTypeCode>
         <ResidenceTypeCode>R</ResidenceTypeCode>
-        <TaxIdentificationNumber>A82735122</TaxIdentificationNumber>
+        <TaxIdentificationNumber>82735122M</TaxIdentificationNumber>
       </TaxIdentification>
       <LegalEntity>
         <CorporateName>Company Comp SA</CorporateName>
@@ -61,7 +61,7 @@
       <TaxIdentification>
         <PersonTypeCode>F</PersonTypeCode>
         <ResidenceTypeCode>E</ResidenceTypeCode>
-        <TaxIdentificationNumber>B10317980</TaxIdentificationNumber>
+        <TaxIdentificationNumber>K103179802</TaxIdentificationNumber>
       </TaxIdentification>
       <AdministrativeCentres>
         <AdministrativeCentre>
