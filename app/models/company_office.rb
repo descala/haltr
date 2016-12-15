@@ -1,7 +1,5 @@
 class CompanyOffice < ActiveRecord::Base
 
-  unloadable
-
   belongs_to :company
   delegate :project, to: :company
   has_many :invoices, dependent: :nullify

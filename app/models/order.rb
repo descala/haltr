@@ -1,5 +1,4 @@
 class Order < ActiveRecord::Base
-  unloadable
 
   belongs_to :project
   belongs_to :client
@@ -270,11 +269,11 @@ class Order < ActiveRecord::Base
   end
 
   def next
-    Order.first(conditions: ["project_id = ? and id > ? and type = ?", project.id, id, type])
+    project.invoices.where("id > ? and type = ?", self.id, self.type).first
   end
 
   def previous
-    Order.last(conditions: ["project_id = ? and id < ? and type = ?", project.id, id, type])
+    project.invoices.where("id < ? and type = ?", self.id, self.type).last
   end
 
   def ubl_invoice

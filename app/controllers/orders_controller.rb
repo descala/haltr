@@ -1,5 +1,4 @@
 class OrdersController < ApplicationController
-  unloadable
 
   menu_item Haltr::MenuItem.new(:orders,:orders_level2)
   menu_item Haltr::MenuItem.new(:orders,:received), :only => [:received, :show_received]
@@ -71,14 +70,11 @@ class OrdersController < ApplicationController
       @client_id = params[:client_id].to_i rescue nil
     end
 
+    @limit = per_page_option
     @order_count = orders.count
-    @order_pages = Paginator.new self, @order_count,
-      per_page_option,
-      params[:page]
-    @orders = orders.find :all,
-      order: sort_clause,
-      limit: @order_pages.items_per_page,
-      offset: @order_pages.current.offset
+    @order_pages = Paginator.new @order_count, @limit, params['page']
+    @offset ||= @order_pages.offset
+    @orders = orders.order(sort_clause).limit(@limit).offset(@offset).to_a
   end
 
   def received
@@ -124,7 +120,7 @@ class OrdersController < ApplicationController
         if @order.xml?
           @order_xslt_html = @order_xslt_html.to_html.html_safe
         end
-        render pdf: 'order.html',
+        render pdf: @order.filename,
         template: 'orders/show',
         layout: 'order',
         :show_as_html => params[:debug],
