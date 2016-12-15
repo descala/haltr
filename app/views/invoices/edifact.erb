@@ -15,6 +15,7 @@ DTM+95E:<%='fechaefe (camp de TSF #4744)'%>:102'
 <% unless @invoice.delivery_note_number.blank? %>
 RFF+DQ:<%=@invoice.delivery_note_number%>'
 <% end %>
+<%= call_hook(:edi_after_delivery_note) if call_hook(:edi_after_delivery_note).present? -%>
 <% unless @invoice.ponumber.blank? %>
 RFF+ON:<%=@invoice.ponumber.to_s[0..16]%>'
 DTM+171:<%=edi_date @invoice.order_date%>:102'
@@ -27,6 +28,7 @@ RFF+VA:<%=@company.edi_code%>'
 NAD+BCO+<%=@client.edi_code%>::9++<%=@client.name%><%="::#{@client.company_identifier}" unless @client.company_identifier.blank?%>+<%=@client.address%>+<%=@client.city%>+<%=@client.province%>+<%=@client.postalcode%>+<%=@client.country%>'
 RFF+VA:<%=@client.taxcode%>'
 NAD+BY+<%=@client.buyer_edi_code%>::9'
+<%= call_hook(:edi_after_buyer_edi_code) if call_hook(:edi_after_buyer_edi_code).present? -%>
 NAD+SU+<%=@company.edi_code%>::9++<%=@company.name.to_s[0..34]%><%="::#{@company.company_identifier.to_s[0..19]}" unless @company.company_identifier.blank?%>+<%=@company.address.to_s[0..34]%>+<%=@company.city.to_s[0..34]%>+<%=@company.province.to_s[0..34]%>+<%=@company.postalcode%>+<%=@company.country%>'
 NAD+IV+<%=@client.buyer_edi_code%>::9'
 NAD+DP+<%=@client.destination_edi_code.to_s.split('@').first%>::9'

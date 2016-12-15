@@ -346,6 +346,8 @@ module Haltr
           client_hash[:country] = SunDawg::CountryIsoTranslater.translate_standard(
             client_hash[:country], "alpha3", "alpha2"
           ).downcase rescue client_hash[:country]
+        elsif client_hash[:country]
+          client_hash[:country] = client_hash[:country].downcase
         end
         if project
           # to match ES12345678 when we have 12345678
