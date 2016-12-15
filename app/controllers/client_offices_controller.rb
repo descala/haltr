@@ -27,14 +27,12 @@ class ClientOfficesController < ApplicationController
       client_offices = client_offices.where(["LOWER(client_offices.name) LIKE ? OR LOWER(client_offices.city) LIKE ? OR LOWER(client_offices.province) LIKE ?", name, name, name])
     end
 
+    @limit = per_page_option
     @client_office_count = client_offices.count
-    @client_office_pages = Paginator.new @client_office_count,
-		per_page_option,
-		params['page']
-    @client_offices = client_offices.
-      where(limit:  @client_office_pages.items_per_page).
-      where(offset: @client_office_pages.current.offset).
-      order(sort_clause)
+    @client_office_pages = Paginator.new @client_office_count, @limit, params['page']
+    @offset ||= @client_office_pages.offset
+    @client_offices = client_offices.order(sort_clause).limit(@limit).offset(@offset).to_a
+
   end
 
   def new

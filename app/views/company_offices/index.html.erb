@@ -56,7 +56,7 @@
         </tr>
       </thead>
       <tbody>
-        <% @company.company_offices.each do |office| -%>
+        <% @company_offices.each do |office| -%>
           <tr class="user <%= cycle("odd", "even") %>" />
             <td><%=h office.address %></td>
             <td><%=h office.city %></td>
