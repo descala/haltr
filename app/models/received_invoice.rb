@@ -29,6 +29,9 @@ class ReceivedInvoice < InvoiceDocument
     event :unpaid do
       transitions from: :paid, to: :accepted
     end
+    event :mark_as_paid do
+      transitions from: :accepted, to: :paid
+    end
     event :failed_notification do
       transitions to: :error
     end
@@ -38,12 +41,6 @@ class ReceivedInvoice < InvoiceDocument
     name = aasm.current_event.to_s.gsub('!','')
     unless Event.automatic.include? name
       Event.create(:name=>name,:invoice=>self,:user=>User.current)
-    end
-    event :mark_as_paid do
-      transition :accepted => :paid
-    end
-    event :failed_notification do
-      transition all => :error
     end
   end
 

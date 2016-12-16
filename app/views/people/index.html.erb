@@ -70,7 +70,7 @@
             <td><%=h person.phone %></td>
             <% if @client == nil %> <td><%=h person.client %></td> <% end %>
             <td align="center"><%= link_to_if_authorized l(:button_edit), {:action=>'edit',:id=>person}, :class => 'icon icon-edit editar' %></td>
-            <td align="center"><%= link_to_if_authorized l(:button_delete), {:action=>'destroy',:id=>person} , :confirm => l(:text_are_you_sure), :method => :delete, :class => 'icon icon-del eliminar' %></td>
+            <td align="center"><%= link_to_if_authorized l(:button_delete), {:action=>'destroy',:id=>person} , :data=>{:confirm=>l(:text_are_you_sure)}, :method => :delete, :class => 'icon icon-del eliminar' %></td>
           </tr>
         <% end -%>
       </tbody>
