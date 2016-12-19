@@ -165,6 +165,7 @@ class QuotesController < ApplicationController
     @client = @quote.client
     @invoice = IssuedInvoice.new
     @invoice.attributes = @quote.attributes
+    @invoice.date = Date.today
     @invoice.number=IssuedInvoice.next_number(@project)
     @quote.invoice_lines.each do |line|
       il = line.dup
