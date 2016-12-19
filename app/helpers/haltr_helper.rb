@@ -165,7 +165,8 @@ module HaltrHelper
     elsif name == "unit"
       l(InvoiceLine::UNIT_CODES[value][:name], :default=>value) rescue value
     elsif name == "country"
-      ISO3166::Country[value].translations[I18n.locale.to_s]
+      c = ISO3166::Country[value]
+      c.translations[I18n.locale.to_s] || c.name
     elsif name == "language"
       l(:general_lang_name,:locale=>value, :default=>value)
     elsif name == "invoice_format"
@@ -175,6 +176,8 @@ module HaltrHelper
     else
       value
     end
+  rescue
+    value
   end
 
   def colspan_for(invoice)
