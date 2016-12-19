@@ -1,6 +1,16 @@
 # Methods added to this helper will be available to all templates in the application.
 module HaltrHelper
 
+  LANG_COUNTRIES = {
+    ca: [:es],
+    da: [:dk],
+    es: [:es],
+    gl: [:es],
+    fr: [:fr],
+    sv: [:se],
+    en: [:gb,:es,:dk,:fr,:se]
+  }
+
   include Cocoon::ViewHelpers
 
   # Renders flash messages
@@ -74,6 +84,10 @@ module HaltrHelper
 
   def currency_options_for_select
     HaltrHelper.currency_options_for_select
+  end
+
+  def countries_of_language(lang)
+    LANG_COUNTRIES[lang.to_sym]
   end
 
   def help(topic)
