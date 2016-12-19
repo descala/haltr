@@ -481,7 +481,7 @@ class Invoice < ActiveRecord::Base
 
   def legal_literals_plus_tax_comments
     str = legal_literals.to_s
-    str += '. ' unless str.blank?
+    str += ' ' unless str.blank?
     str += tax_comments
     str
   end

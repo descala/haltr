@@ -8,6 +8,7 @@
     cols << "visible_#{field}"
     cols << "required_#{field}"
   end
+  cols << 'linked_clients'
 
   CSV.generate(
     :headers       => cols,
@@ -15,7 +16,11 @@
   ) do |csv|
     ExternalCompany.all.each do |d3e|
       csv << cols.collect {|c|
-        d3e.send(c)
+        if c != 'linked_clients'
+          d3e.send(c)
+        else
+          d3e.clients.count
+        end
       }
     end
   end.html_safe
