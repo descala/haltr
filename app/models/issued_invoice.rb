@@ -159,17 +159,16 @@ class IssuedInvoice < InvoiceDocument
   end
 
   def self.find_can_be_sent(project)
-    project.issued_invoices.includes(:client).all(
-      :conditions => [
-        "state='new' and number is not null and date <= ? and clients.invoice_format in (?)",
-        Date.today,
-        ExportChannels.can_send.keys
-      ], :order => "number ASC"
+    project.issued_invoices.includes(:client).where(
+      "state='new' and number is not null and " +
+      "date <= ? and clients.invoice_format in (?)",
+      Date.today,
+      ExportChannels.can_send.keys
     )
   end
 
   def self.find_not_sent(project)
-    project.issued_invoices.all :conditions => "state='new' and number is not null", :order => "number ASC"
+    project.issued_invoices.where("state='new' and number is not null")
   end
 
   def self.candidates_for_payment(payment)

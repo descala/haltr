@@ -84,17 +84,11 @@ module InvoicesHelper
   end
 
   def num_not_sent
-    @project.issued_invoices.count(:conditions => "state='new' and number is not null")
+    IssuedInvoice.find_not_sent(@project).count
   end
 
   def num_can_be_sent
-    @project.issued_invoices.includes(:client).count(
-      :conditions => [
-        "state='new' and number is not null and date <= ? and clients.invoice_format in (?)",
-        Date.today,
-        ExportChannels.can_send.keys
-      ]
-    )
+    IssuedInvoice.find_can_be_sent(@project).count
   end
 
   def tax_name(tax, options = {})
