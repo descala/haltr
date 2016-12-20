@@ -225,3 +225,7 @@ end
 
 Delayed::Worker.max_attempts = 3
 Audited.current_user_method = :find_current_user
+
+CountrySelect::FORMATS[:default] = lambda do |country|
+  [country.translations[I18n.locale.to_s] || country.name, country.alpha2.downcase]
+end

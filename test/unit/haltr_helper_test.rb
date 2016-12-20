@@ -8,6 +8,7 @@ class InvoicesHelperTest < ActionView::TestCase
     set_language_if_valid 'es'
     import = Money.new(123456,'EUR')
     assert_equal('1.234,56 €',money(import))
+    set_language_if_valid 'en'
   end
 
 end
