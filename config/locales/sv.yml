@@ -384,6 +384,8 @@ sv:
   tag_issue: Issue date
   tag_due: Due date
   tag_total: Total
+  tag_tax_wh_percentage: "IRPF %"
+  tag_tax_wh_amount: "IRPF €"
   update_invoice: Update invoice
   replace_tags: Replace
   clear_tag: Remove

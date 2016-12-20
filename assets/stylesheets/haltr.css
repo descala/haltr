@@ -359,14 +359,14 @@ span#send_info {
 .rectangle-txt:not(.context-menu-selection):hover {
   background: white;
   color: black;
-  z-index: 1;
+  z-index: 5;
   border: 1px solid green;
 }
 .rectangle-txt.hastag {
-  background: yellow;
+  background: rgba(255,255,51,.9);
   color: black;
   border: none;
-  z-index: 0;
+  z-index: 5;
   font-weight: bold;
   border: 1px solid yellow;
 }

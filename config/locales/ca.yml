@@ -398,6 +398,8 @@ ca:
   tag_issue: Data d'emisió
   tag_due: Data de venciment
   tag_total: Total
+  tag_tax_wh_percentage: "IRPF %"
+  tag_tax_wh_amount: "IRPF €"
   update_invoice: Actualitzar la factura
   replace_tags: Substituir
   clear_tag: Eliminar
