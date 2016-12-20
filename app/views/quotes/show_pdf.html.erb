@@ -1,3 +1,61 @@
+<% if @debug -%>
+<style type="text/css">
+  body {
+    width: 100%;
+    height: 100%;
+    margin: 0;
+    padding: 0;
+    background-color: #FAFAFA;
+    font-family: "DejaVu Sans";
+    font-size: 12px;
+    line-height: 90%;
+  }
+  th, td {
+    font-size: 11px !important;
+  }
+  * {
+    box-sizing: border-box;
+    -moz-box-sizing: border-box;
+  }
+  .page {
+    position: absolute;
+    width: 210mm;
+    min-height: 297mm;
+    padding: 10 10 10 20mm;
+    margin: 7mm 7mm;
+    border: 1px #D3D3D3 solid;
+    border-radius: 5px;
+    background: white;
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+  }
+  .subpage {
+    height: 257mm;
+    padding-left: 30mm;
+    padding-right: 20mm;
+    padding-top: 20mm;
+    padding-bottom: 20mm;
+  }
+  .window {
+    position: absolute;
+    background-color: yellow;
+    width: 100mm;
+    min-height: 45mm;
+    top: 32mm;
+    left: 104mm;
+    opacity: 0.2;
+    z-index: 1;
+  }
+  div.page-break {
+    margin-top: 20mm;
+    margin-bottom: 20mm;
+    border: solid 1px;
+  }
+</style>
+  <div class="window"></div>
+  <div class="page">
+    <div class="subpage">
+<% end -%>
+
 <%
     @invoice ||= invoice
     @lines   ||= @invoice.invoice_lines

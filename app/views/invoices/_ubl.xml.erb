@@ -1,5 +1,10 @@
   <cbc:ID><%=h @invoice.number%></cbc:ID>
   <cbc:IssueDate><%=h @invoice.date%></cbc:IssueDate>
+<% if @invoice.amend_of -%>
+    <cbc:CreditNoteTypeCode listID="UNCL1001">384</cbc:CreditNoteTypeCode>
+<% elsif -%>
+    <cbc:InvoiceTypeCode listID="UNCL1001">380</cbc:InvoiceTypeCode>
+<% end -%>
 <% if @invoice.extra_info? -%>
         <cbc:Note><%=h @invoice.extra_info%></cbc:Note>
 <% end -%>
@@ -255,7 +260,15 @@
 <% unless invoice_line.notes.blank? -%>
           <cbc:Note><%=invoice_line.notes%></cbc:Note>
 <% end -%>
-          <<%= @invoice.is_amend? ? "cbc:CreditedQuantity" : "cbc:InvoicedQuantity"%> unitCode="<%=h invoice_line.unit_code(:ubl) %>"><%=h invoice_line.quantity%></<%= @invoice.is_amend? ? "cbc:CreditedQuantity" : "cbc:InvoicedQuantity"%>>
+<% if @invoice.is_amend? -%>
+        <cbc:CreditedQuantity unitCode="<%=h invoice_line.unit_code(:ubl) %>"><%=h invoice_line.quantity%></cbc:CreditedQuantity>
+<% else -%>
+    <% if ubl_version != '2.0' -%>
+          <cbc:InvoicedQuantity unitCode="<%=h invoice_line.unit_code(:ubl) %>" unitCodeListID="UNECERec20"><%=h invoice_line.quantity%></cbc:InvoicedQuantity>
+    <% else -%>
+          <cbc:InvoicedQuantity unitCode="<%=h invoice_line.unit_code(:ubl) %>"><%=h invoice_line.quantity%></cbc:InvoicedQuantity>
+    <% end -%>
+<% end -%>
           <cbc:LineExtensionAmount currencyID="<%=h @client.currency%>"><%=h haltr_precision(invoice_line.gross_amount,2)%></cbc:LineExtensionAmount>
         <% if invoice_line.discount_percent > 0  && !@invoice.is_amend? ||
           (invoice_line.discount_percent > 0  && @invoice.is_amend? && ubl_version != "2.0")-%>

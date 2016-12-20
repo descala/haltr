@@ -15,10 +15,12 @@ class AddOrders < ActiveRecord::Migration
       t.integer "comments_count"
     end
     add_column :events, :order_id, :integer
+    add_index  :events, :order_id
   end
 
   def down
     drop_table :orders
+    remove_index :events, :order_id
   end
 
 end

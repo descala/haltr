@@ -347,6 +347,8 @@ module Haltr
           client_hash[:country] = SunDawg::CountryIsoTranslater.translate_standard(
             client_hash[:country], "alpha3", "alpha2"
           ).downcase rescue client_hash[:country]
+        elsif client_hash[:country]
+          client_hash[:country] = client_hash[:country].downcase
         end
         if project
           # to match ES12345678 when we have 12345678
@@ -391,6 +393,9 @@ module Haltr
           end
           # do not add "validate: false" here or you'll end with duplicated
           # clients, client validates uniqueness of taxcode.
+          unless client.valid?
+            raise "#{I18n.t(:client)}: #{client.errors.full_messages.join('. ')}"
+          end
           client.save!
         end
 

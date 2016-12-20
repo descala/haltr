@@ -854,7 +854,10 @@ class InvoiceTest < ActiveSupport::TestCase
     invoice = invoices(:invoices_001)
     invoice.client = nil
     invoice.client, invoice.client_office = Haltr::Utils.client_from_hash(
-      taxcode: "FRB17915224",
+      name: 'test',
+      language: 'en',
+      country: 'fr',
+      taxcode: "12345678901",
       project: invoice.project
     )
     assert_nil invoice.client.company_id
@@ -864,7 +867,10 @@ class InvoiceTest < ActiveSupport::TestCase
     invoice = invoices(:invoices_001)
     invoice.client = nil
     invoice.client, invoice.client_office = Haltr::Utils.client_from_hash(
-      taxcode: "5224",
+      name: 'test',
+      language: 'en',
+      country: 'fr',
+      taxcode: "12345678901",
       project: invoice.project
     )
     assert_nil invoice.client.company_id

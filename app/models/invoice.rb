@@ -483,7 +483,7 @@ class Invoice < ActiveRecord::Base
 
   def legal_literals_plus_tax_comments
     str = legal_literals.to_s
-    str += '. ' unless str.blank?
+    str += ' ' unless str.blank?
     str += tax_comments
     str
   end
@@ -1083,7 +1083,7 @@ _INV
     if company and company.project
       ImportError.create(
         filename:      file_name,
-        import_errors: $!.message,
+        import_errors: $!.message[0.254],
         original:      raw_xml,
         project:       company.project,
       )

@@ -39,7 +39,13 @@ class QuotesController < ApplicationController
           :layout => "invoice.html",
           :template=>"quotes/show_pdf",
           :formats => :html,
-          :show_as_html => params[:debug]
+          :show_as_html => params[:debug],
+          :margin => {
+            :top    => 20,
+            :bottom => 20,
+            :left   => 30,
+            :right  => 20
+          }
       end
       if params[:debug]
         format.facturae30  { render_xml Haltr::Xml.generate(@invoice, 'facturae30') }
@@ -165,6 +171,7 @@ class QuotesController < ApplicationController
     @client = @quote.client
     @invoice = IssuedInvoice.new
     @invoice.attributes = @quote.attributes
+    @invoice.date = Date.today
     @invoice.number=IssuedInvoice.next_number(@project)
     @quote.invoice_lines.each do |line|
       il = line.dup
