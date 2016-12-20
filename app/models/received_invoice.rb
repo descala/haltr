@@ -33,13 +33,13 @@ class ReceivedInvoice < InvoiceDocument
       transitions to: :error
     end
     event :mark_as_accepted do
-      transition all => :accepted
+      transitions to: :accepted
     end
     event :mark_as_paid do
-      transition all => :paid
+      transitions to: :paid
     end
     event :mark_as_refused do
-      transition all => :refused
+      transitions to: :refused
     end
   end
 
