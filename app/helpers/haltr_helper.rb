@@ -1,6 +1,16 @@
 # Methods added to this helper will be available to all templates in the application.
 module HaltrHelper
 
+  LANG_COUNTRIES = {
+    ca: [:es],
+    da: [:dk],
+    es: [:es],
+    gl: [:es],
+    fr: [:fr],
+    sv: [:se],
+    en: [:gb,:es,:dk,:fr,:se]
+  }
+
   include Cocoon::ViewHelpers
 
   # Renders flash messages
@@ -16,9 +26,9 @@ module HaltrHelper
     currency = Money::Currency.new(import.currency)
     currency_symbol = currency.symbol || ""
     if currency.subunit_to_unit == 1
-      number_to_currency(import, :unit => currency_symbol, :precision => 0)
+      number_to_currency(import.dollars, :unit => currency_symbol, :precision => 0)
     else
-      number_to_currency(import, :unit => currency_symbol)
+      number_to_currency(import.dollars, :unit => currency_symbol)
     end
   end
 
@@ -74,6 +84,10 @@ module HaltrHelper
 
   def currency_options_for_select
     HaltrHelper.currency_options_for_select
+  end
+
+  def countries_of_language(lang)
+    LANG_COUNTRIES[lang.to_sym]
   end
 
   def help(topic)
