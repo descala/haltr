@@ -29,11 +29,17 @@ class ReceivedInvoice < InvoiceDocument
     event :unpaid do
       transitions from: :paid, to: :accepted
     end
-    event :mark_as_paid do
-      transitions from: :accepted, to: :paid
-    end
     event :failed_notification do
       transitions to: :error
+    end
+    event :mark_as_accepted do
+      transition all => :accepted
+    end
+    event :mark_as_paid do
+      transition all => :paid
+    end
+    event :mark_as_refused do
+      transition all => :refused
     end
   end
 

@@ -57,7 +57,7 @@ class ExportChannels
   end
 
   def self.options(id)
-    available[id]["options"].dup if available? id
+    available[id]["options"].dup if available?(id) and available[id]["options"]
   end
 
   def self.validators(id=nil)

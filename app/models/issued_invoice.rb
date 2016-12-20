@@ -164,10 +164,11 @@ class IssuedInvoice < InvoiceDocument
   end
 
   def self.find_can_be_sent(project)
-    project.issued_invoices.includes(:client).where(
-        "state='new' and number is not null and date <= ? and clients.invoice_format in (?)",
-        Date.today,
-        ExportChannels.can_send.keys
+    project.issued_invoices.where(
+      "state='new' and number is not null and " +
+      "date <= ? and clients.invoice_format in (?)",
+      Date.today,
+      ExportChannels.can_send.keys
     ).references(:clients)
   end
 
