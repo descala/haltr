@@ -46,11 +46,17 @@ class ReceivedInvoice < InvoiceDocument
     event :error_sending do
       transition :processing_pdf => :error
     end
-    event :mark_as_paid do
-      transition :accepted => :paid
-    end
     event :failed_notification do
       transition all => :error
+    end
+    event :mark_as_accepted do
+      transition all => :accepted
+    end
+    event :mark_as_paid do
+      transition all => :paid
+    end
+    event :mark_as_refused do
+      transition all => :refused
     end
   end
 
