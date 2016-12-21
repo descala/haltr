@@ -377,8 +377,10 @@ class InvoicesController < ApplicationController
 
     if @invoice.update_attributes(parsed_params)
       # mark invoice as new
-      if %w(sent registered accepted allegedly_paid closed).include?(@invoice.state)
-        @invoice.update_attribute(:state, 'new')
+      if parsed_params[:state].blank?
+        if %w(sent registered accepted allegedly_paid closed).include?(@invoice.state)
+          @invoice.update_attribute(:state, 'new')
+        end
       end
 
       event = Event.new(:name=>'edited',:invoice=>@invoice,:user=>User.current)
