@@ -38,7 +38,8 @@ class Invoice < ActiveRecord::Base
     i.client and i.client.client_offices.any? {|o| o.id == i.client_office_id }
   }
 
-  validates_presence_of :client, :date, :currency, :project_id, :unless => Proc.new {|i| i.type == "ReceivedInvoice" }
+  validates_presence_of :date, :currency, :project_id, :unless => Proc.new {|i| i.type == "ReceivedInvoice" }
+  validates_presence_of :client, :unless => Proc.new {|i| %w(Quote ReceivedInvoice).include? i.type }
   validates_inclusion_of :currency, :in  => Money::Currency.table.collect {|k,v| v[:iso_code] }, :unless => Proc.new {|i| i.type == "ReceivedInvoice" }
   validates_numericality_of :charge_amount_in_cents, :allow_nil => true
   validates_numericality_of :payments_on_account_in_cents, :allow_nil => true

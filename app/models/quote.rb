@@ -93,4 +93,10 @@ class Quote < Invoice
     end
   end
 
+  def recipient_emails
+    super
+  rescue # client can be nil #6276
+    []
+  end
+
 end
