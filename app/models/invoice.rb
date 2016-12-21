@@ -1324,9 +1324,12 @@ _INV
     if ext_comp
       ext_comp.required_fields.each do |field|
         if field == "dir3"
-          errors.add(:organ_gestor, :blank) if organ_gestor.blank?
-          errors.add(:unitat_tramitadora, :blank) if unitat_tramitadora.blank?
-          errors.add(:oficina_comptable, :blank) if oficina_comptable.blank?
+          # https://www.ingent.net/issues/6273
+          unless new_record?
+            errors.add(:organ_gestor, :blank) if organ_gestor.blank?
+            errors.add(:unitat_tramitadora, :blank) if unitat_tramitadora.blank?
+            errors.add(:oficina_comptable, :blank) if oficina_comptable.blank?
+          end
         else
           errors.add(field, :blank) if self.send(field).blank?
         end
