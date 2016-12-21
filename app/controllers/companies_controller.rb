@@ -108,6 +108,16 @@ class CompaniesController < ApplicationController
         return
       end
     end
+    unless User.current.admin?
+      # allow to modify own taxcode only if current is invalid #6279
+      if @company.valid? or !@company.errors.messages.keys.include?(:taxcode)
+        new_taxcode = params[:company][:taxcode].present?
+        if new_taxcode.present? and new_taxcode != @company.taxcode
+          flash[:warning] = I18n.t(:cant_modify_taxcode, suport_link: view_context.link_to(I18n.t(:suport_link), project_new_support_path(@company.project))).html_safe
+          params[:company].delete(:taxcode)
+        end
+      end
+    end
     if @company.update_attributes(params[:company])
       unless @company.taxes.collect {|t| t unless t.marked_for_destruction? }.compact.any?
         @company.taxes = []
