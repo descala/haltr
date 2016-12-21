@@ -1,6 +1,5 @@
 class PaymentsController < ApplicationController
 
-  unloadable
   menu_item Haltr::MenuItem.new(:payments,:payments_level2)
   menu_item Haltr::MenuItem.new(:payments,:payment_initiation), :only=> [:payment_initiation,:payment_done,:sepa,:invoices]
   menu_item Haltr::MenuItem.new(:payments,:import_aeb43),       :only=> [:import_aeb43_index,:import_aeb43]
@@ -32,22 +31,20 @@ class PaymentsController < ApplicationController
       payments = payments.scoped conditions: [conditions, *fields.collect {name}]
     end
 
+    @limit = per_page_option
     @payment_count = payments.count
-    @payment_pages = Paginator.new self, @payment_count,
-		per_page_option,
-		params['page']
-    @payments = payments.find :all, :order => sort_clause,
-       :include => :invoice,
-       :limit  => @payment_pages.items_per_page,
-       :offset => @payment_pages.current.offset
+    @payment_pages = Paginator.new @payment_count, @limit, params['page']
+    @offset ||= @payment_pages.offset
+    @payments= payments.order(sort_clause).limit(@limit).offset(@offset).to_a
   end
 
 
   def new
     @payment_type = params[:payment_type]
     if params[:invoice_id]
-      @invoice = Invoice.find params[:invoice_id]
-      @payment = Payment.new(:invoice_id => @invoice.id, :amount => @invoice.unpaid_amount)
+      @invoice = @project.invoices.find params[:invoice_id]
+      @payment = Payment.new(amount: @invoice.unpaid_amount)
+      @payment.invoice = @invoice
     else
       @payment = Payment.new
     end
@@ -57,8 +54,11 @@ class PaymentsController < ApplicationController
   end
 
   def create
+    if params[:payment][:invoice_id].present?
+      @invoice = @project.invoices.find params[:payment].delete(:invoice_id)
+    end
     @payment = Payment.new(params[:payment].merge({:project=>@project}))
-    @invoice = @payment.invoice
+    @payment.invoice = @invoice
     @reason = params[:reason]
     if @payment.save
       flash[:notice] = l(:notice_successful_create)
@@ -95,9 +95,9 @@ class PaymentsController < ApplicationController
     @invoices_to_pay_by_bank_info = {}
     @project.company.bank_infos.each do |bi|
       @invoices_to_pay_by_bank_info[bi] = {}
-      bi.issued_invoices.find(:all,
-        :conditions => ["state IN ('sent','registered','accepted','read') AND payment_method = ?", Invoice::PAYMENT_DEBIT],
-        ).reject {|i| i.due_date.nil? }.group_by(&:due_date).each do |due_date, invoices|
+      bi.issued_invoices.where(
+        "state IN ('sent','registered','accepted','read') AND payment_method = ?", Invoice::PAYMENT_DEBIT
+      ).reject {|i| i.due_date.nil? }.group_by(&:due_date).each do |due_date, invoices|
         @invoices_to_pay_by_bank_info[bi][due_date] = {}
         invoices.each do |invoice|
           unless invoice.client.bank_account.blank? and invoice.client_iban.blank?
@@ -120,9 +120,7 @@ class PaymentsController < ApplicationController
     due_date = params[:due_date]
     bank_info = BankInfo.find params[:bank_info]
     render_404 && return if bank_info.blank?
-    clients_all = Client.find(:all,
-                          :conditions => ["iban != '' and project_id = ?", @project.id],
-                          :order => 'taxcode')
+    clients_all = Client.where("iban != '' and project_id = ?", @project.id).order('taxcode')
     clients = clients_all.reject do |client|
       client.sepa_type != params[:sepa_type] || client.bank_invoices_total(due_date, bank_info.id).zero?
     end
@@ -186,7 +184,7 @@ class PaymentsController < ApplicationController
     invoices  = bank_info.invoices.find(params[:invoices])
     invoices.each do |invoice|
       Payment.new_to_close(invoice).save
-      invoice.close
+      invoice.close!
     end
     flash[:notice] = l(:notice_payment_done, :payment_type => params[:payment_type], :value => params[:due_date])
     redirect_to :action => 'payment_initiation', :project_id => @project
@@ -198,13 +196,19 @@ class PaymentsController < ApplicationController
   def import_aeb43
     file = params[:file]
     if file && file.size > 0
-      importer = Import::Aeb43.new file.path
+      importer = Haltr::Import::Aeb43.new file.path
       @errors = []
       @moviments = importer.moviments
       @moviments.each do |m|
         if m.positiu
           begin
-          p =Payment.new :date => m.date_o, :amount => m.amount, :payment_method => "Account #{m.account}", :reference => "#{m.ref1} #{m.ref2} #{m.txt1} #{m.txt2}".strip, :project => @project
+          p =Payment.new(
+            date: m.date_o,
+            amount: m.amount,
+            payment_method: "Account #{m.account}",
+            reference: "#{m.ref1} #{m.ref2} #{m.txt1} #{m.txt2}".strip,
+            project: @project
+          )
           p.save!
           rescue ActiveRecord::RecordInvalid
             @errors << p

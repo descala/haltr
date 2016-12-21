@@ -1,5 +1,5 @@
-require File.expand_path(File.dirname(__FILE__) + "/../../../test/test_helper")
-require 'webmock/test_unit'
+require File.expand_path('../../../../test/test_helper', __FILE__)
+require 'webmock/minitest'
 
 module Haltr
   module TestHelper
@@ -56,7 +56,7 @@ class ActiveSupport::TestCase
 #  self.use_instantiated_fixtures  = true
 end
 
-class ActionController::IntegrationTest
+class ActionDispatch::IntegrationTest
   self.fixture_path = File.dirname(__FILE__) + '/fixtures'
 #  self.use_transactional_fixtures = true
 #  self.use_instantiated_fixtures  = true

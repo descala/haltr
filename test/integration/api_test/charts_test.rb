@@ -41,10 +41,7 @@ class Redmine::ApiTest::ChartsTest < Redmine::ApiTest::Base
   test 'cash flow' do
     get "/projects/onlinestore/cash_flow.json?pref=all", {}, credentials('jsmith')
     assert_response :success
-    # TODO now lib/redmine/views/builders/structure.rb uses BlankSlate
-    #      method "send" can not be used anymore
-    # assert_equal 1851.36, JSON(response.body)['cash_flow']['EUR']['invoices_sum']
-    pending
+    assert_equal 1851.36, JSON(response.body)['cash_flow']['EUR']['invoices_sum']
   end
 
 end

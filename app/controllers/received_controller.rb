@@ -8,7 +8,7 @@ class ReceivedController < InvoicesController
     unless User.current.admin?
       @invoice.update_attribute(:has_been_read, true)
       if @invoice.created_from_invoice
-        @invoice.created_from_invoice.read
+        @invoice.created_from_invoice.read!
       end
     end
     super
@@ -37,7 +37,7 @@ class ReceivedController < InvoicesController
         notes: params[:reason]
       )
     end
-    Event.create(:name=>'accept',:invoice=>@invoice,:user=>User.current)
+    Event.create(:name=>'accept',:invoice=>@invoice,:user=>User.current, :notes => params[:reason])
     redirect_to :back
   rescue ActionController::RedirectBackError
     render :text => "OK"
@@ -57,7 +57,7 @@ class ReceivedController < InvoicesController
         notes: params[:reason]
       )
     end
-    Event.create(:name=>'refuse',:invoice=>@invoice,:user=>User.current)
+    Event.create(:name=>'refuse',:invoice=>@invoice,:user=>User.current, :notes => params[:reason])
     redirect_to :back
   rescue ActionController::RedirectBackError
     render :text => "OK"

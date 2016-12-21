@@ -1,4 +1,4 @@
-require File.dirname(__FILE__) + '/../test_helper'
+require File.expand_path('../../test_helper', __FILE__)
 
 class InvoicesHelperTest < ActionView::TestCase
 
@@ -17,6 +17,7 @@ class InvoicesHelperTest < ActionView::TestCase
   end
 
   test "send_link_for_invoice handles unknown Client#invoice_format" do
+    set_language_if_valid 'en'
     @invoice = invoices(:invoice1)
     client = @invoice.client
     client.invoice_format = 'white_crow'

@@ -1,5 +1,5 @@
 class ExportChannelsController < ApplicationController
-  unloadable
+
 
   layout 'admin'
   menu_item :export_channels

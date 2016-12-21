@@ -7,12 +7,12 @@
 #  bundle exec rails runner -e development "InvoiceReceiver.receive(File.read('/path/to/mail'))"
 #
 class HaltrMailHandler < MailHandler # < ActionMailer::Base
-  unloadable
+
 
   require "rexml/document"
   require "tempfile"
 
-  def receive(email)
+  def receive(email, options={})
     invoices = []
     if email.multipart?
       raw_invoices = attached_invoices(email)

@@ -1,12 +1,11 @@
 class Order < ActiveRecord::Base
-  unloadable
 
   belongs_to :project
   belongs_to :client
   belongs_to :client_office
   belongs_to :invoice
-  has_many :comments, :as => :commented, :dependent => :delete_all, :order => "created_on"
-  has_many :events, :order => :created_at
+  has_many :comments, -> {order "created_on"}, :as => :commented, :dependent => :delete_all
+  has_many :events, -> {order :created_at}
   after_create :create_event
 
   acts_as_event
@@ -270,11 +269,11 @@ class Order < ActiveRecord::Base
   end
 
   def next
-    Order.first(conditions: ["project_id = ? and id > ? and type = ?", project.id, id, type])
+    project.invoices.where("id > ? and type = ?", self.id, self.type).first
   end
 
   def previous
-    Order.last(conditions: ["project_id = ? and id < ? and type = ?", project.id, id, type])
+    project.invoices.where("id < ? and type = ?", self.id, self.type).last
   end
 
   def ubl_invoice

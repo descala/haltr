@@ -4,7 +4,7 @@ class CreateInvoiceImgs < ActiveRecord::Migration
       t.integer :invoice_id
       t.text :img, limit: 16777215
       t.text :data
-      t.timestamps
+      t.timestamps null: false
     end
   end
 end

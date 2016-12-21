@@ -12,7 +12,7 @@ class CreateClientOffices < ActiveRecord::Migration
       t.string  :country
       t.string  :email
 
-      t.timestamps
+      t.timestamps null: false
     end
     add_index :client_offices, :client_id
   end

@@ -3,7 +3,7 @@ module InvoicesHelper
   DEFAULT_TAX_PERCENT_VALUES = { :format => "%t %n%p", :negative_format => "%t -%n%p", :separator => ".", :delimiter => ",",
                                  :precision => 2, :significant => false, :strip_insignificant_zeros => false, :tax_name => "VAT" }
   def clients_for_select
-    clients = Client.find(:all, :order => 'name', :conditions => ["project_id = ?", @project])
+    clients = Client.where(project: @project).order(:name)
     # check if client.valid?: if you request to link profile, and then unlink it, client is invalid
     clients.collect {|c| [c.name, c.id, {'data-invoice_format'=>ExportChannels.l(c.invoice_format)}] unless c.name.blank?}.compact
   end
@@ -28,8 +28,8 @@ module InvoicesHelper
   end
 
   def send_link_for_invoice
-    confirm = @invoice.sent? ? j(l(:sure_to_resend_invoice, :num=>@invoice.number).html_safe) : nil
-    if @invoice.valid? and @invoice.can_queue? and
+    confirm = @invoice.has_been_sent? ? j(l(:sure_to_resend_invoice, :num=>@invoice.number).html_safe) : nil
+    if @invoice.valid? and @invoice.may_queue? and
         ExportChannels.can_send?(@invoice.client.invoice_format)
       unless @js.blank?
         # channel uses javascript to send invoice
@@ -46,7 +46,7 @@ module InvoicesHelper
           :class=>'icon-haltr-send', :title => @invoice.sending_info.html_safe,
           :confirm => confirm
       end
-    elsif @invoice.can_queue?
+    elsif @invoice.may_queue?
       # invoice has export errors (related to the format or channel)
       # or a format without channel, like "paper"
       link_to l(:label_send), "#", :class=>'icon-haltr-send disabled',
@@ -60,7 +60,7 @@ module InvoicesHelper
 
   def confirm_for(invoice_ids)
     to_confirm = Invoice.find(invoice_ids).select { |invoice|
-      invoice.sent?
+      invoice.has_been_sent?
     }.collect {|invoice| invoice.number }
     if to_confirm.empty?
       return nil
@@ -78,8 +78,8 @@ module InvoicesHelper
   end
 
   def num_new_invoices
-    pre_drafts = InvoiceTemplate.count(:include=>[:client],:conditions => ["clients.project_id = ? AND date <= ?", @project, Date.today + 10.day])
-    drafts = DraftInvoice.count(:include=>[:client],:conditions => ["clients.project_id = ?", @project])
+    pre_drafts = InvoiceTemplate.includes(:client).references(:client).where("clients.project_id = ? AND date <= ?", @project, Date.today + 10.day).count
+    drafts = DraftInvoice.includes(:client).references(:client).where("clients.project_id = ?", @project.id).count
     pre_drafts + drafts
   end
 
@@ -323,8 +323,13 @@ module InvoicesHelper
     desc.join(" * ")
   end
 
+  def invoice_public_view_with_host(h)
+    invoice_public_view_url(h.merge(host: Setting.host_name, protocol: Setting.protocol))
+  end
+
   def display_series_code_in_form?
     ((@invoice.company.country == 'es' or @invoice.series_code.present?) and
       User.current.allowed_to?(:view_invoice_extra_fields,@project))
   end
+
 end

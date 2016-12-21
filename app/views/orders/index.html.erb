@@ -124,7 +124,7 @@
               <% else -%>
                 <td><%= link_to image_tag('zoom_in.png'), project_received_order_path(order, project_id: @project) %></td>
               <% end -%>
-              <td><%= link_to image_tag('delete.png'), project_order_path(order, project_id: @project), confirm: l(:text_are_you_sure), method: :delete, title: l(:button_delete) %></td>
+              <td><%= link_to image_tag('delete.png'), project_order_path(order, project_id: @project), data:{confirm:l(:text_are_you_sure)}, method: :delete, title: l(:button_delete) %></td>
             </tr>
           <% end -%>
         </tbody>

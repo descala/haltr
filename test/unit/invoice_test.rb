@@ -1,5 +1,5 @@
 # encoding: utf-8
-require File.dirname(__FILE__) + '/../test_helper'
+require File.expand_path('../../test_helper', __FILE__)
 
 class InvoiceTest < ActiveSupport::TestCase
 
@@ -251,7 +251,7 @@ class InvoiceTest < ActiveSupport::TestCase
     assert_equal "uploaded", invoice.transport
     assert_equal "Anonymous", invoice.from
     assert_equal "1234", invoice.md5
-    assert_equal "invoice_facturae32_signed.xml", invoice.file_name
+    assert_equal "20120420_invoice_facturae32_signed.xml", invoice.file_name
     # invoice lines
     assert_equal 3, invoice.invoice_lines.size
     assert_equal 600.00, invoice.invoice_lines.collect {|l| l.quantity*l.price }.sum.to_f
@@ -445,8 +445,8 @@ class InvoiceTest < ActiveSupport::TestCase
     assert_equal "uploaded", invoice.events.first.name
     # modified since uploaded?
     assert !invoice.modified_since_created?, "not modified since created"
-    assert invoice.queue
-    assert !invoice.queue
+    assert invoice.queue!
+    assert !invoice.queue!
     assert !invoice.modified_since_created?, "state changes do not update timestamps"
     invoice.extra_info = "change something"
     invoice.state = :new
@@ -507,9 +507,9 @@ class InvoiceTest < ActiveSupport::TestCase
   test 'imports dir3 data and stores it to db' do
     assert_nil Dir3Entity.find_by_code('P00000010')
     extcomp = ExternalCompany.find_by_taxcode 'ESB17915224'
-    assert_not_match(/P00000010/, extcomp.organs_gestors)
-    assert_not_match(/P00000010/, extcomp.unitats_tramitadores)
-    assert_not_match(/P00000010/, extcomp.oficines_comptables)
+    refute_match(/P00000010/, extcomp.organs_gestors)
+    refute_match(/P00000010/, extcomp.unitats_tramitadores)
+    refute_match(/P00000010/, extcomp.oficines_comptables)
     file    = File.new(File.join(File.dirname(__FILE__),'..','fixtures','documents','invoice_facturae32_issued4.xml'))
     invoice = Invoice.create_from_xml(file,companies(:company1),"1234",'uploaded',User.current.name,nil,false)
     assert_equal('P00000010',invoice.organ_gestor)

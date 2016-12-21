@@ -56,12 +56,12 @@
         </tr>
       </thead>
       <tbody>
-        <% @company.company_offices.each do |office| -%>
+        <% @company_offices.each do |office| -%>
           <tr class="user <%= cycle("odd", "even") %>" />
             <td><%=h office.address %></td>
             <td><%=h office.city %></td>
             <td align="center"><%= link_to_if_authorized l(:button_edit), edit_project_company_office_path(office, project_id: @project), class: 'icon icon-edit editar' %></td>
-            <td align="center"><%= link_to_if_authorized l(:button_delete), {action: 'destroy', project_id: @project, id: office}, confirm: l(:text_are_you_sure), method: :delete, class: 'icon icon-del eliminar' %></td>
+            <td align="center"><%= link_to_if_authorized l(:button_delete), {action: 'destroy', project_id: @project, id: office}, data: {confirm: l(:text_are_you_sure)}, method: :delete, class: 'icon icon-del eliminar' %></td>
           </tr>
         <% end -%>
       </tbody>

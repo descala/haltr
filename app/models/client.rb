@@ -1,6 +1,5 @@
 class Client < ActiveRecord::Base
 
-  unloadable
   audited except: [:hashid, :project]
   # do not remove, with audit we need to make the other attributes accessible
   attr_protected :created_at, :updated_at
@@ -8,10 +7,12 @@ class Client < ActiveRecord::Base
   include Haltr::BankInfoValidator
   include Haltr::PaymentMethods
   has_many :invoices, :dependent => :destroy
+  has_many :received_invoices, :dependent => :destroy
+  has_many :invoice_templates, :dependent => :destroy
   has_many :orders
   has_many :people,   :dependent => :destroy
   has_many :mandates, :dependent => :destroy
-  has_many :events,   :order => :created_at
+  has_many :events, -> {order :created_at}
   has_many :invoice_events, :through => :invoices, :source => :events
   has_many :client_offices, :dependent => :destroy
 
@@ -40,7 +41,6 @@ class Client < ActiveRecord::Base
   before_save :set_hashid_value
   before_save :copy_linked_profile
   after_create  :create_event
-  iso_country :country
   include CountryUtils
   include Haltr::TaxcodeValidator
 
@@ -86,26 +86,14 @@ class Client < ActiveRecord::Base
 
   alias :to_s :to_label
 
-  def invoice_templates
-    self.invoices.where(["type=?","InvoiceTemplate"])
-  end
-
   def template_invoice_lines
     invoice_templates.collect do |invoice_template|
       invoice_template.invoice_lines
     end.flatten
   end
 
-  def invoice_documents
-    self.invoices.where(["type=?","IssuedInvoice"])
-  end
-
   def issued_invoices
     self.invoices.where(["type=?","IssuedInvoice"])
-  end
-
-  def received_invoices
-    self.invoices.where(["type=?","ReceivedInvoice"])
   end
 
   def allowed?
@@ -177,7 +165,7 @@ class Client < ActiveRecord::Base
   end
 
   def recipient_people
-    people.find(:all,:order=>'last_name ASC',:conditions=>['send_invoices_by_mail = true'])
+    people.where(send_invoices_by_mail: true).order('last_name ASC')
   end
 
   def recipient_emails
@@ -189,11 +177,11 @@ class Client < ActiveRecord::Base
   end
 
   def next
-    project.clients.first(:conditions=>["id > ?", self.id])
+    project.clients.where(["id > ?", self.id]).first
   end
 
   def previous
-    project.clients.last(:conditions=>["id < ?", self.id])
+    project.clients.where(["id < ?", self.id]).last
   end
 
   def postalcode=(v)

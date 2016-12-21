@@ -10,9 +10,9 @@ module Haltr
         HaltrMailer.send_invoice(
           invoice,
           {:pdf=>pdf, :from=>Redmine::Configuration['haltr_mailer_from']}
-        ).deliver!
+        ).deliver_now!
       else
-        HaltrMailer.send_invoice(invoice,{:pdf=>pdf}).deliver!
+        HaltrMailer.send_invoice(invoice,{:pdf=>pdf}).deliver_now!
       end
     rescue Net::SMTPFatalError => e
         EventError.create(

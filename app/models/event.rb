@@ -1,5 +1,4 @@
 class Event < ActiveRecord::Base
-  unloadable
 
   validates_presence_of :name
   validates_presence_of :project_id
@@ -8,6 +7,8 @@ class Event < ActiveRecord::Base
   belongs_to :invoice
   belongs_to :client
   has_many :audits, :class_name=>'Audited::Adapters::ActiveRecord::Audit'
+
+  attr_protected :created_at, :updated_at
 
   before_validation :set_project_if_nil
   before_create :create_attachment
@@ -26,9 +27,9 @@ class Event < ActiveRecord::Base
     :author_key => :user_id,
     :permission => :general_use,
     :timestamp => "#{Event.table_name}.created_at",
-    :find_options => {:include => [:user, {:invoice => :project}],
-                      :conditions => "events.name in ('success_sending')"}
-
+    :scope => preload(:user, {:invoice => :project}).
+    where("events.name in ('success_sending')").
+    joins("LEFT JOIN #{Project.table_name} ON #{Project.table_name}.id = #{Event.table_name}.project_id")
   acts_as_event :type => 'error_event',
     :title => Proc.new {|e| "#{I18n.t(e.invoice.type)} #{e.invoice.number} (#{I18n.t('state_'+e.invoice.state)})" },
     :url => Proc.new {|e| {:controller=>'invoices', :action=>'show', :id=>e.invoice_id} },
@@ -38,8 +39,9 @@ class Event < ActiveRecord::Base
     :author_key => :user_id,
     :permission => :general_use,
     :timestamp => "#{Event.table_name}.created_at",
-    :find_options => {:include => [:user, {:invoice => :project}],
-                      :conditions => "events.name in ('error_sending','discard_sending')"}
+    :scope => preload(:user, {:invoice => :project}).
+    where("events.name in ('error_sending','discard_sending')").
+    joins("LEFT JOIN #{Project.table_name} ON #{Project.table_name}.id = #{Event.table_name}.project_id")
   ########################
 
   serialize :info
@@ -150,17 +152,13 @@ class Event < ActiveRecord::Base
     # this won't update invoice status if invoice is not valid
     #self.invoice.send(name) if automatic?
     if automatic?
-      begin
-        new_state = invoice.state_transitions.select {|t|
-          t.event.to_s == name.to_s
-        }.first.to
-        invoice.update_attribute(:state, new_state)
-
-        Redmine::Hook.call_hook(:model_event_after_update_invoice,
-                                event: self, new_state: new_state)
-      rescue
-        invoice.send(name)
-      end
+      invoice.send("#{name}!")
+      # TODO: change to dest state anyway, even if is not allowed
+      #
+      # rescue AASM::InvalidTransition => e
+      #   invoice.update_attribute(:state, new_state)
+      #   Redmine::Hook.call_hook(:model_event_after_update_invoice,
+      #                           event: self, new_state: new_state)
 
       # on success_sending check if our company is provider for client, if so
       # create a ReceivedInvoice on client side.

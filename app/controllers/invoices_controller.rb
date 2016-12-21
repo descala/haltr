@@ -1,6 +1,5 @@
 class InvoicesController < ApplicationController
 
-  unloadable
   menu_item Haltr::MenuItem.new(:invoices,:invoices_level2)
   menu_item Haltr::MenuItem.new(:invoices,:reports), :only => [:reports, :report_channel_state, :report_invoice_list, :report_received_table]
   helper :haltr
@@ -20,7 +19,6 @@ class InvoicesController < ApplicationController
   before_filter :find_payment, :only => [:destroy_payment]
   before_filter :find_hashid, :only => [:view]
   before_filter :find_attachment, :only => [:logo]
-  before_filter :set_iso_countries_language
   before_filter :find_invoice_by_number, only: [:number_to_id]
   before_filter :authorize, :except => PUBLIC_METHODS
   skip_before_filter :check_if_login_required, :only => PUBLIC_METHODS
@@ -44,9 +42,9 @@ class InvoicesController < ApplicationController
     sort_update %w(invoices.created_at state number date due_date clients.name import_in_cents)
 
     if self.class == ReceivedController
-      invoices = @project.invoices.includes(:invoice_lines).includes(:client).scoped.where("type = ?","ReceivedInvoice")
+      invoices = @project.received_invoices
     else
-      invoices = @project.issued_invoices.includes(:invoice_lines).includes(:client).includes(:client_office)
+      invoices = @project.issued_invoices
     end
 
     # additional invoice filters
@@ -94,10 +92,10 @@ class InvoicesController < ApplicationController
     end
 
     unless params[:taxcode].blank?
-      invoices = invoices.where("clients.taxcode like ?","%#{params[:taxcode]}%")
+      invoices = invoices.includes(:client).references(:client).where("clients.taxcode like ?","%#{params[:taxcode]}%")
     end
     unless params[:name].blank?
-      invoices = invoices.where("clients.name like ? or client_offices.name like ?","%#{params[:name]}%","%#{params[:name]}%")
+      invoices = invoices.includes(:client).references(:client).includes(:client_office).references(:client_office).where("clients.name like ? or client_offices.name like ?","%#{params[:name]}%","%#{params[:name]}%")
     end
     unless params[:number].blank?
       if params[:number] =~ /,/
@@ -113,12 +111,12 @@ class InvoicesController < ApplicationController
 
     # client invoice_format filter
     unless params[:invoice_format].blank?
-      invoices = invoices.where("clients.invoice_format = ?", params[:invoice_format])
+      invoices = invoices.includes(:client).references(:client).where("clients.invoice_format = ?", params[:invoice_format])
     end
 
     # filter by text
     unless params[:has_text].blank?
-      invoices = invoices.where("invoices.extra_info like ? or invoice_lines.description like ? or invoice_lines.notes like ?", "%#{params[:has_text]}%", "%#{params[:has_text]}%", "%#{params[:has_text]}%")
+      invoices = invoices.includes(:invoice_lines).references(:invoice_lines).where("invoices.extra_info like ? or invoice_lines.description like ? or invoice_lines.notes like ?", "%#{params[:has_text]}%", "%#{params[:has_text]}%", "%#{params[:has_text]}%")
     end
 
     if params[:format] == 'csv' and !User.current.allowed_to?(:export_invoices, @project)
@@ -138,13 +136,9 @@ class InvoicesController < ApplicationController
     end
 
     @invoice_count = invoices.count
-    @invoice_pages = Paginator.new self, @invoice_count, @limit, params['page']
+    @invoice_pages = Paginator.new @invoice_count, @limit, params['page']
     @offset ||= @invoice_pages.offset
-    @invoices =  invoices.find(:all,
-                               :order => sort_clause,
-                               :include => [:client],
-                               :limit  =>  @limit,
-                               :offset =>  @offset)
+    @invoices = invoices.order(sort_clause).limit(@limit).offset(@offset).includes(:client).to_a
 
     respond_to do |format|
       format.html
@@ -306,7 +300,7 @@ class InvoicesController < ApplicationController
     if @invoice.save(validate: validate)
       if @to_amend and params[:amend_type] == 'total'
         @to_amend.save(validate: false)
-        @to_amend.amend_and_close
+        @to_amend.amend_and_close!
       end
       respond_to do |format|
         format.html {
@@ -336,7 +330,7 @@ class InvoicesController < ApplicationController
           if @invoice and ["true","1"].include?(params[:send_after_import])
             begin
               Haltr::Sender.send_invoice(@invoice, User.current)
-              @invoice.queue
+              @invoice.queue!
             rescue
             end
           end
@@ -346,7 +340,7 @@ class InvoicesController < ApplicationController
     else
       logger.info "Invoice errors #{@invoice.errors.full_messages}"
       # Add a client in order to render the form with the errors
-      @client ||= Client.find(:all, :order => 'name', :conditions => ["project_id = ?", @project]).first
+      @client ||= Client.where("project_id = ?", @project).order('name').first
       @client ||= Client.new
 
       respond_to do |format|
@@ -439,10 +433,10 @@ class InvoicesController < ApplicationController
         # nothing to do, invoice was already deleted (eg. by a parent)
       end
     end
-      respond_to do |format|
-        format.html { redirect_back_or_default(:action => 'index', :project_id => @project, :back_url => params[:back_url]) }
-        format.api  { render_api_ok }
-      end
+    respond_to do |format|
+      format.html { redirect_back_or_default(:action => 'index', :project_id => @project, :back_url => params[:back_url]) }
+      format.api  { render_api_ok }
+    end
   end
 
   def destroy_payment
@@ -497,17 +491,18 @@ class InvoicesController < ApplicationController
         # rails replaces '+' with ' '. we undo that.
         file.write Base64.decode64(file_contents.gsub(' ','+'))
         file.close
-        @invoice.queue!
-        Haltr::Sender.send_invoice(@invoice, User.current, true, file)
-        logger.info "Invoice #{@invoice.id} #{file.path} queued"
-        render :text => "Document sent. document = #{file}"
+        if @invoice.queue!
+          Haltr::Sender.send_invoice(@invoice, User.current, true, file)
+          logger.info "Invoice #{@invoice.id} #{file.path} queued"
+          render :text => "Document sent. document = #{file}"
+        else
+          logger.info "Invoice #{@invoice.id}: #{l(:state_not_allowed_for_sending, state: l("state_#{@invoice.state}"))}"
+          render text: l(:state_not_allowed_for_sending, state: l("state_#{@invoice.state}"))
+        end
       else
         render :text => "Missing document"
       end
     end
-  rescue StateMachine::InvalidTransition
-    logger.info "Invoice #{@invoice.id}: #{l(:state_not_allowed_for_sending, state: l("state_#{@invoice.state}"))}"
-    render text: l(:state_not_allowed_for_sending, state: l("state_#{@invoice.state}"))
   end
 
   def show
@@ -687,25 +682,26 @@ class InvoicesController < ApplicationController
     unless ExportChannels.can_send? @invoice.client.invoice_format
       raise "#{l(:export_channel)}: #{ExportChannels.l(@invoice.client.invoice_format)}"
     end
-    @invoice.queue!
-    Haltr::Sender.send_invoice(@invoice, User.current)
-    respond_to do |format|
-      format.html do
-        flash[:notice] = "#{l(:notice_invoice_sent)}"
+    if @invoice.queue!
+      Haltr::Sender.send_invoice(@invoice, User.current)
+      respond_to do |format|
+        format.html do
+          flash[:notice] = "#{l(:notice_invoice_sent)}"
+        end
+        format.api do
+          render_api_ok
+        end
       end
-      format.api do
-        render_api_ok
-      end
-    end
-  rescue StateMachine::InvalidTransition => e
-    error = l(:state_not_allowed_for_sending, state: l("state_#{@invoice.state}"))
-    respond_to do |format|
-      format.html do
-        flash[:error] = error
-      end
-      format.api do
-        @error_messages = [error]
-        render :template => 'common/error_messages.api', :status => :unprocessable_entity, :layout => nil
+    else
+      error = l(:state_not_allowed_for_sending, state: l("state_#{@invoice.state}"))
+      respond_to do |format|
+        format.html do
+          flash[:error] = error
+        end
+        format.api do
+          @error_messages = [error]
+          render :template => 'common/error_messages.api', :status => :unprocessable_entity, :layout => nil
+        end
       end
     end
   rescue Exception => e
@@ -749,7 +745,7 @@ class InvoicesController < ApplicationController
   end
 
   def send_new_invoices
-    @invoices = IssuedInvoice.find_can_be_sent(@project)
+    @invoices = IssuedInvoice.find_can_be_sent(@project).order("number ASC")
     bulk_send
     render action: 'bulk_send'
   end
@@ -757,7 +753,7 @@ class InvoicesController < ApplicationController
   def download_new_invoices
     require 'zip'
     @company = @project.company
-    invoices = IssuedInvoice.find_not_sent @project
+    invoices = IssuedInvoice.find_not_sent(@project).order("number ASC")
     # just a safe big limit
     if invoices.size > 100
       flash[:error] = l(:too_much_invoices,:num=>invoices.size)
@@ -1034,9 +1030,7 @@ class InvoicesController < ApplicationController
       return
     end
     @company = @client.project.company
-    invoices = IssuedInvoice.find(:all,
-                                  :conditions => ["client_id=? AND id=?",@client.id,params[:invoice_id]]
-                                 ).delete_if { |i| !i.visible_by_client? }
+    invoices = IssuedInvoice.where(["client_id=? AND id=?",@client.id,params[:invoice_id]]).all.to_a.delete_if { |i| !i.visible_by_client? }
     if invoices.size != 1
       render_404
       return
@@ -1088,7 +1082,7 @@ class InvoicesController < ApplicationController
   end
 
   def find_invoices
-    @invoices = Invoice.find_all_by_id(params[:id] || params[:ids])
+    @invoices = invoice_class.where(id: (params[:id] || params[:ids]))
     raise ActiveRecord::RecordNotFound if @invoices.empty?
     raise Unauthorized unless @invoices.collect {|i| i.project }.uniq.size == 1
     @project = @invoices.first.project
@@ -1101,10 +1095,6 @@ class InvoicesController < ApplicationController
     @payment = Payment.find(params[:id])
     @invoice = @payment.invoice
     @project = @invoice.project
-  end
-
-  def set_iso_countries_language
-    ISO::Countries.set_language I18n.locale.to_s
   end
 
   #TODO: duplicated code
@@ -1194,17 +1184,13 @@ class InvoicesController < ApplicationController
     states = @invoice.is_a?(ReceivedInvoice) ? %w(paid) :
       %w(new sent accepted registered refused closed)
     if states.include? params[:state]
-      begin
-        @invoice.send("mark_as_#{params[:state]}!")
-      rescue StateMachine::InvalidTransition
-        # mark_as_* raise this on invalid invoices
-        @invoice.update_attribute(:state, params[:state])
-        Event.create(
-          name: "done_mark_as_#{params[:state]}",
-          invoice: @invoice,
-          user: User.current
-        )
-      end
+      @invoice.send("mark_as_#{params[:state]}!")
+      @invoice.update_attribute(:state, params[:state])
+      Event.create(
+        name: "done_mark_as_#{params[:state]}",
+        invoice: @invoice,
+        user: User.current
+      )
     else
       flash[:error] = "unknown state #{params[:state]}"
     end
@@ -1218,7 +1204,7 @@ class InvoicesController < ApplicationController
     if %w(new sent accepted registered refused closed).include? params[:state]
       @invoices.each do |i|
         next if i.state == params[:state]
-        all_changed = i.send("mark_as_#{params[:state]}") && all_changed
+        all_changed = i.send("mark_as_#{params[:state]}!") && all_changed
       end
     else
       flash[:error] = "unknown state #{params[:state]}"
@@ -1231,7 +1217,7 @@ class InvoicesController < ApplicationController
     @errors=[]
     num_invoices = @invoices.size
     @invoices.collect! do |invoice|
-      if invoice.valid? and invoice.can_queue? and
+      if invoice.valid? and invoice.may_queue? and
           ExportChannels.can_send? invoice.client.invoice_format
         if ExportChannels[invoice.client.invoice_format]['javascript']
           @errors << "#{l(:error_invoice_not_sent, :num=>invoice.number)}: Must be processed individually (channel with javascript)"
@@ -1243,7 +1229,7 @@ class InvoicesController < ApplicationController
         err = "#{l(:error_invoice_not_sent, :num=>invoice.number)}: "
         if !invoice.valid?
           err += invoice.errors.full_messages.join(', ')
-        elsif !invoice.can_queue?
+        elsif !invoice.may_queue?
           err += l(:state_not_allowed_for_sending, state: l("state_#{invoice.state}"))
         else
           err += "#{l(:export_channel)}: #{ExportChannels.l(invoice.client.invoice_format)}"
@@ -1322,7 +1308,7 @@ class InvoicesController < ApplicationController
       if @invoice and ["true","1"].include?(params[:send_after_import])
         begin
           Haltr::Sender.send_invoice(@invoice, User.current)
-          @invoice.queue
+          @invoice.queue!
         rescue
         end
       end
@@ -1458,15 +1444,19 @@ class InvoicesController < ApplicationController
   end
 
   def original
+    fn = nil
+    if @invoice.is_a? ReceivedInvoice
+      fn = @invoice.file_name
+    end
     if @invoice.invoice_format == 'pdf'
       send_data @invoice.original,
         :type => 'application/pdf',
-        :filename => @invoice.pdf_name,
+        :filename => fn || @invoice.pdf_name,
         :disposition => params[:disposition] == 'inline' ? 'inline' : 'attachment'
     else
       send_data @invoice.original,
         :type => 'text/xml; charset=UTF-8;',
-        :disposition => "attachment; filename=#{@invoice.xml_name}"
+        :disposition => "attachment; filename=#{fn || @invoice.xml_name}"
     end
   end
 

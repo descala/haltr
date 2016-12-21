@@ -67,10 +67,10 @@
       </p>
       <p class="col span-1-de-4">
       <% if client.linked? -%>
-        <%= f.text_field :country, :value => ISO::Countries.get_country(client.country), :readonly => client.linked?, :required => true %>
+        <%= f.text_field :country, :value => ISO3166::Country[client.country].translations[I18n.locale.to_s], :readonly => client.linked?, :required => true %>
       <% else -%>
         <%= f.label_for_field :country, :required => true %>
-        <%= f.iso_country_select :country, [:es] %>
+        <%= f.country_select :country, priority_countries: [@project.company.country] %>
       <% end -%>
       </p>
     </div>

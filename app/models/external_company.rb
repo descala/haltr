@@ -1,10 +1,10 @@
 class ExternalCompany < ActiveRecord::Base
 
-  unloadable
-
   has_many :clients,
     :as        => :company,
     :dependent => :nullify
+
+  attr_protected :created_at, :updated_at
 
   validates_presence_of :name, :postalcode, :country
   validates_length_of :taxcode, :maximum => 20
@@ -15,12 +15,11 @@ class ExternalCompany < ActiveRecord::Base
     :allow_nil => true,
     :allow_blank => true
   validates_format_of [:organs_gestors,:unitats_tramitadores,:oficines_comptables,:organs_proponents],
-    :with => /^[A-Z0-9, ]*$/i,
+    :with => /\A[A-Z0-9, ]*\z/i,
     :allow_nil => true,
     :allow_blank => true
 
   after_save :update_linked_clients
-  iso_country :country
   include CountryUtils
   include Haltr::TaxcodeValidator
 

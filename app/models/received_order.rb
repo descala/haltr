@@ -1,5 +1,4 @@
 class ReceivedOrder < Order
-  unloadable
 
   after_create :notify_users_by_mail, if: Proc.new {|o|
     o.project.company.order_notifications

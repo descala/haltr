@@ -1,14 +1,13 @@
 # encoding: utf-8
 
-require File.dirname(__FILE__) + '/../test_helper'
+require File.expand_path('../../test_helper', __FILE__)
 
 class HaltrMailerTest < ActiveSupport::TestCase
 
   fixtures :invoices
 
   include Redmine::I18n
-  include ActionDispatch::Assertions::SelectorAssertions
-  include Rails.application.routes.url_helpers
+  include Rails::Dom::Testing::Assertions
 
   def setup
     ActionMailer::Base.deliveries.clear

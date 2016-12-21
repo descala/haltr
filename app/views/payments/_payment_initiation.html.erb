@@ -23,7 +23,7 @@
         :bank_info    => bank_info,
         :payment_type => payment_type.split("_").first,
         :invoices     => invoices.collect {|i| i.id } },
-      :confirm => l(:text_are_you_sure),
+      :data=>{:confirm => l(:text_are_you_sure)},
       :method  => :post %>
   </td>
 </tr>

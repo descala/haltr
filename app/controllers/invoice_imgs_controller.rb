@@ -1,5 +1,4 @@
 class InvoiceImgsController < ApplicationController
-  unloadable
 
   before_filter :find_invoice_img, :except => [:create,:show]
   before_filter :find_project_by_project_id, :only=> [:show]

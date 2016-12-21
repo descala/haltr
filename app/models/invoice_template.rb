@@ -1,6 +1,6 @@
 class InvoiceTemplate < Invoice
 
-  unloadable
+
 
   has_many :issued_invoices, :dependent => :nullify
   validates_presence_of :frequency

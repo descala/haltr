@@ -47,7 +47,7 @@
     </p>
     <p class="col span-1-de-4">
       <%= f.label_for_field :country %>
-      <%= f.iso_country_select :country, [:es] %>
+      <%= f.country_select :country, priority_countries: [@project.company.country] %>
     </p>
   </div>
 

@@ -1,6 +1,6 @@
 class InvoiceTemplatesController < InvoicesController 
 
-  unloadable
+
   menu_item Haltr::MenuItem.new(:invoices,:templates)
 
   # skip parent controller filters, add later
@@ -14,7 +14,7 @@ class InvoiceTemplatesController < InvoicesController
     sort_init 'date', 'asc'
     sort_update %w(date number clients.name frequency)
 
-    templates = @project.invoice_templates.includes(:client)
+    templates = @project.invoice_templates
 
     unless params[:name].blank?
       templates = templates.where("clients.name like ?","%#{params[:name]}%")
@@ -29,11 +29,11 @@ class InvoiceTemplatesController < InvoicesController
     end
 
     unless params[:taxcode].blank?
-      templates = templates.where("clients.taxcode like ?", "%#{params[:taxcode]}%")
+      templates = templates.includes(:client).references(:client).where("clients.taxcode like ?","%#{params[:taxcode]}%")
     end
 
     unless params[:name].blank?
-      templates = templates.where("clients.name like ?","%#{params[:name]}%")
+      templates = templates.includes(:client).references(:client).includes(:client_office).references(:client_office).where("clients.name like ? or client_offices.name like ?","%#{params[:name]}%","%#{params[:name]}%")
     end
 
     unless params[:client_id].blank?
@@ -42,14 +42,11 @@ class InvoiceTemplatesController < InvoicesController
     end
 
     @invoice_count = templates.count
-    @invoice_pages = Paginator.new self, @invoice_count,
+    @invoice_pages = Paginator.new @invoice_count,
 		per_page_option,
 		params['page']
-    @invoices = templates.find :all,
-       :order   => sort_clause,
-       :include => [:client],
-       :limit   => @invoice_pages.items_per_page,
-       :offset  => @invoice_pages.current.offset
+    @invoices = templates.includes(:client).limit(@invoice_pages.items_per_page).
+      offset(@invoice_pages.current.offset).order(sort_clause)
   end
 
   def new_from_invoice
@@ -74,8 +71,12 @@ class InvoiceTemplatesController < InvoicesController
     @number = IssuedInvoice.next_number(@project)
     days = params[:days] || 10
     @date = Date.today + days.to_i.day
-    @drafts = DraftInvoice.find :all, :include => [:client], :conditions => ["clients.project_id = ?", @project.id], :order => "date ASC"
-    templates = InvoiceTemplate.find :all, :include => [:client], :conditions => ["clients.project_id = ? and date <= ?", @project.id, @date], :order => "date ASC"
+    @drafts = DraftInvoice.includes(:client).
+      where("clients.project_id = ?", @project.id).
+      references(:client).order("date ASC")
+    templates = InvoiceTemplate.includes(:client).
+      where("clients.project_id = ? and date <= ?", @project.id, @date).
+      references(:client).order("date ASC")
     templates.each do |t|
       if t.frequency < 6 and t.date < 1.year.ago.to_date
         # limit to 1 year invoices with frequency < 6 months
@@ -93,7 +94,7 @@ class InvoiceTemplatesController < InvoicesController
         flash.now[:error] = e.message
       end
     end
-    @drafts.flatten!
+    @drafts.to_a.flatten!
   end
 
   # creates invoices form draft invoices
@@ -125,7 +126,9 @@ class InvoiceTemplatesController < InvoicesController
         flash.now[:error] = issued.errors.full_messages.join ","
       end
     end
-    @drafts = DraftInvoice.find :all, :include => [:client], :conditions => ["clients.project_id = ?", @project.id], :order => "date ASC"
+    @drafts = DraftInvoice.includes(:client).
+      where("clients.project_id = ?", @project.id).
+      references(:client).order("date ASC")
     render :action => 'new_invoices_from_template'
   end
 

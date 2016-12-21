@@ -1,10 +1,11 @@
 class InvoiceImg < ActiveRecord::Base
-  unloadable
 
   belongs_to :invoice
   validate :has_associated_invoice
 
   serialize :data, Hash
+
+  attr_protected :created_at, :updated_at
 
   def has_associated_invoice
     errors.add(:invoice) unless self.invoice and self.invoice.is_a? InvoiceDocument

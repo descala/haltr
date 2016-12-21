@@ -1,7 +1,5 @@
 class Invoice < ActiveRecord::Base
 
-  unloadable
-
   include HaltrHelper
   include Haltr::FloatParser
   include Haltr::PaymentMethods
@@ -17,7 +15,7 @@ class Invoice < ActiveRecord::Base
   TO_UTF_FIELDS = %w(extra_info)
 
   has_many :invoice_lines, :dependent => :destroy
-  has_many :events, :order => 'created_at'
+  has_many :events, -> {order :created_at}
   #has_many :taxes, :through => :invoice_lines
   belongs_to :project, :counter_cache => true
   belongs_to :client
@@ -25,12 +23,12 @@ class Invoice < ActiveRecord::Base
   belongs_to :amend, :class_name => "Invoice", :foreign_key => 'amend_id'
   has_one :amend_of, :class_name => "Invoice", :foreign_key => 'amend_id'
   # an invoice can have several partial amends
-  has_many :partial_amends, class_name: 'Invoice', foreign_key: 'partially_amended_id', conditions: proc { ["id != ?", self.id] }
+  has_many :partial_amends, class_name: 'Invoice', foreign_key: 'partially_amended_id'
   belongs_to :partial_amend_of, class_name: 'Invoice', foreign_key: 'partially_amended_id'
 
   belongs_to :bank_info
   belongs_to :quote
-  has_many :comments, :as => :commented, :dependent => :delete_all, :order => "created_on"
+  has_many :comments, -> {order :created_on}, :as => :commented, :dependent => :delete_all
   belongs_to :client_office
   belongs_to :company_office
   has_one :order, dependent: :nullify
@@ -348,7 +346,7 @@ class Invoice < ActiveRecord::Base
   end
 
   def taxes_outputs
-    #taxes.find(:all, :group => 'name,percent', :conditions => "percent >= 0")
+    #taxes.where("percent >= 0").group('name,percent')
     taxes_uniq.collect { |tax|
       tax if tax.percent >= 0
     }.compact
@@ -363,7 +361,7 @@ class Invoice < ActiveRecord::Base
   end
 
   def taxes_withheld
-    #taxes.find(:all, :group => 'name,percent', :conditions => "percent < 0")
+    #taxes.where("percent < 0").group('name,percent')
     taxes_uniq.collect {|tax|
       tax if tax.percent < 0
     }.compact
@@ -1159,11 +1157,11 @@ _INV
   end
 
   def next
-    project.invoices.first(:conditions=>["id > ? and type = ?", self.id, self.type])
+    project.invoices.where("id > ? and type = ?", self.id, self.type).first
   end
 
   def previous
-    project.invoices.last(:conditions=>["id < ? and type = ?", self.id, self.type])
+    project.invoices.where("id < ? and type = ?", self.id, self.type).last
   end
 
   def visible_events
@@ -1229,7 +1227,7 @@ _INV
 
   def has_line_charges?
     return @has_line_charges unless @has_line_charges.nil?
-    @has_line_charges = (invoice_lines.sum(&:charge) > 0)
+    @has_line_charges = (invoice_lines.to_a.sum(&:charge) > 0)
   end
 
   def has_line_ponumber?

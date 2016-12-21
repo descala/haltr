@@ -1,4 +1,4 @@
-require File.dirname(__FILE__) + '/../test_helper'
+require File.expand_path('../../test_helper', __FILE__)
 
 class InvoicesControllerTest < ActionController::TestCase
   fixtures :companies, :invoices, :invoice_lines, :taxes
@@ -154,12 +154,15 @@ class InvoicesControllerTest < ActionController::TestCase
     set_tmp_attachments_directory
     attachment = Attachment.create!(:file => fixture_file_upload('/documents/invoice_pdf_signed.pdf','application/pdf',true), :author_id => 2)
 
-    post :upload, {
-      attachments: {'p0' => {'token' => attachment.token}},
-      commit:     'Importar',
-      project_id: 'onlinestore',
-      issued:     '1'
-    }
+    Redmine::Configuration.with 'ws_url' => 'http://localhost:3000/api/v1/' do
+      post :upload, {
+        attachments: {'p0' => {'token' => attachment.token}},
+        commit:     'Importar',
+        project_id: 'onlinestore',
+        issued:     '1'
+      }
+    end
+
     p=Project.find(2)
     assert User.current.allowed_to?(:import_invoices,p), "user #{User.current.login} has not import_invoices permission in project #{p.name}"
     assert_response :found

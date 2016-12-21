@@ -6,8 +6,7 @@
     <li>
     <%= context_menu_link l(:button_send),
       send_invoice_path(@invoice, :back_url=>@back),
-      :class => 'icon-send',
-      :confirm => (@invoice.sent? ? j(l(:sure_to_resend_invoice,:num=>@invoice.number)) : nil) %>
+      :class => 'icon-send' %>
     </li>
     <li>
     <%= context_menu_link l(:button_edit), edit_invoice_path(@invoice),
@@ -41,7 +40,7 @@
     <!-- actions for multiple invoices -->
     <li>
     <%= context_menu_link l(:button_send), invoices_bulk_send_path(:ids=>@invoice_ids, :back_url=>@back),
-      :class => 'icon-send', :confirm => confirm_for(@invoice_ids) %>
+      :class => 'icon-send', :data=>{:confirm => confirm_for(@invoice_ids)} %>
     </li>
     <li class="folder">
     <a href="#" class="submenu"><%= l(:button_download) %></a>

@@ -28,7 +28,7 @@ class InvoiceImgTest < ActiveSupport::TestCase
     assert_equal 1, invoice.invoice_lines.count
     assert_equal 60000, invoice.import_in_cents
     assert_equal "01-06-2012".to_date, invoice.due_date
-    assert_equal :received, invoice.state
+    assert_equal 'received', invoice.state
   end
 
   test "fuzzy_match_client" do

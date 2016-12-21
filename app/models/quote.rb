@@ -1,7 +1,5 @@
 class Quote < Invoice
 
-  unloadable
-
   include Haltr::ExportableDocument
 
   has_one :invoice
@@ -10,10 +8,10 @@ class Quote < Invoice
   after_create do
     Event.create(:name=>"quote_new",:invoice=>self,:user=>User.current)
   end
-  after_initialize do |obj|
-    if !obj.quote_expired? and obj.due_date and Date.today > obj.due_date and
+  after_initialize do
+    if !quote_expired? and due_date and Date.today > due_date and
       (quote_new? or quote_send? or quote_sent?)
-      obj.expired
+      expired!
     end
   end
   before_save do
@@ -24,32 +22,46 @@ class Quote < Invoice
     end
   end
 
-  state_machine :state, :initial => :quote_new do
-    before_transition do |invoice, transition|
-      unless %w(success_sending expired).include? transition.event.to_s
-        Event.create(:name=>transition.event.to_s,:invoice=>invoice,:user=>User.current)
-      end
-    end
+  include AASM
+
+  aasm column: :state, skip_validation_on_save: true, whiny_transitions: false do
+    state :quote_new, initial: true
+    state :quote_send, :quote_accepted, :quote_sent, :quote_expired,
+      :quote_sending, :quote_closed, :quote_refused
+
+    before_all_events :aasm_create_event
+
     event :quote_set_new do
-      transition all => :quote_new
+      transitions to: :quote_new
     end
     event :quote_accept do
-      transition all => :quote_accepted
+      transitions to: :quote_accepted
     end
     event :quote_refuse do
-      transition all => :quote_refused
+      transitions to: :quote_refused
     end
     event :quote_close do
-      transition all => :quote_closed
+      transitions to: :quote_closed
     end
     event :quote_send do
-      transition all => :quote_sending
+      transitions to: :quote_sending
     end
     event :success_sending do
-      transition all => :quote_sent
+      transitions to: :quote_sent
     end
     event :expired do
-      transition [:quote_new,:quote_send,:quote_sent] => :quote_expired
+      transitions from: [:quote_new,:quote_send,:quote_sent], to: :quote_expired
+    end
+  end
+
+  def aasm_create_event
+    name = aasm.current_event.to_s.gsub('!','')
+    unless %w(success_sending expired).include? name
+      Event.create(
+        name: name,
+        invoice: self,
+        user_id: User.current
+      )
     end
   end
 
@@ -76,15 +88,15 @@ class Quote < Invoice
   end
 
   def past_due?
-    !state?(:quote_closed) && due_date && due_date < Date.today
+    quote_closed? && due_date && due_date < Date.today
   end
 
   def pdf_name_without_extension
     "#{l(:label_quote)}-#{number.gsub('/','')}" rescue "quote-___"
   end
 
-  def sent?
-    !state?(:quote_new)
+  def has_been_sent?
+    !quote_new?
   end
 
   def client_has_email

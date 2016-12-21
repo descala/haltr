@@ -215,7 +215,7 @@
       <div class="seccio grup">
         <p class="col span-1-de-4">
         <%= f.label_for_field :fa_country %>
-        <%= f.iso_country_select :fa_country, [:es] %>
+        <%= f.country_select :fa_country, priority_countries: [@project.company.country] %>
         </p>
         <p class="col span-1-de-4">
         <%= f.text_field :fa_info %>

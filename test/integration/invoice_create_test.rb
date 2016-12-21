@@ -1,6 +1,6 @@
-require File.dirname(__FILE__) + '/../test_helper'
+require File.expand_path('../../test_helper', __FILE__)
 
-class InvoiceCreaeteTest < ActionController::IntegrationTest
+class InvoiceCreaeteTest< Redmine::IntegrationTest
 
   fixtures :companies, :invoices, :invoice_lines, :taxes, :client_offices,
     :dir3_entities
@@ -504,7 +504,5 @@ class InvoiceCreaeteTest < ActionController::IntegrationTest
     assert_equal "", invoice.invoice_lines.first.taxes.first.comment
     assert_equal "", invoice.invoice_lines.first.taxes.last.comment
   end
-
-
 
 end
