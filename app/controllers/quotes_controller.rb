@@ -132,7 +132,7 @@ class QuotesController < ApplicationController
       Event.create(:name=>'edited',:invoice=>@invoice,:user=>User.current)
       flash[:notice] = l(:notice_successful_update)
       if params[:save_and_send]
-        if @invoice.valid?
+        if @invoice.valid? and ExportChannels.can_send?(:send_pdf_by_mail)
           redirect_to :action => 'send_quote', :id => @invoice
         else
           flash[:error] = l(:errors_prevented_quote_sent)

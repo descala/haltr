@@ -38,7 +38,8 @@ class Invoice < ActiveRecord::Base
     i.client and i.client.client_offices.any? {|o| o.id == i.client_office_id }
   }
 
-  validates_presence_of :client, :date, :currency, :project_id, :unless => Proc.new {|i| i.type == "ReceivedInvoice" }
+  validates_presence_of :date, :currency, :project_id, :unless => Proc.new {|i| i.type == "ReceivedInvoice" }
+  validates_presence_of :client, :unless => Proc.new {|i| %w(Quote ReceivedInvoice).include? i.type }
   validates_inclusion_of :currency, :in  => Money::Currency.table.collect {|k,v| v[:iso_code] }, :unless => Proc.new {|i| i.type == "ReceivedInvoice" }
   validates_numericality_of :charge_amount_in_cents, :allow_nil => true
   validates_numericality_of :payments_on_account_in_cents, :allow_nil => true
@@ -1327,9 +1328,12 @@ _INV
     if ext_comp
       ext_comp.required_fields.each do |field|
         if field == "dir3"
-          errors.add(:organ_gestor, :blank) if organ_gestor.blank?
-          errors.add(:unitat_tramitadora, :blank) if unitat_tramitadora.blank?
-          errors.add(:oficina_comptable, :blank) if oficina_comptable.blank?
+          # https://www.ingent.net/issues/6273
+          unless new_record?
+            errors.add(:organ_gestor, :blank) if organ_gestor.blank?
+            errors.add(:unitat_tramitadora, :blank) if unitat_tramitadora.blank?
+            errors.add(:oficina_comptable, :blank) if oficina_comptable.blank?
+          end
         else
           errors.add(field, :blank) if self.send(field).blank?
         end
