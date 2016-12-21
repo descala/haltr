@@ -32,8 +32,8 @@ class InvoiceLine < ActiveRecord::Base
 
   belongs_to :invoice
   has_many :taxes, :class_name => "Tax", :order => "percent", :dependent => :destroy
-  validates_numericality_of :quantity, :price, :position
-  validates_numericality_of :charge, :discount_percent, :allow_nil => true
+  validates_numericality_of :quantity, :price
+  validates_numericality_of :charge, :discount_percent, :position, :allow_nil => true
   validates_numericality_of :sequence_number, :allow_nil => true, :allow_blank => true
 
   accepts_nested_attributes_for :taxes,
