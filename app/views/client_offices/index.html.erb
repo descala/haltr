@@ -58,12 +58,12 @@
           </tr>
         </thead>
         <tbody>
-          <% @client.client_offices.each do |office| -%>
+          <% @client_offices.each do |office| -%>
             <tr class="user <%= cycle("odd", "even") %>" />
               <td><%=h office.name %></td>
               <td><%=h office.city %></td>
               <td align="center"><%= link_to_if_authorized l(:button_edit), edit_client_client_office_path(@client, office), :class => 'icon icon-edit editar' %></td>
-              <td align="center"><%= link_to_if_authorized l(:button_delete), {:action=>'destroy',:id=>office} , :confirm => l(:text_are_you_sure), :method => :delete, :class => 'icon icon-del eliminar' %></td>
+              <td align="center"><%= link_to_if_authorized l(:button_delete), {:action=>'destroy',:id=>office} , :data=>{:confirm=>l(:text_are_you_sure)}, :method => :delete, :class => 'icon icon-del eliminar' %></td>
             </tr>
           <% end -%>
         </tbody>
@@ -124,12 +124,12 @@
           </tr>
         </thead>
         <tbody>
-          <% @project.client_offices.each do |office| -%>
+          <% @client_offices.each do |office| -%>
             <tr class="user <%= cycle("odd", "even") %>" />
               <td><%=h office.name %></td>
               <td><%=h office.city %></td>
               <td align="center"><%= link_to_if_authorized l(:button_edit), edit_client_client_office_path(office.client, office), :class => 'icon icon-edit editar' %></td>
-              <td align="center"><%= link_to_if_authorized l(:button_delete), {:action=>'destroy', :client_id=>office.client_id, :id=>office}, :confirm => l(:text_are_you_sure), :method => :delete, :class => 'icon icon-del eliminar' %></td>
+              <td align="center"><%= link_to_if_authorized l(:button_delete), {:action=>'destroy', :client_id=>office.client_id, :id=>office}, :data=>{:confirm=>l(:text_are_you_sure)}, :method => :delete, :class => 'icon icon-del eliminar' %></td>
             </tr>
           <% end -%>
         </tbody>

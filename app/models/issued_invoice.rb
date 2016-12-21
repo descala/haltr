@@ -156,11 +156,12 @@ class IssuedInvoice < InvoiceDocument
   end
 
   def self.find_can_be_sent(project)
-    project.issued_invoices.includes(:client).where(
-        "state='new' and number is not null and date <= ? and clients.invoice_format in (?)",
-        Date.today,
-        ExportChannels.can_send.keys
-    ).references(:clients)
+    project.issued_invoices.includes(:client).references(:client).where(
+      "state='new' and number is not null and " +
+      "date <= ? and clients.invoice_format in (?)",
+      Date.today,
+      ExportChannels.can_send.keys
+    )
   end
 
   def self.find_not_sent(project)
@@ -238,19 +239,6 @@ class IssuedInvoice < InvoiceDocument
 
   def last_sent_event
     events.order(:created_at).select {|e| e.name == 'success_sending' }.last
-  end
-
-  def last_sent_file_path
-    event = last_sent_event
-    begin
-      if event and event.md5
-        Rails.application.routes.url_helpers.legal_path(:id=>id,:md5=>event.md5)
-      else
-        Rails.application.routes.url_helpers.event_file_path(event)
-      end
-    rescue
-      nil
-    end
   end
 
   def self.states

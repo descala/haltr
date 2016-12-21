@@ -36,7 +36,13 @@ class QuotesController < ApplicationController
           :layout => "invoice.html",
           :template=>"quotes/show_pdf",
           :formats => :html,
-          :show_as_html => params[:debug]
+          :show_as_html => params[:debug],
+          :margin => {
+            :top    => 20,
+            :bottom => 20,
+            :left   => 30,
+            :right  => 20
+          }
       end
       if params[:debug]
         format.facturae30  { render_xml Haltr::Xml.generate(@invoice, 'facturae30') }
@@ -75,23 +81,7 @@ class QuotesController < ApplicationController
   end
 
   def create
-    # mark as "_destroy" all taxes with an empty tax code
-    # and copy global "exempt comment" to all exempt taxes
-    parsed_params = params[:invoice]
-    if parsed_params["invoice_lines_attributes"]
-      parsed_params["invoice_lines_attributes"].each do |i, invoice_line|
-        if invoice_line["taxes_attributes"]
-          invoice_line["taxes_attributes"].each do |j, tax|
-            tax['_destroy'] = 1 if tax["code"].blank?
-            if tax["code"] =~ /_E$/
-              tax['comment'] = params["#{tax["name"]}_comment"]
-            else
-              tax['comment'] = ''
-            end
-          end
-        end
-      end
-    end
+    parsed_params = parse_quote_params
 
     @invoice = Quote.new(parsed_params)
     if @invoice.invoice_lines.empty?
@@ -133,22 +123,7 @@ class QuotesController < ApplicationController
     # maybe related to https://rails.lighthouseapp.com/projects/8994/tickets/4642
     @invoice.invoice_lines.each {|l| l.taxes.each {|t| } }
 
-    # mark as "_destroy" all taxes with an empty tax code
-    # and copy global "exempt comment" to all exempt taxes
-    parsed_params = params[:invoice]
-    parsed_params["invoice_lines_attributes"] ||= {}
-    parsed_params["invoice_lines_attributes"].each do |i, invoice_line|
-      if invoice_line["taxes_attributes"]
-        invoice_line["taxes_attributes"].each do |j, tax|
-          tax['_destroy'] = 1 if tax["code"].blank?
-          if tax["code"] =~ /_E$/
-            tax['comment'] = params["#{tax["name"]}_comment"]
-          else
-            tax['comment'] = ''
-          end
-        end
-      end
-    end
+    parsed_params = parse_quote_params
 
     if @invoice.update_attributes(parsed_params)
       Event.create(:name=>'edited',:invoice=>@invoice,:user=>User.current)
@@ -193,6 +168,7 @@ class QuotesController < ApplicationController
     @client = @quote.client
     @invoice = IssuedInvoice.new
     @invoice.attributes = @quote.attributes
+    @invoice.date = Date.today
     @invoice.number=IssuedInvoice.next_number(@project)
     @quote.invoice_lines.each do |line|
       il = line.dup
@@ -211,6 +187,46 @@ class QuotesController < ApplicationController
   end
 
   private
+
+  def parse_quote_params
+    # mark as "_destroy" all taxes with an empty tax code
+    # and copy global "exempt comment" to all exempt taxes
+    parsed_params = params[:invoice]
+    parsed_params["invoice_lines_attributes"] ||= {}
+    parsed_params["invoice_lines_attributes"].each do |i, invoice_line|
+      if invoice_line["taxes_attributes"]
+        invoice_line["taxes_attributes"].each do |j, tax|
+          tax['_destroy'] = 1 if tax["code"].blank?
+          if tax["code"] =~ /_E$/
+            tax['comment'] = params["#{tax["name"]}_comment"]
+          else
+            tax['comment'] = ''
+          end
+        end
+      end
+      # discounts percent and amount #5516
+      discount = invoice_line.delete(:discount).to_s.gsub(/-/,'')
+      discount_type = invoice_line.delete(:discount_type)
+      if discount_type == '€'
+        invoice_line[:discount_percent] = 0
+        invoice_line[:discount_amount] = discount
+      elsif discount_type == '%'
+        invoice_line[:discount_percent] = discount
+        invoice_line[:discount_amount] = 0
+      end
+    end
+    # discounts percent and amount #5516
+    discount = parsed_params.delete(:discount)
+    discount_type = parsed_params.delete(:discount_type)
+    if discount_type == '€'
+      parsed_params[:discount_percent] = 0
+      parsed_params[:discount_amount] = discount
+    elsif discount_type == '%'
+      parsed_params[:discount_percent] = discount
+      parsed_params[:discount_amount] = 0
+    end
+    parsed_params
+  end
 
   def find_invoice
     @invoice = Quote.find params[:id]

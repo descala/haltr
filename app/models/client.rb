@@ -1,6 +1,5 @@
 class Client < ActiveRecord::Base
 
-
   audited except: [:hashid, :project]
   # do not remove, with audit we need to make the other attributes accessible
   attr_protected :created_at, :updated_at
@@ -10,6 +9,7 @@ class Client < ActiveRecord::Base
   has_many :invoices, :dependent => :destroy
   has_many :received_invoices, :dependent => :destroy
   has_many :invoice_templates, :dependent => :destroy
+  has_many :orders
   has_many :people,   :dependent => :destroy
   has_many :mandates, :dependent => :destroy
   has_many :events, -> {order :created_at}
@@ -67,7 +67,7 @@ class Client < ActiveRecord::Base
   def bank_invoices(due_date,bank_info_id)
     IssuedInvoice.where(
       client_id:      self.id,
-      state:          ['sent','registered'],
+      state:          ['sent','registered','accepted','read'],
       payment_method: PAYMENT_DEBIT,
       due_date:       due_date,
       bank_info_id:   bank_info_id
@@ -133,11 +133,13 @@ class Client < ActiveRecord::Base
   end
 
   def set_if_blank(atr,val)
+    val.gsub!(' ','') unless val.nil?
     if send("read_attribute",atr).blank?
       send("#{atr}=",val)
-    elsif send(atr) != val
-      raise "client #{atr} does not match (#{send(atr)} != #{val})"
     end
+    db_val = send("read_attribute",atr)
+    db_val.gsub!(' ','') unless db_val.nil?
+    db_val == val
   end
 
   def bank_account
@@ -201,6 +203,11 @@ class Client < ActiveRecord::Base
     if self.company and self.allowed?
       %w(taxcode company_identifier name email currency postalcode country province city address website invoice_format language).each do |attr|
         self.send("#{attr}=",company.send(attr))
+      end
+      if self.company.respond_to?(:address2)
+        self.address2 = self.company.address2
+      else
+        self.address2 = '' # ExternalCompany has no address2
       end
     elsif !self.company
       self.allowed = nil

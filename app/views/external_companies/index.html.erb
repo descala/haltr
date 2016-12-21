@@ -18,7 +18,7 @@
       <td><%= ec.clients.count %> <%= image_tag('link.png') %></td>
       <td><%= link_to l(:button_edit), edit_external_company_path(ec) %></td>
       <td><%= link_to l(:button_delete), external_company_path(ec),
-        :confirm=>l(:text_are_you_sure), :method=>:delete %></td>
+        :data=>{:confirm=>l(:text_are_you_sure)}, :method=>:delete %></td>
     </tr>
   <% end -%>
 </table>

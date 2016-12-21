@@ -174,7 +174,7 @@
           <InstallmentAmount>90.78</InstallmentAmount>
           <PaymentMeans>02</PaymentMeans>
           <AccountToBeDebited>
-            <AccountNumber>1233333333333333</AccountNumber>
+            <AccountNumber>1233 3333 33 333333</AccountNumber>
           </AccountToBeDebited>
         </Installment>
       </PaymentDetails>

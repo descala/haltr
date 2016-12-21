@@ -1,13 +1,16 @@
 class ClientOffice < ActiveRecord::Base
 
   belongs_to :client
+  delegate :project, to: :client
   has_many :invoices, dependent: :nullify
+  has_many :orders, dependent: :nullify
   validates_presence_of :name, :client_id
 
   attr_protected :created_at, :updated_at
   include CountryUtils
 
-  CLIENT_FIELDS = %w( address address2 city province postalcode country email name destination_edi_code )
+  CLIENT_FIELDS = %w( address address2 city province postalcode country email
+  name destination_edi_code edi_code )
 
   CLIENT_FIELDS.each do |attr|
     define_method(attr) do

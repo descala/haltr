@@ -5,6 +5,11 @@ class ReceivedInvoice < InvoiceDocument
   after_create :create_event
   before_save :update_imports
 
+  acts_as_event
+  after_create :notify_users_by_mail, if: Proc.new {|o|
+    o.project.company.order_notifications
+  }
+
   include AASM
 
   aasm column: :state, skip_validation_on_save: true, whiny_transitions: true do
@@ -14,10 +19,10 @@ class ReceivedInvoice < InvoiceDocument
     before_all_events :aasm_create_event
 
     event :refuse do
-      transitions from: [:accepted,:received], to: :refused
+      transitions to: :refused
     end
     event :accept do
-      transitions from: [:received,:accepted], to: :accepted
+      transitions to: :accepted
     end
     event :paid do
       transitions from: :accepted, to: :paid
@@ -33,6 +38,25 @@ class ReceivedInvoice < InvoiceDocument
     end
     event :processed_pdf do
       transitions from: :processing_pdf, to: :received
+    end
+    event :failed_notification do
+      transitions to: :error
+    end
+    event :mark_as_accepted do
+      transitions to: :accepted
+    end
+    event :mark_as_paid do
+      transitions to: :paid
+    end
+    event :mark_as_refused do
+      transitions to: :refused
+    end
+  end
+
+  def aasm_create_event
+    name = aasm.current_event.to_s.gsub('!','')
+    unless Event.automatic.include? name
+      Event.create(:name=>name,:invoice=>self,:user=>User.current)
     end
   end
 
@@ -133,6 +157,20 @@ class ReceivedInvoice < InvoiceDocument
 
   def create_event
     ReceivedInvoiceEvent.create!(:name=>self.transport,:invoice=>self,:user=>User.current)
+  end
+
+  private
+
+  def visible?(usr=nil)
+    (usr || User.current).allowed_to?(:general_use, project)
+  end
+
+  def notify_users_by_mail
+    MailNotifier.received_invoice_add(self).deliver
+  end
+
+  def updated_on
+    updated_at
   end
 
 end

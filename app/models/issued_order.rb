@@ -1,0 +1,2 @@
+class IssuedOrder < Order
+end

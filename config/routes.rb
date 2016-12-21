@@ -4,8 +4,7 @@
 #        %w(xml json).include? params[:format]
 
 resources :events
-match 'events/file/:id' => 'events#file', :via => :get, :as => :event_file
-match 'events/file/:client_hashid/:id' => 'events#file', :via => :get, :as => :client_event_file
+match 'events/attachment/:client_hashid/:id' => 'events#attachment', :via => :get, :as => :client_event_attachment
 
 match '/clients/check_cif/:id' => 'clients#check_cif', :via => :get
 match '/clients/link_to_profile/:id' => 'clients#link_to_profile', :via => :get
@@ -16,6 +15,7 @@ resources :projects do
   resources :clients, :only => [:index, :new, :create]
   match :people, :controller => 'people', :action => 'index', :via => :get
   resources :client_offices, :only => [:index, :new, :create, :edit, :update, :destroy]
+  resources :company_offices, :only => [:index, :new, :create, :edit, :update, :destroy]
   match 'companies/linked_to_mine', :controller => 'companies', :action => 'linked_to_mine', :via => :get
   match 'my_company',    :controller => 'companies', :action => 'my_company',    :via => :get
   match 'bank_info',     :controller => 'companies', :action => 'bank_info',     :via => :get
@@ -67,6 +67,12 @@ resources :projects do
   match 'payments/reports' => 'payments#reports', :via => [:get]
   match 'payments/report_payment_list' => 'payments#report_payment_list', :via => [:post]
   match 'events' => 'events#index', via: [:get,:post]
+  match 'orders/import' => 'orders#import', via: [:get, :post]
+  match 'orders/received' => 'orders#received', via: [:get]
+  match 'orders/received/:id' => 'orders#show_received', via: [:get], as: :received_order
+  match 'orders/add_comment' => 'orders#add_comment', :via => :post
+  match 'orders/:id/create_invoice' => 'orders#create_invoice', :via => :post
+  resources :orders, only: [:index, :show, :destroy]
 end
 resources :invoice_imgs, :only => [:create,:update]
 match 'invoice_imgs/:id/tag/:tag' => 'invoice_imgs#tag', :as => 'invoice_imgs_tag', :via => :get
@@ -94,7 +100,6 @@ match 'received_invoices', :controller => 'received', :action => 'destroy', :via
 match 'invoice_templates', :controller => 'invoice_templates', :action => 'destroy', :via => :delete
 match 'invoices/:id/mark_as/:state' => 'invoices#mark_as', :via => :get, :as => :mark_as
 match 'invoices/send_invoice/:id' => 'invoices#send_invoice', :via => :get, :as => :send_invoice
-match 'invoices/legal/:id' => 'invoices#legal', :via => :get, :as => :legal
 match 'invoices/amend_for_invoice/:id' => 'invoices#amend_for_invoice', :via => :get, :as => :amend_for_invoice
 match 'invoices/duplicate_invoice/:id' => 'invoices#duplicate_invoice', :via => :get, :as => :duplicate_invoice
 match 'invoices/destroy_payment/:id' => 'invoices#destroy_payment', :via => :delete, :as => :destroy_payment
@@ -110,8 +115,6 @@ match 'quotes/send/:id' => 'quotes#send_quote', :via => :get, :as => :send_quote
 match 'quotes/accept/:id' => 'quotes#accept', :via => :get, :as => :accept_quote
 match 'quotes/refuse/:id' => 'quotes#refuse', :via => :get, :as => :refuse_quote
 
-# public access to an invoice using the client hash
-match 'invoice/download/:client_hashid/:invoice_id' => 'invoices#download', :client_hashid => /.*/, :invoice_id => /\d+/, :via => :get, :as => 'invoice_public_download'
 match 'invoice/:client_hashid/:invoice_id' => 'invoices#view', :client_hashid => /.*/, :invoice_id => /\d+/, :via => :get, :as => 'invoice_public_view'
 
 # public access to a company logo, knowing the id and the file name

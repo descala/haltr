@@ -17,11 +17,13 @@ class InvoicesHelperTest < ActionView::TestCase
   end
 
   test "send_link_for_invoice handles unknown Client#invoice_format" do
+    set_language_if_valid 'en'
     @invoice = invoices(:invoice1)
     client = @invoice.client
     client.invoice_format = 'white_crow'
     client.save
     ExportChannels.use_file('channels.yml.example')
     assert_match(/Signed PDF to email.*Cannot re-send invoices in state Sent/m, send_link_for_invoice)
+    ExportChannels.use_file('channels.yml')
   end
 end

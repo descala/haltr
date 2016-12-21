@@ -65,18 +65,13 @@ class ReceivedController < InvoicesController
 
   def bulk_mark_as
     all_changed = true
-    @invoices.each do |i|
-      next if i.state == params[:state]
-      case params[:state]
-      when "accepted"
-        all_changed &&= (i.accept! || i.unpaid!)
-      when "paid"
-        all_changed &&= i.paid!
-      when "refused"
-        all_changed &&= i.refuse!
-      else
-        flash[:error] = "unknown state #{params[:state]}"
+    if %w(accepted paid refused).include? params[:state]
+      @invoices.each do |i|
+        next if i.state == params[:state]
+        all_changed = i.send("mark_as_#{params[:state]}") && all_changed
       end
+    else
+      flash[:error] = "unknown state #{params[:state]}"
     end
     flash[:warn] = l(:some_states_not_changed) unless all_changed
     redirect_back_or_default(:action=>'index',:project_id=>@project.id)

@@ -1,0 +1,13 @@
+<!--formulari-->
+<div class="seccio grup">
+  <div class="col span-2-de-2">
+    <%= labelled_form_for :company_office, @company_office, :url => { :action => 'update', :id => @company_office }, :html => {:class=>'formee'} do |f| %>
+      <%= render :partial => 'form', :locals => { :f => f } %>
+      <%= submit_tag l(:button_save) %>
+    <% end %>  </div>
+</div>
+<!--final formulari-->
+
+<% content_for :sidebar do %>
+  <%= render_menu :my_company_menu, @project %>
+<% end %>

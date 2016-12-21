@@ -1,6 +1,5 @@
 class PaymentsController < ApplicationController
 
-
   menu_item Haltr::MenuItem.new(:payments,:payments_level2)
   menu_item Haltr::MenuItem.new(:payments,:payment_initiation), :only=> [:payment_initiation,:payment_done,:sepa,:invoices]
   menu_item Haltr::MenuItem.new(:payments,:import_aeb43),       :only=> [:import_aeb43_index,:import_aeb43]
@@ -96,12 +95,12 @@ class PaymentsController < ApplicationController
     @invoices_to_pay_by_bank_info = {}
     @project.company.bank_infos.each do |bi|
       @invoices_to_pay_by_bank_info[bi] = {}
-      bi.invoices.where(
-        "state IN ('sent','registered') AND payment_method = ?", Invoice::PAYMENT_DEBIT
+      bi.issued_invoices.where(
+        "state IN ('sent','registered','accepted','read') AND payment_method = ?", Invoice::PAYMENT_DEBIT
       ).reject {|i| i.due_date.nil? }.group_by(&:due_date).each do |due_date, invoices|
         @invoices_to_pay_by_bank_info[bi][due_date] = {}
         invoices.each do |invoice|
-          unless invoice.client.bank_account.blank? and invoice.client.iban.blank?
+          unless invoice.client.bank_account.blank? and invoice.client_iban.blank?
             @invoices_to_pay_by_bank_info[bi][due_date]["sepa_#{invoice.client.sepa_type}"] ||= []
             @invoices_to_pay_by_bank_info[bi][due_date]["sepa_#{invoice.client.sepa_type}"] << invoice
           end

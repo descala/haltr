@@ -11,7 +11,11 @@ class Event < ActiveRecord::Base
   attr_protected :created_at, :updated_at
 
   before_validation :set_project_if_nil
+  before_create :create_attachment
   after_create :update_invoice, :unless => Proc.new {|event| event.invoice.nil?}
+
+  acts_as_attachable :view_permission => :general_use,
+                   :delete_permission => :general_use
 
   ### redmine activity ###
   acts_as_event :type => 'info_event',
@@ -68,7 +72,7 @@ class Event < ActiveRecord::Base
 
   # automatic events can change invoice status (after_create :update_invoice)
   def automatic?
-    Event.automatic.include? name
+    Event.automatic.include? name.to_s
   end
 
   def self.automatic
@@ -86,15 +90,40 @@ class Event < ActiveRecord::Base
     events
   end
 
-  def file
+  attr_accessor :file, :filename
+
+  def attachment
+    attachments.first
+  rescue
+    nil
+  end
+
+  def attachment_content
+    File.read(attachments.first.diskfile)
+  end
+
+  def create_attachment
+    if @file and @file.size > 0
+      a = Attachment.new
+      # @file may be compressed
+      a.file = StringIO.new(Haltr::Utils.decompress(@file))
+      if a.filesize > 0
+        a.author = User.current
+        a.filename = filename
+        self.attachments << a
+      end
+    end
+  end
+
+  def file_old
     Haltr::Utils.decompress(read_attribute(:file))
   end
 
-  def file=(s)
-    if s and s.size > 0
-      write_attribute(:file, Haltr::Utils.compress(Haltr::Utils.decompress(s)))
-    end
-  end
+#  def file_old=(s)
+#    if s and s.size > 0
+#      write_attribute(:file, Haltr::Utils.compress(Haltr::Utils.decompress(s)))
+#    end
+#  end
 
   %w(notes class_for_send md5 error backtrace codi_registre url created_by extra_notes).each do |c|
     src = <<-END_SRC

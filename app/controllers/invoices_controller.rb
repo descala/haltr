@@ -1,6 +1,5 @@
 class InvoicesController < ApplicationController
 
-
   menu_item Haltr::MenuItem.new(:invoices,:invoices_level2)
   menu_item Haltr::MenuItem.new(:invoices,:reports), :only => [:reports, :report_channel_state, :report_invoice_list, :report_received_table]
   helper :haltr
@@ -12,20 +11,20 @@ class InvoicesController < ApplicationController
   helper :attachments
   include AttachmentsHelper
 
-  PUBLIC_METHODS = [:by_taxcode_and_num,:view,:download,:mail,:logo,:haltr_sign]
+  PUBLIC_METHODS = [:by_taxcode_and_num,:view,:mail,:logo,:haltr_sign]
 
   before_filter :find_project_by_project_id, :only => [:index,:new,:create,:send_new_invoices,:download_new_invoices,:update_payment_stuff,:new_invoices_from_template,:reports,:report_channel_state,:report_invoice_list,:report_received_table,:create_invoices,:update_taxes,:upload,:import,:import_facturae]
-  before_filter :find_invoice, :only => [:edit,:update,:mark_accepted_with_mail,:mark_accepted,:mark_refused_with_mail,:mark_refused,:duplicate_invoice,:base64doc,:show,:send_invoice,:legal,:amend_for_invoice,:original,:validate, :mark_as_accepted, :mark_as, :add_comment]
+  before_filter :find_invoice, :only => [:edit,:update,:mark_accepted_with_mail,:mark_accepted,:mark_refused_with_mail,:mark_refused,:duplicate_invoice,:base64doc,:show,:send_invoice,:amend_for_invoice,:original,:validate, :mark_as_accepted, :mark_as, :add_comment]
   before_filter :find_invoices, :only => [:context_menu,:bulk_download,:bulk_mark_as,:bulk_send,:destroy,:bulk_validate]
   before_filter :find_payment, :only => [:destroy_payment]
-  before_filter :find_hashid, :only => [:view,:download]
+  before_filter :find_hashid, :only => [:view]
   before_filter :find_attachment, :only => [:logo]
   before_filter :find_invoice_by_number, only: [:number_to_id]
   before_filter :authorize, :except => PUBLIC_METHODS
   skip_before_filter :check_if_login_required, :only => PUBLIC_METHODS
   # on development skip auth so we can use curl to debug
   if Rails.env.development? or Rails.env.test?
-    skip_before_filter :check_if_login_required, :only => [:by_taxcode_and_num,:view,:download,:mail,:show,:original]
+    skip_before_filter :check_if_login_required, :only => [:by_taxcode_and_num,:view,:mail,:show,:original]
     skip_before_filter :authorize, :only => [:show,:original]
   else
     before_filter :check_remote_ip, :only => [:by_taxcode_and_num,:mail]
@@ -59,7 +58,7 @@ class InvoicesController < ApplicationController
 
     unless params["state_all"] == "1"
       statelist=[]
-      %w(new sending sent read error cancelled closed discarded registered refused accepted allegedly_paid annotated).each do |state|
+      %w(new sending sent read error cancelled closed discarded registered refused accepted allegedly_paid accounted).each do |state|
         if params[state] == "1"
           statelist << "'#{state}'"
         end
@@ -153,12 +152,8 @@ class InvoicesController < ApplicationController
 
   def new
     @client = Client.find(params[:client]) if params[:client]
-    @client ||= Client.where(project_id: @project).order(:name).first
-    @client ||= Client.new(:country=>@project.company.country,
-                           :currency=>@project.company.currency,
-                           :language=>User.current.language)
     @invoice = invoice_class.new(:client=>@client,:project=>@project,:date=>Date.today,:number=>IssuedInvoice.next_number(@project))
-    @invoice.currency = @client.currency
+    @invoice.currency = @client.currency if @client
     il = InvoiceLine.new
     @project.company.taxes.each do |tax|
       il.taxes << Tax.new(:name=>tax.name, :percent=>tax.percent) if tax.default
@@ -225,6 +220,17 @@ class InvoicesController < ApplicationController
         end
       end
     end
+    unless parsed_params[:organ_proponent].is_a? String
+      organ_proponent = parsed_params.delete(:organ_proponent)
+      if organ_proponent
+        parsed_params[:organ_proponent] = organ_proponent[:code]
+        if client_hash
+          Dir3Entity.new_from_hash(organ_proponent, client_hash[:taxcode], '03')
+        else
+          Dir3Entity.new_from_hash(organ_proponent)
+        end
+      end
+    end
 
     @invoice = invoice_class.new(parsed_params)
     @invoice.project ||= @project
@@ -236,7 +242,8 @@ class InvoicesController < ApplicationController
     end
 
     if client_hash
-      @invoice.set_client_from_hash(client_hash)
+      client_hash[:project] = @invoice.project
+      @invoice.client, @invoice.client_office = Haltr::Utils.client_from_hash(client_hash)
     end
 
     if bank_account || iban
@@ -264,6 +271,7 @@ class InvoicesController < ApplicationController
     @invoice.project = @project
 
     @invoice.client_office = nil unless @client and @client.client_offices.any? {|office| office.id == @invoice.client_office_id }
+    @invoice.company_office = nil unless @project.company.company_offices.any? {|office| office.id == @invoice.company_office_id }
 
     if params[:to_amend] and params[:amend_type]
       @to_amend = @project.invoices.find params[:to_amend]
@@ -514,10 +522,10 @@ class InvoicesController < ApplicationController
     when 'sent'
       if @invoice.last_success_sending_event
         if @invoice.last_success_sending_event.content_type == 'application/pdf'
-          @invoice_pdf = client_event_file_path(@invoice.last_success_sending_event,
-                                                client_hashid: @invoice.client.hashid)
+          attachment = @invoice.last_success_sending_event.attachments.first
+          @invoice_pdf = download_named_attachment_path(attachment, attachment.filename)
         else
-          invoice_nokogiri = Nokogiri::XML(@invoice.last_success_sending_event.file)
+          invoice_nokogiri = Nokogiri::XML(@invoice.last_success_sending_event.attachment_content)
           begin
             if invoice_nokogiri.root.namespace.href =~ /StandardBusinessDocumentHeader/
               invoice_nokogiri = Haltr::Utils.extract_from_sbdh(invoice_nokogiri)
@@ -848,10 +856,9 @@ class InvoicesController < ApplicationController
 
     @lsse = @invoice.last_success_sending_event
     if @lsse
-      if @lsse.content_type == 'application/pdf'
-        @invoice_pdf = client_event_file_path(@lsse, client_hashid: @invoice.client.hashid)
-      elsif @lsse.content_type == 'application/xml'
-        invoice_nokogiri = Nokogiri::XML(@lsse.file)
+      @invoice_url = client_event_attachment_path(@lsse, client_hashid: @invoice.client.hashid)
+      if @lsse.content_type == 'application/xml'
+        invoice_nokogiri = Nokogiri::XML(@lsse.attachment_content)
         template = original_xsl_template(invoice_nokogiri)
         if template
           @invoice_root_namespace = Haltr::Utils.root_namespace(invoice_nokogiri) rescue nil
@@ -874,6 +881,7 @@ class InvoicesController < ApplicationController
     unless @invoice.has_been_read or User.current.projects.include?(@invoice.project) or User.current.admin?
       Event.create!(:name=>'read',:invoice=>@invoice,:user=>User.current)
       @invoice.update_attribute(:has_been_read,true)
+      @invoice.read
     end
     render :layout=>"public"
   rescue ActionView::MissingTemplate
@@ -894,55 +902,6 @@ class InvoicesController < ApplicationController
         :type => 'image/gif',
         :disposition => 'inline'
     end
-  end
-
-  # this is the same as download, but without the before filter :find_hashid
-  def legal
-    download
-  end
-
-  # downloads an invoice without login using client hash_id as credentials
-  def download
-    md5   = params[:md5]
-    event = nil
-    if params[:event]
-      # event is @invoice.last_success_sending_event
-      # used when downloading file from invoice client view
-      event = @invoice.events.find(params[:event]) rescue nil
-    end
-    if event
-      if event.is_a? EventWithFile
-        send_data event.file, :filename => event.filename, :type => event.content_type
-        return
-      else
-        md5 = event.md5
-      end
-    end
-    # old way, external invoice storage
-    if (Rails.env.development? or Rails.env.test?) and !Setting['plugin_haltr']['b2brouter_ip']
-      logger.debug "This is a test XML invoice"
-      send_file Rails.root.join("plugins/haltr/test/fixtures/xml/test_invoice_facturae32.xml")
-    else
-      if @invoice.fetch_from_backup(md5,params[:backup_name])
-        respond_to do |format|
-          format.html do
-            send_data @invoice.legal_invoice,
-              :type => @invoice.legal_content_type,
-              :filename => @invoice.legal_filename,
-              :disposition => params[:disposition] == 'inline' ? 'inline' : 'attachment'
-          end
-          format.xml do
-            render :xml => @invoice.legal_invoice
-          end
-        end
-      else
-        flash[:warning]=l(:cant_connect_trace, "")
-        render_404
-      end
-    end
-  rescue Errno::ECONNREFUSED, Errno::EHOSTUNREACH => e
-    flash[:warning]=l(:cant_connect_trace, e.message)
-    redirect_to :action => 'show', :id => @invoice
   end
 
   def amend_for_invoice
@@ -1099,6 +1058,15 @@ class InvoicesController < ApplicationController
       ClientOffice::CLIENT_FIELDS.each do |f|
         @client[f] = @invoice.client_office.send(f)
       end
+      # client copies linked profile before validation, so remove link
+      # to prevent fields beign overwritten
+      @client[:company_id] = nil
+    end
+    if @invoice.company_office
+      # overwrite company attributes with its office
+      CompanyOffice::COMPANY_FIELDS.each do |f|
+        @company[f] = @invoice.company_office.send(f)
+      end
     end
   rescue ActiveRecord::RecordNotFound
     render_404
@@ -1204,7 +1172,9 @@ class InvoicesController < ApplicationController
   end
 
   def mark_as
-    if %w(new sent accepted registered refused closed).include? params[:state]
+    states = @invoice.is_a?(ReceivedInvoice) ? %w(paid) :
+      %w(new sent accepted registered refused closed)
+    if states.include? params[:state]
       @invoice.send("mark_as_#{params[:state]}!")
       @invoice.update_attribute(:state, params[:state])
       Event.create(
@@ -1570,6 +1540,26 @@ class InvoicesController < ApplicationController
           tax['comment'] = ''
         end
       end
+      # discounts percent and amount #5516
+      discount = invoice_line.delete(:discount).to_s.gsub(/-/,'')
+      discount_type = invoice_line.delete(:discount_type)
+      if discount_type == '€'
+        invoice_line[:discount_percent] = 0
+        invoice_line[:discount_amount] = discount
+      elsif discount_type == '%'
+        invoice_line[:discount_percent] = discount
+        invoice_line[:discount_amount] = 0
+      end
+    end
+    # discounts percent and amount #5516
+    discount = parsed_params.delete(:discount)
+    discount_type = parsed_params.delete(:discount_type)
+    if discount_type == '€'
+      parsed_params[:discount_percent] = 0
+      parsed_params[:discount_amount] = discount
+    elsif discount_type == '%'
+      parsed_params[:discount_percent] = discount
+      parsed_params[:discount_amount] = 0
     end
     parsed_params
   end

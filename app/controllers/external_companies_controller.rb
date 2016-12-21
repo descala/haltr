@@ -10,7 +10,7 @@ class ExternalCompaniesController < ApplicationController
   include CsvImporter
 
   def index
-    @ecompanies = ExternalCompany.all(order: :name)
+    @ecompanies = ExternalCompany.order(:name).all
   end
 
   def new

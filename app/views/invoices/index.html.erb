@@ -58,7 +58,7 @@
                   </tr>
                   <tr>
 
-                <% %w(new sending sent read error cancelled closed discarded registered refused accepted allegedly_paid annotated).each do |state| -%>
+                <% %w(new sending sent read error cancelled closed discarded registered refused accepted allegedly_paid accounted).each do |state| -%>
                   <%= "</tr><tr>".html_safe if state == "discarded" %>
                   <td><label class="inline"><%= check_box_tag(state, "1", params[state]) %> <%=l("state_#{state}_plural")%></label></td>
                 <% end -%>
@@ -180,7 +180,7 @@
         <tbody>
           <% @invoices.each do |invoice| -%>
             <%if invoice.total > invoice.total_paid and invoice.total_paid.cents != 0%>
-              <tr <%='class="halfpaid"'.html_safe%>,  id="invoice-<%=invoice.id%>" class="hascontextmenu <%= 'amended ' if invoice.amended? %><%= cycle("odd", "even") %>">
+              <tr id="invoice-<%=invoice.id%>" class="halfpaid hascontextmenu <%= 'amended ' if invoice.amended? %><%= cycle("odd", "even") %>">
               <%else%>
               <tr id="invoice-<%=invoice.id%>" class="hascontextmenu <%= 'amended ' if invoice.amended? %><%= cycle("odd", "even") %>">
             <% end %>
@@ -190,7 +190,7 @@
                 <td><%=h invoice.client_office ? invoice.client_office : invoice.client %></td>
                 <td class="money"><%= money(invoice.subtotal) %></td>
                 <td class="money"><%= money(invoice.total) %></td>
-                <td <%='class="pastdue"'.html_safe if invoice.past_due?%>><%=h format_date invoice.due_date %></td>
+                <td <%='class="pastdue"'.html_safe if invoice.past_due?%>><%=h format_date invoice.due_date %><%= call_hook(:invoices_index_due_date, { invoice: invoice }) %></td>
                 <td><%=h l("state_#{invoice.state}").capitalize %></td>
               </tr>
           <% end -%>

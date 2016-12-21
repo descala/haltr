@@ -14,13 +14,13 @@ class CompaniesController < ApplicationController
   include Haltr::TaxHelper
 
   before_filter :find_project_by_project_id,
-    :only => [:my_company,:bank_info,:connections,:customization,
-              :linked_to_mine,:logo,:add_bank_info,:check_iban]
+    only: [:my_company,:bank_info,:connections,:customization,:linked_to_mine,
+           :logo,:add_bank_info,:check_iban]
   before_filter :find_company, :only => [:update]
   before_filter :authorize, :except => [:logo,:logo_by_taxcode]
   skip_before_filter :check_if_login_required, :only => [:logo,:logo_by_taxcode]
   before_filter :check_for_company,
-    :only => [:my_company,:bank_info,:connections,:customization]
+    only: [:my_company,:bank_info,:connections,:customization]
 
   accept_api_auth :my_company
 
@@ -80,7 +80,7 @@ class CompaniesController < ApplicationController
     sort_update %w(taxcode name)
     @companies_link_req = @project.company.companies_with_link_requests
     @companies_denied   = @project.company.companies_with_denied_link
-    @companies = (Client.all(:conditions => ['company_id = ?', @project.company]).collect do |client|
+    @companies = (Client.where(["company_id = ? and company_type='Company'", @project.company]).to_a.collect do |client|
       client.project.company
     end - @companies_link_req)
   end

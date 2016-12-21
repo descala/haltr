@@ -4,7 +4,7 @@
     <ul class="menu-rapid">
       <li><%= link_to_if_authorized l("label_quote_new"), new_project_quote_path(@project), :class => 'icon icon-add' %></li>
       <li><%= link_to_if_authorized l(:button_edit), { :action => 'edit', :id => @invoice }, :class => 'icon icon-edit' %></li>
-      <li><%= link_to_if_authorized l(:button_delete), { :action => 'destroy', :id => @invoice}, :confirm=>l(:text_are_you_sure), :method=>:delete, :class=>'icon icon-del' %></li>
+      <li><%= link_to_if_authorized l(:button_delete), { :action => 'destroy', :id => @invoice}, :data=>{:confirm=>l(:text_are_you_sure)}, :method=>:delete, :class=>'icon icon-del' %></li>
       <li><%= link_to_if_authorized "PDF", { :action => 'show', :id => @invoice, :format => 'pdf'}, :class=>'icon-haltr-save' %></li>
       <li><%= link_to_if_authorized l(:accept_quote), accept_quote_path(@invoice) %></li>
       <li><%= link_to_if_authorized l(:refuse_quote), refuse_quote_path(@invoice) %></li>

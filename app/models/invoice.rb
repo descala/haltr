@@ -3,14 +3,13 @@ class Invoice < ActiveRecord::Base
   include HaltrHelper
   include Haltr::FloatParser
   include Haltr::PaymentMethods
-  float_parse :discount_percent, :fa_import
+  float_parse :fa_import, :discount_amount, :discount_percent, :exchange_rate
 
   audited except: [:import_in_cents, :total_in_cents,
                    :state, :has_been_read, :id, :original]
   has_associated_audits
   # do not remove, with audit we need to make the other attributes accessible
   attr_protected :created_at, :updated_at
-  attr_accessor :discount_helper
 
   # remove non-utf8 characters from those fields:
   TO_UTF_FIELDS = %w(extra_info)
@@ -31,6 +30,8 @@ class Invoice < ActiveRecord::Base
   belongs_to :quote
   has_many :comments, -> {order :created_on}, :as => :commented, :dependent => :delete_all
   belongs_to :client_office
+  belongs_to :company_office
+  has_one :order, dependent: :nullify
   validates_inclusion_of :client_office_id, in: [nil], unless: Proc.new {|i|
     i.client and i.client.client_offices.any? {|o| o.id == i.client_office_id }
   }
@@ -40,7 +41,9 @@ class Invoice < ActiveRecord::Base
   validates_numericality_of :charge_amount_in_cents, :allow_nil => true
   validates_numericality_of :payments_on_account_in_cents, :allow_nil => true
   validates_numericality_of :amounts_withheld_in_cents, :allow_nil => true
-  validates_numericality_of :exchange_rate, :allow_nil => true
+  validates_numericality_of :exchange_rate, :allow_blank => true
+  validates_format_of :exchange_rate, with: /\A-?[0-9]+(\.[0-9]{1,2}|)\z/,
+    :allow_blank => true
 
   before_save :fields_to_utf8
   after_create :increment_counter
@@ -216,11 +219,12 @@ class Invoice < ActiveRecord::Base
         # check round_before_sum setting from company #5324
         if company and company.round_before_sum
           # sum([round(price) x tax])
-          t += lines_with_tax(tax).collect {|line|
+          taxes_imports = lines_with_tax(tax).collect {|line|
             price = Haltr::Utils.to_money(line.gross_amount, currency, company.rounding_method)
             discount = Haltr::Utils.to_money((line.total_cost*(discount_percent / 100.0)),currency,company.rounding_method)
             (price - discount)*(tax.percent / 100.0)
-          }.sum
+          }
+          t += taxes_imports.sum
         else
           # sum(price) x tax
           t += taxable_base(tax) * (tax.percent / 100.0)
@@ -252,8 +256,45 @@ class Invoice < ActiveRecord::Base
   end
 
   def discount_amount(tax_type=nil)
-    self.discount_percent = 0 if self.discount_percent.nil?
-    gross_subtotal(tax_type) * (discount_percent / 100.0)
+    if self[:discount_amount] and self[:discount_amount] != 0
+      if tax_type.nil?
+        Haltr::Utils.to_money(self[:discount_amount], currency, company.rounding_method)
+      else
+        # must calculate discount percent to calculate taxable base for a tax_type
+        # (issue 5517 note-5)
+        gross_subtotal(tax_type) * (discount_percent / 100.0)
+      end
+    elsif self[:discount_percent] and self[:discount_percent] != 0
+      gross_subtotal(tax_type) * (self[:discount_percent] / 100.0)
+    else
+      Money.new(0, currency)
+    end
+  end
+
+  def discount_percent
+    if self[:discount_percent] and self[:discount_percent] != 0
+      self[:discount_percent]
+    elsif self[:discount_amount] and self[:discount_amount] != 0 and gross_subtotal.dollars != 0
+      (self[:discount_amount].to_f * 100 / gross_subtotal.dollars).round(2)
+    else
+      0
+    end
+  end
+
+  def discount
+    if discount_type == '€'
+      discount_amount
+    else
+      discount_percent
+    end
+  end
+
+  def discount_type
+    if self[:discount_amount] and self[:discount_amount] != 0
+      '€'
+    else
+      '%'
+    end
   end
 
   def tax_applies_to_all_lines?(tax)
@@ -429,14 +470,20 @@ class Invoice < ActiveRecord::Base
     t
   end
 
-  def extra_info_plus_tax_comments
-    tax_comments = self.taxes.collect do |tax|
+  def tax_comments
+    tc = self.taxes.collect do |tax|
       tax.comment unless tax.comment.blank?
     end.compact
-    tax_comments.unshift(extra_info)
-    tax_comments.delete('')
-    tax_comments.uniq!
-    tax_comments.compact.join('. ')
+    tc.delete('')
+    tc.uniq!
+    tc.compact.join('. ')
+  end
+
+  def legal_literals_plus_tax_comments
+    str = legal_literals.to_s
+    str += ' ' unless str.blank?
+    str += tax_comments
+    str
   end
 
   def to_s
@@ -491,7 +538,7 @@ _INV
     else
       raw_xml = raw_invoice.read
     end
-    doc               = Nokogiri::XML(raw_xml)
+    doc = Nokogiri::XML(raw_xml)
     if doc.child and doc.child.name == "StandardBusinessDocument"
       doc = Haltr::Utils.extract_from_sbdh(doc)
     end
@@ -514,6 +561,10 @@ _INV
 
     xpaths         = Haltr::Utils.xpaths_for(invoice_format)
     seller_taxcode = Haltr::Utils.get_xpath(doc,xpaths[:seller_taxcode])
+    if ubl_version
+      seller_taxcode ||= Haltr::Utils.get_xpath(doc,xpaths[:seller_taxcode2])
+      seller_taxcode ||= Haltr::Utils.get_xpath(doc,xpaths[:seller_taxcode3])
+    end
     buyer_taxcode  = Haltr::Utils.get_xpath(doc,xpaths[:buyer_taxcode])
     if buyer_taxcode.nil? and ubl_version
       buyer_taxcode  = Haltr::Utils.get_xpath(doc,xpaths[:buyer_taxcode_id])
@@ -535,12 +586,15 @@ _INV
     invoice_import   = Haltr::Utils.get_xpath(doc,xpaths[:invoice_import])
     invoice_due_date = Haltr::Utils.get_xpath(doc,xpaths[:invoice_due_date])
     discount_percent = Haltr::Utils.get_xpath(doc,xpaths[:discount_percent])
+    discount_amount  = Haltr::Utils.get_xpath(doc,xpaths[:discount_amount])
+    #total_gross      = Haltr::Utils.get_xpath(doc,xpaths[:invoice_totalgross])
     discount_text    = Haltr::Utils.get_xpath(doc,xpaths[:discount_text])
     extra_info       = Haltr::Utils.get_xpath(doc,xpaths[:extra_info])
     charge           = Haltr::Utils.get_xpath(doc,xpaths[:charge])
     charge_reason    = Haltr::Utils.get_xpath(doc,xpaths[:charge_reason])
     accounting_cost  = Haltr::Utils.get_xpath(doc,xpaths[:accounting_cost])
     payments_on_account = Haltr::Utils.get_xpath(doc,xpaths[:payments_on_account]) || 0
+    amounts_withheld_reason = Haltr::Utils.get_xpath(doc,xpaths[:amounts_withheld_r])
     amounts_withheld = Haltr::Utils.get_xpath(doc,xpaths[:amounts_withheld]) || 0
     amend_of         = Haltr::Utils.get_xpath(doc,xpaths[:amend_of])
     amend_type       = Haltr::Utils.get_xpath(doc,xpaths[:amend_type])
@@ -663,22 +717,20 @@ _INV
       default_channel = 'link_to_pdf_by_mail'
     end
 
-    invoice.set_client_from_hash(
-      {
-        :taxcode        => client_taxcode,
-        :name           => client_name,
-        :address        => client_address,
-        :province       => client_province,
-        :country        => client_country,
-        :website        => client_website,
-        :email          => client_email,
-        :postalcode     => client_postalcode,
-        :city           => client_city,
-        :currency       => currency,
-        :project        => company.project,
-        :invoice_format => default_channel,
-        :language       => client_language
-      }
+    invoice.client, invoice.client_office = Haltr::Utils.client_from_hash(
+      :taxcode        => client_taxcode,
+      :name           => client_name,
+      :address        => client_address,
+      :province       => client_province,
+      :country        => client_country,
+      :website        => client_website,
+      :email          => client_email,
+      :postalcode     => client_postalcode,
+      :city           => client_city,
+      :currency       => currency,
+      :project        => company.project,
+      :invoice_format => default_channel,
+      :language       => client_language
     )
 
     # if it is an issued invoice, and
@@ -735,6 +787,14 @@ _INV
       original = raw_xml
     end
 
+    # there are several Discounts, sum them
+    if discount_amount =~ / /
+      discount_amount = discount_amount.split.collect {|a| Haltr::Utils.float_parse(a) }.sum
+    end
+    if discount_percent =~ / /
+      discount_percent = discount_percent.split.collect {|a| Haltr::Utils.float_parse(a) }.sum
+    end
+
     invoice.assign_attributes(
       :number           => invoice_number,
       :series_code      => invoice_series,
@@ -755,6 +815,7 @@ _INV
       :from             => from,           # u@mail.com, User Name...
       :md5              => md5,
       :original         => original,
+      :discount_amount  => discount_amount,
       :discount_percent => discount_percent,
       :discount_text    => discount_text,
       :extra_info       => extra_info,
@@ -762,6 +823,7 @@ _INV
       :charge_reason    => charge_reason,
       :accounting_cost  => accounting_cost,
       :payments_on_account => Haltr::Utils.to_money(payments_on_account, currency, company.rounding_method),
+      :amounts_withheld_reason  => amounts_withheld_reason,
       :amounts_withheld  => Haltr::Utils.to_money(amounts_withheld, currency, company.rounding_method),
       :fa_person_type    => fa_person_type,
       :fa_residence_type => fa_residence_type,
@@ -886,12 +948,25 @@ _INV
       end
       # line discounts
       line_discounts = line.xpath(xpaths[:line_discounts])
-      if line_discounts.size > 1
-        raise "too many discounts per line! (#{line_discounts.size})"
-      elsif line_discounts.size == 1
-        il.discount_percent = Haltr::Utils.get_xpath(line_discounts.first,xpaths[:line_discount_percent])
-        il.discount_text = Haltr::Utils.get_xpath(line_discounts.first,xpaths[:line_discount_text])
+      il_disc_percent = 0
+      il_disc_amount  = 0
+      il_disc_text    = []
+      line_discounts.each do |line_disc|
+        disc_amount  = Haltr::Utils.get_xpath(line_disc,xpaths[:line_discount_amount])
+        disc_percent = Haltr::Utils.get_xpath(line_disc,xpaths[:line_discount_percent])
+        disc_text    = Haltr::Utils.get_xpath(line_disc,xpaths[:line_discount_text])
+        if disc_amount.present?
+          il_disc_amount += BigDecimal.new(disc_amount)
+        end
+        if disc_percent.present?
+          il_disc_percent += BigDecimal.new(disc_percent)
+        end
+        il_disc_text << disc_text
       end
+      il.discount_amount  = il_disc_amount.round(2)
+      il.discount_percent = il_disc_percent.round(2)
+      il.discount_text = il_disc_text.join('. ')
+
       # line_charges
       line_charges = line.xpath(xpaths[:line_charges])
       if line_charges.size > 1
@@ -1003,7 +1078,7 @@ _INV
     if company and company.project
       ImportError.create(
         filename:      file_name,
-        import_errors: $!.message,
+        import_errors: $!.message[0.254],
         original:      raw_xml,
         project:       company.project,
       )
@@ -1046,8 +1121,9 @@ _INV
       if bank_account
         client.set_if_blank(:bank_account,bank_account)
       else
-        client.set_if_blank(:iban,iban)
-        client.set_if_blank(:bic,bic)
+        # if client iban/bic differs, store them on invoice (#6171)
+        self.client_iban = iban unless client.set_if_blank(:iban,iban)
+        self.client_bic = bic unless client.set_if_blank(:bic,bic)
       end
       client.save!
       # Use any of our bank_infos to receive the payment, let say the last one,
@@ -1141,7 +1217,8 @@ _INV
 
   def has_line_discounts?
     return @has_line_discounts unless @has_line_discounts.nil?
-    @has_line_discounts = (invoice_lines.to_a.sum(&:discount_percent) > 0)
+    @has_line_discounts = invoice_lines.any? {|l| l.discount_percent != 0 }
+    @has_line_discounts ||= invoice_lines.any? {|l| l.discount_amount != 0 }
   end
 
   def has_line_charges?
@@ -1168,71 +1245,12 @@ _INV
     %w(01 02 03 04 05 06 07 08 09 10 11 12 13 14 15 16 80 81 82 83 84 85)
   end
 
-  # set invoice client from hash, first searches or clients by taxcode, if it
-  # matches uses existing client, if not, creates a new one. Then it compares
-  # client fields and creates a client_office if it differs.
-  # assigns invoice [and client_office] to self.
-  #
-  def set_client_from_hash(client_hash)
-    if client_hash[:country] and client_hash[:country].size == 3
-      client_hash[:country] = SunDawg::CountryIsoTranslater.translate_standard(
-        client_hash[:country], "alpha3", "alpha2"
-      ).downcase rescue client_hash[:country]
-    end
-    self.client   = project.clients.where('taxcode like ?', "%#{client_hash[:taxcode]}").first
-    self.client ||= project.clients.where('? like concat("%", taxcode) and taxcode != ""', client_hash[:taxcode]).first
-    if client and client.company.nil?
-      # client found by taxcode, but stored data may not match data in invoice
-      # if it doesn't, we create a client_office with data from invoice
-      to_match = {
-        full_address:         client_hash[:address].to_s.chomp,
-        city:                 client_hash[:city].to_s.chomp,
-        province:             client_hash[:province].to_s.chomp,
-        postalcode:           client_hash[:postalcode].to_s.chomp,
-        country:              client_hash[:country].to_s.chomp,
-        name:                 client_hash[:name].to_s.chomp,
-        destination_edi_code: client_hash[:destination_edi_code].to_s.chomp
-      }.reject {|k,v| v.blank? }
-      # check if client data matches client_hash
-      if !to_match.all? {|k, v| client.send(k).to_s.chomp.casecmp(v) == 0 }
-        # check if any client_office matches client_hash
-        client.client_offices.each do |office|
-          if to_match.all? {|k, v| office.send(k).to_s.chomp.casecmp(v) == 0 }
-            self.client_office = office
-            break
-          end
-        end
+  def client_iban
+    self[:client_iban].blank? ? client.iban : self[:client_iban]
+  end
 
-        if client_office.nil?
-          # client and all its client_offices differ from data in invoice
-          self.client_office = ClientOffice.new(
-            client_id:            client.id,
-            address:              client_hash[:address].to_s.chomp,
-            city:                 client_hash[:city].to_s.chomp,
-            province:             client_hash[:province].to_s.chomp,
-            postalcode:           client_hash[:postalcode].to_s.chomp,
-            country:              client_hash[:country].to_s.chomp.downcase,
-            name:                 client_hash[:name].to_s.chomp,
-            destination_edi_code: client_hash[:destination_edi_code].to_s.chomp
-          )
-          raise "#{l(:label_client_office)}: #{client_office.errors.full_messages.join('. ')}" unless client_office.save
-          client.reload
-          self.client_office_id = client_office.id
-        end
-      end
-    else
-      unless client
-        self.client = Client.new(client_hash)
-        client.project = self.project
-        external_company = ExternalCompany.where('taxcode like ?', "%#{client_hash[:taxcode]}").first
-        external_company ||= ExternalCompany.where('? like concat("%", taxcode) and taxcode != ""', client_hash[:taxcode]).first
-        if external_company
-          self.client.company = external_company
-        end
-      end
-      client.save!(:validate=>false)
-      logger.info "created new client \"#{client.name}\" with cif #{client.taxcode} for company #{project.company.name}. time=#{Time.now}"
-    end
+  def client_bic
+    self[:client_bic].blank? ? client.bic : self[:client_bic]
   end
 
   protected
@@ -1277,12 +1295,6 @@ _INV
     end
     self.import_in_cents = subtotal.cents
     self.total_in_cents = subtotal.cents + tax_amount.cents
-
-    unless discount_percent and discount_percent > 0
-      if discount_helper.present?
-        self.discount_percent = (discount_helper.to_f * 100 / gross_subtotal.dollars)
-      end
-    end
   end
 
   def invoice_must_have_lines

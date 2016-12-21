@@ -251,7 +251,7 @@ class InvoiceTest < ActiveSupport::TestCase
     assert_equal "uploaded", invoice.transport
     assert_equal "Anonymous", invoice.from
     assert_equal "1234", invoice.md5
-    assert_equal "invoice_facturae32_signed.xml", invoice.file_name
+    assert_equal "20120420_invoice_facturae32_signed.xml", invoice.file_name
     # invoice lines
     assert_equal 3, invoice.invoice_lines.size
     assert_equal 600.00, invoice.invoice_lines.collect {|l| l.quantity*l.price }.sum.to_f
@@ -277,6 +277,7 @@ class InvoiceTest < ActiveSupport::TestCase
     # client does not exist
     assert_nil Client.find_by_taxcode "ESP1700000A"
     file    = File.new(File.join(File.dirname(__FILE__),'..','fixtures','documents','invoice_facturae32_issued.xml'))
+    assert_nil(Client.find_by_taxcode "ESP1700000A")
     invoice = Invoice.create_from_xml(file,companies(:company1),"1234",'uploaded',User.current.name)
     client  = Client.find_by_taxcode "ESP1700000A"
     assert_not_nil client
@@ -469,11 +470,13 @@ class InvoiceTest < ActiveSupport::TestCase
     assert_equal Date.new(2010,3,10), invoice.invoicing_period_end
   end
 
-  test 'raise on importing invoice with >1 discount on same line' do
+  test 'when importing invoice with >1 discount on same line, add them' do
     file = File.new(File.join(File.dirname(__FILE__),'..','fixtures','documents','invoice_gob_es2.xml'))
-    assert_raise RuntimeError do
-      Invoice.create_from_xml(file,companies(:company6),"1234",'uploaded',User.current.name,nil,false)
-    end
+    invoice = Invoice.create_from_xml(file,companies(:company6),"1234",'uploaded',User.current.name,nil,false)
+    line = invoice.invoice_lines.first
+    assert_equal 10, line.discount_percent
+    assert_equal "Descuento. Descuento 2", line.discount_text
+    assert_equal 2.50, line.discount_amount
   end
 
   test 'create invoice from facturae32 without saving original' do
@@ -604,8 +607,8 @@ class InvoiceTest < ActiveSupport::TestCase
     assert_equal 'ES1234567890123456789012', invoice.fa_iban
     assert_equal 'ABCABCAAXXX',              invoice.fa_bank_code
     assert_equal 'Clauses',                  invoice.fa_clauses
-    assert invoice.transfer?, "invoice payment is transfer"
-    assert_match(/4_\d+/, invoice.payment_method)
+    assert invoice.debit?, "invoice payment is debit"
+    assert_match(/2_\d+/, invoice.payment_method)
   end
 
   test 'overrides client email with client_email_override' do
@@ -625,6 +628,22 @@ class InvoiceTest < ActiveSupport::TestCase
     i.company.round_before_sum = true
     assert_equal 1828.06, i.tax_amount.dollars
     assert_equal 1828.06, i.tax_amount(i.taxes.first).dollars
+  end
+
+  # import invoice_facturae32_issued11.xml
+  test 'import invoice with discount amount and without discount percent' do
+    file    = File.new(File.join(File.dirname(__FILE__),'..','fixtures','documents','invoice_facturae32_issued11.xml'))
+    invoice = Invoice.create_from_xml(file,User.find_by_login('jsmith'),"1234",'uploaded',User.current.name)
+    assert_equal 5.95, invoice.discount_percent
+    assert_equal 14.42, invoice.discount_amount.dollars
+    il = invoice.invoice_lines.first
+    assert_equal 101, il.total_cost
+    assert_equal 10.0, il.discount_percent
+    assert_equal 10.10, il.discount_amount
+    assert_equal 242.40, invoice.gross_subtotal.dollars
+    assert_equal BigDecimal.new('14.42').to_s, invoice.discount_amount.dollars.to_s
+    assert_equal 85.49, invoice.taxable_base(invoice.taxes.select {|t| t.percent == 21 }.first).dollars
+    assert_equal 142.49, invoice.taxable_base(invoice.taxes.select {|t| t.percent == 10 }.first).dollars
   end
 
   test 'when round_before_sum is checked and invoice has discounts, taxes are calculated correctly' do
@@ -773,30 +792,13 @@ class InvoiceTest < ActiveSupport::TestCase
     assert_equal ext_comp.id, invoice.client.company_id
   end
 
-  test 'import invoice does not create client_office when client its linked to external company' do
-    client_offices = ClientOffice.count
-    ext_comp = ExternalCompany.find_by_taxcode 'ESB17915224'
-    ext_comp.update_attribute(:postalcode, '08720')
-    assert_not_nil ext_comp
-    assert_nil Client.find_by_taxcode 'ESB17915224'
-    client = Client.create!(project_id: 2, company: ext_comp)
-    assert_equal ext_comp.id, client.company_id
-    assert_equal '08720', client.postalcode
-    file = File.new(File.join(File.dirname(__FILE__),'..','fixtures','documents','invoice_facturae32_issued10.xml'))
-    invoice = Invoice.create_from_xml(file,User.find_by_login('jsmith'),"1234",'uploaded',User.current.name)
-    assert_equal client_offices, ClientOffice.count
-    assert_equal invoice.client, client
-    assert_equal ext_comp.id, invoice.client.company_id
-    assert_equal '08720', invoice.client.postalcode
-  end
-
   test 'import invoice does not create client_office when values are blank' do
     invoice = invoices(:invoices_001)
     client = invoice.client
     assert_equal 'Client1', client.name
     assert_equal 1, client.client_offices.size
 
-    invoice.set_client_from_hash(
+    invoice.client, invoice.client_office = Haltr::Utils.client_from_hash(
       :taxcode        => "A13585625",
       :name           => nil,
       :address        => nil,
@@ -807,11 +809,77 @@ class InvoiceTest < ActiveSupport::TestCase
       :postalcode     => nil,
       :city           => nil,
       :currency       => nil,
-      :project        => nil,
+      :project        => invoice.project,
       :invoice_format => nil,
       :language       => nil,
     )
     assert_equal 1, client.client_offices.size
+  end
+
+  # import invoice_facturae32_issued8_iban2.xml
+  test 'import invoice with iban != client.iban stores iban on invoice' do
+    file     = File.new(File.join(File.dirname(__FILE__),'..','fixtures','documents','invoice_facturae32_issued8.xml'))
+    file2    = File.new(File.join(File.dirname(__FILE__),'..','fixtures','documents','invoice_facturae32_issued8_iban2.xml'))
+    assert_nil Client.find_by_taxcode 'ESP1700000A'
+    invoice  = Invoice.create_from_xml(file,User.find_by_login('jsmith'),"1234",'uploaded',User.current.name)
+    assert_not_nil Client.find_by_taxcode 'ESP1700000A'
+    assert_equal 'ES8023100001180000012345', invoice.client.iban
+    assert_equal 'biiiiiiiiic', invoice.client.bic
+    invoice2 = Invoice.create_from_xml(file2,User.find_by_login('jsmith'),"1234",'uploaded',User.current.name)
+    assert_equal 'ES8023100001180000012345', invoice.client.iban
+    assert_equal 'biiiiiiiiic', invoice.client.bic
+    assert_equal 'ES8023100001180000012345', invoice2.client.iban
+    assert_equal 'ES0000000000000000000000', invoice2.client_iban
+    assert_equal 'biiiiiiiic2', invoice2.client_bic
+  end
+
+  # ExternalCompany taxcode is ESB17915224
+  test 'does not link to external_company if taxcode does not match' do
+    invoice = invoices(:invoices_001)
+    invoice.client = nil
+    invoice.client, invoice.client_office = Haltr::Utils.client_from_hash(
+      name: 'test',
+      language: 'en',
+      country: 'fr',
+      taxcode: "12345678901",
+      project: invoice.project
+    )
+    assert_nil invoice.client.company_id
+  end
+
+  test 'does not link to external_company with short taxcodes' do
+    invoice = invoices(:invoices_001)
+    invoice.client = nil
+    invoice.client, invoice.client_office = Haltr::Utils.client_from_hash(
+      name: 'test',
+      language: 'en',
+      country: 'fr',
+      taxcode: "12345678901",
+      project: invoice.project
+    )
+    assert_nil invoice.client.company_id
+  end
+
+  test 'links to external_company if taxcode matches but has no country code' do
+    invoice = invoices(:invoices_001)
+    invoice.client = nil
+    invoice.client, invoice.client_office = Haltr::Utils.client_from_hash(
+      taxcode: "B17915224",
+      project: invoice.project
+    )
+    assert_not_nil invoice.client.company_id
+    assert_equal 'ESB17915224', invoice.client.taxcode
+  end
+
+  test 'links to external_company if taxcode matches' do
+    invoice = invoices(:invoices_001)
+    invoice.client = nil
+    invoice.client, invoice.client_office = Haltr::Utils.client_from_hash(
+      taxcode: "ESB17915224",
+      project: invoice.project
+    )
+    assert_not_nil invoice.client.company_id
+    assert_equal 'ESB17915224', invoice.client.taxcode
   end
 
 end

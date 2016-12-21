@@ -1,0 +1,154 @@
+<!--menu rapid-->
+<div class="seccio grup">
+  <div class="col span-2-de-2">
+    <ul class="menu-rapid">
+      <li><%= link_to l(:label_import), project_orders_import_path(project_id: @project) -%></li>
+    </ul>
+  </div>
+</div>
+<!--final menu rapid-->
+
+<!--filtres-->
+<div class="seccio grup">
+  <div class="col span-2-de-2">
+    <div class="filtres">
+      <div class="titularAcc">
+        <%= l(:label_filter_plural) %>
+      </div>
+      <div class="contingutAcc">
+        <%= form_tag({:id=>@project}, :method => :get, :class => 'formee') do %>
+          <fieldset>
+            <legend><%= l(:label_search) %></legend>
+
+            <div class="seccio grup">
+              <div class="col span-1-de-3">
+                <label for="num_pedido"><%= l(:field_num_pedido) %></label>
+                <%= text_field_tag :num_pedido, params[:num_pedido] %>
+              </div>
+              <div class="col span-1-de-3">
+                <label for="lugar_entrega"><%= l(:field_lugar_entrega) %></label>
+                <%= text_field_tag :lugar_entrega, params[:lugar_entrega] %>
+              </div>
+              <div class="col span-1-de-3">
+                <label for="filename"><%= l(:field_filename) %></label>
+                <%= text_field_tag :filename, params[:filename] %>
+              </div>
+            </div>
+
+            <div class="seccio grup">
+              <div class="col span-1-de-3">
+                <label for="fecha_documento"><%=l(:field_fecha_documento)%></label>
+                <%= text_field_tag :fecha_documento, params[:fecha_documento], :size => 10, :style => "width: 90%;" %><%= calendar_for('fecha_documento') %>
+              </div>
+              <div class="col span-1-de-3">
+                <label for="fecha_documento_to"><%=l(:label_to)%></label>
+                <%= text_field_tag :fecha_documento_to, params[:fecha_documento_to], :size => 10, :style => "width: 90%;" %><%= calendar_for('fecha_documento_to') %>
+              </div>
+              <div class="col span-1-de-3">
+              </div>
+            </div>
+
+            <div class="seccio grup">
+              <div class="col span-1-de-3">
+                <label for="fecha_pedido"><%=l(:field_fecha_pedido)%></label>
+                <%= text_field_tag :fecha_pedido, params[:fecha_pedido], :size => 10, :style => "width: 90%;" %><%= calendar_for('fecha_pedido') %>
+              </div>
+              <div class="col span-1-de-3">
+                <label for="fecha_pedido_to"><%=l(:label_to)%></label>
+                <%= text_field_tag :fecha_pedido_to, params[:fecha_pedido_to], :size => 10, :style => "width: 90%;" %><%= calendar_for('fecha_pedido_to') %>
+              </div>
+              <div class="col span-1-de-3">
+              </div>
+            </div>
+
+            <div class="seccio grup">
+              <div class="col span-1-de-3">
+                <label for="fecha_entrega"><%=l(:field_fecha_entrega)%></label>
+                <%= text_field_tag :fecha_entrega, params[:fecha_entrega], :size => 10, :style => "width: 90%;" %><%= calendar_for('fecha_entrega') %>
+              </div>
+              <div class="col span-1-de-3">
+                <label for="fecha_entrega_to"><%=l(:label_to)%></label>
+                <%= text_field_tag :fecha_entrega_to, params[:fecha_entrega_to], :size => 10, :style => "width: 90%;" %><%= calendar_for('fecha_entrega_to') %>
+              </div>
+              <div class="col span-1-de-3">
+              </div>
+            </div>
+
+            <div class="seccio grup">
+              <div class="col span-1-de-3" style="position: absolute; bottom: 15px; right: 15px; text-align: right;">
+                <%= submit_tag l(:button_apply), :class => "small", :name => nil %>
+              </div>
+            </div>
+
+          </fieldset>
+        <% end %>
+      </div>
+    </div>
+  </div>
+</div>
+<!--final filtres-->
+
+<!--taula factures-->
+<%= form_tag({}) do -%>
+  <%= hidden_field_tag 'back_url', url_for(params), :id => nil %>
+  <div class="seccio grup">
+    <div class="col span-2-de-2">
+      <table class="taula-1 list orders">
+        <thead>
+          <tr>
+            <%= sort_header_tag :num_pedido, caption: l(:field_num_pedido) %>
+            <%= sort_header_tag :fecha_documento, caption: l(:field_fecha_documento) %>
+            <%= sort_header_tag :lugar_entrega, caption: l(:field_lugar_entrega) %>
+            <%= sort_header_tag :fecha_pedido, caption: l(:field_fecha_pedido) %>
+            <%= sort_header_tag :fecha_entrega, caption: l(:field_fecha_entrega) %>
+            <th></th>
+            <th></th>
+            <th></th>
+          </tr>
+        </thead>
+        <tbody>
+          <% @orders.each do |order| -%>
+            <tr id="order-<%=order.id%>" class="<%= cycle("odd", "even") %>">
+              <% if order.is_a?(IssuedOrder) -%>
+                <td><%= link_to order.num_pedido, project_order_path(order, project_id: @project) %></td>
+              <% else -%>
+                <td><%= link_to order.num_pedido, project_received_order_path(order, project_id: @project) %></td>
+              <% end -%>
+              <td><%= order.fecha_documento %></td>
+              <td><%= order.lugar_entrega %></td>
+              <td><%= order.fecha_pedido %></td>
+              <td><%= order.fecha_entrega %></td>
+              <td><%= link_to order.filename, project_order_path(order, project_id: @project, download: true) %></td>
+              <% if order.is_a?(IssuedOrder) -%>
+                <td><%= link_to image_tag('zoom_in.png'), project_order_path(order, project_id: @project) %></td>
+              <% else -%>
+                <td><%= link_to image_tag('zoom_in.png'), project_received_order_path(order, project_id: @project) %></td>
+              <% end -%>
+              <td><%= link_to image_tag('delete.png'), project_order_path(order, project_id: @project), data:{confirm:l(:text_are_you_sure)}, method: :delete, title: l(:button_delete) %></td>
+            </tr>
+          <% end -%>
+        </tbody>
+        <tfoot>
+          <tr>
+            <td colspan="8">&nbsp;</td>
+          </tr>
+        </tfoot>
+      </table>
+    </div>
+  </div>
+<% end -%>
+<!--final taula factures-->
+
+<!--paginacio-->
+<div class="seccio grup paginacio pagination">
+  <%= pagination_links_full @order_pages, @order_count %>
+</div>
+<!--final paginacio-->
+
+
+<% html_title(l(:label_order_plural)) -%>
+
+<% content_for :sidebar do %>
+  <%= render_menu :orders_menu, @project %>
+<% end %>
+

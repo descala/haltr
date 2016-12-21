@@ -1,0 +1,46 @@
+<fieldset class="tabular box">
+  <legend>Datos proveedor</legend>
+  <dl class="dl-horizontal">
+    <% @order.datos_proveedor.each do |name,value| -%>
+      <dt><%= name.split('_').join(' ').titleize %></dt><dd><%= value.blank? ? '-' : value %></dd>
+    <% end -%>
+  </dl>
+</fieldset>
+
+<fieldset class="tabular box">
+  <legend>Datos cliente</legend>
+  <dl class="dl-horizontal">
+    <% @order.datos_cliente.each do |name,value| -%>
+      <dt><%= name.split('_').join(' ').titleize %></dt><dd><%= value.blank? ? '-' : value %></dd>
+    <% end -%>
+  </dl>
+</fieldset>
+
+<fieldset class="tabular box">
+  <legend>Direccion de entrega</legend>
+  <dl class="dl-horizontal">
+    <% @order.direccion_entrega.each do |name,value| -%>
+      <dt><%= name.split('_').join(' ').titleize %></dt><dd><%= value.blank? ? '-' : value %></dd>
+    <% end -%>
+  </dl>
+</fieldset>
+
+<fieldset class="tabular box">
+  <legend>Líneas del pedido</legend>
+  <% @order.lineas_pedido.each do |linea| -%>
+    <dl class="dl-horizontal">
+      <% linea.each do |name,value| -%>
+        <dt><%= name.split('_').join(' ').titleize %></dt><dd><%= value.blank? ? '-' : value %></dd>
+      <% end -%>
+    </dl>
+    <br />
+  <% end -%>
+</fieldset>
+
+<% unless params[:format] == 'pdf' -%>
+  <div style="margin-top: 15px; padding: 15px;">
+    <pre>
+<%= @order.original.gsub(/'/,"'\r") %>
+    </pre>
+  </div>
+<% end -%>
