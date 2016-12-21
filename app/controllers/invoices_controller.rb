@@ -902,6 +902,12 @@ class InvoicesController < ApplicationController
         :type => 'image/gif',
         :disposition => 'inline'
     end
+  rescue ActionController::MissingFile
+    if Rails.env.development?
+      render text: ''
+    else
+      raise $!
+    end
   end
 
   def amend_for_invoice
