@@ -32,7 +32,7 @@ class InvoiceLine < ActiveRecord::Base
 
   belongs_to :invoice
   has_many :taxes, :class_name => "Tax", :order => "percent", :dependent => :destroy
-  validates_numericality_of :quantity, :price
+  validates_numericality_of :quantity, :price, :position
   validates_numericality_of :charge, :discount_percent, :allow_nil => true
   validates_numericality_of :sequence_number, :allow_nil => true, :allow_blank => true
 
@@ -40,6 +40,8 @@ class InvoiceLine < ActiveRecord::Base
     :allow_destroy => true
   validates_associated :taxes
   validate :has_same_category_iva_tax, if: Proc.new {|line| line.taxes.any? {|t| t.name == 'RE' } }
+
+  scope :sorted, lambda { order("#{table_name}.position ASC") }
 
   # Coste Total.
   # Quantity x UnitPriceWithoutTax
@@ -167,6 +169,10 @@ _LINE
         errors.add(:base, l(:re_tax_without_iva_same_category, :line => description))
       end
     end
+  end
+
+  def <=>(line)
+    position <=> line.position
   end
 
   private

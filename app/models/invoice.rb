@@ -16,7 +16,7 @@ class Invoice < ActiveRecord::Base
   # remove non-utf8 characters from those fields:
   TO_UTF_FIELDS = %w(extra_info)
 
-  has_many :invoice_lines, :dependent => :destroy
+  has_many :invoice_lines, :dependent => :destroy, :order => 'position is NULL, position ASC' # NULLS LAST
   has_many :events, :order => 'created_at'
   #has_many :taxes, :through => :invoice_lines
   belongs_to :project, :counter_cache => true
@@ -98,6 +98,14 @@ class Invoice < ActiveRecord::Base
     self.currency ||= self.client.currency rescue nil
     self.currency ||= self.company.currency rescue nil
     self.currency ||= Setting.plugin_haltr['default_currency']
+    invoice_lines.to_enum.with_index(1) do |line, i|
+      if line.position.is_a?(Integer)
+        i=line.position
+      else
+        line.position = i
+      end
+      i+=1
+    end
   end
 
   def currency=(v)
