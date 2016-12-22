@@ -1,7 +1,7 @@
 require File.dirname(__FILE__) + '/../../test_helper'
 
 class Redmine::ApiTest::InvoicesTest < Redmine::ApiTest::Base
-  fixtures :companies, :invoices, :invoice_lines, :taxes, :events
+  fixtures :companies, :invoices, :invoice_lines, :taxes, :events, :clients
 
   def setup
     Setting.rest_api_enabled = '1'

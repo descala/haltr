@@ -32,6 +32,8 @@ module Haltr
     def self.payload_filename
       I18n.locale = User.current.language
       "#{I18n.t(:label_invoice)}.pdf"
+    rescue
+      "invoice.pdf"
     end
 
   end
