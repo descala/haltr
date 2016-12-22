@@ -14,7 +14,7 @@ class Invoice < ActiveRecord::Base
   # remove non-utf8 characters from those fields:
   TO_UTF_FIELDS = %w(extra_info)
 
-  has_many :invoice_lines, :dependent => :destroy
+  has_many :invoice_lines, -> {order 'position is NULL, position ASC'}, dependent: :destroy
   has_many :events, -> {order :created_at}
   #has_many :taxes, :through => :invoice_lines
   belongs_to :project, :counter_cache => true
@@ -36,7 +36,8 @@ class Invoice < ActiveRecord::Base
     i.client and i.client.client_offices.any? {|o| o.id == i.client_office_id }
   }
 
-  validates_presence_of :client, :date, :currency, :project_id, :unless => Proc.new {|i| i.type == "ReceivedInvoice" }
+  validates_presence_of :date, :currency, :project_id, :unless => Proc.new {|i| i.type == "ReceivedInvoice" }
+  validates_presence_of :client, :unless => Proc.new {|i| %w(Quote ReceivedInvoice).include? i.type }
   validates_inclusion_of :currency, :in  => Money::Currency.table.collect {|k,v| v[:iso_code] }, :unless => Proc.new {|i| i.type == "ReceivedInvoice" }
   validates_numericality_of :charge_amount_in_cents, :allow_nil => true
   validates_numericality_of :payments_on_account_in_cents, :allow_nil => true
@@ -95,6 +96,14 @@ class Invoice < ActiveRecord::Base
     self.currency ||= self.client.currency rescue nil
     self.currency ||= self.company.currency rescue nil
     self.currency ||= Setting.plugin_haltr['default_currency']
+    invoice_lines.to_enum.with_index(1) do |line, i|
+      if line.position.is_a?(Integer)
+        i=line.position
+      else
+        line.position = i
+      end
+      i+=1
+    end
   end
 
   def currency=(v)
@@ -862,7 +871,7 @@ _INV
     invoice.payment_method_text = Haltr::Utils.get_xpath(doc,xpaths[:payment_method_text])
 
     # invoice lines
-    doc.xpath(xpaths[:invoice_lines]).each do |line|
+    doc.xpath(xpaths[:invoice_lines]).to_enum.with_index(1) do |line,i|
 
       line_delivery_note_number = nil
       # delivery_notes
@@ -880,6 +889,7 @@ _INV
       end
 
       il = InvoiceLine.new(
+             :position     => i,
              :quantity     => Haltr::Utils.get_xpath(line,xpaths[:line_quantity]),
              :description  => Haltr::Utils.get_xpath(line,xpaths[:line_description]),
              :price        => Haltr::Utils.get_xpath(line,xpaths[:line_price]),
@@ -1304,7 +1314,7 @@ _INV
   end
 
   def bank_info_belongs_to_self
-    if bank_info and client and bank_info.company != client.project.company
+    if bank_info and bank_info.company != project.company
       errors.add(:base, "Bank info is from other company!")
     end
   end
@@ -1322,9 +1332,12 @@ _INV
     if ext_comp
       ext_comp.required_fields.each do |field|
         if field == "dir3"
-          errors.add(:organ_gestor, :blank) if organ_gestor.blank?
-          errors.add(:unitat_tramitadora, :blank) if unitat_tramitadora.blank?
-          errors.add(:oficina_comptable, :blank) if oficina_comptable.blank?
+          # https://www.ingent.net/issues/6273
+          unless new_record?
+            errors.add(:organ_gestor, :blank) if organ_gestor.blank?
+            errors.add(:unitat_tramitadora, :blank) if unitat_tramitadora.blank?
+            errors.add(:oficina_comptable, :blank) if oficina_comptable.blank?
+          end
         else
           errors.add(field, :blank) if self.send(field).blank?
         end

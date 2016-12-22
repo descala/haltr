@@ -44,7 +44,7 @@ module InvoicesHelper
         link_to_if_authorized l(:label_send),
           {:action=>'send_invoice', :id=>@invoice},
           :class=>'icon-haltr-send', :title => @invoice.sending_info.html_safe,
-          :confirm => confirm
+          :data=>{:confirm => confirm}
       end
     elsif @invoice.may_queue?
       # invoice has export errors (related to the format or channel)

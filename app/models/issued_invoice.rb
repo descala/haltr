@@ -156,12 +156,16 @@ class IssuedInvoice < InvoiceDocument
   end
 
   def self.find_can_be_sent(project)
-    project.issued_invoices.includes(:client).references(:client).where(
+    invoices = project.issued_invoices.includes(:client).references(:client).where(
       "state='new' and number is not null and " +
       "date <= ? and clients.invoice_format in (?)",
       Date.today,
       ExportChannels.can_send.keys
     )
+    invoices_extra_filter = Redmine::Hook.call_hook(
+      :model_invoice_can_be_sent_additional_filters, :invoices => invoices
+    )
+    invoices_extra_filter.any? ? invoices_extra_filter.first : invoices
   end
 
   def self.find_not_sent(project)
