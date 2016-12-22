@@ -730,7 +730,7 @@ _INV
     end
 
     invoice.client, invoice.client_office = Haltr::Utils.client_from_hash(
-      :taxcode        => client_taxcode,
+      :taxcode        => client_taxcode.to_s.gsub(/\s/,''),
       :name           => client_name,
       :address        => client_address,
       :province       => client_province,
