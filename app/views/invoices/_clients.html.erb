@@ -1,4 +1,8 @@
-<label for="invoice_client_id"><%= l(:field_client) %><span class="required"> *</span></label>
+<label for="invoice_client_id"><%= l(:field_client) %>
+<% unless @invoice.is_a? Quote -%>
+  <span class="required"> *</span>
+<% end -%>
+</label>
 <%= select :invoice,
   :client_id,
   clients_for_select,
