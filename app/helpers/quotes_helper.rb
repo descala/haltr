@@ -7,7 +7,7 @@ module QuotesHelper
         link_to_if_authorized l(:label_send),
           {:action=>'send_quote', :id=>@invoice},
           :class=>'icon-haltr-send', :title => @invoice.sending_info(:pdf_by_mail).html_safe,
-          :confirm => confirm
+          :data=>{:confirm => confirm}
     else
       # invoice has errors TODO: or a format without channel, like "paper"
       link_to l(:label_send), "#", :class=>'icon-haltr-send disabled',
