@@ -873,7 +873,7 @@ _INV
     invoice.payment_method_text = Haltr::Utils.get_xpath(doc,xpaths[:payment_method_text])
 
     # invoice lines
-    doc.xpath(xpaths[:invoice_lines]).each do |line|
+    doc.xpath(xpaths[:invoice_lines]).to_enum.with_index(1) do |line,i|
 
       line_delivery_note_number = nil
       # delivery_notes
@@ -891,6 +891,7 @@ _INV
       end
 
       il = InvoiceLine.new(
+             :position     => i,
              :quantity     => Haltr::Utils.get_xpath(line,xpaths[:line_quantity]),
              :description  => Haltr::Utils.get_xpath(line,xpaths[:line_description]),
              :price        => Haltr::Utils.get_xpath(line,xpaths[:line_price]),
