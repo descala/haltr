@@ -97,6 +97,7 @@
         <thead>
           <tr>
             <%= sort_header_tag :num_pedido, caption: l(:field_num_pedido) %>
+            <%= sort_header_tag :invoice_id, caption: l(:field_invoice) %>
             <%= sort_header_tag :fecha_documento, caption: l(:field_fecha_documento) %>
             <%= sort_header_tag :lugar_entrega, caption: l(:field_lugar_entrega) %>
             <%= sort_header_tag :fecha_pedido, caption: l(:field_fecha_pedido) %>
@@ -113,6 +114,11 @@
                 <td><%= link_to order.num_pedido, project_order_path(order, project_id: @project) %></td>
               <% else -%>
                 <td><%= link_to order.num_pedido, project_received_order_path(order, project_id: @project) %></td>
+              <% end -%>
+              <% if order.invoice -%>
+                <td><%= link_to order.invoice.number, invoice_path(order.invoice) %></td>
+              <% else -%>
+                <td></td>
               <% end -%>
               <td><%= order.fecha_documento %></td>
               <td><%= order.lugar_entrega %></td>
