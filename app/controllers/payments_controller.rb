@@ -216,7 +216,7 @@ class PaymentsController < ApplicationController
         end
       end
     else
-      flash[:warning] = l(:notice_uploaded_uploaded_file_not_found)
+      flash[:warning] = l(:notice_uploaded_file_not_found)
       redirect_to :action => 'import_aeb43_index', :project_id => @project
     end
   end
