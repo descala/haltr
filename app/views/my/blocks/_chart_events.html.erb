@@ -7,7 +7,7 @@
   <%= select_tag "value", options_for_select({ t(:label_last_changes, :count=>10)=>10,
                                                t(:label_last_changes, :count=>20)=>20 },
                                              User.current.pref.others[:chart_events].to_i),
-    :data  => { :url => url_for(update_chart_preference_path) },
+    :data  => { :url => url_for(update_chart_preference_path(project_id: @project)) },
     :id    => 'chart_events',
     :class => 'chart_prefs'
   %>
