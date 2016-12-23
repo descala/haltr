@@ -1,4 +1,4 @@
-$('div.<%=@chart_name%>').html("<%= escape_javascript(render(partial: "my/blocks/#{@chart_name}")).html_safe %>")
+$('div.<%=@chart_name%>').replaceWith("<%= escape_javascript(render(partial: "my/blocks/#{@chart_name}")).html_safe %>")
 
 //TODO duplicated code in charts.js
 $("select.chart_prefs").change(function() {
