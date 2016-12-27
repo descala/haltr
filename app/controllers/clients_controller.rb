@@ -103,6 +103,9 @@ class ClientsController < ApplicationController
     rescue
       @client = Client.new
     end
+    unless User.current.allowed_to?(:use_local_signature, @project)
+      @client.sign_with_local_certificate = false
+    end
     respond_to do |format|
       if @client.save
         format.html {
@@ -121,6 +124,9 @@ class ClientsController < ApplicationController
 
   def update
     respond_to do |format|
+      unless User.current.allowed_to?(:use_local_signature, @project)
+        params.delete(:sign_with_local_certificate)
+      end
       if @client.update_attributes(params[:client])
         event = Event.new(:name=>'edited',:client=>@client,:user=>User.current)
         # associate last created audits to this event

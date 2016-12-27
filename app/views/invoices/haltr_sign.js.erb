@@ -68,10 +68,16 @@ function errorCallback(errorType, errorMessage) {
 }
 
 
-function doSign(document_url,signature_type) {
+function doSign(document_url, document_format) {
   try {
     clear_logs();
-    haltr_document_url = document_url;
+    var signature_type;
+    if (document_format == 'pdf') {
+      signature_type = 'Adobe PDF';
+    } else {
+      signature_type = 'FacturaE';
+    }
+    haltr_document_url = document_url+document_format;
     MiniApplet.cargarMiniApplet('/plugin_assets/haltr/java');
     var dataB64;
     $('#console').val("");
@@ -79,7 +85,7 @@ function doSign(document_url,signature_type) {
     $('#ajax-indicator').css('display','inline');
     log('<%=j l(:downloading_doc).html_safe %>','notice');
     $.ajax({
-      url : document_url,
+      url : document_url+document_format,
       success : function(dataB64){
         try {
           log('<%=j l(:calling_signature).html_safe %>','notice');

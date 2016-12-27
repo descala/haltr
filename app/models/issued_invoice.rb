@@ -249,6 +249,10 @@ class IssuedInvoice < InvoiceDocument
     end
   end
 
+  def local_cert_js
+    "doSign('/invoices/base64doc/#{id}/','#{ExportChannels.format(client.invoice_format)}')"
+  end
+
   protected
 
   # called after_create (only NEW invoices)
