@@ -173,6 +173,10 @@ Redmine::Plugin.register :haltr do
                :add_comment, :create_invoice]
     }, require: :member
 
+    permission :use_local_signature, {
+      invoices: [:base64doc]
+    }, require: :member
+
     # Loads permisons from config/channels.yml
     ExportChannels.permissions.each do |permission,actions|
       permission permission, actions, :require => :member
