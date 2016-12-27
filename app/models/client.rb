@@ -42,7 +42,6 @@ class Client < ActiveRecord::Base
   before_save :copy_linked_profile
   after_create :create_event
   before_save :checks_for_sign_with_local_certificate
-  iso_country :country
   include CountryUtils
   include Haltr::TaxcodeValidator
 
