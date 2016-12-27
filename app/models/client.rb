@@ -40,7 +40,9 @@ class Client < ActiveRecord::Base
   before_validation :copy_linked_profile
   before_save :set_hashid_value
   before_save :copy_linked_profile
-  after_create  :create_event
+  after_create :create_event
+  before_save :checks_for_sign_with_local_certificate
+  iso_country :country
   include CountryUtils
   include Haltr::TaxcodeValidator
 
@@ -212,6 +214,15 @@ class Client < ActiveRecord::Base
     elsif !self.company
       self.allowed = nil
     end
+  end
+
+  # MiniApplet can sign pdf and facturae only
+  def checks_for_sign_with_local_certificate
+    f = ExportChannels.format(invoice_format).to_s
+    unless f == 'pdf' or f =~ /facturae/
+      self.sign_with_local_certificate = false
+    end
+    true
   end
 
   def set_hashid_value

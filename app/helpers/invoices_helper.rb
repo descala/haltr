@@ -31,13 +31,13 @@ module InvoicesHelper
     confirm = @invoice.has_been_sent? ? j(l(:sure_to_resend_invoice, :num=>@invoice.number).html_safe) : nil
     if @invoice.valid? and @invoice.may_queue? and
         ExportChannels.can_send?(@invoice.client.invoice_format)
-      unless @js.blank?
+      if @invoice.client.sign_with_local_certificate?
         # channel uses javascript to send invoice
         if User.current.allowed_to?(:general_use, @project)
           link_to(l(:label_send), "#", :class=>'icon-haltr-send',
             :title   => @invoice.sending_info.html_safe,
             :onclick => ((confirm ? "confirm('#{confirm}') && " : "") +
-                        @js.gsub(':id',@invoice.id.to_s)).html_safe)
+                         @invoice.local_cert_js).html_safe)
         end
       else
         # sending through invoices#send_invoice

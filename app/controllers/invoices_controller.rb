@@ -307,12 +307,11 @@ class InvoicesController < ApplicationController
           flash[:notice] = l(:notice_successful_create)
           if params[:create_and_send]
             if @invoice.valid?
-              if ExportChannels[@invoice.client.invoice_format]['javascript']
+              if @invoice.client.sign_with_local_certificate?
                 # channel sends via javascript, set autocall and autocall_args
                 # 'show' action will set a div to tell javascript to automatically
                 # call this function
-                js = ExportChannels[@invoice.client.invoice_format]['javascript'].
-                  gsub(':id',@invoice.id.to_s).gsub(/'/,"").split(/\(|\)/)
+                js = @invoice.local_cert_js.gsub(/'/,"").split(/\(|\)/)
                 redirect_to :action => 'show', :id => @invoice,
                   :autocall => js[0].html_safe, :autocall_args => js[1]
               else
@@ -390,12 +389,11 @@ class InvoicesController < ApplicationController
         format.html {
           if params[:save_and_send]
             if @invoice.valid?
-              if ExportChannels[@invoice.client.invoice_format]['javascript']
+              if @invoice.client.sign_with_local_certificate?
                 # channel sends via javascript, set autocall and autocall_args
                 # 'show' action will set a div to tell javascript to automatically
                 # call this function
-                js = ExportChannels[@invoice.client.invoice_format]['javascript'].
-                  gsub(':id',@invoice.id.to_s).gsub(/'/,"").split(/\(|\)/)
+                js = @invoice.local_cert_js.gsub(/'/,"").split(/\(|\)/)
                 redirect_to :action => 'show', :id => @invoice,
                   :autocall => js[0].html_safe, :autocall_args => js[1]
               else
@@ -567,7 +565,6 @@ class InvoicesController < ApplicationController
     end
 
     set_sent_and_closed
-    @js = ExportChannels[@client.invoice_format]['javascript'] rescue nil
     @autocall = params[:autocall]
     @autocall_args = params[:autocall_args]
     @format = params["format"]
@@ -1219,8 +1216,8 @@ class InvoicesController < ApplicationController
     @invoices.collect! do |invoice|
       if invoice.valid? and invoice.may_queue? and
           ExportChannels.can_send? invoice.client.invoice_format
-        if ExportChannels[invoice.client.invoice_format]['javascript']
-          @errors << "#{l(:error_invoice_not_sent, :num=>invoice.number)}: Must be processed individually (channel with javascript)"
+        if invoice.client.sign_with_local_certificate?
+          @errors << "#{l(:error_invoice_not_sent, :num=>invoice.number)}: Must be processed individually (send with local certificate checked on client)"
           nil
         else
           invoice
