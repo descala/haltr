@@ -122,7 +122,7 @@ tag("div", :id => 'autocall', 'data-function' => @autocall, 'data-args' => @auto
 %>
 
 <%=
-  if @invoice.client.sign_with_local_certificate?
+  if @invoice.client and @invoice.client.sign_with_local_certificate?
     content_for :header_tags do
       javascript_include_tag('/invoices/haltr_sign.js') +
         javascript_include_tag('miniapplet.js', :plugin => 'haltr')
