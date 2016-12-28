@@ -129,7 +129,8 @@ tag("div", :id => 'autocall', 'data-function' => @autocall, 'data-args' => @auto
     end
   end
 
-  if @invoice.is_a? IssuedInvoice and @invoice.sending?
+  if (@invoice.is_a? IssuedInvoice and @invoice.sending?) or
+    (@invoice.is_a? ReceivedInvoice and @invoice.processing_pdf?)
     content_for :header_tags do
       javascript_include_tag 'refresher.js', plugin: 'haltr'
     end
