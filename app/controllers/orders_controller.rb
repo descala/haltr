@@ -2,11 +2,10 @@ class OrdersController < ApplicationController
   unloadable
 
   menu_item Haltr::MenuItem.new(:orders,:orders_level2)
-  menu_item Haltr::MenuItem.new(:orders,:received), :only => [:received, :show_received]
   menu_item Haltr::MenuItem.new(:orders,:inexistent), :only => [:import]
 
   before_filter :find_project_by_project_id
-  before_filter :find_order, only: [:add_comment, :show, :show_received, :create_invoice]
+  before_filter :find_order, only: [:add_comment, :show, :create_invoice]
   before_filter :authorize
 
   helper :sort
@@ -19,12 +18,7 @@ class OrdersController < ApplicationController
     sort_init 'num_pedido'
     sort_update %w(num_pedido fecha_pedido lugar_entrega fecha_entrega fecha_documento)
 
-    orders = nil
-    if params[:received] == '1'
-      orders = ReceivedOrder.where(project_id: @project.id)
-    else
-      orders = IssuedOrder.where(project_id: @project.id)
-    end
+    orders = Order.where(project_id: @project.id)
 
     # num_pedido filter
     unless params[:num_pedido].blank?
@@ -81,12 +75,6 @@ class OrdersController < ApplicationController
       offset: @order_pages.current.offset
   end
 
-  def received
-    params[:received] = '1'
-    index
-    render action: :index
-  end
-
   def show
     if params[:download]
       send_data @order.original,
@@ -138,23 +126,15 @@ class OrdersController < ApplicationController
     end
   end
 
-  def show_received
-    show
-  end
-
   def destroy
     order = Order.where(project_id: @project.id).find(params[:id])
     order.events.destroy_all
     order.destroy
-    event = EventDestroy.new(:name    => "deleted_#{order.type.underscore}",
+    event = EventDestroy.new(:name    => "deleted_order",
                              :notes   => order.num_pedido,
                              :project => order.project)
     event.save!
-    if order and order.is_a? ReceivedOrder
-      redirect_to action: :received
-    else
-      redirect_to action: :index
-    end
+    redirect_to action: :index
   end
 
   def import
@@ -176,11 +156,7 @@ class OrdersController < ApplicationController
       end
       respond_to do |format|
         format.html {
-          if @order and @order.is_a? IssuedOrder
-            redirect_to project_order_path(@order, project_id: @project)
-          elsif @order
-            redirect_to project_received_order_path(@order, project_id: @project)
-          end
+          redirect_to project_order_path(@order, project_id: @project)
         }
         format.api {
           render action: :show, status: :created, location: project_order_path(@order, project_id: @project)
@@ -206,11 +182,7 @@ class OrdersController < ApplicationController
       flash[:notice] = l(:label_comment_added)
     end
 
-    if @order.is_a? ReceivedOrder
-      redirect_to project_received_order_path(@order, project_id: @order.project)
-    else
-      redirect_to project_order_path(@order, project_id: @order.project)
-    end
+    redirect_to project_order_path(@order, project_id: @order.project)
   end
 
   def create_invoice
@@ -228,11 +200,7 @@ class OrdersController < ApplicationController
     redirect_to invoice_path(invoice)
   rescue
     flash[:error] = $!.message
-    if @order.is_a? ReceivedOrder
-      redirect_to action: :show_received, id: @order
-    else
-      redirect_to action: :show, id: @order
-    end
+    redirect_to action: :show, id: @order
   end
 
   private

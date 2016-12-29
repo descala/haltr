@@ -97,7 +97,7 @@ Redmine::Plugin.register :haltr do
         :charts    => [:invoice_total, :invoice_status, :top_clients],
         :events    => [:file, :index],
         :import_errors => [:index, :show],
-        :orders    => [:index, :show, :received, :show_received] },
+        :orders    => [:index, :show] },
       :require => :member
 
     permission :restricted_use,
@@ -169,8 +169,7 @@ Redmine::Plugin.register :haltr do
     }
 
     permission :use_orders, {
-      orders: [:index, :show, :destroy, :import, :received, :show_received,
-               :add_comment, :create_invoice]
+      orders: [:index, :show, :destroy, :import, :add_comment, :create_invoice]
     }, require: :member
 
     # Loads permisons from config/channels.yml
@@ -184,7 +183,6 @@ Redmine::Plugin.register :haltr do
   menu :project_menu, :companies,  {:controller=>'clients',   :action=>'index'     }, :param=>:project_id, :caption=>:label_companies
   menu :project_menu, :invoices,   {:controller=>'invoices',  :action=>'index'     }, :param=>:project_id, :caption=>:label_invoice_plural
   menu :project_menu, :payments,   {:controller=>'payments',  :action=>'index'     }, :param=>:project_id, :caption=>:label_payment_plural
-  menu :project_menu, :orders,     { controller: 'orders',     action: 'received'  },  param: :project_id, caption: :label_order_plural
   menu :admin_menu, :external_companies, {:controller=>'external_companies', :action=>'index'}, :caption=>:external_companies
   menu :admin_menu, :dir3_entities, {:controller=>'dir3_entities', :action=>'index'}, :caption=>:dir3_entities
   menu :admin_menu, :export_channels, {:controller=>'export_channels', :action=>'index'}, :caption=>:export_channels
