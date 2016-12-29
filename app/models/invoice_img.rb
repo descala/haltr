@@ -38,6 +38,9 @@ class InvoiceImg < ActiveRecord::Base
     self.data[:width] = initial_data['width']
     self.data[:height] = initial_data['height']
     self.data[:name] = initial_data['name']
+    unless initial_data['currency'].empty?
+      self.data[:currency] = initial_data['currency']
+    end
     initial_tags.each do |tag, token_number|
       value = nil
       if token_number.is_a? Array
@@ -131,6 +134,7 @@ class InvoiceImg < ActiveRecord::Base
             name:    tagv(:seller_name),
             taxcode: tagv(:seller_taxcode),
             country: country_code.downcase,
+            currency: currency,
             language: tags[:language]
           )
           invoice.client = new_client if new_client.save
@@ -138,6 +142,7 @@ class InvoiceImg < ActiveRecord::Base
       end
     end
     invoice.client = fuzzy_match_client unless invoice.client
+    invoice.currency = currency
     invoice.save(validate: false)
     self.save
   end
@@ -217,6 +222,10 @@ class InvoiceImg < ActiveRecord::Base
 
   def height
     data[:height]
+  end
+
+  def currency
+    data[:currency]
   end
 
   def fuzzy_match_client
