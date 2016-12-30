@@ -61,7 +61,7 @@ class Client < ActiveRecord::Base
   end
 
   def currency=(v)
-    write_attribute(:currency,v.upcase)
+    write_attribute(:currency,v.upcase) unless v.nil?
   end
 
   def bank_invoices(due_date,bank_info_id)
