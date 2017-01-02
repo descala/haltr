@@ -19,7 +19,7 @@
       </ul>
     </li>
 
-    <% unless @invoice.invoice_format == 'pdf' -%>
+    <% unless @invoice.has_original? and @invoice.invoice_format == 'pdf' -%>
       <li><%= link_to l(:download_as_pdf), {:action=>'show', :id=>@invoice, :format => 'pdf'}, :class=>'icon-haltr-save' %></li>
     <% end -%>
   </ul>
