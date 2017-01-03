@@ -6,9 +6,7 @@ DTM+137:<%=edi_date @invoice.date%>:102'
 <% unless @invoice.payment_method_code(:edifact).blank? %>
 PAI+::<%=@invoice.payment_method_code(:edifact)%>'
 <% end %>
-<% unless ''.blank?%>
 FTX+AAI+++SERVICIOS. <%=@invoice.extra_info%>'
-<% end %>
 <% unless ''.blank? %>
 DTM+95E:<%='fechaefe (camp de TSF #4744)'%>:102'
 <% end %>
