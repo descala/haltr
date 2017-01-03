@@ -397,6 +397,7 @@ module Haltr
           if external_company
             client.company = external_company
           end
+          client.language ||= User.current.language
           # do not add "validate: false" here or you'll end with duplicated
           # clients, client validates uniqueness of taxcode.
           unless client.valid?
