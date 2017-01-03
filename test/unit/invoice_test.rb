@@ -898,4 +898,11 @@ class InvoiceTest < ActiveSupport::TestCase
     assert_equal 'ESB17915224', invoice.client.taxcode
   end
 
+  test 'import UBL 2.1 with attachments' do
+    file = File.new(File.join(File.dirname(__FILE__),'../fixtures/documents/invoice_ubl_with_attachments.xml'))
+    invoice = Invoice.create_from_xml(file,companies(:company6),"1234",'uploaded',User.current.name,nil,false)
+    assert_equal 'SE841215495001', invoice.client.taxcode
+    assert_equal 2, invoice.attachments.size
+  end
+
 end

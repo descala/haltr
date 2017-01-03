@@ -110,11 +110,7 @@
         <tbody>
           <% @orders.each do |order| -%>
             <tr id="order-<%=order.id%>" class="<%= cycle("odd", "even") %>">
-              <% if order.is_a?(IssuedOrder) -%>
                 <td><%= link_to order.num_pedido, project_order_path(order, project_id: @project) %></td>
-              <% else -%>
-                <td><%= link_to order.num_pedido, project_received_order_path(order, project_id: @project) %></td>
-              <% end -%>
               <% if order.invoice -%>
                 <td><%= link_to order.invoice.number, invoice_path(order.invoice) %></td>
               <% else -%>
@@ -125,11 +121,7 @@
               <td><%= order.fecha_pedido %></td>
               <td><%= order.fecha_entrega %></td>
               <td><%= link_to order.filename, project_order_path(order, project_id: @project, download: true) %></td>
-              <% if order.is_a?(IssuedOrder) -%>
-                <td><%= link_to image_tag('zoom_in.png'), project_order_path(order, project_id: @project) %></td>
-              <% else -%>
-                <td><%= link_to image_tag('zoom_in.png'), project_received_order_path(order, project_id: @project) %></td>
-              <% end -%>
+              <td><%= link_to image_tag('zoom_in.png'), project_order_path(order, project_id: @project) %></td>
               <td><%= link_to image_tag('delete.png'), project_order_path(order, project_id: @project), data:{confirm:l(:text_are_you_sure)}, method: :delete, title: l(:button_delete) %></td>
             </tr>
           <% end -%>
