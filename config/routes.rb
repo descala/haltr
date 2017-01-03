@@ -64,8 +64,6 @@ resources :projects do
   match 'payments/report_payment_list' => 'payments#report_payment_list', :via => [:post]
   match 'events' => 'events#index', via: [:get,:post]
   match 'orders/import' => 'orders#import', via: [:get, :post]
-  match 'orders/received' => 'orders#received', via: [:get]
-  match 'orders/received/:id' => 'orders#show_received', via: [:get], as: :received_order
   match 'orders/add_comment' => 'orders#add_comment', :via => :post
   match 'orders/:id/create_invoice' => 'orders#create_invoice', :via => :post
   resources :orders, only: [:index, :show, :destroy]

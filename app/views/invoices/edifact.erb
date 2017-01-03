@@ -60,7 +60,7 @@ MOA+260:<%=edi_number @invoice.discount_amount%>'
 MOA+125:<%=edi_number @invoice.taxable_base%>'
 MOA+176:<%=edi_number @invoice.tax_amount%>'
 MOA+139:<%=edi_number @invoice.total%>'
-<% @invoice.taxes.each do |tax| -%>
+<% @invoice.taxes_uniq.each do |tax| -%>
 TAX+7+VAT+++:::<%=edi_number tax.percent%>'
 MOA+125:<%=edi_number @invoice.taxable_base(tax)%>'
 MOA+176:<%=edi_number @invoice.tax_amount(tax)%>'
