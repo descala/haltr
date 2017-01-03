@@ -269,11 +269,11 @@ class Order < ActiveRecord::Base
   end
 
   def next
-    project.invoices.where("id > ?", id).first
+    Order.where("id > ? and project_id = ?", id, project.id).first
   end
 
   def previous
-    project.invoices.where("id < ?", id).last
+    Order.where("id < ? and project_id = ?", id, project.id).last
   end
 
   def ubl_invoice
