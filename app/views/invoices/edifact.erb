@@ -6,7 +6,9 @@ DTM+137:<%=edi_date @invoice.date%>:102'
 <% unless @invoice.payment_method_code(:edifact).blank? %>
 PAI+::<%=@invoice.payment_method_code(:edifact)%>'
 <% end %>
-FTX+AAI+++SERVICIOS. <%=@invoice.extra_info%>'
+<% unless ''.blank?%>
+FTX+AAI+++<%=@invoice.extra_info%>'
+<% end %>
 <% unless ''.blank? %>
 DTM+95E:<%='fechaefe (camp de TSF #4744)'%>:102'
 <% end %>
@@ -28,7 +30,6 @@ RFF+VA:<%=@client.taxcode%>'
 NAD+BY+<%=@client.buyer_edi_code%>::9'
 <%= call_hook(:edi_after_buyer_edi_code) if call_hook(:edi_after_buyer_edi_code).present? -%>
 NAD+SU+<%=@company.edi_code%>::9++<%=@company.name.to_s[0..34]%><%="::#{@company.company_identifier.to_s[0..19]}" unless @company.company_identifier.blank?%>+<%=@company.address.to_s[0..34]%>+<%=@company.city.to_s[0..34]%>+<%=@company.province.to_s[0..34]%>+<%=@company.postalcode%>+<%=@company.country%>'
-RFF+VA+<%= @company.taxcode %>
 NAD+IV+<%=@client.buyer_edi_code%>::9'
 NAD+DP+<%=@client.destination_edi_code.to_s.split('@').first%>::9'
 NAD+PR+<%=@client.payer_edi_code%>::9'
