@@ -31,7 +31,7 @@ NAD+BY+<%=@client.buyer_edi_code%>::9'
 <%= call_hook(:edi_after_buyer_edi_code) if call_hook(:edi_after_buyer_edi_code).present? -%>
 NAD+SU+<%=@company.edi_code%>::9++<%=@company.name.to_s[0..34]%><%="::#{@company.company_identifier.to_s[0..19]}" unless @company.company_identifier.blank?%>+<%=@company.address.to_s[0..34]%>+<%=@company.city.to_s[0..34]%>+<%=@company.province.to_s[0..34]%>+<%=@company.postalcode%>+<%=@company.country%>'
 <% if @client.edi_code == "8422410000005" %>
-RFF+VA+<%= @company.taxcode %>
+RFF+VA:<%= @company.taxcode %>'
 <% end %>
 NAD+IV+<%=@client.buyer_edi_code%>::9'
 NAD+DP+<%=@client.destination_edi_code.to_s.split('@').first%>::9'
