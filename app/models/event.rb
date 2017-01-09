@@ -97,7 +97,7 @@ class Event < ActiveRecord::Base
   end
 
   def attachment_content
-    File.read(attachments.first.diskfile)
+    File.read(attachments.first.diskfile) if attachments.first
   end
 
   def create_attachment
