@@ -10,7 +10,17 @@ class ExternalCompaniesController < ApplicationController
   include CsvImporter
 
   def index
-    @ecompanies = ExternalCompany.order(:name).all
+    @ecompanies = ExternalCompany.where(nil)
+    if params[:name].present?
+      name = "%#{params[:name].strip.downcase}%"
+      @ecompanies = @ecompanies.where("LOWER (name) LIKE ? OR " +
+                                      "LOWER (taxcode) LIKE ?", name, name)
+    end
+    @limit = per_page_option
+    @ecompanies_count = @ecompanies.count
+    @ecompanies_pages = Paginator.new @ecompanies_count, @limit, params[:page]
+    @offset = @ecompanies_pages.offset
+    @ecompanies = @ecompanies.order(:name).limit(@limit).offset(@offset)
   end
 
   def new

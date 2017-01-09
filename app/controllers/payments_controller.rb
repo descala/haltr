@@ -21,14 +21,14 @@ class PaymentsController < ApplicationController
     sort_init 'payments.date', 'desc'
     sort_update %w(payments.date amount_in_cents invoices.number)
 
-    payments = @project.payments.includes('invoice')
+    payments = @project.payments.includes('invoice').references('invoice')
 
     if params[:name].present?
       name = "%#{params[:name].strip.downcase}%"
       fields = %w(payments.payment_method reference
       DATE_FORMAT(payments.date,'%d-%m-%Y') invoices.number amount_in_cents)
       conditions = fields.collect {|f| "LOWER(#{f}) LIKE ?" }.join(' OR ')
-      payments = payments.scoped conditions: [conditions, *fields.collect {name}]
+      payments = payments.where([conditions, *fields.collect {name}])
     end
 
     @limit = per_page_option
@@ -216,7 +216,7 @@ class PaymentsController < ApplicationController
         end
       end
     else
-      flash[:warning] = l(:notice_uploaded_uploaded_file_not_found)
+      flash[:warning] = l(:notice_uploaded_file_not_found)
       redirect_to :action => 'import_aeb43_index', :project_id => @project
     end
   end

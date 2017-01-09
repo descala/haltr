@@ -10,6 +10,36 @@
 
 <%= link_to l(:label_new), new_external_company_path %>
 
+<!--filtres-->
+<div class="seccio grup">
+  <div class="col span-2-de-2">
+    <div class="filtres">
+      <div class="titularAcc">
+        <%= l(:label_filter_plural) %>
+      </div>
+      <div class="contingutAcc">
+        <%= form_tag({:id=>@project}, :method => :get, :class => 'formee') do %>
+          <fieldset>
+            <legend><%= l(:label_search) %></legend>
+            <div class="seccio grup">
+              <div class="col span-1-de-2">
+                <label for="name"><%=l(:label_company)%></label>
+                <%= text_field_tag 'name', params[:name], :size => 30 %>
+              </div>
+            </div>
+            <div class="seccio grup">
+              <div class="col span-2-de-2">
+                <%= submit_tag l(:button_apply), :name => nil %>
+              </div>
+            </div>
+          </fieldset>
+        <% end %>
+      </div>
+    </div>
+  </div>
+</div>
+<!--final filtres-->
+
 <table class="taula-1 list clients" style="margin-top: 30px;">
   <% @ecompanies.each do |ec| -%>
     <tr class="<%= cycle('odd senar','even parell') %>">
@@ -24,3 +54,9 @@
 </table>
 
 <%= link_to l(:label_new), new_external_company_path %>
+
+<!--paginacio-->
+<div class="seccio grup paginacio pagination">
+  <%= pagination_links_full @ecompanies_pages, @ecompanies_count %>
+</div>
+<!--final paginacio-->

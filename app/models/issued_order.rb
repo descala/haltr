@@ -1,2 +1,0 @@
-class IssuedOrder < Order
-end

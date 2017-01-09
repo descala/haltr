@@ -1016,37 +1016,42 @@ _INV
       data_compression = Haltr::Utils.get_xpath(attach, xpaths[:attach_compression_algorithm])
       data_format      = Haltr::Utils.get_xpath(attach, xpaths[:attach_format])
       data_encoding    = Haltr::Utils.get_xpath(attach, xpaths[:attach_encoding])
-      data = case data_encoding
-             when 'BASE64'
-               Base64.decode64(data)
-             when 'BER'
-               #TODO
-             when 'DER'
-               #TODO
-             else # NONE
-               data
-             end
-      data = case data_compression
-             when 'ZIP'
-               require 'zip'
-               Zip::InputStream.open(StringIO.new(data)) do |io|
-                 _entry = io.get_next_entry
-                 io.read
-               end
-             when 'GZIP'
-               ActiveSupport::Gzip.decompress(StringIO.new(data))
-             else # NONE
-               data
-             end
-      data_content_type = MIME.check_magics(StringIO.new(data))
-      ext = MIME::Types[data_content_type].first.extensions.first rescue data_format
 
-      a = Attachment.new
-      a.file = StringIO.new data
-      a.author = User.current
-      a.description = Haltr::Utils.get_xpath(attach, xpaths[:attach_description])
-      a.filename = "facturae_#{invoice.number.gsub('/','')}_#{index+1}.#{ext}"
-      to_attach << a
+      if data.present?
+        data_encoding ||= 'BASE64' if invoice_format =~ /ubl/
+
+        data = case data_encoding
+               when 'BASE64'
+                 Base64.decode64(data)
+               when 'BER'
+                 #TODO
+               when 'DER'
+                 #TODO
+               else # NONE
+                 data
+               end
+        data = case data_compression
+               when 'ZIP'
+                 require 'zip'
+                 Zip::InputStream.open(StringIO.new(data)) do |io|
+                   _entry = io.get_next_entry
+                   io.read
+                 end
+               when 'GZIP'
+                 ActiveSupport::Gzip.decompress(StringIO.new(data))
+               else # NONE
+                 data
+               end
+        data_content_type = MIME.check_magics(StringIO.new(data))
+        ext = MIME::Types[data_content_type].first.extensions.first rescue data_format
+
+        a = Attachment.new
+        a.file = StringIO.new data
+        a.author = User.current
+        a.description = Haltr::Utils.get_xpath(attach, xpaths[:attach_description])
+        a.filename = "facturae_#{invoice.number.gsub('/','')}_#{index+1}.#{ext}"
+        to_attach << a
+      end
     end
     invoice.attachments = to_attach
 

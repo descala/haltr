@@ -250,6 +250,13 @@ module Haltr
           xpaths[:tax_name]           = "cac:TaxScheme/cbc:ID"
           xpaths[:tax_category]       = "cbc:ID"
 
+          xpaths[:attachments] = "//cac:AdditionalDocumentReference"
+          # relative to attachment
+          xpaths[:attach_format]      = "cac:Attachment/cbc:EmbeddedDocumentBinaryObject/@mimeCode"
+          xpaths[:attach_encoding]    = "cac:Attachment/cbc:EmbeddedDocumentBinaryObject/@encodingCode"
+          xpaths[:attach_description] = "cbc:DocumentType"
+          xpaths[:attach_data]        = "cac:Attachment/cbc:EmbeddedDocumentBinaryObject"
+
         end
         xpaths
       end
@@ -390,6 +397,7 @@ module Haltr
           if external_company
             client.company = external_company
           end
+          client.language ||= User.current.language
           # do not add "validate: false" here or you'll end with duplicated
           # clients, client validates uniqueness of taxcode.
           unless client.valid?
