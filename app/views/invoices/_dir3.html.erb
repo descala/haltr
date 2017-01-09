@@ -4,11 +4,13 @@
 
 <% if @external_company and @external_company.send("dir3_#{role.pluralize}").any? -%>
 
+  <% opts_hash = (@external_company.send("dir3_#{role.pluralize}").size > 1) ? {include_blank: '--'} : {} -%>
+
   <% if @invoice.nil? or (@external_company.send("dir3_#{role.pluralize}").collect {|d3e| d3e.code }.include?(@invoice.send(role)) or @invoice.send(role).blank?) -%>
-    <%= select(:invoice, role, dir3_for_select(@external_company.send("dir3_#{role.pluralize}")), {include_blank: '--'}) %>
+    <%= select(:invoice, role, dir3_for_select(@external_company.send("dir3_#{role.pluralize}")), opts_hash) %>
     <%= text_field :invoice, role, style: 'display: none;', disabled: true %>
   <% else -%>
-    <%= select(:invoice, role, dir3_for_select(@external_company.send("dir3_#{role.pluralize}")), {}, { style: 'display: none;', disabled: true }) %>
+    <%= select(:invoice, role, dir3_for_select(@external_company.send("dir3_#{role.pluralize}")), opts_hash, { style: 'display: none;', disabled: true }) %>
     <%= text_field :invoice, role %>
   <% end-%>
 
