@@ -20,7 +20,7 @@ module Haltr
             client[f] = invoice.client_office.send(f)
           end
         end
-        xml = InvoicesController.renderer.render(
+        edi = InvoicesController.renderer.render(
           :template => "invoices/edifact",
           :locals   => { :@invoice => invoice,
                          :@company => invoice.company,
