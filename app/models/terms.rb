@@ -1,6 +1,6 @@
 class Terms
 
-  unloadable
+
 
   KEYS = %w(0 15 30 60 90 120 0m-1 1m-1 1m1 2m1 1m15 1m20 1m10)
 

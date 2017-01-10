@@ -1,13 +1,5 @@
-require 'render_anywhere'
-
 module Haltr
   class Pdf
-
-    include RenderAnywhere
-
-    def initialize
-      set_render_anywhere_helpers(ApplicationHelper,HaltrHelper,InvoicesHelper)
-    end
 
     def self.generate(invoice, as_file=false)
       new.generate(invoice, as_file)
@@ -17,7 +9,7 @@ module Haltr
       if invoice.send_original? and invoice.invoice_format == 'pdf'
         pdf = invoice.original
       else
-        pdf_html = render(
+        pdf_html = InvoicesController.renderer.render(
           :template => "invoices/show_pdf.html.erb",
           :layout => "layouts/invoice.html",
           :locals => { :invoice => invoice, :@is_pdf => true }

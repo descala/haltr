@@ -1,5 +1,5 @@
 class ExternalCompaniesController < ApplicationController
-  unloadable
+
 
   layout 'admin'
   menu_item :external_companies

@@ -1,5 +1,5 @@
 class HaltrMailHandlerController < ApplicationController
-  unloadable
+
 
   before_filter :authorize_global
   accept_api_auth :check_mail

@@ -1,6 +1,6 @@
 class CompaniesController < ApplicationController
 
-  unloadable
+
   menu_item Haltr::MenuItem.new(:companies,:linked_to_mine),     :only => [:linked_to_mine]
   menu_item Haltr::MenuItem.new(:my_company,:my_company_level2), :only => [:my_company]
   menu_item Haltr::MenuItem.new(:my_company,:bank_info),         :only => [:bank_info]
@@ -17,7 +17,6 @@ class CompaniesController < ApplicationController
     only: [:my_company,:bank_info,:connections,:customization,:linked_to_mine,
            :logo,:add_bank_info,:check_iban]
   before_filter :find_company, :only => [:update]
-  before_filter :set_iso_countries_language
   before_filter :authorize, :except => [:logo,:logo_by_taxcode]
   skip_before_filter :check_if_login_required, :only => [:logo,:logo_by_taxcode]
   before_filter :check_for_company,
@@ -118,7 +117,7 @@ class CompaniesController < ApplicationController
         end
       end
     end
-    if @company.update_attributes(params[:company])
+    if @company.update_attributes(params[:company].to_hash)
       unless @company.taxes.collect {|t| t unless t.marked_for_destruction? }.compact.any?
         @company.taxes = []
         @company.taxes = default_taxes_for(@company.country)
@@ -201,10 +200,6 @@ class CompaniesController < ApplicationController
       content_type = Redmine::MimeType.of(attachment.filename)
     end
     content_type.to_s
-  end
-
-  def set_iso_countries_language
-    ISO::Countries.set_language I18n.locale.to_s
   end
 
 end

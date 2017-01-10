@@ -1,13 +1,5 @@
-require 'render_anywhere'
-
 module Haltr
   class Edifact
-
-    include RenderAnywhere
-
-    def initialize
-      set_render_anywhere_helpers(ApplicationHelper,HaltrHelper,InvoicesHelper)
-    end
 
     def self.generate(invoice, as_file=false, force=false)
       new.generate(invoice, as_file, force)
@@ -28,7 +20,7 @@ module Haltr
             client[f] = invoice.client_office.send(f)
           end
         end
-        edi = render(
+        xml = InvoicesController.renderer.render(
           :template => "invoices/edifact",
           :locals   => { :@invoice => invoice,
                          :@company => invoice.company,

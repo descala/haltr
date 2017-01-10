@@ -1,52 +1,62 @@
-# to draw states graph execute:
-#   rake state_machine:draw FILE=invoice.rb CLASS=ReceivedInvoice
 class ReceivedInvoice < InvoiceDocument
-
-  unloadable
 
   belongs_to :created_from_invoice, class_name: 'IssuedInvoice'
 
   after_create :create_event
+  before_save :update_imports
 
   acts_as_event
   after_create :notify_users_by_mail, if: Proc.new {|o|
     o.project.company.order_notifications
   }
 
-  state_machine :state, :initial => :received do
-    before_transition do |invoice,transition|
-      unless Event.automatic.include?(transition.event.to_s)
-        if transition.event.to_s =~ /^mark_as_/
-          Event.create(:name=>"done_#{transition.event.to_s}",:invoice=>invoice,:user=>User.current)
-        else
-          Event.create(:name=>transition.event.to_s,:invoice=>invoice,:user=>User.current)
-        end
-      end
-    end
+  include AASM
+
+  aasm column: :state, skip_validation_on_save: true, whiny_transitions: true do
+    state :received, initial: true
+    state :accepted, :paid, :refused, :processing_pdf, :error
+
+    before_all_events :aasm_create_event
 
     event :refuse do
-      transition all => :refused
+      transitions to: :refused
     end
     event :accept do
-      transition all => :accepted
+      transitions to: :accepted
     end
     event :paid do
-      transition :accepted => :paid
+      transitions from: :accepted, to: :paid
     end
     event :unpaid do
-      transition :paid => :accepted
+      transitions from: :paid, to: :accepted
+    end
+    event :error_sending do
+      transitions to: :error
+    end
+    event :processing_pdf do
+      transitions to: :processing_pdf
+    end
+    event :processed_pdf do
+      transitions from: :processing_pdf, to: :received
     end
     event :failed_notification do
-      transition all => :error
+      transitions to: :error
     end
     event :mark_as_accepted do
-      transition all => :accepted
+      transitions to: :accepted
     end
     event :mark_as_paid do
-      transition all => :paid
+      transitions to: :paid
     end
     event :mark_as_refused do
-      transition all => :refused
+      transitions to: :refused
+    end
+  end
+
+  def aasm_create_event
+    name = aasm.current_event.to_s.gsub('!','')
+    unless Event.automatic.include? name
+      Event.create(:name=>name,:invoice=>self,:user=>User.current)
     end
   end
 
@@ -54,9 +64,12 @@ class ReceivedInvoice < InvoiceDocument
     "#{number}"
   end
 
-  def past_due?
-    #TODO
+  def sent?
     false
+  end
+
+  def past_due?
+    !paid? && due_date && due_date < Date.today
   end
 
   def label
@@ -131,10 +144,23 @@ class ReceivedInvoice < InvoiceDocument
     ).save(validate: false)
   end
 
+  def last_sent_event
+    nil
+  end
+
+  def file_name
+    fn = read_attribute('file_name')
+    if date
+      "#{date.strftime("%Y%m%d")}_#{fn}"
+    else
+      "00000000_#{fn}"
+    end
+  end
+
   protected
 
   def create_event
-    ReceivedInvoiceEvent.create(:name=>self.transport,:invoice=>self,:user=>User.current)
+    ReceivedInvoiceEvent.create!(:name=>self.transport,:invoice=>self,:user=>User.current)
   end
 
   private

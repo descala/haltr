@@ -12,6 +12,7 @@ invoice1:
   bank_info_id: 1
   import_in_cents: 92568
   total_in_cents: 92568
+  series_code: 15
 
 template1:
   type: InvoiceTemplate
@@ -319,6 +320,19 @@ i14:
   project_id: 2
   state: accepted
   client_email_override: override@example.com
+
+i15pdf:
+  id: 150
+  type: ReceivedInvoice
+  project_id: 2
+  state: "processing_pdf"
+  client_id: 1
+  currency: EUR
+  date: 2014-12-16
+  due_date: 2015-01-16
+  number: "2016/i15pdf"
+  payment_method: 2
+  project_id: 2
 
 i15:
   id: 15

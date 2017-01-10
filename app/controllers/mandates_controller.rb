@@ -1,6 +1,6 @@
 class MandatesController < ApplicationController
 
-  unloadable
+
   menu_item Haltr::MenuItem.new(:payments,:mandates)
   layout 'haltr'
   helper :haltr

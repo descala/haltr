@@ -3,7 +3,12 @@
   <ul class="menu-rapid">
     <li><%= link_to_if_authorized l("label_company_new"), new_project_client_path(@project), :class => 'icon icon-add' %></li>
     <li><%= link_to_if_authorized l(:button_edit), { :action => 'edit', :id => @client }, :class => 'icon icon-edit' %></li>
-    <li><%= link_to_if_authorized l(:button_delete), { :action => 'destroy', :id => @client}, :confirm=>l(:text_are_you_sure), :method=>:delete, :class=>'icon icon-del' %></li>
+    <% if @client.invoices.any? -%>
+      <li><%= link_to_if_authorized l(:button_delete), {:action=>'destroy',:id=>@client},
+        :data=>{:confirm => l(:confirm_delete_client_with_invoices, :issued=>@client.issued_invoices.count, :received=>@client.received_invoices.count, :templates=>@client.invoice_templates.count )}, :method => :delete, :class=>'icon icon-del', :title=>l(:button_delete) %></li>
+    <% else -%>
+      <li><%= link_to_if_authorized l(:button_delete), {:action=>'destroy',:id=>@client}, :data=>{:confirm=>l(:text_are_you_sure)}, :method=>:delete, :class=>'icon icon-del', :title=>l(:button_delete) %></li>
+    <% end -%>
     <% if @client.next%>
       <li class="invoice-navigator"><%=h link_to_if_authorized l(:label_next), :action => 'show', :id => @client.next %></li>
     <% end %>

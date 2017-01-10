@@ -371,6 +371,27 @@ da:
   notice_payment_done: "%{payment_type} for forfaldsdatoen %{value} maked som udført"
   notice_uploaded_file_not_found: "Fil ikke fundet"
  
+  # Received invoice_imgs
+  label_extracted: Extracted auxiliar information
+  tag_seller_name: Seller name
+  tag_language: Invoice language
+  tag_seller_taxcode: Seller VAT Id
+  tag_seller_country: Seller country
+  tag_buyer_taxcode: Buyed VAT Id
+  tag_invoice_number: Invoice number
+  tag_tax_percentage: Tax %
+  tag_subtotal: Taxable base
+  tag_tax_amount: Tax amount
+  tag_issue: Issue date
+  tag_due: Due date
+  tag_total: Total
+  tag_tax_wh_percentage: "IRPF %"
+  tag_tax_wh_amount: "IRPF €"
+  update_invoice: Update invoice
+  replace_tags: Replace
+  clear_tag: Remove
+
+
   hide_full_form: "Vis færre felter"
   show_full_form: "Vis flere felter"
   state_allegedly_paid: "Reported as paid"
@@ -587,6 +608,9 @@ da:
   field_file_reference: "File number"
   import_issued_from_received: "File to import is an issued invoice"
   import_received_from_issued: "File to import is a received invoice"
+  processing_pdf: "Processing PDF"
+  state_processing_pdf: "Processing PDF"
+  processed_pdf: "PDF processed"
   field_discount: "Discount"
   field_charge: "Charge"
   download_as_pdf: "Download PDF copy"
@@ -733,8 +757,8 @@ da:
   by_peppol: "Received by Peppol"
   invoice_attachment_added: "Annex added"
   invoice_attachment_destoy: "Annex deleted"
-  field_tax_point_date: "Tax Point Date"
   field_xpaths_from_original: "XPATHS to preserve from original"
+  field_tax_point_date: "Tax Point Date"
   warn_edit_invoice: "You are about to edit a sent invoice.<br />
 Your customer will not receive the changes you made unless you resend it.<br />
 If you save it, will be marked as New."
@@ -793,3 +817,5 @@ If you save it, will be marked as New."
   received_by: "Received (%{transport})"
   cant_modify_taxcode: "You cannot modify your VAT ID. If you need to change it, please get in touch with our %{suport_link}"
   suport_link: "support service"
+  field_sign_with_local_certificate: "Sign with local certificate"
+  notice_invoice_processing_pdf: "File uploaded. Processing PDF invoice ..."

@@ -2,8 +2,9 @@ class HaltrMailer < ActionMailer::Base
   layout 'mailer'
   helper :application
   helper :haltr
+  helper :invoices
 
-  unloadable
+
   include Redmine::I18n
   require "digest/md5"
 

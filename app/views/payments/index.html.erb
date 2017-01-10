@@ -62,7 +62,7 @@
             <td><%=h(truncate(payment.reference,:length=>30)) %></td>
             <td><%=link_to_if_authorized(h(payment.invoice.number.blank? ? "?" : payment.invoice.number), invoice_path(payment.invoice)) unless payment.invoice.nil? %></td>
             <td><%= link_to_if_authorized l(:button_edit), edit_payment_path(payment), :class => 'icon icon-edit editar' %></td>
-            <td><%= link_to_if_authorized l(:button_delete), payment_path(payment), :method=>:delete, :confirm => l(:text_are_you_sure), :class => 'icon icon-del eliminar' %></td>
+            <td><%= link_to_if_authorized l(:button_delete), payment_path(payment), :method=>:delete, :data=>{:confirm => l(:text_are_you_sure)}, :class => 'icon icon-del eliminar' %></td>
           </tr>
         <% end -%>
       </tbody>

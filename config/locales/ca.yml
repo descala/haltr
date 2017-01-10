@@ -384,6 +384,26 @@ ca:
   notice_payment_done: "S'ha tancat el %{payment_type} de data %{value}"
   notice_uploaded_file_not_found: "No s'ha trobat el fitxer"
 
+  # Received invoice_imgs
+  label_extracted: Informació extreta del PDF
+  tag_seller_name: Nom del venedor
+  tag_language: Idioma de la factura
+  tag_seller_taxcode: NIF del venedor
+  tag_seller_country: País del venedor
+  tag_buyer_taxcode: NIF del comprador
+  tag_invoice_number: Número de factura
+  tag_tax_percentage: "Impost %"
+  tag_subtotal: Base imposable
+  tag_tax_amount: "Impost €"
+  tag_issue: Data d'emisió
+  tag_due: Data de venciment
+  tag_total: Total
+  tag_tax_wh_percentage: "IRPF %"
+  tag_tax_wh_amount: "IRPF €"
+  update_invoice: Actualitzar la factura
+  replace_tags: Substituir
+  clear_tag: Eliminar
+
   hide_full_form: "Mostrar menys camps"
   show_full_form: "Mostrar mes camps"
   field_created_at: "Creada el"
@@ -600,6 +620,9 @@ ca:
   field_file_reference: "Num expedient"
   import_issued_from_received: "El fitxer a importar correspon a una factura emesa"
   import_received_from_issued: "El fitxer a importar correspon a una factura rebuda"
+  processing_pdf: "Processant PDF"
+  state_processing_pdf: "Processant PDF"
+  processed_pdf: "PDF processat"
   field_discount: "Descompte"
   field_charge: "Càrrec"
   download_as_pdf: "Descarregar còpia en PDF"
@@ -747,8 +770,8 @@ ca:
   by_peppol: "Rebuda per Peppol"
   invoice_attachment_added: "Annex afegit"
   invoice_attachment_destoy: "Annex esborrat"
-  field_tax_point_date: "Data de Servei"
   field_xpaths_from_original: "XPATHS a conservar de l'original"
+  field_tax_point_date: "Data de Servei"
   warn_edit_invoice: "Estàs a punt d'editar una factura que ha estat enviada.<br />
 Tingues en compte que el teu client no rebrà els canvis a no ser que la tornis a enviar.<br />
 Si la deses, es marcara com a Nova."
@@ -809,3 +832,5 @@ Si la deses, es marcara com a Nova."
   received_by: "Rebuda (%{transport})"
   cant_modify_taxcode: "No es pot modificar el NIF. Si l'heu de canviar, sisplau, poseu-vos en contacte amb el %{suport_link}"
   suport_link: "servei de suport"
+  field_sign_with_local_certificate: "Signar amb certificat local"
+  notice_invoice_processing_pdf: "Fitxer importat. Processant la factura PDF ..."

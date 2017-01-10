@@ -263,7 +263,7 @@
             </tr>
             <% @invoice.payments.each do |payment| -%>
               <tr>
-                <td class="item-delete first"><%= link_to_if_authorized "", {:action=>'destroy_payment',:id=>payment} , :confirm => l(:text_are_you_sure), :method => :delete, :class => 'icon icon-del' %></td>
+                <td class="item-delete first"><%= link_to_if_authorized "", {:action=>'destroy_payment',:id=>payment} , :data=>{:confirm=>l(:text_are_you_sure)}, :method => :delete, :class => 'icon icon-del' %></td>
                 <td class="item-date first"><%=h format_date payment.date %></td>
                 <td class="item-description"><%=h payment.description %></td>
                 <td class="line-total last"><%=h money(payment.amount) %></td>

@@ -56,7 +56,10 @@
       <% if controller.controller_name == "invoice_templates" -%>
         <%= f.select :frequency, frequencies_for_select, :required => true %>
       <% else -%>
-        <%= f.text_field :number, :size => 10, :required => true, :label => l(:field_invoice_number) %> <span class="text"><%= "#{l(:label_last_invoice_number)}: #{IssuedInvoice.last_number(@project)}" if @project.issued_invoices.any?%></span>
+        <%= f.text_field :number, :size => 10, :required => true, :label => l(:field_invoice_number) %>
+        <% if @invoice.is_a? IssuedInvoice %>
+          <span class="text"><%= "#{l(:label_last_invoice_number)}: #{IssuedInvoice.last_number(@project)}" if @project.issued_invoices.any?%></span>
+    <% end -%>
       <% end -%>
     </p>
     <% if display_series_code_in_form? -%>
@@ -116,6 +119,7 @@
 
 </fieldset>
 
+<% unless @invoice.is_a?(ReceivedInvoice) %>
 <fieldset class="tabular box">
   <legend class="titularAcc"><%= l(:label_discounts_and_charges) %></legend>
   <div class="contingutAcc">
@@ -166,8 +170,9 @@
 
   </div>
 </fieldset>
+<% end -%>
 
-<% if User.current.allowed_to?(:view_invoice_extra_fields, @project) or @invoice.has_factoring_data? -%>
+<% if (User.current.allowed_to?(:view_invoice_extra_fields, @project) or @invoice.has_factoring_data?) and !@invoice.is_a?(ReceivedInvoice) -%>
   <fieldset class="tabular box">
     <legend class="titularAcc"><%= l(:label_factoring_assignment_data) %></legend>
     <div class="contingutAcc">
@@ -210,7 +215,7 @@
       <div class="seccio grup">
         <p class="col span-1-de-4">
         <%= f.label_for_field :fa_country %>
-        <%= f.iso_country_select :fa_country, [:es] %>
+        <%= f.country_select :fa_country, priority_countries: [@project.company.country] %>
         </p>
         <p class="col span-1-de-4">
         <%= f.text_field :fa_info %>

@@ -1,4 +1,4 @@
-require File.dirname(__FILE__) + '/../test_helper'
+require File.expand_path('../../test_helper', __FILE__)
 
 class InvoicesControllerTest < ActionController::TestCase
   fixtures :companies, :invoices, :invoice_lines, :taxes
@@ -14,6 +14,11 @@ class InvoicesControllerTest < ActionController::TestCase
     # deconfigure onlinestore
     companies(:company1).destroy
     get :index, :id => 'onlinestore'
+  end
+
+  test 'new invoice form' do
+    get :new, :project_id => 'onlinestore'
+    assert_response :success
   end
 
   test 'facturae30' do
@@ -115,9 +120,22 @@ class InvoicesControllerTest < ActionController::TestCase
     @request.session[:user_id] = 2
   end
 
-  test 'import invoice' do
-    post :import, {
-      file:       fixture_file_upload('/documents/invoice_facturae32_issued.xml'),
+  test 'by_taxcode_and_num with serie' do
+    @request.session[:user_id] = nil
+    get :by_taxcode_and_num, :num => "08/001", "taxcode"=>"77310058C", "serie"=>"15"
+    assert_response :success
+    assert_equal "855445292", @response.body
+    get :by_taxcode_and_num, :num => "08/001", "taxcode"=>"77310058C", "serie"=>"11"
+    assert_response :not_found
+    @request.session[:user_id] = 2
+  end
+
+  test 'import invoice with multiple upload' do
+    set_tmp_attachments_directory
+    attachment = Attachment.create!(:file => fixture_file_upload('/documents/invoice_facturae32_issued.xml','text/xml',true), :author_id => 2)
+
+    post :upload, {
+      attachments: {'p0' => {'token' => attachment.token}},
       commit:     'Importar',
       project_id: 'onlinestore',
       issued:     'true'
@@ -125,8 +143,37 @@ class InvoicesControllerTest < ActionController::TestCase
     p=Project.find(2)
     assert User.current.allowed_to?(:import_invoices,p), "user #{User.current.login} has not import_invoices permission in project #{p.name}"
     assert_response :found
-    invoice = IssuedInvoice.find_by_number '767'
+    assert invoice = IssuedInvoice.find_by_number('767'), "should find imported invoice"
     assert invoice.valid?, invoice.errors.messages.to_s
+    assert !invoice.modified_since_created?
+    assert invoice.original
+  end
+
+  test 'import pdf invoice with multiple upload' do
+
+    stub_request(:post, "http://localhost:3000/api/v1/transactions")
+    .to_return(:status => 200,
+               :body => "",
+               :headers => {})
+
+    set_tmp_attachments_directory
+    attachment = Attachment.create!(:file => fixture_file_upload('/documents/invoice_pdf_signed.pdf','application/pdf',true), :author_id => 2)
+
+    Redmine::Configuration.with 'ws_url' => 'http://localhost:3000/api/v1/' do
+      post :upload, {
+        attachments: {'p0' => {'token' => attachment.token}},
+        commit:     'Importar',
+        project_id: 'onlinestore',
+        issued:     '1'
+      }
+    end
+
+    p=Project.find(2)
+    assert User.current.allowed_to?(:import_invoices,p), "user #{User.current.login} has not import_invoices permission in project #{p.name}"
+    assert_response :found
+    assert invoice = IssuedInvoice.last
+    assert !invoice.valid?
+    assert_equal "processing_pdf", invoice.state
     assert !invoice.modified_since_created?
     assert invoice.original
   end

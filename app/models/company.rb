@@ -1,7 +1,5 @@
 class Company < ActiveRecord::Base
 
-  unloadable
-
   ROUNDING_METHODS = %w( half_up bankers truncate )
 
   belongs_to :project
@@ -9,8 +7,8 @@ class Company < ActiveRecord::Base
   # these are the linked clients: where this company apears in other
   # companies' client list
   has_many :clients, :as => :company, :dependent => :nullify
-  has_many :taxes, :class_name => "Tax", :dependent => :destroy, :order => "name,percent DESC"
-  has_many :bank_infos, :dependent => :destroy, :order => "name,bank_account,iban,bic DESC"
+  has_many :taxes, -> {order "name,percent DESC"}, :class_name => "Tax", :dependent => :destroy
+  has_many :bank_infos, -> {order "name,bank_account,iban,bic DESC"}, :dependent => :destroy
   has_many :company_offices, dependent: :destroy
 
   # self referential association
@@ -29,7 +27,6 @@ class Company < ActiveRecord::Base
   acts_as_attachable :view_permission => :general_use,
                      :delete_permission => :general_use
   after_save :update_linked_clients
-  iso_country :country
   include CountryUtils
   include Haltr::TaxcodeValidator
 

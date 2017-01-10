@@ -1,6 +1,6 @@
 module CompanyFilter
 
-  unloadable
+
 
   def check_for_company
     if @project.company.nil?

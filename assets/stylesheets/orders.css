@@ -8,3 +8,22 @@ th,td,caption {
 hr { width: 100%; height: 1px; background: #ccc; border: 0;}
 table td {padding:0px;}
 #content h1, h2, h3, h4 {color: #555;}
+
+.dl-horizontal dt {
+    clear: left;
+    float: left;
+    overflow: hidden;
+    text-align: right;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    width: 220px;
+}
+dt {
+    font-weight: 700;
+}
+dd, dt {
+    line-height: 1.42857;
+}
+.dl-horizontal dd {
+    margin-left: 240px;
+}

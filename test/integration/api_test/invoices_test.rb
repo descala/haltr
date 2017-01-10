@@ -1,7 +1,7 @@
 require File.dirname(__FILE__) + '/../../test_helper'
 
 class Redmine::ApiTest::InvoicesTest < Redmine::ApiTest::Base
-  fixtures :companies, :invoices, :invoice_lines, :taxes, :events
+  fixtures :companies, :invoices, :invoice_lines, :taxes, :events, :clients
 
   def setup
     Setting.rest_api_enabled = '1'
@@ -19,7 +19,7 @@ class Redmine::ApiTest::InvoicesTest < Redmine::ApiTest::Base
 
     assert_response :unprocessable_entity
     assert_equal 'application/xml', response.content_type
-    assert_tag 'errors', :child => {:tag => 'error', :content => "Number 767 has already been taken for year 2012"}
+    assert_select 'errors', :child => {:tag => 'error', :content => "Number 767 has already been taken for year 2012"}
   end
 
   test 'shows invoice' do

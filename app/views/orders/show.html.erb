@@ -12,7 +12,7 @@
       <% end -%>
       <li><%= link_to l(:download_original), project_order_path(@order, project_id: @project, download: true), class: 'icon icon-attachment' %></li>
       <li><%= link_to l(:download_as_pdf), project_order_path(@order, project_id: @project, format: :pdf), class: 'icon icon-attachment' %></li>
-      <li><%= link_to_if_authorized l(:button_delete), { :action => 'destroy', :id => @order }, :confirm=>l(:text_are_you_sure), :method=>:delete, :class=>'icon icon-del' %></li>
+      <li><%= link_to_if_authorized l(:button_delete), { :action => 'destroy', :id => @order }, :data=>{:confirm=>l(:text_are_you_sure)}, :method=>:delete, :class=>'icon icon-del' %></li>
       <% if @order.next%>
         <li class="invoice-navigator"><%=h link_to_if_authorized l(:label_next), :action => 'show', :id => @order.next %></li>
       <% end %>

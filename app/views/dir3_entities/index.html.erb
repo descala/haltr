@@ -17,7 +17,7 @@
       <td><%= dir3_entity.name %></td>
       <td><%= link_to l(:button_edit), edit_dir3_entity_path(dir3_entity) %></td>
       <td><%= link_to l(:button_delete), dir3_entity_path(dir3_entity),
-        :confirm=>l(:text_are_you_sure), :method=>:delete %></td>
+        :data=>{:confirm=>l(:text_are_you_sure)}, :method=>:delete %></td>
     </tr>
   <% end -%>
 </table>

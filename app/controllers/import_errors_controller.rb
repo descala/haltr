@@ -1,6 +1,6 @@
 class ImportErrorsController < ApplicationController
 
-  unloadable
+
   menu_item Haltr::MenuItem.new(:invoices,:import_errors)
   helper :haltr
   layout 'haltr'
@@ -18,16 +18,15 @@ class ImportErrorsController < ApplicationController
     sort_init 'created_at', 'desc'
     sort_update %w(created_at filename import_errors)
 
-    import_errors = @project.import_errors.scoped
+    import_errors = @project.import_errors
 
     @import_errors_count = import_errors.count
-    @import_errors_pages = Paginator.new self, @import_errors_count,
+    @import_errors_pages = Paginator.new @import_errors_count,
       per_page_option, params[:page]
-    @import_errors = import_errors.all(
-      order:  sort_clause,
-      limit:  @import_errors_pages.items_per_page,
-      offset: @import_errors_pages.current.offset
-    )
+    @import_errors = import_errors.
+      limit(@import_errors_pages.items_per_page).
+      offset(@import_errors_pages.current.offset).
+      order(sort_clause)
   end
 
   def show
@@ -75,7 +74,7 @@ class ImportErrorsController < ApplicationController
   end
 
   def find_import_errors
-    @import_errors = ImportError.find_all_by_id(params[:id] || params[:ids])
+    @import_errors = ImportError.where(id: (params[:id] || params[:ids]))
     raise ActiveRecord::RecordNotFound if @import_errors.empty?
     raise Unauthorized unless @import_errors.collect {|i| i.project }.uniq.size == 1
     @project = @import_errors.first.project

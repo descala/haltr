@@ -1,6 +1,6 @@
 class ClientsController < ApplicationController
 
-  unloadable
+
 
   menu_item Haltr::MenuItem.new(:companies,:companies_level2)
 
@@ -13,7 +13,6 @@ class ClientsController < ApplicationController
   before_filter :find_project_by_project_id, :only => [:index,:new,:create,:ccc2iban]
   before_filter :find_project,  :only => [:link_to_profile,:allow_link,:deny_link,:check_cif]
   before_filter :find_client, :except => [:index,:new,:create,:link_to_profile,:allow_link,:deny_link,:check_cif,:ccc2iban]
-  before_filter :set_iso_countries_language
   before_filter :authorize
 
   accept_api_auth :create, :show, :index, :destroy, :update
@@ -61,6 +60,8 @@ class ClientsController < ApplicationController
     end
 
     case params[:format]
+    when 'csv', 'pdf'
+      @limit = Setting.issues_export_limit.to_i
     when 'xml', 'json'
       @offset, @limit = api_offset_and_limit
     else
@@ -68,12 +69,16 @@ class ClientsController < ApplicationController
     end
 
     @client_count = clients.count
-    @client_pages = Paginator.new self, @client_count, @limit, params['page']
+    @client_pages = Paginator.new @client_count, @limit, params['page']
     @offset ||= @client_pages.offset
-    @clients =  clients.find :all,
-       :order => sort_clause,
-       :limit  =>  @limit,
-       :offset =>  @offset
+    @clients = clients.order(sort_clause).limit(@limit).offset(@offset).to_a
+    respond_to do |format|
+      format.html
+      format.api
+      format.csv do
+        @clients = clients.order(sort_clause)
+      end
+    end
   end
 
   def show
@@ -103,6 +108,9 @@ class ClientsController < ApplicationController
     rescue
       @client = Client.new
     end
+    unless User.current.allowed_to?(:use_local_signature, @project)
+      @client.sign_with_local_certificate = false
+    end
     respond_to do |format|
       if @client.save
         format.html {
@@ -121,6 +129,9 @@ class ClientsController < ApplicationController
 
   def update
     respond_to do |format|
+      unless User.current.allowed_to?(:use_local_signature, @project)
+        params.delete(:sign_with_local_certificate)
+      end
       if @client.update_attributes(params[:client])
         event = Event.new(:name=>'edited',:client=>@client,:user=>User.current)
         # associate last created audits to this event
@@ -276,10 +287,6 @@ class ClientsController < ApplicationController
     @project = @client.project
   rescue ActiveRecord::RecordNotFound
     render_404
-  end
-
-  def set_iso_countries_language
-    ISO::Countries.set_language I18n.locale.to_s
   end
 
 end

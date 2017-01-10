@@ -10,10 +10,10 @@ $(document).ready(function() {
     $.getJSON(window.location.pathname, function(data) {
       state = data.invoice.state;
     });
-    if ( state != 'sending' || i > 5 ) {
+    if ( (state != 'sending' && state != 'processing_pdf') || i > 5 ) {
       clearInterval(interval);
       $('div.flash.notice img').remove();
-      if ( state != 'sending' ) {
+      if ( state != 'sending' && state != 'processing_pdf' ) {
         location.reload(true);
       }
     }

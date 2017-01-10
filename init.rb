@@ -2,7 +2,7 @@ require 'redmine'
 
 Rails.logger.info 'Starting haltr plugin'
 
-require_dependency 'haltr'
+require 'haltr'
 
 # Haltr has plugins of his own
 # similar to config/initializers/00-core_plugins.rb in Redmine
@@ -22,16 +22,21 @@ Dir.glob(File.join(File.dirname(__FILE__), "lib/plugins/*")).sort.each do |direc
   end
 end
 
+# groupdate won't work with config.active_record.default_timezone = :local
+# https://github.com/ankane/groupdate/issues/66
+unless ActiveRecord::Base.default_timezone == :utc
+  ActiveRecord::Base.default_timezone = :utc
+end
+
 Date::DATE_FORMATS[:ddmmyy] = "%d%m%y"
 
-require_dependency 'utils'
-require_dependency 'iso_countries'
-require_dependency File.expand_path(File.join(File.dirname(__FILE__), 'app/models/export_channels'))
+require 'utils'
+require File.expand_path(File.join(File.dirname(__FILE__), 'app/models/export_channels'))
 
-require_dependency 'haltr/hooks'
+require 'haltr/hooks'
 
-if (Redmine::VERSION::MAJOR == 1 and Redmine::VERSION::MINOR >= 4) or Redmine::VERSION::MAJOR == 2
-  require_dependency 'country_iso_translater'
+if (Redmine::VERSION::MAJOR == 1 and Redmine::VERSION::MINOR >= 4) or Redmine::VERSION::MAJOR == 2 or Redmine::VERSION::MAJOR == 3
+  require 'country_iso_translater'
 else
   config.gem 'sundawg_country_codes', :lib => 'country_iso_translater'
   config.gem 'money', :version => '>=5.0.0'
@@ -69,7 +74,7 @@ Redmine::Plugin.register :haltr do
         :people    => [:index, :new, :show, :edit, :create, :update, :destroy],
         :invoices  => [:index, :new, :edit, :create, :update, :destroy, :show, :mark_sent, :mark_closed, :mark_not_sent,
                        :destroy_payment, :send_invoice, :legal, :update_payment_stuff, :amend_for_invoice, :download_new_invoices,
-                       :send_new_invoices, :duplicate_invoice, :reports, :report_channel_state, :report_invoice_list, :context_menu, :bulk_mark_as, :original,
+                       :send_new_invoices, :duplicate_invoice, :reports, :report_channel_state, :report_invoice_list, :report_received_table, :context_menu, :bulk_mark_as, :original,
                        :mark_as, :number_to_id],
         :received  => [:index, :new, :edit, :create, :update, :destroy, :show,
                        :mark_accepted, :mark_accepted_with_mail, :mark_refused,
@@ -88,7 +93,7 @@ Redmine::Plugin.register :haltr do
         :people    => [:index, :edit],
         :client_offices => [:index, :edit],
         :company_offices => [:index, :edit],
-        :invoices  => [:index, :show, :legal, :download_new_invoices, :reports, :report_channel_state, :report_invoice_list,
+        :invoices  => [:index, :show, :legal, :download_new_invoices, :reports, :report_channel_state, :report_invoice_list, :report_received_table,
                        :context_menu, :number_to_id, :edit],
         :received  => [:index, :show, :legal, :context_menu],
         :companies => [:my_company,:bank_info, :linked_to_mine, :check_iban],
@@ -105,7 +110,7 @@ Redmine::Plugin.register :haltr do
         :people    => [:index, :edit],
         :client_offices => [:index, :edit, :update],
         :company_offices => [:index, :edit, :update],
-        :invoices  => [:index, :show, :legal, :download_new_invoices, :reports, :report_channel_state, :report_invoice_list,
+        :invoices  => [:index, :show, :legal, :download_new_invoices, :reports, :report_channel_state, :report_invoice_list, :report_received_table,
                        :context_menu, :send_invoice,
                        :send_new_invoices, :number_to_id],
         :received  => [:index, :show, :legal, :context_menu],
@@ -128,8 +133,9 @@ Redmine::Plugin.register :haltr do
         :mandates => [:index,:new,:show,:create,:edit,:update,:destroy,:signed_doc] }, :require => :member
 
     permission :import_invoices,
-      { :invoices => [:import,:import_facturae],
-        :received => [:import],
+      { :invoices => [:upload,:import,:import_facturae],
+        :received => [:upload,:import],
+        :invoice_imgs => [:context_menu,:tag],
         :import_errors => [:index, :create, :show, :destroy, :context_menu] },
       :require => :member
 
@@ -170,6 +176,10 @@ Redmine::Plugin.register :haltr do
 
     permission :use_orders, {
       orders: [:index, :show, :destroy, :import, :add_comment, :create_invoice]
+    }, require: :member
+
+    permission :use_local_signature, {
+      invoices: [:base64doc]
     }, require: :member
 
     # Loads permisons from config/channels.yml
@@ -219,3 +229,7 @@ end
 
 Delayed::Worker.max_attempts = 3
 Audited.current_user_method = :find_current_user
+
+CountrySelect::FORMATS[:default] = lambda do |country|
+  [country.translations[I18n.locale.to_s] || country.name, country.alpha2.downcase]
+end

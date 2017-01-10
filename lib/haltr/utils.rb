@@ -33,6 +33,7 @@ module Haltr
           xpaths[:invoice_number]     = "//Invoices/Invoice/InvoiceHeader/InvoiceNumber"
           xpaths[:invoice_series]     = "//Invoices/Invoice/InvoiceHeader/InvoiceSeriesCode"
           xpaths[:amend_of]           = "//Invoices/Invoice/InvoiceHeader/Corrective/InvoiceNumber"
+          xpaths[:amend_of_serie]     = "//Invoices/Invoice/InvoiceHeader/Corrective/InvoiceSeriesCode"
           xpaths[:amend_type]         = "//Invoices/Invoice/InvoiceHeader/Corrective/CorrectionMethod"
           xpaths[:amend_reason]       = "//Invoices/Invoice/InvoiceHeader/Corrective/ReasonCode"
           xpaths[:invoice_date]       = "//Invoices/Invoice/InvoiceIssueData/IssueDate"

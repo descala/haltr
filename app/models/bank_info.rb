@@ -1,5 +1,5 @@
 class BankInfo < ActiveRecord::Base
-  unloadable
+
   include Haltr::BankInfoValidator
   belongs_to :company
   has_many :invoices, :dependent => :nullify

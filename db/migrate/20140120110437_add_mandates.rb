@@ -8,7 +8,7 @@ class AddMandates < ActiveRecord::Migration
       t.integer :client_id
       t.text    :signed_doc, :limit => 16777215
 
-      t.timestamps
+      t.timestamps null: false
     end
   end
 end

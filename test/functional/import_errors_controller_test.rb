@@ -1,10 +1,11 @@
-require File.dirname(__FILE__) + '/../test_helper'
+require File.expand_path('../../test_helper', __FILE__)
 
 class ImportErrorsControllerTest < ActionController::TestCase
   fixtures :companies, :invoices, :import_errors
 
   def setup
     User.current = nil
+    Setting.rest_api_enabled = '1'
   end
 
   test 'require auth' do

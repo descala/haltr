@@ -1,5 +1,4 @@
 class ChartsController < ApplicationController
-  unloadable
 
   before_filter :find_project_by_project_id
   before_filter :find_optional_client, :only => [:invoice_status, :update_chart_preference]

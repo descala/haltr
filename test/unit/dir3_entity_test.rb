@@ -1,4 +1,4 @@
-require File.dirname(__FILE__) + '/../test_helper'
+require File.expand_path('../../test_helper', __FILE__)
 
 class Dir3EntityTest < ActiveSupport::TestCase
   fixtures :dir3_entities
