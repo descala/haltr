@@ -48,4 +48,11 @@ class InvoiceImgTest < ActiveSupport::TestCase
     assert_equal "€600.00", invoice_img.data[:tokens][66][:text]
     assert_equal 597, invoice_img.data[:tokens][66][:x0]
   end
+
+  test "does not create client if invalid" do
+    invoice_img = invoice_imgs(:image2)
+    invoice_img.update_invoice
+    invoice = invoice_img.invoice
+    assert_equal nil, invoice.client
+  end
 end

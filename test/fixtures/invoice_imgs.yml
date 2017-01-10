@@ -42,3 +42,29 @@ image1:
     width: 707
     height: 1000
     name: 93915486220150505-23017-19yd1t8.pdf
+
+image2:
+  id: 2
+  invoice_id: 150
+  img: '<%= File.read(Rails.root.join("plugins/haltr/test/fixtures/documents/invoice_pdf_signed_img.base64")) %>'
+  data: |
+    ---
+    tags:
+      seller_taxcode: 1
+      seller_name: 2
+    tokens:
+      1:
+        text: "B65695256"
+        x0: "597"
+        y0: 412
+        x1: 636
+        y1: 424
+      2:
+        text: ""
+        x0: "597"
+        y0: 412
+        x1: 636
+        y1: 424
+    width: 707
+    height: 1000
+    name: 93915486220150505-23017-19yd1t8.pdf
