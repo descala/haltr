@@ -144,6 +144,7 @@ class Event < ActiveRecord::Base
       self.project = invoice.project if invoice
       self.project = client.project  if client
     end
+  rescue RangeError
   end
 
   private
