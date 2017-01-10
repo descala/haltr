@@ -326,7 +326,6 @@ i15pdf:
   type: ReceivedInvoice
   project_id: 2
   state: "processing_pdf"
-  client_id: 1
   currency: EUR
   date: 2014-12-16
   due_date: 2015-01-16

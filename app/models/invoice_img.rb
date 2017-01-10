@@ -38,7 +38,7 @@ class InvoiceImg < ActiveRecord::Base
     self.data[:width] = initial_data['width']
     self.data[:height] = initial_data['height']
     self.data[:name] = initial_data['name']
-    unless initial_data['currency'].empty?
+    unless initial_data['currency'].blank?
       self.data[:currency] = initial_data['currency']
     end
     initial_tags.each do |tag, token_number|
@@ -127,18 +127,22 @@ class InvoiceImg < ActiveRecord::Base
       if tagv(:seller_taxcode)
         invoice.client = invoice.company.project.clients.where(taxcode: tagv(:seller_taxcode).gsub(/\s/,'')).first
         if !invoice.client and  tagv(:seller_name)
-          country_code = tagv(:seller_taxcode)[0..1] if tagv(:seller_taxcode)
-          country_code = iso_country_from_text(tagv(:seller_country)) unless country_code and Valvat::Utils::EU_COUNTRIES.include?(country_code.upcase)
-          new_client, client_office = Haltr::Utils.client_from_hash(
-            project: invoice.project,
-            name:    tagv(:seller_name),
-            taxcode: tagv(:seller_taxcode),
-            country: country_code.downcase,
-            currency: currency,
-            language: tags[:language]
-          )
-          invoice.client = new_client
-          invoice.client_office = client_office
+          begin
+            country_code = tagv(:seller_taxcode)[0..1] if tagv(:seller_taxcode)
+            country_code = iso_country_from_text(tagv(:seller_country)) unless country_code and Valvat::Utils::EU_COUNTRIES.include?(country_code.upcase)
+            new_client, client_office = Haltr::Utils.client_from_hash(
+              project: invoice.project,
+              name:    tagv(:seller_name),
+              taxcode: tagv(:seller_taxcode),
+              country: country_code.downcase,
+              currency: currency,
+              language: tags[:language]
+            )
+            invoice.client = new_client
+            invoice.client_office = client_office
+          rescue StandardError
+            # client not OK
+          end
         end
       end
     end
@@ -226,7 +230,7 @@ class InvoiceImg < ActiveRecord::Base
   end
 
   def currency
-    data[:currency]
+    data[:currency] || 'EUR'
   end
 
   def fuzzy_match_client
@@ -240,7 +244,7 @@ class InvoiceImg < ActiveRecord::Base
     best_text = nil
     best_score = 0.6
     invoice.company.project.clients.each do |client|
-      next if client.taxcode.empty?
+      next if client.taxcode.blank?
       text, score = fm.find_with_score(client.taxcode)
       if score and  score > best_score
         best_client_match = client
@@ -259,7 +263,7 @@ class InvoiceImg < ActiveRecord::Base
         v[:text].gsub(/\.|:/,'')
       end.flatten.compact.join('').downcase
       invoice.company.project.clients.each do |client|
-        next if client.taxcode.empty?
+        next if client.taxcode.blank?
         if all_text.include?(client.taxcode.downcase)
           best_client_match = client
           break
