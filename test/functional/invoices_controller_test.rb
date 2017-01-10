@@ -16,6 +16,11 @@ class InvoicesControllerTest < ActionController::TestCase
     get :index, :id => 'onlinestore'
   end
 
+  test 'new invoice form' do
+    get :new, :project_id => 'onlinestore'
+    assert_response :success
+  end
+
   test 'facturae30' do
     get :show, :id => 4, :format => 'facturae30'
     assert_response :success

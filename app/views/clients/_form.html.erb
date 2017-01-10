@@ -106,7 +106,7 @@
     </p>
     <p class="col span-1-de-3"></p>
     <p class="col span-1-de-3">
-    <% if User.current.allowed_to?(:use_local_signature, @project) or @client.sign_with_local_certificate? -%>
+    <% if User.current.allowed_to?(:use_local_signature, @project) or (@client and @client.sign_with_local_certificate?) -%>
       <%= f.check_box :sign_with_local_certificate, no_label: true %>
       <%= l(:field_sign_with_local_certificate) %>
     <% end -%>
