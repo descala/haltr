@@ -1472,7 +1472,7 @@ class InvoicesController < ApplicationController
 
   def find_invoice_by_number
     @project = User.current.project
-    @invoice = @project.invoices.find_last_by_number(params[:number])
+    @invoice = @project.invoices.where(number: params[:number]).last
     if @invoice.nil?
       respond_to do |format|
         format.html {
