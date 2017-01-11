@@ -19,7 +19,8 @@ module InvoicesHelper
   end
 
   def edi_number(num)
-    haltr_precision(num).gsub(',','.')
+    # 123456.78
+    number_with_precision(num, precision: 2, locale: :en)
   end
 
   def edi_date(date)
