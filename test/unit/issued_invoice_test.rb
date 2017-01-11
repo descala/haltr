@@ -32,4 +32,20 @@ class IssuedInvoiceTest < ActiveSupport::TestCase
     assert_equal old_updated_at, i.updated_at, 'updated_at does not change'
   end
 
+  test 'AASM' do
+    i = IssuedInvoice.find 4
+    assert_equal 'new', i.state
+    i.success_sending
+    assert_equal 'sent', i.state
+    i.registered_notification
+    assert_equal 'registered', i.state
+    i.accept_notification
+    assert_equal 'accepted', i.state
+    i.annotated_notification
+    assert_equal 'annotated', i.state
+    # does not change state in transition is invalid
+    i.sent_notification
+    assert_equal 'annotated', i.state
+  end
+
 end

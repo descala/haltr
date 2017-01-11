@@ -115,7 +115,7 @@ class IssuedInvoice < InvoiceDocument
       transitions to: :cancelled
     end
     event :annotated_notification do
-      transitions to: :accounted
+      transitions to: :annotated
     end
   end
 
