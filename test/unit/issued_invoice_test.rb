@@ -46,6 +46,13 @@ class IssuedInvoiceTest < ActiveSupport::TestCase
     # does not change state in transition is invalid
     i.sent_notification
     assert_equal 'annotated', i.state
+    # from inexistent state, raises exception
+    i.state = 'accounted'
+    i.save
+    assert_equal 'accounted', i.state
+    assert_raises AASM::UndefinedState do
+      i.paid_notification
+    end
   end
 
 end
