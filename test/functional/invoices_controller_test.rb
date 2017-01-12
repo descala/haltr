@@ -176,6 +176,7 @@ class InvoicesControllerTest < ActionController::TestCase
     assert_equal "processing_pdf", invoice.state
     assert !invoice.modified_since_created?
     assert invoice.original
+    assert 'processing_pdf', invoice.events.order(:id).last.name
   end
 
   test 'create invoice without client when there are no clients' do

@@ -1394,8 +1394,8 @@ class InvoicesController < ApplicationController
             @invoice.has_been_read = true
             @invoice.file_name = attachment.filename
             @invoice.save(validate: false)
-            Event.create(:name=>'processing_pdf',:invoice=>@invoice)
             Haltr::SendPdfToWs.send(@invoice)
+            @invoice.processing_pdf!
             flash[:notice] = "#{l(:notice_invoice_processing_pdf)}"
           else
             errors <<  "unknown file type: '#{attachment.content_type}' for #{attachment.filename}"
