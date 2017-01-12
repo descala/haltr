@@ -12,6 +12,11 @@ da:
         significant: false
         tax_name: "MOMS"
 
+  activerecord:
+    errors:
+      messages:
+        record_invalid: 'Validation failed: %{errors}'
+
   # community
   label_company: Virksomhed
   label_my_company: Min virksomhed

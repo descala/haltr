@@ -12,6 +12,11 @@ sv:
         significant: false
         tax_name: "VAT"
 
+  activerecord:
+    errors:
+      messages:
+        record_invalid: 'Validation failed: %{errors}'
+
   # community
   label_company: Företag
   label_my_company: Mitt företag

@@ -905,4 +905,16 @@ class InvoiceTest < ActiveSupport::TestCase
     assert_equal 2, invoice.attachments.size
   end
 
+  test 'import facturae with invalid IBAN in PaymentDetails raises error with I18n translation' do
+    I18n.locale = :es
+    xml = File.new(File.join(File.dirname(__FILE__),'../fixtures/documents/invoice_facturae32_issued8.xml')).read
+    xml.gsub!('ES8023100001180000012345','ESXXXXXXXXXXXXXXX000012345')
+    err = assert_raises RuntimeError do
+      Invoice.create_from_xml(xml,companies(:company1),"1234",'uploaded',User.current.name,nil,false)
+    end
+    assert_equal "La validación ha fallado: El IBAN no es válido", err.message
+    I18n.locale = :en
+  end
+
+
 end

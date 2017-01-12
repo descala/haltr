@@ -12,6 +12,11 @@ fr:
         significant: false
         tax_name: TVA
 
+  activerecord:
+    errors:
+      messages:
+        record_invalid: 'Validation failed: %{errors}'
+
   # community
   label_company: Compagnie
   label_my_company: Ma compagnie

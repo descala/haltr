@@ -21,6 +21,11 @@ ca:
         significant: false
         tax_name: "IVA"
 
+  activerecord:
+    errors:
+      messages:
+        record_invalid: 'La validació ha fallat: %{errors}'
+
   # community
   label_company: Empresa
   label_my_company: La meva empresa

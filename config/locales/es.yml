@@ -25,6 +25,11 @@ es:
     formats:
       default: "%d-%m-%Y"
 
+  activerecord:
+    errors:
+      messages:
+        record_invalid: 'La validación ha fallado: %{errors}'
+
   # community
   label_company: Empresa
   label_my_company: Mi empresa
