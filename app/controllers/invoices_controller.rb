@@ -880,9 +880,8 @@ class InvoicesController < ApplicationController
     set_sent_and_closed
     @invoices_not_sent = []
     unless @invoice.has_been_read or User.current.projects.include?(@invoice.project) or User.current.admin?
-      Event.create!(:name=>'read',:invoice=>@invoice,:user=>User.current)
-      @invoice.update_attribute(:has_been_read,true)
-      @invoice.read
+      @invoice.update_column(:has_been_read,true)
+      @invoice.read!
     end
     render :layout=>"public"
   rescue ActionView::MissingTemplate
@@ -1034,6 +1033,7 @@ class InvoicesController < ApplicationController
       return
     else
       @invoice = invoices.first
+      find_offices
     end
   end
 
@@ -1060,6 +1060,12 @@ class InvoicesController < ApplicationController
       end
       @external_company = ExternalCompany.where('taxcode in (?, ?)', @client.taxcode, taxcode2).first
     end
+    find_offices
+  rescue ActiveRecord::RecordNotFound
+    render_404
+  end
+
+  def find_offices
     if @invoice.client_office
       # overwrite client attributes with its office
       ClientOffice::CLIENT_FIELDS.each do |f|
@@ -1075,8 +1081,6 @@ class InvoicesController < ApplicationController
         @company[f] = @invoice.company_office.send(f)
       end
     end
-  rescue ActiveRecord::RecordNotFound
-    render_404
   end
 
   def find_invoices

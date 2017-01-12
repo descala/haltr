@@ -65,11 +65,11 @@ class InvoiceDocument < Invoice
     name = aasm.current_event.to_s.gsub('!','')
     unless Event.automatic.include?(name)
       if name == 'queue' and !new?
-        Event.create(name: 'requeue', invoice: self, user_id: user)
+        Event.create(name: 'requeue', invoice: self, user: user)
       elsif name =~ /^mark_as_/
-        Event.create(name: "done_#{name}", invoice: self, user_id: user)
+        Event.create(name: "done_#{name}", invoice: self, user: user)
       else
-        Event.create(name: name, invoice: self, user_id: user)
+        Event.create(name: name, invoice: self, user: user)
       end
     end
   end
