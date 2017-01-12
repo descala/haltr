@@ -103,6 +103,7 @@ sv:
   transfer: Bankbetalning
   transfer_to: Bankbetalning till %{bank_account}
   cheque: Cheque
+  reposition: Reposition
   other: Annan
   requires_client_bank_account: Kundens bankkonto krävs
   requires_company_bank_account: Bankkonto måste registreras

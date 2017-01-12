@@ -103,6 +103,7 @@ da:
   transfer: Bankoverførsel
   transfer_to: Bankoverførsel til %{bank_account}
   cheque: Cheque
+  reposition: Reposition
   other: Andre
   requires_client_bank_account: kræver klient bankkonto
   requires_company_bank_account: kræver self-service bank konto

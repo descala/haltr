@@ -105,6 +105,7 @@ en:
   transfer: Bank transfer
   transfer_to: Bank transfer to %{bank_account}
   cheque: Cheque
+  reposition: Reposition
   other: Other
   requires_client_bank_account: requires client bank account
   requires_company_bank_account: requires a bank account in your company
