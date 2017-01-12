@@ -1,5 +1,5 @@
 <label for="invoice_<%=role%>">
-  <%= l(role) %><%= required_field_span('dir3') %><%= select_to_edit(role) %>
+  <%= l(role) %><%= required_field_span(%w(organ_gestor oficina_comptable unitat_tramitadora).include?(role.to_s) ? 'dir3' : role) %><%= select_to_edit(role) %>
 </label>
 
 <% if @external_company and @external_company.send("dir3_#{role.pluralize}").any? -%>
