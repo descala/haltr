@@ -676,7 +676,7 @@ _INV
     if amend_of
       #TODO: comprovar amend_of_serie
       raise "Cannot amend received invoices" if invoice.is_a? ReceivedInvoice
-      amended = company.project.issued_invoices.find_last_by_number(amend_of)
+      amended = company.project.issued_invoices.where(number: amend_of).last
       if amended and amend_type == '01'
         invoice.amend_of = amended
       elsif amended and amend_type == '02'
