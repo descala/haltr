@@ -47,6 +47,7 @@ module Haltr
           imap.create(folder)
         end
         imap.append(folder, mail_message.to_s.gsub(/\n/, "\r\n"), [:Draft], Time.now)
+        imap.disconnect
       end
     end
 
