@@ -348,6 +348,14 @@ module Haltr
       #
       def client_from_hash(client_hash)
         project = client_hash[:project]
+        hook_retval = Redmine::Hook.call_hook(
+          :client_from_hash_begin,
+          client_hash: client_hash,
+          project: project
+        )
+        if hook_retval.present?
+          client_hash = hook_retval[0]
+        end
         client = nil
         client_office = nil
         if client_hash[:country] and client_hash[:country].size == 3
