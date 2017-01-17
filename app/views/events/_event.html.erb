@@ -12,7 +12,7 @@
     message = I18n.t(*e.notes, :default => e.notes)
   end
 -%>
-<%= Redmine::CodesetUtil.replace_invalid_utf8(message) %>
+<%= Redmine::CodesetUtil.replace_invalid_utf8(message.to_s) %>
 
 <% end -%>
 <% unless e.codi_registre.blank? -%>
