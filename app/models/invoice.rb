@@ -50,6 +50,7 @@ class Invoice < ActiveRecord::Base
   after_create :increment_counter
   before_destroy :decrement_counter
   before_save :call_before_save_hook
+  before_validation :set_lines_order
 
   accepts_nested_attributes_for :invoice_lines,
     :allow_destroy => true,
@@ -96,14 +97,6 @@ class Invoice < ActiveRecord::Base
     self.currency ||= self.client.currency rescue nil
     self.currency ||= self.company.currency rescue nil
     self.currency ||= Setting.plugin_haltr['default_currency']
-    invoice_lines.to_enum.with_index(1) do |line, i|
-      if line.position.is_a?(Integer)
-        i=line.position
-      else
-        line.position = i
-      end
-      i+=1
-    end
   end
 
   def currency=(v)
@@ -1290,6 +1283,18 @@ _INV
   def fields_to_utf8
     TO_UTF_FIELDS.each do |f|
       self.send("#{f}=",Redmine::CodesetUtil.replace_invalid_utf8(self.send(f)))
+    end
+  end
+
+  def set_lines_order
+    i=1
+    invoice_lines.each do |line|
+      if line.position.is_a?(Integer)
+        i=line.position
+      else
+        line.position = i
+      end
+      i+=1
     end
   end
 

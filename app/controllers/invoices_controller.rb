@@ -173,6 +173,15 @@ class InvoicesController < ApplicationController
       @to_amend = Invoice.find_by_amend_id @invoice.id
       @amend_type = 'total'
     end
+    i=1
+    @invoice.invoice_lines.each do |line|
+      if line.position.is_a?(Integer)
+        i=line.position
+      else
+        line.position = i
+      end
+      i+=1
+    end
   end
 
   def create
