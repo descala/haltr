@@ -24,6 +24,7 @@ class Tax < ActiveRecord::Base
   #  :unless => Proc.new { |tax| tax.company_id.nil? }
   validates_numericality_of :percent, :equal_to => 0,
     :if => Proc.new { |tax| ["Z","E","NS"].include? tax.category }
+  validates :comment, length: {maximum: 255}
 
   SPAIN_TAXCODES = {
     'IVA'      => '01', # Impuesto sobre el valor añadido
