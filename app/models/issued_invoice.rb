@@ -161,7 +161,7 @@ class IssuedInvoice < InvoiceDocument
       "date <= ? and clients.invoice_format in (?)",
       Date.today,
       ExportChannels.can_send.keys
-    )
+    ).order(id: :asc, number: :asc)
     invoices_extra_filter = Redmine::Hook.call_hook(
       :model_invoice_can_be_sent_additional_filters, :invoices => invoices
     )
