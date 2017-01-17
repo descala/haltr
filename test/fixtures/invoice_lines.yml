@@ -150,6 +150,7 @@ i13_line1:
   discount_text: "discount per line"
   charge_reason: "charge per line"
   charge: 10
+  position: 1
 
 i13_line2:
   invoice_id: 13
@@ -157,6 +158,7 @@ i13_line2:
   unit: 1
   price: 100
   description: "line 2 of invoice i13"
+  position: 2
 
 i14_line1:
   invoice_id: 14
