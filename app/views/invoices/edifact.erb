@@ -24,7 +24,7 @@ DTM+171:<%=edi_date @invoice.order_date%>:102'
 RFF+CT:<%=@invoice.contract_number.to_s[0..34]%>'
 <% end %>
 NAD+SCO+<%=@company.edi_code%>::9++<%=@company.name.to_s[0..34]%><%="::#{@company.company_identifier.to_s[0..19]}" unless @company.company_identifier.blank?%>+<%=@company.address.to_s[0..34]%>+<%=@company.city.to_s[0..34]%>+<%=@company.province.to_s[0..34]%>+<%=@company.postalcode%>+<%=@company.country%>'
-RFF+VA:<%=@company.edi_code%>'
+RFF+VA:<%=@company.taxcode%>'
 NAD+BCO+<%=@client.edi_code%>::9++<%=@client.name%><%="::#{@client.company_identifier}" unless @client.company_identifier.blank?%>+<%=@client.address%>+<%=@client.city%>+<%=@client.province%>+<%=@client.postalcode%>+<%=@client.country%>'
 RFF+VA:<%=@client.taxcode%>'
 NAD+BY+<%=@client.buyer_edi_code%>::9'
@@ -45,6 +45,9 @@ MOA+66:<%=edi_number l.taxable_base%>'
 PRI+AAA:<%=edi_number l.price%>'
 <% if @invoice.delivery_note_number.present? or l.delivery_note_number.present? -%>
 RFF+DQ:<%= l.delivery_note_number.present? ? l.delivery_note_number : @invoice.delivery_note_number %>'
+<% end -%>
+<% if l.issuer_transaction_reference.present? -%>
+RFF+PRR:<%= l.issuer_transaction_reference %>'
 <% end -%>
 <% l.taxes.each do |tax| -%>
 TAX+7+VAT+++:::<%=edi_number tax.percent%>'
