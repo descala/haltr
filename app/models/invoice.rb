@@ -37,6 +37,7 @@ class Invoice < ActiveRecord::Base
   }
 
   validates_presence_of :date, :currency, :project_id, :unless => Proc.new {|i| i.type == "ReceivedInvoice" }
+  validates :date, format: { with: /\A[0-9]{4}-[0-9]{1,2}-[0-9]{1,2}\z/ }
   validates_presence_of :client, :unless => Proc.new {|i| %w(Quote ReceivedInvoice).include? i.type }
   validates_inclusion_of :currency, :in  => Money::Currency.table.collect {|k,v| v[:iso_code] }, :unless => Proc.new {|i| i.type == "ReceivedInvoice" }
   validates_numericality_of :charge_amount_in_cents, :allow_nil => true
