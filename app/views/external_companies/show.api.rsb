@@ -1,5 +1,6 @@
 # vi: ft=ruby
 
 api.external_company do
-  api.channel ExportChannels[@external_company.invoice_format]['options']
+  api.channel_name @external_company.invoice_format
+  api.channel_options ExportChannels[@external_company.invoice_format]['options']
 end
