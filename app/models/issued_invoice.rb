@@ -1,8 +1,4 @@
-# to draw states graph execute:
-#   rake state_machine:draw FILE=invoice.rb CLASS=IssuedInvoice ORIENTATION=landscape
 class IssuedInvoice < InvoiceDocument
-
-  unloadable
 
   has_one :created_invoice, class_name: 'ReceivedInvoice',
     foreign_key: 'created_from_invoice_id'
@@ -22,108 +18,109 @@ class IssuedInvoice < InvoiceDocument
   before_save :set_state_updated_at
   before_save :override_line_values, :unless => Proc.new {|i| i.new_record? }
 
-  # new sending sent error discarded closed
-  state_machine :state, :initial => :new do
-    before_transition do |invoice,transition|
-      user = transition.args.first.is_a?(User) ? transition.args.first : User.current
-      unless Event.automatic.include?(transition.event.to_s)
-        if transition.event.to_s == 'queue' and !invoice.state?(:new)
-          Event.create(:name=>'requeue',:invoice=>invoice,:user=>user)
-        elsif transition.event.to_s =~ /^mark_as_/
-          Event.create(name: "done_#{transition.event.to_s}", invoice: invoice, user: user)
-        else
-          Event.create(:name=>transition.event.to_s,:invoice=>invoice,:user=>user)
-        end
-      end
-    end
+  include AASM
+
+  aasm column: :state, skip_validation_on_save: true, whiny_transitions: false do
+    state :new, initial: true
+    state :sending, :sent, :read, :error, :closed, :discarded, :accepted,
+      :refused, :registered, :allegedly_paid, :cancelled, :annotated
+
+    before_all_events :aasm_create_event
+
     event :manual_send do
-      transition [:new,:sending,:error,:discarded] => :sent
+      transitions from: [:new,:sending,:error,:discarded], to: :sent
     end
     event :queue do
-      transition [:new, :error, :discarded, :refused] => :sending
+      transitions from: [:new, :error, :discarded, :refused], to: :sending
     end
     event :success_sending do
-      transition [:new,:sending,:error,:discarded] => :sent
+      transitions from: [:new,:sending,:error,:discarded], to: :sent
     end
     event :mark_unsent do
-      transition [:sent,:read,:sending,:closed,:error,:discarded] => :new
+      transitions from: [:sent,:read,:sending,:closed,:error,:discarded], to: :new
     end
     event :error_sending do
-      transition :sending => :error
+      transitions from: :sending, to: :error
     end
     event :close do
-      transition [:new,:sent,:read,:registered] => :closed
+      transitions from: [:new,:sent,:read,:registered], to: :closed
     end
     event :discard_sending do
-      transition [:error,:sending] => :discarded
+      transitions from: [:error,:sending], to: :discarded
     end
     event :paid do
-      transition [:sent,:read,:accepted,:allegedly_paid,:registered] => :closed
+      transitions from: [:sent,:read,:accepted,:allegedly_paid,:registered], to: :closed
     end
     event :unpaid do
-      transition :closed => :sent
+      transitions from: :closed, to: :sent
     end
     event :bounced do
-      transition :sent => :discarded
+      transitions from: :sent, to: :discarded
     end
     event :accept_notification do
-      transition all => :accepted
+      transitions to: :accepted
     end
     event :refuse_notification do
-      transition all => :refused
+      transitions to: :refused
     end
     event :paid_notification do
-      transition all => :allegedly_paid
+      transitions to: :allegedly_paid
     end
     event :sent_notification do
-      transition :sent => :sent
+      transitions from: :sent, to: :sent
     end
     event :delivered_notification do
-      transition :sent => :sent
+      transitions from: :sent, to: :sent
     end
     event :registered_notification do
-      transition all => :registered
+      transitions to: :registered
     end
     event :amend_and_close do
-      transition all=> :closed
+      transitions to: :closed
+    end
+    event :processing_pdf do
+      transitions from: :new, to: :processing_pdf
+    end
+    event :processed_pdf do
+      transitions from: :processing_pdf, to: :new
     end
     event :mark_as_new do
-      transition all => :new
+      transitions to: :new
     end
     event :mark_as_sent do
-      transition all => :sent
+      transitions to: :sent
     end
     event :mark_as_accepted do
-      transition all => :accepted
+      transitions to: :accepted
     end
     event :mark_as_registered do
-      transition all => :registered
+      transitions to: :registered
     end
     event :mark_as_refused do
-      transition all => :refused
+      transitions to: :refused
     end
     event :mark_as_closed do
-      transition all => :closed
+      transitions to: :closed
     end
     event :read do
-      transition :sent => :read
+      transitions from: :sent, to: :read
     end
     event :received_notification do
-      transition all => :read
+      transitions to: :read
     end
     event :failed_notification do
-      transition all => :error
+      transitions to: :error
     end
     event :cancelled_notification do
-      transition all => :cancelled
+      transitions to: :cancelled
     end
     event :annotated_notification do
-      transition all => :accounted
+      transitions to: :annotated
     end
   end
 
-  def sent?
-    state?(:sent) or state?(:closed) or state?(:sending)
+  def has_been_sent?
+    sent? or closed? or sending?
   end
 
   def label
@@ -159,26 +156,34 @@ class IssuedInvoice < InvoiceDocument
   end
 
   def self.find_can_be_sent(project)
-    project.issued_invoices.includes(:client).all(
-      :conditions => [
-        "state='new' and number is not null and date <= ? and clients.invoice_format in (?)",
-        Date.today,
-        ExportChannels.can_send.keys
-      ], :order => "number ASC"
+    invoices = project.issued_invoices.includes(:client).references(:client).where(
+      "state='new' and " +
+      "date <= ? and clients.invoice_format in (?)",
+      Date.today,
+      ExportChannels.can_send.keys
+    ).order(id: :asc, number: :asc)
+    invoices_extra_filter = Redmine::Hook.call_hook(
+      :model_invoice_can_be_sent_additional_filters, :invoices => invoices
     )
+    invoices_extra_filter.any? ? invoices_extra_filter.first : invoices
   end
 
   def self.find_not_sent(project)
-    project.issued_invoices.all :conditions => "state='new' and number is not null", :order => "number ASC"
+    project.issued_invoices.where("state='new' and number is not null")
   end
 
   def self.candidates_for_payment(payment)
     # order => older invoices to get paid first
-    find :all, :conditions => ["project_id = ? and total_in_cents = ? and date <= ? and state != 'closed'", payment.project_id, payment.amount_in_cents, payment.date], :order => "due_date ASC"
+    where(
+      "project_id = ? and total_in_cents = ? and date <= ? and state != 'closed'",
+      payment.project_id,
+      payment.amount_in_cents,
+      payment.date
+    ).order("due_date ASC")
   end
 
   def past_due?
-    !state?(:closed) && due_date && due_date < Date.today
+    !closed? && due_date && due_date < Date.today
   end
 
   def self.past_due_total(project)
@@ -241,9 +246,11 @@ class IssuedInvoice < InvoiceDocument
   end
 
   def self.states
-    state_machine.states.collect do |s|
-      s.name
-    end
+    aasm.states.map(&:name)
+  end
+
+  def local_cert_js
+    "doSign('/invoices/base64doc/#{id}/','#{ExportChannels.format(client.invoice_format)}')"
   end
 
   protected
@@ -271,12 +278,12 @@ class IssuedInvoice < InvoiceDocument
   def update_status
     update_imports
     if is_paid?
-      if can_paid?
+      if may_paid?
         update_attribute(:state, :closed)
         Event.create(name: 'paid', invoice: self, user: User.current)
       end
     else
-      if state?(:closed)
+      if closed?
         update_attribute(:state, :sent)
         Event.create(name: 'unpaid', invoice: self, user: User.current)
       end

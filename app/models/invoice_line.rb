@@ -1,7 +1,5 @@
 class InvoiceLine < ActiveRecord::Base
 
-  unloadable
-
   include Haltr::FloatParser
   float_parse :discount_percent, :price, :quantity, :charge
 
@@ -31,15 +29,17 @@ class InvoiceLine < ActiveRecord::Base
   attr_protected :created_at, :updated_at
 
   belongs_to :invoice
-  has_many :taxes, :class_name => "Tax", :order => "percent", :dependent => :destroy
+  has_many :taxes, -> {order :percent}, :class_name => "Tax", :dependent => :destroy
   validates_numericality_of :quantity, :price
-  validates_numericality_of :charge, :discount_percent, :allow_nil => true
+  validates_numericality_of :charge, :discount_percent, :position, :allow_nil => true
   validates_numericality_of :sequence_number, :allow_nil => true, :allow_blank => true
 
   accepts_nested_attributes_for :taxes,
     :allow_destroy => true
   validates_associated :taxes
   validate :has_same_category_iva_tax, if: Proc.new {|line| line.taxes.any? {|t| t.name == 'RE' } }
+
+  scope :sorted, lambda { order("#{table_name}.position ASC") }
 
   # Coste Total.
   # Quantity x UnitPriceWithoutTax
@@ -167,6 +167,10 @@ _LINE
         errors.add(:base, l(:re_tax_without_iva_same_category, :line => description))
       end
     end
+  end
+
+  def <=>(line)
+    position <=> line.position
   end
 
   private

@@ -38,7 +38,8 @@
     <%= f.text_field :province %>
     </p>
     <p class="col span-1-de-2">
-    <%= f.label_for_field :country, :required => true %><%= f.iso_country_select :country, [:es] %>
+    <%= f.label_for_field :country, :required => true %>
+    <%= f.country_select :country, priority_countries: countries_of_language(User.current.language) %>
     </p>
   </div>
   <div class="seccio grup">

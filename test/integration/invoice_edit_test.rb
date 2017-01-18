@@ -1,15 +1,15 @@
-require File.dirname(__FILE__) + '/../test_helper'
+require File.expand_path('../../test_helper', __FILE__)
 
-class InvoiceEditTest < ActionController::IntegrationTest
+class InvoiceEditTest < Redmine::IntegrationTest
 
-  # TODO fixtures here break other tests ???
+  fixtures :invoices, :invoice_lines, :taxes, :companies, :clients
 
   def test_edit_invoice_tax_with_comment
     post "/login", :username => 'jsmith', :password => 'jsmith'
 
     # This is a simple invoice. 100 EUR with a 10% VAT tax
-#    get "/invoices/4"
-#    assert_response :success
+    get "/invoices/4"
+    assert_response :success
 
     post "/invoices/4",
       {

@@ -4,22 +4,24 @@ module Haltr
     # 1 - cash (al comptat)
     # 2 - debit (rebut domiciliat)
     # 4 - transfer (transferència)
-    PAYMENT_CASH     = 1
-    PAYMENT_DEBIT    = 2
-    PAYMENT_TRANSFER = 4
-    PAYMENT_AWARDING = 7
-    PAYMENT_CHEQUE   = 12
-    PAYMENT_SPECIAL  = 13
-    PAYMENT_CREDIT   = 19
+    PAYMENT_CASH       = 1
+    PAYMENT_DEBIT      = 2
+    PAYMENT_TRANSFER   = 4
+    PAYMENT_AWARDING   = 7
+    PAYMENT_CHEQUE     = 11
+    PAYMENT_REPOSITION = 12
+    PAYMENT_SPECIAL    = 13
+    PAYMENT_CREDIT     = 19
 
     PAYMENT_CODES = {
-      PAYMENT_CASH     => {:facturae => '01', :ubl => '10', :edifact => '10'},
-      PAYMENT_DEBIT    => {:facturae => '02', :ubl => '49', :edifact => '42'},
-      PAYMENT_TRANSFER => {:facturae => '04', :ubl => '31', :edifact => '31'},
-      PAYMENT_AWARDING => {:facturae => '07', :ubl => '??', :edifact => ''  },
-      PAYMENT_CHEQUE   => {:facturae => '12', :ubl => '??', :edifact => '20'},
-      PAYMENT_SPECIAL  => {:facturae => '13', :ubl => '??', :edifact => ''  },
-      PAYMENT_CREDIT   => {:facturae => '19', :ubl => '??', :edifact => ''  },
+      PAYMENT_CASH       => {facturae: '01', ubl: '10', edifact: '10'},
+      PAYMENT_DEBIT      => {facturae: '02', ubl: '49', edifact: '42'},
+      PAYMENT_TRANSFER   => {facturae: '04', ubl: '31', edifact: '31'},
+      PAYMENT_AWARDING   => {facturae: '07', ubl: '??', edifact: ''  },
+      PAYMENT_CHEQUE     => {facturae: '11', ubl: '??', edifact: '20'},
+      PAYMENT_REPOSITION => {facturae: '12', ubl: '??', edifact: ''  },
+      PAYMENT_SPECIAL    => {facturae: '13', ubl: '??', edifact: ''  },
+      PAYMENT_CREDIT     => {facturae: '19', ubl: '??', edifact: ''  },
     }
 
     def payment_method=(v)
@@ -67,6 +69,7 @@ module Haltr
       pm << [I18n.t("fa_payment_method_19"),PAYMENT_CREDIT]
       pm << [I18n.t("awarding"),PAYMENT_AWARDING]
       pm << [I18n.t("cheque"),PAYMENT_CHEQUE]
+      pm << [I18n.t("reposition"),PAYMENT_REPOSITION]
       pm << [I18n.t("other"),PAYMENT_SPECIAL]
     end
 

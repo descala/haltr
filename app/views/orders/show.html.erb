@@ -12,12 +12,12 @@
       <% end -%>
       <li><%= link_to l(:download_original), project_order_path(@order, project_id: @project, download: true), class: 'icon icon-attachment' %></li>
       <li><%= link_to l(:download_as_pdf), project_order_path(@order, project_id: @project, format: :pdf), class: 'icon icon-attachment' %></li>
-      <li><%= link_to_if_authorized l(:button_delete), { :action => 'destroy', :id => @order }, :confirm=>l(:text_are_you_sure), :method=>:delete, :class=>'icon icon-del' %></li>
+      <li><%= link_to_if_authorized l(:button_delete), { :action => 'destroy', :id => @order }, :data=>{:confirm=>l(:text_are_you_sure)}, :method=>:delete, :class=>'icon icon-del' %></li>
       <% if @order.next%>
-        <li class="invoice-navigator"><%=h link_to_if_authorized l(:label_next), :action => (@order.next.is_a?(IssuedOrder) ? 'show' : 'show_received'), :id => @order.next %></li>
+        <li class="invoice-navigator"><%=h link_to_if_authorized l(:label_next), :action => 'show', :id => @order.next %></li>
       <% end %>
       <% if @order.previous %>
-        <li class="invoice-navigator"><%=h link_to_if_authorized l(:label_previous), :action => (@order.previous.is_a?(IssuedOrder) ? 'show' : 'show_received'), :id => @order.previous %></li>
+        <li class="invoice-navigator"><%=h link_to_if_authorized l(:label_previous), :action => 'show', :id => @order.previous %></li>
       <% end %>
     </ul>
   </div>

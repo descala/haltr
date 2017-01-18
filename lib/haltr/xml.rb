@@ -1,13 +1,5 @@
-require 'render_anywhere'
-
 module Haltr
   class Xml
-
-    include RenderAnywhere
-
-    def initialize
-      set_render_anywhere_helpers(ApplicationHelper,HaltrHelper,InvoicesHelper)
-    end
 
     def self.generate(invoice, format, local_certificate=false, as_file=false, force=false)
       new.generate(invoice,format,local_certificate, as_file, force)
@@ -33,7 +25,7 @@ module Haltr
             client[f] = invoice.client_office.send(f)
           end
         end
-        xml = render(
+        xml = InvoicesController.renderer.render(
           :template => "invoices/#{format}",
           :locals   => { :@invoice => invoice,
                          :@company => invoice.company,

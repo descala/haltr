@@ -267,39 +267,6 @@
       <% end -%>
   </tbody></table>
 
-  <% if @invoice.is_a?(IssuedInvoice) and @invoice.payments.any? -%>
-
-    <!-- Payment Details -->
-    <table class="line-items payments" border="0" cellpadding="0" cellspacing="0">
-      <tbody>
-        <tr>
-          <th class="item-delete first"></th>
-          <th class="item-date"><%=h l :field_due_date %></th>
-          <th class="item-description"><%=h l :field_description%></th>
-          <th class="line-total last"><%=h l :field_quantity %></th>
-        </tr>
-        <% @invoice.payments.each do |payment| -%>
-          <tr>
-            <td class="item-delete first"><%= link_to_if_authorized "", {:action=>'destroy_payment',:id=>payment} , :confirm => l(:text_are_you_sure), :method => :delete, :class => 'icon icon-del' %></td>
-            <td class="item-date first"><%=h format_date payment.date %></td>
-            <td class="item-description"><%=h payment.description %></td>
-            <td class="line-total last"><%=h money(payment.amount) %></td>
-          </tr>
-        <% end -%>
-      </tbody>
-    </table>
-
-    <!-- Payment Total Details -->
-    <table class="invoice-calculations payments" border="0" cellpadding="0" cellspacing="0">
-      <tbody>
-        <tr class="invoice-total">
-          <th><%=h l :field_total_paid %>:</th>
-          <td><%=h money(@invoice.total_paid) %></td>
-        </tr>
-    </tbody></table>
-
-  <% end -%>
-
 </div>
 
 <div class="notes">

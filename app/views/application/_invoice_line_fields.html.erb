@@ -4,6 +4,9 @@
   <table class="formee invoice_lines">
     <thead>
       <tr>
+        <% if User.current.allowed_to?(:view_invoice_extra_fields, @project) -%>
+          <th style="text-align: center;">#</th>
+        <% end -%>
         <th><%=l(:field_quantity)%></th>
         <th></th>
         <% if @invoice.invoice_lines.any? {|l| !l.article_code.blank? } or User.current.allowed_to?(:view_invoice_extra_fields, @project) -%>
@@ -23,12 +26,28 @@
 
     <tbody>
       <tr>
+        <% if User.current.allowed_to?(:view_invoice_extra_fields, @project) -%>
+          <td><%= f.text_field :position, id: "pos_#{lineid}", class: 'pos', style: "width: 35px;", no_label: true %></td>
+        <% else -%>
+          <%= f.hidden_field :position, id: "pos_#{lineid}", class: 'pos' %>
+        <% end -%>
+        <script type="text/javascript">
+var el = $('.pos').last();
+if (el.val() == '') {
+  var last = $('.pos').eq(-2);
+  if ($.isNumeric(last.val())) {
+    el.val(parseInt(last.val()) + 1);
+  } else {
+    el.val('1');
+  }
+}
+        </script>
         <td><%= f.text_field :quantity, :value => f.object.quantity.to_s.gsub(/\.0+$/,''), :style => "width: 78px;", :no_label => true %></td>
         <td><%=f.select :unit, InvoiceLine.units, {:no_label => true, :include_blank => true}, {:style => "width: 100px;"}%></td>
         <% if @invoice.invoice_lines.any? {|l| !l.article_code.blank? } or User.current.allowed_to?(:view_invoice_extra_fields, @project) -%>
           <td><%=f.text_field :article_code, :style => "width: 78px;", :no_label => true%></td>
         <% end -%>
-        <td><%=f.text_field :description, :style => "width: 288px;", :no_label => true%></td>
+        <td><%=f.text_field :description, :style => "width: #{User.current.allowed_to?(:view_invoice_extra_fields, @project) ? "258" : "388" }px;", :no_label => true%></td>
         <%= call_hook(:invoice_form_order_line_reference) %>
         <td><%=f.text_field :price, :value => f.object.price.to_s.gsub(/\.0+$/,''), :style => "width: 78px;", :no_label => true%></td>
 
@@ -78,7 +97,7 @@
   </table>
   <% end -%>
 
-  <% if User.current.allowed_to?(:view_invoice_extra_fields, @project) or @invoice.invoice_lines.sum(&:charge) > 0 -%>
+  <% if User.current.allowed_to?(:view_invoice_extra_fields, @project) or @invoice.invoice_lines.to_a.sum(&:charge) > 0 -%>
   <table class="formee invoice_lines">
     <thead>
       <tr>

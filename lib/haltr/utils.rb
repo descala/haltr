@@ -33,6 +33,7 @@ module Haltr
           xpaths[:invoice_number]     = "//Invoices/Invoice/InvoiceHeader/InvoiceNumber"
           xpaths[:invoice_series]     = "//Invoices/Invoice/InvoiceHeader/InvoiceSeriesCode"
           xpaths[:amend_of]           = "//Invoices/Invoice/InvoiceHeader/Corrective/InvoiceNumber"
+          xpaths[:amend_of_serie]     = "//Invoices/Invoice/InvoiceHeader/Corrective/InvoiceSeriesCode"
           xpaths[:amend_type]         = "//Invoices/Invoice/InvoiceHeader/Corrective/CorrectionMethod"
           xpaths[:amend_reason]       = "//Invoices/Invoice/InvoiceHeader/Corrective/ReasonCode"
           xpaths[:invoice_date]       = "//Invoices/Invoice/InvoiceIssueData/IssueDate"
@@ -250,6 +251,13 @@ module Haltr
           xpaths[:tax_name]           = "cac:TaxScheme/cbc:ID"
           xpaths[:tax_category]       = "cbc:ID"
 
+          xpaths[:attachments] = "//cac:AdditionalDocumentReference"
+          # relative to attachment
+          xpaths[:attach_format]      = "cac:Attachment/cbc:EmbeddedDocumentBinaryObject/@mimeCode"
+          xpaths[:attach_encoding]    = "cac:Attachment/cbc:EmbeddedDocumentBinaryObject/@encodingCode"
+          xpaths[:attach_description] = "cbc:DocumentType"
+          xpaths[:attach_data]        = "cac:Attachment/cbc:EmbeddedDocumentBinaryObject"
+
         end
         xpaths
       end
@@ -340,6 +348,14 @@ module Haltr
       #
       def client_from_hash(client_hash)
         project = client_hash[:project]
+        hook_retval = Redmine::Hook.call_hook(
+          :client_from_hash_begin,
+          client_hash: client_hash,
+          project: project
+        )
+        if hook_retval.present?
+          client_hash = hook_retval[0]
+        end
         client = nil
         client_office = nil
         if client_hash[:country] and client_hash[:country].size == 3
@@ -390,6 +406,7 @@ module Haltr
           if external_company
             client.company = external_company
           end
+          client.language ||= User.current.language
           # do not add "validate: false" here or you'll end with duplicated
           # clients, client validates uniqueness of taxcode.
           unless client.valid?

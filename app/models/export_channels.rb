@@ -1,6 +1,6 @@
 class ExportChannels 
 
-  unloadable
+
 
   def self.use_file(file)
     @@channels = YAML.load(File.read(File.join(File.dirname(__FILE__), "../../config/#{file}")))
@@ -57,7 +57,7 @@ class ExportChannels
   end
 
   def self.options(id)
-    available[id]["options"].dup if available? id
+    available[id]["options"].dup if available?(id) and available[id]["options"]
   end
 
   def self.validators(id=nil)

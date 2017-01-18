@@ -21,6 +21,11 @@ ca:
         significant: false
         tax_name: "IVA"
 
+  activerecord:
+    errors:
+      messages:
+        record_invalid: 'La validació ha fallat: %{errors}'
+
   # community
   label_company: Empresa
   label_my_company: La meva empresa
@@ -114,7 +119,8 @@ ca:
   debit_through: Carregar al compte, mitjançant %{bank_account}
   transfer: Transferència bancària
   transfer_to: Transferència bancària a %{bank_account}
-  cheque: Reposició
+  cheque: Xec
+  reposition: Reposició
   other: Altres
   requires_client_bank_account: requereix compte bancari del client
   requires_company_bank_account: requereix compte bancari propi
@@ -384,6 +390,26 @@ ca:
   notice_payment_done: "S'ha tancat el %{payment_type} de data %{value}"
   notice_uploaded_file_not_found: "No s'ha trobat el fitxer"
 
+  # Received invoice_imgs
+  label_extracted: Informació extreta del PDF
+  tag_seller_name: Nom del venedor
+  tag_language: Idioma de la factura
+  tag_seller_taxcode: NIF del venedor
+  tag_seller_country: País del venedor
+  tag_buyer_taxcode: NIF del comprador
+  tag_invoice_number: Número de factura
+  tag_tax_percentage: "Impost %"
+  tag_subtotal: Base imposable
+  tag_tax_amount: "Impost €"
+  tag_issue: Data d'emisió
+  tag_due: Data de venciment
+  tag_total: Total
+  tag_tax_wh_percentage: "IRPF %"
+  tag_tax_wh_amount: "IRPF €"
+  update_invoice: Actualitzar la factura
+  replace_tags: Substituir
+  clear_tag: Eliminar
+
   hide_full_form: "Mostrar menys camps"
   show_full_form: "Mostrar mes camps"
   field_created_at: "Creada el"
@@ -600,6 +626,9 @@ ca:
   field_file_reference: "Num expedient"
   import_issued_from_received: "El fitxer a importar correspon a una factura emesa"
   import_received_from_issued: "El fitxer a importar correspon a una factura rebuda"
+  processing_pdf: "Processant PDF"
+  state_processing_pdf: "Processant PDF"
+  processed_pdf: "PDF processat"
   field_discount: "Descompte"
   field_charge: "Càrrec"
   download_as_pdf: "Descarregar còpia en PDF"
@@ -747,8 +776,8 @@ ca:
   by_peppol: "Rebuda per Peppol"
   invoice_attachment_added: "Annex afegit"
   invoice_attachment_destoy: "Annex esborrat"
-  field_tax_point_date: "Data de Servei"
   field_xpaths_from_original: "XPATHS a conservar de l'original"
+  field_tax_point_date: "Data de Servei"
   warn_edit_invoice: "Estàs a punt d'editar una factura que ha estat enviada.<br />
 Tingues en compte que el teu client no rebrà els canvis a no ser que la tornis a enviar.<br />
 Si la deses, es marcara com a Nova."
@@ -769,8 +798,8 @@ Si la deses, es marcara com a Nova."
   field_exchange_rate: "Tasa de canvi"
   field_exchange_date: "Data de canvi"
   unitat_contractacio: "Unitat contractació / SEF"
-  state_accounted: "Comptabilitzada"
-  state_accounted_plural: "Comptabilitzades"
+  state_annotated: "Comptabilitzada"
+  state_annotated_plural: "Comptabilitzades"
   field_num_pedido: "Número de comanda"
   field_fecha_documento: "Data del document"
   field_lugar_entrega: "Lloc d'entrega"
@@ -779,8 +808,7 @@ Si la deses, es marcara com a Nova."
   label_order_plural: "Comandes"
   import_order: "Importar comanda"
   label_received_order_plural: "Comandes rebudes"
-  deleted_received_order: "Comanda rebuda esborrada"
-  deleted_issued_order: "Comanda emesa esborrada"
+  deleted_order: "Comanda esborrada"
   mail_notifications: "Notificacions per correu electrònic"
   mail_subject_order_add: "Atenció: Rebuda nova comanda a %{title}"
   mail_body_order_add: |
@@ -808,3 +836,7 @@ Si la deses, es marcara com a Nova."
   field_amounts_withheld_reason: "Concepte de retenció"
   field_amounts_withheld: "Import de retenció"
   received_by: "Rebuda (%{transport})"
+  cant_modify_taxcode: "No es pot modificar el NIF. Si l'heu de canviar, sisplau, poseu-vos en contacte amb el %{suport_link}"
+  suport_link: "servei de suport"
+  field_sign_with_local_certificate: "Signar amb certificat local"
+  notice_invoice_processing_pdf: "Fitxer importat. Processant la factura PDF ..."

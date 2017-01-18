@@ -6,7 +6,7 @@ class AddBankInfosTable < ActiveRecord::Migration
       t.string  :iban
       t.string  :bic
       t.integer :company_id
-      t.timestamps
+      t.timestamps null: false
     end
     add_column    :invoices,  :bank_info_id, :integer
     Company.all.each do |company|
@@ -17,7 +17,7 @@ class AddBankInfosTable < ActiveRecord::Migration
                          :company_id   => company.id)
       end
     end
-    Invoice.find(:all, :conditions => ["payment_method in (?, ?)", Invoice::PAYMENT_TRANSFER, Invoice::PAYMENT_DEBIT]).each do |invoice|
+    Invoice.where(["payment_method in (?, ?)", Invoice::PAYMENT_TRANSFER, Invoice::PAYMENT_DEBIT]).each do |invoice|
       if invoice.project.company.bank_infos.size == 1
         invoice.bank_info = invoice.client.project.company.bank_infos.first
         invoice.save

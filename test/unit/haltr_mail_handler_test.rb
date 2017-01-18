@@ -1,11 +1,11 @@
 # encoding: utf-8
 
-require File.dirname(__FILE__) + '/../test_helper'
+require File.expand_path('../../test_helper', __FILE__)
 
 class HaltrMailHandlerTest < ActiveSupport::TestCase
 
   FIXTURES_PATH = File.dirname(__FILE__) + '/../fixtures/mail_handler'
-  fixtures :invoices
+  fixtures :invoices, :companies
 
   def setup
     ActionMailer::Base.deliveries.clear
@@ -25,14 +25,31 @@ class HaltrMailHandlerTest < ActiveSupport::TestCase
     assert_invoices_created(invoices)
   end
 
-  test "creates invoice from pdf" do
+  test "creates invoice from mail with attached pdf" do
+
+    stub_request(:post, "http://localhost:3000/api/v1/transactions").
+      with(
+        :body => /transaction.id.=.*
+                  &transaction.process.=Estructura%3A%3AInvoice
+                  &transaction.invoice_id.=\d+
+                  &transaction.payload.=.*
+                  &transaction.vat_id.=77310058C
+                  &transaction.is_issued.=false
+                  &transaction.haltr_url.=http%3A%2F%2Flocalhost%3A3001/x,
+    ).to_return(:status => 200,
+                :body => "",
+                :headers => {})
+
     # create, it may exist (same md5)
     invoices = submit_email('invoice_pdf_signed.eml')
     assert_invoices_created(invoices)
+    assert(invoices.first.is_a?(ReceivedInvoice))
     # delete and create again
     assert invoices.first.destroy
     invoices = submit_email('invoice_pdf_signed.eml')
     assert_invoices_created(invoices)
+    assert(invoices.first.is_a?(ReceivedInvoice))
+    assert(invoices.first.original)
   end
 
   test "takes in account all recipients" do
@@ -57,7 +74,9 @@ class HaltrMailHandlerTest < ActiveSupport::TestCase
   def submit_email(filename, options={})
     raw = IO.read(File.join(FIXTURES_PATH, filename))
     yield raw if block_given?
-    HaltrMailHandler.receive(raw, options)
+    Redmine::Configuration.with 'ws_url' => 'http://localhost:3000/api/v1/', 'haltr_url' => 'http://localhost:3001' do
+      return HaltrMailHandler.receive(raw, options)
+    end
   end
 
   def assert_invoices_created(invoices)

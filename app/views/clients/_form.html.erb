@@ -67,10 +67,10 @@
       </p>
       <p class="col span-1-de-4">
       <% if client.linked? -%>
-        <%= f.text_field :country, :value => ISO::Countries.get_country(client.country), :readonly => client.linked?, :required => true %>
+        <%= f.text_field :country, :value => ISO3166::Country[client.country].translations[I18n.locale.to_s], :readonly => client.linked?, :required => true %>
       <% else -%>
         <%= f.label_for_field :country, :required => true %>
-        <%= f.iso_country_select :country, [:es] %>
+        <%= f.country_select :country, priority_countries: [@project.company.country] %>
       <% end -%>
       </p>
     </div>
@@ -101,8 +101,15 @@
     <% end -%>
   </div>
   <div class="seccio grup">
-    <p class="col span-1-de-4">
+    <p class="col span-1-de-3">
     <%= f.text_field :company_identifier %>
+    </p>
+    <p class="col span-1-de-3"></p>
+    <p class="col span-1-de-3">
+    <% if User.current.allowed_to?(:use_local_signature, @project) or (@client and @client.sign_with_local_certificate?) -%>
+      <%= f.check_box :sign_with_local_certificate, no_label: true %>
+      <%= l(:field_sign_with_local_certificate) %>
+    <% end -%>
     </p>
   </div>
 </fieldset>

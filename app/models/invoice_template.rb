@@ -1,6 +1,6 @@
 class InvoiceTemplate < Invoice
 
-  unloadable
+
 
   has_many :issued_invoices, :dependent => :nullify
   validates_presence_of :frequency
@@ -64,6 +64,10 @@ class InvoiceTemplate < Invoice
     false
   end
 
+  def invoice_img
+    nil
+  end
+
   def number
     date
   end
@@ -71,5 +75,4 @@ class InvoiceTemplate < Invoice
   def payments
     []
   end
-
 end

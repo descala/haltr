@@ -1,13 +1,16 @@
 class Order < ActiveRecord::Base
-  unloadable
 
   belongs_to :project
   belongs_to :client
   belongs_to :client_office
   belongs_to :invoice
-  has_many :comments, :as => :commented, :dependent => :delete_all, :order => "created_on"
-  has_many :events, :order => :created_at
+  has_many :comments, -> {order "created_on"}, :as => :commented, :dependent => :delete_all
+  has_many :events, -> {order :created_at}
   after_create :create_event
+
+  after_create :notify_users_by_mail, if: Proc.new {|o|
+    o.project.company.order_notifications
+  }
 
   acts_as_event
 
@@ -130,7 +133,7 @@ class Order < ActiveRecord::Base
 
   def self.create_from_edi(file, project)
     edi = Redmine::CodesetUtil.replace_invalid_utf8(file.read)
-    order = ReceivedOrder.new(
+    order = Order.new(
       project: project,
       original: edi,
       filename: file.original_filename
@@ -180,18 +183,14 @@ class Order < ActiveRecord::Base
     buyer_taxcodes << Haltr::Utils.get_xpath(doc, "#{XPATHS_ORDER[:buyer]}#{XPATHS_PARTY[:endpointid]}")
     buyer_taxcodes = buyer_taxcodes.reject {|t| t.blank? }.uniq
     buyer_taxcodes.collect! {|t| t.gsub(/\s/, '') }
-    buyer_endpoint  = Haltr::Utils.get_xpath(doc, "#{XPATHS_ORDER[:buyer]}#{XPATHS_PARTY[:endpointid]}")
 
     if seller_taxcodes.include?(project.company.taxcode) or project.company.endpointid == seller_endpoint
       client_role = :buyer
       client_taxcodes = buyer_taxcodes
-    elsif buyer_taxcodes.include?(project.company.taxcode) or project.company.endpointid == buyer_endpoint
-      client_role = :seller
-      client_taxcodes = seller_taxcodes
     else
       peppolid = ", #{project.company.schemeid} #{project.company.endpointid}"
       raise I18n.t :taxcodes_does_not_belong_to_self,
-        :tcs => "#{buyer_taxcodes.join('/')} - #{seller_taxcodes.join('/')}",
+        :tcs => "#{seller_taxcodes.join('/')}",
         :tc  => "#{project.company.taxcode}#{peppolid if peppolid.size > 3}"
     end
 
@@ -203,7 +202,7 @@ class Order < ActiveRecord::Base
     client_hash[:taxcode] = client_taxcodes.first
     client_hash[:project] = project
 
-    order = (client_role == :buyer) ? ReceivedOrder.new : IssuedOrder.new
+    order = Order.new
     order.client, order.client_office = Haltr::Utils.client_from_hash(client_hash)
     order.project  = project
     order.original = xml
@@ -270,11 +269,11 @@ class Order < ActiveRecord::Base
   end
 
   def next
-    Order.first(conditions: ["project_id = ? and id > ? and type = ?", project.id, id, type])
+    Order.where("id > ? and project_id = ?", id, project.id).first
   end
 
   def previous
-    Order.last(conditions: ["project_id = ? and id < ? and type = ?", project.id, id, type])
+    Order.where("id < ? and project_id = ?", id, project.id).last
   end
 
   def ubl_invoice
@@ -310,6 +309,20 @@ class Order < ActiveRecord::Base
     end
     #event.audits = self.last_audits_without_event
     event.save!
+  end
+
+  private
+
+  def visible?(usr=nil)
+    (usr || User.current).allowed_to?(:use_orders, project)
+  end
+
+  def notify_users_by_mail
+    MailNotifier.order_add(self).deliver
+  end
+
+  def updated_on
+    updated_at
   end
 
 end

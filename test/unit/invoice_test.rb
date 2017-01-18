@@ -1,5 +1,5 @@
 # encoding: utf-8
-require File.dirname(__FILE__) + '/../test_helper'
+require File.expand_path('../../test_helper', __FILE__)
 
 class InvoiceTest < ActiveSupport::TestCase
 
@@ -251,7 +251,7 @@ class InvoiceTest < ActiveSupport::TestCase
     assert_equal "uploaded", invoice.transport
     assert_equal "Anonymous", invoice.from
     assert_equal "1234", invoice.md5
-    assert_equal "invoice_facturae32_signed.xml", invoice.file_name
+    assert_equal "20120420_invoice_facturae32_signed.xml", invoice.file_name
     # invoice lines
     assert_equal 3, invoice.invoice_lines.size
     assert_equal 600.00, invoice.invoice_lines.collect {|l| l.quantity*l.price }.sum.to_f
@@ -445,8 +445,8 @@ class InvoiceTest < ActiveSupport::TestCase
     assert_equal "uploaded", invoice.events.first.name
     # modified since uploaded?
     assert !invoice.modified_since_created?, "not modified since created"
-    assert invoice.queue
-    assert !invoice.queue
+    assert invoice.queue!
+    assert !invoice.queue!
     assert !invoice.modified_since_created?, "state changes do not update timestamps"
     invoice.extra_info = "change something"
     invoice.state = :new
@@ -507,9 +507,9 @@ class InvoiceTest < ActiveSupport::TestCase
   test 'imports dir3 data and stores it to db' do
     assert_nil Dir3Entity.find_by_code('P00000010')
     extcomp = ExternalCompany.find_by_taxcode 'ESB17915224'
-    assert_not_match(/P00000010/, extcomp.organs_gestors)
-    assert_not_match(/P00000010/, extcomp.unitats_tramitadores)
-    assert_not_match(/P00000010/, extcomp.oficines_comptables)
+    refute_match(/P00000010/, extcomp.organs_gestors)
+    refute_match(/P00000010/, extcomp.unitats_tramitadores)
+    refute_match(/P00000010/, extcomp.oficines_comptables)
     file    = File.new(File.join(File.dirname(__FILE__),'..','fixtures','documents','invoice_facturae32_issued4.xml'))
     invoice = Invoice.create_from_xml(file,companies(:company1),"1234",'uploaded',User.current.name,nil,false)
     assert_equal('P00000010',invoice.organ_gestor)
@@ -702,6 +702,22 @@ class InvoiceTest < ActiveSupport::TestCase
     end
   end
 
+  test 'invoice can repeat number+serie if year changes' do
+    i = IssuedInvoice.new(invoices(:invoice1).attributes)
+    i.invoice_lines = invoices(:invoice1).invoice_lines
+    # invalid: same number+serie, same year
+    assert !i.valid?
+    assert(i.errors.messages.keys.include?(:number))
+    # valid: same number+serie, same year
+    i.date = i.date + 1.year
+    assert i.valid?, i.errors.messages.to_s
+    # valid: same number different serie, year ignored
+    i.series_code = 16
+    assert i.valid?, i.errors.messages.to_s
+    i.date = invoices(:invoice1).date
+    assert i.valid?, i.errors.messages.to_s
+  end
+
   test 'import facturae32 with AmountsWithheld' do
     file = File.new(File.join(File.dirname(__FILE__),'..','fixtures','documents','invoice_amounts_withheld.xml'))
     invoice = Invoice.create_from_xml(file,companies(:company6),"1234",'uploaded',User.current.name,nil,false)
@@ -881,5 +897,24 @@ class InvoiceTest < ActiveSupport::TestCase
     assert_not_nil invoice.client.company_id
     assert_equal 'ESB17915224', invoice.client.taxcode
   end
+
+  test 'import UBL 2.1 with attachments' do
+    file = File.new(File.join(File.dirname(__FILE__),'../fixtures/documents/invoice_ubl_with_attachments.xml'))
+    invoice = Invoice.create_from_xml(file,companies(:company6),"1234",'uploaded',User.current.name,nil,false)
+    assert_equal 'SE841215495001', invoice.client.taxcode
+    assert_equal 2, invoice.attachments.size
+  end
+
+  test 'import facturae with invalid IBAN in PaymentDetails raises error with I18n translation' do
+    I18n.locale = :es
+    xml = File.new(File.join(File.dirname(__FILE__),'../fixtures/documents/invoice_facturae32_issued8.xml')).read
+    xml.gsub!('ES8023100001180000012345','ESXXXXXXXXXXXXXXX000012345')
+    err = assert_raises RuntimeError do
+      Invoice.create_from_xml(xml,companies(:company1),"1234",'uploaded',User.current.name,nil,false)
+    end
+    assert_equal "La validación ha fallado: El IBAN no es válido", err.message
+    I18n.locale = :en
+  end
+
 
 end

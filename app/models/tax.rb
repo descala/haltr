@@ -1,6 +1,6 @@
 class Tax < ActiveRecord::Base
 
-  unloadable
+
   audited :associated_with => :invoice_line, :except => [:id, :invoice_line_id]
 
   # do not remove, with audit we need to make the other attributes accessible
@@ -11,7 +11,7 @@ class Tax < ActiveRecord::Base
   validates_presence_of :name
   validates_numericality_of :percent,
     :unless => Proc.new { |tax| tax.exempt? }
-  validates_format_of :name, :with => /^[a-zA-Z]+$/
+  validates_format_of :name, :with => /\A[a-zA-Z]+\z/
   # only one name-percent combination per invoice_line:
   #TODO: see rails bug https://github.com/rails/rails/issues/4568 on
   # validates_uniqueness_of with accepts_nested_attributes_for
@@ -24,6 +24,7 @@ class Tax < ActiveRecord::Base
   #  :unless => Proc.new { |tax| tax.company_id.nil? }
   validates_numericality_of :percent, :equal_to => 0,
     :if => Proc.new { |tax| ["Z","E","NS"].include? tax.category }
+  validates :comment, length: {maximum: 255}
 
   SPAIN_TAXCODES = {
     'IVA'      => '01', # Impuesto sobre el valor añadido

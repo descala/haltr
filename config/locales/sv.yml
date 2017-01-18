@@ -12,6 +12,11 @@ sv:
         significant: false
         tax_name: "VAT"
 
+  activerecord:
+    errors:
+      messages:
+        record_invalid: 'Validation failed: %{errors}'
+
   # community
   label_company: Företag
   label_my_company: Mitt företag
@@ -103,6 +108,7 @@ sv:
   transfer: Bankbetalning
   transfer_to: Bankbetalning till %{bank_account}
   cheque: Cheque
+  reposition: Reposition
   other: Annan
   requires_client_bank_account: Kundens bankkonto krävs
   requires_company_bank_account: Bankkonto måste registreras
@@ -370,6 +376,26 @@ sv:
   notice_payment_done: "%{payment_type} för betaldatum %{value} markerad som utförd"
   notice_uploaded_file_not_found: "Filen hittades inte"
 
+  # Received invoice_imgs
+  label_extracted: Extracted auxiliar information
+  tag_seller_name: Seller name
+  tag_language: Invoice language
+  tag_seller_taxcode: Seller VAT Id
+  tag_seller_country: Seller country
+  tag_buyer_taxcode: Buyed VAT Id
+  tag_invoice_number: Invoice number
+  tag_tax_percentage: Tax %
+  tag_subtotal: Taxable base
+  tag_tax_amount: Tax amount
+  tag_issue: Issue date
+  tag_due: Due date
+  tag_total: Total
+  tag_tax_wh_percentage: "IRPF %"
+  tag_tax_wh_amount: "IRPF €"
+  update_invoice: Update invoice
+  replace_tags: Replace
+  clear_tag: Remove
+
   hide_full_form: "Visa färre fält"
   show_full_form: "Visa fler fält"
   field_created_at: "Skapad vid"
@@ -585,6 +611,9 @@ sv:
   field_file_reference: "File number"
   import_issued_from_received: "File to import is an issued invoice"
   import_received_from_issued: "File to import is a received invoice"
+  processing_pdf: "Processing PDF"
+  state_processing_pdf: "Processing PDF"
+  processed_pdf: "PDF processed"
   field_discount: "Discount"
   field_charge: "Charge"
   download_as_pdf: "Download PDF copy"
@@ -732,11 +761,12 @@ sv:
   by_peppol: "Received by Peppol"
   invoice_attachment_added: "Annex added"
   invoice_attachment_destoy: "Annex deleted"
-  field_tax_point_date: "Tax Point Date"
   field_xpaths_from_original: "XPATHS to preserve from original"
+  field_tax_point_date: "Tax Point Date"
   warn_edit_invoice: "You are about to edit a sent invoice.<br />
 Your customer will not receive the changes you made unless you resend it.<br />
 If you save it, will be marked as New."
+  view_invoice_requires_login: "Require login to view invoices"
   pdf_shows_original: "This invoice has been modified. The PDF viewer shows the original without your changes"
   label_invoice_view_sent: "View sent document"
   label_invoice_view_original: "View original document"
@@ -753,8 +783,8 @@ If you save it, will be marked as New."
   field_exchange_rate: "Exchange rate"
   field_exchange_date: "Exchange date"
   unitat_contractacio: "Unidad contratación / SEF"
-  state_accounted: "Annotated"
-  state_accounted_plural: "Annotated"
+  state_annotated: "Annotated"
+  state_annotated_plural: "Annotated"
   field_num_pedido: "Order number"
   field_fecha_documento: "Document date"
   field_lugar_entrega: "Delivery place"
@@ -763,8 +793,7 @@ If you save it, will be marked as New."
   label_order_plural: "Orders"
   import_order: "Import order"
   label_received_order_plural: "Received orders"
-  deleted_received_order: "Received order deleted"
-  deleted_issued_order: "Issued order deleted"
+  deleted_order: "Order deleted"
   mail_notifications: "Email notifications"
   mail_subject_order_add: "Warning: You have received a new order in %{title}"
   mail_body_order_add: |
@@ -790,3 +819,7 @@ If you save it, will be marked as New."
   field_amounts_withheld_reason: "Withheld reason"
   field_amounts_withheld: "Withheld amount"
   received_by: "Received (%{transport})"
+  cant_modify_taxcode: "You cannot modify your VAT ID. If you need to change it, please get in touch with our %{suport_link}"
+  suport_link: "support service"
+  field_sign_with_local_certificate: "Sign with local certificate"
+  notice_invoice_processing_pdf: "File uploaded. Processing PDF invoice ..."

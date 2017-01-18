@@ -1,6 +1,5 @@
 class CompanyOfficesController < ApplicationController
 
-  unloadable
   menu_item Haltr::MenuItem.new(:my_company, :company_offices)
 
   layout 'haltr'
@@ -17,15 +16,21 @@ class CompanyOfficesController < ApplicationController
   before_filter :authorize
 
   def index
-    company_offices = @company.company_offices.scoped
+    sort_init 'city', 'asc'
+    sort_update %w(city)
 
+    company_offices = @company.company_offices
+
+    unless params[:name].blank?
+      name = "%#{params[:name].strip.downcase}%"
+      company_offices = company_offices.where(["LOWER(company_offices.city) LIKE ? OR LOWER(company_offices.province) LIKE ?", name, name])
+    end
+
+    @limit = per_page_option
     @company_office_count = company_offices.count
-    @company_office_pages = Paginator.new self, @company_office_count,
-		per_page_option,
-		params['page']
-    @company_offices = company_offices.find :all,
-       :limit  => @company_office_pages.items_per_page,
-       :offset => @company_office_pages.current.offset
+    @company_office_pages = Paginator.new @company_office_count, @limit, params['page']
+    @offset ||= @company_office_pages.offset
+    @company_offices = company_offices.order(sort_clause).limit(@limit).offset(@offset).to_a
   end
 
   def new

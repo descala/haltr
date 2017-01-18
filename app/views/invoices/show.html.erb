@@ -15,12 +15,12 @@
       <% elsif !@invoice.is_a?(ReceivedInvoice) -%>
         <li><%= link_to_if_authorized l(:button_edit), { :action => 'edit', :id => @invoice }, :class => 'icon icon-edit' %></li>
       <% end -%>
-      <li><%= link_to_if_authorized l(:button_delete), { :action => 'destroy', :id => @invoice}, :confirm=>l(:text_are_you_sure), :method=>:delete, :class=>'icon icon-del' %></li>
+      <li><%= link_to_if_authorized l(:button_delete), { :action => 'destroy', :id => @invoice}, :data=>{:confirm=>l(:text_are_you_sure)}, :method=>:delete, :class=>'icon icon-del' %></li>
       <%= render :partial => "#{@invoice.class.to_s.underscore}_menu" %>
       <% if @invoice.next%>
         <li class="invoice-navigator"><%=h link_to_if_authorized l(:label_next), :action => 'show', :id => @invoice.next %></li>
       <% end %>
-       <% if @invoice.previous %>
+      <% if @invoice.previous %>
         <li class="invoice-navigator"><%=h link_to_if_authorized l(:label_previous), :action => 'show', :id => @invoice.previous %></li>
       <% end %>
     </ul>
@@ -41,50 +41,56 @@
   <iframe src="/pdfjs/web/viewer.html?file=<%=@invoice_pdf%>" style="border: 0" width="100%" height="800" frameborder="0" scrolling="no"></iframe>
 <% else -%>
 
-<div id="invoice_wrapper">
-  <div class="ribbon ribbon-<%= @invoice.state %>">
-    <% if @invoice.is_a? InvoiceTemplate %>
-      <span><%=h l("label_invoice_template") %></span>
-    <% else %>
-      <span title="<%= format_time @invoice.state_updated_at %>"><%=h l("state_#{@invoice.state}").capitalize %></span>
-    <% end %>
-  </div>
-  <div id="workspace1" class="haltrinvoice">
-    <div id="workspace2">
-      <div id="col1">
-      <%= render :partial=>'invoices/invoice' %>
-      <%= link_to_attachments @invoice, thumbnails: false, author: false %>
+  <% if @invoice.invoice_img -%>
+    <%= render :partial=>'invoice_imgs/show', locals: {invoice_img: @invoice.invoice_img } %>
+  <% else -%>
+
+    <div id="invoice_wrapper">
+      <div class="ribbon ribbon-<%= @invoice.state %>">
+        <% if @invoice.is_a? InvoiceTemplate %>
+          <span><%=h l("label_invoice_template") %></span>
+        <% else %>
+          <span title="<%= format_time @invoice.state_updated_at %>"><%=h l("state_#{@invoice.state}").capitalize %></span>
+        <% end %>
+      </div>
+      <div id="workspace1" class="haltrinvoice">
+        <div id="workspace2">
+          <div id="col1">
+            <%= render :partial=>'invoices/invoice' %>
+            <%= link_to_attachments @invoice, thumbnails: false, author: false %>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  <% end -%>
+
+  <% if @invoice.send_original? and @invoice.is_a? IssuedInvoice %>
+    <p>* <%= @invoice.invoice_format.upcase rescue "" %> <%= l(:label_will_send_original) -%></p>
+  <% end -%>
+
+  <div class="seccio grup">
+    <div class="col span-2-de-2">
+      <div class="formee-msg-info invoice-comments">
+        <h3 id="haltr_comments">
+          <%=h l(:label_comment_plural)%>
+          <%= toggle_link image_tag('add.png'), "add_comment_form", :focus => "comment_comments" %>
+        </h3>
+        <%= form_tag({:controller => 'invoices', :action => 'add_comment', :id => @invoice, :project_id => @project}, :id => "add_comment_form", :style => "display:none;") do %>
+          <div class="box">
+            <%= text_area 'comment', 'comments', :cols => 80, :rows => 5, :class => 'wiki-edit' %>
+          </div>
+          <p><%= submit_tag l(:button_add) %></p>
+        <% end %>
+
+        <ul>
+          <% @invoice.comments.reverse.each do |comment| -%>
+            <li><strong><%= format_time comment.created_on %></strong> - <%= comment.author.name %>: <%= comment.comments %></li>
+          <% end -%>
+        </ul>
       </div>
     </div>
   </div>
-</div>
-
-<% if @invoice.send_original? and @invoice.is_a? IssuedInvoice %>
-  <p>* <%= @invoice.invoice_format.upcase rescue "" %> <%= l(:label_will_send_original) -%></p>
-<% end -%>
-
-<div class="seccio grup">
-  <div class="col span-2-de-2">
-    <div class="formee-msg-info invoice-comments">
-      <h3 id="haltr_comments">
-        <%=h l(:label_comment_plural)%>
-        <%= toggle_link image_tag('add.png'), "add_comment_form", :focus => "comment_comments" %>
-      </h3>
-      <%= form_tag({:controller => 'invoices', :action => 'add_comment', :id => @invoice, :project_id => @project}, :id => "add_comment_form", :style => "display:none;") do %>
-        <div class="box">
-          <%= text_area 'comment', 'comments', :cols => 80, :rows => 5, :class => 'wiki-edit' %>
-        </div>
-        <p><%= submit_tag l(:button_add) %></p>
-      <% end %>
-
-      <ul>
-        <% @invoice.comments.reverse.each do |comment| -%>
-          <li><strong><%= format_time comment.created_on %></strong> - <%= comment.author.name %>: <%= comment.comments %></li>
-        <% end -%>
-      </ul>
-    </div>
-  </div>
-</div>
 
 <% end -%>
 
@@ -110,20 +116,21 @@
 
 <%=
   # @autocall will be automatically called from javascript (haltr_sign.js)
-  # we can get here when pressing "save and send" button on invoice form if
-  # invoice is sent with javascript method (javascript attribute on channels.yml)
-  tag("div", :id => 'autocall', 'data-function' => @autocall, 'data-args' => @autocall_args) if @autocall
+# we can get here when pressing "save and send" button on invoice form if
+# invoice is sent with javascript method (javascript attribute on channels.yml)
+tag("div", :id => 'autocall', 'data-function' => @autocall, 'data-args' => @autocall_args) if @autocall
 %>
 
 <%=
-  unless @js.blank?
+  if @invoice.client and @invoice.client.sign_with_local_certificate?
     content_for :header_tags do
       javascript_include_tag('/invoices/haltr_sign.js') +
-      javascript_include_tag('miniapplet.js', :plugin => 'haltr')
+        javascript_include_tag('miniapplet.js', :plugin => 'haltr')
     end
   end
 
-  if @invoice.is_a? IssuedInvoice and @invoice.state? :sending
+  if (@invoice.is_a? IssuedInvoice and @invoice.sending?) or
+    (@invoice.is_a? ReceivedInvoice and @invoice.processing_pdf?)
     content_for :header_tags do
       javascript_include_tag 'refresher.js', plugin: 'haltr'
     end

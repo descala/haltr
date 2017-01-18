@@ -24,6 +24,11 @@ gl:
     formats:
       default: "%d-%m-%Y"
 
+  activerecord:
+    errors:
+      messages:
+        record_invalid: 'La validación ha fallado: %{errors}'
+
   # community
   label_company: Empresa
   label_my_company: A miña empresa
@@ -115,7 +120,8 @@ gl:
   debit_through: Cargar en conta, usando %{bank_account}
   transfer: Transferencia bancaria
   transfer_to: Transferencia bancaria a %{bank_account}
-  cheque: Reposición
+  cheque: Cheque
+  reposition: Reposición
   other: Outros
   requires_client_bank_account: require conta bancaria do cliente
   requires_company_bank_account: require conta bancaria propia
@@ -382,6 +388,26 @@ gl:
   notice_empty_sepa: "Non hai datos para xerar un ficheiro SEPA"
   notice_payment_done: "Pechouse o %{payment_type} de data %{value}"
   notice_uploaded_file_not_found: "Non se atopou o ficheiro"
+
+  # Received invoice_imgs
+  label_extracted: Información auxiliar extraida del PDF
+  tag_seller_name: Nombre del vendedor
+  tag_language: Idioma de la factura
+  tag_seller_taxcode: NIF del vendedor
+  tag_seller_country: País del vendedor
+  tag_buyer_taxcode: NIF del comprador
+  tag_invoice_number: Número de factura
+  tag_tax_percentage: Impuesto %
+  tag_subtotal: Base imponible
+  tag_tax_amount: Impuesto €
+  tag_issue: Fecha de emisión
+  tag_due: Fecha de vencimiento
+  tag_total: Total
+  tag_tax_wh_percentage: "IRPF %"
+  tag_tax_wh_amount: "IRPF €"
+  update_invoice: Actualitzar factura
+  replace_tags: Substituir
+  clear_tag: Eliminar
 
   hide_full_form: "Mostrar menos campos"
   show_full_form: "Mostrar máis campos"
@@ -747,8 +773,8 @@ gl:
   by_peppol: "Recibida por Peppol"
   invoice_attachment_added: "Anexo añadido"
   invoice_attachment_destoy: "Anexo borrado"
-  field_tax_point_date: "Fecha de Servicio"
   field_xpaths_from_original: "XPATHS a conservar del original"
+  field_tax_point_date: "Fecha de Servicio"
   warn_edit_invoice: "Estás a punto de editar una factura que ha sido enviada.<br />
 Ten presente que los cambios que realices no los recibirá tu cliente a no ser que la vuelvas a enviar.<br />
 Si la guardas, se marcará como Nueva."
@@ -769,8 +795,8 @@ Si la guardas, se marcará como Nueva."
   field_exchange_rate: "Tasa de cambio"
   field_exchange_date: "Fecha de cambio"
   unitat_contractacio: "Unidad contratación / SEF"
-  state_accounted: "Contabilizada"
-  state_accounted_plural: "Contabilizadas"
+  state_annotated: "Contabilizada"
+  state_annotated_plural: "Contabilizadas"
   field_num_pedido: "Número de pedido"
   field_fecha_documento: "Fecha del documento"
   field_lugar_entrega: "Lugar de entrega"
@@ -779,8 +805,7 @@ Si la guardas, se marcará como Nueva."
   label_order_plural: "Pedidos"
   import_order: "Importar pedido"
   label_received_order_plural: "Pedidos recibidos"
-  deleted_received_order: "Pedido recibido borrado"
-  deleted_issued_order: "Pedido emitido borrado"
+  deleted_order: "Pedido borrado"
   mail_notifications: "Notificaciones por correo electrónico"
   mail_subject_order_add: "Atención: Recibido nuevo pedido en %{title}"
   mail_body_order_add: |
@@ -808,3 +833,7 @@ Si la guardas, se marcará como Nueva."
   field_amounts_withheld_reason: "Concepto de retención"
   field_amounts_withheld: "Importe de retención"
   received_by: "Recibida (%{transport})"
+  cant_modify_taxcode: "No se puede modificar el NIF. Si tenéis que cambiarlo, por favor, poneros en contacto con el %{suport_link}"
+  suport_link: "servicio de soporte"
+  field_sign_with_local_certificate: "Firmar con certificado local"
+  notice_invoice_processing_pdf: "Fichero importado. Procesando la factura PDF ..."

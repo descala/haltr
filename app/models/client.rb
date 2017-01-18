@@ -1,6 +1,5 @@
 class Client < ActiveRecord::Base
 
-  unloadable
   audited except: [:hashid, :project]
   # do not remove, with audit we need to make the other attributes accessible
   attr_protected :created_at, :updated_at
@@ -8,10 +7,12 @@ class Client < ActiveRecord::Base
   include Haltr::BankInfoValidator
   include Haltr::PaymentMethods
   has_many :invoices, :dependent => :destroy
+  has_many :received_invoices, :dependent => :destroy
+  has_many :invoice_templates, :dependent => :destroy
   has_many :orders
   has_many :people,   :dependent => :destroy
   has_many :mandates, :dependent => :destroy
-  has_many :events,   :order => :created_at
+  has_many :events, -> {order :created_at}
   has_many :invoice_events, :through => :invoices, :source => :events
   has_many :client_offices, :dependent => :destroy
 
@@ -39,8 +40,8 @@ class Client < ActiveRecord::Base
   before_validation :copy_linked_profile
   before_save :set_hashid_value
   before_save :copy_linked_profile
-  after_create  :create_event
-  iso_country :country
+  after_create :create_event
+  before_save :checks_for_sign_with_local_certificate
   include CountryUtils
   include Haltr::TaxcodeValidator
 
@@ -61,7 +62,7 @@ class Client < ActiveRecord::Base
   end
 
   def currency=(v)
-    write_attribute(:currency,v.upcase)
+    write_attribute(:currency, v.to_s.upcase)
   end
 
   def bank_invoices(due_date,bank_info_id)
@@ -86,26 +87,14 @@ class Client < ActiveRecord::Base
 
   alias :to_s :to_label
 
-  def invoice_templates
-    self.invoices.where(["type=?","InvoiceTemplate"])
-  end
-
   def template_invoice_lines
     invoice_templates.collect do |invoice_template|
       invoice_template.invoice_lines
     end.flatten
   end
 
-  def invoice_documents
-    self.invoices.where(["type=?","IssuedInvoice"])
-  end
-
   def issued_invoices
     self.invoices.where(["type=?","IssuedInvoice"])
-  end
-
-  def received_invoices
-    self.invoices.where(["type=?","ReceivedInvoice"])
   end
 
   def allowed?
@@ -177,7 +166,7 @@ class Client < ActiveRecord::Base
   end
 
   def recipient_people
-    people.find(:all,:order=>'last_name ASC',:conditions=>['send_invoices_by_mail = true'])
+    people.where(send_invoices_by_mail: true).order('last_name ASC')
   end
 
   def recipient_emails
@@ -189,11 +178,11 @@ class Client < ActiveRecord::Base
   end
 
   def next
-    project.clients.first(:conditions=>["id > ?", self.id])
+    project.clients.where(["id > ?", self.id]).first
   end
 
   def previous
-    project.clients.last(:conditions=>["id < ?", self.id])
+    project.clients.where(["id < ?", self.id]).last
   end
 
   def postalcode=(v)
@@ -213,7 +202,9 @@ class Client < ActiveRecord::Base
 
   def copy_linked_profile
     if self.company and self.allowed?
-      %w(taxcode company_identifier name email currency postalcode country province city address website invoice_format language).each do |attr|
+      %w(taxcode company_identifier name email currency postalcode country
+      province city address website invoice_format language
+      schemeid endpointid).each do |attr|
         self.send("#{attr}=",company.send(attr))
       end
       if self.company.respond_to?(:address2)
@@ -224,6 +215,15 @@ class Client < ActiveRecord::Base
     elsif !self.company
       self.allowed = nil
     end
+  end
+
+  # MiniApplet can sign pdf and facturae only
+  def checks_for_sign_with_local_certificate
+    f = ExportChannels.format(invoice_format).to_s
+    unless f == 'pdf' or f =~ /facturae/
+      self.sign_with_local_certificate = false
+    end
+    true
   end
 
   def set_hashid_value

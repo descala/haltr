@@ -7,19 +7,19 @@
   <ul>
     <li class="submenu"><a href="#"><%= l(:manual_mark_as, state: '') %></a>
       <ul>
-        <% unless @invoice.state?(:accepted) -%>
+        <% unless @invoice.accepted? -%>
           <li><%= link_to_function(I18n.t(:state_accepted), "show_accepted_form();") if authorize_for(:received || :received, :mark_accepted) %></li>
         <% end -%>
-        <% unless @invoice.state?(:refused) -%>
+        <% unless @invoice.refused? -%>
           <li><%= link_to_function(I18n.t(:state_refused),  "show_refused_form();") if authorize_for(:received || :received, :mark_refused) %></li>
         <% end -%>
-        <% if @invoice.state?(:accepted) or @invoice.state?(:error) -%>
+        <% if @invoice.accepted? or @invoice.error? -%>
           <li><%=link_to(l("state_paid"), mark_as_path(@invoice, state: :paid), class: "icon-haltr-mark-paid")%></li>
         <% end -%>
       </ul>
     </li>
 
-    <% unless @invoice.invoice_format == 'pdf' -%>
+    <% unless @invoice.has_original? and @invoice.invoice_format == 'pdf' -%>
       <li><%= link_to l(:download_as_pdf), {:action=>'show', :id=>@invoice, :format => 'pdf'}, :class=>'icon-haltr-save' %></li>
     <% end -%>
   </ul>

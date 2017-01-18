@@ -1,4 +1,4 @@
-require File.dirname(__FILE__) + '/../test_helper'
+require File.expand_path('../../test_helper', __FILE__)
 
 class PaymentsControllerTest < ActionController::TestCase
 
@@ -7,6 +7,8 @@ class PaymentsControllerTest < ActionController::TestCase
   def setup
     @due = invoices(:invoice1).due_date
     @venci = @due.to_formatted_s :ddmmyy
+    User.current = nil
+    @request.session[:user_id] = 2
   end
 
   test "generates SEPA XML" do
@@ -21,6 +23,36 @@ class PaymentsControllerTest < ActionController::TestCase
     assert_equal "08/194 08/001", xml.xpath('//EndToEndId').text
     assert_equal "Invoice 08/194 08/001", xml.xpath('//Ustrd').text
     assert_equal "1851.36", xml.xpath('//InstdAmt').text
+  end
+
+  test 'create payment' do
+    post :create, {
+      project_id: 'onlinestore',
+      payment: {
+        invoice_id: invoices(:invoices_002).id,
+        amount: '10',
+        date: '2015-08-04',
+        payment_method: '',
+        reference: ''
+      }
+    }
+    assert_redirected_to controller: 'payments', action: 'index'
+  end
+
+  test 'cannot create payment to invoice on other project' do
+    # there's no invoice_003 on onlinestore project
+    assert_raise ActiveRecord::RecordNotFound do
+      post :create, {
+        project_id: 'onlinestore',
+        payment: {
+          invoice_id: invoices(:invoices_003).id,
+          amount: '10',
+          date: '2015-08-04',
+          payment_method: '',
+          reference: ''
+        }
+      }
+    end
   end
 
   def test_aeb43

@@ -1,7 +1,5 @@
 class Invoice < ActiveRecord::Base
 
-  unloadable
-
   include HaltrHelper
   include Haltr::FloatParser
   include Haltr::PaymentMethods
@@ -16,8 +14,8 @@ class Invoice < ActiveRecord::Base
   # remove non-utf8 characters from those fields:
   TO_UTF_FIELDS = %w(extra_info)
 
-  has_many :invoice_lines, :dependent => :destroy
-  has_many :events, :order => 'created_at'
+  has_many :invoice_lines, -> {order 'position is NULL, position ASC'}, dependent: :destroy
+  has_many :events, -> {order :created_at}
   #has_many :taxes, :through => :invoice_lines
   belongs_to :project, :counter_cache => true
   belongs_to :client
@@ -25,12 +23,12 @@ class Invoice < ActiveRecord::Base
   belongs_to :amend, :class_name => "Invoice", :foreign_key => 'amend_id'
   has_one :amend_of, :class_name => "Invoice", :foreign_key => 'amend_id'
   # an invoice can have several partial amends
-  has_many :partial_amends, class_name: 'Invoice', foreign_key: 'partially_amended_id', conditions: proc { ["id != ?", self.id] }
+  has_many :partial_amends, class_name: 'Invoice', foreign_key: 'partially_amended_id'
   belongs_to :partial_amend_of, class_name: 'Invoice', foreign_key: 'partially_amended_id'
 
   belongs_to :bank_info
   belongs_to :quote
-  has_many :comments, :as => :commented, :dependent => :delete_all, :order => "created_on"
+  has_many :comments, -> {order :created_on}, :as => :commented, :dependent => :delete_all
   belongs_to :client_office
   belongs_to :company_office
   has_one :order, dependent: :nullify
@@ -38,7 +36,9 @@ class Invoice < ActiveRecord::Base
     i.client and i.client.client_offices.any? {|o| o.id == i.client_office_id }
   }
 
-  validates_presence_of :client, :date, :currency, :project_id, :unless => Proc.new {|i| i.type == "ReceivedInvoice" }
+  validates_presence_of :date, :currency, :project_id, :unless => Proc.new {|i| i.type == "ReceivedInvoice" }
+  validates :date, :due_date, :tax_point_date, :invoicing_period_start, :invoicing_period_end, :order_date, :fa_duedate, format: { with: /\A[0-9]{4}-[0-9]{1,2}-[0-9]{1,2}\z/ }
+  validates_presence_of :client, :unless => Proc.new {|i| %w(Quote ReceivedInvoice).include? i.type }
   validates_inclusion_of :currency, :in  => Money::Currency.table.collect {|k,v| v[:iso_code] }, :unless => Proc.new {|i| i.type == "ReceivedInvoice" }
   validates_numericality_of :charge_amount_in_cents, :allow_nil => true
   validates_numericality_of :payments_on_account_in_cents, :allow_nil => true
@@ -51,6 +51,7 @@ class Invoice < ActiveRecord::Base
   after_create :increment_counter
   before_destroy :decrement_counter
   before_save :call_before_save_hook
+  before_validation :set_lines_order
 
   accepts_nested_attributes_for :invoice_lines,
     :allow_destroy => true,
@@ -347,7 +348,7 @@ class Invoice < ActiveRecord::Base
   end
 
   def taxes_outputs
-    #taxes.find(:all, :group => 'name,percent', :conditions => "percent >= 0")
+    #taxes.where("percent >= 0").group('name,percent')
     taxes_uniq.collect { |tax|
       tax if tax.percent >= 0
     }.compact
@@ -362,7 +363,7 @@ class Invoice < ActiveRecord::Base
   end
 
   def taxes_withheld
-    #taxes.find(:all, :group => 'name,percent', :conditions => "percent < 0")
+    #taxes.where("percent < 0").group('name,percent')
     taxes_uniq.collect {|tax|
       tax if tax.percent < 0
     }.compact
@@ -599,6 +600,8 @@ _INV
     amounts_withheld_reason = Haltr::Utils.get_xpath(doc,xpaths[:amounts_withheld_r])
     amounts_withheld = Haltr::Utils.get_xpath(doc,xpaths[:amounts_withheld]) || 0
     amend_of         = Haltr::Utils.get_xpath(doc,xpaths[:amend_of])
+    #TODO: serie
+    _amend_of_serie  = Haltr::Utils.get_xpath(doc,xpaths[:amend_of_serie])
     amend_type       = Haltr::Utils.get_xpath(doc,xpaths[:amend_type])
     amend_reason     = Haltr::Utils.get_xpath(doc,xpaths[:amend_reason])
     party_id         = Haltr::Utils.get_xpath(doc,xpaths[:party_id])
@@ -665,8 +668,9 @@ _INV
 
     # amend invoices
     if amend_of
+      #TODO: comprovar amend_of_serie
       raise "Cannot amend received invoices" if invoice.is_a? ReceivedInvoice
-      amended = company.project.issued_invoices.find_last_by_number(amend_of)
+      amended = company.project.issued_invoices.where(number: amend_of).last
       if amended and amend_type == '01'
         invoice.amend_of = amended
       elsif amended and amend_type == '02'
@@ -720,7 +724,7 @@ _INV
     end
 
     invoice.client, invoice.client_office = Haltr::Utils.client_from_hash(
-      :taxcode        => client_taxcode,
+      :taxcode        => client_taxcode.to_s.gsub(/\s/,''),
       :name           => client_name,
       :address        => client_address,
       :province       => client_province,
@@ -864,7 +868,7 @@ _INV
     invoice.payment_method_text = Haltr::Utils.get_xpath(doc,xpaths[:payment_method_text])
 
     # invoice lines
-    doc.xpath(xpaths[:invoice_lines]).each do |line|
+    doc.xpath(xpaths[:invoice_lines]).to_enum.with_index(1) do |line,i|
 
       line_delivery_note_number = nil
       # delivery_notes
@@ -882,6 +886,7 @@ _INV
       end
 
       il = InvoiceLine.new(
+             :position     => i,
              :quantity     => Haltr::Utils.get_xpath(line,xpaths[:line_quantity]),
              :description  => Haltr::Utils.get_xpath(line,xpaths[:line_description]),
              :price        => Haltr::Utils.get_xpath(line,xpaths[:line_price]),
@@ -1008,37 +1013,42 @@ _INV
       data_compression = Haltr::Utils.get_xpath(attach, xpaths[:attach_compression_algorithm])
       data_format      = Haltr::Utils.get_xpath(attach, xpaths[:attach_format])
       data_encoding    = Haltr::Utils.get_xpath(attach, xpaths[:attach_encoding])
-      data = case data_encoding
-             when 'BASE64'
-               Base64.decode64(data)
-             when 'BER'
-               #TODO
-             when 'DER'
-               #TODO
-             else # NONE
-               data
-             end
-      data = case data_compression
-             when 'ZIP'
-               require 'zip'
-               Zip::InputStream.open(StringIO.new(data)) do |io|
-                 _entry = io.get_next_entry
-                 io.read
-               end
-             when 'GZIP'
-               ActiveSupport::Gzip.decompress(StringIO.new(data))
-             else # NONE
-               data
-             end
-      data_content_type = MIME.check_magics(StringIO.new(data))
-      ext = MIME::Types[data_content_type].first.extensions.first rescue data_format
 
-      a = Attachment.new
-      a.file = StringIO.new data
-      a.author = User.current
-      a.description = Haltr::Utils.get_xpath(attach, xpaths[:attach_description])
-      a.filename = "facturae_#{invoice.number.gsub('/','')}_#{index+1}.#{ext}"
-      to_attach << a
+      if data.present?
+        data_encoding ||= 'BASE64' if invoice_format =~ /ubl/
+
+        data = case data_encoding
+               when 'BASE64'
+                 Base64.decode64(data)
+               when 'BER'
+                 #TODO
+               when 'DER'
+                 #TODO
+               else # NONE
+                 data
+               end
+        data = case data_compression
+               when 'ZIP'
+                 require 'zip'
+                 Zip::InputStream.open(StringIO.new(data)) do |io|
+                   _entry = io.get_next_entry
+                   io.read
+                 end
+               when 'GZIP'
+                 ActiveSupport::Gzip.decompress(StringIO.new(data))
+               else # NONE
+                 data
+               end
+        data_content_type = MIME.check_magics(StringIO.new(data))
+        ext = MIME::Types[data_content_type].first.extensions.first rescue data_format
+
+        a = Attachment.new
+        a.file = StringIO.new data
+        a.author = User.current
+        a.description = Haltr::Utils.get_xpath(attach, xpaths[:attach_description])
+        a.filename = "facturae_#{invoice.number.gsub('/','')}_#{index+1}.#{ext}"
+        to_attach << a
+      end
     end
     invoice.attachments = to_attach
 
@@ -1155,11 +1165,11 @@ _INV
   end
 
   def next
-    project.invoices.first(:conditions=>["id > ? and type = ?", self.id, self.type])
+    project.invoices.where("id > ? and type = ?", self.id, self.type).first
   end
 
   def previous
-    project.invoices.last(:conditions=>["id < ? and type = ?", self.id, self.type])
+    project.invoices.where("id < ? and type = ?", self.id, self.type).last
   end
 
   def visible_events
@@ -1225,7 +1235,7 @@ _INV
 
   def has_line_charges?
     return @has_line_charges unless @has_line_charges.nil?
-    @has_line_charges = (invoice_lines.sum(&:charge) > 0)
+    @has_line_charges = (invoice_lines.to_a.sum(&:charge) > 0)
   end
 
   def has_line_ponumber?
@@ -1277,6 +1287,18 @@ _INV
     end
   end
 
+  def set_lines_order
+    i=1
+    invoice_lines.each do |line|
+      if line.position.is_a?(Integer)
+        i=line.position
+      else
+        line.position = i
+      end
+      i+=1
+    end
+  end
+
   private
 
   def set_due_date
@@ -1306,7 +1328,7 @@ _INV
   end
 
   def bank_info_belongs_to_self
-    if bank_info and client and bank_info.company != client.project.company
+    if bank_info and bank_info.company != project.company
       errors.add(:base, "Bank info is from other company!")
     end
   end
@@ -1324,9 +1346,12 @@ _INV
     if ext_comp
       ext_comp.required_fields.each do |field|
         if field == "dir3"
-          errors.add(:organ_gestor, :blank) if organ_gestor.blank?
-          errors.add(:unitat_tramitadora, :blank) if unitat_tramitadora.blank?
-          errors.add(:oficina_comptable, :blank) if oficina_comptable.blank?
+          # https://www.ingent.net/issues/6273
+          unless new_record?
+            errors.add(:organ_gestor, :blank) if organ_gestor.blank?
+            errors.add(:unitat_tramitadora, :blank) if unitat_tramitadora.blank?
+            errors.add(:oficina_comptable, :blank) if oficina_comptable.blank?
+          end
         else
           errors.add(field, :blank) if self.send(field).blank?
         end

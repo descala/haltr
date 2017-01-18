@@ -18,7 +18,7 @@ class CreateExternalCompanies < ActiveRecord::Migration
       t.string  'endpointid'
       t.string  'company_identifier'
       t.string  'persontype', :default => 'J'
-      t.timestamps
+      t.timestamps null: false
     end
 
     add_column :clients, :company_type, :string

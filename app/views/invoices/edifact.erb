@@ -6,8 +6,8 @@ DTM+137:<%=edi_date @invoice.date%>:102'
 <% unless @invoice.payment_method_code(:edifact).blank? %>
 PAI+::<%=@invoice.payment_method_code(:edifact)%>'
 <% end %>
-<% unless ''.blank?%>
-FTX+AAI+++<%=@invoice.extra_info%>'
+<% if @client.edi_code == "8422410000005" %>
+FTX+AAI+++SERVICIOS. <%=@invoice.extra_info%>'
 <% end %>
 <% unless ''.blank? %>
 DTM+95E:<%='fechaefe (camp de TSF #4744)'%>:102'
@@ -24,12 +24,15 @@ DTM+171:<%=edi_date @invoice.order_date%>:102'
 RFF+CT:<%=@invoice.contract_number.to_s[0..34]%>'
 <% end %>
 NAD+SCO+<%=@company.edi_code%>::9++<%=@company.name.to_s[0..34]%><%="::#{@company.company_identifier.to_s[0..19]}" unless @company.company_identifier.blank?%>+<%=@company.address.to_s[0..34]%>+<%=@company.city.to_s[0..34]%>+<%=@company.province.to_s[0..34]%>+<%=@company.postalcode%>+<%=@company.country%>'
-RFF+VA:<%=@company.edi_code%>'
+RFF+VA:<%=@company.taxcode%>'
 NAD+BCO+<%=@client.edi_code%>::9++<%=@client.name%><%="::#{@client.company_identifier}" unless @client.company_identifier.blank?%>+<%=@client.address%>+<%=@client.city%>+<%=@client.province%>+<%=@client.postalcode%>+<%=@client.country%>'
 RFF+VA:<%=@client.taxcode%>'
 NAD+BY+<%=@client.buyer_edi_code%>::9'
 <%= call_hook(:edi_after_buyer_edi_code) if call_hook(:edi_after_buyer_edi_code).present? -%>
 NAD+SU+<%=@company.edi_code%>::9++<%=@company.name.to_s[0..34]%><%="::#{@company.company_identifier.to_s[0..19]}" unless @company.company_identifier.blank?%>+<%=@company.address.to_s[0..34]%>+<%=@company.city.to_s[0..34]%>+<%=@company.province.to_s[0..34]%>+<%=@company.postalcode%>+<%=@company.country%>'
+<% if @client.edi_code == "8422410000005" %>
+RFF+VA:<%= @company.taxcode %>'
+<% end %>
 NAD+IV+<%=@client.buyer_edi_code%>::9'
 NAD+DP+<%=@client.destination_edi_code.to_s.split('@').first%>::9'
 NAD+PR+<%=@client.payer_edi_code%>::9'
@@ -42,6 +45,9 @@ MOA+66:<%=edi_number l.taxable_base%>'
 PRI+AAA:<%=edi_number l.price%>'
 <% if @invoice.delivery_note_number.present? or l.delivery_note_number.present? -%>
 RFF+DQ:<%= l.delivery_note_number.present? ? l.delivery_note_number : @invoice.delivery_note_number %>'
+<% end -%>
+<% if l.issuer_transaction_reference.present? -%>
+RFF+PRR:<%= l.issuer_transaction_reference %>'
 <% end -%>
 <% l.taxes.each do |tax| -%>
 TAX+7+VAT+++:::<%=edi_number tax.percent%>'
@@ -60,7 +66,7 @@ MOA+260:<%=edi_number @invoice.discount_amount%>'
 MOA+125:<%=edi_number @invoice.taxable_base%>'
 MOA+176:<%=edi_number @invoice.tax_amount%>'
 MOA+139:<%=edi_number @invoice.total%>'
-<% @invoice.taxes.each do |tax| -%>
+<% @invoice.taxes_uniq.each do |tax| -%>
 TAX+7+VAT+++:::<%=edi_number tax.percent%>'
 MOA+125:<%=edi_number @invoice.taxable_base(tax)%>'
 MOA+176:<%=edi_number @invoice.tax_amount(tax)%>'

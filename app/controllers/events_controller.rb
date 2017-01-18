@@ -1,5 +1,5 @@
 class EventsController < ApplicationController
-  unloadable
+
   helper :haltr
 
   skip_before_filter :check_if_login_required, :only => [ :create, :attachment]
@@ -48,13 +48,10 @@ class EventsController < ApplicationController
     end
 
     @event_count = events.count
-    @event_pages = Paginator.new self, @event_count, @limit, params['page']
+    @event_pages = Paginator.new @event_count, @limit, params['page']
     @offset ||= @event_pages.offset
-    @events =  events.find :all,
-      :order   => sort_clause,
-      :include => [:invoice],
-      :limit   => @event_pages.items_per_page,
-      :offset  => @offset
+    @events =  events.order(sort_clause).includes(:invoice).
+      limit(@event_pages.items_per_page).offset(@offset)
 
     respond_to do |format|
       format.html do
@@ -67,7 +64,7 @@ class EventsController < ApplicationController
   def create
     t = params[:event][:type]
     if t =~ /Event/
-      @event = t.constantize.new(params[:event])
+      @event = t.constantize.new(params[:event].except(:type))
     elsif t.blank?
       @event = Event.new(params[:event])
     else

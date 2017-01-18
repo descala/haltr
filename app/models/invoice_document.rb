@@ -1,8 +1,9 @@
 class InvoiceDocument < Invoice
 
-  unloadable
+
 
   has_many :payments, :foreign_key => :invoice_id, :dependent => :destroy
+  has_one :invoice_img, :foreign_key => :invoice_id, :dependent => :destroy
 
   attr_accessor :legal_filename, :legal_content_type, :legal_invoice
 
@@ -58,11 +59,20 @@ class InvoiceDocument < Invoice
     Money.new(paid_amount,currency)
   end
 
-  # https://rails.lighthouseapp.com/projects/8994/tickets/2389-sti-changes-behavior-depending-on-environment
-  # must be at the bottom of class
-  %w(received_invoice issued_invoice).each do |r| 
-    require_dependency r
-  end if Rails.env.development?
+  # Creates an Event unless it is an "automatic" state change
+  def aasm_create_event(user=nil)
+    user ||= User.current
+    name = aasm.current_event.to_s.gsub('!','')
+    unless Event.automatic.include?(name)
+      if name == 'queue' and !new?
+        Event.create(name: 'requeue', invoice: self, user: user)
+      elsif name =~ /^mark_as_/
+        Event.create(name: "done_#{name}", invoice: self, user: user)
+      else
+        Event.create(name: name, invoice: self, user: user)
+      end
+    end
+  end
 
 end
 

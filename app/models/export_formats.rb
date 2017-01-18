@@ -1,5 +1,5 @@
 class ExportFormats
-  unloadable
+
 
   def self.available
     # See config/formats.yml.example

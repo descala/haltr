@@ -262,6 +262,64 @@ div.action-linked_to_mine #companies {
 .companyid {
   font-size: 10px;
 }
+#invoice_img {
+  text-align: center;
+}
+#invoice_img .image {
+  position: relative;
+  border: 1px solid #666666;
+  overflow: hidden;
+}
+#invoice_img .colu1 {
+  display: inline-block;
+  margin-right: 10px;
+  vertical-align: top;
+}
+#invoice_img .colu2 {
+  text-align: left;
+  display: inline-block;
+  max-width: 210px;
+}
+#invoice_img h3 {
+  padding: 0;
+}
+#invoice_img_edit_metadata .colu1 {
+  margin-top: 20px;
+  border: 1px dotted;
+  float: left;
+  width: 40%;
+}
+#invoice_img_edit_metadata .colu2 {
+  float: left;
+  width: 45%;
+  margin-left: 10px;
+}
+#invoice_preview_small_box {
+  border: 1px dotted;
+  margin: 0;
+  margin-bottom: 10px;
+  padding: 10px;
+  text-align: right;
+}
+#invoice_preview_small_box .invoice-calculations {
+  margin: 0;
+}
+#invoice_preview_small_box .vendor {
+  margin-bottom: 10px;
+}
+#invoice_preview_small_box .invoice-calculations td {
+  padding-right: 2px;
+}
+.controller-received select#invoice_client_id {
+  width: 50%;
+}
+table.received_show {
+  width: auto;
+}
+table.received_show td {
+  text-align: left;
+}
+
 div.attachments span.size {
   font-size: 1em;
 }
@@ -288,6 +346,71 @@ span#send_info {
   right: 0px;
 }
 
+.rectangle-txt {
+  position: absolute;
+  padding: 0;
+  color: transparent;
+  background: rgba(234, 252, 23, .1);
+  z-index: 2;
+}
+.rectangle-txt input{
+  display: none;
+}
+.rectangle-txt:not(.context-menu-selection):hover {
+  background: white;
+  color: black;
+  z-index: 5;
+  border: 1px solid green;
+}
+.rectangle-txt.hastag {
+  background: rgba(255,255,51,.9);
+  color: black;
+  border: none;
+  z-index: 5;
+  font-weight: bold;
+  border: 1px solid yellow;
+}
+.rectangle-tag {
+  border-radius: 0.25em;
+  color: #fff;
+  display: inline;
+  font-size: 75%;
+  font-weight: 700;
+  line-height: 1;
+  padding: 0.2em 0.6em 0.3em;
+  text-align: center;
+  vertical-align: baseline;
+  white-space: nowrap;
+  background: rgba(92, 184, 92, .7);
+  box-sizing: border-box;
+  position: absolute;
+  z-index: 1;
+}
+.notfound-tag {
+  border-radius: 0.25em;
+  color: #fff;
+  display: inline;
+  font-size: 12px;
+  font-weight: 700;
+  line-height: 1.7;
+  padding: 0.2em 0.6em 0.3em;
+  margin-bottom: 0.2em;
+  text-align: center;
+  vertical-align: baseline;
+  white-space: nowrap;
+  background: rgba(184, 82, 92, 1);
+  box-sizing: border-box;
+}
+.controller-received #attachments_fields .description {
+  display: none !important;
+}
+#invoice_img .invoice-calculations th {
+  padding-left: 0;
+}
+#invoice_img h2.invoice-ID {
+  padding: 0;
+  text-align: right;
+}
 .controller-clients .client-info {
   border: 1px outset orange;
   margin-bottom: 10px;

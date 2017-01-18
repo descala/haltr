@@ -3,7 +3,11 @@
   <div class="col span-2-de-2">
     <ul class="menu-rapid">
       <%=  call_hook(:invoices_index_menu_top) %>
-      <li><%= link_to_if_authorized(l("label_invoice_new"), new_project_invoice_path(@project), :class => 'icon icon-add') %></li>
+          <% if controller.controller_name == "invoices" %>
+            <li><%= link_to_if_authorized(l("label_invoice_new"), new_project_invoice_path(@project), :class => 'icon icon-add') %></li>
+          <% else %>
+            <li><%= link_to_if_authorized(l("label_invoice_new"), new_project_received_path(@project), :class => 'icon icon-add') %></li>
+          <% end %>
       <% if num_can_be_sent > 0 -%>
         <li>
         <%= link_to_if_authorized "#{l(:button_send_invoices)} (#{num_can_be_sent})",{:action => 'send_new_invoices'} %>
@@ -21,7 +25,11 @@
       <% end -%>
       <% if User.current.allowed_to?(:import_invoices, @project) -%>
         <li>
-        <%= link_to l(:label_import), project_invoices_import_path(@project, params.merge({issued: 1})) -%>
+          <% if controller.controller_name == "invoices" %>
+            <%= link_to l(:label_import), project_invoices_upload_path(@project) -%>
+          <% else %>
+            <%= link_to l(:label_import), project_received_upload_path(@project) -%>
+          <% end %>
         </li>
       <% end -%>
       <%=  call_hook(:invoices_index_menu_bottom) %>
@@ -126,7 +134,7 @@
                   <div class="seccio grup">
                     <div class="col span-2-de-2">
                       <label for="client_id"><%= l(:label_company) %></label>
-                      <%= collection_select(nil, :client_id, Client.find(:all, :order => 'name', :conditions => ["project_id = ?", @project]), :id, :name, {:include_blank => true, :selected => @client_id}) %>
+                      <%= collection_select(nil, :client_id, Client.where(["project_id = ?", @project]).order(:name).all, :id, :name, {:include_blank => true, :selected => @client_id}) %>
                     </div>
                   </div>
 
@@ -177,7 +185,7 @@
               <tr id="invoice-<%=invoice.id%>" class="hascontextmenu <%= 'amended ' if invoice.amended? %><%= cycle("odd", "even") %>">
             <% end %>
                 <td><%= check_box_tag("ids[]", invoice.id, false, :id => nil) %></td>
-                <td><%=h link_to_if_authorized invoice.number, :action => 'show', :id => invoice %></td>
+                <td><%=h link_to_if_authorized invoice.number.blank? ? "?" : invoice.number, :action => 'show', :id => invoice %></td>
                 <td><%=h format_date invoice.date %></td>
                 <td><%=h invoice.client_office ? invoice.client_office : invoice.client %></td>
                 <td class="money"><%= money(invoice.subtotal) %></td>
@@ -210,4 +218,4 @@
   <%= render_menu :invoices_menu, @project %>
 <% end %>
 
-<%= context_menu invoices_context_menu_path %>
+<%= context_menu "/#{controller.controller_name}/context_menu" %>

@@ -24,6 +24,8 @@ resources :projects do
   match 'add_bank_info', :controller => 'companies', :action => 'add_bank_info', :via => :get
   match 'invoices/import' => 'invoices#import', :via => [:get,:post]
   match 'received/import' => 'received#import', :via => [:get,:post]
+  match 'invoices/upload' => 'invoices#upload', :via => [:get,:post]
+  match 'received/upload' => 'received#upload', :via => [:get,:post]
   match 'invoices/send_new' => 'invoices#send_new_invoices', :via => :get
   match 'invoices/download_new' => 'invoices#download_new_invoices', :via => :get
   match 'invoices/update_payment_stuff' => 'invoices#update_payment_stuff', :via => :get
@@ -34,13 +36,14 @@ resources :projects do
   resources :invoice_templates, :only => [:index, :new, :create]
   match 'new_invoices_from_template' => 'invoice_templates#new_invoices_from_template', :via => [:get, :post]
   match 'create_invoices' => 'invoice_templates#create_invoices', :via => :post
-  match 'update_taxes' => 'invoice_templates#update_taxes'
+  match 'update_taxes' => 'invoice_templates#update_taxes', :via => [:get, :post]
   match 'invoices/reports' => 'invoices#reports', :via => [:get]
   match 'invoices/report_invoice_list' => 'invoices#report_invoice_list', :via => [:post]
   match 'invoices/report_channel_state' => 'invoices#report_channel_state', :via => [:get]
+  match 'invoices/report_received_table' => 'invoices#report_received_table', :via => [:get]
   resources :payments, :only => [:index, :new, :create]
-  match 'payments/import_aeb43_index' => 'payments#import_aeb43_index'
-  match 'payments/import_aeb43' => 'payments#import_aeb43'
+  match 'payments/import_aeb43_index' => 'payments#import_aeb43_index', :via => [:get, :post]
+  match 'payments/import_aeb43' => 'payments#import_aeb43', :via => [:get, :post]
   match 'payments/payment_initiation'  => 'payments#payment_initiation',  :via => :get
   match 'payments/sepa' => 'payments#sepa', :via => :get
   resources :mandates
@@ -51,6 +54,7 @@ resources :projects do
   match 'check_iban' => 'companies#check_iban', :via => :get, :as => :check_iban
   match 'ccc2iban' => 'clients#ccc2iban', :via => :get, :as => :ccc2iban
   resources :quotes, :only => [:index, :new, :create]
+  resources :invoice_imgs, :only => [:show]
   match 'invoices/add_attachment' => 'invoices#add_attachment', :via => :post
   resources :import_errors, :only => [:index, :show, :destroy, :create]
   match 'import_errors' => 'import_errors#destroy', :via => :delete, :as => 'project_import_errors'
@@ -64,12 +68,13 @@ resources :projects do
   match 'payments/report_payment_list' => 'payments#report_payment_list', :via => [:post]
   match 'events' => 'events#index', via: [:get,:post]
   match 'orders/import' => 'orders#import', via: [:get, :post]
-  match 'orders/received' => 'orders#received', via: [:get]
-  match 'orders/received/:id' => 'orders#show_received', via: [:get], as: :received_order
   match 'orders/add_comment' => 'orders#add_comment', :via => :post
   match 'orders/:id/create_invoice' => 'orders#create_invoice', :via => :post
   resources :orders, only: [:index, :show, :destroy]
 end
+resources :invoice_imgs, :only => [:create,:update]
+match 'invoice_imgs/:id/tag/:tag' => 'invoice_imgs#tag', :as => 'invoice_imgs_tag', :via => :get
+
 resources :clients do
   resources :people, :only => [:index, :new, :create]
   resources :client_offices, :only => [:index, :new, :create, :edit, :update, :destroy]
@@ -80,15 +85,16 @@ match 'invoices/context_menu', :to => 'invoices#context_menu', :as => 'invoices_
 match 'received/context_menu', :to => 'received#context_menu', :as => 'received_context_menu', :via => [:get, :post]
 match 'import_errors/context_menu', :to => 'import_errors#context_menu', :as => 'import_errors_context_menu', :via => [:get, :post]
 match 'invoice_templates/context_menu', :to => 'invoice_templates#context_menu', :as => 'invoice_templates_context_menu', :via => [:get, :post]
-match 'invoices/bulk_download' => 'invoices#bulk_download'
-match 'received/bulk_download' => 'received#bulk_download'
-match 'invoices/bulk_mark_as' => 'invoices#bulk_mark_as'
-match 'received/bulk_mark_as' => 'received#bulk_mark_as'
-match 'received/bulk_validate' => 'received#bulk_validate'
-match 'invoices/bulk_send' => 'invoices#bulk_send'
+match 'invoice_imgs/context_menu', :to => 'invoice_imgs#context_menu', :as => 'invoice_imgs_context_menu', :via => [:get, :post]
+match 'invoices/bulk_download' => 'invoices#bulk_download', :via => [:get, :post]
+match 'received/bulk_download' => 'received#bulk_download', :via => [:get, :post]
+match 'invoices/bulk_mark_as' => 'invoices#bulk_mark_as', :via => [:get, :post]
+match 'received/bulk_mark_as' => 'received#bulk_mark_as', :via => [:get, :post]
+match 'received/bulk_validate' => 'received#bulk_validate', :via => [:get, :post]
+match 'invoices/bulk_send' => 'invoices#bulk_send', :via => [:get, :post]
 match 'invoices/by_taxcode_and_num' => 'invoices#by_taxcode_and_num', :via => :get
 match 'invoices', :controller => 'invoices', :action => 'destroy', :via => :delete
-match 'received', :controller => 'received', :action => 'destroy', :via => :delete
+match 'received_invoices', :controller => 'received', :action => 'destroy', :via => :delete
 match 'invoice_templates', :controller => 'invoice_templates', :action => 'destroy', :via => :delete
 match 'invoices/:id/mark_as/:state' => 'invoices#mark_as', :via => :get, :as => :mark_as
 match 'invoices/send_invoice/:id' => 'invoices#send_invoice', :via => :get, :as => :send_invoice
@@ -111,20 +117,20 @@ match 'invoice/:client_hashid/:invoice_id' => 'invoices#view', :client_hashid =>
 
 # public access to a company logo, knowing the id and the file name
 # TODO should be companies controller
-match 'invoices/logo/:attachment_id/:filename' => 'invoices#logo', :attachment_id => /\d+/, :filename => /.*/
+get 'invoices/logo/:attachment_id/:filename' => 'invoices#logo', :attachment_id => /\d+/, :filename => /.*/
 
 resources :invoices, :has_many => :events
 resources :received_invoices, :controller => :received
-match 'received/mark_refused/:id' => 'received#mark_refused', :as => :mark_refused
-match 'received/mark_refused_with_mail/:id' => 'received#mark_refused_with_mail', :as => :mark_refused_with_mail
-match 'received/mark_accepted/:id' => 'received#mark_accepted', :as => :mark_accepted
-match 'received/mark_accepted_with_mail/:id' => 'received#mark_accepted_with_mail', :as => :mark_accepted_with_mail
+match 'received/mark_refused/:id' => 'received#mark_refused', :as => :mark_refused, :via => [:get, :post]
+match 'received/mark_refused_with_mail/:id' => 'received#mark_refused_with_mail', :as => :mark_refused_with_mail, :via => [:get, :post]
+match 'received/mark_accepted/:id' => 'received#mark_accepted', :as => :mark_accepted, :via => [:get, :post]
+match 'received/mark_accepted_with_mail/:id' => 'received#mark_accepted_with_mail', :as => :mark_accepted_with_mail, :via => [:get, :post]
 match 'received/validate/:id' => 'received#validate', :via => :get, :as => :received_validate
 
 resources :invoice_templates
-match 'invoice_templates/new_from_invoice/:id' => 'invoice_templates#new_from_invoice'
+match 'invoice_templates/new_from_invoice/:id' => 'invoice_templates#new_from_invoice', :via => [:get, :post]
 
-match 'projects/:project_id/payments/new/:invoice_id(/:payment_type)' => 'payments#new'
+match 'projects/:project_id/payments/new/:invoice_id(/:payment_type)' => 'payments#new', :via => [:get, :post]
 resources :payments
 
 match '/companies/logo/:project_id' => 'companies#logo', :via => :get

@@ -8,9 +8,9 @@ module Haltr
       # {["facturae_32", "accepted"]=>1,
       #  ["facturae_32", "new"]=>8,
       #  ["facturae_32", "sent"]=>4}
-      query = IssuedInvoice.includes('client')
+      query = IssuedInvoice.joins(:client)
       if country
-        project_ids = Project.includes(:company).
+        project_ids = Project.joins(:company).
           where("companies.country" => country).collect {|p| p.id }
         query = query.where("invoices.project_id in (?)", project_ids)
       end

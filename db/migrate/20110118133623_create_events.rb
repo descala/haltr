@@ -7,7 +7,7 @@ class CreateEvents < ActiveRecord::Migration
       t.column :info, :text
       t.column :md5, :string
       t.column :filename, :string
-      t.timestamps
+      t.timestamps null: false
     end
   end
 

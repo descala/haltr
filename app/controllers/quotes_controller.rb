@@ -1,5 +1,5 @@
 class QuotesController < ApplicationController
-  unloadable
+
   menu_item Haltr::MenuItem.new(:invoices,:quotes)
   helper :haltr
   helper :invoices
@@ -18,14 +18,11 @@ class QuotesController < ApplicationController
     sort_update %w(invoices.created_at state number date due_date clients.name import_in_cents)
     invoices = @project.quotes
     @invoice_count = invoices.count
-    @invoice_pages = Paginator.new self, @invoice_count,
+    @invoice_pages = Paginator.new @invoice_count,
 		per_page_option,
 		params['page']
-    @invoices =  invoices.find :all,
-       :order => sort_clause,
-       :include => [:client],
-       :limit  =>  @invoice_pages.items_per_page,
-       :offset =>  @invoice_pages.current.offset
+    @invoices =  invoices.includes(:client).order(sort_clause).
+      limit(@invoice_pages.items_per_page).offset(@invoice_pages.current.offset)
   end
 
   def show
@@ -39,7 +36,13 @@ class QuotesController < ApplicationController
           :layout => "invoice.html",
           :template=>"quotes/show_pdf",
           :formats => :html,
-          :show_as_html => params[:debug]
+          :show_as_html => params[:debug],
+          :margin => {
+            :top    => 20,
+            :bottom => 20,
+            :left   => 30,
+            :right  => 20
+          }
       end
       if params[:debug]
         format.facturae30  { render_xml Haltr::Xml.generate(@invoice, 'facturae30') }
@@ -67,7 +70,7 @@ class QuotesController < ApplicationController
 
   def new
     @client = Client.find(params[:client]) if params[:client]
-    @client ||= Client.find(:all, :order => 'name', :conditions => ["project_id = ?", @project]).first
+    @client ||= Client.where("project_id = ?", @project).order('name').first
     @client ||= Client.new
     @invoice = Quote.new(:project=>@project,:date=>Date.today,:number=>Quote.next_number(@project))
     il = InvoiceLine.new
@@ -105,7 +108,7 @@ class QuotesController < ApplicationController
     else
       logger.info "Invoice errors #{@invoice.errors.full_messages}"
       # Add a client in order to render the form with the errors
-      @client ||= Client.find(:all, :order => 'name', :conditions => ["project_id = ?", @project]).first
+      @client ||= Client.where("project_id = ?", @project).order('name').first
       @client ||= Client.new
       render :action => "new"
     end
@@ -126,7 +129,7 @@ class QuotesController < ApplicationController
       Event.create(:name=>'edited',:invoice=>@invoice,:user=>User.current)
       flash[:notice] = l(:notice_successful_update)
       if params[:save_and_send]
-        if @invoice.valid?
+        if @invoice.valid? and ExportChannels.can_send?(:send_pdf_by_mail)
           redirect_to :action => 'send_quote', :id => @invoice
         else
           flash[:error] = l(:errors_prevented_quote_sent)
@@ -150,7 +153,7 @@ class QuotesController < ApplicationController
       raise @invoice.errors.full_messages.join(", ") # unless @invoice.valid?(:pdf_by_mail)
     end
     Delayed::Job.enqueue Haltr::SendPdfByMail.new(@invoice,User.current)
-    @invoice.quote_send
+    @invoice.quote_send!
     flash[:notice] = "#{l(:notice_quote_sent)}"
   rescue Exception => e
     flash[:error] = "#{l(:error_quote_not_sent, :num=>@invoice.number)}: #{e.message}"
@@ -161,10 +164,11 @@ class QuotesController < ApplicationController
 
   def accept
     @quote = @invoice
-    @quote.quote_accept
+    @quote.quote_accept!
     @client = @quote.client
     @invoice = IssuedInvoice.new
     @invoice.attributes = @quote.attributes
+    @invoice.date = Date.today
     @invoice.number=IssuedInvoice.next_number(@project)
     @quote.invoice_lines.each do |line|
       il = line.dup
@@ -178,7 +182,7 @@ class QuotesController < ApplicationController
   end
 
   def refuse
-    @invoice.quote_refuse
+    @invoice.quote_refuse!
     redirect_to :action => 'index', :project_id => @project
   end
 
