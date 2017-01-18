@@ -15,6 +15,9 @@ DTM+95E:<%='fechaefe (camp de TSF #4744)'%>:102'
 <% unless @invoice.delivery_note_number.blank? %>
 RFF+DQ:<%=@invoice.delivery_note_number%>'
 <% end %>
+<% if @invoice.invoice_lines.present? && @invoice.invoice_lines.any? && invoice.invoice_line.first.issuer_transaction_reference.present?%>
+RFF+PDR:<%= invoice.invoice_line.first.issuer_transaction_reference %>'
+<% end %>
 <%= call_hook(:edi_after_delivery_note) if call_hook(:edi_after_delivery_note).present? -%>
 <% unless @invoice.ponumber.blank? %>
 RFF+ON:<%=@invoice.ponumber.to_s[0..16]%>'
@@ -45,9 +48,6 @@ MOA+66:<%=edi_number l.taxable_base%>'
 PRI+AAA:<%=edi_number l.price%>'
 <% if @invoice.delivery_note_number.present? or l.delivery_note_number.present? -%>
 RFF+DQ:<%= l.delivery_note_number.present? ? l.delivery_note_number : @invoice.delivery_note_number %>'
-<% end -%>
-<% if l.issuer_transaction_reference.present? -%>
-RFF+PDR:<%= l.issuer_transaction_reference %>'
 <% end -%>
 <% l.taxes.each do |tax| -%>
 TAX+7+VAT+++:::<%=edi_number tax.percent%>'
