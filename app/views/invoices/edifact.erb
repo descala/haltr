@@ -47,7 +47,7 @@ PRI+AAA:<%=edi_number l.price%>'
 RFF+DQ:<%= l.delivery_note_number.present? ? l.delivery_note_number : @invoice.delivery_note_number %>'
 <% end -%>
 <% if l.issuer_transaction_reference.present? -%>
-RFF+PRR:<%= l.issuer_transaction_reference %>'
+RFF+PDR:<%= l.issuer_transaction_reference %>'
 <% end -%>
 <% l.taxes.each do |tax| -%>
 TAX+7+VAT+++:::<%=edi_number tax.percent%>'
