@@ -37,7 +37,7 @@ class Invoice < ActiveRecord::Base
   }
 
   validates_presence_of :date, :currency, :project_id, :unless => Proc.new {|i| i.type == "ReceivedInvoice" }
-  validates :date, :due_date, :tax_point_date, :invoicing_period_start, :invoicing_period_end, :order_date, :fa_duedate, format: { with: /\A[0-9]{4}-[0-9]{1,2}-[0-9]{1,2}\z/ }
+  validates :date, :due_date, :tax_point_date, :invoicing_period_start, :invoicing_period_end, :order_date, :fa_duedate, format: { with: /\A[0-9]{4}-[0-9]{1,2}-[0-9]{1,2}\z/ }, allow_blank: true
   validates_presence_of :client, :unless => Proc.new {|i| %w(Quote ReceivedInvoice).include? i.type }
   validates_inclusion_of :currency, :in  => Money::Currency.table.collect {|k,v| v[:iso_code] }, :unless => Proc.new {|i| i.type == "ReceivedInvoice" }
   validates_numericality_of :charge_amount_in_cents, :allow_nil => true
