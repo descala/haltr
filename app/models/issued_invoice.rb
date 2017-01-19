@@ -23,7 +23,8 @@ class IssuedInvoice < InvoiceDocument
   aasm column: :state, skip_validation_on_save: true, whiny_transitions: false do
     state :new, initial: true
     state :sending, :sent, :read, :error, :closed, :discarded, :accepted,
-      :refused, :registered, :allegedly_paid, :cancelled, :annotated
+      :refused, :registered, :allegedly_paid, :cancelled, :annotated,
+      :processing_pdf
 
     before_all_events :aasm_create_event
 
