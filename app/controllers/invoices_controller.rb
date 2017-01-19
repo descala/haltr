@@ -1393,7 +1393,8 @@ class InvoicesController < ApplicationController
               end
             end
           when /pdf/
-            @invoice = params[:issued] == 'true' ? IssuedInvoice.new : ReceivedInvoice.new
+            #@invoice = params[:issued] == 'true' ? IssuedInvoice.new : ReceivedInvoice.new
+            @invoice = ReceivedInvoice.new
             @invoice.project   = @project
             @invoice.state     = :processing_pdf
             @invoice.transport = transport
