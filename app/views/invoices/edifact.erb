@@ -15,8 +15,8 @@ DTM+95E:<%='fechaefe (camp de TSF #4744)'%>:102'
 <% unless @invoice.delivery_note_number.blank? %>
 RFF+DQ:<%=@invoice.delivery_note_number%>'
 <% end %>
-<% if @invoice.invoice_lines.present? && @invoice.invoice_lines.any? && invoice.invoice_line.first.issuer_transaction_reference.present?%>
-RFF+PDR:<%= invoice.invoice_line.first.issuer_transaction_reference %>'
+<% if @invoice.invoice_lines.any? && @invoice.invoice_lines.first.issuer_transaction_reference.present? %>
+RFF+PDR:<%= @invoice.invoice_lines.first.issuer_transaction_reference %>'
 <% end %>
 <%= call_hook(:edi_after_delivery_note) if call_hook(:edi_after_delivery_note).present? -%>
 <% unless @invoice.ponumber.blank? %>
