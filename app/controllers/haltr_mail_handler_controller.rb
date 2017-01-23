@@ -27,7 +27,7 @@ class HaltrMailHandlerController < ApplicationController
         message.content_transfer_encoding = '8bit'
 
         processed << "processed mail [#{message.message_id}] from '#{message.from}' with subject '#{message.subject}'"
-        processed << HaltrMailHandler.receive(message)
+        processed << HaltrMailHandler.receive(message.raw_source)
       end
       default do
         Rails.logger.info "Unknown recipient #{message.to} for message with id #{message.message_id}"
