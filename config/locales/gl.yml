@@ -121,6 +121,7 @@ gl:
   transfer: Transferencia bancaria
   transfer_to: Transferencia bancaria a %{bank_account}
   cheque: Cheque
+  cheque_b: Cheque bancario
   reposition: Reposición
   other: Outros
   requires_client_bank_account: require conta bancaria do cliente

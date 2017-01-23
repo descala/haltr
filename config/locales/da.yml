@@ -108,6 +108,7 @@ da:
   transfer: Bankoverførsel
   transfer_to: Bankoverførsel til %{bank_account}
   cheque: Cheque
+  cheque_b: Bank Cheque
   reposition: Reposition
   other: Andre
   requires_client_bank_account: kræver klient bankkonto

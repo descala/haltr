@@ -110,6 +110,7 @@ fr:
   transfer: Transfert bancaire
   transfer_to: Transfert bancaire au %{bank_account}
   cheque: Cheque
+  cheque_b: Bank Cheque
   reposition: Reposition
   other: Autres
   requires_client_bank_account: exige le compte bancaire du client

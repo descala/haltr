@@ -11,6 +11,7 @@ module Haltr
     PAYMENT_CHEQUE     = 11
     PAYMENT_REPOSITION = 12
     PAYMENT_SPECIAL    = 13
+    PAYMENT_CHEQUE_B   = 17
     PAYMENT_CREDIT     = 19
 
     PAYMENT_CODES = {
@@ -21,6 +22,7 @@ module Haltr
       PAYMENT_CHEQUE     => {facturae: '11', ubl: '??', edifact: '20'},
       PAYMENT_REPOSITION => {facturae: '12', ubl: '??', edifact: ''  },
       PAYMENT_SPECIAL    => {facturae: '13', ubl: '??', edifact: ''  },
+      PAYMENT_CHEQUE_B   => {facturae: '17', ubl: '23', edifact: '23'},
       PAYMENT_CREDIT     => {facturae: '19', ubl: '??', edifact: ''  },
     }
 
@@ -69,6 +71,7 @@ module Haltr
       pm << [I18n.t("fa_payment_method_19"),PAYMENT_CREDIT]
       pm << [I18n.t("awarding"),PAYMENT_AWARDING]
       pm << [I18n.t("cheque"),PAYMENT_CHEQUE]
+      pm << [I18n.t("cheque_b"),PAYMENT_CHEQUE_B]
       pm << [I18n.t("reposition"),PAYMENT_REPOSITION]
       pm << [I18n.t("other"),PAYMENT_SPECIAL]
     end

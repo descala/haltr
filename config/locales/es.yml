@@ -122,6 +122,7 @@ es:
   transfer: Transferencia bancaria
   transfer_to: Transferencia bancaria a %{bank_account}
   cheque: Cheque
+  cheque_b: Cheque bancario
   reposition: Reposición
   other: Otros
   requires_client_bank_account: requiere cuenta bancaria del cliente

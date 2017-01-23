@@ -120,6 +120,7 @@ ca:
   transfer: Transferència bancària
   transfer_to: Transferència bancària a %{bank_account}
   cheque: Xec
+  cheque_b: Xec bancari
   reposition: Reposició
   other: Altres
   requires_client_bank_account: requereix compte bancari del client
