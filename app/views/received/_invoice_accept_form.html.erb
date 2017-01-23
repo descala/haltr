@@ -1,5 +1,5 @@
 <fieldset style="padding:5px 30px;">
-<legend><%= l :accept_notification_to, :mail => @invoice.client.email.present? ? @invoice.client.email : "(#{I18n.t(:client_without_email)})" %></legend>
+<legend><%= l :accept_notification_to, :mail => (@invoice.client and @invoice.client.email.present?) ? @invoice.client.email : "(#{I18n.t(:client_without_email)})" %></legend>
 <%= form_tag(mark_accepted_path(@invoice)) do %>
 
   <%= I18n.t(:received_invoice_accepted, :num => @invoice.number, :company => @invoice.company.name) %><br />
@@ -11,7 +11,7 @@
   <%= render :partial => "mail_notifier/invoice", :locals => { :invoice => @invoice } %>
   <br />
 
-  <% if @invoice.client.email.present? -%>
+  <% if @invoice.client and @invoice.client.email.present? -%>
     <%= button_tag(name: 'commit', value: 'accept_with_mail') do %>
       <%= I18n.t(:accept_and_mail) %>
     <% end -%>

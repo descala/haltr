@@ -23,6 +23,16 @@
   </div>
   <!--final menu rapid-->
 
+  <% if @invoice.is_a? ReceivedInvoice -%>
+    <div id="invoice-refuse" class="accept_refuse_form" style="display: none;">
+      <%= render :partial => "invoice_refuse_form" %>
+    </div>
+    <div id="invoice-accept" class="accept_refuse_form" style="display: none;">
+      <%= render :partial => "invoice_accept_form" %>
+    </div>
+  <% end -%>
+
+
   <div id="invoice_wrapper">
     <div class="ribbon ribbon-<%= @invoice.state %>">
       <% if @invoice.is_a? InvoiceTemplate %>
