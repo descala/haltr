@@ -122,9 +122,7 @@ get 'invoices/logo/:attachment_id/:filename' => 'invoices#logo', :attachment_id 
 resources :invoices, :has_many => :events
 resources :received_invoices, :controller => :received
 match 'received/mark_refused/:id' => 'received#mark_refused', :as => :mark_refused, :via => [:get, :post]
-match 'received/mark_refused_with_mail/:id' => 'received#mark_refused_with_mail', :as => :mark_refused_with_mail, :via => [:get, :post]
 match 'received/mark_accepted/:id' => 'received#mark_accepted', :as => :mark_accepted, :via => [:get, :post]
-match 'received/mark_accepted_with_mail/:id' => 'received#mark_accepted_with_mail', :as => :mark_accepted_with_mail, :via => [:get, :post]
 match 'received/validate/:id' => 'received#validate', :via => :get, :as => :received_validate
 
 resources :invoice_templates

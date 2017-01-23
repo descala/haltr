@@ -1,27 +1,25 @@
 <fieldset style="padding:5px 30px;">
-  <% if !@invoice.client or @invoice.client.email.blank? -%>
-    <p>
-    <%= I18n.t :client_without_email %>
-    </p>
-  <% else -%>
-  <legend><%= l :refuse_notification_to, :mail => @invoice.client.email %></legend>
-<%= form_tag(mark_refused_with_mail_path(@invoice)) do %>
+<legend><%= l :refuse_notification_to, :mail => @invoice.client.email.present? ? @invoice.client.email : "(#{I18n.t(:client_without_email)})" %></legend>
+<%= form_tag(mark_refused_path(@invoice)) do %>
 
-<%= I18n.t(:received_invoice_refused, :num => @invoice.number, :company => @invoice.company.name) %><br />
+  <%= I18n.t(:received_invoice_refused, :num => @invoice.number, :company => @invoice.company.name) %><br />
 
-<%= text_area_tag 'reason', "", :rows => 4, :cols => 40 %><br />
+  <%= text_area_tag 'reason', "", :rows => 4, :cols => 40 %><br />
 
-----------------------------------------<br />
+  ----------------------------------------<br />
 
-<%= render :partial => "mail_notifier/invoice", :locals => { :invoice => @invoice } %>
-<br />
+  <%= render :partial => "mail_notifier/invoice", :locals => { :invoice => @invoice } %>
+  <br />
 
-<%= submit_tag I18n.t(:refuse_and_mail) %>
-<% end -%>
+  <% if @invoice.client.email.present? -%>
+    <%= button_tag(name: 'commit', value: 'refuse_with_mail') do %>
+      <%= I18n.t(:refuse_and_mail) %>
+    <% end -%>
   <% end -%>
 
-<%= form_tag(mark_refused_path(@invoice)) do %>
-  <%= submit_tag I18n.t(:refuse_without_mail) %>
+  <%= button_tag name: 'commit', value: 'refuse' do %>
+    <%= I18n.t(:refuse_without_mail) %>
+  <% end -%>
   <%= button_tag I18n.t(:cancel), onclick: "$('#invoice-refuse').hide(); return false;" %>
 <% end -%>
 </fieldset>

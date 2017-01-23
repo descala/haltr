@@ -23,12 +23,10 @@ class ReceivedController < InvoicesController
     super
   end
 
-  def mark_accepted_with_mail
-    MailNotifier.delay.received_invoice_accepted(@invoice,params[:reason])
-    mark_accepted
-  end
-
   def mark_accepted
+    if params[:commit] == 'accept_with_mail'
+      MailNotifier.delay.received_invoice_accepted(@invoice,params[:reason])
+    end
     if @invoice.created_from_invoice
       Event.create(
         name: 'accept_notification',
@@ -43,12 +41,10 @@ class ReceivedController < InvoicesController
     render :text => "OK"
   end
 
-  def mark_refused_with_mail
-    MailNotifier.delay.received_invoice_refused(@invoice,params[:reason])
-    mark_refused
-  end
-
   def mark_refused
+    if params[:commit] == 'refuse_with_mail'
+      MailNotifier.delay.received_invoice_refused(@invoice,params[:reason])
+    end
     if @invoice.created_from_invoice
       Event.create(
         name: 'refuse_notification',
