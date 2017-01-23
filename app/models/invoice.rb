@@ -1259,10 +1259,14 @@ _INV
 
   def client_iban
     self[:client_iban].blank? ? client.iban : self[:client_iban]
+  rescue
+    nil
   end
 
   def client_bic
     self[:client_bic].blank? ? client.bic : self[:client_bic]
+  rescue
+    nil
   end
 
   protected
