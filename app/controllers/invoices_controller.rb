@@ -1400,7 +1400,6 @@ class InvoicesController < ApplicationController
           when /pdf/
             @invoice = params[:issued] == 'true' ? IssuedInvoice.new : ReceivedInvoice.new
             @invoice.project   = @project
-            @invoice.state     = :processing_pdf if @invoice.is_a?(ReceivedInvoice)
             @invoice.transport = transport
             @invoice.md5       = attachment.digest
             @invoice.original  = File.binread(attachment.diskfile)
@@ -1408,7 +1407,7 @@ class InvoicesController < ApplicationController
             @invoice.has_been_read = true
             @invoice.file_name = attachment.filename
             @invoice.save(validate: false)
-            if @invoice.is_a?(ReceivedInvoice)
+            if @project.company.auto_process_pdf?
               Haltr::SendPdfToWs.send(@invoice)
               @invoice.processing_pdf!
               flash[:notice] = "#{l(:notice_invoice_processing_pdf)}"
