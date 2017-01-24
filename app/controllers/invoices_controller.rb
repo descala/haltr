@@ -1393,10 +1393,9 @@ class InvoicesController < ApplicationController
               end
             end
           when /pdf/
-            #@invoice = params[:issued] == 'true' ? IssuedInvoice.new : ReceivedInvoice.new
-            @invoice = ReceivedInvoice.new
+            @invoice = params[:issued] == 'true' ? IssuedInvoice.new : ReceivedInvoice.new
             @invoice.project   = @project
-            @invoice.state     = :processing_pdf
+            @invoice.state     = :processing_pdf if @invoice.is_a?(ReceivedInvoice)
             @invoice.transport = transport
             @invoice.md5       = attachment.digest
             @invoice.original  = File.binread(attachment.diskfile)
@@ -1404,9 +1403,11 @@ class InvoicesController < ApplicationController
             @invoice.has_been_read = true
             @invoice.file_name = attachment.filename
             @invoice.save(validate: false)
-            Haltr::SendPdfToWs.send(@invoice)
-            @invoice.processing_pdf!
-            flash[:notice] = "#{l(:notice_invoice_processing_pdf)}"
+            if @invoice.is_a?(ReceivedInvoice)
+              Haltr::SendPdfToWs.send(@invoice)
+              @invoice.processing_pdf!
+              flash[:notice] = "#{l(:notice_invoice_processing_pdf)}"
+            end
           else
             errors <<  "unknown file type: '#{attachment.content_type}' for #{attachment.filename}"
           end
