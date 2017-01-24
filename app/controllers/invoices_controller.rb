@@ -518,7 +518,12 @@ class InvoicesController < ApplicationController
     @invoice_pdf = nil
     unless %w(original sent db).include?(params[:view])
       if @invoice.original and @invoice.send_original?
-        params[:view] = @company.invoice_viewer
+        if @invoice.invoice_format == 'pdf'
+          # PDF invoices have empty fields when not mofified
+          params[:view] = 'original'
+        else
+          params[:view] = @company.invoice_viewer
+        end
       end
     end
     case params[:view]
