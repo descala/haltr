@@ -26,7 +26,6 @@ class InvoiceImgTest < ActiveSupport::TestCase
     invoice_img.update_invoice
     invoice = invoice_img.invoice
     assert_equal 1, invoice.invoice_lines.count
-    assert_equal 60000, invoice.import_in_cents
     assert_equal "01-06-2012".to_date, invoice.due_date
     assert_equal 'received', invoice.state
   end
