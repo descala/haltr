@@ -652,6 +652,7 @@ ca:
   invoice_attachments_description: "Permet pujar fitxers relacionats amb la factura (màxim %{mb}MB). Aquests documents s'adjuntaran a la factura electrònica."
   invoice_attachments_permission: "No tens permisos per pujar fitxers"
   label_will_send_original: "Aquesta factura té original i no s'ha modificat. Així doncs s'enviarà el document original."
+  label_will_send_original_pdf: "Aquesta factura té original en format PDF. Així doncs s'enviarà el document original."
   import_errors: "Errors d'importació"
   text_import_errors_destroy_confirmation: "Segur que vols esborrar els errors d'importació seleccionats?"
   field_series_code: "Sèrie"

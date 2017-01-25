@@ -1107,7 +1107,8 @@ _INV
 
   def send_original?
     Redmine::Hook.call_hook(:model_invoice_send_original, :invoice=>self) != [false] and
-      original and !modified_since_created?
+      # always send original when not modified, or it's a PDF (#6334)
+      original and (!modified_since_created? or invoice_format == 'pdf')
   end
 
   def original_root_namespace

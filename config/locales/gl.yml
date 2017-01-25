@@ -649,6 +649,7 @@ gl:
   invoice_attachments_description: "Permite subir ficheiros relacionados coa factura (máximo %{mb}MB). Estes documentos adxuntaranse á factura electrónica."
   invoice_attachments_permission: "Non tes activada a función de adxuntar ficheiros"
   label_will_send_original: "Esta factura ten orixinal e non se modificou. Entón, enviarase o documento orixinal."
+  label_will_send_original_pdf: "Esta factura tiene original en formato PDF. Así pues, se enviará el documento original."
   import_errors: "Erros de importación"
   text_import_errors_destroy_confirmation: “Seguro que queres borrar os erros de importación seleccionados?"
   field_series_code: "Serie"
