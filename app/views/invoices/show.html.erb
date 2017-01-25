@@ -65,6 +65,8 @@
 
   <% end -%>
 
+<% end -%>
+
   <% if @invoice.send_original? and @invoice.is_a? IssuedInvoice %>
     <p>* <%= @invoice.invoice_format.upcase rescue "" %> <%= l(:label_will_send_original) -%></p>
   <% end -%>
@@ -91,8 +93,6 @@
       </div>
     </div>
   </div>
-
-<% end -%>
 
 <%= render :partial => 'events/list', locals: {events: @invoice.visible_events} %>
 <%= render :partial => 'invoices/issued_invoice_list_other' if @invoice.is_a? IssuedInvoice %>
