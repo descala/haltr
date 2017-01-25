@@ -34,6 +34,7 @@ class InvoiceLine < ActiveRecord::Base
   validates_numericality_of :charge, :discount_percent, :position, :allow_nil => true
   validates_numericality_of :sequence_number, :allow_nil => true, :allow_blank => true
   validates :description, length: { maximum: 2500 }
+  validates :discount_text, length: { maximum: 255 }
 
   accepts_nested_attributes_for :taxes,
     :allow_destroy => true
