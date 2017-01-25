@@ -617,56 +617,50 @@ class InvoicesController < ApplicationController
             }
         end
       end
-      if params[:debug]
-        format.facturae30  { render_xml Haltr::Xml.generate(@invoice, 'facturae30', false, false, true) }
-        format.facturae31  { render_xml Haltr::Xml.generate(@invoice, 'facturae31', false, false, true) }
-        format.facturae32  { render_xml Haltr::Xml.generate(@invoice, 'facturae32', false, false, true) }
-        format.peppolubl20 { render_xml Haltr::Xml.generate(@invoice, 'peppolubl20', false, false, true) }
-        format.peppolubl21 { render_xml Haltr::Xml.generate(@invoice, 'peppolubl21', false, false, true) }
-        format.biiubl20    { render_xml Haltr::Xml.generate(@invoice, 'biiubl20', false, false, true) }
-        format.svefaktura  { render_xml Haltr::Xml.generate(@invoice, 'svefaktura', false, false, true) }
-        format.oioubl20    { render_xml Haltr::Xml.generate(@invoice, 'oioubl20', false, false, true) }
-        format.efffubl     { render_xml Haltr::Xml.generate(@invoice, 'efffubl', false, false, true) }
-        format.original {
-          ct = ExportFormats[@invoice.invoice_format]["content-type"] rescue ""
-          case ct
-          when 'text-xml'
-            render_xml @invoice.original
-          when 'application-pdf'
-            send_data @invoice.original,
-              :type => 'application/pdf',
-              :filename => @invoice.pdf_name,
-              :disposition => 'attachment'
-          else
-            render text: "Unknown original format: #{@invoice.invoice_format}"
-          end
-        }
-        format.edifact     { render text: Haltr::Edifact.generate(@invoice, false, true), content_type: 'text' }
+      format.original {
+        ct = ExportFormats[@invoice.invoice_format]["content-type"] rescue ""
+        case ct
+        when 'text-xml'
+          render_xml @invoice.original
+        when 'application-pdf'
+          send_data @invoice.original,
+            :type => 'application/pdf',
+            :filename => @invoice.pdf_name,
+            :disposition => 'attachment'
+        else
+          render text: "Unknown original format: #{@invoice.invoice_format}"
+        end
+      }
+      if @invoice.client.present?
+        if params[:debug]
+          format.facturae30  { render_xml Haltr::Xml.generate(@invoice, 'facturae30', false, false, true) }
+          format.facturae31  { render_xml Haltr::Xml.generate(@invoice, 'facturae31', false, false, true) }
+          format.facturae32  { render_xml Haltr::Xml.generate(@invoice, 'facturae32', false, false, true) }
+          format.peppolubl20 { render_xml Haltr::Xml.generate(@invoice, 'peppolubl20', false, false, true) }
+          format.peppolubl21 { render_xml Haltr::Xml.generate(@invoice, 'peppolubl21', false, false, true) }
+          format.biiubl20    { render_xml Haltr::Xml.generate(@invoice, 'biiubl20', false, false, true) }
+          format.svefaktura  { render_xml Haltr::Xml.generate(@invoice, 'svefaktura', false, false, true) }
+          format.oioubl20    { render_xml Haltr::Xml.generate(@invoice, 'oioubl20', false, false, true) }
+          format.efffubl     { render_xml Haltr::Xml.generate(@invoice, 'efffubl', false, false, true) }
+          format.edifact     { render text: Haltr::Edifact.generate(@invoice, false, true), content_type: 'text' }
+        else
+          format.facturae30  { download_xml Haltr::Xml.generate(@invoice, 'facturae30', false, false, true) }
+          format.facturae31  { download_xml Haltr::Xml.generate(@invoice, 'facturae31', false, false, true) }
+          format.facturae32  { download_xml Haltr::Xml.generate(@invoice, 'facturae32', false, false, true) }
+          format.peppolubl20 { download_xml Haltr::Xml.generate(@invoice, 'peppolubl20', false, false, true) }
+          format.peppolubl21 { download_xml Haltr::Xml.generate(@invoice, 'peppolubl21', false, false, true) }
+          format.biiubl20    { download_xml Haltr::Xml.generate(@invoice, 'biiubl20', false, false, true) }
+          format.svefaktura  { download_xml Haltr::Xml.generate(@invoice, 'svefaktura', false, false, true) }
+          format.oioubl20    { download_xml Haltr::Xml.generate(@invoice, 'oioubl20', false, false, true) }
+          format.efffubl     { download_xml Haltr::Xml.generate(@invoice, 'efffubl', false, false, true) }
+          format.edifact     { download_txt Haltr::Edifact.generate(@invoice, false, true) }
+        end
       else
-        format.facturae30  { download_xml Haltr::Xml.generate(@invoice, 'facturae30', false, false, true) }
-        format.facturae31  { download_xml Haltr::Xml.generate(@invoice, 'facturae31', false, false, true) }
-        format.facturae32  { download_xml Haltr::Xml.generate(@invoice, 'facturae32', false, false, true) }
-        format.peppolubl20 { download_xml Haltr::Xml.generate(@invoice, 'peppolubl20', false, false, true) }
-        format.peppolubl21 { download_xml Haltr::Xml.generate(@invoice, 'peppolubl21', false, false, true) }
-        format.biiubl20    { download_xml Haltr::Xml.generate(@invoice, 'biiubl20', false, false, true) }
-        format.svefaktura  { download_xml Haltr::Xml.generate(@invoice, 'svefaktura', false, false, true) }
-        format.oioubl20    { download_xml Haltr::Xml.generate(@invoice, 'oioubl20', false, false, true) }
-        format.efffubl     { download_xml Haltr::Xml.generate(@invoice, 'efffubl', false, false, true) }
-        format.original {
-          ct = ExportFormats[@invoice.invoice_format]["content-type"] rescue ""
-          case ct
-          when 'text-xml'
-            render_xml @invoice.original
-          when 'application-pdf'
-            send_data @invoice.original,
-              :type => 'application/pdf',
-              :filename => @invoice.pdf_name,
-              :disposition => 'attachment'
-          else
-            render text: "Unknown original format: #{@invoice.invoice_format}"
-          end
+        format.all {
+          @invoice.valid?
+          flash[:error] = @invoice.errors.full_messages.join('. ')
+          redirect_to invoice_path(@invoice)
         }
-        format.edifact     { download_txt Haltr::Edifact.generate(@invoice, false, true) }
       end
     end
   end

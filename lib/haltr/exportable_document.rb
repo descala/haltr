@@ -13,6 +13,10 @@ module Haltr::ExportableDocument
       end
 
       def sending_info(channel_name=nil)
+        if self.client.nil?
+          self.valid?
+          return self.errors.full_messages.join('. ')
+        end
         if state == 'processing_pdf'
           return 'in process...'
         end
