@@ -12,6 +12,7 @@ class ExportChannelsTest < ActiveSupport::TestCase
     options['a'] = 1
     options = ExportChannels.options(channel)
     assert_equal({'foo'=>'bar'},options)
+    ExportChannels.use_file('channels.yml')
   end
 
 end

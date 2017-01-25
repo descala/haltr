@@ -144,6 +144,20 @@ class IssuedInvoice < InvoiceDocument
     "doSign('/invoices/base64doc/#{id}/','#{ExportChannels.format(client.invoice_format)}')"
   end
 
+  def valid?(context = nil)
+    # do not validate invoices with original PDF, only check for client #6334
+    if original and invoice_format == 'pdf'
+      if client.nil?
+        errors.add(:client, :blank)
+        return false
+      else
+        true
+      end
+    else
+      super
+    end
+  end
+
   protected
 
   # called after_create (only NEW invoices)
