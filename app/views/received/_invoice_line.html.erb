@@ -1,13 +1,26 @@
-<% lineid = f.object_name.split("[").last.gsub(/\]/,'') -%>
-<div id="invoice_line_<%= lineid %>" class="invoice_line">
+<div class="nested-fields">
+  <table class="formee invoice_lines">
+    <thead>
+      <tr>
+        <th><%= l(:field_price) %></th>
+        <th><%= l(:tag_tax_percentage) %></th>
+        <th><%= l(:tag_tax_wh_percentage) %></th>
+        <th></th>
+      </tr>
+    </thead>
 
-<p>
-<%= f.text_field :quantity, :value => f.object.quantity.to_s.gsub(/\.0+$/,''), :style => "width: 60px;", :no_label => true %>
-<%= f.select :unit, InvoiceLine.units, {:no_label => true}, {:style => "width: 100px;"} %>
-<%= f.text_field :description, :style => "width: 215px;", :no_label => true %>
-<%= f.text_field :price, :value => f.object.price.to_s.gsub(/\.0+$/,''), :style => "width: 60px;", :no_label => true %>
+    <tbody>
+      <tr>
+        <td><%= f.text_field :price, value: f.object.price.to_s.gsub(/\.0+$/,''), style: 'width: 78px;', no_label: true %></td>
+        <td><%= f.text_field :tax_percent, no_label: true, style: 'width: 78px;' %></td>
+        <td><%= f.text_field :tax_wh_percent, no_label: true, style: 'width: 78px;' %></td>
+        <td>
+          <!-- cocoon -->
+          <%= link_to_remove_association image_tag('false.png'), f, :class=>'eliminar' %>
+        </td>
+      </tr>
+    </tbody>
+  </table>
 
-<%= link_to_function(image_tag("false.png"),"rm_line(#{lineid});") %>
-</p>
+  <hr style="margin: 15px 0"/>
 </div>
-<%= f.hidden_field(:_destroy, {:value=>0, :id=>"destroy_line_#{lineid}"}) %>

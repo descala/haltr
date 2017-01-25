@@ -23,18 +23,11 @@
     <% end -%>
 
     <%= labelled_form_for :invoice, @invoice, :url => { :action => 'update', :id => @invoice }, :html => {:method => :put, :class => 'formee'}  do |f| %>
-      <%= render :partial => 'invoices/form', :locals => { :f => f } %>
+      <%= render :partial => 'received/form', :locals => { :f => f } %>
       <% if @invoice.original and !@invoice.modified_since_created? -%>
         <%= f.submit l(:button_save), :name => 'save', :data=>{:confirm => l(:overriding_original_warn)} %>
       <% else -%>
         <%= f.submit l(:button_save), :name => 'save' %>
-      <% end -%>
-      <% unless @invoice.is_a? InvoiceTemplate or @invoice.is_a? DraftInvoice -%>
-        <% if @invoice.original and !@invoice.modified_since_created? -%>
-          <%= f.submit l(:button_save_and_send), :name => 'save_and_send', :data=>{:confirm => l(:overriding_original_warn)} %>
-        <% else -%>
-          <%= f.submit l(:button_save_and_send), :name => 'save_and_send' %>
-        <% end -%>
       <% end -%>
     <% end %>
 

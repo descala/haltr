@@ -1,0 +1,65 @@
+<%= error_messages_for 'invoice' %>
+<%= error_messages_for 'client' %>
+<%= f.hidden_field :quote_id %>
+
+<% if @project.company.company_offices.any? -%>
+  <div class="seccio grup tabular">
+    <p class="col span-2-de-3">
+    <label for="company_office_id"><%= l(:label_company_office) %></label>
+    <%= select :invoice, :company_office_id, @project.company.company_offices.collect {|office|
+      ["#{office.address} - #{office.city}", office.id]
+    }, { selected: (@invoice.company_office_id rescue nil),
+         include_blank: "#{@project.company.address} - #{@project.company.city}"
+    } %>
+  </p>
+  </div>
+<% end -%>
+
+<fieldset class="tabular box">
+  <legend><%=l(:invoice_data)%></legend>
+
+  <div class="seccio grup">
+    <p class="col span-2-de-2" id="client_select">
+    <%= render :partial=>'invoices/clients',
+      :locals => { :selected => @created_client || @invoice.client_id } %>
+    </p>
+  </div>
+
+  <div class="seccio grup">
+    <p class="col span-2-de-4" id="client_select">
+    <%= f.text_field :total, :size => 10, :required => true, :label => l(:total_executable) %>
+    </p>
+    <p class="col span-2-de-4">
+        <%= f.text_field :number, :size => 10, :required => true, :label => l(:field_invoice_number) %>
+    </p>
+  </div>
+
+  <div class="seccio grup">
+    <p class="col span-2-de-4">
+      <%= f.text_field :date, :size => 10, :required => true %><%= calendar_for('invoice_date') %>
+    </p>
+    <p class="col span-2-de-4">
+      <%= f.text_field :due_date, :size => 10, :required => true %><%= calendar_for('invoice_due_date') %>
+    </p>
+  </div>
+</fieldset>
+
+
+<!-- linies -->
+
+<fieldset class="tabular box">
+  <legend><%=l(:label_tax_plural)%></legend>
+
+  <div id="invoice_lines" data-tax-names="<%= @project.company.tax_names.join(' ') %>">
+    <%= f.fields_for :invoice_lines do |line_form| %>
+      <%=  render :partial => 'received/invoice_line', :locals => { :f => line_form } %>
+    <% end %>
+  </div>
+
+  <div class="seccio grup">
+    <p class="col span-2-de-2">
+      <!-- cocoon -->
+      <span class='mes'><%= link_to_add_association l(:button_add_invoice_line), f, :invoice_lines, 'data-association-insertion-node' => '#invoice_lines', 'data-association-insertion-method' => 'append', partial: 'received/invoice_line' %></span>
+    </p>
+  </div>
+</fieldset>
