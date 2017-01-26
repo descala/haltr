@@ -85,24 +85,4 @@ class ReceivedController < InvoicesController
     ReceivedInvoice
   end
 
-  def parse_invoice_params
-    parsed_params = params[:invoice] || {}
-    parsed_params['invoice_lines_attributes'] ||= {}
-    #invoice_line['taxes_attributes'].each do |j, tax|
-    #  if tax['code'].blank? and
-    #      #TODO: this condition allows to create taxes without knowing the
-    #      # tax code (usefull from API) but when you edit invoice, tax is
-    #      # not selected correctly
-    #      (tax['percent'].blank? or tax['name'].blank?)
-    #    tax['_destroy'] = 1
-    #  end
-    #  if tax['code'] =~ /_E|_NS$/
-    #    tax['comment'] = params["#{tax['name']}_comment"]
-    #  else
-    #    tax['comment'] = ''
-    #  end
-    #end
-    parsed_params
-  end
-
 end

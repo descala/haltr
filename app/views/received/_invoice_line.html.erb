@@ -2,7 +2,7 @@
   <table class="formee invoice_lines">
     <thead>
       <tr>
-        <th><%= l(:field_price) %></th>
+        <th><%= l(:tag_subtotal) %></th>
         <th><%= l(:tag_tax_percentage) %></th>
         <th><%= l(:tag_tax_wh_percentage) %></th>
         <th></th>
@@ -15,6 +15,7 @@
         <td><%= f.text_field :tax_percent, no_label: true, style: 'width: 78px;' %></td>
         <td><%= f.text_field :tax_wh_percent, no_label: true, style: 'width: 78px;' %></td>
         <td>
+          <%= f.hidden_field :quantity, value: 1 %>
           <!-- cocoon -->
           <%= link_to_remove_association image_tag('false.png'), f, :class=>'eliminar' %>
         </td>

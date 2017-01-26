@@ -1,6 +1,5 @@
 <%= error_messages_for 'invoice' %>
 <%= error_messages_for 'client' %>
-<%= f.hidden_field :quote_id %>
 
 <% if @project.company.company_offices.any? -%>
   <div class="seccio grup tabular">
@@ -59,7 +58,7 @@
   <div class="seccio grup">
     <p class="col span-2-de-2">
       <!-- cocoon -->
-      <span class='mes'><%= link_to_add_association l(:button_add_invoice_line), f, :invoice_lines, 'data-association-insertion-node' => '#invoice_lines', 'data-association-insertion-method' => 'append', partial: 'received/invoice_line' %></span>
+      <span class='mes'><%= link_to_add_association l(:button_add_tax), f, :invoice_lines, 'data-association-insertion-node' => '#invoice_lines', 'data-association-insertion-method' => 'append', partial: 'received/invoice_line' %></span>
     </p>
   </div>
 </fieldset>
