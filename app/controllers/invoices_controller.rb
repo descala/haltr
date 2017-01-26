@@ -514,6 +514,10 @@ class InvoicesController < ApplicationController
   end
 
   def show
+    if Redmine::Hook.call_hook(:invoice_before_show,:project=>@project,:invoice=>@invoice).any?
+      @invoice = Redmine::Hook.call_hook(:invoice_before_show,:project=>@project,:invoice=>@invoice)[0]
+    end
+
     invoice_nokogiri = nil
     @invoice_pdf = nil
     unless %w(original sent db).include?(params[:view])
