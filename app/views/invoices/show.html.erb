@@ -38,13 +38,19 @@
 <% end -%>
 
 <% if @invoice_pdf -%>
-  <iframe src="/pdfjs/web/viewer.html?file=<%=@invoice_pdf%>" style="border: 0" width="70%" height="800" frameborder="0" scrolling="no"></iframe>
-  <div style="float: right;">
-    <% if  @invoice.state == 'processing_pdf' -%>
-      <p><%= I18n.t @invoice.state %></p>
-    <% else -%>
-      <%= link_to I18n.t(:process_pdf), process_pdf_path(@invoice), method: :post %>
-    <% end -%>
+  <div id="invoice_img">
+    <div class="colu1">
+      <iframe src="/pdfjs/web/viewer.html?file=<%=@invoice_pdf%>" style="border: 0" width="720px" height="890" frameborder="0" scrolling="no"></iframe>
+    </div>
+    <div class="colu2">
+      <% if @invoice.state == 'processing_pdf' -%>
+        <p><%= I18n.t @invoice.state %></p>
+      <% elsif @invoice.invoice_img -%>
+        <%= render partial: 'invoice_imgs/metadata', locals: {invoice_img: @invoice.invoice_img } %>
+      <% else -%>
+        <%= link_to I18n.t(:process_pdf), process_pdf_path(@invoice), method: :post %>
+      <% end -%>
+    </div>
   </div>
 <% else -%>
 

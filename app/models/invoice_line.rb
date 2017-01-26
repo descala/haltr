@@ -34,6 +34,7 @@ class InvoiceLine < ActiveRecord::Base
   validates_numericality_of :charge, :discount_percent, :position, :allow_nil => true
   validates_numericality_of :sequence_number, :allow_nil => true, :allow_blank => true
   validates :description, length: { maximum: 2500 }
+  validates :discount_text, length: { maximum: 255 }
 
   accepts_nested_attributes_for :taxes,
     :allow_destroy => true
@@ -172,6 +173,41 @@ _LINE
 
   def <=>(line)
     position <=> line.position
+  end
+
+  # for received invoices simplified form
+  def tax_percent
+    t = taxes.select {|tax| tax.name == 'IVA' }.first
+    if t
+      t.percent
+    else
+      0
+    end
+  end
+  def tax_percent=(v)
+    t = taxes.select {|tax| tax.name == 'IVA' }.first
+    if t
+      t.percent = v.to_f
+    else
+      taxes << Tax.new(name: 'IVA', percent: v, category: 'S')
+    end
+  end
+  def tax_wh_percent
+    t = taxes.select {|tax| tax.name == 'IRPF' }.first
+    if t
+      t.percent
+    else
+      0
+    end
+  end
+  def tax_wh_percent=(v)
+    t = taxes.select {|tax| tax.name == 'IRPF' }.first
+    if t
+      t.percent = v.to_f
+      t.percent = -t.percent if t.percent > 0
+    else
+      taxes << Tax.new(name: 'IRPF', percent: v, category: 'S')
+    end
   end
 
   private

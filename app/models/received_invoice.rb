@@ -110,6 +110,16 @@ class ReceivedInvoice < InvoiceDocument
     raise "Should not be called"
   end
 
+  def total=(value)
+    if value.to_s =~ /^[0-9,.']*$/
+      value = Money.parse(value)
+      write_attribute :total_in_cents, value.cents
+    else
+      # this + validates_numericality_of will raise an error if not a number
+      write_attribute :total_in_cents, value
+    end
+  end
+
   protected
 
   def create_event
