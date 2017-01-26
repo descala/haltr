@@ -41,6 +41,13 @@
       <%= f.text_field :due_date, :size => 10, :required => true %><%= calendar_for('invoice_due_date') %>
     </p>
   </div>
+
+  <div class="seccio grup">
+    <p class="col span-2-de-2">
+    <%= f.label :extra_info, I18n.t(:field_description) %>
+    <%= f.text_field :extra_info, no_label: true %>
+    </p>
+  </div>
 </fieldset>
 
 
