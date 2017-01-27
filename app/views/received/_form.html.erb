@@ -19,8 +19,15 @@
 
   <div class="seccio grup">
     <p class="col span-2-de-2" id="client_select">
-    <%= render :partial=>'invoices/clients',
-      :locals => { :selected => @created_client || @invoice.client_id } %>
+    <label for="invoice_client_id"><%= l(:field_supplier) %></label>
+    <%= select :invoice,
+      :client_id,
+      clients_for_select,
+      { :selected => (@created_client || @invoice.client_id), :include_blank => true },
+      :class => "formee-medium" %>
+    <span class="mes">
+      <%=link_to_function(l(:label_company_new),"$('#new_client_wrapper').show();")%>
+    </span>
     </p>
   </div>
 
