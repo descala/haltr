@@ -43,7 +43,7 @@ class HaltrMailHandler < MailHandler # < ActionMailer::Base
                 invoices << found_invoice
                 log "Discarding repeated invoice with md5 #{md5}. Invoice.id = #{found_invoice.id}", 'error'
               else
-                if raw_invoice.content_type =~ /xml/
+                if raw_invoice.content_type =~ /xml|octet-stream/
                   invoices << Invoice.create_from_xml(raw_invoice,company,md5,'email',from)
                   #TODO rescue and bounce?
                 elsif raw_invoice.content_type =~ /pdf/
@@ -108,14 +108,22 @@ class HaltrMailHandler < MailHandler # < ActionMailer::Base
   def attached_invoices(email)
     invoices = []
     email.attachments.each do |attachment|
-      invoices << attachment if attachment.content_type =~ /xml/ || attachment.content_type =~ /pdf/
+      if attachment.content_type =~ /xml|pdf|octet-stream/
+        invoices << attachment
+      else
+        log("Unknown content-type attachment: #{attachment.content_type}")
+      end
     end
     email.parts.each do |part|
       attached_mail = nil
       attached_mail = TMail::Mail.parse(part.body) if email.attachment?(part) rescue nil
       next if attached_mail.nil? || attached_mail.attachments.nil?
       attached_mail.attachments.each do |attachment|
-        invoices << attachment if attachment.content_type =~ /xml/ || attachment.content_type =~ /pdf/
+        if attachment.content_type =~ /xml|pdf|octet-stream/
+          invoices << attachment
+        else
+          log("Unknown content-type attachment: #{attachment.content_type}")
+        end
       end
     end
     invoices

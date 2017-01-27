@@ -50,7 +50,7 @@
 
   <div class="seccio grup">
     <p class="col span-2-de-6">
-      <%= f.text_field :date, :size => 10, :required => true %><%= calendar_for('invoice_date') %>
+      <%= f.date_field :date, :size => 10, :required => true %><%= calendar_for('invoice_date') %>
     </p>
     <p class="col span-<%= display_series_code_in_form? ? '1' : '2' %>-de-6">
       <% if controller.controller_name == "invoice_templates" -%>
@@ -88,13 +88,13 @@
 
   <div class="seccio grup">
     <p class="col span-1-de-3">
-    <%= f.text_field :invoicing_period_start, :size => 10 %><%= calendar_for('invoice_invoicing_period_start') %>
+    <%= f.date_field :invoicing_period_start, :size => 10 %><%= calendar_for('invoice_invoicing_period_start') %>
     </p>
     <p class="col span-1-de-3">
-    <%= f.text_field :invoicing_period_end, :size => 10 %><%= calendar_for('invoice_invoicing_period_end') %>
+    <%= f.date_field :invoicing_period_end, :size => 10 %><%= calendar_for('invoice_invoicing_period_end') %>
     </p>
     <p class="col span-1-de-3">
-    <%= f.text_field :tax_point_date, :size => 10 %><%= calendar_for('invoice_tax_point_date') %>
+    <%= f.date_field :tax_point_date, :size => 10 %><%= calendar_for('invoice_tax_point_date') %>
     </p>
   </div>
 
@@ -104,7 +104,7 @@
 
   <div class="seccio grup">
     <p class="col span-1-de-3">
-    <%= f.text_field :order_date, :size => 10 %><%= calendar_for('invoice_order_date') %>
+    <%= f.date_field :order_date, :size => 10 %><%= calendar_for('invoice_order_date') %>
     </p>
     <p class="col span-1-de-3">
     <%= f.text_field :contract_number %>
@@ -221,7 +221,7 @@
         <%= f.text_field :fa_info %>
         </p>
         <p class="col span-1-de-4">
-        <%= f.text_field :fa_duedate, :size => 10 %><%= calendar_for('invoice_fa_duedate') %>
+        <%= f.date_field :fa_duedate, :size => 10 %><%= calendar_for('invoice_fa_duedate') %>
         </p>
         <p class="col span-1-de-4">
         <%= f.text_field :fa_import %>
