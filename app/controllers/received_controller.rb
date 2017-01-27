@@ -96,6 +96,7 @@ class ReceivedController < InvoicesController
       iva['import'] = invoice_line.delete('tax_import')
       iva['category'] = invoice_line.delete('tax_category')
       iva.reject! {|k,v| v.blank? }
+      iva['_destroy'] = 1 unless iva.keys.include?('percent') or iva.keys.include?('import')
       if iva.keys.size > 1
         invoice_line['taxes_attributes']['0'] = iva
       end
@@ -110,6 +111,7 @@ class ReceivedController < InvoicesController
       irpf['import'] = wh_import
       irpf['category'] = invoice_line.delete('tax_wh_category')
       irpf.reject! {|k,v| v.blank? }
+      irpf['_destroy'] = 1 unless irpf.keys.include?('percent') or irpf.keys.include?('import')
       if irpf.keys.size > 1
         invoice_line['taxes_attributes']['1'] = irpf
       end
