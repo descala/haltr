@@ -27,7 +27,7 @@
 </div>
 <!--final formulari-->
 
-<% if @invoice.invoice_img -%>
+<% if @invoice.invoice_img or (@invoice.original and @invoice.invoice_format == 'pdf') -%>
   </div>
 
 </div>
