@@ -108,14 +108,22 @@ class HaltrMailHandler < MailHandler # < ActionMailer::Base
   def attached_invoices(email)
     invoices = []
     email.attachments.each do |attachment|
-      invoices << attachment if attachment.content_type =~ /xml/ || attachment.content_type =~ /pdf/
+      if attachment.content_type =~ /xml|pdf|octet-stream/
+        invoices << attachment
+      else
+        log("Unknown content-type attachment: #{attachment.content_type}")
+      end
     end
     email.parts.each do |part|
       attached_mail = nil
       attached_mail = TMail::Mail.parse(part.body) if email.attachment?(part) rescue nil
       next if attached_mail.nil? || attached_mail.attachments.nil?
       attached_mail.attachments.each do |attachment|
-        invoices << attachment if attachment.content_type =~ /xml/ || attachment.content_type =~ /pdf/
+        if attachment.content_type =~ /xml|pdf|octet-stream/
+          invoices << attachment
+        else
+          log("Unknown content-type attachment: #{attachment.content_type}")
+        end
       end
     end
     invoices
