@@ -177,28 +177,28 @@ _LINE
 
   # for received invoices simplified form
   def tax_percent
-    t = taxes.where(name: 'IVA').first
-    t.percent if t
+    iva = taxes.select {|t| t.name == 'IVA'}.first
+    iva.percent if iva
   end
   def tax_import
-    t = taxes.where(name: 'IVA').first
-    t.import if t
+    iva = taxes.select {|t| t.name == 'IVA'}.first
+    iva.import if iva
   end
   def tax_category
-    t = taxes.where(name: 'IVA').first
-    t.category if t
+    iva = taxes.select {|t| t.name == 'IVA'}.first
+    iva.category if iva
   end
   def tax_wh_percent
-    t = taxes.where(name: 'IRPF').first
-    t.percent if t
+    irpf = taxes.select {|t| t.name == 'IRPF'}.first
+    irpf.percent if irpf
   end
   def tax_wh_import
-    t = taxes.where(name: 'IRPF').first
-    t.import if t
+    irpf = taxes.select {|t| t.name == 'IRPF'}.first
+    irpf.import if irpf
   end
   def tax_wh_category
-    t = taxes.where(name: 'IRPF').first
-    t.category if t
+    irpf = taxes.select {|t| t.name == 'IRPF'}.first
+    irpf.category if irpf
   end
 
   private
