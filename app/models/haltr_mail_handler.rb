@@ -81,14 +81,15 @@ class HaltrMailHandler < MailHandler # < ActionMailer::Base
     # assume invoices received by mail are always ReceivedInvoices
     @invoice           = ReceivedInvoice.new
     @invoice.project   = company.project
-    @invoice.state     = :processing_pdf
     @invoice.transport = :email
     @invoice.md5       = md5
     @invoice.original  = raw_invoice.read
     @invoice.invoice_format = 'pdf'
     @invoice.save!(validate: false)
-    Event.create(:name=>'processing_pdf',:invoice=>@invoice)
-    Haltr::SendPdfToWs.send(@invoice)
+    if company.auto_process_pdf?
+      Haltr::SendPdfToWs.send(@invoice)
+      @invoice.processing_pdf!
+    end
     @invoice
   end
 
