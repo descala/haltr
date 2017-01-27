@@ -3,11 +3,7 @@
 <div id="invoice_img_edit_metadata">
 
   <div class="colu1" style="width: 50%">
-    <% if @invoice.invoice_img -%>
-      <img src="<%=project_invoice_img_path(@invoice.invoice_img, project_id: @project)%>" width="100%">
-    <% else -%>
-      <iframe src="/pdfjs/web/viewer.html?file=<%=invoices_original_path(@invoice, format: 'pdf')%>" style="border: 0" width="100%" height="800" frameborder="0" scrolling="no"></iframe>
-    <% end -%>
+    <iframe src="/pdfjs/web/viewer.html?file=<%=invoices_original_path(@invoice, format: 'pdf')%>" style="border: 0" width="100%" height="800" frameborder="0" scrolling="no"></iframe>
   </div>
 
   <div class="colu2" style="width: 48%">
@@ -31,7 +27,7 @@
 </div>
 <!--final formulari-->
 
-<% if @invoice.invoice_img -%>
+<% if @invoice.invoice_img or (@invoice.original and @invoice.invoice_format == 'pdf') -%>
   </div>
 
 </div>

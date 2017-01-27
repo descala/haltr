@@ -14,11 +14,11 @@
             <div class="seccio grup">
               <div class="col span-1-de-3">
                 <label for="from_time"><%=l(:field_date)%></label>
-                <%= text_field_tag :from_time, params[:from_time], :size => 10, :style => "width: 90%;" %><%= calendar_for('from_time') %>
+                <%= date_field_tag :from_time, params[:from_time], :size => 10, :style => "width: 90%;" %><%= calendar_for('from_time') %>
               </div>
               <div class="col span-1-de-3">
                 <label for="to_time"><%=l(:label_to)%></label>
-                <%= text_field_tag :to_time, params[:to_time], :size => 10, :style => "width: 90%;" %><%= calendar_for('to_time') %>
+                <%= date_field_tag :to_time, params[:to_time], :size => 10, :style => "width: 90%;" %><%= calendar_for('to_time') %>
               </div>
               <div class="col span-1-de-3">
               </div>

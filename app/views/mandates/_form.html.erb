@@ -20,7 +20,7 @@
     </div>
     <div class="col span-1-de-2">
       <div id="div_mandate_end_date" style="<%="display:none;" unless @mandate.recurrent %>">
-        <%= f.text_field :end_date, :size => 10 %><%= calendar_for('mandate_end_date') %>
+        <%= f.date_field :end_date, :size => 10 %><%= calendar_for('mandate_end_date') %>
       </div>
     </div>
   </div>
@@ -50,7 +50,7 @@
     <div class="col span-1-de-2">
     </div>
     <div class="col span-1-de-2">
-      <%= f.text_field :signature_date, :size => 10 %><%= calendar_for('mandate_signature_date') %>
+      <%= f.date_field :signature_date, :size => 10 %><%= calendar_for('mandate_signature_date') %>
     </div>
   </div>
 

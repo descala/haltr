@@ -23,11 +23,11 @@
 
   <div class="seccio grup">
     <p class="col span-1-de-3">
-      <%= f.text_field :date, :size => 10, :required => true %><%= calendar_for('invoice_date') %>
+      <%= f.date_field :date, :size => 10, :required => true %><%= calendar_for('invoice_date') %>
     </p>
     <p class="col span-1-de-3">
       <input type="hidden" value="custom" id="invoice_terms" />
-      <%= f.text_field :due_date, :size => 10, :label=>l("valid_until") %><%= calendar_for('invoice_due_date') %>
+      <%= f.date_field :due_date, :size => 10, :label=>l("valid_until") %><%= calendar_for('invoice_due_date') %>
     </p>
     <p class="col span-1-de-3">
       <%= f.text_field :number, :size => 10, :required => true %> <span class="text"><%= "#{l(:label_last_invoice_number)}: #{Quote.last_number(@project)}" if @project.quotes.any?%></span>
