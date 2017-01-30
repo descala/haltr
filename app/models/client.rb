@@ -204,7 +204,7 @@ class Client < ActiveRecord::Base
     if self.company and self.allowed?
       %w(taxcode company_identifier name email currency postalcode country
       province city address website invoice_format language
-      schemeid endpointid sign_with_local_certificate).each do |attr|
+      schemeid endpointid).each do |attr|
         self.send("#{attr}=",company.send(attr))
       end
       if self.company.respond_to?(:address2)
