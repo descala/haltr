@@ -20,7 +20,6 @@ class ExternalCompany < ActiveRecord::Base
     :allow_blank => true
 
   after_save :update_linked_clients
-  before_save :checks_for_sign_with_local_certificate
   include CountryUtils
   include Haltr::TaxcodeValidator
 
@@ -129,17 +128,6 @@ class ExternalCompany < ActiveRecord::Base
     organs_proponents.to_s.split(/[,\n]/).uniq.collect {|code|
       op[code] || Dir3Entity.new(name: code, code: code)
     }
-  end
-
-  private
-
-  # MiniApplet can sign pdf and facturae only
-  def checks_for_sign_with_local_certificate
-    f = ExportChannels.format(invoice_format).to_s
-    unless f == 'pdf' or f =~ /facturae/
-      self.sign_with_local_certificate = false
-    end
-    true
   end
 
 end
