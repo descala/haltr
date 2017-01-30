@@ -12,6 +12,7 @@
     <p><%= f.label_for_field :country, :required => true %><%= f.country_select :country, priority_countries: [:es] %></p>
     <p><%= f.select :currency, currency_options_for_select, :required => true %></p>
     <p><%= f.select :invoice_format, ExportChannels.for_select(nil) %></p>
+    <p><%= f.check_box :sign_with_local_certificate %></p>
     <p><%= f.select :language, lang_options_for_select %></p>
     <p>
     <label><%= l :visible_fields %></label>
