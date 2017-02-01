@@ -229,7 +229,7 @@ class IssuedInvoice < InvoiceDocument
   end
 
   def visible_by_client?
-    %w(sent read refused accepted allegedly_paid closed).include? state
+    !%w(new sending processing_pdf discarded).include? state
   end
 
   # returns true if invoice has been totally amended (substituted by another)
