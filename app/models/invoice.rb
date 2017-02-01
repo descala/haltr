@@ -1,5 +1,7 @@
 class Invoice < ActiveRecord::Base
 
+  columns_on_demand :original
+
   include HaltrHelper
   include Haltr::FloatParser
   include Haltr::PaymentMethods
