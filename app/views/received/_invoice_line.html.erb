@@ -1,13 +1,31 @@
-<% lineid = f.object_name.split("[").last.gsub(/\]/,'') -%>
-<div id="invoice_line_<%= lineid %>" class="invoice_line">
+<div class="nested-fields">
+<table class="formee invoice_lines" width="100%">
+  <tr>
+    <th style="vertical-align: middle;"><%= l(:tag_subtotal) %></th>
+    <td colspan="2">
+    <%= f.text_field :price, value: f.object.price.to_s.gsub(/\.0+$/,''), style: 'width: 150px;', no_label: true %></td>
+    <td style="text-align: right;">
+      <%= f.hidden_field :quantity, value: 1 %>
+      <%= f.hidden_field :tax_id, value: f.object.taxes.where(name: 'IVA').first.id rescue '' %>
+      <%= f.hidden_field :tax_wh_id, value: f.object.taxes.where(name: 'IRPF').first.id rescue '' %>
+      <!-- cocoon -->
+      <%= link_to_remove_association '', f, :class=>'eliminar' %>
+    </td>
+  </tr>
+  <tr>
+    <th style="vertical-align: middle;">IVA</th>
+    <td><%= f.text_field :tax_percent, no_label: true, style: 'width: 78px;' %> <span style="font-size: 15px;">%</span></td>
+    <td><%= f.text_field :tax_import, no_label: true, style: 'width: 78px;' %> <span style="font-size: 15px;">€</span></td>
+    <td><%= f.select :tax_category, Tax.categories, no_label: true, style: 'width: 78px;', include_blank: true %></td>
+  </tr>
 
-<p>
-<%= f.text_field :quantity, :value => f.object.quantity.to_s.gsub(/\.0+$/,''), :style => "width: 60px;", :no_label => true %>
-<%= f.select :unit, InvoiceLine.units, {:no_label => true}, {:style => "width: 100px;"} %>
-<%= f.text_field :description, :style => "width: 215px;", :no_label => true %>
-<%= f.text_field :price, :value => f.object.price.to_s.gsub(/\.0+$/,''), :style => "width: 60px;", :no_label => true %>
+  <tr>
+    <th style="vertical-align: middle;">IRPF</th>
+    <td><%= f.text_field :tax_wh_percent, no_label: true, style: 'width: 78px;' %> <span style="font-size: 15px;">%</span></td>
+    <td><%= f.text_field :tax_wh_import, no_label: true, style: 'width: 78px;' %> <span style="font-size: 15px;">€</span></td>
+    <td><%= f.select :tax_wh_category, Tax.categories, no_label: true, style: 'width: 78px;', include_blank: true %></td>
+  </tr>
+</table>
 
-<%= link_to_function(image_tag("false.png"),"rm_line(#{lineid});") %>
-</p>
+<hr style="margin: 15px 0"/>
 </div>
-<%= f.hidden_field(:_destroy, {:value=>0, :id=>"destroy_line_#{lineid}"}) %>

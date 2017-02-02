@@ -175,6 +175,32 @@ _LINE
     position <=> line.position
   end
 
+  # for received invoices simplified form
+  def tax_percent
+    iva = taxes.select {|t| t.name == 'IVA'}.first
+    iva.percent if iva
+  end
+  def tax_import
+    iva = taxes.select {|t| t.name == 'IVA'}.first
+    iva.import if iva
+  end
+  def tax_category
+    iva = taxes.select {|t| t.name == 'IVA'}.first
+    iva.category if iva
+  end
+  def tax_wh_percent
+    irpf = taxes.select {|t| t.name == 'IRPF'}.first
+    irpf.percent if irpf
+  end
+  def tax_wh_import
+    irpf = taxes.select {|t| t.name == 'IRPF'}.first
+    irpf.import if irpf
+  end
+  def tax_wh_category
+    irpf = taxes.select {|t| t.name == 'IRPF'}.first
+    irpf.category if irpf
+  end
+
   private
 
   def method_missing(m, *args)

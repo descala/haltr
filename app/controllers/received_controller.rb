@@ -85,4 +85,39 @@ class ReceivedController < InvoicesController
     ReceivedInvoice
   end
 
+  def parse_invoice_params
+    parsed_params = super
+    parsed_params['invoice_lines_attributes'].each do |i, invoice_line|
+      invoice_line['taxes_attributes'] ||= {}
+
+      iva = { name: 'IVA'  }
+      iva['id'] = invoice_line.delete('tax_id')
+      iva['percent'] = invoice_line.delete('tax_percent')
+      iva['import'] = invoice_line.delete('tax_import')
+      iva['category'] = invoice_line.delete('tax_category')
+      iva.reject! {|k,v| v.blank? }
+      iva['_destroy'] = 1 unless iva.keys.include?('percent') or iva.keys.include?('import')
+      if iva.keys.size > 1
+        invoice_line['taxes_attributes']['0'] = iva
+      end
+
+      irpf = { name: 'IRPF' }
+      wh_percent = invoice_line.delete('tax_wh_percent')
+      wh_import  = invoice_line.delete('tax_wh_import')
+      wh_percent = "-#{wh_percent}" unless wh_percent.blank? or wh_percent =~ /-/
+      wh_import  = "-#{wh_import}" unless wh_import.blank? or wh_import =~ /-/
+      irpf['id'] = invoice_line.delete('tax_wh_id')
+      irpf['percent'] = wh_percent
+      irpf['import'] = wh_import
+      irpf['category'] = invoice_line.delete('tax_wh_category')
+      irpf.reject! {|k,v| v.blank? }
+      irpf['_destroy'] = 1 unless irpf.keys.include?('percent') or irpf.keys.include?('import')
+      if irpf.keys.size > 1
+        invoice_line['taxes_attributes']['1'] = irpf
+      end
+
+    end
+    parsed_params
+  end
+
 end

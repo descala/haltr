@@ -3,65 +3,22 @@ class ReceivedInvoice < InvoiceDocument
   belongs_to :created_from_invoice, class_name: 'IssuedInvoice'
 
   after_create :create_event
-  before_save :update_imports
 
   acts_as_event
   after_create :notify_users_by_mail, if: Proc.new {|o|
-    o.project.company.order_notifications
+    o.project.company.invoice_notifications
   }
 
-  include AASM
-
-  aasm column: :state, skip_validation_on_save: true, whiny_transitions: true do
-    state :received, initial: true
-    state :accepted, :paid, :refused, :processing_pdf, :error
-
-    before_all_events :aasm_create_event
-
-    event :refuse do
-      transitions to: :refused
-    end
-    event :accept do
-      transitions to: :accepted
-    end
-    event :paid do
-      transitions from: :accepted, to: :paid
-    end
-    event :unpaid do
-      transitions from: :paid, to: :accepted
-    end
-    event :error_sending do
-      transitions to: :error
-    end
-    event :processing_pdf do
-      transitions to: :processing_pdf
-    end
-    event :processed_pdf do
-      transitions from: :processing_pdf, to: :received
-    end
-    event :failed_notification do
-      transitions to: :error
-    end
-    event :mark_as_accepted do
-      transitions to: :accepted
-    end
-    event :mark_as_paid do
-      transitions to: :paid
-    end
-    event :mark_as_refused do
-      transitions to: :refused
-    end
+  def paid?
+    allegedly_paid?
   end
 
-  def aasm_create_event
-    name = aasm.current_event.to_s.gsub('!','')
-    unless Event.automatic.include? name
-      Event.create(:name=>name,:invoice=>self,:user=>User.current)
-    end
+  def received!
+    read!
   end
 
-  def to_label
-    "#{number}"
+  def refuse!
+    mark_as_refused!
   end
 
   def sent?
@@ -74,14 +31,6 @@ class ReceivedInvoice < InvoiceDocument
 
   def label
     l(self.class)
-  end
-
-  def valid_signature?
-    events.sort.each do |e|
-      return true  if %w( success_validating_signature ).include? e.name
-      return false if %w( error_validating_signature discard_validating_signature ).include? e.name
-    end
-    return false
   end
 
   # remove colons "1,23" => "1.23"
@@ -157,10 +106,24 @@ class ReceivedInvoice < InvoiceDocument
     end
   end
 
+  def updated_imports
+    raise "Should not be called"
+  end
+
+  def total=(value)
+    if value.to_s =~ /^[0-9,.']*$/
+      value = Money.parse(value)
+      write_attribute :total_in_cents, value.cents
+    else
+      # this + validates_numericality_of will raise an error if not a number
+      write_attribute :total_in_cents, value
+    end
+  end
+
   protected
 
   def create_event
-    ReceivedInvoiceEvent.create!(:name=>self.transport,:invoice=>self,:user=>User.current)
+    ReceivedInvoiceEvent.create!(:name=>self.transport||'unknown',:invoice=>self,:user=>User.current)
   end
 
   private

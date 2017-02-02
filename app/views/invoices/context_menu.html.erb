@@ -71,6 +71,10 @@
   <%= call_hook(:view_invoices_context_menu_end, {:invoices=>@invoices, :can=>@can, :back=>@back }) %>
 
   <li>
+    <%= context_menu_link l(:process_pdf), bulk_process_pdf_path(:ids=>@invoice_ids, :back_url=>@back), method: :post, data: {confirm: l(:bulk_process_pdf_confirmation, invoices: @invoice_ids.size)}, disabled: !@can[:edit] %>
+  </li>
+
+  <li>
   <%= context_menu_link l(:button_delete), invoices_path(:ids=>@invoice_ids, :back_url=>@back),
     :method=>:delete, :data=>{:confirm=>l(:text_invoices_destroy_confirmation)}, :class=>'icon-del', :disabled=>!@can[:edit] %>
   </li>

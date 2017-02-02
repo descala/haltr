@@ -9,6 +9,7 @@ company1:
   country: es
   city: Barcelona
   public: private
+  auto_process_pdf: true
 
 company2:
   # eCookbook 

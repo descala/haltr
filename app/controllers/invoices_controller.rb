@@ -15,8 +15,8 @@ class InvoicesController < ApplicationController
 
   skip_before_action :verify_authenticity_token, only: [:haltr_sign]
   before_filter :find_project_by_project_id, :only => [:index,:new,:create,:send_new_invoices,:download_new_invoices,:update_payment_stuff,:new_invoices_from_template,:reports,:report_channel_state,:report_invoice_list,:report_received_table,:create_invoices,:update_taxes,:upload,:import,:import_facturae]
-  before_filter :find_invoice, :only => [:edit,:update,:mark_accepted,:mark_refused,:duplicate_invoice,:base64doc,:show,:send_invoice,:amend_for_invoice,:original,:validate, :mark_as_accepted, :mark_as, :add_comment]
-  before_filter :find_invoices, :only => [:context_menu,:bulk_download,:bulk_mark_as,:bulk_send,:destroy,:bulk_validate]
+  before_filter :find_invoice, :only => [:edit,:update,:mark_accepted,:mark_refused,:duplicate_invoice,:base64doc,:show,:send_invoice,:amend_for_invoice,:original,:validate, :mark_as_accepted, :mark_as, :add_comment, :process_pdf]
+  before_filter :find_invoices, :only => [:context_menu,:bulk_download,:bulk_mark_as,:bulk_send,:destroy,:bulk_validate, :bulk_process_pdf]
   before_filter :find_payment, :only => [:destroy_payment]
   before_filter :find_hashid, :only => [:view]
   before_filter :find_attachment, :only => [:logo]
@@ -525,7 +525,7 @@ class InvoicesController < ApplicationController
     @invoice_pdf = nil
     unless %w(original sent db).include?(params[:view])
       if @invoice.original and @invoice.send_original?
-        if @invoice.invoice_format == 'pdf'
+        if @invoice.invoice_format == 'pdf' and @invoice.invoice_img.blank?
           # PDF invoices have empty fields when not mofified
           params[:view] = 'original'
         else
@@ -1401,7 +1401,6 @@ class InvoicesController < ApplicationController
           when /pdf/
             @invoice = params[:issued] == 'true' ? IssuedInvoice.new : ReceivedInvoice.new
             @invoice.project   = @project
-            @invoice.state     = :processing_pdf if @invoice.is_a?(ReceivedInvoice)
             @invoice.transport = transport
             @invoice.md5       = attachment.digest
             @invoice.original  = File.binread(attachment.diskfile)
@@ -1409,7 +1408,7 @@ class InvoicesController < ApplicationController
             @invoice.has_been_read = true
             @invoice.file_name = attachment.filename
             @invoice.save(validate: false)
-            if @invoice.is_a?(ReceivedInvoice)
+            if @project.company.auto_process_pdf?
               Haltr::SendPdfToWs.send(@invoice)
               @invoice.processing_pdf!
               flash[:notice] = "#{l(:notice_invoice_processing_pdf)}"
@@ -1516,6 +1515,33 @@ class InvoicesController < ApplicationController
     end
 
     redirect_to invoice_path(@invoice)
+  end
+
+  def process_pdf
+    Haltr::SendPdfToWs.send(@invoice)
+    @invoice.processing_pdf!
+    flash[:notice] = "#{l(:notice_invoice_processing_pdf)}"
+  rescue Errno::ECONNREFUSED
+    flash[:error] = 'Connection refused, try again later'
+  ensure
+    redirect_to invoice_path(@invoice)
+  end
+
+  def bulk_process_pdf
+    done = 0
+    @invoices.each do |invoice|
+      next if !invoice.original or invoice.invoice_format != 'pdf'
+      next if invoice.invoice_img.present?
+      next if invoice.state == 'processing_pdf'
+      Haltr::SendPdfToWs.send(invoice)
+      invoice.processing_pdf!
+      done += 1
+    end
+    flash[:notice] = l(:processing_pdfs, count: @invoices.count)
+  rescue Errno::ECONNREFUSED
+    flash[:error] = 'Connection refused, try again later'
+  ensure
+    redirect_to project_invoices_path(@project)
   end
 
   private

@@ -18,105 +18,6 @@ class IssuedInvoice < InvoiceDocument
   before_save :set_state_updated_at
   before_save :override_line_values, :unless => Proc.new {|i| i.new_record? }
 
-  include AASM
-
-  aasm column: :state, skip_validation_on_save: true, whiny_transitions: false do
-    state :new, initial: true
-    state :sending, :sent, :read, :error, :closed, :discarded, :accepted,
-      :refused, :registered, :allegedly_paid, :cancelled, :annotated,
-      :processing_pdf
-
-    before_all_events :aasm_create_event
-
-    event :manual_send do
-      transitions from: [:new,:sending,:error,:discarded], to: :sent
-    end
-    event :queue do
-      transitions from: [:new, :error, :discarded, :refused], to: :sending
-    end
-    event :success_sending do
-      transitions from: [:new,:sending,:error,:discarded], to: :sent
-    end
-    event :mark_unsent do
-      transitions from: [:sent,:read,:sending,:closed,:error,:discarded], to: :new
-    end
-    event :error_sending do
-      transitions from: :sending, to: :error
-    end
-    event :close do
-      transitions from: [:new,:sent,:read,:registered], to: :closed
-    end
-    event :discard_sending do
-      transitions from: [:error,:sending], to: :discarded
-    end
-    event :paid do
-      transitions from: [:sent,:read,:accepted,:allegedly_paid,:registered], to: :closed
-    end
-    event :unpaid do
-      transitions from: :closed, to: :sent
-    end
-    event :bounced do
-      transitions from: :sent, to: :discarded
-    end
-    event :accept_notification do
-      transitions to: :accepted
-    end
-    event :refuse_notification do
-      transitions to: :refused
-    end
-    event :paid_notification do
-      transitions to: :allegedly_paid
-    end
-    event :sent_notification do
-      transitions from: :sent, to: :sent
-    end
-    event :registered_notification do
-      transitions to: :registered
-    end
-    event :amend_and_close do
-      transitions to: :closed
-    end
-    event :processing_pdf do
-      transitions from: :new, to: :processing_pdf
-    end
-    event :processed_pdf do
-      transitions from: :processing_pdf, to: :new
-    end
-    event :mark_as_new do
-      transitions to: :new
-    end
-    event :mark_as_sent do
-      transitions to: :sent
-    end
-    event :mark_as_accepted do
-      transitions to: :accepted
-    end
-    event :mark_as_registered do
-      transitions to: :registered
-    end
-    event :mark_as_refused do
-      transitions to: :refused
-    end
-    event :mark_as_closed do
-      transitions to: :closed
-    end
-    event :read do
-      transitions from: :sent, to: :read
-    end
-    event :received_notification do
-      transitions to: :read
-    end
-    event :failed_notification do
-      transitions to: :error
-    end
-    event :cancelled_notification do
-      transitions to: :cancelled
-    end
-    event :annotated_notification do
-      transitions to: :annotated
-    end
-  end
-
   def has_been_sent?
     sent? or closed? or sending?
   end
@@ -127,10 +28,6 @@ class IssuedInvoice < InvoiceDocument
     else
       l :label_invoice
     end
-  end
-
-  def to_label
-    "#{number}"
   end
 
   def number_must_be_uniq
@@ -241,10 +138,6 @@ class IssuedInvoice < InvoiceDocument
 
   def last_sent_event
     events.order(:created_at).select {|e| e.name == 'success_sending' }.last
-  end
-
-  def self.states
-    aasm.states.map(&:name)
   end
 
   def local_cert_js
