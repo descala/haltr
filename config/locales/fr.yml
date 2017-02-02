@@ -221,7 +221,7 @@ fr:
   error_validating_signature: "Erreur à la validation de la signature"
   discard_validating_signature: "Abandonne la validation de la signature"
   sent_notification: "Notification: Facture envoyée"
-  delivered_notification: "Notification: Facture reçue"
+  delivered_notification: "Notification: Invoice delivered"
   registered_notification: "Notification: Facture enregistrée"
   accept_notification: "Notification: Facture acceptée"
   refuse_notification: "Notification: Facture rejetée"

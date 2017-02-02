@@ -76,7 +76,7 @@ class Event < ActiveRecord::Base
   end
 
   def self.automatic
-    events  = %w(bounced sent_notification delivered_notification)
+    events  = %w(bounced sent_notification)
     events += %w(refuse_notification accept_notification paid_notification)
     events += %w(registered_notification accept refuse received_notification)
     events += %w(failed_notification cancelled_notification annotated_notification)

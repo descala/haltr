@@ -70,9 +70,6 @@ class IssuedInvoice < InvoiceDocument
     event :sent_notification do
       transitions from: :sent, to: :sent
     end
-    event :delivered_notification do
-      transitions from: :sent, to: :sent
-    end
     event :registered_notification do
       transitions to: :registered
     end

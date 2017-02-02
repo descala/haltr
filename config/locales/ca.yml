@@ -230,7 +230,7 @@ ca:
   error_validating_signature: "Error en la validació de signatura"
   discard_validating_signature: "Error en la validació de signatura"
   sent_notification: "Notificació: Factura rebuda"
-  delivered_notification: "Notificació: Factura enviada"
+  delivered_notification: "Notificació: Factura entregada"
   registered_notification: "Notificació: Factura registrada"
   accept_notification: "Notificació: Factura acceptada"
   refuse_notification: "Notificació: Factura refusada"
