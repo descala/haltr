@@ -199,7 +199,7 @@ table.invoice_lines {
   text-decoration: none;
   /* shadow */
   text-shadow: 0 0 5px #444;
-  width: 120px;
+  width: 230px;
 }
 
 .ribbon-new, .ribbon-received {
@@ -467,4 +467,8 @@ div.accept_refuse_form {
   border: 1px dashed;
   margin-bottom: 10px;
   padding: 20px;
+}
+.tabular label.radio {
+  float: none;
+  margin-left: 15px;
 }
