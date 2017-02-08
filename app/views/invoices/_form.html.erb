@@ -186,14 +186,14 @@
         </p>
         <p class="col span-1-de-4">
         <%= f.label_for_field :fa_person_type %>
-        <label><%= f.radio_button :fa_person_type, 'F' %><%=l(:label_fa_person_type_individual) %></label>
-        <label><%= f.radio_button :fa_person_type, 'J' %><%=l(:label_fa_person_type_entity)%></label>
+        <label class="radio"><%= f.radio_button :fa_person_type, 'F' %><%=l(:label_fa_person_type_individual) %></label>
+        <label class="radio"><%= f.radio_button :fa_person_type, 'J' %><%=l(:label_fa_person_type_entity)%></label>
         </p>
         <p class="col span-1-de-4">
         <%= f.label_for_field :fa_residence_type %>
-        <label><%= f.radio_button :fa_residence_type, 'E' %><%=l(:label_fa_residence_type_foreigner)%></label>
-        <label><%= f.radio_button :fa_residence_type, 'R' %><%=l(:label_fa_residence_type_spain)%></label>
-        <label><%= f.radio_button :fa_residence_type, 'U' %><%=l(:label_fa_residence_type_UE)%></label>
+        <label class="radio"><%= f.radio_button :fa_residence_type, 'E' %><%=l(:label_fa_residence_type_foreigner)%></label>
+        <label class="radio"><%= f.radio_button :fa_residence_type, 'R' %><%=l(:label_fa_residence_type_spain)%></label>
+        <label class="radio"><%= f.radio_button :fa_residence_type, 'U' %><%=l(:label_fa_residence_type_UE)%></label>
         </p>
       </div>
 
