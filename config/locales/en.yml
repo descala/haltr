@@ -221,7 +221,7 @@ en:
   error_validating_signature: "Error on signature validation"
   discard_validating_signature: "Error on signature validation"
   sent_notification: "Notification: Invoice received"
-  delivered_notification: "Notification: Invoice sent"
+  delivered_notification: "Notification: Invoice delivered"
   registered_notification: "Notification: Invoice registered"
   accept_notification: "Notification: Invoice accepted"
   refuse_notification: "Notification: Invoice refused"

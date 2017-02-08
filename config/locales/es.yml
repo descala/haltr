@@ -232,7 +232,7 @@ es:
   error_validating_signature: "Error en la validación de la firma"
   discard_validating_signature: "Error en la validación de firma"
   sent_notification: "Notificación: Factura recibida"
-  delivered_notification: "Notificación: Factura enviada"
+  delivered_notification: "Notificación: Factura entregada"
   registered_notification: "Notificación: Factura registrada"
   accept_notification: "Notificación: Factura aceptada"
   refuse_notification: "Notificación: Factura rechazada"

@@ -38,6 +38,9 @@ class InvoicesController < ApplicationController
   skip_before_filter :verify_authenticity_token, :only => [:base64doc]
   accept_api_auth :import, :import_facturae, :number_to_id, :update, :show, :index, :destroy, :create, :send_invoice
 
+  # allow to view invoices on a iframe
+  after_action :allow_iframe, only: [:show, :view]
+
   def index
     sort_init 'invoices.created_at', 'desc'
     sort_update %w(invoices.created_at state number date due_date clients.name import_in_cents)
@@ -1623,6 +1626,10 @@ class InvoicesController < ApplicationController
     @invoices_sent_count = InvoiceDocument.where(["client_id = ? and state = 'sent'",@client.id]).order("id desc").count
     @invoices_closed = InvoiceDocument.where(["client_id = ? and state = 'closed'",@client.id]).order("id desc").limit(10)
     @invoices_closed_count = InvoiceDocument.where(["client_id = ? and state = 'closed'",@client.id]).order("id desc").count
+  end
+
+  def allow_iframe
+    response.headers.except! 'X-Frame-Options'
   end
 
 end
