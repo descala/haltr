@@ -199,7 +199,7 @@ table.invoice_lines {
   text-decoration: none;
   /* shadow */
   text-shadow: 0 0 5px #444;
-  width: 120px;
+  width: 230px;
 }
 
 .ribbon-new, .ribbon-received {
