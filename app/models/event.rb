@@ -158,8 +158,9 @@ class Event < ActiveRecord::Base
       #
       # rescue AASM::InvalidTransition => e
       #   invoice.update_attribute(:state, new_state)
-      #   Redmine::Hook.call_hook(:model_event_after_update_invoice,
-      #                           event: self, new_state: new_state)
+
+      Redmine::Hook.call_hook(:model_event_after_update_invoice,
+                              event: self, new_state: invoice.state)
 
       # on success_sending check if our company is provider for client, if so
       # create a ReceivedInvoice on client side.
