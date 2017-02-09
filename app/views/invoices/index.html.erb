@@ -195,7 +195,7 @@
         </tbody>
         <tfoot>
           <tr>
-            <td colspan="7">&nbsp;</td>
+            <td colspan="8">&nbsp;<%= call_hook(:invoices_index_list_footer, {pages: @invoice_pages}) %></td>
           </tr>
         </tfoot>
       </table>
