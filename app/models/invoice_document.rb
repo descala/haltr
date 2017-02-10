@@ -13,7 +13,7 @@ class InvoiceDocument < Invoice
     state :new, initial: true
     state :sending, :sent, :read, :error, :closed, :discarded, :accepted,
       :refused, :registered, :allegedly_paid, :cancelled, :annotated,
-      :processing_pdf
+      :processing_pdf, :paid
     state :received
 
     before_all_events :aasm_create_event
@@ -95,6 +95,9 @@ class InvoiceDocument < Invoice
     end
     event :mark_as_closed do
       transitions to: :closed
+    end
+    event :mark_as_paid do
+      transitions to: :paid
     end
     event :read do
       transitions from: [:received, :sent], to: :read
