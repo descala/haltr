@@ -12,7 +12,7 @@
 
       <%= render :partial=>'clients/form', :locals=>{ :f=>form, :context=>context, :client=>Client.new() } %>
       <%= submit_tag l(:button_create) %>
-      <%= button_tag l(:cancel), type: :button, onclick: "$('#new_client_wrapper').hide();" %>
+      <%= button_tag l(:cancel), type: :button, class: 'formee-button', onclick: "$('#new_client_wrapper').hide();" %>
     <% end -%>
   </div>
 </div>
