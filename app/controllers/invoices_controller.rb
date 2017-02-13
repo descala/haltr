@@ -148,7 +148,7 @@ class InvoicesController < ApplicationController
       format.html
       format.api
       format.csv do
-        @invoices = invoices.order(sort_clause)
+        @invoices = invoices.order(sort_clause).includes(:client)
       end
     end
 
