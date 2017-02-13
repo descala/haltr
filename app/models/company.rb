@@ -195,7 +195,10 @@ class Company < ActiveRecord::Base
   end
 
   def invoice_mail_body(lang,invoice=nil)
-    body = invoice_mail_customization["body"][lang] rescue nil
+    body = nil
+    if email_customization?
+      body = invoice_mail_customization["body"][lang] rescue nil
+    end
     if body.blank?
       body = I18n.t(:invoice_mail_body,:locale=>lang)
       unless Redmine::Hook.call_hook(:replace_invoice_mail_body).join.blank?

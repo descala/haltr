@@ -81,8 +81,28 @@ class HaltrMailer < ActionMailer::Base
 #    end
 
     super headers do |format|
-      format.text
-      format.html unless Setting.plain_text_mail?
+      format.text {
+        begin
+          if @invoice.project.company.email_customization?
+            render
+          else
+            render 'haltr_mailer/send_invoice_override'
+          end
+        rescue ActionView::MissingTemplate
+          render
+        end
+      }
+      format.html {
+        begin
+          if @invoice.project.company.email_customization?
+            render
+          else
+            render 'haltr_mailer/send_invoice_override'
+          end
+        rescue ActionView::MissingTemplate
+          render
+        end
+      } unless Setting.plain_text_mail?
     end
 
     set_language_if_valid @initial_language
