@@ -158,7 +158,7 @@ class Invoice < ActiveRecord::Base
     unless client_email_override.blank?
       client_email_override.split(/[,; ]/)
     else
-      client.recipient_emails
+      client.recipient_emails rescue []
     end
   end
 
