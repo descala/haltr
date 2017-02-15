@@ -48,6 +48,16 @@ class Invoice < ActiveRecord::Base
   validates_numericality_of :exchange_rate, :allow_blank => true
   validates_format_of :exchange_rate, with: /\A-?[0-9]+(\.[0-9]{1,2}|)\z/,
     :allow_blank => true
+  validates :number, :discount_text, :ponumber, :num_contracte,
+    :num_expedient, :payment_method_text, :accounting_cost,
+    :delivery_note_number, :charge_reason, :nom_centre_gestor,
+    :nom_receptor_mercaderia, :file_reference, :title,
+    :nom_unitat_tramitadora, :oficina_comptable, :organ_gestor,
+    :unitat_tramitadora, :organ_proponent, :receiver_contract_reference,
+    :series_code, :legal_literals, :fa_residence_type, :fa_taxcode,
+    :fa_name, :fa_address, :fa_postcode, :fa_town, :fa_province, :fa_country,
+    :fa_info,
+    length: { maximum: 255 }
 
   before_save :fields_to_utf8
   after_create :increment_counter
