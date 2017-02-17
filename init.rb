@@ -154,6 +154,7 @@ Redmine::Plugin.register :haltr do
     permission :view_sequence_number, {}
 
     permission :export_invoices, {:invoices => [:index]}
+    permission :export_clients,  {:clients  => [:index]}
 
     permission :use_invoice_attachments, { :attachments => :upload}
 
