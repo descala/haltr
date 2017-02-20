@@ -59,6 +59,13 @@ class ClientsController < ApplicationController
       clients = clients.where("taxcode in (?, ?)", taxcode, taxcode2)
     end
 
+    if params[:format] == 'csv' and !User.current.allowed_to?(:export_clients, @project)
+      @status= l(:contact_support)
+      @message=l(:notice_not_authorized)
+      render :template => 'common/error', :layout => 'base', :status => 403, :formats => [:html]
+      return
+    end
+
     case params[:format]
     when 'csv', 'pdf'
       @limit = Setting.issues_export_limit.to_i

@@ -1282,6 +1282,10 @@ _INV
     nil
   end
 
+  def visible_by_client?
+    false
+  end
+
   protected
 
   def increment_counter
