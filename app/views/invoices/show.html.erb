@@ -48,7 +48,24 @@
       <% elsif @invoice.invoice_img -%>
         <%= render partial: 'invoice_imgs/metadata', locals: {invoice_img: @invoice.invoice_img } %>
       <% else -%>
-        <%= link_to I18n.t(:process_pdf), process_pdf_path(@invoice), method: :post %>
+        <div style="margin: 20px 0 20px 0;">
+        <%= link_to button_tag(I18n.t(:process_pdf), class: ''), process_pdf_path(@invoice), method: :post %>
+        </div>
+
+        <%= labelled_form_for :invoice, @invoice, url: invoice_path(@invoice), html: {class: 'formee'} do |f| %>
+          <fieldset class="tabular box">
+          <div class="seccio grup">
+            <p class="col" id="client_select">
+            <%= render partial: 'invoices/clients', locals: {selected: @created_client || @invoice.client_id} %>
+            </p>
+          </div>
+          <%= f.submit l(:button_update), :name => 'create' %>
+          </fieldset>
+        <% end -%>
+        <div id="new_client_wrapper" style="display:none;">
+          <%= render :partial => 'invoices/new_client', :locals => {:context => "edit_invoice"} %>
+        </div>
+
       <% end -%>
     </div>
   </div>

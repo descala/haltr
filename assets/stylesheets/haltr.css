@@ -340,6 +340,9 @@ span#attachments_fields input.description {
   margin-left: 1%;
   width: 69%;
 }
+div#invoice_img span#send_info {
+  visibility: hidden;
+}
 span#send_info {
   position: absolute;
   top: -13px;
