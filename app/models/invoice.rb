@@ -48,7 +48,7 @@ class Invoice < ActiveRecord::Base
   validates_numericality_of :exchange_rate, :allow_blank => true
   validates_format_of :exchange_rate, with: /\A-?[0-9]+(\.[0-9]{1,2}|)\z/,
     :allow_blank => true
-  validates :number, :discount_text, :ponumber, :num_contracte,
+  validates :number, :discount_text, :ponumber,
     :num_expedient, :payment_method_text, :accounting_cost,
     :delivery_note_number, :charge_reason, :nom_centre_gestor,
     :nom_receptor_mercaderia, :file_reference, :title,
