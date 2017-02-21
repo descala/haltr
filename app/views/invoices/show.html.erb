@@ -56,7 +56,11 @@
           <fieldset class="tabular box">
           <div class="seccio grup">
             <p class="col" id="client_select">
-            <%= render partial: 'invoices/clients', locals: {selected: @created_client || @invoice.client_id} %>
+            <% if @invoice.is_a? ReceivedInvoice -%>
+              <%= render partial: 'received/clients', locals: {selected: @created_client || @invoice.client_id} %>
+            <% else -%>
+              <%= render partial: 'invoices/clients', locals: {selected: @created_client || @invoice.client_id} %>
+            <% end -%>
             </p>
           </div>
           <%= f.submit l(:button_update), :name => 'create' %>

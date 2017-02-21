@@ -1,19 +1,9 @@
-<%
-#  ajax_opts = {
-#    :method => :get,
-#    :url => url_for({:action=>'update_currency_select',:id=>@project.id}),
-#    :with => "'value=' + this.value + '&curr_sel=' + $('#invoice_currency').value + '&required=' + #{@invoice.invoice_format!="pdf"}",
-#    :update => 'currency_select'
-#  }
--%>
-<label for="invoice_client_id"><%= l(:field_client) %></label>
+<label for="invoice_client_id"><%= l(:field_supplier) %></label>
 <%= select :invoice,
-           :client_id,
-           clients_for_select,
-           { :selected => selected, :include_blank => true },
-           :data => { :remote => true,
-                      :url => url_for(project_invoices_update_payment_stuff_path(@project, :required => 'false')) },
-           :class => "formee-medium" %>
+  :client_id,
+  clients_for_select,
+  { :selected => (@created_client || @invoice.client_id), :include_blank => true },
+  :class => "formee-medium" %>
 <span class="mes">
-  <%= link_to_function(l(:label_company_new), "$('#new_client_wrapper').show();") %>
+  <%=link_to_function(l(:label_company_new),"$('#new_client_wrapper').show();")%>
 </span>
