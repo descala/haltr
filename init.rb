@@ -134,7 +134,7 @@ Redmine::Plugin.register :haltr do
 
     permission :import_invoices,
       { :invoices => [:upload,:import,:import_facturae,:process_pdf, :bulk_process_pdf],
-        :received => [:upload,:import],
+        :received => [:upload,:import, :bulk_process_pdf],
         :invoice_imgs => [:context_menu,:tag],
         :import_errors => [:index, :create, :show, :destroy, :context_menu] },
       :require => :member

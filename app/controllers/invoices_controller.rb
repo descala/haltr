@@ -1035,6 +1035,14 @@ class InvoicesController < ApplicationController
     IssuedInvoice
   end
 
+  def redirect_to_issued_or_received
+    if self.class == ReceivedController
+      redirect_to project_received_index_path(@project)
+    else
+      redirect_to project_invoices_path(@project)
+    end
+  end
+
   def find_hashid
     @client = Client.find_by_hashid params[:client_hashid]
     if @client.nil?
@@ -1428,11 +1436,7 @@ class InvoicesController < ApplicationController
         format.html {
           if @invoice
             if params[:attachments].count > 1
-              if self.class == ReceivedController
-                redirect_to project_received_index_path
-              else
-                redirect_to project_invoices_path
-              end
+              redirect_to_issued_or_received
             else
               redirect_to invoice_path(@invoice)
             end
@@ -1541,7 +1545,7 @@ class InvoicesController < ApplicationController
   rescue Errno::ECONNREFUSED
     flash[:error] = 'Connection refused, try again later'
   ensure
-    redirect_to project_invoices_path(@project)
+    redirect_to_issued_or_received
   end
 
   private
