@@ -460,7 +460,7 @@ class Invoice < ActiveRecord::Base
   # { "VAT" => { "S" => [ tax_example, tax_example2 ], "E" => [ tax_example ] } }
   # tax_example should be passed tax_amount
   #
-  def taxes_by_category(positive=true)
+  def taxes_by_category(positive: true)
     cts = {}
     t = positive ? taxes_outputs : taxes_withheld
     t.each do |tax|
@@ -475,8 +475,8 @@ class Invoice < ActiveRecord::Base
     cts
   end
 
-  def taxes_by_category_ubl(positive=true)
-    tbc = taxes_by_category(positive)
+  def taxes_by_category_ubl(positive: true)
+    tbc = taxes_by_category(positive: true)
     tbc.collect {|name, taxes|
       e_taxes = []
       tmp_taxes = taxes.collect {|cat, tax|
