@@ -471,3 +471,6 @@ div.accept_refuse_form {
   margin-bottom: 10px;
   padding: 20px;
 }
+p#client_select.pdf select#invoice_client_id {
+  width: 100% !important;
+}

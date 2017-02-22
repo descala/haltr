@@ -1,5 +1,5 @@
 <label for="invoice_client_id"><%= l(:field_client) %>
-<% unless @invoice.is_a? Quote -%>
+<% unless @invoice.is_a? Quote or @invoice.is_a? ReceivedInvoice -%>
   <span class="required"> *</span>
 <% end -%>
 </label>
