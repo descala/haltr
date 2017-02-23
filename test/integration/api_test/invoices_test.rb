@@ -39,7 +39,7 @@ class Redmine::ApiTest::InvoicesTest < Redmine::ApiTest::Base
     assert_equal 1000.0, invoice['lines'].first['total_cost']
 
     # discounts
-    assert_equal nil, invoice['discount_text']
+    assert_nil invoice['discount_text']
     assert_equal 0.0, invoice['discount_percent']
     assert_equal 0.0, invoice['discount_amount']
 
