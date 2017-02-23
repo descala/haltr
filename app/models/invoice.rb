@@ -688,14 +688,6 @@ _INV
         invoice.partial_amend_of = amended
       #elsif amended
         #TODO 03 and 04 not yet supported
-      else
-        # importing amend invoice for an unexisting invoice, assign self id as
-        # amended as a dirty hack
-        if amend_type == '02'
-          invoice.partial_amend_of = invoice
-        else
-          invoice.amend_of = invoice
-        end
       end
       invoice.amended_number = amend_of
       invoice.amend_reason = amend_reason
