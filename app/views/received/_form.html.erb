@@ -19,20 +19,13 @@
 
   <div class="seccio grup">
     <p class="col span-2-de-2" id="client_select">
-    <label for="invoice_client_id"><%= l(:field_supplier) %></label>
-    <%= select :invoice,
-      :client_id,
-      clients_for_select,
-      { :selected => (@created_client || @invoice.client_id), :include_blank => true },
-      :class => "formee-medium" %>
-    <span class="mes">
-      <%=link_to_function(l(:label_company_new),"$('#new_client_wrapper').show();")%>
-    </span>
+    <%= render :partial=>'received/clients',
+      :locals => { :selected => @created_client || @invoice.client_id } %>
     </p>
   </div>
 
   <div class="seccio grup">
-    <p class="col span-2-de-4" id="client_select">
+    <p class="col span-2-de-4">
     <%= f.text_field :total, :size => 10, :required => true, :label => l(:total_executable) %>
     </p>
     <p class="col span-2-de-4">
