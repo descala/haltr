@@ -65,9 +65,6 @@ class InvoiceCreaeteTest< Redmine::IntegrationTest
     assert_redirected_to :controller => "invoices", :action => "show", :id => invoice
     assert_equal 1, invoice.invoice_lines.size
     assert_equal 2, invoice.invoice_lines.first.taxes.size
-    # comments should be blank since taxes not exempt
-    assert_equal "", invoice.invoice_lines.first.taxes.first.comment
-    assert_equal "", invoice.invoice_lines.first.taxes.last.comment
   end
 
   def test_create_new_invoice_in_turkish_lira
@@ -132,9 +129,6 @@ class InvoiceCreaeteTest< Redmine::IntegrationTest
     assert_redirected_to :controller => "invoices", :action => "show", :id => invoice
     assert_equal 1, invoice.invoice_lines.size
     assert_equal 2, invoice.invoice_lines.first.taxes.size
-    # comments should be blank since taxes not exempt
-    assert_equal "", invoice.invoice_lines.first.taxes.first.comment
-    assert_equal "", invoice.invoice_lines.first.taxes.last.comment
   end
 
   def test_create_new_invoice_with_client_office
@@ -200,9 +194,6 @@ class InvoiceCreaeteTest< Redmine::IntegrationTest
     assert_redirected_to :controller => "invoices", :action => "show", :id => invoice
     assert_equal 1, invoice.invoice_lines.size
     assert_equal 2, invoice.invoice_lines.first.taxes.size
-    # comments should be blank since taxes not exempt
-    assert_equal "", invoice.invoice_lines.first.taxes.first.comment
-    assert_equal "", invoice.invoice_lines.first.taxes.last.comment
     assert_equal(404360906, invoice.client.id)
     assert_equal(1, invoice.client.client_offices.size)
     assert_equal(invoice.client.client_offices.first.id, invoice.client_office.id)
@@ -500,9 +491,6 @@ class InvoiceCreaeteTest< Redmine::IntegrationTest
     assert_redirected_to :controller => "invoices", :action => "show", :id => invoice
     assert_equal 1, invoice.invoice_lines.size
     assert_equal 2, invoice.invoice_lines.first.taxes.size
-    # comments should be blank since taxes not exempt
-    assert_equal "", invoice.invoice_lines.first.taxes.first.comment
-    assert_equal "", invoice.invoice_lines.first.taxes.last.comment
   end
 
 end
