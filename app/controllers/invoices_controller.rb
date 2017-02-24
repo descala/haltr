@@ -1523,9 +1523,30 @@ class InvoicesController < ApplicationController
   end
 
   def process_pdf
-    Haltr::SendPdfToWs.send(@invoice)
-    @invoice.processing_pdf!
-    flash[:notice] = "#{l(:notice_invoice_processing_pdf)}"
+    #TODO: nomes cobrar OCR si aquest troba alguna cosa
+    #TODO: comprovar rol de l'usuari? comprovar admin/helpdesk?
+    has_credit = false
+    if @project.company.free_ocr_account.balance >= Redmine::Configuration['ocr_price']
+      acc = @project.company.free_ocr_account
+      has_credit = true
+    elsif @project.company.buy_account.balance >= Redmine::Configuration['ocr_price']
+      acc = @project.company.buy_account
+      has_credit = true
+    else
+      flash[:error] = l(:not_enough_credit)
+    end
+    if has_credit
+      Haltr::SendPdfToWs.send(@invoice)
+      @invoice.processing_pdf!
+      flash[:notice] = l(:notice_invoice_processing_pdf)
+    end
+    ocr = @project.company.ocr_account
+    Plutus::Entry.create!(
+      description: "OCR for #{@invoice.number} (id #{@invoice.id})",
+      date: Date.today,
+      debits: [{account: acc, amount: Redmine::Configuration['ocr_price']}],
+      credits: [{account: ocr, amount: Redmine::Configuration['ocr_price']}]
+    )
   rescue Errno::ECONNREFUSED
     flash[:error] = 'Connection refused, try again later'
   ensure

@@ -63,6 +63,7 @@ class Invoice < ActiveRecord::Base
   before_destroy :decrement_counter
   before_save :call_before_save_hook
   before_validation :set_lines_order
+  after_initialize :set_default_values
 
   accepts_nested_attributes_for :invoice_lines,
     :allow_destroy => true,
@@ -97,8 +98,6 @@ class Invoice < ActiveRecord::Base
     :class_name => "Money",
     :mapping => [%w(amounts_withheld_in_cents cents), %w(currency currency_as_string)],
     :constructor => Proc.new { |cents, currency| Money.new(cents || 0, currency || Money::Currency.new(Setting.plugin_haltr['default_currency'])) }
-
-  after_initialize :set_default_values
 
   acts_as_attachable :view_permission => :use_invoice_attachments,
                    :delete_permission => :use_invoice_attachments,

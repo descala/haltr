@@ -1,0 +1,58 @@
+<%= render partial: 'credits/balance' %>
+
+<br />
+
+<p>Efectuar recàrrega:</p>
+
+<%= form_tag(project_credits_path(project_id: @project)) do %>
+
+  <%= text_field_tag :amount %> €
+
+  <%= submit_tag %>
+
+<% end -%>
+
+<p>Detall consums i recàrregues:</p>
+
+<table class="credit">
+  <thead>
+    <tr>
+      <th>Data</th>
+      <th>Concepte</th>
+      <th class="money">Free OCR</th>
+      <th class="money">Payment</th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <% @entries.sort.each do |entry| -%>
+      <tr>
+        <td><%= entry.created_at.strftime("%Y-%m-%d %H:%M") %></td>
+        <td><%= entry.description %></td>
+        <% if entry.credit_accounts.first.normal_credit_balance? -%>
+          <% if entry.credit_accounts.first.name =~ /b2b_ocr_free/ -%>
+            <td class="money">+<%= entry.debit_amounts.sum(:amount) %></td>
+            <td></td>
+          <% else -%>
+            <td></td>
+            <td class="money">+<%= entry.debit_amounts.sum(:amount) %></td>
+          <% end -%>
+        <% else -%>
+          <% if entry.debit_accounts.first.name =~ /b2b_ocr_free/ -%>
+            <td class="money">-<%= entry.debit_amounts.sum(:amount) %></td>
+            <td></td>
+          <% else -%>
+            <td></td>
+            <td class="money">-<%= entry.debit_amounts.sum(:amount) %></td>
+          <% end -%>
+        <% end -%>
+      </tr>
+    <% end -%>
+    <tr style="border-top: 1px solid;">
+      <td></td>
+      <td></td>
+      <td class="money"><%= @project.company.free_ocr_account.balance.to_f %>€</td>
+      <td class="money"><%= @project.company.buy_account.balance.to_f %>€</td>
+    </tr>
+  </tbody>
+</table>

@@ -12,6 +12,7 @@ match '/clients/unlink/:id' => 'clients#unlink', :via => :get
 match '/clients/allow_link/:id' => 'clients#allow_link', :via => :get
 match '/clients/deny_link/:id' => 'clients#deny_link', :via => :get
 resources :projects do
+  resources :credits
   resources :clients, :only => [:index, :new, :create]
   match :people, :controller => 'people', :action => 'index', :via => :get
   resources :client_offices, :only => [:index, :new, :create, :edit, :update, :destroy]
