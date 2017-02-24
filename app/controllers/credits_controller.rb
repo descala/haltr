@@ -22,7 +22,7 @@ class CreditsController < ApplicationController
         credits: [{account: @project.company.buy_account, amount: amount}]
       )
     end
-    render :index
+    redirect_to project_credits_path(project_id: @project)
   end
 
 end
