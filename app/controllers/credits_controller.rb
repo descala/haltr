@@ -9,6 +9,8 @@ class CreditsController < ApplicationController
     @entries << @project.company.buy_account.credit_entries
     @entries << @project.company.free_ocr_account.credit_entries
     @entries << @project.company.ocr_account.credit_entries
+    @entries << @project.company.free_issues_account.credit_entries
+    @entries << @project.company.issues_account.credit_entries
     @entries.flatten!
   end
 

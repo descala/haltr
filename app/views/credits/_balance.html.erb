@@ -4,12 +4,16 @@
   <td class="money"><%= @project.company.free_ocr_account.balance.to_f %>€</td>
 </tr>
 <tr>
+  <td><%= t :issues_free_credit %></td>
+  <td class="money"><%= @project.company.free_issues_account.balance.to_f %>€</td>
+</tr>
+<tr>
   <td><%= t :credit %></td>
   <td class="money"><%= @project.company.buy_account.balance.to_f %>€</td>
 </tr>
 <tr class="last">
   <td><%= t :tag_total %></td>
-  <td class="money"><%= @project.company.free_ocr_account.balance.to_f + @project.company.buy_account.balance.to_f %>€</td>
+  <td class="money"><%= @project.company.free_ocr_account.balance.to_f + @project.company.free_issues_account.balance.to_f + @project.company.buy_account.balance.to_f %>€</td>
 </tr>
 </table>
 

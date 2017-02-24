@@ -291,7 +291,7 @@ class Company < ActiveRecord::Base
     write_attribute(:postalcode, v.gsub(' ', ''))
   end
 
-  # credits comprats per l'usuari, es gasten quan no n'hi ha a free_ocr_account
+  # credits comprats per l'usuari, es gasten quan no n'hi ha a free_.*_account
   def buy_account
     rev = Plutus::Revenue.where(name: 'b2b_buy', tenant: self).last
     rev ||= Plutus::Revenue.create!(name: 'b2b_buy', tenant: self)
@@ -333,6 +333,35 @@ class Company < ActiveRecord::Base
     exp ||= Plutus::Expense.create!(name: 'b2b_ocr', tenant: self)
     unless Plutus::Revenue.exists?(name: 'b2b_ocr_free', tenant: self)
       Plutus::Revenue.create!(name: 'b2b_ocr_free', tenant: self)
+    end
+    exp
+  end
+
+  # credits que recarreguem gratuitament cada mes, destinats a Issues
+  def free_issues_account
+    rev = Plutus::Revenue.where(name: 'b2b_issues_free', tenant: self).last
+    rev ||= Plutus::Revenue.new(name: 'b2b_issues_free', tenant: self)
+    exp = Plutus::Expense.where(name: 'b2b_issues', tenant: self).last
+    exp ||= Plutus::Expense.create!(name: 'b2b_issues', tenant: self)
+    if rev.new_record?
+      rev.save!
+      # posem el credit inicial
+      Plutus::Entry.create!(
+        description: "Free monthly recharge for #{Date.today.strftime("%B %Y")}",
+        date: Date.today, #.beginning_of_month,
+        debits:  [{account: exp, amount: (Redmine::Configuration['free_issues_monthly_credit'].to_i - rev.balance)}],
+        credits: [{account: rev, amount: (Redmine::Configuration['free_issues_monthly_credit'].to_i - rev.balance)}]
+      )
+    end
+    rev
+  end
+
+  # credits gastats en Issues
+  def issues_account
+    exp = Plutus::Expense.where(name: 'b2b_issues', tenant: self).last
+    exp ||= Plutus::Expense.create!(name: 'b2b_issues', tenant: self)
+    unless Plutus::Revenue.exists?(name: 'b2b_issues_free', tenant: self)
+      Plutus::Revenue.create!(name: 'b2b_issues_free', tenant: self)
     end
     exp
   end

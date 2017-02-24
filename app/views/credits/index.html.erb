@@ -20,6 +20,7 @@
       <th>Data</th>
       <th>Concepte</th>
       <th class="money">Free OCR</th>
+      <th class="money">Free Issues</th>
       <th class="money">Payment</th>
     </tr>
   </thead>
@@ -30,18 +31,30 @@
         <td><%= entry.created_at.strftime("%Y-%m-%d %H:%M") %></td>
         <td><%= entry.description %></td>
         <% if entry.credit_accounts.first.normal_credit_balance? -%>
-          <% if entry.credit_accounts.first.name =~ /b2b_ocr_free/ -%>
+          <% if entry.credit_accounts.first.name == 'b2b_ocr_free' -%>
+            <td class="money">+<%= entry.debit_amounts.sum(:amount) %></td>
+            <td></td>
+            <td></td>
+          <% elsif entry.credit_accounts.first.name == 'b2b_issues_free' -%>
+            <td></td>
             <td class="money">+<%= entry.debit_amounts.sum(:amount) %></td>
             <td></td>
           <% else -%>
+            <td></td>
             <td></td>
             <td class="money">+<%= entry.debit_amounts.sum(:amount) %></td>
           <% end -%>
         <% else -%>
-          <% if entry.debit_accounts.first.name =~ /b2b_ocr_free/ -%>
+          <% if entry.debit_accounts.first.name == 'b2b_ocr_free' -%>
+            <td class="money">-<%= entry.debit_amounts.sum(:amount) %></td>
+            <td></td>
+            <td></td>
+          <% elsif entry.debit_accounts.first.name == 'b2b_issues_free' -%>
+            <td></td>
             <td class="money">-<%= entry.debit_amounts.sum(:amount) %></td>
             <td></td>
           <% else -%>
+            <td></td>
             <td></td>
             <td class="money">-<%= entry.debit_amounts.sum(:amount) %></td>
           <% end -%>
@@ -52,6 +65,7 @@
       <td></td>
       <td></td>
       <td class="money"><%= @project.company.free_ocr_account.balance.to_f %>€</td>
+      <td></td>
       <td class="money"><%= @project.company.buy_account.balance.to_f %>€</td>
     </tr>
   </tbody>
