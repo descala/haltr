@@ -294,6 +294,52 @@ class Company < ActiveRecord::Base
     write_attribute(:postalcode, v.gsub(' ', ''))
   end
 
+  # credits comprats per l'usuari, es gasten quan no n'hi ha a free_ocr_account
+  def buy_account
+    rev = Plutus::Revenue.where(name: 'b2b_buy', tenant: self).last
+    rev ||= Plutus::Revenue.create!(name: 'b2b_buy', tenant: self)
+    exp = Plutus::Expense.where(name: 'b2b_recharge', tenant: self).last
+    exp ||= Plutus::Expense.create!(name: 'b2b_recharge', tenant: self)
+    rev
+  end
+
+  def recharge_account
+    exp = Plutus::Expense.where(name: 'b2b_recharge', tenant: self).last
+    exp ||= Plutus::Expense.create!(name: 'b2b_recharge', tenant: self)
+    rev = Plutus::Revenue.where(name: 'b2b_buy', tenant: self).last
+    rev ||= Plutus::Revenue.create!(name: 'b2b_buy', tenant: self)
+    exp
+  end
+
+  # credits que recarreguem gratuitament cada mes, destinats a OCR
+  def free_ocr_account
+    rev = Plutus::Revenue.where(name: 'b2b_ocr_free', tenant: self).last
+    rev ||= Plutus::Revenue.new(name: 'b2b_ocr_free', tenant: self)
+    exp = Plutus::Expense.where(name: 'b2b_ocr', tenant: self).last
+    exp ||= Plutus::Expense.create!(name: 'b2b_ocr', tenant: self)
+    if rev.new_record?
+      rev.save!
+      # posem el credit inicial
+      Plutus::Entry.create!(
+        description: "Free monthly recharge for #{Date.today.strftime("%B %Y")}",
+        date: Date.today, #.beginning_of_month,
+        debits:  [{account: exp, amount: (Redmine::Configuration['free_ocr_monthly_credit'].to_i - rev.balance)}],
+        credits: [{account: rev, amount: (Redmine::Configuration['free_ocr_monthly_credit'].to_i - rev.balance)}]
+      )
+    end
+    rev
+  end
+
+  # credits gastats en OCR
+  def ocr_account
+    exp = Plutus::Expense.where(name: 'b2b_ocr', tenant: self).last
+    exp ||= Plutus::Expense.create!(name: 'b2b_ocr', tenant: self)
+    unless Plutus::Revenue.exists?(name: 'b2b_ocr_free', tenant: self)
+      Plutus::Revenue.create!(name: 'b2b_ocr_free', tenant: self)
+    end
+    exp
+  end
+
   private
 
   def update_linked_clients

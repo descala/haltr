@@ -198,6 +198,7 @@ class InvoicesController < ApplicationController
     # accept bank_account, for client or company
     bank_account = parsed_params.delete(:bank_account)
     iban         = parsed_params.delete(:iban)
+    bic          = parsed_params.delete(:bic)
 
     # accept dir3 info
     unless parsed_params[:oficina_comptable].is_a? String
@@ -261,7 +262,7 @@ class InvoicesController < ApplicationController
 
     if bank_account || iban
       begin
-        @invoice.set_bank_info(bank_account, iban, nil)
+        @invoice.set_bank_info(bank_account, iban, bic)
       rescue
         @invoice.errors.add(:base, $!.message)
         respond_to do |format|
@@ -1035,6 +1036,14 @@ class InvoicesController < ApplicationController
     IssuedInvoice
   end
 
+  def redirect_to_issued_or_received
+    if self.class == ReceivedController
+      redirect_to project_received_index_path(@project)
+    else
+      redirect_to project_invoices_path(@project)
+    end
+  end
+
   def find_hashid
     @client = Client.find_by_hashid params[:client_hashid]
     if @client.nil?
@@ -1428,11 +1437,7 @@ class InvoicesController < ApplicationController
         format.html {
           if @invoice
             if params[:attachments].count > 1
-              if self.class == ReceivedController
-                redirect_to project_received_index_path
-              else
-                redirect_to project_invoices_path
-              end
+              redirect_to_issued_or_received
             else
               redirect_to invoice_path(@invoice)
             end
@@ -1518,9 +1523,30 @@ class InvoicesController < ApplicationController
   end
 
   def process_pdf
-    Haltr::SendPdfToWs.send(@invoice)
-    @invoice.processing_pdf!
-    flash[:notice] = "#{l(:notice_invoice_processing_pdf)}"
+    #TODO: nomes cobrar OCR si aquest troba alguna cosa
+    #TODO: comprovar rol de l'usuari? comprovar admin/helpdesk?
+    has_credit = false
+    if @project.company.free_ocr_account.balance >= Redmine::Configuration['ocr_price']
+      acc = @project.company.free_ocr_account
+      has_credit = true
+    elsif @project.company.buy_account.balance >= Redmine::Configuration['ocr_price']
+      acc = @project.company.buy_account
+      has_credit = true
+    else
+      flash[:error] = l(:not_enough_credit)
+    end
+    if has_credit
+      Haltr::SendPdfToWs.send(@invoice)
+      @invoice.processing_pdf!
+      flash[:notice] = l(:notice_invoice_processing_pdf)
+    end
+    ocr = @project.company.ocr_account
+    Plutus::Entry.create!(
+      description: "OCR for #{@invoice.number} (id #{@invoice.id})",
+      date: Date.today,
+      debits: [{account: acc, amount: Redmine::Configuration['ocr_price']}],
+      credits: [{account: ocr, amount: Redmine::Configuration['ocr_price']}]
+    )
   rescue Errno::ECONNREFUSED
     flash[:error] = 'Connection refused, try again later'
   ensure
@@ -1541,7 +1567,7 @@ class InvoicesController < ApplicationController
   rescue Errno::ECONNREFUSED
     flash[:error] = 'Connection refused, try again later'
   ensure
-    redirect_to project_invoices_path(@project)
+    redirect_to_issued_or_received
   end
 
   private
@@ -1589,10 +1615,14 @@ class InvoicesController < ApplicationController
             (tax['percent'].blank? or tax['name'].blank?)
           tax['_destroy'] = 1
         end
-        if tax['code'] =~ /_E|_NS$/
-          tax['comment'] = params["#{tax['name']}_comment"]
-        else
-          tax['comment'] = ''
+        # Used in API Invoice creation: do not overwrite comment
+        unless tax['comment']
+          # Used in UI Form
+          if tax['code'] =~ /_E|_NS$/
+            tax['comment'] = params["#{tax['name']}_comment"]
+          else
+            tax['comment'] = ''
+          end
         end
       end
       # discounts percent and amount #5516

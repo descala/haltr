@@ -15,7 +15,7 @@ class InvoiceTest < ActiveSupport::TestCase
     assert_equal 'i6', i.next.number
     assert_equal 'i4', i.previous.number
     i = invoices(:invoices_001) # id = 1
-    assert_equal nil, i.previous
+    assert_nil i.previous
   end
 
   test "due dates" do
@@ -291,7 +291,7 @@ class InvoiceTest < ActiveSupport::TestCase
     assert_equal "Address1", client.address
     assert_equal "state", client.province
     assert_equal "es", client.country
-    assert_equal  nil, client.website
+    assert_nil   client.website
     assert_equal "suport@ingent.net", client.email
     assert_equal "08720", client.postalcode
     assert_equal "city", client.city

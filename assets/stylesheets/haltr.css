@@ -475,3 +475,15 @@ div.accept_refuse_form {
   float: none;
   margin-left: 15px;
 }
+p#client_select.pdf select#invoice_client_id {
+  width: 100% !important;
+}
+table.ocr_credit, table.credit {
+  width: 100%;
+}
+table.ocr_credit tr.last {
+  border-top: 1px solid;
+}
+table.credit thead {
+  border-bottom: 1px solid;
+}

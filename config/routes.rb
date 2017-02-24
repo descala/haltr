@@ -12,6 +12,7 @@ match '/clients/unlink/:id' => 'clients#unlink', :via => :get
 match '/clients/allow_link/:id' => 'clients#allow_link', :via => :get
 match '/clients/deny_link/:id' => 'clients#deny_link', :via => :get
 resources :projects do
+  resources :credits
   resources :clients, :only => [:index, :new, :create]
   match :people, :controller => 'people', :action => 'index', :via => :get
   resources :client_offices, :only => [:index, :new, :create, :edit, :update, :destroy]
@@ -109,6 +110,7 @@ match 'received/original/:id' => 'received#original', :via => :get, :as => :rece
 match 'invoices/number_to_id/:number' => 'invoices#number_to_id', :via => :get, :as => :invoices_number_to_id, :constraints => { :number => /.+/ }
 post 'invoices/process_pdf/:id' => 'invoices#process_pdf', as: :process_pdf
 post 'invoices/bulk_process_pdf' => 'invoices#bulk_process_pdf', as: :bulk_process_pdf
+post 'received/bulk_process_pdf' => 'received#bulk_process_pdf', as: :received_bulk_process_pdf
 resources :invoices
 resources :quotes, :only => [:show, :edit, :update, :destroy]
 match 'quotes/send/:id' => 'quotes#send_quote', :via => :get, :as => :send_quote
