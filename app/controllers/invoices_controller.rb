@@ -1542,8 +1542,9 @@ class InvoicesController < ApplicationController
     end
     ocr = @project.company.ocr_account
     Plutus::Entry.create!(
-      description: "OCR for #{@invoice.number} (id #{@invoice.id})",
+      description: "OCR for #{@invoice.number}",
       date: Date.today,
+      commercial_document: @invoice,
       debits: [{account: acc, amount: Redmine::Configuration['ocr_price']}],
       credits: [{account: ocr, amount: Redmine::Configuration['ocr_price']}]
     )

@@ -29,7 +29,15 @@
     <% @entries.sort.each do |entry| -%>
       <tr>
         <td><%= entry.created_at.strftime("%Y-%m-%d %H:%M") %></td>
-        <td><%= entry.description %></td>
+        <% if entry.commercial_document -%>
+          <% if entry.commercial_document.is_a? Invoice -%>
+            <td><%= link_to entry.description, invoice_path(entry.commercial_document) %></td>
+          <% else -%>
+            <td><%= link_to entry.description, issue_path(entry.commercial_document) %></td>
+          <% end -%>
+        <% else -%>
+          <td><%= entry.description %></td>
+        <% end -%>
         <% if entry.credit_accounts.first.normal_credit_balance? -%>
           <% if entry.credit_accounts.first.name == 'b2b_ocr_free' -%>
             <td class="money">+<%= entry.debit_amounts.sum(:amount) %></td>
