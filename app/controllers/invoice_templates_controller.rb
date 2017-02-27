@@ -37,7 +37,7 @@ class InvoiceTemplatesController < InvoicesController
     end
 
     unless params[:client_id].blank?
-      templates = templates.where("client_id = ?", params[:client_id])
+      templates = templates.where("invoices.client_id = ?", params[:client_id])
       @client_id = params[:client_id].to_i rescue nil
     end
 
