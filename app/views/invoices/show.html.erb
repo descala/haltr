@@ -67,9 +67,8 @@
         </div>
 
         <div>
-          <%= render partial: 'credits/balance' %>
-        <br />
-        <%= link_to button_tag(I18n.t(:process_pdf), class: ''), process_pdf_path(@invoice), method: :post %>
+          <p><%= t :credit %>: <%= @project.company.free_ocr_account.balance.to_f + @project.company.free_issues_account.balance.to_f + @project.company.buy_account.balance.to_f %>€</p>
+          <p><%= link_to button_tag(I18n.t(:process_pdf), class: ''), process_pdf_path(@invoice), method: :post %></p>
         </div>
 
       <% end -%>
