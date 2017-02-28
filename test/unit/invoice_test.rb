@@ -916,5 +916,4 @@ class InvoiceTest < ActiveSupport::TestCase
     I18n.locale = :en
   end
 
-
 end
