@@ -1291,6 +1291,13 @@ class InvoicesController < ApplicationController
       )
       respond_to do |format|
         format.api {
+          if @invoice and ["true","1"].include?(params[:send_after_import])
+            begin
+              Haltr::Sender.send_invoice(@invoice, User.current)
+              @invoice.queue!
+            rescue
+            end
+          end
           render action: 'show', status: :created, location: invoice_path(@invoice)
         }
       end
