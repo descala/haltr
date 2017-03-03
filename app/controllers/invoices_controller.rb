@@ -198,6 +198,7 @@ class InvoicesController < ApplicationController
     # accept bank_account, for client or company
     bank_account = parsed_params.delete(:bank_account)
     iban         = parsed_params.delete(:iban)
+    bic          = parsed_params.delete(:bic)
 
     # accept dir3 info
     unless parsed_params[:oficina_comptable].is_a? String
@@ -261,7 +262,7 @@ class InvoicesController < ApplicationController
 
     if bank_account || iban
       begin
-        @invoice.set_bank_info(bank_account, iban, nil)
+        @invoice.set_bank_info(bank_account, iban, bic)
       rescue
         @invoice.errors.add(:base, $!.message)
         respond_to do |format|
@@ -1290,6 +1291,13 @@ class InvoicesController < ApplicationController
       )
       respond_to do |format|
         format.api {
+          if @invoice and ["true","1"].include?(params[:send_after_import])
+            begin
+              Haltr::Sender.send_invoice(@invoice, User.current)
+              @invoice.queue!
+            rescue
+            end
+          end
           render action: 'show', status: :created, location: invoice_path(@invoice)
         }
       end
@@ -1589,10 +1597,14 @@ class InvoicesController < ApplicationController
             (tax['percent'].blank? or tax['name'].blank?)
           tax['_destroy'] = 1
         end
-        if tax['code'] =~ /_E|_NS$/
-          tax['comment'] = params["#{tax['name']}_comment"]
-        else
-          tax['comment'] = ''
+        # Used in API Invoice creation: do not overwrite comment
+        unless tax['comment']
+          # Used in UI Form
+          if tax['code'] =~ /_E|_NS$/
+            tax['comment'] = params["#{tax['name']}_comment"]
+          else
+            tax['comment'] = ''
+          end
         end
       end
       # discounts percent and amount #5516

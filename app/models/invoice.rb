@@ -289,7 +289,7 @@ class Invoice < ActiveRecord::Base
     if self[:discount_percent] and self[:discount_percent] != 0
       self[:discount_percent]
     elsif self[:discount_amount] and self[:discount_amount] != 0 and gross_subtotal.dollars != 0
-      (self[:discount_amount].to_f * 100 / gross_subtotal.dollars).round(2)
+      self[:discount_amount].to_f * 100 / gross_subtotal.dollars
     else
       0
     end
@@ -708,14 +708,6 @@ _INV
         invoice.partial_amend_of = amended
       #elsif amended
         #TODO 03 and 04 not yet supported
-      else
-        # importing amend invoice for an unexisting invoice, assign self id as
-        # amended as a dirty hack
-        if amend_type == '02'
-          invoice.partial_amend_of = invoice
-        else
-          invoice.amend_of = invoice
-        end
       end
       invoice.amended_number = amend_of
       invoice.amend_reason = amend_reason

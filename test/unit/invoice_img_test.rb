@@ -52,6 +52,6 @@ class InvoiceImgTest < ActiveSupport::TestCase
     invoice_img = invoice_imgs(:image2)
     invoice_img.update_invoice
     invoice = invoice_img.invoice
-    assert_equal nil, invoice.client
+    assert_nil invoice.client
   end
 end

@@ -15,7 +15,7 @@ class InvoiceTest < ActiveSupport::TestCase
     assert_equal 'i6', i.next.number
     assert_equal 'i4', i.previous.number
     i = invoices(:invoices_001) # id = 1
-    assert_equal nil, i.previous
+    assert_nil i.previous
   end
 
   test "due dates" do
@@ -291,7 +291,7 @@ class InvoiceTest < ActiveSupport::TestCase
     assert_equal "Address1", client.address
     assert_equal "state", client.province
     assert_equal "es", client.country
-    assert_equal  nil, client.website
+    assert_nil   client.website
     assert_equal "suport@ingent.net", client.email
     assert_equal "08720", client.postalcode
     assert_equal "city", client.city
@@ -634,7 +634,7 @@ class InvoiceTest < ActiveSupport::TestCase
   test 'import invoice with discount amount and without discount percent' do
     file    = File.new(File.join(File.dirname(__FILE__),'..','fixtures','documents','invoice_facturae32_issued11.xml'))
     invoice = Invoice.create_from_xml(file,User.find_by_login('jsmith'),"1234",'uploaded',User.current.name)
-    assert_equal 5.95, invoice.discount_percent
+    assert_equal 5.95, invoice.discount_percent.round(2)
     assert_equal 14.42, invoice.discount_amount.dollars
     il = invoice.invoice_lines.first
     assert_equal 101, il.total_cost
