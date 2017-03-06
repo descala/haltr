@@ -73,7 +73,7 @@ class InvoiceTemplatesController < InvoicesController
     @date = Date.today + days.to_i.day
     @drafts = DraftInvoice.includes(:client).
       where("clients.project_id = ?", @project.id).
-      references(:client).order("date ASC")
+      references(:client).order("date ASC").to_a
     templates = InvoiceTemplate.includes(:client).
       where("clients.project_id = ? and date <= ?", @project.id, @date).
       references(:client).order("date ASC")
