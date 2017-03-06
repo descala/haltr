@@ -117,7 +117,11 @@ class Client < ActiveRecord::Base
         company.project.users.first.language rescue User.current.language
       end
     else
-      read_attribute(:language) || company.language
+      if read_attribute(:language)
+        read_attribute(:language)
+      elsif company
+        company.language
+      end
     end
   end
 
