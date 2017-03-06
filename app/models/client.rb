@@ -121,6 +121,8 @@ class Client < ActiveRecord::Base
         read_attribute(:language)
       elsif company
         company.language
+      else
+        project.users.reject {|u| u.admin? }.first.language rescue User.current.language
       end
     end
   end
