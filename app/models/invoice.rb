@@ -288,7 +288,7 @@ class Invoice < ActiveRecord::Base
     if self[:discount_percent] and self[:discount_percent] != 0
       self[:discount_percent]
     elsif self[:discount_amount] and self[:discount_amount] != 0 and gross_subtotal.dollars != 0
-      (self[:discount_amount].to_f * 100 / gross_subtotal.dollars).round(2)
+      self[:discount_amount].to_f * 100 / gross_subtotal.dollars
     else
       0
     end
