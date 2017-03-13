@@ -1,161 +1,173 @@
-<!--menu rapid-->
-<div class="seccio grup">
-  <div class="col span-2-de-2">
-    <ul class="menu-rapid">
-      <%=  call_hook(:invoices_index_menu_top) %>
-          <% if controller.controller_name == "invoices" %>
-            <li><%= link_to_if_authorized(l("label_invoice_new"), new_project_invoice_path(@project), :class => 'icon icon-add') %></li>
-          <% end %>
-      <% if num_can_be_sent > 0 -%>
-        <li>
-        <%= link_to_if_authorized "#{l(:button_send_invoices)} (#{num_can_be_sent})",{:action => 'send_new_invoices'} %>
-        </li>
-      <% end -%>
-      <% if num_not_sent > 0 -%>
-        <li>
-        <%= link_to_if_authorized "#{l(:button_download_new_invoices)} (#{num_not_sent})",{:action => 'download_new_invoices'}, :title => l(:label_download_new_invoices_info) %>
-        </li>
-      <% end -%>
-      <% if User.current.allowed_to?(:import_invoices, @project) -%>
-        <li>
-          <% if controller.controller_name == "invoices" %>
-            <%= link_to l(:label_import), project_invoices_upload_path(@project) -%>
-          <% else %>
-            <%= link_to l(:label_import), project_received_upload_path(@project) -%>
-          <% end %>
-        </li>
-      <% end -%>
-      <% if User.current.allowed_to?(:export_invoices, @project) -%>
-        <li>
-        <%= link_to 'CSV', project_invoices_path(@project, format: 'csv') -%>
-        </li>
-      <% end -%>
-      <%=  call_hook(:invoices_index_menu_bottom) %>
-    </ul>
-  </div>
+<div class="row">
+<div class="col-xs-6">
+  <h2><%= l :label_issued %></h2>
 </div>
-<!--final menu rapid-->
+<div class="col-xs-6 text-right">
+  <!--menu rapid-->
+  <ul class="list-inline fast-menu">
+    <li>
+      <div class="dropdown">
+        <button class="btn btn-default btn-sm dropdown-toggle" type="button" id="dropdownExport" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+          <%= l :button_export %>
+          <i class="fa fa-angle-down" aria-hidden="true"></i>
+        </button>
+        <ul class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownExport">
+          <li><%= link_to_if_authorized "#{l(:button_download_new_invoices)} (#{num_not_sent})",{:action => 'download_new_invoices'}, :title => l(:label_download_new_invoices_info) %></li>
+          <li><%= link_to 'CSV', project_invoices_path(@project, format: 'csv') -%></li>
+        </ul>
+      </div>
+    </li>
+    <li>
+      <div class="dropdown">
+        <button class="btn btn-success btn-sm dropdown-toggle" type="button" id="dropdownNew" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+          <%= l :button_new %>
+          <i class="fa fa-angle-down" aria-hidden="true"></i>
+        </button>
+        <ul class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownNew">
+          <%=  call_hook(:invoices_index_menu_top) %>
+          <% if controller.controller_name == "invoices" %>
+            <li><%= link_to(l("label_invoice"), new_project_invoice_path(@project)) %></li>
+          <% end %>
+          <% if num_new_invoices > 0 %>
+            <li><%= link_to "#{l(:button_generate_invoices)} (#{num_new_invoices})", {action: 'new_invoices_from_template', controller: 'invoice_templates'}, method: :post %></li>
+          <% end -%>
+
+          <li>
+            <% if controller.controller_name == "invoices" %>
+              <%= link_to l(:label_import), project_invoices_upload_path(@project) -%>
+            <% else %>
+              <%= link_to l(:label_import), project_received_upload_path(@project) -%>
+            <% end %>
+          </li>
+          <%=  call_hook(:invoices_index_menu_bottom) %>
+        </ul>
+      </div>
+    </li>
+  </ul>
+  <!--final menu rapid-->
+</div>
+</div>
 
 <!--filtres-->
-<div class="seccio grup">
-  <div class="col span-2-de-2">
-    <div class="filtres">
-      <div class="titularAcc">
-        <%= l(:label_filter_plural) %>
-      </div>
-      <div class="contingutAcc">
-        <%= form_tag({:id=>@project}, :method => :get, :class => 'formee') do %>
+<%= form_tag({:id=>@project}, :method => :get, :class => 'formee') do %>
+  <div class="seccio grup">
+    <div class="col span-2-de-2">
+      <div class="filtres">
+        <div class="titularAcc">
+          <div class="row">
+            <div class="col-xs-6 pad-top-7">
+              <a class="titularAccFilters icon-fa-right icon-fa-right-angle-down">
+                <%= l(:label_filter_plural) %>
+              </a>
+            </div>
+            <div class="col-xs-6 text-right form-inline">
+              <div class="form-group">
+                <label for="has_text" class="sr-only"><%= l(:field_has_text) %></label>
+                <%= search_field_tag :has_text, params[:has_text], class: 'form-control' %>
+              </div>
+              <%= button_tag(content_tag('i', '', class: 'fa fa-search', 'aria-hidden' => 'true'), :class => "btn btn-search", :name => nil, :type => :submit) %>
+            </div>
+          </div>
+        </div>
+        <div class="contingutAcc">
           <fieldset>
-            <legend><%= l(:label_search) %></legend>
-
             <div id="query_form_content" class="hide-when-print seccio grup">
-              <div class="col span-2-de-2">
-                <table>
-                  <tr>
-                    <td><label class="inline"><%= check_box_tag("state_all", "1", params["state_all"]) %> <%=l("label_all_invoices")%></label></td>
-                  </tr>
-                  <tr>
+              <div class="row">
 
-                <% %w(new sending sent read error cancelled closed discarded registered refused accepted allegedly_paid annotated).each do |state| -%>
-                  <%= "</tr><tr>".html_safe if state == "discarded" %>
-                  <td><label class="inline"><%= check_box_tag(state, "1", params[state]) %> <%=l("state_#{state}_plural")%></label></td>
-                <% end -%>
+                <div class="col-xs-6">
+                  <div class="row">
 
-                  </tr>
-                </table>
-              </div>
-            </div>
-
-            <div class="seccio grup">
-              <div class="col span-1-de-3">
-                <label for="date_from"><%=l(:field_date)%></label>
-                <%= date_field_tag :date_from, (params[:date_from].nil? ? Date.new(Date.today.year) : params[:date_from]), :size => 10, :style => "width: 90%;" %><%= calendar_for('date_from') %>
-              </div>
-              <div class="col span-1-de-3">
-                <label for="date_to"><%=l(:label_to)%></label>
-                <%= date_field_tag :date_to, (params[:date_to].nil? ? Date.today : params[:date_to]), :size => 10, :style => "width: 90%;" %><%= calendar_for('date_to') %>
-              </div>
-              <div class="col span-1-de-3">
-              </div>
-            </div>
-
-            <div class="seccio grup">
-              <div class="col span-1-de-3">
-                <label for="due_date_from"><%=l(:field_due_date)%></label>
-                <%= date_field_tag :due_date_from, params[:due_date_from], :size => 10, :style => "width: 90%;" %><%= calendar_for('due_date_from') %>
-              </div>
-              <div class="col span-1-de-3">
-                <label for="due_date_to"><%=l(:label_to)%></label>
-                <%= date_field_tag :due_date_to, params[:due_date_to], :size => 10, :style => "width: 90%;" %><%= calendar_for('due_date_to') %>
-              </div>
-              <div class="col span-1-de-3">
-              </div>
-            </div>
-
-            <div class="seccio grup">
-              <div class="col span-1-de-3">
-                <label for="number"><%= l(:field_number) %></label>
-                <%= text_field_tag :number, params[:number] %>
-              </div>
-              <div class="col span-1-de-3">
-                <label for="state_updated_at_from"><%= l(:field_state_updated_at) %> <%= l(:label_greater_or_equal) %></label>
-                <%= date_field_tag :state_updated_at_from, params[:state_updated_at_from], :size => 10, :style => "width: 90%;" %><%= calendar_for('state_updated_at_from') %>
-              </div>
-              <div class="col span-1-de-3">
-              </div>
-            </div>
-
-            <div class="seccio grup">
-              <div class="col span-2-de-3">
-                <label for="number"><%= l(:field_has_text) %></label>
-                <%= text_field_tag :has_text, params[:has_text] %>
-              </div>
-              <div class="col span-1-de-3">
-              </div>
-            </div>
-
-            <div class="seccio grup">
-              <div class="col span-2-de-3">
-                <fieldset style="margin: 0;">
-                  <legend>client</legend>
-                  <div class="seccio grup">
-                    <div class="col span-1-de-2">
-                      <label for="taxcode"><%= l(:field_taxcode) %></label>
-                      <%= text_field_tag :taxcode, params[:taxcode] %>
+                    <div class="col-xs-5 col-no-pad-right">
+                      <div class="form-group">
+                        <label for="sel_data"><%= l :field_date %>:</label>
+                        <%= select_tag 'sel_data',
+                          options_for_select([
+                            [l(:field_date), 'date'],
+                            [l(:tag_due), 'due_date'],
+                            [l(:field_state_updated_at), 'state_updated_at'],
+                        ]),
+                        class: 'form-control' -%>
+                      </div>
                     </div>
-                    <div class="col span-1-de-2">
-                      <label for="name"><%= l(:field_name) %></label>
-                      <%= text_field_tag :name, params[:name] %>
+
+                    <div class="col-xs-7">
+                      <div class="row">
+                        <div class="col-xs-6 col-no-pad-right">
+                          <div class="form-group">
+                            <label for="date_from" class="normal"><%= l :label_from %></label>
+                            <div class="relative">
+                              <%= date_field_tag :date_from, (params[:date_from].nil? ? Date.new(Date.today.year) : params[:date_from]), class: 'form-control' %><%= calendar_for('date_from') %>
+                            </div>
+                          </div>
+                        </div>
+                        <div class="col-xs-6 col-no-pad-right">
+                          <div class="form-group">
+                            <label for="date_to" class="normal"><%= l :label_to %></label>
+                            <div class="relative">
+                              <%= date_field_tag :date_to, (params[:date_to].nil? ? Date.today : params[:date_to]), class: 'form-control' %><%= calendar_for('date_to') %>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+
+                  </div>
+                  <div>
+                    <label for="sel_client"><%= l :field_client %>:</label>
+                    <div class="row">
+                      <div class="col-xs-5 col-no-pad-right">
+                        <div class="form-group">
+                          <%= text_field_tag :client, params[:client], class: 'form-control' %>
+                        </div>
+                      </div>
+                      <div class="col-xs-7 col-no-pad-right">
+                        <div class="form-group">
+                        </div>
+                      </div>
                     </div>
                   </div>
 
-                  <div class="seccio grup">
-                    <div class="col span-2-de-2">
-                      <label for="client_id"><%= l(:label_company) %></label>
-                      <%= collection_select(nil, :client_id, Client.where(["project_id = ?", @project]).order(:name).all, :id, :name, {:include_blank => true, :selected => @client_id}) %>
-                    </div>
+                </div> <!-- col-xs-6 -->
+                <div class="col-xs-6 col-separated-left">
+
+                  <p class="like-label"><strong><%= l :label_invoice_state %></strong></p>
+                  <div class="row">
+                    <div class="col-xs-4">
+
+                      <div class="checkbox">
+                        <label class="inline">
+                          <%= check_box_tag("state_all", "1", params["state_all"]) %> <%=l("label_all_invoices")%>
+                        </label>
+                      </div>
+
+                      <% %w(new sending sent read error cancelled closed discarded registered refused accepted allegedly_paid annotated).to_enum.with_index(1) do |state, i| -%>
+                        <%= "</div><div class=\"col-xs-4\">".html_safe if i % 5 == 0 %>
+                        <div class="checkbox">
+                          <label>
+                            <%= check_box_tag(state, "1", params[state]) %> <%=l("state_#{state}_plural")%>
+                          </label>
+                        </div>
+                      <% end -%>
+
+                      </div>
                   </div>
 
-                  <div class="seccio grup">
-                    <div class="col span-2-de-2">
-                      <label for=""><%= l(:field_invoice_format) %></label>
-                      <%= select(nil, :invoice_format, ExportChannels.for_select(@project), { include_blank: true, selected: params[:invoice_format]}) %>
-                    </div>
-                  </div>
-
-                </fieldset>
+                </div>
               </div>
-              <div class="col span-1-de-3" style="text-align: right;">
-                <%= submit_tag l(:button_apply), :class => "small", :name => nil %>
+              <hr>
+              <div class="text-right set-of-buttons">
+                <button type="reset" value="Reset" class="btn btn-link"><%= l :button_clear %></button>
+                <%= submit_tag l(:button_apply), :class => "btn btn-primary", :name => nil %>
               </div>
             </div>
           </fieldset>
-        <% end %>
+        </div>
       </div>
     </div>
   </div>
-</div>
+<% end -%>
 <!--final filtres-->
+
 
 <!--taula factures-->
 <%= form_tag({}) do -%>
@@ -180,8 +192,8 @@
             <%if invoice.total > invoice.total_paid and invoice.total_paid.cents != 0%>
               <tr id="invoice-<%=invoice.id%>" class="halfpaid hascontextmenu <%= 'amended ' if invoice.amended? %><%= cycle("odd", "even") %>">
               <%else%>
-              <tr id="invoice-<%=invoice.id%>" class="hascontextmenu <%= 'amended ' if invoice.amended? %><%= cycle("odd", "even") %>">
-            <% end %>
+                <tr id="invoice-<%=invoice.id%>" class="hascontextmenu <%= 'amended ' if invoice.amended? %><%= cycle("odd", "even") %>">
+                <% end %>
                 <td><%= check_box_tag("ids[]", invoice.id, false, :id => nil) %></td>
                 <td><%=h link_to_if_authorized invoice.number.blank? ? "?" : invoice.number, :action => 'show', :id => invoice %></td>
                 <td><%=h format_date invoice.date %></td>
@@ -190,8 +202,8 @@
                 <td class="money"><%= money(invoice.total) %></td>
                 <td <%='class="pastdue"'.html_safe if invoice.past_due?%>><%=h format_date invoice.due_date %><%= call_hook(:invoices_index_due_date, { invoice: invoice }) %></td>
                 <td><%=h l("state_#{invoice.state}").capitalize %></td>
-              </tr>
-          <% end -%>
+                </tr>
+              <% end -%>
         </tbody>
         <tfoot>
           <tr>
