@@ -48,6 +48,15 @@ class Invoice < ActiveRecord::Base
   validates_numericality_of :exchange_rate, :allow_blank => true
   validates_format_of :exchange_rate, with: /\A-?[0-9]+(\.[0-9]{1,2}|)\z/,
     :allow_blank => true
+  validates :number, :discount_text, :ponumber,
+    :payment_method_text, :accounting_cost,
+    :delivery_note_number, :charge_reason,
+    :file_reference, :title,
+    :receiver_contract_reference,
+    :series_code, :legal_literals, :fa_residence_type, :fa_taxcode,
+    :fa_name, :fa_address, :fa_postcode, :fa_town, :fa_province, :fa_country,
+    :fa_info,
+    length: { maximum: 255 }
 
   before_save :fields_to_utf8
   after_create :increment_counter
@@ -280,7 +289,7 @@ class Invoice < ActiveRecord::Base
     if self[:discount_percent] and self[:discount_percent] != 0
       self[:discount_percent]
     elsif self[:discount_amount] and self[:discount_amount] != 0 and gross_subtotal.dollars != 0
-      (self[:discount_amount].to_f * 100 / gross_subtotal.dollars).round(2)
+      self[:discount_amount].to_f * 100 / gross_subtotal.dollars
     else
       0
     end
@@ -464,6 +473,26 @@ class Invoice < ActiveRecord::Base
       end
     end
     cts
+  end
+
+  def taxes_by_category_ubl(positive: true)
+    tbc = taxes_by_category(positive: true)
+    tbc.collect {|name, taxes|
+      e_taxes = []
+      tmp_taxes = taxes.collect {|cat, tax|
+        if cat == 'NS' || cat == 'E'
+          e_taxes << tax
+          nil
+        else
+          [cat, tax]
+        end
+      }.compact.to_h
+      e_taxes.flatten!
+      if e_taxes.any?
+        tmp_taxes['E'] = e_taxes
+      end
+      [ name, tmp_taxes ]
+    }.to_h
   end
 
   def tax_amount_for(tax_name)
@@ -679,14 +708,6 @@ _INV
         invoice.partial_amend_of = amended
       #elsif amended
         #TODO 03 and 04 not yet supported
-      else
-        # importing amend invoice for an unexisting invoice, assign self id as
-        # amended as a dirty hack
-        if amend_type == '02'
-          invoice.partial_amend_of = invoice
-        else
-          invoice.amend_of = invoice
-        end
       end
       invoice.amended_number = amend_of
       invoice.amend_reason = amend_reason
@@ -1270,6 +1291,10 @@ _INV
     self[:client_bic].blank? ? client.bic : self[:client_bic]
   rescue
     nil
+  end
+
+  def visible_by_client?
+    false
   end
 
   protected

@@ -340,6 +340,9 @@ span#attachments_fields input.description {
   margin-left: 1%;
   width: 69%;
 }
+div#invoice_img span#send_info {
+  visibility: hidden;
+}
 span#send_info {
   position: absolute;
   top: -13px;
@@ -471,4 +474,7 @@ div.accept_refuse_form {
 .tabular label.radio {
   float: none;
   margin-left: 15px;
+}
+p#client_select.pdf select#invoice_client_id {
+  width: 100% !important;
 }

@@ -4,6 +4,11 @@
       <li>
       <%= link_to_if_authorized l(:label_company_new), new_project_client_path, :class => 'icon icon-add' %>
       </li>
+      <% if User.current.allowed_to?(:export_clients, @project) -%>
+        <li>
+        <%= link_to 'CSV', project_clients_path(@project, format: 'csv') -%>
+        </li>
+      <% end -%>
     </ul>
   </div>
 </div>

@@ -26,7 +26,7 @@ class Company < ActiveRecord::Base
   validate :only_one_default_tax_per_name
   acts_as_attachable :view_permission => :general_use,
                      :delete_permission => :general_use
-  after_save :update_linked_clients
+  after_save :update_linked_clients, :after_save_hook
   include CountryUtils
   include Haltr::TaxcodeValidator
 
@@ -304,6 +304,10 @@ class Company < ActiveRecord::Base
       end
       client.save
     end
+  end
+
+  def after_save_hook
+    Redmine::Hook.call_hook(:company_after_save, company: self)
   end
 
   # translations for accepts_nested_attributes_for

@@ -5,7 +5,7 @@ class SendTest < ActiveSupport::TestCase
   fixtures :taxes, :companies, :invoices, :invoice_lines, :clients, :people
 
   test "just call empty perform" do
-    assert_equal nil, Haltr::GenericSender.new.perform
+    assert_nil Haltr::GenericSender.new.perform
   end
 
   test "just call SendPdfByMail" do

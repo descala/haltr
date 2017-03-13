@@ -13,10 +13,11 @@ class InvoiceDocument < Invoice
     state :new, initial: true
     state :sending, :sent, :read, :error, :closed, :discarded, :accepted,
       :refused, :registered, :allegedly_paid, :cancelled, :annotated,
-      :processing_pdf
+      :processing_pdf, :paid
     state :received
 
     before_all_events :aasm_create_event
+    after_all_transitions :update_state_updated_at
 
     event :manual_send do
       transitions from: [:new,:sending,:error,:discarded], to: :sent
@@ -95,6 +96,9 @@ class InvoiceDocument < Invoice
     end
     event :mark_as_closed do
       transitions to: :closed
+    end
+    event :mark_as_paid do
+      transitions to: :paid
     end
     event :read do
       transitions from: [:received, :sent], to: :read
@@ -186,6 +190,16 @@ class InvoiceDocument < Invoice
 
   def to_label
     "#{number}"
+  end
+
+  # if state changes, record state timestamp :state_updated_at
+  # an update to an Invoice sets timestamps as usual, except for:
+  #  :state
+  #  :has_been_read
+  #  :state_updated_at
+  # these attributes do not change updated_at
+  def update_state_updated_at
+    write_attribute :state_updated_at, Time.now
   end
 
 end

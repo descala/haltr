@@ -135,7 +135,7 @@
              <cbc:AllowanceChargeReason><%=h @invoice.discount_text%></cbc:AllowanceChargeReason>
           <% end -%>
           <cbc:Amount currencyID="<%=h @client.currency%>"><%=h haltr_precision(@invoice.discount_amount.dollars,2)%></cbc:Amount>
-          <% @invoice.taxes_by_category.each do |tax_name,categories| -%>
+          <% @invoice.taxes_by_category_ubl.each do |tax_name,categories| -%>
             <% categories.each do |category, taxes| -%>
              <% taxes.each do |tax| -%>
                 <cac:TaxCategory>
@@ -158,7 +158,7 @@
           <cbc:ChargeIndicator>true</cbc:ChargeIndicator>
           <cbc:AllowanceChargeReason><%=h @invoice.charge_reason%></cbc:AllowanceChargeReason>
           <cbc:Amount currencyID="<%=h @client.currency%>"><%=h haltr_precision(@invoice.charge_amount.dollars,2)%></cbc:Amount>
-          <% @invoice.taxes_by_category.each do |tax_name,categories| -%>
+          <% @invoice.taxes_by_category_ubl.each do |tax_name,categories| -%>
             <% categories.each do |category, taxes| -%>
              <% taxes.each do |tax| -%>
                 <cac:TaxCategory>
@@ -176,7 +176,7 @@
           <% end -%>
         </cac:AllowanceCharge>
 <% end -%>
-<% @invoice.taxes_by_category.each do |tax_name,categories| -%>
+<% @invoice.taxes_by_category_ubl.each do |tax_name,categories| -%>
 
       <cac:TaxTotal>
         <cbc:TaxAmount currencyID="<%=h @client.currency%>"><%=h haltr_precision @invoice.tax_amount_for(tax_name).dollars %></cbc:TaxAmount>
@@ -217,7 +217,7 @@
       </cac:TaxTotal>
 <% end -%>
 
-    <% @invoice.taxes_by_category(positive: false).each do |tax_name, categories| -%>
+    <% @invoice.taxes_by_category_ubl(positive: false).each do |tax_name, categories| -%>
       <cac:WithholdingTaxTotal>
         <cbc:TaxAmount currencyID="<%=h @client.currency%>"><%=h haltr_precision @invoice.tax_amount_for(tax_name).dollars %></cbc:TaxAmount>
         <% categories.each do |category, taxes| -%>
@@ -278,7 +278,7 @@
             <cbc:Amount currencyID="EUR"><%=h haltr_precision(invoice_line.discount_amount, 2)%></cbc:Amount>
             <% invoice_line.taxes.each do |tax_line| -%>
               <cac:TaxCategory>
-                <cbc:ID schemeID="UNCL5305" schemeAgencyID="6"><%=h tax_line.category%></cbc:ID>
+                <cbc:ID schemeID="UNCL5305" schemeAgencyID="6"><%=h tax_line.category == 'NS' ? 'E' : tax_line.category%></cbc:ID>
                 <cbc:Percent><%=h haltr_precision(tax_line.percent)%></cbc:Percento>
                 <cac:TaxScheme>
                   <cbc:ID schemeID="UNCL5153" schemeAgencyID="6"><%= Haltr::TaxHelper.ubl(tax_line.name) %></cbc:ID>
@@ -295,7 +295,7 @@
             <cbc:Amount currencyID="EUR"><%=h haltr_precision(invoice_line.charge, 2)%></cbc:Amount>
             <% invoice_line.taxes.each do |tax_line| -%>
               <cac:TaxCategory>
-                <cbc:ID schemeID="UNCL5305" schemeAgencyID="6"><%=h tax_line.category%></cbc:ID>
+                <cbc:ID schemeID="UNCL5305" schemeAgencyID="6"><%=h tax_line.category == 'NS' ? 'E' : tax_line.category%></cbc:ID>
                 <cbc:Percent><%=h haltr_precision(tax_line.percent)%></cbc:Percento>
                 <cac:TaxScheme>
                   <cbc:ID schemeID="UNCL5153" schemeAgencyID="6"><%= Haltr::TaxHelper.ubl(tax_line.name) %></cbc:ID>
@@ -311,7 +311,7 @@
 <% end -%>
             <% invoice_line.taxes.each do |tax_line| -%>
             <cac:ClassifiedTaxCategory>
-              <cbc:ID schemeID="UNCL5305" schemeAgencyID="6"><%=h tax_line.category%></cbc:ID>
+              <cbc:ID schemeID="UNCL5305" schemeAgencyID="6"><%=h tax_line.category == 'NS' ? 'E' : tax_line.category%></cbc:ID>
               <cbc:Percent><%=h haltr_precision(tax_line.percent)%></cbc:Percento>
               <cac:TaxScheme>
                 <cbc:ID schemeID="UNCL5153" schemeAgencyID="6"><%= Haltr::TaxHelper.ubl(tax_line.name) %></cbc:ID>

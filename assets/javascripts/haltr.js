@@ -146,6 +146,13 @@ $(document).ready(function() {
     }
   });
 
+  $(document).keyup(function(e) {
+    if (e.keyCode === 27) {
+      $('#new_client_wrapper').hide();
+      $('.mail_box').parent().hide();
+    }
+  });
+
 });
 
 
@@ -237,5 +244,4 @@ function show_accepted_form() {
   $("#invoice-refuse").hide();
   $("#invoice-accept").show();
 }
-
 

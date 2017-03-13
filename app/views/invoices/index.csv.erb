@@ -55,7 +55,9 @@
             invoice.send(m) rescue nil
           end
         when 'client'
-          invoice.client.send(m)
+          if invoice.client
+            invoice.client.send(m)
+          end
         end
       }.flatten
     end

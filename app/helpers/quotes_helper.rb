@@ -3,7 +3,7 @@ module QuotesHelper
   def send_link_for_quote
     @invoice.client = Client.new if @invoice.client.nil?
     confirm = @invoice.has_been_sent? ? j(l(:sure_to_resend_quote, :num=>@invoice.number).html_safe) : nil
-    if @invoice.valid? and ExportChannels.can_send?(:send_pdf_by_mail)
+    if @invoice.valid? and ExportChannels.can_send?('pdf_by_mail')
         # sending through invoices#send_invoice
         link_to_if_authorized l(:label_send),
           {:action=>'send_quote', :id=>@invoice},
