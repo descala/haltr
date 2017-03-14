@@ -153,6 +153,10 @@ $(document).ready(function() {
     }
   });
 
+  $(document).on('change', 'select#sel-results', function(e) {
+    window.location = window.location.pathname + "?per_page=" + $(this).val();
+  });
+
 });
 
 

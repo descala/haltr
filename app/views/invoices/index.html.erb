@@ -113,7 +113,7 @@
 
                   </div>
                   <div>
-                    <label for="sel_client"><%= l :field_client %>:</label>
+                    <label for="client"><%= l :field_client %>:</label>
                     <div class="row">
                       <div class="col-xs-5 col-no-pad-right">
                         <div class="form-group">
@@ -169,58 +169,73 @@
 <!--final filtres-->
 
 
-<!--taula factures-->
-<%= form_tag({}) do -%>
-  <%= hidden_field_tag 'back_url', url_for(params), :id => nil %>
-  <div class="seccio grup">
-    <div class="col span-2-de-2">
-      <table class="taula-1 list invoices">
-        <thead>
-          <tr>
-            <th></th>
-            <%= sort_header_tag('number', :caption => l(:field_number)) %>
-            <%= sort_header_tag('date', :caption => l(:field_date)) %>
-            <%= sort_header_tag('clients.name', :caption => l(:field_company)) %>
-            <%= sort_header_tag('import_in_cents', :caption => l(:label_subtotal)) %>
-            <%= sort_header_tag('import_in_cents', :caption => l(:label_invoice_total)) %>
-            <%= sort_header_tag('due_date', :caption => l(:field_due_date)) %>
-            <%= sort_header_tag('state', :title => l(:label_sort_by, "\"#{l(:field_state)}\""), :caption => l(:field_state)) %>
-          </tr>
-        </thead>
-        <tbody>
-          <% @invoices.each do |invoice| -%>
-            <%if invoice.total > invoice.total_paid and invoice.total_paid.cents != 0%>
-              <tr id="invoice-<%=invoice.id%>" class="halfpaid hascontextmenu <%= 'amended ' if invoice.amended? %><%= cycle("odd", "even") %>">
-              <%else%>
-                <tr id="invoice-<%=invoice.id%>" class="hascontextmenu <%= 'amended ' if invoice.amended? %><%= cycle("odd", "even") %>">
-                <% end %>
-                <td><%= check_box_tag("ids[]", invoice.id, false, :id => nil) %></td>
-                <td><%=h link_to_if_authorized invoice.number.blank? ? "?" : invoice.number, :action => 'show', :id => invoice %></td>
-                <td><%=h format_date invoice.date %></td>
-                <td><%=h invoice.client_office ? invoice.client_office : invoice.client %></td>
-                <td class="money"><%= money(invoice.subtotal) %></td>
-                <td class="money"><%= money(invoice.total) %></td>
-                <td <%='class="pastdue"'.html_safe if invoice.past_due?%>><%=h format_date invoice.due_date %><%= call_hook(:invoices_index_due_date, { invoice: invoice }) %></td>
-                <td><%=h l("state_#{invoice.state}").capitalize %></td>
-                </tr>
-              <% end -%>
-        </tbody>
-        <tfoot>
-          <tr>
-            <td colspan="8">&nbsp;<%= call_hook(:invoices_index_list_footer, {pages: @invoice_pages}) %></td>
-          </tr>
-        </tfoot>
-      </table>
+<div class="wrapper-table bg-white">
+  <!--taula factures-->
+  <%= form_tag({}) do -%>
+    <%= hidden_field_tag 'back_url', url_for(params), :id => nil %>
+    <div class="seccio grup">
+      <div class="col span-2-de-2">
+        <table class="table table-striped table-hover invoices">
+          <thead>
+            <tr>
+              <th></th>
+              <%= sort_header_tag('number', :caption => l(:field_number)) %>
+              <%= sort_header_tag('date', :caption => l(:field_date)) %>
+              <%= sort_header_tag('due_date', :caption => l(:field_terms)) %>
+              <%= sort_header_tag('clients.name', :caption => l(:field_company)) %>
+              <%= sort_header_tag('import_in_cents', caption: l(:label_subtotal), class: 'text-right') %>
+              <%= sort_header_tag('import_in_cents', caption: l(:label_invoice_total), class: 'text-right') %>
+              <%= sort_header_tag('state', :title => l(:label_sort_by, "\"#{l(:field_state)}\""), :caption => l(:field_state)) %>
+            </tr>
+          </thead>
+          <tbody>
+            <% @invoices.each do |invoice| -%>
+              <%if invoice.total > invoice.total_paid and invoice.total_paid.cents != 0%>
+                <tr id="invoice-<%=invoice.id%>" class="halfpaid hascontextmenu <%= 'amended ' if invoice.amended? %><%= cycle("odd", "even") %>">
+                <%else%>
+                  <tr id="invoice-<%=invoice.id%>" class="hascontextmenu <%= 'amended ' if invoice.amended? %><%= cycle("odd", "even") %>">
+                  <% end %>
+                  <td><%= check_box_tag("ids[]", invoice.id, false, :id => nil) %></td>
+                  <td><%=h link_to_if_authorized invoice.number.blank? ? "?" : invoice.number, :action => 'show', :id => invoice %></td>
+                  <td><%=h format_date invoice.date %></td>
+                  <td <%='class="pastdue"'.html_safe if invoice.past_due?%>><%=h format_date invoice.due_date %><%= call_hook(:invoices_index_due_date, { invoice: invoice }) %></td>
+                  <td><%=h invoice.client_office ? invoice.client_office : invoice.client %></td>
+                  <td class="money"><%= money(invoice.subtotal) %></td>
+                  <td class="money"><%= money(invoice.total) %></td>
+                  <td><%=h l("state_#{invoice.state}").capitalize %></td>
+                  </tr>
+                <% end -%>
+          </tbody>
+          <tfoot>
+            <tr>
+              <td colspan="8"><%= call_hook(:invoices_index_list_footer, {pages: @invoice_pages}) %></td>
+            </tr>
+          </tfoot>
+        </table>
+      </div>
+    </div>
+  <% end -%>
+  <!--final taula factures-->
+
+  <div class="wrapper-pagination-results">
+    <div class="row">
+      <div class="col-xs-4 col-xs-offset-5">
+        <!--paginacio-->
+        <div class="pagination">
+          <%= pagination_links_full(@invoice_pages, @invoice_count, per_page_links: false) %>
+        </div>
+        <!--final paginacio-->
+      </div>
+      <div class="col-xs-3 text-right">
+        <form class="form-inline">
+          <label for="sel-results"><%= l :button_show %></label>
+          <%= select_tag('sel-results', options_for_select(Setting.per_page_options_array, selected: params[:per_page]), class: 'form-control') %>
+        </form>
+      </div>
     </div>
   </div>
-<% end -%>
-<!--final taula factures-->
 
-<!--paginacio-->
-<div class="seccio grup paginacio pagination">
-  <%= pagination_links_full @invoice_pages, @invoice_count %>
 </div>
-<!--final paginacio-->
 
 <% html_title(l(:label_invoice_plural)) -%>
 
