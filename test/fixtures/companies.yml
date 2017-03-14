@@ -10,6 +10,7 @@ company1:
   city: Barcelona
   public: private
   auto_process_pdf: true
+  email_customization: true
 
 company2:
   # eCookbook 
