@@ -72,55 +72,32 @@ class InvoicesController < ApplicationController
       end
     end
 
-    # client filter
-    # TODO: change view collection_select (doesnt display previously selected client)
-    unless params[:client_id].blank?
-      invoices = invoices.where("invoices.client_id = ?", params[:client_id])
-      @client_id = params[:client_id].to_i rescue nil
-    end
-
     # date filter
+    date_field = case params[:sel_data]
+                 when 'due_date'
+                   'due_date'
+                 when 'state_updated_at'
+                   'state_updated_at'
+                 else
+                   'date'
+                 end
     unless params[:date_from].blank?
-      invoices = invoices.where("date >= ?",params[:date_from])
+      invoices = invoices.where("#{date_field} >= ?",params[:date_from])
     end
     unless params["date_to"].blank?
-      invoices = invoices.where("date <= ?",params[:date_to])
+      invoices = invoices.where("#{date_field} <= ?",params[:date_to])
     end
 
-    # due_date filter
-    unless params[:due_date_from].blank?
-      invoices = invoices.where("due_date >= ?",params[:due_date_from])
-    end
-    unless params[:due_date_to].blank?
-      invoices = invoices.where("due_date <= ?",params[:due_date_to])
-    end
-
-    unless params[:taxcode].blank?
-      invoices = invoices.includes(:client).references(:client).where("clients.taxcode like ?","%#{params[:taxcode]}%")
-    end
-    unless params[:name].blank?
-      invoices = invoices.includes(:client).references(:client).includes(:client_office).references(:client_office).where("clients.name like ? or client_offices.name like ?","%#{params[:name]}%","%#{params[:name]}%")
-    end
-    unless params[:number].blank?
-      if params[:number] =~ /,/
-        invoices = invoices.where("number in (?)",params[:number].split(',').collect {|n| n.strip})
-      else
-        invoices = invoices.where("number like ?","%#{params[:number]}%")
-      end
-    end
-
-    unless params[:state_updated_at_from].blank?
-      invoices = invoices.where("state_updated_at >= ?", params[:state_updated_at_from])
-    end
-
-    # client invoice_format filter
-    unless params[:invoice_format].blank?
-      invoices = invoices.includes(:client).references(:client).where("clients.invoice_format = ?", params[:invoice_format])
+    unless params[:client].blank?
+      invoices = invoices.includes(:client).references(:client).
+        includes(:client_office).references(:client_office).
+        where("clients.taxcode like ? or clients.name like ? or client_offices.name like ?","%#{params[:client]}%","%#{params[:client]}%","%#{params[:client]}%")
     end
 
     # filter by text
     unless params[:has_text].blank?
-      invoices = invoices.includes(:invoice_lines).references(:invoice_lines).where("invoices.extra_info like ? or invoice_lines.description like ? or invoice_lines.notes like ?", "%#{params[:has_text]}%", "%#{params[:has_text]}%", "%#{params[:has_text]}%")
+      invoices = invoices.includes(:invoice_lines).references(:invoice_lines).
+        where("invoices.extra_info like ? or invoice_lines.description like ? or invoice_lines.notes like ?", "%#{params[:has_text]}%", "%#{params[:has_text]}%", "%#{params[:has_text]}%")
     end
 
     if params[:format] == 'csv' and !User.current.allowed_to?(:export_invoices, @project)
