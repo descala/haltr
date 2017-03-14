@@ -170,7 +170,10 @@ class Company < ActiveRecord::Base
 
   ################## methods for mail customization ##################
   def invoice_mail_subject(lang,invoice=nil)
-    subj = invoice_mail_customization["subject"][lang] rescue nil
+    subj = nil
+    if email_customization?
+      subj = invoice_mail_customization["subject"][lang] rescue nil
+    end
     if subj.blank?
       subj = I18n.t(:invoice_mail_subject,:locale=>lang)
       unless Redmine::Hook.call_hook(:replace_invoice_mail_subject).join.blank?

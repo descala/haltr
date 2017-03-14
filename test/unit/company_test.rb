@@ -45,7 +45,7 @@ class CompanyTest < ActiveSupport::TestCase
 
   test 'email customization' do
     c = companies('company1')
-    assert_equal "Invoice num @invoice.number", c.invoice_mail_subject_en
+    assert_equal "Invoice number @invoice.number", c.invoice_mail_subject_en
     c.invoice_mail_subject_en = "Yayh"
     assert_equal "Yayh", c.invoice_mail_subject_en
     c.invoice_mail_body_en = "Yayh"
