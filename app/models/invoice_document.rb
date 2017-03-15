@@ -199,7 +199,7 @@ class InvoiceDocument < Invoice
   #  :state_updated_at
   # these attributes do not change updated_at
   def update_state_updated_at
-    write_attribute :state_updated_at, Time.now
+    update_column :state_updated_at, Time.now
   end
 
 end
