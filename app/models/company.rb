@@ -41,6 +41,7 @@ class Company < ActiveRecord::Base
   validates_associated :bank_infos
 
   validate :uniqueness_of_taxes
+  validates :country, length: { is: 2 }
 
   after_initialize :set_default_values
   serialize :invoice_mail_customization
