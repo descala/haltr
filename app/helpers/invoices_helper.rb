@@ -297,7 +297,7 @@ module InvoicesHelper
 
   def select_to_edit(field)
     if @external_company and @external_company.send("dir3_#{field.to_s.pluralize}").any?
-      content_tag :span, l(:button_edit), data: {field: field}, :class => 'icon icon-edit select_to_edit required'
+      content_tag :span, l(:button_edit), data: {field: field}, :class => 'icon-fa icon-fa-pencil select_to_edit control-label'
     end
   end
 

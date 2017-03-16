@@ -480,6 +480,8 @@ gl:
   tax_AA: "Taxa baixa"
   tax_AAA: "Taxa super baixa"
   invoice_data: "Datos factura"
+  invoice_content: "Contenido factura"
+  invoice_attachments: "Ficheros adjuntos"
   bank_info: "Datos bancarios"
 
 

@@ -469,6 +469,8 @@ sv:
   tax_AAA: "Super Low Rated"
   bank_info: "Bank info"
   invoice_data: "Invoice data"
+  invoice_content: "Invoice content"
+  invoice_attachments: "Attached files"
 
   more_options: More options ...
   download_proof: Download proof

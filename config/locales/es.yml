@@ -482,6 +482,8 @@ es:
   tax_AA: "Tasa baja"
   tax_AAA: "Tasa super reducida"
   invoice_data: "Datos factura"
+  invoice_content: "Contenido factura"
+  invoice_attachments: "Ficheros adjuntos"
   bank_info: "Datos bancarios"
 
 
