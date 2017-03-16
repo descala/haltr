@@ -343,11 +343,6 @@ span#attachments_fields input.description {
 div#invoice_img span#send_info {
   visibility: hidden;
 }
-span#send_info {
-  position: absolute;
-  top: -13px;
-  right: 0px;
-}
 
 .rectangle-txt {
   position: absolute;

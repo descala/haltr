@@ -470,6 +470,8 @@ fr:
   tax_AA: "Bas impôt"
   tax_AAA: "Super Low Rated"
   invoice_data: "Données de la facture"
+  invoice_content: "Invoice content"
+  invoice_attachments: "Attached files"
   bank_info: "Information bancaire"
 
   more_options: "Plus d'actions..."
