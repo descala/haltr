@@ -110,6 +110,7 @@
 
          <LegalEntity>
             <CorporateName><%=h @company.name[0..79]%></CorporateName>
+            <RegistrationData />
             <% unless @company.company_identifier.blank? -%>
             <RegistrationData>
               <RegisterOfCompaniesLocation><%=@company.company_identifier[0..19]%></RegisterOfCompaniesLocation>
