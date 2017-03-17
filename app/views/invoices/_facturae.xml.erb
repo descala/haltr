@@ -110,8 +110,9 @@
 
          <LegalEntity>
             <CorporateName><%=h @company.name[0..79]%></CorporateName>
+            <% if @company.company_identifier.blank? -%>
             <RegistrationData />
-            <% unless @company.company_identifier.blank? -%>
+            <% else -%>
             <RegistrationData>
               <RegisterOfCompaniesLocation><%=@company.company_identifier[0..19]%></RegisterOfCompaniesLocation>
               <% if @company.company_identifier.size > 20 -%>
