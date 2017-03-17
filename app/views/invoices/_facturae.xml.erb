@@ -111,7 +111,7 @@
          <LegalEntity>
             <CorporateName><%=h @company.name[0..79]%></CorporateName>
             <% if @company.company_identifier.blank? -%>
-            <RegistrationData />
+              <!-- //Parties/SellerParty/LegalEntity/RegistrationData -->
             <% else -%>
             <RegistrationData>
               <RegisterOfCompaniesLocation><%=@company.company_identifier[0..19]%></RegisterOfCompaniesLocation>
@@ -436,6 +436,8 @@
                 <WithholdingReason><%=h @invoice.amounts_withheld_reason %></WithholdingReason>
                 <WithholdingAmount><%=h haltr_precision @invoice.amounts_withheld.dollars %></WithholdingAmount>
               </AmountsWithheld>
+            <% else -%>
+              <!-- //Invoices/Invoice/InvoiceTotals/AmountsWithheld -->
             <% end -%>
             <TotalExecutableAmount><%=h haltr_precision (@invoice.total - @invoice.payments_on_account - @invoice.amounts_withheld).dollars%></TotalExecutableAmount>
          </InvoiceTotals>
@@ -619,7 +621,9 @@
             </Installment>
           </PaymentDetails>
 <% end -%>
-<% unless @invoice.legal_literals_plus_tax_comments.blank? -%>
+<% if @invoice.legal_literals_plus_tax_comments.blank? -%>
+          <!-- //Invoices/Invoice/LegalLiterals/LegalReference -->
+<% else -%>
           <LegalLiterals>
             <LegalReference><%=@invoice.legal_literals_plus_tax_comments[0...250]%></LegalReference>
           </LegalLiterals>
