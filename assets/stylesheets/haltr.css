@@ -508,3 +508,6 @@ span#attachments_fields span input {
   padding: 6px 12px;
   transition: border-color ease-in-out .15s, box-shadow ease-in-out .15s;
 }
+span.field_with_errors input {
+  border: 1px solid red !important;
+}

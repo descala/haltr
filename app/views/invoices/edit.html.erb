@@ -18,7 +18,7 @@
       <div class="flash warning"><%=raw l(:warn_edit_invoice)%></div>
     <% end -%>
 
-    <%= form_for @invoice, url: {action: 'update', id: @invoice}, html: {method: :put, class: 'formee'}  do |f| %>
+    <%= form_for @invoice.becomes(Invoice), url: {action: 'update', id: @invoice}, html: {method: :put, class: 'formee'}  do |f| %>
       <h2><%= l :label_invoice %></h2>
       <%= render partial: 'invoices/form', locals: {f: f} %>
       <div class="row">
