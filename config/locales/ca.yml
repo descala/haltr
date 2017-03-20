@@ -839,6 +839,7 @@ Si la deses, es marcara com a Nova."
   label_company_office: Seu
   field_amounts_withheld_reason: "Concepte de retenció"
   field_amounts_withheld: "Import de retenció"
+  amounts_withheld: "Retenció"
   received_by: "Rebuda (%{transport})"
   cant_modify_taxcode: "No es pot modificar el NIF. Si l'heu de canviar, sisplau, poseu-vos en contacte amb el %{suport_link}"
   suport_link: "servei de suport"

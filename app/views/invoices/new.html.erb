@@ -7,10 +7,20 @@
     <%= form_for @invoice, :url => url_hash, :html => {:class=>'formee'} do |f| %>
       <h2><%= l :label_invoice_new %></h2>
       <%= render :partial => 'invoices/form', :locals => { :f => f } %>
-      <%= f.submit l(:button_create), :name => 'create' %>
-      <% unless @invoice.is_a? InvoiceTemplate or @invoice.is_a? DraftInvoice -%>
-        <%= f.submit l(:button_create_and_send), :name => 'create_and_send' %>
-      <% end -%>
+      <div class="row">
+        <div class="col-xs-2 col-no-pad-right">
+        </div>
+        <div class="col-xs-10 col-no-pad-left">
+          <div class="tab-pane">
+            <div class="text-right set-of-buttons">
+              <%= f.submit l(:button_create), name: 'create', class: 'btn btn-primary' %>
+              <% unless @invoice.is_a? InvoiceTemplate or @invoice.is_a? DraftInvoice -%>
+                <%= f.submit l(:button_create_and_send), name: 'create_and_send', class: 'btn btn-primary' %>
+              <% end -%>
+            </div>
+          </div>
+        </div>
+      </div>
     <% end %>
 
   </div>
@@ -22,3 +32,10 @@
 </div>
 
 <% html_title(l(:label_invoice_new)) -%>
+
+
+<%=
+  content_for :header_tags do
+    stylesheet_link_tag 'bootstrap.vertical-tabs', plugin: 'haltr'
+  end
+%>

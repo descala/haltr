@@ -42,6 +42,7 @@ class Company < ActiveRecord::Base
 
   validate :uniqueness_of_taxes
   validates :country, length: { is: 2 }
+  validates :taxcode, length: { maximum: 20 }, allow_blank: true
 
   after_initialize :set_default_values
   serialize :invoice_mail_customization
