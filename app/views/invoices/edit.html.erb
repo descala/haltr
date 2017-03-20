@@ -18,21 +18,31 @@
       <div class="flash warning"><%=raw l(:warn_edit_invoice)%></div>
     <% end -%>
 
-    <%= form_for @invoice, :url => { :action => 'update', :id => @invoice }, :html => {:method => :put, :class => 'formee'}  do |f| %>
+    <%= form_for @invoice, url: {action: 'update', id: @invoice}, html: {method: :put, class: 'formee'}  do |f| %>
       <h2><%= l :label_invoice %></h2>
-      <%= render :partial => 'invoices/form', :locals => { :f => f } %>
-      <% if @invoice.original and @invoice.invoice_format != 'pdf' and !@invoice.modified_since_created? -%>
-        <%= f.submit l(:button_save), :name => 'save', :data=>{:confirm => l(:overriding_original_warn)} %>
-      <% else -%>
-        <%= f.submit l(:button_save), :name => 'save' %>
-      <% end -%>
-      <% unless @invoice.is_a? InvoiceTemplate or @invoice.is_a? DraftInvoice -%>
-        <% if @invoice.original and @invoice.invoice_format != 'pdf' and !@invoice.modified_since_created? -%>
-          <%= f.submit l(:button_save_and_send), :name => 'save_and_send', :data=>{:confirm => l(:overriding_original_warn)} %>
-        <% else -%>
-          <%= f.submit l(:button_save_and_send), :name => 'save_and_send' %>
-        <% end -%>
-      <% end -%>
+      <%= render partial: 'invoices/form', locals: {f: f} %>
+      <div class="row">
+        <div class="col-xs-2 col-no-pad-right">
+        </div>
+        <div class="col-xs-10 col-no-pad-left">
+          <div class="tab-pane">
+            <div class="text-right set-of-buttons">
+              <% if @invoice.original and @invoice.invoice_format != 'pdf' and !@invoice.modified_since_created? -%>
+                <%= f.submit l(:button_save), name: 'save', data: {confirm: l(:overriding_original_warn)}, class: 'btn btn-primary' %>
+              <% else -%>
+                <%= f.submit l(:button_save), name: 'save', class: 'btn btn-primary' %>
+              <% end -%>
+              <% unless @invoice.is_a? InvoiceTemplate or @invoice.is_a? DraftInvoice -%>
+                <% if @invoice.original and @invoice.invoice_format != 'pdf' and !@invoice.modified_since_created? -%>
+                  <%= f.submit l(:button_save_and_send), name: 'save_and_send', data: {confirm: l(:overriding_original_warn)}, class: 'btn btn-primary' %>
+                <% else -%>
+                  <%= f.submit l(:button_save_and_send), name: 'save_and_send', class: 'btn btn-primary' %>
+                <% end -%>
+              <% end -%>
+            </div>
+          </div>
+        </div>
+      </div>
     <% end %>
 
   </div>
@@ -45,9 +55,12 @@
 </div>
 <% end -%>
 
-
-
-
 <div id="new_client_wrapper" style="display:none;">
-  <%= render :partial => 'invoices/new_client', :locals => {:context => "edit_invoice"} %>
+  <%= render partial: 'invoices/new_client', locals: {context: "edit_invoice"} %>
 </div>
+
+<%=
+  content_for :header_tags do
+    stylesheet_link_tag 'bootstrap.vertical-tabs', plugin: 'haltr'
+  end
+%>
