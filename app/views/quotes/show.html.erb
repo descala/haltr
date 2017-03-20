@@ -31,9 +31,6 @@
 
 <%= render :partial => 'events/list', locals: {events: @invoice.visible_events} %>
 
-<% content_for :sidebar do %>
-  <%= render_menu :invoices_menu, @project %>
-<% end %>
 <% content_for :header_tags do %>
   <%= stylesheet_link_tag 'minimal', :plugin => 'haltr' %>
 <% end %>

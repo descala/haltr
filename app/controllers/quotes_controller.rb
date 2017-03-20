@@ -1,6 +1,5 @@
 class QuotesController < ApplicationController
 
-  menu_item Haltr::MenuItem.new(:invoices,:quotes)
   helper :haltr
   helper :invoices
   layout 'haltr'
