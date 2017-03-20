@@ -1,56 +1,78 @@
 <% if @project -%>
-<div class="chart_events">
-  <p class="contextual"><%= link_to l(:label_any), project_events_path(project_id: @project) %></p>
-  <%= render :partial => 'common/chart_headers' %>
-  <% old_project = @project %>
-  <h3><%= l(:chart_events) %></h3>
-  <%= select_tag "value", options_for_select({ t(:label_last_changes, :count=>10)=>10,
-                                               t(:label_last_changes, :count=>20)=>20 },
-                                             User.current.pref.others[:chart_events].to_i),
-    :data  => { :url => url_for(update_chart_preference_path(project_id: @project)) },
-    :id    => 'chart_events',
-    :class => 'chart_prefs'
-  %>
+  <div class="chart_events">
+    <p class="pull-right"><%= link_to l(:label_any), project_events_path(project_id: @project) %></p>
+    <%= render partial: 'common/chart_headers' %>
+    <% old_project = @project %>
+    <h3><%= l(:chart_events) %></h3>
+    <div class="wrapper-default">
+      <%= select_tag "value", options_for_select({ t(:label_last_changes, count: 10)=>10,
+                                                   t(:label_last_changes, count: 20)=>20 },
+      User.current.pref.others[:chart_events].to_i),
+      data:  { url: url_for(update_chart_preference_path(project_id: @project)) },
+      id:    'chart_events',
+      class: 'chart_prefs form-control form-control-auto input-sm'
+    %>
+    </div>
 
-  <% haltr_projects.each do |project| -%>
-    <%
+    <% haltr_projects.each do |project| -%>
+      <%
       num = User.current.pref.others[:chart_events].to_i
       num = 10 unless num > 0
       events = project.events.where('events.type != "HiddenEvent"').order('created_at DESC').first(num)
       @project = project
     -%>
-    <fieldset>
-      <legend><h3><%= project.company.name if haltr_projects.size > 1 %></h3></legend>
+  <fieldset>
+    <% if haltr_projects.size > 1 -%>
+      <legend><%= project.company.name %></legend>
+    <% end -%>
+    <div class="wrapper-table">
       <% if events.any? %>
-        <ul>
-          <% events.each do |e| %>
-            <li>
-            <%= format_time e.created_at %> -
-            <% if e.invoice -%>
-              <%= link_to_invoice_with_label(e.invoice) -%>
-            <% elsif e.client -%>
-              <%= link_to "#{l(:field_client)} #{e.client.name}", edit_client_path(e.client) -%>
+        <table class="cashflow table">
+          <tbody>
+            <% events.each do |e| %>
+              <tr class="<%= cycle 'odd', 'even' %>">
+                <td class="nowrap"><%= format_time e.created_at %></td>
+                <td>
+                  <% if e.invoice -%>
+                    <%= link_to_invoice_with_label(e.invoice) -%>
+                  <% elsif e.client -%>
+                    <%= link_to "#{l(:field_client)} #{e.client.name}", edit_client_path(e.client) -%>
+                  <% else -%>
+                    <%= e.to_s %>
+                  <% end -%>
+                </td>
+                <td><%= l e.name %></td>
+                <% if e.audits.size > 0 -%>
+                  <td>
+                    <%= link_to '<i class="fa fa-plus-square" aria-hidden="true"></i>'.html_safe, '#', class: 'show-audits', :'data-id' => e.id %>
+                  </td>
+              </tr>
+              <tr>
+                <td colspan="4" class="td-collapse">
+                  <div id="audited_<%=e.id%>" class="audited">
+                    <ul class="list-unstyled">
+                      <% e.audits.each do |a| -%>
+                        <%= render partial: "audits/audit", locals: { a: a } %>
+                      <% end -%>
+                    </ul>
+                  </div>
+                </td>
+              </tr>
             <% else -%>
-              <%= e.to_s %>
+              <td></td>
+              </tr>
             <% end -%>
-            <%= render :partial => "events/event_short", :locals => {:e=>e} %>
-            </li>
-
-            <div id="audited_<%=e.id%>" class="audited">
-              <% e.audits.each do |a| -%>
-                <%= render partial: "audits/audit", locals: { a: a } %>
-              <% end -%>
-            </div>
-
           <% end -%>
-        </ul>
+          </tbody>
+        </table>
       <% else -%>
         <p><%= l(:label_no_data) %></p>
       <% end -%>
-    </fieldset>
-    <br />
-  <% end -%>
+    </div>
+  </fieldset>
+  <br />
+<% end -%>
 
-  <% @project = old_project %>
-</div>
+<% @project = old_project %>
+  </div>
 <% end -%>

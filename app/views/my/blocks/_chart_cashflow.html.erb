@@ -1,15 +1,15 @@
 <% if @project -%>
-<div class="chart_cashflow wrapper-blocks">
-  <%= render :partial => 'common/chart_headers' %>
+<div class="chart_cashflow">
+  <%= render partial: 'common/chart_headers' %>
   <h3><%= l(:chart_cashflow) %></h3>
   <div class="wrapper-default">
   <%= select_tag "value", options_for_select({ t(:last_3_months) => :last_3_months,
                                                t(:last_year)     => :last_year,
                                                t(:all)           => :all },
                                              User.current.pref.others[:chart_cashflow]),
-    :data  => { :url => url_for(update_chart_preference_path(project_id: @project.id)) },
-    :id    => 'chart_cashflow',
-    :class => 'chart_prefs form-control input-sm'
+    data:  { url: url_for(update_chart_preference_path(project_id: @project.id)) },
+    id:    'chart_cashflow',
+    class: 'chart_prefs form-control form-control-auto input-sm'
   %>
   </div>
 

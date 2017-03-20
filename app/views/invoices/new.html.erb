@@ -5,6 +5,7 @@
     <% url_hash = { :action => 'create', :project_id => @project } -%>
     <% url_hash[:controller] = @dest_controller unless @dest_controller.blank? -%>
     <%= form_for @invoice.becomes(Invoice), :url => url_hash, :html => {:class=>'formee'} do |f| %>
+      <% f.object = @invoice.becomes(@invoice.class) -%>
       <h2><%= l :label_invoice_new %></h2>
       <%= render :partial => 'invoices/form', :locals => { :f => f } %>
       <div class="row">
