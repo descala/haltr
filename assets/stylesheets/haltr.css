@@ -473,3 +473,29 @@ div.accept_refuse_form {
 p#client_select.pdf select#invoice_client_id {
   width: 100% !important;
 }
+div#invoice_lines table.table-lines {
+  margin-bottom: -1px;
+}
+span.table-lines {
+  background: #CAE0EA;
+  margin-top: -15px;
+  border-radius: 0px;
+}
+span#attachments_fields {
+  display: block;
+  margin-bottom: 15px;
+}
+span#attachments_fields span {
+  background: #CAE0EA;
+  padding: 15px;
+}
+span#attachments_fields span input {
+  border-radius: 6px;
+  border: 1px solid #EEEEEE;
+  background: #FFFFFF;
+  font-size: 14px;
+  box-shadow: none;
+  height: 34px;
+  padding: 6px 12px;
+  transition: border-color ease-in-out .15s, box-shadow ease-in-out .15s;
+}

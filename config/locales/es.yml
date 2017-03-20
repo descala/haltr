@@ -841,6 +841,7 @@ Si la guardas, se marcará como Nueva."
   label_company_office: Sede
   field_amounts_withheld_reason: "Concepto de retención"
   field_amounts_withheld: "Importe de retención"
+  amounts_withheld: "Retenciones"
   received_by: "Recibida (%{transport})"
   cant_modify_taxcode: "No se puede modificar el NIF. Si tenéis que cambiarlo, por favor, poneros en contacto con el %{suport_link}"
   suport_link: "servicio de soporte"
