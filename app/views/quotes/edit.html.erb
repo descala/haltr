@@ -15,7 +15,3 @@
 <div id="new_client_wrapper" style="display:none;">
   <%= render :partial => 'invoices/new_client', :locals => {:context => "edit_invoice"} %>
 </div>
-
-<% content_for :sidebar do %>
-  <%= render_menu :invoices_menu, @project %>
-<% end %>

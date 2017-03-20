@@ -192,6 +192,7 @@ Redmine::Plugin.register :haltr do
 
   menu :project_menu, :my_company, {:controller=>'companies', :action=>'my_company'}, :param=>:project_id, :caption=>:label_my_company
   menu :project_menu, :companies,  {:controller=>'clients',   :action=>'index'     }, :param=>:project_id, :caption=>:label_companies
+  menu :project_menu, :quotes,     {:controller=>'quotes',    :action=>'index'     }, :param=>:project_id, :caption=>:label_quote_plural
   menu :project_menu, :invoices,   {:controller=>'invoices',  :action=>'index'     }, :param=>:project_id, :caption=>:label_invoice_plural
   menu :project_menu, :payments,   {:controller=>'payments',  :action=>'index'     }, :param=>:project_id, :caption=>:label_payment_plural
   menu :project_menu, :orders,     { controller: 'orders',     action: 'index'     },  param: :project_id, caption: :label_order_plural
