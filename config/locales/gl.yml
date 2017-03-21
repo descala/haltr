@@ -97,8 +97,7 @@ gl:
   generate_template_from_invoice: Xerar nova plantilla
   duplicate_invoice: Duplicar esta factura
   generated_from_template: Xerada de plantilla
-  receive_payment: Pagamento
-  make_payment: Efectuar pagamento
+  receive_payment: Cobro
   label_paid: Pagado
   label_tax: Imposto
   label_tax_plural: Impostos
@@ -262,7 +261,6 @@ gl:
   label_invoice_template: Plantilla
   label_invoice_template_plural: Plantillas
   label_generated_invoices: Facturas xeradas
-  next_charge: Seguinte pagamento
   invoices_to_generate: Facturas a xerar
   generate: Xerar
   generate_selected: Xerar seleccionadas
@@ -312,9 +310,9 @@ gl:
   label_import_aeb43: Importar movementos en formato AEB43
 
   # Payments
-  label_payment: Pagamento
-  label_payment_plural: Pagamentos
-  label_payment_new: Novo pagamento
+  label_payment: Cobro
+  label_payment_plural: Cobros
+  label_payment_new: Novo cobro
   field_amount: Importe
   field_amount_in_cents: Importe
   field_payment_method: Método de pagamento
@@ -326,9 +324,9 @@ gl:
   received_paid_notification_to: "Notificar recepción do pagamento a %{mail}"
   save_and_mail: "Gardar e enviar mail"
   save_without_mail: "Gardar sen enviar mail"
-  field_sepa_type: "tipo de pagamentos SEPA"
+  field_sepa_type: "tipo de cobros SEPA"
   label_payment_initiation: "Adeudos SEPA"
-  label_invoice_report: Informe de pagamentos
+  label_invoice_report: Informe de cobros
 
   # Settings
   field_taxcode: "NIF"
@@ -457,7 +455,7 @@ gl:
   field_smtp_from: "Remitente"
 
   permission_general_use: "Utilizar o plugin Haltr"
-  permission_manage_payments: "Xestionar pagamentos"
+  permission_manage_payments: "Xestionar cobros"
   permission_use_templates: "Plantillas de facturas"
   permission_batch_processes: "Procesos con scripts"
   permission_use_all_readonly: "Uso completo só lectura"

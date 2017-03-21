@@ -87,7 +87,6 @@ en:
   duplicate_invoice: Duplicate invoce
   generated_from_template: Generated from template
   receive_payment: Payment
-  make_payment: Make payment
   label_paid: Paid
   label_tax: Tax
   label_tax_plural: Taxes
@@ -252,7 +251,6 @@ en:
   label_invoice_template: Template
   label_invoice_template_plural: Recurring
   label_generated_invoices: Generated invoices
-  next_charge: Next charge
   invoices_to_generate: Invoices to generate
   generate: Generate
   generate_selected: Generate selected

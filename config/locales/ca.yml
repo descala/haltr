@@ -95,8 +95,7 @@ ca:
   generate_template_from_invoice: Generar nova plantilla
   duplicate_invoice: Duplicar la factura
   generated_from_template: Generada des de la plantilla
-  receive_payment: Pagament
-  make_payment: Efectuar pagament
+  receive_payment: Cobrament
   label_paid: Pagat
   label_not_paid: No pagat
   label_tax: Impost
@@ -262,7 +261,6 @@ ca:
   label_invoice_template: Recurrent
   label_invoice_template_plural: Recurrents
   label_generated_invoices: Factures generades
-  next_charge: Següent pagament
   invoices_to_generate: Factures a generar
   generate: Generar
   generate_selected: Generar seleccionades
@@ -312,9 +310,9 @@ ca:
   label_import_aeb43: Importar moviments en format AEB43
 
   # Payments
-  label_payment: Pagament
-  label_payment_plural: Pagaments
-  label_payment_new: Nou pagament
+  label_payment: Cobrament
+  label_payment_plural: Cobraments
+  label_payment_new: Nou cobrament
   field_amount: Preu
   field_amount_in_cents: Preu
   field_payment_method: Mètode de pagament
@@ -326,9 +324,9 @@ ca:
   received_paid_notification_to: "Notificar recepció de pagament a %{mail}"
   save_and_mail: "Desar i enviar mail"
   save_without_mail: "Desar sense enviar mail"
-  field_sepa_type: "Tipus de pagaments SEPA"
+  field_sepa_type: "Tipus de cobraments SEPA"
   label_payment_initiation: "Càrrecs SEPA"
-  label_payment_report: Informe de pagaments
+  label_payment_report: Informe de cobraments
 
   # Settings
   field_taxcode: "NIF"
@@ -458,7 +456,7 @@ ca:
   field_smtp_from: "Remitent"
 
   permission_general_use: "Utilitzar el plugin Haltr"
-  permission_manage_payments: "Gestionar pagaments"
+  permission_manage_payments: "Gestionar cobraments"
   permission_use_templates: "Plantilles de factures"
   permission_batch_processes: "Processos amb scripts"
   permission_use_all_readonly: "Ús complet només lectura"

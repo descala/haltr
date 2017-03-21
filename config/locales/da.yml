@@ -85,7 +85,6 @@ da:
   generate_template_from_invoice: Generer ny skabelon
   generated_from_template: Genereret fra skabelon
   receive_payment: Betaling
-  make_payment: Foretag indbetaling
   label_paid: Betalt
   label_tax: Skat
   label_tax_plural: Skatter
@@ -250,7 +249,6 @@ da:
   label_invoice_template: Skablon
   label_invoice_template_plural: Skabloner
   label_generated_invoices: Genererede fakturaer
-  next_charge: Næste afgift
   invoices_to_generate: Fakturaer at generere
   generate: Generer
   generate_selected: Generer valgt

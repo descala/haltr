@@ -85,7 +85,6 @@ sv:
   generate_template_from_invoice: Skapa ny mall
   generated_from_template: Skapad ny mall
   receive_payment: Betalning
-  make_payment: Skapa betalning
   label_paid: Betald
   label_tax: Skatt
   label_tax_plural: Skatter
@@ -249,7 +248,6 @@ sv:
   label_invoice_template: Mall
   label_invoice_template_plural: Mallar
   label_generated_invoices: Skapa fakturor
-  next_charge: Nästa avgift
   invoices_to_generate: Fakturor att skapa
   generate: Skapa
   generate_selected: Skapa vald
