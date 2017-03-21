@@ -8,21 +8,22 @@
       <% f.object = @invoice.becomes(@invoice.class) -%>
       <h2><%= l :label_invoice_new %></h2>
       <%= render :partial => 'invoices/form', :locals => { :f => f } %>
-      <div class="row">
-        <div class="col-xs-2 col-no-pad-right">
-        </div>
-        <div class="col-xs-10 col-no-pad-left">
-          <div class="tab-pane">
-            <div class="text-right set-of-buttons">
-              <%= f.submit l(:button_create), name: 'create', class: 'btn btn-primary' %>
-              <% unless @invoice.is_a? InvoiceTemplate or @invoice.is_a? DraftInvoice -%>
-                <%= f.submit l(:button_create_and_send), name: 'create_and_send', class: 'btn btn-primary' %>
-              <% end -%>
-            </div>
+      <!-- warning: form partial leaves a div intencionally open --!>
+
+      <div class="col-xs-2 col-no-pad-right">
+      </div>
+      <div class="col-xs-10 col-no-pad-left">
+        <div class="tab-pane">
+          <div class="text-right set-of-buttons">
+            <%= f.submit l(:button_create), name: 'create', class: 'btn btn-primary' %>
+            <% unless @invoice.is_a? InvoiceTemplate or @invoice.is_a? DraftInvoice -%>
+              <%= f.submit l(:button_create_and_send), name: 'create_and_send', class: 'btn btn-primary' %>
+            <% end -%>
           </div>
         </div>
       </div>
-    <% end %>
+    </div>
+  <% end %>
 
   </div>
 </div>

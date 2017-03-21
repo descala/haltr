@@ -149,6 +149,7 @@ select.tax {
 
 .pastdue {
   color: red !important;
+  white-space: nowrap;
 }
 .halfpaid {
   color: blue;
@@ -466,9 +467,9 @@ div.accept_refuse_form {
   margin-bottom: 10px;
   padding: 20px;
 }
-.tabular label.radio {
-  float: none;
-  margin-left: 15px;
+label.radio {
+  display: inline;
+  margin-left: 45px;
 }
 p#client_select.pdf select#invoice_client_id {
   width: 100% !important;

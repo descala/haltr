@@ -200,6 +200,7 @@ ca:
   only_one_default_allowed_for: "%{tax_name}: Només es permet un impost per defecte"
   add_taxes_on_company: "Pots gestionar els impostos a \"La meva empresa\""
   button_download_new_invoices: "Descarregar zip amb les noves"
+  button_download_invoices_csv: "Totes les factures en un CSV"
   label_download_new_invoices_info: "Genera un zip que conté totes les factures noves en format PDF"
   field_exempt: "Exempt"
   field_comment: "Motiu d'exempció"
@@ -669,7 +670,7 @@ ca:
   field_fa_residence_type: 'Residència'
   label_fa_person_type_individual: "Física"
   label_fa_person_type_entity: "Jurídica"
-  label_fa_residence_type_foreigner: "Extranger"
+  label_fa_residence_type_foreigner: "Estranger"
   label_fa_residence_type_spain: "Resident"
   label_fa_residence_type_UE: "Europeu"
   field_fa_taxcode: 'NIF'
