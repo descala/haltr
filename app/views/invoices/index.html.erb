@@ -12,8 +12,8 @@
           <i class="fa fa-angle-down" aria-hidden="true"></i>
         </button>
         <ul class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownExport">
-          <li><%= link_to_if_authorized "#{l(:button_download_new_invoices)} (#{num_not_sent})",{:action => 'download_new_invoices'}, :title => l(:label_download_new_invoices_info) %></li>
-          <li><%= link_to 'CSV', project_invoices_path(@project, format: 'csv') -%></li>
+          <li><%= link_to_if_authorized "#{l(:button_download_new_invoices)} (#{num_not_sent})",{:action => 'download_new_invoices'}, :title => l(:label_download_new_invoices_info), :class => 'icon-fa icon-fa-fw icon-fa-file-pdf-o' %></li>
+          <li><%= link_to l(:button_download_invoices_csv), project_invoices_path(@project, format: 'csv'), class: 'icon-fa icon-fa-fw icon-fa-file-excel-o' -%></li>
         </ul>
       </div>
     </li>
