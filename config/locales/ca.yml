@@ -669,7 +669,7 @@ ca:
   field_fa_residence_type: 'Residència'
   label_fa_person_type_individual: "Física"
   label_fa_person_type_entity: "Jurídica"
-  label_fa_residence_type_foreigner: "Extranger"
+  label_fa_residence_type_foreigner: "Estranger"
   label_fa_residence_type_spain: "Resident"
   label_fa_residence_type_UE: "Europeu"
   field_fa_taxcode: 'NIF'
