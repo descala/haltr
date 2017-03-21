@@ -1,6 +1,10 @@
 <div class="row">
 <div class="col-xs-6">
-  <h2><%= l :label_issued %></h2>
+  <% if controller.controller_name == 'invoices' -%>
+    <h2><%= l :label_issued %></h2>
+  <% else -%>
+    <h2><%= l :label_received %></h2>
+  <% end -%>
 </div>
 <div class="col-xs-6 text-right">
   <!--menu rapid-->
