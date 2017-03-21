@@ -149,6 +149,7 @@ select.tax {
 
 .pastdue {
   color: red !important;
+  white-space: nowrap;
 }
 .halfpaid {
   color: blue;
