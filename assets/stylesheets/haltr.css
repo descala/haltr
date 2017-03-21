@@ -503,3 +503,7 @@ span#attachments_fields span input {
 span.field_with_errors input {
   border: 1px solid red !important;
 }
+div#row-title {
+  margin-right: 0px;
+  padding-left: 2px;
+}
