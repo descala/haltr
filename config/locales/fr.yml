@@ -87,7 +87,6 @@ fr:
   duplicate_invoice: Dup facture
   generated_from_template: Généré depuis modèle
   receive_payment: Paiement
-  make_payment: Faire paiement
   label_paid: Payé
   label_tax: Tax
   label_tax_plural: Taxes
@@ -252,7 +251,6 @@ fr:
   label_invoice_template: Modèle
   label_invoice_template_plural: Modèles
   label_generated_invoices: Factures générées
-  next_charge: Charge suivante
   invoices_to_generate: Factures à être générées
   generate: Génère
   generate_selected: Génère sélectionnée
