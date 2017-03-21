@@ -202,6 +202,7 @@ es:
   only_one_default_allowed_for: "%{tax_name}: Solo se acepta un impuesto por defecto"
   add_taxes_on_company: "Puedes gestionar los impuestos en \"Mi empresa\""
   button_download_new_invoices: "Descargar zip de facturas nuevas"
+  button_download_invoices_csv: "Todas las facturas en un CSV"
   label_download_new_invoices_info: "Genera un zip con todas las facturas nuevas en formato PDF"
   field_exempt: "Exento"
   field_comment: "Razón de exención"
