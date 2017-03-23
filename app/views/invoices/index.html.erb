@@ -221,14 +221,13 @@
   <% end -%>
   <!--final taula factures-->
 
+  <!--paginacio-->
   <div class="wrapper-pagination-results">
     <div class="row">
       <div class="col-xs-4 col-xs-offset-5">
-        <!--paginacio-->
         <div class="pagination">
           <%= pagination_links_full(@invoice_pages, @invoice_count, per_page_links: false) %>
         </div>
-        <!--final paginacio-->
       </div>
       <div class="col-xs-3 text-right">
         <form class="form-inline">
@@ -238,6 +237,7 @@
       </div>
     </div>
   </div>
+  <!--final paginacio-->
 
 </div>
 
