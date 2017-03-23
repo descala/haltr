@@ -195,9 +195,9 @@
           <tbody>
             <% @invoices.each do |invoice| -%>
               <%if invoice.total > invoice.total_paid and invoice.total_paid.cents != 0%>
-                <tr id="invoice-<%=invoice.id%>" class="halfpaid hascontextmenu <%= 'amended ' if invoice.amended? %><%= cycle("odd", "even") %>">
+                <tr id="invoice-<%=invoice.id%>" class="halfpaid hascontextmenu <%= 'amended ' if invoice.amended? %>">
                 <%else%>
-                  <tr id="invoice-<%=invoice.id%>" class="hascontextmenu <%= 'amended ' if invoice.amended? %><%= cycle("odd", "even") %>">
+                  <tr id="invoice-<%=invoice.id%>" class="hascontextmenu <%= 'amended ' if invoice.amended? %>">
                   <% end %>
                   <td><%= check_box_tag("ids[]", invoice.id, false, :id => nil) %></td>
                   <td><%=h link_to_if_authorized invoice.number.blank? ? "?" : invoice.number, :action => 'show', :id => invoice %></td>
