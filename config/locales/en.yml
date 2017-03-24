@@ -194,7 +194,7 @@ en:
   button_download_invoices_csv: "All invoices in a CSV file"
   label_download_new_invoices_info: "Creates a zip file with all the new invoices in PDF format"
   field_exempt: "Exempt"
-  field_comment: "Reason for exemption"
+  field_comment: "Reason"
 
   # Events
   events: "Event log"
@@ -431,6 +431,7 @@ en:
 
   label_linked_to_mine: "Linked companies"
 
+  imap_config: "IMAP - Incoming mail server"
   field_imap_host: "IMAP server"
   field_imap_port: "Port"
   field_imap_ssl: "Use SSL"
@@ -438,6 +439,7 @@ en:
   field_imap_password: "Password"
   field_imap_from: "From"
 
+  smtp_config: "SMTP - Outgoing mail server"
   field_smtp_host: "SMTP server"
   field_smtp_port: "Port"
   field_smtp_ssl: "Use SSL"

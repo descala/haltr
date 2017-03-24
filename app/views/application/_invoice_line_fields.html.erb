@@ -22,7 +22,7 @@
     <tbody>
       <tr>
         <% if User.current.allowed_to?(:view_invoice_extra_fields, @project) -%>
-          <td><%= f.text_field :position, id: "pos_#{lineid}", class: 'pos form-control', style: "width: 35px;", no_label: true %></td>
+          <td><%= f.text_field :position, id: "pos_#{lineid}", class: 'pos form-control' %></td>
         <% else -%>
           <%= f.hidden_field :position, id: "pos_#{lineid}", class: 'pos' %>
         <% end -%>

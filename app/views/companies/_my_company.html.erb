@@ -1,105 +1,433 @@
-<div class="tabular box">
+<%= call_hook(:company_form_taxcode) %>
 
-  <%= call_hook(:company_form_taxcode) %>
+<div class="row">
 
-  <div class="seccio grup">
-    <p class="col span-1-de-2">
-    <%= f.text_field :taxcode, :required => true %>
-    </p>
-    <p class="col span-1-de-2">
-    <%= f.label_for_field :name, :label => l('name_or_company'), :required => true %>
-    <%= f.text_field :name, :required => true, :no_label => true %>
-      <p style="float: right;"><%= check_box(:company, :persontype, {:no_label=>true}, 'F', 'J') %> <%= l(:self_employed) %></p>
-    </p>
-  </div>
-  <div class="seccio grup">
-    <p class="col span-1-de-2">
-    <%= f.text_field :email, :required => true %>
-    </p>
-    <p class="col span-1-de-2">
-    <%= f.text_field :phone, label: l(:label_phone) %>
-    </p>
-  </div>
-  <div class="seccio grup">
-    <p class="col span-2-de-2">
-    <%= f.text_field :address %>
-    </p>
-  </div>
-  <div class="seccio grup">
-    <p class="col span-1-de-2">
-    <%= f.text_field :city %>
-    </p>
-    <p class="col span-1-de-2">
-    <%= f.text_field :postalcode, :required => true %>
-    </p>
-  </div>
-  <div class="seccio grup">
-    <p class="col span-1-de-2">
-    <%= f.text_field :province %>
-    </p>
-    <p class="col span-1-de-2">
-    <%= f.label_for_field :country, :required => true %>
-    <%= f.country_select :country, priority_countries: countries_of_language(User.current.language) %>
-    </p>
-  </div>
-  <div class="seccio grup">
-    <p class="col span-1-de-2">
-    <%= f.text_field :website %>
-    </p>
-    <p class="col span-1-de-2">
-    </p>
-  </div>
-  <div class="seccio grup">
-    <p class="col span-1-de-2">
-    <%= f.select :currency, currency_options_for_select, :required => true %>
-    </p>
-    <p class="col span-1-de-2">
-    <%=label_tag('attachments[1][file]', l(:logo))%>
-    <%= file_field_tag 'attachments[1][file]', :size=>30, :id=>'logo', :accept=>'image/png,image/gif,image/jpeg' -%>
-    <% if @company.attachments.size > 0 -%>
-      <%= image_tag "/attachments/#{@company.attachments.first.id}/#{@company.attachments.first.filename}", style: "margin-top: 10px;" -%>
-    <% end -%>
-    </p>
+  <div class="col-xs-2 col-no-pad-right">
+    <!-- Nav tabs -->
+    <ul class="nav nav-tabs tabs-left">
+      <li class="active"><a href="#company-data" data-toggle="tab"><%= l :label_fiscal_data %></a></li>
+      <li><a href="#company-taxes" data-toggle="tab"><%= l :label_tax_plural %></a></li>
+      <li><a href="#company-bank" data-toggle="tab"><%= l :bank_info %></a></li>
+      <li><a href="#company-connections" data-toggle="tab"><%= l :label_connections %></a></li>
+      <li><a href="#company-customization" data-toggle="tab"><%= l :label_customization %></a></li>
+      <li><a href="#company-assessors" data-toggle="tab"><%= l :label_assessors %></a></li>
+      <li><a href="#company-users" data-toggle="tab"><%= l :label_project_users %></a></li>
+    </ul>
   </div>
 
-  <div class="seccio grup">
-    <p class="col span-1-de-2">
-    <%= f.text_field :company_identifier %>
-    </p>
-  </div>
+  <div class="col-xs-10 col-no-pad-left">
 
-  <fieldset class="tabular box">
-    <legend><%=l(:label_tax_plural)%></legend>
-    <div class="seccio grup">
-      <div class="col span-2-de-2">
-        <p><%= l(:info_default_taxes) %></p>
+    <!-- Tab panes -->
+    <div class="tab-content">
+
+      <div class="tab-pane active" id="company-data">
+        <fieldset class="form-horizontal">
+          <legend class="relative"><%=l(:label_fiscal_data)%></legend>
+
+          <div class="form-group">
+            <%= f.label :name, class: 'col-xs-3 control-label ' do %>
+              <%= l :name_or_company %>: <span class="required">*</span>
+            <% end -%>
+            <div class="col-xs-6">
+              <%= f.text_field :name, required: true, class: 'form-control form-required' %>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <%= f.label :taxcode, class: 'col-xs-3 control-label' do %>
+              <%= l :field_taxcode %>: <span class="required">*</span>
+            <% end -%>
+            <div class="col-xs-3">
+              <%= f.text_field :taxcode, required: true, class: 'form-control form-required' %>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <div class="col-xs-9 col-xs-offset-3">
+              <div class="checkbox">
+                <%= f.label :persontype do %>
+                  <%= check_box(:company, :persontype, {}, 'F', 'J') %>
+                  <%= l(:self_employed) %>
+                <% end -%>
+              </div>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <%= f.label :company_identifier, class: 'col-xs-3 control-label' do %>
+              <%= l :field_company_identifier %>:
+            <% end -%>
+            <div class="col-xs-3">
+              <%= f.text_field :company_identifier, class: 'form-control' %>
+            </div>
+          </div>
+
+          <hr class="form-elements" />
+
+          <div class="form-group">
+            <%=label_tag('attachments[1][file]', class: 'col-xs-3 control-label') do %>
+              <%= l(:logo) %>:
+            <% end -%>
+            <div class="col-xs-4 relative">
+              <%= file_field_tag 'attachments[1][file]', id: 'logo', accept: 'image/png,image/gif,image/jpeg', class: 'filestyle', data: {input: 'true', iconName: 'fa fa-folder', badge: 'false'} -%>
+            </div>
+          </div>
+
+          <% if @company.attachments.size > 0 -%>
+            <div class="form-group">
+              <div class="col-xs-9 col-xs-offset-3">
+                <%= image_tag "/attachments/download/#{@company.attachments.first.id}/#{@company.attachments.first.filename}" -%>
+              </div>
+            </div>
+          <% end -%>
+
+          <div class="form-group">
+            <%= f.label :address, class: 'col-xs-3 control-label' do %>
+              <%= l :field_address %>:
+            <% end -%>
+            <div class="col-xs-5">
+              <%= f.text_field :address, class: 'form-control' %>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <%= f.label :postalcode, class: 'col-xs-3 control-label' do %>
+              <%= l :field_postalcode %>: <span class="required">*</span>
+            <% end -%>
+            <div class="col-xs-2">
+              <%= f.text_field :postalcode, class: 'form-control form-required' %>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <%= f.label :city, class: 'col-xs-3 control-label' do %>
+              <%= l :field_city %>:
+            <% end -%>
+            <div class="col-xs-4">
+              <%= f.text_field :city, class: 'form-control' %>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <%= f.label :province, class: 'col-xs-3 control-label' do %>
+              <%= l :field_province %>:
+            <% end -%>
+            <div class="col-xs-4">
+              <%= f.text_field :province, class: 'form-control' %>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <%= f.label :country, class: 'col-xs-3 control-label' do %>
+              <%= l :field_country %>: <span class="required">*</span>
+            <% end -%>
+            <div class="col-xs-4">
+              <%= f.country_select :country, {priority_countries: countries_of_language(User.current.language)}, class: 'form-control form-required' %>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <%= f.label :currency, class: 'col-xs-3 control-label' do %>
+              <%= l :field_currency %>: <span class="required">*</span>
+            <% end -%>
+            <div class="col-xs-4">
+              <%= f.select :currency, currency_options_for_select, {}, required: true, class: 'form-control form-required' %>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <%= f.label :email, class: 'col-xs-3 control-label' do %>
+              <%= l :field_email %>: <span class="required">*</span>
+            <% end -%>
+            <div class="col-xs-4">
+              <%= f.text_field :email, class: 'form-control form-required' %>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <%= f.label :phone, class: 'col-xs-3 control-label' do %>
+              <%= l :label_phone %>:
+            <% end -%>
+            <div class="col-xs-3">
+              <%= f.telephone_field :phone, class: 'form-control' %>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <%= f.label :website, class: 'col-xs-3 control-label' do %>
+              <%= l :field_website %>:
+            <% end -%>
+            <div class="col-xs-3">
+              <%= f.text_field :website, class: 'form-control' %>
+            </div>
+          </div>
+
+        </fieldset>
       </div>
-    </div>
-    <div class="seccio grup">
-      <table id="taxes" <%= @company.country == 'es' ? "data-taxes='#{Tax::SPAIN_TAXCODES.keys}'".html_safe : "data-taxes='[]'".html_safe %>>
-        <tr>
-          <th class="tax_name"><%= l(:field_name) %></th>
-          <th class="tax_percent">%</th>
-          <th class="tax_default"><%= l(:default) %></th>
-          <th class="tax_category"><%= l(:field_category) %></th>
-          <th class="tax_remove"></th>
-          <th class="tax_exempt"><%= l(:field_comment) %></th>
-        </tr>
-        <%= f.fields_for :taxes do |tax_form| %>
-          <%= render :partial => 'companies/tax_fields', :locals => { :f => tax_form } %>
-        <% end %>
-      </table>
-    </div>
-    <div class="seccio grup">
-      <p class="col span-2-de-2">
-      <!-- cocoon -->
-      <span class="mes">
-        <%= link_to_add_association l(:button_add_tax), f, :taxes, 'data-association-insertion-node' => '#taxes', 'data-association-insertion-method' => 'append', :partial => 'companies/tax_fields' %>
-      </span>
-      </p>
-    </div>
-  </fieldset>
 
-  <%= call_hook(:company_form_end) %>
+      <div class="tab-pane" id="company-taxes">
+        <fieldset class="form-horizontal">
+          <legend class="relative"><%=l(:label_tax_plural)%></legend>
 
+          <p><%= l(:info_default_taxes) %></p>
+          <table class="table table-taxes" <%= @company.country == 'es' ? "data-taxes='#{Tax::SPAIN_TAXCODES.keys}'".html_safe : "data-taxes='[]'".html_safe %>>
+            <thead>
+              <tr>
+                <th><%= l :field_name %></th>
+                <th>%</th>
+                <th></th>
+                <th><%= l :field_category %></th>
+                <th><%= l :field_comment %></th>
+                <th></th>
+              </tr>
+            </thead>
+            <tbody id="taxes">
+              <%= f.fields_for :taxes do |tax_form| %>
+                <%= render partial: 'companies/tax_fields', locals: { f: tax_form } %>
+              <% end %>
+            </tbody>
+            <tfoot>
+              <tr>
+                <td colspan="6">
+                  <%= link_to_add_association l(:button_add_tax), f, :taxes, data: { 'association-insertion-node'=>'#taxes', 'association-insertion-method'=>'append' }, partial: 'companies/tax_fields', class: 'add_fields icon-fa icon-fa-plus-sign' %>
+                </td>
+              </tr>
+            </tfoot>
+          </table>
+
+        </fieldset>
+      </div>
+
+      <div class="tab-pane" id="company-bank">
+        <fieldset class="form-horizontal">
+          <legend class="relative"><%=l(:bank_info)%></legend>
+          <table class="table table-bank-info">
+            <thead>
+              <tr>
+                <th><%= l :field_name %></th>
+                <% if @company.bank_infos.reject {|bi| bi.bank_account.blank? }.present? -%>
+                  <th><%= f.label :bank_account %></th>
+                <% end -%>
+                <th><%= l :field_iban %></th>
+                <th><%= l :field_bic %></th>
+                <th></th>
+              </tr>
+            </thead>
+            <tbody id="bank_infos">
+              <%= f.fields_for :bank_infos do |bank_info_form| %>
+                <%=render partial: 'companies/bank_info_fields', locals: {f: bank_info_form}%>
+              <% end -%>
+            </tbody>
+            <tfoot>
+              <tr>
+                <td colspan="5">
+                  <% if User.current.allowed_to?(:add_multiple_bank_infos, @project) -%>
+                    <%= link_to_add_association l(:button_add_bank_info), f, :bank_infos, data: { 'association-insertion-node'=>'#bank_infos', 'association-insertion-method'=>'append'} %>
+                  <% else -%>
+                    <%= link_to l(:button_add_bank_info), project_add_bank_info_path(project_id: @project), data: {confirm: l(:page_redirecting_will_lose_unsaved_data)} %>
+                  <% end -%>
+                </td>
+              </tr>
+            </tfoot>
+          </table>
+
+          <%= call_hook(:company_bank_info_form_end) %>
+        </fieldset>
+      </div>
+
+      <div class="tab-pane" id="company-connections">
+        <fieldset class="form-horizontal">
+          <legend class="relative"><%=l(:label_connections)%></legend>
+
+          <label><%= l :smtp_config %></label>
+          <div class="form-group">
+            <%= f.label :field_smtp_host, class: 'col-xs-3 control-label' do %>
+              <%= l :field_smtp_host %>:
+            <% end -%>
+            <div class="col-xs-5">
+              <%= f.text_field :smtp_host, class: 'form-control' %>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <%= f.label :field_smtp_port, class: 'col-xs-3 control-label' do %>
+              <%= l :field_smtp_port %>:
+            <% end -%>
+            <div class="col-xs-2">
+              <%= f.text_field :smtp_port, class: 'form-control' %>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <%= f.label :field_smtp_from, class: 'col-xs-3 control-label' do %>
+              <%= l :field_smtp_from %>:
+            <% end -%>
+            <div class="col-xs-3">
+              <%= f.text_field :smtp_from, class: 'form-control' %>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <%= f.label :field_smtp_username, class: 'col-xs-3 control-label' do %>
+              <%= l :field_smtp_username %>:
+            <% end -%>
+            <div class="col-xs-3">
+              <%= f.text_field :smtp_username, class: 'form-control' %>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <%= f.label :field_smtp_password, class: 'col-xs-3 control-label' do %>
+              <%= l :field_smtp_password %>:
+            <% end -%>
+            <div class="col-xs-3">
+              <%= f.password_field :smtp_password, class: 'form-control' %>
+              <%= link_to(('<i class="fa fa-eye" aria-hidden="true"></i> ' + l(:button_show)).html_safe, '#', id: 'show_smtp_password', onclick: 'return change_smtp_password_type();')%>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <div class="col-xs-9 col-xs-offset-3">
+              <div class="checkbox">
+                <%= f.label :field_smtp_ssl do %>
+                  <%= f.check_box(:smtp_ssl, {}) %>
+                  <%= l(:field_smtp_ssl) %>
+                <% end -%>
+              </div>
+            </div>
+          </div>
+
+          <hr class="form-elements" />
+
+          <label><%= l :imap_config %></label>
+
+          <div class="form-group">
+            <%= f.label :field_imap_host, class: 'col-xs-3 control-label' do %>
+              <%= l :field_imap_host %>:
+            <% end -%>
+            <div class="col-xs-5">
+              <%= f.text_field :imap_host, class: 'form-control' %>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <%= f.label :field_imap_port, class: 'col-xs-3 control-label' do %>
+              <%= l :field_imap_port %>:
+            <% end -%>
+            <div class="col-xs-2">
+              <%= f.text_field :imap_port, class: 'form-control' %>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <%= f.label :field_imap_from, class: 'col-xs-3 control-label' do %>
+              <%= l :field_imap_from %>:
+            <% end -%>
+            <div class="col-xs-3">
+              <%= f.text_field :imap_from, class: 'form-control' %>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <%= f.label :field_imap_username, class: 'col-xs-3 control-label' do %>
+              <%= l :field_imap_username %>:
+            <% end -%>
+            <div class="col-xs-3">
+              <%= f.text_field :imap_username, class: 'form-control' %>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <%= f.label :field_imap_password, class: 'col-xs-3 control-label' do %>
+              <%= l :field_imap_password %>:
+            <% end -%>
+            <div class="col-xs-3">
+              <%= f.password_field :imap_password, class: 'form-control' %>
+              <%= link_to(('<i class="fa fa-eye" aria-hidden="true"></i> ' + l(:label_display)).html_safe, '#', id: 'show_imap_password', onclick: 'return change_imap_password_type();')%>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <div class="col-xs-9 col-xs-offset-3">
+              <div class="checkbox">
+                <%= f.label :field_imap_ssl do %>
+                  <%= f.check_box(:imap_ssl, {}) %>
+                  <%= l(:field_imap_ssl) %>
+                <% end -%>
+              </div>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <%= f.label :a, class: 'col-xs-3 control-label' do %>
+              <%= l :field_ %>:
+            <% end -%>
+            <div class="col-xs-3">
+              <%= f.text_field :a, class: 'form-control' %>
+            </div>
+          </div>
+
+          <hr class="form-elements" />
+
+          <label>PEPPOL</label>
+
+          <div class="form-group">
+            <%= f.label :field_schemeid, class: 'col-xs-3 control-label' do %>
+              <%= l :field_schemeid %>:
+            <% end -%>
+            <div class="col-xs-5">
+              <%= f.select :schemeid, Peppol::schemes_for_select, {}, class: 'form-control' %>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <%= f.label :field_endpointid, class: 'col-xs-3 control-label' do %>
+              <%= l :field_endpointid %>:
+            <% end -%>
+            <div class="col-xs-3">
+              <%= f.text_field :endpointid, class: 'form-control' %>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <%= f.label :a, class: 'col-xs-3 control-label' do %>
+              <%= l :field_ %>:
+            <% end -%>
+            <div class="col-xs-3">
+              <%= f.text_field :a, class: 'form-control' %>
+            </div>
+          </div>
+
+          <%= call_hook(:company_connections_form_end) %>
+        </fieldset>
+      </div>
+
+      <div class="tab-pane" id="company-customization">
+        <fieldset class="form-horizontal">
+          <legend class="relative"><%=l(:label_customization)%></legend>
+
+        </fieldset>
+      </div>
+
+      <div class="tab-pane" id="company-assessors">
+        <fieldset class="form-horizontal">
+          <legend class="relative"><%=l(:label_assessors)%></legend>
+        </fieldset>
+      </div>
+
+      <div class="tab-pane" id="company-users">
+        <fieldset class="form-horizontal">
+          <legend class="relative"><%=l(:label_project_users)%></legend>
+        </fieldset>
+      </div>
+
+    </div>
+  </div>
 </div>
+
+<%= call_hook(:company_form_end) %>
+
+<% content_for :header_tags do -%>
+  <%= javascript_include_tag('iban',:plugin=>'haltr')%>
+  <%= stylesheet_link_tag 'bootstrap.vertical-tabs', plugin: 'haltr' %>
+<% end -%>
