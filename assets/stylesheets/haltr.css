@@ -509,3 +509,21 @@ span#attachments_fields span input {
 span.field_with_errors input {
   border: 1px solid red !important;
 }
+div#row-title {
+  margin-right: 0px;
+  padding-left: 2px;
+}
+.table.table-taxes, .table.table-taxes > thead tr th, .table.table-taxes > tfoot tr td {
+  background: #CAE0EA;
+  padding: 10px 10px 10px 10px;
+}
+.table.table-taxes {
+  border-collapse: separate;
+}
+.table.table-bank-info, .table.table-bank-info > thead tr th, .table.table-bank-info > tfoot tr td {
+  background: #CAE0EA;
+  padding: 10px 10px 10px 10px;
+}
+.table.table-bank-info {
+  border-collapse: separate;
+}

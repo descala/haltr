@@ -204,7 +204,7 @@ gl:
   button_download_invoices_csv: "Todas las facturas en un CSV"
   label_download_new_invoices_info: "Xera un zip con todas as facturas novas en formato PDF"
   field_exempt: "Exento"
-  field_comment: "Razón de exención"
+  field_comment: "Razón"
 
   # Events
   events: "Log de eventos"
@@ -441,6 +441,7 @@ gl:
 
   label_linked_to_mine: "Empresas vinculadas"
 
+  imap_config: "IMAP - Servidor de correo entrante"
   field_imap_host: "Servidor IMAP"
   field_imap_port: "Porto"
   field_imap_ssl: "Usar SSL"
@@ -448,6 +449,7 @@ gl:
   field_imap_password: "Contrasinal"
   field_imap_from: "Remitente"
 
+  smtp_config: "SMTP - Servidor de correo saliente"
   field_smtp_host: "Servidor SMTP"
   field_smtp_port: "Puerto"
   field_smtp_ssl: "Usar SSL"
