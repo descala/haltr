@@ -388,6 +388,117 @@
         <fieldset class="form-horizontal">
           <legend class="relative"><%=l(:label_customization)%></legend>
 
+          <label><%= l :mail_notifications %></label>
+
+          <div class="form-group">
+            <div class="col-xs-3 col-xs-offset-3">
+              <div class="checkbox">
+                <%= f.label :invoice_notifications do %>
+                  <%= check_box(:company, :invoice_notifications) %>
+                  <%= l(:label_received) %>
+                <% end -%>
+              </div>
+            </div>
+            <div class="col-xs-3">
+              <div class="checkbox">
+                <%= f.label :order_notifications do %>
+                  <%= check_box(:company, :order_notifications) %>
+                  <%= l(:label_received_order_plural) %>
+                <% end -%>
+              </div>
+            </div>
+          </div>
+
+          <label><%= l :field_company_public %></label>
+
+          <div class="form-group">
+            <div class="col-xs-9 col-xs-offset-3">
+              <label class="radio"><%= f.radio_button :public, :public %> <%= help :help_public_profile %> <%= l(:public) %></label>
+              <label class="radio"><%= f.radio_button :public, :semipublic %> <%= help :help_semipublic_profile %> <%= l(:semipublic) %></label>
+              <label class="radio"><%= f.radio_button :public, :private %> <%= help :help_private_profile %> <%= l(:private) %></label>
+            </div>
+          </div>
+
+          <label><%= l :label_invoice_viewer %></label>
+
+          <div class="form-group">
+            <div class="col-xs-9 col-xs-offset-3">
+              <div class="checkbox">
+                <%= f.label :auto_process_pdf do %>
+                  <%= check_box(:company, :auto_process_pdf) %>
+                  <%= l(:auto_process_pdf) %>
+                <% end -%>
+              </div>
+            </div>
+          </div>
+          <div class="form-group">
+            <div class="col-xs-3 col-xs-offset-3">
+              <%= f.select :invoice_viewer, [[l(:label_invoice_viewer_standard),'standard'],[l(:view_original), 'original']], {}, class: 'form-control' %>
+            </div>
+          </div>
+
+          <label><%= l :label_discounts %></label>
+
+          <div class="form-group">
+            <div class="col-xs-2 col-xs-offset-3">
+              <%= f.select :line_discounts_as_imports, [[l('as_percent'),false],[l('as_import'),true]], {}, class: 'form-control' %>
+            </div>
+          </div>
+
+          <label><%= l :label_rounding_plural %></label>
+
+          <div class="form-group">
+            <div class="col-xs-3 col-xs-offset-3">
+              <%= f.select :rounding_method, Company.rounding_methods, {}, class: 'form-control' %>
+            </div>
+          </div>
+          <div class="form-group">
+            <div class="col-xs-9 col-xs-offset-3">
+              <div class="checkbox">
+                <%= f.label :round_before_sum do %>
+                  <%= check_box(:company, :round_before_sum) %>
+                  <%= l(:round_before_sum) %>
+                <% end -%>
+              </div>
+            </div>
+          </div>
+
+          <label><%= l :pdf_customization %></label>
+
+          <div class="form-group">
+            <div class="col-xs-3 col-xs-offset-3">
+              <%= f.select :pdf_template, [[l(:pdf_default),'default'], [l(:pdf_right_windowed_envelope),'right_windowed_envelope']], {}, class: 'form-control' -%>
+            </div>
+          </div>
+          <%= call_hook(:company_customization_pdf_end) %>
+
+          <label><%= l :email_customization %></label>
+
+          <div class="form-group">
+            <div class="col-xs-3 col-xs-offset-3">
+              <%= select_tag :invoice_mail_customization_lang,
+                options_for_select(valid_languages.reject { |l|
+                !(l =~ /^[a-z][a-z][\-A-Z]{0,3}$/)
+              }.collect {|l| [I18n.t(:general_lang_name, :locale=>l),l]}),
+              class: 'form-control' %>
+            </div>
+          </div>
+
+          <% valid_languages.reject {|l| !(l =~ /^[a-z][a-z][\-A-Z]{0,3}$/)}.each do |lang| -%>
+            <div id="invoice_mail_customization_<%=lang%>" class="invoice_mail_customization" style="display: none;">
+              <div class="form-group">
+                <div class=" col-xs-6 col-xs-offset-3">
+                  <%=f.text_field "invoice_mail_subject_#{lang}", label: :field_mail_subject, class: 'form-control' %>
+                </div>
+              </div>
+              <div class="form-group">
+                <div class=" col-xs-6 col-xs-offset-3">
+                  <%=f.text_area "invoice_mail_body_#{lang}", rows: 4, class: 'form-control' %>
+                </div>
+              </div>
+            </div>
+          <% end -%>
+
         </fieldset>
       </div>
 
