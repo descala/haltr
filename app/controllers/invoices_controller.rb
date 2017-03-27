@@ -43,7 +43,7 @@ class InvoicesController < ApplicationController
 
   def index
     sort_init 'invoices.created_at', 'desc'
-    sort_update %w(invoices.created_at state number date due_date clients.name import_in_cents)
+    sort_update %w(invoices.created_at state number date due_date clients.name import_in_cents total_in_cents)
 
     if self.class == ReceivedController
       invoices = @project.received_invoices

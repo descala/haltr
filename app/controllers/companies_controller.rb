@@ -44,7 +44,7 @@ class CompaniesController < ApplicationController
   end
 
   def my_company
-    @partial='my_company'
+    @company.bank_infos.build if @company.bank_infos.empty?
     respond_to do |format|
       format.html do
         render :action => 'edit'
@@ -54,23 +54,6 @@ class CompaniesController < ApplicationController
         render action: :my_company
       end
     end
-  end
-
-  def bank_info
-    flash.now[:info] = l(:private_fields_info)
-    @company.bank_infos.build if @company.bank_infos.empty?
-    @partial='bank_info'
-    render :action => 'edit'
-  end
-
-  def connections
-    @partial='connections'
-    render :action => 'edit'
-  end
-
-  def customization
-    @partial='customization'
-    render :action => 'edit'
   end
 
   def linked_to_mine
@@ -85,11 +68,6 @@ class CompaniesController < ApplicationController
   end
 
   def update
-    @partial = params[:partial] || 'my_company'
-    if @partial == 'bank_info'
-      # prevent crash when deleted all bank_infos
-      params[:company] ||= { :bank_infos_attributes => [] }
-    end
     # check if user trying to add multiple bank_infos without role
     unless User.current.allowed_to?(:add_multiple_bank_infos,@project)
       if params[:company][:bank_infos_attributes] and 
@@ -145,7 +123,7 @@ class CompaniesController < ApplicationController
         render_attachment_warning_if_needed(@company)
       end
       flash[:notice] = l(:notice_successful_update) 
-      redirect_to :action => @partial, :project_id => @project
+      redirect_to :action => 'my_company', :project_id => @project
 
     else
       @company.bank_infos.build if @company.bank_infos.empty?
