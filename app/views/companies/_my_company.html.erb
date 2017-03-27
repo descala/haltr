@@ -162,6 +162,7 @@
             </div>
           </div>
 
+          <%= call_hook(:company_data_form_end) %>
         </fieldset>
       </div>
 
@@ -195,6 +196,7 @@
             </tfoot>
           </table>
 
+          <%= call_hook(:company_taxes_form_end) %>
         </fieldset>
       </div>
 
@@ -230,9 +232,9 @@
               </tr>
             </tfoot>
           </table>
-
-          <%= call_hook(:company_bank_info_form_end) %>
         </fieldset>
+
+        <%= call_hook(:company_bank_info_form_end) %>
       </div>
 
       <div class="tab-pane" id="company-connections">
@@ -544,7 +546,6 @@
           <% end -%>
 
           <%= call_hook(:company_customization_form_end) %>
-
         </fieldset>
       </div>
 
