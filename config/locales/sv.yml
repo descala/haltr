@@ -431,6 +431,7 @@ sv:
 
   label_linked_to_mine: "Linked companies"
 
+  imap_config: "IMAP - Incoming mail server"
   field_imap_host: "IMAP server"
   field_imap_port: "Port"
   field_imap_ssl: "Use SSL"
@@ -438,6 +439,7 @@ sv:
   field_imap_password: "Password"
   field_imap_from: "From"
 
+  smtp_config: "SMTP - Outgoing mail server"
   field_smtp_host: "SMTP server"
   field_smtp_port: "Port"
   field_smtp_ssl: "Use SSL"

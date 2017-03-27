@@ -1,6 +1,5 @@
 class CompaniesController < ApplicationController
 
-
   menu_item Haltr::MenuItem.new(:companies,:linked_to_mine),     :only => [:linked_to_mine]
   menu_item Haltr::MenuItem.new(:my_company,:my_company_level2), :only => [:my_company]
   menu_item Haltr::MenuItem.new(:my_company,:bank_info),         :only => [:bank_info]

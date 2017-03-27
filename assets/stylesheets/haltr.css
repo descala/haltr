@@ -251,9 +251,6 @@ div.audited-changes table tr.new-values {
 div.audited-changes table tr.old-values {
   background-color: #fdd;
 }
-#link_requests {
-  margin-bottom: 20px;
-}
 div.action-linked_to_mine #companies {
   margin-bottom: 20px;
 }
@@ -511,4 +508,22 @@ span#attachments_fields span input {
 }
 span.field_with_errors input {
   border: 1px solid red !important;
+}
+div#row-title {
+  margin-right: 0px;
+  padding-left: 2px;
+}
+.table.table-taxes, .table.table-taxes > thead tr th, .table.table-taxes > tfoot tr td {
+  background: #CAE0EA;
+  padding: 10px 10px 10px 10px;
+}
+.table.table-taxes {
+  border-collapse: separate;
+}
+.table.table-bank-info, .table.table-bank-info > thead tr th, .table.table-bank-info > tfoot tr td {
+  background: #CAE0EA;
+  padding: 10px 10px 10px 10px;
+}
+.table.table-bank-info {
+  border-collapse: separate;
 }

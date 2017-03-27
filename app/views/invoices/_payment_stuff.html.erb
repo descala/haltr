@@ -167,8 +167,10 @@
         <%= text_field :invoice, :exchange_rate, class: 'form-control' %>
       </div>
       <div class="col-xs-3">
-        <%= date_field :invoice, :exchange_date, class: 'form-control' %>
-        <%= calendar_for('invoice_exchange_date') %>
+        <div class="relative">
+          <%= date_field :invoice, :exchange_date, class: 'form-control' %>
+          <%= calendar_for('invoice_exchange_date') %>
+        </div>
       </div>
     </div>
   </div>
