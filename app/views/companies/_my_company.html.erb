@@ -479,7 +479,7 @@
               <%= select_tag :invoice_mail_customization_lang,
                 options_for_select(valid_languages.reject { |l|
                 !(l =~ /^[a-z][a-z][\-A-Z]{0,3}$/)
-              }.collect {|l| [I18n.t(:general_lang_name, :locale=>l),l]}),
+              }.collect {|l| [I18n.t(:general_lang_name, locale: l),l]}),
               class: 'form-control' %>
             </div>
           </div>
@@ -488,7 +488,7 @@
             <div id="invoice_mail_customization_<%=lang%>" class="invoice_mail_customization" style="display: none;">
               <div class="form-group">
                 <div class=" col-xs-6 col-xs-offset-3">
-                  <%=f.text_field "invoice_mail_subject_#{lang}", label: :field_mail_subject, class: 'form-control' %>
+                  <%=f.text_field "invoice_mail_subject_#{lang}", class: 'form-control' %>
                 </div>
               </div>
               <div class="form-group">
@@ -498,6 +498,52 @@
               </div>
             </div>
           <% end -%>
+
+          <div class="form-group">
+            <div class="col-xs-6 col-xs-offset-3">
+              <div class="checkbox">
+                <%= f.label :email_customization do %>
+                  <%= check_box(:company, :email_customization) %>
+                  <%= l(:send_custom_text) %>
+                <% end -%>
+              </div>
+              <div class="checkbox">
+                <%= f.label :bcc_me do %>
+                  <%= check_box(:company, :bcc_me) %>
+                  <%= l(:field_bcc_me) %>
+                <% end -%>
+              </div>
+            </div>
+          </div>
+
+          <label><%= l :label_quote_plural %></label>
+
+          <div class="form-group">
+            <div class="col-xs-3 col-xs-offset-3">
+              <%= select_tag :quote_mail_customization_lang,
+                options_for_select(valid_languages.reject { |l|
+                !(l =~ /^[a-z][a-z][\-A-Z]{0,3}$/)
+              }.collect {|l| [I18n.t(:general_lang_name, locale: l),l]}),
+              class: 'form-control' %>
+            </div>
+          </div>
+
+          <% valid_languages.reject {|l| !(l =~ /^[a-z][a-z][\-A-Z]{0,3}$/)}.each do |lang| -%>
+            <div id="quote_mail_customization_<%=lang%>" class="quote_mail_customization" style="display: none;">
+              <div class="form-group">
+                <div class=" col-xs-6 col-xs-offset-3">
+                  <%=f.text_field "quote_mail_subject_#{lang}", class: 'form-control' %>
+                </div>
+              </div>
+              <div class="form-group">
+                <div class=" col-xs-6 col-xs-offset-3">
+                  <%=f.text_area "quote_mail_body_#{lang}", rows: 4, class: 'form-control' %>
+                </div>
+              </div>
+            </div>
+          <% end -%>
+
+          <%= call_hook(:company_customization_form_end) %>
 
         </fieldset>
       </div>
