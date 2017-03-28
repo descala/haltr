@@ -1,9 +1,9 @@
 <% if @invoices and @invoices.any? -%>
-  <h2><%= l(:label_generated_invoices)%></h2>
+  <div class="row">
+    <h2><%= l(:label_generated_invoices)%></h2>
+    <div class="form-group wrapper-table bg-white">
 
-  <div class="seccio grup">
-    <div class="col span-2-de-2">
-      <table class="taula-1 list invoices">
+      <table class="table table-striped table-hover invoices">
         <thead>
           <tr>
             <th><%= l(:field_type) %></th>
@@ -12,22 +12,27 @@
             <th><%= l(:field_date) %></th>
             <th><%= l(:field_due_date) %></th>
             <th><%= l(:field_company) %></th>
-            <th><%= l(:label_invoice_total) %></th>
+            <th class="text-right"><%= l(:label_invoice_total) %></th>
           </tr>
         </thead>
         <tbody>
           <% for invoice in @invoices do -%>
             <tr class="user <%= cycle("odd", "even") %>" onclick="javascript: document.location = '<%=url_for(:controller=>'invoices',:action=>'show', :id=>invoice)%>'">
-              <td align="center"><%=h l(invoice.type) %></td>
-              <td align="center"><%=h l("state_#{invoice.state}").capitalize %></td>
-              <td align="center"><%=h invoice.number %></td>
-              <td align="center"><%=h format_date invoice.date %></td>
-              <td align="center"<%='class="pastdue"' if invoice.past_due?%>><%=h format_date invoice.due_date %></td>
+              <td><%=h l(invoice.type) %></td>
+              <td><%=h l("state_#{invoice.state}").capitalize %></td>
+              <td><%=h invoice.number %></td>
+              <td><%=h format_date invoice.date %></td>
+              <td <%='class=pastdue' if invoice.past_due?%>><%=h format_date invoice.due_date %></td>
               <td><%=h invoice.client %></td>
-              <td align="right"><%= money invoice.import %></td>
+              <td class="text-right"><%= money invoice.import %></td>
             </tr>
           <% end -%>
         </tbody>
+        <tfoot>
+          <tr>
+            <td colspan="7"></td>
+          </tr>
+        </tfoot>
       </table>
     </div>
   </div>
@@ -38,63 +43,69 @@
   <%= form_tag(url_for(:action => 'create_invoices'), :method=>'post', :class=>'formee') do %>
 
     <% if num_new_invoices > 0 %>
-      <div class="seccio grup">
-        <div class="col span-2-de-2">
-          <ul class="menu-rapid">
-            <%= submit_tag(l(:generate_selected)) %>
-          </ul>
-        </div>
+      <div class="pull-right">
+        <ul class="menu-rapid">
+          <%= submit_tag(l(:generate_selected), class: 'btn btn-primary') %>
+        </ul>
       </div>
     <% end -%>
 
-    <div class="seccio grup">
-      <div class="col span-2-de-2">
-        <table class="taula-1 list invoices">
+    <div class="row">
+      <h2><%= l :label_draft_plural %></h2>
+      <div class="form-group wrapper-table bg-white">
+
+        <table class="table table-striped table-hover invoices">
           <thead>
             <tr>
-              <th id="change_checks" title="check/uncheck all"><%= image_tag "true.png" %></th>
+              <th id="change_checks" title="check/uncheck all" class="w6p"><%= image_tag "true.png" %></th>
               <th style="min-width: 108px;"><%= l(:field_number) %></th>
               <th><%= l(:field_date) %></th>
               <th><%= l(:field_due_date) %></th>
               <th><%= l(:field_company) %></th>
-              <th><%= l(:label_invoice_total) %></th>
-              <th><%= l(:button_delete) %></th>
+              <th class="text-right"><%= l(:label_invoice_total) %></th>
+              <th class="w6p"></th>
             </tr>
           </thead>
           <tbody>
             <% num = @number -%>
             <% @drafts.each do |draft| -%>
-              <tr class="user <%= cycle("odd", "even") %>">
-                <td align="center"><%= check_box_tag "draft_ids[]", draft.id, true %></td>
-                <td align="center"><%= text_field_tag "draft_#{draft.id}", num, :size => 5 %></td>
-                <td align="center"><%=h format_date draft.date %></td>
-                <td align="center"<%='class="pastdue"' if draft.past_due?%>><%=h format_date draft.due_date %></td>
+              <tr>
+                <td><%= check_box_tag "draft_ids[]", draft.id, true %></td>
+                <td class="w12p"><%= text_field_tag "draft_#{draft.id}", num, class: 'form-control' %></td>
+                <td><%=h format_date draft.date %></td>
+                <td <%='class=pastdue' if draft.past_due?%>><%=h format_date draft.due_date %></td>
                 <td><%=h draft.client %></td>
-                <td align="right"><%= money draft.import %></td>
-                <td><%= link_to(l(:button_delete), invoice_path(draft, :back_url=>project_new_invoices_from_template_path(@project)), :method=>:delete, :data=>{:confirm=>l(:text_are_you_sure)}, :class=>'icon icon-del eliminar') if User.current.allowed_to?(:general_use,@project) %></td>
+                <td class="text-right"><%= money draft.import %></td>
+                <td class="text-right"><%= link_to('', invoice_path(draft, back_url: project_new_invoices_from_template_path(@project)), method: :delete, data: {confirm: l(:text_are_you_sure)}, class: 'icon icon-del eliminar') if User.current.allowed_to?(:general_use,@project) %></td>
               </tr>
               <% num = IssuedInvoice.increment_right(num) -%>
             <% end -%>
           </tbody>
+          <tfoot>
+            <tr>
+              <td colspan="7"></td>
+            </tr>
+          </tfoot>
         </table>
+
+      <% end -%>
+
       </div>
     </div>
 
   <% end -%>
 
-<% end -%>
+  <% unless (@invoices and @invoices.any?) or @drafts.any? -%>
+    <br />
+    <p class="nodata"><%= l(:label_no_issues_to_generate) %></p>
+  <% end -%>
 
-<% unless (@invoices and @invoices.any?) or @drafts.any? -%>
-  <br />
-  <p class="nodata"><%= l(:label_no_issues_to_generate) %></p>
-<% end -%>
+  <% html_title(l(:label_invoice_plural)) -%>
 
-<% html_title(l(:label_invoice_plural)) -%>
+  <% content_for :sidebar do %>
+    <%= render_menu :invoices_menu, @project %>
+  <% end %>
 
-<% content_for :sidebar do %>
-  <%= render_menu :invoices_menu, @project %>
-<% end %>
-
-<script type='text/javascript'>
-    $('#change_checks').on("click", function(){ $('input[type="checkbox"]').click(); });
-</script>
+  <script type='text/javascript'>
+$('#change_checks').on("click", function(){ $('input[type="checkbox"]').click(); });
+  </script>

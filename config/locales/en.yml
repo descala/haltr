@@ -60,6 +60,7 @@ en:
   label_invoice_plural: Invoices
   label_invoice: Invoice
   label_draft: Invoice draft
+  label_draft_plural: Draft invoices
   field_invoice: Invoice
   label_invoice_new: New invoice
   label_received_invoice_new: New received invoice

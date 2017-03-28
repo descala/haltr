@@ -60,6 +60,7 @@ fr:
   label_invoice_plural: Factures
   label_invoice: Facture
   label_draft: Brouillon facture
+  label_draft_plural: Draft invoices
   field_invoice: Facture
   label_invoice_new: Nouvelle facture
   label_received_invoice_new: Ajouter factures entrantes

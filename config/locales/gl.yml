@@ -72,6 +72,7 @@ gl:
   label_invoice_plural: Facturas
   label_invoice: Factura
   label_draft: Borrador de factura
+  label_draft_plural: Borradores de factura
   field_invoice: Factura
   label_invoice_new: Nova factura
   label_received_invoice_new: Engadir factura recibida

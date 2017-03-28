@@ -60,6 +60,7 @@ da:
   label_invoice_plural: fakturaer
   label_invoice: faktura
   label_draft: faktura udkast
+  label_draft_plural: Draft invoices
   field_invoice: Faktura
   label_invoice_new: Ny faktura
   button_new_invoice: Ny faktura
