@@ -1,51 +1,60 @@
-<%= form_tag project_invoices_report_invoice_list_path(@project), :class => 'formee' do %>
-  <fieldset>
-    <legend><%= l(:label_invoice_report) %></legend>
-    <div class="seccio grup">
-      <div class="col span-1-de-3">
-        <label for="date_from"><%=l(:field_date)%></label>
-        <%= date_field_tag :date_from, (params[:date_from].nil? ? Date.new(Date.today.year) : params[:date_from]), :size => 10, :style => "width: 90%;" %><%= calendar_for('date_from') %>
+<div class="tab-pane">
+<%= form_tag project_invoices_report_invoice_list_path(@project), class: 'formee' do %>
+  <fieldset class="form-horizontal">
+    <legend class="relative"><%= l(:label_invoice_report) %></legend>
+    <div class="form-group">
+      <label for="date_from" class="col-xs-1 control-label"><%=l(:field_date)%></label>
+      <div class="col-xs-3">
+        <div class="relative">
+          <%= date_field_tag :date_from, (params[:date_from].nil? ? Date.new(Date.today.year) : params[:date_from]), class: 'form-control' %><%= calendar_for('date_from') %>
+        </div>
       </div>
-      <div class="col span-1-de-3">
-        <label for="date_to"><%=l(:label_to)%></label>
-        <%= date_field_tag :date_to, (params[:date_to].nil? ? Date.today : params[:date_to]), :size => 10, :style => "width: 90%;" %><%= calendar_for('date_to') %>
-      </div>
-      <div class="col span-1-de-3">
+      <label for="date_to" class="col-xs-1 control-label"><%=l(:label_to)%></label>
+      <div class="col-xs-3">
+        <div class="relative">
+          <%= date_field_tag :date_to, (params[:date_to].nil? ? Date.today : params[:date_to]), class: 'form-control' %><%= calendar_for('date_to') %>
+        </div>
       </div>
     </div>
-    <div class="seccio grup">
-      <div class="col span-2-de-2">
-        <%= submit_tag l(:button_apply), :class => "small", :name => nil %>
+    <div class="form-group">
+      <div class="col-xs-8 text-right">
+        <%= submit_tag l(:button_apply), class: 'btn btn-primary', name: nil %>
       </div>
     </div>
   </fieldset>
 <% end -%>
 
-<%= form_tag(project_invoices_report_channel_state_path, :method => :get, :class => 'formee') do %>
-  <fieldset>
-    <legend><%= l(:label_report_channel_state) %></legend>
-    <%= submit_tag l('label_report_channel_state')%>
+<%= form_tag(project_invoices_report_channel_state_path, method: :get, class: 'formee') do %>
+  <fieldset class="form-horizontal">
+    <legend class="relative"><%= l(:label_report_channel_state) %></legend>
+    <div class="form-group">
+      <div class="col-xs-8 text-right">
+        <%= submit_tag l('label_report_channel_state'), class: 'btn btn-primary' %>
+      </div>
+    </div>
   </fieldset>
 <% end %>
 
 <%= form_tag project_invoices_report_received_table_path(@project), :method => :get, :class => 'formee' do %>
-  <fieldset>
-    <legend><%= l(:label_received) %></legend>
-    <div class="seccio grup">
-      <div class="col span-1-de-3">
-        <label for="date_from_received"><%=l(:field_date)%></label>
-        <%= date_field_tag :date_from_received, (params[:date_from_received].nil? ? Date.new(Date.today.year) : params[:date_from_received]), :size => 10, :style => "width: 90%;" %><%= calendar_for('date_from_received') %>
+  <fieldset class="form-horizontal">
+    <legend class="relative"><%= l(:label_received) %></legend>
+    <div class="form-group">
+      <label for="date_from_received" class="col-xs-1 control-label"><%=l(:field_date)%></label>
+      <div class="col-xs-3">
+        <div class="relative">
+          <%= date_field_tag :date_from_received, (params[:date_from_received].nil? ? Date.new(Date.today.year) : params[:date_from_received]), class: 'form-control' %><%= calendar_for('date_from_received') %>
+        </div>
       </div>
-      <div class="col span-1-de-3">
-        <label for="date_to_received"><%=l(:label_to)%></label>
-        <%= date_field_tag :date_to_received, (params[:date_to_received].nil? ? Date.today : params[:date_to_received]), :size => 10, :style => "width: 90%;" %><%= calendar_for('date_to_received') %>
-      </div>
-      <div class="col span-1-de-3">
+      <label for="date_to_received" class="col-xs-1 control-label"><%=l(:label_to)%></label>
+      <div class="col-xs-3">
+        <div class="relative">
+          <%= date_field_tag :date_to_received, (params[:date_to_received].nil? ? Date.today : params[:date_to_received]), class: 'form-control' %><%= calendar_for('date_to_received') %>
+        </div>
       </div>
     </div>
-    <div class="seccio grup">
-      <div class="col span-2-de-2">
-        <%= submit_tag l(:button_apply), :class => "small", :name => nil %>
+    <div class="form-group">
+      <div class="col-xs-8 text-right">
+        <%= submit_tag l(:button_apply), class: 'btn btn-primary', name: nil %>
       </div>
     </div>
   </fieldset>
@@ -54,3 +63,4 @@
 <% content_for :sidebar do %>
   <%= render_menu :invoices_menu, @project %>
 <% end %>
+</div>

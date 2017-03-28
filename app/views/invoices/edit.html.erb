@@ -12,7 +12,6 @@
 
 <%= form_for @invoice.becomes(Invoice), url: {action: 'update', id: @invoice}, html: {method: :put}  do |f| %>
   <div id="row-title" class="row">
-  <h2 class="col-xs-2"><%= l :label_invoice %></h2>
 
   <!--formulari-->
   <% if %w(sending sent registered accepted allegedly_paid closed).include?(@invoice.state) -%>
