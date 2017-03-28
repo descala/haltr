@@ -69,6 +69,7 @@ ca:
   label_invoice_plural: Factures
   label_invoice: Factura
   label_draft: Esborrany de factura
+  label_draft_plural: Esborranys de factura
   field_invoice: Factura
   label_invoice_new: Nova factura
   label_received_invoice_new: Afegir factura rebuda

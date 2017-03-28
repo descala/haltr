@@ -3,17 +3,23 @@
 <%= f.hidden_field :quote_id %>
 
 <% if @project.company.company_offices.any? -%>
-  <div class="seccio grup tabular">
-    <p class="col span-2-de-3">
-    <label for="company_office_id"><%= l(:label_company_office) %></label>
-    <%= select :invoice, :company_office_id, @project.company.company_offices.collect {|office|
-      ["#{office.address} - #{office.city}", office.id]
-    }, { selected: (@invoice.company_office_id rescue nil),
-         include_blank: "#{@project.company.address} - #{@project.company.city}"
-    } %>
-    </p>
+  <div class="pull-right col-xs-8 form-horizontal">
+    <div class="form-group">
+      <%= label :invoice, :company_office_id, class: 'control-label col-xs-3' do %>
+        <%= l(:label_company_office) %>:
+      <% end -%>
+      <div class="col-xs-9">
+        <%= select :invoice, :company_office_id, @project.company.company_offices.collect {|office|
+          ["#{office.address} - #{office.city}", office.id]
+        }, { selected: (@invoice.company_office_id rescue nil),
+             include_blank: "#{@project.company.address} - #{@project.company.city}"
+        }, class: 'form-control' %>
+      </div>
+    </div>
   </div>
 <% end -%>
+
+<h2><%= %w(new create).include?(params[:action]) ? l(:label_invoice_new) : l(:label_invoice) %></h2>
 
 <div class="row">
   <div class="col-xs-2 col-no-pad-right">
@@ -36,21 +42,27 @@
           <legend class="relative">1. <%=l(:invoice_data)%></legend>
 
           <% if @to_amend -%>
-            <p class="col span-1-de-2">
-            <span>
-              <span><%= l(:amended_invoice, link: @to_amend.number) %> (<%= l("amend_#{@amend_type}") %>)</span><br />
-              <span><%= l(:client) %>:
-                <span><%= @invoice.client %></span>
-              </span>
-            </span>
+            <div class="form-group">
+              <div class="col-xs-6 col-xs-offset-3">
+                <%= l(:amended_invoice, link: @to_amend.number) %> (<%= l("amend_#{@amend_type}") %>)
+              </div>
+            </div>
+            <div class="form-group">
+              <label class="col-xs-3 control-label"><%= l(:client) %>:</label>
+              <div class="col-xs-6">
+                <p class="control-label text-left"><%= @invoice.client %></p>
+              </div>
+            </div>
             <%= hidden_field_tag 'amend_type', @amend_type %>
             <%= hidden_field_tag 'to_amend', @to_amend.id %>
             <%= f.hidden_field 'client_id', value: @invoice.client_id %>
-            </p>
             <% if @amend_type == 'partial' -%>
-              <p class="col span-1-de-2">
-              <%= f.select :amend_reason, Invoice.amend_reason_codes.collect {|code| [l("amend_reason_#{code}"), code] } %>
-              </p>
+              <div class="form-group">
+                <%= f.label :amend_reason, class: 'col-xs-3 control-label' %>
+                <div class="col-xs-5">
+                  <%= f.select :amend_reason, Invoice.amend_reason_codes.collect {|code| [l("amend_reason_#{code}"), code] }, {}, class: 'form-control' %>
+                </div>
+              </div>
             <% end -%>
 
           <% else -%>
@@ -95,7 +107,7 @@
                 <% if @invoice.is_a? IssuedInvoice and @project.issued_invoices.any? %>
                   <div class="col-xs-3">
                     <span class="note">
-                      <%= l(:label_last_invoice_number)%>:
+                      <%= l(:label_last_invoice_number)%>:<br />
                       <strong><%= IssuedInvoice.last_number(@project) %></strong>
                     </span>
                   </div>
@@ -541,7 +553,7 @@
             </div>
 
           <% else -%>
-            <p class="warning"><%= l(:invoice_attachments_permission) %></p>
+            <%= render partial: 'common/premium' %>
           <% end -%>
         </fieldset>
       </div>
@@ -551,12 +563,13 @@
       <div class="tab-pane" id="invoice-files">
         <fieldset class="form-horizontal">
           <legend>4. <%= l :invoice_attachments %></legend>
-          <p><%=l(:invoice_attachments_description, mb: (Setting.attachment_max_size.to_i / 1024))%></p>
           <% if User.current.allowed_to?(:use_invoice_attachments, @project) -%>
+            <p><%=l(:invoice_attachments_description, mb: (Setting.attachment_max_size.to_i / 1024))%></p>
             <%= link_to_attachments @invoice, thumbnails: false, author: false %>
             <%= render :partial => 'attachments/form', locals: {container: @invoice} %>
           <% else %>
-            <p class="warning"><%= l(:invoice_attachments_permission) %></p>
+            <%= render partial: 'common/premium' %>
+            <p><%=l(:invoice_attachments_description, mb: (Setting.attachment_max_size.to_i / 1024))%></p>
           <%- end %>
         </fieldset>
       </div>

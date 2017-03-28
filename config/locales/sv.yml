@@ -60,6 +60,7 @@ sv:
   label_invoice_plural: Fakturor
   label_invoice: Faktura
   label_draft: Fakturautkast
+  label_draft_plural: Draft invoices
   field_invoice: Faktura
   label_invoice_new: Ny faktura
   button_new_invoice: Ny faktura

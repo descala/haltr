@@ -16,7 +16,6 @@ resources :projects do
   match :people, :controller => 'people', :action => 'index', :via => :get
   resources :client_offices, :only => [:index, :new, :create, :edit, :update, :destroy]
   resources :company_offices, :only => [:index, :new, :create, :edit, :update, :destroy]
-  match 'companies/linked_to_mine', :controller => 'companies', :action => 'linked_to_mine', :via => :get
   match 'my_company',    :controller => 'companies', :action => 'my_company',    :via => :get
   match 'bank_info',     :controller => 'companies', :action => 'bank_info',     :via => :get
   match 'connections',   :controller => 'companies', :action => 'connections',   :via => :get
