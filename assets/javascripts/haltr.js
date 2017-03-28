@@ -157,6 +157,15 @@ $(document).ready(function() {
     window.location = window.location.pathname + "?per_page=" + $(this).val();
   });
 
+  // reset invoices filter
+  $('input#reset').click(function() {
+    $(this.form.elements).not(':button, :submit, :reset, :hidden')
+      .val('')
+      .removeAttr('checked')
+      .removeAttr('selected');
+    return false;
+  });
+
 });
 
 
@@ -248,4 +257,3 @@ function show_accepted_form() {
   $("#invoice-refuse").hide();
   $("#invoice-accept").show();
 }
-
