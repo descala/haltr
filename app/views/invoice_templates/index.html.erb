@@ -1,11 +1,23 @@
 <!--menu rapid-->
-<div class="seccio grup">
-  <div class="col span-2-de-2">
-    <ul class="menu-rapid">
-      <li><%= link_to_if_authorized l("label_invoice_template_new"), new_project_invoice_template_path(@project), :class => 'icon icon-add' %></li>
-      <% if num_new_invoices > 0 %>
-        <li><%= link_to_if_authorized "#{l(:button_generate_invoices)} (#{num_new_invoices})", {:action => 'new_invoices_from_template'}, :method => :post %></li>
-      <% end -%>
+<div class="row">
+  <div class="col-xs-6">
+    <h2><%= l :label_invoice_template_plural %></h2>
+  </div>
+  <div class="col-xs-6 text-right">
+    <ul class="list-inline fast-menu">
+      <li>
+        <div class="dropdown">
+          <button class="btn btn-success btn-sm dropdown-toggle" type="button" id="dropdownExport" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+            <%= l :button_new %>
+            <i class="fa fa-angle-down" aria-hidden="true"></i>
+          </button>
+          <ul class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownNew">
+            <li><%= link_to_if_authorized l("label_invoice_template_new"), new_project_invoice_template_path(@project), :class => 'icon-fa icon-fa-fw icon-fa-file' %></li>
+            <% if num_new_invoices > 0 %>
+              <li><%= link_to_if_authorized "#{l(:button_generate_invoices)} (#{num_new_invoices})", {action: 'new_invoices_from_template'}, method: :post, class: 'icon-fa icon-fa-fw icon-fa-folder-open' %></li>
+            <% end -%>
+          </ul>
+        </div>
     </ul>
   </div>
 </div>
