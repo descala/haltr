@@ -183,10 +183,6 @@
   <fieldset class="form-horizontal">
     <legend class="relative"><%=l(:bank_info)%></legend>
 
-    <div class="flash info">
-      <%= l :private_fields_info %>
-    </div>
-
     <table class="table table-bank-info">
       <thead>
         <tr>
@@ -392,16 +388,6 @@
             <%= l(:label_received_order_plural) %>
           <% end -%>
         </div>
-      </div>
-    </div>
-
-    <label><%= l :field_company_public %></label>
-
-    <div class="form-group">
-      <div class="col-xs-9 col-xs-offset-3">
-        <label class="radio"><%= f.radio_button :public, :public %> <%= help :help_public_profile %> <%= l(:public) %></label>
-        <label class="radio"><%= f.radio_button :public, :semipublic %> <%= help :help_semipublic_profile %> <%= l(:semipublic) %></label>
-        <label class="radio"><%= f.radio_button :public, :private %> <%= help :help_private_profile %> <%= l(:private) %></label>
       </div>
     </div>
 

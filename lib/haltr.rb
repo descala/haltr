@@ -11,9 +11,6 @@ require 'haltr/menu_item'
 
 Redmine::MenuManager.map :companies_menu do |menu|
   menu.push :companies_level2, {:controller=>'clients', :action => 'index' }, :param => :project_id, :caption => :label_companies
-  menu.push :linked_to_mine, {:controller=>'companies', :action => 'linked_to_mine' }, :param => :project_id, :if => Proc.new { |p|
-    Client.where(['company_id = ?', p.company]).any?
-  }
   menu.push :people, {:controller=>'people', :action => 'index' }, :param => :project_id
   menu.push :client_offices , {:controller=>'client_offices', :action => 'index' }, :param => :project_id
 end
