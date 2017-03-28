@@ -95,7 +95,7 @@
                 <% if @invoice.is_a? IssuedInvoice and @project.issued_invoices.any? %>
                   <div class="col-xs-3">
                     <span class="note">
-                      <%= l(:label_last_invoice_number)%>:
+                      <%= l(:label_last_invoice_number)%>:<br />
                       <strong><%= IssuedInvoice.last_number(@project) %></strong>
                     </span>
                   </div>
@@ -541,7 +541,7 @@
             </div>
 
           <% else -%>
-            <p class="warning"><%= l(:invoice_attachments_permission) %></p>
+            <%= render partial: 'common/premium' %>
           <% end -%>
         </fieldset>
       </div>
@@ -551,12 +551,13 @@
       <div class="tab-pane" id="invoice-files">
         <fieldset class="form-horizontal">
           <legend>4. <%= l :invoice_attachments %></legend>
-          <p><%=l(:invoice_attachments_description, mb: (Setting.attachment_max_size.to_i / 1024))%></p>
           <% if User.current.allowed_to?(:use_invoice_attachments, @project) -%>
+            <p><%=l(:invoice_attachments_description, mb: (Setting.attachment_max_size.to_i / 1024))%></p>
             <%= link_to_attachments @invoice, thumbnails: false, author: false %>
             <%= render :partial => 'attachments/form', locals: {container: @invoice} %>
           <% else %>
-            <p class="warning"><%= l(:invoice_attachments_permission) %></p>
+            <%= render partial: 'common/premium' %>
+            <p><%=l(:invoice_attachments_description, mb: (Setting.attachment_max_size.to_i / 1024))%></p>
           <%- end %>
         </fieldset>
       </div>
