@@ -1,23 +1,29 @@
-<div class="seccio grup">
-  <div class="col span-2-de-2">
-    <ul class="menu-rapid">
-      <li><%= link_to(l(:label_mandate_new), new_project_mandate_path(@project), :class => 'icon icon-add') %></li>
-    </ul>
-  </div>
+<div class="row">
+<div class="col-xs-6">
+  <h2><%= l :label_mandates %></h2>
 </div>
 
+<div class="col-xs-6 text-right">
+  <ul class="list-inline fast-menu">
+    <li>
+      <%= link_to(l(:label_mandate_new), new_project_mandate_path(@project), class: 'icon-fa icon-fa-fw icon-fa-file') %>
+    </li>
+  </ul>
+</div>
+</div>
+
+
+<div class="wrapper-table bg-white">
 <!--taula-->
-<div class="seccio grup">
-  <div class="col span-2-de-2">
-    <table class="taula-1 list">
+    <table class="table table-striped payments">
       <thead>
         <tr>
           <th><%=l(:field_client)%></th>
           <th><%=l(:field_signature_date)%></th>
           <th><%=l(:field_signed_doc)%></th>
-          <th><%=l(:button_download)%></th>
-          <th><%=l(:button_edit)%></th>
-          <th><%=l(:button_delete)%></th>
+          <th class="w6p"></th>
+          <th class="w6p"></th>
+          <th class="w6p"></th>
         </tr>
       </thead>
       <tbody>
@@ -25,17 +31,21 @@
           <tr>
             <td><%= mandate.client.name %></td>
             <td><%= mandate.signature_date %></td>
-            <td><%= link_to mandate.signed_doc_filename, project_mandate_signed_doc_path(mandate,:project_id=>@project) if mandate.signed_doc %></td>
-            <td><%= link_to l(:button_download), project_mandate_path(mandate, :project_id => @project, :format=>'pdf'), :class => 'icon icon-download' %></td>
-            <td><%= link_to l(:button_edit), edit_project_mandate_path(mandate, :project_id => @project), :class => 'icon icon-edit editar' %></td>
-            <td><%= link_to l(:button_delete), project_mandate_path(mandate, :project_id => @project), :method => :delete, :data=>{:confirm => l(:text_are_you_sure)}, :class => 'icon icon-del eliminar' %></td>
+            <td><%= link_to mandate.signed_doc_filename, project_mandate_signed_doc_path(mandate,project_id: @project) if mandate.signed_doc %></td>
+            <td><%= link_to l(:button_download), project_mandate_path(mandate, project_id: @project, format: 'pdf'), class: 'icon icon-download' %></td>
+            <td><%= link_to l(:button_edit), edit_project_mandate_path(mandate, project_id: @project), class: 'icon icon-edit editar' %></td>
+            <td><%= link_to l(:button_delete), project_mandate_path(mandate, project_id: @project), method: :delete, data: {confirm: l(:text_are_you_sure)}, class: 'icon icon-del eliminar' %></td>
           </tr>
         <% end -%>
       </tbody>
+      <tfoot>
+        <tr>
+          <td colspan="6"></td>
+        </tr>
+      </tfoot>
     </table>
-  </div>
-</div>
 <!--final taula-->
+</div>
 
 <% content_for :sidebar do %>
   <%= render_menu :payments_menu, @project %>

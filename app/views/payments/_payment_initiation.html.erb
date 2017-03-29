@@ -1,29 +1,31 @@
 <tr>
-  <td width="10%"><%=payment_type.split("_").last%></td>
-  <td>
-    (<%= link_to("#{invoices.size} #{l(:label_invoice_plural)}", :action => 'invoices', :project_id => @project, :invoices => invoices.collect {|i| i.id })-%> <%=h money(invoices.collect {|i| i.total}.sum) %>)
+  <td class="w6p"><%=payment_type.split("_").last%></td>
+  <td class="w35p">
+    (<%= link_to("#{invoices.size} #{l(:label_invoice_plural)}", action: 'invoices', project_id: @project, invoices: invoices.collect {|i| i.id })-%> <%=h money(invoices.collect {|i| i.total}.sum) %>)
   </td>
-  <td>
+  <td class="text-right">
     <%= link_to l(:button_download),
-      { :action     => payment_type.split("_").first, # sepa
-        :project_id => @project,
-        :due_date   => due_date,
-        :bank_info  => bank_info,
-        :sepa_type  => payment_type.split("_").last,
-        :invoices   => invoices.collect {|i| i.id } },
-      :style => (due_date < Date.today ? "color: red;" : ""),
-      :title => (due_date < Date.today ? "#{l(:field_due_date)}: #{format_date due_date}" : "")
+      { action:     payment_type.split("_").first, # sepa
+        project_id: @project,
+        due_date:   due_date,
+        bank_info:  bank_info,
+        sepa_type:  payment_type.split("_").last,
+        invoices:   invoices.collect {|i| i.id } },
+      style: (due_date < Date.today ? "color: red;" : ""),
+      title: (due_date < Date.today ? "#{l(:field_due_date)}: #{format_date due_date}" : ""),
+      class: 'btn btn-default'
     %>
   </td>
-  <td>
+  <td class="text-right w20p">
     <%= link_to l(:button_mark_done),
-      { :action       => "payment_done",
-        :project_id   => @project,
-        :due_date     => due_date,
-        :bank_info    => bank_info,
-        :payment_type => payment_type.split("_").first,
-        :invoices     => invoices.collect {|i| i.id } },
-      :data=>{:confirm => l(:text_are_you_sure)},
-      :method  => :post %>
+      { action: "payment_done",
+        project_id: @project,
+        due_date: due_date,
+        bank_info: bank_info,
+        payment_type: payment_type.split("_").first,
+        invoices: invoices.collect {|i| i.id } },
+      data:   {confirm: l(:text_are_you_sure)},
+      method: :post,
+      class:  'btn btn-default' %>
   </td>
 </tr>

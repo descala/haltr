@@ -1,43 +1,43 @@
+<div class="wrapper-table bg-white">
 <%= form_tag({}) do -%>
-  <%= hidden_field_tag 'back_url', url_for(params), :id => nil %>
-  <div class="seccio grup">
-    <div class="col span-2-de-2">
-      <table class="taula-1 list invoices">
-        <thead>
-          <tr>
-            <th></th>
-            <%= content_tag('th', l(:field_number)) %>
-            <%= content_tag('th', l(:field_date)) %>
-            <%= content_tag('th', l(:field_company)) %>
-            <%= content_tag('th', l(:label_subtotal)) %>
-            <%= content_tag('th', l(:label_invoice_total)) %>
-            <%= content_tag('th', l(:field_due_date)) %>
-            <%= content_tag('th', l(:field_state)) %>
-          </tr>
-        </thead>
-        <tbody>
-          <% for invoice in @invoices -%>
-            <tr id="invoice-<%=invoice.id%>" class="hascontextmenu <%= 'amended ' if invoice.amended? %><%= cycle("odd", "even") %>">
-              <td><%= check_box_tag("ids[]", invoice.id, false, :id => nil) %></td>
-              <td onclick="javascript: document.location = '<%=url_for(:controller=>'invoices', :action=>'show', :id=>invoice)%>'" style="cursor:pointer;"><%=h link_to_if_authorized invoice.number, :controller => 'invoices', :action => 'show', :id => invoice %></td>
-              <td><%=h format_date invoice.date %></td>
-              <td><%=h invoice.client %></td>
-              <td class="money"><%= money(invoice.subtotal) %></td>
-              <td class="money"><%= money(invoice.total) %></td>
-              <td <%='class="pastdue"'.html_safe if invoice.past_due?%>><%=h format_date invoice.due_date %></td>
-              <td><%=h l("state_#{invoice.state}").capitalize %></td>
-            </tr>
-          <% end -%>
-        </tbody>
-        <tfoot>
-          <tr>
-            <td colspan="7">&nbsp;</td>
-          </tr>
-        </tfoot>
-      </table>
-    </div>
-  </div>
+  <%= hidden_field_tag 'back_url', url_for(params), id: nil %>
+  <table class="table table-striped table-hover invoices">
+    <thead>
+      <tr>
+        <th></th>
+        <%= content_tag('th', l(:field_number)) %>
+        <%= content_tag('th', l(:field_date)) %>
+        <%= content_tag('th', l(:field_company)) %>
+        <%= content_tag('th', l(:label_subtotal), class: 'text-right') %>
+        <%= content_tag('th', l(:label_invoice_total), class: 'text-right') %>
+        <%= content_tag('th', l(:field_due_date)) %>
+        <%= content_tag('th', l(:field_state)) %>
+      </tr>
+    </thead>
+    <tbody>
+      <% for invoice in @invoices -%>
+        <tr id="invoice-<%=invoice.id%>" class="hascontextmenu <%= 'amended ' if invoice.amended? %>">
+          <td><%= check_box_tag("ids[]", invoice.id, false, id: nil) %></td>
+          <td onclick="javascript: document.location = '<%=url_for(controller: 'invoices', action: 'show', id:invoice)%>'" style="cursor:pointer;"><%=h link_to_if_authorized invoice.number, controller: 'invoices', action: 'show', id: invoice %></td>
+          <td><%=h format_date invoice.date %></td>
+          <td><%=h invoice.client %></td>
+          <td class="money"><%= money(invoice.subtotal) %></td>
+          <td class="money"><%= money(invoice.total) %></td>
+          <td <%='class="pastdue"'.html_safe if invoice.past_due?%>><%=h format_date invoice.due_date %></td>
+          <td><%=h l("state_#{invoice.state}").capitalize %></td>
+        </tr>
+      <% end -%>
+    </tbody>
+    <tfoot>
+      <tr>
+        <td colspan="8">&nbsp;</td>
+      </tr>
+    </tfoot>
+  </table>
+</div>
+</div>
 <% end -%>
+</div>
 <!--final taula factures-->
 
 <% content_for :sidebar do %>

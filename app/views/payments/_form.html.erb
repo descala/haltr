@@ -1,38 +1,43 @@
 <%= error_messages_for 'payment' %>
 
-<fieldset>
-  <legend><%=l(@payment.new_record? ? :label_payment_new : :label_payment)%></legend>
+    <h2><%=l(@payment.new_record? ? :label_payment_new : :label_payment)%></h2>
+    <% if @invoice -%>
+      <h3><%= "#{l(:label_invoice)} #{@invoice.number} - #{@invoice.client}"%></h3>
+    <% end -%>
 
-  <% if @invoice -%>
-    <p><%= "#{l(:label_invoice)} #{@invoice.number} - #{@invoice.client}"%></p>
-  <% end -%>
+<div class="col-xs-10 col-no-pad-left">
+  <div class="tab-pane form-horizontal">
+    <% if @invoice -%>
+      <%= f.hidden_field "invoice_id" %>
+    <% else -%>
+      <div class="form-group">
+        <div class="col-xs-3">
+          <%= f.label :invoice_id, class: 'col-xs-3 control-label' do %>
+            <%= l :label_invoice %>
+          <% end -%>
+          <%= f.select :invoice_id, invoices_for_select, {include_blank: true}, class: 'form-control' %>
+        </div>
+      </div>
+    <% end -%>
 
-  <div class="seccio grup">
-    <div class="col span-1-de-2">
-      <% if @invoice -%>
-        <%= f.hidden_field "invoice_id" %>
-      <% else -%>
-        <%= f.select :invoice_id, invoices_for_select, :include_blank => true %>
-      <% end -%>
+    <div class="form-group">
+      <div class="col-xs-3">
+        <%= f.text_field :amount, required: true, class: 'form-control' %>
+      </div>
+      <div class="col span-1-de-2">
+        <%= f.date_field :date, required: true %><%= calendar_for('payment_date') %>
+      </div>
     </div>
+
+    <div class="seccio grup">
+      <div class="col span-1-de-2">
+        <%= f.text_field :payment_method %>
+      </div>
+      <div class="col span-1-de-2">
+        <%= f.text_field :reference %>
+      </div>
+    </div>
+
   </div>
-
-  <div class="seccio grup">
-    <div class="col span-1-de-2">
-      <%= f.text_field :amount, :size => 4, :required => true %>
-    </div>
-    <div class="col span-1-de-2">
-      <%= f.date_field :date, :size => 10, :required => true %><%= calendar_for('payment_date') %>
-    </div>
-  </div>
-
-  <div class="seccio grup">
-    <div class="col span-1-de-2">
-      <%= f.text_field :payment_method %>
-    </div>
-    <div class="col span-1-de-2">
-      <%= f.text_field :reference %>
-    </div>
-  </div>
-
-</fieldset>
+</div>
+</div>

@@ -1,7 +1,23 @@
-<%= form_tag(url_for(:action => 'import_aeb43',:project_id=>@project ), :multipart => true ) do |f| %>
-  <%= l(:label_import_aeb43) %> <%= file_field_tag 'file', :size => 30, :id => nil  -%>
-  <%= submit_tag l(:button_submit) %>
-<% end %>
+<h2><%= l :label_import_aeb43 %></h2>
+
+<div class="col-xs-10 col-no-pad-left">
+  <div class="tab-pane form-horizontal">
+
+    <%= form_tag(url_for(action: 'import_aeb43', project_id: @project), multipart: true, class: 'form-horizontal' ) do |f| %>
+      <div class="form-group">
+        <div class="col-xs-5">
+          <%= file_field_tag 'file', id: nil, class: 'filestyle' -%>
+        </div>
+      </div>
+      <div class="form-group">
+        <div class="col-xs-5 text-right">
+          <%= submit_tag l(:button_submit), class: 'btn btn-primary' %>
+        </div>
+      </div>
+    <% end %>
+
+  </div>
+</div>
 
 <% content_for :sidebar do %>
   <%= render_menu :payments_menu, @project %>
