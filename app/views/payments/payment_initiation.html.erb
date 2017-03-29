@@ -1,27 +1,28 @@
 <div class="formee">
-  <% if @invoices_to_pay_by_bank_info.size == 0 -%>
-    <p class="nodata"><%= l(:label_no_data) %></p>
-  <% else -%>
-    <% @invoices_to_pay_by_bank_info.each do |bank_info, invoices_by_due_date| -%>
-      <% next if invoices_by_due_date.blank? -%>
-      <h3><%=l :field_bank_account %> <%=bank_info.name%></h3>
+<% if @invoices_to_pay_by_bank_info.size == 0 -%>
+  <p class="nodata"><%= l(:label_no_data) %></p>
+<% else -%>
+  <% @invoices_to_pay_by_bank_info.each do |bank_info, invoices_by_due_date| -%>
+    <% next if invoices_by_due_date.blank? -%>
+    <h2><%=l :field_bank_account %> <%=bank_info.name%></h2>
 
-        <table class="list taula-1 payment_initiation">
-          <thead>
+    <div class="wrapper-table bg-white">
+      <table class="table table-striped payment_initiation">
+        <thead>
           <tr>
             <th><%=l(:field_due_date)%></th>
             <th>SEPA</th>
           </tr>
-          </thead>
-          <tbody>
+        </thead>
+        <tbody>
           <% invoices_by_due_date.sort.each do |due_date, invoices_by_payment_type| -%>
             <tr class="<%= cycle("odd", "even") %>">
               <td width="25%" style="<%= "color: red;" if due_date < Date.today %>"><%=format_date(due_date)%></td>
               <td>
                 <table width="100%">
-                <% invoices_by_payment_type.each do |payment_type, invoices| -%>
-                  <%= render partial: 'payment_initiation',
-                    locals: {
+                  <% invoices_by_payment_type.each do |payment_type, invoices| -%>
+                    <%= render partial: 'payment_initiation',
+                      locals: {
                       payment_type: payment_type,
                       invoices: invoices,
                       due_date: due_date,
@@ -32,11 +33,17 @@
               </td>
             </tr>
           <% end -%>
-          </tbody>
-        </table>
+        </tbody>
+        <tfoot>
+          <tr>
+            <td colspan="2"></td>
+          </tr>
+        </tfoot>
+      </table>
+    </div>
 
-    <% end -%>
   <% end -%>
+<% end -%>
 </div>
 
 <% content_for :sidebar do %>

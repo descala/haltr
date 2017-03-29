@@ -68,8 +68,8 @@
           <% else -%>
             <div id="client_select">
               <div class="form-group">
-                <%= render :partial=>'invoices/clients',
-                  :locals => { :selected => @created_client || @invoice.client_id } %>
+                <%= render partial: 'invoices/clients',
+                  locals: { selected: @created_client || @invoice.client_id } %>
               </div>
             </div>
 
@@ -211,7 +211,7 @@
           <hr class="form-elements">
 
           <div id="payment_stuff">
-            <%= render :partial => 'invoices/payment_stuff' %>
+            <%= render partial: 'invoices/payment_stuff' %>
           </div>
 
           <hr class="form-elements">
@@ -250,7 +250,7 @@
             <legend>2. <%= l :invoice_content %></legend>
             <div id="invoice_lines" data-tax-names="<%= @project.company.tax_names.join(' ') %>">
               <%= f.fields_for :invoice_lines do |line_form| %>
-                <%=  render :partial => 'invoice_line_fields', :locals => { :f => line_form } %>
+                <%=  render partial: 'invoice_line_fields', locals: { f: line_form } %>
               <% end %>
             </div>
             <!-- cocoon -->
@@ -566,7 +566,7 @@
           <% if User.current.allowed_to?(:use_invoice_attachments, @project) -%>
             <p><%=l(:invoice_attachments_description, mb: (Setting.attachment_max_size.to_i / 1024))%></p>
             <%= link_to_attachments @invoice, thumbnails: false, author: false %>
-            <%= render :partial => 'attachments/form', locals: {container: @invoice} %>
+            <%= render partial: 'attachments/form', locals: {container: @invoice} %>
           <% else %>
             <%= render partial: 'common/premium' %>
             <p><%=l(:invoice_attachments_description, mb: (Setting.attachment_max_size.to_i / 1024))%></p>
