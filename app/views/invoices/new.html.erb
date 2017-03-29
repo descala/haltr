@@ -1,7 +1,7 @@
 <!--formulari-->
 <% url_hash = { action: 'create', project_id: @project } -%>
 <% url_hash[:controller] = @dest_controller unless @dest_controller.blank? -%>
-<%= form_for @invoice.becomes(Invoice), url: url_hash, html: {class: 'formee'} do |f| %>
+<%= form_for @invoice.becomes(Invoice), url: url_hash do |f| %>
   <% f.object = @invoice.becomes(@invoice.class) -%>
   <%= render partial: 'invoices/form', locals: { f: f } %>
   <!-- warning: form partial leaves a div intencionally open --!>

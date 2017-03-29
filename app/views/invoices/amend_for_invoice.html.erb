@@ -2,13 +2,13 @@
 <div class="seccio grup">
   <div class="col span-2-de-2">
 
-    <% url_hash = { :action => 'create', :project_id => @project } -%>
+    <% url_hash = { action: 'create', project_id: @project } -%>
     <% url_hash[:controller] = @dest_controller unless @dest_controller.blank? -%>
-    <%= labelled_form_for :invoice, @invoice, :url => url_hash, :html => {:class=>'formee'} do |f| %>
-      <%= render :partial => 'invoices/form', :locals => { :f => f } %>
-      <%= f.submit l(:button_create), :name => 'create' %>
+    <%= labelled_form_for :invoice, @invoice, url: url_hash do |f| %>
+      <%= render partial: 'invoices/form', locals: { f: f } %>
+      <%= f.submit l(:button_create), name: 'create' %>
       <% unless @invoice.is_a? InvoiceTemplate or @invoice.is_a? DraftInvoice -%>
-        <%= f.submit l(:button_create_and_send), :name => 'create_and_send' %>
+        <%= f.submit l(:button_create_and_send), name: 'create_and_send' %>
       <% end -%>
     <% end %>
 
@@ -16,8 +16,8 @@
 </div>
 <!--final formulari-->
 
-<div id="new_client_wrapper" style="display:none;">
-  <%= render :partial => 'invoices/new_client', :locals => {:context => "new_invoice"} %>
+<div id="new_client_wrapper" style="display: none;">
+  <%= render partial: 'invoices/new_client', locals: {context: "new_invoice"} %>
 </div>
 
 <% html_title(l(:label_invoice_new)) -%>
@@ -26,3 +26,8 @@
   <%= render_menu :invoices_menu, @project %>
 <% end %>
 
+<%=
+  content_for :header_tags do
+    stylesheet_link_tag 'bootstrap.vertical-tabs', plugin: 'haltr'
+  end
+%>
