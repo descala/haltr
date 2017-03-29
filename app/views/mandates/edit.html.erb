@@ -1,10 +1,11 @@
 <!--formulari-->
 <div class="seccio grup">
   <div class="col span-2-de-2">
-    <%= labelled_form_for :mandate, @mandate, :url => { :action => 'update', :id => @mandate }, :html => {:class=>'formee',:multipart=>true} do |f| %>
-      <%= render :partial => 'form', :locals => { :f => f } %>
+    <%= form_for @mandate, url: {action: 'update', id: @mandate}, html: {multipart: true} do |f| %>
+      <%= render partial: 'form', locals: { f: f } %>
       <%= submit_tag l(:button_save) %>
-    <% end %>  </div>
+    <% end %>
+  </div>
 </div>
 <!--final formulari-->
 

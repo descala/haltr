@@ -1,5 +1,5 @@
 <div class="tab-pane">
-<%= form_tag project_invoices_report_invoice_list_path(@project), class: 'formee' do %>
+<%= form_tag project_invoices_report_invoice_list_path(@project) do %>
   <fieldset class="form-horizontal">
     <legend class="relative"><%= l(:label_invoice_report) %></legend>
     <div class="form-group">
@@ -24,7 +24,7 @@
   </fieldset>
 <% end -%>
 
-<%= form_tag(project_invoices_report_channel_state_path, method: :get, class: 'formee') do %>
+<%= form_tag(project_invoices_report_channel_state_path, method: :get) do %>
   <fieldset class="form-horizontal">
     <legend class="relative"><%= l(:label_report_channel_state) %></legend>
     <div class="form-group">
@@ -35,7 +35,7 @@
   </fieldset>
 <% end %>
 
-<%= form_tag project_invoices_report_received_table_path(@project), :method => :get, :class => 'formee' do %>
+<%= form_tag project_invoices_report_received_table_path(@project), method: :get do %>
   <fieldset class="form-horizontal">
     <legend class="relative"><%= l(:label_received) %></legend>
     <div class="form-group">
