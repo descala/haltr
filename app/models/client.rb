@@ -36,6 +36,7 @@ class Client < ActiveRecord::Base
 #  validates_format_of :identifier, :with => /^[a-z0-9\-]*$/
   validates_format_of :postalcode, with: /\A[0-9]{5}\z/, if: Proc.new {|i| i.country == 'es'}, allow_blank: true
   validates :country, length: { is: 2 }
+  validates :taxcode, length: { maximum: 20 }
 
   before_validation :set_hashid_value
   before_validation :copy_linked_profile
