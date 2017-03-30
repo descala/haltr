@@ -1,12 +1,7 @@
 <!--formulari-->
-<div class="seccio grup">
-  <div class="col span-2-de-2">
-    <%= form_for @mandate, url: {action: 'update', id: @mandate}, html: {multipart: true} do |f| %>
-      <%= render partial: 'form', locals: { f: f } %>
-      <%= submit_tag l(:button_save) %>
-    <% end %>
-  </div>
-</div>
+<%= form_for @mandate, url: {action: 'update', id: @mandate}, html: {multipart: true} do |f| %>
+  <%= render partial: 'form', locals: { f: f } %>
+<% end %>
 <!--final formulari-->
 
 <% content_for :sidebar do %>

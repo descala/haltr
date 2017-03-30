@@ -1,19 +1,7 @@
 <!--formulari-->
-<div class="seccio grup">
-  <div class="col span-2-de-2">
-
-    <%= labelled_form_for :mandate, @mandate, :url => { :action => 'create', :project_id => @project }, :html => {:class=>'formee',:multipart=>true} do |f| %>
-      <%= render :partial => 'form', :locals => { :f => f } %>
-      <% if @invoice -%>
-        <%= render :partial => 'paid_notification' %>
-        <%= submit_tag I18n.t(:save_without_mail) %>
-      <% else -%>
-        <%= submit_tag l(:button_create) %>
-      <% end -%>
-    <% end %>
-
-  </div>
-</div>
+<%= form_for @mandate, url: {action: 'create', project_id: @project}, html: {multipart: true} do |f| %>
+  <%= render partial: 'form', locals: { f: f } %>
+<% end %>
 <!--final formulari-->
 
 <% content_for :sidebar do %>
