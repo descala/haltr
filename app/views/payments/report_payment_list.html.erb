@@ -1,7 +1,7 @@
 <% if @invoices_by_payment_method -%>
   <div class="invoices_report">
     <h2><%= l(:label_payment_report) %></h2>
-    <h3><%=l(:with_date) %> <%= format_date @from %> - <%= format_date @to %> (<%=l(:field_due_date)%>)</h3>
+    <p><%=l(:with_date) %> <%= format_date @from %> - <%= format_date @to %> (<%=l(:field_due_date)%>)</p>
   </div>
 
 

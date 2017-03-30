@@ -1,59 +1,99 @@
 <%= error_messages_for 'mandate' %>
 
-<fieldset>
-  <legend><%=l(@mandate.new_record? ? :label_mandate_new : :label_mandate)%></legend>
+<h2><%=l(@mandate.new_record? ? :label_mandate_new : :label_mandate)%></h2>
 
-  <div class="seccio grup">
-    <div class="col span-1-de-2">
-      <%= f.select :client_id, @project.clients.collect {|c| [c.name, c.id] } -%>
-    </div>
-    <div class="col span-1-de-2" style="padding-top:20px;">
-      <label><%= f.radio_button :sepa_type, :b2b  %> B2B</label>
-      <label><%= f.radio_button :sepa_type, :core %> CORE</label>
-    </div>
-  </div>
-
-  <div class="seccio grup">
-    <div class="col span-1-de-2" style="height:84px; padding-top:20px;">
-      <label><%= f.radio_button :recurrent, true  %><%=l(:mandate_recurrent)%></label>
-      <label><%= f.radio_button :recurrent, false %><%=l(:mandate_non_recurrent)%></label>
-    </div>
-    <div class="col span-1-de-2">
-      <div id="div_mandate_end_date" style="<%="display:none;" unless @mandate.recurrent %>">
-        <%= f.date_field :end_date, :size => 10 %><%= calendar_for('mandate_end_date') %>
+<div class="form-horizontal tab-pane">
+  <div class="row">
+    <div class="form-group">
+      <%= f.label :client_id, class: 'col-xs-3 control-label' do %>
+        <%= l :field_client %>:
+      <% end -%>
+      <div class="col-xs-3">
+        <%= f.select :client_id, @project.clients.collect {|c| [c.name, c.id] }, {}, class: 'form-control' -%>
       </div>
     </div>
-  </div>
 
-  <hr />
-  <br />
-
-  <div class="seccio grup">
-    <div class="col span-1-de-2">
-      <% if @mandate.signed_doc and @mandate.id -%>
-        <label><%= l(:current_signed_doc) %></label>
-        <p>
-        <%= link_to @mandate.signed_doc_filename, project_mandate_signed_doc_path(@mandate,:project_id=>@project) %>
-        <%= label_tag(:mandate_delete_signed_doc, :style=>"font-size: 12px;") do %>
-          <%= f.check_box :delete_signed_doc, :no_label => true %>
-          <%= l(:field_delete_signed_doc) %>
-        <% end %>
-        </p>
+    <div class="form-group">
+      <%= f.label :sepa_type, class: 'col-xs-3 control-label' do %>
+        <%= l :field_sepa_type %>:
       <% end -%>
+      <div class="col-xs-3">
+        <label class="radio"><%= f.radio_button :sepa_type, :b2b  %> B2B</label>
+        <label class="radio"><%= f.radio_button :sepa_type, :core %> CORE</label>
+      </div>
     </div>
-    <div class="col span-1-de-2">
-      <%= f.file_field :signed_doc -%>
-    </div>
-  </div>
 
-  <div class="seccio grup">
-    <div class="col span-1-de-2">
+    <div class="form-group">
+      <%= f.label :recurrent, class: 'col-xs-3 control-label' do %>
+        <%= l :field_type %>:
+      <% end -%>
+      <div class="col-xs-6">
+        <label class="radio"><%= f.radio_button :recurrent, true  %><%=l(:mandate_recurrent)%></label>
+        <label class="radio"><%= f.radio_button :recurrent, false %><%=l(:mandate_non_recurrent)%></label>
+      </div>
     </div>
-    <div class="col span-1-de-2">
-      <%= f.date_field :signature_date, :size => 10 %><%= calendar_for('mandate_signature_date') %>
-    </div>
-  </div>
 
-</fieldset>
+    <div id="div_mandate_end_date" style="<%="display:none;" unless @mandate.recurrent %>">
+      <div class="form-group">
+        <%= f.label :end_date, class: 'col-xs-3 control-label' do %>
+          <%= l :field_end_date %>:
+        <% end -%>
+        <div class="col-xs-2">
+          <div class="relative">
+            <%= f.date_field :end_date, class: 'form-control' %><%= calendar_for('mandate_end_date') %>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <% if @mandate.signed_doc and @mandate.id -%>
+      <div class="form-group">
+        <label class="col-xs-3 control-label">
+          <%= l(:current_signed_doc) %>:
+        </label>
+        <div class="col-xs-9">
+          <%= link_to @mandate.signed_doc_filename, project_mandate_signed_doc_path(@mandate,project_id: @project) %>
+          <div class="checkbox">
+            <%= f.label :delete_signed_doc do %>
+              <%= f.check_box :delete_signed_doc %>
+              <%= l(:field_delete_signed_doc) %>
+            <% end -%>
+          </div>
+        </div>
+      </div>
+    <% end -%>
+
+    <div class="form-group">
+      <%= f.label :signed_doc, class: 'col-xs-3 control-label' do %>
+        <%= l :field_signed_doc %>:
+      <% end -%>
+      <div class="col-xs-4">
+        <%= f.file_field :signed_doc, class: 'filestyle', data: {input: 'true', iconName: 'fa fa-folder', badge: 'false'} -%>
+      </div>
+    </div>
+
+    <div class="form-group">
+      <%= f.label :signature_date, class: 'col-xs-3 control-label' do %>
+        <%= l :field_signature_date %>:
+      <% end -%>
+      <div class="col-xs-2">
+        <div class="relative">
+          <%= f.date_field :signature_date, class: 'form-control' %><%= calendar_for('mandate_signature_date') %>
+        </div>
+      </div>
+    </div>
+
+    <div class="form-group">
+      <div class="col-xs-7 text-right">
+        <% if @mandate.new_record? -%>
+          <%= submit_tag l(:button_create), class: 'btn btn-primary' %>
+        <% else -%>
+          <%= submit_tag l(:button_save), class: 'btn btn-primary' %>
+        <% end -%>
+      </div>
+    </div>
+
+  </div>
+</div>
 
 <%= javascript_include_tag 'mandates', :plugin => 'haltr' %>
