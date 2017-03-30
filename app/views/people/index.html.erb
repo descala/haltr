@@ -55,21 +55,8 @@
   </table>
   <!--final taula-->
 
-  <!--paginacio-->
-  <div class="wrapper-pagination-results">
-    <div class="row">
-      <div class="col-xs-4 col-xs-offset-5">
-        <%= pagination_links_full @person_pages, @person_count, per_page_links: false %>
-      </div>
-      <div class="col-xs-3 text-right">
-        <form class="form-inline">
-          <label for="sel-results"><%= l :button_show %></label>
-          <%= select_tag('sel-results', options_for_select(Setting.per_page_options_array, selected: params[:per_page]), class: 'form-control') %>
-        </form>
-      </div>
-    </div>
-  </div>
-  <!--final paginacio-->
+  <%= render partial: 'common/pagination', locals: {pages: @person_pages, count: @person_count} %>
+
 </div>
 
 

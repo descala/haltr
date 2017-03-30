@@ -1,6 +1,4 @@
 <!--menu rapid-->
-<div class="seccio grup">
-  <div class="col span-2-de-2">
     <ul class="menu-rapid">
       <li><%= link_to l(:label_import), project_orders_import_path(project_id: @project) -%></li>
       <% if @order.xml? -%>
@@ -20,8 +18,6 @@
         <li class="invoice-navigator"><%=h link_to_if_authorized l(:label_previous), :action => 'show', :id => @order.previous %></li>
       <% end %>
     </ul>
-  </div>
-</div>
 <!--final menu rapid-->
 
 <div id="invoice_wrapper">
