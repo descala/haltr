@@ -518,3 +518,6 @@ div#row-title {
 .table.table-bank-info {
   border-collapse: separate;
 }
+tr.no-padding td {
+  padding: 0 !important;
+}
