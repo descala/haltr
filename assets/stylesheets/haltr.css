@@ -78,7 +78,7 @@ th.money, td.money, .money{
   margin-top: -26px;
 }
 .invoice-navigator {
-  float: right !important;
+  margin-right: 5px !important;
 }
 
 .invoice-channel-links h3, .invoice-events h3 {
