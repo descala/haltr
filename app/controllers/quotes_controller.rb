@@ -15,7 +15,15 @@ class QuotesController < ApplicationController
   def index
     sort_init 'invoices.created_at', 'desc'
     sort_update %w(invoices.created_at state number date due_date clients.name import_in_cents)
-    invoices = @project.quotes
+    invoices = @project.quotes.includes('client').references('client')
+
+    if params[:name].present?
+      name = "%#{params[:name].strip.downcase}%"
+      fields = %w(clients.name DATE_FORMAT(invoices.date,'%d-%m-%Y') invoices.number)
+      conditions = fields.collect {|f| "LOWER(#{f}) LIKE ?" }.join(' OR ')
+      invoices = invoices.where([conditions, *fields.collect {name}])
+    end
+
     @invoice_count = invoices.count
     @invoice_pages = Paginator.new @invoice_count,
 		per_page_option,

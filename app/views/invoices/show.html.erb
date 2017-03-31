@@ -18,10 +18,10 @@
       <li><%= link_to_if_authorized l(:button_delete), { action: 'destroy', id: @invoice}, data: {confirm: l(:text_are_you_sure)}, method: :delete, class: 'icon icon-del' %></li>
       <%= render partial: "#{@invoice.class.to_s.underscore}_menu" %>
       <% if @invoice.next%>
-        <li class="invoice-navigator"><%=h link_to_if_authorized l(:label_next), action: 'show', id: @invoice.next %></li>
+        <li class="invoice-navigator"><%=h link_to_if_authorized l(:label_next), {action: 'show', id: @invoice.next}, class: 'btn btn-default' %></li>
       <% end %>
       <% if @invoice.previous %>
-        <li class="invoice-navigator"><%=h link_to_if_authorized l(:label_previous), action: 'show', id: @invoice.previous %></li>
+        <li class="invoice-navigator"><%=h link_to_if_authorized l(:label_previous), {action: 'show', id: @invoice.previous}, class: 'btn btn-default' %></li>
       <% end %>
     </ul>
   </div>
