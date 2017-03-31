@@ -6,11 +6,11 @@
 <div class="col-xs-6 text-right">
   <ul class="list-inline fast-menu">
     <li>
-      <%= link_to_if_authorized l(:label_company_new), new_project_client_path, class: 'icon-fa icon-fa-fw icon-fa-file' %>
+      <%= link_to_if_authorized l(:label_company_new), new_project_client_path, class: 'icon-fa icon-fa-fw icon-fa-file btn btn-default' %>
     </li>
     <% if User.current.allowed_to?(:export_clients, @project) -%>
       <li>
-        <%= link_to 'CSV', project_clients_path(@project, format: 'csv'), class: 'icon-fa icon-fa-fw' -%>
+        <%= link_to 'CSV', project_clients_path(@project, format: 'csv'), class: 'icon-fa icon-fa-fw icon-fa-download btn btn-default' -%>
       </li>
     <% end -%>
   </ul>

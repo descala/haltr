@@ -13,8 +13,6 @@ match '/clients/allow_link/:id' => 'clients#allow_link', :via => :get
 match '/clients/deny_link/:id' => 'clients#deny_link', :via => :get
 resources :projects do
   resources :clients, :only => [:index, :new, :create]
-  match :people, :controller => 'people', :action => 'index', :via => :get
-  resources :client_offices, :only => [:index, :new, :create, :edit, :update, :destroy]
   resources :company_offices, :only => [:index, :new, :create, :edit, :update, :destroy]
   match 'my_company',    :controller => 'companies', :action => 'my_company',    :via => :get
   match 'bank_info',     :controller => 'companies', :action => 'bank_info',     :via => :get
@@ -75,11 +73,10 @@ resources :invoice_imgs, :only => [:create,:update]
 match 'invoice_imgs/:id/tag/:tag' => 'invoice_imgs#tag', :as => 'invoice_imgs_tag', :via => :get
 
 resources :clients do
-  resources :people, :only => [:index, :new, :create]
+  resources :people
   resources :client_offices, :only => [:index, :new, :create, :edit, :update, :destroy]
 end
 
-resources :people
 match 'invoices/context_menu', :to => 'invoices#context_menu', :as => 'invoices_context_menu', :via => [:get, :post]
 match 'received/context_menu', :to => 'received#context_menu', :as => 'received_context_menu', :via => [:get, :post]
 match 'import_errors/context_menu', :to => 'import_errors#context_menu', :as => 'import_errors_context_menu', :via => [:get, :post]

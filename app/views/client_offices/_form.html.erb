@@ -1,64 +1,116 @@
 <%= error_messages_for 'client_office' %>
 
-<fieldset class="tabular box">
-  <legend><%=l(@client_office.new_record? ? :label_client_office_new : :label_client_office)%></legend>
+<h2><%=l(@client_office.new_record? ? :label_client_office_new : :label_client_office)%></h2>
 
-  <div class="seccio grup">
-    <p class="col span-1-de-2">
-    <label for="client">
-      <%= l(:label_company) %>
-    </label>
-    <%= text_field_tag('client', @client.name, disabled: true) %>
-    </p>
+<div class="form-horizontal tab-pane">
+  <div class="row">
 
-    <%= call_hook(:client_office_form, {f: f}) %>
+    <div class="form-group">
+      <%= label_tag :client, class: 'col-xs-3 control-label' do %>
+        <%= l :label_company %>:
+      <% end -%>
+      <div class="col-xs-3">
+        <%= text_field_tag('client', @client.name, disabled: true, class: 'form-control') %>
+      </div>
+      <%= call_hook(:client_office_form, {f: f}) %>
+    </div>
+
+    <div class="form-group">
+      <%= f.label :name, class: 'col-xs-3 control-label' do %>
+        <%= l :field_name %>:
+      <% end -%>
+      <div class="col-xs-3">
+        <%= f.text_field :name, required: true, class: 'form-control' %>
+      </div>
+    </div>
+
+    <div class="form-group">
+      <%= f.label :email, class: 'col-xs-3 control-label' do %>
+        <%= l :field_email %>:
+      <% end -%>
+      <div class="col-xs-4">
+        <%= f.text_field :email, class: 'form-control' %>
+      </div>
+    </div>
+
+    <div class="form-group">
+      <%= f.label :address, class: 'col-xs-3 control-label' do %>
+        <%= l :field_address %>:
+      <% end -%>
+      <div class="col-xs-4">
+        <%= f.text_field :address, class: 'form-control' %>
+      </div>
+    </div>
+
+    <div class="form-group">
+      <div class="col-xs-4 col-xs-offset-3">
+        <%= f.text_field :address2, class: 'form-control' %>
+      </div>
+    </div>
+
+    <div class="form-group">
+      <%= f.label :postalcode, class: 'col-xs-3 control-label' do %>
+        <%= l :field_postalcode %>:
+      <% end -%>
+      <div class="col-xs-2">
+        <%= f.text_field :postalcode, class: 'form-control' %>
+      </div>
+    </div>
+
+    <div class="form-group">
+      <%= f.label :city, class: 'col-xs-3 control-label' do %>
+        <%= l :field_city %>:
+      <% end -%>
+      <div class="col-xs-3">
+        <%= f.text_field :city, class: 'form-control' %>
+      </div>
+    </div>
+
+    <div class="form-group">
+      <%= f.label :province, class: 'col-xs-3 control-label' do %>
+        <%= l :field_province %>:
+      <% end -%>
+      <div class="col-xs-3">
+        <%= f.text_field :province, class: 'form-control' %>
+      </div>
+    </div>
+
+    <div class="form-group">
+      <%= f.label :country, class: 'col-xs-3 control-label' do %>
+        <%= l :field_country %>:
+      <% end -%>
+      <div class="col-xs-3">
+        <%= f.country_select :country, {priority_countries: [@project.company.country]}, class: 'form-control' %>
+      </div>
+    </div>
+
+    <div class="form-group">
+      <%= f.label :edi_code, class: 'col-xs-3 control-label' do %>
+        <%= l :field_edi_code %>:
+      <% end -%>
+      <div class="col-xs-4">
+        <%= f.text_field :edi_code, class: 'form-control' %>
+      </div>
+    </div>
+
+    <div class="form-group">
+      <%= f.label :destination_edi_code, class: 'col-xs-3 control-label' do %>
+        <%= l :field_destination_edi_code %>:
+      <% end -%>
+      <div class="col-xs-4">
+        <%= f.text_field :destination_edi_code, class: 'form-control' %>
+      </div>
+    </div>
+
+    <div class="from-group">
+      <div class="col-xs-7 text-right">
+        <% if @client_office.new_record? -%>
+          <%= submit_tag l(:button_create), class: 'btn btn-primary' %>
+        <% else -%>
+          <%= submit_tag l(:button_save), class: 'btn btn-primary' %>
+        <% end -%>
+      </div>
+    </div>
+
   </div>
-
-  <div class="seccio grup">
-    <p class="col span-1-de-2">
-      <%= f.text_field :name, :required => true %>
-    </p>
-    <p class="col span-1-de-2">
-      <%= f.text_field :email%>
-    </p>
-  </div>
-
-  <div class="seccio grup">
-    <p class="col span-2-de-2">
-      <%= f.text_field :address %>
-    </p>
-  </div>
-
-  <div class="seccio grup">
-    <p class="col span-2-de-2">
-      <%= f.text_field :address2 %>
-    </p>
-  </div>
-
-  <div class="seccio grup">
-    <p class="col span-1-de-4">
-    <%= f.text_field :postalcode %>
-    </p>
-    <p class="col span-1-de-4">
-    <%= f.text_field :city %>
-    </p>
-    <p class="col span-1-de-4">
-    <%= f.text_field :province %>
-    </p>
-    <p class="col span-1-de-4">
-      <%= f.label_for_field :country %>
-      <%= f.country_select :country, priority_countries: [@project.company.country] %>
-    </p>
-  </div>
-
-  <div class="seccio grup">
-    <p class="col span-1-de-4">
-    <%= f.text_field :edi_code%>
-    </p>
-    <p class="col span-1-de-4">
-    <%= f.text_field :destination_edi_code%>
-    </p>
-  </div>
-
-
-</fieldset>
+</div>

@@ -1,12 +1,7 @@
 <!--formulari-->
-<div class="seccio grup">
-  <div class="col span-2-de-2">
-    <%= labelled_form_for :client_office, [@client, @client_office], :html => {:class=>'formee'} do |f| %>
-      <%= render :partial => 'form', :locals => { :f => f } %>
-      <%= submit_tag l(:button_create) %>
-    <% end %>
-  </div>
-</div>
+<%= form_for [@client, @client_office] do |f| %>
+  <%= render partial: 'form', locals: { f: f } %>
+<% end %>
 <!--final formulari-->
 
 <% content_for :sidebar do %>
