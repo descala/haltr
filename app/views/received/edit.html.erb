@@ -1,0 +1,42 @@
+<% if @invoice.invoice_img or (@invoice.original and @invoice.invoice_format == 'pdf') -%>
+
+<div id="invoice_img_edit_metadata">
+
+  <div class="colu1" style="width: 50%">
+    <iframe src="/pdfjs/web/viewer.html?file=<%=invoices_original_path(@invoice, format: 'pdf')%>" style="border: 0" width="100%" height="800" frameborder="0" scrolling="no"></iframe>
+  </div>
+
+  <div class="colu2" style="width: 48%">
+
+<% end -%>
+
+<!--formulari-->
+<div class="seccio grup">
+  <div class="col span-2-de-2">
+
+    <% if %w(sending sent registered accepted allegedly_paid closed).include?(@invoice.state) -%>
+      <div class="flash warning"><%=raw l(:warn_edit_invoice)%></div>
+    <% end -%>
+
+    <%= labelled_form_for :invoice, @invoice, :url => { :action => 'update', :id => @invoice }, :html => {:method => :put, :class => 'formee'}  do |f| %>
+      <%= render :partial => 'received/form', :locals => { :f => f } %>
+      <%= f.submit l(:button_save), :name => 'save' %>
+    <% end %>
+
+  </div>
+</div>
+<!--final formulari-->
+
+<% if @invoice.invoice_img or (@invoice.original and @invoice.invoice_format == 'pdf') -%>
+  </div>
+
+</div>
+<% end -%>
+
+<div id="new_client_wrapper" style="display:none;">
+  <%= render :partial => 'invoices/new_client', :locals => {:context => "edit_invoice"} %>
+</div>
+
+<% content_for :sidebar do %>
+  <%= render_menu :invoices_menu, @project %>
+<% end %>

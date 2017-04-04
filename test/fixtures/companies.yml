@@ -9,6 +9,9 @@ company1:
   country: es
   city: Barcelona
   public: private
+  auto_process_pdf: true
+  email_customization: true
+  invoice_mail_customization: "---\nsubject:\n  en: Invoice number @invoice.number\n"
 
 company2:
   # eCookbook 

@@ -24,11 +24,11 @@ class IssuedInvoiceTest < ActiveSupport::TestCase
     assert_equal 'new', i.state
     old_updated_at = i.updated_at
     assert_nil i.state_updated_at
-    i.update_attribute(:state, 'sent')
+    i.success_sending!
     assert_not_nil i.state_updated_at, 'state modificication sets state_updated_at'
     old_state_updated_at = i.state_updated_at
     i.update_attribute(:state, 'closed')
-    assert old_state_updated_at <  i.state_updated_at, 'state_updated_at updated whit state change'
+    assert old_state_updated_at <  i.state_updated_at, 'state_updated_at updated with state change'
     assert_equal old_updated_at, i.updated_at, 'updated_at does not change'
   end
 

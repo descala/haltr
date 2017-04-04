@@ -8,7 +8,6 @@
     [ :client,   l(:field_city),     :city],
     [ :client,   l(:field_email),    :email],
     [ :people,   l(:label_people),   nil],
-    [ :template, l(:label_invoice_template), nil]
   ]
 
   CSV.generate(
@@ -18,15 +17,6 @@
     @clients.each do |client|
       csv << cols.collect {|o,l,m|
         case o.to_s
-        when 'template'
-          # List templates of active clients only
-          if client.invoice_templates.where(['date < ? and date > ?', Date.today + 5.year, Date.today - 2.year]).any?
-            client.template_invoice_lines.collect do |line|
-              line.description
-            end.join("\n")
-          else
-            nil
-          end
         when 'people'
           client.recipient_emails.join("; ")
         when 'client'

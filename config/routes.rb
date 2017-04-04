@@ -107,6 +107,8 @@ match 'invoices/haltr_sign' => 'invoices#haltr_sign', :via => :get
 match 'invoices/original/:id' => 'invoices#original', :via => :get, :as => :invoices_original
 match 'received/original/:id' => 'received#original', :via => :get, :as => :received_original
 match 'invoices/number_to_id/:number' => 'invoices#number_to_id', :via => :get, :as => :invoices_number_to_id, :constraints => { :number => /.+/ }
+post 'invoices/process_pdf/:id' => 'invoices#process_pdf', as: :process_pdf
+post 'invoices/bulk_process_pdf' => 'invoices#bulk_process_pdf', as: :bulk_process_pdf
 resources :invoices
 resources :quotes, :only => [:show, :edit, :update, :destroy]
 match 'quotes/send/:id' => 'quotes#send_quote', :via => :get, :as => :send_quote
@@ -122,9 +124,7 @@ get 'invoices/logo/:attachment_id/:filename' => 'invoices#logo', :attachment_id 
 resources :invoices, :has_many => :events
 resources :received_invoices, :controller => :received
 match 'received/mark_refused/:id' => 'received#mark_refused', :as => :mark_refused, :via => [:get, :post]
-match 'received/mark_refused_with_mail/:id' => 'received#mark_refused_with_mail', :as => :mark_refused_with_mail, :via => [:get, :post]
 match 'received/mark_accepted/:id' => 'received#mark_accepted', :as => :mark_accepted, :via => [:get, :post]
-match 'received/mark_accepted_with_mail/:id' => 'received#mark_accepted_with_mail', :as => :mark_accepted_with_mail, :via => [:get, :post]
 match 'received/validate/:id' => 'received#validate', :via => :get, :as => :received_validate
 
 resources :invoice_templates

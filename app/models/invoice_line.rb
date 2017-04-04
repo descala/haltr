@@ -33,6 +33,11 @@ class InvoiceLine < ActiveRecord::Base
   validates_numericality_of :quantity, :price
   validates_numericality_of :charge, :discount_percent, :position, :allow_nil => true
   validates_numericality_of :sequence_number, :allow_nil => true, :allow_blank => true
+  validates :description, length: { maximum: 2500 }
+  validates :article_code, :discount_text, :charge_reason,
+    :issuer_transaction_reference, :sequence_number, :delivery_note_number,
+    :ponumber, :receiver_contract_reference, :file_reference,
+    length: { maximum: 255 }
 
   accepts_nested_attributes_for :taxes,
     :allow_destroy => true
@@ -171,6 +176,32 @@ _LINE
 
   def <=>(line)
     position <=> line.position
+  end
+
+  # for received invoices simplified form
+  def tax_percent
+    iva = taxes.select {|t| t.name == 'IVA'}.first
+    iva.percent if iva
+  end
+  def tax_import
+    iva = taxes.select {|t| t.name == 'IVA'}.first
+    iva.import if iva
+  end
+  def tax_category
+    iva = taxes.select {|t| t.name == 'IVA'}.first
+    iva.category if iva
+  end
+  def tax_wh_percent
+    irpf = taxes.select {|t| t.name == 'IRPF'}.first
+    irpf.percent if irpf
+  end
+  def tax_wh_import
+    irpf = taxes.select {|t| t.name == 'IRPF'}.first
+    irpf.import if irpf
+  end
+  def tax_wh_category
+    irpf = taxes.select {|t| t.name == 'IRPF'}.first
+    irpf.category if irpf
   end
 
   private

@@ -1,7 +1,5 @@
 class Person < ActiveRecord::Base
 
-
-
   belongs_to :client
 
   validates_presence_of :client, :first_name, :last_name
@@ -10,6 +8,8 @@ class Person < ActiveRecord::Base
     :with => /\A[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]+(,[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]+)*\z/,
     :allow_nil => true,
     :allow_blank => true
+  validates :first_name, :last_name, :email, :phone_office, :phone_mobile,
+    :info, length: { maximum: 255 }
 
   attr_protected :created_at, :updated_at
 

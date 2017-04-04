@@ -1,4 +1,4 @@
-<% unless @invoice.client.nil? %>
+<% unless !(@invoice.original and @invoice.invoice_format == 'pdf') and @invoice.client.nil? %>
 <li><%= send_link_for_invoice %></li>
 <% end -%>
 

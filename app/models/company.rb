@@ -26,7 +26,7 @@ class Company < ActiveRecord::Base
   validate :only_one_default_tax_per_name
   acts_as_attachable :view_permission => :general_use,
                      :delete_permission => :general_use
-  after_save :update_linked_clients
+  after_save :update_linked_clients, :after_save_hook
   include CountryUtils
   include Haltr::TaxcodeValidator
 
@@ -41,10 +41,14 @@ class Company < ActiveRecord::Base
   validates_associated :bank_infos
 
   validate :uniqueness_of_taxes
+  validates :country, length: { is: 2 }
+  validates :taxcode, length: { maximum: 20 }, allow_blank: true
 
   after_initialize :set_default_values
   serialize :invoice_mail_customization
   serialize :quote_mail_customization
+
+  attr_protected :created_at, :updated_at
 
   def set_default_values
     #TODO: Add default country taxes
@@ -168,7 +172,10 @@ class Company < ActiveRecord::Base
 
   ################## methods for mail customization ##################
   def invoice_mail_subject(lang,invoice=nil)
-    subj = invoice_mail_customization["subject"][lang] rescue nil
+    subj = nil
+    #if email_customization?
+      subj = invoice_mail_customization["subject"][lang] rescue nil
+    #end
     if subj.blank?
       subj = I18n.t(:invoice_mail_subject,:locale=>lang)
       unless Redmine::Hook.call_hook(:replace_invoice_mail_subject).join.blank?
@@ -299,6 +306,10 @@ class Company < ActiveRecord::Base
       end
       client.save
     end
+  end
+
+  def after_save_hook
+    Redmine::Hook.call_hook(:company_after_save, company: self)
   end
 
   # translations for accepts_nested_attributes_for

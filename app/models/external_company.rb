@@ -18,6 +18,7 @@ class ExternalCompany < ActiveRecord::Base
     :with => /\A[A-Z0-9, ]*\z/i,
     :allow_nil => true,
     :allow_blank => true
+  validates :country, length: { is: 2 }
 
   after_save :update_linked_clients
   include CountryUtils

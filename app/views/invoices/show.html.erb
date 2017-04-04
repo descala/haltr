@@ -38,7 +38,41 @@
 <% end -%>
 
 <% if @invoice_pdf -%>
-  <iframe src="/pdfjs/web/viewer.html?file=<%=@invoice_pdf%>" style="border: 0" width="100%" height="800" frameborder="0" scrolling="no"></iframe>
+  <div id="invoice_img">
+    <div class="colu1">
+      <iframe src="/pdfjs/web/viewer.html?file=<%=@invoice_pdf%>" style="border: 0" width="720px" height="890" frameborder="0" scrolling="no"></iframe>
+    </div>
+    <div class="colu2">
+      <% if @invoice.state == 'processing_pdf' -%>
+        <p><%= I18n.t @invoice.state %></p>
+      <% elsif @invoice.invoice_img -%>
+        <%= render partial: 'invoice_imgs/metadata', locals: {invoice_img: @invoice.invoice_img } %>
+      <% else -%>
+        <div style="margin: 20px 0 20px 0;">
+        <%= link_to button_tag(I18n.t(:process_pdf), class: ''), process_pdf_path(@invoice), method: :post %>
+        </div>
+
+        <%= labelled_form_for :invoice, @invoice, url: invoice_path(@invoice), html: {class: 'formee'} do |f| %>
+          <fieldset class="tabular box">
+          <div class="seccio grup">
+            <p class="col pdf" id="client_select">
+            <% if @invoice.is_a? ReceivedInvoice -%>
+              <%= render partial: 'received/clients', locals: {selected: @created_client || @invoice.client_id} %>
+            <% else -%>
+              <%= render partial: 'invoices/clients', locals: {selected: @created_client || @invoice.client_id} %>
+            <% end -%>
+            </p>
+          </div>
+          <%= f.submit l(:button_update), :name => 'create' %>
+          </fieldset>
+        <% end -%>
+        <div id="new_client_wrapper" style="display:none;">
+          <%= render :partial => 'invoices/new_client', :locals => {:context => "edit_invoice"} %>
+        </div>
+
+      <% end -%>
+    </div>
+  </div>
 <% else -%>
 
   <% if @invoice.invoice_img -%>
@@ -65,8 +99,14 @@
 
   <% end -%>
 
+<% end -%>
+
   <% if @invoice.send_original? and @invoice.is_a? IssuedInvoice %>
-    <p>* <%= @invoice.invoice_format.upcase rescue "" %> <%= l(:label_will_send_original) -%></p>
+    <% if @invoice.original and @invoice.invoice_format == 'pdf' -%>
+      <p>* <%= @invoice.invoice_format.upcase rescue "" %> <%= l(:label_will_send_original_pdf) -%></p>
+    <% else -%>
+      <p>* <%= @invoice.invoice_format.upcase rescue "" %> <%= l(:label_will_send_original) -%></p>
+    <% end -%>
   <% end -%>
 
   <div class="seccio grup">
@@ -91,8 +131,6 @@
       </div>
     </div>
   </div>
-
-<% end -%>
 
 <%= render :partial => 'events/list', locals: {events: @invoice.visible_events} %>
 <%= render :partial => 'invoices/issued_invoice_list_other' if @invoice.is_a? IssuedInvoice %>

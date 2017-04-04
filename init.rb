@@ -77,8 +77,8 @@ Redmine::Plugin.register :haltr do
                        :send_new_invoices, :duplicate_invoice, :reports, :report_channel_state, :report_invoice_list, :report_received_table, :context_menu, :bulk_mark_as, :original,
                        :mark_as, :number_to_id],
         :received  => [:index, :new, :edit, :create, :update, :destroy, :show,
-                       :mark_accepted, :mark_accepted_with_mail, :mark_refused,
-                       :mark_refused_with_mail, :legal, :context_menu, :original, :validate, :bulk_mark_as],
+                       :mark_accepted, :mark_refused, :legal, :context_menu,
+                       :original, :validate, :bulk_mark_as],
         :companies => [:my_company,:bank_info,:update,:linked_to_mine,:check_iban],
         :charts    => [:invoice_total, :invoice_status, :top_clients, :cash_flow],
         :events    => [:file, :index] },
@@ -133,7 +133,7 @@ Redmine::Plugin.register :haltr do
         :mandates => [:index,:new,:show,:create,:edit,:update,:destroy,:signed_doc] }, :require => :member
 
     permission :import_invoices,
-      { :invoices => [:upload,:import,:import_facturae],
+      { :invoices => [:upload,:import,:import_facturae,:process_pdf, :bulk_process_pdf],
         :received => [:upload,:import],
         :invoice_imgs => [:context_menu,:tag],
         :import_errors => [:index, :create, :show, :destroy, :context_menu] },
@@ -154,6 +154,7 @@ Redmine::Plugin.register :haltr do
     permission :view_sequence_number, {}
 
     permission :export_invoices, {:invoices => [:index]}
+    permission :export_clients,  {:clients  => [:index]}
 
     permission :use_invoice_attachments, { :attachments => :upload}
 

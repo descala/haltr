@@ -5,8 +5,6 @@
       <%=  call_hook(:invoices_index_menu_top) %>
           <% if controller.controller_name == "invoices" %>
             <li><%= link_to_if_authorized(l("label_invoice_new"), new_project_invoice_path(@project), :class => 'icon icon-add') %></li>
-          <% else %>
-            <li><%= link_to_if_authorized(l("label_invoice_new"), new_project_received_path(@project), :class => 'icon icon-add') %></li>
           <% end %>
       <% if num_can_be_sent > 0 -%>
         <li>
@@ -18,11 +16,6 @@
         <%= link_to_if_authorized "#{l(:button_download_new_invoices)} (#{num_not_sent})",{:action => 'download_new_invoices'}, :title => l(:label_download_new_invoices_info) %>
         </li>
       <% end -%>
-      <% if User.current.allowed_to?(:export_invoices, @project) -%>
-        <li>
-        <%= link_to 'CSV', project_invoices_path(@project, format: 'csv') -%>
-        </li>
-      <% end -%>
       <% if User.current.allowed_to?(:import_invoices, @project) -%>
         <li>
           <% if controller.controller_name == "invoices" %>
@@ -30,6 +23,11 @@
           <% else %>
             <%= link_to l(:label_import), project_received_upload_path(@project) -%>
           <% end %>
+        </li>
+      <% end -%>
+      <% if User.current.allowed_to?(:export_invoices, @project) -%>
+        <li>
+        <%= link_to 'CSV', project_invoices_path(@project, format: 'csv') -%>
         </li>
       <% end -%>
       <%=  call_hook(:invoices_index_menu_bottom) %>
@@ -71,11 +69,11 @@
             <div class="seccio grup">
               <div class="col span-1-de-3">
                 <label for="date_from"><%=l(:field_date)%></label>
-                <%= text_field_tag :date_from, (params[:date_from].nil? ? Date.new(Date.today.year) : params[:date_from]), :size => 10, :style => "width: 90%;" %><%= calendar_for('date_from') %>
+                <%= date_field_tag :date_from, (params[:date_from].nil? ? Date.new(Date.today.year) : params[:date_from]), :size => 10, :style => "width: 90%;" %><%= calendar_for('date_from') %>
               </div>
               <div class="col span-1-de-3">
                 <label for="date_to"><%=l(:label_to)%></label>
-                <%= text_field_tag :date_to, (params[:date_to].nil? ? Date.today : params[:date_to]), :size => 10, :style => "width: 90%;" %><%= calendar_for('date_to') %>
+                <%= date_field_tag :date_to, (params[:date_to].nil? ? Date.today : params[:date_to]), :size => 10, :style => "width: 90%;" %><%= calendar_for('date_to') %>
               </div>
               <div class="col span-1-de-3">
               </div>
@@ -84,11 +82,11 @@
             <div class="seccio grup">
               <div class="col span-1-de-3">
                 <label for="due_date_from"><%=l(:field_due_date)%></label>
-                <%= text_field_tag :due_date_from, params[:due_date_from], :size => 10, :style => "width: 90%;" %><%= calendar_for('due_date_from') %>
+                <%= date_field_tag :due_date_from, params[:due_date_from], :size => 10, :style => "width: 90%;" %><%= calendar_for('due_date_from') %>
               </div>
               <div class="col span-1-de-3">
                 <label for="due_date_to"><%=l(:label_to)%></label>
-                <%= text_field_tag :due_date_to, params[:due_date_to], :size => 10, :style => "width: 90%;" %><%= calendar_for('due_date_to') %>
+                <%= date_field_tag :due_date_to, params[:due_date_to], :size => 10, :style => "width: 90%;" %><%= calendar_for('due_date_to') %>
               </div>
               <div class="col span-1-de-3">
               </div>
@@ -101,7 +99,7 @@
               </div>
               <div class="col span-1-de-3">
                 <label for="state_updated_at_from"><%= l(:field_state_updated_at) %> <%= l(:label_greater_or_equal) %></label>
-                <%= text_field_tag :state_updated_at_from, params[:state_updated_at_from], :size => 10, :style => "width: 90%;" %><%= calendar_for('state_updated_at_from') %>
+                <%= date_field_tag :state_updated_at_from, params[:state_updated_at_from], :size => 10, :style => "width: 90%;" %><%= calendar_for('state_updated_at_from') %>
               </div>
               <div class="col span-1-de-3">
               </div>
@@ -197,7 +195,7 @@
         </tbody>
         <tfoot>
           <tr>
-            <td colspan="7">&nbsp;</td>
+            <td colspan="8">&nbsp;<%= call_hook(:invoices_index_list_footer, {pages: @invoice_pages}) %></td>
           </tr>
         </tfoot>
       </table>

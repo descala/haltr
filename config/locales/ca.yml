@@ -120,6 +120,7 @@ ca:
   transfer: Transferència bancària
   transfer_to: Transferència bancària a %{bank_account}
   cheque: Xec
+  cheque_b: Xec bancari
   reposition: Reposició
   other: Altres
   requires_client_bank_account: requereix compte bancari del client
@@ -229,7 +230,7 @@ ca:
   error_validating_signature: "Error en la validació de signatura"
   discard_validating_signature: "Error en la validació de signatura"
   sent_notification: "Notificació: Factura rebuda"
-  delivered_notification: "Notificació: Factura enviada"
+  delivered_notification: "Notificació: Factura entregada"
   registered_notification: "Notificació: Factura registrada"
   accept_notification: "Notificació: Factura acceptada"
   refuse_notification: "Notificació: Factura refusada"
@@ -651,6 +652,7 @@ ca:
   invoice_attachments_description: "Permet pujar fitxers relacionats amb la factura (màxim %{mb}MB). Aquests documents s'adjuntaran a la factura electrònica."
   invoice_attachments_permission: "No tens permisos per pujar fitxers"
   label_will_send_original: "Aquesta factura té original i no s'ha modificat. Així doncs s'enviarà el document original."
+  label_will_send_original_pdf: "Aquesta factura té original en format PDF. Així doncs s'enviarà el document original."
   import_errors: "Errors d'importació"
   text_import_errors_destroy_confirmation: "Segur que vols esborrar els errors d'importació seleccionats?"
   field_series_code: "Sèrie"
@@ -840,3 +842,7 @@ Si la deses, es marcara com a Nova."
   suport_link: "servei de suport"
   field_sign_with_local_certificate: "Signar amb certificat local"
   notice_invoice_processing_pdf: "Fitxer importat. Processant la factura PDF ..."
+  process_pdf: "Processar PDF"
+  processing_pdfs: "Processant %{count} factures"
+  auto_process_pdf: "Processar PDF automàticament"
+  field_supplier: "Proveïdor"

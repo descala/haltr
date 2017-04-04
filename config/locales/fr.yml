@@ -110,6 +110,7 @@ fr:
   transfer: Transfert bancaire
   transfer_to: Transfert bancaire au %{bank_account}
   cheque: Cheque
+  cheque_b: Bank Cheque
   reposition: Reposition
   other: Autres
   requires_client_bank_account: exige le compte bancaire du client
@@ -220,7 +221,7 @@ fr:
   error_validating_signature: "Erreur à la validation de la signature"
   discard_validating_signature: "Abandonne la validation de la signature"
   sent_notification: "Notification: Facture envoyée"
-  delivered_notification: "Notification: Facture reçue"
+  delivered_notification: "Notification: Invoice delivered"
   registered_notification: "Notification: Facture enregistrée"
   accept_notification: "Notification: Facture acceptée"
   refuse_notification: "Notification: Facture rejetée"
@@ -634,6 +635,7 @@ fr:
   invoice_attachments_description: "You can add attachments to the invoce (max %{mb}MB). These documents will be sent along with the invoice."
   invoice_attachments_permission: "Not allowed"
   label_will_send_original: "Since this electronic invoice has been imported and it has not been updated, the original imported invoice will be sent."
+  label_will_send_original_pdf: "Since this electronic invoice has been imported in PDF, the original imported invoice will be sent."
   import_errors: "Import errors"
   text_import_errors_destroy_confirmation: "Are you sure you want to delete the selected import error(s)?"
   field_series_code: "Serie"
@@ -821,3 +823,7 @@ If you save it, will be marked as New."
   suport_link: "support service"
   field_sign_with_local_certificate: "Sign with local certificate"
   notice_invoice_processing_pdf: "File uploaded. Processing PDF invoice ..."
+  process_pdf: "Process PDF"
+  processing_pdfs: "Processing %{count} invoices"
+  auto_process_pdf: "Process PDF automatically"
+  field_supplier: "Supplier"

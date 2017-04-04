@@ -23,11 +23,14 @@
 
 <fieldset class="tabular box">
   <legend><%= l(:label_invoice_viewer) %></legend>
-<div class="seccio grup">
-  <p class="col span-1-de-3">
-  <%= f.select :invoice_viewer, [[l(:label_invoice_viewer_standard),'standard'],[l(:view_original), 'original']] %>
-  </p>
-</div>
+  <div class="seccio grup">
+    <p class="col span-1-de-3">
+    <%= f.select :invoice_viewer, [[l(:label_invoice_viewer_standard),'standard'],[l(:view_original), 'original']] %>
+    </p>
+    <p class="col span-1-de-3">
+    <span>&nbsp;<%= check_box(:company, :auto_process_pdf, {no_label: true}) %> <%= l(:auto_process_pdf) %></span>
+    </p>
+  </div>
 </fieldset>
 
 <fieldset class="tabular box">

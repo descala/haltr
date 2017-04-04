@@ -15,8 +15,8 @@ class InvoicesController < ApplicationController
 
   skip_before_action :verify_authenticity_token, only: [:haltr_sign]
   before_filter :find_project_by_project_id, :only => [:index,:new,:create,:send_new_invoices,:download_new_invoices,:update_payment_stuff,:new_invoices_from_template,:reports,:report_channel_state,:report_invoice_list,:report_received_table,:create_invoices,:update_taxes,:upload,:import,:import_facturae]
-  before_filter :find_invoice, :only => [:edit,:update,:mark_accepted_with_mail,:mark_accepted,:mark_refused_with_mail,:mark_refused,:duplicate_invoice,:base64doc,:show,:send_invoice,:amend_for_invoice,:original,:validate, :mark_as_accepted, :mark_as, :add_comment]
-  before_filter :find_invoices, :only => [:context_menu,:bulk_download,:bulk_mark_as,:bulk_send,:destroy,:bulk_validate]
+  before_filter :find_invoice, :only => [:edit,:update,:mark_accepted,:mark_refused,:duplicate_invoice,:base64doc,:show,:send_invoice,:amend_for_invoice,:original,:validate, :mark_as_accepted, :mark_as, :add_comment, :process_pdf]
+  before_filter :find_invoices, :only => [:context_menu,:bulk_download,:bulk_mark_as,:bulk_send,:destroy,:bulk_validate, :bulk_process_pdf]
   before_filter :find_payment, :only => [:destroy_payment]
   before_filter :find_hashid, :only => [:view]
   before_filter :find_attachment, :only => [:logo]
@@ -37,6 +37,9 @@ class InvoicesController < ApplicationController
 
   skip_before_filter :verify_authenticity_token, :only => [:base64doc]
   accept_api_auth :import, :import_facturae, :number_to_id, :update, :show, :index, :destroy, :create, :send_invoice
+
+  # allow to view invoices on a iframe
+  after_action :allow_iframe, only: [:show, :view]
 
   def index
     sort_init 'invoices.created_at', 'desc'
@@ -59,7 +62,7 @@ class InvoicesController < ApplicationController
 
     unless params["state_all"] == "1"
       statelist=[]
-      %w(new sending sent read error cancelled closed discarded registered refused accepted allegedly_paid accounted).each do |state|
+      %w(new sending sent read error cancelled closed discarded registered refused accepted allegedly_paid annotated).each do |state|
         if params[state] == "1"
           statelist << "'#{state}'"
         end
@@ -145,7 +148,7 @@ class InvoicesController < ApplicationController
       format.html
       format.api
       format.csv do
-        @invoices = invoices.order(sort_clause)
+        @invoices = invoices.order(sort_clause).includes(:client)
       end
     end
 
@@ -195,6 +198,7 @@ class InvoicesController < ApplicationController
     # accept bank_account, for client or company
     bank_account = parsed_params.delete(:bank_account)
     iban         = parsed_params.delete(:iban)
+    bic          = parsed_params.delete(:bic)
 
     # accept dir3 info
     unless parsed_params[:oficina_comptable].is_a? String
@@ -258,7 +262,7 @@ class InvoicesController < ApplicationController
 
     if bank_account || iban
       begin
-        @invoice.set_bank_info(bank_account, iban, nil)
+        @invoice.set_bank_info(bank_account, iban, bic)
       rescue
         @invoice.errors.add(:base, $!.message)
         respond_to do |format|
@@ -378,7 +382,7 @@ class InvoicesController < ApplicationController
     # and copy global "exempt comment" to all exempt taxes
     parsed_params = parse_invoice_params
 
-    if params[:invoice][:client_id]
+    if params[:invoice][:client_id].present?
       @invoice.client_office = nil unless Client.find(params[:invoice][:client_id]).client_offices.any? {|office| office.id == @invoice.client_office_id }
     end
 
@@ -514,11 +518,20 @@ class InvoicesController < ApplicationController
   end
 
   def show
+    if Redmine::Hook.call_hook(:invoice_before_show,:project=>@project,:invoice=>@invoice).any?
+      @invoice = Redmine::Hook.call_hook(:invoice_before_show,:project=>@project,:invoice=>@invoice)[0]
+    end
+
     invoice_nokogiri = nil
     @invoice_pdf = nil
     unless %w(original sent db).include?(params[:view])
       if @invoice.original and @invoice.send_original?
-        params[:view] = @company.invoice_viewer
+        if @invoice.invoice_format == 'pdf' and @invoice.invoice_img.blank?
+          # PDF invoices have empty fields when not mofified
+          params[:view] = 'original'
+        else
+          params[:view] = @company.invoice_viewer
+        end
       end
     end
     case params[:view]
@@ -612,56 +625,50 @@ class InvoicesController < ApplicationController
             }
         end
       end
-      if params[:debug]
-        format.facturae30  { render_xml Haltr::Xml.generate(@invoice, 'facturae30', false, false, true) }
-        format.facturae31  { render_xml Haltr::Xml.generate(@invoice, 'facturae31', false, false, true) }
-        format.facturae32  { render_xml Haltr::Xml.generate(@invoice, 'facturae32', false, false, true) }
-        format.peppolubl20 { render_xml Haltr::Xml.generate(@invoice, 'peppolubl20', false, false, true) }
-        format.peppolubl21 { render_xml Haltr::Xml.generate(@invoice, 'peppolubl21', false, false, true) }
-        format.biiubl20    { render_xml Haltr::Xml.generate(@invoice, 'biiubl20', false, false, true) }
-        format.svefaktura  { render_xml Haltr::Xml.generate(@invoice, 'svefaktura', false, false, true) }
-        format.oioubl20    { render_xml Haltr::Xml.generate(@invoice, 'oioubl20', false, false, true) }
-        format.efffubl     { render_xml Haltr::Xml.generate(@invoice, 'efffubl', false, false, true) }
-        format.original {
-          ct = ExportFormats[@invoice.invoice_format]["content-type"] rescue ""
-          case ct
-          when 'text-xml'
-            render_xml @invoice.original
-          when 'application-pdf'
-            send_data @invoice.original,
-              :type => 'application/pdf',
-              :filename => @invoice.pdf_name,
-              :disposition => 'attachment'
-          else
-            render text: "Unknown original format: #{@invoice.invoice_format}"
-          end
-        }
-        format.edifact     { render text: Haltr::Edifact.generate(@invoice, false, true), content_type: 'text' }
+      format.original {
+        ct = ExportFormats[@invoice.invoice_format]["content-type"] rescue ""
+        case ct
+        when 'text-xml'
+          render_xml @invoice.original
+        when 'application-pdf'
+          send_data @invoice.original,
+            :type => 'application/pdf',
+            :filename => @invoice.pdf_name,
+            :disposition => 'attachment'
+        else
+          render text: "Unknown original format: #{@invoice.invoice_format}"
+        end
+      }
+      if @invoice.client.present?
+        if params[:debug]
+          format.facturae30  { render_xml Haltr::Xml.generate(@invoice, 'facturae30', false, false, true) }
+          format.facturae31  { render_xml Haltr::Xml.generate(@invoice, 'facturae31', false, false, true) }
+          format.facturae32  { render_xml Haltr::Xml.generate(@invoice, 'facturae32', false, false, true) }
+          format.peppolubl20 { render_xml Haltr::Xml.generate(@invoice, 'peppolubl20', false, false, true) }
+          format.peppolubl21 { render_xml Haltr::Xml.generate(@invoice, 'peppolubl21', false, false, true) }
+          format.biiubl20    { render_xml Haltr::Xml.generate(@invoice, 'biiubl20', false, false, true) }
+          format.svefaktura  { render_xml Haltr::Xml.generate(@invoice, 'svefaktura', false, false, true) }
+          format.oioubl20    { render_xml Haltr::Xml.generate(@invoice, 'oioubl20', false, false, true) }
+          format.efffubl     { render_xml Haltr::Xml.generate(@invoice, 'efffubl', false, false, true) }
+          format.edifact     { render text: Haltr::Edifact.generate(@invoice, false, true), content_type: 'text' }
+        else
+          format.facturae30  { download_xml Haltr::Xml.generate(@invoice, 'facturae30', false, false, true) }
+          format.facturae31  { download_xml Haltr::Xml.generate(@invoice, 'facturae31', false, false, true) }
+          format.facturae32  { download_xml Haltr::Xml.generate(@invoice, 'facturae32', false, false, true) }
+          format.peppolubl20 { download_xml Haltr::Xml.generate(@invoice, 'peppolubl20', false, false, true) }
+          format.peppolubl21 { download_xml Haltr::Xml.generate(@invoice, 'peppolubl21', false, false, true) }
+          format.biiubl20    { download_xml Haltr::Xml.generate(@invoice, 'biiubl20', false, false, true) }
+          format.svefaktura  { download_xml Haltr::Xml.generate(@invoice, 'svefaktura', false, false, true) }
+          format.oioubl20    { download_xml Haltr::Xml.generate(@invoice, 'oioubl20', false, false, true) }
+          format.efffubl     { download_xml Haltr::Xml.generate(@invoice, 'efffubl', false, false, true) }
+          format.edifact     { download_txt Haltr::Edifact.generate(@invoice, false, true) }
+        end
       else
-        format.facturae30  { download_xml Haltr::Xml.generate(@invoice, 'facturae30', false, false, true) }
-        format.facturae31  { download_xml Haltr::Xml.generate(@invoice, 'facturae31', false, false, true) }
-        format.facturae32  { download_xml Haltr::Xml.generate(@invoice, 'facturae32', false, false, true) }
-        format.peppolubl20 { download_xml Haltr::Xml.generate(@invoice, 'peppolubl20', false, false, true) }
-        format.peppolubl21 { download_xml Haltr::Xml.generate(@invoice, 'peppolubl21', false, false, true) }
-        format.biiubl20    { download_xml Haltr::Xml.generate(@invoice, 'biiubl20', false, false, true) }
-        format.svefaktura  { download_xml Haltr::Xml.generate(@invoice, 'svefaktura', false, false, true) }
-        format.oioubl20    { download_xml Haltr::Xml.generate(@invoice, 'oioubl20', false, false, true) }
-        format.efffubl     { download_xml Haltr::Xml.generate(@invoice, 'efffubl', false, false, true) }
-        format.original {
-          ct = ExportFormats[@invoice.invoice_format]["content-type"] rescue ""
-          case ct
-          when 'text-xml'
-            render_xml @invoice.original
-          when 'application-pdf'
-            send_data @invoice.original,
-              :type => 'application/pdf',
-              :filename => @invoice.pdf_name,
-              :disposition => 'attachment'
-          else
-            render text: "Unknown original format: #{@invoice.invoice_format}"
-          end
+        format.all {
+          @invoice.valid?
+          flash[:error] = @invoice.errors.full_messages.join('. ')
+          redirect_to invoice_path(@invoice)
         }
-        format.edifact     { download_txt Haltr::Edifact.generate(@invoice, false, true) }
       end
     end
   end
@@ -1284,6 +1291,13 @@ class InvoicesController < ApplicationController
       )
       respond_to do |format|
         format.api {
+          if @invoice and ["true","1"].include?(params[:send_after_import])
+            begin
+              Haltr::Sender.send_invoice(@invoice, User.current)
+              @invoice.queue!
+            rescue
+            end
+          end
           render action: 'show', status: :created, location: invoice_path(@invoice)
         }
       end
@@ -1393,9 +1407,8 @@ class InvoicesController < ApplicationController
               end
             end
           when /pdf/
-            @invoice = params[:issued] == '1' ? IssuedInvoice.new : ReceivedInvoice.new
+            @invoice = params[:issued] == 'true' ? IssuedInvoice.new : ReceivedInvoice.new
             @invoice.project   = @project
-            @invoice.state     = :processing_pdf
             @invoice.transport = transport
             @invoice.md5       = attachment.digest
             @invoice.original  = File.binread(attachment.diskfile)
@@ -1403,9 +1416,11 @@ class InvoicesController < ApplicationController
             @invoice.has_been_read = true
             @invoice.file_name = attachment.filename
             @invoice.save(validate: false)
-            Haltr::SendPdfToWs.send(@invoice)
-            @invoice.processing_pdf!
-            flash[:notice] = "#{l(:notice_invoice_processing_pdf)}"
+            if @project.company.auto_process_pdf?
+              Haltr::SendPdfToWs.send(@invoice)
+              @invoice.processing_pdf!
+              flash[:notice] = "#{l(:notice_invoice_processing_pdf)}"
+            end
           else
             errors <<  "unknown file type: '#{attachment.content_type}' for #{attachment.filename}"
           end
@@ -1510,6 +1525,33 @@ class InvoicesController < ApplicationController
     redirect_to invoice_path(@invoice)
   end
 
+  def process_pdf
+    Haltr::SendPdfToWs.send(@invoice)
+    @invoice.processing_pdf!
+    flash[:notice] = "#{l(:notice_invoice_processing_pdf)}"
+  rescue Errno::ECONNREFUSED
+    flash[:error] = 'Connection refused, try again later'
+  ensure
+    redirect_to invoice_path(@invoice)
+  end
+
+  def bulk_process_pdf
+    done = 0
+    @invoices.each do |invoice|
+      next if !invoice.original or invoice.invoice_format != 'pdf'
+      next if invoice.invoice_img.present?
+      next if invoice.state == 'processing_pdf'
+      Haltr::SendPdfToWs.send(invoice)
+      invoice.processing_pdf!
+      done += 1
+    end
+    flash[:notice] = l(:processing_pdfs, count: @invoices.count)
+  rescue Errno::ECONNREFUSED
+    flash[:error] = 'Connection refused, try again later'
+  ensure
+    redirect_to project_invoices_path(@project)
+  end
+
   private
 
   def original_xsl_template(doc)
@@ -1555,10 +1597,14 @@ class InvoicesController < ApplicationController
             (tax['percent'].blank? or tax['name'].blank?)
           tax['_destroy'] = 1
         end
-        if tax['code'] =~ /_E|_NS$/
-          tax['comment'] = params["#{tax['name']}_comment"]
-        else
-          tax['comment'] = ''
+        # Used in API Invoice creation: do not overwrite comment
+        unless tax['comment']
+          # Used in UI Form
+          if tax['code'] =~ /_E|_NS$/
+            tax['comment'] = params["#{tax['name']}_comment"]
+          else
+            tax['comment'] = ''
+          end
         end
       end
       # discounts percent and amount #5516
@@ -1592,6 +1638,10 @@ class InvoicesController < ApplicationController
     @invoices_sent_count = InvoiceDocument.where(["client_id = ? and state = 'sent'",@client.id]).order("id desc").count
     @invoices_closed = InvoiceDocument.where(["client_id = ? and state = 'closed'",@client.id]).order("id desc").limit(10)
     @invoices_closed_count = InvoiceDocument.where(["client_id = ? and state = 'closed'",@client.id]).order("id desc").count
+  end
+
+  def allow_iframe
+    response.headers.except! 'X-Frame-Options'
   end
 
 end

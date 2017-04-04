@@ -1,5 +1,7 @@
 class Invoice < ActiveRecord::Base
 
+  columns_on_demand :original
+
   include HaltrHelper
   include Haltr::FloatParser
   include Haltr::PaymentMethods
@@ -37,7 +39,7 @@ class Invoice < ActiveRecord::Base
   }
 
   validates_presence_of :date, :currency, :project_id, :unless => Proc.new {|i| i.type == "ReceivedInvoice" }
-  validates :date, :due_date, :tax_point_date, :invoicing_period_start, :invoicing_period_end, :order_date, :fa_duedate, format: { with: /\A[0-9]{4}-[0-9]{1,2}-[0-9]{1,2}\z/ }
+  validates :date, :due_date, :tax_point_date, :invoicing_period_start, :invoicing_period_end, :order_date, :fa_duedate, format: { with: /\A[0-9]{4}-[0-9]{1,2}-[0-9]{1,2}\z/ }, allow_blank: true
   validates_presence_of :client, :unless => Proc.new {|i| %w(Quote ReceivedInvoice).include? i.type }
   validates_inclusion_of :currency, :in  => Money::Currency.table.collect {|k,v| v[:iso_code] }, :unless => Proc.new {|i| i.type == "ReceivedInvoice" }
   validates_numericality_of :charge_amount_in_cents, :allow_nil => true
@@ -46,6 +48,15 @@ class Invoice < ActiveRecord::Base
   validates_numericality_of :exchange_rate, :allow_blank => true
   validates_format_of :exchange_rate, with: /\A-?[0-9]+(\.[0-9]{1,2}|)\z/,
     :allow_blank => true
+  validates :number, :discount_text, :ponumber,
+    :payment_method_text, :accounting_cost,
+    :delivery_note_number, :charge_reason,
+    :file_reference, :title,
+    :receiver_contract_reference,
+    :series_code, :legal_literals, :fa_residence_type, :fa_taxcode,
+    :fa_name, :fa_address, :fa_postcode, :fa_town, :fa_province, :fa_country,
+    :fa_info,
+    length: { maximum: 255 }
 
   before_save :fields_to_utf8
   after_create :increment_counter
@@ -278,7 +289,7 @@ class Invoice < ActiveRecord::Base
     if self[:discount_percent] and self[:discount_percent] != 0
       self[:discount_percent]
     elsif self[:discount_amount] and self[:discount_amount] != 0 and gross_subtotal.dollars != 0
-      (self[:discount_amount].to_f * 100 / gross_subtotal.dollars).round(2)
+      self[:discount_amount].to_f * 100 / gross_subtotal.dollars
     else
       0
     end
@@ -462,6 +473,26 @@ class Invoice < ActiveRecord::Base
       end
     end
     cts
+  end
+
+  def taxes_by_category_ubl(positive: true)
+    tbc = taxes_by_category(positive: true)
+    tbc.collect {|name, taxes|
+      e_taxes = []
+      tmp_taxes = taxes.collect {|cat, tax|
+        if cat == 'NS' || cat == 'E'
+          e_taxes << tax
+          nil
+        else
+          [cat, tax]
+        end
+      }.compact.to_h
+      e_taxes.flatten!
+      if e_taxes.any?
+        tmp_taxes['E'] = e_taxes
+      end
+      [ name, tmp_taxes ]
+    }.to_h
   end
 
   def tax_amount_for(tax_name)
@@ -677,14 +708,6 @@ _INV
         invoice.partial_amend_of = amended
       #elsif amended
         #TODO 03 and 04 not yet supported
-      else
-        # importing amend invoice for an unexisting invoice, assign self id as
-        # amended as a dirty hack
-        if amend_type == '02'
-          invoice.partial_amend_of = invoice
-        else
-          invoice.amend_of = invoice
-        end
       end
       invoice.amended_number = amend_of
       invoice.amend_reason = amend_reason
@@ -1107,7 +1130,8 @@ _INV
 
   def send_original?
     Redmine::Hook.call_hook(:model_invoice_send_original, :invoice=>self) != [false] and
-      original and !modified_since_created?
+      # always send original when not modified, or it's a PDF (#6334)
+      original and (!modified_since_created? or invoice_format == 'pdf')
   end
 
   def original_root_namespace
@@ -1259,10 +1283,18 @@ _INV
 
   def client_iban
     self[:client_iban].blank? ? client.iban : self[:client_iban]
+  rescue
+    nil
   end
 
   def client_bic
     self[:client_bic].blank? ? client.bic : self[:client_bic]
+  rescue
+    nil
+  end
+
+  def visible_by_client?
+    false
   end
 
   protected
