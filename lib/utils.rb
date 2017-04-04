@@ -1,16 +1,20 @@
 module Utils
   class << self
-    
+
     def replace_dates!(text,date)
       return nil if text.nil?
-      months = I18n.backend.translate("#{I18n.locale}.date.month_names", "")
+      locale = I18n.locale.to_s
+      raise "blank locale" if locale.blank?
+      months = I18n.backend.translate("ca.date.month_names", "")
       months.each do |m|
-        text.gsub!(/#{m}/i, months[date.month]) unless m.nil? or months[date.month].nil?
+        unless m.nil? or months[date.month].nil?
+          text.gsub!(/\b#{m}\b/i, months[date.month])
+        end
       end
-      text.gsub!(/ 20[0-5][0-9]/, " #{date.year.to_s}")
+      text.gsub!(/\b20[0-5][0-9]\b/, " #{date.year.to_s}")
       text
     end
-    
+
   end
 end
 

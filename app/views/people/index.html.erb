@@ -1,7 +1,19 @@
-<h3><%= l :label_person_plural %> <%= link_to(@client.name, client_path(@client)) if @client.present? %></h3>
+<div class="row">
+<div class="col-xs-6">
+  <% if @client -%>
+    <h2> <%= link_to(@client.name, client_path(@client)) %></h2>
+  <% else -%>
+    <h2><%= l :label_person_plural %></h2>
+  <% end -%>
+</div>
 <% if @client %>
-  <%= link_to_if_authorized l(:label_person_new), new_client_person_path(@client), :class => 'icon icon-add' %>
+  <div class="col-xs-6 text-right">
+    <ul class="list-inline fast-menu">
+      <li><%= link_to_if_authorized l(:label_person_new), new_client_person_path(@client), :class => 'icon-fa icon-fa-fw icon-fa-file btn btn-default' %></li>
+    </ul>
+  </div>
 <% end %>
+</div>
 
 <!--filtres-->
 <%= form_tag({}, method: :get, class: 'formee') do %>
@@ -19,7 +31,6 @@
 <% end %>
 <!--final filtres-->
 
-
 <!--taula-->
 <div class="wrapper-table bg-white">
   <table class="table table-striped">
@@ -30,8 +41,8 @@
         <%= sort_header_tag('email', caption: l(:field_email)) %>
         <th><%= l(:label_phone) %></th>
         <% if @client == nil %> <th><%= l(:label_company) %></th> <% end %>
-        <th><%= l(:button_edit) %></th>
-        <th><%= l(:button_delete) %></th>
+        <th></th>
+        <th></th>
       </tr>
     </thead>
     <tbody>
@@ -42,8 +53,8 @@
           <td><%=h person.email %></td>
           <td><%=h person.phone %></td>
           <% if @client == nil %> <td><%=h person.client %></td> <% end %>
-          <td align="center"><%= link_to_if_authorized l(:button_edit), {action: 'edit',id: person}, class: 'icon icon-edit editar' %></td>
-          <td align="center"><%= link_to_if_authorized l(:button_delete), {action: 'destroy',id: person} , data: {confirm: l(:text_are_you_sure)}, method: :delete, class: 'icon icon-del eliminar' %></td>
+          <td align="center"><%= link_to_if_authorized l(:button_edit), {action: 'edit', id: person, client_id: @client}, class: 'icon icon-edit editar' %></td>
+          <td align="center"><%= link_to_if_authorized l(:button_delete), {action: 'destroy', id: person} , data: {confirm: l(:text_are_you_sure)}, method: :delete, class: 'icon icon-del eliminar' %></td>
         </tr>
       <% end -%>
     </tbody>

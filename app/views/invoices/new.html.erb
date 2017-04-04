@@ -23,7 +23,10 @@
 <!--final formulari-->
 
 <div id="new_client_wrapper" style="display:none;">
-  <%= render partial: 'invoices/new_client', locals: {context: "new_invoice"} %>
+  <div id="new_client_form">
+    <%= render partial: 'invoices/new_client', locals: {context: "new_invoice"} %>
+  </div>
+  <div class="overlay"></div>
 </div>
 
 <% html_title(l(:label_invoice_new)) -%>

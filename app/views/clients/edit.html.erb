@@ -1,15 +1,18 @@
-<div class="seccio grup">
-  <div class="col span-2-de-2">
-    <%= labelled_form_for @client, 
-      :html => {:class => 'formee'} do |f| %>
-      <%= render :partial => 'form', :locals => { :f => f, :client => @client, :context => "new_client" } %>
-      <%= submit_tag l(:button_save) %>
-    <% end %>
-  </div>
+<div class="wrapper-element">
+<%= form_for @client do |f| %>
+  <%= render partial: 'form', locals: {f: f, client: @client, context: "new_client"} %>
+<% end %>
 </div>
 
 <% content_for :sidebar do %>
   <%= render_menu :companies_menu, @project %>
 <% end %>
 
-<%= render :partial => 'events/list', locals: {events: @client.events} %>
+<div class="col-xs-10 col-no-pad-left">
+  <div class="form-group">
+    <h3><%= l :label_history %></h3>
+    <div class="wrapper-table">
+      <%= render partial: 'events/table', locals: {events: @client.events} %>
+    </div>
+  </div>
+</div>

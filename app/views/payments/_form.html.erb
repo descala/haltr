@@ -1,41 +1,94 @@
 <%= error_messages_for 'payment' %>
 
-    <h2><%=l(@payment.new_record? ? :label_payment_new : :label_payment)%></h2>
-    <% if @invoice -%>
-      <h3><%= "#{l(:label_invoice)} #{@invoice.number} - #{@invoice.client}"%></h3>
-    <% end -%>
+<h2><%=l(@payment.new_record? ? :label_payment_new : :label_payment)%></h2>
 
 <div class="col-xs-10 col-no-pad-left">
   <div class="tab-pane form-horizontal">
-    <% if @invoice -%>
-      <%= f.hidden_field "invoice_id" %>
-    <% else -%>
-      <div class="form-group">
+    <div class="form-group">
+      <%= f.label :invoice_id, class: 'col-xs-3 control-label' do %>
+        <%= l :label_invoice %>:
+      <% end -%>
+      <% if @invoice -%>
+        <div class="col-xs-9">
+          <h3><%= "#{l(:label_invoice)} #{@invoice.number} - #{@invoice.client}"%></h3>
+          <%= f.hidden_field "invoice_id" %>
+        </div>
+      <% else -%>
         <div class="col-xs-3">
-          <%= f.label :invoice_id, class: 'col-xs-3 control-label' do %>
-            <%= l :label_invoice %>
-          <% end -%>
           <%= f.select :invoice_id, invoices_for_select, {include_blank: true}, class: 'form-control' %>
         </div>
-      </div>
-    <% end -%>
+      <% end -%>
+    </div>
 
     <div class="form-group">
+      <%= f.label :amount, class: 'col-xs-3 control-label' do %>
+        <%= l :field_amount %>:
+      <% end -%>
       <div class="col-xs-3">
         <%= f.text_field :amount, required: true, class: 'form-control' %>
       </div>
-      <div class="col span-1-de-2">
-        <%= f.date_field :date, required: true %><%= calendar_for('payment_date') %>
+    </div>
+
+    <div class="form-group">
+      <%= f.label :date, class: 'col-xs-3 control-label' do %>
+        <%= l :field_date %>:
+      <% end -%>
+      <div class="col-xs-3">
+        <div class="relative">
+          <%= f.date_field :date, required: true, class: 'form-control' %>
+          <%= calendar_for('payment_date') %>
+        </div>
       </div>
     </div>
 
-    <div class="seccio grup">
-      <div class="col span-1-de-2">
-        <%= f.text_field :payment_method %>
+    <div class="form-group">
+      <%= f.label :payment_method, class: 'col-xs-3 control-label' do %>
+        <%= l :field_payment_method %>:
+      <% end -%>
+      <div class="col-xs-3">
+        <%= f.text_field :payment_method, class: 'form-control' %>
       </div>
-      <div class="col span-1-de-2">
-        <%= f.text_field :reference %>
+    </div>
+
+    <div class="form-group">
+      <%= f.label :reference, class: 'col-xs-3 control-label' do %>
+        <%= l :field_reference %>:
+      <% end -%>
+      <div class="col-xs-3">
+        <%= f.text_field :reference, class: 'form-control' %>
       </div>
+    </div>
+
+    <div class="form-group">
+      <% if @payment.new_record? -%>
+        <% if @invoice -%>
+          <% if !@invoice.client or @invoice.client.email.blank? -%>
+            <div class="col-xs-6 text-right">
+              <p><%= l :client_without_email %></p>
+              <%= submit_tag I18n.t(:save_without_mail), class: 'btn btn-primary' %>
+            </div>
+          <% else -%>
+            <div class="col-xs-8">
+              <div class="tab-pane">
+                <%= render partial: 'paid_notification' %>
+              </div>
+              <br />
+              <div class="text-right">
+                <%= submit_tag l(:save_and_mail), name: 'save_and_mail', class: 'btn btn-primary' %>
+                <%= submit_tag I18n.t(:save_without_mail), class: 'btn btn-primary' %>
+              </div>
+            </div>
+          <% end -%>
+        <% else -%>
+          <div class="col-xs-6 text-right">
+            <%= submit_tag l(:button_create), class: 'btn btn-primary' %>
+          </div>
+        <% end -%>
+      <% else -%>
+        <div class="col-xs-6 text-right">
+          <%= submit_tag l(:button_save), class: 'btn btn-primary' %>
+        </div>
+      <% end -%>
     </div>
 
   </div>

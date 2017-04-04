@@ -1,7 +1,16 @@
-<h3><%= l :label_client_offices %> <%= link_to(@client.name, client_path(@client)) if @client %></h3>
-<% if @client -%>
-  <%= link_to_if_authorized l(:label_client_office_new), new_client_client_office_path(@client), class: 'icon icon-add' %>
-<% end -%>
+<div class="row">
+<div class="col-xs-6">
+  <h2><%= l :label_client_offices %> - <%= @client.name %></h2>
+</div>
+
+<div class="col-xs-6 text-right">
+  <ul class="list-inline fast-menu">
+    <li>
+      <%= link_to_if_authorized l(:label_client_office_new), new_client_client_office_path(@client), class: 'icon-fa icon-fa-fw icon-fa-file btn btn-default' %>
+    </li>
+  </ul>
+</div>
+</div>
 
 <!--filtres-->
 <%= form_tag({}, method: :get, class: 'formee') do %>

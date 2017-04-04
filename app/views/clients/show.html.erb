@@ -47,7 +47,7 @@
   <% for person in @people -%>
     <div class="people-info">
       <div class="contextual">
-        <%= link_to_if_authorized(l(:button_edit), edit_person_path(person), :class => 'icon icon-edit') %>
+        <%= link_to_if_authorized(l(:button_edit), edit_client_person_path(@client, person), :class => 'icon icon-edit') %>
       </div>
       <h3><%= l(:label_person) %>: <%=h person.first_name %> <%=h person.last_name %></h3>
       <div><%=h person.info%></div>

@@ -1,12 +1,6 @@
 <!--formulari-->
-<%= form_for @payment, url: {action: 'create', project_id: @project}, html: {class: 'formee'} do |f| %>
+<%= form_for @payment, url: {action: 'create', project_id: @project} do |f| %>
   <%= render partial: 'form', locals: {f: f} %>
-  <% if @invoice -%>
-    <%= render partial: 'paid_notification' %>
-    <%= submit_tag I18n.t(:save_without_mail) %>
-  <% else -%>
-    <%= submit_tag l(:button_create) %>
-  <% end -%>
 <% end %>
 <!--final formulari-->
 

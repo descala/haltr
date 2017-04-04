@@ -7,44 +7,47 @@
   if client and client.company #and (client.company == company || company.nil?)
 -%>
 
-  <% if client.allowed? -%>
-    <span class="profilelink">
-      <% if client.company.is_a?(ExternalCompany) and User.current.admin? -%>
-        <%= link_to l(:linked_to_profile, :company => client.company.name).html_safe, edit_external_company_path(client.company) %>
-        (<%=link_to_if_authorized(l(:unlink),{:controller=>'clients',:action=>'unlink',:id=>client})%>)
-      <% else -%>
-        <%= l(:linked_to_profile, :company => client.company.name).html_safe %> (<%=link_to_if_authorized(l(:unlink),{:controller=>'clients',:action=>'unlink',:id=>client})%>)
-      <% end -%>
-  <% elsif client.denied? -%>
-    <span class="profilelinkred">
-      <%= l(:denied_authorization, :company => client.company.name).html_safe %> (<%=link_to_if_authorized(l(:unlink),{:controller=>'clients',:action=>'unlink',:id=>client})%>)
-  <% else -%>
-    <span class="profilelink">
-      <%= l(:pending_authorization, :company => client.company.name).html_safe %> (<%=link_to_if_authorized(l(:unlink),{:controller=>'clients',:action=>'unlink',:id=>client})%>)
-  <% end -%>
-    </span>
-
-<%
-  # we found a company to link to
-  elsif company
--%>
-
-    <% if !client or client.new_record? %>
-      <script language="javascript">
-        alert("<%= l(:cif_belongs_to_company_text_only,{:company=>company.name}) %>");
-        self.location="<%=url_for(:action=>'link_to_profile',:controller=>'clients',:id=>@project,:company=>company.taxcode,:client=>client,:context=>context,:invoice_id=>invoice_id)%>";
-      </script>
+  <div class="col-xs-12">
+    <% if client.allowed? -%>
+      <div class="flash info">
+        <% if client.company.is_a?(ExternalCompany) and User.current.admin? -%>
+          <%= link_to l(:linked_to_profile, :company => client.company.name).html_safe, edit_external_company_path(client.company) %>
+          (<%=link_to_if_authorized(l(:unlink),{:controller=>'clients',:action=>'unlink',:id=>client})%>)
+        <% else -%>
+          <%= l(:linked_to_profile, :company => client.company.name).html_safe %> (<%=link_to_if_authorized(l(:unlink),{:controller=>'clients',:action=>'unlink',:id=>client})%>)
+        <% end -%>
+      </div>
+    <% elsif client.denied? -%>
+      <div class="flash error">
+        <%= l(:denied_authorization, :company => client.company.name).html_safe %> (<%=link_to_if_authorized(l(:unlink),{:controller=>'clients',:action=>'unlink',:id=>client})%>)
+      </div>
     <% else -%>
+      <div class="flash info">
+        <%= l(:pending_authorization, :company => client.company.name).html_safe %> (<%=link_to_if_authorized(l(:unlink),{:controller=>'clients',:action=>'unlink',:id=>client})%>)
+      </div>
+    <% end -%>
+  </div>
 
-      <span class="profilelink">
+<% elsif company # we found a company to link to -%>
+
+  <% if !client or client.new_record? %>
+    <script language="javascript">
+alert("<%= l(:cif_belongs_to_company_text_only,{:company=>company.name}) %>");
+self.location="<%=url_for(:action=>'link_to_profile',:controller=>'clients',:id=>@project,:company=>company.taxcode,:client=>client,:context=>context,:invoice_id=>invoice_id)%>";
+    </script>
+  <% else -%>
+
+    <div class="col-xs-12">
+      <div class="flash info">
         <%= l(:cif_belongs_to_company,{:company=>company.name}).html_safe %>
         <% if company.public? # public profile -%>
           <%= l(:link_to_profile_suggest, :href=>link_to_if_authorized(l(:link_to_profile),{:controller=>'clients',:action=>'link_to_profile',:id=>@project,:company=>company.taxcode,:client=>client})).html_safe %>
-        <% else # semipublic profile -%>
-          <%= l(:link_to_profile_suggest, :href=>link_to_if_authorized(l(:link_to_profile_ask),{:controller=>'clients',:action=>'link_to_profile',:id=>@project,:company=>company.taxcode,:client=>client})).html_safe %>
-        <% end -%>
-        </span>
+          <% else # semipublic profile -%>
+            <%= l(:link_to_profile_suggest, :href=>link_to_if_authorized(l(:link_to_profile_ask),{:controller=>'clients',:action=>'link_to_profile',:id=>@project,:company=>company.taxcode,:client=>client})).html_safe %>
+          <% end -%>
+      </div>
+    </div>
 
-    <% end -%>
+  <% end -%>
 
 <% end -%>

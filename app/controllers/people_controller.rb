@@ -1,15 +1,13 @@
 class PeopleController < ApplicationController
 
-
   menu_item Haltr::MenuItem.new(:companies,:people)
   layout 'haltr'
   helper :haltr
   helper :sort
   include SortHelper
 
-  before_filter :find_optional_client, :only => [:index]
-  before_filter :find_client, :only => [:new,:create]
-  before_filter :find_person, :only => [:show,:edit,:destroy,:update]
+  before_filter :find_client, only: [:index,:new,:create]
+  before_filter :find_person, only: [:show,:edit,:destroy,:update]
   before_filter :authorize
 
   include CompanyFilter
@@ -19,7 +17,7 @@ class PeopleController < ApplicationController
     sort_init 'last_name', 'asc'
     sort_update %w(first_name last_name email)
 
-    people = @client.nil? ? @project.people :  @client.people
+    people = @client.people
 
     unless params[:name].blank?
       name = "%#{params[:name].strip.downcase}%"
@@ -44,41 +42,30 @@ class PeopleController < ApplicationController
   end
 
   def create
-    @person = Person.new(params[:person].merge({:client=>@client}))
+    @person = Person.new(params[:person].merge({client:@client}))
     if @person.save
       flash[:notice] = l(:notice_successful_create)
-      redirect_to :action => 'index', :id => @client
+      redirect_to action: 'index', id: @client
     else
-      render :action => "new"
+      render action: "new"
     end
   end
 
   def update
     if @person.update_attributes(params[:person])
       flash[:notice] = l(:notice_successful_update)
-      redirect_to :action => 'index', :client_id => @person.client
+      redirect_to action: 'index', client_id: @person.client
     else
-      render :action => "edit"
+      render action: "edit"
     end
   end
 
   def destroy
     @person.destroy
-    redirect_to :action => 'index', :client_id => @person.client
+    redirect_to action: 'index', client_id: @person.client
   end
 
   private
-
-  def find_optional_client
-    @client = Client.find params[:client_id] unless params[:client_id].blank?
-    if @client
-      @project = @client.project
-    else 
-      @project = Project.find(params[:project_id])
-    end
-    rescue ActiveRecord::RecordNotFound
-    render_404
-  end
 
   def find_client
     @client = Client.find params[:client_id]

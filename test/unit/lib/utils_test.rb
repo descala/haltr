@@ -39,5 +39,12 @@ class UtilsTest < ActiveSupport::TestCase
     doc = Nokogiri::XML(xml)
     assert_equal 'a test', Haltr::Utils.get_xpath(doc,'//withspaces')
   end
+
+  test 'replace_dates' do
+    text="gener general"
+    Utils.replace_dates!(text, Date.parse('2017-02-01'))
+    assert_equal 'Febrer general', text
+  end
+
 end
 
