@@ -1,8 +1,10 @@
 <%= error_messages_for 'client' %>
 
-<h2><%=l(@client.new_record? ? :label_company_new : :label_company)%></h2>
+<% if @client -%>
+  <h2><%=l(@client.new_record? ? :label_company_new : :label_company)%></h2>
+<% end -%>
 
-<div class="col-xs-10 col-no-pad-left">
+<div class="<%= 'col-xs-10' unless @client.nil? %> col-no-pad-left">
   <div class="tab-pane form-horizontal">
 
     <div class="form-group" id='cif_info'>
@@ -32,7 +34,7 @@
       <%= f.label :name, class: 'col-xs-3 control-label' do %>
         <%= l :name_or_company %>:
       <% end -%>
-      <div class="col-xs-3">
+      <div class="col-xs-8">
         <%= f.text_field :name, required: true, readonly: client.linked?, class: 'form-control' %>
       </div>
     </div>
@@ -44,10 +46,8 @@
       <div class="col-xs-3">
         <%= f.text_field :email, readonly: client.linked?, class: 'form-control' %>
       </div>
-    </div>
 
-    <div class="form-group">
-      <%= f.label :phone, class: 'col-xs-3 control-label' do %>
+      <%= f.label :phone, class: 'col-xs-2 control-label' do %>
         <%= l :label_phone %>:
       <% end -%>
       <div class="col-xs-3">
@@ -61,12 +61,20 @@
       <div class="col-xs-3">
         <%= f.text_field :website, readonly: client.linked?, class: 'form-control' %>
       </div>
+      <%= f.label :company_identifier, class: 'col-xs-3 control-label' do %>
+        <%= l :field_company_identifier %>:
+      <% end -%>
+      <div class="col-xs-2">
+        <%= f.text_field :company_identifier, class: 'form-control' %>
+      </div>
     </div>
+
     <% if context =~ /_invoice$/ -%>
       <div id="show_full_form">
         <%= link_to_function("--- #{l(:show_full_form)} ---", "$('.client_hiden_fields').show(); $('#show_full_form').hide()") %>
       </div>
     <% end -%>
+
     <div class="client_hiden_fields" style="<%= context =~ /_invoice$/ ? "display:none;" : "" %>">
       <% if context =~ /_invoice$/ -%>
         <div><%= link_to_function("--- #{l(:hide_full_form)} ---", "$('.client_hiden_fields').hide(); $('#show_full_form').show()") %></div>
@@ -75,12 +83,12 @@
         <%= f.label :address, class: 'col-xs-3 control-label' do %>
           <%= l :field_address %>:
         <% end -%>
-        <div class="col-xs-3">
+        <div class="col-xs-8">
           <%= f.text_field :address, readonly: client.linked?, class: 'form-control' %>
         </div>
       </div>
       <div class="form-group">
-        <div class="col-xs-3 col-xs-offset-3">
+        <div class="col-xs-8 col-xs-offset-3">
           <%= f.text_field :address2, readonly: client.linked?, class: 'form-control' %>
         </div>
       </div>
@@ -91,9 +99,7 @@
         <div class="col-xs-3">
           <%= f.text_field :postalcode, readonly: client.linked?, class: 'form-control' %>
         </div>
-      </div>
-      <div class="form-group">
-        <%= f.label :city, class: 'col-xs-3 control-label' do %>
+        <%= f.label :city, class: 'col-xs-2 control-label' do %>
           <%= l :field_city %>:
         <% end -%>
         <div class="col-xs-3">
@@ -107,9 +113,7 @@
         <div class="col-xs-3">
           <%= f.text_field :province, readonly: client.linked?, class: 'form-control' %>
         </div>
-      </div>
-      <div class="form-group">
-        <%= f.label :country, class: 'col-xs-3 control-label' do %>
+        <%= f.label :country, class: 'col-xs-2 control-label' do %>
           <%= l :field_country %>:
         <% end -%>
         <div class="col-xs-3">
@@ -171,35 +175,28 @@
           </div>
         </div>
       <% end -%>
-    </div>
-    <div class="form-group">
-      <%= f.label :company_identifier, class: 'col-xs-3 control-label' do %>
-        <%= l :field_company_identifier %>:
-      <% end -%>
-      <div class="col-xs-3">
-        <%= f.text_field :company_identifier, class: 'form-control' %>
-      </div>
-    </div>
-    <% if User.current.allowed_to?(:use_local_signature, @project) or (@client and @client.sign_with_local_certificate?) -%>
-      <div class="form-group">
-        <div class="col-xs-3 col-xs-offset-3">
-          <div class="checkbox">
-            <%= f.label :sign_with_local_certificate do %>
-              <%= f.check_box :sign_with_local_certificate %>
-              <%= l :field_sign_with_local_certificate %>
-            <% end -%>
+      <% if User.current.allowed_to?(:use_local_signature, @project) or (@client and @client.sign_with_local_certificate?) -%>
+        <div class="form-group">
+          <div class="col-xs-3 col-xs-offset-3">
+            <div class="checkbox">
+              <%= f.label :sign_with_local_certificate do %>
+                <%= f.check_box :sign_with_local_certificate %>
+                <%= l :field_sign_with_local_certificate %>
+              <% end -%>
+            </div>
           </div>
         </div>
-      </div>
-    <% end -%>
-
-    <hr class="form-elements">
+      <% end -%>
+    </div>
 
     <div class="client_hiden_fields" style="<%= context =~ /_invoice$/ ? "display:none;" : "" %>">
+
+      <hr class="form-elements">
+
       <label><%=l(:bank_info)%></label>
 
-      <% if @client and @client.read_attribute(:bank_account).blank? -%>
-        <% if @client and @client.country=='es' %>
+      <% if @client.nil? or @client.read_attribute(:bank_account).blank? -%>
+        <% if @client.nil? or @client.country=='es' %>
           <div class="form-group">
             <div class="col-xs-3">
               <a id="ccc2iban" data-url="<%=project_ccc2iban_path(@project)%>" href="#">Convert spanish CCC to IBAN</a>
@@ -220,7 +217,7 @@
         <%= f.label :iban, class: 'col-xs-3 control-label' do %>
           <%= l :field_iban %>:
         <% end -%>
-        <div class="col-xs-5">
+        <div class="col-xs-4">
           <%= f.text_field :iban, class: 'iban form-control', data: {url: project_check_iban_path(@project), 'span-for-result' => 'iban'} %>
           <span id="iban" class="ibanspan"></span>
         </div>
@@ -228,77 +225,124 @@
           <%= l :field_bic %>:
         <% end -%>
         <div class="col-xs-3">
-          <%= f.text_field :bic, size: 11 %>
+          <%= f.text_field :bic, class: 'form-control' %>
         </div>
       </div>
 
       <div class="form-group">
+        <%= f.label :payment_method, class: 'col-xs-3 control-label' do %>
+          <%= l :field_payment_method %>:
+        <% end -%>
         <div class="col-xs-3">
-          <%= f.select(:payment_method, Haltr::PaymentMethods.for_select(@project.company)) %><br/>
-          <%= f.text_area(:payment_method_text, cols: 40, rows: 2, no_label: true, id: 'payment_other', style: (client.payment_method==Invoice::PAYMENT_SPECIAL) ? '' : 'display: none;') %>
+          <%= f.select(:payment_method, Haltr::PaymentMethods.for_select(@project.company), {}, class: 'form-control') %><br />
+          <%= f.text_area(:payment_method_text, rows: 2, id: 'payment_other', style: (client.payment_method==Invoice::PAYMENT_SPECIAL) ? '' : 'display: none;', class: 'form-control') %>
         </div>
+        <%= f.label :terms, class: 'col-xs-2' do %>
+          <%= l :field_terms %>:
+        <% end -%>
         <div class="col-xs-3">
-          <%= f.select(:terms, Terms.for_select, {}) %>
+          <%= f.select(:terms, Terms.for_select, {}, class: 'form-control') %>
         </div>
       </div>
 
       <% if User.current.allowed_to?(:use_sepa,@project) -%>
         <div class="form-group">
+          <%= f.label :sepa_type, class: 'col-xs-3 control-label' do %>
+            <%= l :field_sepa_type %>:
+          <% end -%>
           <div class="col-xs-3">
-            <%= f.select :sepa_type, ["CORE", "B2B"] %>
+            <%= f.select :sepa_type, ["CORE", "B2B"], {}, class: 'form-control' %>
           </div>
         </div>
       <% end -%>
-
 
 
       <% if User.current.admin? or User.current.allowed_to?(:send_peppol, @project) -%>
-        <fieldset class="tabular box">
-          <legend>PEPPOL</legend>
-          <div class="form-group">
-            <div class="col-xs-3">
-              <%= f.select :schemeid, Peppol::schemes_for_select %>
-            </div>
-            <div class="col-xs-3">
-              <%= f.text_field :endpointid %>
-            </div>
-          </div>
-        </fieldset>
-      <% end -%>
+        <hr class="form-elements">
 
-      <fieldset class="tabular box">
-        <legend>EDI</legend>
+        <label>PEPPOL</label>
         <div class="form-group">
+          <%= f.label :schemeid, class: 'col-xs-3 control-label' do %>
+            <%= l :field_schemeid %>:
+          <% end -%>
           <div class="col-xs-3">
-            <%= f.text_field :edi_code %>
+            <%= f.select :schemeid, Peppol::schemes_for_select, {}, class: 'form-control' %>
           </div>
+          <%= f.label :endpointid, class: 'col-xs-3 control-label' do %>
+            <%= l :field_endpointid %>:
+          <% end -%>
           <div class="col-xs-3">
-            <%= f.text_field :buyer_edi_code %>
-          </div>
-          <div class="col-xs-3">
-            <%= f.text_field :receiver_edi_code %>
-          </div>
-          <div class="col-xs-3">
-            <%= f.text_field :destination_edi_code %>
-          </div>
-          <div class="col-xs-3">
-            <%= f.text_field :payer_edi_code %>
+            <%= f.text_field :endpointid, class: 'form-control' %>
           </div>
         </div>
-      </fieldset>
+      <% end -%>
+
+      <hr class="form-elements">
+
+      <label>EDI</label>
+      <div class="form-group">
+        <%= f.label :edi_code, class: 'col-xs-3 control-label' do %>
+          <%= l :field_edi_code %>:
+        <% end -%>
+        <div class="col-xs-3">
+          <%= f.text_field :edi_code, class: 'form-control' %>
+        </div>
+        <%= f.label :buyer_edi_code, class: 'col-xs-3 control-label' do %>
+          <%= l :field_buyer_edi_code %>:
+        <% end -%>
+        <div class="col-xs-3">
+          <%= f.text_field :buyer_edi_code, class: 'form-control' %>
+        </div>
+      </div>
+      <div class="form-group">
+        <%= f.label :receiver_edi_code, class: 'col-xs-3 control-label' do %>
+          <%= l :field_receiver_edi_code %>:
+        <% end -%>
+        <div class="col-xs-3">
+          <%= f.text_field :receiver_edi_code, class: 'form-control' %>
+        </div>
+        <%= f.label :destination_edi_code, class: 'col-xs-3 control-label' do %>
+          <%= l :field_destination_edi_code %>:
+        <% end -%>
+        <div class="col-xs-3">
+          <%= f.text_field :destination_edi_code, class: 'form-control' %>
+        </div>
+      </div>
+      <div class="form-group">
+        <%= f.label :payer_edi_code, class: 'col-xs-3 control-label' do %>
+          <%= l :field_payer_edi_code %>:
+        <% end -%>
+        <div class="col-xs-3">
+          <%= f.text_field :payer_edi_code, class: 'form-control' %>
+        </div>
+      </div>
 
       <% if User.current.admin? or User.current.allowed_to?(:set_client_xpaths, @project) -%>
-        <fieldset class="tabular box">
-          <legend>XPATH</legend>
-          <div class="form-group">
-            <div class="col-xs-3">
-              <%= f.text_area :xpaths_from_original %>
-            </div>
+
+        <hr class="form-elements">
+
+        <label>XPATH</label>
+
+        <div class="form-group">
+          <%= f.label :xpaths_from_original, class: 'col-xs-3 control-label' do %>
+            <%= l :field_xpaths_from_original %>:
+          <% end -%>
+          <div class="col-xs-9">
+            <%= f.text_area :xpaths_from_original, class: 'form-control' %>
           </div>
-        </fieldset>
+        </div>
       <% end -%>
 
     </div>
+
+    <% unless context =~ /_invoice/ -%>
+      <div class="form-group">
+        <div class="col-xs-12 text-right">
+          <%= submit_tag (@client.new_record? ? l(:button_create) : l(:button_save)), class: 'btn btn-primary' %>
+        </div>
+      </div>
+    <% end -%>
+
 
   </div>
 </div>

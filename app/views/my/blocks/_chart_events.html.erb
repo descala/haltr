@@ -27,43 +27,8 @@
     <% end -%>
     <div class="wrapper-table">
       <% if events.any? %>
-        <table class="cashflow table">
-          <tbody>
-            <% events.each do |e| %>
-              <tr class="<%= cycle 'odd', 'even' %>">
-                <td class="nowrap"><%= format_time e.created_at %></td>
-                <td>
-                  <% if e.invoice -%>
-                    <%= link_to_invoice_with_label(e.invoice) -%>
-                  <% elsif e.client -%>
-                    <%= link_to "#{l(:field_client)} #{e.client.name}", edit_client_path(e.client) -%>
-                  <% else -%>
-                    <%= e.to_s %>
-                  <% end -%>
-                </td>
-                <td><%= l e.name %></td>
-                <% if e.audits.size > 0 -%>
-                  <td>
-                    <%= link_to '<i class="fa fa-plus-square" aria-hidden="true"></i>'.html_safe, '#', class: 'show-audits', :'data-id' => e.id %>
-                  </td>
-              </tr>
-              <tr>
-                <td colspan="4" class="td-collapse">
-                  <div id="audited_<%=e.id%>" class="audited">
-                    <ul class="list-unstyled">
-                      <% e.audits.each do |a| -%>
-                        <%= render partial: "audits/audit", locals: { a: a } %>
-                      <% end -%>
-                    </ul>
-                  </div>
-                </td>
-              </tr>
-            <% else -%>
-              <td></td>
-              </tr>
-            <% end -%>
-          <% end -%>
-          </tbody>
+        <table class="cashflow table table-striped">
+          <%= render partial: 'events/list', locals: {events: events} %>
         </table>
       <% else -%>
         <p><%= l(:label_no_data) %></p>

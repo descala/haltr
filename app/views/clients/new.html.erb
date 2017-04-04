@@ -1,6 +1,5 @@
 <%= form_for @client, url: project_clients_path(@project) do |f| %>
   <%= render partial: 'form', locals: {f: f, client: @client, context: "new_client"} %>
-  <%= submit_tag l(:button_create) %>
 <% end %>
 
 <% content_for :sidebar do %>

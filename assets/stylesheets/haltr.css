@@ -95,7 +95,7 @@ th.money, td.money, .money{
   margin: 20px 50px 0 50px;
 }
 .overlay {
-  position:absolute; top:0; left:0;
+  position:fixed; top:0; left:0;
   width:100%; height:100%;
   /* width: 1138px; height: 1132px; */
   z-index: 1001;
@@ -103,13 +103,17 @@ th.money, td.money, .money{
   opacity: 0.9;
 }
 
+#new_client_form {
+  position: absolute; top: 115px; left: 50%;
+}
+
 .new_client_box {
-  position:absolute; top:115px; left:50%;
-  margin-left: -325px;
+  position: relative;
+  left: -50%;
   background-color: white;
-  width: 650px;
   z-index: 1002;
   border: 4px solid #333333;
+  width: 950px;
 }
 
 #new_client {
@@ -419,12 +423,6 @@ div#invoice_img span#send_info {
   padding: 10px;
 }
 
-.controller-clients .events {
-  border: 1px outset grey;
-  margin-bottom: 10px;
-  padding: 10px;
-}
-
 .controller-clients .invoices-box {
   border: 1px outset grey;
   margin-bottom: 10px;
@@ -520,4 +518,10 @@ div#row-title {
 }
 tr.no-padding td {
   padding: 0 !important;
+}
+div.wrapper-element {
+  margin-bottom: 40px;
+}
+div.wrapper-element form {
+  display: inline-block;
 }
