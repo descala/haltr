@@ -166,6 +166,41 @@ $(document).ready(function() {
     return false;
   });
 
+  // functions-clients.js
+  if ( $(".table .show-audits").length > 0 ) {
+    $( ".table .show-audits" ).click(function() {
+      if ( $( this ).find("i").hasClass( "fa-plus-square" ) ) {
+        $( this ).find("i").removeClass( "fa-plus-square" );
+        $( this ).find("i").addClass( "fa-minus-square" );
+      } else {
+        $( this ).find("i").removeClass( "fa-minus-square" );
+        $( this ).find("i").addClass( "fa-plus-square" );
+      }
+
+    });
+  }
+  if ( $(".titularAccFilters").length > 0 ) {
+    $(".titularAccFilters").click(function() {
+      if ( $( this ).hasClass( "icon-fa-right-angle-down" ) ) {
+        $( this ).removeClass( "icon-fa-right-angle-down" );
+        $( this ).addClass( "icon-fa-right-angle-up" );
+      } else {
+        $( this ).removeClass( "icon-fa-right-angle-up" );
+        $( this ).addClass( "icon-fa-right-angle-down" );
+      }
+
+    });
+  }
+  $('.modal.fade').on('show.bs.modal', function (e) {  /* evitamos movimientos con los modal */
+    $("body").addClass( "no-pad-right" );
+  })
+  $(".clickable-row > tr").click(function() {
+    window.location = $(this).data("href");
+  });
+  if ( $(".equalheight").length > 0 ) {
+    $('.equalheight').matchHeight();
+  }
+
 });
 
 
