@@ -72,6 +72,12 @@ class InvoicesController < ApplicationController
       end
     end
 
+    # client filter
+    unless params[:client_id].blank?
+      invoices = invoices.where("invoices.client_id = ?", params[:client_id])
+      @client_id = params[:client_id].to_i rescue nil
+    end
+
     # date filter
     date_field = case params[:sel_data]
                  when 'due_date'
