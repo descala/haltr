@@ -20,10 +20,8 @@ class Person < ActiveRecord::Base
   def phone
     if phone_office.blank? and phone_mobile.blank?
       nil
-    elsif phone_office.blank?
-      phone_mobile
     else
-      phone_office
+      [phone_office, phone_mobile].join(', ')
     end
   end
 

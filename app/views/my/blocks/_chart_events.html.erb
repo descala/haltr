@@ -8,16 +8,36 @@
       <%= select_tag "value", options_for_select({ t(:label_last_changes, count: 10)=>10,
                                                    t(:label_last_changes, count: 20)=>20 },
       User.current.pref.others[:chart_events].to_i),
-      data:  { url: url_for(update_chart_preference_path(project_id: @project)) },
+      data:  { url: url_for(update_chart_preference_path(project_id: @project, client_id: @client)) },
       id:    'chart_events',
       class: 'chart_prefs form-control form-control-auto input-sm'
     %>
     </div>
+    <%
+      num = User.current.pref.others[:chart_events].to_i
+      num = 10 unless num > 0
+    -%>
+
+    <% if @client -%>
+      <%
+      events = @client.events.where('events.type != "HiddenEvent"').order('created_at DESC').first(num)
+    -%>
+      <fieldset>
+        <div class="wrapper-table">
+          <% if events.any? %>
+            <table class="cashflow table table-striped">
+              <%= render partial: 'events/list', locals: {events: events} %>
+            </table>
+          <% else -%>
+            <p><%= l(:label_no_data) %></p>
+          <% end -%>
+        </div>
+      </fieldset>
+      <br />
+    <% else -%>
 
     <% haltr_projects.each do |project| -%>
       <%
-      num = User.current.pref.others[:chart_events].to_i
-      num = 10 unless num > 0
       events = project.events.where('events.type != "HiddenEvent"').order('created_at DESC').first(num)
       @project = project
     -%>
@@ -36,7 +56,8 @@
     </div>
   </fieldset>
   <br />
-<% end -%>
+  <% end -%>
+    <% end -%>
 
 <% @project = old_project %>
   </div>

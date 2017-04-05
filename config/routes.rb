@@ -20,7 +20,6 @@ resources :projects do
   match 'customization', :controller => 'companies', :action => 'customization', :via => :get
   match 'add_bank_info', :controller => 'companies', :action => 'add_bank_info', :via => :get
   match 'invoices/import' => 'invoices#import', :via => [:get,:post]
-  match 'received/import' => 'received#import', :via => [:get,:post]
   match 'invoices/upload' => 'invoices#upload', :via => [:get,:post]
   match 'received/upload' => 'received#upload', :via => [:get,:post]
   match 'invoices/send_new' => 'invoices#send_new_invoices', :via => :get
