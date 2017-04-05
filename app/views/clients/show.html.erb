@@ -174,7 +174,7 @@
                   <td><%= link_to invoice.number, invoice_path(invoice) %></td>
                   <td><%= h invoice.date %></td>
                   <td class="nowrap"><strong><%= h money invoice.total %></strong></td>
-                  <td><%= h l invoice.state %></td>
+                  <td><%= h l "state_#{invoice.state}" %></td>
                 </tr>
               <% end -%>
             </tbody>
@@ -215,7 +215,7 @@
                   <td><%= h invoice.date %></td>
                   <td><%= h invoice.client.name %></td>
                   <td class="nowrap"><strong><%= h money invoice.total %></strong></td>
-                  <td><%= h l invoice.state %></td>
+                  <td><%= h l "state_#{invoice.state}" %></td>
                 </tr>
               <% end -%>
             </tbody>
