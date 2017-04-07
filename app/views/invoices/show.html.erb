@@ -161,64 +161,65 @@
       </fieldset>
     </div>
   </div>
+</div>
 
 
-  <div id="list-right" class="splitcontentright">
-    <div class="mypage-box">
-      <div>
-        <h3><%=h l(:label_comment_plural)%></h3>
-        <div class="wrapper-default">
-          <%= form_tag({controller: 'invoices', action: 'add_comment', id: @invoice, project_id: @project}, id: "add_comment_form") do %>
-            <div class="row">
-              <div class="col-xs-10">
-                <%= text_field 'comment', 'comments', class: 'form-control', placeholder: l(:write_comment) %>
-              </div>
-              <div class="col-xs-2 col-no-pad-left">
-                <%= submit_tag l(:button_add), class: 'btn btn-primary' %>
-              </div>
+<div id="list-right" class="splitcontentright">
+  <div class="mypage-box">
+    <div>
+      <h3><%=h l(:label_comment_plural)%></h3>
+      <div class="wrapper-default">
+        <%= form_tag({controller: 'invoices', action: 'add_comment', id: @invoice, project_id: @project}, id: "add_comment_form") do %>
+          <div class="row">
+            <div class="col-xs-10">
+              <%= text_field 'comment', 'comments', class: 'form-control', placeholder: l(:write_comment) %>
             </div>
-          <% end -%>
-        </div>
-        <fieldset>
-          <div class="wrapper-table">
-            <table class="cashflow table table-striped">
-              <tbody>
-                <% @invoice.comments.reverse.each do |comment| -%>
-                  <tr>
-                    <td class="nowrap"><%= format_time comment.created_on %></td>
-                    <td class="nowrap"><strong><%= comment.author.name %></strong></td>
-                    <td class="w100p"><%= comment.comments %></td>
-                  </tr>
-                <% end -%>
-              </tbody>
-            </table>
+            <div class="col-xs-2 col-no-pad-left">
+              <%= submit_tag l(:button_add), class: 'btn btn-primary' %>
+            </div>
           </div>
-        </fieldset>
+        <% end -%>
       </div>
+      <fieldset>
+        <div class="wrapper-table">
+          <table class="cashflow table table-striped">
+            <tbody>
+              <% @invoice.comments.reverse.each do |comment| -%>
+                <tr>
+                  <td class="nowrap"><%= format_time comment.created_on %></td>
+                  <td class="nowrap"><strong><%= comment.author.name %></strong></td>
+                  <td class="w100p"><%= comment.comments %></td>
+                </tr>
+              <% end -%>
+            </tbody>
+          </table>
+        </div>
+      </fieldset>
     </div>
+  </div>
 
-    <%= render partial: 'invoices/issued_invoice_list_other' if @invoice.is_a? IssuedInvoice %>
-    <%= render partial: 'invoices/channel_links' if (Rails.env == "development" or User.current.allowed_to?(:use_all_readonly, @project)) and @invoice.is_a? IssuedInvoice %>
+  <%= render partial: 'invoices/issued_invoice_list_other' if @invoice.is_a? IssuedInvoice %>
+  <%= render partial: 'invoices/channel_links' if (Rails.env == "development" or User.current.allowed_to?(:use_all_readonly, @project)) and @invoice.is_a? IssuedInvoice %>
 
-    <% if @invoice.is_a? InvoiceTemplate and @invoices_generated and @invoices_generated.any? -%>
-      <h3><%= l(:label_generated_invoices)%></h3>
-      <p>
-      <% @invoices_generated.each do |invoice| -%>
-        <%=link_to_if_authorized invoice.number, controller: 'invoices', action: 'show', id: invoice %><%= ", " unless invoice == @invoices_generated.last %>
-      <% end -%>
-      </p>
+  <% if @invoice.is_a? InvoiceTemplate and @invoices_generated and @invoices_generated.any? -%>
+    <h3><%= l(:label_generated_invoices)%></h3>
+    <p>
+    <% @invoices_generated.each do |invoice| -%>
+      <%=link_to_if_authorized invoice.number, controller: 'invoices', action: 'show', id: invoice %><%= ", " unless invoice == @invoices_generated.last %>
     <% end -%>
+    </p>
+  <% end -%>
 
-    <% content_for :header_tags do %>
-      <%= stylesheet_link_tag 'minimal', plugin: 'haltr' %>
-    <% end %>
+  <% content_for :header_tags do %>
+    <%= stylesheet_link_tag 'minimal', plugin: 'haltr' %>
+  <% end %>
 
-    <%=
-      # @autocall will be automatically called from javascript (haltr_sign.js)
-    # we can get here when pressing "save and send" button on invoice form if
-    # invoice is sent with javascript method (javascript attribute on channels.yml)
-    tag("div", id: 'autocall', 'data-function' => @autocall, 'data-args' => @autocall_args) if @autocall
-  %>
+  <%=
+    # @autocall will be automatically called from javascript (haltr_sign.js)
+  # we can get here when pressing "save and send" button on invoice form if
+  # invoice is sent with javascript method (javascript attribute on channels.yml)
+  tag("div", id: 'autocall', 'data-function' => @autocall, 'data-args' => @autocall_args) if @autocall
+%>
 
 <%=
   if @invoice.client and @invoice.client.sign_with_local_certificate?
@@ -235,4 +236,4 @@
     end
   end
 %>
-  </div>
+</div>
