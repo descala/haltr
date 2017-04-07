@@ -534,3 +534,9 @@ div.wrapper-element {
 div.wrapper-element form {
   display: inline-block;
 }
+a.icon-fa-send.disabled {
+  color: #921b1b !important;
+}
+table.payments {
+  margin-top: 50px;
+}

@@ -1,7 +1,7 @@
 <!-- Client Info -->
 <% unless !@client or @client.new_record? -%>
   <div class="client-info">
-    <h3><%= client_name_with_link @client %></h3>
+    <div><strong><%= client_name_with_link @client %></strong></div>
     <address class="adr">
       <div class="street-address"><%=h @client.address %></div>
       <div class="street-address"><%=h @client.address2 %></div>
@@ -12,7 +12,7 @@
       <% end -%>
       <div class="country-name"><%=h @client.country_name if @client.country and @client.country.casecmp(@company.country) != 0 %></div>
     </address>
-    <div><strong><%=h l(:field_taxcode) %>:</strong><span class="tax-id"> <%=h @client.taxcode.upcase if @client.taxcode %></span></div>
+    <div><%=h l(:field_taxcode) %>:<span class="tax-id"> <%=h @client.taxcode.upcase if @client.taxcode %></span></div>
     <% if call_hook(:invoice_view_client_info).present? -%>
       <%= call_hook(:invoice_view_client_info) %>
     <% elsif @invoice.has_dir3_info? -%>

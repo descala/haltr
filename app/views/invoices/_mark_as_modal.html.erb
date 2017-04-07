@@ -1,0 +1,30 @@
+<!-- Modal -->
+<div class="modal fade" id="modal-mark" tabindex="-1" role="dialog" aria-labelledby="modalMarkLabel">
+  <div class="modal-dialog modal-sm" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><i class="fa fa-times" aria-hidden="true"></i></button>
+        <h4 class="modal-title" id="modalMarkLabel"><%= l :mark_as %></h4>
+      </div>
+      <div class="modal-body">
+        <%= form_tag mark_as_path(@invoice), method: :post do %>
+          <div>
+            <% %w(new sent accepted registered refused closed).each do |state| -%>
+              <% next if @invoice.state == state -%>
+              <div class="radio">
+                <label>
+                  <input type="radio" name="state" value="<%= state %>" required="required"> <%= l "state_#{state}" %>
+                </label>
+              </div>
+            <% end -%>
+            <hr>
+            <div class="text-right set-of-buttons">
+              <button type="button" data-dismiss="modal" aria-label="Close" class="btn btn-link"><%= l :button_cancel %></button>
+              <input type="submit" value="<%= l :button_submit %>" class="btn btn-primary">
+            </div>
+          </div>
+        <% end -%>
+      </div>
+    </div>
+  </div>
+</div>

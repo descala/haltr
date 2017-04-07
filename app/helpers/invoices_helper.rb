@@ -1,7 +1,7 @@
 module InvoicesHelper
 
-  DEFAULT_TAX_PERCENT_VALUES = { :format => "%t %n%p", :negative_format => "%t -%n%p", :separator => ".", :delimiter => ",",
-                                 :precision => 2, :significant => false, :strip_insignificant_zeros => false, :tax_name => "VAT" }
+  DEFAULT_TAX_PERCENT_VALUES = { format: "%t %n%p", negative_format: "%t -%n%p", separator: ".", delimiter: ",",
+                                 precision: 2, significant: false, strip_insignificant_zeros: false, tax_name: "VAT" }
   def clients_for_select
     clients = Client.where(project: @project).order(:name)
     # check if client.valid?: if you request to link profile, and then unlink it, client is invalid
@@ -29,32 +29,32 @@ module InvoicesHelper
   end
 
   def send_link_for_invoice
-    confirm = @invoice.has_been_sent? ? j(l(:sure_to_resend_invoice, :num=>@invoice.number).html_safe) : nil
+    confirm = @invoice.has_been_sent? ? j(l(:sure_to_resend_invoice, num: @invoice.number).html_safe) : nil
     if @invoice.valid? and @invoice.may_queue? and
         ExportChannels.can_send?(@invoice.client.invoice_format)
       if @invoice.client.sign_with_local_certificate?
         # channel uses javascript to send invoice
         if User.current.allowed_to?(:general_use, @project)
-          link_to(l(:label_send), "#", :class=>'icon-haltr-send',
-            :title   => @invoice.sending_info.html_safe,
-            :onclick => ((confirm ? "confirm('#{confirm}') && " : "") +
+          link_to(l(:label_send), "#", class: 'icon-fa icon-fa-send',
+            title: @invoice.sending_info.html_safe,
+            onclick: ((confirm ? "confirm('#{confirm}') && " : "") +
                          @invoice.local_cert_js).html_safe)
         end
       else
         # sending through invoices#send_invoice
         link_to_if_authorized l(:label_send),
-          {:action=>'send_invoice', :id=>@invoice},
-          :class=>'icon-haltr-send', :title => @invoice.sending_info.html_safe,
-          :data=>{:confirm => confirm}
+          {action: 'send_invoice', id: @invoice},
+          class: 'icon-fa icon-fa-send', title: @invoice.sending_info.html_safe,
+          data: {confirm: confirm}
       end
     elsif @invoice.may_queue?
       # invoice has export errors (related to the format or channel)
       # or a format without channel, like "paper"
-      link_to l(:label_send), "#", :class=>'icon-haltr-send disabled',
-        :title => @invoice.sending_info.html_safe
+      link_to l(:label_send), "#", class: 'icon-fa icon-fa-send disabled',
+        title: @invoice.sending_info.html_safe
     else
-      link_to l(:label_send), "#", :class=>'icon-haltr-send disabled',
-        :title => ("#{@invoice.sending_info}<br/>" +
+      link_to l(:label_send), "#", class: 'icon-fa icon-fa-send disabled',
+        title: ("#{@invoice.sending_info}<br/>" +
         "#{I18n.t(:state_not_allowed_for_sending, state: I18n.t("state_#{@invoice.state}"))}").html_safe
     end
   end
@@ -66,9 +66,9 @@ module InvoicesHelper
     if to_confirm.empty?
       return nil
     elsif to_confirm.size == 1
-      return l(:sure_to_resend_invoice, :num => to_confirm.first)
+      return l(:sure_to_resend_invoice, num: to_confirm.first)
     else
-      return l(:sure_to_resend_invoices, :nums => to_confirm.join(", "))
+      return l(:sure_to_resend_invoices, nums: to_confirm.join(", "))
     end
   end
 
@@ -99,11 +99,11 @@ module InvoicesHelper
 
     options.symbolize_keys!
     default_format = I18n.translate(:'number.format',
-                                    :locale => options[:locale],
-                                    :default => {})
+                                    locale: options[:locale],
+                                    default: {})
     tax_format   = I18n.translate(:'number.tax.format',
-                                  :locale => options[:locale],
-                                  :default => {})
+                                  locale: options[:locale],
+                                  default: {})
     default_format  = DEFAULT_TAX_PERCENT_VALUES.merge(default_format).merge!(tax_format)
     default_format[:negative_format] = "-" + options[:format] if options[:format]
     options = default_format.merge!(options)
@@ -116,7 +116,7 @@ module InvoicesHelper
     end
 
     begin
-      value = number_with_precision(number, options.merge(:raise => true))
+      value = number_with_precision(number, options.merge(raise: true))
       format.gsub(/%n/, value).gsub(/%p/, '%').gsub(/%t/,tax.name)
     rescue
       number
@@ -128,9 +128,9 @@ module InvoicesHelper
       invoice.number
     else
       if User.current.admin? or (User.current.logged? and User.current.projects.include?(invoice.project))
-        link_to(invoice.number, {:action=>'show', :id=>invoice})
+        link_to(invoice.number, {action: 'show', id: invoice})
       elsif invoice.visible_by_client?
-        link_to(invoice.number, {:action=>'view', :client_hashid=>invoice.client.hashid, :invoice_id=>invoice.id}, :class=>'public')
+        link_to(invoice.number, {action: 'view', client_hashid: invoice.client.hashid, invoice_id: invoice.id}, class: 'public')
       else
         nil
       end
@@ -139,7 +139,7 @@ module InvoicesHelper
 
   def client_name_with_link(client)
     if authorize_for('clients', 'show')
-      link_to h(client.name), {:controller=>'clients',:action=>'show',:id=>client}
+      link_to h(client.name), {controller: 'clients', action: 'show', id: client}, class: 'underline'
     else
       h(client.name)
     end
@@ -297,7 +297,7 @@ module InvoicesHelper
 
   def select_to_edit(field)
     if @external_company and @external_company.send("dir3_#{field.to_s.pluralize}").any?
-      content_tag :span, l(:button_edit), data: {field: field}, :class => 'icon-fa icon-fa-pencil select_to_edit control-label'
+      content_tag :span, l(:button_edit), data: {field: field}, class: 'icon-fa icon-fa-pencil select_to_edit control-label'
     end
   end
 
@@ -315,7 +315,7 @@ module InvoicesHelper
     lines = Array.new
     invoice.invoice_lines.each_with_index do |line,i|
       break if i > 2
-      lines << truncate(line.description,length:50)
+      lines << truncate(line.description, length: 50)
     end
     desc = Array.new
     desc << money(invoice.total)
@@ -336,7 +336,7 @@ module InvoicesHelper
   def invoice_imgs_context_menu(url)
     unless @context_menu_included
       content_for :header_tags do
-        javascript_include_tag('invoice_imgs_context_menu', :plugin => 'haltr') +
+        javascript_include_tag('invoice_imgs_context_menu', plugin: 'haltr') +
           stylesheet_link_tag('context_menu')
       end
       if l(:direction) == 'rtl'
@@ -370,6 +370,18 @@ module InvoicesHelper
     font_size = [attributes[:y1].to_i-attributes[:y0].to_i-1, 9].max
     font_size = 16 if font_size > 16
     "left:#{attributes[:x0].to_i-1}px; top:#{attributes[:y0].to_i-1}px; height:#{attributes[:y1].to_i-attributes[:y0].to_i+2}px; min-width:#{attributes[:x1].to_i-attributes[:x0].to_i+2}px; font-size:#{font_size}px; line-height: <%=font_size%>px;"
+  end
+
+  def index_url_helper
+    if @invoice.is_a? IssuedInvoice
+      project_invoices_path(@project)
+    elsif @invoice.is_a? ReceivedInvoice
+      project_received_index_path(@project)
+    elsif @invoice.is_a? InvoiceTemplate
+      project_invoice_templates_path(@project)
+    else
+      raise "unknown object type: #{@invoice.class}"
+    end
   end
 
 end

@@ -1,14 +1,13 @@
 <!-- Vendor Info -->
 <div class="vendor-info">
-  <h3><%=h @company.name %></h3>
+  <strong><%=h @company.name %></strong>
   <address class="adr">
     <div class="street-address"><%=h @company.address %></div>
     <span class="postal-code"><%=h @company.postalcode %></span> <span class="locality"><%=h @company.city %></span>
     <div class="region"><%=h @company.province %></div>
     <div class="country-name"></div>
   </address>
-  <div><strong><%=h l(:field_taxcode) %></strong><span class="tax-id"> <%=h @company.taxcode %></span></div>
-  <div style="height:10px;"></div>
+  <p><%=h l(:field_taxcode) %><span class="tax-id"> <%=h @company.taxcode %></span></p>
   <div><%= @company.website %></div>
   <div><%= @company.email %></div>
   <% if @invoice.party_identification.present? -%>
