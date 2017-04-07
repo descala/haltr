@@ -276,7 +276,7 @@ lpayments .item-date { width: 116px; }
 	width: 100%;
 	}
 .invoice-calculations th {
-	padding-left: 382px;
+	padding-right: 50px;
 	text-align: left;
 	line-height: 20px;
 	}

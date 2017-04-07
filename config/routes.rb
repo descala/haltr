@@ -91,7 +91,7 @@ match 'invoices/by_taxcode_and_num' => 'invoices#by_taxcode_and_num', :via => :g
 match 'invoices', :controller => 'invoices', :action => 'destroy', :via => :delete
 match 'received_invoices', :controller => 'received', :action => 'destroy', :via => :delete
 match 'invoice_templates', :controller => 'invoice_templates', :action => 'destroy', :via => :delete
-match 'invoices/:id/mark_as/:state' => 'invoices#mark_as', :via => :get, :as => :mark_as
+match 'invoices/:id/mark_as' => 'invoices#mark_as', :via => :post, :as => :mark_as
 match 'invoices/send_invoice/:id' => 'invoices#send_invoice', :via => :get, :as => :send_invoice
 match 'invoices/amend_for_invoice/:id' => 'invoices#amend_for_invoice', :via => :get, :as => :amend_for_invoice
 match 'invoices/duplicate_invoice/:id' => 'invoices#duplicate_invoice', :via => :get, :as => :duplicate_invoice
