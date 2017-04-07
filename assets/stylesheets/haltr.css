@@ -458,7 +458,7 @@ dd, dt {
   margin-left: 240px;
 }
 div.accept_refuse_form {
-  border: 1px dashed;
+  border: 1px solid;
   margin-bottom: 10px;
   padding: 20px;
 }

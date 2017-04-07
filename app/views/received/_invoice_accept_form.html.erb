@@ -1,25 +1,28 @@
-<fieldset style="padding:5px 30px;">
-<legend><%= l :accept_notification_to, :mail => (@invoice.client and @invoice.client.email.present?) ? @invoice.client.email : "(#{I18n.t(:client_without_email)})" %></legend>
-<%= form_tag(mark_accepted_path(@invoice)) do %>
+<label>
+<%= l :accept_notification_to,
+  mail: (@invoice.client and @invoice.client.email.present?) ?
+  @invoice.client.email : "(#{I18n.t(:client_without_email)})" %>
+</label>
+<%= form_tag mark_accepted_path(@invoice) do %>
 
-  <%= I18n.t(:received_invoice_accepted, :num => @invoice.number, :company => @invoice.company.name) %><br />
+  <%= I18n.t(:received_invoice_accepted, num: @invoice.number, company: @invoice.company.name) %>
 
-  <%= text_area_tag 'reason', "", :rows => 4, :cols => 40 %><br />
+  <%= text_area_tag 'reason', "", rows: 4, class: 'form-control' %>
 
-  ----------------------------------------<br />
+  <hr />
 
-  <%= render :partial => "mail_notifier/invoice", :locals => { :invoice => @invoice } %>
-  <br />
+  <%= render partial: "mail_notifier/invoice", locals: { invoice: @invoice } %>
 
-  <% if @invoice.client and @invoice.client.email.present? -%>
-    <%= button_tag(name: 'commit', value: 'accept_with_mail') do %>
-      <%= I18n.t(:accept_and_mail) %>
+  <div class="text-right">
+    <% if @invoice.client and @invoice.client.email.present? -%>
+      <%= button_tag(name: 'commit', value: 'accept_with_mail', class: 'btn btn-primary') do %>
+        <%= I18n.t(:accept_and_mail) %>
+      <% end -%>
     <% end -%>
-  <% end -%>
 
-  <%= button_tag name: 'commit', value: 'accept' do %>
-    <%= I18n.t(:accept_without_mail) %>
-  <% end -%>
-  <%= button_tag I18n.t(:cancel), onclick: "$('#invoice-accept').hide(); return false;" %>
+    <%= button_tag name: 'commit', value: 'accept', class: 'btn btn-primary' do %>
+      <%= I18n.t(:accept_without_mail) %>
+    <% end -%>
+    <%= button_tag I18n.t(:cancel), onclick: "$('#invoice-accept').hide(); return false;", class: 'btn btn-default' %>
+  </div>
 <% end -%>
-</fieldset>

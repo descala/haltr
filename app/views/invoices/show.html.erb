@@ -27,10 +27,6 @@
         <% end -%>
         <li><%= link_to_if_authorized l(:button_delete), { action: 'destroy', id: @invoice}, data: {confirm: l(:text_are_you_sure)}, method: :delete, class: 'icon-fa icon-fa-trash' %></li>
 
-        <li>
-          <a data-toggle="modal" data-target="#modal-mark" class="icon-fa icon-fa-tag"><%= l :mark_as %></a>
-        </li>
-
         <%= render partial: "#{@invoice.class.to_s.underscore}_menu" %>
       </ul>
     </div>
@@ -62,10 +58,10 @@
 
 
 <% if @invoice.is_a? ReceivedInvoice -%>
-  <div id="invoice-refuse" class="accept_refuse_form" style="display: none;">
+  <div id="invoice-refuse" class="tab-pane form-horizontal" style="display: none;">
     <%= render partial: "invoice_refuse_form" %>
   </div>
-  <div id="invoice-accept" class="accept_refuse_form" style="display: none;">
+  <div id="invoice-accept" class="tab-pane form-horizontal" style="display: none;">
     <%= render partial: "invoice_accept_form" %>
   </div>
 <% end -%>
@@ -111,7 +107,13 @@
 <% else -%>
 
   <% if @invoice.invoice_img -%>
-    <%= render partial: 'invoice_imgs/show', locals: {invoice_img: @invoice.invoice_img } %>
+      <div id="workspace1" class="haltrinvoice">
+        <div id="workspace2">
+          <div id="col1">
+            <%= render partial: 'invoice_imgs/show', locals: {invoice_img: @invoice.invoice_img } %>
+        </div>
+      </div>
+    </div>
   <% else -%>
 
     <div id="invoice_wrapper" class="wrapper-element">

@@ -1,3 +1,7 @@
+<li>
+<a data-toggle="modal" data-target="#modal-mark" class="icon-fa icon-fa-tag"><%= l :mark_as %></a>
+</li>
+
 <% unless !(@invoice.original and @invoice.invoice_format == 'pdf') and @invoice.client.nil? %>
   <li><%= send_link_for_invoice %></li>
 <% end -%>
