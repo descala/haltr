@@ -200,6 +200,18 @@ $(document).ready(function() {
   if ( $(".equalheight").length > 0 ) {
     $('.equalheight').matchHeight();
   }
+  if ( $(".equalheight2").length > 0 ) {
+    $('.equalheight2').matchHeight();
+  }
+  if ( $(".wrapper-dismissible").length > 0 ) {
+    $( ".wrapper-dismissible" ).slideDown( "slow" );
+    $( ".wrapper-dismissible .close" ).click(function() {
+      $( ".wrapper-dismissible" ).slideUp( "fast" );
+    });
+  }
+  if ( $(".modal-launch").length > 0 ) {
+    $('.modal-launch').modal('show');
+  }
 
 });
 
