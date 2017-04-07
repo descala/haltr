@@ -197,12 +197,6 @@ $(document).ready(function() {
   $(".clickable-row > tr").click(function() {
     window.location = $(this).data("href");
   });
-  if ( $(".equalheight").length > 0 ) {
-    $('.equalheight').matchHeight();
-  }
-  if ( $(".equalheight2").length > 0 ) {
-    $('.equalheight2').matchHeight();
-  }
   if ( $(".wrapper-dismissible").length > 0 ) {
     $( ".wrapper-dismissible" ).slideDown( "slow" );
     $( ".wrapper-dismissible .close" ).click(function() {
