@@ -1,36 +1,38 @@
 <div id="invoice_img">
 
-<div class="colu1">
-  <div class="image" style="width: <%=invoice_img.width%>px; background-image: url('<%=project_invoice_img_path(invoice_img, project_id: @project)%>')">
-    <div class="ribbon ribbon-<%= @invoice.state %>">
-      <% if @invoice.is_a? InvoiceTemplate %>
-        <span><%=h l("label_invoice_template") %></span>
-      <% else %>
-        <span title="<%= format_time @invoice.state_updated_at %>"><%=h l("state_#{@invoice.state}").capitalize %></span>
-      <% end %>
-    </div>
-    <%= form_tag({}) do -%>
-      <%= hidden_field_tag 'back_url', url_for(params), :id => nil %>
-      <%= hidden_field_tag 'id', invoice_img.id, :id => nil %>
-      <% invoice_img.tokens && invoice_img.useful_tokens.each do |number,attributes| %>
-        <div class="rectangle-txt hascontextmenu <%='hastag' if invoice_img.token_has_tag?(number)%>" style="<%=invoice_img_token_style(attributes)%>">
-          <%= check_box_tag("token_ids[]", number, false, :id => nil) %>
-          <%=h attributes[:text]%>
+<div class="row">
+  <div class="col-xs-8">
+    <div class="image" style="width: <%=invoice_img.width%>px; background-image: url('<%=project_invoice_img_path(invoice_img, project_id: @project)%>')">
+      <div class="ribbon ribbon-<%= @invoice.state %>">
+        <% if @invoice.is_a? InvoiceTemplate %>
+          <span><%=h l("label_invoice_template") %></span>
+        <% else %>
+          <span title="<%= format_time @invoice.state_updated_at %>"><%=h l("state_#{@invoice.state}").capitalize %></span>
+        <% end %>
+      </div>
+      <%= form_tag({}) do -%>
+        <%= hidden_field_tag 'back_url', url_for(params), :id => nil %>
+        <%= hidden_field_tag 'id', invoice_img.id, :id => nil %>
+        <% invoice_img.tokens && invoice_img.useful_tokens.each do |number,attributes| %>
+          <div class="rectangle-txt hascontextmenu <%='hastag' if invoice_img.token_has_tag?(number)%>" style="<%=invoice_img_token_style(attributes)%>">
+            <%= check_box_tag("token_ids[]", number, false, :id => nil) %>
+            <%=h attributes[:text]%>
+          </div>
+        <% end %>
+        <% invoice_img.tags && invoice_img.tags.each_key do |tag| %>
+          <%= invoice_img_tag_div(invoice_img,tag) %>
+        <% end %>
+        <div style="height: <%=invoice_img.height%>px;">
         </div>
       <% end %>
-      <% invoice_img.tags && invoice_img.tags.each_key do |tag| %>
-        <%= invoice_img_tag_div(invoice_img,tag) %>
-      <% end %>
-      <div style="height: <%=invoice_img.height%>px;">
-      </div>
-    <% end %>
+    </div>
   </div>
-</div>
 
-<div class="colu2">
-  <%= render partial: 'invoice_imgs/metadata', locals: {invoice_img: invoice_img } %>
-</div>
+  <div class="col-xs-4">
+    <%= render partial: 'invoice_imgs/metadata', locals: {invoice_img: invoice_img } %>
+  </div>
 
+</div>
 </div>
 
 <%= invoice_imgs_context_menu invoice_imgs_context_menu_path %>
