@@ -137,7 +137,7 @@ class IssuedInvoice < InvoiceDocument
   end
 
   def last_sent_event
-    events.order(:created_at).select {|e| e.name == 'success_sending' }.last
+    events.where(name: 'success_sending').first
   end
 
   def local_cert_js
