@@ -1,12 +1,12 @@
 <% if @invoice.invoice_img -%>
 
-<div id="invoice_img_edit_metadata">
+<div id="invoice_img_edit_metadata" class="row">
 
-  <div class="colu1">
+  <div class="col-xs-6">
     <img src="<%=project_invoice_img_path(@invoice.invoice_img, project_id: @project)%>" width="100%">
   </div>
 
-  <div class="colu2">
+  <div class="col-xs-6">
 
 <% end -%>
 
@@ -54,7 +54,10 @@
 <% end -%>
 
 <div id="new_client_wrapper" style="display:none;">
-  <%= render partial: 'invoices/new_client', locals: {context: "edit_invoice"} %>
+  <div id="new_client_form">
+    <%= render partial: 'invoices/new_client', locals: {context: 'edit_invoice'} %>
+  </div>
+  <div class="overlay"></div>
 </div>
 
 <%=

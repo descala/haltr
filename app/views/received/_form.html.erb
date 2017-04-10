@@ -2,70 +2,77 @@
 <%= error_messages_for 'client' %>
 
 <% if @project.company.company_offices.any? -%>
-  <div class="seccio grup tabular">
-    <p class="col span-2-de-3">
-    <label for="company_office_id"><%= l(:label_company_office) %></label>
+  <div class="form-group">
+    <%= f.label :company_office, class: 'control-label' do %>
+      <%= l :label_company_office %>
+    <% end -%>
     <%= select :invoice, :company_office_id, @project.company.company_offices.collect {|office|
       ["#{office.address} - #{office.city}", office.id]
     }, { selected: (@invoice.company_office_id rescue nil),
-         include_blank: "#{@project.company.address} - #{@project.company.city}"
-    } %>
-  </p>
+         include_blank: "#{@project.company.address} - #{@project.company.city}",
+    }, class: 'form-control' %>
   </div>
+  <hr class="form-elements">
 <% end -%>
 
-<fieldset class="tabular box">
-  <legend><%=l(:invoice_data)%></legend>
+<h3><%=l(:invoice_data)%></h3>
 
-  <div class="seccio grup">
-    <p class="col span-2-de-2" id="client_select">
-    <%= render :partial=>'received/clients',
-      :locals => { :selected => @created_client || @invoice.client_id } %>
-    </p>
+<div class="form-group" id="client_select">
+  <%= render partial:'received/clients',
+    locals: { selected: @created_client || @invoice.client_id } %>
+</div>
+
+<div class="form-group">
+  <%= f.label :total, l(:total_executable), class: 'control-label' %>
+  <%= f.text_field :total, required: true, class: 'form-control' %>
+</div>
+
+<div class="form-group">
+  <%= f.label :number, l(:field_invoice_number), class: 'control-label' %>
+  <%= f.text_field :number, required: true, class: 'form-control' %>
+</div>
+
+<div class="form-group">
+  <div class="col-xs-6">
+    <%= f.label :date, l(:field_date), class: 'control-label' %>
+    <div class="relative">
+      <%= f.date_field :date, required: true, class: 'form-control' %>
+      <%= calendar_for('invoice_date') %>
+    </div>
   </div>
 
-  <div class="seccio grup">
-    <p class="col span-2-de-4">
-    <%= f.text_field :total, :size => 10, :required => true, :label => l(:total_executable) %>
-    </p>
-    <p class="col span-2-de-4">
-        <%= f.text_field :number, :size => 10, :required => true, :label => l(:field_invoice_number) %>
-    </p>
+  <div class="col-xs-6">
+    <%= f.label :due_date, l(:field_terms), class: 'control-label' %>
+    <div class="relative">
+      <%= f.date_field :due_date, required: true, class: 'form-control' %>
+      <%= calendar_for('invoice_due_date') %>
+    </div>
   </div>
+</div>
 
-  <div class="seccio grup">
-    <p class="col span-2-de-4">
-      <%= f.text_field :date, :size => 10, :required => true %><%= calendar_for('invoice_date') %>
-    </p>
-    <p class="col span-2-de-4">
-      <%= f.text_field :due_date, :size => 10, :required => true %><%= calendar_for('invoice_due_date') %>
-    </p>
-  </div>
+<div class="form-group">
+  <%= f.label :extra_info, I18n.t(:field_description), class: 'control-label' %>
+  <%= f.text_field :extra_info, class: 'form-control' %>
+</div>
 
-  <div class="seccio grup">
-    <p class="col span-2-de-2">
-    <%= f.label :extra_info, I18n.t(:field_description) %>
-    <%= f.text_field :extra_info, no_label: true %>
-    </p>
-  </div>
-</fieldset>
+</div>
 
+<div class="clear">
+</div>
+
+<hr class="form-elements">
 
 <!-- lines (taxes) -->
 
-<fieldset class="tabular box">
-  <legend><%=l(:label_tax_plural)%></legend>
+<h3><%=l(:label_tax_plural)%></h3>
 
-  <div id="invoice_lines" data-tax-names="<%= @project.company.tax_names.join(' ') %>">
-    <%= f.fields_for :invoice_lines do |line_form| %>
-      <%=  render :partial => 'received/invoice_line', :locals => { :f => line_form } %>
-    <% end %>
-  </div>
+<div id="invoice_lines" data-tax-names="<%= @project.company.tax_names.join(' ') %>">
+  <%= f.fields_for :invoice_lines do |line_form| %>
+    <%=  render partial: 'received/invoice_line', locals: { f: line_form } %>
+  <% end %>
+</div>
 
-  <div class="seccio grup">
-    <p class="col span-2-de-2">
-      <!-- cocoon -->
-      <span class='mes'><%= link_to_add_association l(:button_add_tax), f, :invoice_lines, 'data-association-insertion-node' => '#invoice_lines', 'data-association-insertion-method' => 'append', partial: 'received/invoice_line' %></span>
-    </p>
-  </div>
-</fieldset>
+<div class="form-group">
+  <!-- cocoon -->
+  <span class='mes'><%= link_to_add_association l(:button_add_tax), f, :invoice_lines, 'data-association-insertion-node' => '#invoice_lines', 'data-association-insertion-method' => 'append', partial: 'received/invoice_line' %></span>
+</div>

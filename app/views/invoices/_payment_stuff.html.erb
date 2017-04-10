@@ -59,12 +59,12 @@
         (@client and ExportChannels.punts_generals.include?(@client.invoice_format)) or
         (@invoice and @invoice.has_dir3_info?) or
         (@client and ExportChannels.format(@client.invoice_format) =~ /facturae/) -%>
-      <%= render :partial => 'invoices/dir3', locals: { role: 'organ_gestor'} %>
-      <%= render :partial => 'invoices/dir3', locals: { role: 'oficina_comptable'} %>
-      <%= render :partial => 'invoices/dir3', locals: { role: 'unitat_tramitadora'} %>
+      <%= render partial: 'invoices/dir3', locals: { role: 'organ_gestor'} %>
+      <%= render partial: 'invoices/dir3', locals: { role: 'oficina_comptable'} %>
+      <%= render partial: 'invoices/dir3', locals: { role: 'unitat_tramitadora'} %>
     <% end -%>
     <% if @external_company and @external_company.visible_organ_proponent -%>
-      <%= render :partial => 'invoices/dir3', locals: { role: 'organ_proponent'} %>
+      <%= render partial: 'invoices/dir3', locals: { role: 'organ_proponent'} %>
     <% end -%>
   <% end -%>
 
@@ -138,11 +138,11 @@
       <%= text_area(:invoice, :payment_method_text, cols: 40, rows: 2, value: payment_method_text, id: 'payment_other', style: (payment_method==Invoice::PAYMENT_SPECIAL) ? '' : 'display: none;') %>
     </div>
     <div class="col-xs-3">
-      <%= select :invoice, :currency, currency_options_for_select, {:selected=>currency}, :required => true, class: 'form-control form-required' %>
+      <%= select :invoice, :currency, currency_options_for_select, {selected: currency}, required: true, class: 'form-control form-required' %>
     </div>
     <% unless @invoice.is_a?(Quote) -%>
       <div class="col-xs-3">
-        <%= select(:invoice, :terms, Terms.for_select, {:selected=>terms}, class: 'form-control') %>
+        <%= select(:invoice, :terms, Terms.for_select, {selected: terms}, class: 'form-control') %>
         <div id="due_date_cal" class="relative no-display">
           <%= date_field :invoice, :due_date, class: 'form-control' %>
           <%= calendar_for('invoice_due_date') %>

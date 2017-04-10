@@ -272,29 +272,8 @@ div.action-linked_to_mine #companies {
   border: 1px solid #666666;
   overflow: hidden;
 }
-#invoice_img .colu1 {
-  display: inline-block;
-  margin-right: 10px;
-  vertical-align: top;
-}
-#invoice_img .colu2 {
-  text-align: left;
-  display: inline-block;
-  max-width: 210px;
-}
 #invoice_img h3 {
   padding: 0;
-}
-#invoice_img_edit_metadata .colu1 {
-  margin-top: 20px;
-  border: 1px dotted;
-  float: left;
-  width: 40%;
-}
-#invoice_img_edit_metadata .colu2 {
-  float: left;
-  width: 45%;
-  margin-left: 10px;
 }
 #invoice_preview_small_box {
   border: 1px dotted;
@@ -311,9 +290,6 @@ div.action-linked_to_mine #companies {
 }
 #invoice_preview_small_box .invoice-calculations td {
   padding-right: 2px;
-}
-.controller-received select#invoice_client_id {
-  width: 50%;
 }
 table.received_show {
   width: auto;
