@@ -242,6 +242,13 @@
             </div>
           </div>
 
+          <%if @invoice.new_record? %>
+            <hr></hr>
+            <div class="text-right set-of-buttons">
+              <%=link_to l(:cancel), project_invoices_path(@project),class: 'btn btn-link' %>
+              <%= f.submit l(:continue), name: 'continue', class: 'btn btn-primary', id: 'invoice-continue' %>
+            </div>
+          <%end%>
         </fieldset>
       </div>
 
