@@ -137,6 +137,7 @@ i4:
   discount_percent: 0
   discount_text:
   due_date: 2013-02-05
+  state_updated_at: 2014-02-05
   extra_info: "This is a simple invoice. 100 EUR with a 10% VAT tax"
   number: "i4"
   payment_method: 1

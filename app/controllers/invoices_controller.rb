@@ -84,9 +84,27 @@ class InvoicesController < ApplicationController
                    'due_date'
                  when 'state_updated_at'
                    'state_updated_at'
-                 else
+                 when 'date'
                    'date'
+                 else
+                   # old way of filters used in API
+                   unless params[:date_from].blank?
+                     invoices = invoices.where("date >= ?",params[:date_from])
+                   end
+                   unless params["date_to"].blank?
+                     invoices = invoices.where("date <= ?",params[:date_to])
+                   end
+                   unless params[:due_date_from].blank?
+                     invoices = invoices.where("due_date >= ?",params[:due_date_from])
+                   end
+                   unless params[:due_date_to].blank?
+                     invoices = invoices.where("due_date <= ?",params[:due_date_to])
+                   end
+                   unless params[:state_updated_at_from].blank?
+                     invoices = invoices.where("state_updated_at >= ?", params[:state_updated_at_from])
+                   end
                  end
+
     unless params[:date_from].blank?
       invoices = invoices.where("#{date_field} >= ?",params[:date_from])
     end

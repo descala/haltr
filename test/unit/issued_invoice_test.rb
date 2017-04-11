@@ -23,7 +23,7 @@ class IssuedInvoiceTest < ActiveSupport::TestCase
     i = IssuedInvoice.find 4
     assert_equal 'new', i.state
     old_updated_at = i.updated_at
-    assert_nil i.state_updated_at
+    assert_equal '2014-02-05'.to_date, i.state_updated_at
     i.success_sending!
     assert_not_nil i.state_updated_at, 'state modificication sets state_updated_at'
     old_state_updated_at = i.state_updated_at
