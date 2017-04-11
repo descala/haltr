@@ -1,5 +1,5 @@
 <%= error_messages_for 'company' %>
-<%= javascript_include_tag 'company', :plugin => 'haltr' %>
+<%= javascript_include_tag 'company?v=2', :plugin => 'haltr' %>
 
 <!--formulari-->
 <%= form_for @company,
@@ -51,7 +51,7 @@
 <%= call_hook(:company_form_end) %>
 
 <% content_for :header_tags do %>
-  <%= stylesheet_link_tag "graella", :plugin => "haltr"%>
-  <%= javascript_include_tag('iban',:plugin=>'haltr')%>
-  <%= stylesheet_link_tag 'bootstrap.vertical-tabs', plugin: 'haltr' %>
+  <%= stylesheet_link_tag "graella?v=2", :plugin => "haltr"%>
+  <%= javascript_include_tag('iban?v=2',:plugin=>'haltr')%>
+  <%= stylesheet_link_tag 'bootstrap.vertical-tabs?v=2', plugin: 'haltr' %>
 <% end %>
