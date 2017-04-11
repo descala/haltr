@@ -121,7 +121,7 @@ class InvoicesController < ApplicationController
     # filter by text
     unless params[:has_text].blank?
       invoices = invoices.includes(:invoice_lines).references(:invoice_lines).
-        where("invoices.extra_info like ? or invoice_lines.description like ? or invoice_lines.notes like ?", "%#{params[:has_text]}%", "%#{params[:has_text]}%", "%#{params[:has_text]}%")
+        where("number = ? or invoices.extra_info like ? or invoice_lines.description like ? or invoice_lines.notes like ?", params[:has_text], "%#{params[:has_text]}%", "%#{params[:has_text]}%", "%#{params[:has_text]}%")
     end
 
     if params[:format] == 'csv' and !User.current.allowed_to?(:export_invoices, @project)
