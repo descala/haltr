@@ -4,11 +4,13 @@
     <% unless @project -%>
       <th><%= l(:field_project) %></th>
     <% end -%>
-    <th><%= l(:field_date) %></th>
-    <% if User.current.admin? -%>
-      <th><%= l(:field_type) %></th>
-    <% end -%>
     <th></th>
+    <% if User.current.admin? -%>
+      <th></th>
+    <% end -%>
+    <% unless @invoice -%>
+      <th></th>
+    <% end -%>
     <th></th>
     <th></th>
   </tr>
