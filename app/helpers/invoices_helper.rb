@@ -336,7 +336,7 @@ module InvoicesHelper
   def invoice_imgs_context_menu(url)
     unless @context_menu_included
       content_for :header_tags do
-        javascript_include_tag('invoice_imgs_context_menu', plugin: 'haltr') +
+        javascript_include_tag('invoice_imgs_context_menu?v=2', plugin: 'haltr') +
           stylesheet_link_tag('context_menu')
       end
       if l(:direction) == 'rtl'
