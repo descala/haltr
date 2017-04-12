@@ -1382,6 +1382,7 @@ class InvoicesController < ApplicationController
       end
       errors =  []
       transport = params[:transport] || 'uploaded'
+      params[:attachments] ||= []
       params[:attachments].each do |key, attachment_param|
         begin
           attachment = Attachment.find_by_token(attachment_param['token'])
