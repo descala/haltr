@@ -26,7 +26,7 @@
     <!-- Nav tabs -->
     <ul class="nav nav-tabs tabs-left">
       <li class="active"><a href="#invoice-data" data-toggle="tab">1. <%= l :invoice_data %></a></li>
-      <li><a href="#invoice-content" data-toggle="tab">2. <%= l :invoice_content %></a></li>
+      <li><a href="#invoice-content" data-toggle="tab">2. <%= l :field_invoice_lines %></a></li>
       <li><a href="#invoice-factoring" data-toggle="tab">3. <%= l :label_factoring_assignment_data %></a></li>
       <li><a href="#invoice-files" data-toggle="tab">4. <%= l :invoice_attachments %></a></li>
     </ul>
@@ -242,15 +242,24 @@
             </div>
           </div>
 
+          <%if @invoice.new_record? %>
+            <hr></hr>
+            <div class="text-right set-of-buttons">
+              <%=link_to l(:cancel), project_invoices_path(@project),class: 'btn btn-link' %>
+              <%= f.submit l(:continue), name: 'continue', class: 'btn btn-primary', id: 'invoice-continue' %>
+            </div>
+          <%else%>
+            <%=render partial: 'invoices/form_submit', locals: {f: f} %>
+          <%end%>
         </fieldset>
       </div>
 
       <div class="tab-pane" id="invoice-content">
           <fieldset class="form-horizontal">
-            <legend>2. <%= l :invoice_content %></legend>
+            <legend>2. <%= l :field_invoice_lines %></legend>
             <div id="invoice_lines" data-tax-names="<%= @project.company.tax_names.join(' ') %>">
               <%= f.fields_for :invoice_lines do |line_form| %>
-                <%=  render partial: 'invoice_line_fields', locals: { f: line_form } %>
+                <%= render partial: 'invoice_line_fields', locals: {f: line_form} %>
               <% end %>
             </div>
             <!-- cocoon -->
@@ -379,6 +388,7 @@
               </div>
             </div>
           <% end -%>
+          <%=render partial: 'invoices/form_submit', locals: {f: f} %>
           </fieldset>
       </div>
 
@@ -555,6 +565,7 @@
           <% else -%>
             <%= render partial: 'common/premium' %>
           <% end -%>
+          <%=render partial: 'invoices/form_submit', locals: {f: f} %>
         </fieldset>
       </div>
 
@@ -571,6 +582,7 @@
             <%= render partial: 'common/premium' %>
             <p><%=l(:invoice_attachments_description, mb: (Setting.attachment_max_size.to_i / 1024))%></p>
           <%- end %>
+          <%=render partial: 'invoices/form_submit', locals: {f: f} %>
         </fieldset>
       </div>
 

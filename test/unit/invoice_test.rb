@@ -857,7 +857,7 @@ class InvoiceTest < ActiveSupport::TestCase
       name: 'test',
       language: 'en',
       country: 'fr',
-      taxcode: "12345678901",
+      taxcode: "FR60528551658",
       project: invoice.project
     )
     assert_nil invoice.client.company_id
@@ -870,7 +870,7 @@ class InvoiceTest < ActiveSupport::TestCase
       name: 'test',
       language: 'en',
       country: 'fr',
-      taxcode: "12345678901",
+      taxcode: "FR60528551658",
       project: invoice.project
     )
     assert_nil invoice.client.company_id

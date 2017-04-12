@@ -29,7 +29,7 @@ class TaxcodeValidatorTest < ActiveSupport::TestCase
     client.taxcode = ''
     assert !client.valid?
     client.company_identifier = '1234'
-    assert client.valid?
+    assert client.valid?, client.errors.full_messages.join(' ')
   end
 
   test 'fr clients require taxcode or company_identifier' do
@@ -41,12 +41,12 @@ class TaxcodeValidatorTest < ActiveSupport::TestCase
     )
     assert !client.valid?
     assert_equal 'Organization ID/Company Registration Number cannot be blank', client.errors.full_messages.join(' ')
-    client.taxcode = '12345678901'
+    client.taxcode = 'FR60528551658'
     assert client.valid?, client.errors.full_messages.join(' ')
     client.taxcode = ''
     assert !client.valid?
     client.company_identifier = '1234'
-    assert client.valid?
+    assert client.valid?, client.errors.full_messages.join(' ')
   end
 
 end

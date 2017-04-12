@@ -8,20 +8,28 @@
       <% if User.current.admin? -%>
         <td title="<%=e.id%>"><%= e.type %></td>
       <% end -%>
+      <% unless @invoice -%>
+        <td>
+          <% if e.invoice -%>
+            <%= link_to_invoice_with_label(e.invoice) -%>
+          <% elsif e.client -%>
+            <%= link_to "#{l(:field_client)} #{e.client.name}", edit_client_path(e.client) -%>
+          <% elsif e.invoice_id -%>
+            <%= e.invoice_id %>
+          <% elsif e.client_id -%>
+            <%= e.client_id %>
+          <% else -%>
+            <%= e.to_s %>
+          <% end -%>
+        </td>
+      <% end -%>
       <td>
-        <% if e.invoice -%>
-          <%= link_to_invoice_with_label(e.invoice) -%>
-        <% elsif e.client -%>
-          <%= link_to "#{l(:field_client)} #{e.client.name}", edit_client_path(e.client) -%>
-        <% elsif e.invoice_id -%>
-          <%= e.invoice_id %>
-        <% elsif e.client_id -%>
-          <%= e.client_id %>
-        <% else -%>
-          <%= e.to_s %>
+        <% begin -%>
+          <%= render :partial => "events/#{e.type.underscore}", :locals => {:e=>e} %>
+        <% rescue ActionView::MissingTemplate -%>
+          <%= render :partial => "events/event", :locals => {:e=>e} %>
         <% end -%>
       </td>
-      <td><%= l e.name %></td>
       <td>
         <%= link_to '<i class="fa fa-plus-square" aria-hidden="true"></i>'.html_safe, '#', class: 'show-audits', data: {id: e.id} if e.audits.any? %>
       </td>

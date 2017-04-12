@@ -166,6 +166,13 @@ $(document).ready(function() {
     return false;
   });
 
+  // new invoice "continue" button
+  $('input#invoice-continue').click(function() {
+    $('.nav li a[href^="#invoice-content"]').click();
+    $('div#invoice-continue-show').removeClass('hide');
+    return false;
+  });
+
   // functions-clients.js
   if ( $(".table .show-audits").length > 0 ) {
     $( ".table .show-audits" ).click(function() {

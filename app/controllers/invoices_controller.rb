@@ -103,13 +103,16 @@ class InvoicesController < ApplicationController
                    unless params[:state_updated_at_from].blank?
                      invoices = invoices.where("state_updated_at >= ?", params[:state_updated_at_from])
                    end
+                   nil
                  end
 
-    unless params[:date_from].blank?
-      invoices = invoices.where("#{date_field} >= ?",params[:date_from])
-    end
-    unless params["date_to"].blank?
-      invoices = invoices.where("#{date_field} <= ?",params[:date_to])
+    if date_field
+      unless params[:date_from].blank?
+        invoices = invoices.where("#{date_field} >= ?",params[:date_from])
+      end
+      unless params[:date_to].blank?
+        invoices = invoices.where("#{date_field} <= ?",params[:date_to])
+      end
     end
 
     unless params[:client].blank?
@@ -121,7 +124,7 @@ class InvoicesController < ApplicationController
     # filter by text
     unless params[:has_text].blank?
       invoices = invoices.includes(:invoice_lines).references(:invoice_lines).
-        where("invoices.extra_info like ? or invoice_lines.description like ? or invoice_lines.notes like ?", "%#{params[:has_text]}%", "%#{params[:has_text]}%", "%#{params[:has_text]}%")
+        where("number = ? or invoices.extra_info like ? or invoice_lines.description like ? or invoice_lines.notes like ?", params[:has_text], "%#{params[:has_text]}%", "%#{params[:has_text]}%", "%#{params[:has_text]}%")
     end
 
     if params[:format] == 'csv' and !User.current.allowed_to?(:export_invoices, @project)

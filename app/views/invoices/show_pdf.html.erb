@@ -97,7 +97,7 @@
 
 <% if @is_pdf and @debug -%>
   <%= javascript_heads %>
-  <%= javascript_include_tag "/wkhtmltopdf_tableSplitHack.js", :plugin=>'haltr' %>
+  <%= javascript_include_tag "/wkhtmltopdf_tableSplitHack.js?v=2", :plugin=>'haltr' %>
 
 <% else -%>
 

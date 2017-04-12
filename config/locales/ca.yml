@@ -483,7 +483,6 @@ ca:
   tax_AA: "Tasa baixa"
   tax_AAA: "Tasa super reduïda"
   invoice_data: "Dades factura"
-  invoice_content: "Contingut factura"
   invoice_attachments: "Fitxers adjunts"
   bank_info: "Dades bancàries"
 

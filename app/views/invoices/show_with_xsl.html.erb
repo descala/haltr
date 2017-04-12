@@ -95,9 +95,9 @@
     <%= render_menu :invoices_menu, @project %>
   <% end %>
   <% content_for :header_tags do %>
-    <%= stylesheet_link_tag 'minimal', plugin: 'haltr' %>
-    <%= stylesheet_link_tag 'facturae_xslt_viewer', plugin: 'haltr' %>
-    <%= javascript_include_tag "facturae_xslt_viewer", plugin: "haltr"%>
+    <%= stylesheet_link_tag 'minimal?v=2', plugin: 'haltr' %>
+    <%= stylesheet_link_tag 'facturae_xslt_viewer?v=2', plugin: 'haltr' %>
+    <%= javascript_include_tag "facturae_xslt_viewer?v=2", plugin: "haltr"%>
   <% end %>
 
   <%=
@@ -110,14 +110,14 @@
 <%=
   unless @js.blank?
     content_for :header_tags do
-      javascript_include_tag('/invoices/haltr_sign.js') +
-        javascript_include_tag('miniapplet.js', plugin: 'haltr')
+      javascript_include_tag('/invoices/haltr_sign.js?v=2') +
+        javascript_include_tag('miniapplet.js?v=2', plugin: 'haltr')
     end
   end
 
   if @invoice.is_a? IssuedInvoice and @invoice.sending?
     content_for :header_tags do
-      javascript_include_tag 'refresher.js', plugin: 'haltr'
+      javascript_include_tag 'refresher.js?v=2', plugin: 'haltr'
     end
   end
 %>
