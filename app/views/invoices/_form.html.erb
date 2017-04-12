@@ -248,6 +248,8 @@
               <%=link_to l(:cancel), project_invoices_path(@project),class: 'btn btn-link' %>
               <%= f.submit l(:continue), name: 'continue', class: 'btn btn-primary', id: 'invoice-continue' %>
             </div>
+          <%else%>
+            <%=render partial: 'invoices/form_submit', locals: {f: f} %>
           <%end%>
         </fieldset>
       </div>
@@ -386,6 +388,7 @@
               </div>
             </div>
           <% end -%>
+          <%=render partial: 'invoices/form_submit', locals: {f: f} %>
           </fieldset>
       </div>
 
@@ -562,6 +565,7 @@
           <% else -%>
             <%= render partial: 'common/premium' %>
           <% end -%>
+          <%=render partial: 'invoices/form_submit', locals: {f: f} %>
         </fieldset>
       </div>
 
@@ -578,6 +582,7 @@
             <%= render partial: 'common/premium' %>
             <p><%=l(:invoice_attachments_description, mb: (Setting.attachment_max_size.to_i / 1024))%></p>
           <%- end %>
+          <%=render partial: 'invoices/form_submit', locals: {f: f} %>
         </fieldset>
       </div>
 

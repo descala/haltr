@@ -6,18 +6,6 @@
   <%= render partial: 'invoices/form', locals: { f: f } %>
   <!-- warning: form partial leaves a div intencionally open --!>
 
-  <div class="col-xs-2 col-no-pad-right">
-  </div>
-  <div class="col-xs-10 col-no-pad-left">
-    <div class="tab-pane hide" id='invoice-continue-show'>
-      <div class="text-right set-of-buttons">
-        <%= f.submit l(:button_create), name: 'create', class: 'btn btn-primary' %>
-        <% unless @invoice.is_a? InvoiceTemplate or @invoice.is_a? DraftInvoice -%>
-          <%= f.submit l(:button_create_and_send), name: 'create_and_send', class: 'btn btn-primary' %>
-        <% end -%>
-      </div>
-    </div>
-  </div>
 </div>
 <% end %>
 <!--final formulari-->
