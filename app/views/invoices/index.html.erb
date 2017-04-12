@@ -21,6 +21,11 @@
         </ul>
       </div>
     </li>
+    <% if num_can_be_sent > 0 -%>
+      <li>
+        <%= link_to_if_authorized "#{l(:button_send_invoices)} (#{num_can_be_sent})",{:action => 'send_new_invoices'}, class: 'btn btn-default btn-sm' %>
+      </li>
+    <% end -%>
     <li>
       <div class="dropdown">
         <button class="btn btn-success btn-sm dropdown-toggle" type="button" id="dropdownNew" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
