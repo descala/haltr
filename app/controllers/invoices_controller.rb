@@ -103,13 +103,16 @@ class InvoicesController < ApplicationController
                    unless params[:state_updated_at_from].blank?
                      invoices = invoices.where("state_updated_at >= ?", params[:state_updated_at_from])
                    end
+                   nil
                  end
 
-    unless params[:date_from].blank?
-      invoices = invoices.where("#{date_field} >= ?",params[:date_from])
-    end
-    unless params["date_to"].blank?
-      invoices = invoices.where("#{date_field} <= ?",params[:date_to])
+    if date_field
+      unless params[:date_from].blank?
+        invoices = invoices.where("#{date_field} >= ?",params[:date_from])
+      end
+      unless params[:date_to].blank?
+        invoices = invoices.where("#{date_field} <= ?",params[:date_to])
+      end
     end
 
     unless params[:client].blank?
