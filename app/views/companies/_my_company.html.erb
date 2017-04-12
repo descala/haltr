@@ -1,5 +1,5 @@
 <!-- Tab panes -->
-<div class="tab-pane active" id="company-data">
+<div class="tab-pane " id="company-data">
   <fieldset class="form-horizontal">
     <legend class="relative"><%=l(:label_fiscal_data)%></legend>
 
@@ -366,9 +366,18 @@
   </fieldset>
 </div>
 
-<div class="tab-pane" id="company-customization">
+<div class="tab-pane active" id="company-customization">
   <fieldset class="form-horizontal">
     <legend class="relative"><%=l(:label_customization)%></legend>
+
+    <% unless User.current.admin? or User.current.allowed_to?(:email_customization, @project) -%>
+      <% disabled = true -%>
+      <div class="flash info">
+        <%= l(:need_to_upgrade_to_plan, plan: Plan.professional.role_name) %>
+      </div>
+    <% else -%>
+      <% disabled = false -%>
+    <% end -%>
 
     <label><%= l :mail_notifications %></label>
 
@@ -376,7 +385,7 @@
       <div class="col-xs-3 col-xs-offset-3">
         <div class="checkbox">
           <%= f.label :invoice_notifications do %>
-            <%= f.check_box :invoice_notifications %>
+            <%= f.check_box :invoice_notifications, disabled: disabled %>
             <%= l(:label_received) %>
           <% end -%>
         </div>
@@ -384,7 +393,7 @@
       <div class="col-xs-3">
         <div class="checkbox">
           <%= f.label :order_notifications do %>
-            <%= f.check_box :order_notifications %>
+            <%= f.check_box :order_notifications, disabled: disabled %>
             <%= l(:label_received_order_plural) %>
           <% end -%>
         </div>
@@ -397,7 +406,7 @@
       <div class="col-xs-9 col-xs-offset-3">
         <div class="checkbox">
           <%= f.label :auto_process_pdf do %>
-            <%= f.check_box :auto_process_pdf %>
+            <%= f.check_box :auto_process_pdf, disabled: disabled %>
             <%= l(:auto_process_pdf) %>
           <% end -%>
         </div>
@@ -405,7 +414,7 @@
     </div>
     <div class="form-group">
       <div class="col-xs-3 col-xs-offset-3">
-        <%= f.select :invoice_viewer, [[l(:label_invoice_viewer_standard),'standard'],[l(:view_original), 'original']], {}, class: 'form-control' %>
+        <%= f.select :invoice_viewer, [[l(:label_invoice_viewer_standard),'standard'],[l(:view_original), 'original']], {}, class: 'form-control', disabled: disabled %>
       </div>
     </div>
 
@@ -413,7 +422,7 @@
 
     <div class="form-group">
       <div class="col-xs-2 col-xs-offset-3">
-        <%= f.select :line_discounts_as_imports, [[l('as_percent'),false],[l('as_import'),true]], {}, class: 'form-control' %>
+        <%= f.select :line_discounts_as_imports, [[l('as_percent'),false],[l('as_import'),true]], {}, class: 'form-control', disabled: disabled %>
       </div>
     </div>
 
@@ -421,14 +430,14 @@
 
     <div class="form-group">
       <div class="col-xs-3 col-xs-offset-3">
-        <%= f.select :rounding_method, Company.rounding_methods, {}, class: 'form-control' %>
+        <%= f.select :rounding_method, Company.rounding_methods, {}, class: 'form-control', disabled: disabled %>
       </div>
     </div>
     <div class="form-group">
       <div class="col-xs-9 col-xs-offset-3">
         <div class="checkbox">
           <%= f.label :round_before_sum do %>
-            <%= f.check_box :round_before_sum %>
+            <%= f.check_box :round_before_sum, disabled: disabled %>
             <%= l(:round_before_sum) %>
           <% end -%>
         </div>
@@ -439,7 +448,7 @@
 
     <div class="form-group">
       <div class="col-xs-3 col-xs-offset-3">
-        <%= f.select :pdf_template, [[l(:pdf_default),'default'], [l(:pdf_right_windowed_envelope),'right_windowed_envelope']], {}, class: 'form-control' -%>
+        <%= f.select :pdf_template, [[l(:pdf_default),'default'], [l(:pdf_right_windowed_envelope),'right_windowed_envelope']], {}, class: 'form-control', disabled: disabled -%>
       </div>
     </div>
     <%= call_hook(:company_customization_pdf_end) %>
@@ -452,7 +461,7 @@
           options_for_select(valid_languages.reject { |l|
           !(l =~ /^[a-z][a-z][\-A-Z]{0,3}$/)
         }.collect {|l| [I18n.t(:general_lang_name, locale: l),l]}),
-        class: 'form-control' %>
+        class: 'form-control', disabled: disabled %>
       </div>
     </div>
 
@@ -460,12 +469,12 @@
       <div id="invoice_mail_customization_<%=lang%>" class="invoice_mail_customization" style="display: none;">
         <div class="form-group">
           <div class=" col-xs-6 col-xs-offset-3">
-            <%=f.text_field "invoice_mail_subject_#{lang}", class: 'form-control' %>
+            <%=f.text_field "invoice_mail_subject_#{lang}", class: 'form-control', disabled: disabled %>
           </div>
         </div>
         <div class="form-group">
           <div class=" col-xs-6 col-xs-offset-3">
-            <%=f.text_area "invoice_mail_body_#{lang}", rows: 4, class: 'form-control' %>
+            <%=f.text_area "invoice_mail_body_#{lang}", rows: 4, class: 'form-control', disabled: disabled %>
           </div>
         </div>
       </div>
@@ -475,13 +484,13 @@
       <div class="col-xs-6 col-xs-offset-3">
         <div class="checkbox">
           <%= f.label :email_customization do %>
-            <%= f.check_box :email_customization %>
+            <%= f.check_box :email_customization, disabled: disabled %>
             <%= l(:send_custom_text) %>
           <% end -%>
         </div>
         <div class="checkbox">
           <%= f.label :bcc_me do %>
-            <%= f.check_box :bcc_me %>
+            <%= f.check_box :bcc_me, disabled: disabled %>
             <%= l(:field_bcc_me) %>
           <% end -%>
         </div>
@@ -496,7 +505,7 @@
           options_for_select(valid_languages.reject { |l|
           !(l =~ /^[a-z][a-z][\-A-Z]{0,3}$/)
         }.collect {|l| [I18n.t(:general_lang_name, locale: l),l]}),
-        class: 'form-control' %>
+        class: 'form-control', disabled: disabled %>
       </div>
     </div>
 
@@ -504,12 +513,12 @@
       <div id="quote_mail_customization_<%=lang%>" class="quote_mail_customization" style="display: none;">
         <div class="form-group">
           <div class=" col-xs-6 col-xs-offset-3">
-            <%=f.text_field "quote_mail_subject_#{lang}", class: 'form-control' %>
+            <%=f.text_field "quote_mail_subject_#{lang}", class: 'form-control', disabled: disabled %>
           </div>
         </div>
         <div class="form-group">
           <div class=" col-xs-6 col-xs-offset-3">
-            <%=f.text_area "quote_mail_body_#{lang}", rows: 4, class: 'form-control' %>
+            <%=f.text_area "quote_mail_body_#{lang}", rows: 4, class: 'form-control', disabled: disabled %>
           </div>
         </div>
       </div>
@@ -522,6 +531,13 @@
 <div class="tab-pane" id="company-users">
   <fieldset class="form-horizontal">
     <legend class="relative"><%=l(:label_project_users)%></legend>
+
+    <% unless User.current.admin? or User.current.allowed_to?(:email_customization, @project) -%>
+      <div class="flash info">
+        <%= l(:need_to_upgrade_to_plan, plan: Plan.professional.role_name) %>
+      </div>
+    <% end -%>
+
   </fieldset>
 </div>
 
