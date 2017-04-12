@@ -65,13 +65,13 @@ class CompaniesController < ApplicationController
       end
     end
     # check if user trying to customize emails without role
-    unless User.current.admin? or User.current.allowed_to?(:email_customization, @project)
-      # keys come with lang (_ca,_en..) so remove last 3 chars
-      if (params[:company].keys.collect {|k| k[0...-3]} & %w(invoice_mail_body quote_mail_subject quote_mail_body pdf_template)).any?
-        render_403
-        return
-      end
-    end
+    #unless User.current.admin? or User.current.allowed_to?(:email_customization, @project)
+    #  # keys come with lang (_ca,_en..) so remove last 3 chars
+    #  if (params[:company].keys.collect {|k| k[0...-3]} & %w(invoice_mail_body quote_mail_subject quote_mail_body pdf_template)).any?
+    #    render_403
+    #    return
+    #  end
+    #end
     unless User.current.admin?
       # allow to modify own taxcode only if current is invalid #6279
       if @company.valid? or !@company.errors.messages.keys.include?(:taxcode)
