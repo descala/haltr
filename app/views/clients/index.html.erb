@@ -21,9 +21,7 @@
 <%= form_tag({id: @project}, method: :get, class: 'formee') do %>
   <div class="titularAcc">
     <div class="row">
-      <div class="col-xs-6 pad-top-7">
-        <%= l(:label_filter_plural) %>
-      </div>
+      <div class="col-xs-6 pad-top-7"></div>
       <div class="col-xs-6 text-right form-inline">
         <div class="form-group">
           <%= search_field_tag :name, params[:name], class: 'form-control' %>
