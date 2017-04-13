@@ -9,28 +9,12 @@
           <li><%= link_to l(:button_delete), {action: 'destroy', id: @client},
             data:{confirm: l(:confirm_delete_client_with_invoices, issued: @client.issued_invoices.count, received: @client.received_invoices.count, templates: @client.invoice_templates.count)}, method: :delete, class: 'icon-fa icon-fa-trash', title: l(:button_delete) %></li>
         <% else -%>
-          <li><%= link_to l(:button_delete), {action:'destroy',id:@client}, data:{confirm:l(:text_are_you_sure)}, method: :delete, class:'icon icon-del', title:l(:button_delete) %></li>
+          <li><%= link_to l(:button_delete), {action:'destroy', id: @client}, data: {confirm: l(:text_are_you_sure)}, method: :delete, class: 'icon icon-del', title: l(:button_delete) %></li>
         <% end -%>
       </ul>
     </div>
     <div class="col-xs-2">
-      <nav class="text-right">
-        <ul class="pages">
-          <% if @client.previous %>
-            <li>
-              <%= link_to '', {action: 'show', id: @client.previous},
-                class: 'fa fa-angle-left',
-                aria: {hidden: true, label: l(:label_previous)} %>
-            </li>
-          <% end %>
-          <% if @client.next%>
-            <li>
-              <%= link_to '', {action: 'show', id: @client.next},
-                class: 'fa fa-angle-right',
-                aria: {hidden: true, label: l(:label_next)} %></li>
-          <% end %>
-        </ul>
-      </nav>
+      <%= render partial: 'common/navigation_links', locals: {obj: @client} %>
     </div>
   </div>
 </div>

@@ -504,3 +504,6 @@ a.icon-fa-send.disabled {
 table.payments {
   margin-top: 50px;
 }
+ul.pages li span:hover.disabled {
+  background-color: #F0F0F0 !important;
+}

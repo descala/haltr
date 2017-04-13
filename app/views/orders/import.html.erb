@@ -1,16 +1,17 @@
 <!--formulari-->
-<div class="seccio grup">
-  <div class="col span-2-de-2">
-
-    <%= form_tag({:action => 'import', :project_id => @project}, :class=>'formee', :multipart => true) do %>
-      <div>
-        <%= file_field_tag "file" %>
-      </div>
-      <%= submit_tag l(:label_import) %>
-    <% end %>
-
+<%= form_tag({action: 'import', project_id: @project}, class: 'form-horizontal', multipart: true) do %>
+  <div class="form-group">
+    <div class="col-xs-5 col-xs-offset-2">
+    <%= file_field_tag 'file', class: 'filestyle', data: {input: 'true', iconName: 'fa fa-folder', badge: 'false'} %>
+    </div>
   </div>
-</div>
+
+  <div class="form-group">
+    <div class="col-xs-5 col-xs-offset-2 text-right">
+      <%= submit_tag l(:label_import), class: 'btn btn-primary' %>
+    </div>
+  </div>
+<% end %>
 <!--final formulari-->
 
 <% html_title(l(:import_order)) -%>
