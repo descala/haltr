@@ -70,7 +70,7 @@
         <div class="col-xs-6 text-right form-inline">
           <div class="form-group">
             <label for="has_text" class="sr-only"><%= l(:field_has_text) %></label>
-            <%= search_field_tag :has_text, params[:has_text], class: 'form-control' %>
+            <%= search_field_tag :has_text, params[:has_text], class: 'form-control', placeholder: [l(:field_number), l(:field_extra_info), l(:field_description)].join(', ') %>
           </div>
           <%= button_tag(content_tag('i', '', class: 'fa fa-search', 'aria-hidden' => 'true'), class: "btn btn-search", name: nil, type: :submit) %>
         </div>
