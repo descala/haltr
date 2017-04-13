@@ -116,7 +116,7 @@ th.money, td.money, .money{
   width: 950px;
 }
 
-#new_client {
+.new_client_box form, .new_client_box>div {
   margin: 30px;
 }
 
