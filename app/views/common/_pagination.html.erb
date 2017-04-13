@@ -8,7 +8,7 @@
     </div>
     <div class="col-xs-4 text-right">
       <form class="form-inline">
-        <label for="sel-results"><%= l :button_show %></label>
+        <label for="sel-results"><%= l :button_show %></label> <%= "(#{@invoice_pages.first_item}-#{@invoice_pages.last_item}/#{@invoice_pages.item_count})" %>
         <%= select_tag('sel-results', options_for_select(Setting.per_page_options_array, selected: params[:per_page]), class: 'form-control') %>
       </form>
     </div>
