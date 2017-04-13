@@ -20,6 +20,26 @@
         <li><%= send_link_for_quote %></li>
       </ul>
     </div>
+    <div class="col-xs-2">
+      <nav class="text-right">
+        <ul class="pages">
+          <% if @invoice.previous %>
+            <li>
+              <%=h link_to '', {action: 'show', id: @invoice.previous},
+                class: 'fa fa-angle-left',
+                aria: {hidden: true, label: l(:label_previous)} %>
+            </li>
+          <% end %>
+          <% if @invoice.next%>
+            <li>
+              <%=h link_to '', {action: 'show', id: @invoice.next},
+                class: 'fa fa-angle-right',
+                aria: {hidden: true, label: l(:label_next)} %>
+            </li>
+          <% end %>
+        </ul>
+      </nav>
+    </div>
   </div>
 </div>
 <!--final menu rapid-->
