@@ -1,18 +1,28 @@
-<!--formulari-->
-<%= form_tag({action: 'import', project_id: @project}, class: 'form-horizontal', multipart: true) do %>
-  <div class="form-group">
-    <div class="col-xs-5 col-xs-offset-2">
-    <%= file_field_tag 'file', class: 'filestyle', data: {input: 'true', iconName: 'fa fa-folder', badge: 'false'} %>
-    </div>
-  </div>
+<div class="row">
+<div class="col-xs-6">
+  <h2><%= l :label_order_plural %></h2>
+</div>
+</div>
 
-  <div class="form-group">
-    <div class="col-xs-5 col-xs-offset-2 text-right">
-      <%= submit_tag l(:label_import), class: 'btn btn-primary' %>
+<div class="tab-pane row form-horizontal">
+
+  <!--formulari-->
+  <%= form_tag({action: 'import', project_id: @project}, class: 'form-horizontal', multipart: true) do %>
+    <div class="form-group">
+      <%= label_tag :file, l(:label_attachment_plural), class: 'col-xs-3 control-label' %>
+      <div class="col-xs-5">
+        <%= file_field_tag 'file', class: 'filestyle', data: {input: 'true', iconName: 'fa fa-folder', badge: 'false'} %>
+      </div>
     </div>
-  </div>
-<% end %>
-<!--final formulari-->
+
+    <div class="form-group">
+      <div class="col-xs-8 text-right">
+        <%= submit_tag l(:label_import), class: 'btn btn-primary' %>
+      </div>
+    </div>
+  <% end %>
+  <!--final formulari-->
+</div>
 
 <% html_title(l(:import_order)) -%>
 
