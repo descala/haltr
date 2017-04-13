@@ -379,6 +379,8 @@ module InvoicesHelper
       project_received_index_path(@project)
     elsif @invoice.is_a? InvoiceTemplate
       project_invoice_templates_path(@project)
+    elsif @invoice.is_a? Quote
+      project_quotes_path(@project)
     else
       raise "unknown object type: #{@invoice.class}"
     end
