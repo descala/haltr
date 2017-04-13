@@ -24,11 +24,11 @@
     </div>
 
     <div class="form-group">
-      <%= f.label :company, class: 'col-xs-3 control-label' do %>
-        <%= l :field_company %>
+      <%= f.label :client_id, class: 'col-xs-3 control-label' do %>
+        <%= l :field_client %>
       <% end -%>
       <div class="col-xs-4">
-        <%= f.select :company, clients_for_select, {}, class: 'form-control' %>
+        <%= f.select :client_id, clients_for_select, {}, class: 'form-control' %>
       </div>
     </div>
 
@@ -39,7 +39,7 @@
       <div class="col-xs-3">
         <div class="relative">
           <%= f.date_field :date, required: true, class: 'form-control' %>
-          <%= calendar_for('quote_date') %>
+          <%= calendar_for('invoice_date') %>
         </div>
       </div>
     </div>
@@ -52,7 +52,7 @@
         <input type="hidden" value="custom" id="invoice_terms" />
         <div class="relative">
           <%= f.date_field :due_date, class: 'form-control' %>
-          <%= calendar_for('quote_due_date') %>
+          <%= calendar_for('invoice_due_date') %>
         </div>
       </div>
     </div>
@@ -114,34 +114,36 @@
   <label><%=l(:label_tax_plural)%></label>
 
   <% if @invoice.taxes_hash.empty? -%>
-    <%= link_to_if_authorized l(:add_taxes_on_company), project_my_company_path(@project) -%>
+    <p><%= link_to_if_authorized l(:add_taxes_on_company), project_my_company_path(@project) -%></p>
   <% end -%>
 
   <% @invoice.taxes_hash.keys.sort.each do |name| -%>
     <div class="form-group">
-      <div class="col-xs-3">
-        <%= label_tag "#{name}_global", name%>
+        <%= label_tag "#{name}_global", name, class: 'col-xs-3 control-label' %>
+      <div class="col-xs-2">
         <%= select_tag("#{name}_global",
                        options_for_select(tax_categories_array(@invoice,name),
                                           selected: @invoice.global_code_for(name)),
         disabled: @invoice.tax_per_line?(name),
-        style: "width: 90px;",
-        'class' => 'global_tax',
+        class: 'form-control global_tax',
         'data-tax-name' => name ) %>
       </div>
-      <div class="col-xs-3 check-box-alineat">
-        <%= check_box_tag("#{name}_multiple", 1, @invoice.tax_per_line?(name), class: 'global_tax_check', 'data-tax-name' => name) %>
-        <span>
-          <%= l(:line_specific_tax) %>
-        </span>
+      <div class="col-xs-2">
+        <div class="checkbox">
+          <%= label_tag "#{name}_multiple" do %>
+            <%= check_box_tag("#{name}_multiple", 1, @invoice.tax_per_line?(name), class: 'global_tax_check', 'data-tax-name' => name) %>
+            <%= l :line_specific_tax %>
+          <% end -%>
+        </div>
       </div>
-      <div id="<%=name%>_comment" style="<%= hide_if_not_exempt_tax(name) %>" class="col span-3-de-5">
+      <div style="<%= hide_if_not_exempt_tax(name) %>" class="col span-3-de-5">
         <%= label_tag "#{name}_comment", l("field_comment") %>
         <%= text_field_tag("#{name}_comment", @invoice.global_comment_for(name)) %>
       </div>
     </div>
   <% end -%>
 
+  <hr class="form-elements">
 
   <label><%=l(:field_invoice_lines)%></label>
   <div id="invoice_lines" data-tax-names="<%= @project.company.tax_names.join(' ') %>">
@@ -152,6 +154,18 @@
   <div class="form-group">
     <div class="col-xs-3">
       <!-- cocoon -->
-      <span class='mes'><%= link_to_add_association l(:button_add_invoice_line), f, :invoice_lines, 'data-association-insertion-node' => '#invoice_lines', 'data-association-insertion-method' => 'append' %></span>
+      <span class='mes'><%= link_to_add_association l(:button_add_invoice_line), f, :invoice_lines, data: {'association-insertion-node' => '#invoice_lines', 'association-insertion-method' => 'append'} %></span>
     </div>
   </div>
+
+  <hr></hr>
+  <div class="text-right set-of-buttons">
+    <% if @invoice.new_record? -%>
+      <%= f.submit l(:button_create), name: 'create', class: 'btn btn-primary' %>
+      <%= f.submit l(:button_create_and_send), name: 'create_and_send', class: 'btn btn-primary' %>
+    <% else -%>
+      <%= f.submit l(:button_save), name: 'save', class: 'btn btn-primary' %>
+      <%= f.submit l(:button_save_and_send), name: 'save_and_send', class: 'btn btn-primary' %>
+    <% end -%>
+  </div>
+</div>

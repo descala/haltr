@@ -1,30 +1,24 @@
-
-<%if @invoice.new_record? %>
-  <hr></hr>
-  <div class="text-right set-of-buttons">
-  <%= link_to l(:cancel), project_invoices_path(@project),class: 'btn btn-link' %>
-  <%= f.submit l(:button_create), name: 'create', class: 'btn btn-primary' %>
-  <% unless @invoice.is_a? InvoiceTemplate or @invoice.is_a? DraftInvoice -%>
-    <%= f.submit l(:button_create_and_send), name: 'create_and_send', class: 'btn btn-primary' %>
-  <% end -%>
-  </div>
-<% else -%>
-  <hr></hr>
-  <div class="text-right set-of-buttons">
-  <%= link_to l(:cancel), invoice_path(@invoice), class: 'btn btn-link' %>
-  <% if @invoice.original and @invoice.invoice_format != 'pdf' and !@invoice.modified_since_created? -%>
-    <%= f.submit l(:button_save), name: 'save', data: {confirm: l(:overriding_original_warn)}, class: 'btn btn-primary' %>
-  <% else -%>
-    <%= f.submit l(:button_save), name: 'save', class: 'btn btn-primary' %>
-  <% end -%>
-  <% unless @invoice.is_a? InvoiceTemplate or @invoice.is_a? DraftInvoice -%>
-    <% if @invoice.original and @invoice.invoice_format != 'pdf' and !@invoice.modified_since_created? -%>
-    <%= f.submit l(:button_save_and_send), name: 'save_and_send', data: {confirm: l(:overriding_original_warn)}, class: 'btn btn-primary' %>
-    <% else -%>
-    <%= f.submit l(:button_save_and_send), name: 'save_and_send', class: 'btn btn-primary' %>
+<hr></hr>
+<div class="text-right set-of-buttons">
+  <%if @invoice.new_record? %>
+    <%= link_to l(:cancel), project_invoices_path(@project),class: 'btn btn-link' %>
+    <%= f.submit l(:button_create), name: 'create', class: 'btn btn-primary' %>
+    <% unless @invoice.is_a? InvoiceTemplate or @invoice.is_a? DraftInvoice -%>
+      <%= f.submit l(:button_create_and_send), name: 'create_and_send', class: 'btn btn-primary' %>
     <% end -%>
-  <% end -%>
-  </div>
-
-<%end%>
-
+  <% else -%>
+    <%= link_to l(:cancel), invoice_path(@invoice), class: 'btn btn-link' %>
+    <% if @invoice.original and @invoice.invoice_format != 'pdf' and !@invoice.modified_since_created? -%>
+      <%= f.submit l(:button_save), name: 'save', data: {confirm: l(:overriding_original_warn)}, class: 'btn btn-primary' %>
+    <% else -%>
+      <%= f.submit l(:button_save), name: 'save', class: 'btn btn-primary' %>
+    <% end -%>
+    <% unless @invoice.is_a? InvoiceTemplate or @invoice.is_a? DraftInvoice -%>
+      <% if @invoice.original and @invoice.invoice_format != 'pdf' and !@invoice.modified_since_created? -%>
+        <%= f.submit l(:button_save_and_send), name: 'save_and_send', data: {confirm: l(:overriding_original_warn)}, class: 'btn btn-primary' %>
+      <% else -%>
+        <%= f.submit l(:button_save_and_send), name: 'save_and_send', class: 'btn btn-primary' %>
+      <% end -%>
+    <% end -%>
+  <%end%>
+</div>
