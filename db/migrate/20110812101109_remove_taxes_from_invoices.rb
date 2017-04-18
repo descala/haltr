@@ -24,7 +24,7 @@ class RemoveTaxesFromInvoices < ActiveRecord::Migration
           end
         end
         invoice.save(:validate=>false) # to trigger update_imports method and update invoice imports
-      end
+      end rescue nil
     end
     remove_column :invoices, :withholding_tax_in_cents
     remove_column :invoices, :apply_withholding_tax
