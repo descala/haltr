@@ -507,3 +507,6 @@ table.payments {
 ul.pages li span:hover.disabled {
   background-color: #F0F0F0 !important;
 }
+div.wrapper-pagination-results label {
+  padding-top: 5px;
+}
