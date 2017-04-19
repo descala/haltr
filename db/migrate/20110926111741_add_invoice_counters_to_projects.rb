@@ -13,7 +13,7 @@ class AddInvoiceCountersToProjects < ActiveRecord::Migration
         :issued_invoices_count   => p.issued_invoices.length,
         :received_invoices_count => p.received_invoices.length,
         :invoice_templates_count => p.invoice_templates.length
-    end
+    end rescue nil
   end
 
   def self.down
