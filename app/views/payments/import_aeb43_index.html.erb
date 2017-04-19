@@ -22,3 +22,8 @@
 <% content_for :sidebar do %>
   <%= render_menu :payments_menu, @project %>
 <% end %>
+
+<script type="text/javascript">
+// set
+$(":file").filestyle('buttonText', '&nbsp;<%= l :field_filename %>');
+</script>
