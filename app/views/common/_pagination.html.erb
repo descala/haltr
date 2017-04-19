@@ -14,9 +14,6 @@
           </div>
           <div class="col-xs-4">
             <%= select_tag('sel-results', options_for_select(Setting.per_page_options_array, selected: params[:per_page]), class: 'form-control') %>
-            <div class="text-center">
-              <%= "(#{pages.first_item}-#{pages.last_item}/#{pages.item_count})" %>
-            </div>
           </div>
         </div>
       </form>
