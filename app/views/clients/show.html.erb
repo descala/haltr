@@ -9,7 +9,7 @@
           <li><%= link_to l(:button_delete), {action: 'destroy', id: @client},
             data:{confirm: l(:confirm_delete_client_with_invoices, issued: @client.issued_invoices.count, received: @client.received_invoices.count, templates: @client.invoice_templates.count)}, method: :delete, class: 'icon-fa icon-fa-trash', title: l(:button_delete) %></li>
         <% else -%>
-          <li><%= link_to l(:button_delete), {action:'destroy', id: @client}, data: {confirm: l(:text_are_you_sure)}, method: :delete, class: 'icon icon-del', title: l(:button_delete) %></li>
+          <li><%= link_to l(:button_delete), {action:'destroy', id: @client}, data: {confirm: l(:text_are_you_sure)}, method: :delete, class: 'icon-fa icon-fa-trash', title: l(:button_delete) %></li>
         <% end -%>
       </ul>
     </div>
@@ -24,7 +24,7 @@
     <p>
     <strong class="s16"><%= h @client.name %></strong>
     <% if @client.company -%>
-      <span class="marg-left-15 icon-fa fa-link"><%= l :linked %></span>
+      <span class="marg-left-15 icon-fa icon-fa-chain"><%= l :linked %></span>
     <% else -%>
       <span class="marg-left-15 icon-fa icon-fa-chain-broken"><%= l :not_linked %></span>
     <% end -%>
