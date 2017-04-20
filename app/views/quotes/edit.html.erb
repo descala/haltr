@@ -1,8 +1,7 @@
 <!--formulari-->
-<%= form_for @invoice, url: {action: 'update', id: @invoice}, html: {method: :put} do |f| %>
+<%= form_for :invoice, url: {action: 'update', id: @invoice}, html: {method: :put} do |f| %>
+  <% f.object = @invoice -%>
   <%= render partial: 'quotes/form', locals: { f: f } %>
-  <%= f.submit l(:button_save), name: 'save' %>
-  <%= f.submit l(:button_save_and_send), name: 'save_and_send' %>
 <% end %>
 <!--final formulari-->
 

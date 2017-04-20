@@ -29,24 +29,7 @@
       </ul>
     </div>
     <div class="col-xs-2">
-      <nav class="text-right">
-        <ul class="pages">
-          <% if @invoice.previous %>
-            <li>
-              <%=h link_to '', {action: 'show', id: @invoice.previous},
-                class: 'fa fa-angle-left',
-                aria: {hidden: true, label: l(:label_previous)} %>
-            </li>
-          <% end %>
-          <% if @invoice.next%>
-            <li>
-              <%=h link_to '', {action: 'show', id: @invoice.next},
-                class: 'fa fa-angle-right',
-                aria: {hidden: true, label: l(:label_next)} %>
-            </li>
-          <% end %>
-        </ul>
-      </nav>
+      <%= render partial: 'common/navigation_links', locals: {obj: @invoice} %>
     </div>
   </div>
 </div>
@@ -153,10 +136,7 @@
     <div class="chart_events">
       <h3><%= l :label_history %></h3>
       <div class="wrapper-default">
-        <select name="value" id="chart_events" data-url="/charts/update_chart_preference?project_id=software-tests-joan" class="chart_prefs form-control form-control-auto input-sm">
-          <option value="10">últims 10 canvis</option>
-          <option value="20">últims 20 canvis</option>
-        </select>
+        <p>&nbsp;</p>
       </div>
       <fieldset>
         <div class="wrapper-table">
@@ -166,7 +146,6 @@
     </div>
   </div>
 </div>
-
 
 <div id="list-right" class="splitcontentright">
   <div class="mypage-box">

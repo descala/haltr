@@ -204,6 +204,11 @@ $(document).ready(function() {
   $(".clickable-row > tr").click(function() {
     window.location = $(this).data("href");
   });
+  if ( $(".table-show").length > 0 ) {
+    $(".table-show > tbody > tr").hover(
+        function() { $( this ).find(".fa").toggle(); },
+        function() { $( this ).find(".fa").toggle(); });
+  }
 
 });
 

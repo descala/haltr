@@ -1,22 +1,48 @@
-<div class="seccio grup">
-  <div class="col span-2-de-2">
+<div class="row">
+<div class="col-xs-6">
+  <h2><%= l :label_invoice_plural %></h2>
+</div>
+</div>
 
-    <%= form_tag({}, :multipart => true) do %>
-      <div class="box tabular">
-        <p>
-        <label><%=l(:label_attachment_plural)%></label>
-        <%= render :partial => 'attachments/form' %>
-        </p>
-        <% if @issued %>
-          <%= check_box_tag "send_after_import" %> <%= l(:send_after_import) %>
-          <%= check_box_tag 'validate', 'false' %> <%= l(:skip_invoice_validations) %>
-        <% end -%>
+<div class="tab-pane row form-horizontal">
+
+  <%= form_tag({}, multipart: true) do %>
+    <div class="form-group">
+      <%= label_tag :file, l(:label_attachment_plural), class: 'col-xs-3 control-label' %>
+
+      <div class="col-xs-5">
+        <%= render partial: 'attachments/form' %>
       </div>
-      <%= hidden_field_tag(:issued, @issued) %>
-      <%= submit_tag l(:label_import) %>
-    <% end %>
 
-  </div>
+    </div>
+
+    <% if @issued %>
+      <div class="form-group">
+        <div class="col-xs-5 col-xs-offset-3">
+          <div class="checkbox">
+            <%= label_tag 'send_after_import' do %>
+              <%= check_box_tag 'send_after_import' %>
+              <%= l(:send_after_import) %>
+            <% end -%>
+          </div>
+          <div class="checkbox">
+            <%= label_tag 'validate' do %>
+              <%= check_box_tag 'validate', 'false' %>
+              <%= l(:skip_invoice_validations) %>
+            <% end -%>
+          </div>
+        </div>
+      </div>
+    <% end -%>
+    <%= hidden_field_tag(:issued, @issued) %>
+
+    <div class="form-group">
+      <div class="col-xs-8 text-right">
+        <%= submit_tag l(:label_import), class: 'btn btn-primary' %>
+      </div>
+    </div>
+  <% end %>
+
 </div>
 
 <% html_title(l(:import_invoice)) -%>

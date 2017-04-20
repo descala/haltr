@@ -2,7 +2,8 @@ require File.expand_path('../../test_helper', __FILE__)
 
 class InvoiceImgTest < ActiveSupport::TestCase
 
-  fixtures :invoices, :invoice_lines, :events, :invoice_imgs, :clients
+  fixtures :invoices, :invoice_lines, :events, :invoice_imgs, :clients,
+    :companies
 
   test "requires an invoice" do
     assert !InvoiceImg.new.save, "should not save without an invoice"

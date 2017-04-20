@@ -21,6 +21,11 @@
         </ul>
       </div>
     </li>
+    <% if num_can_be_sent > 0 -%>
+      <li>
+        <%= link_to_if_authorized "#{l(:button_send_invoices)} (#{num_can_be_sent})",{:action => 'send_new_invoices'}, class: 'btn btn-default btn-sm' %>
+      </li>
+    <% end -%>
     <li>
       <div class="dropdown">
         <button class="btn btn-success btn-sm dropdown-toggle" type="button" id="dropdownNew" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
@@ -65,7 +70,7 @@
         <div class="col-xs-6 text-right form-inline">
           <div class="form-group">
             <label for="has_text" class="sr-only"><%= l(:field_has_text) %></label>
-            <%= search_field_tag :has_text, params[:has_text], class: 'form-control' %>
+            <%= search_field_tag :has_text, params[:has_text], class: 'form-control', placeholder: [l(:field_number), l(:field_extra_info), l(:field_description)].join(', ') %>
           </div>
           <%= button_tag(content_tag('i', '', class: 'fa fa-search', 'aria-hidden' => 'true'), class: "btn btn-search", name: nil, type: :submit) %>
         </div>
@@ -204,7 +209,7 @@
       </tbody>
       <tfoot>
         <tr>
-          <td colspan="8"><%= call_hook(:invoices_index_list_footer, {pages: @invoice_pages}) %></td>
+          <td colspan="8" class="text-center"><%= call_hook(:invoices_index_list_footer, {pages: @invoice_pages}) %></td>
         </tr>
       </tfoot>
     </table>

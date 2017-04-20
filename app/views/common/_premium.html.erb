@@ -8,8 +8,8 @@
       <strong><%= l :invoice_attachments_permission %></strong>
     </h3>
     <div class="set-of-buttons">
-      <%= link_to l(:more_info), "/#{I18n.locale}/plan-premium-profesional.html", class: 'btn btn-white btn-sm' %>
-      <%= link_to l(:become_premium), "", class: 'btn btn-premium btn-sm' %>
+      <%= link_to l(:more_info), "/#{I18n.locale}/plan-premium-profesional.html", class: 'btn btn-white btn-sm', target: '_blank' %>
+      <%= link_to l(:become_premium), my_account_path, class: 'btn btn-premium btn-sm' %>
     </div>
   </div>
 </div>

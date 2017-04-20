@@ -214,7 +214,7 @@
       <% @invoice.taxes_uniq.each do |tax| -%>
         <tr class="sales-tax">
           <td colspan="<%= line_cells - 3 %>"></td>
-          <td class="text-right" colspan="2"><%= h tax_name(tax) %> <%= " #{l(:over_taxable_base)} #{money(@invoice.taxable_base(tax))}" unless @invoice.tax_applies_to_all_lines?(tax) %>:</td>
+          <td class="text-right" colspan="2"><%= h tax_name(tax) %><%= " #{l(:over_taxable_base)} #{money(@invoice.taxable_base(tax))}" unless @invoice.tax_applies_to_all_lines?(tax) %>:</td>
           <td class="text-right"><%= h money(@invoice.tax_amount(tax)) %></td>
         </tr>
       <% end -%>

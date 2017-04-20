@@ -116,7 +116,7 @@ th.money, td.money, .money{
   width: 950px;
 }
 
-#new_client {
+.new_client_box form, .new_client_box>div {
   margin: 30px;
 }
 
@@ -515,4 +515,10 @@ a.icon-fa-send.disabled {
 }
 table.payments {
   margin-top: 50px;
+}
+ul.pages li span:hover.disabled {
+  background-color: #F0F0F0 !important;
+}
+div.wrapper-pagination-results label {
+  padding-top: 5px;
 }

@@ -1,8 +1,7 @@
 <!--formulari-->
-<%= form_for @invoice, url: {action: 'create', project_id: @project} do |f| %>
+<%= form_for :invoice, url: {action: 'create', project_id: @project} do |f| %>
+  <% f.object = @invoice -%>
   <%= render partial: 'quotes/form', locals: { f: f } %>
-  <%= f.submit l(:button_create), name: 'create' %>
-  <%= f.submit l(:button_create_and_send), name: 'create_and_send' %>
 <% end %>
 <!--final formulari-->
 

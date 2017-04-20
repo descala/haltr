@@ -8,8 +8,14 @@
     </div>
     <div class="col-xs-4 text-right">
       <form class="form-inline">
-        <label for="sel-results"><%= l :button_show %></label>
-        <%= select_tag('sel-results', options_for_select(Setting.per_page_options_array, selected: params[:per_page]), class: 'form-control') %>
+        <div class="row">
+          <div class="col-xs-8 text-right">
+            <label for="sel-results"><%= l :button_show %></label>
+          </div>
+          <div class="col-xs-4">
+            <%= select_tag('sel-results', options_for_select(Setting.per_page_options_array, selected: params[:per_page]), class: 'form-control') %>
+          </div>
+        </div>
       </form>
     </div>
   </div>

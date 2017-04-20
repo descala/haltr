@@ -4,7 +4,7 @@ require File.expand_path('../../test_helper', __FILE__)
 
 class HaltrMailerTest < ActiveSupport::TestCase
 
-  fixtures :invoices
+  fixtures :invoices, :companies
 
   include Redmine::I18n
   include Rails::Dom::Testing::Assertions

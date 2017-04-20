@@ -1,0 +1,27 @@
+<nav class="text-right">
+<ul class="pages">
+  <% if obj.previous %>
+    <li>
+      <%=h link_to '', {action: 'show', id: obj.previous},
+        class: 'fa fa-angle-left',
+        aria: {hidden: true, label: l(:label_previous)} %>
+    </li>
+  <% else -%>
+    <li>
+      <span class="fa fa-angle-left disabled" aria-hidden="true"></span>
+    </li>
+  <% end %>
+  <% if obj.next %>
+    <li>
+      <%=h link_to '', {action: 'show', id: obj.next},
+        class: 'fa fa-angle-right',
+        aria: {hidden: true, label: l(:label_next)} %>
+    </li>
+  <% else -%>
+    <li>
+      <span class="fa fa-angle-right disabled" aria-hidden="true"></span>
+    </li>
+  <% end %>
+</ul>
+</nav>
+
