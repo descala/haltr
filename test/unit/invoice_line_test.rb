@@ -16,4 +16,34 @@ class InvoiceLineTest < ActiveSupport::TestCase
     assert(il.valid?, 'Line with RE tax and IVA with the same category should be valid')
   end
 
+  test "invoice lines with negative quantity and discount amount" do
+    il = InvoiceLine.new(quantity: -1, price: 10, discount_amount: 1)
+    assert(il.valid?, il.errors.full_messages)
+    assert_equal(-1, il.discount.to_f)
+    assert_equal(-9, il.taxable_base.to_f)
+  end
+
+  test "invoice lines with negative quantity and discount percent" do
+    il = InvoiceLine.new(quantity: -1, price: 10, discount_percent: 10)
+    assert(il.valid?, il.errors.full_messages)
+    assert_equal(-1, il.discount_amount.to_f)
+    assert_equal(-9, il.taxable_base.to_f)
+  end
+
+  test "invoice lines with discount percent" do
+    il = InvoiceLine.new(quantity: 1, price: 10, discount_percent: 10)
+    assert(il.valid?, il.errors.full_messages)
+    assert_equal 1, il.discount_amount.to_f
+    assert_equal(9, il.taxable_base.to_f)
+  end
+
+  test "invoice lines with negative discount are invalid" do
+    il = InvoiceLine.new(quantity: 1, price: 10, discount_percent: -10)
+    assert(!il.valid?)
+    assert_equal("Discount must be greater than or equal to 0", il.errors.full_messages.first)
+    il = InvoiceLine.new(quantity: 1, price: 10, discount_amount: -1)
+    assert(!il.valid?)
+    assert_equal("Discount must be greater than or equal to 0", il.errors.full_messages.first)
+  end
+
 end
