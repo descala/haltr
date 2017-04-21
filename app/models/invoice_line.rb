@@ -31,13 +31,14 @@ class InvoiceLine < ActiveRecord::Base
   belongs_to :invoice
   has_many :taxes, -> {order :percent}, :class_name => "Tax", :dependent => :destroy
   validates_numericality_of :quantity, :price
-  validates_numericality_of :charge, :discount_percent, :position, :allow_nil => true
-  validates_numericality_of :sequence_number, :allow_nil => true, :allow_blank => true
+  validates_numericality_of :charge, :position, :allow_blank => true
+  validates_numericality_of :sequence_number, :allow_blank => true
   validates :description, length: { maximum: 2500 }
   validates :article_code, :discount_text, :charge_reason,
     :issuer_transaction_reference, :sequence_number, :delivery_note_number,
     :ponumber, :receiver_contract_reference, :file_reference,
     length: { maximum: 255 }
+  validate :discount_cant_be_negative
 
   accepts_nested_attributes_for :taxes,
     :allow_destroy => true
@@ -69,7 +70,13 @@ class InvoiceLine < ActiveRecord::Base
 
   def discount_amount
     if self[:discount_amount] and self[:discount_amount] != 0
-      self[:discount_amount]
+      if total_cost >= 0
+        self[:discount_amount]
+      else
+        # on lines with negative price we change discount sign so it sums:
+        # price - ( - discount) => price + discount (#6514)
+        - self[:discount_amount]
+      end
     elsif self[:discount_percent] and self[:discount_percent] != 0
       total_cost * (self[:discount_percent] / 100.0)
     else
@@ -220,6 +227,13 @@ _LINE
   # translations for accepts_nested_attributes_for
   def self.human_attribute_name(attribute_key_name, *args)
     super(attribute_key_name.to_s.gsub(/taxes\./,''), *args)
+  end
+
+  def discount_cant_be_negative
+    if (self[:discount_amount].present? and self[:discount_amount] < 0) or
+        (self[:discount_percent].present? and self[:discount_percent] < 0)
+      errors.add(:discount, I18n.t('activerecord.errors.messages.greater_than_or_equal_to', count: 0))
+    end
   end
 
 end
