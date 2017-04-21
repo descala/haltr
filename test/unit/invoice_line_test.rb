@@ -39,11 +39,11 @@ class InvoiceLineTest < ActiveSupport::TestCase
 
   test "invoice lines with negative discount are invalid" do
     il = InvoiceLine.new(quantity: 1, price: 10, discount_percent: -10)
-    assert(!il.valid?)
-    assert_equal("Discount must be greater than or equal to 0", il.errors.full_messages.first)
+    assert(il.valid?)
+    assert_equal 10, il.discount_percent
     il = InvoiceLine.new(quantity: 1, price: 10, discount_amount: -1)
-    assert(!il.valid?)
-    assert_equal("Discount must be greater than or equal to 0", il.errors.full_messages.first)
+    assert(il.valid?)
+    assert_equal 1, il.discount_amount
   end
 
 end
