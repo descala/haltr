@@ -84,6 +84,10 @@ class InvoiceLine < ActiveRecord::Base
     end
   end
 
+  def discount_amount=(v)
+    self[:discount_amount] = v.to_s.gsub(/-/,'')
+  end
+
   def discount_percent
     if self[:discount_percent] and self[:discount_percent] != 0
       self[:discount_percent]
