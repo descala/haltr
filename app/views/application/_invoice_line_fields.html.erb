@@ -95,7 +95,7 @@ if (el.val() == '') {
     <tbody>
       <tr>
         <td>
-          <%= f.text_field(:discount, class: 'form-control') %>
+          <%= f.text_field(:discount, value: f.object.discount.to_f.abs, class: 'form-control') %>
         </td>
         <td>
           <%= f.select :discount_type, ['%','€'], {}, class: 'form-control' %>

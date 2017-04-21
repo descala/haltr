@@ -88,7 +88,7 @@ class InvoiceLine < ActiveRecord::Base
     if self[:discount_percent] and self[:discount_percent] != 0
       self[:discount_percent]
     elsif self[:discount_amount] and self[:discount_amount] != 0
-      self[:discount_amount] * 100 / total_cost
+      (self[:discount_amount] * 100 / total_cost).abs
     else
       0
     end

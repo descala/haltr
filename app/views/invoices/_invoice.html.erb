@@ -158,7 +158,7 @@
           <td class="item-price"><%=h line_price(line, 'price', @invoice) %></td>
           <% if line.discount_amount.to_f != 0 -%>
             <% if @invoice.company.line_discounts_as_imports -%>
-              <td class="item-price"><%=h money(Haltr::Utils.to_money(line.discount_amount, @invoice.currency, @invoice.company.rounding_method)) %></td>
+              <td class="item-price"><%=h money(Haltr::Utils.to_money(line.discount_amount.abs, @invoice.currency, @invoice.company.rounding_method)) %></td>
             <% else -%>
               <td class="item-price"><%=h number_to_percentage(line.discount_percent, precision: 2, strip_insignificant_zeros: true) %></td>
             <% end -%>
