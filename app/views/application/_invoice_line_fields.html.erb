@@ -86,7 +86,7 @@ if (el.val() == '') {
     <tbody>
       <tr>
         <td style="width: 78px">
-          <%= f.text_field(:discount, no_label: true) %>
+          <%= f.text_field(:discount, value: f.object.discount.to_f.abs, no_label: true) %>
         </td>
         <td style="width: 55px">
           <%= f.select :discount_type, ['%','€'], :no_label => true %>

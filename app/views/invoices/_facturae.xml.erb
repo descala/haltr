@@ -486,7 +486,7 @@
               <% end -%>
               <UnitPriceWithoutTax><%=h haltr_precision(invoice_line.price,6)%></UnitPriceWithoutTax>
               <TotalCost><%=h haltr_precision(invoice_line.total_cost, *(format == "facturae32" ? [6,2] : 2))%></TotalCost>
-<% if invoice_line.discount_percent > 0 -%>
+<% if invoice_line.discount_percent != 0 -%>
               <DiscountsAndRebates>
                 <Discount>
                   <DiscountReason><%=h invoice_line.discount_text.blank? ? "." : invoice_line.discount_text %></DiscountReason>
