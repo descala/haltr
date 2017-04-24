@@ -1,13 +1,15 @@
 <tbody>
   <% events.each do |e| -%>
-    <tr>
+    <% if User.current.admin? -%>
+      <tr title="<%= e.type %> <%=e.id%>">
+      <% else -%>
+        <tr>
+        <% end -%>
       <% unless @project -%>
         <td><%= link_to(e.project.name, project_events_path(project_id: e.project)) %></td>
       <% end -%>
-      <td><%= format_time e.created_at %></td>
-      <% if User.current.admin? -%>
-        <td title="<%=e.id%>"><%= e.type %></td>
-      <% end -%>
+      <td><%= e.created_at.strftime('%d-%m-%Y') rescue '' %></td>
+      <td><%= e.created_at.strftime('%H:%M') rescue '' %></td>
       <% unless @invoice -%>
         <td>
           <% if e.invoice -%>
