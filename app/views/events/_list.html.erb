@@ -1,56 +1,53 @@
 <tbody>
-  <% events.each do |e| -%>
-    <tr>
-      <% unless @project -%>
-        <td><%= link_to(e.project.name, project_events_path(project_id: e.project)) %></td>
-      <% end -%>
-      <td><%= format_time e.created_at %></td>
-      <% if User.current.admin? -%>
-        <td title="<%=e.id%>"><%= e.type %></td>
-      <% end -%>
-      <% unless @invoice -%>
-        <td>
-          <% if e.invoice -%>
-            <%= link_to_invoice_with_label(e.invoice) -%>
-          <% elsif e.client -%>
-            <%= link_to "#{l(:field_client)} #{e.client.name}", edit_client_path(e.client) -%>
-          <% elsif e.invoice_id -%>
-            <%= e.invoice_id %>
-          <% elsif e.client_id -%>
-            <%= e.client_id %>
-          <% else -%>
-            <%= e.to_s %>
-          <% end -%>
-        </td>
-      <% end -%>
+<% events.each do |e| -%>
+  <tr<%= ' title="#{e.type} #{e.id}"' if User.current.admin? %>>
+    <% unless @project -%>
+      <td><%= link_to(e.project.name, project_events_path(project_id: e.project)) %></td>
+    <% end -%>
+    <td><%= format_date(e.created_at) rescue '' %></td>
+    <td><%= e.created_at.strftime('%H:%M') rescue '' %></td>
+    <% unless @invoice -%>
       <td>
-        <% begin -%>
-          <%= render :partial => "events/#{e.type.underscore}", :locals => {:e=>e} %>
-        <% rescue ActionView::MissingTemplate -%>
-          <%= render :partial => "events/event", :locals => {:e=>e} %>
+        <% if e.invoice -%>
+          <%= link_to_invoice_with_label(e.invoice) -%>
+        <% elsif e.client -%>
+          <%= link_to "#{l(:field_client)} #{e.client.name}", edit_client_path(e.client) -%>
+        <% elsif e.invoice_id -%>
+          <%= e.invoice_id %>
+        <% elsif e.client_id -%>
+          <%= e.client_id %>
+        <% else -%>
+          <%= e.to_s %>
         <% end -%>
       </td>
-      <td>
-        <%= link_to '<i class="fa fa-plus-square" aria-hidden="true"></i>'.html_safe, '#', class: 'show-audits', data: {id: e.id} if e.audits.any? %>
-      </td>
+    <% end -%>
+    <td>
+      <% begin -%>
+        <%= render :partial => "events/#{e.type.underscore}", :locals => {:e=>e} %>
+      <% rescue ActionView::MissingTemplate -%>
+        <%= render :partial => "events/event", :locals => {:e=>e} %>
+      <% end -%>
+    </td>
+    <td>
+      <%= link_to '<i class="fa fa-plus-square" aria-hidden="true"></i>'.html_safe, '#', class: 'show-audits', data: {id: e.id} if e.audits.any? %>
+    </td>
+  </tr>
 
-    </tr>
+  <tr class="no-padding">
+    <td colspan="6">
+      <div id="audited_<%=e.id%>" class="audited">
+        <ul>
+          <% e.audits.each do |a| -%>
+            <%= render partial: "audits/audit", locals: { a: a } %>
+          <% end -%>
+        </ul>
+      </div>
+    </td>
+  </tr>
 
-    <tr class="no-padding">
-      <td colspan="6">
-        <div id="audited_<%=e.id%>" class="audited">
-          <ul>
-            <% e.audits.each do |a| -%>
-              <%= render partial: "audits/audit", locals: { a: a } %>
-            <% end -%>
-          </ul>
-        </div>
-      </td>
-    </tr>
+  <tr class="no-padding">
+    <td colspan="6"><!-- only for alternating tr colors --></td>
+  </tr>
 
-    <tr class="no-padding">
-      <td colspan="6"><!-- only for alternating tr colors --></td>
-    </tr>
-
-  <% end -%>
+<% end -%>
 </tbody>

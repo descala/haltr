@@ -70,11 +70,11 @@
           <% else -%>
             <td><span class="icon-fa icon-fa-chain-broken" title="<%= l :not_linked %>"></span></td>
           <% end -%>
-          <td class="taxcode" style="cursor:pointer;" <%= onclick_show %>><%= link_to_if_authorized client.taxcode, action: 'show', id: client %></td>
-          <td class="name"><%=h client.name%></td>
-          <td class="invoices text-center"><%= client.issued_invoices.any? ? link_to_if_authorized(client.issued_invoices.count, {controller: 'invoices', action: 'index', id: @project, client_id: client}, title: l(:label_issued)) : "-" %></td>
-          <td class="invoices text-center"><%= client.received_invoices.any? ? link_to_if_authorized(client.received_invoices.count, {controller: 'received', action: 'index', id: @project, client_id: client}, title: l(:label_received)) : "-" %></td>
-          <td class="orders text-center"><%= client.orders.any? ? link_to_if_authorized(client.orders.count, {controller: 'orders', action: 'received', id: @project, client_id: client}, title: l(:label_received)) : "-" %></td>
+          <td class="taxcode"><%= h client.taxcode%></td>
+          <td class="name" style="cursor:pointer;" <%= onclick_show %>><%= link_to_if_authorized client.name, action: 'show', id: client %></td>
+          <td class="invoices text-center"><%= client.issued_invoices.any? ? client.issued_invoices.count : "-" %></td>
+          <td class="invoices text-center"><%= client.received_invoices.any? ? client.received_invoices.count : "-" %></td>
+          <td class="orders text-center"><%= client.orders.any? ? client.orders.count : "-" %></td>
           <td class="people text-center"><%= link_to_if_authorized client.people.count, client_people_path(client), title: l(:label_person_plural) %></td>
           <td class="client_offices text-center"><%= link_to client.client_offices.count, client_client_offices_path(client), class: 'client_offices-btt', title: l(:label_client_offices) %></td>
           <td class="new text-right">
@@ -103,8 +103,8 @@
   <ul>
     <% @project.company.companies_with_link_requests.each do |req| -%>
       <li>
-        <%=req.taxcode%> <span style="font-weight: bold;"><%=req.name%></span> - 
-        <%=link_to_if_authorized l(:allow_link), {action: 'allow_link',id: @project,req: req}%> / 
+        <%=req.taxcode%> <span style="font-weight: bold;"><%=req.name%></span> -
+        <%=link_to_if_authorized l(:allow_link), {action: 'allow_link',id: @project,req: req}%> /
         <%=link_to_if_authorized l(:deny_link), {action: 'deny_link',id: @project,req: req} %>
       </li>
     <% end -%>

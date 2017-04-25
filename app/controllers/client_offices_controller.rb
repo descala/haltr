@@ -41,7 +41,7 @@ class ClientOfficesController < ApplicationController
     @client_office = ClientOffice.new(params[:client_office])
     @client_office.client = @client
     if @client_office.save
-      redirect_to client_client_offices_path(@client), notice: l(:notice_successful_create)
+      redirect_to client_path(@client), notice: l(:notice_successful_create)
     else
       render action: :new
     end
@@ -54,7 +54,7 @@ class ClientOfficesController < ApplicationController
   def update
     @client_office = @client.client_offices.find(params[:id])
     if @client_office.update_attributes(params[:client_office])
-      redirect_to client_client_offices_path(@client), notice: l(:notice_successful_update)
+      redirect_to client_path(@client), notice: l(:notice_successful_create)
     else
       render action: :edit
     end

@@ -81,9 +81,15 @@
                 <strong class="s16"><%= h person.name %></strong>
                 </p>
                 <p>
-                <%= mail_to person.email, person.email, class: 'icon-fa icon-fa-fw icon-fa-envelope' %><br />
-                <span class="icon-fa icon-fa-fw icon-fa-phone"><%= h person.phone %></span><br />
-                <span class="icon-fa icon-fa-fw icon-fa-info"><%= person.info %></span>
+                <% if person.email.present? -%>
+                  <%= mail_to person.email, person.email, class: 'icon-fa icon-fa-fw icon-fa-envelope' %><br />
+                <% end -%>
+                <% if person.phone.present? -%>
+                  <span class="icon-fa icon-fa-fw icon-fa-phone"><%= h person.phone %></span><br />
+                <% end -%>
+                <% if person.info.present? -%>
+                  <span class="icon-fa icon-fa-fw icon-fa-info"><%= person.info %></span>
+                <% end -%>
                 </p>
               </div>
               <% unless i == @client.people.size - 1 -%>

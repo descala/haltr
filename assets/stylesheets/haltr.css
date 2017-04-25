@@ -513,9 +513,6 @@ div.wrapper-element form {
 a.icon-fa-send.disabled {
   color: #921b1b !important;
 }
-table.payments {
-  margin-top: 50px;
-}
 ul.pages li span:hover.disabled {
   background-color: #F0F0F0 !important;
 }

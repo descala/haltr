@@ -111,11 +111,6 @@ $(document).ready(function() {
     );
   });
 
-  $(document).on('click', 'a.show-audits', function(e) {
-    $('#audited_'+$(this).data('id')).toggle();
-    return false;
-  });
-
   $(document).on('mousemove', 'div.audited li', function(e) {
     $('div.audited-changes').css({
       "left":  e.pageX + 15,
@@ -175,13 +170,19 @@ $(document).ready(function() {
 
   // functions-clients.js
   if ( $(".table .show-audits").length > 0 ) {
-    $( ".table .show-audits" ).click(function() {
+    // prevent duplicated click bind #6510
+    $( ".table a.show-audits" ).off('click');
+    $( ".table a.show-audits" ).click(function() {
       if ( $( this ).find("i").hasClass( "fa-plus-square" ) ) {
         $( this ).find("i").removeClass( "fa-plus-square" );
         $( this ).find("i").addClass( "fa-minus-square" );
+        $('#audited_'+$(this).data('id')).toggle();
+        return false;
       } else {
         $( this ).find("i").removeClass( "fa-minus-square" );
         $( this ).find("i").addClass( "fa-plus-square" );
+        $('#audited_'+$(this).data('id')).toggle();
+        return false;
       }
 
     });
