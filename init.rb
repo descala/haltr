@@ -98,7 +98,7 @@ Redmine::Plugin.register :haltr do
         :received  => [:index, :show, :legal, :context_menu],
         :companies => [:my_company,:bank_info, :check_iban],
         :payments  => [:index, :payment_initiation, :invoices, :reports, :report_payment_list],
-        :invoice_templates => [:index, :show, :context_menu],
+        :invoice_templates => [:index, :show, :context_menu, :new_invoices_from_template],
         :charts    => [:invoice_total, :invoice_status, :top_clients],
         :events    => [:file, :index],
         :import_errors => [:index, :show],
