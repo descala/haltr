@@ -5,7 +5,7 @@ require File.expand_path('../../test_helper', __FILE__)
 class HaltrMailHandlerTest < ActiveSupport::TestCase
 
   FIXTURES_PATH = File.dirname(__FILE__) + '/../fixtures/mail_handler'
-  fixtures :invoices, :companies
+  fixtures :invoices, :companies, :events
 
   def setup
     ActionMailer::Base.deliveries.clear
