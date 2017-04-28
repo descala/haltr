@@ -18,7 +18,6 @@
       <div class="col-xs-3">
         <%= f.text_field :taxcode,
           size: 20,
-          required: true,
           readonly: client.linked?,
           'data-context' => context,
           'data-check-cif-url' => url_for(controller: 'clients',
