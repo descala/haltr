@@ -176,7 +176,7 @@ module InvoicesHelper
        (@invoice.new_record? and @invoice.global_code_for(name).match(/_E$/))
       return ""
     else
-      return "display: none"
+      return "no-display"
     end
   end
 

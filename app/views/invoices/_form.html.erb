@@ -253,7 +253,6 @@
           <%end%>
         </fieldset>
       </div>
-
       <div class="tab-pane" id="invoice-content">
           <fieldset class="form-horizontal">
             <legend>2. <%= l :field_invoice_lines %></legend>
@@ -264,7 +263,7 @@
             </div>
             <!-- cocoon -->
             <span class="table-lines form-control">
-              <%= link_to_add_association l(:button_add_invoice_line), f, :invoice_lines, 'data-association-insertion-node' => '#invoice_lines', 'data-association-insertion-method' => 'append', class: 'add_fields icon-fa icon-fa-plus-sign' %>
+              <%= link_to_add_association l(:button_add_invoice_line), f, :invoice_lines, 'data-association-insertion-node' => '#invoice_lines', 'data-association-insertion-method' => 'append', class: 'add_fields icon-fa icon-fa-plus-sign', force_non_association_create: 'true' %>
             </span>
 
             <hr class="form-elements">
@@ -288,7 +287,7 @@
                       class:    'form-control global_tax',
                       'data-tax-name' => name ) %>
                     </div>
-                    <div class="col-xs-2">
+                    <div class="col-xs-3">
                       <div class="checkbox">
                         <%= label_tag "#{name}_multiple" do %>
                           <%= check_box_tag("#{name}_multiple", 1, @invoice.tax_per_line?(name), class: 'global_tax_check', 'data-tax-name' => name) %>
@@ -297,7 +296,7 @@
                       </div>
                     </div>
                   </div>
-                  <div id="<%= name %>_comment" class="form-group no-display">
+                  <div id="<%= name %>_comment" class="form-group <%= hide_if_not_exempt_tax(name) %>">
                     <%= label_tag "#{name}_comment", l("field_comment"), class: 'col-xs-3 control-label normal' %>
                     <div class="col-xs-6">
                       <%= text_field_tag("#{name}_comment", @invoice.global_comment_for(name), class: 'form-control') %>

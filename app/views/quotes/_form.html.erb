@@ -136,11 +136,14 @@
           <% end -%>
         </div>
       </div>
-      <div style="<%= hide_if_not_exempt_tax(name) %>" class="col span-3-de-5">
-        <%= label_tag "#{name}_comment", l("field_comment") %>
-        <%= text_field_tag("#{name}_comment", @invoice.global_comment_for(name)) %>
+    </div>
+    <div id="<%= name %>_comment" class="form-group <%= hide_if_not_exempt_tax(name) %>">
+      <%= label_tag "#{name}_comment", l("field_comment"), class: 'col-xs-3 control-label normal' %>
+      <div class="col-xs-6">
+        <%= text_field_tag("#{name}_comment", @invoice.global_comment_for(name), class: 'form-control') %>
       </div>
     </div>
+
   <% end -%>
 
   <hr class="form-elements">
@@ -151,12 +154,10 @@
       <%=  render partial: 'invoice_line_fields', locals: { f: line_form } %>
     <% end %>
   </div>
-  <div class="form-group">
-    <div class="col-xs-3">
-      <!-- cocoon -->
-      <span class='mes'><%= link_to_add_association l(:button_add_invoice_line), f, :invoice_lines, data: {'association-insertion-node' => '#invoice_lines', 'association-insertion-method' => 'append'} %></span>
-    </div>
-  </div>
+  <!-- cocoon -->
+  <span class='table-lines form-control'>
+    <%= link_to_add_association l(:button_add_invoice_line), f, :invoice_lines, data: {'association-insertion-node' => '#invoice_lines', 'association-insertion-method' => 'append'}, class: 'add_fields icon-fa icon-fa-plus-sign', force_non_association_create: 'true' %>
+  </span>
 
   <hr></hr>
   <div class="text-right set-of-buttons">
