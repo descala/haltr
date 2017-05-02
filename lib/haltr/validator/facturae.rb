@@ -60,7 +60,8 @@ module Haltr
           errors.add(:exchange_date, :blank) unless exchange_date.present?
         end
 
-        if client.errors.any?
+        # add client errors to self unless we are creating the invoice.
+        if client.errors.any? and !self.new_record?
           errors.add(:client, client.errors.full_messages.uniq.join(', '))
         end
       end
