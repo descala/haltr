@@ -8,6 +8,7 @@ guard :minitest, :all_on_start => false, :all_after_pass => false, :test_folders
   watch(%r{^#{H}/lib/haltr/(.+)\.rb$})                    { |m| "#{H}/test/unit/lib/#{m[1]}_test.rb" }
   watch(%r{^#{H}/lib/haltr/bank_info_validator.rb$})      { ["#{H}/test/unit/lib/bank_info_test.rb", "#{H}/test/unit/client_test.rb"] }
   watch(%r{^#{H}/lib/haltr/xml_validation(.+)$})          { |m| "#{H}/test/functional/invoices_controller_test.rb" }
+  watch(%r{^#{H}/lib/haltr/validator/(.+)\.rb$})          { |m| "#{H}/test/unit/lib/haltr/validator/#{m[1]}_test.rb" }
   watch(%r{^#{H}/app/models/(.+)\.rb$})                   { |m| "#{H}/test/unit/#{m[1]}_test.rb" }
   watch(%r{^#{H}/app/helpers/(.+)\.rb$})                  { |m| "#{H}/test/unit/#{m[1]}_test.rb" }
   watch(%r{^#{H}/app/models/invoice_line.rb$})            { "#{H}/test/unit/invoice_test.rb" }
