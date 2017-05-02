@@ -210,6 +210,15 @@ $(document).ready(function() {
         function() { $( this ).find(".fa").toggle(); },
         function() { $( this ).find(".fa").toggle(); });
   }
+  // load invoice form tab matching url anchor
+  if ( $('div#invoice-content').length > 0 ) {
+    var invoice_tab;
+    var stripped_url = document.location.toString().split("#");
+    if (stripped_url.length > 1) {
+      invoice_tab = stripped_url[1];
+      $('a[href="#'+invoice_tab+'"]').click();
+    }
+  }
 
 });
 
