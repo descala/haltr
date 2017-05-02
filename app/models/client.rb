@@ -6,34 +6,34 @@ class Client < ActiveRecord::Base
 
   include Haltr::BankInfoValidator
   include Haltr::PaymentMethods
-  has_many :invoices, :dependent => :destroy
-  has_many :received_invoices, :dependent => :destroy
-  has_many :invoice_templates, :dependent => :destroy
+  has_many :invoices, dependent: :destroy
+  has_many :received_invoices, dependent: :destroy
+  has_many :invoice_templates, dependent: :destroy
   has_many :orders
-  has_many :people,   :dependent => :destroy
-  has_many :mandates, :dependent => :destroy
+  has_many :people,   dependent: :destroy
+  has_many :mandates, dependent: :destroy
   has_many :events, -> {order created_at: :desc}
-  has_many :invoice_events, :through => :invoices, :source => :events
-  has_many :client_offices, :dependent => :destroy
+  has_many :invoice_events, through: :invoices, source: :events
+  has_many :client_offices, dependent: :destroy
 
   belongs_to :project   # client of
   belongs_to :company,  # linked to
-    :polymorphic => true
+    polymorphic: true
   belongs_to :bank_info # refers to company's bank_info
                         # default one when creating new invoices
 
   validates_presence_of :hashid
-  validates_uniqueness_of :taxcode, :scope => :project_id, :allow_blank => true
-  validates_uniqueness_of :edi_code, :scope => :project_id, :allow_blank => true
+  validates_uniqueness_of :taxcode, scope: :project_id, allow_blank: true
+  validates_uniqueness_of :edi_code, scope: :project_id, allow_blank: true
   validates_uniqueness_of :hashid
 
-  validates_presence_of     :project_id, :name, :currency, :language, :invoice_format, :if => Proc.new {|c| c.company_id.blank? }
-  validates_inclusion_of    :currency, :in  => Money::Currency.table.collect {|k,v| v[:iso_code] }, :if => Proc.new {|c| c.company_id.blank? }
-  validates_format_of       :email, :with => /\A([\w\.\-\+]+)@((?:[-a-z0-9]+\.)+[a-z]{2,})\z/i, :allow_nil => true, :allow_blank => true
+  validates_presence_of     :project_id, :name, :currency, :language, :invoice_format, if: Proc.new {|c| c.company_id.blank? }
+  validates_inclusion_of    :currency, in: Money::Currency.table.collect {|k,v| v[:iso_code] }, if: Proc.new {|c| c.company_id.blank? }
+  validates_format_of       :email, with: /\A([\w\.\-\+]+)@((?:[-a-z0-9]+\.)+[a-z]{2,})\z/i, allow_nil: true, allow_blank: true
   validate :bank_info_belongs_to_self
-#  validates_uniqueness_of :name, :scope => :project_id
-#  validates_length_of :name, :maximum => 30
-#  validates_format_of :identifier, :with => /^[a-z0-9\-]*$/
+#  validates_uniqueness_of :name, scope: :project_id
+#  validates_length_of :name, maximum: 30
+#  validates_format_of :identifier, with: /^[a-z0-9\-]*$/
   validates_format_of :postalcode, with: /\A[0-9]{5}\z/, if: Proc.new {|i| i.country == 'es'}, allow_blank: true
   validates :country, length: { is: 2 }
   validates :taxcode, length: { maximum: 20 }
@@ -201,7 +201,7 @@ class Client < ActiveRecord::Base
 
   # called after_create (only NEW clients)
   def create_event
-    event = Event.new(:name=>'new',:client=>self,:user=>User.current)
+    event = Event.new(name: 'new', client: self, user: User.current)
     event.audits = self.last_audits_without_event
     event.save!
   end
