@@ -9,6 +9,7 @@ class OrdersController < ApplicationController
 
   helper :sort
   helper :haltr
+  layout 'haltr'
   include SortHelper
 
   accept_api_auth :import
