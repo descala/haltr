@@ -92,7 +92,6 @@ Redmine::Plugin.register :haltr do
       { :clients   => [:index, :show, :edit, :check_cif, :ccc2iban],
         :people    => [:index, :edit],
         :client_offices => [:index, :edit],
-        :company_offices => [:index, :edit],
         :invoices  => [:index, :show, :legal, :download_new_invoices, :reports, :report_channel_state, :report_invoice_list, :report_received_table,
                        :context_menu, :number_to_id, :edit],
         :received  => [:index, :show, :legal, :context_menu],
@@ -109,7 +108,6 @@ Redmine::Plugin.register :haltr do
       { :clients   => [:index, :show, :edit, :check_cif, :ccc2iban, :update],
         :people    => [:index, :edit],
         :client_offices => [:index, :edit, :update],
-        :company_offices => [:index, :edit, :update],
         :invoices  => [:index, :show, :legal, :download_new_invoices, :reports, :report_channel_state, :report_invoice_list, :report_received_table,
                        :context_menu, :send_invoice,
                        :send_new_invoices, :number_to_id],
@@ -139,11 +137,9 @@ Redmine::Plugin.register :haltr do
         :import_errors => [:index, :create, :show, :destroy, :context_menu] },
       :require => :member
 
-    permission :email_customization,   {:companies=>'customization'},   :require => :member
-    permission :configure_connections, {:companies=>'connections'},     :require => :member
-    permission :use_company_offices,   {
-      :company_offices => [:index, :new, :show, :edit, :create, :update, :destroy],
-    }
+    permission :email_customization,   {}, require: :member
+    permission :configure_connections, {}, require: :member
+    permission :use_company_offices,   {}, require: :member
 
     permission :invoice_quotes,
       { :quotes => [:index, :new, :create, :show, :edit, :update, :send_quote,

@@ -528,6 +528,49 @@
   </fieldset>
 </div>
 
+<div class="tab-pane" id="company-offices">
+  <fieldset class="form-horizontal">
+    <legend class="relative"><%=l(:label_company_offices)%></legend>
+
+    <% unless User.current.admin? or User.current.allowed_to?(:email_customization, @project) -%>
+      <div class="flash info">
+        <%= l(:need_to_upgrade_to_plan, plan: Plan.professional.role_name) %>
+      </div>
+    <% end -%>
+
+    <table class="table table-company-offices">
+      <thead>
+        <tr>
+          <th><%= l(:field_address) %></th>
+          <th><%= l(:field_city) %></th>
+          <th><%= l(:field_postalcode) %></th>
+          <th><%= l(:field_province) %></th>
+          <th><%= l(:field_country) %></th>
+          <th></th>
+        </tr>
+      </thead>
+      <tbody id="offices">
+        <%= f.fields_for :company_offices do |company_office| %>
+          <%= render partial: 'companies/company_office_fields', locals: { f: company_office } %>
+        <% end %>
+      </tbody>
+      <tfoot>
+        <tr>
+          <td colspan="6">
+            <% if User.current.admin? or User.current.allowed_to?(:email_customization, @project) -%>
+              <%= link_to_add_association l(:button_add_office), f, :company_offices, data: { 'association-insertion-node'=>'#offices', 'association-insertion-method'=>'append' }, partial: 'companies/company_office_fields', class: 'add_fields icon-fa icon-fa-plus-sign' %>
+            <% else -%>
+              <span class="add_fields icon-fa icon-fa-plus-sign"><%= l(:button_add_office) %></span>
+            <% end -%>
+          </td>
+        </tr>
+      </tfoot>
+    </table>
+
+    <%= call_hook(:company_taxes_form_end) %>
+  </fieldset>
+</div>
+
 <script type="text/javascript">
 // set
 $(":file").filestyle('buttonText', '&nbsp;<%= l :field_filename %>');

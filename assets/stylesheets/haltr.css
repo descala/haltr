@@ -489,6 +489,13 @@ div#row-title {
 .table.table-bank-info {
   border-collapse: separate;
 }
+.table.table-company-offices, .table.table-company-offices> thead tr th, .table.table-company-offices> tfoot tr td {
+  background: #CAE0EA;
+  padding: 10px 10px 10px 10px;
+}
+.table.table-company-offices {
+  border-collapse: separate;
+}
 tr.no-padding td {
   padding: 0 !important;
 }
@@ -511,4 +518,7 @@ td.long-td {
   max-width: 150px;
   text-overflow: ellipsis;
   overflow: hidden;
+}
+select#invoice_company_office_id {
+  background-color: white;
 }
