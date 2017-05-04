@@ -280,7 +280,7 @@ function copy_last_line_tax(tax_name) {
  */
 function tax_changed(tax_name, tax_code) {
   if (tax_code.match(/(_E|_NS)$/)) {
-    $('#'+tax_name+'_comment').show();
+    $('.'+tax_name+'_comment').show();
   } else {
     var hide_comment = true;
     $('select.tax_'+tax_name).each(function(index) {
@@ -289,7 +289,7 @@ function tax_changed(tax_name, tax_code) {
       }
     });
     if ( hide_comment ) {
-      $('#'+tax_name+'_comment').hide();
+      $('.'+tax_name+'_comment').hide();
     }
   }
 }
