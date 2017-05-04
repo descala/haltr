@@ -206,7 +206,7 @@
             <% if User.current.allowed_to?(:add_multiple_bank_infos, @project) -%>
               <%= link_to_add_association l(:button_add_bank_info), f, :bank_infos, data: { 'association-insertion-node'=>'#bank_infos', 'association-insertion-method'=>'append'} %>
             <% else -%>
-              <%= link_to l(:button_add_bank_info), project_add_bank_info_path(project_id: @project), data: {confirm: l(:page_redirecting_will_lose_unsaved_data)} %>
+              <%= link_to l(:button_add_bank_info), project_add_bank_info_path(project_id: @project), data: {confirm: l(:page_redirecting_will_lose_unsaved_data)}, title: l(:invoice_attachments_permission) %>
             <% end -%>
           </td>
         </tr>
