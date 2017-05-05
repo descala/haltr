@@ -295,9 +295,20 @@ module InvoicesHelper
     end
   end
 
-  def select_to_edit(field)
+  # has_custom_value is true when field has value not included in select
+  def select_to_edit(field, has_custom_value)
     if @external_company and @external_company.send("dir3_#{field.to_s.pluralize}").any?
-      content_tag :span, l(:button_edit), data: {field: field}, class: 'icon-fa icon-fa-pencil select_to_edit control-label'
+      if has_custom_value
+        content_tag :span,
+          l(:button_cancel),
+          data: {field: field, text: l(:button_edit)},
+          class: 'icon-fa fa-ban select_to_edit control-label'
+      else
+        content_tag :span,
+          l(:button_edit),
+          data: {field: field, text: l(:button_cancel)},
+          class: 'icon-fa icon-fa-pencil select_to_edit control-label'
+      end
     end
   end
 

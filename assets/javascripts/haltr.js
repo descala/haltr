@@ -61,6 +61,10 @@ $(document).ready(function() {
     $("select#invoice_"+field).prop('disabled', !$("select#invoice_"+field).prop('disabled'));
     $("input#invoice_"+field).toggle();
     $("input#invoice_"+field).prop('disabled', !$("input#invoice_"+field).prop('disabled'));
+    $(this).toggleClass('icon-fa-pencil fa-ban');
+    var tmp=$(this).data('text');
+    $(this).data('text', $(this).text());
+    $(this).text(tmp);
   });
 
   $(document).on('change', '#invoice_terms', function(e) {
