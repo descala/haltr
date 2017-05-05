@@ -19,7 +19,7 @@
   </div>
 <% end -%>
 
-<h2><%= %w(new create).include?(params[:action]) ? l(:label_invoice_new) : l(:label_invoice) %></h2>
+<h2><%= %w(new create).include?(params[:action]) ? l(:label_invoice_new) : "#{l(:label_invoice)} #{@invoice.number}" %></h2>
 
 <div class="row">
   <div class="col-xs-2 col-no-pad-right">
