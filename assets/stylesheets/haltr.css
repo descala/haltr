@@ -522,3 +522,6 @@ td.long-td {
 select#invoice_company_office_id {
   background-color: white;
 }
+textarea.textarea-auto {
+  resize: vertical;
+}
