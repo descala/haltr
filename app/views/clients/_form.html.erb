@@ -1,10 +1,10 @@
 <%= error_messages_for 'client' %>
 
-<% if client -%>
+<% unless context =~ /_invoice/ -%>
   <h2><%=l(client.new_record? ? :label_company_new : :label_company)%></h2>
 <% end -%>
 
-<div class="<%= 'col-xs-10' unless client.nil? %> col-no-pad-left">
+<div class="<%= 'col-xs-10' unless context =~ /_invoice/ %> col-no-pad-left">
   <div class="tab-pane form-horizontal">
 
     <div class="form-group" id='cif_info'>
