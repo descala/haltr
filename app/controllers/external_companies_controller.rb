@@ -1,6 +1,5 @@
 class ExternalCompaniesController < ApplicationController
 
-
   layout 'admin'
   menu_item :external_companies
   before_filter :authorize_global

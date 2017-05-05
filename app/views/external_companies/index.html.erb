@@ -1,62 +1,61 @@
 <div class="contextual">
-  <%= form_tag({action: 'csv_import'}, {multipart: true}) do -%>
-    <%= submit_tag "#{l(:label_import)} CSV" %>
-    <%= file_field_tag :csv_file %>
-  <% end -%>
-  <%= link_to button_tag("#{l(:button_download)} CSV"), {format: :csv} %>
+<%= form_tag({action: 'csv_import'}, {multipart: true}) do -%>
+  <%= submit_tag "#{l(:label_import)} CSV" %>
+  <%= file_field_tag :csv_file %>
+<% end -%>
+<%= link_to button_tag("#{l(:button_download)} CSV"), {format: :csv} %>
 </div>
 
 <h2><%= l(:external_companies) %></h2>
 
-<%= link_to l(:label_new), new_external_company_path %>
+<%= link_to l(:label_new), new_external_company_path, class: 'icon-fa icon-fa-fw icon-fa-file btn btn-default' %>
 
 <!--filtres-->
-<div class="seccio grup">
-  <div class="col span-2-de-2">
-    <div class="filtres">
-      <div class="titularAcc">
-        <%= l(:label_filter_plural) %>
-      </div>
-      <div class="contingutAcc">
-        <%= form_tag({:id=>@project}, :method => :get, :class => 'formee') do %>
-          <fieldset>
-            <legend><%= l(:label_search) %></legend>
-            <div class="seccio grup">
-              <div class="col span-1-de-2">
-                <label for="name"><%=l(:label_company)%></label>
-                <%= text_field_tag 'name', params[:name], :size => 30 %>
-              </div>
-            </div>
-            <div class="seccio grup">
-              <div class="col span-2-de-2">
-                <%= submit_tag l(:button_apply), :name => nil %>
-              </div>
-            </div>
-          </fieldset>
-        <% end %>
+<%= form_tag({id: @project}, method: :get, class: 'formee') do %>
+  <div class="filtres">
+    <div class="titularAcc">
+      <div class="row">
+        <div class="col-xs-6 col-xs-offset-6 text-right form-inline">
+          <div class="form-group">
+            <label for="name" class="sr-only"><%= l(:field_has_text) %></label>
+            <%= search_field_tag :name, params[:name], class: 'form-control', placeholder: l(:field_name) %>
+          </div>
+          <%= button_tag(content_tag('i', '', class: 'fa fa-search', 'aria-hidden' => 'true'), class: "btn btn-search", name: nil, type: :submit) %>
+        </div>
       </div>
     </div>
   </div>
-</div>
+<% end %>
 <!--final filtres-->
 
-<table class="taula-1 list clients" style="margin-top: 30px;">
-  <% @ecompanies.each do |ec| -%>
-    <tr class="<%= cycle('odd senar','even parell') %>">
-      <td><%= ec.taxcode %></td>
-      <td><%= ec.name %></td>
-      <td><%= ec.clients.count %> <%= image_tag('link.png') %></td>
-      <td><%= link_to l(:button_edit), edit_external_company_path(ec) %></td>
-      <td><%= link_to l(:button_delete), external_company_path(ec),
-        :data=>{:confirm=>l(:text_are_you_sure)}, :method=>:delete %></td>
-    </tr>
-  <% end -%>
-</table>
+<div class="wrapper-table bg-white">
+  <table class="table table-striped table-hover external-companies">
+    <tbody>
+    <% @ecompanies.each do |ec| -%>
+      <tr>
+        <td><%= ec.taxcode %></td>
+        <td><%= ec.name %></td>
+        <td><%= ec.clients.count %> <%= image_tag('link.png') %></td>
+        <td><%= link_to l(:button_edit), edit_external_company_path(ec) %></td>
+        <td><%= link_to l(:button_delete), external_company_path(ec),
+          data:{confirm: l(:text_are_you_sure)}, method: :delete %></td>
+      </tr>
+    <% end -%>
+    </tbody>
+    <tfoot>
+      <tr>
+        <td colspan="5"></td>
+      </tr>
+    </tfoot>
+  </table>
 
-<%= link_to l(:label_new), new_external_company_path %>
+  <%= render partial: 'common/pagination', locals: {pages: @ecompanies_pages, count: @ecompanies_count} %>
 
-<!--paginacio-->
-<div class="seccio grup paginacio pagination">
-  <%= pagination_links_full @ecompanies_pages, @ecompanies_count %>
 </div>
-<!--final paginacio-->
+
+<br />
+<%= link_to l(:label_new), new_external_company_path, class: 'icon-fa icon-fa-fw icon-fa-file btn btn-default' %>
+
+<%= content_for :header_tags do %>
+  <%= javascript_include_tag :haltr, plugin: :haltr %>
+<% end -%>
