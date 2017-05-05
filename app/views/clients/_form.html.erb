@@ -1,10 +1,10 @@
 <%= error_messages_for 'client' %>
 
-<% if @client -%>
-  <h2><%=l(@client.new_record? ? :label_company_new : :label_company)%></h2>
+<% if client -%>
+  <h2><%=l(client.new_record? ? :label_company_new : :label_company)%></h2>
 <% end -%>
 
-<div class="<%= 'col-xs-10' unless @client.nil? %> col-no-pad-left">
+<div class="<%= 'col-xs-10' unless client.nil? %> col-no-pad-left">
   <div class="tab-pane form-horizontal">
 
     <div class="form-group" id='cif_info'>
@@ -174,7 +174,7 @@
           </div>
         </div>
       <% end -%>
-      <% if User.current.allowed_to?(:use_local_signature, @project) or (@client and @client.sign_with_local_certificate?) -%>
+      <% if User.current.allowed_to?(:use_local_signature, @project) or (client and client.sign_with_local_certificate?) -%>
         <div class="form-group">
           <div class="col-xs-3 col-xs-offset-3">
             <div class="checkbox">
@@ -194,8 +194,8 @@
 
       <label><%=l(:bank_info)%></label>
 
-      <% if @client.nil? or @client.read_attribute(:bank_account).blank? -%>
-        <% if @client.nil? or @client.country=='es' %>
+      <% if client.nil? or client.read_attribute(:bank_account).blank? -%>
+        <% if client.nil? or client.country=='es' %>
           <div class="form-group">
             <div class="col-xs-3">
               <a id="ccc2iban" data-url="<%=project_ccc2iban_path(@project)%>" href="#">Convert spanish CCC to IBAN</a>
@@ -337,7 +337,7 @@
     <% unless context =~ /_invoice/ -%>
       <div class="form-group">
         <div class="col-xs-12 text-right">
-          <%= submit_tag (@client.new_record? ? l(:button_create) : l(:button_save)), class: 'btn btn-primary' %>
+          <%= submit_tag (client.new_record? ? l(:button_create) : l(:button_save)), class: 'btn btn-primary' %>
         </div>
       </div>
     <% end -%>
