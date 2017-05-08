@@ -226,8 +226,7 @@
       <% if @invoice.payments_on_account_in_cents.to_i != 0 or @invoice.amounts_withheld.cents != 0 -%>
         <% if @invoice.payments_on_account_in_cents.to_i != 0 -%>
           <tr>
-            <td colspan="<%= line_cells - 2 %>"></td>
-            <td colspan="<%= line_cells %>" class="text-right"><%=h l(:field_payments_on_account) %></td>
+            <td colspan="<%= line_cells - 1 %>" class="text-right"><%=h l(:field_payments_on_account) %></td>
             <td class="text-right"><%=h money(@invoice.payments_on_account) %></td>
           </tr>
         <% end -%>
