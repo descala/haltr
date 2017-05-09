@@ -9,7 +9,7 @@
   </address>
   <p><%=h l(:field_taxcode) %><span class="tax-id"> <%=h @company.taxcode %></span></p>
   <div><%= @company.website %></div>
-  <div><%= @company.email %></div>
+  <div><%= @invoice.from_email %></div>
   <% if @invoice.party_identification.present? -%>
     <div>
       <%= t(:field_party_identification) %>: <%= @invoice.party_identification %>

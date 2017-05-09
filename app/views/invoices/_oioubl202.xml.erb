@@ -39,9 +39,9 @@
           </cac:TaxScheme>
         </cac:PartyTaxScheme>
         <%= render :partial => "invoices/oio_party_legal_entity", :format => :xml, :locals => {:entity => @company} %>
-        <% if @company.email and !@company.email.blank? -%>
+        <% if @invoice.from_email.present? -%>
           <cac:Contact>
-            <cbc:ElectronicMail><%=h @company.email%></cbc:ElectronicMail>
+            <cbc:ElectronicMail><%=h @invoice.from_email%></cbc:ElectronicMail>
           </cac:Contact>
         <% end -%>
      </cac:Party>

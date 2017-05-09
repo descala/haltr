@@ -69,8 +69,12 @@ module Haltr
       mail = Mail.new
       mail.charset   = "UTF-8"
       mail.to        = invoice.recipient_emails.join(', ')
-      mail.bcc       = invoice.company.email if invoice.company.bcc_me?
-      mail.from      = "#{invoice.company.name.gsub(',','')} <#{invoice.company.email}>"
+      mail.bcc       = invoice.from_email if invoice.company.bcc_me?
+      if invoice.company_email_override.present?
+        mail.from    = "#{invoice.company.name.gsub(',','')} <#{invoice.company_email_override}>"
+      else
+        mail.from    = "#{invoice.company.name.gsub(',','')} <#{invoice.from_email}>"
+      end
       mail.subject   = subj
       mail.text_part do
         body body_txt

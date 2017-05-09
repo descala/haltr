@@ -253,6 +253,10 @@ class InvoicesController < ApplicationController
     @invoice = invoice_class.new(parsed_params)
     @invoice.project ||= @project
 
+    if @invoice.company_email_override == @project.company.email
+      @invoice.company_email_override = nil
+    end
+
     if @invoice.fa_country.to_s.size == 3
       @invoice.fa_country = SunDawg::CountryIsoTranslater.translate_standard(
         @invoice.fa_country, "alpha3", "alpha2"

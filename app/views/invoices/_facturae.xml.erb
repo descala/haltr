@@ -123,8 +123,8 @@
             <%= render :partial => "invoices/address.facturae", :format => :xml, :locals => {:entity => @company} %>
             <ContactDetails>
                <WebAddress><%=h @company.website%></WebAddress>
-               <% unless @company.email.blank? -%>
-               <ElectronicMail><%=h @company.email%></ElectronicMail>
+               <% unless @invoice.from_email.blank? -%>
+               <ElectronicMail><%=h @invoice.from_email%></ElectronicMail>
                <% end -%>
             </ContactDetails>
          </LegalEntity>
@@ -136,8 +136,8 @@
             <%= render :partial => "invoices/address.facturae", :format => :xml, :locals => {:entity => @company} %>
             <ContactDetails>
                <WebAddress><%=h @company.website%></WebAddress>
-               <% unless @company.email.blank? -%>
-               <ElectronicMail><%=h @company.email%></ElectronicMail>
+               <% unless @invoice.from_email.blank? -%>
+               <ElectronicMail><%=h @invoice.from_email%></ElectronicMail>
                <% end -%>
             </ContactDetails>
          </Individual>

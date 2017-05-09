@@ -322,6 +322,23 @@
             </div>
           </div>
 
+          <div class="form-group">
+            <%= f.label :company_email_override, class: 'col-xs-3 control-label' do %>
+              <%= l :field_company_email %>:
+            <% end -%>
+            <div class="col-xs-6">
+              <p class="control-label text-left"><%= l :field_company_email_override %>:</p>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <div class="col-xs-6 col-xs-offset-3">
+              <div class="relative">
+                <%= f.text_field :company_email_override, class: 'form-control' %>
+              </div>
+            </div>
+          </div>
+
           <%if @invoice.new_record? %>
             <hr />
             <div class="text-right set-of-buttons">

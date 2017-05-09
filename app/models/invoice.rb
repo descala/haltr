@@ -171,6 +171,14 @@ class Invoice < ActiveRecord::Base
     end
   end
 
+  def from_email
+    if company_email_override.present?
+      company_email_override
+    else
+      company.email
+    end
+  end
+
   def terms_description
     terms_object.description
   end
