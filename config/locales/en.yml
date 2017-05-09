@@ -182,7 +182,7 @@ en:
   invoice_no_taxes_and_discount: "An invoice can not have lines without tax and a global discount"
   field_import: "Import"
   pdf_not_legal: "PDF not legal"
-  amended_invoice: "Rectification of %{link}"
+  amended_invoice: "Rectification of invoice %{link}"
   amended_by_invoice: "Rectificated by %{link}"
   create_amend_invoice: "Create rectification invoice"
   label_amendment_invoice: "Amendment Invoice"

@@ -19,7 +19,15 @@
   </div>
 <% end -%>
 
-<h2><%= %w(new create).include?(params[:action]) ? l(:label_invoice_new) : "#{l(:label_invoice)} #{@invoice.number}" %></h2>
+<h2>
+<% if @invoice.new_record? and !@to_amend -%>
+  <%= l(:label_invoice_new) %>
+<% elsif @to_amend -%>
+  <%= l(:amended_invoice, link: @to_amend.number) %> (<%= l("amend_#{@amend_type}") %>)
+<% else -%>
+  <%= "#{l(:label_invoice)} #{@invoice.number}" %>
+<% end -%>
+</h2>
 
 <div class="row">
   <div class="col-xs-2 col-no-pad-right">
@@ -42,11 +50,6 @@
           <legend class="relative">1. <%=l(:invoice_data)%></legend>
 
           <% if @to_amend -%>
-            <div class="form-group">
-              <div class="col-xs-6 col-xs-offset-3">
-                <%= l(:amended_invoice, link: @to_amend.number) %> (<%= l("amend_#{@amend_type}") %>)
-              </div>
-            </div>
             <div class="form-group">
               <label class="col-xs-3 control-label"><%= l(:client) %>:</label>
               <div class="col-xs-6">

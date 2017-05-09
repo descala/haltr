@@ -191,7 +191,7 @@ ca:
   invoice_no_taxes_and_discount: "Una factura no pot tenir a la vegada línies sense impostos i un descompte global"
   field_import: "Import"
   pdf_not_legal: "PDF no legal"
-  amended_invoice: "Rectificació de la %{link}"
+  amended_invoice: "Rectificació de la factura %{link}"
   amended_by_invoice: "Rectificada per la %{link}"
   create_amend_invoice: "Crear factura rectificativa"
   label_amendment_invoice: "Factura rectificativa"

@@ -182,7 +182,7 @@ fr:
   invoice_no_taxes_and_discount: "Vous ne pouvez pas avoir des lignes sans impôt et une réduction globale"
   field_import: "Importer"
   pdf_not_legal: "PDF illégal"
-  amended_invoice: "Ajustements au %{link}"
+  amended_invoice: "Ajustements au facture %{link}"
   amended_by_invoice: "Corrigé pour %{link}"
   create_amend_invoice: "Créer projet d'amendement"
   label_amendment_invoice: "Facture d'amendment"
