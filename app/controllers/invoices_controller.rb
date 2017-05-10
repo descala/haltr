@@ -950,6 +950,7 @@ class InvoicesController < ApplicationController
       il.taxes = line.taxes.collect {|tax| tax.dup }
       @invoice.invoice_lines << il
     end
+    render :new
   end
 
   def mail
