@@ -21,11 +21,11 @@
 
 <h2>
 <% if @invoice.new_record? and !@to_amend -%>
-  <%= l(:label_invoice_new) %>
+  <%= controller.controller_name == 'invoice_templates' ? l(:label_invoice_template_new) : l(:label_invoice_new) %>
 <% elsif @to_amend -%>
   <%= l(:amended_invoice, link: @to_amend.number) %> (<%= l("amend_#{@amend_type}") %>)
 <% else -%>
-  <%= "#{l(:label_invoice)} #{@invoice.number}" %>
+  <%= "#{controller.controller_name == 'invoice_templates' ? l(:label_invoice_template) : l(:label_invoice)} #{@invoice.number}" %>
 <% end -%>
 </h2>
 
