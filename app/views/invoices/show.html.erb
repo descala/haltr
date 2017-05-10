@@ -2,13 +2,16 @@
 <div class="pull-left">
   <h2>
     <%= link_to "", index_url_helper, class: 'fa fa-long-arrow-left fa-big fa-left', aria: { hidden: true } %>
-    <%= "#{l :label_issued_invoice} #{@invoice.number}" %>
+    <% if @invoice.amend_of -%>
+      <%= l(:amended_invoice, link: @invoice.amend_of.number) %> (<%= l("amend_total") %>)
+    <% elsif @invoice.partial_amend_of -%>
+      <%= l(:amended_invoice, link: @invoice.partial_amend_of.number) %> (<%= l("amend_partial") %>)
+    <% else -%>
+      <%= "#{controller.controller_name == 'invoice_templates' ? l(:label_invoice_template) : l(:label_invoice)} #{@invoice.number}" %>
+    <% end -%>
   </h2>
 </div>
 </div>
-
-
-
 
 <!--menu rapid-->
 <div class="wrapper-default">

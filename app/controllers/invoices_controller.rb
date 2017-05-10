@@ -365,7 +365,7 @@ class InvoicesController < ApplicationController
       @client ||= Client.new
 
       respond_to do |format|
-        format.html { render :action => (@to_amend ? 'amend_for_invoice' : 'new') }
+        format.html { render action: 'new' }
         format.api { render_validation_errors(@invoice) }
       end
     end
