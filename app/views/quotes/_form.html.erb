@@ -149,15 +149,35 @@
   <hr class="form-elements">
 
   <label><%=l(:field_invoice_lines)%></label>
-  <div id="invoice_lines" data-tax-names="<%= @project.company.tax_names.join(' ') %>">
+  <table class="table table-lines">
+    <thead>
+      <tr>
+        <% if User.current.allowed_to?(:view_invoice_extra_fields, @project) -%>
+          <th class="w6p"><%= l :invoice_line %></th>
+        <% end -%>
+        <th class="w35p"><%=l(:field_description)%></th>
+        <th><%=l(:field_quantity)%></th>
+        <th></th>
+        <%= call_hook(:invoice_form_order_line_reference_header) %>
+        <th class="w8p"><%=l(:field_price)%></th>
+        <% if @invoice.invoice_lines.any? {|l| !l.article_code.blank? } or User.current.allowed_to?(:view_invoice_extra_fields, @project) -%>
+          <th class="w8p"><%=l(:field_article_code)%></th>
+        <% end -%>
+        <th></th>
+      </tr>
+    </thead>
     <%= f.fields_for :invoice_lines do |line_form| %>
       <%=  render partial: 'invoice_line_fields', locals: { f: line_form } %>
     <% end %>
-  </div>
-  <!-- cocoon -->
-  <span class='table-lines form-control'>
-    <%= link_to_add_association l(:button_add_invoice_line), f, :invoice_lines, data: {'association-insertion-node' => '#invoice_lines', 'association-insertion-method' => 'append'}, class: 'add_fields icon-fa icon-fa-plus-sign', force_non_association_create: 'true' %>
-  </span>
+    <tfoot id="invoice_lines" data-tax-names="<%= @project.company.tax_names.join(' ') %>">
+      <tr>
+        <td colspan="99">
+          <!-- cocoon -->
+          <%= link_to_add_association l(:button_add_invoice_line), f, :invoice_lines, 'data-association-insertion-node' => '#invoice_lines', 'data-association-insertion-method' => 'before', class: 'add_fields icon-fa icon-fa-plus-sign', force_non_association_create: 'true', partial: 'invoice_line_fields' %>
+        </td>
+      </tr>
+    </tfoot>
+  </table>
 
   <hr />
   <div class="text-right set-of-buttons">
