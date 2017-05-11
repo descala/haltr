@@ -1,7 +1,5 @@
 class ExportChannels 
 
-
-
   def self.use_file(file)
     @@channels = YAML.load(File.read(File.join(File.dirname(__FILE__), "../../config/#{file}")))
   end

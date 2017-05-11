@@ -14,7 +14,8 @@ class FacturaeTest < ActiveSupport::TestCase
     assert_equal '', client.postalcode
     assert client.valid?, client.errors.full_messages.join
     invoice.reload
-    invoice.valid?
+    assert invoice.valid?
+    invoice.about_to_be_sent=true
     assert !invoice.valid?, 'invoice is valid but client postalcode is blank'
     assert_equal 'Client Postcode cannot be blank', invoice.errors.full_messages.join
   end

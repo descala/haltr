@@ -13,6 +13,9 @@ class Invoice < ActiveRecord::Base
   # do not remove, with audit we need to make the other attributes accessible
   attr_protected :created_at, :updated_at
 
+  attr_accessor :about_to_be_sent
+  alias_method :about_to_be_sent?, :about_to_be_sent
+
   # remove non-utf8 characters from those fields:
   TO_UTF_FIELDS = %w(extra_info)
 

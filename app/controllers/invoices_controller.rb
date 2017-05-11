@@ -328,6 +328,7 @@ class InvoicesController < ApplicationController
         format.html {
           flash[:notice] = l(:notice_successful_create)
           if params[:create_and_send]
+            @invoice.about_to_be_sent=true
             if @invoice.valid?
               if @invoice.client.sign_with_local_certificate?
                 # channel sends via javascript, set autocall and autocall_args
@@ -410,6 +411,7 @@ class InvoicesController < ApplicationController
       respond_to do |format|
         format.html {
           if params[:save_and_send]
+            @invoice.about_to_be_sent=true
             if @invoice.valid?
               if @invoice.client.sign_with_local_certificate?
                 # channel sends via javascript, set autocall and autocall_args
@@ -698,6 +700,7 @@ class InvoicesController < ApplicationController
   end
 
   def send_invoice
+    @invoice.about_to_be_sent=true
     unless @invoice.valid?
       raise @invoice.errors.full_messages.join(', ')
     end
@@ -1244,6 +1247,7 @@ class InvoicesController < ApplicationController
     @errors=[]
     num_invoices = @invoices.size
     @invoices.collect! do |invoice|
+      invoice.about_to_be_sent=true
       if invoice.valid? and invoice.may_queue? and
           ExportChannels.can_send? invoice.client.invoice_format
         if invoice.client.sign_with_local_certificate?

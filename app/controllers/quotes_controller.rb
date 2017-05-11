@@ -103,6 +103,7 @@ class QuotesController < ApplicationController
     if @invoice.save
       flash[:notice] = l(:notice_successful_create)
       if params[:create_and_send]
+        @invoice.about_to_be_sent=true
         if @invoice.valid?
           redirect_to :action => 'send_quote', :id => @invoice
         else
@@ -136,6 +137,7 @@ class QuotesController < ApplicationController
       Event.create(:name=>'edited',:invoice=>@invoice,:user=>User.current)
       flash[:notice] = l(:notice_successful_update)
       if params[:save_and_send]
+        @invoice.about_to_be_sent=true
         if @invoice.valid? and ExportChannels.can_send?(:send_pdf_by_mail)
           redirect_to :action => 'send_quote', :id => @invoice
         else
@@ -156,6 +158,7 @@ class QuotesController < ApplicationController
   end
 
   def send_quote
+    @invoice.about_to_be_sent=true
     unless @invoice.class.include?(Haltr::Validator::Mail) and @invoice.valid? #TODO aixo no funciona...
       raise @invoice.errors.full_messages.join(", ") # unless @invoice.valid?(:pdf_by_mail)
     end

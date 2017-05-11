@@ -1,6 +1,7 @@
 module QuotesHelper
 
   def send_link_for_quote
+    @invoice.about_to_be_sent=true
     @invoice.client = Client.new if @invoice.client.nil?
     confirm = @invoice.has_been_sent? ? j(l(:sure_to_resend_quote, num: @invoice.number).html_safe) : nil
     if @invoice.valid? and ExportChannels.can_send?('pdf_by_mail')

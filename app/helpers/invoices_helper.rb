@@ -29,6 +29,7 @@ module InvoicesHelper
   end
 
   def send_link_for_invoice
+    @invoice.about_to_be_sent=true
     confirm = @invoice.has_been_sent? ? j(l(:sure_to_resend_invoice, num: @invoice.number).html_safe) : nil
     if @invoice.valid? and @invoice.may_queue? and
         ExportChannels.can_send?(@invoice.client.invoice_format)
