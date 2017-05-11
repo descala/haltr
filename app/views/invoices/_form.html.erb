@@ -70,10 +70,8 @@
 
           <% else -%>
             <div id="client_select">
-              <div class="form-group">
-                <%= render partial: 'invoices/clients',
-                  locals: { selected: @created_client || @invoice.client_id } %>
-              </div>
+              <%= render partial: 'invoices/clients',
+                locals: { selected: @created_client || @invoice.client_id } %>
             </div>
 
           <% end -%>
@@ -83,7 +81,7 @@
           <div>
             <div class="form-group">
               <%= f.label :date, class: 'col-xs-3 control-label' do %>
-                <%= t :invoice %> <span class="required">*</span>
+                <%= t :invoice %>: <span class="required">*</span>
               <% end -%>
               <div class="col-xs-3">
                 <p class="control-label text-left"><%= l :field_date %></p>
@@ -277,7 +275,7 @@
             <div>
               <div class="form-group">
                 <%= f.label :amounts_withheld_reason, class: 'col-xs-3 control-label' do %>
-                  <%= l :amounts_withheld %>
+                  <%= l :amounts_withheld %>:
                 <% end -%>
                 <div class="col-xs-3">
                   <p class="control-label text-left"><%= l :field_amounts_withheld_reason %></p>
@@ -359,7 +357,7 @@
 
           <% @invoice.taxes_hash.keys.sort.each do |name| -%>
             <div class="form-group">
-              <%= label_tag "#{name}_global", name, class: 'col-xs-3 control-label' %>
+              <%= label_tag "#{name}_global", "#{name}:", class: 'col-xs-3 control-label' %>
               <div class="col-xs-2">
                 <%= select_tag("#{name}_global",
                                options_for_select(tax_categories_array(@invoice,name),

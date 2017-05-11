@@ -1,7 +1,9 @@
-<label for="invoice_client_id" class="col-xs-3 control-label"><%= l(:field_client) %>
-<% unless @invoice.is_a? Quote or @invoice.is_a? ReceivedInvoice -%>
-  <span class="required"> *</span>
-<% end -%>
+<div class="form-group">
+<label for="invoice_client_id" class="col-xs-3 control-label">
+  <%= l(:field_client) %>:
+  <% unless @invoice.is_a? Quote or @invoice.is_a? ReceivedInvoice -%>
+    <span class="required"> *</span>
+  <% end -%>
 </label>
 <div class="col-xs-7">
   <%= select :invoice,
@@ -11,14 +13,20 @@
     :data => { :remote => true,
                :url => url_for(project_invoices_update_payment_stuff_path(@project, invoice_id: (@invoice ? @invoice.id : nil))) },
   :class => "form-control form-required" %>
-<span id="send_info"><%= l(:transport) %>:
-  <span id="invoice_format">
-    <% if @client -%>
-      <%= ExportChannels.l(@client.invoice_format) %>
-    <% end -%>
-  </span>
-</span>
 <span class="help-block">
   <%=link_to_function(l(:label_company_new),"$('#new_client_wrapper').show();", class: 'icon-fa icon-fa-plus-sign black')%>
 </span>
+
+</div>
+</div>
+
+<div class="form-group">
+  <label class="col-xs-3 control-label"><%= l :transport %>:</label>
+  <div class="col-xs-7">
+    <p class="form-control-static"><span id="invoice_format">
+      <% if @client -%>
+        <%= ExportChannels.l(@client.invoice_format) %>
+      <% end -%>
+    </span></p>
+  </div>
 </div>
