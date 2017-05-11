@@ -203,6 +203,33 @@ $(document).ready(function() {
 
     });
   }
+  if ( $(".table-lines .plus-options").length > 0 ) {
+    $(".table-lines .plus-options a").click(function() {
+      if ( $( this ).hasClass( "icon-fa-right-angle-down" ) ) {
+        $( this ).next().slideDown();
+        $( this ).removeClass( "icon-fa-right-angle-down" );
+        $( this ).addClass( "icon-fa-right-angle-up" );
+      } else {
+        $( this ).next().slideUp();
+        $( this ).removeClass( "icon-fa-right-angle-up" );
+        $( this ).addClass( "icon-fa-right-angle-down" );
+      }
+    });
+  }
+  $('#invoice_lines').on('cocoon:after-insert', function(e, insertedItem) {
+    insertedItem.find('.plus-options a').click(function() {
+      if ( $( this ).hasClass( "icon-fa-right-angle-down" ) ) {
+        $( this ).next().slideDown();
+        $( this ).removeClass( "icon-fa-right-angle-down" );
+        $( this ).addClass( "icon-fa-right-angle-up" );
+      } else {
+        $( this ).next().slideUp();
+        $( this ).removeClass( "icon-fa-right-angle-up" );
+        $( this ).addClass( "icon-fa-right-angle-down" );
+      }
+    });
+  });
+
   $('.modal.fade').on('show.bs.modal', function (e) {  /* evitamos movimientos con los modal */
     $("body").addClass( "no-pad-right" );
   })

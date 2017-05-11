@@ -350,55 +350,75 @@
       <div class="tab-pane" id="invoice-content">
         <fieldset class="form-horizontal">
           <legend>2. <%= l :field_invoice_lines %></legend>
-          <div id="invoice_lines" data-tax-names="<%= @project.company.tax_names.join(' ') %>">
-            <%= f.fields_for :invoice_lines do |line_form| %>
-              <%= render partial: 'invoice_line_fields', locals: {f: line_form} %>
-            <% end %>
-          </div>
-          <!-- cocoon -->
-          <span class="table-lines form-control">
-            <%= link_to_add_association l(:button_add_invoice_line), f, :invoice_lines, 'data-association-insertion-node' => '#invoice_lines', 'data-association-insertion-method' => 'append', class: 'add_fields icon-fa icon-fa-plus-sign', force_non_association_create: 'true' %>
-          </span>
+
+          <p><strong><%= l :label_tax_plural %></strong></p>
+
+          <% if @invoice.taxes_hash.empty? -%>
+            <p><%= link_to_if_authorized l(:add_taxes_on_company), project_my_company_path(@project) -%></p>
+          <% end -%>
+
+          <% @invoice.taxes_hash.keys.sort.each do |name| -%>
+            <div class="form-group">
+              <%= label_tag "#{name}_global", name, class: 'col-xs-3 control-label' %>
+              <div class="col-xs-2">
+                <%= select_tag("#{name}_global",
+                               options_for_select(tax_categories_array(@invoice,name),
+                                                  selected: @invoice.global_code_for(name)),
+                disabled: @invoice.tax_per_line?(name),
+                class:    'form-control global_tax',
+                'data-tax-name' => name ) %>
+              </div>
+              <div class="col-xs-3">
+                <div class="checkbox">
+                  <%= label_tag "#{name}_multiple" do %>
+                    <%= check_box_tag("#{name}_multiple", 1, @invoice.tax_per_line?(name), class: 'global_tax_check', 'data-tax-name' => name) %>
+                    <%= l(:line_specific_tax) %>
+                  <% end -%>
+                </div>
+              </div>
+            </div>
+            <div class="<%= name %>_comment form-group <%= hide_if_not_exempt_tax(name) %>">
+              <%= label_tag "#{name}_comment", l("field_comment"), class: 'col-xs-3 control-label normal' %>
+              <div class="col-xs-6">
+                <%= text_field_tag("#{name}_comment", @invoice.global_comment_for(name), class: 'form-control') %>
+              </div>
+            </div>
+          <% end -%>
 
           <hr class="form-elements">
 
-          <div>
-            <p><strong><%= l :label_tax_plural %></strong></p>
+          <p><strong><%= l :field_invoice_lines %></strong></p>
 
-            <% if @invoice.taxes_hash.empty? -%>
-              <p><%= link_to_if_authorized l(:add_taxes_on_company), project_my_company_path(@project) -%></p>
-            <% end -%>
+          <table class="table table-lines">
+            <thead>
+              <tr>
+                <% if User.current.allowed_to?(:view_invoice_extra_fields, @project) -%>
+                  <th class="w6p">#</th>
+                <% end -%>
+                <th><%=l(:field_quantity)%></th>
+                <th></th>
+                <th class="w35p"><%=l(:field_description)%></th>
+                <%= call_hook(:invoice_form_order_line_reference_header) %>
+                <th class="w8p"><%=l(:field_price)%></th>
+                <% if @invoice.invoice_lines.any? {|l| !l.article_code.blank? } or User.current.allowed_to?(:view_invoice_extra_fields, @project) -%>
+                  <th class="w8p"><%=l(:field_article_code)%></th>
+                <% end -%>
+                <th></th>
+              </tr>
+            </thead>
 
-            <% @invoice.taxes_hash.keys.sort.each do |name| -%>
-              <div class="pad-top-7">
-                <div class="form-group">
-                  <%= label_tag "#{name}_global", name, class: 'col-xs-3 control-label' %>
-                  <div class="col-xs-2">
-                    <%= select_tag("#{name}_global",
-                                   options_for_select(tax_categories_array(@invoice,name),
-                                                      selected: @invoice.global_code_for(name)),
-                    disabled: @invoice.tax_per_line?(name),
-                    class:    'form-control global_tax',
-                    'data-tax-name' => name ) %>
-                  </div>
-                  <div class="col-xs-3">
-                    <div class="checkbox">
-                      <%= label_tag "#{name}_multiple" do %>
-                        <%= check_box_tag("#{name}_multiple", 1, @invoice.tax_per_line?(name), class: 'global_tax_check', 'data-tax-name' => name) %>
-                        <%= l(:line_specific_tax) %>
-                      <% end -%>
-                    </div>
-                  </div>
-                </div>
-                <div class="<%= name %>_comment form-group <%= hide_if_not_exempt_tax(name) %>">
-                  <%= label_tag "#{name}_comment", l("field_comment"), class: 'col-xs-3 control-label normal' %>
-                  <div class="col-xs-6">
-                    <%= text_field_tag("#{name}_comment", @invoice.global_comment_for(name), class: 'form-control') %>
-                  </div>
-                </div>
-              </div>
-            <% end -%>
-          </div>
+            <%= f.fields_for :invoice_lines do |line_form| %>
+              <%= render partial: 'invoice_line_fields', locals: {f: line_form} %>
+            <% end %>
+            <tfoot id="invoice_lines" data-tax-names="<%= @project.company.tax_names.join(' ') %>">
+              <tr>
+                <td colspan="99">
+                  <!-- cocoon -->
+                  <%= link_to_add_association l(:button_add_invoice_line), f, :invoice_lines, 'data-association-insertion-node' => '#invoice_lines', 'data-association-insertion-method' => 'before', class: 'add_fields icon-fa icon-fa-plus-sign', force_non_association_create: 'true', partial: 'invoice_line_fields' %>
+                </td>
+              </tr>
+            </tfoot>
+          </table>
 
           <%=render partial: 'invoices/form_submit', locals: {f: f} %>
         </fieldset>

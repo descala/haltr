@@ -1,32 +1,13 @@
+<tbody class="nested-fields">
 <% lineid = f.object_name.split("[").last.gsub(/\]/,'') -%>
 
-<div class="nested-fields">
-  <table class="table table-lines">
-    <thead>
-      <tr>
-        <% if User.current.allowed_to?(:view_invoice_extra_fields, @project) -%>
-          <th class="w6p">#</th>
-        <% end -%>
-        <th><%=l(:field_quantity)%></th>
-        <th></th>
-        <th class="w35p"><%=l(:field_description)%></th>
-        <%= call_hook(:invoice_form_order_line_reference_header) %>
-        <th class="w8p"><%=l(:field_price)%></th>
-        <% if @invoice.invoice_lines.any? {|l| !l.article_code.blank? } or User.current.allowed_to?(:view_invoice_extra_fields, @project) -%>
-          <th class="w8p"><%=l(:field_article_code)%></th>
-        <% end -%>
-        <th></th>
-      </tr>
-    </thead>
-
-    <tbody>
-      <tr>
-        <% if User.current.allowed_to?(:view_invoice_extra_fields, @project) -%>
-          <td><%= f.text_field :position, id: "pos_#{lineid}", class: 'pos form-control' %></td>
-        <% else -%>
-          <%= f.hidden_field :position, id: "pos_#{lineid}", class: 'pos' %>
-        <% end -%>
-        <script type="text/javascript">
+<tr>
+  <% if User.current.allowed_to?(:view_invoice_extra_fields, @project) -%>
+    <td><%= f.text_field :position, id: "pos_#{lineid}", class: 'pos form-control' %></td>
+  <% else -%>
+    <%= f.hidden_field :position, id: "pos_#{lineid}", class: 'pos' %>
+  <% end -%>
+  <script type="text/javascript">
 var el = $('.pos').last();
 if (el.val() == '') {
   var last = $('.pos').eq(-2);
@@ -36,148 +17,170 @@ if (el.val() == '') {
     el.val('1');
   }
 }
-        </script>
-        <td class="w8p"><%= f.text_field :quantity, value: f.object.quantity.to_s.gsub(/\.0+$/,''), class: 'form-control' %></td>
-        <td class="w12p"><%=f.select :unit, InvoiceLine.units, {no_label: true, include_blank: true}, {class: 'form-control'}%></td>
-        <td><%=f.text_area :description, rows: 1, class: 'form-control textarea-auto' %></td>
-        <%= call_hook(:invoice_form_order_line_reference) %>
-        <td><%=f.text_field :price, value: f.object.price.to_s.gsub(/\.0+$/,''), class: 'form-control' %></td>
-        <% if @invoice.invoice_lines.any? {|l| !l.article_code.blank? } or User.current.allowed_to?(:view_invoice_extra_fields, @project) -%>
-          <td><%=f.text_field :article_code, class: 'form-control' %></td>
-        <% end -%>
-
-        <td class="td-second-table">
-          <table class="table table-lines">
-            <tbody>
-              <% i=0 -%>
-              <% @invoice.taxes_hash.keys.sort.each do |name| -%>
-                <tr>
-                  <th class="<%= name %>_title <%= 'no-display' unless @invoice.tax_per_line?(name) %>"><%= name %></th>
-                  <td class="tax_<%= name %> <%= 'no-display' unless @invoice.tax_per_line?(name) %> w100p">
-                    <% current_tax = f.object.taxes.collect {|t|
-                      t if t.name == name
-                    }.compact.first || Tax.new(category: nil) %>
-                  <%= select_tag(
-                    "invoice[invoice_lines_attributes][#{lineid}][taxes_attributes][#{i.to_s}][code]",
-                    options_for_select(tax_categories_array(@invoice,name),
-                                       selected: current_tax.code),
-                                       class: "tax tax_#{name} form-control",
-                                       onchange: "tax_changed('#{name}',this.value);"
-                  ) %>
-                <%= hidden_field_tag("invoice[invoice_lines_attributes][#{lineid}][taxes_attributes][#{i.to_s}][name]", name) %>
-                <%= hidden_field_tag("invoice[invoice_lines_attributes][#{lineid}][taxes_attributes][#{i.to_s}][id]", current_tax.id) %>
-                <% i+=1 -%>
-                  </td>
-                </tr>
-              <% end -%>
-            </tbody>
-          </table>
-        </td>
-
-        <td class="td-icon text-right">
-          <!-- cocoon -->
-          <%= link_to_remove_association "<i class='fa fa-trash' aria-hidden='true'></i>".html_safe, f %>
-        </td>
-      </tr>
-    </tbody>
-  </table>
-
-  <% if User.current.allowed_to?(:view_invoice_extra_fields, @project) or @invoice.has_line_discounts? -%>
-
-  <table class="table table-lines">
-    <thead>
-      <tr>
-        <th><%= l(:field_discount) %></th>
-        <th></th>
-        <th colspan="2"><%= l(:field_discount_text) %></th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td>
-          <%= f.text_field(:discount, value: f.object.discount.to_f.abs, class: 'form-control') %>
-        </td>
-        <td>
-          <%= f.select :discount_type, ['%','€'], {}, class: 'form-control' %>
-        </td>
-        <td colspan="2"><%= f.text_field(:discount_text, class: 'form-control') %></td>
-      </tr>
-    </tbody>
-  </table>
+  </script>
+  <td class="w8p"><%= f.text_field :quantity, value: f.object.quantity.to_s.gsub(/\.0+$/,''), class: 'form-control' %></td>
+  <td class="w12p"><%=f.select :unit, InvoiceLine.units, {no_label: true, include_blank: true}, {class: 'form-control'}%></td>
+  <td><%=f.text_area :description, rows: 1, class: 'form-control textarea-auto' %></td>
+  <%= call_hook(:invoice_form_order_line_reference) %>
+  <td><%=f.text_field :price, value: f.object.price.to_s.gsub(/\.0+$/,''), class: 'form-control' %></td>
+  <% if @invoice.invoice_lines.any? {|l| !l.article_code.blank? } or User.current.allowed_to?(:view_invoice_extra_fields, @project) -%>
+    <td><%=f.text_field :article_code, class: 'form-control' %></td>
   <% end -%>
 
-  <% if User.current.allowed_to?(:view_invoice_extra_fields, @project) or @invoice.invoice_lines.to_a.sum(&:charge) > 0 -%>
-  <table class="table table-lines">
-    <thead>
-      <tr>
-        <th><%= l(:field_charge) %></th>
-        <th colspan="2"><%= l(:field_charge_reason) %></th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><%= f.text_field(:charge, class: 'form-control') %></td>
-        <td colspan="2"><%= f.text_field(:charge_reason, class: 'form-control') %></td>
-      </tr>
-    </tbody>
-  </table>
-  <% end -%>
-
-  <% if @invoice.invoice_lines.any? {|l| !l.notes.blank? } or User.current.allowed_to?(:view_invoice_extra_fields, @project) -%>
-  <table class="table table-lines">
-    <thead>
-      <tr>
-        <th><%= l(:field_extra_info) %></th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><%= f.text_field :notes, class: 'form-control' %></td>
-      </tr>
-    </tbody>
-  </table>
-  <% end -%>
-
-  <% if @invoice.invoice_lines.any? {|l| l.sequence_number.present? or l.delivery_note_number.present? } or User.current.allowed_to?(:view_sequence_number, @project) or User.current.allowed_to?(:view_invoice_extra_fields, @project)-%>
-  <table class="table table-lines">
-    <thead>
-      <tr>
-        <% if @invoice.invoice_lines.any? {|l| l.sequence_number.present? } or User.current.allowed_to?(:view_sequence_number, @project) -%>
-          <th><%= l(:sequence_number) %></th>
+  <td class="td-second-table">
+    <table class="table table-lines">
+      <tbody>
+        <% i=0 -%>
+        <% @invoice.taxes_hash.keys.sort.each do |name| -%>
+          <tr>
+            <th class="<%= name %>_title <%= 'no-display' unless @invoice.tax_per_line?(name) %>"><%= name %></th>
+            <td class="tax_<%= name %> <%= 'no-display' unless @invoice.tax_per_line?(name) %> w100p">
+              <% current_tax = f.object.taxes.collect {|t|
+                t if t.name == name
+              }.compact.first || Tax.new(category: nil) %>
+            <%= select_tag(
+              "invoice[invoice_lines_attributes][#{lineid}][taxes_attributes][#{i.to_s}][code]",
+              options_for_select(tax_categories_array(@invoice,name),
+                                 selected: current_tax.code),
+                                 class: "tax tax_#{name} form-control",
+                                 onchange: "tax_changed('#{name}',this.value);"
+            ) %>
+          <%= hidden_field_tag("invoice[invoice_lines_attributes][#{lineid}][taxes_attributes][#{i.to_s}][name]", name) %>
+          <%= hidden_field_tag("invoice[invoice_lines_attributes][#{lineid}][taxes_attributes][#{i.to_s}][id]", current_tax.id) %>
+          <% i+=1 -%>
+            </td>
+          </tr>
         <% end -%>
-        <% if @invoice.invoice_lines.any? {|l| l.delivery_note_number.present? } or User.current.allowed_to?(:view_invoice_extra_fields, @project) -%>
-          <th><%= l(:field_delivery_note_number) %></th>
-        <% end -%>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <% if @invoice.invoice_lines.any? {|l| l.sequence_number.present? } or User.current.allowed_to?(:view_sequence_number, @project) -%>
-          <td><%= f.text_field :sequence_number, class: 'form-control' %></td>
-        <% end -%>
-        <% if @invoice.invoice_lines.any? {|l| l.delivery_note_number.present? } or User.current.allowed_to?(:view_invoice_extra_fields, @project) -%>
-          <td><%= f.text_field :delivery_note_number, class: 'form-control' %></td>
-        <% end -%>
-      </tr>
-    </tbody>
-  </table>
-  <% end -%>
+      </tbody>
+    </table>
+  </td>
 
-  <% if @invoice.invoice_lines.any? {|l| l.issuer_transaction_reference.present? } or User.current.allowed_to?(:view_invoice_extra_fields, @project)-%>
-  <table class="table table-lines">
-    <thead>
-      <tr>
-        <th><%= l(:field_issuer_transaction_reference) %></th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><%= f.text_field :issuer_transaction_reference, class: 'form-control' %></td>
-      </tr>
-    </tbody>
-  </table>
-  <% end -%>
+  <td class="td-icon text-right">
+    <!-- cocoon -->
+    <%= link_to_remove_association "<i class='fa fa-trash' aria-hidden='true'></i>".html_safe, f %>
+  </td>
+</tr>
 
-  <br />
+<% if User.current.allowed_to?(:view_invoice_extra_fields, @project) or
+    User.current.allowed_to?(:view_sequence_number, @project) or
+    @invoice.has_line_discounts? or
+    @invoice.invoice_lines.to_a.sum(&:charge) > 0 or
+    @invoice.invoice_lines.any? {|l| l.sequence_number.present? } or
+    @invoice.invoice_lines.any? {|l| l.delivery_note_number.present? } or
+    @invoice.invoice_lines.any? {|l| !l.notes.blank? } -%>
+  <tr>
+    <td class="plus-options text-right" colspan="99">
+      <a class="icon-fa-right icon-fa-right-angle-down" role="button">
+        <%= l :line_extra_fields %>
+      </a>
 
-</div>
+      <div>
+
+        <% if User.current.allowed_to?(:view_invoice_extra_fields, @project) or @invoice.has_line_discounts? -%>
+
+          <div class="form-group">
+            <%= f.label :discount, class: 'col-xs-3 control-label' do %>
+              <%= l :field_discount %>:
+            <% end -%>
+            <div class="col-xs-4">
+              <p class="control-label text-left"><%= l :field_discount_text %></p>
+            </div>
+            <div class="col-xs-3">
+              <p class="control-left text-left"><%= l :field_import %></p>
+            </div>
+          </div>
+          <div class="form-group">
+            <div class="col-xs-4 col-xs-offset-3">
+              <%= f.text_field :discount_text, class: 'form-control' %>
+            </div>
+            <div class="col-xs-3">
+              <div class="row">
+                <div class="col-xs-6">
+                  <%= f.text_field :discount, value: f.object.discount.to_f.abs, class: 'form-control' %>
+                </div>
+                <div class="col-xs-6">
+                  <%= f.select :discount_type, ['%','€'], {}, class: 'form-control' %>
+                </div>
+              </div>
+            </div>
+          </div>
+        <% end -%>
+
+        <% if User.current.allowed_to?(:view_invoice_extra_fields, @project) or @invoice.invoice_lines.to_a.sum(&:charge) > 0 -%>
+          <div class="form-group">
+            <%= f.label :charge, class: 'col-xs-3 control-label' do %>
+              <%= l :field_charge %>:
+            <% end -%>
+            <div class="col-xs-4">
+              <p class="control-label text-left"><%= l :field_charge_reason %></p>
+            </div>
+            <div class="col-xs-3">
+              <p class="control-label text-left"><%= l :field_import %></p>
+            </div>
+          </div>
+          <div class="form-group">
+            <div class="col-xs-4 col-xs-offset-3">
+              <%= f.text_field :charge_reason, class: 'form-control' %>
+            </div>
+            <div class="col-xs-3">
+              <%= f.text_field :charge, class: 'form-control' %>
+            </div>
+          </div>
+        <% end -%>
+
+        <% if @invoice.invoice_lines.any? {|l| l.delivery_note_number.present? } or User.current.allowed_to?(:view_invoice_extra_fields, @project)-%>
+          <div class="form-group">
+            <%= f.label :delivery_note_number, class: 'col-xs-3 control-label' do %>
+              <%= l :field_delivery_note_number %>:
+            <% end -%>
+            <div class="col-xs-4">
+              <p class="control-label text-left"><%= l :field_delivery_note_number %></p>
+            </div>
+            <div class="col-xs-4">
+              <p class="control-label text-left"><%= l :field_issuer_transaction_reference %></p>
+            </div>
+          </div>
+          <div class="form-group">
+            <div class="col-xs-4 col-xs-offset-3">
+              <%= f.text_field :delivery_note_number, class: 'form-control' %>
+            </div>
+            <div class="col-xs-4">
+              <%= f.text_field :issuer_transaction_reference, class: 'form-control' %>
+            </div>
+          </div>
+
+        <% end -%>
+
+        <% if @invoice.invoice_lines.any? {|l| l.sequence_number.present? } or User.current.allowed_to?(:view_sequence_number, @project) or User.current.allowed_to?(:view_invoice_extra_fields, @project) -%>
+          <div class="form-group">
+            <%= f.label :sequence_number, class: 'col-xs-3 control-label' do %>
+              <%= l :sequence_number %>:
+            <% end -%>
+            <div class="col-xs-3">
+              <%= f.text_field :sequence_number, class: 'form-control' %>
+            </div>
+          </div>
+        <% end -%>
+
+        <% if @invoice.invoice_lines.any? {|l| !l.notes.blank? } or User.current.allowed_to?(:view_invoice_extra_fields, @project) -%>
+          <div class="form-group">
+            <%= f.label :notes, class: 'col-xs-3 control-label' do %>
+              <%= l :field_extra_info %>:
+            <% end -%>
+            <div class="col-xs-8">
+              <%= f.text_area :notes, rows: '1', class: 'form-control' %>
+            </div>
+          </div>
+        <% end -%>
+
+
+      </div>
+
+    </td>
+  </tr>
+<% end -%>
+
+<tr>
+  <td class="separated-td" colspan="99"></td>
+</tr>
+</tbody>
