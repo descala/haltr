@@ -589,7 +589,7 @@ fr:
   audited_create: "%{model} created"
   audited_update: "%{model} updated"
   audited_destroy: "%{model} deleted"
-  invoice_line: "Invoice line"
+  invoice_line: "Line"
   invoice: "Invoice"
   tax: "Tax"
   field_percent: "%"

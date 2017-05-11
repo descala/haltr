@@ -18,9 +18,9 @@ if (el.val() == '') {
   }
 }
   </script>
+  <td><%=f.text_area :description, rows: 1, class: 'form-control textarea-auto' %></td>
   <td class="w8p"><%= f.text_field :quantity, value: f.object.quantity.to_s.gsub(/\.0+$/,''), class: 'form-control' %></td>
   <td class="w12p"><%=f.select :unit, InvoiceLine.units, {no_label: true, include_blank: true}, {class: 'form-control'}%></td>
-  <td><%=f.text_area :description, rows: 1, class: 'form-control textarea-auto' %></td>
   <%= call_hook(:invoice_form_order_line_reference) %>
   <td><%=f.text_field :price, value: f.object.price.to_s.gsub(/\.0+$/,''), class: 'form-control' %></td>
   <% if @invoice.invoice_lines.any? {|l| !l.article_code.blank? } or User.current.allowed_to?(:view_invoice_extra_fields, @project) -%>

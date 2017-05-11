@@ -608,7 +608,7 @@ es:
   audited_create: "Creado: %{model} creado/a"
   audited_update: "Actualizado: %{model}"
   audited_destroy: "Borrado: %{model}"
-  invoice_line: "Línea de factura"
+  invoice_line: "Línea"
   invoice: "Factura"
   tax: "Impuesto"
   field_percent: "%"

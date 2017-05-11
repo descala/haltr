@@ -391,11 +391,11 @@
             <thead>
               <tr>
                 <% if User.current.allowed_to?(:view_invoice_extra_fields, @project) -%>
-                  <th class="w6p">#</th>
+                  <th class="w6p"><%= l :invoice_line %></th>
                 <% end -%>
+                <th class="w35p"><%=l(:field_description)%></th>
                 <th><%=l(:field_quantity)%></th>
                 <th></th>
-                <th class="w35p"><%=l(:field_description)%></th>
                 <%= call_hook(:invoice_form_order_line_reference_header) %>
                 <th class="w8p"><%=l(:field_price)%></th>
                 <% if @invoice.invoice_lines.any? {|l| !l.article_code.blank? } or User.current.allowed_to?(:view_invoice_extra_fields, @project) -%>

@@ -605,7 +605,7 @@ ca:
   audited_create: "Creat: %{model}"
   audited_update: "Actualitzat: %{model}"
   audited_destroy: "Esborrat: %{model}"
-  invoice_line: "Línia de factura"
+  invoice_line: "Línia"
   invoice: "Factura"
   tax: "Impost"
   field_percent: "%"
