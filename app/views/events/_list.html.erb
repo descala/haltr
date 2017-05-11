@@ -5,7 +5,7 @@
       <td><%= link_to(e.project.name, project_events_path(project_id: e.project)) %></td>
     <% end -%>
     <td><%= format_date(e.created_at) rescue '' %></td>
-    <td><%= e.created_at.strftime('%H:%M') rescue '' %></td>
+    <td><%= format_time(e.created_at)  rescue '' %></td>
     <% unless @invoice -%>
       <td>
         <% if e.invoice -%>
