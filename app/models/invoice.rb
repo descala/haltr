@@ -1124,7 +1124,7 @@ _INV
     if company and company.project
       ImportError.create(
         filename:      file_name,
-        import_errors: $!.message[0.254],
+        import_errors: $!.message[0..254],
         original:      raw_xml,
         project:       company.project,
       )
