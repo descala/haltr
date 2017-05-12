@@ -1,18 +1,15 @@
 <div class="row">
 <div class="col-xs-6">
-  <% if @client -%>
-    <h2> <%= link_to(@client.name, client_path(@client)) %></h2>
-  <% else -%>
-    <h2><%= l :label_person_plural %></h2>
-  <% end -%>
+  <h2>
+    <%= link_to "", client_path(@client), class: 'fa fa-long-arrow-left fa-big fa-left', aria: { hidden: true } %>
+    <%= link_to(@client.name, client_path(@client)) %>
+  </h2>
 </div>
-<% if @client %>
-  <div class="col-xs-6 text-right">
-    <ul class="list-inline fast-menu">
-      <li><%= link_to_if_authorized l(:label_person_new), new_client_person_path(@client), :class => 'icon-fa icon-fa-fw icon-fa-file btn btn-default' %></li>
-    </ul>
-  </div>
-<% end %>
+<div class="col-xs-6 text-right">
+  <ul class="list-inline fast-menu">
+    <li><%= link_to_if_authorized l(:label_person_new), new_client_person_path(@client), :class => 'btn btn-success' %></li>
+  </ul>
+</div>
 </div>
 
 <!--filtres-->
@@ -42,7 +39,6 @@
         <th><%= l(:label_phone) %></th>
         <% if @client == nil %> <th><%= l(:label_company) %></th> <% end %>
         <th></th>
-        <th></th>
       </tr>
     </thead>
     <tbody>
@@ -53,8 +49,8 @@
           <td><%=h person.email %></td>
           <td><%=h person.phone %></td>
           <% if @client == nil %> <td><%=h person.client %></td> <% end %>
-          <td align="center"><%= link_to_if_authorized l(:button_edit), {action: 'edit', id: person, client_id: @client}, class: 'icon icon-edit editar' %></td>
-          <td align="center"><%= link_to_if_authorized l(:button_delete), {action: 'destroy', id: person} , data: {confirm: l(:text_are_you_sure)}, method: :delete, class: 'icon icon-del eliminar' %></td>
+          <td class="text-right"><%= link_to_if_authorized l(:button_edit), {action: 'edit', id: person, client_id: @client}, class: 'icon icon-fa icon-fa-pencil' %>
+          <%= link_to_if_authorized l(:button_delete), {action: 'destroy', id: person} , data: {confirm: l(:text_are_you_sure)}, method: :delete, class: 'icon icon-fa icon-fa-trash' %></td>
         </tr>
       <% end -%>
     </tbody>

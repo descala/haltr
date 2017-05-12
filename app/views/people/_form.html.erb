@@ -1,7 +1,7 @@
 <%= error_messages_for 'person' %>
 
 <h2>
-  <%= link_to "", client_path(@client), class: 'fa fa-long-arrow-left fa-big fa-left', aria: { hidden: true } %>
+  <%= link_to "", client_people_path(@client), class: 'fa fa-long-arrow-left fa-big fa-left', aria: { hidden: true } %>
   <%=l(@person.new_record? ? :label_person_new : :label_person)%>
 </h2>
 
