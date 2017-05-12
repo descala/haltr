@@ -1,6 +1,6 @@
 <tbody>
 <% events.each do |e| -%>
-  <tr<%= ' title="#{e.type} #{e.id}"' if User.current.admin? %>>
+  <tr<%= " title=\"#{e.type} #{e.id}\"".html_safe if User.current.admin? %>>
     <% unless @project -%>
       <td><%= link_to(e.project.name, project_events_path(project_id: e.project)) %></td>
     <% end -%>
