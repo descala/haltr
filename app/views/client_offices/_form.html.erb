@@ -1,6 +1,9 @@
 <%= error_messages_for 'client_office' %>
 
-<h2><%=l(@client_office.new_record? ? :label_client_office_new : :label_client_office)%></h2>
+<h2>
+  <%= link_to "", client_client_offices_path(@client), class: 'fa fa-long-arrow-left fa-big fa-left', aria: { hidden: true } %>
+  <%=l(@client_office.new_record? ? :label_client_office_new : :label_client_office)%>
+</h2>
 
 <div class="form-horizontal tab-pane">
   <div class="row">
@@ -104,6 +107,7 @@
 
     <div class="from-group">
       <div class="col-xs-7 text-right">
+        <%= link_to l(:cancel), client_path(@client), class: 'btn btn-link' %>
         <% if @client_office.new_record? -%>
           <%= submit_tag l(:button_create), class: 'btn btn-primary' %>
         <% else -%>
