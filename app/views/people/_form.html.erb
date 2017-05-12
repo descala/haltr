@@ -1,6 +1,9 @@
 <%= error_messages_for 'person' %>
 
-<h2><%=l(@person.new_record? ? :label_person_new : :label_person)%></h2>
+<h2>
+  <%= link_to "", client_path(@client), class: 'fa fa-long-arrow-left fa-big fa-left', aria: { hidden: true } %>
+  <%=l(@person.new_record? ? :label_person_new : :label_person)%>
+</h2>
 
 <div class="form-horizontal tab-pane">
   <div class="row">
@@ -81,6 +84,7 @@
 
     <div class="from-group">
       <div class="col-xs-6 text-right">
+        <%= link_to l(:cancel), client_path(@client), class: 'btn btn-link' %>
         <% if @person.new_record? -%>
           <%= submit_tag l(:button_create), class: 'btn btn-primary' %>
         <% else -%>
