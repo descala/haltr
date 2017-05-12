@@ -19,7 +19,15 @@
   </div>
 <% end -%>
 
-<h2><%= %w(new create).include?(params[:action]) ? l(:label_invoice_new) : l(:label_invoice) %></h2>
+<h2>
+<% if @invoice.new_record? and !@to_amend -%>
+  <%= controller.controller_name == 'invoice_templates' ? l(:label_invoice_template_new) : l(:label_invoice_new) %>
+<% elsif @to_amend -%>
+  <%= l(:amended_invoice, link: @to_amend.number) %> (<%= l("amend_#{@amend_type}") %>)
+<% else -%>
+  <%= "#{controller.controller_name == 'invoice_templates' ? l(:label_invoice_template) : l(:label_invoice)} #{@invoice.number}" %>
+<% end -%>
+</h2>
 
 <div class="row">
   <div class="col-xs-2 col-no-pad-right">
@@ -43,11 +51,6 @@
 
           <% if @to_amend -%>
             <div class="form-group">
-              <div class="col-xs-6 col-xs-offset-3">
-                <%= l(:amended_invoice, link: @to_amend.number) %> (<%= l("amend_#{@amend_type}") %>)
-              </div>
-            </div>
-            <div class="form-group">
               <label class="col-xs-3 control-label"><%= l(:client) %>:</label>
               <div class="col-xs-6">
                 <p class="control-label text-left"><%= @invoice.client %></p>
@@ -67,10 +70,8 @@
 
           <% else -%>
             <div id="client_select">
-              <div class="form-group">
-                <%= render partial: 'invoices/clients',
-                  locals: { selected: @created_client || @invoice.client_id } %>
-              </div>
+              <%= render partial: 'invoices/clients',
+                locals: { selected: @created_client || @invoice.client_id } %>
             </div>
 
           <% end -%>
@@ -80,7 +81,7 @@
           <div>
             <div class="form-group">
               <%= f.label :date, class: 'col-xs-3 control-label' do %>
-                <%= t :invoice %> <span class="required">*</span>
+                <%= t :invoice %>: <span class="required">*</span>
               <% end -%>
               <div class="col-xs-3">
                 <p class="control-label text-left"><%= l :field_date %></p>
@@ -214,102 +215,7 @@
             <%= render partial: 'invoices/payment_stuff' %>
           </div>
 
-          <hr class="form-elements">
-
-          <div class="form-group">
-            <%= f.label :extra_info, class: 'col-xs-3 control-label' do %>
-              <%= l :field_extra_info %>:
-            <% end -%>
-            <div class="col-xs-9">
-              <%= f.text_area :extra_info, class: 'form-control' %>
-            </div>
-          </div>
-
-          <div class="form-group">
-            <%= f.label :client_email_override, class: 'col-xs-3 control-label' do %>
-              <%= l :field_email %>:
-            <% end -%>
-            <div class="col-xs-6">
-              <p class="control-label text-left"><%= l :field_client_email_override %>:</p>
-            </div>
-          </div>
-
-          <div class="form-group">
-            <div class="col-xs-6 col-xs-offset-3">
-              <div class="relative">
-                <%= f.text_field :client_email_override, class: 'form-control' %>
-              </div>
-            </div>
-          </div>
-
-          <%if @invoice.new_record? %>
-            <hr></hr>
-            <div class="text-right set-of-buttons">
-              <%=link_to l(:cancel), project_invoices_path(@project),class: 'btn btn-link' %>
-              <%= f.submit l(:continue), name: 'continue', class: 'btn btn-primary', id: 'invoice-continue' %>
-            </div>
-          <%else%>
-            <%=render partial: 'invoices/form_submit', locals: {f: f} %>
-          <%end%>
-        </fieldset>
-      </div>
-
-      <div class="tab-pane" id="invoice-content">
-          <fieldset class="form-horizontal">
-            <legend>2. <%= l :field_invoice_lines %></legend>
-            <div id="invoice_lines" data-tax-names="<%= @project.company.tax_names.join(' ') %>">
-              <%= f.fields_for :invoice_lines do |line_form| %>
-                <%= render partial: 'invoice_line_fields', locals: {f: line_form} %>
-              <% end %>
-            </div>
-            <!-- cocoon -->
-            <span class="table-lines form-control">
-              <%= link_to_add_association l(:button_add_invoice_line), f, :invoice_lines, 'data-association-insertion-node' => '#invoice_lines', 'data-association-insertion-method' => 'append', class: 'add_fields icon-fa icon-fa-plus-sign' %>
-            </span>
-
-            <hr class="form-elements">
-
-            <div>
-              <p><strong><%= l :label_tax_plural %></strong></p>
-
-              <% if @invoice.taxes_hash.empty? -%>
-                <p><%= link_to_if_authorized l(:add_taxes_on_company), project_my_company_path(@project) -%></p>
-              <% end -%>
-
-              <% @invoice.taxes_hash.keys.sort.each do |name| -%>
-                <div class="pad-top-7">
-                  <div class="form-group">
-                    <%= label_tag "#{name}_global", name, class: 'col-xs-3 control-label' %>
-                    <div class="col-xs-2">
-                      <%= select_tag("#{name}_global",
-                                     options_for_select(tax_categories_array(@invoice,name),
-                                                        selected: @invoice.global_code_for(name)),
-                      disabled: @invoice.tax_per_line?(name),
-                      class:    'form-control global_tax',
-                      'data-tax-name' => name ) %>
-                    </div>
-                    <div class="col-xs-2">
-                      <div class="checkbox">
-                        <%= label_tag "#{name}_multiple" do %>
-                          <%= check_box_tag("#{name}_multiple", 1, @invoice.tax_per_line?(name), class: 'global_tax_check', 'data-tax-name' => name) %>
-                          <%= l(:line_specific_tax) %>
-                        <% end -%>
-                      </div>
-                    </div>
-                  </div>
-                  <div id="<%= name %>_comment" class="form-group no-display">
-                    <%= label_tag "#{name}_comment", l("field_comment"), class: 'col-xs-3 control-label normal' %>
-                    <div class="col-xs-6">
-                      <%= text_field_tag("#{name}_comment", @invoice.global_comment_for(name), class: 'form-control') %>
-                    </div>
-                  </div>
-                </div>
-              <% end -%>
-            </div>
-
-        <% unless @invoice.is_a?(ReceivedInvoice) %>
-
-            <hr class="form-elements">
+          <% unless @invoice.is_a?(ReceivedInvoice) %>
 
             <div>
               <div class="form-group">
@@ -369,7 +275,7 @@
             <div>
               <div class="form-group">
                 <%= f.label :amounts_withheld_reason, class: 'col-xs-3 control-label' do %>
-                  <%= l :amounts_withheld %>
+                  <%= l :amounts_withheld %>:
                 <% end -%>
                 <div class="col-xs-3">
                   <p class="control-label text-left"><%= l :field_amounts_withheld_reason %></p>
@@ -388,8 +294,132 @@
               </div>
             </div>
           <% end -%>
+
+          <hr class="form-elements">
+
+          <div class="form-group">
+            <%= f.label :extra_info, class: 'col-xs-3 control-label' do %>
+              <%= l :field_extra_info %>:
+            <% end -%>
+            <div class="col-xs-9">
+              <%= f.text_area :extra_info, class: 'form-control' %>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <%= f.label :client_email_override, class: 'col-xs-3 control-label' do %>
+              <%= l :field_email %>:
+            <% end -%>
+            <div class="col-xs-6">
+              <p class="control-label text-left"><%= l :field_client_email_override %>:</p>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <div class="col-xs-6 col-xs-offset-3">
+              <div class="relative">
+                <%= f.text_field :client_email_override, class: 'form-control' %>
+              </div>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <%= f.label :company_email_override, class: 'col-xs-3 control-label' do %>
+              <%= l :field_company_email %>:
+            <% end -%>
+            <div class="col-xs-6">
+              <p class="control-label text-left"><%= l :field_company_email_override %>:</p>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <div class="col-xs-6 col-xs-offset-3">
+              <div class="relative">
+                <%= f.text_field :company_email_override, class: 'form-control' %>
+              </div>
+            </div>
+          </div>
+
+            <%=render partial: 'invoices/form_submit', locals: {f: f, first_tab: true} %>
+        </fieldset>
+      </div>
+
+
+      <div class="tab-pane" id="invoice-content">
+        <fieldset class="form-horizontal">
+          <legend>2. <%= l :field_invoice_lines %></legend>
+
+          <p><strong><%= l :label_tax_plural %></strong></p>
+
+          <% if @invoice.taxes_hash.empty? -%>
+            <p><%= link_to_if_authorized l(:add_taxes_on_company), project_my_company_path(@project) -%></p>
+          <% end -%>
+
+          <% @invoice.taxes_hash.keys.sort.each do |name| -%>
+            <div class="form-group">
+              <%= label_tag "#{name}_global", "#{name}:", class: 'col-xs-3 control-label' %>
+              <div class="col-xs-2">
+                <%= select_tag("#{name}_global",
+                               options_for_select(tax_categories_array(@invoice,name),
+                                                  selected: @invoice.global_code_for(name)),
+                disabled: @invoice.tax_per_line?(name),
+                class:    'form-control global_tax',
+                'data-tax-name' => name ) %>
+              </div>
+              <div class="col-xs-3">
+                <div class="checkbox">
+                  <%= label_tag "#{name}_multiple" do %>
+                    <%= check_box_tag("#{name}_multiple", 1, @invoice.tax_per_line?(name), class: 'global_tax_check', 'data-tax-name' => name) %>
+                    <%= l(:line_specific_tax) %>
+                  <% end -%>
+                </div>
+              </div>
+            </div>
+            <div class="<%= name %>_comment form-group <%= hide_if_not_exempt_tax(name) %>">
+              <%= label_tag "#{name}_comment", l("field_comment"), class: 'col-xs-3 control-label normal' %>
+              <div class="col-xs-6">
+                <%= text_field_tag("#{name}_comment", @invoice.global_comment_for(name), class: 'form-control') %>
+              </div>
+            </div>
+          <% end -%>
+
+          <hr class="form-elements">
+
+          <p><strong><%= l :field_invoice_lines %></strong></p>
+
+          <table class="table table-lines">
+            <thead>
+              <tr>
+                <% if User.current.allowed_to?(:view_invoice_extra_fields, @project) -%>
+                  <th class="w6p"><%= l :invoice_line %></th>
+                <% end -%>
+                <th class="w35p"><%=l(:field_description)%></th>
+                <th><%=l(:field_quantity)%></th>
+                <th></th>
+                <%= call_hook(:invoice_form_order_line_reference_header) %>
+                <th class="w8p"><%=l(:field_price)%></th>
+                <% if @invoice.invoice_lines.any? {|l| !l.article_code.blank? } or User.current.allowed_to?(:view_invoice_extra_fields, @project) -%>
+                  <th class="w8p"><%=l(:field_article_code)%></th>
+                <% end -%>
+                <th></th>
+              </tr>
+            </thead>
+
+            <%= f.fields_for :invoice_lines do |line_form| %>
+              <%= render partial: 'invoice_line_fields', locals: {f: line_form} %>
+            <% end %>
+            <tfoot id="invoice_lines" data-tax-names="<%= @project.company.tax_names.join(' ') %>">
+              <tr>
+                <td colspan="99">
+                  <!-- cocoon -->
+                  <%= link_to_add_association l(:button_add_invoice_line), f, :invoice_lines, 'data-association-insertion-node' => '#invoice_lines', 'data-association-insertion-method' => 'before', class: 'add_fields icon-fa icon-fa-plus-sign', force_non_association_create: 'true', partial: 'invoice_line_fields' %>
+                </td>
+              </tr>
+            </tfoot>
+          </table>
+
           <%=render partial: 'invoices/form_submit', locals: {f: f} %>
-          </fieldset>
+        </fieldset>
       </div>
 
       <div class="tab-pane" id="invoice-factoring">
@@ -419,8 +449,8 @@
                 <%= l :field_fa_person_type %>:
               <% end -%>
               <div class="col-xs-6">
-                <label class="radio"><%= f.radio_button :fa_person_type, 'F' %><%=l(:label_fa_person_type_individual) %></label>
-                <label class="radio"><%= f.radio_button :fa_person_type, 'J' %><%=l(:label_fa_person_type_entity)%></label>
+                <label class="radio normal"><%= f.radio_button :fa_person_type, 'F' %><%=l(:label_fa_person_type_individual) %></label>
+                <label class="radio normal"><%= f.radio_button :fa_person_type, 'J' %><%=l(:label_fa_person_type_entity)%></label>
               </div>
             </div>
 
@@ -432,9 +462,9 @@
                 <%= l :field_fa_residence_type %>:
               <% end -%>
               <div class="col-xs-6">
-                <label class="radio"><%= f.radio_button :fa_residence_type, 'E' %><%=l(:label_fa_residence_type_foreigner)%></label>
-                <label class="radio"><%= f.radio_button :fa_residence_type, 'R' %><%=l(:label_fa_residence_type_spain)%></label>
-                <label class="radio"><%= f.radio_button :fa_residence_type, 'U' %><%=l(:label_fa_residence_type_UE)%></label>
+                <label class="radio normal"><%= f.radio_button :fa_residence_type, 'E' %><%=l(:label_fa_residence_type_foreigner)%></label>
+                <label class="radio normal"><%= f.radio_button :fa_residence_type, 'R' %><%=l(:label_fa_residence_type_spain)%></label>
+                <label class="radio normal"><%= f.radio_button :fa_residence_type, 'U' %><%=l(:label_fa_residence_type_UE)%></label>
               </div>
             </div>
 
@@ -570,7 +600,6 @@
       </div>
 
 
-
       <div class="tab-pane" id="invoice-files">
         <fieldset class="form-horizontal">
           <legend>4. <%= l :invoice_attachments %></legend>
@@ -589,4 +618,4 @@
     </div>
   </div>
 
-<!-- warning: this partial leaves a div intencionally open --!>
+  <!-- warning: this partial leaves a div intencionally open -->

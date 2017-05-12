@@ -21,7 +21,7 @@ class HaltrMailerTest < ActiveSupport::TestCase
     mail = last_email
     assert_not_nil mail
 
-    assert_equal invoice.company.email, mail.from_addrs.first
+    assert_equal invoice.from_email,    mail.from_addrs.first
     assert_equal invoice.client.email,  mail.to_addrs.first
     assert_equal invoice.id.to_s,       mail.header['X-Haltr-Id'].to_s
     assert_equal 'Invoice-08001.pdf',   mail.header['X-Haltr-PDF-Filename'].to_s

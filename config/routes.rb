@@ -13,11 +13,7 @@ match '/clients/allow_link/:id' => 'clients#allow_link', :via => :get
 match '/clients/deny_link/:id' => 'clients#deny_link', :via => :get
 resources :projects do
   resources :clients, :only => [:index, :new, :create]
-  resources :company_offices, :only => [:index, :new, :create, :edit, :update, :destroy]
   match 'my_company',    :controller => 'companies', :action => 'my_company',    :via => :get
-  match 'bank_info',     :controller => 'companies', :action => 'bank_info',     :via => :get
-  match 'connections',   :controller => 'companies', :action => 'connections',   :via => :get
-  match 'customization', :controller => 'companies', :action => 'customization', :via => :get
   match 'add_bank_info', :controller => 'companies', :action => 'add_bank_info', :via => :get
   match 'invoices/import' => 'invoices#import', :via => [:get,:post]
   match 'invoices/upload' => 'invoices#upload', :via => [:get,:post]

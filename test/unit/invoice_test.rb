@@ -175,6 +175,8 @@ class InvoiceTest < ActiveSupport::TestCase
     assert(i.valid?)
     # remove client bank_account
     i.client.bank_account = ""
+    assert(i.valid?)
+    i.about_to_be_sent=true
     assert(!i.valid?)
     assert(i.errors.messages.keys.include?(:payment_method))
     # invoice with payment transfer (invoice has bank_info)
@@ -182,6 +184,8 @@ class InvoiceTest < ActiveSupport::TestCase
     assert_not_nil i.bank_info
     assert(i.valid?)
     i.bank_info = nil
+    assert(i.valid?)
+    i.about_to_be_sent=true
     assert(!i.valid?)
     assert(i.errors.messages.keys.include?(:payment_method))
   end
@@ -191,6 +195,8 @@ class InvoiceTest < ActiveSupport::TestCase
     assert(i.valid?)
     assert_equal(0, i.errors.size)
     i.invoice_lines.first.taxes=[]
+    assert(i.valid?) # facturae errors expected to be checked only when sending
+    i.about_to_be_sent=true
     assert(!i.valid?)
     assert_equal(1, i.errors.size)
   end
@@ -206,6 +212,8 @@ class InvoiceTest < ActiveSupport::TestCase
     i.payment_method = "#{Invoice::PAYMENT_TRANSFER}_2"
     assert !i.valid?, "bank_info is from other company"
     i.payment_method = Invoice::PAYMENT_TRANSFER
+    assert i.valid?
+    i.about_to_be_sent=true
     assert !i.valid?
     assert i.transfer?
     assert_nil i.bank_info
@@ -695,6 +703,8 @@ class InvoiceTest < ActiveSupport::TestCase
     invoice = Invoice.create_from_xml(file,companies(:company6),"1234",'uploaded',User.current.name,nil,false)
     assert_equal '5503070490', invoice.client.taxcode
     if invoice.client.invoice_format == 'link_to_pdf_by_mail'
+      assert invoice.valid?
+      invoice.about_to_be_sent=true
       assert !invoice.valid?
       assert_equal ["Invoice's client has no email defined"], invoice.errors.full_messages
     else

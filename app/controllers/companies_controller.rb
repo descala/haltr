@@ -1,9 +1,5 @@
 class CompaniesController < ApplicationController
 
-  menu_item Haltr::MenuItem.new(:my_company,:my_company_level2), :only => [:my_company]
-  menu_item Haltr::MenuItem.new(:my_company,:bank_info),         :only => [:bank_info]
-  menu_item Haltr::MenuItem.new(:my_company,:connections),       :only => [:connections]
-  menu_item Haltr::MenuItem.new(:my_company,:customization),     :only => [:customization]
   layout 'haltr'
   helper :haltr
 
@@ -67,7 +63,16 @@ class CompaniesController < ApplicationController
     # check if user trying to customize emails without role
     unless User.current.admin? or User.current.allowed_to?(:email_customization, @project)
       # keys come with lang (_ca,_en..) so remove last 3 chars
-      if (params[:company].keys.collect {|k| k[0...-3]} & %w(invoice_mail_body quote_mail_subject quote_mail_body pdf_template)).any?
+      if (params[:company].keys.collect {|k| k[0...-3]} & %w(invoice_mail_subject invoice_mail_body quote_mail_subject quote_mail_body)).any? or
+          # normal keys, without lang
+          (params[:company].keys & %w(email_customization pdf_template)).any?
+        render_403
+        return
+      end
+    end
+    # check if user trying to add company infos without role
+    unless User.current.admin? or User.current.allowed_to?(:use_company_offices, @project)
+      if params[:company][:company_offices_attributes]
         render_403
         return
       end

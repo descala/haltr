@@ -29,6 +29,7 @@ module InvoicesHelper
   end
 
   def send_link_for_invoice
+    @invoice.about_to_be_sent=true
     confirm = @invoice.has_been_sent? ? j(l(:sure_to_resend_invoice, num: @invoice.number).html_safe) : nil
     if @invoice.valid? and @invoice.may_queue? and
         ExportChannels.can_send?(@invoice.client.invoice_format)
@@ -176,7 +177,7 @@ module InvoicesHelper
        (@invoice.new_record? and @invoice.global_code_for(name).match(/_E$/))
       return ""
     else
-      return "display: none"
+      return "no-display"
     end
   end
 
@@ -295,9 +296,20 @@ module InvoicesHelper
     end
   end
 
-  def select_to_edit(field)
+  # has_custom_value is true when field has value not included in select
+  def select_to_edit(field, has_custom_value)
     if @external_company and @external_company.send("dir3_#{field.to_s.pluralize}").any?
-      content_tag :span, l(:button_edit), data: {field: field}, class: 'icon-fa icon-fa-pencil select_to_edit control-label'
+      if has_custom_value
+        content_tag :span,
+          l(:button_cancel),
+          data: {field: field, text: l(:button_edit)},
+          class: 'icon-fa fa-ban select_to_edit control-label'
+      else
+        content_tag :span,
+          l(:button_edit),
+          data: {field: field, text: l(:button_cancel)},
+          class: 'icon-fa icon-fa-pencil select_to_edit control-label'
+      end
     end
   end
 

@@ -40,6 +40,11 @@ class Company < ActiveRecord::Base
     :reject_if => :all_blank
   validates_associated :bank_infos
 
+  accepts_nested_attributes_for :company_offices,
+    :allow_destroy => true,
+    :reject_if => :all_blank
+  validates_associated :company_offices
+
   validate :uniqueness_of_taxes
   validates :country, length: { is: 2 }
   validates :taxcode, length: { maximum: 20 }, allow_blank: true

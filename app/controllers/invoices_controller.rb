@@ -253,6 +253,10 @@ class InvoicesController < ApplicationController
     @invoice = invoice_class.new(parsed_params)
     @invoice.project ||= @project
 
+    if @invoice.company_email_override == @project.company.email
+      @invoice.company_email_override = nil
+    end
+
     if @invoice.fa_country.to_s.size == 3
       @invoice.fa_country = SunDawg::CountryIsoTranslater.translate_standard(
         @invoice.fa_country, "alpha3", "alpha2"
@@ -324,6 +328,7 @@ class InvoicesController < ApplicationController
         format.html {
           flash[:notice] = l(:notice_successful_create)
           if params[:create_and_send]
+            @invoice.about_to_be_sent=true
             if @invoice.valid?
               if @invoice.client.sign_with_local_certificate?
                 # channel sends via javascript, set autocall and autocall_args
@@ -361,7 +366,7 @@ class InvoicesController < ApplicationController
       @client ||= Client.new
 
       respond_to do |format|
-        format.html { render :action => (@to_amend ? 'amend_for_invoice' : 'new') }
+        format.html { render action: 'new' }
         format.api { render_validation_errors(@invoice) }
       end
     end
@@ -406,6 +411,7 @@ class InvoicesController < ApplicationController
       respond_to do |format|
         format.html {
           if params[:save_and_send]
+            @invoice.about_to_be_sent=true
             if @invoice.valid?
               if @invoice.client.sign_with_local_certificate?
                 # channel sends via javascript, set autocall and autocall_args
@@ -694,6 +700,7 @@ class InvoicesController < ApplicationController
   end
 
   def send_invoice
+    @invoice.about_to_be_sent=true
     unless @invoice.valid?
       raise @invoice.errors.full_messages.join(', ')
     end
@@ -946,6 +953,7 @@ class InvoicesController < ApplicationController
       il.taxes = line.taxes.collect {|tax| tax.dup }
       @invoice.invoice_lines << il
     end
+    render :new
   end
 
   def mail
@@ -1247,6 +1255,7 @@ class InvoicesController < ApplicationController
     @errors=[]
     num_invoices = @invoices.size
     @invoices.collect! do |invoice|
+      invoice.about_to_be_sent=true
       if invoice.valid? and invoice.may_queue? and
           ExportChannels.can_send? invoice.client.invoice_format
         if invoice.client.sign_with_local_certificate?

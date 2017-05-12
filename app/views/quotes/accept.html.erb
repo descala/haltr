@@ -4,7 +4,7 @@
 
     <%= labelled_form_for :invoice, @invoice, :url => { :action => 'create' }, :html => {:method => :put, :class => 'formee'}  do |f| %>
       <%= render :partial => 'invoices/form', :locals => { :f => f } %>
-      <!-- warning: form partial leaves a div intencionally open --!>
+      <!-- warning: form partial leaves a div intencionally open -->
 
       <%= f.hidden_field :quote_id, :value => @invoice.id %>
       <%= f.submit l(:button_save), :name => 'save' %>

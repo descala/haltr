@@ -143,10 +143,10 @@
               <td></td>
             <% end -%>
             <td><%= order.fecha_documento %></td>
-            <td><%= order.lugar_entrega %></td>
+            <td class="long-td"><%= order.lugar_entrega %></td>
             <td><%= order.fecha_pedido %></td>
             <td><%= order.fecha_entrega %></td>
-            <td><%= link_to order.filename, project_order_path(order, project_id: @project, download: true) %></td>
+            <td class="long-td"><%= link_to order.filename, project_order_path(order, project_id: @project, download: true) %></td>
             <td><%= link_to image_tag('zoom_in.png'), project_order_path(order, project_id: @project) %></td>
             <td><%= link_to image_tag('delete.png'), project_order_path(order, project_id: @project), data: {confirm:l(:text_are_you_sure)}, method: :delete, title: l(:button_delete) %></td>
           </tr>

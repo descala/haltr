@@ -10,6 +10,7 @@ module Haltr
     # for 2) and 3) it queues or sends the invoice
     #
     def self.send_invoice(invoice, user, local_certificate=false, invoice_file=nil)
+      invoice.about_to_be_sent=true
       unless invoice.valid?
         EventError.create(
           :name    => 'error_sending',

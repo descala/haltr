@@ -2,7 +2,7 @@
 
 <div class="form-group">
 <%= label_tag "invoice_#{role}", class: 'col-xs-3 control-label' do %>
-  <%= l(role) %><%= required_field %>
+  <%= l(role) %>:<%= required_field %>
 <% end -%>
 
 <div class="col-xs-6">
@@ -11,9 +11,11 @@
     <% opts_hash = (@external_company.send("dir3_#{role.pluralize}").size > 1) ? {include_blank: '--'} : {} -%>
 
     <% if @invoice.nil? or (@external_company.send("dir3_#{role.pluralize}").collect {|d3e| d3e.code }.include?(@invoice.send(role)) or @invoice.send(role).blank?) -%>
+      <% has_custom_value = false -%>
       <%= select(:invoice, role, dir3_for_select(@external_company.send("dir3_#{role.pluralize}")), opts_hash, { class: "form-control#{ ' form-required' if required_field.present?}" }) %>
       <%= text_field :invoice, role, style: 'display: none;', disabled: true, class: "form-control#{ ' form-required' if required_field.present?}" %>
     <% else -%>
+      <% has_custom_value = true -%>
       <%= select(:invoice, role, dir3_for_select(@external_company.send("dir3_#{role.pluralize}")), opts_hash, { style: 'display: none;', disabled: true, class: "form-control#{ ' form-required' if required_field.present?}" }) %>
       <%= text_field :invoice, role, class: "form-control#{ ' form-required' if required_field.present?}" %>
     <% end-%>
@@ -27,7 +29,7 @@
 </div>
 
 <div class="col-xs-3">
-  <%= select_to_edit(role) %>
+  <%= select_to_edit(role, has_custom_value) %>
 </div>
 
 </div>

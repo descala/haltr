@@ -4,8 +4,7 @@
 <%= form_for :invoice, url: url_hash do |f| %>
   <% f.object = @invoice -%>
   <%= render partial: 'invoices/form', locals: { f: f } %>
-  <!-- warning: form partial leaves a div intencionally open --!>
-
+  <!-- warning: form partial leaves a div intencionally open -->
 </div>
 <% end %>
 <!--final formulari-->

@@ -1,6 +1,6 @@
 <li data-id="<%= a.id %>" title="<%= a.id %>" class="li-table li-<%= a.action %>">
-<span><%= format_time a.created_at %> - </span>
-<span><%=l("audited_#{a.action}", :model=>l(a.auditable_type.underscore))%> <%= a.auditable_id if a.action=='destroy' and User.current.admin? %></span>
+<span> <%= format_time a.created_at %></span>
+<span><%=l("audited_#{a.action}", :model=>l(a.auditable_type.underscore), :user=>a.user)%> <%= a.auditable_id if a.action=='destroy' and User.current.admin? %></span>
 <span class="text-right"><i class="fa fa-eye" aria-hidden="true"></i></span>
 
 <% if a.audited_changes.is_a?(String) or a.audited_changes.reject { |field,values|
