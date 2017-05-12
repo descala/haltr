@@ -6,7 +6,7 @@
 <div class="col-xs-6 text-right">
   <ul class="list-inline fast-menu">
     <li>
-      <%= link_to_if_authorized l(:label_client_office_new), new_client_client_office_path(@client), class: 'icon-fa icon-fa-fw icon-fa-file btn btn-default' %>
+      <%= link_to_if_authorized l(:label_client_office_new), new_client_client_office_path(@client), class: 'btn btn-success' %>
     </li>
   </ul>
 </div>
@@ -36,7 +36,6 @@
         <%= sort_header_tag(:name, caption: l(:field_name)) %>
         <%= sort_header_tag(:city, caption: l(:field_city)) %>
         <th></th>
-        <th></th>
       </tr>
     </thead>
     <tbody>
@@ -44,8 +43,9 @@
         <tr>
           <td><%=h office.name %></td>
           <td><%=h office.city %></td>
-          <td><%= link_to_if_authorized l(:button_edit), edit_client_client_office_path(office.client, office), class: 'icon icon-edit editar' %></td>
-          <td><%= link_to_if_authorized l(:button_delete), {action: 'destroy', client_id: office.client_id, id: office}, data: {confirm: l(:text_are_you_sure)}, method: :delete, class: 'icon icon-del eliminar' %></td>
+          <td class="text-right">
+          <%= link_to_if_authorized l(:button_edit), edit_client_client_office_path(office.client, office), class: 'icon icon-fa icon-fa-pencil' %>
+          <%= link_to_if_authorized l(:button_delete), {action: 'destroy', client_id: office.client_id, id: office}, data: {confirm: l(:text_are_you_sure)}, method: :delete, class: 'icon icon-fa icon-fa-trash' %></td>
         </tr>
       <% end -%>
     </tbody>
