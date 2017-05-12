@@ -79,7 +79,7 @@ Redmine::Plugin.register :haltr do
         :received  => [:index, :new, :edit, :create, :update, :destroy, :show,
                        :mark_accepted, :mark_refused, :legal, :context_menu,
                        :original, :validate, :bulk_mark_as],
-        :companies => [:my_company,:bank_info,:update,:linked_to_mine,:check_iban],
+        :companies => [:my_company,:bank_info,:update,:check_iban],
         :charts    => [:invoice_total, :invoice_status, :top_clients, :cash_flow],
         :events    => [:file, :index] },
       :require => :member
@@ -92,13 +92,12 @@ Redmine::Plugin.register :haltr do
       { :clients   => [:index, :show, :edit, :check_cif, :ccc2iban],
         :people    => [:index, :edit],
         :client_offices => [:index, :edit],
-        :company_offices => [:index, :edit],
         :invoices  => [:index, :show, :legal, :download_new_invoices, :reports, :report_channel_state, :report_invoice_list, :report_received_table,
                        :context_menu, :number_to_id, :edit],
         :received  => [:index, :show, :legal, :context_menu],
-        :companies => [:my_company,:bank_info, :linked_to_mine, :check_iban],
+        :companies => [:my_company,:bank_info, :check_iban],
         :payments  => [:index, :payment_initiation, :invoices, :reports, :report_payment_list],
-        :invoice_templates => [:index, :show, :context_menu],
+        :invoice_templates => [:index, :show, :context_menu, :new_invoices_from_template],
         :charts    => [:invoice_total, :invoice_status, :top_clients],
         :events    => [:file, :index],
         :import_errors => [:index, :show],
@@ -109,12 +108,11 @@ Redmine::Plugin.register :haltr do
       { :clients   => [:index, :show, :edit, :check_cif, :ccc2iban, :update],
         :people    => [:index, :edit],
         :client_offices => [:index, :edit, :update],
-        :company_offices => [:index, :edit, :update],
         :invoices  => [:index, :show, :legal, :download_new_invoices, :reports, :report_channel_state, :report_invoice_list, :report_received_table,
                        :context_menu, :send_invoice,
                        :send_new_invoices, :number_to_id],
         :received  => [:index, :show, :legal, :context_menu],
-        :companies => [:my_company,:bank_info, :linked_to_mine, :check_iban],
+        :companies => [:my_company,:bank_info, :check_iban],
         :payments  => [:index],
         :invoice_templates => [:index, :show, :context_menu],
         :charts    => [:invoice_total, :invoice_status, :top_clients],
@@ -139,11 +137,9 @@ Redmine::Plugin.register :haltr do
         :import_errors => [:index, :create, :show, :destroy, :context_menu] },
       :require => :member
 
-    permission :email_customization,   {:companies=>'customization'},   :require => :member
-    permission :configure_connections, {:companies=>'connections'},     :require => :member
-    permission :use_company_offices,   {
-      :company_offices => [:index, :new, :show, :edit, :create, :update, :destroy],
-    }
+    permission :email_customization,   {}, require: :member
+    permission :configure_connections, {}, require: :member
+    permission :use_company_offices,   {}, require: :member
 
     permission :invoice_quotes,
       { :quotes => [:index, :new, :create, :show, :edit, :update, :send_quote,
@@ -195,6 +191,7 @@ Redmine::Plugin.register :haltr do
   menu :project_menu, :invoices,   {:controller=>'invoices',  :action=>'index'     }, :param=>:project_id, :caption=>:label_invoice_plural
   menu :project_menu, :payments,   {:controller=>'payments',  :action=>'index'     }, :param=>:project_id, :caption=>:label_payment_plural
   menu :project_menu, :orders,     { controller: 'orders',     action: 'index'     },  param: :project_id, caption: :label_order_plural
+  menu :project_menu, :quotes,     { controller: 'quotes',     action: 'index'     },  param: :project_id, caption: :label_quote_plural
   menu :admin_menu, :external_companies, {:controller=>'external_companies', :action=>'index'}, :caption=>:external_companies
   menu :admin_menu, :dir3_entities, {:controller=>'dir3_entities', :action=>'index'}, :caption=>:dir3_entities
   menu :admin_menu, :export_channels, {:controller=>'export_channels', :action=>'index'}, :caption=>:export_channels

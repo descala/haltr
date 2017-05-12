@@ -13,17 +13,9 @@ match '/clients/allow_link/:id' => 'clients#allow_link', :via => :get
 match '/clients/deny_link/:id' => 'clients#deny_link', :via => :get
 resources :projects do
   resources :clients, :only => [:index, :new, :create]
-  match :people, :controller => 'people', :action => 'index', :via => :get
-  resources :client_offices, :only => [:index, :new, :create, :edit, :update, :destroy]
-  resources :company_offices, :only => [:index, :new, :create, :edit, :update, :destroy]
-  match 'companies/linked_to_mine', :controller => 'companies', :action => 'linked_to_mine', :via => :get
   match 'my_company',    :controller => 'companies', :action => 'my_company',    :via => :get
-  match 'bank_info',     :controller => 'companies', :action => 'bank_info',     :via => :get
-  match 'connections',   :controller => 'companies', :action => 'connections',   :via => :get
-  match 'customization', :controller => 'companies', :action => 'customization', :via => :get
   match 'add_bank_info', :controller => 'companies', :action => 'add_bank_info', :via => :get
   match 'invoices/import' => 'invoices#import', :via => [:get,:post]
-  match 'received/import' => 'received#import', :via => [:get,:post]
   match 'invoices/upload' => 'invoices#upload', :via => [:get,:post]
   match 'received/upload' => 'received#upload', :via => [:get,:post]
   match 'invoices/send_new' => 'invoices#send_new_invoices', :via => :get
@@ -76,11 +68,10 @@ resources :invoice_imgs, :only => [:create,:update]
 match 'invoice_imgs/:id/tag/:tag' => 'invoice_imgs#tag', :as => 'invoice_imgs_tag', :via => :get
 
 resources :clients do
-  resources :people, :only => [:index, :new, :create]
+  resources :people
   resources :client_offices, :only => [:index, :new, :create, :edit, :update, :destroy]
 end
 
-resources :people
 match 'invoices/context_menu', :to => 'invoices#context_menu', :as => 'invoices_context_menu', :via => [:get, :post]
 match 'received/context_menu', :to => 'received#context_menu', :as => 'received_context_menu', :via => [:get, :post]
 match 'import_errors/context_menu', :to => 'import_errors#context_menu', :as => 'import_errors_context_menu', :via => [:get, :post]
@@ -96,7 +87,7 @@ match 'invoices/by_taxcode_and_num' => 'invoices#by_taxcode_and_num', :via => :g
 match 'invoices', :controller => 'invoices', :action => 'destroy', :via => :delete
 match 'received_invoices', :controller => 'received', :action => 'destroy', :via => :delete
 match 'invoice_templates', :controller => 'invoice_templates', :action => 'destroy', :via => :delete
-match 'invoices/:id/mark_as/:state' => 'invoices#mark_as', :via => :get, :as => :mark_as
+match 'invoices/:id/mark_as' => 'invoices#mark_as', :via => :post, :as => :mark_as
 match 'invoices/send_invoice/:id' => 'invoices#send_invoice', :via => :get, :as => :send_invoice
 match 'invoices/amend_for_invoice/:id' => 'invoices#amend_for_invoice', :via => :get, :as => :amend_for_invoice
 match 'invoices/duplicate_invoice/:id' => 'invoices#duplicate_invoice', :via => :get, :as => :duplicate_invoice

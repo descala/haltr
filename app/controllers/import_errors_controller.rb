@@ -20,6 +20,11 @@ class ImportErrorsController < ApplicationController
 
     import_errors = @project.import_errors
 
+    unless params[:name].blank?
+      name = "%#{params[:name].strip.downcase}%"
+      import_errors = import_errors.where("LOWER(filename) LIKE ? OR LOWER(import_errors) LIKE ?", name, name)
+    end
+
     @import_errors_count = import_errors.count
     @import_errors_pages = Paginator.new @import_errors_count,
       per_page_option, params[:page]

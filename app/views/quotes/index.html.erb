@@ -1,65 +1,73 @@
-<!--menu rapid-->
-<div class="seccio grup">
-  <div class="col span-2-de-2">
-    <ul class="menu-rapid">
-      <li><%= link_to_if_authorized(l("label_quote_new"), new_project_quote_path(@project), :class => 'icon icon-add') %></li>
-    </ul>
-  </div>
+<div class="row">
+<div class="col-xs-6">
+  <h2><%= l :label_quote_plural %></h2>
 </div>
-<!--final menu rapid-->
+<div class="col-xs-6 text-right">
+  <ul class="list-inline fast-menu">
+    <li><%= link_to_if_authorized(l("label_quote_new"), new_project_quote_path(@project), class: 'icon-fa icon-fa-fw icon-fa-file btn btn-default') %></li>
+  </ul>
+</div>
+</div>
 
-<!--taula factures-->
-<%= form_tag({}) do -%>
-  <%= hidden_field_tag 'back_url', url_for(params), :id => nil %>
-  <div class="seccio grup">
-    <div class="col span-2-de-2">
-      <table class="taula-1 list invoices">
-        <thead>
-          <tr>
-            <%= sort_header_tag('number', :caption => l(:field_number)) %>
-            <%= sort_header_tag('date', :caption => l(:field_date)) %>
-            <%= sort_header_tag('clients.name', :caption => l(:field_company)) %>
-            <%= sort_header_tag('import_in_cents', :caption => l(:label_subtotal)) %>
-            <%= sort_header_tag('import_in_cents', :caption => l(:label_invoice_total)) %>
-            <%= sort_header_tag('due_date', :caption => l(:valid_until)) %>
-            <%= sort_header_tag('invoice', :caption => l(:field_invoice)) %>
-            <%= sort_header_tag('state', :caption => l(:field_state)) %>
-          </tr>
-        </thead>
-        <tbody>
-          <% for invoice in @invoices -%>
-            <tr id="invoice-<%=invoice.id%>" class="<%= cycle("odd", "even") %>">
-              <td style="cursor:pointer;" onclick="javascript: document.location = '<%=url_for(:action=>'show', :id=>invoice)%>'"><%=h link_to_if_authorized invoice.number, :action => 'show', :id => invoice %></td>
-              <td><%=h format_date invoice.date %></td>
-              <td><%=h invoice.client %></td>
-              <td class="money"><%= money(invoice.subtotal) %></td>
-              <td class="money"><%= money(invoice.total) %></td>
-              <td <%='class="pastdue"'.html_safe if invoice.past_due?%>><%=h format_date invoice.due_date %></td>
-              <td><%= link_to invoice.invoice.number, invoice_path(invoice.invoice) if invoice.invoice %></td>
-              <td><%=h l("state_#{invoice.state}").capitalize %></td>
-            </tr>
-          <% end -%>
-        </tbody>
-        <tfoot>
-          <tr>
-            <td colspan="8">&nbsp;</td>
-          </tr>
-        </tfoot>
-      </table>
+<!--filtres-->
+<%= form_tag({id: @project}, method: :get, class: 'formee') do %>
+  <div class="titularAcc">
+    <div class="row">
+      <div class="col-xs-6 pad-top-7">
+        <%= l(:label_filter_plural) %>
+      </div>
+      <div class="col-xs-6 text-right form-inline">
+        <div class="form-group">
+          <%= search_field_tag :name, params[:name], class: 'form-control' %>
+        </div>
+        <%= button_tag(content_tag('i', '', class: 'fa fa-search', 'aria-hidden' => 'true'), class: "btn btn-search", name: nil, type: :submit) %>
+      </div>
     </div>
   </div>
-<% end -%>
-<!--final taula factures-->
+<% end %>
+<!--final filtres-->
 
-<!--paginacio-->
-<div class="seccio grup paginacio pagination">
-  <%= pagination_links_full @invoice_pages, @invoice_count %>
+<div class="wrapper-table bg-white">
+  <!--taula factures-->
+  <%= form_tag({}) do -%>
+    <%= hidden_field_tag 'back_url', url_for(params), id: nil %>
+    <table class="table table-striped table-hover quotes">
+      <thead>
+        <tr>
+          <%= sort_header_tag('number', caption: l(:field_number)) %>
+          <%= sort_header_tag('date', caption: l(:field_date)) %>
+          <%= sort_header_tag('clients.name', caption: l(:field_company)) %>
+          <%= sort_header_tag('import_in_cents', caption: l(:label_subtotal)) %>
+          <%= sort_header_tag('import_in_cents', caption: l(:label_invoice_total)) %>
+          <%= sort_header_tag('due_date', caption: l(:valid_until)) %>
+          <%= sort_header_tag('invoice', caption: l(:field_invoice)) %>
+          <%= sort_header_tag('state', caption: l(:field_state)) %>
+        </tr>
+      </thead>
+      <tbody>
+        <% for invoice in @invoices -%>
+          <tr id="invoice-<%=invoice.id%>">
+            <td style="cursor:pointer;" onclick="javascript: document.location = '<%=url_for(action: 'show', id: invoice)%>'"><%=h link_to_if_authorized invoice.number, action: 'show', id: invoice %></td>
+            <td><%=h format_date invoice.date %></td>
+            <td><%=h invoice.client %></td>
+            <td class="money"><%= money(invoice.subtotal) %></td>
+            <td class="money"><%= money(invoice.total) %></td>
+            <td <%='class="pastdue"'.html_safe if invoice.past_due?%>><%=h format_date invoice.due_date %></td>
+            <td><%= link_to invoice.invoice.number, invoice_path(invoice.invoice) if invoice.invoice %></td>
+            <td><%=h l("state_#{invoice.state}").capitalize %></td>
+          </tr>
+        <% end -%>
+      </tbody>
+      <tfoot>
+        <tr>
+          <td colspan="8"></td>
+        </tr>
+      </tfoot>
+    </table>
+  <% end -%>
+  <!--final taula factures-->
+
+  <%= render partial: 'common/pagination', locals: {pages: @invoice_pages, count: @invoice_count} %>
 </div>
-<!--final paginacio-->
-
 
 <% html_title(l(:label_quote_plural)) -%>
-
-<% content_for :sidebar do %>
-  <%= render_menu :invoices_menu, @project %>
-<% end %>

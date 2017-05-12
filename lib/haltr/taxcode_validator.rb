@@ -15,28 +15,18 @@ module Haltr::TaxcodeValidator
     validates :taxcode, valvat: {
       match_country: :country,
       checksum:      true,
-      allow_blank:   true,
-    }, if: Proc.new {|c| c.gb? or c.fr? }
+      allow_blank:   true
+    }, if: Proc.new {|c| c.eu? }
 
-    validates_presence_of :company_identifier,
-      if: Proc.new {|c| (c.gb? or c.fr?) and c.taxcode.blank? }
-
-    validates :taxcode, :valvat => {
-      match_country: :country,
-      checksum:      true,
-      allow_blank:   false,
-    }, if: Proc.new {|c| !c.gb? and !c.fr? and c.eu? }
+    validates_presence_of :taxcode,
+      if: Proc.new {|c| c.es? or (c.eu? and c.company_identifier.blank?) }
 
     def eu?
       Valvat::Utils::EU_COUNTRIES.include?(country.upcase)
     end
 
-    def gb?
-      country == 'gb'
-    end
-
-    def fr?
-      country == 'fr'
+    def es?
+      country == 'es'
     end
 
     def normalize_taxcode

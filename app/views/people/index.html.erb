@@ -1,94 +1,70 @@
-<% if @client %>
-<div class="seccio grup">
-  <div class="col span-1-de-2">
-    <ul class="menu-rapid">
-      <li>
-      <%= link_to_if_authorized l(:label_person_new), new_client_person_path(@client), :class => 'icon icon-add' %>
-      </li>
-    </ul>
-  </div>
-  <div class="col span-1-de-2">
-    <h1 style="float: right;"><%= link_to(@client.name, client_path(@client)) %> - <%=l(:label_person_plural)%></h1>
-  </div>
+<div class="row">
+<div class="col-xs-6">
+  <h2>
+    <%= link_to "", client_path(@client), class: 'fa fa-long-arrow-left fa-big fa-left', aria: { hidden: true } %>
+    <%= link_to(@client.name, client_path(@client)) %>
+  </h2>
 </div>
-<%end%>
+<div class="col-xs-6 text-right">
+  <ul class="list-inline fast-menu">
+    <li><%= link_to_if_authorized l(:label_person_new), new_client_person_path(@client), :class => 'btn btn-success' %></li>
+  </ul>
+</div>
+</div>
 
 <!--filtres-->
-<div class="seccio grup">
-  <div class="col span-2-de-2">
-    <div class="filtres">
-      <div class="titularAcc">
-        <%= l(:label_filter_plural) %>
+<%= form_tag({}, method: :get, class: 'formee') do %>
+  <div class="titularAcc">
+    <div class="row">
+      <div class="col-xs-6 pad-top-7">
+        <%= l :label_filter_plural %>
       </div>
-      <div class="contingutAcc">
-        <form class="formee">
-          <fieldset>
-            <legend><%=l(:label_search)%></legend>
-
-            <%= form_tag({}, :method => :get) do %>
-              <div class="seccio grup">
-                <div class="col span-1-de-2">
-                  <%= text_field_tag 'name', params[:name] %>
-                </div>
-              </div>
-              <div class="seccio grup">
-                <div class="col span-2-de-2">
-                  <%= submit_tag l(:button_apply), :name => nil %>
-                </div>
-              </div>
-            <% end %>
-          </fieldset>
-        </form>
+      <div class="col-xs-6 text-right form-inline">
+        <%= text_field_tag 'name', params[:name], class: 'form-control' %>
+        <%= button_tag(content_tag('i', '', class: 'fa fa-search', 'aria-hidden' => 'true'), class: "btn btn-search", name: nil, type: :submit) %>
       </div>
     </div>
   </div>
-</div>
+<% end %>
 <!--final filtres-->
 
-
 <!--taula-->
-<div class="seccio grup">
-  <div class="col span-2-de-2">
-    <table class="taula-1 list">
-      <thead>
+<div class="wrapper-table bg-white">
+  <table class="table table-striped">
+    <thead>
+      <tr>
+        <%= sort_header_tag('first_name', caption: l(:field_first_name)) %>
+        <%= sort_header_tag('last_name', caption: l(:field_last_name)) %>
+        <%= sort_header_tag('email', caption: l(:field_email)) %>
+        <th><%= l(:label_phone) %></th>
+        <% if @client == nil %> <th><%= l(:label_company) %></th> <% end %>
+        <th></th>
+      </tr>
+    </thead>
+    <tbody>
+      <% for person in @people -%>
         <tr>
-          <%= sort_header_tag('first_name', :caption => l(:field_first_name)) %>
-          <%= sort_header_tag('last_name', :caption => l(:field_last_name)) %>
-          <%= sort_header_tag('email', :caption => l(:field_email)) %>
-          <th><%= l(:label_phone) %></th>
-          <% if @client == nil %> <th><%= l(:label_company) %></th> <% end %>
-          <th><%= l(:button_edit) %></th>
-          <th><%= l(:button_delete) %></th>
+          <td><%=h person.first_name %></td>
+          <td><%=h person.last_name %></td>
+          <td><%=h person.email %></td>
+          <td><%=h person.phone %></td>
+          <% if @client == nil %> <td><%=h person.client %></td> <% end %>
+          <td class="text-right"><%= link_to_if_authorized l(:button_edit), {action: 'edit', id: person, client_id: @client}, class: 'icon icon-fa icon-fa-pencil' %>
+          <%= link_to_if_authorized l(:button_delete), {action: 'destroy', id: person} , data: {confirm: l(:text_are_you_sure)}, method: :delete, class: 'icon icon-fa icon-fa-trash' %></td>
         </tr>
-      </thead>
-      <tbody>
-        <% for person in @people -%>
-          <tr class="user <%= cycle("odd", "even") %>" />
-            <td><%=h person.first_name %></td>
-            <td><%=h person.last_name %></td>
-            <td><%=h person.email %></td>
-            <td><%=h person.phone %></td>
-            <% if @client == nil %> <td><%=h person.client %></td> <% end %>
-            <td align="center"><%= link_to_if_authorized l(:button_edit), {:action=>'edit',:id=>person}, :class => 'icon icon-edit editar' %></td>
-            <td align="center"><%= link_to_if_authorized l(:button_delete), {:action=>'destroy',:id=>person} , :data=>{:confirm=>l(:text_are_you_sure)}, :method => :delete, :class => 'icon icon-del eliminar' %></td>
-          </tr>
-        <% end -%>
-      </tbody>
-      <tfoot>
-        <tr>
-          <td colspan="6">&nbsp;</td>
-        </tr>
-      </tfoot>
-    </table>
-  </div>
-</div>
-<!--final taula-->
+      <% end -%>
+    </tbody>
+    <tfoot>
+      <tr>
+        <td colspan="<%= @client.nil? ? '7' : '6' %>"></td>
+      </tr>
+    </tfoot>
+  </table>
+  <!--final taula-->
 
-<!--paginacio-->
-<div class="seccio grup pagination paginacio">
-  <%= pagination_links_full @person_pages, @person_count, {:per_page_links=>false} %>
+  <%= render partial: 'common/pagination', locals: {pages: @person_pages, count: @person_count} %>
+
 </div>
-<!--final paginacio-->
 
 
 <% html_title(l(:button_people)) -%>

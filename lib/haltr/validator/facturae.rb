@@ -9,7 +9,6 @@ module Haltr
           validates_length_of :accounting_cost, maximum: 40, if: condition
           validates_length_of :delivery_note_number, maximum: 30, if: condition
           validate :facturae_validations, if: condition
-          validates_associated :client, if: condition
         end
       end
 
@@ -59,6 +58,11 @@ module Haltr
         if currency != 'EUR'
           errors.add(:exchange_rate, :blank) unless exchange_rate.present?
           errors.add(:exchange_date, :blank) unless exchange_date.present?
+        end
+
+        # add client errors to self unless we are creating the invoice.
+        if client.errors.any? and !self.new_record?
+          errors.add(:client, client.errors.full_messages.uniq.join(', '))
         end
       end
 

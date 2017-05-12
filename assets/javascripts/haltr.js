@@ -61,6 +61,10 @@ $(document).ready(function() {
     $("select#invoice_"+field).prop('disabled', !$("select#invoice_"+field).prop('disabled'));
     $("input#invoice_"+field).toggle();
     $("input#invoice_"+field).prop('disabled', !$("input#invoice_"+field).prop('disabled'));
+    $(this).toggleClass('icon-fa-pencil fa-ban');
+    var tmp=$(this).data('text');
+    $(this).data('text', $(this).text());
+    $(this).text(tmp);
   });
 
   $(document).on('change', '#invoice_terms', function(e) {
@@ -111,11 +115,6 @@ $(document).ready(function() {
     );
   });
 
-  $(document).on('click', 'a.show-audits', function(e) {
-    $('#audited_'+$(this).data('id')).toggle();
-    return false;
-  });
-
   $(document).on('mousemove', 'div.audited li', function(e) {
     $('div.audited-changes').css({
       "left":  e.pageX + 15,
@@ -152,6 +151,105 @@ $(document).ready(function() {
       $('.mail_box').parent().hide();
     }
   });
+
+  $(document).on('change', 'select#sel-results', function(e) {
+    window.location = window.location.pathname + "?per_page=" + $(this).val();
+  });
+
+  // reset invoices filter
+  $('input#reset').click(function() {
+    $(this.form.elements).not(':button, :submit, :reset, :hidden')
+      .val('')
+      .removeAttr('checked')
+      .removeAttr('selected');
+    return false;
+  });
+
+  // new invoice "continue" button
+  $('input#invoice-continue').click(function() {
+    $('.nav li a[href^="#invoice-content"]').click();
+    $('div#invoice-continue-show').removeClass('hide');
+    return false;
+  });
+
+  // functions-clients.js
+  if ( $(".table .show-audits").length > 0 ) {
+    // prevent duplicated click bind #6510
+    $( ".table a.show-audits" ).off('click');
+    $( ".table a.show-audits" ).click(function() {
+      if ( $( this ).find("i").hasClass( "fa-plus-square" ) ) {
+        $( this ).find("i").removeClass( "fa-plus-square" );
+        $( this ).find("i").addClass( "fa-minus-square" );
+        $('#audited_'+$(this).data('id')).toggle();
+        return false;
+      } else {
+        $( this ).find("i").removeClass( "fa-minus-square" );
+        $( this ).find("i").addClass( "fa-plus-square" );
+        $('#audited_'+$(this).data('id')).toggle();
+        return false;
+      }
+
+    });
+  }
+  if ( $(".titularAccFilters").length > 0 ) {
+    $(".titularAccFilters").click(function() {
+      if ( $( this ).hasClass( "icon-fa-right-angle-down" ) ) {
+        $( this ).removeClass( "icon-fa-right-angle-down" );
+        $( this ).addClass( "icon-fa-right-angle-up" );
+      } else {
+        $( this ).removeClass( "icon-fa-right-angle-up" );
+        $( this ).addClass( "icon-fa-right-angle-down" );
+      }
+
+    });
+  }
+  if ( $(".table-lines .plus-options").length > 0 ) {
+    $(".table-lines .plus-options a").click(function() {
+      if ( $( this ).hasClass( "icon-fa-right-angle-down" ) ) {
+        $( this ).next().slideDown();
+        $( this ).removeClass( "icon-fa-right-angle-down" );
+        $( this ).addClass( "icon-fa-right-angle-up" );
+      } else {
+        $( this ).next().slideUp();
+        $( this ).removeClass( "icon-fa-right-angle-up" );
+        $( this ).addClass( "icon-fa-right-angle-down" );
+      }
+    });
+  }
+  $('#invoice_lines').on('cocoon:after-insert', function(e, insertedItem) {
+    insertedItem.find('.plus-options a').click(function() {
+      if ( $( this ).hasClass( "icon-fa-right-angle-down" ) ) {
+        $( this ).next().slideDown();
+        $( this ).removeClass( "icon-fa-right-angle-down" );
+        $( this ).addClass( "icon-fa-right-angle-up" );
+      } else {
+        $( this ).next().slideUp();
+        $( this ).removeClass( "icon-fa-right-angle-up" );
+        $( this ).addClass( "icon-fa-right-angle-down" );
+      }
+    });
+  });
+
+  $('.modal.fade').on('show.bs.modal', function (e) {  /* evitamos movimientos con los modal */
+    $("body").addClass( "no-pad-right" );
+  })
+  $(".clickable-row > tr").click(function() {
+    window.location = $(this).data("href");
+  });
+  if ( $(".table-show").length > 0 ) {
+    $(".table-show > tbody > tr").hover(
+        function() { $( this ).find(".fa").toggle(); },
+        function() { $( this ).find(".fa").toggle(); });
+  }
+  // load invoice form tab matching url anchor
+  if ( $('div#invoice-content').length > 0 ) {
+    var invoice_tab;
+    var stripped_url = document.location.toString().split("#");
+    if (stripped_url.length > 1) {
+      invoice_tab = stripped_url[1];
+      $('a[href="#'+invoice_tab+'"]').click();
+    }
+  }
 
 });
 
@@ -213,7 +311,7 @@ function copy_last_line_tax(tax_name) {
  */
 function tax_changed(tax_name, tax_code) {
   if (tax_code.match(/(_E|_NS)$/)) {
-    $('#'+tax_name+'_comment').show();
+    $('.'+tax_name+'_comment').show();
   } else {
     var hide_comment = true;
     $('select.tax_'+tax_name).each(function(index) {
@@ -222,7 +320,7 @@ function tax_changed(tax_name, tax_code) {
       }
     });
     if ( hide_comment ) {
-      $('#'+tax_name+'_comment').hide();
+      $('.'+tax_name+'_comment').hide();
     }
   }
 }
@@ -244,4 +342,3 @@ function show_accepted_form() {
   $("#invoice-refuse").hide();
   $("#invoice-accept").show();
 }
-

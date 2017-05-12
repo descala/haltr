@@ -1,89 +1,77 @@
-<div class="seccio grup">
-  <div class="col span-2-de-2">
-    <ul class="menu-rapid">
-      <li><%= link_to_if_authorized l("label_payment_new"), new_project_payment_path(@project), :class => 'icon icon-add' %></li>
-    </ul>
-  </div>
+<div class="row">
+<div class="col-xs-6">
+  <h2><%= l :label_payment_plural %></h2>
+</div>
+
+<div class="col-xs-6 text-right">
+  <ul class="list-inline fast-menu">
+    <li>
+      <%= link_to_if_authorized l(:label_payment_new), new_project_payment_path, class: 'icon-fa icon-fa-fw icon-fa-file btn btn-default' %>
+    </li>
+  </ul>
+</div>
 </div>
 
 <!--filtres-->
-<div class="seccio grup">
-  <div class="col span-2-de-2">
-    <div class="filtres">
-      <div class="titularAcc">
+<%= form_tag({id: @project}, method: :get, class: 'formee') do %>
+  <div class="titularAcc">
+    <div class="row">
+      <div class="col-xs-6 pad-top-7">
         <%= l(:label_filter_plural) %>
       </div>
-      <div class="contingutAcc">
-        <form class="formee">
-          <fieldset>
-            <legend><%=l(:label_search)%></legend>
-
-            <%= form_tag({}, :method => :get) do %>
-              <div class="seccio grup">
-                <div class="col span-1-de-2">
-                  <%= text_field_tag 'name', params[:name] %>
-                </div>
-              </div>
-              <div class="seccio grup">
-                <div class="col span-2-de-2">
-                  <%= submit_tag l(:button_apply), :name => nil %>
-                </div>
-              </div>
-            <% end %>
-          </fieldset>
-        </form>
+      <div class="col-xs-6 text-right form-inline">
+        <div class="form-group">
+          <%= search_field_tag :name, params[:name], class: 'form-control' %>
+        </div>
+        <%= button_tag(content_tag('i', '', class: 'fa fa-search', 'aria-hidden' => 'true'), class: "btn btn-search", name: nil, type: :submit) %>
       </div>
     </div>
   </div>
-</div>
+<% end %>
 <!--final filtres-->
 
-<!--taula-->
-<div class="seccio grup">
-  <div class="col span-2-de-2">
-    <table class="taula-1 list">
-      <thead>
+<div class="wrapper-table bg-white">
+  <!--taula-->
+  <table class="table table-striped payments">
+    <thead>
+      <tr>
+        <%= sort_header_tag('payments.date', caption: l(:field_date), class: 'w6p') %>
+        <%= sort_header_tag('amount_in_cents', caption: l(:field_amount), class: 'text-right w12p') %>
+        <%= content_tag('th', l(:field_payment_method)) %>
+        <%= content_tag('th', l(:field_reference)) %>
+        <%= sort_header_tag('invoices.number', caption: l(:field_invoice)) %>
+        <th class="w6p"></th>
+        <th class="w6p"></th>
+      </tr>
+    </thead>
+    <tbody>
+      <% for payment in @payments -%>
         <tr>
-          <%= sort_header_tag('payments.date', :caption => l(:field_date)) %>
-          <%= sort_header_tag('amount_in_cents', :caption => l(:field_amount)) %>
-          <%= content_tag('th', l(:field_payment_method)) %>
-          <%= content_tag('th', l(:field_reference)) %>
-          <%= sort_header_tag('invoices.number', :caption => l(:field_invoice)) %>
-          <th><%= l(:button_edit) %></th>
-          <th><%= l(:button_delete) %></th>
+          <td><%=h format_date payment.date %></td>
+          <td class="money" style="color: <%=payment.invoice.is_a?(IssuedInvoice) ? "green" : "red" %>">
+            <%= money(payment.amount) %>
+          </td>
+          <td><%=h(truncate(payment.payment_method,length: 20)) %></td>
+          <td><%=h(truncate(payment.reference,length: 30)) %></td>
+          <td><%=link_to_if_authorized(h(payment.invoice.number.blank? ? "?" : payment.invoice.number), invoice_path(payment.invoice)) unless payment.invoice.nil? %></td>
+          <td><%= link_to_if_authorized l(:button_edit), edit_payment_path(payment), class: 'icon icon-edit editar' %></td>
+          <td><%= link_to_if_authorized l(:button_delete), payment_path(payment), method: :delete, data: {confirm: l(:text_are_you_sure)}, class: 'icon icon-del eliminar' %></td>
         </tr>
-      </thead>
-      <tbody>
-        <% for payment in @payments -%>
-          <tr class="user <%= cycle("odd", "even") %>" />
-            <td><%=h format_date payment.date %></td>
-            <td class="money" style="color: <%=payment.invoice.is_a?(IssuedInvoice) ? "green" : "red" %>"><%= money(payment.amount) %></td>
-            <td><%=h(truncate(payment.payment_method,:length=>20)) %></td>
-            <td><%=h(truncate(payment.reference,:length=>30)) %></td>
-            <td><%=link_to_if_authorized(h(payment.invoice.number.blank? ? "?" : payment.invoice.number), invoice_path(payment.invoice)) unless payment.invoice.nil? %></td>
-            <td><%= link_to_if_authorized l(:button_edit), edit_payment_path(payment), :class => 'icon icon-edit editar' %></td>
-            <td><%= link_to_if_authorized l(:button_delete), payment_path(payment), :method=>:delete, :data=>{:confirm => l(:text_are_you_sure)}, :class => 'icon icon-del eliminar' %></td>
-          </tr>
-        <% end -%>
-      </tbody>
-      <tfoot>
-        <tr>
-          <td colspan="7">&nbsp;</td>
-        </tr>
-      </tfoot>
-    </table>
-  </div>
-</div>
-<!--final taula-->
+      <% end -%>
+    </tbody>
+    <tfoot>
+      <tr>
+        <td colspan="7">&nbsp;</td>
+      </tr>
+    </tfoot>
+  </table>
+  <!--final taula-->
 
-<!--paginacio-->
-<div class="seccio grup paginacio pagination">
-  <%= pagination_links_full @payment_pages, @payment_count, {:per_page_links=>false} %>
-</div>
-<!--final paginacio-->
+  <%= render partial: 'common/pagination', locals: {pages: @payment_pages, count: @payment_count} %>
 
-<% html_title(l(:label_payment_plural)) -%>
+  <% html_title(l(:label_payment_plural)) -%>
 
-<% content_for :sidebar do %>
+  <% content_for :sidebar do %>
     <%= render_menu :payments_menu, @project %>
-<% end %>
+  <% end %>
+</div>

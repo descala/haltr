@@ -40,6 +40,11 @@ class Company < ActiveRecord::Base
     :reject_if => :all_blank
   validates_associated :bank_infos
 
+  accepts_nested_attributes_for :company_offices,
+    :allow_destroy => true,
+    :reject_if => :all_blank
+  validates_associated :company_offices
+
   validate :uniqueness_of_taxes
   validates :country, length: { is: 2 }
   validates :taxcode, length: { maximum: 20 }, allow_blank: true
@@ -173,9 +178,9 @@ class Company < ActiveRecord::Base
   ################## methods for mail customization ##################
   def invoice_mail_subject(lang,invoice=nil)
     subj = nil
-    #if email_customization?
+    if email_customization?
       subj = invoice_mail_customization["subject"][lang] rescue nil
-    #end
+    end
     if subj.blank?
       subj = I18n.t(:invoice_mail_subject,:locale=>lang)
       unless Redmine::Hook.call_hook(:replace_invoice_mail_subject).join.blank?
@@ -200,7 +205,10 @@ class Company < ActiveRecord::Base
   end
 
   def invoice_mail_body(lang,invoice=nil)
-    body = invoice_mail_customization["body"][lang] rescue nil
+    body = nil
+    if email_customization?
+      body = invoice_mail_customization["body"][lang] rescue nil
+    end
     if body.blank?
       body = I18n.t(:invoice_mail_body,:locale=>lang)
       unless Redmine::Hook.call_hook(:replace_invoice_mail_body).join.blank?

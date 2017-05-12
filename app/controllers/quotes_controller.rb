@@ -1,6 +1,5 @@
 class QuotesController < ApplicationController
 
-  menu_item Haltr::MenuItem.new(:invoices,:quotes)
   helper :haltr
   helper :invoices
   layout 'haltr'
@@ -16,7 +15,15 @@ class QuotesController < ApplicationController
   def index
     sort_init 'invoices.created_at', 'desc'
     sort_update %w(invoices.created_at state number date due_date clients.name import_in_cents)
-    invoices = @project.quotes
+    invoices = @project.quotes.includes('client').references('client')
+
+    if params[:name].present?
+      name = "%#{params[:name].strip.downcase}%"
+      fields = %w(clients.name DATE_FORMAT(invoices.date,'%d-%m-%Y') invoices.number)
+      conditions = fields.collect {|f| "LOWER(#{f}) LIKE ?" }.join(' OR ')
+      invoices = invoices.where([conditions, *fields.collect {name}])
+    end
+
     @invoice_count = invoices.count
     @invoice_pages = Paginator.new @invoice_count,
 		per_page_option,
@@ -96,6 +103,7 @@ class QuotesController < ApplicationController
     if @invoice.save
       flash[:notice] = l(:notice_successful_create)
       if params[:create_and_send]
+        @invoice.about_to_be_sent=true
         if @invoice.valid?
           redirect_to :action => 'send_quote', :id => @invoice
         else
@@ -129,6 +137,7 @@ class QuotesController < ApplicationController
       Event.create(:name=>'edited',:invoice=>@invoice,:user=>User.current)
       flash[:notice] = l(:notice_successful_update)
       if params[:save_and_send]
+        @invoice.about_to_be_sent=true
         if @invoice.valid? and ExportChannels.can_send?(:send_pdf_by_mail)
           redirect_to :action => 'send_quote', :id => @invoice
         else
@@ -149,6 +158,7 @@ class QuotesController < ApplicationController
   end
 
   def send_quote
+    @invoice.about_to_be_sent=true
     unless @invoice.class.include?(Haltr::Validator::Mail) and @invoice.valid? #TODO aixo no funciona...
       raise @invoice.errors.full_messages.join(", ") # unless @invoice.valid?(:pdf_by_mail)
     end

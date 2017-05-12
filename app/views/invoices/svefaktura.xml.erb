@@ -69,9 +69,9 @@
                <cac0:ID>SWT</cac0:ID>
             </cac0:TaxScheme>
          </cac0:PartyTaxScheme>
-         <% if @company.email and !@company.email.blank? -%>
+         <% if @invoice.from_email.present? -%>
          <cac0:Contact>
-           <cbc:ElectronicMail><%=h @company.email%></cbc:ElectronicMail>
+           <cbc:ElectronicMail><%=h @invoice.from_email%></cbc:ElectronicMail>
          </cac0:Contact>
          <% end -%>
       </cac0:Party>

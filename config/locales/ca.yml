@@ -69,6 +69,7 @@ ca:
   label_invoice_plural: Factures
   label_invoice: Factura
   label_draft: Esborrany de factura
+  label_draft_plural: Esborranys de factura
   field_invoice: Factura
   label_invoice_new: Nova factura
   label_received_invoice_new: Afegir factura rebuda
@@ -95,8 +96,7 @@ ca:
   generate_template_from_invoice: Generar nova plantilla
   duplicate_invoice: Duplicar la factura
   generated_from_template: Generada des de la plantilla
-  receive_payment: Pagament
-  make_payment: Efectuar pagament
+  receive_payment: Cobrament
   label_paid: Pagat
   label_not_paid: No pagat
   label_tax: Impost
@@ -191,7 +191,7 @@ ca:
   invoice_no_taxes_and_discount: "Una factura no pot tenir a la vegada línies sense impostos i un descompte global"
   field_import: "Import"
   pdf_not_legal: "PDF no legal"
-  amended_invoice: "Rectificació de la %{link}"
+  amended_invoice: "Rectificació de la factura %{link}"
   amended_by_invoice: "Rectificada per la %{link}"
   create_amend_invoice: "Crear factura rectificativa"
   label_amendment_invoice: "Factura rectificativa"
@@ -201,9 +201,10 @@ ca:
   only_one_default_allowed_for: "%{tax_name}: Només es permet un impost per defecte"
   add_taxes_on_company: "Pots gestionar els impostos a \"La meva empresa\""
   button_download_new_invoices: "Descarregar zip amb les noves"
+  button_download_invoices_csv: "Totes les factures en un CSV"
   label_download_new_invoices_info: "Genera un zip que conté totes les factures noves en format PDF"
   field_exempt: "Exempt"
-  field_comment: "Motiu d'exempció"
+  field_comment: "Motiu"
 
   # Events
   events: "Log d'esdeveniments"
@@ -262,7 +263,6 @@ ca:
   label_invoice_template: Recurrent
   label_invoice_template_plural: Recurrents
   label_generated_invoices: Factures generades
-  next_charge: Següent pagament
   invoices_to_generate: Factures a generar
   generate: Generar
   generate_selected: Generar seleccionades
@@ -312,9 +312,9 @@ ca:
   label_import_aeb43: Importar moviments en format AEB43
 
   # Payments
-  label_payment: Pagament
-  label_payment_plural: Pagaments
-  label_payment_new: Nou pagament
+  label_payment: Cobrament
+  label_payment_plural: Cobraments
+  label_payment_new: Nou cobrament
   field_amount: Preu
   field_amount_in_cents: Preu
   field_payment_method: Mètode de pagament
@@ -326,9 +326,9 @@ ca:
   received_paid_notification_to: "Notificar recepció de pagament a %{mail}"
   save_and_mail: "Desar i enviar mail"
   save_without_mail: "Desar sense enviar mail"
-  field_sepa_type: "Tipus de pagaments SEPA"
+  field_sepa_type: "Tipus de cobraments SEPA"
   label_payment_initiation: "Càrrecs SEPA"
-  label_payment_report: Informe de pagaments
+  label_payment_report: Informe de cobraments
 
   # Settings
   field_taxcode: "NIF"
@@ -443,6 +443,7 @@ ca:
 
   label_linked_to_mine: "Empreses vinculades"
 
+  imap_config: "IMAP - Servidor de correu entrant"
   field_imap_host: "Servidor IMAP"
   field_imap_port: "Port"
   field_imap_ssl: "Fer servir SSL"
@@ -450,6 +451,7 @@ ca:
   field_imap_password: "Contrasenya"
   field_imap_from: "Remitent"
 
+  smtp_config: "SMTP - Servidor de correu sortint"
   field_smtp_host: "Servidor SMTP"
   field_smtp_port: "Port"
   field_smtp_ssl: "Fer servir SSL"
@@ -458,7 +460,7 @@ ca:
   field_smtp_from: "Remitent"
 
   permission_general_use: "Utilitzar el plugin Haltr"
-  permission_manage_payments: "Gestionar pagaments"
+  permission_manage_payments: "Gestionar cobraments"
   permission_use_templates: "Plantilles de factures"
   permission_batch_processes: "Processos amb scripts"
   permission_use_all_readonly: "Ús complet només lectura"
@@ -481,6 +483,7 @@ ca:
   tax_AA: "Tasa baixa"
   tax_AAA: "Tasa super reduïda"
   invoice_data: "Dades factura"
+  invoice_attachments: "Fitxers adjunts"
   bank_info: "Dades bancàries"
 
   more_options: Més accions ...
@@ -599,10 +602,10 @@ ca:
   field_article_code: "Codi"
   label_error_event_plural: "Esdeveniments d'enviaments fallats"
   label_info_event_plural: "Esdeveniments d'enviaments exitosos"
-  audited_create: "Creat: %{model}"
-  audited_update: "Actualitzat: %{model}"
-  audited_destroy: "Esborrat: %{model}"
-  invoice_line: "Línia de factura"
+  audited_create: "Objecte %{model} creat per %{user}"
+  audited_update: "Objecte %{model} actualizat per %{user}"
+  audited_destroy: "Objecte %{model} esborrat per %{user}"
+  invoice_line: "Línia"
   invoice: "Factura"
   tax: "Impost"
   field_percent: "%"
@@ -669,7 +672,7 @@ ca:
   field_fa_residence_type: 'Residència'
   label_fa_person_type_individual: "Física"
   label_fa_person_type_entity: "Jurídica"
-  label_fa_residence_type_foreigner: "Extranger"
+  label_fa_residence_type_foreigner: "Estranger"
   label_fa_residence_type_spain: "Resident"
   label_fa_residence_type_UE: "Europeu"
   field_fa_taxcode: 'NIF'
@@ -837,6 +840,7 @@ Si la deses, es marcara com a Nova."
   label_company_office: Seu
   field_amounts_withheld_reason: "Concepte de retenció"
   field_amounts_withheld: "Import de retenció"
+  amounts_withheld: "Retenció"
   received_by: "Rebuda (%{transport})"
   cant_modify_taxcode: "No es pot modificar el NIF. Si l'heu de canviar, sisplau, poseu-vos en contacte amb el %{suport_link}"
   suport_link: "servei de suport"
@@ -846,3 +850,16 @@ Si la deses, es marcara com a Nova."
   processing_pdfs: "Processant %{count} factures"
   auto_process_pdf: "Processar PDF automàticament"
   field_supplier: "Proveïdor"
+  send_custom_text: "Enviar text personalitzat"
+  button_new: "Nova"
+  not_linked: "No vinculada"
+  linked: "Vinculada"
+  for_this_company: "per aquesta empresa"
+  write_comment: "Escriure comentari"
+  accept_received: "Acceptar"
+  refuse_received: "Refusar"
+  pay_received: "Pagament"
+  button_add_office: "Afegir seu"
+  field_company_email: "Email propi"
+  field_company_email_override: "No utilitzar l'email de la meva empresa, sinó aquest"
+  line_extra_fields: "Més opcions per afegir a la línia"

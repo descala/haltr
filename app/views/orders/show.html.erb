@@ -1,28 +1,38 @@
+<div class="clearfix">
+<div class="pull-left">
+  <h2>
+    <%= link_to "", project_orders_path(@project), class: 'fa fa-long-arrow-left fa-big fa-left', aria: { hidden: true } %>
+    <%= "#{l :label_order} #{@order.num_pedido}" %>
+  </h2>
+</div>
+</div>
+
+
 <!--menu rapid-->
-<div class="seccio grup">
-  <div class="col span-2-de-2">
-    <ul class="menu-rapid">
-      <li><%= link_to l(:label_import), project_orders_import_path(project_id: @project) -%></li>
-      <% if @order.xml? -%>
-        <% if @order.invoice -%>
-          <li><%= link_to l(:invoice), invoice_path(@order.invoice), class: 'icon icon-attachment' %></li>
-        <% else -%>
-          <li><%= link_to l(:create_invoice_from_order), {action: :create_invoice, id: @order, project_id: @project}, class: 'icon icon-attachment', method: :post %></li>
+<div class="wrapper-default">
+  <div class="row">
+    <div class="col-xs-10">
+      <ul class="list-inline">
+        <li><%= link_to l(:label_import), project_orders_import_path(project_id: @project), class: 'icon-fa icon-fa-fw icon-fa-upload' -%></li>
+        <li><%= link_to l(:download_original), project_order_path(@order, project_id: @project, download: true), class: 'icon-fa icon-fa-fw icon-fa-download' %></li>
+        <% if @order.xml? -%>
+          <% if @order.invoice -%>
+            <li><%= link_to l(:invoice), invoice_path(@order.invoice), class: 'icon-fa icon-fa-fw icon-fa-file' %></li>
+          <% else -%>
+            <li><%= link_to l(:create_invoice_from_order), {action: :create_invoice, id: @order, project_id: @project}, class: 'icon-fa icon-fa-fw icon-fa-file', method: :post %></li>
+          <% end -%>
         <% end -%>
-      <% end -%>
-      <li><%= link_to l(:download_original), project_order_path(@order, project_id: @project, download: true), class: 'icon icon-attachment' %></li>
-      <li><%= link_to l(:download_as_pdf), project_order_path(@order, project_id: @project, format: :pdf), class: 'icon icon-attachment' %></li>
-      <li><%= link_to_if_authorized l(:button_delete), { :action => 'destroy', :id => @order }, :data=>{:confirm=>l(:text_are_you_sure)}, :method=>:delete, :class=>'icon icon-del' %></li>
-      <% if @order.next%>
-        <li class="invoice-navigator"><%=h link_to_if_authorized l(:label_next), :action => 'show', :id => @order.next %></li>
-      <% end %>
-      <% if @order.previous %>
-        <li class="invoice-navigator"><%=h link_to_if_authorized l(:label_previous), :action => 'show', :id => @order.previous %></li>
-      <% end %>
-    </ul>
+        <li><%= link_to l(:download_as_pdf), project_order_path(@order, project_id: @project, format: :pdf), class: 'icon-fa icon-fa-fw icon-fa-file-pdf-o' %></li>
+        <li><%= link_to_if_authorized l(:button_delete), { action: 'destroy', id: @order }, data: {confirm: l(:text_are_you_sure)}, method: :delete, class: 'icon-fa icon-fa-fw icon-fa-trash' %></li>
+      </ul>
+    </div>
+    <div class="col-xs-2">
+      <%= render partial: 'common/navigation_links', locals: {obj: @order} %>
+    </div>
   </div>
 </div>
 <!--final menu rapid-->
+
 
 <div id="invoice_wrapper">
   <div id="workspace1" class="haltrinvoice">
@@ -43,11 +53,11 @@
     <div class="formee-msg-info invoice-comments">
       <h3 id="haltr_comments">
         <%=h l(:label_comment_plural)%>
-        <%= toggle_link image_tag('add.png'), "add_comment_form", :focus => "comment_comments" %>
+        <%= toggle_link image_tag('add.png'), "add_comment_form", focus: "comment_comments" %>
       </h3>
-      <%= form_tag({:controller => 'orders', :action => 'add_comment', :id => @order, :project_id => @order.project}, :id => "add_comment_form", :style => "display:none;") do %>
+      <%= form_tag({controller: 'orders', action: 'add_comment', id: @order, project_id: @order.project}, id: "add_comment_form", style: "display:none;") do %>
         <div class="box">
-          <%= text_area 'comment', 'comments', :cols => 80, :rows => 5, :class => 'wiki-edit' %>
+          <%= text_area 'comment', 'comments', cols: 80, rows: 5, class: 'wiki-edit' %>
         </div>
         <p><%= submit_tag l(:button_add) %></p>
       <% end %>
@@ -61,21 +71,21 @@
   </div>
 </div>
 
-<%= render :partial => 'events/list', locals: {events: @order.events} %>
+<%= render partial: 'events/list', locals: {events: @order.events} %>
 
 <% if (Rails.env == "development" or User.current.allowed_to?(:use_all_readonly, @project)) and @order.xml? -%>
-<div class="invoice-channel-links">
-<h3>Check generated documents</h3>
-<ul>
-  <li><%= link_to_if_authorized 'UBL invoice', {controller: 'orders', action: 'show', id: @order, show_invoice: true } %></li>
-</ul>
-</div><% end -%>
+  <div class="invoice-channel-links">
+    <h3>Check generated documents</h3>
+    <ul>
+      <li><%= link_to_if_authorized 'UBL invoice', {controller: 'orders', action: 'show', id: @order, show_invoice: true } %></li>
+    </ul>
+  </div><% end -%>
 
 <% content_for :header_tags do %>
-  <%= stylesheet_link_tag 'orders', :plugin => 'haltr_invinet_patches' %>
-  <%= stylesheet_link_tag 'minimal', :plugin => 'haltr' %>
-  <%= stylesheet_link_tag 'haltr', :plugin => 'haltr' %>
-  <%= stylesheet_link_tag 'facturae_xslt_viewer', :plugin => 'haltr' %>
+  <%= stylesheet_link_tag 'orders?v=2', plugin: 'haltr_invinet_patches' %>
+  <%= stylesheet_link_tag 'minimal?v=2', plugin: 'haltr' %>
+  <%= stylesheet_link_tag 'haltr?v=2', plugin: 'haltr' %>
+  <%= stylesheet_link_tag 'facturae_xslt_viewer?v=2', plugin: 'haltr' %>
 <% end %>
 
 <% content_for :sidebar do %>

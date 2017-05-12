@@ -60,3 +60,21 @@ $(document).on('change','input#logo', function(e) {
     $(this).val('');
   }
 });
+function change_smtp_password_type() {
+  var obj = $('#company_smtp_password')[0];
+  if (obj.type == 'password') {
+    obj.type = 'text';
+  } else {
+    obj.type = 'password';
+  }
+  return false;
+}
+function change_imap_password_type() {
+  var obj = $('#company_imap_password')[0];
+  if (obj.type == 'password') {
+    obj.type = 'text';
+  } else {
+    obj.type = 'password';
+  }
+  return false;
+}

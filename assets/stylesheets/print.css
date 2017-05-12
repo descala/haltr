@@ -104,8 +104,17 @@ a:hover {
 	margin: 0;
 	padding: 0.5em;
 	vertical-align: top;
-	border-bottom: 1px solid #999;
 	}
+.line-items tbody td {
+	border-bottom: 1px solid #999;
+}
+.line-items tfoot tr.invoice-subtotal td {
+	padding-top: 0.9em;
+}
+.line-items tfoot td {
+  padding: 0.3em;
+  padding-right:12px;
+}
 .line-items td.first { padding-left:12px; }
 .line-items td.last { padding-right:12px; }
 .line-items .item-date { width: 75px; }
@@ -178,11 +187,14 @@ a:hover {
 	margin: 0 0 .25in 0;
 	padding: 0 2px 10px 0;
 	text-align: right;
-	border-bottom: 4px solid #000;
 	}
 .vendor .invoicelogo {
 	float: left;
 	}
+table {
+  border-spacing: 0px;
+  border-collapse: separate;
+}
 .firm {
 	margin: 0 0 .25in;
 	padding: 0 0 10px;
@@ -207,4 +219,7 @@ a:hover {
 }
 div.page-break {
   page-break-before: always;
+}
+.text-right {
+  text-align: right;
 }

@@ -1,12 +1,17 @@
 <h2><%= l(:label_import_aeb43) %></h2>
 
+<div class="col-xs-10 col-no-pad-left">
+  <div class="tab-pane form-horizontal">
+
 <pre>
 <% @moviments.each do |m| %>
 <%= m %>
 <% end %>
 </pre>
 
-<%= @errors %>
+    <%= @errors %>
+  </div>
+</div>
 
 <% content_for :sidebar do %>
   <%= render_menu :payments_menu, @project %>

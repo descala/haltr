@@ -1,0 +1,12 @@
+<tr class="nested-fields">
+<td><%= f.text_field :address, class: 'form-control' %></td>
+<td><%= f.text_field :city, class: 'form-control' %></td>
+<td><%= f.text_field :postalcode, class: 'form-control' %></td>
+<td><%= f.text_field :province, class: 'form-control' %></td>
+<td><%= f.country_select :country, {priority_countries: [@company.country]}, class: 'form-control' %></td>
+<td class="tax_remove w6p text-right">
+  <!-- cocoon -->
+  <%= link_to_remove_association "<i class='fa fa-trash' aria-hidden='true'></i>".html_safe, f %>
+</td>
+</tr>
+

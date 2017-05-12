@@ -1,49 +1,97 @@
 <%= error_messages_for 'person' %>
 
-<fieldset class="tabular box">
-  <legend><%=l(@person.new_record? ? :label_person_new : :label_person)%></legend>
+<h2>
+  <%= link_to "", client_people_path(@client), class: 'fa fa-long-arrow-left fa-big fa-left', aria: { hidden: true } %>
+  <%=l(@person.new_record? ? :label_person_new : :label_person)%>
+</h2>
 
-  <div class="seccio grup">
-    <p class="col span-1-de-2">
-    <label for="client">
-      <%= l(:label_company) %>
-    </label>
-    <%= text_field_tag('client', @client.name, disabled: true) %>
-    </p>
+<div class="form-horizontal tab-pane">
+  <div class="row">
+
+    <div class="form-group">
+      <%= label_tag :client, class: 'col-xs-3 control-label' do %>
+        <%= l :label_company %>
+      <% end -%>
+      <div class="col-xs-3">
+        <%= text_field_tag('client', @client.name, disabled: true, class: 'form-control') %>
+      </div>
+    </div>
+
+    <div class="form-group">
+      <%= f.label :first_name, class: 'col-xs-3 control-label' do %>
+        <%= l :field_first_name %>:
+      <% end -%>
+      <div class="col-xs-3">
+        <%= f.text_field :first_name, required: true, class: 'form-control form-required' %>
+      </div>
+    </div>
+
+    <div class="form-group">
+      <%= f.label :last_name, class: 'col-xs-3 control-label' do %>
+        <%= l :field_last_name %>:
+      <% end -%>
+      <div class="col-xs-3">
+        <%= f.text_field :last_name, required: true, class: 'form-control form-required' %>
+      </div>
+    </div>
+
+    <div class="form-group">
+      <%= f.label :email, class: 'col-xs-3 control-label' do %>
+        <%= l :field_email %>:
+      <% end -%>
+      <div class="col-xs-3">
+        <%= f.text_field :email, required: false, class: 'form-control' %>
+      </div>
+    </div>
+
+    <div class="form-group">
+      <div class="col-xs-6 col-xs-offset-3">
+        <div class="checkbox">
+          <%= f.label :send_invoices_by_mail do %>
+            <%= f.check_box :send_invoices_by_mail %>
+            <%= l :field_send_invoices_by_mail %>
+          <% end -%>
+        </div>
+      </div>
+    </div>
+
+    <div class="form-group">
+      <%= f.label :phone_office, class: 'col-xs-3 control-label' do %>
+        <%= l :field_phone_office %>:
+      <% end -%>
+      <div class="col-xs-3">
+        <%= f.text_field :phone_office, class: 'form-control' %>
+      </div>
+    </div>
+
+    <div class="form-group">
+      <%= f.label :phone_mobile, class: 'col-xs-3 control-label' do %>
+        <%= l :field_phone_mobile %>:
+      <% end -%>
+      <div class="col-xs-3">
+        <%= f.text_field :phone_mobile, class: 'form-control' %>
+      </div>
+    </div>
+
+    <div class="form-group">
+      <%= f.label :info, class: 'col-xs-3 control-label' do %>
+        <%= l :field_info %>:
+      <% end -%>
+      <div class="col-xs-3">
+        <%= f.text_area :info, rows: 4, class: 'form-control' %>
+      </div>
+    </div>
+
+    <div class="from-group">
+      <div class="col-xs-6 text-right">
+        <%= link_to l(:cancel), client_path(@client), class: 'btn btn-link' %>
+        <% if @person.new_record? -%>
+          <%= submit_tag l(:button_create), class: 'btn btn-primary' %>
+        <% else -%>
+          <%= submit_tag l(:button_save), class: 'btn btn-primary' %>
+        <% end -%>
+      </div>
+    </div>
+
   </div>
-
-  <div class="seccio grup">
-    <p class="col span-1-de-2">
-      <%= f.text_field :first_name, :required => true %>
-    </p>
-    <p class="col span-1-de-2">
-      <%= f.text_field :last_name, :required => true %>
-    </p>
-  </div>
-
-  <div class="seccio grup">
-    <p class="col span-1-de-2">
-      <%= f.text_field :email, :required => false %>
-    </p>
-    <p class="col span-1-de-2">
-      <%= f.check_box  :send_invoices_by_mail%>
-    </p>
-  </div>
-
-  <div class="seccio grup">
-    <p class="col span-1-de-2">
-      <%= f.text_field :phone_office %>
-    </p>
-    <p class="col span-1-de-2">
-      <%= f.text_field :phone_mobile %>
-    </p>
-  </div>
-
-  <div class="seccio grup">
-    <p class="col span-1-de-2">
-      <%= f.text_area :info, :rows=>8, :cols=>100 %>
-    </p>
-  </div>
-
-
-</fieldset>
+</div>

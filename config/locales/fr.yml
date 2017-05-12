@@ -60,6 +60,7 @@ fr:
   label_invoice_plural: Factures
   label_invoice: Facture
   label_draft: Brouillon facture
+  label_draft_plural: Draft invoices
   field_invoice: Facture
   label_invoice_new: Nouvelle facture
   label_received_invoice_new: Ajouter factures entrantes
@@ -87,7 +88,6 @@ fr:
   duplicate_invoice: Dup facture
   generated_from_template: Généré depuis modèle
   receive_payment: Paiement
-  make_payment: Faire paiement
   label_paid: Payé
   label_tax: Tax
   label_tax_plural: Taxes
@@ -182,7 +182,7 @@ fr:
   invoice_no_taxes_and_discount: "Vous ne pouvez pas avoir des lignes sans impôt et une réduction globale"
   field_import: "Importer"
   pdf_not_legal: "PDF illégal"
-  amended_invoice: "Ajustements au %{link}"
+  amended_invoice: "Ajustements au facture %{link}"
   amended_by_invoice: "Corrigé pour %{link}"
   create_amend_invoice: "Créer projet d'amendement"
   label_amendment_invoice: "Facture d'amendment"
@@ -192,6 +192,7 @@ fr:
   only_one_default_allowed_for: "%{tax_name}: Une seule taxe par défaut autorisé"
   add_taxes_on_company: "Vous pouvez gérer vos impôts \"Ma compagnie\""
   button_download_new_invoices: "Téléchargez le nouveau zip"
+  button_download_invoices_csv: "All invoices in a CSV file"
   label_download_new_invoices_info: "Génère un zip contenant toutes les nouvelles factures en PDF"
   field_exempt: "Exempt"
   field_comment: "Reason"
@@ -252,7 +253,6 @@ fr:
   label_invoice_template: Modèle
   label_invoice_template_plural: Modèles
   label_generated_invoices: Factures générées
-  next_charge: Charge suivante
   invoices_to_generate: Factures à être générées
   generate: Génère
   generate_selected: Génère sélectionnée
@@ -432,6 +432,7 @@ fr:
 
   label_linked_to_mine: "Entreprises associées"
 
+  imap_config: "IMAP - Incoming mail server"
   field_imap_host: "Serveur IMAP"
   field_imap_port: "Port"
   field_imap_ssl: "Utiliser SSL"
@@ -439,6 +440,7 @@ fr:
   field_imap_password: "Mot de passe"
   field_imap_from: "De"
 
+  smtp_config: "SMTP - Outgoing mail server"
   field_smtp_host: "SMTP server"
   field_smtp_port: "Port"
   field_smtp_ssl: "Use SSL"
@@ -470,6 +472,7 @@ fr:
   tax_AA: "Bas impôt"
   tax_AAA: "Super Low Rated"
   invoice_data: "Données de la facture"
+  invoice_attachments: "Attached files"
   bank_info: "Information bancaire"
 
   more_options: "Plus d'actions..."
@@ -583,10 +586,10 @@ fr:
   field_article_code: "Code"
   label_error_event_plural: "Failed shipments events"
   label_info_event_plural: "Successful shipments events"
-  audited_create: "%{model} created"
-  audited_update: "%{model} updated"
-  audited_destroy: "%{model} deleted"
-  invoice_line: "Invoice line"
+  audited_create: "%{model} created by %{user}"
+  audited_update: "%{model} updated by %{user}"
+  audited_destroy: "%{model} deleted by %{user}"
+  invoice_line: "Line"
   invoice: "Invoice"
   tax: "Tax"
   field_percent: "%"
@@ -818,6 +821,7 @@ If you save it, will be marked as New."
   label_company_office: Succursale
   field_amounts_withheld_reason: "Withheld reason"
   field_amounts_withheld: "Withheld amount"
+  amounts_withheld: "Withheld amounts"
   received_by: "Received (%{transport})"
   cant_modify_taxcode: "You cannot modify your VAT ID. If you need to change it, please get in touch with our %{suport_link}"
   suport_link: "support service"
@@ -827,3 +831,16 @@ If you save it, will be marked as New."
   processing_pdfs: "Processing %{count} invoices"
   auto_process_pdf: "Process PDF automatically"
   field_supplier: "Supplier"
+  send_custom_text: "Send customized text"
+  button_new: "New"
+  not_linked: "Not linked"
+  linked: "Linked"
+  for_this_company: "for this company"
+  write_comment: "Write comment"
+  accept_received: "Accept"
+  refuse_received: "Refuse"
+  pay_received: "Payment"
+  button_add_office: "Add office"
+  field_company_email: "Own Email"
+  field_company_email_override: "Override the email of my company with this one"
+  line_extra_fields: "More options for this line"

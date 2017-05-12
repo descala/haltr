@@ -1,156 +1,68 @@
-<% if @client -%>
-
-  <div class="seccio grup">
-    <div class="col span-1-de-2">
-      <ul class="menu-rapid">
-        <li>
-          <%= link_to_if_authorized l(:label_client_office_new), new_client_client_office_path(@client), :class => 'icon icon-add' %>
-        </li>
-      </ul>
-    </div>
-    <div class="col span-1-de-2">
-      <h1 style="float: right;"><%= link_to(@client.name, client_path(@client)) %> - <%= l(:label_client_offices) %></h1>
-    </div>
-  </div>
-
-  <!--filtres-->
-  <div class="seccio grup">
-    <div class="col span-2-de-2">
-      <div class="filtres">
-        <div class="titularAcc">
-          <%= l(:label_filter_plural) %>
-        </div>
-        <div class="contingutAcc">
-          <form class="formee">
-            <fieldset>
-              <legend><%=l(:label_search)%></legend>
-
-              <%= form_tag({}, :method => :get) do %>
-                <div class="seccio grup">
-                  <div class="col span-1-de-2">
-                    <%= text_field_tag 'name', params[:name] %>
-                  </div>
-                </div>
-                <div class="seccio grup">
-                  <div class="col span-2-de-2">
-                    <%= submit_tag l(:button_apply), :name => nil %>
-                  </div>
-                </div>
-              <% end %>
-            </fieldset>
-          </form>
-        </div>
-      </div>
-    </div>
-  </div>
-  <!--final filtres-->
-
-  <!--taula-->
-  <div class="seccio grup">
-    <div class="col span-2-de-2">
-      <table class="taula-1 list">
-        <thead>
-          <tr>
-            <th><%= l(:field_name) %></th>
-            <th><%= l(:field_city) %></th>
-            <th><%= l(:button_edit) %></th>
-            <th><%= l(:button_delete) %></th>
-          </tr>
-        </thead>
-        <tbody>
-          <% @client_offices.each do |office| -%>
-            <tr class="user <%= cycle("odd", "even") %>" />
-              <td><%=h office.name %></td>
-              <td><%=h office.city %></td>
-              <td align="center"><%= link_to_if_authorized l(:button_edit), edit_client_client_office_path(@client, office), :class => 'icon icon-edit editar' %></td>
-              <td align="center"><%= link_to_if_authorized l(:button_delete), {:action=>'destroy',:id=>office} , :data=>{:confirm=>l(:text_are_you_sure)}, :method => :delete, :class => 'icon icon-del eliminar' %></td>
-            </tr>
-          <% end -%>
-        </tbody>
-        <tfoot>
-          <tr>
-            <td colspan="6">&nbsp;</td>
-          </tr>
-        </tfoot>
-      </table>
-    </div>
-  </div>
-  <!--final taula-->
-
-<% else -%>
-
-  <!--filtres-->
-  <div class="seccio grup">
-    <div class="col span-2-de-2">
-      <div class="filtres">
-        <div class="titularAcc">
-          <%= l(:label_filter_plural) %>
-        </div>
-        <div class="contingutAcc">
-          <form class="formee">
-            <fieldset>
-              <legend><%=l(:label_search)%></legend>
-
-              <%= form_tag({}, :method => :get) do %>
-                <div class="seccio grup">
-                  <div class="col span-1-de-2">
-                    <%= text_field_tag 'name', params[:name] %>
-                  </div>
-                </div>
-                <div class="seccio grup">
-                  <div class="col span-2-de-2">
-                    <%= submit_tag l(:button_apply), :name => nil %>
-                  </div>
-                </div>
-              <% end %>
-            </fieldset>
-          </form>
-        </div>
-      </div>
-    </div>
-  </div>
-  <!--final filtres-->
-
-  <!--taula-->
-  <div class="seccio grup">
-    <div class="col span-2-de-2">
-      <table class="taula-1 list">
-        <thead>
-          <tr>
-            <%= sort_header_tag(:name, caption: l(:field_name)) %>
-            <%= sort_header_tag(:city, caption: l(:field_city)) %>
-            <th><%= l(:button_edit) %></th>
-            <th><%= l(:button_delete) %></th>
-          </tr>
-        </thead>
-        <tbody>
-          <% @client_offices.each do |office| -%>
-            <tr class="user <%= cycle("odd", "even") %>" />
-              <td><%=h office.name %></td>
-              <td><%=h office.city %></td>
-              <td align="center"><%= link_to_if_authorized l(:button_edit), edit_client_client_office_path(office.client, office), :class => 'icon icon-edit editar' %></td>
-              <td align="center"><%= link_to_if_authorized l(:button_delete), {:action=>'destroy', :client_id=>office.client_id, :id=>office}, :data=>{:confirm=>l(:text_are_you_sure)}, :method => :delete, :class => 'icon icon-del eliminar' %></td>
-            </tr>
-          <% end -%>
-        </tbody>
-        <tfoot>
-          <tr>
-            <td colspan="6">&nbsp;</td>
-          </tr>
-        </tfoot>
-      </table>
-    </div>
-  </div>
-  <!--final taula-->
-
-<% end -%>
-
-<!--paginacio-->
-<div class="seccio grup pagination paginacio">
-  <%= pagination_links_full @client_office_pages, @client_office_count, {:per_page_links=>false} %>
+<div class="row">
+<div class="col-xs-6">
+  <h2>
+    <%= link_to "", client_path(@client), class: 'fa fa-long-arrow-left fa-big fa-left', aria: { hidden: true } %>
+    <%= l :label_client_offices %> - <%= @client.name %>
+  </h2>
 </div>
-<!--final paginacio-->
 
+<div class="col-xs-6 text-right">
+  <ul class="list-inline fast-menu">
+    <li>
+      <%= link_to_if_authorized l(:label_client_office_new), new_client_client_office_path(@client), class: 'btn btn-success' %>
+    </li>
+  </ul>
+</div>
+</div>
+
+<!--filtres-->
+<%= form_tag({}, method: :get, class: 'formee') do %>
+  <div class="titularAcc">
+    <div class="row">
+      <div class="col-xs-6 pad-top-7">
+        <%= l :label_filter_plural %>
+      </div>
+      <div class="col-xs-6 text-right form-inline">
+        <%= text_field_tag 'name', params[:name], class: 'form-control' %>
+        <%= button_tag(content_tag('i', '', class: 'fa fa-search', 'aria-hidden' => 'true'), class: "btn btn-search", name: nil, type: :submit) %>
+      </div>
+    </div>
+  </div>
+<% end %>
+<!--final filtres-->
+
+<!--taula-->
+<div class="wrapper-table bg-white">
+  <table class="table table-striped">
+    <thead>
+      <tr>
+        <%= sort_header_tag(:name, caption: l(:field_name)) %>
+        <%= sort_header_tag(:city, caption: l(:field_city)) %>
+        <th></th>
+      </tr>
+    </thead>
+    <tbody>
+      <% @client_offices.each do |office| -%>
+        <tr>
+          <td><%=h office.name %></td>
+          <td><%=h office.city %></td>
+          <td class="text-right">
+          <%= link_to_if_authorized l(:button_edit), edit_client_client_office_path(office.client, office), class: 'icon icon-fa icon-fa-pencil' %>
+          <%= link_to_if_authorized l(:button_delete), {action: 'destroy', client_id: office.client_id, id: office}, data: {confirm: l(:text_are_you_sure)}, method: :delete, class: 'icon icon-fa icon-fa-trash' %></td>
+        </tr>
+      <% end -%>
+    </tbody>
+    <tfoot>
+      <tr>
+        <td colspan="4"></td>
+      </tr>
+    </tfoot>
+  </table>
+  <!--final taula-->
+
+  <%= render partial: 'common/pagination', locals: {pages: @client_office_pages, count: @client_office_count} %>
+
+</div>
 
 <% html_title(l(:label_client_offices)) -%>
 

@@ -32,7 +32,7 @@ api.invoice do
   # discounts
   api.discount_text    @invoice.discount_text
   api.discount_percent @invoice.discount_percent.to_f
-  api.discount_amount  @invoice.discount_amount.to_f
+  api.discount_amount  @invoice.discount_amount.to_f.abs
 
   # subtotal
   api.subtotal @invoice.subtotal.to_f

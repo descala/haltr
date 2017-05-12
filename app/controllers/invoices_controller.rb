@@ -43,7 +43,7 @@ class InvoicesController < ApplicationController
 
   def index
     sort_init 'invoices.created_at', 'desc'
-    sort_update %w(invoices.created_at state number date due_date clients.name import_in_cents)
+    sort_update %w(invoices.created_at state number date due_date clients.name import_in_cents total_in_cents)
 
     if self.class == ReceivedController
       invoices = @project.received_invoices
@@ -73,54 +73,58 @@ class InvoicesController < ApplicationController
     end
 
     # client filter
-    # TODO: change view collection_select (doesnt display previously selected client)
     unless params[:client_id].blank?
       invoices = invoices.where("invoices.client_id = ?", params[:client_id])
       @client_id = params[:client_id].to_i rescue nil
     end
 
     # date filter
-    unless params[:date_from].blank?
-      invoices = invoices.where("date >= ?",params[:date_from])
-    end
-    unless params["date_to"].blank?
-      invoices = invoices.where("date <= ?",params[:date_to])
-    end
+    date_field = case params[:sel_data]
+                 when 'due_date'
+                   'due_date'
+                 when 'state_updated_at'
+                   'state_updated_at'
+                 when 'date'
+                   'date'
+                 else
+                   # old way of filters used in API
+                   unless params[:date_from].blank?
+                     invoices = invoices.where("date >= ?",params[:date_from])
+                   end
+                   unless params["date_to"].blank?
+                     invoices = invoices.where("date <= ?",params[:date_to])
+                   end
+                   unless params[:due_date_from].blank?
+                     invoices = invoices.where("due_date >= ?",params[:due_date_from])
+                   end
+                   unless params[:due_date_to].blank?
+                     invoices = invoices.where("due_date <= ?",params[:due_date_to])
+                   end
+                   unless params[:state_updated_at_from].blank?
+                     invoices = invoices.where("state_updated_at >= ?", params[:state_updated_at_from])
+                   end
+                   nil
+                 end
 
-    # due_date filter
-    unless params[:due_date_from].blank?
-      invoices = invoices.where("due_date >= ?",params[:due_date_from])
-    end
-    unless params[:due_date_to].blank?
-      invoices = invoices.where("due_date <= ?",params[:due_date_to])
-    end
-
-    unless params[:taxcode].blank?
-      invoices = invoices.includes(:client).references(:client).where("clients.taxcode like ?","%#{params[:taxcode]}%")
-    end
-    unless params[:name].blank?
-      invoices = invoices.includes(:client).references(:client).includes(:client_office).references(:client_office).where("clients.name like ? or client_offices.name like ?","%#{params[:name]}%","%#{params[:name]}%")
-    end
-    unless params[:number].blank?
-      if params[:number] =~ /,/
-        invoices = invoices.where("number in (?)",params[:number].split(',').collect {|n| n.strip})
-      else
-        invoices = invoices.where("number like ?","%#{params[:number]}%")
+    if date_field
+      unless params[:date_from].blank?
+        invoices = invoices.where("#{date_field} >= ?",params[:date_from])
+      end
+      unless params[:date_to].blank?
+        invoices = invoices.where("#{date_field} <= ?",params[:date_to])
       end
     end
 
-    unless params[:state_updated_at_from].blank?
-      invoices = invoices.where("state_updated_at >= ?", params[:state_updated_at_from])
-    end
-
-    # client invoice_format filter
-    unless params[:invoice_format].blank?
-      invoices = invoices.includes(:client).references(:client).where("clients.invoice_format = ?", params[:invoice_format])
+    unless params[:client].blank?
+      invoices = invoices.includes(:client).references(:client).
+        includes(:client_office).references(:client_office).
+        where("clients.taxcode like ? or clients.name like ? or client_offices.name like ?","%#{params[:client]}%","%#{params[:client]}%","%#{params[:client]}%")
     end
 
     # filter by text
     unless params[:has_text].blank?
-      invoices = invoices.includes(:invoice_lines).references(:invoice_lines).where("invoices.extra_info like ? or invoice_lines.description like ? or invoice_lines.notes like ?", "%#{params[:has_text]}%", "%#{params[:has_text]}%", "%#{params[:has_text]}%")
+      invoices = invoices.includes(:invoice_lines).references(:invoice_lines).
+        where("number = ? or invoices.extra_info like ? or invoice_lines.description like ? or invoice_lines.notes like ?", params[:has_text], "%#{params[:has_text]}%", "%#{params[:has_text]}%", "%#{params[:has_text]}%")
     end
 
     if params[:format] == 'csv' and !User.current.allowed_to?(:export_invoices, @project)
@@ -249,6 +253,10 @@ class InvoicesController < ApplicationController
     @invoice = invoice_class.new(parsed_params)
     @invoice.project ||= @project
 
+    if @invoice.company_email_override == @project.company.email
+      @invoice.company_email_override = nil
+    end
+
     if @invoice.fa_country.to_s.size == 3
       @invoice.fa_country = SunDawg::CountryIsoTranslater.translate_standard(
         @invoice.fa_country, "alpha3", "alpha2"
@@ -320,6 +328,7 @@ class InvoicesController < ApplicationController
         format.html {
           flash[:notice] = l(:notice_successful_create)
           if params[:create_and_send]
+            @invoice.about_to_be_sent=true
             if @invoice.valid?
               if @invoice.client.sign_with_local_certificate?
                 # channel sends via javascript, set autocall and autocall_args
@@ -357,7 +366,7 @@ class InvoicesController < ApplicationController
       @client ||= Client.new
 
       respond_to do |format|
-        format.html { render :action => (@to_amend ? 'amend_for_invoice' : 'new') }
+        format.html { render action: 'new' }
         format.api { render_validation_errors(@invoice) }
       end
     end
@@ -402,6 +411,7 @@ class InvoicesController < ApplicationController
       respond_to do |format|
         format.html {
           if params[:save_and_send]
+            @invoice.about_to_be_sent=true
             if @invoice.valid?
               if @invoice.client.sign_with_local_certificate?
                 # channel sends via javascript, set autocall and autocall_args
@@ -690,6 +700,7 @@ class InvoicesController < ApplicationController
   end
 
   def send_invoice
+    @invoice.about_to_be_sent=true
     unless @invoice.valid?
       raise @invoice.errors.full_messages.join(', ')
     end
@@ -942,6 +953,7 @@ class InvoicesController < ApplicationController
       il.taxes = line.taxes.collect {|tax| tax.dup }
       @invoice.invoice_lines << il
     end
+    render :new
   end
 
   def mail
@@ -1235,6 +1247,7 @@ class InvoicesController < ApplicationController
     @errors=[]
     num_invoices = @invoices.size
     @invoices.collect! do |invoice|
+      invoice.about_to_be_sent=true
       if invoice.valid? and invoice.may_queue? and
           ExportChannels.can_send? invoice.client.invoice_format
         if invoice.client.sign_with_local_certificate?
@@ -1378,6 +1391,7 @@ class InvoicesController < ApplicationController
       end
       errors =  []
       transport = params[:transport] || 'uploaded'
+      params[:attachments] ||= []
       params[:attachments].each do |key, attachment_param|
         begin
           attachment = Attachment.find_by_token(attachment_param['token'])

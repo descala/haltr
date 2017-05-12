@@ -1,15 +1,17 @@
 <% if @project -%>
 <div class="chart_cashflow">
-  <%= render :partial => 'common/chart_headers' %>
+  <%= render partial: 'common/chart_headers' %>
   <h3><%= l(:chart_cashflow) %></h3>
+  <div class="wrapper-default">
   <%= select_tag "value", options_for_select({ t(:last_3_months) => :last_3_months,
                                                t(:last_year)     => :last_year,
                                                t(:all)           => :all },
                                              User.current.pref.others[:chart_cashflow]),
-    :data  => { :url => url_for(update_chart_preference_path(project_id: @project.id)) },
-    :id    => 'chart_cashflow',
-    :class => 'chart_prefs'
+    data:  { url: url_for(update_chart_preference_path(project_id: @project.id)) },
+    id:    'chart_cashflow',
+    class: 'chart_prefs form-control form-control-auto input-sm'
   %>
+  </div>
 
   <%
       currencies = @project.issued_invoices.group(:currency).count.keys
@@ -24,33 +26,34 @@
       invoices_sum = Money.new(invoices.sum('total_in_cents').to_i - invoices_paid,currency)
   -%>
   <fieldset>
-    <table class="cashflow">
-      <tr>
-        <th><%= l(:past_due) %>:</th>
-        <td class="past_due"><%=h money(due_invoices_sum) %></td>
-        <td>
-          <%= link_to("#{due_invoices.count} #{l(:label_invoice_plural)}",  invoices_past_due_path(@project, User.current.pref.others[:chart_cashflow]) ) if due_invoices.count > 0 %>
-        </td>
-        <td></td>
-      </tr>
-      <tr>
-        <th><%= l(:on_schedule) %>:</th>
-        <td class="on_schedule"><%=h money(invoices_sum) %></td>
-        <td>
-          <%= link_to("#{invoices.count} #{l(:label_invoice_plural)}",  invoices_on_schedule_path(@project, User.current.pref.others[:chart_cashflow]) ) if invoices.count > 0 %>
-        </td>
-      </tr>
-      <tr>
-        <th/>
-        <td colspan="3"><hr/></td>
-      </tr>
-      <tr>
-        <th><%= l(:label_invoice_total) %>:</th>
-        <td class="total"><%=h money(due_invoices_sum+invoices_sum)%></td>
-        <td><%= l(:label_not_paid) %></td>
-      </tr>
-    </table>
+    <div class="wrapper-table">
+      <table class="cashflow table table-striped">
+        <tfoot>
+          <tr>
+            <td class="bold"><%= l(:label_invoice_total) %>:</td>
+            <td class="total text-right bold"><%=h money(due_invoices_sum+invoices_sum)%></td>
+            <td><%= l(:label_not_paid) %></td>
+          </tr>
+        </tfoot>
+        <tbody>
+          <tr>
+            <td><%= l(:past_due) %>:</td>
+            <td class="past_due text-right text-negative bold"><%=h money(due_invoices_sum) %></td>
+            <td>
+              <%= link_to("#{due_invoices.count} #{l(:label_invoice_plural)}",  invoices_past_due_path(@project, User.current.pref.others[:chart_cashflow]) ) if due_invoices.count > 0 %>
+            </td>
+          </tr>
+          <tr>
+            <td><%= l(:on_schedule) %>:</td>
+            <td class="on_schedule text-right bold"><%=h money(invoices_sum) %></td>
+            <td>
+              <%= link_to("#{invoices.count} #{l(:label_invoice_plural)}",  invoices_on_schedule_path(@project, User.current.pref.others[:chart_cashflow]) ) if invoices.count > 0 %>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
   </fieldset>
-  <% end -%>
+<% end -%>
 </div>
 <% end -%>

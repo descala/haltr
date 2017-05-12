@@ -1,41 +1,30 @@
 <% if @invoice.invoice_img -%>
 
-<div id="invoice_img_edit_metadata">
+<div id="invoice_img_edit_metadata" class="row">
 
-  <div class="colu1">
+  <div class="col-xs-6">
     <img src="<%=project_invoice_img_path(@invoice.invoice_img, project_id: @project)%>" width="100%">
   </div>
 
-  <div class="colu2">
+  <div class="col-xs-6">
 
 <% end -%>
 
-<!--formulari-->
-<div class="seccio grup">
-  <div class="col span-2-de-2">
+<%= form_for @invoice.becomes(Invoice), url: {action: 'update', id: @invoice}, html: {method: :put}  do |f| %>
+  <div id="row-title" class="row">
 
-    <% if %w(sending sent registered accepted allegedly_paid closed).include?(@invoice.state) -%>
-      <div class="flash warning"><%=raw l(:warn_edit_invoice)%></div>
-    <% end -%>
-
-    <%= labelled_form_for :invoice, @invoice, :url => { :action => 'update', :id => @invoice }, :html => {:method => :put, :class => 'formee'}  do |f| %>
-      <%= render :partial => 'invoices/form', :locals => { :f => f } %>
-      <% if @invoice.original and @invoice.invoice_format != 'pdf' and !@invoice.modified_since_created? -%>
-        <%= f.submit l(:button_save), :name => 'save', :data=>{:confirm => l(:overriding_original_warn)} %>
-      <% else -%>
-        <%= f.submit l(:button_save), :name => 'save' %>
-      <% end -%>
-      <% unless @invoice.is_a? InvoiceTemplate or @invoice.is_a? DraftInvoice -%>
-        <% if @invoice.original and @invoice.invoice_format != 'pdf' and !@invoice.modified_since_created? -%>
-          <%= f.submit l(:button_save_and_send), :name => 'save_and_send', :data=>{:confirm => l(:overriding_original_warn)} %>
-        <% else -%>
-          <%= f.submit l(:button_save_and_send), :name => 'save_and_send' %>
-        <% end -%>
-      <% end -%>
-    <% end %>
-
+  <!--formulari-->
+  <% if %w(sending sent registered accepted allegedly_paid closed).include?(@invoice.state) -%>
+    <div class="flash warning col-xs-10"><%=raw l(:warn_edit_invoice)%></div>
+  <% end -%>
   </div>
+
+  <%= render partial: 'invoices/form', locals: {f: f} %>
+  <!-- warning: form partial leaves a div intencionally open -->
+
 </div>
+<% end %>
+
 <!--final formulari-->
 
 <% if @invoice.invoice_img -%>
@@ -44,13 +33,15 @@
 </div>
 <% end -%>
 
-
-
-
 <div id="new_client_wrapper" style="display:none;">
-  <%= render :partial => 'invoices/new_client', :locals => {:context => "edit_invoice"} %>
+  <div id="new_client_form">
+    <%= render partial: 'invoices/new_client', locals: {context: 'edit_invoice'} %>
+  </div>
+  <div class="overlay"></div>
 </div>
 
-<% content_for :sidebar do %>
-  <%= render_menu :invoices_menu, @project %>
-<% end %>
+<%=
+  content_for :header_tags do
+    stylesheet_link_tag 'bootstrap.vertical-tabs?v=2', plugin: 'haltr'
+  end
+%>

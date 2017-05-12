@@ -1,0 +1,16 @@
+<div class="well well-lg bg-premium">
+<div class="row">
+  <div class="col-xs-2 pad-top-7">
+    <%= image_tag 'premium.png', class: 'img-responsive' %>
+  </div>
+  <div class="col-xs-10">
+    <h3 class="white">
+      <strong><%= l :invoice_attachments_permission %></strong>
+    </h3>
+    <div class="set-of-buttons">
+      <%= link_to l(:more_info), "/#{I18n.locale}/plan-premium-profesional.html", class: 'btn btn-white btn-sm', target: '_blank' %>
+      <%= link_to l(:become_premium), my_account_path, class: 'btn btn-premium btn-sm' %>
+    </div>
+  </div>
+</div>
+</div>

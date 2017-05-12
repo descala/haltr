@@ -1,23 +1,21 @@
 <% bank_info_id = f.object.new_record? ? Time.now.to_i : f.object.id -%>
 
-<div class="seccio grup nested-fields">
-  <p class="col span-1-de-5">
-  <%= f.text_field :name, :no_label => true %>
-  </p>
+<tr class="nested-fields">
+  <td><%= f.text_field :name, class: 'form-control' %></td>
   <% if @company.bank_infos.reject {|bi| bi.bank_account.blank? }.present? -%>
-    <p class="col span-1-de-5">
-    <% unless f.object.bank_account.blank? -%>
-      <%= f.text_field :bank_account, :maxlength => 20, :size => 30, :no_label => true, :maxlength => 20, :disabled => true %>
-    <% end -%>
-    </p>
+    <td>
+      <% unless f.object.bank_account.blank? -%>
+        <%= f.text_field :bank_account, :maxlength => 20, :size => 30, :no_label => true, :maxlength => 20, :disabled => true, class: 'form-control' %>
+      <% end -%>
+    </td>
   <% end -%>
-  <p class="col span-2-de-5">
-  <%= f.text_field :iban, :size => 34, :no_label => true, :maxlength => 34, :class => 'iban', "data-url" => project_check_iban_path(@project), "data-span-for-result" => "iban#{bank_info_id}" %>
-  <span id="iban<%=bank_info_id%>" class=ownibanspan></span>
-  </p>
-  <p class="col span-1-de-5">
-  <%= f.text_field :bic, :no_label => true, :size => 11, :maxlength => 11, :style => "width: 78%" %>
-  <!-- cocoon -->
-  <%= link_to_remove_association image_tag('false.png'), f, :class=>'eliminar', :style => "margin-left: 8px; vertical-align: middle;" %>
-  </p>
-</div>
+  <td>
+    <%= f.text_field :iban, maxlength: 34, class: 'iban', data: { url: project_check_iban_path(@project), "span-for-result"=>"iban#{bank_info_id}" }, class: 'form-control' %>
+    <span id="iban<%=bank_info_id%>" class=ownibanspan></span>
+  </td>
+  <td><%= f.text_field :bic, maxlength: 11, class: 'form-control' %></td>
+  <td class="tax_remove w6p text-right">
+    <!-- cocoon -->
+    <%= link_to_remove_association "<i class='fa fa-trash' aria-hidden='true'></i>".html_safe, f %>
+  </td>
+</tr>

@@ -4,22 +4,23 @@
     <p><%=l(:with_date) %> <%= format_date @from %> - <%= format_date @to %> (<%=l(:field_due_date)%>)</p>
   </div>
 
-  <table class="taula-1 list" width="100%">
+
+  <table class="table">
     <% @invoices_by_payment_method.each do |method,invoices_pm| -%>
 
       <% next if invoices_pm.first.bank_info.nil? %>
 
-      <tr class="imparell">
-        <th><%=l("debit_through",:bank_account=>invoices_pm.first.bank_info.name)%></th>
+      <tr>
+        <th><%=l("debit_through",bank_account: invoices_pm.first.bank_info.name)%></th>
       </tr>
 
       <% invoices_pm.group_by(&:due_date).sort.each do |date,invoices| %>
 
         <tr>
           <td>
-            <table class="taula-1 list" width="100%">
+            <table class="table" width="100%">
 
-              <tr class="imparell">
+              <tr>
                 <th>
                   <%=l(:charge_bank_on_date)%> <b><%= format_date invoices.first.due_date %></b>.
                   <%=l(:field_amount)%> <b><%= money(invoices.sum(&:total)) %></b>
@@ -28,16 +29,18 @@
 
               <tr>
                 <td>
-                  <table class="taula-1 list" width="100%">
-                    <tr class="imparell">
-                      <th><%=l(:field_number)%></th>
-                      <th><%=l(:field_date)%></th>
-                      <th><%=l(:field_taxcode)%></th>
-                      <th><%=l(:field_amount)%></th>
-                    </tr>
+                  <table class="table table-striped table-hover" width="100%">
+                    <thead>
+                      <tr>
+                        <th><%=l(:field_number)%></th>
+                        <th><%=l(:field_date)%></th>
+                        <th><%=l(:field_taxcode)%></th>
+                        <th><%=l(:field_amount)%></th>
+                      </tr>
+                    </thead>
 
                     <% invoices.each do |i| -%>
-                      <tr class="<%= cycle("odd imparell", "even parell") %>">
+                      <tr>
                         <td><%= i.number %></td>
                         <td><%= format_date i.date %></td>
                         <td><%= i.client.taxcode %></td>

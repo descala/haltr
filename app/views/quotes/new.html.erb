@@ -1,23 +1,12 @@
 <!--formulari-->
-<div class="seccio grup">
-  <div class="col span-2-de-2">
-
-    <%= labelled_form_for :invoice, @invoice, :url => { :action => 'create', :project_id => @project }, :html => {:class=>'formee'} do |f| %>
-      <%= render :partial => 'quotes/form', :locals => { :f => f } %>
-      <%= f.submit l(:button_create), :name => 'create' %>
-      <%= f.submit l(:button_create_and_send), :name => 'create_and_send' %>
-    <% end %>
-
-  </div>
-</div>
+<%= form_for :invoice, url: {action: 'create', project_id: @project} do |f| %>
+  <% f.object = @invoice -%>
+  <%= render partial: 'quotes/form', locals: { f: f } %>
+<% end %>
 <!--final formulari-->
 
 <div id="new_client_wrapper" style="display:none;">
-  <%= render :partial => 'invoices/new_client', :locals => {:context => "new_invoice"} %>
+  <%= render partial: 'invoices/new_client', locals: {context: "new_invoice"} %>
 </div>
 
 <% html_title(l(:label_quote_new)) -%>
-
-<% content_for :sidebar do %>
-  <%= render_menu :invoices_menu, @project %>
-<% end %>

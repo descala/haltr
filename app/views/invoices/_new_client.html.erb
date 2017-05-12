@@ -1,19 +1,21 @@
 <div class="new_client_box">
-  <div id="new_client">
+  <div>
     <h2><%= l(:label_company_new) %></h2>
-    <%= labelled_form_for(:client, Client.new(:country=>@project.company.country,
-                           :currency=>@project.company.currency,
-                           :language=>User.current.language),
-         :url     => {:controller=>'clients', :action=>'create', :project_id=>@project},
-         :html    => {:class => 'formee'},
-         :remote  => true,
-         :lang    => current_language
+    <%= form_for(Client.new(country: @project.company.country,
+                           currency: @project.company.currency,
+                           language: User.current.language),
+         url: {controller: 'clients', action: 'create', project_id: @project},
+         remote: true,
+         lang: current_language
        ) do |form| -%>
 
-      <%= render :partial=>'clients/form', :locals=>{ :f=>form, :context=>context, :client=>Client.new() } %>
-      <%= submit_tag l(:button_create) %>
-      <%= button_tag l(:cancel), type: :button, class: 'formee-button', onclick: "$('#new_client_wrapper').hide();" %>
+      <%= render partial: 'clients/form', locals: { f: form, context: context, client: Client.new() } %>
+      <div class="form-group">
+      <div class="col-xs-12 text-right">
+      <%= submit_tag l(:button_create), class: 'btn btn-primary' %>
+      <%= button_tag l(:cancel), type: :button, onclick: "$('#new_client_wrapper').hide();", class: 'btn btn-default' %>
+      </div>
+      </div>
     <% end -%>
   </div>
 </div>
-<div class="overlay"></div>

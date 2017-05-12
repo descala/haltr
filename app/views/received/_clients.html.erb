@@ -2,8 +2,8 @@
 <%= select :invoice,
   :client_id,
   clients_for_select,
-  { :selected => (@created_client || @invoice.client_id), :include_blank => true },
-  :class => "formee-medium" %>
-<span class="mes">
-  <%=link_to_function(l(:label_company_new),"$('#new_client_wrapper').show();")%>
+  { selected: (@created_client || @invoice.client_id), include_blank: true },
+  class: "form-control" %>
+<span class="help-block">
+  <%=link_to_function(l(:label_company_new),"$('#new_client_wrapper').show();", class: 'icon-fa icon-fa-plus-sign black')%>
 </span>

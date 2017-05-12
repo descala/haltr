@@ -1,26 +1,21 @@
 class ClientOfficesController < ApplicationController
 
-
   menu_item Haltr::MenuItem.new(:companies,:client_offices)
 
   layout 'haltr'
   helper :haltr
-
   helper :sort
   include SortHelper
-
   before_filter :find_client
-
   include CompanyFilter
   before_filter :check_for_company
-
   before_filter :authorize
 
   def index
     sort_init 'name', 'asc'
     sort_update %w(name city)
 
-    client_offices = @client.nil? ? @project.client_offices:  @client.client_offices
+    client_offices = @client.client_offices
 
     unless params[:name].blank?
       name = "%#{params[:name].strip.downcase}%"
@@ -32,7 +27,6 @@ class ClientOfficesController < ApplicationController
     @client_office_pages = Paginator.new @client_office_count, @limit, params['page']
     @offset ||= @client_office_pages.offset
     @client_offices = client_offices.order(sort_clause).limit(@limit).offset(@offset).to_a
-
   end
 
   def new
@@ -47,7 +41,7 @@ class ClientOfficesController < ApplicationController
     @client_office = ClientOffice.new(params[:client_office])
     @client_office.client = @client
     if @client_office.save
-      redirect_to client_client_offices_path(@client), notice: l(:notice_successful_create)
+      redirect_to client_path(@client), notice: l(:notice_successful_create)
     else
       render action: :new
     end
@@ -60,7 +54,7 @@ class ClientOfficesController < ApplicationController
   def update
     @client_office = @client.client_offices.find(params[:id])
     if @client_office.update_attributes(params[:client_office])
-      redirect_to client_client_offices_path(@client), notice: l(:notice_successful_update)
+      redirect_to client_path(@client), notice: l(:notice_successful_create)
     else
       render action: :edit
     end
@@ -74,12 +68,8 @@ class ClientOfficesController < ApplicationController
   private
 
   def find_client
-    if params.has_key? :client_id
-      @client = Client.find params[:client_id]
-      @project = @client.project
-    else
-      @project = Project.find params[:project_id]
-    end
+    @client = Client.find params[:client_id]
+    @project = @client.project
   rescue ActiveRecord::RecordNotFound
     render_404
   end

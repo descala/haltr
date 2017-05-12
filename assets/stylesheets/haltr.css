@@ -78,7 +78,7 @@ th.money, td.money, .money{
   margin-top: -26px;
 }
 .invoice-navigator {
-  float: right !important;
+  margin-right: 5px !important;
 }
 
 .invoice-channel-links h3, .invoice-events h3 {
@@ -95,7 +95,7 @@ th.money, td.money, .money{
   margin: 20px 50px 0 50px;
 }
 .overlay {
-  position:absolute; top:0; left:0;
+  position:fixed; top:0; left:0;
   width:100%; height:100%;
   /* width: 1138px; height: 1132px; */
   z-index: 1001;
@@ -103,16 +103,20 @@ th.money, td.money, .money{
   opacity: 0.9;
 }
 
-.new_client_box {
-  position:absolute; top:115px; left:50%;
-  margin-left: -325px;
-  background-color: white;
-  width: 650px;
-  z-index: 1002;
-  border: 4px solid #333333;
+#new_client_form {
+  position: absolute; top: 115px; left: 50%;
 }
 
-#new_client {
+.new_client_box {
+  position: relative;
+  left: -50%;
+  background-color: white;
+  z-index: 1002;
+  border: 4px solid #333333;
+  width: 950px;
+}
+
+.new_client_box form, .new_client_box>div {
   margin: 30px;
 }
 
@@ -149,6 +153,7 @@ select.tax {
 
 .pastdue {
   color: red !important;
+  white-space: nowrap;
 }
 .halfpaid {
   color: blue;
@@ -199,7 +204,7 @@ table.invoice_lines {
   text-decoration: none;
   /* shadow */
   text-shadow: 0 0 5px #444;
-  width: 120px;
+  width: 230px;
 }
 
 .ribbon-new, .ribbon-received {
@@ -250,9 +255,6 @@ div.audited-changes table tr.new-values {
 div.audited-changes table tr.old-values {
   background-color: #fdd;
 }
-#link_requests {
-  margin-bottom: 20px;
-}
 div.action-linked_to_mine #companies {
   margin-bottom: 20px;
 }
@@ -270,29 +272,8 @@ div.action-linked_to_mine #companies {
   border: 1px solid #666666;
   overflow: hidden;
 }
-#invoice_img .colu1 {
-  display: inline-block;
-  margin-right: 10px;
-  vertical-align: top;
-}
-#invoice_img .colu2 {
-  text-align: left;
-  display: inline-block;
-  max-width: 210px;
-}
 #invoice_img h3 {
   padding: 0;
-}
-#invoice_img_edit_metadata .colu1 {
-  margin-top: 20px;
-  border: 1px dotted;
-  float: left;
-  width: 40%;
-}
-#invoice_img_edit_metadata .colu2 {
-  float: left;
-  width: 45%;
-  margin-left: 10px;
 }
 #invoice_preview_small_box {
   border: 1px dotted;
@@ -309,9 +290,6 @@ div.action-linked_to_mine #companies {
 }
 #invoice_preview_small_box .invoice-calculations td {
   padding-right: 2px;
-}
-.controller-received select#invoice_client_id {
-  width: 50%;
 }
 table.received_show {
   width: auto;
@@ -342,11 +320,6 @@ span#attachments_fields input.description {
 }
 div#invoice_img span#send_info {
   visibility: hidden;
-}
-span#send_info {
-  position: absolute;
-  top: -13px;
-  right: 0px;
 }
 
 .rectangle-txt {
@@ -426,12 +399,6 @@ span#send_info {
   padding: 10px;
 }
 
-.controller-clients .events {
-  border: 1px outset grey;
-  margin-bottom: 10px;
-  padding: 10px;
-}
-
 .controller-clients .invoices-box {
   border: 1px outset grey;
   margin-bottom: 10px;
@@ -467,10 +434,94 @@ dd, dt {
   margin-left: 240px;
 }
 div.accept_refuse_form {
-  border: 1px dashed;
+  border: 1px solid;
   margin-bottom: 10px;
   padding: 20px;
 }
-p#client_select.pdf select#invoice_client_id {
-  width: 100% !important;
+label.radio {
+  display: inline;
+  margin-left: 45px;
+}
+div#invoice_lines table.table-lines {
+  margin-bottom: -1px;
+}
+span.table-lines {
+  background: #CAE0EA;
+  margin-top: -15px;
+  border-radius: 0px;
+}
+span#attachments_fields {
+  display: block;
+  margin-bottom: 15px;
+}
+span#attachments_fields span {
+  background: #CAE0EA;
+  padding: 15px;
+}
+span#attachments_fields span input {
+  border-radius: 6px;
+  border: 1px solid #EEEEEE;
+  background: #FFFFFF;
+  font-size: 14px;
+  box-shadow: none;
+  height: 34px;
+  padding: 6px 12px;
+  transition: border-color ease-in-out .15s, box-shadow ease-in-out .15s;
+}
+span.field_with_errors input {
+  border: 1px solid red !important;
+}
+div#row-title {
+  margin-right: 0px;
+  padding-left: 2px;
+}
+.table.table-taxes, .table.table-taxes > thead tr th, .table.table-taxes > tfoot tr td {
+  background: #CAE0EA;
+  padding: 10px 10px 10px 10px;
+}
+.table.table-taxes {
+  border-collapse: separate;
+}
+.table.table-bank-info, .table.table-bank-info > thead tr th, .table.table-bank-info > tfoot tr td {
+  background: #CAE0EA;
+  padding: 10px 10px 10px 10px;
+}
+.table.table-bank-info {
+  border-collapse: separate;
+}
+.table.table-company-offices, .table.table-company-offices> thead tr th, .table.table-company-offices> tfoot tr td {
+  background: #CAE0EA;
+  padding: 10px 10px 10px 10px;
+}
+.table.table-company-offices {
+  border-collapse: separate;
+}
+tr.no-padding td {
+  padding: 0 !important;
+}
+div.wrapper-element {
+  margin-bottom: 40px;
+}
+div.wrapper-element form {
+  display: inline-block;
+}
+a.icon-fa-send.disabled {
+  color: #921b1b !important;
+}
+ul.pages li span:hover.disabled {
+  background-color: #F0F0F0 !important;
+}
+div.wrapper-pagination-results label {
+  padding-top: 5px;
+}
+td.long-td {
+  max-width: 150px;
+  text-overflow: ellipsis;
+  overflow: hidden;
+}
+select#invoice_company_office_id {
+  background-color: white;
+}
+textarea.textarea-auto {
+  resize: vertical;
 }

@@ -10,18 +10,21 @@ $(document).ready(function() {
 $(document).ready(function() {
   $('#ccc2iban').on('click', function (event) {
     var ccc=prompt('Enter spanish CCC');
-    var for_result = $('#client_iban');
-    $.ajax({
-      url: $(this).data('url'),
-      data: "ccc="+ccc,
-      method: 'get',
-      dataType: 'text',
-      async: false
-    }).done( function(iban) {
-      for_result.val(iban);
-    });
+    if (ccc != null && ccc != '') {
+      var for_result = $('#client_iban');
+      $.ajax({
+        url: $(this).data('url'),
+        data: "ccc="+ccc,
+        method: 'get',
+        dataType: 'text',
+        async: false
+      }).done( function(iban) {
+        if (iban != null && iban != '') {
+          for_result.val(iban);
+        }
+      });
+    }
     return false;
-
   });
 });
 

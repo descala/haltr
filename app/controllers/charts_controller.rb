@@ -148,6 +148,9 @@ class ChartsController < ApplicationController
       preference.others[name.to_sym]=value
       preference.save
     end
+    if params[:client_id]
+      @client = @project.clients.find params[:client_id]
+    end
     @chart_name=name
     respond_to do |format|
       format.js

@@ -1,148 +1,272 @@
-<div class="seccio grup">
-<div class="col span-2-de-2">
-  <ul class="menu-rapid">
-    <li><%= link_to_if_authorized l("label_company_new"), new_project_client_path(@project), :class => 'icon icon-add' %></li>
-    <li><%= link_to_if_authorized l(:button_edit), { :action => 'edit', :id => @client }, :class => 'icon icon-edit' %></li>
-    <% if @client.invoices.any? -%>
-      <li><%= link_to_if_authorized l(:button_delete), {:action=>'destroy',:id=>@client},
-        :data=>{:confirm => l(:confirm_delete_client_with_invoices, :issued=>@client.issued_invoices.count, :received=>@client.received_invoices.count, :templates=>@client.invoice_templates.count )}, :method => :delete, :class=>'icon icon-del', :title=>l(:button_delete) %></li>
+<h2><%= link_to "", project_clients_path(@project), class: 'fa fa-long-arrow-left fa-big fa-left', aria: {hidden: true} %> <%= @client.name %></h2>
+
+<div class="wrapper-default">
+  <div class="row">
+    <div class="col-xs-10">
+      <ul class="list-inline no-btn">
+        <li><%= link_to l(:button_edit), {action: 'edit', id: @client}, class: 'icon-fa icon-fa-pencil' %></li>
+        <% if @client.invoices.any? -%>
+          <li><%= link_to l(:button_delete), {action: 'destroy', id: @client},
+            data:{confirm: l(:confirm_delete_client_with_invoices, issued: @client.issued_invoices.count, received: @client.received_invoices.count, templates: @client.invoice_templates.count)}, method: :delete, class: 'icon-fa icon-fa-trash', title: l(:button_delete) %></li>
+        <% else -%>
+          <li><%= link_to l(:button_delete), {action:'destroy', id: @client}, data: {confirm: l(:text_are_you_sure)}, method: :delete, class: 'icon-fa icon-fa-trash', title: l(:button_delete) %></li>
+        <% end -%>
+      </ul>
+    </div>
+    <div class="col-xs-2">
+      <%= render partial: 'common/navigation_links', locals: {obj: @client} %>
+    </div>
+  </div>
+</div>
+
+<div class="wrapper-element">
+  <div id="workspace1">
+    <p>
+    <strong class="s16"><%= h @client.name %></strong>
+    <% if @client.company -%>
+      <span class="marg-left-15 icon-fa icon-fa-chain"><%= l :linked %></span>
     <% else -%>
-      <li><%= link_to_if_authorized l(:button_delete), {:action=>'destroy',:id=>@client}, :data=>{:confirm=>l(:text_are_you_sure)}, :method=>:delete, :class=>'icon icon-del', :title=>l(:button_delete) %></li>
+      <span class="marg-left-15 icon-fa icon-fa-chain-broken"><%= l :not_linked %></span>
     <% end -%>
-    <% if @client.next%>
-      <li class="invoice-navigator"><%=h link_to_if_authorized l(:label_next), :action => 'show', :id => @client.next %></li>
-    <% end %>
-    <% if @client.previous %>
-      <li class="invoice-navigator"><%=h link_to_if_authorized l(:label_previous), :action => 'show', :id => @client.previous %></li>
-    <% end %>
-  </ul>
-</div>
+    </p>
+    <div class="row">
+      <div class="col-xs-4">
+        <address>
+          <div class="address"><%= h @client.address %></div>
+          <div class="address"><%= h @client.address2 %></div>
+          <span class="postalcode"><%= h @client.postalcode %></span> <span class="city"><%= @client.city %></span>
+          <div class="province"><%= h @client.province %></div>
+          <div class="country"><%= h @client.country_name %></div>
+        </address>
+      </div>
+      <div class="col-xs-4">
+        <p>
+        <strong><%= l :field_taxcode %>:</strong> <%= h @client.taxcode %><br />
+        <strong><%= l :field_invoice_format %>:</strong> <%= ExportChannels.l(@client.invoice_format) %><br />
+        <% if @client.terms != '---' -%>
+          <strong><%= l :field_terms %>:</strong> <%= h client_terms @client %>
+        <% end -%>
+        </p>
+      </div>
+
+      <div class="col-xs-4">
+        <p>
+        <%= mail_to @client.email, @client.email, class: 'icon-fa icon-fa-fw icon-fa-envelope' %><br />
+        <span class="icon-fa icon-fa-fw icon-fa-phone"><%= h @client.phone %></span><br />
+        <span class="icon-fa icon-fa-fw icon-fa-globe"><%= h ll(@client.language,:general_lang_name)%></span>
+        </p>
+      </div>
+    </div>
+  </div>
 </div>
 
-<div class="splitcontentleft">
-  <div class="client-info">
-    <div class="contextual">
-    <%= link_to_if_authorized l(:label_person_new), new_client_person_path(@client), :class => 'icon icon-add' %>
-    <%= link_to_if_authorized l(:label_client_office_new), new_client_client_office_path(@client), :class => 'icon icon-add' %>
+<div class="row">
+  <div class="col-xs-4">
+
+    <div class="mypage-box">
+      <div>
+        <h3><%= l :label_people %></h3>
+        <div class="wrapper-default">
+          <ul class="list-inline no-btn">
+            <li><%= link_to l(:label_person_new), new_client_person_path(@client), class: 'icon-fa icon-fa-plus' %></li>
+          </ul>
+        </div>
+        <div class="panel">
+          <div class="panel-body">
+            <% @client.people.each_with_index do |person, i| -%>
+              <div>
+                <p>
+                <%= link_to '', edit_client_person_path(@client, person), class: 'fa fa-pencil pull-right', aria: {hidden: true} %>
+                <strong class="s16"><%= h person.name %></strong>
+                </p>
+                <p>
+                <% if person.email.present? -%>
+                  <%= mail_to person.email, person.email, class: 'icon-fa icon-fa-fw icon-fa-envelope' %><br />
+                <% end -%>
+                <% if person.phone.present? -%>
+                  <span class="icon-fa icon-fa-fw icon-fa-phone"><%= h person.phone %></span><br />
+                <% end -%>
+                <% if person.info.present? -%>
+                  <span class="icon-fa icon-fa-fw icon-fa-info"><%= person.info %></span>
+                <% end -%>
+                </p>
+              </div>
+              <% unless i == @client.people.size - 1 -%>
+                <hr class="form-elements">
+              <% end -%>
+            <% end -%>
+          </div>
+        </div>
+      </div>
     </div>
-    <h3><%=h @client.name %></h3>
-    <address>
-      <div class="address"><%=h @client.full_address %></div>
-      <span class="postalcode"><%=h @client.postalcode %></span> <span class="city"><%=h @client.city %></span>
-      <div class="province"><%=h @client.province %></div>
-      <div class="country"><%=h @client.country_name %></div>
-    </address>
-    <div><%= link_to(@client.website, "http://#{@client.website}", :target=>'_blank') if @client.website%></div>
-    <div><%= mail_to(@client.email) %></div>
-    <div><%= @client.phone %></div>
-    <div><%= ll(@client.language,:general_lang_name)%></div>
-    <div><strong><%=h l(:field_taxcode) %></strong><span class="tax-id"> <%=h @client.taxcode %></span></div>
-    <div><%= ExportChannels.l(@client.invoice_format) %></div>
-    <div title="<%= @client.currency %> - <%=Money::Currency.find(@client.currency).name %>"><%= client_payment_method_info(@client) %></div>
-    <% if @client.terms != '---' -%>
-      <div><%= l(:field_terms) %> <%= client_terms(@client) %></div>
-    <% end -%>
+
+    <div class="mypage-box">
+      <div>
+        <h3><%= l :label_client_offices %></h3>
+        <div class="wrapper-default">
+          <ul class="list-inline no-btn">
+            <li><%= link_to l(:label_client_office_new), new_client_client_office_path(@client), class: 'icon-fa icon-fa-plus' %></li>
+          </ul>
+        </div>
+        <div class="panel">
+          <div class="panel-body">
+            <% @client.client_offices.each_with_index do |client_office, i| -%>
+              <div>
+                <p>
+                <%= link_to '', edit_client_client_office_path(@client, client_office), class: 'fa fa-pencil pull-right', aria: {hidden: true} %>
+                <strong class="s16"><%= h client_office.name %></strong>
+                </p>
+                <address>
+                  <div class="address"><%= h client_office.address %></div>
+                  <div class="address"><%= h client_office.address2 %></div>
+                  <span class="postalcode"><%= h client_office.postalcode %></span>
+                  <span class="city"><%= h client_office.city %></span>
+                  <div class="province"><%= h client_office.province %></div>
+                  <div class="country"><%= h client_office.country_name %></div>
+                </address>
+              </div>
+              <% unless i == @client.client_offices.size - 1 -%>
+                <hr class="form-elements">
+              <% end -%>
+            <% end -%>
+          </div>
+        </div>
+      </div>
+    </div>
+
   </div>
 
-  <% for person in @people -%>
-    <div class="people-info">
-      <div class="contextual">
-        <%= link_to_if_authorized(l(:button_edit), edit_person_path(person), :class => 'icon icon-edit') %>
-      </div>
-      <h3><%= l(:label_person) %>: <%=h person.first_name %> <%=h person.last_name %></h3>
-      <div><%=h person.info%></div>
-      <div><%=mail_to(person.email) %><%= " (#{l(:field_send_invoices_by_mail)})" if person.send_invoices_by_mail %></div>
-      <div><%=h person.phone_office %></div>
-      <div><%=h person.phone_mobile %></div>
-    </div>
-  <% end -%>
+  <div class="col-xs-8">
 
-  <% for client_office in @client_offices -%>
-    <div class="people-info">
-      <div class="contextual">
-        <%= link_to_if_authorized(l(:button_edit), edit_client_client_office_path(@client, client_office), :class => 'icon icon-edit') %>
+    <div class="mypage-box">
+      <h3><%= l :label_issued %></h3>
+      <div class="wrapper-default">
+        <div class="row">
+          <div class="col-xs-9">
+            <ul class="list-inline no-btn">
+              <li><%= link_to_if_authorized l(:button_new_invoice), project_client_new_invoice_path(project_id: @project, client: @client), class: 'icon-fa icon-fa-file' -%></li>
+            </ul>
+          </div>
+          <% if @client.issued_invoices.any? -%>
+            <div class="col-xs-3 text-right">
+              <%= link_to "#{l(:label_all_invoices)} (#{@client.issued_invoices.size})", project_invoices_path(project_id: @project, client_id: @client), class: 'btn btn-primary', role: 'button' %>
+            </div>
+          <% end -%>
+        </div>
       </div>
-      <h3><%= l(:label_client_office) %>: <%=h client_office.name %></h3>
-      <address>
-        <div class="address"><%=h client_office.full_address %></div>
-        <span class="postalcode"><%=h client_office.postalcode %></span> <span class="city"><%=h client_office.city %></span>
-        <div class="province"><%=h client_office.province %></div>
-        <div class="country"><%=h client_office.country_name %></div>
-      </address>
-    </div>
-  <% end -%>
-
-  <% if @events.any? %>
-    <div class="events">
-      <p class="contextual"><%= link_to l(:label_any), project_events_path(project_id: @project) %></p>
-      <h3><%= l(:events)%></h3>
-      <% @events.each do |event| -%>
-        <div><%= format_time event.created_at %> <%= link_to(event.invoice.number, invoice_path(event.invoice), :title => invoice_summary(event.invoice)) -%> <%=l(event.name)%></div>
+      <% if @client.issued_invoices.any? -%>
+        <div class="wrapper-table">
+          <table class="table table-striped table-hover">
+            <tbody class="clickable-row">
+              <% @client.issued_invoices.last(10).each do |invoice| -%>
+                <tr data-href="<%= invoice_path(invoice) %>">
+                  <td><%= link_to invoice.number, invoice_path(invoice) %></td>
+                  <td><%= h invoice.date %></td>
+                  <td class="nowrap"><strong><%= h money invoice.total %></strong></td>
+                  <td><%= h l "state_#{invoice.state}" %></td>
+                </tr>
+              <% end -%>
+            </tbody>
+          </table>
+        </div>
+      <% else -%>
+        <div class="panel">
+          <div class="panel-body panel-body-pad text-center">
+            <%= link_to l(:label_invoice_new), project_client_new_invoice_path(project_id: @project, client: @client) %> <%= l :for_this_company %>
+          </div>
+        </div>
       <% end -%>
-      <% if @events_count > 10 %>
-        <div>...</div>
-      <% end %>
     </div>
-  <% end %>
-</div>
 
-<div class="splitcontentright">
+    <div class="mypage-box">
+      <h3><%= l :label_received %></h3>
+      <div class="wrapper-default">
+        <div class="row">
+          <div class="col-xs-9">
+            <ul class="list-inline no-btn">
+              <li><%= link_to l(:label_import), project_received_upload_path(@project), class: 'icon-fa icon-fa-upload' %></li>
+            </ul>
+          </div>
+          <% if @client.received_invoices.any? -%>
+            <div class="col-xs-3 text-right">
+              <%= link_to "#{l(:label_all_invoices)} (#{@client.received_invoices.size})", project_received_index_path(project_id: @project, client_id: @client), class: 'btn btn-primary', role: 'button' %>
+            </div>
+          <% end -%>
+        </div>
+      </div>
+      <% if @client.received_invoices.any? -%>
+        <div class="wrapper-table">
+          <table class="table table-striped table-hover">
+            <tbody class="clickable-row">
+              <% @client.received_invoices.last(10).each do |invoice| -%>
+                <tr data-href="<%= received_invoice_path(invoice) %>">
+                  <td><%= link_to invoice.number, received_invoice_path(invoice) %></td>
+                  <td><%= h invoice.date %></td>
+                  <td><%= h invoice.client.name %></td>
+                  <td class="nowrap"><strong><%= h money invoice.total %></strong></td>
+                  <td><%= h l "state_#{invoice.state}" %></td>
+                </tr>
+              <% end -%>
+            </tbody>
+          </table>
+        </div>
+      <% else -%>
+        <div class="panel">
+          <div class="panel-body panel-body-pad text-center">
+            <%= link_to l(:label_received_invoice_new), project_received_upload_path(@project) %>
+          </div>
+        </div>
+      <% end -%>
+    </div>
 
-  <div class="invoices-box">
+    <div class="mypage-box">
+      <h3><%= l :label_invoice_template_plural %></h3>
+      <div class="wrapper-default">
+        <div class="row">
+          <div class="col-xs-9">
+            <ul class="list-inline no-btn">
+              <li><%= link_to l(:label_invoice_template_new), new_project_invoice_template_path(project_id: @project, client: @client) %></li>
+            </ul>
+          </div>
+          <% if @client.invoice_templates.any? -%>
+            <div class="col-xs-3 text-right">
+              <%= link_to "#{l(:label_all_invoices)} (#{@client.invoice_templates.size})", project_invoice_templates_path(project_id: @project, client_id: @client), class: 'btn btn-primary', role: 'button' %>
+            </div>
+          <% end -%>
+        </div>
+      </div>
+      <% if @client.invoice_templates.any? -%>
+        <div class="wrapper-table">
+          <table class="table table-striped table-hover">
+            <tbody class="clickable-row">
+              <% @client.invoice_templates.last(10).each do |invoice| -%>
+                <tr data-href="<%= invoice_template_path(invoice) %>">
+                  <td><%= link_to "##{invoice.id}", invoice_template_path(invoice) %></td>
+                  <td><%= h invoice.date%></td>
+                  <td><%= h invoice.client.name %></td>
+                  <td class="nowrap"><strong><%= h money invoice.total %></strong></td>
+                </tr>
+              <% end -%>
+            </tbody>
+          </table>
+        </div>
+      <% else -%>
+        <div class="panel">
+          <div class="panel-body panel-body-pad text-center">
+            <%= link_to l(:label_invoice_template_new), new_project_invoice_template_path(project_id: @project, client: @client) %> <%= l :for_this_company %>
+          </div>
+        </div>
+      <% end -%>
+    </div>
 
-    <h3><%= l(:label_issued)%> <%= link_to_if_authorized("(#{@client.issued_invoices.count})", project_invoices_path(:project_id=>@project, :client_id=>@client)) %></h3>
-    <%= link_to_if_authorized l(:button_new_invoice), project_client_new_invoice_path(:project_id=>@project,:client=>@client), :class => 'icon icon-add' -%>
-    <% @client.issued_invoices.order('date desc, created_at desc').limit(10).each do |invoice| %>
-      ,
-      <%= link_to(invoice.number, invoice_path(invoice), :title => invoice_summary(invoice), :class => invoice.past_due? ? 'pastdue' : nil ) -%>
-    <% end %>
-    <%= " ..." if @client.issued_invoices.count > 10 %>
+    <div class="mypage-box">
+      <%= render partial: 'my/blocks/chart_invoice_status' %>
+    </div>
 
-    <h3><%= l(:label_invoice_template_plural)%> <%= link_to_if_authorized("(#{@client.invoice_templates.count})", project_invoice_templates_path(:project_id=>@project, :client_id=>@client)) %></h3>
-    <%= link_to_if_authorized l(:label_invoice_template_new), project_client_new_invoice_template_path(:project_id=>@project,:client=>@client), :class => 'icon icon-add' %>
-    <% @client.invoice_templates.order('date desc, created_at desc').limit(10).each do |template| %>
-      ,
-      <%= link_to(template.number, invoice_template_path(template), :title => invoice_summary(template)) %>
-    <% end %>
-    <%= " ..." if @client.invoice_templates.count > 10 %>
-    <% if @client.template_invoice_lines.any? %>
-      <table class="line-items" border="0" cellpadding="0" cellspacing="0">
-        <thead>
-          <tr>
-            <td colspan="2"></td>
-          </tr>
-        </thead>
-        <tbody>
-          <% @client.template_invoice_lines.each do |line| %>
-            <tr>
-              <td><%= line.description %></td>
-              <td class="line-total"><%=h money(Haltr::Utils.to_money(line.taxable_base)) %></td>
-            </tr>
-          <% end %>
-          <tr>
-            <td colspan="2" class="invoice-templates-total line-total"><%=h money(@templates_total)%></td>
-          </tr>
-        </tbody>
-      </table>
-    <% end %>
-
-    <h3><%= l(:label_received) %> <%= link_to_if_authorized("(#{@client.received_invoices.count})", {:controller=>'received', :action=>'index', :project_id=>@project, :client_id=>@client}, :title=>l(:label_received)) %></h3>
-    <%= link_to_if_authorized l(:label_import), project_received_import_path(@project), :class => 'icon icon-add' %>
-    <% @client.received_invoices.order('created_at desc').limit(10).each do |invoice| %>
-      ,
-      <%= link_to(invoice.number, received_invoice_path(invoice), :title => invoice_summary(invoice)) %>
-    <% end %>
-    <%= " ..." if @client.received_invoices.count > 10 %>
+    <div class="mypage-box">
+      <%= render partial: 'my/blocks/chart_events' %>
+    </div>
 
   </div>
 
-  <%= render :partial => "my/blocks/chart_invoice_status" %>
-
 </div>
-
-<% content_for :sidebar do %>
-  <%= render_menu :companies_menu, @project %>
-<% end %>
-<% content_for :header_tags do %>
-  <%= stylesheet_link_tag 'minimal', :plugin => 'haltr' %>
-<% end %>

@@ -7,8 +7,12 @@ class TaxcodeValidatorTest < ActiveSupport::TestCase
       country: 'es',
       name: 'test',
       language: 'es',
-      project_id: 1
+      project_id: 1,
+      company_identifier: '123'
     )
+    assert !client.valid?
+    assert_equal 'VAT ID Number cannot be blank', client.errors.full_messages.join
+    client.taxcode = 'AAAAAAAAAAA'
     assert !client.valid?
     assert_equal 'VAT ID Number is not a valid Spanish vat number', client.errors.full_messages.join
     client.taxcode = 'ESP1700000A'
@@ -23,13 +27,13 @@ class TaxcodeValidatorTest < ActiveSupport::TestCase
       project_id: 1
     )
     assert !client.valid?
-    assert_equal 'Organization ID/Company Registration Number cannot be blank', client.errors.full_messages.join(' ')
+    assert_equal 'VAT ID Number cannot be blank', client.errors.full_messages.join(' ')
     client.taxcode = '123456789'
     assert client.valid?, client.errors.full_messages.join(' ')
     client.taxcode = ''
     assert !client.valid?
     client.company_identifier = '1234'
-    assert client.valid?
+    assert client.valid?, client.errors.full_messages.join(' ')
   end
 
   test 'fr clients require taxcode or company_identifier' do
@@ -40,13 +44,13 @@ class TaxcodeValidatorTest < ActiveSupport::TestCase
       project_id: 1
     )
     assert !client.valid?
-    assert_equal 'Organization ID/Company Registration Number cannot be blank', client.errors.full_messages.join(' ')
-    client.taxcode = '12345678901'
+    assert_equal 'VAT ID Number cannot be blank', client.errors.full_messages.join(' ')
+    client.taxcode = 'FR60528551658'
     assert client.valid?, client.errors.full_messages.join(' ')
     client.taxcode = ''
     assert !client.valid?
     client.company_identifier = '1234'
-    assert client.valid?
+    assert client.valid?, client.errors.full_messages.join(' ')
   end
 
 end

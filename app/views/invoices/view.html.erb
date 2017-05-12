@@ -35,9 +35,9 @@
 <% end %>
 
 <% content_for :header_tags do %>
-  <%= stylesheet_link_tag 'minimal', :plugin => 'haltr' %>
+  <%= stylesheet_link_tag 'minimal?v=2', :plugin => 'haltr' %>
   <% if @invoice_xslt_html -%>
-    <%= stylesheet_link_tag 'facturae_xslt_viewer', :plugin => 'haltr' %>
-    <%= javascript_include_tag "facturae_xslt_viewer", :plugin => "haltr"%>
+    <%= stylesheet_link_tag 'facturae_xslt_viewer?v=2', :plugin => 'haltr' %>
+    <%= javascript_include_tag "facturae_xslt_viewer?v=2", :plugin => "haltr"%>
   <% end -%>
 <% end %>

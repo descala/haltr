@@ -3,6 +3,7 @@
   <%= render :partial => 'common/chart_headers' %>
 
   <h3><%=l('chart_top_clients')%></h3>
+  <div class="wrapper-default">
   <%= select_tag "value", options_for_select({t(:last_year_by_month)=>"last_year_by_month",
                                               t(:last_month_by_week)=>"last_month_by_week",
                                               t(:all_by_year)=>"all_by_year",
@@ -10,12 +11,15 @@
                                              User.current.pref.others[:chart_top_clients]),
                  :data  => { :url => url_for(update_chart_preference_path(project_id: @project.id)) },
                  :id    => 'chart_top_clients',
-                 :class => 'chart_prefs'
+                 :class => 'chart_prefs form-control form-control-auto input-sm'
   %>
+  </div>
 
   <% haltr_projects.each do |project| %>
     <% currencies = project.issued_invoices.group(:currency).count.keys -%>
-    <h3><%= project.company.name if haltr_projects.size > 1 %></h3>
+    <% if haltr_projects.size > 1 -%>
+      <h3><%= project.company.name %></h3>
+    <% end -%>
     <% currencies.each do |currency| -%>
       <%= column_chart project_top_clients_chart_path(project, currency: currency), id: "chart_top_clients_#{project.identifier}_#{currency}", library: {isStacked: true, vAxis: {title: "#{l(:chart_invoice_total)} (#{currency})" }} %>
     <% end -%>

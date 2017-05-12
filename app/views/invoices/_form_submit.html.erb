@@ -1,0 +1,43 @@
+<% first_tab ||= false -%>
+<hr />
+<div class="text-right set-of-buttons">
+
+  <%if @invoice.new_record? %>
+
+    <% if @to_amend -%>
+      <%=link_to l(:cancel), invoice_path(@to_amend), class: 'btn btn-link' %>
+    <% elsif controller.controller_name == 'invoice_templates' -%>
+      <%=link_to l(:cancel), project_invoice_templates_path(@project), class: 'btn btn-link' %>
+    <% else -%>
+      <%=link_to l(:cancel), project_invoices_path(@project), class: 'btn btn-link' %>
+    <% end -%>
+
+    <% if first_tab and !@to_amend -%>
+      <%= f.submit l(:continue), name: 'continue', class: 'btn btn-primary', id: 'invoice-continue' %>
+    <% else -%>
+      <%= f.submit l(:button_create), name: 'create', class: 'btn btn-primary' %>
+      <% unless @invoice.is_a? InvoiceTemplate or @invoice.is_a? DraftInvoice -%>
+        <%= f.submit l(:button_create_and_send), name: 'create_and_send', class: 'btn btn-primary' %>
+      <% end -%>
+    <% end -%>
+
+  <% else -%>
+
+    <%= link_to l(:cancel), invoice_path(@invoice), class: 'btn btn-link' %>
+
+    <% if @invoice.original and @invoice.invoice_format != 'pdf' and !@invoice.modified_since_created? -%>
+      <%= f.submit l(:button_save), name: 'save', data: {confirm: l(:overriding_original_warn)}, class: 'btn btn-primary' %>
+    <% else -%>
+      <%= f.submit l(:button_save), name: 'save', class: 'btn btn-primary' %>
+    <% end -%>
+    <% unless @invoice.is_a? InvoiceTemplate or @invoice.is_a? DraftInvoice -%>
+      <% if @invoice.original and @invoice.invoice_format != 'pdf' and !@invoice.modified_since_created? -%>
+        <%= f.submit l(:button_save_and_send), name: 'save_and_send', data: {confirm: l(:overriding_original_warn)}, class: 'btn btn-primary' %>
+      <% else -%>
+        <%= f.submit l(:button_save_and_send), name: 'save_and_send', class: 'btn btn-primary' %>
+      <% end -%>
+    <% end -%>
+
+  <% end %>
+
+</div>

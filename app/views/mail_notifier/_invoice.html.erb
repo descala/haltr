@@ -1,7 +1,4 @@
 <p><%= "#{I18n.t :field_invoice_number}: #{invoice.number}" %></p>
-
-<ul>
-  <li><%=I18n.t(:field_date)%>: <%= h invoice.date %></li>
-  <li><%=I18n.t(:field_due_date)%>: <%= h invoice.due_date %></li>
-  <li><%=I18n.t(:field_amount)%>: <%= money invoice.total %></li>
-</ul>
+<ul><li><%=I18n.t(:field_date)%>: <%= h invoice.date %></li>
+<li><%=I18n.t(:field_due_date)%>: <%= h invoice.due_date %></li>
+<li><%=I18n.t(:field_amount)%>: <%= money invoice.total %></li></ul>

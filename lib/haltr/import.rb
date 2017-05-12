@@ -23,7 +23,7 @@ module Haltr
           when '22'
             moviments << Moviment.new(line, account)
           when '23' 
-            moviments.last.process_23 line
+            moviments.last.process_23(line) rescue nil
           end
         end
         moviments

@@ -1,37 +1,40 @@
 <tr class="nested-fields">
 
-  <td class="tax_name">
-    <%= f.text_field :name, required: true, no_label: true, class: 'tax_name' %>
+  <td class="tax_name w12p">
+    <%= f.text_field :name, required: true, class: 'form-control tax_name' %>
   </td>
 
-  <td class="tax_percent">
+  <td class="tax_percent w8p">
     <span class="span_percent" style="display: <%=f.object.exempt? ? "none" : "inline"%>;">
-      <%= f.text_field :percent,
-        :no_label => true,
-        :readonly => f.object.zero? %>
+      <%= f.text_field :percent, readonly: f.object.zero?, class: 'form-control' %>
     </span>
   </td>
 
-  <td class="tax_default">
-    <%= f.check_box :default, :no_label => true %>
+  <td class="tax_default w20p">
+    <div class="checkbox">
+      <%= f.label :default do %>
+        <%= f.check_box :default %>
+        <%= l(:default) %>
+      <% end -%>
+    </div>
   </td>
 
-  <td class="tax_category">
+  <td class="tax_category w20p">
     <%= f.select :category,
       Tax.categories.collect {|code| [l("tax_#{code}"), code] },
-      {:no_label => true},
-      :class => 'tax_category'  %>
-  </td>
-
-  <td class="tax_remove">
-    <!-- cocoon -->
-    <%= link_to_remove_association image_tag('false.png'), f, :class=>'eliminar' %>
+      {},
+      class: 'form-control tax_category'  %>
   </td>
 
   <td class="tax_exempt">
     <span class="span_comment" style="display: <%=f.object.exempt? ? "inline" : "none"%>;">
-      <%= f.text_field :comment, :no_label => true %>
+      <%= f.text_field :comment, class: 'form-control' %>
     </span>
+  </td>
+
+  <td class="tax_remove w6p text-right">
+    <!-- cocoon -->
+    <%= link_to_remove_association "<i class='fa fa-trash' aria-hidden='true'></i>".html_safe, f %>
   </td>
 
 </tr>

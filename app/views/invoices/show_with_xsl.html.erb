@@ -6,17 +6,17 @@
   <div class="seccio grup">
     <div class="col span-2-de-2">
       <ul class="menu-rapid">
-        <li><%= link_to_if_authorized l("label_invoice_new"), new_project_invoice_path(@project), :class => 'icon icon-add' %></li>
+        <li><%= link_to_if_authorized l("label_invoice_new"), new_project_invoice_path(@project), class: 'icon icon-add' %></li>
         <% unless @invoice.is_a?(ReceivedInvoice) -%>
-          <li><%= link_to_if_authorized l(:button_edit), { :action => 'edit', :id => @invoice }, :class => 'icon icon-edit' %></li>
+          <li><%= link_to_if_authorized l(:button_edit), { action: 'edit', id: @invoice }, class: 'icon icon-edit' %></li>
         <% end -%>
-        <li><%= link_to_if_authorized l(:button_delete), { :action => 'destroy', :id => @invoice}, :data=>{:confirm=>l(:text_are_you_sure)}, :method=>:delete, :class=>'icon icon-del' %></li>
-        <%= render :partial => "#{@invoice.class.to_s.underscore}_menu" %>
+        <li><%= link_to_if_authorized l(:button_delete), { action: 'destroy', id: @invoice}, data: {confirm: l(:text_are_you_sure)}, method: :delete, class: 'icon icon-del' %></li>
+        <%= render partial: "#{@invoice.class.to_s.underscore}_menu" %>
         <% if @invoice.next%>
-          <li class="invoice-navigator"><%=h link_to_if_authorized l(:label_next), :action => 'show', :id => @invoice.next %></li>
+          <li class="invoice-navigator"><%=h link_to_if_authorized l(:label_next), action: 'show', id: @invoice.next %></li>
         <% end %>
         <% if @invoice.previous %>
-          <li class="invoice-navigator"><%=h link_to_if_authorized l(:label_previous), :action => 'show', :id => @invoice.previous %></li>
+          <li class="invoice-navigator"><%=h link_to_if_authorized l(:label_previous), action: 'show', id: @invoice.previous %></li>
         <% end %>
       </ul>
     </div>
@@ -25,10 +25,10 @@
 
   <% if @invoice.is_a? ReceivedInvoice -%>
     <div id="invoice-refuse" class="accept_refuse_form" style="display: none;">
-      <%= render :partial => "invoice_refuse_form" %>
+      <%= render partial: "invoice_refuse_form" %>
     </div>
     <div id="invoice-accept" class="accept_refuse_form" style="display: none;">
-      <%= render :partial => "invoice_accept_form" %>
+      <%= render partial: "invoice_accept_form" %>
     </div>
   <% end -%>
 
@@ -57,14 +57,14 @@
 
   <div class="seccio grup">
     <div class="col span-2-de-2">
-      <div class="formee-msg-info invoice-comments">
+      <div class="invoice-comments">
         <h3 id="haltr_comments">
           <%=h l(:label_comment_plural)%>
-          <%= toggle_link image_tag('add.png'), "add_comment_form", :focus => "comment_comments" %>
+          <%= toggle_link image_tag('add.png'), "add_comment_form", focus: "comment_comments" %>
         </h3>
-        <%= form_tag({:controller => 'invoices', :action => 'add_comment', :id => @invoice, :project_id => @project}, :id => "add_comment_form", :style => "display:none;") do %>
+        <%= form_tag({controller: 'invoices', action: 'add_comment', id: @invoice, project_id: @project}, id: "add_comment_form", style: "display:none;") do %>
           <div class="box">
-            <%= text_area 'comment', 'comments', :cols => 80, :rows => 5, :class => 'wiki-edit' %>
+            <%= text_area 'comment', 'comments', cols: 80, rows: 5, class: 'wiki-edit' %>
           </div>
           <p><%= submit_tag l(:button_add) %></p>
         <% end %>
@@ -78,15 +78,15 @@
     </div>
   </div>
 
-  <%= render :partial => 'events/list', locals: {events: @invoice.visible_events} %>
-  <%= render :partial => 'invoices/issued_invoice_list_other' if @invoice.is_a? IssuedInvoice %>
-  <%= render :partial => 'invoices/channel_links' if (Rails.env == "development" or User.current.allowed_to?(:use_all_readonly, @project)) and @invoice.is_a? IssuedInvoice %>
+  <%= render partial: 'events/list', locals: {events: @invoice.visible_events} %>
+  <%= render partial: 'invoices/issued_invoice_list_other' if @invoice.is_a? IssuedInvoice %>
+  <%= render partial: 'invoices/channel_links' if (Rails.env == "development" or User.current.allowed_to?(:use_all_readonly, @project)) and @invoice.is_a? IssuedInvoice %>
 
   <% if @invoice.is_a? InvoiceTemplate and @invoices_generated and @invoices_generated.any? -%>
     <h3><%= l(:label_generated_invoices)%></h3>
     <p>
     <% @invoices_generated.each do |invoice| -%>
-      <%=link_to_if_authorized invoice.number, :controller => 'invoices', :action => 'show', :id => invoice %><%= ", " unless invoice == @invoices_generated.last %>
+      <%=link_to_if_authorized invoice.number, controller: 'invoices', action: 'show', id: invoice %><%= ", " unless invoice == @invoices_generated.last %>
     <% end -%>
     </p>
   <% end -%>
@@ -95,29 +95,29 @@
     <%= render_menu :invoices_menu, @project %>
   <% end %>
   <% content_for :header_tags do %>
-    <%= stylesheet_link_tag 'minimal', :plugin => 'haltr' %>
-    <%= stylesheet_link_tag 'facturae_xslt_viewer', :plugin => 'haltr' %>
-    <%= javascript_include_tag "facturae_xslt_viewer", :plugin => "haltr"%>
+    <%= stylesheet_link_tag 'minimal?v=2', plugin: 'haltr' %>
+    <%= stylesheet_link_tag 'facturae_xslt_viewer?v=2', plugin: 'haltr' %>
+    <%= javascript_include_tag "facturae_xslt_viewer?v=2", plugin: "haltr"%>
   <% end %>
 
   <%=
     # @autocall will be automatically called from javascript (haltr_sign.js)
   # we can get here when pressing "save and send" button on invoice form if
   # invoice is sent with javascript method (javascript attribute on channels.yml)
-  tag("div", :id => 'autocall', 'data-function' => @autocall, 'data-args' => @autocall_args) if @autocall
+  tag("div", id: 'autocall', 'data-function' => @autocall, 'data-args' => @autocall_args) if @autocall
 %>
 
 <%=
   unless @js.blank?
     content_for :header_tags do
-      javascript_include_tag('/invoices/haltr_sign.js') +
-        javascript_include_tag('miniapplet.js', :plugin => 'haltr')
+      javascript_include_tag('/invoices/haltr_sign.js?v=2') +
+        javascript_include_tag('miniapplet.js?v=2', plugin: 'haltr')
     end
   end
 
   if @invoice.is_a? IssuedInvoice and @invoice.sending?
     content_for :header_tags do
-      javascript_include_tag 'refresher.js', plugin: 'haltr'
+      javascript_include_tag 'refresher.js?v=2', plugin: 'haltr'
     end
   end
 %>

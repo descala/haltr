@@ -13,11 +13,14 @@ class Invoice < ActiveRecord::Base
   # do not remove, with audit we need to make the other attributes accessible
   attr_protected :created_at, :updated_at
 
+  attr_accessor :about_to_be_sent
+  alias_method :about_to_be_sent?, :about_to_be_sent
+
   # remove non-utf8 characters from those fields:
   TO_UTF_FIELDS = %w(extra_info)
 
   has_many :invoice_lines, -> {order 'position is NULL, position ASC'}, dependent: :destroy
-  has_many :events, -> {order :created_at}
+  has_many :events, -> {order 'created_at DESC'}
   #has_many :taxes, :through => :invoice_lines
   belongs_to :project, :counter_cache => true
   belongs_to :client
@@ -167,7 +170,15 @@ class Invoice < ActiveRecord::Base
     unless client_email_override.blank?
       client_email_override.split(/[,; ]/)
     else
-      client.recipient_emails
+      client.recipient_emails rescue []
+    end
+  end
+
+  def from_email
+    if company_email_override.present?
+      company_email_override
+    else
+      company.email
     end
   end
 
@@ -1113,7 +1124,7 @@ _INV
     if company and company.project
       ImportError.create(
         filename:      file_name,
-        import_errors: $!.message[0.254],
+        import_errors: $!.message[0..254],
         original:      raw_xml,
         project:       company.project,
       )

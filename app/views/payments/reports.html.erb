@@ -1,24 +1,34 @@
-<%= form_tag project_payments_report_payment_list_path(@project), :class => 'formee' do %>
-  <fieldset>
-    <legend><%= l(:label_payment_report) %></legend>
-    <div class="seccio grup">
-      <div class="col span-1-de-3">
-        <label for="date_from"><%=l(:field_date)%></label>
-        <%= date_field_tag :date_from, (params[:date_from].nil? ? Date.new(Date.today.year) : params[:date_from]), :size => 10, :style => "width: 90%;" %><%= calendar_for('date_from') %>
-      </div>
-      <div class="col span-1-de-3">
-        <label for="date_to"><%=l(:label_to)%></label>
-        <%= date_field_tag :date_to, (params[:date_to].nil? ? Date.today : params[:date_to]), :size => 10, :style => "width: 90%;" %><%= calendar_for('date_to') %>
-      </div>
-      <div class="col span-1-de-3">
-      </div>
-    </div>
-    <div class="seccio grup">
-      <div class="col span-2-de-2">
-        <%= submit_tag l(:button_apply), :class => "small", :name => nil %>
+<%= form_tag project_payments_report_payment_list_path(@project) do %>
+
+  <h2><%= l(:label_payment_report) %></h2>
+
+  <div class="tab-pane row form-horizontal">
+
+    <div class="form-group">
+      <label for="date_from" class="col-xs-3 control-label"><%=l(:field_date)%></label>
+      <div class="col-xs-3">
+        <div class="relative">
+          <%= date_field_tag :date_from, (params[:date_from].nil? ? Date.new(Date.today.year) : params[:date_from]), class: 'form-control' %><%= calendar_for('date_from') %>
+        </div>
       </div>
     </div>
-  </fieldset>
+
+    <div class="form-group">
+      <label for="date_to" class="col-xs-3 control-label"><%=l(:label_to)%></label>
+      <div class="col-xs-3">
+        <div class="relative">
+          <%= date_field_tag :date_to, (params[:date_to].nil? ? Date.today : params[:date_to]), class: 'form-control' %><%= calendar_for('date_to') %>
+        </div>
+      </div>
+    </div>
+
+    <div class="form-group">
+      <div class="col-xs-6 text-right">
+        <%= submit_tag l(:button_apply), class: 'btn btn-primary', name: nil %>
+      </div>
+    </div>
+
+  </div>
 <% end -%>
 
 <% content_for :sidebar do %>

@@ -1,11 +1,5 @@
 class CompaniesController < ApplicationController
 
-
-  menu_item Haltr::MenuItem.new(:companies,:linked_to_mine),     :only => [:linked_to_mine]
-  menu_item Haltr::MenuItem.new(:my_company,:my_company_level2), :only => [:my_company]
-  menu_item Haltr::MenuItem.new(:my_company,:bank_info),         :only => [:bank_info]
-  menu_item Haltr::MenuItem.new(:my_company,:connections),       :only => [:connections]
-  menu_item Haltr::MenuItem.new(:my_company,:customization),     :only => [:customization]
   layout 'haltr'
   helper :haltr
 
@@ -14,8 +8,8 @@ class CompaniesController < ApplicationController
   include Haltr::TaxHelper
 
   before_filter :find_project_by_project_id,
-    only: [:my_company,:bank_info,:connections,:customization,:linked_to_mine,
-           :logo,:add_bank_info,:check_iban]
+    only: [:my_company,:bank_info,:connections,:customization,:logo,
+           :add_bank_info,:check_iban]
   before_filter :find_company, :only => [:update]
   before_filter :authorize, :except => [:logo,:logo_by_taxcode]
   skip_before_filter :check_if_login_required, :only => [:logo,:logo_by_taxcode]
@@ -45,7 +39,7 @@ class CompaniesController < ApplicationController
   end
 
   def my_company
-    @partial='my_company'
+    @company.bank_infos.build if @company.bank_infos.empty?
     respond_to do |format|
       format.html do
         render :action => 'edit'
@@ -57,42 +51,9 @@ class CompaniesController < ApplicationController
     end
   end
 
-  def bank_info
-    flash.now[:info] = l(:private_fields_info)
-    @company.bank_infos.build if @company.bank_infos.empty?
-    @partial='bank_info'
-    render :action => 'edit'
-  end
-
-  def connections
-    @partial='connections'
-    render :action => 'edit'
-  end
-
-  def customization
-    @partial='customization'
-    render :action => 'edit'
-  end
-
-  def linked_to_mine
-    # TODO sort and paginate
-    sort_init 'name', 'asc'
-    sort_update %w(taxcode name)
-    @companies_link_req = @project.company.companies_with_link_requests
-    @companies_denied   = @project.company.companies_with_denied_link
-    @companies = (Client.where(["company_id = ? and company_type='Company'", @project.company]).to_a.collect do |client|
-      client.project.company
-    end - @companies_link_req)
-  end
-
   def update
-    @partial = params[:partial] || 'my_company'
-    if @partial == 'bank_info'
-      # prevent crash when deleted all bank_infos
-      params[:company] ||= { :bank_infos_attributes => [] }
-    end
     # check if user trying to add multiple bank_infos without role
-    unless User.current.allowed_to?(:add_multiple_bank_infos,@project)
+    unless User.current.allowed_to?(:add_multiple_bank_infos, @project)
       if params[:company][:bank_infos_attributes] and 
         params[:company][:bank_infos_attributes].reject {|i,b| b["_destroy"] == "1" }.size > 1
         redirect_to project_add_bank_info_path(@project), :alert => "You are not allowed to add multiple bank accounts"
@@ -102,7 +63,16 @@ class CompaniesController < ApplicationController
     # check if user trying to customize emails without role
     unless User.current.admin? or User.current.allowed_to?(:email_customization, @project)
       # keys come with lang (_ca,_en..) so remove last 3 chars
-      if (params[:company].keys.collect {|k| k[0...-3]} & %w(invoice_mail_body quote_mail_subject quote_mail_body pdf_template)).any?
+      if (params[:company].keys.collect {|k| k[0...-3]} & %w(invoice_mail_subject invoice_mail_body quote_mail_subject quote_mail_body)).any? or
+          # normal keys, without lang
+          (params[:company].keys & %w(email_customization pdf_template)).any?
+        render_403
+        return
+      end
+    end
+    # check if user trying to add company infos without role
+    unless User.current.admin? or User.current.allowed_to?(:use_company_offices, @project)
+      if params[:company][:company_offices_attributes]
         render_403
         return
       end
@@ -146,7 +116,7 @@ class CompaniesController < ApplicationController
         render_attachment_warning_if_needed(@company)
       end
       flash[:notice] = l(:notice_successful_update) 
-      redirect_to :action => @partial, :project_id => @project
+      redirect_to :action => 'my_company', :project_id => @project
 
     else
       @company.bank_infos.build if @company.bank_infos.empty?

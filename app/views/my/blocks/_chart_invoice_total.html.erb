@@ -2,6 +2,7 @@
 <div class="chart_invoice_total">
   <%= render :partial => 'common/chart_headers' %>
   <h3><%=l('chart_invoice_total')%></h3>
+  <div class="wrapper-default">
   <%= select_tag "value", options_for_select({t(:last_year_by_month)=>"last_year_by_month",
                                               t(:last_month_by_week)=>"last_month_by_week",
                                               t(:all_by_year)=>"all_by_year",
@@ -9,8 +10,9 @@
                                              User.current.pref.others[:chart_invoice_total]),
                  :data  => { :url => url_for(update_chart_preference_path(project_id: @project.id)) },
                  :id    => 'chart_invoice_total',
-                 :class => 'chart_prefs'
+                 :class => 'chart_prefs form-control form-control-auto input-sm'
   %>
+  </div>
 
   <%= column_chart project_invoice_total_chart_path(project_id: @project.id), id: "chart_invoice_total_chart", library: {isStacked: false, vAxis: {title: l(:chart_invoice_total) }} %>
 </div>

@@ -73,6 +73,7 @@ es:
   label_invoice_plural: Facturas
   label_invoice: Factura
   label_draft: Borrador de factura
+  label_draft_plural: Borradores de factura
   field_invoice: Factura
   label_invoice_new: Nueva factura
   label_received_invoice_new: Añadir factura recibida
@@ -98,8 +99,7 @@ es:
   generate_template_from_invoice: Generar nueva plantilla
   duplicate_invoice: Duplicar esta factura
   generated_from_template: Generada desde la plantilla
-  receive_payment: Pago
-  make_payment: Efectuar pago
+  receive_payment: Cobro
   label_paid: Pagado
   label_tax: Impuesto
   label_tax_plural: Impuestos
@@ -193,7 +193,7 @@ es:
   invoice_no_taxes_and_discount: "Una factura no puede tener a la vez líneas de suplidos y un descuento" 
   field_import: "Importe"
   pdf_not_legal: "PDF no legal"
-  amended_invoice: "Rectificación de la %{link}"
+  amended_invoice: "Rectificación de la factura %{link}"
   amended_by_invoice: "Rectificada por la %{link}"
   create_amend_invoice: "Crear factura rectificativa"
   label_amendment_invoice: "Factura rectificativa"
@@ -203,9 +203,10 @@ es:
   only_one_default_allowed_for: "%{tax_name}: Solo se acepta un impuesto por defecto"
   add_taxes_on_company: "Puedes gestionar los impuestos en \"Mi empresa\""
   button_download_new_invoices: "Descargar zip de facturas nuevas"
+  button_download_invoices_csv: "Todas las facturas en un CSV"
   label_download_new_invoices_info: "Genera un zip con todas las facturas nuevas en formato PDF"
   field_exempt: "Exento"
-  field_comment: "Razón de exención"
+  field_comment: "Razón"
 
   # Events
   events: "Log de eventos"
@@ -264,7 +265,6 @@ es:
   label_invoice_template: Plantilla
   label_invoice_template_plural: Plantillas
   label_generated_invoices: Facturas generadas
-  next_charge: Siguiente pago
   invoices_to_generate: Facturas a generar
   generate: Generar
   generate_selected: Generar seleccionadas
@@ -314,9 +314,9 @@ es:
   label_import_aeb43: Importar movimientos en formato AEB43
 
   # Payments
-  label_payment: Pago
-  label_payment_plural: Pagos
-  label_payment_new: Nuevo pago
+  label_payment: Cobro
+  label_payment_plural: Cobros
+  label_payment_new: Nuevo cobro
   field_amount: Precio
   field_amount_in_cents: Precio
   field_payment_method: Método de pago
@@ -328,9 +328,9 @@ es:
   received_paid_notification_to: "Notificar recepción del pago a %{mail}"
   save_and_mail: "Guardar y enviar mail"
   save_without_mail: "Guardar sin enviar mail"
-  field_sepa_type: "tipo de pagos SEPA"
+  field_sepa_type: "tipo de cobros SEPA"
   label_payment_initiation: "Adeudos SEPA"
-  label_payment_report: Informe de pagos
+  label_payment_report: Informe de cobros
 
   # Settings
   field_taxcode: "NIF"
@@ -444,6 +444,7 @@ es:
 
   label_linked_to_mine: "Empresas vinculadas"
 
+  imap_config: "IMAP - Servidor de correo entrante"
   field_imap_host: "Servidor IMAP"
   field_imap_port: "Puerto"
   field_imap_ssl: "Usar SSL"
@@ -451,6 +452,7 @@ es:
   field_imap_password: "Contraseña"
   field_imap_from: "Remitente"
 
+  smtp_config: "SMTP - Servidor de correo saliente"
   field_smtp_host: "Servidor SMTP"
   field_smtp_port: "Puerto"
   field_smtp_ssl: "Usar SSL"
@@ -459,7 +461,7 @@ es:
   field_smtp_from: "Remitente"
 
   permission_general_use: "Utilizar el plugin Haltr"
-  permission_manage_payments: "Gestionar pagos"
+  permission_manage_payments: "Gestionar cobros"
   permission_use_templates: "Plantillas de facturas"
   permission_batch_processes: "Procesos con scripts"
   permission_use_all_readonly: "Uso completo solo lectura"
@@ -482,6 +484,7 @@ es:
   tax_AA: "Tasa baja"
   tax_AAA: "Tasa super reducida"
   invoice_data: "Datos factura"
+  invoice_attachments: "Ficheros adjuntos"
   bank_info: "Datos bancarios"
 
 
@@ -602,10 +605,10 @@ es:
   field_article_code: "Código"
   label_error_event_plural: "Eventos de envíos fallados"
   label_info_event_plural: "Eventos de envíos con éxito"
-  audited_create: "Creado: %{model} creado/a"
-  audited_update: "Actualizado: %{model}"
-  audited_destroy: "Borrado: %{model}"
-  invoice_line: "Línea de factura"
+  audited_create: "Objeto %{model} creado por %{user}"
+  audited_update: "Objeto %{model} actualizado por %{user}"
+  audited_destroy: "Objeto %{model} borrado por %{user}"
+  invoice_line: "Línea"
   invoice: "Factura"
   tax: "Impuesto"
   field_percent: "%"
@@ -839,6 +842,7 @@ Si la guardas, se marcará como Nueva."
   label_company_office: Sede
   field_amounts_withheld_reason: "Concepto de retención"
   field_amounts_withheld: "Importe de retención"
+  amounts_withheld: "Retenciones"
   received_by: "Recibida (%{transport})"
   cant_modify_taxcode: "No se puede modificar el NIF. Si tenéis que cambiarlo, por favor, poneros en contacto con el %{suport_link}"
   suport_link: "servicio de soporte"
@@ -848,3 +852,16 @@ Si la guardas, se marcará como Nueva."
   processing_pdfs: "Procesando %{count} facturas"
   auto_process_pdf: "Procesar PDF automaticamente"
   field_supplier: "Proveedor"
+  send_custom_text: "Enviar texto personalizado"
+  button_new: "Nueva"
+  not_linked: "No vinculada"
+  linked: "Vinculada"
+  for_this_company: "para esta empresa"
+  write_comment: "Escribir comentario"
+  accept_received: "Aceptar"
+  refuse_received: "Rechazar"
+  pay_received: "Pagos"
+  button_add_office: "Añadir sede"
+  field_company_email: "Email propio"
+  field_company_email_override: "No utilizar el email de mi empresa, sino este"
+  line_extra_fields: "Más opciones para añadir a la línea"
