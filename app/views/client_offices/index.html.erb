@@ -1,6 +1,9 @@
 <div class="row">
 <div class="col-xs-6">
-  <h2><%= l :label_client_offices %> - <%= @client.name %></h2>
+  <h2>
+    <%= link_to "", client_path(@client), class: 'fa fa-long-arrow-left fa-big fa-left', aria: { hidden: true } %>
+    <%= l :label_client_offices %> - <%= @client.name %>
+  </h2>
 </div>
 
 <div class="col-xs-6 text-right">
