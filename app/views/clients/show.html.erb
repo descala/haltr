@@ -24,7 +24,11 @@
     <p>
     <strong class="s16"><%= h @client.name %></strong>
     <% if @client.company -%>
-      <span class="marg-left-15 icon-fa icon-fa-chain"><%= l :linked %></span>
+      <% if User.current.allowed_to?(:manage_external_companies?, nil, {global: true}) -%>
+        <span class="marg-left-15 icon-fa icon-fa-chain"><%= link_to l(:linked), edit_external_company_path(@client.company) %></span>
+      <% else -%>
+        <span class="marg-left-15 icon-fa icon-fa-chain"><%= l :linked %></span>
+      <% end -%>
     <% else -%>
       <span class="marg-left-15 icon-fa icon-fa-chain-broken"><%= l :not_linked %></span>
     <% end -%>
