@@ -12,7 +12,7 @@ module QuotesHelper
           data: {confirm: confirm}
     else
       # invoice has errors TODO: or a format without channel, like "paper"
-      link_to l(:label_send), "#", class: 'icon-haltr-send disabled',
+      link_to l(:label_send), "#", class: 'icon-fa icon-fa-send disabled',
         title: @invoice.sending_info(:pdf_by_mail).html_safe
     end
   end
