@@ -275,6 +275,7 @@ fr:
   s_days: j
   s_other: ""
   boxes: 'Boxes'
+  s_boxes: ''
 
   # People
   label_person: Personne

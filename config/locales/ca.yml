@@ -285,6 +285,7 @@ ca:
   s_days: d
   s_other: ""
   boxes: 'Caixes'
+  s_boxes: ''
 
   # People
   label_person: Persona

@@ -14,7 +14,7 @@ class ImportErrorsControllerTest < ActionController::TestCase
   end
 
   test 'create import_error' do
-    initial_count = ImportError.count
+    initial_count = Project.find(2).import_errors.count
     post :create, {
       format: :json,
       project_id: 2,
@@ -27,7 +27,7 @@ class ImportErrorsControllerTest < ActionController::TestCase
     }
     assert_equal 'application/json', response.content_type
     assert_response :success
-    assert_equal initial_count+1, ImportError.count
+    assert_equal initial_count+1, Project.find(2).import_errors.count
   end
 
 end
