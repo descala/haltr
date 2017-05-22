@@ -1110,7 +1110,7 @@ _INV
       ImportError.create(
         filename:      (invoice.file_name rescue ""),
         import_errors: I18n.t(:invoice_import_mismatch, original: invoice_total.dollars, calculated: invoice.total.dollars),
-        original:      raw_xml,
+        original:      Haltr::Utils.compress(raw_xml),
         project:       company.project,
       )
       Event.create(
@@ -1125,7 +1125,7 @@ _INV
       ImportError.create(
         filename:      file_name,
         import_errors: $!.message[0..254],
-        original:      raw_xml,
+        original:      Haltr::Utils.compress(raw_xml),
         project:       company.project,
       )
       logger.error "Error creating new invoice for company #{company.name} (#{$!.message}). time=#{Time.now}"
