@@ -203,7 +203,9 @@
               <td><%=h invoice.client_office ? invoice.client_office : invoice.client %></td>
               <td class="money"><%= money(invoice.subtotal) %></td>
               <td class="money"><%= money(invoice.total) %></td>
-              <td><%=h l("state_#{invoice.state}").capitalize %></td>
+              <td>
+                <div class="ribbon2-<%="#{invoice.state}"%>"><%=h l("state_#{invoice.state}").capitalize %></div>
+              </td>
               </tr>
             <% end -%>
       </tbody>
