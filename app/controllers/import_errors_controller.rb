@@ -42,6 +42,9 @@ class ImportErrorsController < ApplicationController
   end
 
   def create
+    if params[:import_error] and params[:import_error][:import_errors].size > 65535
+      params[:import_error][:import_errors] = params[:import_error][:import_errors][0..65000] + " (...)\n*** Import error truncated to 65000 characters ***"
+    end
     @import_error = ImportError.new(params[:import_error])
     @import_error.project = @project
     if @import_error.save!
