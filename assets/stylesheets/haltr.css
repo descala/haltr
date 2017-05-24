@@ -135,7 +135,7 @@ th.money, td.money, .money{
 
 .amended, .amended td a {
   text-decoration: line-through;
-} 
+}
 
 select.tax {
   width: 77px;
@@ -220,6 +220,23 @@ table.invoice_lines {
 .ribbon-error, .ribbon-discarded, .ribbon-refused, .ribbon-cancelled {
   background-color: red;
 }
+
+
+.ribbon2-new, .ribbon2-received {
+  color: yellowgreen;
+}
+.ribbon2-new span, .ribbon2-received span {
+  color: black;
+  text-shadow: 0 0 5px #fff;
+}
+.ribbon2-read, .ribbon2-sent, .ribbon2-accepted, .ribbon2-closed, .ribbon2-paid, .ribbon2-registered, .ribbon2-accounted {
+  color: green;
+}
+.ribbon2-error, .ribbon2-discarded, .ribbon2-refused, .ribbon2-cancelled {
+  color: red;
+}
+
+
 .haltr_event_error {
   color: darkred;
 }
