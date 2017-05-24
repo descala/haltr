@@ -30,4 +30,17 @@ class ImportErrorsControllerTest < ActionController::TestCase
     assert_equal initial_count+1, Project.find(2).import_errors.count
   end
 
+  test 'truncates import_errors when it is too long (:limit => 65535)' do
+    post :create, {
+      format: :json,
+      project_id: 2,
+      key: User.find_by_login('jsmith').api_key,
+      import_error: {
+        filename: 'file.txt',
+        import_errors: 'X'*65900,
+        original: 'text'
+      }
+    }
+    assert_match(/Import error truncated to 65000 characters/, Project.find(2).import_errors.last.import_errors)
+  end
 end
