@@ -167,7 +167,9 @@
                   <td><%= link_to invoice.number, invoice_path(invoice) %></td>
                   <td><%= h invoice.date %></td>
                   <td class="nowrap"><strong><%= h money invoice.total %></strong></td>
-                  <td><%= h l "state_#{invoice.state}" %></td>
+                  <td>
+                    <div class="ribbon2-<%="#{invoice.state}"%>"><%= h l "state_#{invoice.state}" %></div>
+                  </td>
                 </tr>
               <% end -%>
             </tbody>
