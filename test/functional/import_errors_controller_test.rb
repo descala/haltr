@@ -37,7 +37,7 @@ class ImportErrorsControllerTest < ActionController::TestCase
       key: User.find_by_login('jsmith').api_key,
       import_error: {
         filename: 'file.txt',
-        import_errors: 'X'*65900,
+        import_errors: 'à'*(65900/2),
         original: 'text'
       }
     }
