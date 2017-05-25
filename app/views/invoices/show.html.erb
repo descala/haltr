@@ -50,6 +50,19 @@
   </div>
 <% end -%>
 
+
+<%= render partial: 'mark_as_modal_amend' %>
+
+
+<% if @invoice.is_a? ReceivedInvoice -%>
+  <div id="invoice-refuse" class="tab-pane form-horizontal" style="display: none;">
+    <%= render partial: "invoice_refuse_form" %>
+  </div>
+  <div id="invoice-accept" class="tab-pane form-horizontal" style="display: none;">
+    <%= render partial: "invoice_accept_form" %>
+  </div>
+<% end -%>
+
 <% if @invoice_pdf -%>
   <!-- TODO -->
   <div id="invoice_img">
