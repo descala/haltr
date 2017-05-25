@@ -13,7 +13,7 @@
             <label for="sel-results"><%= l :button_show %></label>
           </div>
           <div class="col-xs-4">
-            <%= select_tag('sel-results', options_for_select(Setting.per_page_options_array, selected: params[:per_page]), class: 'form-control') %>
+            <%= select_tag('sel-results', options_for_select(Setting.per_page_options_array, selected: @limit), class: 'form-control') %>
           </div>
         </div>
       </form>

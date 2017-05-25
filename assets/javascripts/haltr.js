@@ -153,7 +153,7 @@ $(document).ready(function() {
   });
 
   $(document).on('change', 'select#sel-results', function(e) {
-    window.location = window.location.pathname + "?per_page=" + $(this).val();
+    window.location.search = setUrlParameter(window.location.search, 'per_page', $(this).val());
   });
 
   // reset invoices filter
@@ -341,4 +341,18 @@ function show_refused_form() {
 function show_accepted_form() {
   $("#invoice-refuse").hide();
   $("#invoice-accept").show();
+}
+
+// https://stackoverflow.com/questions/5999118/add-or-update-query-string-parameter
+function setUrlParameter(url, key, value) {
+  var parts = url.split("#", 2), anchor = parts.length > 1 ? "#" + parts[1] : '';
+  var query = (url = parts[0]).split("?", 2);
+  if (query.length === 1)
+    return url + "?" + key + "=" + value + anchor;
+
+  for (var params = query[query.length - 1].split("&"), i = 0; i < params.length; i++)
+    if (params[i].toLowerCase().startsWith(key.toLowerCase() + "="))
+      return params[i] = key + "=" + value, query[query.length - 1] = params.join("&"), query.join("?") + anchor;
+
+  return url + "&" + key + "=" + value + anchor
 }
