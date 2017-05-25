@@ -207,33 +207,57 @@ table.invoice_lines {
   width: 230px;
 }
 
-.ribbon-new, .ribbon-received {
-  background-color: #FF971D;
+.ribbon-new, .ribbon-sent, .ribbon-received, .ribbon-read, .ribbon-accepted, .ribbon-paid {
+  padding: 4px 0;
+  margin-top: 1px;
+  background-color: #008000;
+  color: #FFFFFF;
 }
 .ribbon-new span, .ribbon-received span {
-  color: #4A4A4A;
+  padding: 4px 0;
+  margin-top: 1px;
+  color: #008000;
   text-shadow: 0 0 5px #fff;
 }
-.ribbon-read, .ribbon-sent, .ribbon-accepted, .ribbon-closed, .ribbon-paid, .ribbon-registered, .ribbon-accounted {
-  background-color: #008000;
+
+.ribbon-sending, .ribbon-processing_pdf{
+  padding: 4px 0;
+  margin-top: 1px;
+  background-color: #FF971D;
+  color: #FFFFFF;
 }
-.ribbon-error, .ribbon-discarded, .ribbon-refused, .ribbon-cancelled {
+
+.ribbon-closed, .ribbon-discarded, .ribbon-allegedly_paid, .ribbon-registered, .ribbon-annotated {
+  padding: 4px 0;
+  margin-top: 1px;
+  background-color: #4A4A4A;
+  color: #FFFFFF;
+}
+.ribbon-error, .ribbon-refused, .ribbon-cancelled {
+  padding: 4px 0;
+  margin-top: 1px;
   background-color: #FF0000;
+  color: #FFFFFF;
 }
 
 
-.ribbon2-new, .ribbon2-received {
-  color: #FF971D;
-}
-.ribbon2-new span, .ribbon2-received span {
-  color: #4A4A4A;
-  text-shadow: 0 0 5px #fff;
-}
-.ribbon2-read, .ribbon2-sent, .ribbon2-accepted, .ribbon2-closed, .ribbon2-paid, .ribbon2-registered, .ribbon2-accounted {
+.ribbon2-new, .ribbon2-sent, .ribbon2-received, .ribbon2-read, .ribbon2-accepted, .ribbon2-paid {
   color: #008000;
 }
-.ribbon2-error, .ribbon2-discarded, .ribbon2-refused, .ribbon2-cancelled {
-  color: #FF0000
+.ribbon2-new span, .ribbon2-received span {
+  color: #008000;
+  text-shadow: 0 0 5px #fff;
+}
+
+.ribbon2-sending, .ribbon2-processing_pdf{
+  color: #FF971D;
+}
+
+.ribbon2-closed, .ribbon2-discarded, .ribbon2-allegedly_paid, .ribbon2-registered, .ribbon2-annotated {
+  color: #4A4A4A;
+}
+.ribbon2-error, .ribbon2-refused, .ribbon2-cancelled {
+  color: #FF0000;
 }
 
 
