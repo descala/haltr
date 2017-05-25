@@ -1,0 +1,23 @@
+<!-- Modal -->
+<div class="modal fade" id="modal-mark-amend" tabindex="-1" role="dialog" aria-labelledby="modalMarkLabel">
+  <div class="modal-dialog modal-sm" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><i class="fa fa-times" aria-hidden="true"></i></button>
+        <h4 class="modal-title" id="modalMarkLabel"><%= l :create_amend_invoice %></h4>
+      </div>
+      <div class="modal-body">
+          <div>
+            <ul>
+              <li><%= link_to l(:amend_total),   {controller: 'invoices', action: 'amend_for_invoice', id: @invoice, amend_type: :total}, class: 'icon-fa icon-fa-fw icon-fa-file-text' %></li>
+              <li><%= link_to l(:amend_partial), {controller: 'invoices', action: 'amend_for_invoice', id: @invoice, amend_type: :partial}, class: 'icon-fa icon-fa-fw icon-fa-file-text' %></li>
+            </ul>
+            <hr>
+            <div class="text-right set-of-buttons">
+              <button type="button" data-dismiss="modal" aria-label="Close" class="btn btn-link"><%= l :button_cancel %></button>
+            </div>
+          </div>
+      </div>
+    </div>
+  </div>
+</div>
