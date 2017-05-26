@@ -4,8 +4,7 @@
     <% unless @project -%>
       <td><%= link_to(e.project.name, project_events_path(project_id: e.project)) %></td>
     <% end -%>
-    <td><%= format_date(e.created_at) rescue '' %></td>
-    <td><%= format_time(e.created_at)  rescue '' %></td>
+    <div> <td class="white-space-nowrap"><%= format_time(e.created_at)  rescue '' %></td> </div>
     <% unless @invoice -%>
       <td>
         <% if e.invoice -%>
@@ -28,7 +27,7 @@
         <%= render :partial => "events/event", :locals => {:e=>e} %>
       <% end -%>
     </td>
-    <td>
+    <td class="text-right">
       <%= link_to '<i class="fa fa-plus-square" aria-hidden="true"></i>'.html_safe, '#', class: 'show-audits', data: {id: e.id} if e.audits.any? %>
     </td>
   </tr>
@@ -36,11 +35,9 @@
   <tr class="no-padding">
     <td colspan="6">
       <div id="audited_<%=e.id%>" class="audited">
-        <ul>
           <% e.audits.each do |a| -%>
             <%= render partial: "audits/audit", locals: { a: a } %>
           <% end -%>
-        </ul>
       </div>
     </td>
   </tr>
