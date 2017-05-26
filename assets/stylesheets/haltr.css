@@ -578,3 +578,7 @@ select#invoice_company_office_id {
 textarea.textarea-auto {
   resize: vertical;
 }
+
+.white-space-nowrap {
+  white-space: nowrap;
+}
