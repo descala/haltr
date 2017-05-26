@@ -147,9 +147,6 @@
   <div class="mypage-box">
     <div class="chart_events">
       <h3><%= l :label_history %></h3>
-      <div class="wrapper-default">
-        <p>&nbsp;</p>
-      </div>
       <fieldset>
         <div class="wrapper-table">
           <%= render partial: 'events/table', locals: {events: @invoice.visible_events} %>
