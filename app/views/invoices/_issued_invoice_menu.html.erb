@@ -25,11 +25,7 @@
         <% end -%>
       <% end -%>
       <% unless @invoice.amended? -%>
-        <li class="submenu"><a href="#"><%= l(:create_amend_invoice) %></a>
-          <ul>
-            <li><%= link_to l(:amend_total),   {controller: 'invoices', action: 'amend_for_invoice', id: @invoice, amend_type: :total}, class: 'icon-fa icon-fa-fw icon-fa-file-text' %></li>
-            <li><%= link_to l(:amend_partial), {controller: 'invoices', action: 'amend_for_invoice', id: @invoice, amend_type: :partial}, class: 'icon-fa icon-fa-fw icon-fa-file-text' %></li>
-          </ul>
+        <li data-toggle="modal" data-target="#modal-mark-amend" class="submenu"><%= link_to(l(:create_amend_invoice) , "#",  class: 'icon-fa icon-fa-fw icon-fa-file-text') %>
         </li>
       <% end -%>
       <% if @invoice_xslt_html or @invoice_pdf %>

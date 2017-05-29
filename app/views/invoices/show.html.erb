@@ -50,6 +50,19 @@
   </div>
 <% end -%>
 
+
+<%= render partial: 'mark_as_modal_amend' %>
+
+
+<% if @invoice.is_a? ReceivedInvoice -%>
+  <div id="invoice-refuse" class="tab-pane form-horizontal" style="display: none;">
+    <%= render partial: "invoice_refuse_form" %>
+  </div>
+  <div id="invoice-accept" class="tab-pane form-horizontal" style="display: none;">
+    <%= render partial: "invoice_accept_form" %>
+  </div>
+<% end -%>
+
 <% if @invoice_pdf -%>
   <!-- TODO -->
   <div id="invoice_img">
@@ -134,9 +147,6 @@
   <div class="mypage-box">
     <div class="chart_events">
       <h3><%= l :label_history %></h3>
-      <div class="wrapper-default">
-        <p>&nbsp;</p>
-      </div>
       <fieldset>
         <div class="wrapper-table">
           <%= render partial: 'events/table', locals: {events: @invoice.visible_events} %>

@@ -111,4 +111,8 @@ class Quote < Invoice
     []
   end
 
+  def has_all_fields_required_by_external_company
+    true
+  end
+
 end

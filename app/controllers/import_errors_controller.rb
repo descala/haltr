@@ -36,13 +36,17 @@ class ImportErrorsController < ApplicationController
 
   def show
     import_error = @project.import_errors.find(params[:id])
-    send_data import_error.original,
+    send_data Haltr::Utils.decompress(import_error.original),
       :type => 'text/xml; charset=UTF-8;',
       :disposition => "attachment; filename=#{import_error.filename}"
   end
 
   def create
+    if params[:import_error] and params[:import_error][:import_errors] and params[:import_error][:import_errors].bytesize > 65535
+      params[:import_error][:import_errors] = params[:import_error][:import_errors].byteslice(0..64999) + " (...)\n*** Import error truncated to 65000 characters ***"
+    end
     @import_error = ImportError.new(params[:import_error])
+    @import_error.project = @project
     if @import_error.save!
       respond_to do |format|
         format.api { render_api_ok }

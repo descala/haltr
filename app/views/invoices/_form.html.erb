@@ -20,13 +20,13 @@
 <% end -%>
 
 <h2>
-<% if @invoice.new_record? and !@to_amend -%>
-  <%= controller.controller_name == 'invoice_templates' ? l(:label_invoice_template_new) : l(:label_invoice_new) %>
-<% elsif @to_amend -%>
-  <%= l(:amended_invoice, link: @to_amend.number) %> (<%= l("amend_#{@amend_type}") %>)
-<% else -%>
-  <%= "#{controller.controller_name == 'invoice_templates' ? l(:label_invoice_template) : l(:label_invoice)} #{@invoice.number}" %>
-<% end -%>
+  <% if @invoice.new_record? and !@to_amend -%>
+    <%= controller.controller_name == 'invoice_templates' ? l(:label_invoice_template_new) : l(:label_invoice_new) %>
+  <% elsif @to_amend -%>
+    <%= l(:amended_invoice, link: @to_amend.number) %> (<%= l("amend_#{@amend_type}") %>)
+  <% else -%>
+    <%= "#{controller.controller_name == 'invoice_templates' ? l(:label_invoice_template) : l(:label_invoice)} #{@invoice.number}" %>
+  <% end -%>
 </h2>
 
 <div class="row">
@@ -78,138 +78,132 @@
 
           <hr class="form-elements">
 
-          <div>
-            <div class="form-group">
-              <%= f.label :date, class: 'col-xs-3 control-label' do %>
-                <%= t :invoice %>: <span class="required">*</span>
-              <% end -%>
-              <div class="col-xs-3">
-                <p class="control-label text-left"><%= l :field_date %></p>
-              </div>
-              <div class="col-xs-3">
-                <p class="control-label text-left"><%= l :tag_invoice_number %></p>
+          <div class="form-group">
+            <%= f.label :date, class: 'col-xs-3 control-label' do %>
+              <%= t :invoice %>: <span class="required">*</span>
+            <% end -%>
+            <div class="col-xs-3">
+              <p class="control-label text-left"><%= l :field_date %></p>
+            </div>
+            <div class="col-xs-3">
+              <p class="control-label text-left"><%= l :tag_invoice_number %></p>
+            </div>
+          </div>
+          <div class="form-group">
+            <div class="col-xs-3 col-xs-offset-3">
+              <div class="relative">
+                <%= f.date_field :date, required: true, class: 'form-control form-required' %>
+                <%= calendar_for('invoice_date') %>
               </div>
             </div>
-            <div class="form-group no-margin-bot">
-              <div class="col-xs-3 col-xs-offset-3">
-                <div class="relative">
-                  <%= f.date_field :date, required: true, class: 'form-control form-required' %>
-                  <%= calendar_for('invoice_date') %>
-                </div>
+            <% if controller.controller_name == "invoice_templates" -%>
+              <div class="col-xs-3">
+                <%= f.select :frequency, frequencies_for_select, required: true, class: 'form-control' %>
               </div>
-              <% if controller.controller_name == "invoice_templates" -%>
+            <% else -%>
+              <div class="col-xs-3">
+                <%= f.text_field :number, size: 10, required: true, class: 'form-control form-required' %>
+              </div>
+              <% if @invoice.is_a? IssuedInvoice and @project.issued_invoices.any? %>
                 <div class="col-xs-3">
-                  <%= f.select :frequency, frequencies_for_select, required: true, class: 'form-control' %>
+                  <span class="note">
+                    <%= l(:label_last_invoice_number)%>:<br />
+                    <strong><%= IssuedInvoice.last_number(@project) %></strong>
+                  </span>
                 </div>
-              <% else -%>
-                <div class="col-xs-3">
-                  <%= f.text_field :number, size: 10, required: true, class: 'form-control form-required' %>
-                </div>
-                <% if @invoice.is_a? IssuedInvoice and @project.issued_invoices.any? %>
-                  <div class="col-xs-3">
-                    <span class="note">
-                      <%= l(:label_last_invoice_number)%>:<br />
-                      <strong><%= IssuedInvoice.last_number(@project) %></strong>
-                    </span>
-                  </div>
-                <% end -%>
               <% end -%>
-            </div>
+            <% end -%>
+          </div>
 
-            <div class="form-group">
-              <%= f.label :invoicing_period, class: 'col-xs-3 control-label' do %>
-                <%= l :field_invoicing_period %>:
-              <% end -%>
-              <div class="col-xs-3">
-                <p class="control-label text-left"><%= l :field_invoicing_period_start %></p>
-              </div>
-              <div class="col-xs-3">
-                <p class="control-label text-left"><%= l :field_invoicing_period_end %></p>
-              </div>
-              <% if display_series_code_in_form? -%>
-                <div class="col-xs-3">
-                  <p class="control-label text-left"><%= l :field_series_code %></p>
-                </div>
-              <% end -%>
+          <div class="form-group">
+            <%= f.label :invoicing_period, class: 'col-xs-3 control-label' do %>
+              <%= l :field_invoicing_period %>:
+            <% end -%>
+            <div class="col-xs-3">
+              <p class="control-label text-left"><%= l :field_invoicing_period_start %></p>
             </div>
+            <div class="col-xs-3">
+              <p class="control-label text-left"><%= l :field_invoicing_period_end %></p>
+            </div>
+            <% if display_series_code_in_form? -%>
+              <div class="col-xs-3">
+                <p class="control-label text-left"><%= l :field_series_code %></p>
+              </div>
+            <% end -%>
+          </div>
 
-            <div class="form-group">
-              <div class="col-xs-3 col-xs-offset-3">
-                <div class="relative">
-                  <%= f.date_field :invoicing_period_start, class: 'form-control' %>
-                  <%= calendar_for('invoice_invoicing_period_start') %>
-                </div>
+          <div class="form-group">
+            <div class="col-xs-3 col-xs-offset-3">
+              <div class="relative">
+                <%= f.date_field :invoicing_period_start, class: 'form-control' %>
+                <%= calendar_for('invoice_invoicing_period_start') %>
               </div>
-              <div class="col-xs-3">
-                <div class="relative">
-                  <%= f.date_field :invoicing_period_end, class: 'form-control' %>
-                  <%= calendar_for('invoice_invoicing_period_end') %>
-                </div>
-              </div>
-              <% if display_series_code_in_form? -%>
-                <div class="col-xs-3">
-                  <%= f.text_field :series_code, class: 'form-control' %>
-                </div>
-              <% end -%>
             </div>
+            <div class="col-xs-3">
+              <div class="relative">
+                <%= f.date_field :invoicing_period_end, class: 'form-control' %>
+                <%= calendar_for('invoice_invoicing_period_end') %>
+              </div>
+            </div>
+            <% if display_series_code_in_form? -%>
+              <div class="col-xs-3">
+                <%= f.text_field :series_code, class: 'form-control' %>
+              </div>
+            <% end -%>
           </div>
 
           <hr class="form-elements">
 
-          <div>
-            <div class="form-group">
-              <%= f.label :invoice_order_date, class: 'col-xs-3 control-label' do %>
-                <%= l :label_order %>:
-              <% end -%>
-              <div class="col-xs-3">
-                <p class="control-label text-left"><%= l :field_order_date %></p>
-              </div>
-              <div class="col-xs-3">
-                <p class="control-label text-left"><%= l :field_ponumber %><%= required_field_span 'ponumber' %></p>
+          <div class="form-group">
+            <%= f.label :invoice_order_date, class: 'col-xs-3 control-label' do %>
+              <%= l :label_order %>:
+            <% end -%>
+            <div class="col-xs-3">
+              <p class="control-label text-left"><%= l :field_order_date %></p>
+            </div>
+            <div class="col-xs-3">
+              <p class="control-label text-left"><%= l :field_ponumber %><%= required_field_span 'ponumber' %></p>
+            </div>
+          </div>
+          <div class="form-group">
+            <div class="col-xs-3 col-xs-offset-3">
+              <div class="relative">
+                <%= f.date_field :order_date, class: 'form-control' %>
+                <%= calendar_for('invoice_order_date') %>
               </div>
             </div>
-            <div class="form-group">
-              <div class="col-xs-3 col-xs-offset-3">
-                <div class="relative">
-                  <%= f.date_field :order_date, class: 'form-control' %>
-                  <%= calendar_for('invoice_order_date') %>
-                </div>
-              </div>
-              <div class="col-xs-3">
-                <%= f.text_field :ponumber, class: 'form-control' %>
-              </div>
+            <div class="col-xs-3">
+              <%= f.text_field :ponumber, class: 'form-control' %>
             </div>
-            <div class="form-group">
-              <%= f.label :delivery_note_number, class: 'col-xs-3 control-label' do %>
-                <%= l :field_delivery_note_number %>:
-                <%= required_field_span 'delivery_note_number' %>
-              <% end -%>
-              <div class="col-xs-3">
-                <%= f.text_field :delivery_note_number, class: 'form-control' %>
-              </div>
+          </div>
+          <div class="form-group">
+            <%= f.label :delivery_note_number, class: 'col-xs-3 control-label' do %>
+              <%= l :field_delivery_note_number %>:
+              <%= required_field_span 'delivery_note_number' %>
+            <% end -%>
+            <div class="col-xs-3">
+              <%= f.text_field :delivery_note_number, class: 'form-control' %>
             </div>
-            <div class="form-group">
-              <%= f.label :contract_number, class: 'col-xs-3 control-label' do %>
-                <%= l :field_contract_number %>:
-              <% end -%>
-              <div class="col-xs-3">
-                <%= f.text_field :contract_number, class: 'form-control' %>
-              </div>
+          </div>
+          <div class="form-group">
+            <%= f.label :contract_number, class: 'col-xs-3 control-label' do %>
+              <%= l :field_contract_number %>:
+            <% end -%>
+            <div class="col-xs-3">
+              <%= f.text_field :contract_number, class: 'form-control' %>
             </div>
-            <div class="form-group">
-              <%= f.label :tax_point_date, class: 'col-xs-3 control-label' do %>
-                <%= l :field_tax_point_date %>:
-              <% end -%>
-              <div class="col-xs-3">
-                <div class="relative">
-                  <%= f.date_field :tax_point_date, class: 'form-control' %>
-                  <%= calendar_for('invoice_tax_point_date') %>
-                </div>
+          </div>
+          <div class="form-group">
+            <%= f.label :tax_point_date, class: 'col-xs-3 control-label' do %>
+              <%= l :field_tax_point_date %>:
+            <% end -%>
+            <div class="col-xs-3">
+              <div class="relative">
+                <%= f.date_field :tax_point_date, class: 'form-control' %>
+                <%= calendar_for('invoice_tax_point_date') %>
               </div>
             </div>
           </div>
-
-          <hr class="form-elements">
 
           <div id="payment_stuff">
             <%= render partial: 'invoices/payment_stuff' %>
@@ -217,80 +211,79 @@
 
           <% unless @invoice.is_a?(ReceivedInvoice) %>
 
-            <div>
-              <div class="form-group">
-                <%= f.label :discount_text, class: 'col-xs-3 control-label' do %>
-                  <%= l :field_discount %>:
-                <% end -%>
-                <div class="col-xs-3">
-                  <p class="control-label text-left"><%= l :field_discount_text %></p>
-                </div>
-                <div class="col-xs-3">
-                  <p class="control-label text-left"><%= l :field_discount_percent %></p>
-                </div>
+            <div class="form-group">
+              <%= f.label :discount_text, class: 'col-xs-3 control-label' do %>
+                <%= l :field_discount %>:
+              <% end -%>
+              <div class="col-xs-3">
+                <p class="control-label text-left"><%= l :field_discount_text %></p>
               </div>
-              <div class="form-group no-margin-bot">
-                <div class="col-xs-3 col-xs-offset-3">
-                  <%= f.text_field :discount_text, class: 'form-control' %>
-                </div>
-                <div class="col-xs-3">
-                  <div class="row">
-                    <div class="col-xs-6">
-                      <%= f.text_field :discount, class: 'form-control' %>
-                    </div>
-                    <div class="col-xs-6">
-                      <%= f.select :discount_type, ['%','€'], {}, class: 'form-control' %>
-                    </div>
+              <div class="col-xs-3">
+                <p class="control-label text-left"><%= l :field_discount_percent %></p>
+              </div>
+            </div>
+
+            <div class="form-group">
+              <div class="col-xs-3 col-xs-offset-3">
+                <%= f.text_field :discount_text, class: 'form-control' %>
+              </div>
+              <div class="col-xs-3">
+                <div class="row">
+                  <div class="col-xs-6">
+                    <%= f.text_field :discount, class: 'form-control' %>
+                  </div>
+                  <div class="col-xs-6">
+                    <%= f.select :discount_type, ['%','€'], {}, class: 'form-control' %>
                   </div>
                 </div>
               </div>
             </div>
-            <div>
-              <div class="form-group">
-                <%= f.label :field_charge_reason, class: 'col-xs-3 control-label' do %>
-                  <%= l :field_charge %>:
-                <% end -%>
-                <div class="col-xs-3">
-                  <p class="control-label text-left"><%= l :field_charge_reason %></p>
-                </div>
-                <div class="col-xs-3">
-                  <p class="control-label text-left"><%= l :field_charge_amount %></p>
-                </div>
-                <div class="col-xs-3">
-                  <p class="control-label text-left"><%= l :field_accounting_cost %></p>
-                </div>
+
+            <div class="form-group">
+              <%= f.label :field_charge_reason, class: 'col-xs-3 control-label' do %>
+                <%= l :field_charge %>:
+              <% end -%>
+              <div class="col-xs-3">
+                <p class="control-label text-left"><%= l :field_charge_reason %></p>
               </div>
-              <div class="form-group no-margin-bot">
-                <div class="col-xs-3 col-xs-offset-3">
-                  <%= f.text_field :charge_reason, class: 'form-control' %>
-                </div>
-                <div class="col-xs-3">
-                  <%= f.text_field :charge_amount, value: (@invoice.charge_amount.cents > 0 ? @invoice.charge_amount : ""), class: 'form-control' %>
-                </div>
-                <div class="col-xs-3">
-                  <%= f.text_field :accounting_cost, class: 'form-control' %>
-                </div>
+              <div class="col-xs-3">
+                <p class="control-label text-left"><%= l :field_charge_amount %></p>
+              </div>
+              <div class="col-xs-3">
+                <p class="control-label text-left"><%= l :field_accounting_cost %></p>
               </div>
             </div>
-            <div>
-              <div class="form-group">
-                <%= f.label :amounts_withheld_reason, class: 'col-xs-3 control-label' do %>
-                  <%= l :amounts_withheld %>:
-                <% end -%>
-                <div class="col-xs-3">
-                  <p class="control-label text-left"><%= l :field_amounts_withheld_reason %></p>
-                </div>
-                <div class="col-xs-3">
-                  <p class="control-label text-left"><%= l :field_amounts_withheld %></p>
-                </div>
+
+            <div class="form-group">
+              <div class="col-xs-3 col-xs-offset-3">
+                <%= f.text_field :charge_reason, class: 'form-control' %>
               </div>
-              <div class="form-group">
-                <div class="col-xs-3 col-xs-offset-3">
-                  <%= f.text_field :amounts_withheld_reason, class: 'form-control' %>
-                </div>
-                <div class="col-xs-3">
-                  <%= f.text_field :amounts_withheld, value: (@invoice.amounts_withheld.cents > 0 ? @invoice.amounts_withheld : ""), class: 'form-control' %>
-                </div>
+              <div class="col-xs-3">
+                <%= f.text_field :charge_amount, value: (@invoice.charge_amount.cents > 0 ? @invoice.charge_amount : ""), class: 'form-control' %>
+              </div>
+              <div class="col-xs-3">
+                <%= f.text_field :accounting_cost, class: 'form-control' %>
+              </div>
+            </div>
+
+            <div class="form-group">
+              <%= f.label :amounts_withheld_reason, class: 'col-xs-3 control-label' do %>
+                <%= l :amounts_withheld %>:
+              <% end -%>
+              <div class="col-xs-3">
+                <p class="control-label text-left"><%= l :field_amounts_withheld_reason %></p>
+              </div>
+              <div class="col-xs-3">
+                <p class="control-label text-left"><%= l :field_amounts_withheld %></p>
+              </div>
+            </div>
+
+            <div class="form-group">
+              <div class="col-xs-3 col-xs-offset-3">
+                <%= f.text_field :amounts_withheld_reason, class: 'form-control' %>
+              </div>
+              <div class="col-xs-3">
+                <%= f.text_field :amounts_withheld, value: (@invoice.amounts_withheld.cents > 0 ? @invoice.amounts_withheld : ""), class: 'form-control' %>
               </div>
             </div>
           <% end -%>
@@ -340,7 +333,7 @@
             </div>
           </div>
 
-            <%=render partial: 'invoices/form_submit', locals: {f: f, first_tab: true} %>
+          <%=render partial: 'invoices/form_submit', locals: {f: f, first_tab: true} %>
         </fieldset>
       </div>
 
@@ -539,7 +532,7 @@
               </div>
             </div>
 
-            <div class="form-group no-margin-bot">
+            <div class="form-group">
               <div class="col-xs-2 col-xs-offset-3">
                 <%= f.text_field :fa_import, class: 'form-control' %>
               </div>

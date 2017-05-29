@@ -7,12 +7,3 @@
 <% content_for :sidebar do %>
   <%= render_menu :companies_menu, @project %>
 <% end %>
-
-<div class="col-xs-10 col-no-pad-left">
-  <div class="form-group">
-    <h3><%= l :label_history %></h3>
-    <div class="wrapper-table">
-      <%= render partial: 'events/table', locals: {events: @client.events} %>
-    </div>
-  </div>
-</div>

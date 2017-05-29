@@ -275,6 +275,7 @@ fr:
   s_days: j
   s_other: ""
   boxes: 'Boxes'
+  s_boxes: ''
 
   # People
   label_person: Personne
@@ -783,6 +784,7 @@ If you save it, will be marked as New."
   state_read_plural: "Read"
   state_cancelled_plural: "Cancelled"
   field_bcc_me: "Send me copy of invoices"
+  field_sii_auto_send: "Automatically submit records"
   field_exchange_rate: "Exchange rate"
   field_exchange_date: "Exchange date"
   unitat_contractacio: "Unidad contratación / SEF"

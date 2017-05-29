@@ -1,23 +1,3 @@
 <table class="table table-striped events">
-<thead>
-  <tr>
-    <% unless @project -%>
-      <th><%= l(:field_project) %></th>
-    <% end -%>
-    <th></th>
-    <th></th>
-    <% unless @invoice -%>
-      <th></th>
-    <% end -%>
-    <th></th>
-    <th></th>
-  </tr>
-</thead>
 <%= render partial: 'events/list', locals: {events: events} %>
-<tfoot>
-  <tr>
-    <td colspan="6"></td>
-  </tr>
-</tfoot>
 </table>
-

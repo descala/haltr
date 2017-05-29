@@ -34,9 +34,9 @@
             <td><%= check_box_tag("ids[]", import_error.id, false, :id => nil) %></td>
             <td><%= format_time import_error.created_at %></td>
             <td><%= link_to import_error.filename, project_import_error_path(import_error, project_id: @project) %></td>
-            <td><%= import_error.import_errors %></td>
+            <td><%= import_error.import_errors.gsub("\n","<br/>").html_safe %></td>
             <td align="center">
-              <%= link_to '', project_import_error_path(import_error, project_id: @project), method: :delete, class: 'icon icon-del eliminar' %>
+              <%= link_to '', project_import_error_path(import_error, project_id: @project), method: :delete, class: 'fa fa-trash' %>
             </td>
           </tr>
         <% end -%>
