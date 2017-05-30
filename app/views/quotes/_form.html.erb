@@ -182,8 +182,8 @@
   <hr />
   <div class="text-right set-of-buttons">
     <% if @invoice.new_record? -%>
-      <%= f.submit l(:button_create), name: 'create', class: 'btn btn-primary' %>
-      <%= f.submit l(:button_create_and_send), name: 'create_and_send', class: 'btn btn-primary' %>
+      <%= f.submit l(:button_save), name: 'create', class: 'btn btn-primary' %>
+      <%= f.submit l(:button_save_and_send), name: 'create_and_send', class: 'btn btn-primary' %>
     <% else -%>
       <%= f.submit l(:button_save), name: 'save', class: 'btn btn-primary' %>
       <%= f.submit l(:button_save_and_send), name: 'save_and_send', class: 'btn btn-primary' %>

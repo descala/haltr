@@ -109,7 +109,7 @@
       <div class="col-xs-7 text-right">
         <%= link_to l(:cancel), client_path(@client), class: 'btn btn-link' %>
         <% if @client_office.new_record? -%>
-          <%= submit_tag l(:button_create), class: 'btn btn-primary' %>
+          <%= submit_tag l(:button_save), class: 'btn btn-primary' %>
         <% else -%>
           <%= submit_tag l(:button_save), class: 'btn btn-primary' %>
         <% end -%>

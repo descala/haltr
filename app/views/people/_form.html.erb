@@ -86,7 +86,7 @@
       <div class="col-xs-6 text-right">
         <%= link_to l(:cancel), client_path(@client), class: 'btn btn-link' %>
         <% if @person.new_record? -%>
-          <%= submit_tag l(:button_create), class: 'btn btn-primary' %>
+          <%= submit_tag l(:button_save), class: 'btn btn-primary' %>
         <% else -%>
           <%= submit_tag l(:button_save), class: 'btn btn-primary' %>
         <% end -%>

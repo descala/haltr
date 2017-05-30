@@ -1,7 +1,7 @@
 class ImportErrorsController < ApplicationController
 
 
-  menu_item Haltr::MenuItem.new(:invoices,:import_errors)
+  #menu_item Haltr::MenuItem.new(:invoices,:import_errors)
   helper :haltr
   layout 'haltr'
   before_filter :find_project_by_project_id, only: [:index, :show, :create]

@@ -15,9 +15,9 @@
     <% if first_tab and !@to_amend -%>
       <%= f.submit l(:continue), name: 'continue', class: 'btn btn-primary', id: 'invoice-continue' %>
     <% else -%>
-      <%= f.submit l(:button_create), name: 'create', class: 'btn btn-primary' %>
+      <%= f.submit l(:button_save), name: 'create', class: 'btn btn-primary' %>
       <% unless @invoice.is_a? InvoiceTemplate or @invoice.is_a? DraftInvoice -%>
-        <%= f.submit l(:button_create_and_send), name: 'create_and_send', class: 'btn btn-primary' %>
+        <%= f.submit l(:button_save_and_send), name: 'create_and_send', class: 'btn btn-primary' %>
       <% end -%>
     <% end -%>
 
