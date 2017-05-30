@@ -53,10 +53,5 @@
   <%= render partial: 'common/pagination', locals: {pages: @import_errors_pages, count: @import_errors_count} %>
 
   <% html_title(l(:import_errors)) -%>
-
-  <% content_for :sidebar do %>
-    <%= render_menu :invoices_menu, @project %>
-  <% end %>
-
   <%= context_menu import_errors_context_menu_path %>
 </div>
