@@ -28,6 +28,7 @@
       <% end -%>
     </td>
     <td class="text-right">
+      <%= link_to '<i class="fa fa-plus-square" aria-hidden="true"></i>'.html_safe, '#', class: 'show-events', data: {id: e.id} unless e.notes.blank?  %>
       <%= link_to '<i class="fa fa-plus-square" aria-hidden="true"></i>'.html_safe, '#', class: 'show-audits', data: {id: e.id} if e.audits.any? %>
     </td>
   </tr>

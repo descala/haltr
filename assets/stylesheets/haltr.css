@@ -270,6 +270,9 @@ table.invoice_lines {
 .cashflow {
   text-align: right;
 }
+span.events {
+  display: none;
+}
 div.audited {
   display: none;
 }

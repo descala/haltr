@@ -12,9 +12,11 @@
     message = I18n.t(*e.notes, :default => e.notes)
   end
 -%>
-<%= Redmine::CodesetUtil.replace_invalid_utf8(message.to_s) %>
-
+<br />
+<span class="events" id="event_<%= e.id  %>"><%=Redmine::CodesetUtil.replace_invalid_utf8(message.to_s)%></span>
 <% end -%>
+
+
 <% unless e.codi_registre.blank? -%>
   ( reg. <%= e.codi_registre %> )
 <% end -%>

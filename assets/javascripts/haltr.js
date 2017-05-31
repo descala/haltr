@@ -191,6 +191,27 @@ $(document).ready(function() {
 
     });
   }
+
+  if ( $(".table .show-events").length > 0 ) {
+    // prevent duplicated click bind #6510
+    $( ".table a.show-events" ).off('click');
+    $( ".table a.show-events" ).click(function() {
+      if ( $( this ).find("i").hasClass( "fa-plus-square" ) ) {
+        $( this ).find("i").removeClass( "fa-plus-square" );
+        $( this ).find("i").addClass( "fa-minus-square" );
+        $('#event_'+$(this).data('id')).toggle();
+        return false;
+      } else {
+        $( this ).find("i").removeClass( "fa-minus-square" );
+        $( this ).find("i").addClass( "fa-plus-square" );
+        $('#event_'+$(this).data('id')).toggle();
+        return false;
+      }
+
+    });
+  }
+
+
   if ( $(".titularAccFilters").length > 0 ) {
     $(".titularAccFilters").click(function() {
       if ( $( this ).hasClass( "icon-fa-right-angle-down" ) ) {
