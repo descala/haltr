@@ -337,7 +337,7 @@
     <% unless context =~ /_invoice/ -%>
       <div class="form-group">
         <div class="col-xs-12 text-right">
-          <%= submit_tag (client.new_record? ? l(:button_create) : l(:button_save)), class: 'btn btn-primary' %>
+          <%= submit_tag (client.new_record? ? l(:button_save) : l(:button_save)), class: 'btn btn-primary' %>
         </div>
       </div>
     <% end -%>

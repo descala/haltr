@@ -21,7 +21,7 @@ Redmine::MenuManager.map :invoices_menu do |menu|
     end
   }
   menu.push :reports, {:controller=>'invoices', :action => 'reports' }, :param => :project_id, :caption=>:label_reports
-  menu.push :import_errors, {:controller=>'import_errors', :action=>'index' }, :param => :project_id, :caption => :import_errors
+  # menu.push :import_errors, {:controller=>'import_errors', :action=>'index' }, :param => :project_id, :caption => :import_errors
 end
 
 Redmine::MenuManager.map :payments_menu do |menu|
