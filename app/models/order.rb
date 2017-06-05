@@ -276,18 +276,29 @@ class Order < ActiveRecord::Base
     Order.where("id < ? and project_id = ?", id, project.id).last
   end
 
-  def ubl_invoice
+  def ubl_invoice(number=nil,date=nil)
+    number ||= IssuedInvoice.next_number(project)
+    date   ||= Date.today
     if xml?
       begin
         xslt = Nokogiri.XSLT(File.open(
           File.dirname(__FILE__) +
           "/../../lib/haltr/xslt/Invinet-Order2Invoice.xsl",'rb'
         ))
-        xslt.transform(
+        invoice = xslt.transform(
           Nokogiri::XML(original),
-          ['ID', "'#{IssuedInvoice.next_number(project)}'",
-           'IssueDate', "'#{Date.today}'"]
-        ).to_s
+          ['ID', "'#{number}'",
+           'IssueDate', "'#{date}'"]
+        )
+        # TODO add <cac:PostalAddress> to invoice SupplierParty
+        #      if the Orders does not have one
+        ubl_address = InvoicesController.renderer.render(
+          :partial => "invoices/ubl_address",
+          :format => :xml,
+          :locals => {:entity => project.company},
+          layout: false
+        )
+        invoice.to_s
       rescue
         raise "Error with XSLT transformation"
       end
