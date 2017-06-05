@@ -213,7 +213,6 @@ Mime::Type.register "text/xml", :facturae31
 Mime::Type.register "text/xml", :facturae32
 Mime::Type.register "text/xml", :peppolubl20
 Mime::Type.register "text/xml", :peppolubl21
-Mime::Type.register "text/xml", :biiubl20
 Mime::Type.register "text/xml", :svefaktura
 Mime::Type.register "text/xml", :oioubl20
 Mime::Type.register "text/xml", :efffubl

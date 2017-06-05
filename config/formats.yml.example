@@ -41,11 +41,6 @@ peppolubl21:
   validators: Haltr::Validator::Ubl
   content-type: "text-xml"
 
-biiubl20:
-  name: "BII UBL"
-  validators: Haltr::Validator::Ubl
-  content-type: "text-xml"
-
 svefaktura:
   name: "Svefaktura"
   validators: Haltr::Validator::Svefaktura
