@@ -290,15 +290,19 @@ class Order < ActiveRecord::Base
           ['ID', "'#{number}'",
            'IssueDate', "'#{date}'"]
         )
-        # TODO add <cac:PostalAddress> to invoice SupplierParty
-        #      if the Orders does not have one
-        ubl_address = InvoicesController.renderer.render(
-          :partial => "invoices/ubl_address",
-          :format => :xml,
-          :locals => {:entity => project.company},
-          layout: false
-        )
-        invoice.to_s
+        # Adds the PostalAddress of our Company, only if not already pressent in Order
+        unless invoice.at('//cac:AccountingSupplierParty/cac:Party/cac:PostalAddress', cac: 'urn:oasis:names:specification:ubl:schema:xsd:CommonAggregateComponents-2')
+
+          supplier_party_name_node = invoice.at('//cac:AccountingSupplierParty/cac:Party/cac:PartyName', cac: 'urn:oasis:names:specification:ubl:schema:xsd:CommonAggregateComponents-2')
+          ubl_address = InvoicesController.renderer.render(
+            :partial => "invoices/ubl_address",
+            :format => :xml,
+            :locals => {:entity => project.company},
+            layout: false
+          )
+          supplier_party_name_node.after("<cac:PostalAddress>#{ubl_address}</cac:PostalAddress>")
+        end
+        Haltr::Xml.clean_xml(invoice.to_s)
       rescue
         raise "Error with XSLT transformation"
       end
