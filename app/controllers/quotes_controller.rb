@@ -58,7 +58,6 @@ class QuotesController < ApplicationController
         format.peppolubl20 { render_xml Haltr::Xml.generate(@invoice, 'peppolubl20') }
         format.peppolubl21 { render_xml Haltr::Xml.generate(@invoice, 'peppolubl21') }
         format.svefaktura  { render_xml Haltr::Xml.generate(@invoice, 'svefaktura') }
-        format.oioubl20    { render_xml Haltr::Xml.generate(@invoice, 'oioubl20') }
         format.efffubl     { render_xml Haltr::Xml.generate(@invoice, 'efffubl') }
       else
         format.facturae30  { download_xml Haltr::Xml.generate(@invoice, 'facturae30') }
@@ -67,7 +66,6 @@ class QuotesController < ApplicationController
         format.peppolubl20 { download_xml Haltr::Xml.generate(@invoice, 'peppolubl20') }
         format.peppolubl21 { download_xml Haltr::Xml.generate(@invoice, 'peppolubl21') }
         format.svefaktura  { download_xml Haltr::Xml.generate(@invoice, 'svefaktura') }
-        format.oioubl20    { download_xml Haltr::Xml.generate(@invoice, 'oioubl20') }
         format.efffubl     { download_xml Haltr::Xml.generate(@invoice, 'efffubl') }
       end
     end

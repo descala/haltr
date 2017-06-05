@@ -46,11 +46,6 @@ svefaktura:
   validators: Haltr::Validator::Svefaktura
   content-type: "text-xml"
 
-oioubl20:
-  name: "OIO"
-  validators: Haltr::Validator::Ubl
-  content-type: "text-xml"
-
 original:
   name: "Original"
   validators: Haltr::Validator::Original
