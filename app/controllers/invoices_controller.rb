@@ -657,7 +657,6 @@ class InvoicesController < ApplicationController
           format.peppolubl20 { render_xml Haltr::Xml.generate(@invoice, 'peppolubl20', false, false, true) }
           format.peppolubl21 { render_xml Haltr::Xml.generate(@invoice, 'peppolubl21', false, false, true) }
           format.svefaktura  { render_xml Haltr::Xml.generate(@invoice, 'svefaktura', false, false, true) }
-          format.efffubl     { render_xml Haltr::Xml.generate(@invoice, 'efffubl', false, false, true) }
           format.edifact     { render text: Haltr::Edifact.generate(@invoice, false, true), content_type: 'text' }
         else
           format.facturae30  { download_xml Haltr::Xml.generate(@invoice, 'facturae30', false, false, true) }
@@ -666,7 +665,6 @@ class InvoicesController < ApplicationController
           format.peppolubl20 { download_xml Haltr::Xml.generate(@invoice, 'peppolubl20', false, false, true) }
           format.peppolubl21 { download_xml Haltr::Xml.generate(@invoice, 'peppolubl21', false, false, true) }
           format.svefaktura  { download_xml Haltr::Xml.generate(@invoice, 'svefaktura', false, false, true) }
-          format.efffubl     { download_xml Haltr::Xml.generate(@invoice, 'efffubl', false, false, true) }
           format.edifact     { download_txt Haltr::Edifact.generate(@invoice, false, true) }
         end
       else

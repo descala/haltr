@@ -214,7 +214,6 @@ Mime::Type.register "text/xml", :facturae32
 Mime::Type.register "text/xml", :peppolubl20
 Mime::Type.register "text/xml", :peppolubl21
 Mime::Type.register "text/xml", :svefaktura
-Mime::Type.register "text/xml", :efffubl
 Mime::Type.register "text/xml", :original
 Mime::Type.register "text/xml", :edifact
 

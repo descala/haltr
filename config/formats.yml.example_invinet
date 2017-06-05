@@ -50,11 +50,6 @@ svefaktura:
   validators: Haltr::Validator::Svefaktura
   content-type: "text-xml"
 
-efffubl:
-  name: "EFFF"
-  validators: Haltr::Validator::Ubl
-  content-type: "text-xml"
-
 edifact:
   name: "EDIFact"
   validators: Haltr::Validator::Edifact
