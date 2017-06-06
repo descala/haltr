@@ -926,4 +926,36 @@ class InvoiceTest < ActiveSupport::TestCase
     I18n.locale = :en
   end
 
+  test 'import more fields from UBL 2.0' do
+    file = File.new(File.join(File.dirname(__FILE__),'../fixtures/documents/invoice_ubl_with_sbdh.xml'))
+    invoice = Invoice.create_from_xml(file,companies(:company6),"1234",'uploaded',User.current.name,nil,false)
+    xml = Nokogiri::XML(Haltr::Xml.generate(invoice, 'peppolubl21', false, false, true))
+    xml.remove_namespaces!
+    assert_equal 'Invoice notes', invoice.extra_info # ho importem
+    assert_equal 'Invoice notes', xml.at('//Invoice/Note').text # ho posem a l'xml
+    assert_equal 'ISK', invoice.currency
+    assert_equal 'ISK', xml.at('//Invoice/DocumentCurrencyCode').text
+    assert_equal '20068', invoice.ponumber
+    assert_equal '20068', xml.at('//Invoice/OrderReference/ID').text
+    assert_equal '20068', invoice.invoice_lines.first.ponumber #TODO: a ubl ho hem de posar a linia tmb?
+    #assert_equal 1, invoice.client.people.size
+    #person = invoice.client.people.first
+    #assert_equal 'Customer', person.name
+    #assert_equal '123-4560', person.phone_office
+    ##assert_equal '123-4678', person.phone_fax
+    #assert_equal 'test@customer.com', person.email
+    #assert_equal 'Customer', xml.at('//Invoice/AccountingCustomerParty/Party/Contact/Name')
+    #assert_equal '123-4560', xml.at('//Invoice/AccountingCustomerParty/Party/Contact/Telephone')
+    ##assert_equal '123-4678', xml.at('//Invoice/AccountingCustomerParty/Party/Contact/Telefax')
+    #assert_equal 'test@customer.com', xml.at('//Invoice/AccountingCustomerParty/Party/Contact/ElectronicMail')
+    #
+    #assert_equal 'ID GREN DSK', invoice.invoice_lines[0].notes
+    #assert_equal 'ID GREN DSK', xml.at('//Invoice/InvoiceLine/Item/Description').text
+    #assert_equal 'ID GREN DSK2', invoice.invoice_lines[1].notes
+    #assert_equal 'ID GREN DSK3', invoice.invoice_lines[2].notes
+    assert_equal InvoiceLine::OTHER, invoice.invoice_lines[0].unit
+    assert_equal InvoiceLine::UNITS, invoice.invoice_lines[1].unit
+    assert_equal InvoiceLine::UNITS, invoice.invoice_lines[2].unit
+  end
+
 end

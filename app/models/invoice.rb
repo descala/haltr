@@ -912,9 +912,16 @@ _INV
 
       unit = Haltr::Utils.get_xpath(line,xpaths[:line_unit])
       InvoiceLine::UNIT_CODES.each do |haltr_id, units|
-        if units[:facturae] == unit
-          unit = haltr_id
-          break
+        if invoice_format =~ /facturae/
+          if units[:facturae] == unit
+            unit = haltr_id
+            break
+          end
+        elsif invoice_format =~ /ubl/
+          if units[:ubl] == unit
+            unit = haltr_id
+            break
+          end
         end
         unit = InvoiceLine::OTHER if unit.present?
       end

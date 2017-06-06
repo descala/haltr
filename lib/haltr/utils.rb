@@ -174,6 +174,8 @@ module Haltr
         elsif format =~ /ubl/
           xpaths[:invoice_number]     = "/xmlns:Invoice/cbc:ID"
           xpaths[:invoice_date]       = "/xmlns:Invoice/cbc:IssueDate"
+          xpaths[:extra_info]         = "/xmlns:Invoice/cbc:Note"
+          xpaths[:invoice_date]       = "/xmlns:Invoice/cbc:IssueDate"
           xpaths[:tax_point_date]     = "/xmlns:Invoice/cbc:TaxPointDate"
           xpaths[:invoice_total]      = "/xmlns:Invoice/cac:LegalMonetaryTotal/cbc:TaxInclusiveAmount"
           xpaths[:invoice_import]     = "/xmlns:Invoice/cac:LegalMonetaryTotal/cbc:TaxExclusiveAmount"
@@ -240,7 +242,7 @@ module Haltr
           # relative to invoice_lines/delivery_notes_references/delivery_note
           xpaths[:delivery_note_num]  = "DeliveryNoteNumber" # todo
 
-          xpaths[:ponumber]           = "ReceiverTransactionReference" # todo
+          xpaths[:ponumber]           = "/xmlns:Invoice/cac:OrderReference/cbc:ID"
           # relative to invoice_lines/discounts
           xpaths[:line_discount_percent] = "cbc:MultiplierFactorNumeric"
           xpaths[:line_discount_text]    = "cbc:AllowanceChargeReason"
