@@ -34,7 +34,12 @@ $(document).ready(function() {
   $('select#invoice_client_id').bind('ajax:success', function(evt, data, status, xhr){
     $('#payment_stuff').html(xhr.responseText);
     terms();
-    $('span#invoice_format').html($('select#invoice_client_id option:selected').data('invoice_format'));
+    $('span#invoice_format').html($('select#invoice_client_id option:selected').data('channel'));
+    if ( /ubl/i.test($('select#invoice_client_id option:selected').data('format')) ) {
+      //TODO show UBL stuff tab
+    } else {
+      //TODO hide UBL stuff tab
+    }
   })
 
   /* on load, simulate a client change to call above function */
