@@ -37,6 +37,7 @@
       <li><a href="#invoice-content" data-toggle="tab">2. <%= l :field_invoice_lines %></a></li>
       <li><a href="#invoice-factoring" data-toggle="tab">3. <%= l :label_factoring_assignment_data %></a></li>
       <li><a href="#invoice-files" data-toggle="tab">4. <%= l :invoice_attachments %></a></li>
+      <li><a href="#invoice-delivery" data-toggle="tab">5. <%= l :invoice_delivery %></a></li>
     </ul>
   </div>
 
@@ -604,6 +605,83 @@
             <%= render partial: 'common/premium' %>
             <p><%=l(:invoice_attachments_description, mb: (Setting.attachment_max_size.to_i / 1024))%></p>
           <%- end %>
+          <%=render partial: 'invoices/form_submit', locals: {f: f} %>
+        </fieldset>
+      </div>
+
+      <div class="tab-pane" id="invoice-delivery">
+        <fieldset class="form-horizontal">
+          <legend>5. <%= l :invoice_delivery %></legend>
+
+          <div class="form-group">
+            <%= f.label :delivery_date, class: 'col-xs-3 control-label' do %>
+              <%= t :field_delivery_date %>:
+            <% end -%>
+            <div class="col-xs-4">
+              <%= f.text_field :delivery_date, class: 'form-control' %>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <%= f.label :delivery_, class: 'col-xs-3 control-label' do %>
+              <%= t :field_delivery_location_id%>:
+            <% end -%>
+            <div class="col-xs-4">
+              <%= f.text_field :delivery_location_id, class: 'form-control' %>
+            </div>
+            <%= f.label :delivery_, class: 'col-xs-2 control-label' do %>
+              <%= t :field_delivery_location_type%>:
+            <% end -%>
+            <div class="col-xs-3">
+              <%= f.text_field :delivery_location_type, class: 'form-control' %>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <%= f.label :delivery_address, class: 'col-xs-3 control-label' do %>
+              <%= t :field_delivery_address%>:
+            <% end -%>
+            <div class="col-xs-4">
+              <%= f.text_field :delivery_address, class: 'form-control' %>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <%= f.label :delivery_city, class: 'col-xs-3 control-label' do %>
+              <%= t :field_delivery_city%>:
+            <% end -%>
+            <div class="col-xs-4">
+              <%= f.text_field :delivery_city, class: 'form-control' %>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <%= f.label :delivery_postalcode, class: 'col-xs-3 control-label' do %>
+              <%= t :field_delivery_postalcode%>:
+            <% end -%>
+            <div class="col-xs-4">
+              <%= f.text_field :delivery_postalcode, class: 'form-control' %>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <%= f.label :delivery_province, class: 'col-xs-3 control-label' do %>
+              <%= t :field_delivery_province%>:
+            <% end -%>
+            <div class="col-xs-4">
+              <%= f.text_field :delivery_province, class: 'form-control' %>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <%= f.label :delivery_country, class: 'col-xs-3 control-label' do %>
+              <%= t :field_delivery_country%>:
+            <% end -%>
+            <div class="col-xs-4">
+              <%= f.text_field :delivery_country, class: 'form-control' %>
+            </div>
+          </div>
+
           <%=render partial: 'invoices/form_submit', locals: {f: f} %>
         </fieldset>
       </div>
