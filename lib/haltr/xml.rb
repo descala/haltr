@@ -13,11 +13,6 @@ module Haltr
       if invoice.send_original? and !force and invoice.original_root_namespace
         xml = invoice.original
       else
-        if format == 'efffubl'
-          pdf = Base64::encode64(Haltr::Pdf.generate(invoice))
-        else
-          pdf = nil
-        end
         client = invoice.client
         if invoice.client_office
           # overwrite client attributes with its office
@@ -30,7 +25,6 @@ module Haltr
           :locals   => { :@invoice => invoice,
                          :@company => invoice.company,
                          :@client  => client,
-                         :@efffubl_base64_pdf => pdf,
                          :@format  => format,
                          :@local_certificate  => local_certificate },
           :formats  => :xml,

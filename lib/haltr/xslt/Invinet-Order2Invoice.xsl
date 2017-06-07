@@ -113,6 +113,8 @@ saxon655 -o myInvoice.xml myOrder.xml Invinet-Order2Invoice.xsl
   <Invoice xmlns="urn:oasis:names:specification:ubl:schema:xsd:Invoice-2">
     <!--the spec doesn't say about others, but probably should be copied-->
     <xsl:apply-templates mode="c:noNS" select="cbc:UBLVersionID"/><!--001-->
+    <cbc:CustomizationID schemeID="PEPPOL">urn:www.cenbii.eu:transaction:biitrns010:ver2.0:extended:urn:www.peppol.eu:bis:peppol4a:ver2.0</cbc:CustomizationID>
+    <cbc:ProfileID>urn:www.cenbii.eu:profile:bii04:ver2.0</cbc:ProfileID>
     <!--special handling for the customization identifier-->
     <xsl:if test="string($CustomizationID)">
       <xsl:choose>
@@ -144,6 +146,7 @@ saxon655 -o myInvoice.xml myOrder.xml Invinet-Order2Invoice.xsl
     <cbc:IssueDate>
       <xsl:value-of select="$IssueDate"/>
     </cbc:IssueDate>
+    <cbc:InvoiceTypeCode listID="UNCL1001">380</cbc:InvoiceTypeCode>
     <xsl:apply-templates mode="c:noNS" select="cbc:Note"/><!--003-->
     <xsl:apply-templates mode="c:noNS"
                          select="cbc:DocumentCurrencyCode"/><!--004-->
