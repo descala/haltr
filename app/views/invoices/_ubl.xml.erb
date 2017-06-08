@@ -93,6 +93,7 @@
         <% end -%>
       </cac:Party>
     </cac:AccountingCustomerParty>
+    <% if @invoice.has_delivery_info? -%>
     <cac:Delivery>
       <cbc:ActualDeliveryDate><%= @invoice.delivery_date %></cbc:ActualDeliveryDate>
       <cac:DeliveryLocation>
@@ -108,6 +109,7 @@
         </cac:Address>
       </cac:DeliveryLocation>
     </cac:Delivery>
+    <% end -%>
 <% if @invoice.payment_method_code(:ubl).present? and @invoice.due_date.present? and !@invoice.is_amend? -%>
       <cac:PaymentMeans>
         <cbc:PaymentMeansCode listID="UNCL4461"><%=h @invoice.payment_method_code(:ubl) %></cbc:PaymentMeansCode>
