@@ -618,7 +618,10 @@
               <%= t :field_delivery_date %>:
             <% end -%>
             <div class="col-xs-4">
-              <%= f.text_field :delivery_date, class: 'form-control' %>
+              <div class="relative">
+                <%= f.date_field :delivery_date, class: 'form-control' %>
+                <%= calendar_for('invoice_delivery_date') %>
+              </div>
             </div>
           </div>
 
@@ -678,7 +681,7 @@
               <%= t :field_delivery_country%>:
             <% end -%>
             <div class="col-xs-4">
-              <%= f.text_field :delivery_country, class: 'form-control' %>
+              <%= f.country_select :delivery_country, {priority_countries: [@project.company.country]}, class: 'form-control' %>
             </div>
           </div>
 
