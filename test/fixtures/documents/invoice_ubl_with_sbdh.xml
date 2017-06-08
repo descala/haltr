@@ -128,19 +128,17 @@
       </cac:Party>
     </cac:AccountingCustomerParty>
     <cac:Delivery>
+      <cbc:ActualDeliveryDate>2017-05-19</cbc:ActualDeliveryDate>
       <cac:DeliveryLocation>
         <cbc:ID schemeID="GLN">1234567890123</cbc:ID>
         <cac:Address>
-          <cbc:AddressFormatCode listID="Address Format" listAgencyID="NES">Unstructured</cbc:AddressFormatCode>
-          <cac:AddressLine>
-            <cbc:Line>Strategía ehf.</cbc:Line>
-          </cac:AddressLine>
-          <cac:AddressLine>
-            <cbc:Line>Suðurlandsbraut 22</cbc:Line>
-          </cac:AddressLine>
-          <cac:AddressLine>
-            <cbc:Line>Guðrún</cbc:Line>
-          </cac:AddressLine>
+          <cbc:StreetName>Melió 113</cbc:StreetName>
+          <cbc:CityName>Vilafranca del Penedès</cbc:CityName>
+          <cbc:PostalZone>08720</cbc:PostalZone>
+          <cbc:CountrySubentity>Barcelona</cbc:CountrySubentity>
+          <cac:Country>
+            <cbc:IdentificationCode listID="ISO3166-1:Alpha2">ES</cbc:IdentificationCode>
+          </cac:Country>
         </cac:Address>
       </cac:DeliveryLocation>
     </cac:Delivery>
@@ -196,9 +194,6 @@
       <cbc:Note>line 1 note</cbc:Note>
       <cbc:InvoicedQuantity unitCode="BO">3.00</cbc:InvoicedQuantity>
       <cbc:LineExtensionAmount currencyID="ISK">3270.27</cbc:LineExtensionAmount>
-      <cac:Delivery>
-        <cbc:ActualDeliveryDate>2017-05-19</cbc:ActualDeliveryDate>
-      </cac:Delivery>
       <cac:TaxTotal>
         <cbc:TaxAmount currencyID="ISK">359.73</cbc:TaxAmount>
         <cac:TaxSubtotal>
@@ -247,9 +242,6 @@
       <cbc:Note>line 2 note</cbc:Note>
       <cbc:InvoicedQuantity unitCode="C62">-3.00</cbc:InvoicedQuantity>
       <cbc:LineExtensionAmount currencyID="ISK">-7200.00</cbc:LineExtensionAmount>
-      <cac:Delivery>
-        <cbc:ActualDeliveryDate>2017-05-19</cbc:ActualDeliveryDate>
-      </cac:Delivery>
       <cac:TaxTotal>
         <cbc:TaxAmount currencyID="ISK">-1728.00</cbc:TaxAmount>
         <cac:TaxSubtotal>
@@ -298,9 +290,6 @@
       <cbc:Note>line 3 note</cbc:Note>
       <cbc:InvoicedQuantity unitCode="C62">3.00</cbc:InvoicedQuantity>
       <cbc:LineExtensionAmount currencyID="ISK">7200.00</cbc:LineExtensionAmount>
-      <cac:Delivery>
-        <cbc:ActualDeliveryDate>2017-05-19</cbc:ActualDeliveryDate>
-      </cac:Delivery>
       <cac:TaxTotal>
         <cbc:TaxAmount currencyID="ISK">1728.00</cbc:TaxAmount>
         <cac:TaxSubtotal>

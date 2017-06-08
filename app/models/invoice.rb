@@ -894,6 +894,16 @@ _INV
       invoice.payment_method = Haltr::Utils.payment_method_from_facturae(xml_payment_method)
     else # ubl
       invoice.payment_method = Haltr::Utils.payment_method_from_ubl(xml_payment_method)
+      delivery = doc.xpath(xpaths[:delivery])
+
+      [:delivery_date, :delivery_location_type, :delivery_location_id,
+       :delivery_address, :delivery_city, :delivery_postalcode,
+       :delivery_province, :delivery_country].each do |delivery_attr|
+         invoice.public_send(
+           "#{delivery_attr}=",
+           Haltr::Utils.get_xpath(delivery, xpaths[delivery_attr])
+         )
+       end
     end
 
     # bank info

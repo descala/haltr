@@ -260,6 +260,17 @@ module Haltr
           xpaths[:attach_description] = "cbc:DocumentType"
           xpaths[:attach_data]        = "cac:Attachment/cbc:EmbeddedDocumentBinaryObject"
 
+          xpaths[:delivery] = "//cac:Delivery"
+          # relative to delivery
+          xpaths[:delivery_date]          = "cbc:ActualDeliveryDate"
+          xpaths[:delivery_location_type] = "cac:DeliveryLocation/cbc:ID/@schemeID"
+          xpaths[:delivery_location_id]   = "cac:DeliveryLocation/cbc:ID"
+          xpaths[:delivery_address]       = "cac:DeliveryLocation/cac:Address/cbc:StreetName"
+          xpaths[:delivery_city]          = "cac:DeliveryLocation/cac:Address/cbc:CityName"
+          xpaths[:delivery_postalcode]    = "cac:DeliveryLocation/cac:Address/cbc:PostalZone"
+          xpaths[:delivery_province]      = "cac:DeliveryLocation/cac:Address/cbc:CountrySubentity"
+          xpaths[:delivery_country]       = "cac:DeliveryLocation/cac:Address/cac:Country/cbc:IdentificationCode"
+
         end
         xpaths
       end

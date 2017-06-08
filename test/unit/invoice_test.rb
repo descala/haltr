@@ -705,6 +705,7 @@ class InvoiceTest < ActiveSupport::TestCase
     if invoice.client.invoice_format == 'link_to_pdf_by_mail'
       assert invoice.valid?
       invoice.about_to_be_sent=true
+      invoice.client.email=''
       assert !invoice.valid?
       assert_equal ["Invoice's client has no email defined"], invoice.errors.full_messages
     else
@@ -956,6 +957,23 @@ class InvoiceTest < ActiveSupport::TestCase
     assert_equal InvoiceLine::OTHER, invoice.invoice_lines[0].unit
     assert_equal InvoiceLine::UNITS, invoice.invoice_lines[1].unit
     assert_equal InvoiceLine::UNITS, invoice.invoice_lines[2].unit
+    # delivery
+    assert_equal Date.parse('2017-05-19'), invoice.delivery_date
+    assert_equal '2017-05-19', xml.at('//Invoice/Delivery/ActualDeliveryDate').text
+    assert_equal 'GLN', invoice.delivery_location_type
+    assert_equal 'GLN', xml.at('//Invoice/Delivery/DeliveryLocation/ID/@schemeID').text
+    assert_equal '1234567890123', invoice.delivery_location_id
+    assert_equal '1234567890123', xml.at('//Invoice/Delivery/DeliveryLocation/ID').text
+    assert_equal 'Melió 113', invoice.delivery_address
+    assert_equal 'Melió 113', xml.at('//Invoice/Delivery/DeliveryLocation/Address/StreetName').text
+    assert_equal 'Vilafranca del Penedès', invoice.delivery_city
+    assert_equal 'Vilafranca del Penedès', xml.at('//Invoice/Delivery/DeliveryLocation/Address/CityName').text
+    assert_equal '08720', invoice.delivery_postalcode
+    assert_equal '08720', xml.at('//Invoice/Delivery/DeliveryLocation/Address/PostalZone').text
+    assert_equal 'Barcelona', invoice.delivery_province
+    assert_equal 'Barcelona', xml.at('//Invoice/Delivery/DeliveryLocation/Address/CountrySubentity').text
+    assert_equal 'ES', invoice.delivery_country
+    assert_equal 'ES', xml.at('//Invoice/Delivery/DeliveryLocation/Address/Country/IdentificationCode').text
   end
 
 end
