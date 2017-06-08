@@ -30,12 +30,26 @@ function terms(){
 
 $(document).ready(function() {
 
-  /* Bind update payment stuff in an issued invoice form */
-  $('select#invoice_client_id').bind('ajax:success', function(evt, data, status, xhr){
-    $('#payment_stuff').html(xhr.responseText);
-    terms();
-    $('span#invoice_format').html($('select#invoice_client_id option:selected').data('invoice_format'));
-  })
+  if ( $('select#invoice_client_id').size() > 0 ) {
+    // show/hide for current client
+    if ( /ubl/i.test($('select#invoice_client_id option:selected').data('format')) ) {
+      $('.nav li a[href^="#invoice-delivery"]').show();
+    } else {
+      $('.nav li a[href^="#invoice-delivery"]').hide();
+    }
+
+    /* Bind update payment stuff in an issued invoice form */
+    $('select#invoice_client_id').bind('ajax:success', function(evt, data, status, xhr){
+      $('#payment_stuff').html(xhr.responseText);
+      terms();
+      $('span#invoice_format').html($('select#invoice_client_id option:selected').data('channel'));
+      if ( /ubl/i.test($('select#invoice_client_id option:selected').data('format')) ) {
+        $('.nav li a[href^="#invoice-delivery"]').show();
+      } else {
+        $('.nav li a[href^="#invoice-delivery"]').hide();
+      }
+    })
+  }
 
   /* on load, simulate a client change to call above function */
   /* but only when creating new invoice, to avoid undesired changes */
@@ -247,7 +261,9 @@ $(document).ready(function() {
     var stripped_url = document.location.toString().split("#");
     if (stripped_url.length > 1) {
       invoice_tab = stripped_url[1];
-      $('a[href="#'+invoice_tab+'"]').click();
+      if ( $('a[href="#'+invoice_tab+'"]').is(":visible") ) {
+        $('a[href="#'+invoice_tab+'"]').click();
+      }
     }
   }
 
