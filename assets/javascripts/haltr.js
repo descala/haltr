@@ -34,10 +34,8 @@ $(document).ready(function() {
     // show/hide for current client
     if ( /ubl/i.test($('select#invoice_client_id option:selected').data('format')) ) {
       $('.nav li a[href^="#invoice-delivery"]').show();
-      $('div#invoice-delivery').show();
     } else {
       $('.nav li a[href^="#invoice-delivery"]').hide();
-      $('div#invoice-delivery').hide();
     }
 
     /* Bind update payment stuff in an issued invoice form */
@@ -47,10 +45,8 @@ $(document).ready(function() {
       $('span#invoice_format').html($('select#invoice_client_id option:selected').data('channel'));
       if ( /ubl/i.test($('select#invoice_client_id option:selected').data('format')) ) {
         $('.nav li a[href^="#invoice-delivery"]').show();
-        $('div#invoice-delivery').show();
       } else {
         $('.nav li a[href^="#invoice-delivery"]').hide();
-        $('div#invoice-delivery').hide();
       }
     })
   }
