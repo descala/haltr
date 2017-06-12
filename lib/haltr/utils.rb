@@ -382,6 +382,9 @@ module Haltr
               end
             end
           end
+          unless client
+            client = project.clients.where('company_identifier = ?', client_hash[:taxcode]).first
+          end
         end
         unless client
           client = Client.new(client_hash)
@@ -409,6 +412,11 @@ module Haltr
           client.language ||= User.current.language
           # do not add "validate: false" here or you'll end with duplicated
           # clients, client validates uniqueness of taxcode.
+          unless client.valid?
+            # provem si només es un error de taxcode
+            client.company_identifier = client.taxcode
+            client.taxcode = ''
+          end
           unless client.valid?
             raise "#{I18n.t(:client)}: #{client.errors.full_messages.join('. ')}"
           end
