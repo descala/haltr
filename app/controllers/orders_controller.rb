@@ -96,6 +96,10 @@ class OrdersController < ApplicationController
         #HACK: link to client
         # https://groups.google.com/forum/#!topic/nokogiri-talk/LZjW70XpkLc
         if @order.xml? and @order.client
+          client_name = Nokogiri::XML(@order.xml).xpath(
+            "#{Order::XPATHS_ORDER[:buyer]}/#{Order::XPATHS_PARTY[:name]}"
+          ).text rescue nil
+          client_name ||= @order.client.name
           @order_xslt_html = @order_xslt_html.to_html.gsub(
             @order.client.name,
             view_context.link_to(@order.client.name, client_path(@order.client))
