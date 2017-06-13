@@ -95,6 +95,7 @@ class Order < ActiveRecord::Base
   }
 
   XPATHS_ORDER = {
+    sbdh:            "//xmlns:StandardBusinessDocument/xmlns:StandardBusinessDocumentHeader",
     num_pedido:      "/xmlns:Order/cbc:ID",
     fecha_pedido:    "/xmlns:Order/cbc:IssueDate",
     lugar_entrega:   "/xmlns:Order/cac:Delivery/cac:DeliveryLocation/cbc:ID",
@@ -111,16 +112,16 @@ class Order < ActiveRecord::Base
 
   # relatius a seller o buyer
   XPATHS_PARTY = {
-    taxcode:    "/cac:PartyTaxScheme/cbc:CompanyID",
-    taxcode2:   "/cac:PartyLegalEntity/cbc:CompanyID",
-    taxcode3:   "/cac:PartyIdentification/cbc:ID",
-    name:       "/cac:PartyName/cbc:Name",
-    endpointid: "/cbc:EndpointID", # peppol
-    address:    "/cac:PostalAddress/cbc:StreetName",
-    city:       "/cac:PostalAddress/cbc:CityName",
-    postalcode: "/cac:PostalAddress/cbc:PostalZone",
-    province:   "/cac:PostalAddress/cbc:CountrySubentity",
-    country:    "/cac:PostalAddress/cac:Country/cbc:IdentificationCode",
+    taxcode:            "/cac:PartyTaxScheme/cbc:CompanyID",
+    company_identifier: "/cac:PartyLegalEntity/cbc:CompanyID",
+    endpointid:         "/cbc:EndpointID", # peppol
+    endpointid2:        "/cac:PartyIdentification/cbc:ID",
+    name:               "/cac:PartyName/cbc:Name",
+    address:            "/cac:PostalAddress/cbc:StreetName",
+    city:               "/cac:PostalAddress/cbc:CityName",
+    postalcode:         "/cac:PostalAddress/cbc:PostalZone",
+    province:           "/cac:PostalAddress/cbc:CountrySubentity",
+    country:            "/cac:PostalAddress/cac:Country/cbc:IdentificationCode",
   }
 
   def self.regexps(edi)
@@ -165,42 +166,50 @@ class Order < ActiveRecord::Base
 
     xml = file.read
     doc = Nokogiri::XML(xml)
+
     if doc.child and doc.child.name == "StandardBusinessDocument"
+      # PEPPOL data from SBDH
+      sender_schemeid, sender_endpointid = doc.at(
+        "#{XPATHS_ORDER[:sbdh]}/xmlns:Sender/xmlns:Identifier"
+      ).text.to_s.split(':')
+      sender_schemeid = B2b::Peppol.iso2sch(sender_schemeid)
+      receiver_schemeid, receiver_endpointid = doc.at(
+        "#{XPATHS_ORDER[:sbdh]}/xmlns:Receiver/xmlns:Identifier"
+      ).text.to_s.split(':')
+      receiver_schemeid = B2b::Peppol.iso2sch(receiver_schemeid)
+
       doc = Haltr::Utils.extract_from_sbdh(doc)
     end
-    seller_taxcodes = []
-    seller_taxcodes << Haltr::Utils.get_xpath(doc, "#{XPATHS_ORDER[:seller]}#{XPATHS_PARTY[:taxcode]}")
-    seller_taxcodes << Haltr::Utils.get_xpath(doc, "#{XPATHS_ORDER[:seller]}#{XPATHS_PARTY[:taxcode2]}")
-    seller_taxcodes << Haltr::Utils.get_xpath(doc, "#{XPATHS_ORDER[:seller]}#{XPATHS_PARTY[:taxcode3]}")
-    seller_taxcodes << Haltr::Utils.get_xpath(doc, "#{XPATHS_ORDER[:seller]}#{XPATHS_PARTY[:endpointid]}")
-    seller_taxcodes = seller_taxcodes.reject {|t| t.blank? }.uniq
-    seller_taxcodes.collect! {|t| t.gsub(/\s/,'') }
-    seller_endpoint = Haltr::Utils.get_xpath(doc, "#{XPATHS_ORDER[:seller]}#{XPATHS_PARTY[:endpointid]}")
-    buyer_taxcodes  = []
-    buyer_taxcodes << Haltr::Utils.get_xpath(doc, "#{XPATHS_ORDER[:buyer]}#{XPATHS_PARTY[:taxcode]}")
-    buyer_taxcodes << Haltr::Utils.get_xpath(doc, "#{XPATHS_ORDER[:buyer]}#{XPATHS_PARTY[:taxcode2]}")
-    buyer_taxcodes << Haltr::Utils.get_xpath(doc, "#{XPATHS_ORDER[:buyer]}#{XPATHS_PARTY[:taxcode3]}")
-    buyer_taxcodes << Haltr::Utils.get_xpath(doc, "#{XPATHS_ORDER[:buyer]}#{XPATHS_PARTY[:endpointid]}")
-    buyer_taxcodes = buyer_taxcodes.reject {|t| t.blank? }.uniq
-    buyer_taxcodes.collect! {|t| t.gsub(/\s/, '') }
 
-    if seller_taxcodes.include?(project.company.taxcode) or project.company.endpointid == seller_endpoint
-      client_role = :buyer
-      client_taxcodes = buyer_taxcodes
-    else
-      peppolid = ", #{project.company.schemeid} #{project.company.endpointid}"
-      raise I18n.t :taxcodes_does_not_belong_to_self,
-        :tcs => "#{seller_taxcodes.join('/')}",
-        :tc  => "#{project.company.taxcode}#{peppolid if peppolid.size > 3}"
+    # PEPPOL data from XML (if data from SBDH is blank)
+    [XPATHS_PARTY[:endpointid], XPATHS_PARTY[:endpointid2]].each do |xpath|
+      sender_endpointid = Haltr::Utils.get_xpath(
+        doc, "#{XPATHS_ORDER[:seller]}#{xpath}") if sender_endpointid.blank?
+      sender_schemeid = Haltr::Utils.get_xpath(
+        doc, "#{XPATHS_ORDER[:seller]}#{xpath}/@schemeID") if sender_schemeid.blank?
+      receiver_endpointid = Haltr::Utils.get_xpath(
+        doc, "#{XPATHS_ORDER[:buyer]}#{xpath}") if receiver_endpointid.blank?
+      receiver_schemeid = Haltr::Utils.get_xpath(
+        doc, "#{XPATHS_ORDER[:buyer]}#{xpath}/@schemeID") if receiver_schemeid.blank?
+    end
+
+    # our company data must match seller data
+    unless receiver_endpointid == project.company.endpointid and
+        receiver_schemeid == project.company.schemeid
+      # seller does not match
+      raise I18n.t :endpoint_does_not_belong_to_self,
+        :tcs => "#{sender_schemeid}:#{sender_endpointid}",
+        :tc  => "#{project.company.schemeid}:#{project.company.endpointid}"
     end
 
     client_hash = {}
     XPATHS_PARTY.each do |k,v|
-      next if k =~ /taxcode/
-      client_hash[k] = Haltr::Utils.get_xpath(doc, "#{XPATHS_ORDER[client_role]}#{v}")
+      next if k =~ /endpointid/
+      client_hash[k] = Haltr::Utils.get_xpath(doc, "#{XPATHS_ORDER[:buyer]}#{v}")
     end
-    client_hash[:taxcode] = client_taxcodes.first
-    client_hash[:project] = project
+    client_hash[:endpointid] = sender_endpointid
+    client_hash[:schemeid]   = sender_schemeid
+    client_hash[:project]    = project
 
     order = Order.new
     order.client, order.client_office = Haltr::Utils.client_from_hash(client_hash)

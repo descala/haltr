@@ -366,27 +366,34 @@ module Haltr
           client_hash[:country] = client_hash[:country].downcase
         end
         if project
-          # to match ES12345678 when we have 12345678
-          project.clients.where('taxcode like ?', "%#{client_hash[:taxcode]}").each do |c|
-            if c.taxcode =~ /\A.{0,2}#{client_hash[:taxcode]}\z/
-              client = c
-              break
-            end
+          if client_hash[:endpointid].present? and client_hash[:schemeid].present?
+            client = project.clients.where(
+              'schemeid = ? and endpointid = ?', client_hash[:schemeid], client_hash[:endpointid]
+            ).first
           end
-          unless client
-            # to match 12345678 when we have ES12345678
-            project.clients.where('? like concat("%", taxcode) and taxcode != ""', client_hash[:taxcode]).each do |c|
-              if client_hash[:taxcode] =~ /\A.{0,2}#{c.taxcode}\z/
+          if client.blank? and client_hash[:taxcode].present?
+            # to match ES12345678 when we have 12345678
+            project.clients.where('taxcode like ?', "%#{client_hash[:taxcode]}").each do |c|
+              if c.taxcode =~ /\A.{0,2}#{client_hash[:taxcode]}\z/
                 client = c
                 break
               end
             end
+            unless client
+              # to match 12345678 when we have ES12345678
+              project.clients.where('? like concat("%", taxcode) and taxcode != ""', client_hash[:taxcode]).each do |c|
+                if client_hash[:taxcode] =~ /\A.{0,2}#{c.taxcode}\z/
+                  client = c
+                  break
+                end
+              end
+            end
           end
-          unless client
-            client = project.clients.where('company_identifier = ?', client_hash[:taxcode]).first
+          if client.blank? and client_hash[:company_identifier].present?
+            client = project.clients.where('company_identifier = ?', client_hash[:company_identifier]).first
           end
         end
-        unless client
+        if client.blank?
           client = Client.new(client_hash)
           client.project = project
           external_company = nil
