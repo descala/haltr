@@ -102,7 +102,7 @@ class OrdersController < ApplicationController
           @client_name ||= @order.client.name
           @order_xslt_html = @order_xslt_html.to_html.gsub(
             @client_name,
-            view_context.link_to(@order.client.name, client_path(@order.client))
+            view_context.link_to(@client_name, client_path(@order.client))
           ).html_safe
         elsif @order.xml?
           @order_xslt_html = @order_xslt_html.to_html.html_safe
