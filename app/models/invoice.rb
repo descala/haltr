@@ -651,6 +651,7 @@ _INV
     amend_reason     = Haltr::Utils.get_xpath(doc,xpaths[:amend_reason])
     party_id         = Haltr::Utils.get_xpath(doc,xpaths[:party_id])
     legal_literals   = Haltr::Utils.get_xpath(doc,xpaths[:legal_literals])
+    contract_number  = Haltr::Utils.get_xpath(doc,xpaths[:contract_number])
 
 
     # factoring assignment data
@@ -886,7 +887,8 @@ _INV
       :fa_clauses        => fa_clauses,
       :party_identification => party_id,
       :legal_literals    => legal_literals,
-      :file_name         => file_name
+      :file_name         => file_name,
+      :contract_number   => contract_number
     )
 
     xml_payment_method = Haltr::Utils.get_xpath(doc,xpaths[:payment_method])
