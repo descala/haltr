@@ -243,6 +243,7 @@ module Haltr
           xpaths[:delivery_note_num]  = "DeliveryNoteNumber" # todo
 
           xpaths[:ponumber]           = "/xmlns:Invoice/cac:OrderReference/cbc:ID"
+          xpaths[:contract_number]    = "/xmlns:Invoice/cac:ContractDocumentReference/cbc:ID"
           # relative to invoice_lines/discounts
           xpaths[:line_discount_percent] = "cbc:MultiplierFactorNumeric"
           xpaths[:line_discount_text]    = "cbc:AllowanceChargeReason"

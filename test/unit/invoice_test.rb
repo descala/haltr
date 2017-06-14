@@ -939,6 +939,8 @@ class InvoiceTest < ActiveSupport::TestCase
     assert_equal '20068', invoice.ponumber
     assert_equal '20068', xml.at('//Invoice/OrderReference/ID').text
     assert_equal '20068', invoice.invoice_lines.first.ponumber #TODO: a ubl ho hem de posar a linia tmb?
+    assert_equal 'Contract01', invoice.contract_number
+    assert_equal 'Contract01', xml.at('//Invoice/ContractDocumentReference/ID').text
     #assert_equal 1, invoice.client.people.size
     #person = invoice.client.people.first
     #assert_equal 'Customer', person.name

@@ -42,6 +42,10 @@
     <cac:OrderReference>
       <cbc:ID>20068</cbc:ID>
     </cac:OrderReference>
+    <cac:ContractDocumentReference>
+      <cbc:ID>Contract01</cbc:ID>
+      <cbc:DocumentType>Contract</cbc:DocumentType>
+    </cac:ContractDocumentReference>
     <cac:AdditionalDocumentReference>
       <cbc:ID>0070075</cbc:ID>
       <cbc:IssueDate>2016-02-24</cbc:IssueDate>
