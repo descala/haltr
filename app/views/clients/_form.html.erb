@@ -264,9 +264,12 @@
           <%= f.label :schemeid, class: 'col-xs-3 control-label' do %>
             <%= l :field_schemeid %>:
           <% end -%>
-          <div class="col-xs-3">
+          <div class="col-xs-5">
             <%= f.select :schemeid, Peppol::schemes_for_select, {}, class: 'form-control' %>
           </div>
+        </div>
+
+        <div class="form-group">
           <%= f.label :endpointid, class: 'col-xs-3 control-label' do %>
             <%= l :field_endpointid %>:
           <% end -%>
