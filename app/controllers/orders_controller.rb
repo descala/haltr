@@ -88,6 +88,9 @@ class OrdersController < ApplicationController
       if doc.child and doc.child.name == "StandardBusinessDocument"
         doc = Haltr::Utils.extract_from_sbdh(doc)
       end
+      @client_name = doc.xpath(
+        "#{Order::XPATHS_ORDER[:buyer]}/#{Order::XPATHS_PARTY[:name]}"
+      ).text rescue nil
       xslt = Nokogiri.XSLT(File.open("#{File.dirname(__FILE__)}/../../lib/haltr/xslt/OIOUBL_Order.xsl",'rb'))
       @order_xslt_html = xslt.transform(doc)
     end
@@ -96,9 +99,10 @@ class OrdersController < ApplicationController
         #HACK: link to client
         # https://groups.google.com/forum/#!topic/nokogiri-talk/LZjW70XpkLc
         if @order.xml? and @order.client
+          @client_name ||= @order.client.name
           @order_xslt_html = @order_xslt_html.to_html.gsub(
-            @order.client.name,
-            view_context.link_to(@order.client.name, client_path(@order.client))
+            @client_name,
+            view_context.link_to(@client_name, client_path(@order.client))
           ).html_safe
         elsif @order.xml?
           @order_xslt_html = @order_xslt_html.to_html.html_safe

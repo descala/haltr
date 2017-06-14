@@ -223,11 +223,11 @@ module Haltr
           xpaths[:i_transaction_ref]  = "IssuerTransactionReference" # todo
           xpaths[:r_contract_reference] = "ReceiverContractReference" # todo
           xpaths[:line_quantity]      = "cbc:InvoicedQuantity"
-          xpaths[:line_description]   = "cac:Item/cbc:Name"
+          xpaths[:line_description]   = ["cac:Item/cbc:Name", "cac:Item/cbc:Description"]
           xpaths[:line_price]         = "cac:Price/cbc:PriceAmount"
           xpaths[:line_unit]          = "cbc:InvoicedQuantity/@unitCode"
           xpaths[:line_taxes]         = ["cac:Item/cac:ClassifiedTaxCategory"]
-          xpaths[:line_notes]         = "cac:Item/cbc:Description"
+          xpaths[:line_notes]         = "cbc:Note"
           xpaths[:line_code]          = "cac:Item/cac:SellersItemIdentification/cbc:ID"
           xpaths[:line_discounts]     = "cac:AllowanceCharges[/cbc:ChargeIndicator='false']/*"
           xpaths[:line_charges]       = "cac:AllowanceCharges[/cbc:ChargeIndicator='true']/*"
@@ -379,24 +379,34 @@ module Haltr
           client_hash[:country] = client_hash[:country].downcase
         end
         if project
-          # to match ES12345678 when we have 12345678
-          project.clients.where('taxcode like ?', "%#{client_hash[:taxcode]}").each do |c|
-            if c.taxcode =~ /\A.{0,2}#{client_hash[:taxcode]}\z/
-              client = c
-              break
-            end
+          if client_hash[:endpointid].present? and client_hash[:schemeid].present?
+            client = project.clients.where(
+              'schemeid = ? and endpointid = ?', client_hash[:schemeid], client_hash[:endpointid]
+            ).first
           end
-          unless client
-            # to match 12345678 when we have ES12345678
-            project.clients.where('? like concat("%", taxcode) and taxcode != ""', client_hash[:taxcode]).each do |c|
-              if client_hash[:taxcode] =~ /\A.{0,2}#{c.taxcode}\z/
+          if client.blank? and client_hash[:taxcode].present?
+            # to match ES12345678 when we have 12345678
+            project.clients.where('taxcode like ?', "%#{client_hash[:taxcode]}").each do |c|
+              if c.taxcode =~ /\A.{0,2}#{client_hash[:taxcode]}\z/
                 client = c
                 break
               end
             end
+            unless client
+              # to match 12345678 when we have ES12345678
+              project.clients.where('? like concat("%", taxcode) and taxcode != ""', client_hash[:taxcode]).each do |c|
+                if client_hash[:taxcode] =~ /\A.{0,2}#{c.taxcode}\z/
+                  client = c
+                  break
+                end
+              end
+            end
+          end
+          if client.blank? and client_hash[:company_identifier].present?
+            client = project.clients.where('company_identifier = ?', client_hash[:company_identifier]).first
           end
         end
-        unless client
+        if client.blank?
           client = Client.new(client_hash)
           client.project = project
           external_company = nil
@@ -422,6 +432,11 @@ module Haltr
           client.language ||= User.current.language
           # do not add "validate: false" here or you'll end with duplicated
           # clients, client validates uniqueness of taxcode.
+          unless client.valid?
+            # provem si només es un error de taxcode
+            client.company_identifier = client.taxcode
+            client.taxcode = ''
+          end
           unless client.valid?
             raise "#{I18n.t(:client)}: #{client.errors.full_messages.join('. ')}"
           end

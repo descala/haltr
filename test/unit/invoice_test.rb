@@ -949,14 +949,16 @@ class InvoiceTest < ActiveSupport::TestCase
     #assert_equal '123-4560', xml.at('//Invoice/AccountingCustomerParty/Party/Contact/Telephone')
     ##assert_equal '123-4678', xml.at('//Invoice/AccountingCustomerParty/Party/Contact/Telefax')
     #assert_equal 'test@customer.com', xml.at('//Invoice/AccountingCustomerParty/Party/Contact/ElectronicMail')
-    #
-    #assert_equal 'ID GREN DSK', invoice.invoice_lines[0].notes
-    #assert_equal 'ID GREN DSK', xml.at('//Invoice/InvoiceLine/Item/Description').text
-    #assert_equal 'ID GREN DSK2', invoice.invoice_lines[1].notes
-    #assert_equal 'ID GREN DSK3', invoice.invoice_lines[2].notes
+
+    assert_equal 'Ísvatn 19L ID GREN DSK', invoice.invoice_lines[0].description
+    assert_equal 'Ísvatn 19L ID GREN DSK', xml.xpath('//Invoice/InvoiceLine/Item/Name')[0].text
     assert_equal InvoiceLine::OTHER, invoice.invoice_lines[0].unit
     assert_equal InvoiceLine::UNITS, invoice.invoice_lines[1].unit
     assert_equal InvoiceLine::UNITS, invoice.invoice_lines[2].unit
+    assert_equal 'line 1 note', invoice.invoice_lines[0].notes
+    assert_equal 'line 1 note', xml.xpath('//Invoice/InvoiceLine/Note')[0].text
+    assert_equal 'line 2 note', invoice.invoice_lines[1].notes
+    assert_equal 'line 3 note', invoice.invoice_lines[2].notes
     # delivery
     assert_equal Date.parse('2017-05-19'), invoice.delivery_date
     assert_equal '2017-05-19', xml.at('//Invoice/Delivery/ActualDeliveryDate').text
