@@ -210,7 +210,7 @@
         </cac:TaxSubtotal>
       </cac:TaxTotal>
       <cac:Item>
-        <cbc:Name>Ísvatn 19L </cbc:Name>
+        <cbc:Name>Ísvatn 19L</cbc:Name>
         <cbc:Description>ID GREN DSK</cbc:Description>
         <cac:BuyersItemIdentification>
           <cbc:ID>30001</cbc:ID>

@@ -223,11 +223,11 @@ module Haltr
           xpaths[:i_transaction_ref]  = "IssuerTransactionReference" # todo
           xpaths[:r_contract_reference] = "ReceiverContractReference" # todo
           xpaths[:line_quantity]      = "cbc:InvoicedQuantity"
-          xpaths[:line_description]   = "cac:Item/cbc:Name"
+          xpaths[:line_description]   = ["cac:Item/cbc:Name", "cac:Item/cbc:Description"]
           xpaths[:line_price]         = "cac:Price/cbc:PriceAmount"
           xpaths[:line_unit]          = "cbc:InvoicedQuantity/@unitCode"
           xpaths[:line_taxes]         = ["cac:Item/cac:ClassifiedTaxCategory"]
-          xpaths[:line_notes]         = "cac:Item/cbc:Description"
+          xpaths[:line_notes]         = "cbc:Note"
           xpaths[:line_code]          = "cac:Item/cac:SellersItemIdentification/cbc:ID"
           xpaths[:line_discounts]     = "cac:AllowanceCharges[/cbc:ChargeIndicator='false']/*"
           xpaths[:line_charges]       = "cac:AllowanceCharges[/cbc:ChargeIndicator='true']/*"
