@@ -537,6 +537,18 @@
           </div>
         </div>
       </div>
+
+      <div class="form-group">
+        <div class="col-xs-6 col-xs-offset-3">
+          <div class="checkbox">
+            <%= f.label :sii_discard_duplicates do %>
+              <%= f.check_box :sii_auto_send, disabled: disabled %>
+              <%= l(:field_sii_discard_duplicates) %>
+            <% end -%>
+          </div>
+        </div>
+      </div>
+
     <% end -%>
 
     <%= call_hook(:company_customization_form_end) %>
