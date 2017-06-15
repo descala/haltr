@@ -20,7 +20,7 @@ class Invoice < ActiveRecord::Base
   TO_UTF_FIELDS = %w(extra_info)
 
   has_many :invoice_lines, -> {order 'position is NULL, position ASC'}, dependent: :destroy
-  has_many :events, -> {order 'created_at DESC'}
+  has_many :events, -> {order 'created_at DESC, id DESC'}
   #has_many :taxes, :through => :invoice_lines
   belongs_to :project, :counter_cache => true
   belongs_to :client
