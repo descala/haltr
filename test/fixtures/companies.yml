@@ -2,7 +2,7 @@ company1:
   # OnlineStore
   project_id: 2
   name: Company1
-  taxcode: 77310058C
+  taxcode: ES77310058C
   postalcode: 08720
   currency: EUR
   email: test@example.com
