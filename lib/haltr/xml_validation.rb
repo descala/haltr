@@ -43,7 +43,6 @@ module Haltr
     end
 
     # these are the xsl used in ubl:
-    # biiubl20    = biicore + biirules
     # peppolubl20 = biicore + biirules + eugen
     # invoice#amend_of ? uses t14 (creditnote) : uses t10 (invoice)
     # donwloaded from http://www.invinet.org/recursos/conformance/download.html

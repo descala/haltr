@@ -1,0 +1,290 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<Order xmlns="urn:oasis:names:specification:ubl:schema:xsd:Order-2" xmlns:cac="urn:oasis:names:specification:ubl:schema:xsd:CommonAggregateComponents-2" xmlns:cbc="urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2">
+    <cbc:UBLVersionID>2.1</cbc:UBLVersionID>
+    <cbc:CustomizationID>urn:www.cenbii.eu:transaction:biitrns001:ver2.0:extended:urn:www.peppol.eu:bis:peppol3a:ver2.0</cbc:CustomizationID>
+    <cbc:ProfileID>urn:www.cenbii.eu:profile:bii03:ver2.0</cbc:ProfileID>
+    <cbc:ID>94837593</cbc:ID>
+    <cbc:IssueDate>2017-05-18</cbc:IssueDate>
+    <cbc:Note>NOTE</cbc:Note>
+    <cbc:DocumentCurrencyCode listID="ISO4217">GBP</cbc:DocumentCurrencyCode>
+    <cac:ValidityPeriod>
+        <cbc:EndDate>2017-05-18</cbc:EndDate>
+    </cac:ValidityPeriod>
+    <cac:BuyerCustomerParty>
+        <cac:Party>
+            <cbc:EndpointID schemeID="GLN">4135811991839</cbc:EndpointID>
+            <cac:PartyIdentification>
+                <cbc:ID schemeID="GB:VAT">xxxx</cbc:ID>
+            </cac:PartyIdentification>
+            <cac:PartyName>
+                <cbc:Name>Tech Hospitals NHS Trust</cbc:Name>
+            </cac:PartyName>
+            <cac:PostalAddress>
+                <cbc:StreetName>Main Road</cbc:StreetName>
+                <cbc:CityName>LONDON</cbc:CityName>
+                <cbc:PostalZone>XX12 3AE</cbc:PostalZone>
+                <cbc:CountrySubentity>London</cbc:CountrySubentity>
+                <cac:Country>
+                    <cbc:IdentificationCode listID="ISO3166-1:Alpha2">GB</cbc:IdentificationCode>
+                </cac:Country>
+            </cac:PostalAddress>
+            <cac:PartyTaxScheme>
+                <cbc:CompanyID schemeID="GB:VAT">xxxx</cbc:CompanyID>
+                <cac:TaxScheme>
+                    <cbc:ID>VAT</cbc:ID>
+                </cac:TaxScheme>
+            </cac:PartyTaxScheme>
+            <cac:Contact>
+                <cbc:Name>Procurement Department</cbc:Name>
+                <cbc:Telephone>0389 39990022</cbc:Telephone>
+                <cbc:ElectronicMail>supplies@nhs.net</cbc:ElectronicMail>
+            </cac:Contact>
+        </cac:Party>
+    </cac:BuyerCustomerParty>
+    <cac:SellerSupplierParty>
+        <cac:Party>
+            <cbc:EndpointID schemeID="GLN">xxxx</cbc:EndpointID>
+            <cac:PartyIdentification>
+                <cbc:ID schemeID="GB:VAT">xxxx</cbc:ID>
+            </cac:PartyIdentification>
+            <cac:PartyName>
+                <cbc:Name>CE Supplies UK Limited </cbc:Name>
+            </cac:PartyName>
+            <cac:Contact>
+                <cbc:Name/>
+                <cbc:Telephone>40450403844</cbc:Telephone>
+                <cbc:ElectronicMail>cesupplies@my-supplier.com</cbc:ElectronicMail>
+            </cac:Contact>
+        </cac:Party>
+    </cac:SellerSupplierParty>
+    <cac:AccountingCustomerParty>
+        <cac:Party>
+            <cbc:EndpointID schemeID="GLN">5087458492322</cbc:EndpointID>
+            <cac:PartyIdentification>
+                <cbc:ID schemeID="GLN">5087458492322</cbc:ID>
+            </cac:PartyIdentification>
+            <cac:PartyName>
+                <cbc:Name>Finance Department</cbc:Name>
+            </cac:PartyName>
+            <cac:PostalAddress>
+                <cbc:StreetName>Tech Hospital</cbc:StreetName>
+                <cbc:AdditionalStreetName>Main Road</cbc:AdditionalStreetName>
+                <cbc:CityName>London</cbc:CityName>
+                <cbc:PostalZone>XX12 3AE</cbc:PostalZone>
+            </cac:PostalAddress>
+        </cac:Party>
+    </cac:AccountingCustomerParty>
+    <cac:Delivery>
+        <cac:DeliveryLocation>
+            <cbc:ID schemeID="GLN">5087458492360</cbc:ID>
+            <cac:Address>
+                <cbc:ID>5087458492360</cbc:ID>
+                <cbc:StreetName>MAIN ROAD</cbc:StreetName>
+                <cbc:AdditionalStreetName>RECEIPT AND DISTRIBUTION</cbc:AdditionalStreetName>
+                <cbc:CityName>LONDON</cbc:CityName>
+                <cbc:PostalZone>XX12 3AE</cbc:PostalZone>
+                <cac:Country>
+                    <cbc:IdentificationCode listID="ISO3166-1:Alpha2">GB</cbc:IdentificationCode>
+                </cac:Country>
+            </cac:Address>
+        </cac:DeliveryLocation>
+        <cac:RequestedDeliveryPeriod>
+            <cbc:StartDate>2017-05-19</cbc:StartDate>
+            <cbc:EndDate>2017-05-19</cbc:EndDate>
+        </cac:RequestedDeliveryPeriod>
+        <cac:DeliveryParty>
+            <cac:PartyName>
+                <cbc:Name>Tech Hospitals NHS Trust</cbc:Name>
+            </cac:PartyName>
+        </cac:DeliveryParty>
+    </cac:Delivery>
+    <cac:TaxTotal>
+        <cbc:TaxAmount currencyID="GBP">338.11</cbc:TaxAmount>
+    </cac:TaxTotal>
+    <cac:AnticipatedMonetaryTotal>
+        <cbc:LineExtensionAmount currencyID="GBP">1690.53</cbc:LineExtensionAmount>
+        <cbc:TaxExclusiveAmount currencyID="GBP">1690.53</cbc:TaxExclusiveAmount>
+        <cbc:TaxInclusiveAmount currencyID="GBP">2028.64</cbc:TaxInclusiveAmount>
+        <cbc:PayableAmount currencyID="GBP">2028.64</cbc:PayableAmount>
+    </cac:AnticipatedMonetaryTotal>
+    <cac:OrderLine>
+        <cbc:Note> NOTE 1</cbc:Note>
+        <cac:LineItem>
+            <cbc:ID>1</cbc:ID>
+            <cbc:Quantity unitCode="EA" unitCodeListID="UNECERec20">1.0</cbc:Quantity>
+            <cbc:LineExtensionAmount currencyID="GBP">495.48</cbc:LineExtensionAmount>
+            <cbc:TotalTaxAmount currencyID="GBP">99.10</cbc:TotalTaxAmount>
+            <cac:Delivery>
+                <cac:RequestedDeliveryPeriod>
+                    <cbc:StartDate>2017-05-19</cbc:StartDate>
+                    <cbc:EndDate>2017-05-19</cbc:EndDate>
+                </cac:RequestedDeliveryPeriod>
+            </cac:Delivery>
+            <cac:Price>
+                <cbc:PriceAmount currencyID="GBP">495.48</cbc:PriceAmount>
+            </cac:Price>
+            <cac:Item>
+                <cbc:Description>ACC MAN PP</cbc:Description>
+                <cac:SellersItemIdentification>
+                    <cbc:ID>094385035</cbc:ID>
+                </cac:SellersItemIdentification>
+                <cac:StandardItemIdentification>
+                    <cbc:ID schemeID="GTIN">908450385034</cbc:ID>
+                </cac:StandardItemIdentification>
+                <cac:ItemSpecificationDocumentReference>
+                    <cbc:ID>349503 0439503</cbc:ID>
+                </cac:ItemSpecificationDocumentReference>
+            </cac:Item>
+        </cac:LineItem>
+    </cac:OrderLine>
+    <cac:OrderLine>
+        <cbc:Note>NOTE 2</cbc:Note>
+        <cac:LineItem>
+            <cbc:ID>2</cbc:ID>
+            <cbc:Quantity unitCode="EA" unitCodeListID="UNECERec20">1.0</cbc:Quantity>
+            <cbc:LineExtensionAmount currencyID="GBP">495.48</cbc:LineExtensionAmount>
+            <cbc:TotalTaxAmount currencyID="GBP">99.10</cbc:TotalTaxAmount>
+            <cac:Delivery>
+                <cac:RequestedDeliveryPeriod>
+                    <cbc:StartDate>2017-05-19</cbc:StartDate>
+                    <cbc:EndDate>2017-05-19</cbc:EndDate>
+                </cac:RequestedDeliveryPeriod>
+            </cac:Delivery>
+            <cac:Price>
+                <cbc:PriceAmount currencyID="GBP">495.48</cbc:PriceAmount>
+            </cac:Price>
+            <cac:Item>
+                <cbc:Description>GTHX SAO CC</cbc:Description>
+                <cac:SellersItemIdentification>
+                    <cbc:ID>30003402</cbc:ID>
+                </cac:SellersItemIdentification>
+                <cac:StandardItemIdentification>
+                    <cbc:ID schemeID="GTIN">09234024032</cbc:ID>
+                </cac:StandardItemIdentification>
+                <cac:ItemSpecificationDocumentReference>
+                    <cbc:ID>MIESNN </cbc:ID>
+                </cac:ItemSpecificationDocumentReference>
+            </cac:Item>
+        </cac:LineItem>
+    </cac:OrderLine>
+    <cac:OrderLine>
+        <cbc:Note>NOTE 3</cbc:Note>
+        <cac:LineItem>
+            <cbc:ID>3</cbc:ID>
+            <cbc:Quantity unitCode="EA" unitCodeListID="UNECERec20">1.0</cbc:Quantity>
+            <cbc:LineExtensionAmount currencyID="GBP">316.88</cbc:LineExtensionAmount>
+            <cbc:TotalTaxAmount currencyID="GBP">63.38</cbc:TotalTaxAmount>
+            <cac:Delivery>
+                <cac:RequestedDeliveryPeriod>
+                    <cbc:StartDate>2017-05-19</cbc:StartDate>
+                    <cbc:EndDate>2017-05-19</cbc:EndDate>
+                </cac:RequestedDeliveryPeriod>
+            </cac:Delivery>
+            <cac:Price>
+                <cbc:PriceAmount currencyID="GBP">316.88</cbc:PriceAmount>
+            </cac:Price>
+            <cac:Item>
+                <cbc:Description>ID GREN DSK</cbc:Description>
+                <cac:SellersItemIdentification>
+                    <cbc:ID>023409203</cbc:ID>
+                </cac:SellersItemIdentification>
+                <cac:StandardItemIdentification>
+                    <cbc:ID schemeID="GTIN">9340230239483</cbc:ID>
+                </cac:StandardItemIdentification>
+                <cac:ItemSpecificationDocumentReference>
+                    <cbc:ID>CIRMN S99</cbc:ID>
+                </cac:ItemSpecificationDocumentReference>
+            </cac:Item>
+        </cac:LineItem>
+    </cac:OrderLine>
+    <cac:OrderLine>
+        <cbc:Note>NOTE 4</cbc:Note>
+        <cac:LineItem>
+            <cbc:ID>4</cbc:ID>
+            <cbc:Quantity unitCode="EA" unitCodeListID="UNECERec20">1.0</cbc:Quantity>
+            <cbc:LineExtensionAmount currencyID="GBP">67.24</cbc:LineExtensionAmount>
+            <cbc:TotalTaxAmount currencyID="GBP">13.45</cbc:TotalTaxAmount>
+            <cac:Delivery>
+                <cac:RequestedDeliveryPeriod>
+                    <cbc:StartDate>2017-05-19</cbc:StartDate>
+                    <cbc:EndDate>2017-05-19</cbc:EndDate>
+                </cac:RequestedDeliveryPeriod>
+            </cac:Delivery>
+            <cac:Price>
+                <cbc:PriceAmount currencyID="GBP">67.24</cbc:PriceAmount>
+            </cac:Price>
+            <cac:Item>
+                <cbc:Description>DESC HS MM</cbc:Description>
+                <cac:SellersItemIdentification>
+                    <cbc:ID>39409423</cbc:ID>
+                </cac:SellersItemIdentification>
+                <cac:StandardItemIdentification>
+                    <cbc:ID schemeID="GTIN">9934203943</cbc:ID>
+                </cac:StandardItemIdentification>
+                <cac:ItemSpecificationDocumentReference>
+                    <cbc:ID>CHMS MSL</cbc:ID>
+                </cac:ItemSpecificationDocumentReference>
+            </cac:Item>
+        </cac:LineItem>
+    </cac:OrderLine>
+    <cac:OrderLine>
+        <cbc:Note>NOTE 5</cbc:Note>
+        <cac:LineItem>
+            <cbc:ID>5</cbc:ID>
+            <cbc:Quantity unitCode="EA" unitCodeListID="UNECERec20">2.0</cbc:Quantity>
+            <cbc:LineExtensionAmount currencyID="GBP">134.48</cbc:LineExtensionAmount>
+            <cbc:TotalTaxAmount currencyID="GBP">26.90</cbc:TotalTaxAmount>
+            <cac:Delivery>
+                <cac:RequestedDeliveryPeriod>
+                    <cbc:StartDate>2017-05-19</cbc:StartDate>
+                    <cbc:EndDate>2017-05-19</cbc:EndDate>
+                </cac:RequestedDeliveryPeriod>
+            </cac:Delivery>
+            <cac:Price>
+                <cbc:PriceAmount currencyID="GBP">67.24</cbc:PriceAmount>
+            </cac:Price>
+            <cac:Item>
+                <cbc:Description>DKFSK ASDF</cbc:Description>
+                <cac:SellersItemIdentification>
+                    <cbc:ID>398443045</cbc:ID>
+                </cac:SellersItemIdentification>
+                <cac:StandardItemIdentification>
+                    <cbc:ID schemeID="GTIN">948549949</cbc:ID>
+                </cac:StandardItemIdentification>
+                <cac:ItemSpecificationDocumentReference>
+                    <cbc:ID>MNHDJK SS</cbc:ID>
+                </cac:ItemSpecificationDocumentReference>
+            </cac:Item>
+        </cac:LineItem>
+    </cac:OrderLine>
+    <cac:OrderLine>
+        <cbc:Note>NOTE 6</cbc:Note>
+        <cac:LineItem>
+            <cbc:ID>6</cbc:ID>
+            <cbc:Quantity unitCode="EA" unitCodeListID="UNECERec20">1.0</cbc:Quantity>
+            <cbc:LineExtensionAmount currencyID="GBP">180.97</cbc:LineExtensionAmount>
+            <cbc:TotalTaxAmount currencyID="GBP">36.19</cbc:TotalTaxAmount>
+            <cac:Delivery>
+                <cac:RequestedDeliveryPeriod>
+                    <cbc:StartDate>2017-05-19</cbc:StartDate>
+                    <cbc:EndDate>2017-05-19</cbc:EndDate>
+                </cac:RequestedDeliveryPeriod>
+            </cac:Delivery>
+            <cac:Price>
+                <cbc:PriceAmount currencyID="GBP">180.97</cbc:PriceAmount>
+            </cac:Price>
+            <cac:Item>
+                <cbc:Description>HUG SN</cbc:Description>
+                <cac:SellersItemIdentification>
+                    <cbc:ID>98493933</cbc:ID>
+                </cac:SellersItemIdentification>
+                <cac:StandardItemIdentification>
+                    <cbc:ID schemeID="GTIN">98304024234</cbc:ID>
+                </cac:StandardItemIdentification>
+                <cac:ItemSpecificationDocumentReference>
+                    <cbc:ID>MSND SMS</cbc:ID>
+                </cac:ItemSpecificationDocumentReference>
+            </cac:Item>
+        </cac:LineItem>
+    </cac:OrderLine>
+</Order>

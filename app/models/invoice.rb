@@ -20,7 +20,7 @@ class Invoice < ActiveRecord::Base
   TO_UTF_FIELDS = %w(extra_info)
 
   has_many :invoice_lines, -> {order 'position is NULL, position ASC'}, dependent: :destroy
-  has_many :events, -> {order 'created_at DESC'}
+  has_many :events, -> {order 'created_at DESC, id DESC'}
   #has_many :taxes, :through => :invoice_lines
   belongs_to :project, :counter_cache => true
   belongs_to :client
@@ -596,7 +596,7 @@ _INV
       invoice_format  = "facturae#{facturae_version.text.gsub(/[^\d]/,'')}"
       logger.info "Creating invoice from xml - format is FacturaE #{facturae_version.text}. time=#{Time.now}"
     elsif ubl_version
-      #TODO: biiubl20 efffubl oioubl20 pdf peppolubl20 peppolubl21 svefaktura
+      #TODO: pdf peppolubl20 peppolubl21 svefaktura
       invoice_format  = "ubl#{ubl_version.text}"
       logger.info "Creating invoice from xml - format is UBL #{ubl_version.text}. time=#{Time.now}"
     else

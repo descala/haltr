@@ -221,6 +221,28 @@
   <fieldset class="form-horizontal">
     <legend class="relative"><%=l(:label_connections)%></legend>
 
+    <label>PEPPOL</label>
+
+    <div class="form-group">
+      <%= f.label :schemeid, class: 'col-xs-3 control-label' do %>
+        <%= l :field_schemeid %>:
+      <% end -%>
+      <div class="col-xs-5">
+        <%= f.select :schemeid, Peppol::schemes_for_select, {}, class: 'form-control' %>
+      </div>
+    </div>
+
+    <div class="form-group">
+      <%= f.label :endpointid, class: 'col-xs-3 control-label' do %>
+        <%= l :field_endpointid %>:
+      <% end -%>
+      <div class="col-xs-3">
+        <%= f.text_field :endpointid, class: 'form-control' %>
+      </div>
+    </div>
+
+    <hr class="form-elements" />
+
     <label><%= l :smtp_config %></label>
     <div class="form-group">
       <%= f.label :field_smtp_host, class: 'col-xs-3 control-label' do %>
@@ -337,28 +359,6 @@
             <%= l(:field_imap_ssl) %>
           <% end -%>
         </div>
-      </div>
-    </div>
-
-    <hr class="form-elements" />
-
-    <label>PEPPOL</label>
-
-    <div class="form-group">
-      <%= f.label :field_schemeid, class: 'col-xs-3 control-label' do %>
-        <%= l :field_schemeid %>:
-      <% end -%>
-      <div class="col-xs-5">
-        <%= f.select :schemeid, Peppol::schemes_for_select, {}, class: 'form-control' %>
-      </div>
-    </div>
-
-    <div class="form-group">
-      <%= f.label :field_endpointid, class: 'col-xs-3 control-label' do %>
-        <%= l :field_endpointid %>:
-      <% end -%>
-      <div class="col-xs-3">
-        <%= f.text_field :endpointid, class: 'form-control' %>
       </div>
     </div>
 
@@ -537,6 +537,18 @@
           </div>
         </div>
       </div>
+
+      <div class="form-group">
+        <div class="col-xs-6 col-xs-offset-3">
+          <div class="checkbox">
+            <%= f.label :sii_discard_duplicates do %>
+              <%= f.check_box :sii_discard_duplicates, disabled: disabled %>
+              <%= l(:field_sii_discard_duplicates) %>
+            <% end -%>
+          </div>
+        </div>
+      </div>
+
     <% end -%>
 
     <%= call_hook(:company_customization_form_end) %>

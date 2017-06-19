@@ -67,22 +67,22 @@ class InvoicesControllerTest < ActionController::TestCase
     assert_equal [], facturae_errors_online(xml)
   end
 
-  test 'biiubl20_xml_i4' do
-    get :show, :id => 4, :format => 'biiubl20'
+  test 'peppolubl21_xml_i4' do
+    get :show, :id => 4, :format => 'peppolubl21'
     assert_response :success
     xml = @response.body
     assert_equal [], ubl_errors(xml)
   end
 
-  test 'biiubl20_xml_i5_vat_excemption' do
-    get :show, :id => 5, :format => 'biiubl20'
+  test 'peppolubl21_xml_i5_vat_excemption' do
+    get :show, :id => 5, :format => 'peppolubl21'
     assert_response :success
     xml = @response.body
     assert_equal [], ubl_errors(xml)
   end
 
-  test 'biiubl20_xml_i6_vat_and_charges' do
-    get :show, :id => 6, :format => 'biiubl20'
+  test 'peppolubl21_xml_i6_vat_and_charges' do
+    get :show, :id => 6, :format => 'peppolubl21'
     assert_response :success
     xml = @response.body
     assert_equal [], ubl_errors(xml)

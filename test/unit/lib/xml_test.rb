@@ -13,10 +13,7 @@ class XmlTest < ActiveSupport::TestCase
   test "generate ubl" do
     assert_not_nil Haltr::Xml.generate(invoices(:invoices_001), 'peppolubl20')
     assert_not_nil Haltr::Xml.generate(invoices(:invoices_001), 'peppolubl21')
-    assert_not_nil Haltr::Xml.generate(invoices(:invoices_001), 'biiubl20')
     assert_not_nil Haltr::Xml.generate(invoices(:invoices_001), 'svefaktura')
-    assert_not_nil Haltr::Xml.generate(invoices(:invoices_001), 'oioubl20')
-    assert_not_nil Haltr::Xml.generate(invoices(:invoices_001), 'efffubl')
   end
 
   test "generate facturae32 with dir3" do
