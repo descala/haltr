@@ -227,8 +227,8 @@ module Haltr
           xpaths[:line_price]         = "cac:Price/cbc:PriceAmount"
           xpaths[:line_unit]          = "cbc:InvoicedQuantity/@unitCode"
           xpaths[:line_taxes]         = ["cac:Item/cac:ClassifiedTaxCategory"]
-          xpaths[:line_notes]         = "cbc:Note"
-          xpaths[:line_code]          = "cac:Item/cac:SellersItemIdentification/cbc:ID"
+          xpaths[:line_notes]         = ["cbc:Note","cac:Item/cac:SellersItemIdentification/cbc:ID"]
+          xpaths[:line_code]          = "cac:Item/cac:StandardItemIdentification/cbc:ID"
           xpaths[:line_discounts]     = "cac:AllowanceCharges[/cbc:ChargeIndicator='false']/*"
           xpaths[:line_charges]       = "cac:AllowanceCharges[/cbc:ChargeIndicator='true']/*"
           xpaths[:file_reference]     = "FileReference" # todo
