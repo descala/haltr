@@ -33,7 +33,7 @@ class HaltrMailHandlerTest < ActiveSupport::TestCase
                   &transaction.process.=Estructura%3A%3AInvoice
                   &transaction.invoice_id.=\d+
                   &transaction.payload.=.*
-                  &transaction.vat_id.=77310058C
+                  &transaction.vat_id.=ES77310058C
                   &transaction.is_issued.=false
                   &transaction.haltr_url.=http%3A%2F%2Flocalhost%3A3001/x,
     ).to_return(:status => 200,

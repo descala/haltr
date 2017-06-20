@@ -581,14 +581,14 @@ class InvoiceTest < ActiveSupport::TestCase
   test 'create issued_invoice from facturae32 when invoice taxcode includes country' do
     file    = File.new(File.join(File.dirname(__FILE__),'..','fixtures','documents','invoice_facturae32_issued6.xml'))
     invoice = Invoice.create_from_xml(file,User.find_by_login('jsmith'),"1234",'uploaded',User.current.name)
-    assert_equal '77310058C', invoice.company.taxcode # invoice taxcode: ES77310058C
+    assert_equal 'ES77310058C', invoice.company.taxcode # invoice taxcode: ES77310058C
   end
 
   # import invoice_facturae32_issued7.xml
   test 'create issued_invoice from facturae32 when company taxcode includes country' do
     file    = File.new(File.join(File.dirname(__FILE__),'..','fixtures','documents','invoice_facturae32_issued7.xml'))
     invoice = Invoice.create_from_xml(file,User.find_by_login('jsmith'),"1234",'uploaded',User.current.name)
-    assert_equal '77310058C', invoice.company.taxcode # invoice taxcode: 77310058C
+    assert_equal 'ES77310058C', invoice.company.taxcode # invoice taxcode: 77310058C
   end
 
   test 'it rounds every line total before adding them' do
