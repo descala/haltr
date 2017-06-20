@@ -702,6 +702,8 @@ class InvoiceTest < ActiveSupport::TestCase
     file = File.new(File.join(File.dirname(__FILE__),'../fixtures/documents/invoice_ubl_with_sbdh.xml'))
     invoice = Invoice.create_from_xml(file,companies(:company6),"1234",'uploaded',User.current.name,nil,false)
     assert_equal '5503070490', invoice.client.taxcode
+    assert_equal '908450385034', invoice.invoice_lines.first.article_code
+    assert_equal 'line 1 note 30001', invoice.invoice_lines.first.notes
     if invoice.client.invoice_format == 'link_to_pdf_by_mail'
       assert invoice.valid?
       invoice.about_to_be_sent=true
@@ -957,10 +959,10 @@ class InvoiceTest < ActiveSupport::TestCase
     assert_equal InvoiceLine::OTHER, invoice.invoice_lines[0].unit
     assert_equal InvoiceLine::UNITS, invoice.invoice_lines[1].unit
     assert_equal InvoiceLine::UNITS, invoice.invoice_lines[2].unit
-    assert_equal 'line 1 note', invoice.invoice_lines[0].notes
-    assert_equal 'line 1 note', xml.xpath('//Invoice/InvoiceLine/Note')[0].text
-    assert_equal 'line 2 note', invoice.invoice_lines[1].notes
-    assert_equal 'line 3 note', invoice.invoice_lines[2].notes
+    assert_equal 'line 1 note 30001', invoice.invoice_lines[0].notes
+    assert_equal 'line 1 note 30001', xml.xpath('//Invoice/InvoiceLine/Note')[0].text
+    assert_equal 'line 2 note 30006', invoice.invoice_lines[1].notes
+    assert_equal 'line 3 note 30005', invoice.invoice_lines[2].notes
     # delivery
     assert_equal Date.parse('2017-05-19'), invoice.delivery_date
     assert_equal '2017-05-19', xml.at('//Invoice/Delivery/ActualDeliveryDate').text
