@@ -9,7 +9,8 @@
 
   <div class="col-xs-12">
     <% if client.allowed? -%>
-      <div class="flash info">
+    <div class="alert alert-flex alert-info" role="alert">
+      <b><i class="fa fa-info" aria-hidden="true"></i></b >
         <% if client.company.is_a?(ExternalCompany) and User.current.admin? -%>
           <%= link_to l(:linked_to_profile, :company => client.company.name).html_safe, edit_external_company_path(client.company) %>
           (<%=link_to_if_authorized(l(:unlink),{:controller=>'clients',:action=>'unlink',:id=>client})%>)
@@ -18,11 +19,13 @@
         <% end -%>
       </div>
     <% elsif client.denied? -%>
-      <div class="flash error">
+    <div class="alert alert-flex alert-error" role="alert">
+      <b><i class="fa fa-exlamation" aria-hidden="true"></i></b >
         <%= l(:denied_authorization, :company => client.company.name).html_safe %> (<%=link_to_if_authorized(l(:unlink),{:controller=>'clients',:action=>'unlink',:id=>client})%>)
       </div>
     <% else -%>
-      <div class="flash info">
+      <div class="alert alert-flex alert-info" role="alert">
+        <b><i class="fa fa-info" aria-hidden="true"></i></b >
         <%= l(:pending_authorization, :company => client.company.name).html_safe %> (<%=link_to_if_authorized(l(:unlink),{:controller=>'clients',:action=>'unlink',:id=>client})%>)
       </div>
     <% end -%>
@@ -38,7 +41,8 @@ self.location="<%=url_for(:action=>'link_to_profile',:controller=>'clients',:id=
   <% else -%>
 
     <div class="col-xs-12">
-      <div class="flash info">
+      <div class="alert alert-flex alert-info" role="alert">
+        <b><i class="fa fa-info" aria-hidden="true"></i></b >
         <%= l(:cif_belongs_to_company,{:company=>company.name}).html_safe %>
         <% if company.public? # public profile -%>
           <%= l(:link_to_profile_suggest, :href=>link_to_if_authorized(l(:link_to_profile),{:controller=>'clients',:action=>'link_to_profile',:id=>@project,:company=>company.taxcode,:client=>client})).html_safe %>
