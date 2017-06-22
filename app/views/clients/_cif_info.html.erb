@@ -41,8 +41,8 @@ self.location="<%=url_for(:action=>'link_to_profile',:controller=>'clients',:id=
   <% else -%>
 
     <div class="col-xs-12">
-      <div class="alert alert-flex alert-info" role="alert">
-        <b><i class="fa fa-info" aria-hidden="true"></i></b >
+      <div class="alert alert-info" role="alert">
+        <b><i class="fa fa-info" style="width:10px" aria-hidden="true"></i></b >
         <%= l(:cif_belongs_to_company,{:company=>company.name}).html_safe %>
         <% if company.public? # public profile -%>
           <%= l(:link_to_profile_suggest, :href=>link_to_if_authorized(l(:link_to_profile),{:controller=>'clients',:action=>'link_to_profile',:id=>@project,:company=>company.taxcode,:client=>client})).html_safe %>
