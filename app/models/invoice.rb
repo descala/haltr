@@ -1333,7 +1333,7 @@ _INV
   def has_delivery_info?
     %w( delivery_date delivery_location_id delivery_location_type
     delivery_address delivery_city delivery_postalcode delivery_province
-    delivery_country ).any? {|m| public_send(m).present? }
+    ).any? {|m| public_send(m).present? }
   end
 
   protected
