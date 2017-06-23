@@ -29,14 +29,6 @@
   </div>
 
 <% elsif company # we found a company to link to -%>
-
-  <% if !client or client.new_record? %>
-    <script language="javascript">
-alert("<%= l(:cif_belongs_to_company_text_only,{:company=>company.name}) %>");
-self.location="<%=url_for(:action=>'link_to_profile',:controller=>'clients',:id=>@project,:company=>company.taxcode,:client=>client,:context=>context,:invoice_id=>invoice_id)%>";
-    </script>
-  <% else -%>
-
     <div class="col-xs-12">
       <div class="flash info">
         <%= l(:cif_belongs_to_company,{:company=>company.name}).html_safe %>
@@ -47,7 +39,4 @@ self.location="<%=url_for(:action=>'link_to_profile',:controller=>'clients',:id=
           <% end -%>
       </div>
     </div>
-
-  <% end -%>
-
 <% end -%>
