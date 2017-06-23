@@ -2,7 +2,7 @@
   <cbc:IssueDate><%=h @invoice.date%></cbc:IssueDate>
 <% if @invoice.amend_of -%>
     <cbc:CreditNoteTypeCode listID="UNCL1001">384</cbc:CreditNoteTypeCode>
-<% elsif -%>
+<% else -%>
     <cbc:InvoiceTypeCode listID="UNCL1001">380</cbc:InvoiceTypeCode>
 <% end -%>
 <% if @invoice.extra_info? -%>
