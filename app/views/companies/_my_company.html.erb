@@ -454,13 +454,15 @@
     <%= call_hook(:company_customization_pdf_end) %>
 
     <label><%= l :email_customization %></label>
+    <i class="fa fa-info-circle" aria-hidden="true" title="<%= l :info_mails_language %>"></i>
 
     <div class="form-group">
       <div class="col-xs-3 col-xs-offset-3">
         <%= select_tag :invoice_mail_customization_lang,
           options_for_select(valid_languages.reject { |l|
           !(l =~ /^[a-z][a-z][\-A-Z]{0,3}$/)
-        }.collect {|l| [I18n.t(:general_lang_name, locale: l),l]}),
+        }.collect {|l| [I18n.t(:general_lang_name, locale: l),l]},
+        selected: User.current.language),
         class: 'form-control', disabled: disabled %>
       </div>
     </div>
@@ -498,13 +500,15 @@
     </div>
 
     <label><%= l :label_quote_plural %></label>
+    <i class="fa fa-info-circle" aria-hidden="true" title="<%= l :info_mails_language %>"></i>
 
     <div class="form-group">
       <div class="col-xs-3 col-xs-offset-3">
         <%= select_tag :quote_mail_customization_lang,
           options_for_select(valid_languages.reject { |l|
           !(l =~ /^[a-z][a-z][\-A-Z]{0,3}$/)
-        }.collect {|l| [I18n.t(:general_lang_name, locale: l),l]}),
+        }.collect {|l| [I18n.t(:general_lang_name, locale: l),l]},
+        selected: User.current.language),
         class: 'form-control', disabled: disabled %>
       </div>
     </div>
