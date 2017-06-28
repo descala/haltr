@@ -174,6 +174,8 @@ module Haltr
         elsif format =~ /ubl/
           xpaths[:invoice_number]     = "/xmlns:Invoice/cbc:ID"
           xpaths[:invoice_date]       = "/xmlns:Invoice/cbc:IssueDate"
+          xpaths[:extra_info]         = "/xmlns:Invoice/cbc:Note"
+          xpaths[:invoice_date]       = "/xmlns:Invoice/cbc:IssueDate"
           xpaths[:tax_point_date]     = "/xmlns:Invoice/cbc:TaxPointDate"
           xpaths[:invoice_total]      = "/xmlns:Invoice/cac:LegalMonetaryTotal/cbc:TaxInclusiveAmount"
           xpaths[:invoice_import]     = "/xmlns:Invoice/cac:LegalMonetaryTotal/cbc:TaxExclusiveAmount"
@@ -221,12 +223,12 @@ module Haltr
           xpaths[:i_transaction_ref]  = "IssuerTransactionReference" # todo
           xpaths[:r_contract_reference] = "ReceiverContractReference" # todo
           xpaths[:line_quantity]      = "cbc:InvoicedQuantity"
-          xpaths[:line_description]   = "cac:Item/cbc:Name"
+          xpaths[:line_description]   = ["cac:Item/cbc:Name", "cac:Item/cbc:Description"]
           xpaths[:line_price]         = "cac:Price/cbc:PriceAmount"
           xpaths[:line_unit]          = "cbc:InvoicedQuantity/@unitCode"
           xpaths[:line_taxes]         = ["cac:Item/cac:ClassifiedTaxCategory"]
-          xpaths[:line_notes]         = "cac:Item/cbc:Description"
-          xpaths[:line_code]          = "cac:Item/cac:SellersItemIdentification/cbc:ID"
+          xpaths[:line_notes]         = ["cbc:Note","cac:Item/cac:SellersItemIdentification/cbc:ID"]
+          xpaths[:line_code]          = "cac:Item/cac:StandardItemIdentification/cbc:ID"
           xpaths[:line_discounts]     = "cac:AllowanceCharges[/cbc:ChargeIndicator='false']/*"
           xpaths[:line_charges]       = "cac:AllowanceCharges[/cbc:ChargeIndicator='true']/*"
           xpaths[:file_reference]     = "FileReference" # todo
@@ -240,7 +242,8 @@ module Haltr
           # relative to invoice_lines/delivery_notes_references/delivery_note
           xpaths[:delivery_note_num]  = "DeliveryNoteNumber" # todo
 
-          xpaths[:ponumber]           = "ReceiverTransactionReference" # todo
+          xpaths[:ponumber]           = "/xmlns:Invoice/cac:OrderReference/cbc:ID"
+          xpaths[:contract_number]    = "/xmlns:Invoice/cac:ContractDocumentReference/cbc:ID"
           # relative to invoice_lines/discounts
           xpaths[:line_discount_percent] = "cbc:MultiplierFactorNumeric"
           xpaths[:line_discount_text]    = "cbc:AllowanceChargeReason"
@@ -257,6 +260,17 @@ module Haltr
           xpaths[:attach_encoding]    = "cac:Attachment/cbc:EmbeddedDocumentBinaryObject/@encodingCode"
           xpaths[:attach_description] = "cbc:DocumentType"
           xpaths[:attach_data]        = "cac:Attachment/cbc:EmbeddedDocumentBinaryObject"
+
+          xpaths[:delivery] = "//cac:Delivery"
+          # relative to delivery
+          xpaths[:delivery_date]          = "cbc:ActualDeliveryDate"
+          xpaths[:delivery_location_type] = "cac:DeliveryLocation/cbc:ID/@schemeID"
+          xpaths[:delivery_location_id]   = "cac:DeliveryLocation/cbc:ID"
+          xpaths[:delivery_address]       = "cac:DeliveryLocation/cac:Address/cbc:StreetName"
+          xpaths[:delivery_city]          = "cac:DeliveryLocation/cac:Address/cbc:CityName"
+          xpaths[:delivery_postalcode]    = "cac:DeliveryLocation/cac:Address/cbc:PostalZone"
+          xpaths[:delivery_province]      = "cac:DeliveryLocation/cac:Address/cbc:CountrySubentity"
+          xpaths[:delivery_country]       = "cac:DeliveryLocation/cac:Address/cac:Country/cbc:IdentificationCode"
 
         end
         xpaths

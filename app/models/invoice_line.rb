@@ -20,7 +20,7 @@ class InvoiceLine < ActiveRecord::Base
     HOURS     => { name: 'hours',     facturae: '02', ubl: 'HUR', edifact: 'PCE'},
     KILOGRAMS => { name: 'kilograms', facturae: '03', ubl: 'KGM', edifact: 'KGM'},
     LITTERS   => { name: 'litters',   facturae: '04', ubl: 'LTR', edifact: 'LTR'},
-    OTHER     => { name: 'other',     facturae: '05', ubl: 'ZZ',  edifact: 'OTH'},
+    OTHER     => { name: 'other',     facturae: '05', ubl: 'C62', edifact: 'OTH'},
     DAYS      => { name: 'days',      facturae: '05', ubl: 'DAY', edifact: 'PCE'},
     BOXES     => { name: 'boxes',     facturae: '06', ubl: 'CS',  edifact: 'CS' },
   }

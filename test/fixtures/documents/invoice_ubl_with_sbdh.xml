@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <StandardBusinessDocument xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://www.unece.org/cefact/namespaces/StandardBusinessDocumentHeader">
   <StandardBusinessDocumentHeader>
     <HeaderVersion>1.0</HeaderVersion>
@@ -33,7 +33,7 @@
     <cbc:ID>0070075</cbc:ID>
     <cbc:IssueDate>2016-02-24</cbc:IssueDate>
     <cbc:InvoiceTypeCode listID="UN/ECE 1001 Subset" listAgencyID="NES">380</cbc:InvoiceTypeCode>
-    <cbc:Note languageID="IS">Guðrún pantar. Endilega hringja því þau eru mikið á ferðinni  og því ekki alltaf við..........  S: 770-4121  </cbc:Note>
+    <cbc:Note languageID="IS">Invoice notes</cbc:Note>
     <cbc:DocumentCurrencyCode listID="ISO 4217 Alpha" listAgencyID="6">ISK</cbc:DocumentCurrencyCode>
     <cac:InvoicePeriod>
       <cbc:StartDate>2016-02-01</cbc:StartDate>
@@ -42,6 +42,10 @@
     <cac:OrderReference>
       <cbc:ID>20068</cbc:ID>
     </cac:OrderReference>
+    <cac:ContractDocumentReference>
+      <cbc:ID>Contract01</cbc:ID>
+      <cbc:DocumentType>Contract</cbc:DocumentType>
+    </cac:ContractDocumentReference>
     <cac:AdditionalDocumentReference>
       <cbc:ID>0070075</cbc:ID>
       <cbc:IssueDate>2016-02-24</cbc:IssueDate>
@@ -93,6 +97,7 @@
           <cbc:Name>Sigursteinn</cbc:Name>
           <cbc:Telephone>564-1400</cbc:Telephone>
           <cbc:Telefax>564-1402</cbc:Telefax>
+          <cbc:ElectronicMail>test@supplier.com</cbc:ElectronicMail>
         </cac:Contact>
       </cac:Party>
     </cac:AccountingSupplierParty>
@@ -117,21 +122,27 @@
           <cbc:RegistrationName>Eikar</cbc:RegistrationName>
           <cbc:CompanyID schemeID="IS:KT" schemeAgencyID="ZZZ">5503070490</cbc:CompanyID>
         </cac:PartyLegalEntity>
+        <cac:Contact>
+          <cbc:ID>3</cbc:ID>
+          <cbc:Name>Customer</cbc:Name>
+          <cbc:Telephone>123-4560</cbc:Telephone>
+          <cbc:Telefax>123-4678</cbc:Telefax>
+          <cbc:ElectronicMail>test@customer.com</cbc:ElectronicMail>
+        </cac:Contact>
       </cac:Party>
     </cac:AccountingCustomerParty>
     <cac:Delivery>
+      <cbc:ActualDeliveryDate>2017-05-19</cbc:ActualDeliveryDate>
       <cac:DeliveryLocation>
+        <cbc:ID schemeID="GLN">1234567890123</cbc:ID>
         <cac:Address>
-          <cbc:AddressFormatCode listID="Address Format" listAgencyID="NES">Unstructured</cbc:AddressFormatCode>
-          <cac:AddressLine>
-            <cbc:Line>Strategía ehf.</cbc:Line>
-          </cac:AddressLine>
-          <cac:AddressLine>
-            <cbc:Line>Suðurlandsbraut 22</cbc:Line>
-          </cac:AddressLine>
-          <cac:AddressLine>
-            <cbc:Line>Guðrún</cbc:Line>
-          </cac:AddressLine>
+          <cbc:StreetName>Melió 113</cbc:StreetName>
+          <cbc:CityName>Vilafranca del Penedès</cbc:CityName>
+          <cbc:PostalZone>08720</cbc:PostalZone>
+          <cbc:CountrySubentity>Barcelona</cbc:CountrySubentity>
+          <cac:Country>
+            <cbc:IdentificationCode listID="ISO3166-1:Alpha2">ES</cbc:IdentificationCode>
+          </cac:Country>
         </cac:Address>
       </cac:DeliveryLocation>
     </cac:Delivery>
@@ -184,6 +195,7 @@
     </cac:LegalMonetaryTotal>
     <cac:InvoiceLine>
       <cbc:ID>1</cbc:ID>
+      <cbc:Note>line 1 note</cbc:Note>
       <cbc:InvoicedQuantity unitCode="BO">3.00</cbc:InvoicedQuantity>
       <cbc:LineExtensionAmount currencyID="ISK">3270.27</cbc:LineExtensionAmount>
       <cac:TaxTotal>
@@ -202,7 +214,8 @@
         </cac:TaxSubtotal>
       </cac:TaxTotal>
       <cac:Item>
-        <cbc:Name>Ísvatn 19L </cbc:Name>
+        <cbc:Name>Ísvatn 19L</cbc:Name>
+        <cbc:Description>ID GREN DSK</cbc:Description>
         <cac:BuyersItemIdentification>
           <cbc:ID>30001</cbc:ID>
         </cac:BuyersItemIdentification>
@@ -217,6 +230,12 @@
             <cbc:Name>UN/ECE 5305</cbc:Name>
           </cac:TaxScheme>
         </cac:ClassifiedTaxCategory>
+        <cac:StandardItemIdentification>
+          <cbc:ID schemeID="GTIN">908450385034</cbc:ID>
+        </cac:StandardItemIdentification>
+        <cac:ItemSpecificationDocumentReference>
+          <cbc:ID>349503 0439503</cbc:ID>
+        </cac:ItemSpecificationDocumentReference>
       </cac:Item>
       <cac:Price>
         <cbc:PriceAmount currencyID="ISK">1090.00</cbc:PriceAmount>
@@ -224,6 +243,7 @@
     </cac:InvoiceLine>
     <cac:InvoiceLine>
       <cbc:ID>2</cbc:ID>
+      <cbc:Note>line 2 note</cbc:Note>
       <cbc:InvoicedQuantity unitCode="C62">-3.00</cbc:InvoicedQuantity>
       <cbc:LineExtensionAmount currencyID="ISK">-7200.00</cbc:LineExtensionAmount>
       <cac:TaxTotal>
@@ -243,6 +263,7 @@
       </cac:TaxTotal>
       <cac:Item>
         <cbc:Name>Vatnsbrúsi 19L INN (skilagjald) </cbc:Name>
+        <cbc:Description>ID GREN DSK2</cbc:Description>
         <cac:BuyersItemIdentification>
           <cbc:ID>30006</cbc:ID>
         </cac:BuyersItemIdentification>
@@ -257,6 +278,12 @@
             <cbc:Name>UN/ECE 5305</cbc:Name>
           </cac:TaxScheme>
         </cac:ClassifiedTaxCategory>
+        <cac:StandardItemIdentification>
+          <cbc:ID schemeID="GTIN">09234024032</cbc:ID>
+        </cac:StandardItemIdentification>
+        <cac:ItemSpecificationDocumentReference>
+          <cbc:ID>MIESNN </cbc:ID>
+        </cac:ItemSpecificationDocumentReference>
       </cac:Item>
       <cac:Price>
         <cbc:PriceAmount currencyID="ISK">2400.00</cbc:PriceAmount>
@@ -264,6 +291,7 @@
     </cac:InvoiceLine>
     <cac:InvoiceLine>
       <cbc:ID>3</cbc:ID>
+      <cbc:Note>line 3 note</cbc:Note>
       <cbc:InvoicedQuantity unitCode="C62">3.00</cbc:InvoicedQuantity>
       <cbc:LineExtensionAmount currencyID="ISK">7200.00</cbc:LineExtensionAmount>
       <cac:TaxTotal>
@@ -283,6 +311,7 @@
       </cac:TaxTotal>
       <cac:Item>
         <cbc:Name>Vatnsbrúsi 19L ÚT (skilagjald) </cbc:Name>
+        <cbc:Description>ID GREN DSK3</cbc:Description>
         <cac:BuyersItemIdentification>
           <cbc:ID>30005</cbc:ID>
         </cac:BuyersItemIdentification>
@@ -297,6 +326,12 @@
             <cbc:Name>UN/ECE 5305</cbc:Name>
           </cac:TaxScheme>
         </cac:ClassifiedTaxCategory>
+        <cac:StandardItemIdentification>
+          <cbc:ID schemeID="GTIN">9340230239483</cbc:ID>
+        </cac:StandardItemIdentification>
+        <cac:ItemSpecificationDocumentReference>
+          <cbc:ID>CIRMN S99</cbc:ID>
+        </cac:ItemSpecificationDocumentReference>
       </cac:Item>
       <cac:Price>
         <cbc:PriceAmount currencyID="ISK">2400.00</cbc:PriceAmount>

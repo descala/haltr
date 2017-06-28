@@ -702,9 +702,12 @@ class InvoiceTest < ActiveSupport::TestCase
     file = File.new(File.join(File.dirname(__FILE__),'../fixtures/documents/invoice_ubl_with_sbdh.xml'))
     invoice = Invoice.create_from_xml(file,companies(:company6),"1234",'uploaded',User.current.name,nil,false)
     assert_equal '5503070490', invoice.client.taxcode
+    assert_equal '908450385034', invoice.invoice_lines.first.article_code
+    assert_equal 'line 1 note 30001', invoice.invoice_lines.first.notes
     if invoice.client.invoice_format == 'link_to_pdf_by_mail'
       assert invoice.valid?
       invoice.about_to_be_sent=true
+      invoice.client.email=''
       assert !invoice.valid?
       assert_equal ["Invoice's client has no email defined"], invoice.errors.full_messages
     else
@@ -924,6 +927,59 @@ class InvoiceTest < ActiveSupport::TestCase
     end
     assert_equal "La validación ha fallado: El IBAN no es válido", err.message
     I18n.locale = :en
+  end
+
+  test 'import more fields from UBL 2.0' do
+    file = File.new(File.join(File.dirname(__FILE__),'../fixtures/documents/invoice_ubl_with_sbdh.xml'))
+    invoice = Invoice.create_from_xml(file,companies(:company6),"1234",'uploaded',User.current.name,nil,false)
+    xml = Nokogiri::XML(Haltr::Xml.generate(invoice, 'peppolubl21', false, false, true))
+    xml.remove_namespaces!
+    assert_equal 'Invoice notes', invoice.extra_info # ho importem
+    assert_equal 'Invoice notes', xml.at('//Invoice/Note').text # ho posem a l'xml
+    assert_equal 'ISK', invoice.currency
+    assert_equal 'ISK', xml.at('//Invoice/DocumentCurrencyCode').text
+    assert_equal '20068', invoice.ponumber
+    assert_equal '20068', xml.at('//Invoice/OrderReference/ID').text
+    assert_equal '20068', invoice.invoice_lines.first.ponumber #TODO: a ubl ho hem de posar a linia tmb?
+    assert_equal 'Contract01', invoice.contract_number
+    assert_equal 'Contract01', xml.at('//Invoice/ContractDocumentReference/ID').text
+    #assert_equal 1, invoice.client.people.size
+    #person = invoice.client.people.first
+    #assert_equal 'Customer', person.name
+    #assert_equal '123-4560', person.phone_office
+    ##assert_equal '123-4678', person.phone_fax
+    #assert_equal 'test@customer.com', person.email
+    #assert_equal 'Customer', xml.at('//Invoice/AccountingCustomerParty/Party/Contact/Name')
+    #assert_equal '123-4560', xml.at('//Invoice/AccountingCustomerParty/Party/Contact/Telephone')
+    ##assert_equal '123-4678', xml.at('//Invoice/AccountingCustomerParty/Party/Contact/Telefax')
+    #assert_equal 'test@customer.com', xml.at('//Invoice/AccountingCustomerParty/Party/Contact/ElectronicMail')
+
+    assert_equal 'Ísvatn 19L ID GREN DSK', invoice.invoice_lines[0].description
+    assert_equal 'Ísvatn 19L ID GREN DSK', xml.xpath('//Invoice/InvoiceLine/Item/Name')[0].text
+    assert_equal InvoiceLine::OTHER, invoice.invoice_lines[0].unit
+    assert_equal InvoiceLine::UNITS, invoice.invoice_lines[1].unit
+    assert_equal InvoiceLine::UNITS, invoice.invoice_lines[2].unit
+    assert_equal 'line 1 note 30001', invoice.invoice_lines[0].notes
+    assert_equal 'line 1 note 30001', xml.xpath('//Invoice/InvoiceLine/Note')[0].text
+    assert_equal 'line 2 note 30006', invoice.invoice_lines[1].notes
+    assert_equal 'line 3 note 30005', invoice.invoice_lines[2].notes
+    # delivery
+    assert_equal Date.parse('2017-05-19'), invoice.delivery_date
+    assert_equal '2017-05-19', xml.at('//Invoice/Delivery/ActualDeliveryDate').text
+    assert_equal 'GLN', invoice.delivery_location_type
+    assert_equal 'GLN', xml.at('//Invoice/Delivery/DeliveryLocation/ID/@schemeID').text
+    assert_equal '1234567890123', invoice.delivery_location_id
+    assert_equal '1234567890123', xml.at('//Invoice/Delivery/DeliveryLocation/ID').text
+    assert_equal 'Melió 113', invoice.delivery_address
+    assert_equal 'Melió 113', xml.at('//Invoice/Delivery/DeliveryLocation/Address/StreetName').text
+    assert_equal 'Vilafranca del Penedès', invoice.delivery_city
+    assert_equal 'Vilafranca del Penedès', xml.at('//Invoice/Delivery/DeliveryLocation/Address/CityName').text
+    assert_equal '08720', invoice.delivery_postalcode
+    assert_equal '08720', xml.at('//Invoice/Delivery/DeliveryLocation/Address/PostalZone').text
+    assert_equal 'Barcelona', invoice.delivery_province
+    assert_equal 'Barcelona', xml.at('//Invoice/Delivery/DeliveryLocation/Address/CountrySubentity').text
+    assert_equal 'ES', invoice.delivery_country
+    assert_equal 'ES', xml.at('//Invoice/Delivery/DeliveryLocation/Address/Country/IdentificationCode').text
   end
 
 end

@@ -42,7 +42,10 @@ class Invoice < ActiveRecord::Base
   }
 
   validates_presence_of :date, :currency, :project_id, :unless => Proc.new {|i| i.type == "ReceivedInvoice" }
-  validates :date, :due_date, :tax_point_date, :invoicing_period_start, :invoicing_period_end, :order_date, :fa_duedate, format: { with: /\A[0-9]{4}-[0-9]{1,2}-[0-9]{1,2}\z/ }, allow_blank: true
+  validates :date, :due_date, :tax_point_date, :invoicing_period_start,
+    :invoicing_period_end, :order_date, :fa_duedate, :delivery_date,
+    format: { with: /\A[0-9]{4}-[0-9]{1,2}-[0-9]{1,2}\z/ },
+    allow_blank: true
   validates_presence_of :client, :unless => Proc.new {|i| %w(Quote ReceivedInvoice).include? i.type }
   validates_inclusion_of :currency, :in  => Money::Currency.table.collect {|k,v| v[:iso_code] }, :unless => Proc.new {|i| i.type == "ReceivedInvoice" }
   validates_numericality_of :charge_amount_in_cents, :allow_nil => true
@@ -648,6 +651,7 @@ _INV
     amend_reason     = Haltr::Utils.get_xpath(doc,xpaths[:amend_reason])
     party_id         = Haltr::Utils.get_xpath(doc,xpaths[:party_id])
     legal_literals   = Haltr::Utils.get_xpath(doc,xpaths[:legal_literals])
+    contract_number  = Haltr::Utils.get_xpath(doc,xpaths[:contract_number])
 
 
     # factoring assignment data
@@ -883,7 +887,8 @@ _INV
       :fa_clauses        => fa_clauses,
       :party_identification => party_id,
       :legal_literals    => legal_literals,
-      :file_name         => file_name
+      :file_name         => file_name,
+      :contract_number   => contract_number
     )
 
     xml_payment_method = Haltr::Utils.get_xpath(doc,xpaths[:payment_method])
@@ -891,6 +896,16 @@ _INV
       invoice.payment_method = Haltr::Utils.payment_method_from_facturae(xml_payment_method)
     else # ubl
       invoice.payment_method = Haltr::Utils.payment_method_from_ubl(xml_payment_method)
+      delivery = doc.xpath(xpaths[:delivery])
+
+      [:delivery_date, :delivery_location_type, :delivery_location_id,
+       :delivery_address, :delivery_city, :delivery_postalcode,
+       :delivery_province, :delivery_country].each do |delivery_attr|
+         invoice.public_send(
+           "#{delivery_attr}=",
+           Haltr::Utils.get_xpath(delivery, xpaths[delivery_attr])
+         )
+       end
     end
 
     # bank info
@@ -912,9 +927,16 @@ _INV
 
       unit = Haltr::Utils.get_xpath(line,xpaths[:line_unit])
       InvoiceLine::UNIT_CODES.each do |haltr_id, units|
-        if units[:facturae] == unit
-          unit = haltr_id
-          break
+        if invoice_format =~ /facturae/
+          if units[:facturae] == unit
+            unit = haltr_id
+            break
+          end
+        elsif invoice_format =~ /ubl/
+          if units[:ubl] == unit
+            unit = haltr_id
+            break
+          end
         end
         unit = InvoiceLine::OTHER if unit.present?
       end
@@ -1306,6 +1328,12 @@ _INV
 
   def visible_by_client?
     false
+  end
+
+  def has_delivery_info?
+    %w( delivery_date delivery_location_id delivery_location_type
+    delivery_address delivery_city delivery_postalcode delivery_province
+    ).any? {|m| public_send(m).present? }
   end
 
   protected

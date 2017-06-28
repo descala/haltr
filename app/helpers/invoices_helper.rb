@@ -5,7 +5,16 @@ module InvoicesHelper
   def clients_for_select
     clients = Client.where(project: @project).order(:name)
     # check if client.valid?: if you request to link profile, and then unlink it, client is invalid
-    clients.collect {|c| [c.name, c.id, {'data-invoice_format'=>ExportChannels.l(c.invoice_format)}] unless c.name.blank?}.compact
+    clients.collect do |c|
+      next if c.name.blank?
+      data_hash = {
+        data: {
+          channel: ExportChannels.l(c.invoice_format),
+          format:  ExportChannels[c.invoice_format]['format']
+        }
+      }
+      [c.name, c.id, data_hash]
+    end.compact
   end
 
   def haltr_precision(num, precision=2, relevant=nil)
