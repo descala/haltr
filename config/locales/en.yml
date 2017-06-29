@@ -805,7 +805,7 @@ If you save it, will be marked as New."
   label_received_order_plural: "Received orders"
   deleted_order: "Order deleted"
   mail_notifications: "Email notifications"
-  mail_subject_order_add: "Warning: You have received a new order in %{title}"
+  mail_subject_order_add: "IMPORTANT: You have received a new order in %{title}"
   mail_body_order_add: |
     Dear user,
     You have received a new order in your %{title} account.
@@ -813,7 +813,7 @@ If you save it, will be marked as New."
 
     With kind regards
     %{title} Team
-  mail_subject_invoice_add: "Warning: You have received a new invoice in %{title}"
+  mail_subject_invoice_add: "IMPORTANT: You have received a new invoice in %{title}"
   mail_body_invoice_add: |
     Dear user,
     You have received a new invoice in your %{title} account.
