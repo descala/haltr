@@ -179,7 +179,7 @@
     <table class="table table-striped table-hover invoices">
       <thead>
         <tr>
-          <th></th>
+          <th class="hidden-print"></th>
           <%= sort_header_tag('number', caption: l(:field_number)) %>
           <%= sort_header_tag('date', caption: l(:field_date)) %>
           <%= sort_header_tag('due_date', caption: l(:field_terms)) %>
@@ -196,7 +196,7 @@
             <%else%>
               <tr id="invoice-<%=invoice.id%>" class="hascontextmenu <%= 'amended ' if invoice.amended? %>">
               <% end %>
-              <td><%= check_box_tag("ids[]", invoice.id, false, id: nil) %></td>
+              <td class="hidden-print"><%= check_box_tag("ids[]", invoice.id, false, id: nil) %></td>
               <td><%=h link_to_if_authorized invoice.number.blank? ? "?" : invoice.number, action: 'show', id: invoice %></td>
               <td><%=h format_date invoice.date %></td>
               <td <%='class="pastdue"'.html_safe if invoice.past_due?%>><%=h format_date invoice.due_date %><%= call_hook(:invoices_index_due_date, { invoice: invoice }) %></td>
