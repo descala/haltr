@@ -62,6 +62,11 @@
           <ElectronicMail>lluis@ingent.net</ElectronicMail>
         </ContactDetails>
       </Individual>
+      <LegalEntity>
+        <ContactDetails>
+          <ElectronicMail>override@companymail.net</ElectronicMail>
+        </ContactDetails>
+      </LegalEntity>
     </SellerParty>
     <BuyerParty>
       <TaxIdentification>

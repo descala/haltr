@@ -60,7 +60,7 @@ module Haltr
           xpaths[:seller_province]    = "//Parties/SellerParty/*/*/Province"
           xpaths[:seller_countrycode] = "//Parties/SellerParty/*/*/CountryCode"
           xpaths[:seller_website]     = "//Parties/SellerParty/*/ContactDetails/WebAddress"
-          xpaths[:seller_email]       = "//Parties/SellerParty/*/ContactDetails/ElectronicMail"
+          xpaths[:seller_email]       = "//Parties/SellerParty/LegalEntity/ContactDetails/ElectronicMail"
           xpaths[:seller_cp_city]     = [ "//Parties/SellerParty/*/*/PostCode",
                                           "//Parties/SellerParty/*/*/Town" ]
           xpaths[:seller_cp_city2]    = "//Parties/SellerParty/*/*/PostCodeAndTown"
