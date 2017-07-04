@@ -5,13 +5,13 @@
   <% if @company.bank_infos.reject {|bi| bi.bank_account.blank? }.present? -%>
     <td>
       <% unless f.object.bank_account.blank? -%>
-        <%= f.text_field :bank_account, :maxlength => 20, :size => 30, :no_label => true, :maxlength => 20, :disabled => true, class: 'form-control' %>
+        <%= f.text_field :bank_account, :maxlength => 20, :size => 30, :no_label => true, :disabled => true, class: 'form-control' %>
       <% end -%>
     </td>
   <% end -%>
   <td>
-    <%= f.text_field :iban, maxlength: 34, class: 'iban', data: { url: project_check_iban_path(@project), "span-for-result"=>"iban#{bank_info_id}" }, class: 'form-control' %>
-    <span id="iban<%=bank_info_id%>" class=ownibanspan></span>
+    <%= f.text_field :iban, maxlength: 34, class: 'iban form-control', data: { url: project_check_iban_path(@project), "span-for-result"=>"iban#{bank_info_id}" } %>
+    <span id="iban<%=bank_info_id%>" class="ownibanspan"></span>
   </td>
   <td><%= f.text_field :bic, maxlength: 11, class: 'form-control' %></td>
   <td class="tax_remove w6p text-right">
