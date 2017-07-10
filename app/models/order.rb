@@ -198,7 +198,7 @@ class Order < ActiveRecord::Base
         receiver_schemeid == project.company.schemeid
       # seller does not match
       raise I18n.t :endpoint_does_not_belong_to_self,
-        :tcs => "#{sender_schemeid}:#{sender_endpointid}",
+        :tcs => "#{receiver_schemeid}:#{receiver_endpointid}",
         :tc  => "#{project.company.schemeid}:#{project.company.endpointid}"
     end
 
