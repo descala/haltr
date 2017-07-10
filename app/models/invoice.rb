@@ -170,8 +170,10 @@ class Invoice < ActiveRecord::Base
   end
 
   def recipient_emails
-    unless client_email_override.blank?
+    if client_email_override.present?
       client_email_override.split(/[,; ]/)
+    elsif client_office.present?
+      client_office.recipient_emails rescue []
     else
       client.recipient_emails rescue []
     end
