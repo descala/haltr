@@ -27,7 +27,7 @@ module Haltr
         val.blank? ? nil : val.collect {|v| v.text.to_s.strip }.join(" ")
       end
 
-      def xpaths_for(format)
+      def xpaths_for(format, root_element='Invoice')
         xpaths = {}.with_indifferent_access
         if format =~ /facturae/
           xpaths[:invoice_number]     = "//Invoices/Invoice/InvoiceHeader/InvoiceNumber"
@@ -172,53 +172,53 @@ module Haltr
           xpaths[:legal_literals]     = "//Invoices/Invoice/LegalLiterals/LegalReference"
 
         elsif format =~ /ubl/
-          xpaths[:invoice_number]     = "/xmlns:Invoice/cbc:ID"
-          xpaths[:invoice_date]       = "/xmlns:Invoice/cbc:IssueDate"
-          xpaths[:extra_info]         = "/xmlns:Invoice/cbc:Note"
-          xpaths[:invoice_date]       = "/xmlns:Invoice/cbc:IssueDate"
-          xpaths[:tax_point_date]     = "/xmlns:Invoice/cbc:TaxPointDate"
-          xpaths[:invoice_total]      = "/xmlns:Invoice/cac:LegalMonetaryTotal/cbc:TaxInclusiveAmount"
-          xpaths[:invoice_import]     = "/xmlns:Invoice/cac:LegalMonetaryTotal/cbc:TaxExclusiveAmount"
-          xpaths[:payment_method]     = "/xmlns:Invoice/cac:PaymentMeans/cbc:PaymentMeansCode"
-          xpaths[:invoice_due_date]   = "/xmlns:Invoice/cac:PaymentMeans/cbc:PaymentDueDate"
-          xpaths[:seller_taxcode]     = "/xmlns:Invoice/cac:AccountingSupplierParty/cac:Party/cac:PartyTaxScheme/cbc:CompanyID"
-          xpaths[:seller_taxcode2]    = "/xmlns:Invoice/cac:AccountingSupplierParty/cac:Party/cac:PartyLegalEntity/cbc:CompanyID"
-          xpaths[:seller_taxcode3]    = "/xmlns:Invoice/cac:AccountingSupplierParty/cac:Party/cac:PartyIdentification/cbc:ID"
-          xpaths[:seller_name]        = "/xmlns:Invoice/cac:AccountingSupplierParty/cac:Party/cac:PartyName/cbc:Name"
+          xpaths[:invoice_number]     = "/xmlns:#{root_element}/cbc:ID"
+          xpaths[:invoice_date]       = "/xmlns:#{root_element}/cbc:IssueDate"
+          xpaths[:extra_info]         = "/xmlns:#{root_element}/cbc:Note"
+          xpaths[:invoice_date]       = "/xmlns:#{root_element}/cbc:IssueDate"
+          xpaths[:tax_point_date]     = "/xmlns:#{root_element}/cbc:TaxPointDate"
+          xpaths[:invoice_total]      = "/xmlns:#{root_element}/cac:LegalMonetaryTotal/cbc:TaxInclusiveAmount"
+          xpaths[:invoice_import]     = "/xmlns:#{root_element}/cac:LegalMonetaryTotal/cbc:TaxExclusiveAmount"
+          xpaths[:payment_method]     = "/xmlns:#{root_element}/cac:PaymentMeans/cbc:PaymentMeansCode"
+          xpaths[:invoice_due_date]   = "/xmlns:#{root_element}/cac:PaymentMeans/cbc:PaymentDueDate"
+          xpaths[:seller_taxcode]     = "/xmlns:#{root_element}/cac:AccountingSupplierParty/cac:Party/cac:PartyTaxScheme/cbc:CompanyID"
+          xpaths[:seller_taxcode2]    = "/xmlns:#{root_element}/cac:AccountingSupplierParty/cac:Party/cac:PartyLegalEntity/cbc:CompanyID"
+          xpaths[:seller_taxcode3]    = "/xmlns:#{root_element}/cac:AccountingSupplierParty/cac:Party/cac:PartyIdentification/cbc:ID"
+          xpaths[:seller_name]        = "/xmlns:#{root_element}/cac:AccountingSupplierParty/cac:Party/cac:PartyName/cbc:Name"
           xpaths[:seller_name2]       = nil
-          xpaths[:seller_address]     = [ "/xmlns:Invoice/cac:AccountingSupplierParty/cac:Party/cac:PostalAddress/cbc:StreetName",
-                                          "/xmlns:Invoice/cac:AccountingSupplierParty/cac:Party/cac:PostalAddress/cbc:BuildingNumber" ] 
-          xpaths[:seller_province]    = "/xmlns:Invoice/cac:AccountingSupplierParty/cac:Party/cac:PostalAddress/cbc:CountrySubentity"
-          xpaths[:seller_countrycode] = "/xmlns:Invoice/cac:AccountingSupplierParty/cac:Party/cac:PostalAddress/cac:Country/cbc:IdentificationCode"
-          xpaths[:seller_website]     = "/xmlns:Invoice/cac:AccountingSupplierParty/cac:Party/cbc:WebsiteURI"
-          xpaths[:seller_email]       = "/xmlns:Invoice/cac:AccountingSupplierParty/cac:Party/cac:Contact/cbc:ElectronicMail"
-          xpaths[:seller_cp_city]     = [ "/xmlns:Invoice/cac:AccountingSupplierParty/cac:Party/cac:PostalAddress/cbc:PostalZone",
-                                          "/xmlns:Invoice/cac:AccountingSupplierParty/cac:Party/cac:PostalAddress/cbc:CityName" ]
+          xpaths[:seller_address]     = [ "/xmlns:#{root_element}/cac:AccountingSupplierParty/cac:Party/cac:PostalAddress/cbc:StreetName",
+                                          "/xmlns:#{root_element}/cac:AccountingSupplierParty/cac:Party/cac:PostalAddress/cbc:BuildingNumber" ] 
+          xpaths[:seller_province]    = "/xmlns:#{root_element}/cac:AccountingSupplierParty/cac:Party/cac:PostalAddress/cbc:CountrySubentity"
+          xpaths[:seller_countrycode] = "/xmlns:#{root_element}/cac:AccountingSupplierParty/cac:Party/cac:PostalAddress/cac:Country/cbc:IdentificationCode"
+          xpaths[:seller_website]     = "/xmlns:#{root_element}/cac:AccountingSupplierParty/cac:Party/cbc:WebsiteURI"
+          xpaths[:seller_email]       = "/xmlns:#{root_element}/cac:AccountingSupplierParty/cac:Party/cac:Contact/cbc:ElectronicMail"
+          xpaths[:seller_cp_city]     = [ "/xmlns:#{root_element}/cac:AccountingSupplierParty/cac:Party/cac:PostalAddress/cbc:PostalZone",
+                                          "/xmlns:#{root_element}/cac:AccountingSupplierParty/cac:Party/cac:PostalAddress/cbc:CityName" ]
           xpaths[:seller_cp_city2]    = nil
-          xpaths[:buyer_taxcode]      = "/xmlns:Invoice/cac:AccountingCustomerParty/cac:Party/cac:PartyTaxScheme/cbc:CompanyID"
-          xpaths[:buyer_taxcode_id]   = "/xmlns:Invoice/cac:AccountingCustomerParty/cac:Party/cac:PartyIdentification/cbc:ID"
-          xpaths[:buyer_endpoint_id]  = "/xmlns:Invoice/cac:AccountingCustomerParty/cac:Party/cbc:EndpointID"
-          xpaths[:buyer_name]         = "/xmlns:Invoice/cac:AccountingCustomerParty/cac:Party/cac:PartyName/cbc:Name"
+          xpaths[:buyer_taxcode]      = "/xmlns:#{root_element}/cac:AccountingCustomerParty/cac:Party/cac:PartyTaxScheme/cbc:CompanyID"
+          xpaths[:buyer_taxcode_id]   = "/xmlns:#{root_element}/cac:AccountingCustomerParty/cac:Party/cac:PartyIdentification/cbc:ID"
+          xpaths[:buyer_endpoint_id]  = "/xmlns:#{root_element}/cac:AccountingCustomerParty/cac:Party/cbc:EndpointID"
+          xpaths[:buyer_name]         = "/xmlns:#{root_element}/cac:AccountingCustomerParty/cac:Party/cac:PartyName/cbc:Name"
           xpaths[:buyer_name2]        = nil
-          xpaths[:buyer_address]      = [ "/xmlns:Invoice/cac:AccountingCustomerParty/cac:Party/cac:PostalAddress/cbc:StreetName",
-                                          "/xmlns:Invoice/cac:AccountingCustomerParty/cac:Party/cac:PostalAddress/cbc:BuildingNumber" ] 
-          xpaths[:buyer_province]     = "/xmlns:Invoice/cac:AccountingCustomerParty/cac:Party/cac:PostalAddress/cbc:CountrySubentity"
-          xpaths[:buyer_countrycode]  = "/xmlns:Invoice/cac:AccountingCustomerParty/cac:Party/cac:PostalAddress/cac:Country/cbc:IdentificationCode"
-          xpaths[:buyer_website]      = "/xmlns:Invoice/cac:AccountingCustomerParty/cac:Party/cbc:WebsiteURI"
-          xpaths[:buyer_email]        = "/xmlns:Invoice/cac:AccountingCustomerParty/cac:Party/cac:Contact/cbc:ElectronicMail"
-          xpaths[:buyer_cp_city]      = [ "/xmlns:Invoice/cac:AccountingCustomerParty/cac:Party/cac:PostalAddress/cbc:PostalZone",
-                                          "/xmlns:Invoice/cac:AccountingCustomerParty/cac:Party/cac:PostalAddress/cbc:CityName" ]
+          xpaths[:buyer_address]      = [ "/xmlns:#{root_element}/cac:AccountingCustomerParty/cac:Party/cac:PostalAddress/cbc:StreetName",
+                                          "/xmlns:#{root_element}/cac:AccountingCustomerParty/cac:Party/cac:PostalAddress/cbc:BuildingNumber" ] 
+          xpaths[:buyer_province]     = "/xmlns:#{root_element}/cac:AccountingCustomerParty/cac:Party/cac:PostalAddress/cbc:CountrySubentity"
+          xpaths[:buyer_countrycode]  = "/xmlns:#{root_element}/cac:AccountingCustomerParty/cac:Party/cac:PostalAddress/cac:Country/cbc:IdentificationCode"
+          xpaths[:buyer_website]      = "/xmlns:#{root_element}/cac:AccountingCustomerParty/cac:Party/cbc:WebsiteURI"
+          xpaths[:buyer_email]        = "/xmlns:#{root_element}/cac:AccountingCustomerParty/cac:Party/cac:Contact/cbc:ElectronicMail"
+          xpaths[:buyer_cp_city]      = [ "/xmlns:#{root_element}/cac:AccountingCustomerParty/cac:Party/cac:PostalAddress/cbc:PostalZone",
+                                          "/xmlns:#{root_element}/cac:AccountingCustomerParty/cac:Party/cac:PostalAddress/cbc:CityName" ]
           xpaths[:buyer_cp_city2]     = nil
-          xpaths[:currency]           = "/xmlns:Invoice/cbc:DocumentCurrencyCode"
+          xpaths[:currency]           = "/xmlns:#{root_element}/cbc:DocumentCurrencyCode"
 
-          xpaths[:global_taxes]       = ["/xmlns:Invoice/cac:TaxTotal/cac:TaxSubtotal",
-                                         "/xmlns:Invoice/cac:WithholdingTaxTotal/cac:TaxSubtotal"]
+          xpaths[:global_taxes]       = ["/xmlns:#{root_element}/cac:TaxTotal/cac:TaxSubtotal",
+                                         "/xmlns:#{root_element}/cac:WithholdingTaxTotal/cac:TaxSubtotal"]
           # relative to global_taxes
           xpaths[:gtax_category]      = "cac:TaxCategory/cbc:ID"
           xpaths[:gtax_percent]       = "cac:TaxCategory/cbc:Percent"
           xpaths[:gtax_name]          = "cac:TaxCategory/cac:TaxScheme/cbc:ID"
 
-          xpaths[:invoice_lines]      = "//cac:InvoiceLine"
+          xpaths[:invoice_lines]      = "//cac:#{root_element}Line"
           # relative to invoice_lines
           xpaths[:i_transaction_ref]  = "IssuerTransactionReference" # todo
           xpaths[:r_contract_reference] = "ReceiverContractReference" # todo
@@ -242,8 +242,8 @@ module Haltr
           # relative to invoice_lines/delivery_notes_references/delivery_note
           xpaths[:delivery_note_num]  = "DeliveryNoteNumber" # todo
 
-          xpaths[:ponumber]           = "/xmlns:Invoice/cac:OrderReference/cbc:ID"
-          xpaths[:contract_number]    = "/xmlns:Invoice/cac:ContractDocumentReference/cbc:ID"
+          xpaths[:ponumber]           = "/xmlns:#{root_element}/cac:OrderReference/cbc:ID"
+          xpaths[:contract_number]    = "/xmlns:#{root_element}/cac:ContractDocumentReference/cbc:ID"
           # relative to invoice_lines/discounts
           xpaths[:line_discount_percent] = "cbc:MultiplierFactorNumeric"
           xpaths[:line_discount_text]    = "cbc:AllowanceChargeReason"

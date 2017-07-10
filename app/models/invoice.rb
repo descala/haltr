@@ -592,29 +592,36 @@ _INV
     end
     doc_no_namespaces = doc.dup.remove_namespaces!
     facturae_version  = doc.at_xpath("//FileHeader/SchemaVersion")
-    ubl_version       = doc_no_namespaces.at_xpath("//Invoice/UBLVersionID")
+    ubl_invoice       = doc_no_namespaces.at_xpath("//Invoice/UBLVersionID")
+    ubl_creditnote    = doc_no_namespaces.at_xpath("//CreditNote/UBLVersionID")
     # invoice_format should match format in config/channels.yml
     if facturae_version
       # facturae30 facturae31 facturae32
-      invoice_format  = "facturae#{facturae_version.text.gsub(/[^\d]/,'')}"
+      invoice_format = "facturae#{facturae_version.text.gsub(/[^\d]/,'')}"
+      root_element   = 'Invoice'
       logger.info "Creating invoice from xml - format is FacturaE #{facturae_version.text}. time=#{Time.now}"
-    elsif ubl_version
+    elsif ubl_invoice
       #TODO: pdf peppolubl20 peppolubl21 svefaktura
-      invoice_format  = "ubl#{ubl_version.text}"
-      logger.info "Creating invoice from xml - format is UBL #{ubl_version.text}. time=#{Time.now}"
+      invoice_format = "ubl#{ubl_invoice.text}"
+      root_element   = 'Invoice'
+      logger.info "Creating invoice from xml - format is UBL #{ubl_invoice.text}. time=#{Time.now}"
+    elsif ubl_creditnote
+      invoice_format = "ubl#{ubl_creditnote.text}"
+      root_element   = 'CreditNote'
+      logger.info "Creating credit_note from xml - format is UBL #{ubl_creditnote.text}. time=#{Time.now}"
     else
       logger.info "Creating invoice from xml - unknown format. time=#{Time.now}"
       raise "Unknown format"
     end
 
-    xpaths         = Haltr::Utils.xpaths_for(invoice_format)
+    xpaths         = Haltr::Utils.xpaths_for(invoice_format, root_element)
     seller_taxcode = Haltr::Utils.get_xpath(doc,xpaths[:seller_taxcode])
-    if ubl_version
+    if ubl_invoice
       seller_taxcode ||= Haltr::Utils.get_xpath(doc,xpaths[:seller_taxcode2])
       seller_taxcode ||= Haltr::Utils.get_xpath(doc,xpaths[:seller_taxcode3])
     end
     buyer_taxcode  = Haltr::Utils.get_xpath(doc,xpaths[:buyer_taxcode])
-    if buyer_taxcode.nil? and ubl_version
+    if buyer_taxcode.nil? and ubl_invoice
       buyer_taxcode  = Haltr::Utils.get_xpath(doc,xpaths[:buyer_taxcode_id])
       if buyer_taxcode.nil?
         buyer_taxcode  = Haltr::Utils.get_xpath(doc,xpaths[:buyer_endpoint_id])
@@ -1062,10 +1069,12 @@ _INV
       end
     end
 
-    # assign value to invoice field to prevent validation errors on import
-    invoice.file_reference = invoice.invoice_lines.first.file_reference
-    invoice.ponumber = invoice.invoice_lines.first.ponumber
-    invoice.receiver_contract_reference = invoice.invoice_lines.first.receiver_contract_reference
+    if invoice.invoice_lines.any?
+      # assign value to invoice field to prevent validation errors on import
+      invoice.file_reference = invoice.invoice_lines.first.file_reference
+      invoice.ponumber = invoice.invoice_lines.first.ponumber
+      invoice.receiver_contract_reference = invoice.invoice_lines.first.receiver_contract_reference
+    end
 
     # attachments
     to_attach = []
