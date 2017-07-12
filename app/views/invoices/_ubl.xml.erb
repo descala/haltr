@@ -70,8 +70,10 @@
     </cac:AccountingSupplierParty>
     <cac:AccountingCustomerParty>
       <cac:Party>
-<% unless !@client.respond_to?(:endpointid) or @client.endpointid.blank? -%>
+<% if @client.respond_to?(:endpointid) and @client.endpointid.present? -%>
         <cbc:EndpointID schemeID="<%= @client.schemeid %>"><%= @client.endpointid %></cbc:EndpointID>
+<% elsif @client.respond_to?(:eprior_endpointid) and @client.eprior_endpointid.present? -%>
+        <cbc:EndpointID schemeID="<%= @client.eprior_schemeid %>"><%= @client.eprior_endpointid %></cbc:EndpointID>
 <% end -%>
         <cac:PartyName>
           <cbc:Name><%=h @client.name%></cbc:Name>
