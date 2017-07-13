@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<OrderResponse xmlns:cac="urn:oasis:names:specification:ubl:schema:xsd:CommonAggregateComponents-2"
+  xmlns:cbc="urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2"
+  xmlns:qdt="urn:oasis:names:specification:ubl:schema:xsd:QualifiedDataTypes-2"
+  xmlns:udt="urn:oasis:names:specification:ubl:schema:xsd:UnqualifiedDataTypes-2"
+  xmlns="urn:oasis:names:specification:ubl:schema:xsd:OrderResponse-2">
+  <cbc:UBLVersionID>2.1</cbc:UBLVersionID>
+  <cbc:CustomizationID>urn:www.cenbii.eu:transaction:biitrns001:ver2.0:extended:urn:www.peppol.eu:bis:peppol28a:ver1.0</cbc:CustomizationID>
+  <cbc:ProfileID>urn:www.cenbii.eu:profile:bii28:ver2.0</cbc:ProfileID>
+  <cbc:ID><%= @order.id %></cbc:ID>
+  <cbc:IssueDate><%= issue_date %></cbc:IssueDate>
+  <cbc:IssueTime><%= issue_time %></cbc:IssueTime>
+  <cbc:OrderResponseCode listID="UNCL1225">29</cbc:OrderResponseCode>
+  <cbc:DocumentCurrencyCode/>
+  <cac:OrderReference>
+    <cbc:ID><%= @order.num_pedido %></cbc:ID>
+  </cac:OrderReference>
+  <cac:BuyerCustomerParty/>
+  <cac:SellerSupplierParty/>
+</OrderResponse>

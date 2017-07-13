@@ -320,6 +320,46 @@ class Order < ActiveRecord::Base
     end
   end
 
+  def order_response(time=Time.now)
+
+    response = OrdersController.renderer.render(
+      :template => "orders/order_response",
+      :locals   => {
+        :@order => self,
+        :issue_date => time.strftime("%Y-%m-%d"),
+        :issue_time => time.strftime("%H:%M:%S")
+      },
+      :formats  => :xml,
+      :layout   => false
+    )
+
+    # Amb Nokogiri s'hi afegeix, de la Order:
+    #
+    #  cbc:DocumentCurrencyCode
+    #  cac:BuyerCustomerParty
+    #  cac:SellerSupplierParty
+    #
+    # TODO tenir en compte diferents prefixes
+    #      assumim cbc i cac
+
+    order_doc = Nokogiri.XML(original)
+    response_doc = Nokogiri.XML(response)
+
+    customer = response_doc.at('//cbc:DocumentCurrencyCode')
+    customer.replace(order_doc.at('//cbc:DocumentCurrencyCode'))
+    customer = response_doc.at('//cac:BuyerCustomerParty')
+    customer.replace(order_doc.at('//cac:BuyerCustomerParty'))
+    seller = response_doc.at('//cac:SellerSupplierParty')
+    seller.replace(order_doc.at('//cac:SellerSupplierParty'))
+
+    # Elimina nodes que no calen
+    response_doc.xpath('//cac:Contact').remove rescue nil
+    response_doc.xpath('//cac:PostalAddress').remove rescue nil
+    response_doc.xpath('//cac:PartyTaxScheme').remove rescue nil
+
+    Haltr::Xml.clean_xml(response_doc.to_s)
+  end
+
   protected
 
   def create_event
