@@ -17,8 +17,39 @@ class Redmine::ApiTest::EventsTest < Redmine::ApiTest::Base
         type: 'Event'
       }
     }
-    assert_response :created
+    assert_response :created, @response.body
     assert_equal('registered', Invoice.find(1).state)
+  end
+
+  test "accepta events polimorfics" do
+    event_count = Event.count
+
+    post '/events.json', {
+      event: {
+        type: 'Event',
+        model_object_id: '1',
+        model_object_type: 'Invoice',
+        name: 'success_sending'
+      }
+    }
+
+    assert_response :success
+    event_count +=1
+    assert_equal event_count, Event.count
+
+    post '/events.json', {
+      event: {
+        project_id: 1,
+        type: 'Event',
+        model_object_id: '1',
+        model_object_type: 'Nonexist',
+        name: 'success_sending'
+      }
+    }
+    assert_response :unprocessable_entity
+    assert_match(/Unknown type: Nonexist/, @response.body)
+    assert_equal event_count, Event.count
+
   end
 
 end
