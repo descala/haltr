@@ -75,7 +75,7 @@ class EventsController < ApplicationController
 
     has_errors = false
     # TODO polymorphic events #6805
-    if params[:event].has_key?(:model_object_type) and params[:event].has_key?(:model_object_id)
+    if params[:event][:model_object_type].present? and params[:event][:model_object_id].present?
       case params[:event][:model_object_type]
       when /Invoice/
         @event.invoice_id ||= params[:event][:model_object_id]

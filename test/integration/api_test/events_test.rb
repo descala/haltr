@@ -52,4 +52,22 @@ class Redmine::ApiTest::EventsTest < Redmine::ApiTest::Base
 
   end
 
+  test "accepta events polimorfics amb nils" do
+    event_count = Event.count
+
+    post '/events.json', {
+      event: {
+        type: 'Event',
+        invoice_id: '1',
+        model_object_id: '',
+        model_object_type: '',
+        name: 'success_sending'
+      }
+    }
+
+    assert_response :success
+    event_count +=1
+    assert_equal event_count, Event.count
+  end
+
 end
