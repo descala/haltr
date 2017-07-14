@@ -172,7 +172,7 @@ Redmine::Plugin.register :haltr do
     }
 
     permission :use_orders, {
-      orders: [:index, :show, :destroy, :import, :add_comment, :create_invoice]
+      orders: [:index, :show, :destroy, :import, :add_comment, :create_invoice, :accept]
     }, require: :member
 
     permission :use_local_signature, {

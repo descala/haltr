@@ -4,7 +4,7 @@ class OrdersController < ApplicationController
   menu_item Haltr::MenuItem.new(:orders,:inexistent), :only => [:import]
 
   before_filter :find_project_by_project_id
-  before_filter :find_order, only: [:add_comment, :show, :create_invoice]
+  before_filter :find_order, only: [:add_comment, :show, :create_invoice, :accept]
   before_filter :authorize
 
   helper :sort
@@ -82,6 +82,11 @@ class OrdersController < ApplicationController
       send_data @order.ubl_invoice,
         type: 'text/plain',
         disposition: "attachment; filename=#{@order.filename}"
+      return
+    elsif params[:show_response] and @order.xml?
+      send_data @order.order_response,
+        type: 'text/plain',
+        disposition: "attachment; filename=response_#{@order.filename}"
       return
     elsif @order.xml?
       doc  = Nokogiri::XML(@order.original)
@@ -202,6 +207,14 @@ class OrdersController < ApplicationController
   rescue
     flash[:error] = $!.message
     redirect_to action: :show, id: @order
+  end
+
+  def accept
+    @order.order_response
+    Haltr::Sender.send_invoice(@order, User.current)
+    Event.create!(order: @order, name: 'accept', user: User.current, project: @project)
+    @order.update_column :state, 'accepted'
+    redirect_to project_order_url(@order, project_id: @project)
   end
 
   private

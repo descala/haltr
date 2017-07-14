@@ -1,6 +1,29 @@
 module Haltr
   class Sender
 
+    def send_order_response
+      peppol = :peppolbis21_test
+      unless ExportChannels.can_send?(peppol) #TODO: prod/test?
+        raise "PEPPOL channel not configured!"
+      end
+      class_for_send = ExportChannels.class_for_send(peppol).constantize
+      #sender = class_for_send.new(order, user)
+      #if sender.respond_to?(:immediate_perform)
+      #  # send using immediate_perform
+      #  sender.immediate_perform(doc)
+      #elsif sender.respond_to?(:perform)
+      #  # send using Delayed::Job
+      #  if format == 'pdf'
+      #    sender.pdf = doc
+      #  else
+      #    sender.xml = doc
+      #  end
+      #  Delayed::Job.enqueue sender
+      #else
+      #  raise "Error in channels.yml: check configuration for #{export_id}"
+      #end
+    end
+
     # search invoice.client.invoice_format in channels.yml in order to choose a
     # method for sending the invoice. There are 3 options:
     #   1) Leave invoice in a folder

@@ -6,6 +6,7 @@ class Event < ActiveRecord::Base
   belongs_to :user
   belongs_to :invoice
   belongs_to :client
+  belongs_to :order
   has_many :audits, :class_name=>'Audited::Adapters::ActiveRecord::Audit'
 
   attr_protected :created_at, :updated_at
