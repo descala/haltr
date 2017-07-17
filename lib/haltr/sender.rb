@@ -1,12 +1,12 @@
 module Haltr
   class Sender
 
-    def send_order_response(order, user)
+    def self.send_order_response(order, user)
       if Redmine::Configuration['haltr_url'] =~ /test/ or
           Redmine::Configuration['haltr_url'] =~ /localhost/
-        channel = :peppolbis21_test
+        channel = 'peppolbis21_test'
       else
-        channel = :peppolbis21
+        channel = 'peppolbis21'
       end
       unless ExportChannels.can_send?(channel)
         raise "PEPPOL channel not configured!"

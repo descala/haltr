@@ -11,7 +11,7 @@ module Haltr
 
     attr_accessor :order, :channel, :user
 
-    def initialize(order: nil, channel: :peppolbis21, user: nil)
+    def initialize(order: nil, channel: 'peppolbis21', user: nil)
       self.order = order
       self.user = user || User.current
       self.channel = channel
