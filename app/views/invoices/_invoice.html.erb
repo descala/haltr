@@ -99,7 +99,7 @@
       <div class="street-address"><%=h @invoice.delivery_postalcode %></div>
       <span class="locality"><%=h @invoice.delivery_province %></span>
       <span class="locality"><%=h @invoice.delivery_city %></span>
-      <div class="country-name"><%=h @invoice.delivery_country_name if @invoice.delivery_country and @invoice.delivery_country.casecmp(@company.country) != 0 %></div>
+      <div class="country-name"><%=h @invoice.delivery_country if @invoice.delivery_country and @invoice.delivery_country.casecmp(@company.country) != 0 %></div>
     </address>
   <% end -%>
 </div>

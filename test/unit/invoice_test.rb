@@ -395,6 +395,8 @@ class InvoiceTest < ActiveSupport::TestCase
     assert_equal 'S',    il.taxes[0].category
     # email override lluis@ingent.net, instead of client1@email.com
     assert_equal 'lluis@ingent.net', invoice.client_email_override
+    # company email override
+    assert_equal 'override@companymail.net', invoice.company_email_override
   end
 
   # import invoice_facturae32_issued3.xml

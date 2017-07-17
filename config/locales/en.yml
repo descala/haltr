@@ -422,6 +422,10 @@ en:
   field_schemeid: "Peppol Scheme ID"
   missing_company_peppol_fields: "Missing Peppol fields on your company"
   missing_client_peppol_fields: "Missing Peppol fields on client"
+  field_eprior_endpointid: "Eprior Endpoint ID"
+  field_eprior_schemeid: "Eprior Scheme ID"
+  missing_company_eprior_fields: "Missing Eprior fields on your company"
+  missing_client_eprior_fields: "Missing Eprior fields on client"
   field_accounting_cost: "Accounting cost"
   field_client_email_override: "Override the email of the client with this one"
   missing_svefaktura_account: "Missing Svefaktura account cost"
@@ -805,7 +809,7 @@ If you save it, will be marked as New."
   label_received_order_plural: "Received orders"
   deleted_order: "Order deleted"
   mail_notifications: "Email notifications"
-  mail_subject_order_add: "Warning: You have received a new order in %{title}"
+  mail_subject_order_add: "IMPORTANT: You have received a new order in %{title}"
   mail_body_order_add: |
     Dear user,
     You have received a new order in your %{title} account.
@@ -813,7 +817,7 @@ If you save it, will be marked as New."
 
     With kind regards
     %{title} Team
-  mail_subject_invoice_add: "Warning: You have received a new invoice in %{title}"
+  mail_subject_invoice_add: "IMPORTANT: You have received a new invoice in %{title}"
   mail_body_invoice_add: |
     Dear user,
     You have received a new invoice in your %{title} account.

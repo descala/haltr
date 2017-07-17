@@ -32,4 +32,8 @@ class ClientOffice < ActiveRecord::Base
     country
   end
 
+  def recipient_emails
+    email.present? ? [email] : client.recipient_emails
+  end
+
 end

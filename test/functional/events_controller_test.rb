@@ -5,6 +5,7 @@ class EventsControllerTest < ActionController::TestCase
 
   def setup
     User.current = nil
+    @request.session[:user_id] = 2
   end
 
 end

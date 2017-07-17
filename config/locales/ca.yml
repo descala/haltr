@@ -433,6 +433,11 @@ ca:
   field_schemeid: "Peppol Scheme ID"
   missing_company_peppol_fields: "Falten camps de Peppol de la teva empresa"
   missing_client_peppol_fields: "Falten camps de Peppol del client"
+  field_eprior_endpointid: "Eprior Endpoint ID"
+  field_eprior_schemeid: "Eprior Scheme ID"
+  missing_company_eprior_fields: "Falten camps de Eprior de la teva empresa"
+  missing_client_eprior_fields: "Falten camps de Eprior del client"
+
   field_accounting_cost: "Centre de cost"
   field_client_email_override: "No utilitzar l'email de la fitxa de client, sinó aquest"
   missing_svefaktura_account: "Manca el centre de cost"
