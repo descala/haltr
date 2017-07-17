@@ -185,13 +185,13 @@ class Order < ActiveRecord::Base
     # PEPPOL data from XML (if data from SBDH is blank)
     [XPATHS_PARTY[:endpointid], XPATHS_PARTY[:endpointid2]].each do |xpath|
       sender_endpointid = Haltr::Utils.get_xpath(
-        doc, "#{XPATHS_ORDER[:seller]}#{xpath}") if sender_endpointid.blank?
+        doc, "#{XPATHS_ORDER[:buyer]}#{xpath}") if sender_endpointid.blank?
       sender_schemeid = Haltr::Utils.get_xpath(
-        doc, "#{XPATHS_ORDER[:seller]}#{xpath}/@schemeID") if sender_schemeid.blank?
+        doc, "#{XPATHS_ORDER[:buyer]}#{xpath}/@schemeID") if sender_schemeid.blank?
       receiver_endpointid = Haltr::Utils.get_xpath(
-        doc, "#{XPATHS_ORDER[:buyer]}#{xpath}") if receiver_endpointid.blank?
+        doc, "#{XPATHS_ORDER[:seller]}#{xpath}") if receiver_endpointid.blank?
       receiver_schemeid = Haltr::Utils.get_xpath(
-        doc, "#{XPATHS_ORDER[:buyer]}#{xpath}/@schemeID") if receiver_schemeid.blank?
+        doc, "#{XPATHS_ORDER[:seller]}#{xpath}/@schemeID") if receiver_schemeid.blank?
     end
 
     # our company data must match seller data
