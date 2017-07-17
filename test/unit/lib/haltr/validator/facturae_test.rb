@@ -6,7 +6,7 @@ class FacturaeTest < ActiveSupport::TestCase
 
   test "invoices validate with Haltr::Validator::Facturae when applies" do
     client = clients(:client1)
-    assert 'B10317980', client.taxcode
+    assert_equal 'B10317980', client.taxcode
     invoice = invoices(:invoice1)
     assert invoice.valid?, invoice.errors.full_messages.join
     assert client.valid?, client.errors.full_messages.join
