@@ -1,7 +1,7 @@
 module Haltr
   class Sender
 
-    def send_order_response
+    def send_order_response(order, user)
       if Redmine::Configuration['haltr_url'] =~ /test/ or
           Redmine::Configuration['haltr_url'] =~ /localhost/
         channel = :peppolbis21_test

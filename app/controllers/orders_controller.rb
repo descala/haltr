@@ -211,7 +211,7 @@ class OrdersController < ApplicationController
 
   def accept
     @order.order_response
-    Haltr::Sender.send_invoice(@order, User.current)
+    Haltr::Sender.send_order_response(@order, User.current)
     Event.create!(order: @order, name: 'accept', user: User.current, project: @project)
     @order.update_column :state, 'accepted'
     redirect_to project_order_url(@order, project_id: @project)
