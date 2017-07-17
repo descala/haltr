@@ -1,6 +1,7 @@
 class Order < ActiveRecord::Base
 
   belongs_to :project
+  has_one :company, through: :project
   belongs_to :client
   belongs_to :client_office
   belongs_to :invoice
