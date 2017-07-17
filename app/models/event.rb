@@ -144,6 +144,7 @@ class Event < ActiveRecord::Base
     if project.nil?
       self.project = invoice.project if invoice
       self.project = client.project  if client
+      self.project = order.project   if order
     end
   rescue RangeError
   end
