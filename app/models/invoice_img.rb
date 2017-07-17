@@ -28,6 +28,48 @@ class InvoiceImg < ActiveRecord::Base
     end
   end
 
+  def json=(json_tags)
+    json = JSON.parse(json_tags)
+   
+    # converts JSON 
+    #
+    # "data": [[null, 284, 108, 419, 134, "factura", "FACTURA"],
+    #         [null, 37, 142, 53, 153, "pc", "PC"], ...
+    #
+    # to data with hashes
+    #
+    # {:tags=>{
+    #    :language=>:en,
+    #    :seller_taxcode=>48,
+    #    :buyer_taxcode=>48},
+    #  :tokens=> { 0 => {:text=>"Invoice", :x0=>47, :x1=>145, :y0=>54, :y1=>81}
+
+    data = {tokens: {}}
+    tags = {}
+    i = 0
+    json['data'].each do |token|
+      data[:tokens][i] = {
+        x0: token[1],
+        y0: token[2],
+        x1: token[3],
+        y1: token[4],
+        # token[5] és MIX# etc. no cal
+        text: token[6],
+      }
+      tag = token[0]
+      if tag
+        tags[tag.downcase.to_sym] = i
+      end
+      i = i + 1
+    end
+    data[:width] = json['width']
+    data[:height] = json['height']
+    data[:currency] = json['currency']
+    data[:tags] = tags
+    self.img = data[:img] # PNG gzip + base64
+    self.data = data
+  end
+
   def fix_datatypes
     initial_data = data
     initial_tags = initial_data['tags'] || {}

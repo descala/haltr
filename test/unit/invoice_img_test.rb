@@ -55,4 +55,10 @@ class InvoiceImgTest < ActiveSupport::TestCase
     invoice = invoice_img.invoice
     assert_nil invoice.client
   end
+
+  test "converteix json a tags + tokens" do
+    invoice = invoices(:i15pdf)
+    json = File.read(File.dirname(__FILE__)+"/../../test/fixtures/documents/ostrich_out.json")
+    assert InvoiceImg.new(invoice: invoice, json: json).save! 
+  end
 end
