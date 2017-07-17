@@ -62,6 +62,7 @@ resources :projects do
   match 'orders/import' => 'orders#import', via: [:get, :post]
   match 'orders/add_comment' => 'orders#add_comment', :via => :post
   match 'orders/:id/create_invoice' => 'orders#create_invoice', :via => :post
+  match 'orders/:id/accept' => 'orders#accept', :via => :post
   resources :orders, only: [:index, :show, :destroy]
 end
 resources :invoice_imgs, :only => [:create,:update]

@@ -1,11 +1,12 @@
 class Order < ActiveRecord::Base
 
   belongs_to :project
+  has_one :company, through: :project
   belongs_to :client
   belongs_to :client_office
   belongs_to :invoice
   has_many :comments, -> {order "created_on"}, :as => :commented, :dependent => :delete_all
-  has_many :events, -> {order :created_at}
+  has_many :events, -> {order 'created_at DESC, id DESC'}
   after_create :create_event
 
   after_create :notify_users_by_mail, if: Proc.new {|o|
