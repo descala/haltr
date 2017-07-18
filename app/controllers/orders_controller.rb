@@ -172,7 +172,7 @@ class OrdersController < ApplicationController
   rescue StandardError => e
     respond_to do |format|
       format.html {
-        flash[:error] = e.message
+        flash.now[:error] = e.message
       }
       format.api {
         render text: e.message, status: :unprocessable_entity
@@ -210,8 +210,25 @@ class OrdersController < ApplicationController
   end
 
   def accept
-    @order.order_response
-    Haltr::Sender.send_order_response(@order, User.current)
+    client = @order.client
+    if client.schemeid.blank? or client.endpointid.blank?
+      flash[:error]="client has no peppol data configured"
+      redirect_to project_order_path @order, project_id: @project
+      return
+    end
+    participantIdentifier = "#{B2b::Peppol.sch2iso client.schemeid}:#{client.endpointid}"
+    format = ExportFormats.available["peppol_order_response"]
+    begin
+      # check if client can receive OrderResponses
+      PeppolDestination.new(
+        participantIdentifier, format['peppol-docid'], format['peppol-procid']
+      ).access_points
+      @order.order_response
+      Haltr::Sender.send_order_response(@order, User.current)
+    rescue PeppolDestinationException
+      #TODO: send by email
+      flash[:warning]="Participant has not published the capacity to handle OrderResponse documents in Peppol SMP: #{$!.message}"
+    end
     Event.create!(order: @order, name: 'accept', user: User.current, project: @project)
     @order.update_column :state, 'accepted'
     redirect_to project_order_url(@order, project_id: @project)
