@@ -11,14 +11,6 @@ class InvoiceImg < ActiveRecord::Base
     errors.add(:invoice) unless self.invoice and self.invoice.is_a? InvoiceDocument
   end
 
-  after_initialize do
-    if data.is_a? HashWithIndifferentAccess or Rails.env == 'test'
-      # if data is a HashWithIndifferentAccess tranform to a Hash
-      # ensure data keys are symbols and tag numbers are integers
-      fix_datatypes
-    end
-  end
-
   after_create do
     update_invoice if data and tags
     if tags.any?
@@ -58,52 +50,23 @@ class InvoiceImg < ActiveRecord::Base
       }
       tag = token[0]
       if tag
-        tags[tag.downcase.to_sym] = i
+        name = tag.downcase.to_sym
+        if tags[name].is_a? Array
+          tags[name] <<  i
+        elsif tags[name].nil?
+          tags[name] = i
+        else
+          tags[name] = [tags[name], i]
+        end
       end
       i = i + 1
     end
+    data[:tags] = tags
     data[:width] = json['width']
     data[:height] = json['height']
     data[:currency] = json['currency']
-    data[:tags] = tags
-    self.img = data[:img] # PNG gzip + base64
+    write_attribute(:img, json['img']) # PNG gzip + base64
     self.data = data
-  end
-
-  def fix_datatypes
-    initial_data = data
-    initial_tags = initial_data['tags'] || {}
-    initial_tokens= initial_data['tokens'] || {}
-    self.data = {}
-    self.data[:tags] = {}
-    self.data[:tokens] = {}
-    self.data[:width] = initial_data['width']
-    self.data[:height] = initial_data['height']
-    self.data[:name] = initial_data['name']
-    unless initial_data['currency'].blank?
-      self.data[:currency] = initial_data['currency']
-    end
-    initial_tags.each do |tag, token_number|
-      value = nil
-      if token_number.is_a? Array
-        value = []
-        token_number.each do |num|
-          value << num.to_i rescue token_number
-        end
-      else
-        value = token_number.to_i rescue token_number
-      end
-      self.data[:tags][tag.to_sym] = value
-    end
-    initial_tokens.each do |token_number, token_data|
-      token = {}
-      token[:text] = token_data['text']
-      token[:x0] = token_data['x0'].to_i
-      token[:x1] = token_data['x1'].to_i
-      token[:y0] = token_data['y0'].to_i
-      token[:y1] = token_data['y1'].to_i
-      self.data[:tokens][token_number.to_i] = token
-    end
   end
 
   def update_invoice
@@ -115,6 +78,8 @@ class InvoiceImg < ActiveRecord::Base
     tax_percentage   = tagv(:tax_percentage).to_money rescue nil
     tax_amount       = tagv(:tax_amount).to_money rescue nil
     total            = tagv(:total).to_money rescue nil
+    tax_amount       = Money.new(0) if tax_amount.nil? and tax_percentage == 0
+
     if tax_amount and total
       subtotal = total - tax_amount
     end
@@ -190,6 +155,7 @@ class InvoiceImg < ActiveRecord::Base
     end
     invoice.client = fuzzy_match_client unless invoice.client
     invoice.currency = currency
+    invoice.send(:update_imports) #unless invoice.import_in_cents > 0
     invoice.save(validate: false)
     self.save
   end

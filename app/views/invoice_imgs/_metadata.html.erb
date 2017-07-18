@@ -65,29 +65,4 @@
   <% end %>
 </div>
 
-<div class="metadata form-group wrapper-table bg-white">
-  <%= form_tag(invoice_img_path(invoice_img), method: :put) do -%>
-    <table class="table ">
-      <thead>
-        <tr>
-          <th id="extracted"><%= l(:label_extracted) %></th>
-        </tr>
-      </thead>
-      <tbody>
-        <% invoice_img.all_possible_tags.each do |tag| %>
-          <tr>
-            <td>
-              <%= label_tag tag, l("tag_#{tag}"), class: 'control-label' %>
-              <%= text_field_tag tag, invoice_img.tagv(tag), class: 'form-control' %>
-            </td>
-          </tr>
-        <% end %>
-      </tbody>
-      <tfoot>
-        <tr>
-          <th class="text-right"><%= submit_tag l(:update_invoice), class: 'btn btn-primary' %></th>
-        </tr>
-      </tfoot>
-    </table>
-  <% end %>
-</div>
+

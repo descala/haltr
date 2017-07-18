@@ -13,7 +13,6 @@ class InvoiceImgsController < ApplicationController
   end
 
   def create
-    byebug
     @invoice_img = InvoiceImg.new(params[:invoice_img])
     respond_to do |format|
       if @invoice_img.save
