@@ -4,7 +4,7 @@ class OrdersController < ApplicationController
   menu_item Haltr::MenuItem.new(:orders,:inexistent), :only => [:import]
 
   before_filter :find_project_by_project_id
-  before_filter :find_order, only: [:add_comment, :show, :create_invoice, :accept]
+  before_filter :find_order, only: [:add_comment, :show, :create_invoice, :accept, :mark_as]
   before_filter :authorize
 
   helper :sort
@@ -232,6 +232,20 @@ class OrdersController < ApplicationController
     Event.create!(order: @order, name: 'accept', user: User.current, project: @project)
     @order.update_column :state, 'accepted'
     redirect_to project_order_url(@order, project_id: @project)
+  end
+
+  def mark_as
+    if Order::STATES.include? params[:state]
+      @order.update_attribute(:state, params[:state])
+      Event.create!(
+        name: "done_mark_as_#{params[:state]}",
+        order: @order,
+        user: User.current
+      )
+    end
+    redirect_to :back
+  rescue ActionController::RedirectBackError
+    render :text => "OK"
   end
 
   private

@@ -257,6 +257,7 @@ ca:
   done_mark_as_refused: "Marcada manualment com a refusada"
   done_mark_as_closed: "Marcada manualment com a tancada"
   done_mark_as_paid: "Marcada manualment com a pagada"
+  done_mark_as_received: "Marcada manualment com a rebuda"
 
   # Invoice templates
   label_invoice_template_new: Nova factura recurrent
