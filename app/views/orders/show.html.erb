@@ -21,6 +21,9 @@
           <% else -%>
             <li><%= link_to l(:create_invoice_from_order), {action: :create_invoice, id: @order, project_id: @project}, class: 'icon-fa icon-fa-fw icon-fa-file', method: :post %></li>
           <% end -%>
+          <li>
+            <a data-toggle="modal" data-target="#modal-mark" class="icon-fa icon-fa-tag"><%= l :mark_as %></a>
+          </li>
         <% end -%>
         <li><%= link_to l(:download_as_pdf), project_order_path(@order, project_id: @project, format: :pdf), class: 'icon-fa icon-fa-fw icon-fa-file-pdf-o' %></li>
         <li><%= link_to_if_authorized l(:button_delete), { action: 'destroy', id: @order }, data: {confirm: l(:text_are_you_sure)}, method: :delete, class: 'icon-fa icon-fa-fw icon-fa-trash' %></li>
@@ -36,6 +39,7 @@
 </div>
 <!--final menu rapid-->
 
+<%= render partial: 'mark_as_modal' %>
 
 <div id="invoice_wrapper" class="wrapper-element">
   <div id="workspace1" class="haltrinvoice">

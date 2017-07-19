@@ -125,6 +125,8 @@ class Order < ActiveRecord::Base
     country:            "/cac:PostalAddress/cac:Country/cbc:IdentificationCode",
   }
 
+  STATES = %w(received accepted refused closed)
+
   def self.regexps(edi)
     !!(edi =~ REGEXPS[:num_pedido]) ? REGEXPS : REGEXPS2
   end
