@@ -184,13 +184,13 @@ class Order < ActiveRecord::Base
     # PEPPOL data from XML (if data from SBDH is blank)
     [XPATHS_PARTY[:endpointid], XPATHS_PARTY[:endpointid2]].each do |xpath|
       sender_endpointid = Haltr::Utils.get_xpath(
-        doc, "#{XPATHS_ORDER[:seller]}#{xpath}") if sender_endpointid.blank?
+        doc, "#{XPATHS_ORDER[:buyer]}#{xpath}") if sender_endpointid.blank?
       sender_schemeid = Haltr::Utils.get_xpath(
-        doc, "#{XPATHS_ORDER[:seller]}#{xpath}/@schemeID") if sender_schemeid.blank?
+        doc, "#{XPATHS_ORDER[:buyer]}#{xpath}/@schemeID") if sender_schemeid.blank?
       receiver_endpointid = Haltr::Utils.get_xpath(
-        doc, "#{XPATHS_ORDER[:buyer]}#{xpath}") if receiver_endpointid.blank?
+        doc, "#{XPATHS_ORDER[:seller]}#{xpath}") if receiver_endpointid.blank?
       receiver_schemeid = Haltr::Utils.get_xpath(
-        doc, "#{XPATHS_ORDER[:buyer]}#{xpath}/@schemeID") if receiver_schemeid.blank?
+        doc, "#{XPATHS_ORDER[:seller]}#{xpath}/@schemeID") if receiver_schemeid.blank?
     end
 
     # our company data must match seller data
@@ -198,7 +198,7 @@ class Order < ActiveRecord::Base
         receiver_schemeid == project.company.schemeid
       # seller does not match
       raise I18n.t :endpoint_does_not_belong_to_self,
-        :tcs => "#{sender_schemeid}:#{sender_endpointid}",
+        :tcs => "#{receiver_schemeid}:#{receiver_endpointid}",
         :tc  => "#{project.company.schemeid}:#{project.company.endpointid}"
     end
 
@@ -211,11 +211,16 @@ class Order < ActiveRecord::Base
     client_hash[:schemeid]   = sender_schemeid
     client_hash[:project]    = project
 
+    # if client has no country, assume it is the same as the seller's
+    if client_hash[:country].nil?
+      client_hash[:country] = Haltr::Utils.get_xpath(doc, "#{XPATHS_ORDER[:seller]}#{XPATHS_PARTY[:country]}")
+    end
+
     order = Order.new
     order.client, order.client_office = Haltr::Utils.client_from_hash(client_hash)
     order.project  = project
     order.original = xml
-    order.filename = file.original_filename
+    order.filename = file.original_filename rescue 'Unknown'
 
     XPATHS_ORDER.each do |key, xpath|
       next unless order.respond_to?("#{key}=")
@@ -318,6 +323,46 @@ class Order < ActiveRecord::Base
     else
       raise "Original must be in XML format to create an invoice"
     end
+  end
+
+  def order_response(time=Time.now)
+
+    response = OrdersController.renderer.render(
+      :template => "orders/order_response",
+      :locals   => {
+        :@order => self,
+        :issue_date => time.strftime("%Y-%m-%d"),
+        :issue_time => time.strftime("%H:%M:%S")
+      },
+      :formats  => :xml,
+      :layout   => false
+    )
+
+    # Amb Nokogiri s'hi afegeix, de la Order:
+    #
+    #  cbc:DocumentCurrencyCode
+    #  cac:BuyerCustomerParty
+    #  cac:SellerSupplierParty
+    #
+    # TODO tenir en compte diferents prefixes
+    #      assumim cbc i cac
+
+    order_doc = Nokogiri.XML(original)
+    response_doc = Nokogiri.XML(response)
+
+    customer = response_doc.at('//cbc:DocumentCurrencyCode')
+    customer.replace(order_doc.at('//cbc:DocumentCurrencyCode'))
+    customer = response_doc.at('//cac:BuyerCustomerParty')
+    customer.replace(order_doc.at('//cac:BuyerCustomerParty'))
+    seller = response_doc.at('//cac:SellerSupplierParty')
+    seller.replace(order_doc.at('//cac:SellerSupplierParty'))
+
+    # Elimina nodes que no calen
+    response_doc.xpath('//cac:Contact').remove rescue nil
+    response_doc.xpath('//cac:PostalAddress').remove rescue nil
+    response_doc.xpath('//cac:PartyTaxScheme').remove rescue nil
+
+    Haltr::Xml.clean_xml(response_doc.to_s)
   end
 
   protected

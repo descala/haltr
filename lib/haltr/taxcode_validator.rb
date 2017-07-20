@@ -18,8 +18,17 @@ module Haltr::TaxcodeValidator
       allow_blank:   true
     }, if: Proc.new {|c| c.eu? }
 
-    validates_presence_of :taxcode,
-      if: Proc.new {|c| c.es? or (c.eu? and c.company_identifier.blank? and c.endpointid.blank?) }
+    validates_presence_of :taxcode, if: Proc.new {|c|
+      c.validate_taxcode?
+    }
+
+    def validate_taxcode?
+      return true if es?
+      if eu? and company_identifier.blank? and endpointid.blank?
+        return true unless respond_to?(:eprior_endpointid)
+        eprior_endpointid.blank?
+      end
+    end
 
     def eu?
       Valvat::Utils::EU_COUNTRIES.include?(country.upcase)

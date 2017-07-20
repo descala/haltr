@@ -372,7 +372,8 @@
 
     <% unless User.current.admin? or User.current.allowed_to?(:email_customization, @project) -%>
       <% disabled = true -%>
-      <div class="flash info">
+      <div class="alert alert-flex alert-info" role="alert">
+        <b><i class="fa fa-info" aria-hidden="true"></i></b >
         <%= l(:need_to_upgrade_to_plan, subscription_link: link_to(l(:upgrade_account), my_account_path), plan: Plan.professional.role_name).html_safe %>
       </div>
     <% else -%>
@@ -564,7 +565,8 @@
     <legend class="relative"><%=l(:label_company_offices)%></legend>
 
     <% unless User.current.admin? or User.current.allowed_to?(:email_customization, @project) -%>
-      <div class="flash info">
+    <div class="alert alert-flex alert-info" role="alert">
+      <b><i class="fa fa-info" aria-hidden="true"></i></b >
         <%= l(:need_to_upgrade_to_plan, subscription_link: link_to(l(:upgrade_account), my_account_path), plan: Plan.professional.role_name).html_safe %>
       </div>
     <% end -%>

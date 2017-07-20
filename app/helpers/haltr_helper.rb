@@ -13,15 +13,6 @@ module HaltrHelper
 
   include Cocoon::ViewHelpers
 
-  # Renders flash messages
-  def render_flash_messages
-    s = ''
-    flash.each do |k,v|
-      s << content_tag('div', v, :class => "flash #{k}")
-    end
-    s.html_safe
-  end
-
   def money(import)
     currency = Money::Currency.new(import.currency)
     currency_symbol = currency.symbol || ""

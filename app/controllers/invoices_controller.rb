@@ -706,7 +706,7 @@ class InvoicesController < ApplicationController
       Haltr::Sender.send_invoice(@invoice, User.current)
       respond_to do |format|
         format.html do
-          flash[:notice] = "#{l(:notice_invoice_sent)}"
+          flash[:spinner] = "#{l(:notice_invoice_sent)}"
         end
         format.api do
           render_api_ok
@@ -1428,7 +1428,7 @@ class InvoicesController < ApplicationController
             if @project.company.auto_process_pdf?
               Haltr::SendPdfToWs.send(@invoice)
               @invoice.processing_pdf!
-              flash[:notice] = "#{l(:notice_invoice_processing_pdf)}"
+              flash[:spinner] = "#{l(:notice_invoice_processing_pdf)}"
             end
           else
             errors <<  "unknown file type: '#{attachment.content_type}' for #{attachment.filename}"
@@ -1537,7 +1537,7 @@ class InvoicesController < ApplicationController
   def process_pdf
     Haltr::SendPdfToWs.send(@invoice)
     @invoice.processing_pdf!
-    flash[:notice] = "#{l(:notice_invoice_processing_pdf)}"
+    flash[:spinner] = "#{l(:notice_invoice_processing_pdf)}"
   rescue Errno::ECONNREFUSED
     flash[:error] = 'Connection refused, try again later'
   ensure

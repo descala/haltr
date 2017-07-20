@@ -1,0 +1,13 @@
+order_001:
+  client: client1
+  invoice: invoices_001
+  client_office_id: client_office_001
+  project_id: 2
+  num_pedido: 94837593
+  fecha_documento: 2017-05-18
+  lugar_entrega: 5087458492360
+  fecha_pedido: 2017-05-18
+  fecha_entrega: 2017-05-19
+  filename: e4ab98d6-6008-462d-81ae-bdfb679102da.xml
+  comments_count: nil
+  original: '<%= File.read(Rails.root.join("plugins/haltr/test/fixtures/documents/order_to_invoice_order.xml")) %>'

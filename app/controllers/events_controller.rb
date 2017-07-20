@@ -64,11 +64,27 @@ class EventsController < ApplicationController
   def create
     t = params[:event][:type]
     if t =~ /Event/
-      @event = t.constantize.new(params[:event].except(:type))
+      @event = t.constantize.new(
+        params[:event].except(:type, :model_object_id, :model_object_type)
+      )
     elsif t.blank?
       @event = Event.new(params[:event])
     else
       #TODO raise / log
+    end
+
+    has_errors = false
+    # TODO polymorphic events #6805
+    if params[:event][:model_object_type].present? and params[:event][:model_object_id].present?
+      case params[:event][:model_object_type]
+      when /Invoice/
+        @event.invoice_id ||= params[:event][:model_object_id]
+      when /Order/
+        @event.order_id ||= params[:event][:model_object_id]
+      else
+        @event.errors.add(:base, "Unknown type: #{params[:event][:model_object_type]}")
+        has_errors = true
+      end
     end
 
     #TODO: should remove this when all events come with type
@@ -80,7 +96,7 @@ class EventsController < ApplicationController
     end
 
     respond_to do |format|
-      if @event.save
+      if !has_errors and @event.save
         flash[:notice] = 'Event was successfully created.'
         format.xml  { render :xml => @event, :status => :created }
         format.json  { render :json => @event, :status => :created }
