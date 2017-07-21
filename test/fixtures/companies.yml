@@ -12,6 +12,8 @@ company1:
   auto_process_pdf: true
   email_customization: true
   invoice_mail_customization: "---\nsubject:\n  en: Invoice number @invoice.number\n"
+  schemeid: GLN
+  endpointid: 9008737000028
 
 company2:
   # eCookbook 
