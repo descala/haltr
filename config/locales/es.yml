@@ -67,6 +67,7 @@ es:
   confirm_delete_client_with_invoices: "¡Atención! El cliente tiene facturas asociadas:\n  %{issued} emitidas\n  %{received} recibidas\n  %{templates} plantillas\n¿Borrar el cliente y todas sus facturas?"
 
   # Invoices
+  find_label: Buscar
   IssuedInvoice: Factura emitida
   ReceivedInvoice: Factura recibida
   DraftInvoice: Borrador

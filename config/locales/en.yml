@@ -54,6 +54,7 @@ en:
   confirm_delete_client_with_invoices: "Warning! Client has associated invoices:\n  %{issued} issued\n  %{received} received\n  %{templates} templates\nDelete client and all his invoices?"
 
   # Invoices
+  find_label: Find
   IssuedInvoice: Issued invoice
   ReceivedInvoice: Received invoice
   DraftInvoice: Draft

@@ -54,6 +54,7 @@ fr:
   confirm_delete_client_with_invoices: "Attention! Le client a des factures associées:\n  %{issued} envoyé\n  %{received} reçu\n  %{templates} récurrent\nRetirez le client et toutes leurs factures?"
 
   # Invoices
+  find_label: Rechercher
   IssuedInvoice: Facture émise
   ReceivedInvoice: Facture reçue
   DraftInvoice: Projet
