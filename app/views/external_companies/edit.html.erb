@@ -20,7 +20,7 @@
 <% if @ecompany.clients.any? -%>
   <div class="clients">
     <%= @ecompany.clients.collect { |client|
-      if client.project
+      if client.project and client.project.status == Project::STATUS_ACTIVE
         link_to "#{client.project.company.name} (#{client.invoices.count} #{l(:label_invoice_plural)})",
           project_invoices_path(:project_id=>client.project,:client_id=>client)
       else

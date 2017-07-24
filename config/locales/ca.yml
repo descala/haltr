@@ -63,6 +63,7 @@ ca:
   confirm_delete_client_with_invoices: "Atenció! El client té factures associades:\n  %{issued} emeses\n  %{received} rebudes\n  %{templates} recurrents\nEsborrar el client i totes les seves factures?"
 
   # Invoices
+  find_label: Cerca
   IssuedInvoice: Factura emesa
   ReceivedInvoice: Factura rebuda
   DraftInvoice: Esborrany
@@ -257,6 +258,7 @@ ca:
   done_mark_as_refused: "Marcada manualment com a refusada"
   done_mark_as_closed: "Marcada manualment com a tancada"
   done_mark_as_paid: "Marcada manualment com a pagada"
+  done_mark_as_received: "Marcada manualment com a rebuda"
 
   # Invoice templates
   label_invoice_template_new: Nova factura recurrent
@@ -862,8 +864,8 @@ Si la deses, es marcara com a Nova."
   linked: "Vinculada"
   for_this_company: "per aquesta empresa"
   write_comment: "Escriure comentari"
-  accept_received: "Acceptar"
-  refuse_received: "Refusar"
+  button_accept: "Acceptar"
+  button_refuse: "Refusar"
   pay_received: "Pagament"
   button_add_office: "Afegir seu"
   field_company_email: "Email propi"

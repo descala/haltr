@@ -66,3 +66,9 @@ original:
   name: "Original"
   validators: Haltr::Validator::Original
   content-type: "text/plain"
+
+peppol_order_response:
+  name: "PEPPOL Order Response"
+  content-type: "text-xml"
+  peppol-docid: "urn:oasis:names:specification:ubl:schema:xsd:OrderResponse-2::OrderResponse##urn:www.cenbii.eu:transaction:biitrns001:ver2.0:extended:urn:www.peppol.eu:bis:peppol28a:ver1.0::2.1"
+  peppol-procid: "urn:www.cenbii.eu:profile:bii28:ver2.0"
