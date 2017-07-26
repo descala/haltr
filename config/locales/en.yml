@@ -54,6 +54,7 @@ en:
   confirm_delete_client_with_invoices: "Warning! Client has associated invoices:\n  %{issued} issued\n  %{received} received\n  %{templates} templates\nDelete client and all his invoices?"
 
   # Invoices
+  find_label: Find
   IssuedInvoice: Issued invoice
   ReceivedInvoice: Received invoice
   DraftInvoice: Draft
@@ -138,7 +139,7 @@ en:
   state_discarded: "Discarded"
   state_validating_format: "Validating format"
   state_validating_signature: "Validating signature"
-  state_received: "Received invoice"
+  state_received: "Received"
   state_accepted: "Accepted"
   state_refused: "Refused"
   state_paid: "Paid"

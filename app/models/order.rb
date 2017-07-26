@@ -214,11 +214,16 @@ class Order < ActiveRecord::Base
     client_hash[:schemeid]   = sender_schemeid
     client_hash[:project]    = project
 
+    # if client has no country, assume it is the same as the seller's
+    if client_hash[:country].nil?
+      client_hash[:country] = Haltr::Utils.get_xpath(doc, "#{XPATHS_ORDER[:seller]}#{XPATHS_PARTY[:country]}")
+    end
+
     order = Order.new
     order.client, order.client_office = Haltr::Utils.client_from_hash(client_hash)
     order.project  = project
     order.original = xml
-    order.filename = file.original_filename
+    order.filename = file.original_filename rescue 'Unknown'
 
     XPATHS_ORDER.each do |key, xpath|
       next unless order.respond_to?("#{key}=")

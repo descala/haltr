@@ -6,7 +6,8 @@ class ExternalCompany < ActiveRecord::Base
 
   attr_protected :created_at, :updated_at
 
-  validates_presence_of :name, :postalcode, :country
+  validates_presence_of :name, :country
+  validates_format_of :postalcode, with: /\A[0-9]{5}\z/, if: Proc.new {|i| i.country == 'es'}, allow_blank: true
   validates_length_of :taxcode, :maximum => 20
   validates_uniqueness_of :taxcode, :allow_blank => true
   validates_inclusion_of :currency, :in => Money::Currency.table.collect {|k,v| v[:iso_code] }
