@@ -231,7 +231,7 @@ class ClientsController < ApplicationController
     @client  ||= Client.new(:project=>@project)
     @client.company = @company
     @client.taxcode = @company.taxcode
-    if @client.save
+    if @client.save(validate: false)
       case params[:context]
       when "new_invoice" then
         redirect_to project_client_new_invoice_path(:project_id=>@project.id,

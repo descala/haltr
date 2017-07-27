@@ -1,7 +1,5 @@
 class InvoiceDocument < Invoice
 
-
-
   has_many :payments, :foreign_key => :invoice_id, :dependent => :destroy
   has_one :invoice_img, :foreign_key => :invoice_id, :dependent => :destroy
 

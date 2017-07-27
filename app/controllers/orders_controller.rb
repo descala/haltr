@@ -4,7 +4,7 @@ class OrdersController < ApplicationController
   menu_item Haltr::MenuItem.new(:orders,:inexistent), :only => [:import]
 
   before_filter :find_project_by_project_id
-  before_filter :find_order, only: [:add_comment, :show, :create_invoice]
+  before_filter :find_order, only: [:add_comment, :show, :create_invoice, :accept, :mark_as]
   before_filter :authorize
 
   helper :sort
@@ -82,6 +82,11 @@ class OrdersController < ApplicationController
       send_data @order.ubl_invoice,
         type: 'text/plain',
         disposition: "attachment; filename=#{@order.filename}"
+      return
+    elsif params[:show_response] and @order.xml?
+      send_data @order.order_response,
+        type: 'text/plain',
+        disposition: "attachment; filename=response_#{@order.filename}"
       return
     elsif @order.xml?
       doc  = Nokogiri::XML(@order.original)
@@ -167,7 +172,7 @@ class OrdersController < ApplicationController
   rescue StandardError => e
     respond_to do |format|
       format.html {
-        flash[:error] = e.message
+        flash.now[:error] = e.message
       }
       format.api {
         render text: e.message, status: :unprocessable_entity
@@ -202,6 +207,45 @@ class OrdersController < ApplicationController
   rescue
     flash[:error] = $!.message
     redirect_to action: :show, id: @order
+  end
+
+  def accept
+    client = @order.client
+    if client.schemeid.blank? or client.endpointid.blank?
+      flash[:error]="client has no peppol data configured"
+      redirect_to project_order_path @order, project_id: @project
+      return
+    end
+    participantIdentifier = "#{B2b::Peppol.sch2iso client.schemeid}:#{client.endpointid}"
+    format = ExportFormats.available["peppol_order_response"]
+    begin
+      # check if client can receive OrderResponses
+      PeppolDestination.new(
+        participantIdentifier, format['peppol-docid'], format['peppol-procid']
+      ).access_points
+      @order.order_response
+      Haltr::Sender.send_order_response(@order, User.current)
+    rescue PeppolDestinationException
+      #TODO: send by email
+      flash[:warning]="Participant has not published the capacity to handle OrderResponse documents in Peppol SMP: #{$!.message}"
+    end
+    Event.create!(order: @order, name: 'accept', user: User.current, project: @project)
+    @order.update_column :state, 'accepted'
+    redirect_to project_order_url(@order, project_id: @project)
+  end
+
+  def mark_as
+    if Order::STATES.include? params[:state]
+      @order.update_attribute(:state, params[:state])
+      Event.create!(
+        name: "done_mark_as_#{params[:state]}",
+        order: @order,
+        user: User.current
+      )
+    end
+    redirect_to :back
+  rescue ActionController::RedirectBackError
+    render :text => "OK"
   end
 
   private

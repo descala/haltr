@@ -54,6 +54,7 @@ en:
   confirm_delete_client_with_invoices: "Warning! Client has associated invoices:\n  %{issued} issued\n  %{received} received\n  %{templates} templates\nDelete client and all his invoices?"
 
   # Invoices
+  find_label: Find
   IssuedInvoice: Issued invoice
   ReceivedInvoice: Received invoice
   DraftInvoice: Draft
@@ -138,7 +139,7 @@ en:
   state_discarded: "Discarded"
   state_validating_format: "Validating format"
   state_validating_signature: "Validating signature"
-  state_received: "Received invoice"
+  state_received: "Received"
   state_accepted: "Accepted"
   state_refused: "Refused"
   state_paid: "Paid"
@@ -247,6 +248,7 @@ en:
   done_mark_as_refused: "Manually marked as refused"
   done_mark_as_closed: "Manually marked as closed"
   done_mark_as_paid: "Manually marked as paid"
+  done_mark_as_received: "Manually marked as received"
 
   # Invoice templates
   label_invoice_template_new: New template
@@ -848,8 +850,8 @@ If you save it, will be marked as New."
   linked: "Linked"
   for_this_company: "for this company"
   write_comment: "Write comment"
-  accept_received: "Accept"
-  refuse_received: "Refuse"
+  button_accept: "Accept"
+  button_refuse: "Refuse"
   pay_received: "Payment"
   button_add_office: "Add office"
   field_company_email: "Own Email"

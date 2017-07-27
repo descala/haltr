@@ -1,11 +1,12 @@
 class Order < ActiveRecord::Base
 
   belongs_to :project
+  has_one :company, through: :project
   belongs_to :client
   belongs_to :client_office
   belongs_to :invoice
   has_many :comments, -> {order "created_on"}, :as => :commented, :dependent => :delete_all
-  has_many :events, -> {order :created_at}
+  has_many :events, -> {order 'created_at DESC, id DESC'}
   after_create :create_event
 
   after_create :notify_users_by_mail, if: Proc.new {|o|
@@ -124,6 +125,8 @@ class Order < ActiveRecord::Base
     country:            "/cac:PostalAddress/cac:Country/cbc:IdentificationCode",
   }
 
+  STATES = %w(received accepted refused closed)
+
   def self.regexps(edi)
     !!(edi =~ REGEXPS[:num_pedido]) ? REGEXPS : REGEXPS2
   end
@@ -184,13 +187,13 @@ class Order < ActiveRecord::Base
     # PEPPOL data from XML (if data from SBDH is blank)
     [XPATHS_PARTY[:endpointid], XPATHS_PARTY[:endpointid2]].each do |xpath|
       sender_endpointid = Haltr::Utils.get_xpath(
-        doc, "#{XPATHS_ORDER[:seller]}#{xpath}") if sender_endpointid.blank?
+        doc, "#{XPATHS_ORDER[:buyer]}#{xpath}") if sender_endpointid.blank?
       sender_schemeid = Haltr::Utils.get_xpath(
-        doc, "#{XPATHS_ORDER[:seller]}#{xpath}/@schemeID") if sender_schemeid.blank?
+        doc, "#{XPATHS_ORDER[:buyer]}#{xpath}/@schemeID") if sender_schemeid.blank?
       receiver_endpointid = Haltr::Utils.get_xpath(
-        doc, "#{XPATHS_ORDER[:buyer]}#{xpath}") if receiver_endpointid.blank?
+        doc, "#{XPATHS_ORDER[:seller]}#{xpath}") if receiver_endpointid.blank?
       receiver_schemeid = Haltr::Utils.get_xpath(
-        doc, "#{XPATHS_ORDER[:buyer]}#{xpath}/@schemeID") if receiver_schemeid.blank?
+        doc, "#{XPATHS_ORDER[:seller]}#{xpath}/@schemeID") if receiver_schemeid.blank?
     end
 
     # our company data must match seller data
@@ -211,11 +214,16 @@ class Order < ActiveRecord::Base
     client_hash[:schemeid]   = sender_schemeid
     client_hash[:project]    = project
 
+    # if client has no country, assume it is the same as the seller's
+    if client_hash[:country].nil?
+      client_hash[:country] = Haltr::Utils.get_xpath(doc, "#{XPATHS_ORDER[:seller]}#{XPATHS_PARTY[:country]}")
+    end
+
     order = Order.new
     order.client, order.client_office = Haltr::Utils.client_from_hash(client_hash)
     order.project  = project
     order.original = xml
-    order.filename = file.original_filename
+    order.filename = file.original_filename rescue 'Unknown'
 
     XPATHS_ORDER.each do |key, xpath|
       next unless order.respond_to?("#{key}=")

@@ -1,9 +1,9 @@
 <% unless @invoice.accepted? -%>
-  <li><%= link_to_function(I18n.t(:accept_received), "show_accepted_form();", class: "icon-fa icon-fa-check-circle") if authorize_for(:received || :received, :mark_accepted) %></li>
+  <li><%= link_to_function(I18n.t(:button_accept), "show_accepted_form();", class: "icon-fa icon-fa-check-circle") if authorize_for(:received || :received, :mark_accepted) %></li>
 <% end -%>
 
 <% unless @invoice.refused? -%>
-  <li><%= link_to_function(I18n.t(:refuse_received),  "show_refused_form();", class: 'icon-fa icon-fa-times-circle') if authorize_for(:received || :received, :mark_refused) %></li>
+  <li><%= link_to_function(I18n.t(:button_refuse),  "show_refused_form();", class: 'icon-fa icon-fa-times-circle') if authorize_for(:received || :received, :mark_refused) %></li>
 <% end -%>
 
 <% if @invoice.accepted? or @invoice.error? -%>

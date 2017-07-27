@@ -2,7 +2,7 @@
 <div class="pull-left">
   <h2>
     <%= link_to "", project_orders_path(@project), class: 'fa fa-long-arrow-left fa-big fa-left', aria: { hidden: true } %>
-    <%= "#{l :label_order} #{@order.num_pedido}" %>
+    <%= "#{l :label_order} #{@order.num_pedido}" %> (<%= l "state_#{@order.state}" %>)
   </h2>
 </div>
 </div>
@@ -21,9 +21,15 @@
           <% else -%>
             <li><%= link_to l(:create_invoice_from_order), {action: :create_invoice, id: @order, project_id: @project}, class: 'icon-fa icon-fa-fw icon-fa-file', method: :post %></li>
           <% end -%>
+          <li>
+            <a data-toggle="modal" data-target="#modal-mark" class="icon-fa icon-fa-tag"><%= l :mark_as %></a>
+          </li>
         <% end -%>
         <li><%= link_to l(:download_as_pdf), project_order_path(@order, project_id: @project, format: :pdf), class: 'icon-fa icon-fa-fw icon-fa-file-pdf-o' %></li>
         <li><%= link_to_if_authorized l(:button_delete), { action: 'destroy', id: @order }, data: {confirm: l(:text_are_you_sure)}, method: :delete, class: 'icon-fa icon-fa-fw icon-fa-trash' %></li>
+        <% if @order.xml? and @order.state != 'accepted' -%>
+          <li><%= link_to_if_authorized l(:button_accept), { action: 'accept', id: @order }, data: {confirm: l(:text_are_you_sure)}, method: :post, class: 'icon-fa icon-fa-check-circle' %></li>
+        <% end -%>
       </ul>
     </div>
     <div class="col-xs-2">
@@ -33,8 +39,9 @@
 </div>
 <!--final menu rapid-->
 
+<%= render partial: 'mark_as_modal' %>
 
-<div id="invoice_wrapper">
+<div id="invoice_wrapper" class="wrapper-element">
   <div id="workspace1" class="haltrinvoice">
     <div id="workspace2">
       <div id="col1">
@@ -48,38 +55,66 @@
   </div>
 </div>
 
-<div class="seccio grup">
-  <div class="col span-2-de-2">
-    <div class="formee-msg-info invoice-comments">
-      <h3 id="haltr_comments">
-        <%=h l(:label_comment_plural)%>
-        <%= toggle_link image_tag('add.png'), "add_comment_form", focus: "comment_comments" %>
-      </h3>
-      <%= form_tag({controller: 'orders', action: 'add_comment', id: @order, project_id: @order.project}, id: "add_comment_form", style: "display:none;") do %>
-        <div class="box">
-          <%= text_area 'comment', 'comments', cols: 80, rows: 5, class: 'wiki-edit' %>
+<div id="list-left" class="splitcontentleft">
+  <div class="mypage-box">
+    <div class="chart_events">
+      <h3><%= l :label_history %></h3>
+      <fieldset>
+        <div class="wrapper-table">
+          <%= render partial: 'events/table', locals: {events: @order.events} %>
         </div>
-        <p><%= submit_tag l(:button_add) %></p>
-      <% end %>
-
-      <ul>
-        <% @order.comments.reverse.each do |comment| -%>
-          <li><strong><%= format_time comment.created_on %></strong> - <%= comment.author.name %>: <%= comment.comments %></li>
-        <% end -%>
-      </ul>
+      </fieldset>
     </div>
   </div>
 </div>
 
-<%= render partial: 'events/list', locals: {events: @order.events} %>
+<div id="list-right" class="splitcontentright">
+
+  <div class="mypage-box">
+    <div>
+      <h3><%=h l(:label_comment_plural)%></h3>
+      <div class="wrapper-default">
+        <%= form_tag({controller: 'invoices', action: 'add_comment', id: @order, project_id: @project}, id: "add_comment_form") do %>
+          <div class="row">
+            <div class="col-xs-10">
+              <%= text_field 'comment', 'comments', class: 'form-control', placeholder: l(:write_comment) %>
+            </div>
+            <div class="col-xs-2 col-no-pad-left">
+              <%= submit_tag l(:button_add), class: 'btn btn-primary' %>
+            </div>
+          </div>
+        <% end -%>
+      </div>
+      <fieldset>
+        <div class="wrapper-table">
+          <table class="cashflow table table-striped">
+            <tbody>
+              <% @order.comments.reverse.each do |comment| -%>
+                <tr>
+                  <td class="nowrap"><%= format_time comment.created_on %></td>
+                  <td class="nowrap"><strong><%= comment.author.name %></strong></td>
+                  <td class="w100p"><%= comment.comments %></td>
+                </tr>
+              <% end -%>
+            </tbody>
+          </table>
+        </div>
+      </fieldset>
+    </div>
+  </div>
+
+
 
 <% if (Rails.env == "development" or User.current.allowed_to?(:use_all_readonly, @project)) and @order.xml? -%>
   <div class="invoice-channel-links">
     <h3>Check generated documents</h3>
     <ul>
       <li><%= link_to_if_authorized 'UBL invoice', {controller: 'orders', action: 'show', id: @order, show_invoice: true } %></li>
+      <li><%= link_to_if_authorized 'OrderResponse', {controller: 'orders', action: 'show', id: @order, show_response: true } %></li>
     </ul>
   </div><% end -%>
+
+</div>
 
 <% content_for :header_tags do %>
   <%= stylesheet_link_tag 'orders?v=2', plugin: 'haltr_invinet_patches' %>

@@ -5,7 +5,7 @@ class OrderTest < ActiveSupport::TestCase
 
   include XsdValidator
 
-  fixtures :invoices, :orders
+  fixtures :invoices, :orders, :companies, :clients
 
   test "ubl invoice from order" do
     expected_invoice_xml =  File.read(File.dirname(__FILE__)+"/../../test/fixtures/documents/order_to_invoice_invoice.xml")
@@ -13,7 +13,6 @@ class OrderTest < ActiveSupport::TestCase
     assert order.xml?
     genreated_invoice_xml = order.ubl_invoice('3','2017-05-31')
     assert_equal expected_invoice_xml, genreated_invoice_xml
-
   end
 
   test "ubl order response" do
@@ -61,5 +60,14 @@ class OrderTest < ActiveSupport::TestCase
 XML
 
     assert_equal expected_xml, xml
+  end
+
+  test "importa Order amb un Buyer sense country al UBL" do
+    project = Project.find(2)
+    assert_equal companies(:company1), project.company
+    file = File.new(File.dirname(__FILE__)+"/../../test/fixtures/documents/order_issue_6827.xml")
+    order = Order.create_from_xml(file, project)
+    assert_equal 'Client Name XXX', order.client.name
+    assert_equal 'gb', order.client.country
   end
 end

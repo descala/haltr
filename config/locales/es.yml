@@ -67,6 +67,7 @@ es:
   confirm_delete_client_with_invoices: "¡Atención! El cliente tiene facturas asociadas:\n  %{issued} emitidas\n  %{received} recibidas\n  %{templates} plantillas\n¿Borrar el cliente y todas sus facturas?"
 
   # Invoices
+  find_label: Buscar
   IssuedInvoice: Factura emitida
   ReceivedInvoice: Factura recibida
   DraftInvoice: Borrador
@@ -259,6 +260,7 @@ es:
   done_mark_as_refused: "Marcada manualmente como rechazada"
   done_mark_as_closed: "Marcada manualmente como cerrada"
   done_mark_as_paid: "Marcada manualmente como pagada"
+  done_mark_as_received: "Marcada manualmente como recibida"
 
   # Invoice templates
   label_invoice_template_new: Nueva plantilla
@@ -863,8 +865,8 @@ Si la guardas, se marcará como Nueva."
   linked: "Vinculada"
   for_this_company: "para esta empresa"
   write_comment: "Escribir comentario"
-  accept_received: "Aceptar"
-  refuse_received: "Rechazar"
+  button_accept: "Aceptar"
+  button_refuse: "Rechazar"
   pay_received: "Pagos"
   button_add_office: "Añadir sede"
   field_company_email: "Email propio"

@@ -1,4 +1,8 @@
-<%=h e -%>
+<% if e.url and User.current.admin?-%>
+  <%= link_to h(e), e.url %>
+<% else -%>
+    <%=h e -%>
+<% end %>
 <% unless e.notes.blank? -%>:
   <%
     message = ""
