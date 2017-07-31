@@ -905,7 +905,6 @@ class InvoicesController < ApplicationController
       @invoice.update_column(:has_been_read,true)
       @invoice.read!
     end
-    render :layout=>"public"
   rescue ActionView::MissingTemplate
     nil
   rescue Exception => e
