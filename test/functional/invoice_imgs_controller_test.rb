@@ -10,7 +10,9 @@ class InvoiceImgsControllerTest < ActionController::TestCase
 
   test "create" do
     post :create, format: 'json',
-      "invoice_img"=>{"invoice_id"=>10, "img"=>"asdf"}
+      "invoice_img"=>{
+      invoice_id: 10, 
+      json: File.read(File.dirname(__FILE__)+"/../../test/fixtures/documents/ostrich_out.json")}
     assert_response :success
     assert(Invoice.find(10).invoice_img.img, "asdf")
   end

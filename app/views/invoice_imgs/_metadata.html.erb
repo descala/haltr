@@ -65,27 +65,3 @@
     </table>
   <% end %>
 </div>
-<div class="metadata">
-  <%= form_tag(invoice_img_path(invoice_img), method: :put) do -%>
-    <table class="list received_show">
-      <thead>
-        <tr>
-          <th colspan="2"><%= l(:label_extracted) %></th>
-        </tr>
-      </thead>
-      <tbody>
-        <% invoice_img.all_possible_tags.each do |tag| %>
-          <tr class="<%= cycle("odd", "even") %>" >
-            <td><%=l("tag_#{tag}")%><br/><%= text_field_tag tag, invoice_img.tagv(tag) %> </td>
-          </tr>
-        <% end %>
-      </tbody>
-      <tfoot>
-        <tr>
-          <th colspan="2"><%= submit_tag l(:update_invoice) %></th>
-        </tr>
-      </tfoot>
-    </table>
-  <% end %>
-</div>
-</div>
