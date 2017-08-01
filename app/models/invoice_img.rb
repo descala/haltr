@@ -11,14 +11,6 @@ class InvoiceImg < ActiveRecord::Base
     errors.add(:invoice) unless self.invoice and self.invoice.is_a? InvoiceDocument
   end
 
-  after_initialize do
-    if data.is_a? HashWithIndifferentAccess or Rails.env == 'test'
-      # if data is a HashWithIndifferentAccess tranform to a Hash
-      # ensure data keys are symbols and tag numbers are integers
-      fix_datatypes
-    end
-  end
-
   after_create do
     update_invoice if data and tags
     if tags.any?
@@ -28,44 +20,55 @@ class InvoiceImg < ActiveRecord::Base
     end
   end
 
-  def fix_datatypes
-    initial_data = data
-    initial_tags = initial_data['tags'] || {}
-    initial_tokens= initial_data['tokens'] || {}
-    self.data = {}
-    self.data[:tags] = {}
-    self.data[:tokens] = {}
-    self.data[:width] = initial_data['width']
-    self.data[:height] = initial_data['height']
-    self.data[:name] = initial_data['name']
-    unless initial_data['currency'].blank?
-      self.data[:currency] = initial_data['currency']
-    end
-    initial_tags.each do |tag, token_number|
-      value = nil
-      if token_number.is_a? Array
-        value = []
-        token_number.each do |num|
-          value << num.to_i rescue token_number
+  def json=(json_tags)
+    json = JSON.parse(json_tags)
+   
+    # converts JSON 
+    #
+    # "data": [[null, 284, 108, 419, 134, "factura", "FACTURA"],
+    #         [null, 37, 142, 53, 153, "pc", "PC"], ...
+    #
+    # to data with hashes
+    #
+    # {:tags=>{
+    #    :language=>:en,
+    #    :seller_taxcode=>48,
+    #    :buyer_taxcode=>48},
+    #  :tokens=> { 0 => {:text=>"Invoice", :x0=>47, :x1=>145, :y0=>54, :y1=>81}
+
+
+    data = json.except('data','img').symbolize_keys
+    data[:tokens] = {}
+    tags = {}
+    i = 0
+    json['data'].each do |token|
+      data[:tokens][i] = {
+        x0: token[1],
+        y0: token[2],
+        x1: token[3],
+        y1: token[4],
+        # token[5] és MIX# etc. no cal
+        text: token[6],
+      }
+      tag = token[0]
+      if tag
+        name = tag.downcase.to_sym
+        if tags[name].is_a? Array
+          tags[name] <<  i
+        elsif tags[name].nil?
+          tags[name] = i
+        else
+          tags[name] = [tags[name], i]
         end
-      else
-        value = token_number.to_i rescue token_number
       end
-      self.data[:tags][tag.to_sym] = value
+      i = i + 1
     end
-    initial_tokens.each do |token_number, token_data|
-      token = {}
-      token[:text] = token_data['text']
-      token[:x0] = token_data['x0'].to_i
-      token[:x1] = token_data['x1'].to_i
-      token[:y0] = token_data['y0'].to_i
-      token[:y1] = token_data['y1'].to_i
-      self.data[:tokens][token_number.to_i] = token
-    end
+    data[:tags]=tags
+    write_attribute(:img, json['img']) # PNG gzip + base64
+    self.data = data
   end
 
   def update_invoice
-    tags[:language]  = what_language unless tagv(:language)
     invoice.number   = tagv(:invoice_number).gsub(/\s/,'') rescue nil
     invoice.date     = input_date(tagv(:issue))
     invoice.due_date = input_date(tagv(:due))
@@ -73,6 +76,8 @@ class InvoiceImg < ActiveRecord::Base
     tax_percentage   = tagv(:tax_percentage).to_money rescue nil
     tax_amount       = tagv(:tax_amount).to_money rescue nil
     total            = tagv(:total).to_money rescue nil
+    tax_amount       = Money.new(0) if tax_amount.nil? and tax_percentage == 0
+
     if tax_amount and total
       subtotal = total - tax_amount
     end
@@ -124,19 +129,19 @@ class InvoiceImg < ActiveRecord::Base
       invoice.state=:new
     end
     if !invoice.client
-      if tagv(:seller_taxcode)
-        invoice.client = invoice.company.project.clients.where(taxcode: tagv(:seller_taxcode).gsub(/\s/,'')).first
-        if !invoice.client and  tagv(:seller_name)
+      if seller_taxcode
+        invoice.client = invoice.company.project.clients.where(taxcode: seller_taxcode.gsub(/\s/,'')).first
+        if !invoice.client and seller_name
           begin
-            country_code = tagv(:seller_taxcode)[0..1] if tagv(:seller_taxcode)
-            country_code = iso_country_from_text(tagv(:seller_country)) unless country_code and Valvat::Utils::EU_COUNTRIES.include?(country_code.upcase)
+            country_code = seller_taxcode[0..1] if seller_taxcode
+            country_code = iso_country_from_text(seller_country) unless country_code and Valvat::Utils::EU_COUNTRIES.include?(country_code.upcase)
             new_client, client_office = Haltr::Utils.client_from_hash(
-              project: invoice.project,
-              name:    tagv(:seller_name),
-              taxcode: tagv(:seller_taxcode),
-              country: country_code.downcase,
+              project:  invoice.project,
+              name:     seller_name,
+              taxcode:  seller_taxcode,
+              country:  country_code.downcase,
               currency: currency,
-              language: tags[:language]
+              language: language
             )
             invoice.client = new_client
             invoice.client_office = client_office
@@ -148,6 +153,7 @@ class InvoiceImg < ActiveRecord::Base
     end
     invoice.client = fuzzy_match_client unless invoice.client
     invoice.currency = currency
+    invoice.send(:update_imports) #unless invoice.import_in_cents > 0
     invoice.save(validate: false)
     self.save
   end
@@ -233,6 +239,22 @@ class InvoiceImg < ActiveRecord::Base
     data[:currency] || 'EUR'
   end
 
+  def seller_taxcode
+    data[:seller_taxcode]
+  end
+
+  def seller_name
+    data[:seller_name]
+  end
+
+  def seller_country
+    data[:seller_country]
+  end
+
+  def language
+    data[:language]
+  end
+
   def fuzzy_match_client
     require 'fuzzy_match'
     # Method #1 - fuzzy match against all tokens with numbers
@@ -284,17 +306,9 @@ class InvoiceImg < ActiveRecord::Base
     return best_client_match
   end
 
-  def what_language
-    require 'whatlanguage'
-    invoice_string = tokens.collect do |k,v|
-      v[:text] unless v[:text] =~ /\d/
-    end.flatten.compact.join(' ')
-    WhatLanguage.new.language_iso(invoice_string)
-  end
-
   def iso_country_from_text(country_txt)
     begin
-      fm = FuzzyMatch.new(ISO3166::Country.translations(tagv(:language)))
+      fm = FuzzyMatch.new(ISO3166::Country.translations(language))
       # ["ES", "Espanya"]
       fm.find(country_txt)[0].downcase
     rescue

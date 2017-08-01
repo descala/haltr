@@ -390,7 +390,7 @@ module InvoicesHelper
   def invoice_img_token_style(attributes)
     font_size = [attributes[:y1].to_i-attributes[:y0].to_i-1, 9].max
     font_size = 16 if font_size > 16
-    "left:#{attributes[:x0].to_i-1}px; top:#{attributes[:y0].to_i-1}px; height:#{attributes[:y1].to_i-attributes[:y0].to_i+2}px; min-width:#{attributes[:x1].to_i-attributes[:x0].to_i+2}px; font-size:#{font_size}px; line-height: <%=font_size%>px;"
+    "left:#{attributes[:x0].to_i-1}px; top:#{attributes[:y0].to_i-1}px; height:#{attributes[:y1].to_i-attributes[:y0].to_i+2}px; min-width:#{attributes[:x1].to_i-attributes[:x0].to_i+2}px; font-size:#{font_size}px; line-height: #{font_size}px;"
   end
 
   def index_url_helper
