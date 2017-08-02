@@ -626,6 +626,7 @@ ca:
   pending_auth_requests: "Hi ha peticions pendents d'autorització: %{num} empreses es volen vincular al teu perfil"
   denied_requests: "Peticions denegades"
   self_employed: "Sóc treballador autònom"
+  not_self_employed: "Sóc una empresa"
   organ_gestor: "Òrgan gestor"
   oficina_comptable: "Oficina comptable"
   unitat_tramitadora: "Unitat tramitadora"

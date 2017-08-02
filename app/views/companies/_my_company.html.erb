@@ -23,12 +23,24 @@
 
     <div class="form-group">
       <div class="col-xs-9 col-xs-offset-3">
+        <%= f.label :persontype do %>
+        <% if f.object.country == "es" -%>
+          <% if f.object.taxcode[0].to_i.to_s == f.object.taxcode[0] -%>
+            <%= l(:self_employed) %>
+            <%= f.hidden_field :persontype, :value => 'F'%>
+          <% else -%>
+            <%= l(:not_self_employed) %>
+            <%= f.hidden_field :persontype, :value => 'J'%>
+          <% end -%>
+        <% else -%>
         <div class="checkbox">
           <%= f.label :persontype do %>
             <%= f.check_box :persontype, {}, 'F', 'J' %>
             <%= l(:self_employed) %>
           <% end -%>
         </div>
+        <% end -%>
+        <% end -%>
       </div>
     </div>
 
