@@ -50,7 +50,6 @@ class Company < ActiveRecord::Base
   validates :taxcode, length: { maximum: 20 }, allow_blank: true
 
   after_initialize :set_default_values
-  after_initialize :persontype
   serialize :invoice_mail_customization
   serialize :quote_mail_customization
 
@@ -70,11 +69,13 @@ class Company < ActiveRecord::Base
   end
 
   def persontype
-     if self.country == "es"
-       if !!(self.taxcode =~ /([\d]{8}[ABCDEFGHJKLMNPQRSTVWXYZ]|[KLMXYZ][\d]{7}[ABCDEFGHJKLMNPQRSTVWXYZ])/)
-          self.persontype = 'F'
+     if es?
+       if !!(taxcode =~ /([\d]{8}[ABCDEFGHJKLMNPQRSTVWXYZ]|[KLMXYZ][\d]{7}[ABCDEFGHJKLMNPQRSTVWXYZ])/)
+         'F'
+       elsif taxcode.present?
+         'J'
        else
-          self.persontype = 'J'
+         nil
        end
      else
        read_attribute(:persontype)
