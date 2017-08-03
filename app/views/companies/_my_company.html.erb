@@ -20,7 +20,7 @@
         <%= f.text_field :taxcode, required: true, class: 'form-control form-required' %>
       </div>
       <% if f.object.country == "es" and f.object.persontype -%>
-        <div class="col-xs-3">
+        <div class="col-xs-3 control-label"  style="text-align:left">
           <%=  f.object.persontype == 'F' ? l(:self_employed) : l(:not_self_employed) %>
         </div>
       <% end %>
