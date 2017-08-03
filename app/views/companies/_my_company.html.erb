@@ -25,7 +25,7 @@
       <div class="col-xs-9 col-xs-offset-3">
         <%= f.label :persontype do %>
         <% if f.object.country == "es" -%>
-          <% if f.object.taxcode[0].to_i.to_s == f.object.taxcode[0] -%>
+          <% if f.object.taxcode =~ /\A([\d]{8}[ABCDEFGHJKLMNPQRSTVWXYZ]|[KLMXYZ][\d]{7}[ABCDEFGHJKLMNPQRSTVWXYZ])\Z/ -%>
             <%= l(:self_employed) %>
             <%= f.hidden_field :persontype, :value => 'F'%>
           <% else -%>
