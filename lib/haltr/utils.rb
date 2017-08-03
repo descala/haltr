@@ -434,9 +434,12 @@ module Haltr
           # do not add "validate: false" here or you'll end with duplicated
           # clients, client validates uniqueness of taxcode.
           unless client.valid?
-            # provem si només es un error de taxcode
-            client.company_identifier = client.taxcode
-            client.taxcode = ''
+            client.email = ''
+            unless client.valid?
+              # provem si només es un error de taxcode
+              client.company_identifier = client.taxcode
+              client.taxcode = ''
+            end
           end
           unless client.valid?
             raise "#{I18n.t(:client)}: #{client.errors.full_messages.join('. ')}"
