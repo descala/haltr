@@ -8,6 +8,7 @@ class CompanyTest < ActiveSupport::TestCase
     c = companies('company1')
     c.persontype = 'J'
     c.taxcode = '27887353Z'
+    assert c.save
 
     assert_equal c.persontype , "F"
   end
@@ -16,6 +17,7 @@ class CompanyTest < ActiveSupport::TestCase
     c = companies('company1')
     c.persontype = 'F'
     c.taxcode = 'W1558151E'
+    assert c.save
 
     assert_equal c.persontype , "J"
   end
@@ -25,6 +27,7 @@ class CompanyTest < ActiveSupport::TestCase
     c.country = "de"
     c.persontype = 'F'
     c.taxcode = 'W1558151E'
+    assert !c.save
 
     assert_equal c.persontype , "F"
   end
