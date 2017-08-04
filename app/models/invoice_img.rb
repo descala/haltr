@@ -13,7 +13,7 @@ class InvoiceImg < ActiveRecord::Base
 
   after_create do
     update_invoice if data and tags
-    if tags.any?
+    if tags and tags.any?
       Event.create(name: 'processed_pdf', invoice: invoice)
     else
       EventError.create(name: 'processed_pdf', invoice: invoice, notes: 'OCR failed')

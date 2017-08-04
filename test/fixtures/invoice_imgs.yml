@@ -4,44 +4,48 @@ image1:
   img: '<%= File.read(Rails.root.join("plugins/haltr/test/fixtures/documents/invoice_pdf_signed_img.base64")) %>'
   data: |
     ---
-    tags:
-      subtotal: "66"
-      due: 29
-      tax_percentage: 68
-    tokens:
-       "66":
-        text: "€600.00"
-        x0: "597"
-        y0: 412
-        x1: 636
-        y1: 424
-       29:
-        text: 01-06-2012
-        x0: 475
-        y0: 219
-        x1: 531
-        y1: 230
-       68:
-        text: 18,00%
-        x0: 428
-        y0: 430
-        x1: 465
-        y1: 441
-       69:
-        text: B-10317980
-        x0: 100
-        y0: 100
-        x1: 110
-        y1: 110
-       70:
-        text: 77310058C
-        x0: 200
-        y0: 200
-        x1: 210
-        y1: 210
-    width: 707
-    height: 1000
-    name: 93915486220150505-23017-19yd1t8.pdf
+    :width: 707
+    :height: 1000
+    :seller_country: dk
+    :currency: EUR
+    :tokens:
+      66:
+        :text: "€600.00"
+        :x0: "597"
+        :y0: 412
+        :x1: 636
+        :y1: 424
+      29:
+        :text: 01-06-2012
+        :x0: 475
+        :y0: 219
+        :x1: 531
+        :y1: 230
+      68:
+        :text: 18,00%
+        :x0: 428
+        :y0: 430
+        :x1: 465
+        :y1: 441
+      69:
+        :text: B-10317980
+        :x0: 100
+        :y0: 100
+        :x1: 110
+        :y1: 110
+      70:
+        :text: 77310058C
+        :x0: 200
+        :y0: 200
+        :x1: 210
+        :y1: 210
+    :language: en
+    :seller_taxcode: ESB10317980
+    :buyer_taxcode: ES77310058C
+    :tags:
+      :subtotal: 66
+      :due: 29
+      :tax_percentage: 68
 
 image2:
   id: 2
@@ -49,22 +53,25 @@ image2:
   img: '<%= File.read(Rails.root.join("plugins/haltr/test/fixtures/documents/invoice_pdf_signed_img.base64")) %>'
   data: |
     ---
-    tags:
-      seller_taxcode: 1
-      seller_name: 2
-    tokens:
-      1:
-        text: "B65695256"
-        x0: "597"
-        y0: 412
-        x1: 636
-        y1: 424
-      2:
-        text: ""
-        x0: "597"
-        y0: 412
-        x1: 636
-        y1: 424
-    width: 707
-    height: 1000
-    name: 93915486220150505-23017-19yd1t8.pdf
+    :tags:
+      :seller_taxcode: 1
+      :seller_name: 2
+    :tokens:
+      :1:
+        :text: "B65695256"
+        :x0: "597"
+        :y0: 412
+        :x1: 636
+        :y1: 424
+      :2:
+        :text: ""
+        :x0: "597"
+        :y0: 412
+        :x1: 636
+        :y1: 424
+    :width: 707
+    :height: 1000
+    :name: 93915486220150505-23017-19yd1t8.pdf
+    :language: en
+    :seller_taxcode: ESB10317980
+    :buyer_taxcode: ES77310058C
