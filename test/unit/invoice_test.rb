@@ -278,6 +278,8 @@ class InvoiceTest < ActiveSupport::TestCase
     assert_equal 'S',  invoice.invoice_lines[0].taxes[0].category
     assert_equal 'S',  invoice.invoice_lines[1].taxes[0].category
     assert_equal 'S',  invoice.invoice_lines[2].taxes[0].category
+
+    assert_nil invoice.company_email_override
   end
 
   # import invoice_facturae32_issued.xml

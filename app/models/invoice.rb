@@ -900,10 +900,12 @@ _INV
       :contract_number   => contract_number
     )
 
+    if invoice.type != "ReceivedInvoice"
     company_email_override = Haltr::Utils.get_xpath(doc,xpaths[:seller_email])
     if company_email_override != company.email
       invoice.company_email_override = company_email_override
     end
+   end
 
     xml_payment_method = Haltr::Utils.get_xpath(doc,xpaths[:payment_method])
     if invoice_format =~ /facturae/
