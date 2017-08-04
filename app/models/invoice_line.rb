@@ -44,6 +44,9 @@ class InvoiceLine < ActiveRecord::Base
     :allow_destroy => true
   validates_associated :taxes
   validate :has_same_category_iva_tax, if: Proc.new {|line| line.taxes.any? {|t| t.name == 'RE' } }
+  validates :invoicing_period_start, :invoicing_period_end,
+    format: { with: /\A[0-9]{4}-[0-9]{1,2}-[0-9]{1,2}\z/ },
+    allow_blank: true
 
   scope :sorted, lambda { order("#{table_name}.position ASC") }
 

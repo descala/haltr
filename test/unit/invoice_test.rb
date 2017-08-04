@@ -986,4 +986,12 @@ class InvoiceTest < ActiveSupport::TestCase
     assert_equal 'ES', xml.at('//Invoice/Delivery/DeliveryLocation/Address/Country/IdentificationCode').text
   end
 
+  # import lines invoicing_periods invoice_facturae32_issued8_iban2.xml
+  test 'import invoice with invoicing_period on lines' do
+    file = File.new(File.join(File.dirname(__FILE__),'..','fixtures','documents','invoice_facturae32_issued8.xml'))
+    invoice = Invoice.create_from_xml(file,User.find_by_login('jsmith'),"1234",'uploaded',User.current.name)
+    assert_equal Date.new(2015,4,7), invoice.invoice_lines.first.invoicing_period_start
+    assert_equal Date.new(2015,5,7), invoice.invoice_lines.first.invoicing_period_end
+  end
+
 end
