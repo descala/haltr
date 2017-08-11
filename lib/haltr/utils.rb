@@ -296,6 +296,9 @@ module Haltr
 
       def float_parse(value)
         value = value.to_s.strip
+        # remove currency symbols if any
+        symbols = {'€' => '', '$' => '', '£' => '', 'EUR' => '', 'USD' => ''}
+        value.gsub!(Regexp.union(symbols.keys), symbols)
         val = case value
               when /^-?[0-9]+$/
                 value
