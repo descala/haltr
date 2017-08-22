@@ -176,6 +176,10 @@
               </TaxableBase>
             </Tax>
           </TaxesOutputs>
+          <LineItemPeriod>
+            <StartDate>2015-04-07</StartDate>
+            <EndDate>2015-05-07</EndDate>
+          </LineItemPeriod>
         </InvoiceLine>
         <InvoiceLine>
           <ReceiverTransactionReference/>

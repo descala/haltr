@@ -16,7 +16,7 @@ company1:
   endpointid: 9008737000028
 
 company2:
-  # eCookbook 
+  # eCookbook
   project_id: 1
   name: Company 2 is public
   taxcode: A28022143

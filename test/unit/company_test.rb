@@ -3,6 +3,36 @@ require File.expand_path('../../test_helper', __FILE__)
 class CompanyTest < ActiveSupport::TestCase
   fixtures :clients, :companies
 
+
+  test "test c auto assigns persontype for ES taxcode" do
+    c = companies('company1')
+    c.persontype = 'J'
+    c.taxcode = '27887353Z'
+    assert c.save
+
+    assert_equal c.persontype , "F"
+  end
+
+  test "test auto assigns persontype for ES taxcode, now test with company" do
+    c = companies('company1')
+    c.persontype = 'F'
+    c.taxcode = 'W1558151E'
+    assert c.save
+
+    assert_equal c.persontype , "J"
+  end
+
+  test "test DO NOT assigns persontype for not ES taxcode" do
+    c = companies('company1')
+    c.country = "de"
+    c.persontype = 'F'
+    c.taxcode = 'W1558151E'
+    assert !c.save
+
+    assert_equal c.persontype , "F"
+  end
+
+
   test "public, semipublic and private accessors" do
     assert !companies(:company1).public?
     assert !companies(:company1).semipublic?

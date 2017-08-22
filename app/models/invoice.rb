@@ -899,9 +899,11 @@ _INV
       :contract_number   => contract_number
     )
 
-    company_email_override = Haltr::Utils.get_xpath(doc,xpaths[:seller_email])
-    if company_email_override != company.email
-      invoice.company_email_override = company_email_override
+    if invoice.type != "ReceivedInvoice"
+      company_email_override = Haltr::Utils.get_xpath(doc,xpaths[:seller_email])
+      if company_email_override != company.email
+        invoice.company_email_override = company_email_override
+      end
     end
 
     xml_payment_method = Haltr::Utils.get_xpath(doc,xpaths[:payment_method])
@@ -967,7 +969,9 @@ _INV
              :delivery_note_number         => line_delivery_note_number,
              :ponumber                     => Haltr::Utils.get_xpath(line,xpaths[:ponumber]),
              :file_reference               => Haltr::Utils.get_xpath(line,xpaths[:file_reference]),
-             :receiver_contract_reference  => Haltr::Utils.get_xpath(line,xpaths[:r_contract_reference])
+             :receiver_contract_reference  => Haltr::Utils.get_xpath(line,xpaths[:r_contract_reference]),
+             :invoicing_period_start       => Haltr::Utils.get_xpath(line,xpaths[:line_invoicing_period_start]),
+             :invoicing_period_end         => Haltr::Utils.get_xpath(line,xpaths[:line_invoicing_period_end])
            )
       if invoice_format =~ /facturae/
         # invoice line taxes. Known taxes are described at config/taxes.yml

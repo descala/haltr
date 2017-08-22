@@ -614,6 +614,7 @@ en:
   pending_auth_requests: "There are pending authorization requests: %{num} companies want to link your profile"
   denied_requests: "Denied requests"
   self_employed: "I am self-employed"
+  not_self_employed: "I am a company"
   organ_gestor: "Managing unit"
   oficina_comptable: "Accounting unit"
   unitat_tramitadora: "Processing unit"

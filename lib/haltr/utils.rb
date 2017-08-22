@@ -122,6 +122,8 @@ module Haltr
           xpaths[:sequence_number]    = "SequenceNumber"
           xpaths[:tax_event_code]     = "SpecialTaxableEvent/SpecialTaxableEventCode"
           xpaths[:tax_event_reason]   = "SpecialTaxableEvent/SpecialTaxableEventReason"
+          xpaths[:line_invoicing_period_start] = "LineItemPeriod/StartDate"
+          xpaths[:line_invoicing_period_end]   = "LineItemPeriod/EndDate"
 
           xpaths[:delivery_notes]     = "DeliveryNotesReferences/DeliveryNote"
           # relative to invoice_lines/delivery_notes_references/delivery_note
@@ -294,6 +296,9 @@ module Haltr
 
       def float_parse(value)
         value = value.to_s.strip
+        # remove currency symbols if any
+        symbols = {'€' => '', '$' => '', '£' => '', 'EUR' => '', 'USD' => ''}
+        value.gsub!(Regexp.union(symbols.keys), symbols)
         val = case value
               when /^-?[0-9]+$/
                 value
@@ -434,9 +439,12 @@ module Haltr
           # do not add "validate: false" here or you'll end with duplicated
           # clients, client validates uniqueness of taxcode.
           unless client.valid?
-            # provem si només es un error de taxcode
-            client.company_identifier = client.taxcode
-            client.taxcode = ''
+            client.email = ''
+            unless client.valid?
+              # provem si només es un error de taxcode
+              client.company_identifier = client.taxcode
+              client.taxcode = ''
+            end
           end
           unless client.valid?
             raise "#{I18n.t(:client)}: #{client.errors.full_messages.join('. ')}"

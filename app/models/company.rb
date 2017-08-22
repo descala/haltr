@@ -26,7 +26,8 @@ class Company < ActiveRecord::Base
   validate :only_one_default_tax_per_name
   acts_as_attachable :view_permission => :general_use,
                      :delete_permission => :general_use
-  after_save :update_linked_clients, :after_save_hook
+  after_save :update_linked_clients, :after_save_hook, :update_project_identifier
+
   include CountryUtils
   include Haltr::TaxcodeValidator
 
@@ -50,6 +51,7 @@ class Company < ActiveRecord::Base
   validates :taxcode, length: { maximum: 20 }, allow_blank: true
 
   after_initialize :set_default_values
+  before_validation :set_persontype
   serialize :invoice_mail_customization
   serialize :quote_mail_customization
 
@@ -66,6 +68,19 @@ class Company < ActiveRecord::Base
 
   def <=>(oth)
     self.name <=> oth.name
+  end
+
+  def set_persontype
+     if es?
+       pt = if !!(taxcode =~ /([\d]{8}[ABCDEFGHJKLMNPQRSTVWXYZ]|[KLMXYZ][\d]{7}[ABCDEFGHJKLMNPQRSTVWXYZ])/)
+         'F'
+       elsif taxcode.present?
+         'J'
+       else
+         nil
+       end
+       self.persontype = pt
+     end
   end
 
   def first_name
@@ -393,6 +408,17 @@ class Company < ActiveRecord::Base
 
   def after_save_hook
     Redmine::Hook.call_hook(:company_after_save, company: self)
+  end
+
+  def update_project_identifier
+    if name_changed?
+      # project protects identifier from changes, hope this dont break anything
+      project.update_column :identifier, User.company_identifier(name)
+    end
+  rescue ActiveRecord::RecordNotUnique
+    # after_save, so we only update project when company saves, but then its
+    # too late to add errors
+    #errors.add(:name, :taken)
   end
 
   # translations for accepts_nested_attributes_for

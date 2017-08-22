@@ -561,6 +561,12 @@
 <% end -%>
               </TaxesOutputs>
 <% end -%>
+<% if invoice_line.invoicing_period_start.present? and invoice_line.invoicing_period_end.present? -%>
+              <LineItemPeriod>
+                <StartDate><%=h invoice_line.invoicing_period_start%></StartDate>
+                <EndDate><%=h invoice_line.invoicing_period_end%></EndDate>
+              </LineItemPeriod>
+<% end -%>
 <% unless invoice_line.notes.blank? -%>
               <AdditionalLineItemInformation><%=invoice_line.notes%></AdditionalLineItemInformation>
 <% end -%>

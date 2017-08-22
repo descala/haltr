@@ -38,21 +38,19 @@ class InvoiceImgTest < ActiveSupport::TestCase
     assert_equal 70, invoice_img.tags[:buyer_taxcode]
   end
 
-  test "ensure keys are symbols" do
-    invoice_img = invoice_imgs(:image1)
-    assert_equal 'Hash', invoice_img.data.class.to_s
-    assert_equal 'Hash', invoice_img.data[:tags].class.to_s
-    assert_equal 66, invoice_img.data[:tags][:subtotal]
-    assert_equal 'Hash', invoice_img.data[:tokens].class.to_s
-    assert_equal 'Hash', invoice_img.data[:tokens][66].class.to_s
-    assert_equal "€600.00", invoice_img.data[:tokens][66][:text]
-    assert_equal 597, invoice_img.data[:tokens][66][:x0]
-  end
-
   test "does not create client if invalid" do
     invoice_img = invoice_imgs(:image2)
     invoice_img.update_invoice
     invoice = invoice_img.invoice
     assert_nil invoice.client
+  end
+
+  test "converteix json a tags + tokens" do
+    invoice = invoices(:i15pdf)
+    json = File.read(File.dirname(__FILE__)+"/../../test/fixtures/documents/ostrich_out.json")
+    ii = InvoiceImg.new(invoice: invoice, json: json)
+    assert ii.save!, ii.errors
+    assert_match(/^H4sIA/, ii.img)
+    assert_equal(Array, ii.tags[:line_total].class)
   end
 end

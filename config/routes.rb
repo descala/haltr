@@ -13,7 +13,7 @@ match '/clients/allow_link/:id' => 'clients#allow_link', :via => :get
 match '/clients/deny_link/:id' => 'clients#deny_link', :via => :get
 resources :projects do
   resources :clients, :only => [:index, :new, :create]
-  match 'my_company',    :controller => 'companies', :action => 'my_company',    :via => :get
+  match 'my_company', :controller => 'companies', :action => 'my_company', :via => :get
   match 'add_bank_info', :controller => 'companies', :action => 'add_bank_info', :via => :get
   match 'invoices/import' => 'invoices#import', :via => [:get,:post]
   match 'invoices/upload' => 'invoices#upload', :via => [:get,:post]
@@ -66,6 +66,7 @@ resources :projects do
   match 'orders/:id/mark_as' => 'orders#mark_as', :via => :post, :as => :order_mark_as
   resources :orders, only: [:index, :show, :destroy]
 end
+match 'new_company', controller: 'companies', action: 'new_company', via: [:get,:post]
 resources :invoice_imgs, :only => [:create,:update]
 match 'invoice_imgs/:id/tag/:tag' => 'invoice_imgs#tag', :as => 'invoice_imgs_tag', :via => :get
 
