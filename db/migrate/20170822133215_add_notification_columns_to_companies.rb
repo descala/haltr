@@ -1,12 +1,12 @@
 class AddNotificationColumnsToCompanies < ActiveRecord::Migration
 
   def up
-    #add_column :companies, :issued_invoice_notifications,    :string
-    #add_column :companies, :received_invoice_notifications,  :string
-    #add_column :companies, :received_order_notifications,    :string
-    #add_column :companies, :sii_imported_notifications,      :string
-    #add_column :companies, :sii_sent_notifications,          :string
-    #add_column :companies, :sii_state_changes_notifications, :string
+    add_column :companies, :issued_invoice_notifications,    :string
+    add_column :companies, :received_invoice_notifications,  :string
+    add_column :companies, :received_order_notifications,    :string
+    add_column :companies, :sii_imported_notifications,      :string
+    add_column :companies, :sii_sent_notifications,          :string
+    add_column :companies, :sii_state_changes_notifications, :string
 
     Company.all.each do |company|
 
