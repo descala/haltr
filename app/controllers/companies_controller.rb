@@ -70,7 +70,10 @@ class CompaniesController < ApplicationController
       # keys come with lang (_ca,_en..) so remove last 3 chars
       if (params[:company].keys.collect {|k| k[0...-3]} & %w(invoice_mail_subject invoice_mail_body quote_mail_subject quote_mail_body)).any? or
           # normal keys, without lang
-          (params[:company].keys & %w(email_customization pdf_template)).any?
+          (params[:company].keys & %w(email_customization pdf_template
+           issued_invoice_notifications received_invoice_notifications
+           received_order_notifications sii_imported_notifications
+           sii_sent_notifications sii_state_changes_notifications)).any?
         render_403
         return
       end
