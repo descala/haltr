@@ -1,5 +1,5 @@
 <!-- Tab panes -->
-<div class="tab-pane active" id="company-data">
+<div class="tab-pane" id="company-data">
   <fieldset class="form-horizontal">
     <legend class="relative"><%=l(:label_fiscal_data)%></legend>
 
@@ -377,7 +377,7 @@
   </fieldset>
 </div>
 
-<div class="tab-pane" id="company-customization">
+<div class="tab-pane active" id="company-customization">
   <fieldset class="form-horizontal">
     <legend class="relative"><%=l(:label_customization)%></legend>
 
@@ -394,21 +394,51 @@
     <label><%= l :mail_notifications %></label>
 
     <div class="form-group">
-      <div class="col-xs-3 col-xs-offset-3">
-        <div class="checkbox">
-          <%= f.label :invoice_notifications do %>
-            <%= f.check_box :invoice_notifications, disabled: disabled %>
-            <%= l(:label_received) %>
-          <% end -%>
-        </div>
+      <%= f.label :issued_invoice_notifications, class: 'col-xs-3 control-label' do %>
+        <%= l :field_issued_invoice_notifications %>:
+      <% end -%>
+      <div class="col-xs-3 ">
+        <%= f.text_field :issued_invoice_notifications, class: 'form-control' %>
       </div>
-      <div class="col-xs-3">
-        <div class="checkbox">
-          <%= f.label :order_notifications do %>
-            <%= f.check_box :order_notifications, disabled: disabled %>
-            <%= l(:label_received_order_plural) %>
-          <% end -%>
-        </div>
+    </div>
+    <div class="form-group">
+      <%= f.label :received_invoice_notifications, class: 'col-xs-3 control-label' do %>
+        <%= l :field_received_invoice_notifications %>:
+      <% end -%>
+      <div class="col-xs-3 ">
+        <%= f.text_field :received_invoice_notifications, class: 'form-control' %>
+      </div>
+    </div>
+    <div class="form-group">
+      <%= f.label :received_order_notifications, class: 'col-xs-3 control-label' do %>
+        <%= l :field_received_order_notifications %>:
+      <% end -%>
+      <div class="col-xs-3 ">
+        <%= f.text_field :received_order_notifications, class: 'form-control' %>
+      </div>
+    </div>
+    <div class="form-group">
+      <%= f.label :sii_imported_notifications, class: 'col-xs-3 control-label' do %>
+        <%= l :field_sii_imported_notifications %>:
+      <% end -%>
+      <div class="col-xs-3 ">
+        <%= f.text_field :sii_imported_notifications, class: 'form-control' %>
+      </div>
+    </div>
+    <div class="form-group">
+      <%= f.label :sii_sent_notifications, class: 'col-xs-3 control-label' do %>
+        <%= l :field_sii_sent_notifications %>:
+      <% end -%>
+      <div class="col-xs-3 ">
+        <%= f.text_field :sii_sent_notifications, class: 'form-control' %>
+      </div>
+    </div>
+    <div class="form-group">
+      <%= f.label :sii_state_changes_notifications, class: 'col-xs-3 control-label' do %>
+        <%= l :field_sii_state_changes_notifications %>:
+      <% end -%>
+      <div class="col-xs-3 ">
+        <%= f.text_field :sii_state_changes_notifications, class: 'form-control' %>
       </div>
     </div>
 
@@ -500,12 +530,6 @@
           <%= f.label :email_customization do %>
             <%= f.check_box :email_customization, disabled: disabled %>
             <%= l(:send_custom_text) %>
-          <% end -%>
-        </div>
-        <div class="checkbox">
-          <%= f.label :bcc_me do %>
-            <%= f.check_box :bcc_me, disabled: disabled %>
-            <%= l(:field_bcc_me) %>
           <% end -%>
         </div>
       </div>

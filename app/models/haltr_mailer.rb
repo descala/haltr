@@ -44,7 +44,9 @@ class HaltrMailer < ActionMailer::Base
     end
 
     recipients = invoice.recipient_emails.join(', ')
-    bcc        = invoice.from_email if invoice.company.bcc_me?
+    if invoice.company.issued_invoice_notifications.present?
+      bcc      = invoice.company.issued_invoice_notifications
+    end
     subj       = ""
     @body      = ""
     if @invoice.is_a?(Quote)

@@ -10,7 +10,7 @@ class Order < ActiveRecord::Base
   after_create :create_event
 
   after_create :notify_users_by_mail, if: Proc.new {|o|
-    o.project.company.order_notifications
+    o.project.company.received_order_notifications
   }
 
   acts_as_event
