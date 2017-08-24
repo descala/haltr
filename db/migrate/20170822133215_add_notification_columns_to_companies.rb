@@ -11,6 +11,9 @@ class AddNotificationColumnsToCompanies < ActiveRecord::Migration
     Company.all.each do |company|
 
       next if company.project.nil?
+      # skip Free users
+      members = company.project.memberships.select {|m| m.user.active?}
+      next if members.all? {|m| m.roles.reject {|r| r.name == 'Free' }.empty?}
 
       if company.bcc_me?
         company.issued_invoice_notifications = company.email
