@@ -47,7 +47,7 @@
             <td><%= l(:on_schedule) %>:</td>
             <td class="on_schedule text-right bold"><%=h money(invoices_sum) %></td>
             <td>
-              <%= link_to("#{invoices.count} #{l(:label_invoice_plural)}",  invoices_on_schedule_path(@project, User.current.pref.others[:chart_cashflow]),currency) if invoices.count > 0 %>
+              <%= link_to("#{invoices.count} #{l(:label_invoice_plural)}",  invoices_on_schedule_path(@project, User.current.pref.others[:chart_cashflow],currency)) if invoices.count > 0 %>
             </td>
           </tr>
         </tbody>
