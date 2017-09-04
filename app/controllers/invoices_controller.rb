@@ -77,6 +77,10 @@ class InvoicesController < ApplicationController
       end
     end
 
+    unless params[:currency].blank?
+      invoices = invoices.where("currency = ?", params[:currency])
+    end
+
     # client filter
     unless params[:client_id].blank?
       invoices = invoices.where("invoices.client_id = ?", params[:client_id])

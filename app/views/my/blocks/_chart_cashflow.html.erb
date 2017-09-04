@@ -40,14 +40,14 @@
             <td><%= l(:past_due) %>:</td>
             <td class="past_due text-right text-negative bold"><%=h money(due_invoices_sum) %></td>
             <td>
-              <%= link_to("#{due_invoices.uniq.count} #{l(:label_invoice_plural)}",  invoices_past_due_path(@project, User.current.pref.others[:chart_cashflow]) ) if due_invoices.count > 0 %>
+              <%= link_to("#{due_invoices.uniq.count} #{l(:label_invoice_plural)}",  invoices_past_due_path(@project, User.current.pref.others[:chart_cashflow],currency)) if due_invoices.count > 0 %>
             </td>
           </tr>
           <tr>
             <td><%= l(:on_schedule) %>:</td>
             <td class="on_schedule text-right bold"><%=h money(invoices_sum) %></td>
             <td>
-              <%= link_to("#{invoices.count} #{l(:label_invoice_plural)}",  invoices_on_schedule_path(@project, User.current.pref.others[:chart_cashflow]) ) if invoices.count > 0 %>
+              <%= link_to("#{invoices.count} #{l(:label_invoice_plural)}",  invoices_on_schedule_path(@project, User.current.pref.others[:chart_cashflow]),currency) if invoices.count > 0 %>
             </td>
           </tr>
         </tbody>
