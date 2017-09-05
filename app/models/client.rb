@@ -213,7 +213,7 @@ class Client < ActiveRecord::Base
       %w(taxcode company_identifier name email currency postalcode country
       province city address website department invoice_format language
       schemeid endpointid).each do |attr|
-        self.send("#{attr}=",company.send(attr))
+        self.send("#{attr}=",company.send(attr)) rescue nil
       end
       if self.company.respond_to?(:address2)
         self.address2 = self.company.address2
