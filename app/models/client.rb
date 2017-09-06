@@ -211,7 +211,7 @@ class Client < ActiveRecord::Base
   def copy_linked_profile
     if self.company and self.allowed?
       %w(taxcode company_identifier name email currency postalcode country
-      province city address website department invoice_format language
+      province city address website invoice_format language
       schemeid endpointid).each do |attr|
         self.send("#{attr}=",company.send(attr)) rescue nil
       end
