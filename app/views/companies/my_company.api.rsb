@@ -18,4 +18,10 @@ api.my_company do
   api.logo url_for(
     {controller: 'companies', action: 'logo', project_id: @company.project}
   )
+  api.issued_invoice_notifications    @company.issued_invoice_notifications
+  api.received_invoice_notifications  @company.received_invoice_notifications
+  api.received_order_notifications    @company.received_order_notifications
+  api.sii_imported_notifications      @company.sii_imported_notifications
+  api.sii_sent_notifications          @company.sii_sent_notifications
+  api.sii_state_changes_notifications @company.sii_state_changes_notifications
 end
