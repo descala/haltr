@@ -1,5 +1,6 @@
 class CompaniesController < ApplicationController
 
+  menu_item '', only: [:my_company]
   layout 'haltr'
   helper :haltr
 
