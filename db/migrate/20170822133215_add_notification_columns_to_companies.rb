@@ -12,7 +12,7 @@ class AddNotificationColumnsToCompanies < ActiveRecord::Migration
 
       next if company.project.nil?
       # skip Free users
-      members = company.project.memberships.select {|m| m.user.active?}
+      members = company.project.memberships.select {|m| m.user.active? rescue false}
       next if members.all? {|m| m.roles.reject {|r| r.name == 'Free' }.empty?}
 
       if company.bcc_me?
