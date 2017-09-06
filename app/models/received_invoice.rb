@@ -6,7 +6,7 @@ class ReceivedInvoice < InvoiceDocument
 
   acts_as_event
   after_create :notify_users_by_mail, if: Proc.new {|o|
-    o.project.company.invoice_notifications
+    o.project.company.received_invoice_notifications.present?
   }
 
   def paid?

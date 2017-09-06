@@ -14,6 +14,8 @@ company1:
   invoice_mail_customization: "---\nsubject:\n  en: Invoice number @invoice.number\n"
   schemeid: GLN
   endpointid: 9008737000028
+  sii_sent_notifications: test2@example.com
+  sii_imported_notifications: test3@example.com
 
 company2:
   # eCookbook

@@ -64,7 +64,7 @@ class MailNotifier < Mailer
     @invoice_url = url_for(:project => invoice.project.identifier,
                            :controller => 'invoices',
                            :action => 'show', :id => invoice.id)
-    mail :to => invoice.recipients,
+    mail :to => invoice.project.company.received_invoice_notifications,
       :subject => l(:mail_subject_invoice_add, :title => Setting.app_title)
   end
 
@@ -74,7 +74,7 @@ class MailNotifier < Mailer
     message_id order
     @order = order
     @order_url = project_order_url(order, project_id: order.project)
-    mail :to => order.recipients,
+    mail :to => order.project.company.received_order_notifications,
       :subject => l(:mail_subject_order_add, :title => Setting.app_title)
   end
 
