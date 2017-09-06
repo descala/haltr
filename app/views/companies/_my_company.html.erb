@@ -21,7 +21,7 @@
       </div>
       <% if f.object.country == "es" and f.object.persontype -%>
         <div class="col-xs-3 control-label"  style="text-align:left">
-          <%=  f.object.persontype == 'F' ? l(:self_employed) : l(:not_self_employed) %>
+          <%= (f.object.persontype == 'F' ? l(:self_employed) : l(:not_self_employed)) if f.object.taxcode.present? %>
         </div>
       <% end %>
     </div>
