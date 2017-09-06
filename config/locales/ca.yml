@@ -336,6 +336,7 @@ ca:
   # Settings
   field_taxcode: "NIF"
   field_website: "Lloc web"
+  field_department: "Departament"
   export_channels_path: "Path de les carpetes d'exportació"
   field_company: "Empresa"
   logo: "Logo"

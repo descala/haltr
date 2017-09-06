@@ -338,6 +338,7 @@ es:
   # Settings
   field_taxcode: "NIF"
   field_website: "Sitio web"
+  field_department: "Departamento"
   export_channels_path: "Ubicación de les carpetas de exportación"
   field_company: "Empresa"
   logo: "Logo"

@@ -326,6 +326,7 @@ fr:
   # Settings
   field_taxcode: N° TVA
   field_website: Site web
+  field_department: "Département"
   export_channels_path: "Chemin des répertoires d'export"
   field_company: "Compagnie"
   logo: "Logo"
