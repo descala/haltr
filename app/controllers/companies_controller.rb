@@ -11,7 +11,7 @@ class CompaniesController < ApplicationController
     only: [:my_company,:bank_info,:connections,:customization,:logo,
            :add_bank_info,:check_iban]
   before_filter :find_company, :only => [:update]
-  before_filter :authorize, :except => [:logo,:logo_by_taxcode,:new_company]
+  before_filter :authorize, :except => [:logo,:logo_by_taxcode]
   skip_before_filter :check_if_login_required, :only => [:logo,:logo_by_taxcode]
   before_filter :check_for_company,
     only: [:my_company,:bank_info,:connections,:customization]
@@ -49,11 +49,6 @@ class CompaniesController < ApplicationController
         render action: :my_company
       end
     end
-  end
-
-  def new_company
-    @project = Project.new
-    @company = Company.new(project: @project)
   end
 
   def update

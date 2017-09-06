@@ -83,8 +83,6 @@ Redmine::Plugin.register :haltr do
         :charts    => [:invoice_total, :invoice_status, :top_clients, :cash_flow],
         :events    => [:file, :index] },
       :require => :member
-    permission :general_use,
-      { companies: [:new_company] }, require: :loggedin
 
     permission :manage_payments, { :payments => [:index, :new, :edit, :create, :update, :destroy, :payment_initiation, :payment_done, :import_aeb43_index, :import_aeb43, :invoices, :reports, :report_payment_list] }, :require => :member
     permission :use_templates, { :invoice_templates => [:index, :new, :edit, :create, :update, :destroy, :show, :new_from_invoice,

@@ -26,7 +26,7 @@ class Company < ActiveRecord::Base
   validate :only_one_default_tax_per_name
   acts_as_attachable :view_permission => :general_use,
                      :delete_permission => :general_use
-  after_save :update_linked_clients, :after_save_hook, :update_project_identifier
+  after_save :update_linked_clients, :after_save_hook, :update_project_name
 
   include CountryUtils
   include Haltr::TaxcodeValidator
@@ -335,15 +335,10 @@ class Company < ActiveRecord::Base
     Redmine::Hook.call_hook(:company_after_save, company: self)
   end
 
-  def update_project_identifier
-    if name_changed?
-      # project protects identifier from changes, hope this dont break anything
-      project.update_column :identifier, User.company_identifier(name)
+  def update_project_name
+    if name_changed? and name.present?
+      project.update_attribute :name, name[0...255]
     end
-  rescue ActiveRecord::RecordNotUnique
-    # after_save, so we only update project when company saves, but then its
-    # too late to add errors
-    #errors.add(:name, :taken)
   end
 
   # translations for accepts_nested_attributes_for

@@ -66,7 +66,6 @@ resources :projects do
   match 'orders/:id/mark_as' => 'orders#mark_as', :via => :post, :as => :order_mark_as
   resources :orders, only: [:index, :show, :destroy]
 end
-match 'new_company', controller: 'companies', action: 'new_company', via: [:get,:post]
 resources :invoice_imgs, :only => [:create,:update]
 match 'invoice_imgs/:id/tag/:tag' => 'invoice_imgs#tag', :as => 'invoice_imgs_tag', :via => :get
 

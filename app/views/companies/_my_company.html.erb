@@ -186,8 +186,6 @@
   </fieldset>
 </div>
 
-<% unless @company.new_record? -%>
-
 <div class="tab-pane" id="company-bank">
   <fieldset class="form-horizontal">
     <legend class="relative"><%=l(:bank_info)%></legend>
@@ -225,8 +223,6 @@
 
   <%= call_hook(:company_bank_info_form_end) %>
 </div>
-
-<% end -%>
 
 <div class="tab-pane" id="company-connections">
   <fieldset class="form-horizontal">
