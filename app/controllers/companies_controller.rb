@@ -33,7 +33,7 @@ class CompaniesController < ApplicationController
                              email:          user_mail,
                              invoice_format: default_invoice_format,
                              public:         'private')
-      @company.save(:validate=>false)
+      @company.save(validate: false)
     else
       @company = @project.company
     end
@@ -43,11 +43,9 @@ class CompaniesController < ApplicationController
     @company.bank_infos.build if @company.bank_infos.empty?
     respond_to do |format|
       format.html do
-        render :action => 'edit'
       end
       format.api do
         params[:format] ||= 'json'
-        render action: :my_company
       end
     end
   end

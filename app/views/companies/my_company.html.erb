@@ -5,7 +5,6 @@
 <%= form_for @company,
   :url => { :action => 'update', :id => @company },
   :html => {:method => :put, :multipart => true } do |f| %>
-  <h2><%= l :label_my_company %></h2>
 
   <%= call_hook(:company_form_taxcode) %>
 
