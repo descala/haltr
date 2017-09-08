@@ -104,21 +104,6 @@ Redmine::Plugin.register :haltr do
         :orders    => [:index, :show] },
       :require => :member
 
-    permission :restricted_use,
-      { :clients   => [:index, :show, :edit, :check_cif, :ccc2iban, :update],
-        :people    => [:index, :edit],
-        :client_offices => [:index, :edit, :update],
-        :invoices  => [:index, :show, :legal, :download_new_invoices, :reports, :report_channel_state, :report_invoice_list, :report_received_table,
-                       :context_menu, :send_invoice,
-                       :send_new_invoices, :number_to_id],
-        :received  => [:index, :show, :legal, :context_menu],
-        :companies => [:my_company,:bank_info, :check_iban],
-        :payments  => [:index],
-        :invoice_templates => [:index, :show, :context_menu],
-        :charts    => [:invoice_total, :invoice_status, :top_clients],
-        :events    => [:file, :index] },
-      :require => :member
-
     permission :bulk_operations,
       { :invoices => [:bulk_download,:bulk_send],
         :received => [:bulk_download,:bulk_validate] }, :require => :member
