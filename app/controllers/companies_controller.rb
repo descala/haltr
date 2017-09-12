@@ -118,6 +118,12 @@ class CompaniesController < ApplicationController
         render_attachment_warning_if_needed(@company)
       end
       flash[:notice] = l(:notice_successful_update) 
+      referer = User.current.referer
+      if referer.present? and referer !~ /\A_/
+        redirect_to new_subscription_path(plan_id: Plan.try(referer))
+        User.current.update_column(:referer, "_#{referer}")
+        return
+      end
       redirect_to :action => 'my_company', :project_id => @project
 
     else
