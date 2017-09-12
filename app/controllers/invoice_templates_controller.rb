@@ -168,8 +168,7 @@ class InvoiceTemplatesController < InvoicesController
 
     @can = { :edit => User.current.allowed_to?(:general_use, @project),
              :read => (User.current.allowed_to?(:general_use, @project) ||
-                      User.current.allowed_to?(:use_all_readonly, @project) ||
-                      User.current.allowed_to?(:restricted_use, @project)),
+                      User.current.allowed_to?(:use_all_readonly, @project)),
            }
     @back = back_url
 

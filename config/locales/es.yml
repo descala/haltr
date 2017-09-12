@@ -473,7 +473,6 @@ es:
   permission_use_templates: "Plantillas de facturas"
   permission_batch_processes: "Procesos con scripts"
   permission_use_all_readonly: "Uso completo solo lectura"
-  permission_restricted_use: "Uso restringido"
 
   # this depends on permissions defined in channels.yml
   permission_download_pdf: "B2BRouter - Descargar PDF"
