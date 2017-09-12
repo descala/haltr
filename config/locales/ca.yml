@@ -336,6 +336,7 @@ ca:
   # Settings
   field_taxcode: "NIF"
   field_website: "Lloc web"
+  field_department: "Departament"
   export_channels_path: "Path de les carpetes d'exportació"
   field_company: "Empresa"
   logo: "Logo"
@@ -472,7 +473,6 @@ ca:
   permission_use_templates: "Plantilles de factures"
   permission_batch_processes: "Processos amb scripts"
   permission_use_all_readonly: "Ús complet només lectura"
-  permission_restricted_use: "Ús restringit"
 
   # this depends on permissions defined in channels.yml
   permission_download_pdf: "B2BRouter - Descarregar PDF"

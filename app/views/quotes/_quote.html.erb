@@ -61,6 +61,9 @@
           <% if line.discount_text.present? and line.discount_text != '.' -%>
             <br /><%= l(:field_discount) %>: <%= line.discount_text %>
           <% end -%>
+          <% if line.notes.present? -%>
+            <br /><%= l(:field_extra_info) %>: <%= line.notes %>
+          <% end -%>
         </td>
         <% if line.discount_amount.to_f != 0 -%>
           <% if @invoice.company.line_discounts_as_imports -%>

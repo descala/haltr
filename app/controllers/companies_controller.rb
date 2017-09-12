@@ -1,5 +1,6 @@
 class CompaniesController < ApplicationController
 
+  menu_item '', only: [:my_company]
   layout 'haltr'
   helper :haltr
 
@@ -11,7 +12,7 @@ class CompaniesController < ApplicationController
     only: [:my_company,:bank_info,:connections,:customization,:logo,
            :add_bank_info,:check_iban]
   before_filter :find_company, :only => [:update]
-  before_filter :authorize, :except => [:logo,:logo_by_taxcode,:new_company]
+  before_filter :authorize, :except => [:logo,:logo_by_taxcode]
   skip_before_filter :check_if_login_required, :only => [:logo,:logo_by_taxcode]
   before_filter :check_for_company,
     only: [:my_company,:bank_info,:connections,:customization]
@@ -32,7 +33,7 @@ class CompaniesController < ApplicationController
                              email:          user_mail,
                              invoice_format: default_invoice_format,
                              public:         'private')
-      @company.save(:validate=>false)
+      @company.save(validate: false)
     else
       @company = @project.company
     end
@@ -42,18 +43,11 @@ class CompaniesController < ApplicationController
     @company.bank_infos.build if @company.bank_infos.empty?
     respond_to do |format|
       format.html do
-        render :action => 'edit'
       end
       format.api do
         params[:format] ||= 'json'
-        render action: :my_company
       end
     end
-  end
-
-  def new_company
-    @project = Project.new
-    @company = Company.new(project: @project)
   end
 
   def update
@@ -124,6 +118,12 @@ class CompaniesController < ApplicationController
         render_attachment_warning_if_needed(@company)
       end
       flash[:notice] = l(:notice_successful_update) 
+      referer = User.current.referer
+      if referer.present? and referer !~ /\A_/
+        redirect_to new_subscription_path(plan_id: Plan.try(referer))
+        User.current.update_column(:referer, "_#{referer}")
+        return
+      end
       redirect_to :action => 'my_company', :project_id => @project
 
     else

@@ -326,6 +326,7 @@ en:
   # Settings
   field_taxcode: VAT ID Number
   field_website: Website
+  field_department: "Department"
   export_channels_path: "Path of export folders"
   field_company: "Company"
   logo: "Logo"
@@ -460,7 +461,6 @@ en:
   permission_use_templates: "Invoice templates"
   permission_batch_processes: "Processes with scripts"
   permission_use_all_readonly: "Full use readonly"
-  permission_restricted_use: "Restricted use"
 
   # this depends on permissions defined in channels.yml
   permission_download_pdf: "B2BRouter - Download PDF"

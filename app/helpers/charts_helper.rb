@@ -24,20 +24,20 @@ module ChartsHelper
       joins('LEFT JOIN payments ON payments.invoice_id = invoices.id')
     case from.to_s
     when 'last_year'
-      invoices = invoices.where(["state != 'closed' and due_date < ? and invoices.date >= ?", Date.today, 1.year.ago])
+      invoices = invoices.where(["due_date < ? and invoices.date >= ?", Date.today, 1.year.ago])
     when 'last_3_months'
-      invoices = invoices.where(["state != 'closed' and due_date < ? and invoices.date >= ?", Date.today, 3.months.ago])
+      invoices = invoices.where(["due_date < ? and invoices.date >= ?", Date.today, 3.months.ago])
     else
-      invoices = invoices.where(["state != 'closed' and due_date < ?", Date.today])
+      invoices = invoices.where(["due_date < ?", Date.today])
     end
     if currency
       invoices = invoices.where("currency = ?", currency)
     end
-    invoices = invoices.where("state not in ('error', 'refused')")
+    invoices = invoices.where("state not in ('error', 'refused', 'closed')")
     invoices
   end
 
-  def invoices_past_due_path(project,from=nil)
+  def invoices_past_due_path(project,from=nil,currency=nil)
     date_from = ''
     case from.to_s
     when 'last_year'
@@ -45,7 +45,7 @@ module ChartsHelper
     when 'last_3_months'
       date_from = 3.months.ago.to_date
     end
-    project_invoices_path(:project_id=>project,new:1,sending:1,sent:1,discarded:1,registered:1,accepted:1,due_date_to:Date.yesterday,date_from:date_from,date_to:'')
+    project_invoices_path(:project_id=>project,due_date_to:Date.yesterday,date_from:date_from,date_to:'',error:0,refused:0,closed:0,currency:currency)
   end
 
   def invoices_on_schedule(project,from=nil,currency=nil)
@@ -53,20 +53,20 @@ module ChartsHelper
       joins('LEFT JOIN payments ON payments.invoice_id = invoices.id')
     case from
     when 'last_year'
-      invoices = invoices.where(["state != 'closed' and due_date >= ? and invoices.date >= ?", Date.today, 1.year.ago])
+      invoices = invoices.where(["due_date >= ? and invoices.date >= ?", Date.today, 1.year.ago])
     when 'last_3_months'
-      invoices = invoices.where(["state != 'closed' and due_date >= ? and invoices.date >= ?", Date.today, 3.months.ago])
+      invoices = invoices.where(["due_date >= ? and invoices.date >= ?", Date.today, 3.months.ago])
     else
-      invoices = invoices.where(["state != 'closed' and due_date >= ?", Date.today])
+      invoices = invoices.where(["due_date >= ?", Date.today])
     end
     if currency
       invoices = invoices.where("currency = ?", currency)
     end
-    invoices = invoices.where("state not in ('error', 'refused')")
+    invoices = invoices.where("state not in ('error', 'refused', 'closed')")
     invoices
   end
 
-  def invoices_on_schedule_path(project,from=nil)
+  def invoices_on_schedule_path(project,from=nil,currency=nil)
     date_from = ''
     case from.to_s
     when 'last_year'
@@ -74,7 +74,7 @@ module ChartsHelper
     when 'last_3_months'
       date_from = 3.months.ago.to_date
     end
-    project_invoices_path(:project_id=>project,new:1,sending:1,sent:1,discarded:1,registered:1,accepted:1,due_date_from:Date.today,date_from:date_from,date_to:'')
+    project_invoices_path(:project_id=>project,due_date_from:Date.today,date_from:date_from,date_to:'',error:0,refused:0,closed:0,currency:currency)
   end
 
 end

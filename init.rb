@@ -83,8 +83,6 @@ Redmine::Plugin.register :haltr do
         :charts    => [:invoice_total, :invoice_status, :top_clients, :cash_flow],
         :events    => [:file, :index] },
       :require => :member
-    permission :general_use,
-      { companies: [:new_company] }, require: :loggedin
 
     permission :manage_payments, { :payments => [:index, :new, :edit, :create, :update, :destroy, :payment_initiation, :payment_done, :import_aeb43_index, :import_aeb43, :invoices, :reports, :report_payment_list] }, :require => :member
     permission :use_templates, { :invoice_templates => [:index, :new, :edit, :create, :update, :destroy, :show, :new_from_invoice,
@@ -104,21 +102,6 @@ Redmine::Plugin.register :haltr do
         :events    => [:file, :index],
         :import_errors => [:index, :show],
         :orders    => [:index, :show] },
-      :require => :member
-
-    permission :restricted_use,
-      { :clients   => [:index, :show, :edit, :check_cif, :ccc2iban, :update],
-        :people    => [:index, :edit],
-        :client_offices => [:index, :edit, :update],
-        :invoices  => [:index, :show, :legal, :download_new_invoices, :reports, :report_channel_state, :report_invoice_list, :report_received_table,
-                       :context_menu, :send_invoice,
-                       :send_new_invoices, :number_to_id],
-        :received  => [:index, :show, :legal, :context_menu],
-        :companies => [:my_company,:bank_info, :check_iban],
-        :payments  => [:index],
-        :invoice_templates => [:index, :show, :context_menu],
-        :charts    => [:invoice_total, :invoice_status, :top_clients],
-        :events    => [:file, :index] },
       :require => :member
 
     permission :bulk_operations,
@@ -188,7 +171,6 @@ Redmine::Plugin.register :haltr do
 
   end
 
-  menu :project_menu, :my_company, {:controller=>'companies', :action=>'my_company'}, :param=>:project_id, :caption=>:label_my_company
   menu :project_menu, :companies,  {:controller=>'clients',   :action=>'index'     }, :param=>:project_id, :caption=>:label_companies
   menu :project_menu, :invoices,   {:controller=>'invoices',  :action=>'index'     }, :param=>:project_id, :caption=>:label_invoice_plural
   menu :project_menu, :payments,   {:controller=>'payments',  :action=>'index'     }, :param=>:project_id, :caption=>:label_payment_plural

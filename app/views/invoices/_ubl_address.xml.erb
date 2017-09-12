@@ -1,5 +1,9 @@
+
 <% if entity.address and !entity.address.blank? -%>
     <cbc:StreetName><%=h entity.address%></cbc:StreetName>
+<% end -%>
+<% if entity.respond_to?(:department) && entity.department.present? -%>
+    <cbc:Department><%=h entity.department%></cbc:Department>
 <% end -%>
 <% if entity.city and !entity.city.blank? -%>
     <cbc:CityName><%=h entity.city%></cbc:CityName>

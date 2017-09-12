@@ -21,7 +21,7 @@
       </div>
       <% if f.object.country == "es" and f.object.persontype -%>
         <div class="col-xs-3 control-label"  style="text-align:left">
-          <%=  f.object.persontype == 'F' ? l(:self_employed) : l(:not_self_employed) %>
+          <%= (f.object.persontype == 'F' ? l(:self_employed) : l(:not_self_employed)) if f.object.taxcode.present? %>
         </div>
       <% end %>
     </div>
@@ -186,8 +186,6 @@
   </fieldset>
 </div>
 
-<% unless @company.new_record? -%>
-
 <div class="tab-pane" id="company-bank">
   <fieldset class="form-horizontal">
     <legend class="relative"><%=l(:bank_info)%></legend>
@@ -225,8 +223,6 @@
 
   <%= call_hook(:company_bank_info_form_end) %>
 </div>
-
-<% end -%>
 
 <div class="tab-pane" id="company-connections">
   <fieldset class="form-horizontal">

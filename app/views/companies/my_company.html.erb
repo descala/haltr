@@ -3,9 +3,8 @@
 
 <!--formulari-->
 <%= form_for @company,
-  url: { action: 'new_company' },
-  html: {method: :post, multipart: true } do |f| %>
-  <h2><%= l :label_my_company %></h2>
+  :url => { :action => 'update', :id => @company },
+  :html => {:method => :put, :multipart => true } do |f| %>
 
   <%= call_hook(:company_form_taxcode) %>
 

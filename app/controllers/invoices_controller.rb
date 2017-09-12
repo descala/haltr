@@ -62,14 +62,23 @@ class InvoicesController < ApplicationController
 
     unless params["state_all"] == "1"
       statelist=[]
+      no_statelist=[]
       %w(new sending sent read error cancelled closed discarded registered refused accepted allegedly_paid annotated).each do |state|
-        if params[state] == "1"
+        if params[state] == '1'
           statelist << "'#{state}'"
+        elsif params[state] == '0'
+          no_statelist << "'#{state}'"
         end
       end
       if statelist.any?
         invoices = invoices.where("state in (#{statelist.join(",")})")
+      elsif no_statelist.any?
+        invoices = invoices.where("state not in (#{no_statelist.join(',')})")
       end
+    end
+
+    unless params[:currency].blank?
+      invoices = invoices.where("invoices.currency = ?", params[:currency])
     end
 
     # client filter
@@ -1159,8 +1168,7 @@ class InvoicesController < ApplicationController
 
     @can = { :edit => User.current.allowed_to?(:general_use, @project),
              :read => (User.current.allowed_to?(:general_use, @project) ||
-                      User.current.allowed_to?(:use_all_readonly, @project) ||
-                      User.current.allowed_to?(:restricted_use, @project)),
+                      User.current.allowed_to?(:use_all_readonly, @project)),
              :bulk_download => User.current.allowed_to?(:bulk_download, @project)
            }
     @back = back_url
