@@ -205,8 +205,13 @@
               <td><%=h format_date invoice.date %></td>
               <td <%='class="pastdue"'.html_safe if invoice.past_due?%>><%=h format_date invoice.due_date %><%= call_hook(:invoices_index_due_date, { invoice: invoice }) %></td>
               <td><%=h invoice.client_office ? invoice.client_office : invoice.client %></td>
-              <td class="money"><%= money(invoice.subtotal) %></td>
-              <td class="money"><%= money(invoice.total) %></td>
+              <% if invoice.invoice_format == 'pdf' and invoice.number.blank? and invoice.date.blank? -%>
+                <td class="money"><%= invoice.subtotal.dollars == 0 ? '-' : money(invoice.subtotal) %></td>
+                <td class="money"><%= invoice.total.dollars == 0 ? '-' : money(invoice.total) %></td>
+              <% else -%>
+                <td class="money"><%= money(invoice.subtotal) %></td>
+                <td class="money"><%= money(invoice.total) %></td>
+              <% end -%>
               <td>
                 <div class="ribbon2-<%="#{invoice.state}"%>"><%=h l("state_#{invoice.state}").capitalize %></div>
               </td>

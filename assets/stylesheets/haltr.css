@@ -305,8 +305,9 @@ div.action-linked_to_mine #companies {
 .companyid {
   font-size: 10px;
 }
-#invoice_img {
-  text-align: center;
+#invoice_img iframe {
+  margin-top: 10px;
+  margin-bottom: 10px;
 }
 #invoice_img .image {
   position: relative;
