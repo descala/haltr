@@ -1,7 +1,5 @@
 module CompanyFilter
 
-
-
   def check_for_company
     if @project.company.nil?
       user_mail = User.find_by_project_id(@project.id).mail rescue ""

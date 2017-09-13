@@ -1,11 +1,12 @@
 <div class="form-group">
-<label for="invoice_client_id" class="col-xs-3 control-label">
+<label for="invoice_client_id" class="control-label <%= 'col-xs-3' unless params[:action] == 'show' -%>">
   <%= l(:field_client) %>:
   <% unless @invoice.is_a? Quote or @invoice.is_a? ReceivedInvoice -%>
     <span class="required"> *</span>
   <% end -%>
 </label>
-<div class="col-xs-7">
+
+<div class="<%= 'col-xs-7' unless params[:action] == 'show' %>">
   <%= select :invoice,
     :client_id,
     clients_for_select,
@@ -16,17 +17,18 @@
 <span class="help-block">
   <%=link_to_function(l(:label_company_new),"$('#new_client_wrapper').show();", class: 'icon-fa icon-fa-plus-sign black')%>
 </span>
-
 </div>
+
 </div>
 
 <div class="form-group">
-  <label class="col-xs-3 control-label"><%= l :transport %>:</label>
-  <div class="col-xs-7">
+  <label class="control-label <%= 'col-xs-3' unless params[:action] == 'show' %>"><%= l :transport %>:</label>
+  <div class="<%= 'col-xs-7' unless params[:action] == 'show' %>">
     <p class="form-control-static"><span id="invoice_format">
       <% if @client -%>
         <%= ExportChannels.l(@client.invoice_format) %>
       <% end -%>
-    </span></p>
+    </span>
+    </p>
   </div>
 </div>

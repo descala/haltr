@@ -1,4 +1,5 @@
-<label for="invoice_client_id"><%= l(:field_supplier) %></label>
+<div class="form-group">
+<label for="invoice_client_id"><%= l(:field_supplier) %>:</label>
 <%= select :invoice,
   :client_id,
   clients_for_select,
@@ -7,3 +8,4 @@
 <span class="help-block">
   <%=link_to_function(l(:label_company_new),"$('#new_client_wrapper').show();", class: 'icon-fa icon-fa-plus-sign black')%>
 </span>
+</div>
