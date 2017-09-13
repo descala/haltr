@@ -65,21 +65,24 @@
 
 <% if @invoice_pdf -%>
   <!-- TODO -->
-  <div id="invoice_img">
-    <div class="colu1">
-      <iframe src="/pdfjs/web/viewer.html?file=<%=@invoice_pdf%>" style="border: 0" width="720px" height="890" frameborder="0" scrolling="no"></iframe>
+  <div id="invoice_img" class="row">
+    <div class="col-xs-8">
+      <iframe src="/pdfjs/web/viewer.html?file=<%=@invoice_pdf%>" style="border: 0" width="100%" height="890" frameborder="0" scrolling="no"></iframe>
     </div>
-    <div class="colu2">
+    <div class="col-xs-4">
       <% if @invoice.state == 'processing_pdf' -%>
         <p><%= I18n.t @invoice.state %></p>
       <% elsif @invoice.invoice_img -%>
         <%= render partial: 'invoice_imgs/metadata', locals: {invoice_img: @invoice.invoice_img } %>
       <% else -%>
+        <% if false # https://www.ingent.net/issues/6912 -%>
         <div style="margin: 20px 0 20px 0;">
           <%= link_to button_tag(I18n.t(:process_pdf), class: ''), process_pdf_path(@invoice), method: :post %>
         </div>
-        <%= labelled_form_for :invoice, @invoice, url: invoice_path(@invoice) do |f| %>
-          <fieldset class="tabular box">
+        <% end -%>
+
+        <%= form_for @invoice, url: invoice_path(@invoice) do |f| %>
+          <fieldset class="box bg-white">
             <div class="seccio grup">
               <p class="col pdf" id="client_select">
               <% if @invoice.is_a? ReceivedInvoice -%>
@@ -92,9 +95,6 @@
             <%= f.submit l(:button_update), name: 'create' %>
           </fieldset>
         <% end -%>
-        <div id="new_client_wrapper" style="display:none;">
-          <%= render partial: 'invoices/new_client', locals: {context: "edit_invoice"} %>
-        </div>
 
         <div>
           <p><%= t :credit %>: <%= @project.company.free_ocr_account.balance.to_f + @project.company.free_issues_account.balance.to_f + @project.company.buy_account.balance.to_f %>€</p>
@@ -105,6 +105,12 @@
     </div>
   </div>
   <!-- TODO -->
+  <div id="new_client_wrapper" style="display:none;">
+    <div id="new_client_form">
+      <%= render partial: 'invoices/new_client', locals: {context: 'edit_invoice'} %>
+    </div>
+    <div class="overlay"></div>
+  </div>
 <% else -%>
 
   <% if @invoice.invoice_img -%>
