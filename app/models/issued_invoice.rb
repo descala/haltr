@@ -38,7 +38,7 @@ class IssuedInvoice < InvoiceDocument
         series_code_value = series_code
       end
       query = IssuedInvoice.where(project_id: project, number: number, series_code: series_code_value)
-      query = query.where(["YEAR(date) = ?", date.year]) unless date.nil?
+      query = query.where(["EXTRACT(YEAR FROM date) = ?", date.year]) unless date.nil?
       query = query.where(["id != ?", id]) unless new_record?
       if query.any?
         if date.nil?
