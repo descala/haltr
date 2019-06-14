@@ -72,7 +72,7 @@
 
 
 <!--taula factures-->
-<%= form_tag({}) do -%>
+<%= form_tag({}, data: {cm_url: invoice_templates_context_menu_path}) do -%>
   <%= hidden_field_tag 'back_url', url_for(params), :id => nil %>
   <div class="seccio grup">
     <div class="col span-2-de-2">
@@ -113,4 +113,4 @@
   <%= render_menu :invoices_menu, @project %>
 <% end %>
 
-<%= context_menu invoice_templates_context_menu_path %>
+<%= context_menu %>

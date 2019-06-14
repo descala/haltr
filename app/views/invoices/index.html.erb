@@ -158,7 +158,7 @@
 <!--final filtres-->
 
 <!--taula factures-->
-<%= form_tag({}) do -%>
+<%= form_tag({}, :data => {:cm_url => (controller.controller_name == 'invoices') ?  invoices_context_menu_path : received_context_menu_path}) do -%>
   <%= hidden_field_tag 'back_url', url_for(params), :id => nil %>
   <div class="seccio grup">
     <div class="col span-2-de-2">
@@ -216,4 +216,4 @@
   <%= render_menu :invoices_menu, @project %>
 <% end %>
 
-<%= context_menu "/#{controller.controller_name}/context_menu" %>
+<%= context_menu %>
