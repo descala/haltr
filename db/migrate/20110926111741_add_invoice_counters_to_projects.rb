@@ -6,13 +6,16 @@ class AddInvoiceCountersToProjects < ActiveRecord::Migration
     add_column :projects, :received_invoices_count, :integer, :default => 0
     add_column :projects, :invoice_templates_count, :integer, :default => 0
 
-    #Project.reset_column_information
-    Project.all.each do |p|
-      Project.update_counters p.id,
-        :invoices_count          => p.invoices.length,
-        :issued_invoices_count   => p.issued_invoices.length,
-        :received_invoices_count => p.received_invoices.length,
-        :invoice_templates_count => p.invoice_templates.length
+    begin
+      Project.all.each do |p|
+        Project.update_counters p.id,
+          :invoices_count          => p.invoices.length,
+          :issued_invoices_count   => p.issued_invoices.length,
+          :received_invoices_count => p.received_invoices.length,
+          :invoice_templates_count => p.invoice_templates.length
+      end
+    rescue
+      nil
     end
   end
 

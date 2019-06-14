@@ -11,19 +11,23 @@ class RemoveTaxesFromInvoices < ActiveRecord::Migration
     end
     say_with_time "Migrating invoices, this may take a while..." do
       tax_names = {"es" => "IVA", "fr" => "TVA" }
-      Invoice.all.each do |invoice|
-        if invoice.tax_percent and invoice.tax_percent > 0
-          invoice.invoice_lines.each do |il|
-            il.taxes << Tax.new(:name => (tax_names[invoice.company.country] || "VAT"), :percent => invoice.tax_percent)
+      begin
+        Invoice.all.each do |invoice|
+          if invoice.tax_percent and invoice.tax_percent > 0
+            invoice.invoice_lines.each do |il|
+              il.taxes << Tax.new(:name => (tax_names[invoice.company.country] || "VAT"), :percent => invoice.tax_percent)
+            end
           end
-        end
-        if invoice.apply_withholding_tax and invoice.company.withholding_tax_percent
-          tax_percent = invoice.company.withholding_tax_percent * -1
-          invoice.invoice_lines.each do |il|
-            il.taxes << Tax.new(:name => "IRPF", :percent => tax_percent)
+          if invoice.apply_withholding_tax and invoice.company.withholding_tax_percent
+            tax_percent = invoice.company.withholding_tax_percent * -1
+            invoice.invoice_lines.each do |il|
+              il.taxes << Tax.new(:name => "IRPF", :percent => tax_percent)
+            end
           end
+          invoice.save(:validate=>false) # to trigger update_imports method and update invoice imports
         end
-        invoice.save(:validate=>false) # to trigger update_imports method and update invoice imports
+      rescue
+        nil
       end
     end
     remove_column :invoices, :withholding_tax_in_cents
