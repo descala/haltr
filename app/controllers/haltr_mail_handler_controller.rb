@@ -1,7 +1,7 @@
 class HaltrMailHandlerController < ApplicationController
 
 
-  before_filter :authorize_global
+  before_action :authorize_global
   accept_api_auth :check_mail
 
   # Retrieves new mails from configured inbox (in config/configuration.yml)

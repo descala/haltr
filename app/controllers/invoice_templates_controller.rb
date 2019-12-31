@@ -5,10 +5,10 @@ class InvoiceTemplatesController < InvoicesController
 
   # skip parent controller filters, add later
   # otherwise they get executed before ours
-  skip_before_filter :authorize, :check_for_company
+  skip_before_action :authorize, :check_for_company
 
-  before_filter :find_issued_invoice, :only => [:new_from_invoice]
-  before_filter :authorize, :check_for_company
+  before_action :find_issued_invoice, :only => [:new_from_invoice]
+  before_action :authorize, :check_for_company
 
   def index
     sort_init 'date', 'asc'
@@ -108,12 +108,12 @@ class InvoiceTemplatesController < InvoicesController
       end
     end
     drafts_to_process.each do |draft|
-      issued = IssuedInvoice.new(draft.attributes)
+      issued = IssuedInvoice.new(draft.attributes.dup.except('id','created_at','updated_at','type'))
       issued.number = params["draft_#{draft.id}"]
       draft.invoice_lines.each do |draft_line|
-        l = InvoiceLine.new draft_line.attributes
+        l = InvoiceLine.new draft_line.attributes.dup.except('id','created_at','updated_at','invoice_id')
         draft_line.taxes.each do |tax|
-          l.taxes << Tax.new(tax.attributes.except('invoice_line_id'))
+          l.taxes << Tax.new(tax.attributes.dup.except('id','created_at','updated_at','invoice_line_id'))
         end
         issued.invoice_lines << l
       end

@@ -26,7 +26,6 @@ class InvoiceLine < ActiveRecord::Base
   }
 
   # do not remove, with audit we need to make the other attributes accessible
-  attr_protected :created_at, :updated_at
 
   belongs_to :invoice
   has_many :taxes, -> {order :percent}, :class_name => "Tax", :dependent => :destroy

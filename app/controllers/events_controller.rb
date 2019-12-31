@@ -2,12 +2,12 @@ class EventsController < ApplicationController
 
   helper :haltr
 
-  skip_before_filter :check_if_login_required, :only => [ :create, :attachment]
-  before_filter :check_remote_ip, :except => [:index, :attachment]
-  before_filter :find_event, :only => [:attachment]
-  before_filter :find_project_by_project_id, :only => [:index]
-  before_filter :authorize, :only => [:index]
-  before_filter :authorize_or_find_hashid, only: [:attachment]
+  skip_before_action :check_if_login_required, :only => [ :create, :attachment]
+  before_action :check_remote_ip, :except => [:index, :attachment]
+  before_action :find_event, :only => [:attachment]
+  before_action :find_project_by_project_id, :only => [:index]
+  before_action :authorize, :only => [:index]
+  before_action :authorize_or_find_hashid, only: [:attachment]
 
   accept_api_auth :index
 

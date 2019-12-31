@@ -3,7 +3,7 @@ class ExportChannelsController < ApplicationController
 
   layout 'admin'
   menu_item :export_channels
-  before_filter :authorize_global
+  before_action :authorize_global
   helper :haltr
 
   def index

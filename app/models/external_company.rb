@@ -4,7 +4,6 @@ class ExternalCompany < ActiveRecord::Base
     :as        => :company,
     :dependent => :nullify
 
-  attr_protected :created_at, :updated_at
 
   validates_presence_of :name, :postalcode, :country
   validates_length_of :taxcode, :maximum => 20

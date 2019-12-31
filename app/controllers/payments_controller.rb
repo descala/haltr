@@ -10,12 +10,12 @@ class PaymentsController < ApplicationController
 
   include SortHelper
 
-  before_filter :find_project_by_project_id, :except => [:destroy,:edit,:update]
-  before_filter :find_payment,               :only   => [:destroy,:edit,:update]
-  before_filter :authorize
+  before_action :find_project_by_project_id, :except => [:destroy,:edit,:update]
+  before_action :find_payment,               :only   => [:destroy,:edit,:update]
+  before_action :authorize
 
   include CompanyFilter
-  before_filter :check_for_company
+  before_action :check_for_company
 
   def index
     sort_init 'payments.date', 'desc'
@@ -57,7 +57,8 @@ class PaymentsController < ApplicationController
     if params[:payment][:invoice_id].present?
       @invoice = @project.invoices.find params[:payment].delete(:invoice_id)
     end
-    @payment = Payment.new(params[:payment].merge({:project=>@project}))
+    @payment = Payment.new({:project=>@project})
+    @payment.safe_attributes = params[:payment]
     @payment.invoice = @invoice
     @reason = params[:reason]
     if @payment.save
@@ -78,7 +79,8 @@ class PaymentsController < ApplicationController
   end
 
   def update
-    if @payment.update_attributes(params[:payment])
+    @payment.safe_attributes = params[:payment]
+    if @payment.save
       flash[:notice] = l(:notice_successful_update)
       redirect_to project_payments_path(@project)
     else

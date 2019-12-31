@@ -1,26 +1,6 @@
-require 'redmine'
-
 Rails.logger.info 'Starting haltr plugin'
 
 require 'haltr'
-
-# Haltr has plugins of his own
-# similar to config/initializers/00-core_plugins.rb in Redmine
-# Loads the core plugins located in lib/plugins
-Dir.glob(File.join(File.dirname(__FILE__), "lib/plugins/*")).sort.each do |directory|
-  if File.directory?(directory)
-    lib = File.join(directory, "lib")
-    if File.directory?(lib)
-      $:.unshift lib
-      ActiveSupport::Dependencies.autoload_paths += [lib]
-    end
-    initializer = File.join(directory, "init.rb")
-    if File.file?(initializer)
-      config = config = RedmineApp::Application.config
-      eval(File.read(initializer), binding, initializer)
-    end
-  end
-end
 
 # groupdate won't work with config.active_record.default_timezone = :local
 # https://github.com/ankane/groupdate/issues/66
@@ -34,13 +14,6 @@ require 'utils'
 require File.expand_path(File.join(File.dirname(__FILE__), 'app/models/export_channels'))
 
 require 'haltr/hooks'
-
-if (Redmine::VERSION::MAJOR == 1 and Redmine::VERSION::MINOR >= 4) or Redmine::VERSION::MAJOR == 2 or Redmine::VERSION::MAJOR == 3
-  require 'country_iso_translater'
-else
-  config.gem 'sundawg_country_codes', :lib => 'country_iso_translater'
-  config.gem 'money', :version => '>=5.0.0'
-end
 
 Rails.configuration.to_prepare do
   Project.send(:include, ProjectHaltrPatch)

@@ -20,7 +20,7 @@ class InvoiceTemplate < Invoice
   end
 
   def next_invoice
-    i = DraftInvoice.new self.attributes
+    i = DraftInvoice.new self.attributes.dup.except('id','created_at','updated_at', 'type')
     i.invoice_template = self
     i.state = 'new'
     # Do not generate invoices on weekend
@@ -30,11 +30,12 @@ class InvoiceTemplate < Invoice
     template_replacements(i.date)
     # copy template lines
     self.invoice_lines.each do |tl|
-      l = InvoiceLine.new tl.attributes
+      l = InvoiceLine.new tl.attributes.dup.except('id','created_at','updated_at','invoice_id')
+      l.invoice = i
       l.template_replacements(i.date)
       i.invoice_lines << l
       tl.taxes.each do |tax|
-        l.taxes << Tax.new(tax.attributes.except('invoice_line_id'))
+        l.taxes << Tax.new(tax.attributes.dup.except('id','created_at','updated_at','invoice_line_id'))
       end
     end
     i.save!

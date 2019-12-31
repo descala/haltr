@@ -14,28 +14,28 @@ class InvoicesController < ApplicationController
   PUBLIC_METHODS = [:by_taxcode_and_num,:view,:mail,:logo,:haltr_sign]
 
   skip_before_action :verify_authenticity_token, only: [:haltr_sign]
-  before_filter :find_project_by_project_id, :only => [:index,:new,:create,:send_new_invoices,:download_new_invoices,:update_payment_stuff,:new_invoices_from_template,:reports,:report_channel_state,:report_invoice_list,:report_received_table,:create_invoices,:update_taxes,:upload,:import,:import_facturae]
-  before_filter :find_invoice, :only => [:edit,:update,:mark_accepted,:mark_refused,:duplicate_invoice,:base64doc,:show,:send_invoice,:amend_for_invoice,:original,:validate, :mark_as_accepted, :mark_as, :add_comment, :process_pdf]
-  before_filter :find_invoices, :only => [:context_menu,:bulk_download,:bulk_mark_as,:bulk_send,:destroy,:bulk_validate, :bulk_process_pdf]
-  before_filter :find_payment, :only => [:destroy_payment]
-  before_filter :find_hashid, :only => [:view]
-  before_filter :find_attachment, :only => [:logo]
-  before_filter :find_invoice_by_number, only: [:number_to_id]
-  before_filter :authorize, :except => PUBLIC_METHODS
-  skip_before_filter :check_if_login_required, :only => PUBLIC_METHODS
+  before_action :find_project_by_project_id, :only => [:index,:new,:create,:send_new_invoices,:download_new_invoices,:update_payment_stuff,:new_invoices_from_template,:reports,:report_channel_state,:report_invoice_list,:report_received_table,:create_invoices,:update_taxes,:upload,:import,:import_facturae]
+  before_action :find_invoice, :only => [:edit,:update,:mark_accepted,:mark_refused,:duplicate_invoice,:base64doc,:show,:send_invoice,:amend_for_invoice,:original,:validate, :mark_as_accepted, :mark_as, :add_comment, :process_pdf]
+  before_action :find_invoices, :only => [:context_menu,:bulk_download,:bulk_mark_as,:bulk_send,:destroy,:bulk_validate, :bulk_process_pdf]
+  before_action :find_payment, :only => [:destroy_payment]
+  before_action :find_hashid, :only => [:view]
+  before_action :find_attachment, :only => [:logo]
+  before_action :find_invoice_by_number, only: [:number_to_id]
+  before_action :authorize, :except => PUBLIC_METHODS
+  skip_before_action :check_if_login_required, :only => PUBLIC_METHODS
   # on development skip auth so we can use curl to debug
   if Rails.env.development? or Rails.env.test?
-    skip_before_filter :check_if_login_required, :only => [:by_taxcode_and_num,:view,:mail,:show,:original]
-    skip_before_filter :authorize, :only => [:show,:original]
+    skip_before_action :check_if_login_required, :only => [:by_taxcode_and_num,:view,:mail,:show,:original]
+    skip_before_action :authorize, :only => [:show,:original]
   else
-    before_filter :check_remote_ip, :only => [:by_taxcode_and_num,:mail]
+    before_action :check_remote_ip, :only => [:by_taxcode_and_num,:mail]
   end
-  before_filter :redirect_to_correct_controller, :only => [:show]
+  before_action :redirect_to_correct_controller, :only => [:show]
 
   include CompanyFilter
-  before_filter :check_for_company, :except => PUBLIC_METHODS
+  before_action :check_for_company, :except => PUBLIC_METHODS
 
-  skip_before_filter :verify_authenticity_token, :only => [:base64doc]
+  skip_before_action :verify_authenticity_token, :only => [:base64doc]
   accept_api_auth :import, :import_facturae, :number_to_id, :update, :show, :index, :destroy, :create, :send_invoice
 
   # allow to view invoices on a iframe
@@ -246,8 +246,8 @@ class InvoicesController < ApplicationController
       end
     end
 
-    @invoice = invoice_class.new(parsed_params)
-    @invoice.project ||= @project
+    @invoice = invoice_class.new
+    @invoice.safe_attributes = parsed_params
 
     if @invoice.fa_country.to_s.size == 3
       @invoice.fa_country = SunDawg::CountryIsoTranslater.translate_standard(
@@ -386,7 +386,8 @@ class InvoicesController < ApplicationController
       @invoice.client_office = nil unless Client.find(params[:invoice][:client_id]).client_offices.any? {|office| office.id == @invoice.client_office_id }
     end
 
-    if @invoice.update_attributes(parsed_params)
+    @invoice.safe_attributes = parsed_params
+    if @invoice.save
       # mark invoice as new
       if parsed_params[:state].blank?
         if %w(sent registered accepted allegedly_paid closed).include?(@invoice.state)
@@ -1234,7 +1235,7 @@ class InvoicesController < ApplicationController
   def bulk_send
     @errors=[]
     num_invoices = @invoices.size
-    @invoices.collect! do |invoice|
+    @invoices.to_a.collect! do |invoice|
       if invoice.valid? and invoice.may_queue? and
           ExportChannels.can_send? invoice.client.invoice_format
         if invoice.client.sign_with_local_certificate?
@@ -1567,7 +1568,7 @@ class InvoicesController < ApplicationController
   end
 
   def parse_invoice_params
-    parsed_params = params[:invoice] || {}
+    parsed_params = params[:invoice].try(:dup) || {}
     parsed_params['invoice_lines_attributes'] ||= {}
     # accept invoice_lines_attributes = { '0' => {}, ... }
     # and    invoice_lines_attributes = [{}, ...]

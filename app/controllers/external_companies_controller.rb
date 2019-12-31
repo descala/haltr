@@ -3,7 +3,7 @@ class ExternalCompaniesController < ApplicationController
 
   layout 'admin'
   menu_item :external_companies
-  before_filter :authorize_global
+  before_action :authorize_global
   helper :haltr
   accept_api_auth :show
 

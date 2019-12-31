@@ -4,11 +4,11 @@ class MandatesController < ApplicationController
   menu_item Haltr::MenuItem.new(:payments,:mandates)
   layout 'haltr'
   helper :haltr
-  before_filter :find_project_by_project_id
-  before_filter :find_mandate, :only => [:show,:edit,:update,:destroy,:signed_doc]
-  before_filter :authorize
+  before_action :find_project_by_project_id
+  before_action :find_mandate, :only => [:show,:edit,:update,:destroy,:signed_doc]
+  before_action :authorize
   include CompanyFilter
-  before_filter :check_for_company
+  before_action :check_for_company
 
   def index
     @mandates = @project.mandates.order("created_at desc")

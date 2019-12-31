@@ -1,9 +1,9 @@
 class InvoiceImgsController < ApplicationController
 
-  before_filter :find_invoice_img, :except => [:create,:show]
-  before_filter :find_project_by_project_id, :only=> [:show]
-  skip_before_filter :check_if_login_required, :only => [:create]
-  before_filter :check_remote_ip,              :only => [:create]
+  before_action :find_invoice_img, :except => [:create,:show]
+  before_action :find_project_by_project_id, :only=> [:show]
+  skip_before_action :check_if_login_required, :only => [:create]
+  before_action :check_remote_ip,              :only => [:create]
   helper :context_menus
 
   def show

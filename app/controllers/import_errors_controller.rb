@@ -4,9 +4,9 @@ class ImportErrorsController < ApplicationController
   menu_item Haltr::MenuItem.new(:invoices,:import_errors)
   helper :haltr
   layout 'haltr'
-  before_filter :find_project_by_project_id, only: [:index, :show, :create]
-  before_filter :find_import_errors, :only => [:context_menu, :destroy]
-  before_filter :authorize
+  before_action :find_project_by_project_id, only: [:index, :show, :create]
+  before_action :find_import_errors, :only => [:context_menu, :destroy]
+  before_action :authorize
 
   accept_api_auth :create, :index
 

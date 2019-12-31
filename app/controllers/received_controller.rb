@@ -2,7 +2,7 @@ class ReceivedController < InvoicesController
 
   menu_item Haltr::MenuItem.new(:invoices,:received)
 
-  skip_before_filter :check_for_company, :only=> [:index, :show]
+  skip_before_action :check_for_company, :only=> [:index, :show]
 
   def show
     unless User.current.admin?

@@ -10,15 +10,15 @@ class ClientsController < ApplicationController
   helper :sort
   include SortHelper
 
-  before_filter :find_project_by_project_id, :only => [:index,:new,:create,:ccc2iban]
-  before_filter :find_project,  :only => [:link_to_profile,:allow_link,:deny_link,:check_cif]
-  before_filter :find_client, :except => [:index,:new,:create,:link_to_profile,:allow_link,:deny_link,:check_cif,:ccc2iban]
-  before_filter :authorize
+  before_action :find_project_by_project_id, :only => [:index,:new,:create,:ccc2iban]
+  before_action :find_project,  :only => [:link_to_profile,:allow_link,:deny_link,:check_cif]
+  before_action :find_client, :except => [:index,:new,:create,:link_to_profile,:allow_link,:deny_link,:check_cif,:ccc2iban]
+  before_action :authorize
 
   accept_api_auth :create, :show, :index, :destroy, :update
 
   include CompanyFilter
-  before_filter :check_for_company
+  before_action :check_for_company
 
   def index
     sort_init 'name', 'asc'
@@ -110,11 +110,9 @@ class ClientsController < ApplicationController
   end
 
   def create
-    begin
-      @client = Client.new(params[:client].merge({:project=>@project}))
-    rescue
-      @client = Client.new
-    end
+    @client = Client.new
+    @client.safe_attributes = params[:client]
+    @client.project = @project
     unless User.current.allowed_to?(:use_local_signature, @project)
       @client.sign_with_local_certificate = false
     end
@@ -139,7 +137,8 @@ class ClientsController < ApplicationController
       unless User.current.allowed_to?(:use_local_signature, @project)
         params.delete(:sign_with_local_certificate)
       end
-      if @client.update_attributes(params[:client])
+      @client.safe_attributes = params[:client]
+      if @client.save
         event = Event.new(:name=>'edited',:client=>@client,:user=>User.current)
         # associate last created audits to this event
         event.audits = @client.last_audits_without_event

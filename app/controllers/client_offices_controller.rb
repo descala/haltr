@@ -9,12 +9,12 @@ class ClientOfficesController < ApplicationController
   helper :sort
   include SortHelper
 
-  before_filter :find_client
+  before_action :find_client
 
   include CompanyFilter
-  before_filter :check_for_company
+  before_action :check_for_company
 
-  before_filter :authorize
+  before_action :authorize
 
   def index
     sort_init 'name', 'asc'

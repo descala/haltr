@@ -4,9 +4,9 @@ class QuotesController < ApplicationController
   helper :haltr
   helper :invoices
   layout 'haltr'
-  before_filter :find_project_by_project_id, :except => [:show,:edit,:update,:destroy,:send_quote,:accept,:refuse]
-  before_filter :find_invoice, :only => [:show,:edit,:update,:destroy,:send_quote,:accept,:refuse]
-  before_filter :authorize
+  before_action :find_project_by_project_id, :except => [:show,:edit,:update,:destroy,:send_quote,:accept,:refuse]
+  before_action :find_invoice, :only => [:show,:edit,:update,:destroy,:send_quote,:accept,:refuse]
+  before_action :authorize
 
   helper :sort
   include SortHelper

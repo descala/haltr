@@ -6,7 +6,6 @@ class Dir3Entity < ActiveRecord::Base
   validates_uniqueness_of :code
   validates :country, length: { is: 2 }, allow_blank: true
 
-  attr_protected :created_at, :updated_at
 
   def full_address?
     address.present? and

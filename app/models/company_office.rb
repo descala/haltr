@@ -5,7 +5,6 @@ class CompanyOffice < ActiveRecord::Base
   has_many :invoices, dependent: :nullify
   validates_presence_of :company_id
 
-  attr_protected :created_at, :updated_at
   include CountryUtils
 
   COMPANY_FIELDS = %w( address city province postalcode country )

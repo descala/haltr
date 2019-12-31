@@ -48,7 +48,6 @@ class Company < ActiveRecord::Base
   serialize :invoice_mail_customization
   serialize :quote_mail_customization
 
-  attr_protected :created_at, :updated_at
 
   def set_default_values
     #TODO: Add default country taxes

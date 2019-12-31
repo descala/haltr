@@ -11,7 +11,6 @@ class Person < ActiveRecord::Base
   validates :first_name, :last_name, :email, :phone_office, :phone_mobile,
     :info, length: { maximum: 255 }
 
-  attr_protected :created_at, :updated_at
 
   def to_label
     "#{first_name} #{last_name}"

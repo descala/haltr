@@ -159,7 +159,7 @@
 
 <!--taula factures-->
 <%= form_tag({}, :data => {:cm_url => (controller.controller_name == 'invoices') ?  invoices_context_menu_path : received_context_menu_path}) do -%>
-  <%= hidden_field_tag 'back_url', url_for(params), :id => nil %>
+  <%= hidden_field_tag 'back_url', url_for(params.to_unsafe_h), :id => nil %>
   <div class="seccio grup">
     <div class="col span-2-de-2">
       <table class="taula-1 list invoices">

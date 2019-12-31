@@ -1,14 +1,20 @@
 class Event < ActiveRecord::Base
 
+  INFO_CONTENT = %w(notes class_for_send md5 error backtrace codi_registre url
+   created_by extra_notes)
+
+  include Redmine::SafeAttributes
+  safe_attributes(*(column_names - [
+    'id','created_at','updated_at','type','model_object_type', 'info',
+    'model_object_id']) + INFO_CONTENT + ['file', 'filename'])
+
   validates_presence_of :name
   validates_presence_of :project_id
   belongs_to :project
   belongs_to :user
   belongs_to :invoice
   belongs_to :client
-  has_many :audits, :class_name=>'Audited::Adapters::ActiveRecord::Audit'
-
-  attr_protected :created_at, :updated_at
+  has_many :audits, :class_name=>'Audited::Audit'
 
   before_validation :set_project_if_nil
   before_create :create_attachment

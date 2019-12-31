@@ -1,5 +1,12 @@
 class Invoice < ActiveRecord::Base
 
+  include Redmine::SafeAttributes
+  assignments = ['invoice_lines_attributes', 'amounts_withheld', 'payments_on_account',
+                 'original', 'total', 'client_office']
+  safe_attributes(*(column_names - [
+    'id','created_at','updated_at'
+  ] + assignments))
+
   columns_on_demand :original
 
   include HaltrHelper
@@ -11,7 +18,6 @@ class Invoice < ActiveRecord::Base
                    :state, :has_been_read, :id, :original]
   has_associated_audits
   # do not remove, with audit we need to make the other attributes accessible
-  attr_protected :created_at, :updated_at
 
   # remove non-utf8 characters from those fields:
   TO_UTF_FIELDS = %w(extra_info)
@@ -391,7 +397,7 @@ class Invoice < ActiveRecord::Base
 
   def charge_amount=(value)
     if value.to_s =~ /^[0-9,.']*$/
-      value = Money.parse(value)
+      value = Monetize.parse(value)
       write_attribute :charge_amount_in_cents, value.cents
     else
       # this + validates_numericality_of will raise an error if not a number
@@ -401,7 +407,7 @@ class Invoice < ActiveRecord::Base
 
   def payments_on_account=(value)
     if value.to_s =~ /^[-0-9,.']*$/
-      value = Money.parse(value)
+      value = Monetize.parse(value)
       write_attribute :payments_on_account_in_cents, value.cents
     else
       # this + validates_numericality_of will raise an error if not a number
@@ -411,7 +417,7 @@ class Invoice < ActiveRecord::Base
 
   def amounts_withheld=(value)
     if value.to_s =~ /^[-0-9,.']*$/
-      value = Money.parse(value)
+      value = Monetize.parse(value)
       write_attribute :amounts_withheld_in_cents, value.cents
     else
       # this + validates_numericality_of will raise an error if not a number

@@ -7,13 +7,13 @@ class PeopleController < ApplicationController
   helper :sort
   include SortHelper
 
-  before_filter :find_optional_client, :only => [:index]
-  before_filter :find_client, :only => [:new,:create]
-  before_filter :find_person, :only => [:show,:edit,:destroy,:update]
-  before_filter :authorize
+  before_action :find_optional_client, :only => [:index]
+  before_action :find_client, :only => [:new,:create]
+  before_action :find_person, :only => [:show,:edit,:destroy,:update]
+  before_action :authorize
 
   include CompanyFilter
-  before_filter :check_for_company
+  before_action :check_for_company
 
   def index
     sort_init 'last_name', 'asc'

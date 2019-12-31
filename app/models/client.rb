@@ -1,8 +1,11 @@
 class Client < ActiveRecord::Base
 
   audited except: [:hashid, :project]
-  # do not remove, with audit we need to make the other attributes accessible
-  attr_protected :created_at, :updated_at
+
+  include Redmine::SafeAttributes
+  safe_attributes(*(column_names - [
+    'id','created_at','updated_at'
+  ] + ['invoice_lines_attributes', 'company_id', 'company_type', 'invoice_format_category']))
 
   include Haltr::BankInfoValidator
   include Haltr::PaymentMethods

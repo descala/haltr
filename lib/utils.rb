@@ -5,7 +5,7 @@ module Utils
       return nil if text.nil?
       locale = I18n.locale.to_s
       raise "blank locale" if locale.blank?
-      months = I18n.backend.translate("ca.date.month_names", "")
+      months = I18n.t("date.month_names", locale: locale)
       months.each do |m|
         unless m.nil? or months[date.month].nil?
           text.gsub!(/\b#{m}\b/i, months[date.month])
