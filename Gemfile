@@ -1,7 +1,7 @@
 gem "money"
 gem 'monetize'
 gem "gettext"
-gem "sundawg_country_codes" #, :lib => 'country_iso_translater'
+gem "sundawg_country_codes", :require => ['country_iso_translater']
 gem 'rubyzip', '>= 1.0.0'
 gem 'csv-mapper'
 gem 'wicked_pdf', git: 'http://github.com/mileszs/wicked_pdf.git'
