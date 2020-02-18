@@ -1,5 +1,10 @@
 class Person < ActiveRecord::Base
 
+  include Redmine::SafeAttributes
+  safe_attributes(*(column_names - [
+    'id','created_at','updated_at'
+  ] + ['client']))
+
   belongs_to :client
 
   validates_presence_of :client, :first_name, :last_name
