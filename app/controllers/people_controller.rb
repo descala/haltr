@@ -44,7 +44,8 @@ class PeopleController < ApplicationController
   end
 
   def create
-    @person = Person.new(params[:person].merge({:client=>@client}))
+    @person = Person.new
+    @person.safe_attributes = params[:person].merge({client:@client})
     if @person.save
       flash[:notice] = l(:notice_successful_create)
       redirect_to :action => 'index', :id => @client
@@ -54,7 +55,8 @@ class PeopleController < ApplicationController
   end
 
   def update
-    if @person.update_attributes(params[:person])
+    @person.safe_attributes = params[:person]
+    if @person.save
       flash[:notice] = l(:notice_successful_update)
       redirect_to :action => 'index', :client_id => @person.client
     else
