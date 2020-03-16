@@ -931,18 +931,19 @@ class InvoicesController < ApplicationController
     @to_amend = @invoice
     @amend_type = params[:amend_type]
     @invoice = IssuedInvoice.new(
-      @to_amend.attributes.update(
-        state: 'new',
-        number: IssuedInvoice.next_number(@project)
-      ),
-      amend_reason: '16',
-      amended_number: @to_amend.number
+      @to_amend.dup.attributes.update(
+        'state'  => 'new',
+        'number' => IssuedInvoice.next_number(@project),
+        'amend_reason' => '16',
+        'amended_number' => @to_amend.number
+      )
     )
     @to_amend.invoice_lines.each do |line|
       il = line.dup
       il.taxes = line.taxes.collect {|tax| tax.dup }
       @invoice.invoice_lines << il
     end
+    render :new
   end
 
   def mail
