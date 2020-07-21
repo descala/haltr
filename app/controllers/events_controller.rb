@@ -64,9 +64,15 @@ class EventsController < ApplicationController
   def create
     t = params[:event][:type]
     if t =~ /Event/
-      @event = t.constantize.new(params[:event].except(:type))
+      @event = t.constantize.new
+      @event.safe_attributes = params[:event].except(
+        :type, :model_object_id, :model_object_type
+      )
     elsif t.blank?
-      @event = Event.new(params[:event])
+      @event = Event.new
+      @event.safe_attributes = params[:event].except(
+        :type, :model_object_id, :model_object_type
+      )
     else
       #TODO raise / log
     end
